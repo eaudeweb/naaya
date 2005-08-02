@@ -194,17 +194,18 @@ class NyFolder(NyAttributes, NyProperties, NyContainer, utils):
 
     def process_submissions(self):
         #returns info regarding the meta_types that ce be added inside the folder
-        l = []
+        r = []
         #check for adding folders
-        if self.checkPermission(PERMISSION_ADD_FOLDER):
-            l.append(('folder_add_html', 'Folder'))
+        if METATYPE_FOLDER in self.folder_meta_types:
+            if self.checkPermission(PERMISSION_ADD_FOLDER):
+                r.append(('folder_add_html', 'Folder'))
         #check pluggable content
         pc = self.get_pluggable_content()
         for k in self.get_pluggable_installed_meta_types():
             if k in self.folder_meta_types:
                 if self.checkPermission(pc[k]['permission']):
-                    l.append((pc[k]['addform'], pc[k]['label']))
-        return l
+                    r.append((pc[k]['addform'], pc[k]['label']))
+        return r
 
     security.declareProtected(view, 'checkPermissionManageObects')
     def checkPermissionManageObjects(self, p_object=None):
