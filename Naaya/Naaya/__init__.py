@@ -63,6 +63,15 @@ misc_ = {
     'plus.gif':ImageFile('www/plus.gif', globals()),
     'minus.gif':ImageFile('www/minus.gif', globals()),
 
+    'select_all.gif':ImageFile('www/select_all.gif', globals()),
+    'copy.gif':ImageFile('www/copy.gif', globals()),
+    'cut.gif':ImageFile('www/cut.gif', globals()),
+    'delete.gif':ImageFile('www/delete.gif', globals()),
+    'paste.gif':ImageFile('www/paste.gif', globals()),
+    'edit':ImageFile('www/edit.gif', globals()),
+    'checkin':ImageFile('www/checkin.gif', globals()),
+    'checkout':ImageFile('www/checkout.gif', globals()),
+
     #drag & drop files
     'core.js': ImageFile('zpt/dragdrop/core.js.dtml', globals()),
     'events.js': ImageFile('zpt/dragdrop/events.js.dtml', globals()),
