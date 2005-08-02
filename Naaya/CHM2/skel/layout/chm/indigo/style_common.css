@@ -15,7 +15,7 @@
 		background-color:#eeeff0; /*#ecf2e1*/ /*#d9d8b9*/ /*#c1c19d*/ /* #f9f9f9*/
 	}
 
-	.right_link_portlet .title{
+	.right_link_portlet .portlet-title{
 		background-color:#879aa7; /*#ffffff*/ /*#d3e188*/ /*#7e8c37*/ /* #006cad*/
 		background-image:none; /*none*/ /*url("portlet_right_bullet.gif")*/ /*url("portlet_right_bullet.gif")*/ /*url("portlet_right_bullet.gif")*/
 		background-position:100% 5%;
@@ -62,12 +62,14 @@
 			text-decoration: none;
 		}
 
+	/* errors and messages box */
 	.system-msg {
 		border: 1px solid black;
 		padding: 1em;
 		margin-bottom: 1em;
 	}
 
+	/* folder index styles */
 	#admin_this_folder{
 		padding: 0.5em;
 		border:1px solid #d2d9dd; /*1px solid #cfe0b4*/ /*1px solid #e4e4d6*/ /*1px solid #d5d7bf*/ /* 1px solid #ddebf4*/
@@ -99,7 +101,7 @@
 		display: none;
 	}
 
-    #admin_this_folder select {
+	#admin_this_folder select {
 		vertical-align: middle;
 	}
 
@@ -171,19 +173,19 @@
 		vertical-align: middle;
 	}
 
-	#folderfile_list .title{
+	#folderfile_list .title-column{
 		vertical-align: middle;
 		text-align: left;
 	}
 
-		td.title a{
+		td.title-column a{
 			color:#286185; /*#336633*/ /*#003366*/ /*#003399*/ /* #0f75b3*/
 		}
-		td.title a:hover{
+		td.title-column a:hover{
 			text-decoration: none;
 		}
 
-	#folderfile_list th.title{
+	#folderfile_list th.title-column{
 		vertical-align: middle;
 		padding-left: 0.3em;
 	}
@@ -351,6 +353,7 @@
 		padding:5px 15px 4px 6px;
 	}
 
+	/* warning box for active versions of items */
 	.version_box {
 		background-color: #f4fff4;
 		color: red;
@@ -362,7 +365,6 @@
 	}
 
 	/* Content translation boxes */
-
 	.translate {
 		width: 90%;
 		padding:  4px 3px 4px 32px;
@@ -400,4 +402,16 @@
 	.translate a:hover {
 		background-color: #CCCCCC;
 		color: #444444;
+	}
+
+	/* styles for forms */
+	.field {
+	}
+
+	.field label {
+		display: block;
+	}
+
+	.field .invisible {
+		display: none;
 	}
