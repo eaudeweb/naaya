@@ -218,17 +218,17 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
                 layouttool_ob.manageLayout(skel_handler.root.layout.default_skin_id, skel_handler.root.layout.default_scheme_id)
                 #load logos
                 content = self.futRead(join(skel_path, 'layout', 'logo.gif'), 'rb')
-                logo_ob = layouttool_ob._getOb('logo.gif', None)
-                if logo_ob is None:
+                image_ob = layouttool_ob._getOb('logo.gif', None)
+                if image_ob is None:
                     layouttool_ob.manage_addImage(id='logo.gif', file='', title='Site logo')
-                image_ob = layouttool_ob._getOb('logo.gif')
+                    image_ob = layouttool_ob._getOb('logo.gif')
                 image_ob.update_data(data=content)
                 image_ob._p_changed=1
                 content = self.futRead(join(skel_path, 'layout', 'logobis.gif'), 'rb')
-                logo_ob = layouttool_ob._getOb('logobis.gif', None)
-                if logo_ob is None:
+                image_ob = layouttool_ob._getOb('logobis.gif', None)
+                if image_ob is None:
                     layouttool_ob.manage_addImage(id='logobis.gif', file='', title='Site secondary logo')
-                image_ob = layouttool_ob._getOb('logobis.gif')
+                    image_ob = layouttool_ob._getOb('logobis.gif')
                 image_ob.update_data(data=content)
                 image_ob._p_changed=1
             #load pluggable content types
@@ -253,8 +253,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
                     content = self.futRead(join(skel_path, 'portlets', '%s.zpt' % portlet.id), 'r')
                     self.create_portlet_special(portlet.id, portlet.title, content)
                 for linkslist in skel_handler.root.portlets.linkslists:
-                    portletstool_ob.manage_addLinksList(linkslist.id, linkslist.title, linkslist.portlet)
-                    linkslist_ob = portletstool_ob._getOb(linkslist.id)
+                    linkslist_ob = portletstool_ob._getOb(linkslist.id, None)
+                    if linkslist_ob is None:
+                        portletstool_ob.manage_addLinksList(linkslist.id, linkslist.title, linkslist.portlet)
+                        linkslist_ob = portletstool_ob._getOb(linkslist.id)
+                    else:
+                        linkslist_ob.manage_delete_links(linkslist_ob.get_links_collection().keys())
                     for link in linkslist.links:
                         try: relative = abs(int(link.relative))
                         except: relative = 0
@@ -295,7 +299,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
                     file_ob = self._getOb('robots.txt', None)
                     if file_ob is None:
                         self.manage_addFile(id='robots.txt', file='', title='')
-                    file_ob = self._getOb('robots.txt')
+                        file_ob = self._getOb('robots.txt')
                     file_ob.update_data(data=content)
                     file_ob._p_changed=1
                 if skel_handler.root.others.favicon is not None:
@@ -303,7 +307,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
                     image_ob = self._getOb('favicon.ico', None)
                     if image_ob is None:
                         self.manage_addImage(id='favicon.ico', file='', title='')
-                    image_ob = self._getOb('favicon.ico')
+                        image_ob = self._getOb('favicon.ico')
                     image_ob.update_data(data=content)
                     image_ob._p_changed=1
                 if skel_handler.root.others.images is not None:
