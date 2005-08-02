@@ -1,6 +1,8 @@
 <span tal:replace="python:request.RESPONSE.setHeader('content-type','text/html;charset=utf-8')" />
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" tal:attributes="xml:lang python:here.gl_get_selected_language(); lang python:here.gl_get_selected_language()" >
+<html xmlns="http://www.w3.org/1999/xhtml"
+	tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language"
+	tal:define="site_url here/getSitePath">
 <head>
 	<title tal:content="here/title_or_id" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -16,7 +18,7 @@
 	<div id="topnav">
 		<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('topnav_links').get_links_list()">
 		<tal:block tal:repeat="item l_list">
-			<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (here.getSitePath(), item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
+			<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
 		</tal:block>
 		</ul>
 	</div>
@@ -36,7 +38,7 @@
 		</div>
 		<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
 		<tal:block tal:repeat="item l_list">
-			<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (here.getSitePath(), item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
+			<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
 		</tal:block>
 		</ul>
 	</div>
@@ -55,12 +57,14 @@
 <div id="middle_port">
 	<a name="startcontent" id="startcontent"></a>
 	<span tal:replace="structure here/messages_box"/>
+
 	<!--STANDARD_HEADERFOOTER_MARKER-->
+
 </div>
 <div id="last_modified">Page last modified: dd-mm-yyyy </div>
 <div id="footer">
-	[<a href="#">Copyright</a>]
-	[<a accesskey="0" href="#">Accessibility statement</a>]
+	[<a tal:attributes="href string:${site_url}/copyright_html" i18n:translate="">Copyright</a>]
+	[<a tal:attributes="href string:${site_url}/accessibility_html" accesskey="0" i18n:translate="">Accessibility statement</a>]
 </div>
 </body>
 </html>
