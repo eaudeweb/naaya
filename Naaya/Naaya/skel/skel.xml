@@ -15,7 +15,6 @@
 		<form id="site_login" title="Portal login"/>
 		<form id="site_logout" title="Portal logout"/>
 		<form id="site_unauthorized" title="Portal logout"/>
-		<form id="site_accessibility_statement" title="Accessibility statement"/>
 		<form id="site_external_search" title="Portal external search"/>
 		<form id="site_search" title="Portal search"/>
 		<form id="site_sitemap" title="Portal site map"/>
@@ -169,7 +168,7 @@
 		</folder>
 		<folder id="info" title="Information" description="" coverage="" keywords="" publicinterface="" maintainer_email="" sortorder="0" meta_types="">
 			<document id="accessibility" title="Accessibility statement" description="" coverage="" keywords="" sortorder="0">
-				<![CDATA[
+			<![CDATA[
 <h2>Keyboard shortcuts</h2>
 	<p>Most browsers support jumping to specific links by typing keys defined on the web site. 
 	On Windows, you can press <strong>ALT + an access key</strong>; 
@@ -239,14 +238,14 @@
 	<li>the website defines its acronyms and abbreviations with the proper tags</li>
 	<li>the forms composing the user interface are well described by labels</li>
 	</ul>
-				]]>
+			]]>
 			</document>
 			<document id="contact" title="Contact us" description="" coverage="" keywords="" sortorder="0">
-				<![CDATA[
+			<![CDATA[
 <p>
 	This page should contain contact information.
 </p>
-				]]>
+			]]>
 			</document>
 		</folder>
 	</content>
