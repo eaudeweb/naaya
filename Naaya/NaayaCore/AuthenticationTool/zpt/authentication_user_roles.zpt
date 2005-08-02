@@ -1,0 +1,129 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+
+<script language="JavaScript">
+function emptyLocation()
+{
+   if (document.forms['frmUsersRoles'].loc[0].checked == true)
+       document.forms['frmUsersRoles'].location.value = '';
+}
+
+function pickLocation()
+{
+   document.forms['frmUsersRoles'].loc[1].checked = true;
+}
+
+function setupWin(url, theWidth, theHeight)
+{
+   pickLocation();
+   wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
+   wwinn.focus();
+   return true;
+}
+
+function createKey(key)
+{
+   document.forms['frmUsersRoles'].location.value = key;
+}
+</script>
+
+
+<p class="page-title">User Roles</p>
+<p class="page-description">
+    This page displays the existing users in the portal and their corresponding roles.
+    You can revoke a role prior assigned to a user <br>by ticking in the appropiate check box 
+    and clicking on the Revoke selected roles button.
+</p>
+
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+    Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+</div>
+
+<form action="manage_revokeUsersRoles" method="post">
+<table border="0" cellspacing="0" cellpadding="2" width="80%">
+    <tr class="row-header">
+        <td class="cell-header" width="20%">User</td>
+        <td class="cell-header" width="35%">Roles</td>
+        <td class="cell-header" width="*">Location</td>
+    </tr>
+    <tr tal:define="users_roles here/getUsersRoles" tal:repeat="user python:users_roles.keys()" 
+        tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
+        <td valign="top" tal:content="user">user</td>
+        <td colspan="2" valign="top">
+            <table border=0 cellspacing=0 cellpadding=0 width="100%" tal:define="roles python:users_roles[user]">
+                <tr tal:repeat="role roles">
+                    <td valign="top" width="2%" tal:condition="python:role[0] != []">
+                        <input type="checkbox" name="roles" tal:attributes="value python:'%s||%s' % (user,role[1])">
+                    </td>
+                    <td width="40%" tal:condition="python:role[0] != []">
+                    <span tal:repeat="r python:here.utConvertToList(role[0])" tal:content="r"/></td>
+                    <td width="*" tal:condition="python:role[0] != []">
+                        <span tal:condition="python:role[1] == '/'">Entire portal</span>
+                        <span tal:condition="python:role[1] != '/'" tal:define="obj_title python:here.utGetObject(role[1]).title_or_id()">
+                            <a tal:attributes="href python:role[1]" tal:content="obj_title"/>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="cell-header" colspan="4">
+            <input type="hidden" name="destination" value="manage_userRoles_html">
+            <input type="submit" name="del" value="Revoke roles">
+        </td>
+    </tr>
+</table>
+</form>
+<br>
+<form action="manage_addUsersRoles" method="post" name="frmUsersRoles">
+<table border="0" cellspacing="0" cellpadding="2" width="80%">
+    <tr>
+        <td>
+            <fieldset>
+                <table width="100%" border="0" cellspacing="0" cellpadding="6">
+                    <tr>
+                        <td colspan="2">The following form can be used to assign a new role to an existing user. 
+                            Select the username from the drop-down field, the intended role(s) and choose the specific location.
+                        </td>
+                    </tr>
+                    <tr><td>&nbsp;</td></tr>
+                    <tr>
+                        <td align="top" width="20%" class="form-label">Username:</td>
+                        <td align="top" width="*" tal:define="users here/user_names">
+                            <select name="name">
+                                <option tal:repeat="user users" tal:attributes="value user" tal:content="user"/>
+                            <select>
+                         </td>
+                     </tr>
+                     <tr>
+                        <td align="top" width="20%" class="form-label">Roles:</td>
+                        <td align="top" width="*" tal:define="roles here/list_valid_roles">
+                            <select name="roles" size="5" multiple>
+                                <option tal:repeat="role roles" tal:attributes="value role" tal:content="role"/>
+                            <select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" width="20%" class="form-label">Location:(folder)<br>e.g. /folderURL</td>
+                        <td valign="top" width="*">
+                            <input type="radio" name="loc" value="allsite" checked="checked" onclick="emptyLocation();" /> Entire portal<br />
+                            <input type=radio name="loc" value="other"> Pick other...<br />
+                            <input type=text name="location" size="40" onclick="pickLocation();" value="" />
+                            <input type="button" value="Pick" onclick="setupWin('sitemap', 300, 500);" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="cell-header">
+                            <input type="hidden" name="destination" value="manage_userRoles_html">
+                            <input type="submit" name="add" value="Assign role"></td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </table>
+            </fieldset>
+        </td>
+    </tr>
+</table>
+</form>
+<span tal:replace="structure here/manage_page_footer"/>

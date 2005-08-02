@@ -1,0 +1,64 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+
+<p class="page-title">User list</p>
+<p class="page-description">
+    This page lists the users defined in this portal.
+</p>
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+    Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+</div>
+
+<tal:block tal:define="users here/user_names">
+
+<form method="post" name="frmUsers">
+
+<table width="80%" tal:condition="here/isSessionErrors">
+    <tr tal:repeat="error_value here/getSessionErrors" >
+        <td tal:content="error_value">&nbsp;</td>
+    </tr>
+</table>
+
+<table border="0" cellspacing="0" cellpadding="2" width="80%">
+    <tr class="row-header">
+        <td class="cell-header" width="5%">Delete</td>
+        <td class="cell-header" width="15%">Username</td>
+        <td class="cell-header" width="30%">First Name and Last Name</td>
+        <td class="cell-header" width="*">Email</td>
+    </tr>
+    <tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
+        <tal:block tal:define="user_obj python:here.getUser(user)">
+        <td width="3%" nowrap>
+            <table border=0>
+                <tr>
+                    <td><input type="checkbox" name="del_users" tal:attributes="value python:here.getUserAccount(user_obj)">
+                    </td>
+                    <td><img src="misc_/NaayaCore/User.gif" alt="user"></td>
+                </tr>
+            </table>
+        </td>
+        <td><b><a tal:define="user python:here.getUserAccount(user_obj)"
+            tal:attributes="href string:manage_editUser_html?name=${user}" 
+            tal:content="user">username</a></b></td>
+        <td tal:content="python:here.getUserFirstName(user_obj) + ' ' + here.getUserLastName(user_obj)">firstname + lastname</td>
+        <td align="left" tal:content="python:here.getUserEmail(user_obj)">email</td>
+        </tal:block>
+    </tr>
+    <tr tal:condition="python:len(users) == 0">
+        <td colspan="4"> Users list empty </td>
+    </tr>
+    <tr>
+        <td class="cell-header" colspan="4">
+            <input type="button" name="add" value="Add user" onclick="document.location.href='manage_addUser_html';">&nbsp;
+            <input type="hidden" name="destination" value="manage_users_html">
+            <input type="submit" name="delete" value="Delete user" onclick="document.frmUsers.action='manage_delUsers';">&nbsp;
+            <input type="button" name="view_roles" value="Users & Roles" onclick="document.location.href='manage_userRoles_html';">
+        </td>
+    </tr>
+</table>
+</form>
+</tal:block>
+<span tal:content="python:here.delSessionErrors()" tal:omit-tag=""></span>
+<span tal:content="python:here.delUserSession()" tal:omit-tag=""></span>
+<span tal:replace="structure here/manage_page_footer"/>
