@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<skel>
+	<forms>
+		<form id="site_admin_deletions" title="Portal administration - submissions"/>
+		<form id="site_admin_submissions" title="Portal administration - deletions"/>
+	</forms>
+	<layout default_skin_id="chm" default_scheme_id="blue">
+		<skin id="chm" title="CHM">
+			<template id="standard_html_headerfooter" title="Portal standard HTML header and footer"/>
+			<template id="portlet_left_macro" title="Macro for left portlets"/>
+			<template id="portlet_center_macro" title="Macro for center portlets"/>
+			<template id="portlet_right_macro" title="Macro for right portlets"/>
+			<scheme id="blue" title="Blue">
+				<style id="style" title="Main CSS"/>
+				<style id="style_common" title="Common CSS"/>
+				<style id="style_handheld" title="Handheld CSS"/>
+				<style id="style_print" title="CSS for print media"/>
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="bullet.gif" title=""/>
+				<image id="go.gif" title=""/>
+				<image id="path.gif" title=""/>
+				<image id="sign_story.gif" title=""/>
+				<image id="tip.gif" title=""/>
+				<image id="tableft.gif" title=""/>
+				<image id="tableft_on.gif" title=""/>
+				<image id="tabright.gif" title=""/>
+				<image id="tabright_on.gif" title=""/>
+				<image id="banner.jpg" title=""/>
+				<image id="portlet_right_bullet.gif" title=""/>
+				<image id="separ_1.gif" title=""/>
+				<image id="separ_2.gif" title=""/>
+				<image id="portlet-middle-bullet.gif" title=""/>
+			</scheme>
+			<scheme id="brown" title="Brown">
+				<style id="style" title="Main CSS"/>
+				<style id="style_common" title="Common CSS"/>
+				<style id="style_handheld" title="Handheld CSS"/>
+				<style id="style_print" title="CSS for print media"/>
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="bullet.gif" title=""/>
+				<image id="go.gif" title=""/>
+				<image id="path.gif" title=""/>
+				<image id="sign_story.gif" title=""/>
+				<image id="tip.gif" title=""/>
+				<image id="tableft.gif" title=""/>
+				<image id="tableft_on.gif" title=""/>
+				<image id="tabright.gif" title=""/>
+				<image id="tabright_on.gif" title=""/>
+				<image id="banner.jpg" title=""/>
+				<image id="portlet_right_bullet.gif" title=""/>
+				<image id="separ_1.gif" title=""/>
+				<image id="separ_2.gif" title=""/>
+				<image id="portlet-middle-bullet.gif" title=""/>
+			</scheme>
+			<scheme id="green" title="Green">
+				<style id="style" title="Main CSS"/>
+				<style id="style_common" title="Common CSS"/>
+				<style id="style_handheld" title="Handheld CSS"/>
+				<style id="style_print" title="CSS for print media"/>
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="bullet.gif" title=""/>
+				<image id="go.gif" title=""/>
+				<image id="path.gif" title=""/>
+				<image id="sign_story.gif" title=""/>
+				<image id="tip.gif" title=""/>
+				<image id="tableft.gif" title=""/>
+				<image id="tableft_on.gif" title=""/>
+				<image id="tabright.gif" title=""/>
+				<image id="tabright_on.gif" title=""/>
+				<image id="banner.jpg" title=""/>
+				<image id="portlet_right_bullet.gif" title=""/>
+				<image id="separ_1.gif" title=""/>
+				<image id="separ_2.gif" title=""/>
+				<image id="portlet-middle-bullet.gif" title=""/>
+			</scheme>
+			<scheme id="indigo" title="Indigo">
+				<style id="style" title="Main CSS"/>
+				<style id="style_common" title="Common CSS"/>
+				<style id="style_handheld" title="Handheld CSS"/>
+				<style id="style_print" title="CSS for print media"/>
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="bullet.gif" title=""/>
+				<image id="go.gif" title=""/>
+				<image id="path.gif" title=""/>
+				<image id="sign_story.gif" title=""/>
+				<image id="tip.gif" title=""/>
+				<image id="tableft.gif" title=""/>
+				<image id="tableft_on.gif" title=""/>
+				<image id="tabright.gif" title=""/>
+				<image id="tabright_on.gif" title=""/>
+				<image id="banner.jpg" title=""/>
+				<image id="portlet_right_bullet.gif" title=""/>
+				<image id="separ_1.gif" title=""/>
+				<image id="separ_2.gif" title=""/>
+				<image id="portlet-middle-bullet.gif" title=""/>
+			</scheme>
+		</skin>
+	</layout>
+	<portlets>
+		<portlet id="portlet_administration" title="Administration" />
+	</portlets>
+	<content maintopics="">
+		<folder id="stories" title="Stories" description="" coverage="" keywords="" publicinterface="1" maintainer_email="" sortorder="0" meta_types="Naaya Story">
+		</folder>
+		<folder id="news" title="News" description="" coverage="" keywords="" publicinterface="1" maintainer_email="" sortorder="0" meta_types="Naaya News">
+		</folder>
+		<folder id="events" title="Events" description="" coverage="" keywords="" publicinterface="1" maintainer_email="" sortorder="0" meta_types="Naaya Event">
+		</folder>
+	</content>
+</skel>
