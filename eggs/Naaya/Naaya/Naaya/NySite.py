@@ -158,6 +158,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
         """ """
+        self.manage_addProperty('management_page_charset', 'utf-8', 'string')
         languages = [DEFAULT_PORTAL_LANGUAGE_CODE]
         manage_addTranslationsTool(self, languages)
         manage_addLocalizer(self, TITLE_LOCALIZER, languages)
