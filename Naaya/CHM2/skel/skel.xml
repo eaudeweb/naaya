@@ -97,7 +97,9 @@
 		</skin>
 	</layout>
 	<portlets>
-		<portlet id="portlet_administration" title="Administration" />
+		<portlet id="portlet_administration" title="Administration"/>
+		<portlet id="portlet_lateststories" title="Latest stories"/>
+		<portlet id="portlet_latestnews" title="What's new"/>
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
 			<link id="100" title="Biodiversity CHM" description="Global Biodiversity Clearing-House Mechanism (CBD)" url="http://www.biodiv.org/chm" relative="0" permission="" order="10"/>
 			<link id="101" title="Europa" description="Gateway to the European Union" url="http://europa.eu.int/" relative="0" permission="" order="20"/>
