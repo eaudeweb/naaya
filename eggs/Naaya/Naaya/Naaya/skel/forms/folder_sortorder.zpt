@@ -11,12 +11,12 @@
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr>
 	<th class="type" i18n:translate="">Type</th>
-	<th class="title" i18n:translate="">Title</th>
+	<th class="title-column" i18n:translate="">Title</th>
 	<th class="edit" i18n:translate="">Sort order</th>
 </tr>
 <tr tal:repeat="folder folders">
 	<td class="type"><img tal:attributes="src folder/icon; alt folder/meta_type; title folder/meta_type" border="0" /></td>
-	<td class="title">
+	<td class="title-column">
 		<a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id"/>
 		<span tal:replace="structure folder/description" />
 		<input type="hidden" name="ids" tal:attributes="value folder/id" />
@@ -34,12 +34,12 @@
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr>
 	<th class="type" i18n:translate="">Type</th>
-	<th class="title" i18n:translate="">Title</th>
+	<th class="title-column" i18n:translate="">Title</th>
 	<th class="edit" i18n:translate="">Sort order</th>
 </tr>
 <tr tal:repeat="item items">
 	<td class="type"><img tal:attributes="src item/icon; alt item/meta_type; title item/meta_type" border="0" /></td>
-	<td class="title">
+	<td class="title-column">
 		<a tal:attributes="href item/absolute_url" tal:content="item/title_or_id"/>
 		<span tal:replace="structure item/description" />
 		<input type="hidden" name="ids" tal:attributes="value item/id" />
