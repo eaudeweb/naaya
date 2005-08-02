@@ -1,0 +1,110 @@
+# The contents of this file are subject to the Mozilla Public
+# License Version 1.1 (the "License"); you may not use this file
+# except in compliance with the License. You may obtain a copy of
+# the License at http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS
+# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+# implied. See the License for the specific language governing
+# rights and limitations under the License.
+#
+# The Initial Owner of the Original Code is European Environment
+# Agency (EEA).  Portions created by Finsiel Romania are
+# Copyright (C) European Environment Agency.  All
+# Rights Reserved.
+#
+# Authors:
+#
+# Cornel Nitu, Finsiel Romania
+# Dragos Chirila, Finsiel Romania
+
+#Python imports
+
+#Zope imports
+
+#Product imports
+
+# Types of portlets:
+#   0 - Static HTML
+#   1 - Links list
+#   2 - RemoteChannel
+#   3 - LocalChannel
+#   4 - Special (e.g. search, administration)
+PORTLETS_TYPES = {
+    0: 'Static HTML',
+    1: 'Links list',
+    2: 'Remote channel',
+    3: 'Local channel',
+    4: 'Folder',
+    100: 'Special'
+}
+
+#used for portlets that contains static HTML code
+DEFAULT_PORTLET_HEADER = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"><span tal:replace="template/title" /></tal:block>
+<tal:block metal:fill-slot="portlet_content">'''
+DEFAULT_PORTLET_FOOTER = '''</tal:block>
+</tal:block>'''
+
+#used to generate portlets for other types of objects: links list, rdf channels, folders etc.
+SIMPLE_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title">PORTLET_TITLE</tal:block>
+<tal:block metal:fill-slot="portlet_content">PORTLET_CONTENT</tal:block>
+</tal:block>'''
+
+HTML_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"><span tal:replace="here/title" /></tal:block>
+<tal:block metal:fill-slot="portlet_content"><span tal:replace="structure here/body" /></tal:block>
+</tal:block>'''
+
+LINKSLIST_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"><span tal:replace="python:here.getPortletsTool().PORTLET_LINKSLIST_ID.title_or_id()" /></tal:block>
+<tal:block metal:fill-slot="portlet_content">
+	<ul>
+	<tal:block tal:repeat="item python:here.getPortletsTool().PORTLET_LINKSLIST_ID.get_links_list()">
+		<li tal:condition="python:here.checkPermissionForLink(item.permission, here)">
+			<a tal:attributes="href python:test(item.relative, '%s%s' % (here.getSitePath(), item.url), item.url); title item/description" i18n:attributes="title" i18n:translate="" tal:content="item/title" />
+		</li>
+	</tal:block>
+	</ul>
+</tal:block>
+</tal:block>'''
+
+REMOTECHANNEL_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"><span tal:replace="python:here.getSyndicationTool().PORTLET_REMOTECHANNEL_ID.title_or_id()" /></tal:block>
+<tal:block metal:fill-slot="portlet_content">
+	<ul>
+		<li tal:repeat="item python:here.getSyndicationTool().PORTLET_REMOTECHANNEL_ID.getChannelItems()">
+			<a tal:attributes="href python:item['link']" tal:content="python:item['title']" />
+		</li>
+	</ul>
+</tal:block>
+</tal:block>'''
+
+LOCALCHANNEL_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"><span tal:replace="python:here.getSyndicationTool().PORTLET_LOCALCHANNEL_ID.title_or_id()" /></tal:block>
+<tal:block metal:fill-slot="portlet_content">
+	<ul>
+		<tal:block tal:repeat="item python:here.getSyndicationTool().PORTLET_LOCALCHANNEL_ID.get_objects_for_rdf()">
+		<li>
+			<a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id" />
+		</li>
+		</tal:block>
+	</ul>
+	<a tal:attributes="href python:here.getSyndicationTool().PORTLET_LOCALCHANNEL_ID.absolute_url()"><img src="misc_/EWCore/xml.png" width="36" height="14" border="0" alt="Syndication (XML)" i18n:attributes="alt" /></a>
+</tal:block>
+</tal:block>'''
+
+FOLDER_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title" tal:content="python:here.getFolderByPath('PORTLET_FOLDER_PATH').title_or_id()"></tal:block>
+<tal:block metal:fill-slot="portlet_content" tal:content="structure python:here.getFolderByPath('PORTLET_FOLDER_PATH').description"></tal:block>
+</tal:block>'''
+
+PORTLETS_BODIES = {
+    0: HTML_PORTLET_TEMPLATE,
+    1: LINKSLIST_PORTLET_TEMPLATE,
+    2: REMOTECHANNEL_PORTLET_TEMPLATE,
+    3: LOCALCHANNEL_PORTLET_TEMPLATE,
+    4: FOLDER_PORTLET_TEMPLATE,
+    100: SIMPLE_PORTLET_TEMPLATE
+}

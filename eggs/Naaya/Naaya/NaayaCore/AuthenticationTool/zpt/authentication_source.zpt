@@ -1,0 +1,15 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+
+	<tal:block tal:define="source_id python:request.get('id', '');
+							source_obj python:here.getSourceObj(source_id);">
+		<tal:block tal:condition="python:source_obj is not None">
+			<h3><span tal:replace="source_obj/title" /> - source for <span tal:replace="source_obj/obj_path" /></h3>
+			<span tal:replace="structure source_obj/interface_html" />
+		</tal:block>
+		<tal:block tal:condition="python:source_obj is None">
+			Invalid source id.
+		</tal:block>
+	</tal:block>
+
+<span tal:replace="structure here/manage_page_footer"/>
