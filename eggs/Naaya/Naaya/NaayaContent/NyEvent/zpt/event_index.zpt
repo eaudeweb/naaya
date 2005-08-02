@@ -1,0 +1,64 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_type; alt here/meta_type" border="0" /> <span tal:replace="here/title_or_id" /></h1>
+<tal:block tal:condition="python:here.checkPermissionEditObject()">
+	<tal:block tal:condition="python: not here.hasVersion()">
+		<a tal:attributes="href string:${here/absolute_url}/startVersion"><img src="misc_/Naaya/checkout" border="0" alt="Checkout - start new version" i18n:attributes="alt" /></a>
+		<a tal:attributes="href string:${here/absolute_url}/edit_html"><img src="/misc_/Naaya/edit" border="0" alt="Click here to edit object" i18n:attributes="alt" /></a>
+	</tal:block>
+	<a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><img src="/misc_/Naaya/checkin" border="0" alt="Version control" i18n:attributes="alt" /></a>
+</tal:block>
+<p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+
+<table border="0" cellspacing="2" cellpadding="2">
+<tr>
+	<th i18n:translate="">Period</th>
+	<td>
+	<tal:block condition="python:here.start_date != here.end_date">
+		[<span tal:replace="python:here.utShowDateTime(here.start_date)"/> - <span tal:replace="python:here.utShowDateTime(here.end_date)"/>]
+	</tal:block>
+	<tal:block condition="python:here.start_date == here.end_date">
+		<span tal:replace="python:here.utShowDateTime(here.start_date)"/>
+	</tal:block>
+	</td>
+</tr>
+<tr>
+	<th i18n:translate="">Location</th>
+	<td>
+		<span tal:replace="here/location" /> <a tal:attributes="href here/location" tal:content="here/location"/> <span tal:replace="here/location_address" />
+	</td>
+</tr>
+<tr>
+	<th i18n:translate="">Host</th>
+	<td tal:content="here/host">host</td>
+</tr>
+<tr tal:condition="here/agenda_url">
+	<th i18n:translate="">See the agenda</th>
+	<td><a tal:attributes="href here/agenda_url" tal:content="here/agenda_url">agenda url</a></td>
+</tr>
+<tr tal:condition="here/event_url">
+	<th i18n:translate="">Event URL</th>
+	<td><a tal:attributes="href here/event_url" tal:content="here/event_url" /></td>
+</tr>
+<tr>
+	<th valign="top" i18n:translate="">Contact</th>
+	<td><span tal:replace="here/contact_person"/>
+		<tal:block condition="here/contact_email">
+			<br /><span i18n:translate="Email address: " /> <span tal:replace="here/contact_email"/>
+		</tal:block>
+		<tal:block condition="here/contact_phone">
+			<br /><span i18n:translate="Phone: " /> <span tal:replace="here/contact_phone"/>
+		</tal:block>
+		<tal:block condition="here/contact_fax">
+			<br /><span i18n:translate="Fax: " /> <span tal:replace="here/contact_fax"/>
+		</tal:block>
+	</td>
+</tr>
+<tr>
+	<th i18n:translate="">Released</th>
+	<td tal:content="python:here.utShowDateTime(here.releasedate)"/>
+</tr>
+</table>
+<p tal:condition="python:here.details!=''" tal:content="structure here/details" />
+
+<span tal:replace="structure here/standard_html_footer" />
