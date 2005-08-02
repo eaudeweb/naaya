@@ -107,4 +107,8 @@
 		<folder id="events" title="Events" description="" coverage="" keywords="" publicinterface="1" maintainer_email="" sortorder="0" meta_types="Naaya Event">
 		</folder>
 	</content>
+	<others>
+		<favicon />
+		<robots />
+	</others>
 </skel>
