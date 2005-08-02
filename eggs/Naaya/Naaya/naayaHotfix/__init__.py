@@ -67,6 +67,7 @@ LOG('naayaHotfix', DEBUG, 'Patch for Localizer and other stuff')
 from Products.TextIndexNG2.converters import doc, ppt, ps, ooffice, pdf, xls
 from Products.TextIndexNG2.Registry import ConverterRegistry
 
+
 def doc_convert2(self, doc, encoding, mimetype):
     if encoding:
         return self.convert(doc), encoding
@@ -137,3 +138,160 @@ for t in converter.getType():
         LOG('naayaHotfix', INFO, 'Converter "%s" for %s registered' % (cv, t))
     except:
         LOG('naayaHotfix', INFO, 'Converter "%s" for %s NOT registered' % (cv, t))
+
+
+from zLOG import ERROR, WARNING, LOG
+from OFS.content_types import guess_content_type
+from Products.TextIndexNG2.Registry import NormalizerRegistry
+from Products.TextIndexNG2.Registry import SplitterRegistry, RegistryException
+from Products.TextIndexNG2.TextIndexNG import TextIndexNG
+
+def _index_object(self, documentId, obj, threshold=None, attr=''):
+
+    encoding = self.default_encoding
+    source = mimetype = None
+
+    # This is to support foreign file formats that
+    # are stored as "File" objects when searching
+    # through PrincipiaSearchSource
+
+    if hasattr(obj, 'txng_get'):
+        # Check if the object has a method txng_get()
+        result = obj.txng_get([attr])
+        if result is None: return None
+        source, mimetype, encoding = result
+
+    elif obj.meta_type in ('File', 'Portal File', 'Naaya File') and  \
+       attr in ('PrincipiaSearchSource', 'SearchableText'):
+
+        source= getattr(obj, attr, None)
+        if source and not self.use_converters:
+            if callable(source): source = source()
+        else:              
+            source = str(obj)
+        mimetype = obj.content_type
+
+    elif obj.meta_type == 'ExtFile' and \
+       attr in ('PrincipiaSearchSource', 'SearchableText'):
+        source = obj.index_html()
+        mimetype = obj.getContentType()
+
+    elif obj.meta_type in ('ZMSFile',):
+        lang = attr[attr.rfind('_')+1:]
+        req = {'lang' : lang}
+        file = obj.getObjProperty('file', req)
+        source = ''
+        mimetype = None
+        if file:
+            source = file.getData()
+            mimetype = file.getContentType()
+
+    elif obj.meta_type in ('TTWObject',) and attr not in ('SearchableText', ): 
+        field = obj.get(attr)
+        source = str(field)
+        if field.meta_type in ( 'ZMSFile', 'File' ):
+            mimetype = field.getContentType()
+        else:
+            mimetype = None
+
+    else:
+        # default behaviour: try to obtain the source from
+        # the attribute or method call return value
+
+        try:
+            source = getattr(obj, attr)
+            if callable(source): source = source()
+            if not isinstance(source, unicode):
+                source = str(source)
+        except (AttributeError, TypeError):
+            return None
+    
+    # If enabled, we try to find a valid document converter
+    # and convert the data to get a hopefully text only representation
+    # of the data.
+
+    if self.use_converters:
+        if mimetype is None or mimetype == 'application/octet-stream':
+            mimetype, encoding = guess_content_type(obj.getId(), source)
+            if not encoding:
+                encoding = self.default_encoding
+
+        try: 
+            converter = ConverterRegistry.get(mimetype)
+        except RegistryException: 
+            LOG('textindexng', ERROR, '%s could not be converted because no converter could be found for %s' % (obj.absolute_url(1), mimetype))
+            return None
+
+        if converter:
+            try:
+                source, encoding = converter.convert2(source, encoding, mimetype)
+            except:
+                try:
+                    source = converter.convert(source)
+                except:
+                    LOG('textindexng', ERROR, '%s could not be converted' % obj.absolute_url(1), error=sys.exc_info())
+                    return None
+
+        if obj.meta_type == 'Portal File': 
+            source += ' ' + obj.SearchableText()
+
+    # Now we try to get a valid encoding. For unicode strings
+    # we have to perform no action. For string objects we check
+    # if the document has an attibute (not a method) '<index>_encoding'.
+    # As fallback we also check for the presence of an attribute
+    # 'document_encoding'. Checking for the two attributes allows
+    # us to define different encodings for different attributes
+    # on an object. This is useful when an object stores multiple texts
+    # as attributes within the same instance (e.g. for multilingual
+    # versions of a text but with different encodings). 
+    # If no encoding is specified as object attribute, we will use
+    # Python's default encoding.
+    # After getting the encoding, we convert the data to unicode.
+
+    if isinstance(source, str):
+        if encoding is None:
+            try: encoding = self.default_encoding
+            except: encoding = self.default_encoding = 'iso-8859-15'
+
+            for k in ['document_encoding', attr + '_encoding']:
+                enc = getattr(obj, k, None)
+                if enc is not None: encoding = enc  
+
+        if encoding=='ascii': encoding ='iso-8859-15'         
+        try:
+            source = unicode(source, encoding, 'strict')
+        except UnicodeDecodeError:
+            LOG('textindexng', WARNING, 'UnicodeDecodeError raised from %s - ignoring unknown unicode characters'  % obj.absolute_url(1))
+            source = unicode(source, encoding, 'ignore')
+
+    elif isinstance(source, unicode):  pass
+    else: raise TXNGError,"unknown object type" 
+
+    source = source.strip()
+    if not source: return None
+
+    # Normalization: apply translation table to data
+    if self.use_normalizer:
+        source = NormalizerRegistry.get(self.use_normalizer).process(source)    
+
+    # Split the text into a list of words
+    SP = SplitterRegistry.get(self.use_splitter)
+
+    _source = source
+    words = SP(casefolding  = self.splitter_casefolding,
+               separator    = self.splitter_separators,
+               maxlen       = self.splitter_max_len,
+               singlechar   = self.splitter_single_chars
+               ).split(_source)
+
+    #  remove stopwords from data
+    if self.use_stopwords:
+        words = self.use_stopwords.process( words ) 
+
+    # We pass the list of words to the corresponding lexicon
+    # and obtain a list of wordIds. The "old" TextIndex iterated
+    # over every single words (overhead).
+    return self._lexicon.getWordIdList(words)
+
+
+TextIndexNG._index_object = _index_object
