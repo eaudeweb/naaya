@@ -67,6 +67,15 @@ class CHMSite(NySite):
         NySite.__dict__['loadDefaultData'](self)
         self.loadSkeleton(join(CHM2_PRODUCT_PATH, 'skel'))
 
+    #api
+    def getOnFrontNews(self):
+        #returns a list with the news marked as on front
+        news_ob = self._getOb('news', None)
+        if news_ob is not None:
+            return [x for x in news_ob.objectValues(METATYPE_NYNEWS) if x.approved==1 and x.topitem==1]
+        else:
+            return []
+
     #administration pages
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_urls_html')
     def admin_urls_html(self, REQUEST=None, RESPONSE=None):
