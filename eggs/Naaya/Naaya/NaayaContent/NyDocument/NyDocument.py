@@ -127,7 +127,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
-        return u' '.join([self._objectkeywords(), self.getLocalProperty('body', lang)])
+        return u' '.join([self._objectkeywords(lang), self.getLocalProperty('body', lang)])
 
     security.declarePrivate('exportThisCustomProperties')
     def exportThisCustomProperties(self):
