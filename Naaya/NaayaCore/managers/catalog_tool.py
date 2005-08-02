@@ -88,6 +88,9 @@ class catalog_tool:
         l_criteria = l_filter.copy()
         l_criteria['objectkeywords_%s' % lang] = p_query
         l_result.extend(self.__searchCatalog(l_criteria))
+        l_criteria = l_filter.copy()
+        l_criteria['PrincipiaSearchSource'] = p_query
+        l_result.extend(self.__searchCatalog(l_criteria))
         return l_result
 
     def searchCatalog(self, p_query, p_path, lang):
