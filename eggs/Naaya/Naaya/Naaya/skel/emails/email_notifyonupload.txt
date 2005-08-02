@@ -1,0 +1,9 @@
+Dear Sir or Madam,
+
+The item @@ITEMID@@ is uploaded to the library @@CONTAINERPATH@@.
+
+Upload time @@UPLOADTIME@@.
+
+Click here to approve it @@CONTAINERBASKETPATH@@.
+
+Best Regards

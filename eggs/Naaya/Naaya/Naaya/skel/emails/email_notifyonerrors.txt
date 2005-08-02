@@ -1,0 +1,9 @@
+An error was encountered at the following adrress @@URL@@.
+
+Error type - @@ERRORTYPE@@.
+Error value - @@ERRORVALUE@@.
+
+The request was made from the ip address - @@IPADDRESS@@.
+User who made the request  - @@USER@@.
+
+Time of the request - @@TIMEOFREQUEST@@.

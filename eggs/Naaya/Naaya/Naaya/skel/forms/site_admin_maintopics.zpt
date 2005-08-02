@@ -1,0 +1,77 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Main topics</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				maintopics here/getMainTopics">
+<p i18n:translate="">
+	This section allows administrators to manage the main topics.
+	You can set the order by drag and drop the boxes and click <strong>Save positions</strong>.
+</p>
+<style type="text/css">
+<!--
+	ul.boxy {
+		list-style-type: none;
+		padding: 0px;
+		margin: 0px;
+		width: 30em;
+	}
+	ul.boxy li {
+		cursor:move;
+		padding: 4px;
+		border: 1px solid #ccc;
+		background-color: #eee;
+	}
+	#maintopicslist {
+		margin-bottom: 1em;
+	}
+	#maintopicslist li {
+		margin-bottom: 0px;
+		margin-top: 4px;
+	}
+	#maintopicslist .chk {
+		margin: 0px;
+	}
+//-->
+</style>
+<script language="javascript" type="text/javascript">
+<!--
+function fSave(action)
+{
+	document.forms['frmDragDrop'].positions.value = junkdrawer.serializeList(document.getElementById('maintopicslist'));
+	document.forms['frmDragDrop'].action=action;
+}
+//-->
+</script>
+
+<form name="frmDragDrop" method="post">
+<ul id="maintopicslist" class="boxy">
+	<li tal:repeat="item maintopics" tal:attributes="itemID item/id">
+		<input type="checkbox" class="chk" name="ids" tal:attributes="value item/id" />
+		<span tal:replace="python:here.utTruncateString(item.title_or_id(), 40)" />
+	</li>
+</ul>
+<span tal:replace="structure python:here.DragDropHidden(maintopics)" />
+<input type="submit" value="Save positions" i18n:attributes="value" tal:attributes="onclick string:fSave('${site_url}/admin_ordermaintopics')" />
+<input type="submit" value="Delete" i18n:attributes="value" tal:attributes="onclick string:fSave('${site_url}/admin_deletemaintopics')" />
+</form>
+<span tal:replace="structure python:here.DragDropCore('maintopicslist')" />
+
+<fieldset>
+<legend i18n:translate="">Add new main topic</legend>
+<form method="post" tal:attributes="action string:${site_url}/admin_addmaintopics">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+<tr>
+	<td i18n:translate="">Title</td>
+	<td><input type="text" name="title" size="50" value="" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><input type="submit" value="Add" i18n:attributes="value" /></td>
+</tr>
+</form>
+</fieldset>
+</tal:block>
+
+</tal:block>

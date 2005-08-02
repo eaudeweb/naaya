@@ -1,0 +1,14 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<div id="right_port">
+	<tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
+		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+	</tal:block>
+</div>
+
+<span tal:replace="structure here/description" />
+<tal:block tal:repeat="item here/get_center_portlets_objects">
+	<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})" />
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />
