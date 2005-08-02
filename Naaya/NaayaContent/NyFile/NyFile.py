@@ -315,6 +315,7 @@ class NyFile(NyAttributes, NyItem, file_item, NyVersioning, NyCheckControl, NyVa
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
             self.version.handleUpload(source, file, url)
+        self.recatalogNyObject(self)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
