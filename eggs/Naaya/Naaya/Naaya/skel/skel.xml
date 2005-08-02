@@ -15,6 +15,7 @@
 		<form id="site_login" title="Portal login"/>
 		<form id="site_logout" title="Portal logout"/>
 		<form id="site_unauthorized" title="Portal logout"/>
+		<form id="site_accessibility_statement" title="Accessibility statement"/>
 		<form id="site_external_search" title="Portal external search"/>
 		<form id="site_search" title="Portal search"/>
 		<form id="site_sitemap" title="Portal site map"/>

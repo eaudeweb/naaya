@@ -1831,6 +1831,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_unauthorized')
 
+    security.declareProtected(view, 'accessibility_html')
+    def accessibility_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_accessibility_statement')
+
     security.declareProtected(view, 'search_html')
     def search_html(self, REQUEST=None, RESPONSE=None):
         """ """
