@@ -33,7 +33,7 @@ from constants import *
 #read list of directories
 dirs = []
 for x in listdir(NAAYACONTENT_PRODUCT_PATH):
-    if isdir(join(NAAYACONTENT_PRODUCT_PATH, x)):
+    if isdir(join(NAAYACONTENT_PRODUCT_PATH, x)) and x.startswith('Ny'):
         dirs.append(x)
 
 #run imports
