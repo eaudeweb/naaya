@@ -35,6 +35,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
 from ZPublisher import BeforeTraverse
+from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
 import Products
 
 #Product imports
@@ -169,6 +170,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
         manage_addPortletsTool(self)
         manage_addFormsTool(self)
         manage_addLayoutTool(self)
+        manage_addErrorLog(self)
         self.loadSkeleton(join(NAAYA_PRODUCT_PATH, 'skel'))
 
     security.declarePrivate('loadSkeleton')
@@ -287,15 +289,19 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
                 properties_tool.manageMainTopics(skel_handler.root.content.maintopics.split(','))
             #other stuff
             if skel_handler.root.others is not None:
-                if skel_handler.root.others.favicon is not None:
+                if skel_handler.root.others.robots is not None:
                     content = self.futRead(join(skel_path, 'others', 'robots.txt'), 'r')
-                    self.manage_addFile(id='robots.txt', file='', title='')
+                    file_ob = self._getOb('robots.txt', None)
+                    if file_ob is None:
+                        self.manage_addFile(id='robots.txt', file='', title='')
                     file_ob = self._getOb('robots.txt')
                     file_ob.update_data(data=content)
                     file_ob._p_changed=1
-                if skel_handler.root.others.robots is not None:
+                if skel_handler.root.others.favicon is not None:
                     content = self.futRead(join(skel_path, 'others', 'favicon.ico'), 'rb')
-                    self.manage_addImage(id='favicon.ico', file='', title='')
+                    image_ob = self._getOb('favicon.ico', None)
+                    if image_ob is None:
+                        self.manage_addImage(id='favicon.ico', file='', title='')
                     image_ob = self._getOb('favicon.ico')
                     image_ob.update_data(data=content)
                     image_ob._p_changed=1

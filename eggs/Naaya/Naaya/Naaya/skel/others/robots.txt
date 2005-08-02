@@ -1,5 +1,6 @@
 User-agent: *
-Disallow: /Localizer/
+
+#Disallow Naaya core tools
 Disallow: /acl_users/
 Disallow: /portal_catalog/
 Disallow: /portal_dynamicproperties/
@@ -10,3 +11,7 @@ Disallow: /portal_portlets/
 Disallow: portal_properties
 Disallow: /portal_syndication/
 Disallow: /portal_translations/
+
+#Disallow other products
+Disallow: /Localizer/
+Disallow: error_log

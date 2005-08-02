@@ -484,9 +484,9 @@ class skel_handler(ContentHandler):
         elif name == 'favicon':
             self.stack[-1].obj.favicon = 1
         elif name == 'robots':
-            self.stack[-1].obj.favicon = 1
+            self.stack[-1].obj.robots = 1
         elif name == 'images':
-            self.stack[-1].obj.favicon = 1
+            self.stack[-1].obj.images = 1
 
     def characters(self, content):
         if len(self.stack) > 0:
