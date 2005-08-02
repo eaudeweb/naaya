@@ -365,6 +365,7 @@
 			}
 
 	td#center_cell {
+vertical-align: top;
 		border-bottom:1px solid #d4e28c; /*1px solid #d3e189*/ /*1px solid #d8d8d8*/ /*1px solid #acb9c1*/ /*1px solid #cfe0b4*/
 		border-left:1px solid #d4e28c; /*1px solid #d3e189*/ /*1px solid #d8d8d8*/ /*1px solid #acb9c1*/ /*1px solid #cfe0b4*/
 		border-right:1px solid #d4e28c; /*1px solid #d3e189*/ /*1px solid #d8d8d8*/ /*1px solid #acb9c1*/ /*1px solid #cfe0b4*/
@@ -374,7 +375,7 @@
 
 	#content{
 
-	
+	vertical-align: top;
 		border-top:0px solid #ffffff; /*0px solid #ffffff*/ /*0px solid #ffffff*/ /* 0px solid #637785*/ /*0px solid #637048*/
 		margin-right: 1px;
 		padding:0em;
