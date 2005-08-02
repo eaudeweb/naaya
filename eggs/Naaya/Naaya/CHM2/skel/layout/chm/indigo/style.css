@@ -365,6 +365,7 @@
 			}
 
 	td#center_cell {
+vertical-align: top;
 		border-bottom:1px solid #acb9c1; /*1px solid #cfe0b4*/ /*1px solid #d4e28c*/ /*1px solid #d3e189*/ /*1px solid #d8d8d8*/
 		border-left:1px solid #acb9c1; /*1px solid #cfe0b4*/ /*1px solid #d4e28c*/ /*1px solid #d3e189*/ /*1px solid #d8d8d8*/
 		border-right:1px solid #acb9c1; /*1px solid #cfe0b4*/ /*1px solid #d4e28c*/ /*1px solid #d3e189*/ /*1px solid #d8d8d8*/
