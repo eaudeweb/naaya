@@ -98,11 +98,11 @@
 		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="portlet_maincategories" title="Main categories" />
 		<portlet id="portlet_latestuploads" title="Latest uploads" />
-		<linkslist id="topnav_links" title="Top navigation links" portlet="0">
+		<linkslist id="topnav_links" title="Top navigation links" portlet="">
 			<link id="102" title="Finsiel" description="Finsiel Romania" url="http://www.finsiel.ro" relative="0" permission="" order="2"/>
 			<link id="103" title="Naaya" description="EnviroWindows Publisher" url="http://publisher.finsiel.ro/" relative="0" permission="" order="3"/>
 		</linkslist>
-		<linkslist id="menunav_links" title="Menu navigation links" portlet="0">
+		<linkslist id="menunav_links" title="Menu navigation links" portlet="">
 			<link id="102" title="Login" description="Login page" url="login_html" relative="0" permission="" order="2"/>
 			<link id="108" title="Other searches" description="" url="/external_search_html" relative="1" permission="" order="8"/>
 			<link id="109" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="9"/>
