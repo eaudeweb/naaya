@@ -134,6 +134,24 @@
 		</folder>
 		<folder id="events" title="Events" description="" coverage="" keywords="" publicinterface="1" maintainer_email="" sortorder="0" meta_types="Naaya Event">
 		</folder>
+		<folder id="info" title="Information" description="" coverage="" keywords="" publicinterface="" maintainer_email="" sortorder="0" meta_types="">
+			<document id="copyright" title="Copyright" description="" coverage="" keywords="" sortorder="0">
+				<![CDATA[
+<p><span class="font-weight: bold;">&copy; European Communities, 2000</span></p>
+<p>Reproduction of information provided on this web site is authorised, except for 
+commercial purposes, provided the source is acknowledged. Information 
+on the European Community Clearing-House Mechanism web site does 
+not necessarily engage the responsibility of the European Institutions. 
+While our goal is to keep this information timely and accurate, 
+we cannot guarantee either. If errors are brought to our attention, 
+we will try to correct them. Some of the documents and multimedia 
+sequences on this server might contain references, or pointers, 
+to information maintained by other organisations. Please note that 
+we do not control and cannot guarantee the relevance, timeliness 
+or accuracy of these outside materials.</p>
+				]]>
+			</document>
+		</folder>
 	</content>
 	<others>
 		<favicon />

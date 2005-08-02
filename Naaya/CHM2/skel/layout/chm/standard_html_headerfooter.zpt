@@ -126,9 +126,9 @@
 </div>
 <div id="footer">
 <div class="horizlist">
-	[<a tal:attributes="href string:${site_url}/copyright_html" i18n:translate="">Copyright</a>]
+	[<a tal:attributes="href string:${site_url}/info/copyright" i18n:translate="">Copyright</a>]
 	[<a tal:attributes="href string:${site_url}/HelpDesk/" accesskey="9" i18n:translate="">Feedback and helpdesk</a>]
-	[<a tal:attributes="href string:${site_url}/accessibility_html" accesskey="0" i18n:translate="">Accessibility statement</a>]
+	[<a tal:attributes="href string:${site_url}/info/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>]
 </div>
 </div>
 </body>
