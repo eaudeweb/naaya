@@ -318,12 +318,19 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
         #create default folders structure
         if folder.meta_types == '': meta_types = ''
         else: meta_types = folder.meta_types.split(',')
-        addNyFolder(node, folder.id, folder.title, folder.description, folder.coverage, folder.keywords,
-            folder.sortorder, folder.publicinterface, folder.maintainer_email, meta_types)
-        ob = node._getOb(folder.id)
-        ob.modifyPublicInterface(folder.index_html)
+        folder_ob = node._getOb(folder.id, None)
+        if folder_ob is None:
+            addNyFolder(node, folder.id, folder.title, folder.description, folder.coverage, folder.keywords,
+                folder.sortorder, folder.publicinterface, folder.maintainer_email, meta_types)
+            folder_ob = node._getOb(folder.id)
+        folder_ob.modifyPublicInterface(folder.index_html)
+        for item in folder.items:
+            if item.type == METATYPE_NYDOCUMENT:
+                folder_ob.addNyDocument(id=item.id, title=item.title, description=item.description,
+                    coverage=item.coverage, keywords=item.keywords, sortorder=item.sortorder,
+                    body=item.body)
         for item in folder.folders:
-            self.loadFolderData(ob, item)
+            self.loadFolderData(folder_ob, item)
 
     #overwrite handlers
     def manage_beforeDelete(self, item, container):
@@ -1830,11 +1837,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
     def unauthorized_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_unauthorized')
-
-    security.declareProtected(view, 'accessibility_html')
-    def accessibility_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_accessibility_statement')
 
     security.declareProtected(view, 'search_html')
     def search_html(self, REQUEST=None, RESPONSE=None):
