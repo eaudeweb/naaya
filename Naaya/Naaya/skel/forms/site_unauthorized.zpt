@@ -1,0 +1,7 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<H1>Access denied</H1>
+<div>This account does not have sufficient rights to access this resource.
+Please contact the site administrator for more information.</div>
+
+<span tal:replace="structure here/standard_html_footer"/>

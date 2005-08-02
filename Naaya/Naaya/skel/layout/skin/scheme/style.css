@@ -1,0 +1,194 @@
+<span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')"/>
+
+.skiplink {
+	display: none;
+}
+
+
+#language {
+	float: right;
+	margin-right: 1em;
+}
+
+#language form {
+	margin:0;
+}
+
+#header {
+	position: relative;
+	border: 1px solid #000000;
+}
+
+#header img {
+	margin-left: 1%;
+}
+
+#breadcrumbtrail {
+	clear: both;
+	margin: 1% 0% 1% 20%;
+}
+
+#middle_port {
+	padding-left: 1%; padding-right: 1%;
+	padding-bottom: 4%;
+	margin-bottom: 10px;
+	margin-left: 20%;
+	border: 1px solid #000000;
+}
+
+.center_portlet {
+	margin-bottom: 10px;
+}
+.center_portlet .center_portlet_title {
+	background-color: #dddddd;
+}
+.center_portlet .center_portlet_content {
+	border: 1px solid #dddddd;
+}
+
+#left_port {
+	float: left;
+	width: 18%;
+	margin-bottom: 10px;
+	border: 1px solid #000000;
+}
+
+.left_portlet {
+	margin-bottom: 10px;
+}
+.left_portlet .left_portlet_title {
+	background-color: #cccccc;
+}
+.left_portlet .left_portlet_content {
+	border: 1px solid #cccccc;
+}
+
+#right_port {
+	float: right;
+	width: 25%;
+	margin-left: 10px;
+	margin-bottom: 10px;
+	background-color: #ffffff;
+}
+
+.right_portlet {
+	margin-bottom: 10px;
+}
+.right_portlet .right_portlet_title {
+	background-color: #eeeeee;
+}
+.right_portlet .right_portlet_content {
+	border: 1px solid #eeeeee;
+}
+
+#footer {
+	clear: both;
+	text-align: center;
+	vertical-align: middle;
+	padding-top: 2px;
+	padding-bottom: 5px;
+	border: 1px solid #000000;
+}
+
+#toptitle {
+	margin-left: 20%;
+	margin-top: 0.5em;
+}
+	
+#last_modified {
+	margin: 1% 0% 1% 20%;
+}
+
+#topnav {
+}
+#topnav ul {
+	margin:0;
+	padding:0;
+	display: inline; 
+	list-style-type: none;
+}
+#topnav li {
+	margin-right:1em;
+	padding:0;
+	display: inline;
+}
+
+#menunav {
+	clear: both;
+}
+#menunav ul {
+	margin:0;
+	padding:0;
+	list-style-type:none;
+	display:inline;
+}
+#menunav li {
+	margin-right:1em;
+	padding:0;
+	display:inline;
+}
+
+#search {
+	float: right;
+}
+
+#search form {
+	margin:0;
+}
+
+#tabbedmenu {
+	float:left;
+	width:100%;
+	border-bottom: thin solid #E3E2D3;
+	font-size: 0.8em;
+	line-height:normal;
+}
+#tabbedmenu ul {
+	margin:0;
+	padding:10px 10px 0;
+	list-style:none;
+}
+#tabbedmenu li {
+	float:left;
+	background:url("tableft.gif") no-repeat left top;
+	margin:0;
+	padding:0 0 0 5px;
+	white-space: nowrap;
+}
+#tabbedmenu a {
+	display:block;
+	text-decoration: none;
+	font-weight: bold;
+	color: black;
+	background:url("tabright.gif") no-repeat right top;
+	padding:5px 10px 4px 6px;
+}
+#tabbedmenu #currenttab {
+	background-image:url("tableft_on.gif");
+}
+#tabbedmenu #currenttab a {
+	text-decoration: none;
+	font-weight: bold;
+	background-image:url("tabright_on.gif");
+	padding-bottom: 5px;
+}
+#tabbedmenu #currenttab span {
+	display:block;
+	text-decoration: none;
+	font-weight: bold;
+	background:url("tabright_on.gif") no-repeat right top;
+	padding:5px 15px 4px 6px;
+}
+
+.page_title {}
+.page_subtitle {}
+
+
+/*	EPOZ buttons	*/
+#epoz_button_strikethrough {display:none;}
+#epoz_button_subscript {display:none;}
+#epoz_button_superscript {display:none;}
+#epoz_button_unformat {display:none;}
+#epoz_button_anchor {display:none;}
+#epoz_button_undo {display:none;}
+#epoz_button_redo {display:none;}

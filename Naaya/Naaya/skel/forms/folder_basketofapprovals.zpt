@@ -1,0 +1,68 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 i18n:translate="">Basket of approvals</h1>
+
+<p i18n:translate="">
+	This page lists all the pending (not yet approved) items from this folder that have been submitted
+	portal contributors. After reviewing them, select <strong>Approve</strong> or <strong>Delete</strong>
+	for any subset and click <strong>Save changes</strong>.
+</p>
+
+<script type="text/javascript">
+<!--
+function checkApp(control, operation)
+{
+	var listControls = eval("document.aForm." + operation);
+	for (var i=0; i < listControls.length; i++)
+	{
+		if (listControls[i].value == control.value)
+			var theIndex = i;
+	}
+	if (operation == 'app')
+		the_other = eval("document.aForm.del")[theIndex];
+	else
+		the_other = eval("document.aForm.app")[theIndex];
+	if (control.checked == true)
+	{
+		the_other.checked = false;
+	}
+}
+-->
+</script>
+
+<tal:block tal:define="pendings here/getPendingContent">
+<tal:block tal:condition="python:len(pendings)>0">
+<form action="updateBasketOfApprovals" method="post" name="aForm" id="aForm">
+<table border="0" cellspacing="2" cellpadding="2" align="center">
+	<tr>
+		<th></th>
+		<th i18n:translate="">Submitted at</th>
+		<th i18n:translate="">Title</th>
+		<th i18n:translate="">Edit</th>
+		<th i18n:translate="">Approve</th>
+		<th i18n:translate="">Delete</th>
+	</tr>
+	<tr tal:repeat="item pendings">
+		<td width="1%"><img tal:attributes="src item/icon" border="0" /></td>
+		<td tal:content="python:here.utShowDateTime(item.releasedate)" />
+		<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id"/></td>
+		<td><a tal:attributes="href string:${item/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a></td>
+		<td><input type="checkbox" name="app" tal:attributes="value item/id" onclick="javascript:checkApp(this, 'app')" /></td>
+		<td><input type="checkbox" name="del" tal:attributes="value item/id" onclick="javascript:checkApp(this, 'del')" /></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td colspan="5">
+			<input type="submit" value="Save changes" i18n:attributes="value" />
+			<input type="reset" value="Reset" i18n:attributes="value" />
+		</td>
+	</tr>
+</table>
+</form>
+</tal:block>
+<tal:block tal:condition="python:len(pendings)==0">
+	<strong i18n:translate="">No pending items to review.</strong>
+</tal:block>
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />

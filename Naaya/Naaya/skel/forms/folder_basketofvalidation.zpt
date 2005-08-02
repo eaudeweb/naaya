@@ -1,0 +1,38 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 i18n:translate="">Basket of validation</h1>
+
+<p i18n:translate="">
+	This page lists the items from this folder along with their validation status. After reviewing them, select <strong>Checked - OK</strong> is the information contained by an item is still valid or <strong>Checked - Not OK</strong>, in which case you must enter a comment explaining why. Click <strong>Save changes</strong> in the end.
+</p>
+
+<tal:block tal:define="all_items here/getObjectsForValidation">
+<tal:block tal:condition="python:len(all_items)>0">
+<form action="updateBasketOfInvalidObjects" method="post">
+<dl tal:repeat="item all_items">
+	<dt><img tal:attributes="src item/icon" border="0" />
+		<a tal:attributes="href string:${item/absolute_url}/index_html"><span tal:content="item/title_or_id"/></a>
+		[<span i18n:translate="">released at</span>: <em tal:content="python:here.utShowDateTime(item.releasedate)" />]</dt>
+	<dd><fieldset><legend i18n:translate="">Validate</legend>
+		<span i18n:translate="">Last validated</span>: 
+		<em tal:condition="item/validation_date"><span tal:content="python:here.utShowDateTime(item.validation_date)"/>, <span i18n:translate="">by</span> <span tal:content="item/validation_by" /></em>
+		<em tal:condition="python:not item.validation_date" i18n:translate="">never</em><br/>
+		<input type="radio" tal:attributes="name python:'radio_' + item.id; checked python:item.validation_status==0" value="0" /> <span i18n:translate="" tal:omit-tag="">Not checked</span>
+		<input type="radio" tal:attributes="name python:'radio_' + item.id; checked python:item.validation_status==1" value="1" /> <span i18n:translate="" tal:omit-tag="">Checked - OK</span>
+		<input type="radio" tal:attributes="name python:'radio_' + item.id; checked python:item.validation_status==-1" value="-1"/> <span i18n:translate="" tal:omit-tag="">Checked - Not OK</span>
+		<input type="hidden" name="id" tal:attributes="value item/id" />
+		<textarea tal:attributes="name python:'comment_' + item.id"  rows="3" cols="30" tal:content="item/validation_comment"></textarea>
+		</fieldset>
+	</dd>
+</dl>
+	<input type="submit" value="Save changes" i18:attributes="value" />
+	<input type="reset" value="Reset" i18:attributes="value" />
+	<input type="hidden" name="username" tal:attributes="value python:request.AUTHENTICATED_USER.getUserName()" />
+</form>
+</tal:block>
+<tal:block tal:condition="python:len(all_items)==0">
+	<strong i18n:translate="">No items to validate.</strong>
+</tal:block>
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer"/>

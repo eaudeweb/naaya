@@ -1,0 +1,14 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<h1>Feedback to Webmaster</h1>
+
+<form method="post" tal:attributes="action string:${here/getSitePath}/processFeedbackForm">
+<table border="0" cellspacing="2" cellpadding="2">
+    <tr><td>Full name</td><td><input type="text" name="username" size="40" value="" /></td></tr>
+    <tr><td>Email address</td><td><input type="text" name="email" size="40" value="" /></td></tr>
+    <tr><td valign="top">Comments<br/>(if any)</td><td><textarea name="comments" rows="10" cols="50"></textarea></td></tr>
+    <tr><td>&nbsp;</td><td><input type="submit" value="Send" /></td></tr>
+</table>
+</form>
+
+<span tal:replace="structure here/standard_html_footer"/>

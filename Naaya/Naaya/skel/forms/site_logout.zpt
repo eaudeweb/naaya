@@ -1,0 +1,16 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<tal:block define="user python:here.is_logged(request)">
+
+<span tal:condition="python:user==0">
+	<h1 i18n:translate="">You have been successfully logged out.</h1>
+</span>
+
+<span tal:condition="python:user==1">
+	<span i18n:translate="" tal:omit-tag="">You are logged in using HTTP authentication. You may need to</span>
+	<a href="/manage_zmi_logout" i18n:translate="">log out of the Zope management interface</a>.
+</span>
+
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer"/>

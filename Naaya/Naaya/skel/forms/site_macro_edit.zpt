@@ -1,0 +1,115 @@
+<tal:block metal:define-macro="page">
+
+<tal:block tal:replace="structure here/standard_html_header"/>
+
+<tal:block tal:condition="python:(not here.hasVersion()) or (here.hasVersion() and here.isVersionAuthor())">
+
+<h1 metal:define-slot="title" i18n:translate="">Edit object</h1>
+
+<tal:block define="languages python:here.get_languages_mapping(); curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
+
+<div class="version_box" tal:condition="here/hasVersion">
+	<span i18n:translate="" tal:omit-tag="">
+		<strong>You are working on a version of this item.</strong> In order to save the work done in the version and make it accessible to all end users, click on the <strong>Commit</strong> button. To permanently discard the work done in the version, click on the <strong>Discard</strong> button.
+	</span>
+	<br /><br />
+	<form style="display: inline;" action="commitVersion"><input type="submit" value="Commit" i18n:attributes="value" /></form>
+	<form style="display: inline;" action="discardVersion"><input type="submit" value="Discard" i18n:attributes="value" /></form>
+</div>
+
+<p metal:define-slot="description" i18n:translate="">Description</p>
+
+<script language="javascript" type="text/javascript">
+<!--
+function fPick(glossary_url)
+{
+	var wnd = window.open(glossary_url, "pickkeyword", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
+	wnd.focus();
+}
+
+function fSet(ctrl, value)
+{
+	var frm = document.frmEdit;
+	var items = frm[ctrl + ':utf8:ustring'];
+	if (value != '')
+	{
+		if (items.value == '')
+			items.value = value;
+		else
+			items.value = items.value + ', ' + value;
+	}
+}
+// -->
+</script>
+
+<form name="frmEdit" method="post" action="saveProperties" enctype="multipart/form-data">
+<table border="0" cellspacing="2" cellpadding="2">
+<tr>
+	<td i18n:translate="">Title</td>
+	<td><input type="text" name="title:utf8:ustring" size="50" tal:attributes="value python:here.getVersionLocalProperty('title', curr_lang)" /></td>
+</tr>
+<tr>
+	<td valign="top" i18n:translate="">Description</td>
+	<td><span tal:replace="structure python:here.Epoz('description:utf8:ustring', data=here.getVersionLocalProperty('description', curr_lang), toolbox='', lang=curr_lang, style='width: 400px; height: 200px; border: 1px solid #000000;')" /></td>
+</tr>
+<tr tal:define="coverage_glossary here/get_coverage_glossary">
+	<td i18n:translate="">Coverage</td>
+	<td>
+		<input type="text" name="coverage:utf8:ustring" size="50" tal:attributes="value python:here.getVersionLocalProperty('coverage', curr_lang)" />
+		<tal:block tal:condition="python:coverage_glossary is not None">
+			<input type="button" value="Pick" tal:attributes="onclick string:javascript:fPick('${coverage_glossary/absolute_url}/GlossMap_html?ctrl=coverage&amp;lang=${curr_lang}');">
+		</tal:block>
+	</td>
+</tr>
+<tr tal:define="keywords_glossary here/get_keywords_glossary">
+	<td i18n:translate="">Keywords</td>
+	<td>
+		<input type="text" name="keywords:utf8:ustring" size="50" tal:attributes="value python:here.getVersionLocalProperty('keywords', curr_lang)" />
+		<tal:block tal:condition="python:keywords_glossary is not None">
+			<input type="button" value="Pick" tal:attributes="onclick string:javascript:fPick('${keywords_glossary/absolute_url}/GlossMap_html?ctrl=keywords&amp;lang=${curr_lang}');">
+		</tal:block>
+	</td>
+</tr>
+<tr>
+	<td i18n:translate="">Sort order</td>
+	<td><input type="text" name="sortorder" size="2" tal:attributes="value python:here.getVersionProperty('sortorder')" /></td>
+</tr>
+<tr>
+	<td class="form-label" i18n:translate="">Release date (<em>dd/mm/yyyy</em>)</td>
+	<td><input type="text" name="releasedate" size="20" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getVersionProperty('releasedate'))"/></td>
+</tr>
+<tal:block metal:define-slot="custom_properties"/>
+<tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
+	<td><span tal:replace="record/name"/></td>
+	<td tal:content="structure python:record.render(here.getPropertyValue(record.id, curr_lang, 1))">dynamic html control</td>
+</tr>
+<tr>
+	<td><input type="hidden" name="lang" tal:attributes="value curr_lang" /></td>
+	<td><input type="submit" value="Save changes" i18n:attributes="value" /></td>
+</tr>
+</table>
+
+<div class="translate"><span  i18n:translate="" tal:omit-tag="">Translate in</span>
+<tal:block tal:repeat="language languages">
+<strong tal:condition="python:language['code'] == curr_lang">
+<a tal:attributes="href string:?lang=${language/code}; title python:language['name']"
+	tal:content="python:language['name']" /></strong>
+<a tal:condition="python:language['code'] != curr_lang"
+	tal:attributes="href string:?lang=${language/code}; title python:language['name']"
+	tal:content="python:language['name']" />
+</tal:block>
+</div>
+
+</form>
+
+</tal:block>
+
+</tal:block>
+
+<tal:block tal:condition="python:here.hasVersion() and (not here.isVersionAuthor())">
+	<strong>This object is checked out for editing by another user.</strong>
+</tal:block>
+
+<tal:block tal:replace="structure here/standard_html_footer"/>
+
+</tal:block>

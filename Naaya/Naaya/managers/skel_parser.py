@@ -1,0 +1,513 @@
+# The contents of this file are subject to the Mozilla Public
+# License Version 1.1 (the "License"); you may not use this file
+# except in compliance with the License. You may obtain a copy of
+# the License at http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS
+# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+# implied. See the License for the specific language governing
+# rights and limitations under the License.
+#
+# The Initial Owner of the Original Code is European Environment
+# Agency (EEA).  Portions created by Finsiel Romania are
+# Copyright (C) European Environment Agency.  All
+# Rights Reserved.
+#
+# Authors:
+#
+# Cornel Nitu, Finsiel Romania
+# Dragos Chirila, Finsiel Romania
+
+#Python imports
+import string
+from xml.sax.handler import ContentHandler
+from xml.sax import *
+from cStringIO import StringIO
+
+#Zope imports
+
+#Product imports
+
+class skel_struct:
+    def __init__(self):
+        self.forms = None
+        self.layout = None
+        self.syndication = None
+        self.pluggablecontenttypes = None
+        self.portlets = None
+        self.properties = None
+        self.emails = None
+        self.content = None
+        self.security = None
+        self.others = None
+
+class forms_struct:
+    def __init__(self):
+        self.forms = []
+
+class form_struct:
+    def __init__(self, id, title):
+        self.id = id
+        self.title = title
+
+class layout_struct:
+    def __init__(self, default_skin_id, default_scheme_id):
+        self.skins = []
+        self.default_skin_id = default_skin_id
+        self.default_scheme_id = default_scheme_id
+
+class skin_struct:
+    def __init__(self, id, title):
+        self.id = id
+        self.title = title
+        self.templates = []
+        self.schemes = []
+
+class template_struct:
+    def __init__(self, id, title):
+        self.id = id
+        self.title = title
+
+class scheme_struct:
+    def __init__(self, id, title):
+        self.id = id
+        self.title = title
+        self.styles = []
+        self.images = []
+
+class style_struct:
+    def __init__(self, id, title):
+        self.id = id
+        self.title = title
+
+class image_struct:
+    def __init__(self, id, title):
+        self.id = id
+        self.title = title
+
+class syndication_struct:
+    def __init__(self):
+        self.namespaces = []
+        self.channeltypes = []
+        self.localchannels = []
+        self.remotechannels = []
+
+class namespace_struct:
+    def __init__(self, id, prefix, value):
+        self.id = id
+        self.prefix = prefix
+        self.value = value
+
+class channeltype_struct:
+    def __init__(self, id, title):
+        self.id = id
+        self.title = title
+
+class localchannel_struct:
+    def __init__(self, id, title, description, language, type, objmetatype, numberofitems):
+        self.id = id
+        self.title = title
+        self.description = description
+        self.language = language
+        self.type = type
+        self.objmetatype = objmetatype
+        self.numberofitems = numberofitems
+
+class remotechannel_struct:
+    def __init__(self, id, title, url, numbershownitems):
+        self.id = id
+        self.title = title
+        self.url = url
+        self.numbershownitems = numbershownitems
+
+class pluggablecontenttypes_struct:
+    def __init__(self):
+        self.pluggablecontenttypes = []
+
+class pluggablecontenttype_struct:
+    def __init__(self, meta_type):
+        self.meta_type = meta_type
+
+class portlets_struct:
+    def __init__(self):
+        self.portlets = []
+        self.linkslists = []
+
+class portlet_struct:
+    def __init__(self, id, title):
+        self.id = id
+        self.title = title
+
+class linkslist_struct:
+    def __init__(self, id, title, portlet):
+        self.id = id
+        self.title = title
+        self.portlet = portlet
+        self.links = []
+
+class link_struct:
+    def __init__(self, id, title, description, url, relative, permission, order):
+        self.id = id
+        self.title = title
+        self.description = description
+        self.url = url
+        self.relative = relative
+        self.permission = permission
+        self.order = order
+
+class properties_struct:
+    def __init__(self):
+        self.eventtypes = []
+        self.contenttypes = []
+        self.languages = []
+
+class language_struct:
+    def __init__(self, code):
+        self.code = code
+
+class eventtype_struct:
+    def __init__(self, id, title):
+        self.id = id
+        self.title = title
+
+class contenttype_struct:
+    def __init__(self, id, title, picture):
+        self.id = id
+        self.title = title
+        self.picture = picture
+
+class emails_struct:
+    def __init__(self):
+        self.emailtemplates = []
+
+class emailtemplate_struct:
+    def __init__(self, id, title):
+        self.id = id
+        self.title = title
+
+class content_struct:
+    def __init__(self, maintopics):
+        self.maintopics = maintopics
+        self.folders = []
+
+class folder_struct:
+    def __init__(self, id, title, description, coverage, keywords, publicinterface, maintainer_email, sortorder, meta_types):
+        self.id = id
+        self.title = title
+        self.description = description
+        self.coverage = coverage
+        self.keywords = keywords
+        self.publicinterface = publicinterface
+        self.maintainer_email = maintainer_email
+        self.sortorder = sortorder
+        self.meta_types = meta_types
+        self.folders = []
+        self.items = []
+        self.index_html = None
+
+class security_struct:
+    def __init__(self):
+        self.permissions = []
+        self.roles = []
+
+class permission_struct:
+    """ """
+    def __init__(self, name, description, permissions):
+        """ """
+        self.name = name
+        self.description = description
+        self.permissions = permissions
+
+class role_struct:
+    """ """
+    def __init__(self, name, permissions):
+        """ """
+        self.name = name
+        self.permissions = permissions
+
+class others_struct:
+    def __init__(self):
+        self.favicon = None
+        self.robots = None
+        self.images = None
+
+class saxstack_struct:
+    def __init__(self, name='', obj=None):
+        self.name = name
+        self.obj = obj
+        self.content = ''
+
+class skel_handler(ContentHandler):
+    """ """
+
+    def __init__(self):
+        self.root = None
+        self.stack = []
+
+    def startElement(self, name, attrs):
+        """ """
+        if name == 'skel':
+            obj = skel_struct()
+            stackObj = saxstack_struct('skel', obj)
+            self.stack.append(stackObj)
+        elif name == 'forms':
+            obj = forms_struct()
+            stackObj = saxstack_struct('forms', obj)
+            self.stack.append(stackObj)
+        elif name == 'form':
+            obj = form_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'))
+            stackObj = saxstack_struct('form', obj)
+            self.stack.append(stackObj)
+        elif name == 'layout':
+            obj = layout_struct(attrs['default_skin_id'].encode('utf-8'), attrs['default_scheme_id'].encode('utf-8'))
+            stackObj = saxstack_struct('layout', obj)
+            self.stack.append(stackObj)
+        elif name == 'skin':
+            obj = skin_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'))
+            stackObj = saxstack_struct('skin', obj)
+            self.stack.append(stackObj)
+        elif name == 'template':
+            obj = template_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'))
+            stackObj = saxstack_struct('template', obj)
+            self.stack.append(stackObj)
+        elif name == 'scheme':
+            obj = scheme_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'))
+            stackObj = saxstack_struct('scheme', obj)
+            self.stack.append(stackObj)
+        elif name == 'style':
+            obj = style_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'))
+            stackObj = saxstack_struct('style', obj)
+            self.stack.append(stackObj)
+        elif name == 'image':
+            obj = image_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'))
+            stackObj = saxstack_struct('image', obj)
+            self.stack.append(stackObj)
+        elif name == 'syndication':
+            obj = syndication_struct()
+            stackObj = saxstack_struct('syndication', obj)
+            self.stack.append(stackObj)
+        elif name == 'namespace':
+            obj = namespace_struct(attrs['id'].encode('utf-8'), attrs['prefix'].encode('utf-8'), attrs['value'].encode('utf-8'))
+            stackObj = saxstack_struct('namespace', obj)
+            self.stack.append(stackObj)
+        elif name == 'channeltype':
+            obj = channeltype_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'))
+            stackObj = saxstack_struct('namespace', obj)
+            self.stack.append(stackObj)
+        elif name == 'localchannel':
+            obj = localchannel_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['description'].encode('utf-8'), attrs['language'].encode('utf-8'), attrs['type'].encode('utf-8'), attrs['objmetatype'].encode('utf-8'), attrs['numberofitems'].encode('utf-8'))
+            stackObj = saxstack_struct('localchannel', obj)
+            self.stack.append(stackObj)
+        elif name == 'remotechannel':
+            obj = remotechannel_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['url'].encode('utf-8'), attrs['numbershownitems'].encode('utf-8'))
+            stackObj = saxstack_struct('remotechannel', obj)
+            self.stack.append(stackObj)
+        elif name == 'linkslist':
+            obj = linkslist_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['portlet'].encode('utf-8'))
+            stackObj = saxstack_struct('linkslist', obj)
+            self.stack.append(stackObj)
+        elif name == 'link':
+            if len(self.stack) >=2:
+                obj = link_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['description'].encode('utf-8'), attrs['url'].encode('utf-8'), attrs['relative'].encode('utf-8'), attrs['permission'].encode('utf-8'), attrs['order'].encode('utf-8'))
+                stackObj = saxstack_struct('link', obj)
+                self.stack.append(stackObj)
+        elif name == 'pluggablecontenttypes':
+            obj = pluggablecontenttypes_struct()
+            stackObj = saxstack_struct('pluggablecontenttypes', obj)
+            self.stack.append(stackObj)
+        elif name == 'pluggablecontenttype':
+            obj = pluggablecontenttype_struct(attrs['meta_type'].encode('utf-8'))
+            stackObj = saxstack_struct('pluggablecontenttype', obj)
+            self.stack.append(stackObj)
+        elif name == 'portlets':
+            obj = portlets_struct()
+            stackObj = saxstack_struct('portlets', obj)
+            self.stack.append(stackObj)
+        elif name == 'portlet':
+            obj = portlet_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'))
+            stackObj = saxstack_struct('portlet', obj)
+            self.stack.append(stackObj)
+        elif name == 'properties':
+            obj = properties_struct()
+            stackObj = saxstack_struct('properties', obj)
+            self.stack.append(stackObj)
+        elif name == 'language':
+            obj = language_struct(attrs['code'].encode('utf-8'))
+            stackObj = saxstack_struct('language', obj)
+            self.stack.append(stackObj)
+        elif name == 'eventtype':
+            obj = eventtype_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'))
+            stackObj = saxstack_struct('eventtype', obj)
+            self.stack.append(stackObj)
+        elif name == 'contenttype':
+            obj = contenttype_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['picture'].encode('utf-8'))
+            stackObj = saxstack_struct('contenttype', obj)
+            self.stack.append(stackObj)
+        elif name == 'emails':
+            obj = emails_struct()
+            stackObj = saxstack_struct('emails', obj)
+            self.stack.append(stackObj)
+        elif name == 'emailtemplate':
+            obj = emailtemplate_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'))
+            stackObj = saxstack_struct('emailtemplate', obj)
+            self.stack.append(stackObj)
+        elif name == 'content':
+            obj = content_struct(attrs['maintopics'].encode('utf-8'))
+            stackObj = saxstack_struct('content', obj)
+            self.stack.append(stackObj)
+        elif name == 'folder':
+            obj = folder_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['description'].encode('utf-8'), attrs['coverage'].encode('utf-8'), attrs['keywords'].encode('utf-8'), attrs['publicinterface'].encode('utf-8'), attrs['maintainer_email'].encode('utf-8'), attrs['sortorder'].encode('utf-8'), attrs['meta_types'].encode('utf-8'))
+            stackObj = saxstack_struct('folder', obj)
+            self.stack.append(stackObj)
+        elif name == 'security':
+            obj = security_struct()
+            stackObj = saxstack_struct('security', obj)
+            self.stack.append(stackObj)
+        elif name == 'permission':
+            obj = permission_struct(attrs['name'].encode('utf-8'), attrs['description'].encode('utf-8'), attrs['permissions'].encode('utf-8').split(','))
+            stackObj = saxstack_struct('permission', obj)
+            self.stack.append(stackObj)
+        elif name == 'role':
+            obj = role_struct(attrs['name'].encode('utf-8'), attrs['permissions'].encode('utf-8').split(','))
+            stackObj = saxstack_struct('role', obj)
+            self.stack.append(stackObj)
+        elif name == 'others':
+            obj = others_struct()
+            stackObj = saxstack_struct('others', obj)
+            self.stack.append(stackObj)
+        elif name == 'favicon':
+            pass
+        elif name == 'robots':
+            pass
+        elif name == 'images':
+            pass
+
+    def endElement(self, name):
+        """ """
+        if name == 'skel':
+            self.root = self.stack[-1].obj
+            self.stack.pop()
+        elif name == 'forms':
+            self.stack[-2].obj.forms = self.stack[-1].obj
+            self.stack.pop()
+        elif name == 'form':
+            self.stack[-2].obj.forms.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'layout':
+            self.stack[-2].obj.layout = self.stack[-1].obj
+            self.stack.pop()
+        elif name == 'skin':
+            self.stack[-2].obj.skins.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'template':
+            self.stack[-2].obj.templates.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'scheme':
+            self.stack[-2].obj.schemes.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'style':
+            self.stack[-2].obj.styles.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'image':
+            self.stack[-2].obj.images.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'syndication':
+            self.stack[-2].obj.syndication = self.stack[-1].obj
+            self.stack.pop()
+        elif name == 'namespace':
+            self.stack[-2].obj.namespaces.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'channeltype':
+            self.stack[-2].obj.channeltypes.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'localchannel':
+            self.stack[-2].obj.localchannels.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'remotechannel':
+            self.stack[-2].obj.remotechannels.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'pluggablecontenttypes':
+            self.stack[-2].obj.pluggablecontenttypes = self.stack[-1].obj
+            self.stack.pop()
+        elif name == 'pluggablecontenttype':
+            self.stack[-2].obj.pluggablecontenttypes.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'portlets':
+            self.stack[-2].obj.portlets = self.stack[-1].obj
+            self.stack.pop()
+        elif name == 'portlet':
+            self.stack[-2].obj.portlets.append(self.stack[-1].obj)
+            self.stack.pop()
+        if name == 'linkslist':
+            self.stack[-2].obj.linkslists.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'link':
+            self.stack[-2].obj.links.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'properties':
+            self.stack[-2].obj.properties = self.stack[-1].obj
+            self.stack.pop()
+        elif name == 'language':
+            self.stack[-2].obj.languages.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'eventtype':
+            self.stack[-2].obj.eventtypes.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'contenttype':
+            self.stack[-2].obj.contenttypes.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'emails':
+            self.stack[-2].obj.emails = self.stack[-1].obj
+            self.stack.pop()
+        elif name == 'emailtemplate':
+            self.stack[-2].obj.emailtemplates.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'content':
+            self.stack[-2].obj.content = self.stack[-1].obj
+            self.stack.pop()
+        elif name == 'folder':
+            self.stack[-1].obj.index_html = self.stack[-1].content.encode('utf-8')
+            self.stack[-2].obj.folders.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'security':
+            self.stack[-2].obj.security = self.stack[-1].obj
+            self.stack.pop()
+        elif name == 'permission':
+            self.stack[-2].obj.permissions.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'role':
+            self.stack[-2].obj.roles.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'others':
+            self.stack[-2].obj.others = self.stack[-1].obj
+            self.stack.pop()
+        elif name == 'favicon':
+            self.stack[-1].obj.favicon = 1
+        elif name == 'robots':
+            self.stack[-1].obj.favicon = 1
+        elif name == 'images':
+            self.stack[-1].obj.favicon = 1
+
+    def characters(self, content):
+        if len(self.stack) > 0:
+            self.stack[-1].content += content.strip(' \t')
+
+class skel_parser:
+    """ """
+
+    def __init__(self):
+        """ """
+        pass
+
+    def parse(self, p_content):
+        """ """
+        l_handler = skel_handler()
+        l_parser = make_parser()
+        l_parser.setContentHandler(l_handler)
+        l_inpsrc = InputSource()
+        l_inpsrc.setByteStream(StringIO(p_content))
+        #try:
+        l_parser.parse(l_inpsrc)
+        return (l_handler, '')
+        #except Exception, error:
+        #    return (None, error)

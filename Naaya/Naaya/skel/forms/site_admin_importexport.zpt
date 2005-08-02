@@ -1,0 +1,86 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Import/Export messages</h1>
+
+<tal:block metal:fill-slot="section" 
+	tal:define="site_url here/getSitePath;
+				languages here/gl_get_languages_mapping">
+
+<div id="tabbedmenu">
+<ul>
+	<li><a tal:attributes="href string:${site_url}/admin_translations_html" i18n:translate="">Messages</a></li>
+	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_importexport_html" i18n:translate="">Import/Export</a></li>
+</ul>
+</div>
+&nbsp;
+<fieldset><legend i18n:translate="">Export messages to PO file</legend>
+<p class="form-help"  i18n:translate="">
+	You can export the messages and their translations to PO files. Check
+	<tt>locale.pot</tt> to get only the messages, without their translations.
+	Check any other option to get a PO file with the messages and their
+	translations to the selected language. Then click the <tt>Export</tt>
+	button.
+</p>
+
+<form method="post" tal:attributes="action string:${site_url}/admin_exportmessages">
+<table border="0">
+	<tr>
+		<th align="left" i18n:translate="">File / Language</th>
+	</tr>
+	<tr>
+		<td valign="top">
+			<select name="x">
+				<option value="locale.pot" selected="selected">locale.pot</option>
+				<tal:block repeat="lang languages">
+					<option tal:attributes="value lang/code"
+						tal:content="string:${lang/code}.po/${lang/name}" />
+				</tal:block>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><input type="submit" value="Export" i18n:attributes="value"></td>
+	</tr>
+</table>
+</form>
+</fieldset>
+
+<fieldset><legend  i18n:translate="">Import translations from PO file</legend>
+<p class="form-help"  i18n:translate="">
+	You can add new messages and translations importing a PO file. Enter the
+	filename, select the language of the translations and click the
+	<tt>Import</tt> button.
+</p>
+
+<form method="post" tal:attributes="action string:${site_url}/admin_importmessages" enctype="multipart/form-data">
+<table border="0">
+	<tr>
+		<th align="right" i18n:translate="">File</th>
+		<td><input type="file" name="file" /></td>
+	</tr>
+	<tr>
+		<th align="right" valign="top" i18n:translate="">Language</th>
+		<td>
+			<select name="lang">
+				<tal:block repeat="lang languages">
+				<option tal:attributes="value lang/code; selected python:path('repeat/lang/start')"
+						tal:content="string:${lang/name}[${lang/code}]" />
+				</tal:block>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td><input type="submit" value="Import" i18n:attributes="value" /></td>
+	</tr>
+</table>
+</form>
+</fieldset>
+
+<tal:block tal:condition="python:languages == []">
+	<em i18n:translate="">No languages available, please add them using the Languages tab</em>
+</tal:block>
+
+</tal:block>
+
+</tal:block>

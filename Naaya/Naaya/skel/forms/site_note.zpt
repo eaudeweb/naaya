@@ -1,0 +1,10 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<h1>Thank you for your submission</h1>
+
+The administrator will analyze your request and you will be notified about the result shortly.
+
+<p>Go <a tal:attributes="href python:here.getSession('referer', request['HTTP_REFERER'])" title="Go back to the page you came from">back</a>.</p>
+<span tal:replace="python:here.delSession('referer')" />
+
+<span tal:replace="structure here/standard_html_footer"/>

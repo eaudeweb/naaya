@@ -1,0 +1,12 @@
+User-agent: *
+Disallow: /Localizer/
+Disallow: /acl_users/
+Disallow: /portal_catalog/
+Disallow: /portal_dynamicproperties/
+Disallow: /portal_email/
+Disallow: /portal_forms/
+Disallow: /portal_layout/
+Disallow: /portal_portlets/
+Disallow: portal_properties
+Disallow: /portal_syndication/
+Disallow: /portal_translations/
