@@ -85,6 +85,7 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
     ob = self._getOb(id)
     ob.handleUpload(source, file, url)
     ob.createVersion()
+    self.recatalogNyObject(ob)
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'file_manage_add' or l_referer.find('file_manage_add') != -1:
