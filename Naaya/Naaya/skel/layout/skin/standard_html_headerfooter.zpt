@@ -63,8 +63,8 @@
 </div>
 <div id="last_modified">Page last modified: dd-mm-yyyy </div>
 <div id="footer">
-	[<a tal:attributes="href string:${site_url}/copyright_html" i18n:translate="">Copyright</a>]
-	[<a tal:attributes="href string:${site_url}/accessibility_html" accesskey="0" i18n:translate="">Accessibility statement</a>]
+	[<a tal:attributes="href string:${site_url}/info/contact" i18n:translate="">Contact us</a>]
+	[<a tal:attributes="href string:${site_url}/info/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>]
 </div>
 </body>
 </html>

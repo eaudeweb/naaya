@@ -27,6 +27,7 @@ from cStringIO import StringIO
 #Zope imports
 
 #Product imports
+from Products.Naaya.constants import *
 
 class skel_struct:
     def __init__(self):
@@ -205,6 +206,17 @@ class folder_struct:
         self.items = []
         self.index_html = None
 
+class document_struct:
+    def __init__(self, id, title, description, coverage, keywords, sortorder):
+        self.type = METATYPE_NYDOCUMENT
+        self.id = id
+        self.title = title
+        self.description = description
+        self.coverage = coverage
+        self.keywords = keywords
+        self.sortorder = sortorder
+        self.body = None
+
 class security_struct:
     def __init__(self):
         self.permissions = []
@@ -359,6 +371,10 @@ class skel_handler(ContentHandler):
             obj = folder_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['description'].encode('utf-8'), attrs['coverage'].encode('utf-8'), attrs['keywords'].encode('utf-8'), attrs['publicinterface'].encode('utf-8'), attrs['maintainer_email'].encode('utf-8'), attrs['sortorder'].encode('utf-8'), attrs['meta_types'].encode('utf-8'))
             stackObj = saxstack_struct('folder', obj)
             self.stack.append(stackObj)
+        elif name == 'document':
+            obj = document_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['description'].encode('utf-8'), attrs['coverage'].encode('utf-8'), attrs['keywords'].encode('utf-8'), attrs['sortorder'].encode('utf-8'))
+            stackObj = saxstack_struct('document', obj)
+            self.stack.append(stackObj)
         elif name == 'security':
             obj = security_struct()
             stackObj = saxstack_struct('security', obj)
@@ -468,6 +484,10 @@ class skel_handler(ContentHandler):
         elif name == 'folder':
             self.stack[-1].obj.index_html = self.stack[-1].content.encode('utf-8')
             self.stack[-2].obj.folders.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'document':
+            self.stack[-1].obj.body = self.stack[-1].content.encode('utf-8')
+            self.stack[-2].obj.items.append(self.stack[-1].obj)
             self.stack.pop()
         elif name == 'security':
             self.stack[-2].obj.security = self.stack[-1].obj
