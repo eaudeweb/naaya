@@ -35,6 +35,7 @@ from Products.Naaya.constants import *
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
+from Products.NaayaPhotoArchive.NyPhotoFolder import manage_addNyPhotoFolder
 
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addCHMSite(self, id='', title='', lang=None, REQUEST=None):
@@ -69,6 +70,7 @@ class CHMSite(NySite):
         """ """
         NySite.__dict__['loadDefaultData'](self)
         manage_addLinkChecker(self, ID_LINKCHECKER, TITLE_LINKCHECKER)
+        manage_addNyPhotoFolder(self, ID_PHOTOARCHIVE, TITLE_PHOTOARCHIVE)
         self.loadSkeleton(join(CHM2_PRODUCT_PATH, 'skel'))
 
     #objects getters
