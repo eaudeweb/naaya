@@ -36,7 +36,7 @@ from Products.Localizer.LanguageManager import LanguageManager
 import NyPhoto
 
 manage_addNyPhotoFolder_html = PageTemplateFile('zpt/photofolder_manage_add', globals())
-def addNyPhotoFolder(self, id='', title='', quality='', REQUEST=None):
+def manage_addNyPhotoFolder(self, id='', title='', quality='', REQUEST=None):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_NYPHOTOFOLDER + self.utGenRandomId(6)
