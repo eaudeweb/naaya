@@ -36,7 +36,7 @@ class config_struct:
 
 class urls_struct:
     def __init__(self):
-        self.metatypes = {}
+        self.entries = []
 
 class entry_struct:
     def __init__(self, meta_type, property):

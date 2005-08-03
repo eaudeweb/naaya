@@ -94,43 +94,82 @@ class CHMSite(NySite):
         #process and returns a map with all approved urls in the portal by domain
         #this requires NyURL pluggable content type to be present
         urls = self.query_objects_ex(meta_type=METATYPE_NYURL, approved=1)
-        if sort=='title' or sort=='locator':
-            return self.utSortObjsListByAttr(urls, sort, 0)
+        other_urls = self.query_objects_ex(meta_type=self.get_content_urls().keys(), approved=1)
+        if sort=='url':
+            #sort urls
+            r1 = [(x.locator, x) for x in urls]
+            r1.sort()
+            #sort other urls
+            r2 = []
+            r2a = r2.append
+            for x in other_urls:
+                for y in self.get_content_urls()[x.meta_type]:
+                    r2a((getattr(x, y),x))
+            r2.sort()
+            return r1, r2
+        elif sort=='title':
+            #sort urls
+            r1 = [(x.title_or_id(), x) for x in urls]
+            r1.sort()
+            r1 = [(x[1].locator, x[1]) for x in r1]
+            #sort other urls
+            r2 = []
+            r2a = r2.append
+            for x in other_urls:
+                for y in self.get_content_urls()[x.meta_type]:
+                    r2a((x.title_or_id(), getattr(x, y),x))
+            r2.sort()
+            r2 = [(x[1], x[2]) for x in r2]
+            return r1, r2
         elif sort=='server':
-            domains = {}
-            for url in urls:
-                domain = urlparse(url.locator)[1]
-                domain = domain.replace('www.', '')
-                domain_key = domain.split('.')
-                domain_key = domain_key[:-1]
-                domain_key.reverse()
-                domain_key = '.'.join(domain_key)
-                if not domains.has_key(domain_key):
-                    domains[domain_key] = [domain, []]
-                domains[domain_key][1].append(url)
-            domains_keys = domains.keys()
-            domains_keys.sort()
-            return domains_keys, domains
+            #sort urls
+            r1 = self.__splitbyDomains([(x.locator, x) for x in urls])
+            #sort other urls
+            r2 = []
+            r2a = r2.append
+            for x in other_urls:
+                for y in self.get_content_urls()[x.meta_type]:
+                    r2a((getattr(x, y),x))
+            r2 = self.__splitbyDomains(r2)
+            return r1, r2
         else:
             return urls
+
+    def __splitbyDomains(self, p_list):
+        #given a list o tuples (url, ob) groups them by domain name
+        domains = {}
+        for item in p_list:
+            domain = urlparse(item[0])[1]
+            domain = domain.replace('www.', '')
+            domain_key = domain.split('.')
+            domain_key = domain_key[:-1]
+            domain_key.reverse()
+            domain_key = '.'.join(domain_key)
+            if not domains.has_key(domain_key):
+                domains[domain_key] = [domain, []]
+            domains[domain_key][1].append(item)
+        domains_keys = domains.keys()
+        domains_keys.sort()
+        return domains_keys, domains
 
     def getURLProperties(self):
         #process the list of all approved items which have URL properties, by location
         url_struct = {}
-        print self.query_objects_ex(meta_type=[METATYPE_NYURL, METATYPE_NYEVENT, METATYPE_NYNEWS])
-        for url in self.query_objects_ex(meta_type=[METATYPE_NYURL, METATYPE_NYEVENT, METATYPE_NYNEWS]):
-            if url.meta_type == METATYPE_NYURL:
-                url_prop = ['locator']
-            elif url.meta_type == METATYPE_NYNEWS:
-                url_prop = ['resourceurl']
-            elif url.meta_type == METATYPE_NYEVENT:
-                url_prop = ['location_url', 'agenda_url', 'event_url']
-            for p in url_prop:
-                p_value = getattr(url, p)
+        #list urls
+        for x in self.query_objects_ex(meta_type=METATYPE_NYURL):
+            p_value = x.locator
+            if url_struct.has_key(p_value):
+                url_struct[p_value][1].append(x.getParentNode())
+            else:
+                url_struct[p_value] = [x, [x.getParentNode()]]
+        #list other
+        for x in self.query_objects_ex(meta_type=self.get_content_urls().keys()):
+            for y in self.get_content_urls()[x.meta_type]:
+                p_value = getattr(x, y)
                 if url_struct.has_key(p_value):
-                    url_struct[p_value][1].append(url.getParentNode())
+                    url_struct[p_value][1].append(x.getParentNode())
                 else:
-                    url_struct[p_value] = [url, [url.getParentNode()]]
+                    url_struct[p_value] = [x, [x.getParentNode()]]
         return url_struct
 
     #administration pages
