@@ -177,8 +177,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
     def loadSkeleton(self, skel_path):
         """ """
         #load site skeleton
-        skel = skel_parser()
-        skel_handler, error = skel.parse(self.futRead(join(skel_path, 'skel.xml'), 'r'))
+        skel_handler, error = skel_parser().parse(self.futRead(join(skel_path, 'skel.xml'), 'r'))
         if skel_handler is not None:
             properties_tool = self.getPropertiesTool()
             formstool_ob = self.getFormsTool()
