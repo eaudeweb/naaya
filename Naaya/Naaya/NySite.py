@@ -447,10 +447,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
                 l_upcoming_events.append(event_obj)
         return l_upcoming_events
 
-    def getAnnouncements(self):
-        #returns a list with latest approved top news
-        return self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, approved=1, howmany=self.number_announcements, topitem=1)
-
     def getFoldersWithPendingItems(self):
         #returns a list with all folders that contains pending(draft) objects
         d = {}
@@ -522,189 +518,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
     def setItemsAge(self, age): self.search_age = age
     def getNumberOfResults(self): return self.numberresultsperpage
     def setNumberOfResults(self, results_number): self.numberresultsperpage = results_number
-
-    #import/export methods
-    security.declareProtected(view, 'exportportal_html')
-    def exportportal_html(self):
-        """ - generates an XML with the site content
-            - it can be imported into another site """
-        l_xml = []
-        l_xml.append('<?xml version="1.0" encoding="iso-8859-1"?>')
-        l_xml.append('<portal>')
-        for l_folder in self.objectValues(METATYPE_FOLDER):
-            l_xml.append(l_folder.exportThis())
-        l_xml.append('</portal>')
-        self.REQUEST.RESPONSE.setHeader('content-type', 'text/xml')
-        return ''.join(l_xml)
-
-    security.declareProtected(view_management_screens, 'manageImportPortal')
-    def manageImportPortal(self, source='file', file='', url='', REQUEST=None):
-        """ - imports a site from an XML
-            - it can be an uploaded XML file or the content grabbed from an url """
-        if source=='file':
-            if file != '':
-                if hasattr(file, 'filename'):
-                    if file.filename != '':
-                        file = file.read()
-                    else: file = ''
-        elif source=='url':
-            file, l_ctype = self.grabFromUrl(url) #upload from an url
-        if file != '' and file != None:
-            #import from xml
-            importexport_parser = importexport_portal_parser()
-            importexport_handler, error = importexport_parser.parseContent(file)
-            if importexport_handler is None: return ERROR300 % str(error)
-            else: self.__importPortal(importexport_handler.tree_objects, 0, self)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_xmlimportexport_html')
-
-    def __importPortal(self, p_tree, p_node_id, p_parent_obj):
-        #import engine - creates the objects
-        l_node = p_tree[p_node_id]
-        if p_node_id != 0:
-            #clean up id
-            l_node.object.id = self.utCleanupId(l_node.object.id)
-            #objects
-            if l_node.meta_type == METATYPE_FOLDER:
-                if l_node.object.publicinterface == '0': l_node.object.publicinterface = ''
-                p_parent_obj.addNyFolder(
-                    id=l_node.object.id,
-                    title=l_node.object.title,
-                    description=l_node.object.description,
-                    language=l_node.object.language,
-                    coverage=l_node.object.coverage,
-                    keywords=l_node.object.keywords,
-                    sortorder=l_node.object.sortorder,
-                    publicinterface=l_node.object.publicinterface,
-                    maintainer_email=l_node.object.maintainer_email)
-            elif l_node.meta_type == METATYPE_EWURL:
-                p_parent_obj.addEWUrl(
-                    id=l_node.object.id,
-                    title=l_node.object.title,
-                    description=l_node.object.description,
-                    language=l_node.object.language,
-                    coverage=l_node.object.coverage,
-                    keywords=l_node.object.keywords,
-                    sortorder=l_node.object.sortorder,
-                    locator=l_node.object.locator)
-            elif l_node.meta_type == METATYPE_EWDOCUMENT:
-                p_parent_obj.addEWDocument(
-                    id=l_node.object.id,
-                    title=l_node.object.title,
-                    description=l_node.object.description,
-                    language=l_node.object.language,
-                    coverage=l_node.object.coverage,
-                    keywords=l_node.object.keywords,
-                    sortorder=l_node.object.sortorder,
-                    body=l_node.object.body)
-            elif l_node.meta_type == METATYPE_EWFILE:
-                p_parent_obj.addEWFile(
-                    id=l_node.object.id,
-                    title=l_node.object.title,
-                    description=l_node.object.description,
-                    language=l_node.object.language,
-                    coverage=l_node.object.coverage,
-                    keywords=l_node.object.keywords,
-                    sortorder=l_node.object.sortorder,
-                    source='file',
-                    file=self.utBase64Decode(l_node.object.file),
-                    url='',
-                    precondition=l_node.object.precondition,
-                    content_type=l_node.object.content_type,
-                    downloadfilename=l_node.object.downloadfilename)
-            elif l_node.meta_type == METATYPE_EWNEWS:
-                if l_node.object.topitem == '0': l_node.object.topitem = ''
-                p_parent_obj.addEWNews(
-                    id=l_node.object.id,
-                    title=l_node.object.title,
-                    description=l_node.object.description,
-                    language=l_node.object.language,
-                    coverage=l_node.object.coverage,
-                    keywords=l_node.object.keywords,
-                    sortorder=l_node.object.sortorder,
-                    details=l_node.object.details,
-                    expirationdate=self.utConvertDateTimeObjToString(self.utGetDate(l_node.object.expirationdate)),
-                    topitem=l_node.object.topitem,
-                    smallpicture=self.utBase64Decode(l_node.object.smallpicture),
-                    bigpicture=self.utBase64Decode(l_node.object.bigpicture),
-                    resourceurl=l_node.object.resourceurl,
-                    source=l_node.object.source)
-            elif l_node.meta_type == METATYPE_EWSTORY:
-                p_parent_obj.addEWStory(
-                    id=l_node.object.id,
-                    title=l_node.object.title,
-                    description=l_node.object.description,
-                    language=l_node.object.language,
-                    coverage=l_node.object.coverage,
-                    keywords=l_node.object.keywords,
-                    sortorder=l_node.object.sortorder,
-                    details=l_node.object.details,
-                    storypicture=self.utBase64Decode(l_node.object.storypicture),
-                    bigpicture_url=l_node.object.bigpicture_url,
-                    resourceurl=l_node.object.resourceurl,
-                    source=l_node.object.source)
-            elif l_node.meta_type == METATYPE_EWEVENT:
-                p_parent_obj.addEWEvent(
-                    id=l_node.object.id,
-                    title=l_node.object.title,
-                    description=l_node.object.description,
-                    language=l_node.object.language,
-                    coverage=l_node.object.coverage,
-                    keywords=l_node.object.keywords,
-                    sortorder=l_node.object.sortorder,
-                    location=l_node.object.location,
-                    location_address=l_node.object.location_address,
-                    location_url=l_node.object.location_url,
-                    start_date=self.utConvertDateTimeObjToString(self.utGetDate(l_node.object.start_date)),
-                    end_date=self.utConvertDateTimeObjToString(self.utGetDate(l_node.object.end_date)),
-                    host=l_node.object.host,
-                    agenda_url=l_node.object.agenda_url,
-                    event_url=l_node.object.event_url,
-                    details=l_node.object.details,
-                    event_type=l_node.object.event_type,
-                    contact_person=l_node.object.contact_person,
-                    contact_email=l_node.object.contact_email,
-                    contact_phone=l_node.object.contact_phone,
-                    contact_fax=l_node.object.contact_fax)
-            elif l_node.meta_type == METATYPE_EWPOINTER:
-                p_parent_obj.addEWPointer(
-                    id=l_node.object.id,
-                    title=l_node.object.title,
-                    description=l_node.object.description,
-                    language=l_node.object.language,
-                    coverage=l_node.object.coverage,
-                    keywords=l_node.object.keywords,
-                    sortorder=l_node.object.sortorder,
-                    pointer=l_node.object.pointer)
-            #other thpes of objects
-            elif l_node.meta_type == 'Folder':
-                manage_addFolder(p_parent_obj,
-                    id=l_node.object.id,
-                    title=l_node.object.title)
-            elif l_node.meta_type == 'Image':
-                manage_addImage(p_parent_obj,
-                    id=l_node.object.id,
-                    title=l_node.object.title,
-                    file=self.utBase64Decode(l_node.object.file),
-                    content_type=l_node.object.content_type)
-            elif l_node.meta_type == 'DTML Method':
-                addDTMLMethod(p_parent_obj,
-                    id=l_node.object.id,
-                    title=l_node.object.title,
-                    file=l_node.object.body)
-            elif l_node.meta_type == 'DTML Document':
-                addDTMLDocument(p_parent_obj,
-                    id=l_node.object.id,
-                    title=l_node.object.title,
-                    file=l_node.object.body)
-            p_parent_obj = p_parent_obj._getOb(l_node.object.id)
-            if l_node.meta_type in self.get_meta_types(1):
-                p_parent_obj.approveThis(abs(int(l_node.object.approved)))
-                p_parent_obj.setReleaseDate(l_node.object.releasedate)
-                if l_node.meta_type in [METATYPE_EWFILE, METATYPE_EWURL, METATYPE_EWDOCUMENT, METATYPE_EWPOINTER]:
-                    p_parent_obj.checkImportThis(int(l_node.object.validation_status), l_node.object.validation_comment, l_node.object.validation_by, l_node.object.validation_date)                
-                self.catalogNyObject(p_parent_obj)
-        for l_child_node_id in l_node.childs:
-            self.__importPortal(p_tree, l_child_node_id, p_parent_obj)
 
     #layer over the Localizer and MessageCatalog
     #the scope is to centralize the list of available languages
@@ -794,7 +607,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
         #process a click in the site map tree on a collapse button
         return self.joinToList(self.removeFromList(expand, str(node)))
 
-    #site forms actions
+    #site actions
     security.declareProtected(view, 'processFeedbackForm')
     def processFeedbackForm(self, username='', email='', comments='', REQUEST=None):
         """ """
@@ -976,11 +789,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
     def lateststories_rdf(self):
         """ """
         return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestStories())
-
-    security.declareProtected(view, 'topnews_rdf')
-    def topnews_rdf(self):
-        """ """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getAnnouncements())
 
     security.declareProtected(view, 'upcomingevents_rdf')
     def upcomingevents_rdf(self):
