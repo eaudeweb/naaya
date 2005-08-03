@@ -23,7 +23,6 @@
 #Python imports
 from os.path import join
 from urllib import quote
-from urlparse import urlparse
 
 #Zope imports
 from OFS.Folder import Folder, manage_addFolder
