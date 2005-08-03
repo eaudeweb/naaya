@@ -29,6 +29,7 @@ from AccessControl.Permissions import view_management_screens, view
 #Product imports
 from constants import *
 from Products.NaayaBase.constants import *
+from Products.NaayaContent import *
 from Products.Naaya.constants import *
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
@@ -70,6 +71,7 @@ class CHMSite(NySite):
     #api
     def getOnFrontNews(self):
         #returns a list with the news marked as on front
+        #this requires NyNews pluggable content type to be present
         news_ob = self._getOb('news', None)
         if news_ob is not None:
             return [x for x in news_ob.objectValues(METATYPE_NYNEWS) if x.approved==1 and x.topitem==1]
@@ -78,7 +80,8 @@ class CHMSite(NySite):
 
     def getUrlMap(self, sort='title'):
         #process and returns a map with all approved urls in the portal by domain
-        urls = self.query_objects_ex(meta_type='Naaya URL', approved=1)
+        #this requires NyURL pluggable content type to be present
+        urls = self.query_objects_ex(meta_type=METATYPE_NYURL, approved=1)
         if sort=='title' or sort=='locator':
             return self.utSortObjsListByAttr(urls, sort, 0)
         elif sort=='server':
