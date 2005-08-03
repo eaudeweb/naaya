@@ -154,6 +154,7 @@ class CHMSite(NySite):
 
     def getURLProperties(self):
         #process the list of all approved items which have URL properties, by location
+        #this requires NyURL pluggable content type to be present
         url_struct = {}
         #list urls
         for x in self.query_objects_ex(meta_type=METATYPE_NYURL):
@@ -171,6 +172,32 @@ class CHMSite(NySite):
                 else:
                     url_struct[p_value] = [x, [x.getParentNode()]]
         return url_struct
+
+    def getLatestStories(self):
+        #returns a list with approved top stories
+        #this requires NyStory pluggable content type to be present
+        return self.getCatalogedObjects(meta_type=METATYPE_NYSTORY, approved=1, topitem=1)
+
+    def getUpcomingEvents(self):
+        #returns a list with the approved events that will follow the current date
+        #this requires NyEvent pluggable content type to be present
+        l_upcoming_events = []
+        l_today = self.utGetTodayDate()
+        for event_obj in self.getCatalogedObjects(meta_type=METATYPE_NYEVENT, approved=1):
+            if event_obj.start_date > l_today:
+                l_upcoming_events.append(event_obj)
+        return l_upcoming_events
+
+    #rdf channels
+    security.declareProtected(view, 'lateststories_rdf')
+    def lateststories_rdf(self):
+        """ """
+        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestStories())
+
+    security.declareProtected(view, 'upcomingevents_rdf')
+    def upcomingevents_rdf(self):
+        """ """
+        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getUpcomingEvents())
 
     #administration pages
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_urls_html')
