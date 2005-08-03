@@ -432,19 +432,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
         #the number of objects can be set by modifing the property 'number_latest_uploads'
         return self.getCatalogedObjects(meta_type=self.get_meta_types(), approved=1, howmany=self.number_latest_uploads, path=['/'.join(x.getPhysicalPath()) for x in self.getMainTopics()])
 
-    def getLatestStories(self):
-        #returns a list with approved top stories
-        return self.getCatalogedObjects(meta_type=METATYPE_NYSTORY, approved=1, topitem=1)
-
-    def getUpcomingEvents(self):
-        #returns a list with the approved events that will follow the current date
-        l_upcoming_events = []
-        l_today = self.utGetTodayDate()
-        for event_obj in self.getCatalogedObjects(meta_type=METATYPE_NYEVENT, approved=1):
-            if event_obj.getStartDate() > l_today:
-                l_upcoming_events.append(event_obj)
-        return l_upcoming_events
-
     def getFoldersWithPendingItems(self):
         #returns a list with all folders that contains pending(draft) objects
         d = {}
@@ -782,16 +769,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
     def latestuploads_rdf(self):
         """ """
         return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestUploads())
-
-    security.declareProtected(view, 'lateststories_rdf')
-    def lateststories_rdf(self):
-        """ """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestStories())
-
-    security.declareProtected(view, 'upcomingevents_rdf')
-    def upcomingevents_rdf(self):
-        """ """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getUpcomingEvents())
 
     security.declareProtected(view, 'localchannels_rdf')
     def localchannels_rdf(self):
