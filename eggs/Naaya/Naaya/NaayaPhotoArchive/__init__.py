@@ -34,7 +34,7 @@ def initialize(context):
         permission = PERMISSION_ADD_PHOTOFOLDER,
         constructors = (
                 NyPhotoFolder.manage_addNyPhotoFolder_html,
-                NyPhotoFolder.addNyPhotoFolder,
+                NyPhotoFolder.manage_addNyPhotoFolder,
                 ),
         icon = 'www/NyPhotoFolder.gif'
         )
