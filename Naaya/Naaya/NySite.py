@@ -192,8 +192,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
             if skel_handler.root.forms is not None:
                 for form in skel_handler.root.forms.forms:
                     content = self.futRead(join(skel_path, 'forms', '%s.zpt' % form.id), 'r')
-                    formstool_ob.manage_addTemplate(id=form.id, title=form.title, file='')
-                    formstool_ob._getOb(form.id).pt_edit(text=content, content_type='')
+                    form_ob = formstool_ob._getOb(form.id, None)
+                    if form_ob is None:
+                        formstool_ob.manage_addTemplate(id=form.id, title=form.title, file='')
+                        form_ob = formstool_ob._getOb(form.id, None)
+                    form_ob.pt_edit(text=content, content_type='')
             #load skins
             if skel_handler.root.layout is not None:
                 for skin in skel_handler.root.layout.skins:
@@ -790,29 +793,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
     def processCollapse(self, expand, node):
         #process a click in the site map tree on a collapse button
         return self.joinToList(self.removeFromList(expand, str(node)))
-
-    def getUrlMap(self, sort='title'):
-        #process and returns a map with all approved urls in the portal by domain
-        urls = self.query_objects_ex(meta_type='Naaya URL', approved=1)
-        if sort=='title' or sort=='locator':
-            return self.utSortObjsListByAttr(urls, sort, 0)
-        elif sort=='server':
-            domains = {}
-            for url in urls:
-                domain = urlparse(url.locator)[1]
-                domain = domain.replace('www.', '')
-                domain_key = domain.split('.')
-                domain_key = domain_key[:-1]
-                domain_key.reverse()
-                domain_key = '.'.join(domain_key)
-                if not domains.has_key(domain_key):
-                    domains[domain_key] = [domain, []]
-                domains[domain_key][1].append(url)
-            domains_keys = domains.keys()
-            domains_keys.sort()
-            return domains_keys, domains
-        else:
-            return urls
 
     #site forms actions
     security.declareProtected(view, 'processFeedbackForm')
@@ -1852,11 +1832,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
     def sitemap_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_sitemap')
-
-    security.declareProtected(view, 'urlmap_html')
-    def urlmap_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_urlmap')
 
     security.declareProtected(view, 'feedback_html')
     def feedback_html(self, REQUEST=None, RESPONSE=None):
