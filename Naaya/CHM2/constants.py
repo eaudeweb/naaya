@@ -35,3 +35,6 @@ METATYPE_CHMSITE = 'CHM Site'
 
 ID_LINKCHECKER = 'LinkChecker'
 TITLE_LINKCHECKER = 'Link checker'
+
+ID_PHOTOARCHIVE = 'PhotoArchive'
+TITLE_PHOTOARCHIVE = 'Photo archive'
