@@ -1,0 +1,57 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 i18n:translate="">Photo submission</h1>
+
+<p i18n:translate="">
+	Fill the properties in the form below and click <strong>Add</strong>.
+</p>
+<form method="post" tal:attributes="action string:${here/absolute_url}/addNyPhoto" enctype="multipart/form-data">
+<table border="0" cellspacing="2" cellpadding="2">
+<tr>
+	<td i18n:translate="">Title</td>
+	<td><input type="text" name="title:utf8:ustring" size="50" /></td>
+</tr>
+<tr>
+	<td i18n:translate="">Author</td>
+	<td><input type="text" name="author" size="50" value="" /></td>
+</tr>
+<tr>
+	<td i18n:translate="">Source</td>
+	<td><input type="text" name="source" size="50" value="" /></td>
+</tr>
+<tr>
+	<td valign="top" i18n:translate="">Description</td>
+	<td><textarea name="description:utf8:ustring" rows="5" cols="40"></textarea></td>
+</tr>
+<tr>
+	<td i18n:translate="">Sort order</td>
+	<td><input type="text" name="sortorder" size="3" value="100" /></td>
+</tr>
+<tr>
+	<td i18n:translate="">On front</td>
+	<td><input type="checkbox" name="topitem" /></td>
+</tr>
+<tr>
+	<td i18n:translate="">On front from</td>
+	<td><input type="text" name="onfrontfrom" size="10" value="" /> <em>(dd/mm/yyyy)</em></td>
+</tr>
+<tr>
+	<td i18n:translate="">On front to</td>
+	<td><input type="text" name="onfrontto" size="10" value="" /> <em>(dd/mm/yyyy)</em></td>
+</tr>
+<tr>
+	<td i18n:translate="">Add photo(file)</td>
+	<td><input type="file" name="file" size="50" /></td>
+</tr>
+<tr>
+	<td i18n:translate="">Quality</td>
+	<td><input type="text" name="quality" size="3" tal:attributes="value here/quality" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><input type="submit" value="Submit" i18n:attributes="value" /></td>
+</tr>
+</table>
+</form>
+
+<span tal:replace="structure here/standard_html_footer" />
