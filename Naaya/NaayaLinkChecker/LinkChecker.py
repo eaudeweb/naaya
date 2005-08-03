@@ -80,7 +80,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     log_html = Globals.DTMLFile("dtml/LinkChecker_log", globals())
     view_log = Globals.DTMLFile("dtml/LinkChecker_logForm",globals())
 
-    def __init__(self, id, title='',objectMetaType={}, proxy='', batch_size=5, log_urls=0):
+    def __init__(self, id, title='',objectMetaType={}, proxy='', batch_size=10, log_urls=0):
         "initialize a new instance of LinkChecker"
         self.id = id
         self.title = title
@@ -219,7 +219,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             results = NewThread.start()
         for thread in range(0,THREAD_COUNT):
             checker_ThreadList[thread].join()
-        return self.prepareLog(links_dict, logresults, 1)
+        return self.prepareLog(links_dict, logresults, 0)
 
     security.declarePrivate('prepareLog')
     def prepareLog(self, links_dict, logresults, manual=0):
