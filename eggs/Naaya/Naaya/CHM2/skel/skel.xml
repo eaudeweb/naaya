@@ -5,8 +5,10 @@
 		<form id="site_urlmap" title="Portal url map"/>
 		<form id="site_admin_deletions" title="Portal administration - submissions"/>
 		<form id="site_admin_submissions" title="Portal administration - deletions"/>
+		<form id="site_admin_urls" title="Portal administration - urls"/>
+		<form id="site_admin_linkchecker" title="Portal administration - link checker"/>
 	</forms>
-	<layout default_skin_id="chm" default_scheme_id="blue">
+	<layout default_skin_id="chm" default_scheme_id="indigo">
 		<skin id="chm" title="CHM">
 			<template id="standard_html_headerfooter" title="Portal standard HTML header and footer"/>
 			<template id="portlet_left_macro" title="Macro for left portlets"/>

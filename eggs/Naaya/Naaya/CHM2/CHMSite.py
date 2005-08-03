@@ -19,6 +19,7 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+from urlparse import urlparse
 
 #Zope imports
 from Globals import InitializeClass
@@ -68,6 +69,15 @@ class CHMSite(NySite):
         NySite.__dict__['loadDefaultData'](self)
         self.loadSkeleton(join(CHM2_PRODUCT_PATH, 'skel'))
 
+    #objects getters
+    def getLinkChecker(self): return self._getOb('LinkChecker', None)
+    def getLinkCheckerLastLog(self):
+        try:
+            entries = self.utSortObjsListByAttr(self._getOb('LinkChecker').objectValues("LogEntry"), 'date_create', p_desc=1)
+            if len(entries) > 0: return entries[0]
+            else: return None
+        except:
+            return None
     #api
     def getOnFrontNews(self):
         #returns a list with the news marked as on front
@@ -102,6 +112,25 @@ class CHMSite(NySite):
         else:
             return urls
 
+    def getURLProperties(self):
+        #process the list of all approved items which have URL properties, by location
+        url_struct = {}
+        print self.query_objects_ex(meta_type=[METATYPE_NYURL, METATYPE_NYEVENT, METATYPE_NYNEWS])
+        for url in self.query_objects_ex(meta_type=[METATYPE_NYURL, METATYPE_NYEVENT, METATYPE_NYNEWS]):
+            if url.meta_type == METATYPE_NYURL:
+                url_prop = ['locator']
+            elif url.meta_type == METATYPE_NYNEWS:
+                url_prop = ['resourceurl']
+            elif url.meta_type == METATYPE_NYEVENT:
+                url_prop = ['location_url', 'agenda_url', 'event_url']
+            for p in url_prop:
+                p_value = getattr(url, p)
+                if url_struct.has_key(p_value):
+                    url_struct[p_value][1].append(url.getParentNode())
+                else:
+                    url_struct[p_value] = [url, [url.getParentNode()]]
+        return url_struct
+
     #administration pages
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_urls_html')
     def admin_urls_html(self, REQUEST=None, RESPONSE=None):
@@ -117,6 +146,16 @@ class CHMSite(NySite):
     def admin_deletions_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_deletions')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_urls_html')
+    def admin_urls_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_urls')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkchecker_html')
+    def admin_linkchecker_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_linkchecker')
 
     #site pages
     security.declareProtected(view, 'urlmap_html')
