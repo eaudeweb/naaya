@@ -38,15 +38,11 @@
         itemmessage="linkcheckeritem[7]"
         itemlocation="getLocation(itemrelativeurl)">
     <tr>
-            <td class="<dtml-var row_type>"><img src="/<dtml-var itemrelativeurl>/<dtml-var itemicon>" alt="<dtml-var itemmetatype>" border="0" />
-            <a href="/<dtml-var itemrelativeurl>"><dtml-var "restrictedTraverse(itemrelativeurl).title_or_id()" html_quote></a></td>
-        <dtml-if "itemmessage == 'OK'">
-            <td class="<dtml-var row_type>"><a href="<dtml-var itemlink>" target="_blank"><dtml-var itemlink html_quote size=50></a></td>
-            <td class="<dtml-var row_type>">OK</td>
-      <dtml-else>
-            <td class="<dtml-var row_type>"><a href="<dtml-var itemlink>" target="_blank"><font color="red"><dtml-var itemlink html_quote size=50></font></a></td>
-            <td class="<dtml-var row_type>"><font color="red">Possibly broken (<dtml-var itemmessage html_quote>)</font></td>
-      </dtml-if>
+        <td class="<dtml-var row_type>"><img src="/<dtml-var itemrelativeurl>/<dtml-var itemicon>" alt="<dtml-var itemmetatype>" border="0" />
+        <a href="/<dtml-var itemrelativeurl>"><dtml-var "restrictedTraverse(itemrelativeurl).title_or_id()" html_quote size=20></a>
+	</td>
+        <td class="<dtml-var row_type>"><a href="<dtml-var itemlink>" target="_blank"><font color="red"><dtml-var itemlink html_quote size=50></font></a></td>
+        <td class="<dtml-var row_type>"><font color="red">Possibly broken (<dtml-var itemmessage html_quote>)</font></td>
     </tr>
     </dtml-let>
 </dtml-in>

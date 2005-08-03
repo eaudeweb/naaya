@@ -41,10 +41,7 @@ class UtilsManager:
         minutes = str(date[4])
         if len(minutes)==1:
             minutes = '0' + minutes
-        seconds = str(date[5])
-        if len(seconds)==1:
-            seconds = '0' + seconds
-        return day + '/' + month + '/' + year + ' ' + hours + ':' + minutes + ':' + seconds
+        return day + '/' + month + '/' + year + ' ' + hours + ':' + minutes
 
     def umGetTodayDate(self):
         """Returns today date in a DateTime object"""

@@ -1,7 +1,9 @@
 <h2>Log of broken links found by the automatic checking</h2>
 
-<p>This page presents the URLs found broken at <dtml-var "umFormatDateTimeToString(date_create)">&nbsp;
-by the automatic link checker.</p>
+
+<p>
+This page presents the most recent broken links log, obtained at <dtml-var "umFormatDateTimeToString(date_create)">&nbsp; by the automatic link checker. The links below appear in URL, news and events items from this portal.
+</p>
 
 <form name="frm">
   <dtml-in url_list size=batch_size start="queryStart">
@@ -16,7 +18,7 @@ by the automatic link checker.</p>
 <table cellspacing="2" cellpadding="0" width="100%">
 <tr>
     <th width="5%">&nbsp;</th>
-    <th width="20%">Item</th>
+    <th width="20%">Edit item</th>
     <th width="50%">URL</th>
     <th width="25%">Test result</th>
 </tr>
@@ -37,8 +39,8 @@ by the automatic link checker.</p>
                 itemmessage="linkcheckeritem[7]">
                 <tr class="<dtml-var class_name>">
                     <td><img src="<dtml-var itemabsoluteurl>/<dtml-var itemicon>" alt="<dtml-var itemmetatype>" border="0" /></td>
-                    <td><div class="list-item"><a href="<dtml-var "getLocation(itemabsoluteurl).absolute_url(1)">"><dtml-var itemid></a></div></td>
-                    <td><div class="list-item"><dtml-if itemlink><dtml-var itemlink html_quote size=50><dtml-else>&nbsp;</dtml-if></div></td>
+                    <td><div class="list-item"><a href="<dtml-var itemabsoluteurl>/edit_html"><dtml-var "restrictedTraverse(itemabsoluteurl).title_or_id()" html_quote size=25></a></div></td>		    
+                    <td><div class="list-item"><dtml-if itemlink><a href="<dtml-var itemlink>"><dtml-var itemlink html_quote size=50></a><dtml-else>&nbsp;</dtml-if></div></td>
                     <td><div class="list-item"><dtml-var itemmessage html_quote></div></td>
                 </tr>
         </dtml-let>
