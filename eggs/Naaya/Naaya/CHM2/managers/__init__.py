@@ -19,19 +19,7 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
-from os.path import join
 
 #Zope imports
 
 #Product imports
-import Globals
-
-CHM2_PRODUCT_NAME = 'CHM2'
-CHM2_PRODUCT_PATH = Globals.package_home(globals())
-
-PERMISSION_ADD_CHMSITE = 'CHM2 - Add CHM Site objects'
-
-METATYPE_CHMSITE = 'CHM Site'
-
-ID_LINKCHECKER = 'LinkChecker'
-TITLE_LINKCHECKER = 'Link checker'
