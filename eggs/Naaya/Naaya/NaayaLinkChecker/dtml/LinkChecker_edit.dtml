@@ -1,0 +1,139 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<dtml-var style_html>
+
+<p class="note">Change the properties of your LinkChecker object 
+on this form. <br /><strong>Note:</strong> this product only checkes for URLs containing absolute
+addresses and they must not be from the local server.</p>
+
+<dtml-let   editmetatype="REQUEST.get('editmetatype', '')" 
+            validmetatype="hasMetaType(editmetatype)">
+
+<fieldset><legend class="strong_note">Administration</legend>
+<form action="manage_edit" method="post">
+
+<p class="note">If your server is behind a proxy, specify its address followed by the port number. Leave the field blank to ignore.<br /><strong>Example: </strong>http://proxy.mycompany.com:3128</p>
+<span class="strong_note">Proxy Server</span>
+<input type="text" name="proxy" size="50" value="<dtml-var proxy html_quote missing>" class="input_small" />
+
+<p class="note">Insert the number of objects displayed on a page (lower number will make a page load faster and will diminish the number of simultaneously connections). Recommended max 10 result on a page.</p>
+<span class="strong_note">Number of results</span>
+<input type="text" name="batch_size" size="2" value="<dtml-var batch_size missing>" class="input_small" />
+
+<p class="note">You can choose what to store in log: all the urls (valid or broken) or only the broken urls. If you check the following option, information about all checked urls is stored in log.</p>
+
+<span class="strong_note">Log all checked URLs</span>
+<input type="checkbox" name="log_urls" size="2" value="on" class="input_small" <dtml-if log_urls>checked="checked"</dtml-if> />
+
+<p class="note">You can choose to search using an existing ZCatalog(faster). You must create a ZCatalog in the root folder and specify its id below.</p>
+<span class="strong_note">Use Catalog</span>
+<input type="checkbox" name="use_catalog" size="2" class="input_small" value="on" <dtml-if use_catalog>checked="checked"</dtml-if> /><br />
+<span class="strong_note">Catalog id</span>
+<input type="text" name="catalog_name" size="20" class="input_small" <dtml-if use_catalog>value="<dtml-var catalog_name>"</dtml-if> />
+
+<p><input type="submit" name="change" value=" Change " class="input_small" /></p>
+
+</form>
+</fieldset>
+
+<br />
+
+<fieldset><legend class="strong_note">Object types</legend>
+<form name="frmUpdateCache" action="manageUpdateCache">
+<p class="note">
+    This Link Checker will loop all the objects of the meta types specified below and 
+    check their properties that you indicate for every one to build a temporary list of links to
+    be checked in the manual check process.
+</p>
+<input type="submit" name="btnUpdateCache" value="Update Cache" class="input_small" />
+</form>
+
+<p class="note">Specify the meta_type of the objects you want to check.<br /><strong>Example: </strong>Yihaw URL</p>
+<form action="manage_addMetaType" method="post">
+<span class="strong_note">ObjectMetaType</span>
+<input type="text" name="objectMetaType" size="50" value="" class="input_small" />
+<input type="submit" name="addMetaType" value=" Add " class="input_small" />
+</form>
+
+<form action="manage_delMetaType" method="post">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+<tr bgcolor="#C0C0C0">
+    <td width="1%">&nbsp;</td>
+    <td width="20%" nowrap="nowrap" class="strong_note">Meta Type</td>
+    <td width="80%" nowrap="nowrap" class="strong_note">Properties</td>
+</tr>
+<dtml-in "getObjectMetaTypes()">
+    <dtml-if sequence-odd>
+        <dtml-call "REQUEST.set('cellcolor', '#DCDCDC')">
+    <dtml-else>
+        <dtml-call "REQUEST.set('cellcolor', '#FFFFFF')">
+    </dtml-if>
+<tr bgcolor="<dtml-var cellcolor>">
+    <td><input type="checkbox" name="objectMetaType" value="<dtml-var sequence-item html_quote>" class="input_small" /></td>
+    <td class="note"><a href="manage_properties?editmetatype=<dtml-var sequence-item url_quote>#property"><dtml-var sequence-item html_quote></a></td>
+    <td class="note"><dtml-var "_.str(getProperties(_['sequence-item']))[1:-1]"></td>
+</tr>
+</dtml-in>
+<tr>
+    <td>&nbsp;</td>
+    <td colspan="2"><input type="submit" name="delMetaType" value=" Delete " class="input_small" /></td>
+</tr>
+</table>
+</form>
+</fieldset>
+
+<dtml-if validmetatype>
+<br />
+
+<fieldset><legend class="strong_note">Relevant properties of <dtml-var editmetatype html_quote></legend>
+<p class="note"><a name="property"></a>Specify the name of the property of the above type of object that 
+contains the URL you want checked. The property must contain <strong>only</strong> the URL and no other text. <strong>Example for the above object: </strong>locator</p>
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+    <form action="manage_addProperty" method="post">
+    <tr>
+        <td nowrap="nowrap" class="note">Object Meta Type</td>
+        <td nowrap="nowrap" class="strong_note"><dtml-var editmetatype html_quote></td>
+    </tr>
+    <tr>
+        <td nowrap="nowrap" class="note">Object property</td>
+        <td width="100%"><input type="text" name="objectProperty" size="30" class="input_small" />
+        <input type="hidden" name="editmetatype" value="<dtml-var editmetatype html_quote>" />
+        <input type="submit" name="addProperty" value=" Add " class="input_small" /></td>
+    </tr>
+    </form>
+    <form action="manage_delProperty" method="post">
+    <tr>
+        <td>&nbsp;</td>
+        <td>
+            <table border="0" cellspacing="2" cellpadding="2" width="100%">
+                <tr bgcolor="#C0C0C0">
+                    <td width="1%">&nbsp;</td>
+                    <td class="strong_note">Property</td>
+                </tr>
+                <dtml-in "getProperties(editmetatype)">
+                    <dtml-if sequence-odd>
+                        <dtml-call "REQUEST.set('cellcolor', '#DCDCDC')">
+                    <dtml-else>
+                        <dtml-call "REQUEST.set('cellcolor', '#FFFFFF')">
+                    </dtml-if>
+                <tr bgcolor="<dtml-var cellcolor>">
+                    <td><input type="checkbox" name="objectProperty" value="<dtml-var sequence-item html_quote>" class="input_small" /></td>
+                    <td class="note"><dtml-var sequence-item html_quote></td>
+                </tr>
+                </dtml-in>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td><input type="hidden" name="editmetatype" value="<dtml-var editmetatype html_quote>" class="input_small" /><input type="submit" name="delProperty" value=" Delete " class="input_small" /></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </form>
+</table>
+</fieldset>
+</dtml-if>
+
+</dtml-let>
+
+<dtml-var manage_page_footer>
