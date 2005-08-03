@@ -136,75 +136,79 @@
 		<![CDATA[
 <span tal:replace="structure here/standard_html_header" />
 
-<tal:block define="folders_info here/checkPermissionManageFolders; objects_info here/checkPermissionManageObjects;
-	folders_list python:folders_info[2]; objects_list python:objects_info[2];
-	folders_delete_all python:folders_info[1]; objects_delete_all python:objects_info[1];
-	folders_select_all python:folders_info[0]; objects_select_all python:objects_info[0]">
+<tal:block define="objects_info here/checkPermissionManageObjects;
+	objects_list python:objects_info[2];
+	objects_delete_all python:objects_info[1];
+	objects_select_all python:objects_info[0]">
 
-<script language="javascript" type="text/javascript" tal:condition="python:objects_select_all">
+<script language="javascript" type="text/javascript" tal:condition="objects_select_all">
 <!--
 function fCheckSelection()
-{   var frm = document.objectItems;
-    var i;
-    check = false;
-    for(i=0; i<frm.elements.length; i++)
-        if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-        {   check = true; break;}
-    return check;}
+{	var frm = document.objectItems;
+	var i;
+	check = false;
+	for(i=0; i<frm.elements.length; i++)
+		if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
+		{	check = true; break;}
+	return check;}
 //-->
 </script>
 
-<script language="javascript" type="text/javascript" tal:condition="python:folders_delete_all or objects_delete_all">
+<script language="javascript" type="text/javascript" tal:condition="objects_delete_all">
 <!--
 function fDeleteObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="deleteObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to delete.');}
+{	if (fCheckSelection())
+	{	document.objectItems.action="deleteObjects";
+		document.objectItems.submit();}
+	else
+		alert('Please select one or more items to delete.');}
 //-->
 </script>
 
-<script language="javascript" type="text/javascript" tal:condition="python:objects_delete_all">
+<script language="javascript" type="text/javascript" tal:condition="objects_delete_all">
 <!--
-function fsetTopStoryObjects()
-{   document.objectItems.action="setTopStoryObjects";
-    document.objectItems.submit();}
-
+	function fSetTopStoryObjects()
+	{	document.objectItems.action="setTopStoryObjects";
+		document.objectItems.submit();}
 //-->
 </script>
 
+<span style="float: right; width: 20%; word-wrap: break-word;">
+	<tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
+		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+	</tal:block>
+</span>
 
-<table border="0">
-<tr>
-	<td>
 <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_type; alt here/meta_type" border="0" /> <tal:block tal:replace="here/title_or_id" /></h1>
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
 <tal:block tal:define="this_absolute_url python:here.absolute_url(0);
-	perm_add_stories here/checkPermissionAddStories;
+	submissions here/process_submissions;
+	perm_add_something python:len(submissions)>0;
 	perm_edit_object here/checkPermissionEditObject;
 	perm_publish_objects here/checkPermissionPublishObjects">
-<div id="admin_this_folder" tal:condition="python:perm_add_stories or perm_edit_object and perm_publish_objects">
-	<span id="submission" tal:condition="perm_add_stories">
+<div id="admin_this_folder" tal:condition="python:perm_add_something or perm_edit_object and perm_publish_objects">
+	<span id="submission" tal:condition="perm_add_something">
 		<span i18n:translate="" tal:omit-tag="">Submit</span>:
 		<select name="typetoadd"
 			tal:attributes="onchange string:document.location.href='${this_absolute_url}/' + this.options[this.selectedIndex].value">
 			<option value="#" i18n:translate="">Type to add</option>
-			<option value="story_add" i18n:translate="">Story</option>
+			<option tal:repeat="item submissions"
+				tal:attributes="value python:item[0]"
+				tal:content="python:item[1]" i18n:translate="" />
 		</select>
 	</span>
 	<tal:block tal:condition="python:perm_edit_object and perm_publish_objects">
-		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span class="buttons"><span i18n:translate="" tal:omit-tag="">Edit Folder</span></span></a>
-		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span class="buttons"><span i18n:translate="" tal:omit-tag="">Basket of Approvals</span></span></a>
+		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span class="buttons"><img src="/misc_/Naaya/editfolder" border="0" alt="Edit Folder" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Edit Folder</span></span></a>
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span class="buttons"><img src="/misc_/Naaya/basket" border="0" alt="Basket of approvals" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Basket of Approvals</span></span></a>
 	</tal:block>
 </div>
 </tal:block>
 
-<div tal:condition="python:objects_select_all">
+<div tal:condition="objects_select_all">
 	<div id="toolbar">
-		<tal:block tal:condition="python:objects_delete_all"><a href="javascript:fDeleteObjects();"><span><img src="/misc_/EWPublisher/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
-		<tal:block tal:condition="python:objects_delete_all"><a href="javascript:fsetTopStoryObjects();"><span><img src="/misc_/EWPublisher/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Save on front</span></span></a></tal:block>
+		<tal:block tal:condition="objects_delete_all"><a href="javascript:fDeleteObjects();"><span><img src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
+		<tal:block tal:condition="objects_delete_all"><a href="javascript:fSetTopStoryObjects();"><span><input src="/misc_/Naaya/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="" tal:omit-tag="">Save on front</span></span></a></tal:block>
 	</div>
 </div>
 
@@ -233,25 +237,16 @@ function fsetTopStoryObjects()
 	</td>
 	<td class="edit">
 		<tal:block tal:condition="python:edit_permission==1">
-			<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/EWPublisher/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
+			<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
 		</tal:block>
 	</td>
 	</tal:block>
 </tr>
 </table>
 </form>
-
-	</td>
-	<td style="vertical-align: top;">
-	<tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
-		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
-	</tal:block>
-	</td>
-</tr>
-</table>
 </tal:block>
 
-<p style="clear: both;"><a href="index_rdf" target="_blank"><img src="/misc_/EWPublisher/xml.png" alt="Syndication (XML)" border="0" i18n:attributes="alt" /></a></p>
+<p style="clear: both;"><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a></p>
 
 <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
 	<a tal:attributes="href string:${here/absolute_url}/requestrole_html" i18n:translate="">Apply for a content contributor role in this portal</a>
@@ -264,82 +259,85 @@ function fsetTopStoryObjects()
 		<![CDATA[
 <span tal:replace="structure here/standard_html_header" />
 
-<tal:block define="folders_info here/checkPermissionManageFolders; objects_info here/checkPermissionManageObjects;
-	folders_list python:folders_info[2]; objects_list python:objects_info[2];
-	folders_delete_all python:folders_info[1]; objects_delete_all python:objects_info[1];
-	folders_select_all python:folders_info[0]; objects_select_all python:objects_info[0]">
+<tal:block define="objects_info here/checkPermissionManageObjects;
+	objects_list python:objects_info[2];
+	objects_delete_all python:objects_info[1];
+	objects_select_all python:objects_info[0]">
 
-<script language="javascript" type="text/javascript" tal:condition="python:folders_select_all or objects_select_all">
+<script language="javascript" type="text/javascript" tal:condition="objects_select_all">
 <!--
 function fCheckSelection()
-{   var frm = document.objectItems;
-    var i;
-    check = false;
-    for(i=0; i<frm.elements.length; i++)
-        if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-        {   check = true; break;}
-    return check;}
+{	var frm = document.objectItems;
+	var i;
+	check = false;
+	for(i=0; i<frm.elements.length; i++)
+		if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
+		{	check = true; break;}
+	return check;}
 //-->
 </script>
 
-<script language="javascript" type="text/javascript" tal:condition="python:folders_delete_all or objects_delete_all">
+<script language="javascript" type="text/javascript" tal:condition="objects_delete_all">
 <!--
 function fDeleteObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="deleteObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to delete.');}
+{	if (fCheckSelection())
+	{	document.objectItems.action="deleteObjects";
+		document.objectItems.submit();}
+	else
+		alert('Please select one or more items to delete.');}
 //-->
 </script>
 
-<script language="javascript" type="text/javascript" tal:condition="python:folders_delete_all or objects_delete_all">
+<script language="javascript" type="text/javascript" tal:condition="objects_delete_all">
 <!--
-function fsetTopStoryObjects()
-{   document.objectItems.action="setTopStoryObjects";
-    document.objectItems.submit();}
-
+	function fSetTopStoryObjects()
+	{	document.objectItems.action="setTopStoryObjects";
+		document.objectItems.submit();}
 //-->
 </script>
 
+<span style="float: right; width: 20%; word-wrap: break-word;">
+	<tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
+		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+	</tal:block>
+</span>
 
-<table border="0">
-<tr>
-	<td>
 <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_type; alt here/meta_type" border="0" /> <tal:block tal:replace="here/title_or_id" /></h1>
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
 <tal:block tal:define="this_absolute_url python:here.absolute_url(0);
-	perm_add_news here/checkPermissionAddNews;
+	submissions here/process_submissions;
+	perm_add_something python:len(submissions)>0;
 	perm_edit_object here/checkPermissionEditObject;
 	perm_publish_objects here/checkPermissionPublishObjects">
-<div id="admin_this_folder" tal:condition="python:perm_add_news or perm_edit_object and perm_publish_objects">
-	<span id="submission" tal:condition="perm_add_news">
+<div id="admin_this_folder" tal:condition="python:perm_add_something or perm_edit_object and perm_publish_objects">
+	<span id="submission" tal:condition="perm_add_something">
 		<span i18n:translate="" tal:omit-tag="">Submit</span>:
 		<select name="typetoadd"
 			tal:attributes="onchange string:document.location.href='${this_absolute_url}/' + this.options[this.selectedIndex].value">
 			<option value="#" i18n:translate="">Type to add</option>
-			<option value="news_add_html" i18n:translate="">News</option>
+			<option tal:repeat="item submissions"
+				tal:attributes="value python:item[0]"
+				tal:content="python:item[1]" i18n:translate="" />
 		</select>
 	</span>
 	<tal:block tal:condition="python:perm_edit_object and perm_publish_objects">
-		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span class="buttons"><span i18n:translate="" tal:omit-tag="">Edit Folder</span></span></a>
-		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span class="buttons"><span i18n:translate="" tal:omit-tag="">Basket of Approvals</span></span></a>
+		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span class="buttons"><img src="/misc_/Naaya/editfolder" border="0" alt="Edit Folder" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Edit Folder</span></span></a>
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span class="buttons"><img src="/misc_/Naaya/basket" border="0" alt="Basket of approvals" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Basket of Approvals</span></span></a>
 	</tal:block>
 </div>
 </tal:block>
 
-
-<div tal:condition="python:folders_select_all or objects_select_all or (here.hasObjectsToPaste() and here.checkPermissionPasteObjects())">
+<div tal:condition="objects_select_all">
 	<div id="toolbar">
-		<tal:block tal:condition="python:folders_delete_all or objects_delete_all"><a href="javascript:fDeleteObjects();"><span><img src="/misc_/EWPublisher/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
-		<tal:block tal:condition="python:folders_delete_all or objects_delete_all"><a href="javascript:fsetTopStoryObjects();"><span><input src="/misc_/EWPublisher/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="" tal:omit-tag="">Save on front</span></span></a></tal:block>
+		<tal:block tal:condition="objects_delete_all"><a href="javascript:fDeleteObjects();"><span><img src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
+		<tal:block tal:condition="objects_delete_all"><a href="javascript:fSetTopStoryObjects();"><span><input src="/misc_/Naaya/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="" tal:omit-tag="">Save on front</span></span></a></tal:block>
 	</div>
 </div>
 
 <form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
-<tal:block tal:condition="python:folders_select_all or objects_select_all">
+<tal:block tal:condition="python:objects_select_all">
 <tr>
 	<th class="checkbox" i18n:translate="">Delete</th>
 	<th class="type" i18n:translate="">Type</th>
@@ -362,24 +360,16 @@ function fsetTopStoryObjects()
 	</td>
 	<td class="edit">
 		<tal:block tal:condition="python:edit_permission==1">
-			<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/EWPublisher/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
+			<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
 		</tal:block>
 	</td>
 	</tal:block>
 </tr>
 </table>
 </form>
-
-	</td>
-	<td style="vertical-align: top;">
-	<tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
-		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
-	</tal:block>
-</tr>
-</table>
 </tal:block>
 
-<p style="clear: both;"><a href="index_rdf" target="_blank"><img src="/misc_/EWPublisher/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a></p>
+<p style="clear: both;"><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a></p>
 
 <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
 	<a tal:attributes="href string:${here/absolute_url}/requestrole_html" i18n:translate="">Apply for a content contributor role in this portal</a>
@@ -421,36 +411,41 @@ function fDeleteObjects()
 //-->
 </script>
 
+<span style="float: right; width: 20%; word-wrap: break-word;">
+	<tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
+		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+	</tal:block>
+</span>
 
-<table border="0">
-<tr>
-	<td>
 <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_type; alt here/meta_type" border="0" /> <tal:block tal:replace="here/title_or_id" /></h1>
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
 <tal:block tal:define="this_absolute_url python:here.absolute_url(0);
-	perm_add_stories here/checkPermissionAddEvents;
+	submissions here/process_submissions;
+	perm_add_something python:len(submissions)>0;
 	perm_edit_object here/checkPermissionEditObject;
 	perm_publish_objects here/checkPermissionPublishObjects">
-<div id="admin_this_folder" tal:condition="python:perm_add_stories or perm_edit_object and perm_publish_objects">
-	<span id="submission" tal:condition="perm_add_stories">
+<div id="admin_this_folder" tal:condition="python:perm_add_something or perm_edit_object and perm_publish_objects">
+	<span id="submission" tal:condition="perm_add_something">
 		<span i18n:translate="" tal:omit-tag="">Submit</span>:
 		<select name="typetoadd"
 			tal:attributes="onchange string:document.location.href='${this_absolute_url}/' + this.options[this.selectedIndex].value">
 			<option value="#" i18n:translate="">Type to add</option>
-			<option value="event_add_html" i18n:translate="">Event</option>
+			<option tal:repeat="item submissions"
+				tal:attributes="value python:item[0]"
+				tal:content="python:item[1]" i18n:translate="" />
 		</select>
 	</span>
 	<tal:block tal:condition="python:perm_edit_object and perm_publish_objects">
-		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span class="buttons"><span i18n:translate="" tal:omit-tag="">Edit Folder</span></span></a>
-		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span class="buttons"><span i18n:translate="" tal:omit-tag="">Basket of Approvals</span></span></a>
+		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span class="buttons"><img src="/misc_/Naaya/editfolder" border="0" alt="Edit Folder" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Edit Folder</span></span></a>
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span class="buttons"><img src="/misc_/Naaya/basket" border="0" alt="Basket of approvals" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Basket of Approvals</span></span></a>
 	</tal:block>
 </div>
 </tal:block>
 
 <div tal:condition="python:objects_select_all">
 	<div id="toolbar">
-		<tal:block tal:condition="python:folders_delete_all or objects_delete_all"><a href="javascript:fDeleteObjects();"><span><img src="/misc_/EWPublisher/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
+		<tal:block tal:condition="python:folders_delete_all or objects_delete_all"><a href="javascript:fDeleteObjects();"><span><img src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
 	</div>
 </div>
 
@@ -475,24 +470,16 @@ function fDeleteObjects()
 	</td>
 	<td class="edit">
 		<tal:block tal:condition="python:edit_permission==1">
-			<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/EWPublisher/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
+			<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
 		</tal:block>
 	</td>
 	</tal:block>
 </tr>
 </table>
 </form>
-
-	</td>
-	<td style="vertical-align: top;">
-	<tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
-		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
-	</tal:block>
-</tr>
-</table>
 </tal:block>
 
-<p style="clear: both;"><a href="index_rdf" target="_blank"><img src="/misc_/EWPublisher/xml.png" alt="Syndication (XML)" border="0" i18n:attributes="alt" /></a></p>
+<p style="clear: both;"><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0" i18n:attributes="alt" /></a></p>
 
 <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
 	<a tal:attributes="href string:${here/absolute_url}/requestrole_html" i18n:translate="">Apply for a content contributor role in this portal</a>
