@@ -46,9 +46,3 @@ PREFIX_SITE = 'portal'
 PREFIX_FOLDER = 'fol'
 
 ID_IMAGESFOLDER = 'images'
-
-#some default Naaya content meta types
-METATYPE_NYNEWS = 'Naaya News'
-METATYPE_NYSTORY = 'Naaya Story'
-METATYPE_NYEVENT = 'Naaya Event'
-METATYPE_NYDOCUMENT = 'Naaya Document'
