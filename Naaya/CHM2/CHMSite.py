@@ -34,6 +34,7 @@ from Products.NaayaContent import *
 from Products.Naaya.constants import *
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
+from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
 
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addCHMSite(self, id='', title='', lang=None, REQUEST=None):
@@ -67,13 +68,14 @@ class CHMSite(NySite):
     def loadDefaultData(self):
         """ """
         NySite.__dict__['loadDefaultData'](self)
+        manage_addLinkChecker(self, ID_LINKCHECKER, TITLE_LINKCHECKER)
         self.loadSkeleton(join(CHM2_PRODUCT_PATH, 'skel'))
 
     #objects getters
-    def getLinkChecker(self): return self._getOb('LinkChecker', None)
+    def getLinkChecker(self): return self._getOb(ID_LINKCHECKER, None)
     def getLinkCheckerLastLog(self):
         try:
-            entries = self.utSortObjsListByAttr(self._getOb('LinkChecker').objectValues("LogEntry"), 'date_create', p_desc=1)
+            entries = self.utSortObjsListByAttr(self._getOb(ID_LINKCHECKER).objectValues('LogEntry'), 'date_create', p_desc=1)
             if len(entries) > 0: return entries[0]
             else: return None
         except:
