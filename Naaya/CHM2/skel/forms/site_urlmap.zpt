@@ -1,0 +1,70 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<h1><tal:block tal:replace="here/site_title" /> <span i18n:translate="" tal:omit-tag="">sitemap</span></h1>
+
+<tal:block tal:define="site_url here/getSitePath">
+
+<div id="tabbedmenu">
+<ul>
+	<li><a tal:attributes="href string:${site_url}/sitemap_html" i18n:translate="">Directory structure</a></li>
+	<li id="currenttab">
+		<a tal:attributes="href string:${site_url}/urlmap_html" i18n:translate="">URL structure</a>
+	</li>
+</ul>
+</div>
+
+<tal:block tal:define="sort python:request.get('sort', 'title');">
+<p>
+	This page lists the links published in this portal,
+	<tal:block tal:condition="python:sort=='title'">
+		<span i18n:translate="" tal:omit-tag="">alphabetically ordered by title. You can also</span>
+		<a tal:attributes="href string:${site_url}/urlmap_html?sort=locator" i18n:translate="">sort the items by URL</a>
+		<span i18n:translate="" tal:omit-tag="">or</span>
+		<a tal:attributes="href string:${site_url}/urlmap_html?sort=server" i18n:translate="">group them by server</a>.
+	</tal:block>
+	<tal:block tal:condition="python:sort=='locator'">
+		<span i18n:translate="" tal:omit-tag="">ordered by the URL address. You can also</span>
+		<a tal:attributes="href string:${site_url}/urlmap_html?sort=title" i18n:translate="">sort them by title</a>
+		<span i18n:translate="" tal:omit-tag="">or</span>
+		<a tal:attributes="href string:${site_url}/urlmap_html?sort=server" i18n:translate="">group them by server</a>.
+	</tal:block>
+	<tal:block tal:condition="python:sort=='server'">
+		<span i18n:translate="" tal:omit-tag="">groupped bt server. You can also</span>
+		<a tal:attributes="href string:${site_url}/urlmap_html?sort=title" i18n:translate="">sort them by title</a>
+		<span i18n:translate="" tal:omit-tag="">or</span>
+		<a tal:attributes="href string:${site_url}/urlmap_html?sort=locator" i18n:translate="">sort the items by URL</a>
+	</tal:block>
+</p>
+
+<tal:block tal:condition="python:sort=='title' or sort=='locator'">
+<ul>
+	<li tal:repeat="item python:here.getUrlMap(sort)">
+		<a tal:attributes="href item/locator" target="_blank" tal:content="item/title_or_id" />
+		<span tal:replace="item/description" />
+		<br />
+		<span tal:replace="item/locator" />
+	</li>
+</ul>
+</tal:block>
+<tal:block tal:condition="python:sort=='server'">
+	<tal:block tal:define="map python:here.getUrlMap(sort);
+							domains python:map[0];
+							urlsmap python:map[1]">
+		<tal:block tal:repeat="domain domains">
+		<strong tal:content="python:urlsmap[domain][0]" />
+		<ul>
+			<li tal:repeat="item python:urlsmap[domain][1]">
+				<a tal:attributes="href item/locator" target="_blank" tal:content="item/title_or_id" />
+				<span tal:replace="item/description" />
+				<br />
+				<span tal:replace="item/locator" />
+			</li>
+		</ul>
+		</tal:block>
+	</tal:block>
+</tal:block>
+</tal:block>
+
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer"/>

@@ -76,6 +76,29 @@ class CHMSite(NySite):
         else:
             return []
 
+    def getUrlMap(self, sort='title'):
+        #process and returns a map with all approved urls in the portal by domain
+        urls = self.query_objects_ex(meta_type='Naaya URL', approved=1)
+        if sort=='title' or sort=='locator':
+            return self.utSortObjsListByAttr(urls, sort, 0)
+        elif sort=='server':
+            domains = {}
+            for url in urls:
+                domain = urlparse(url.locator)[1]
+                domain = domain.replace('www.', '')
+                domain_key = domain.split('.')
+                domain_key = domain_key[:-1]
+                domain_key.reverse()
+                domain_key = '.'.join(domain_key)
+                if not domains.has_key(domain_key):
+                    domains[domain_key] = [domain, []]
+                domains[domain_key][1].append(url)
+            domains_keys = domains.keys()
+            domains_keys.sort()
+            return domains_keys, domains
+        else:
+            return urls
+
     #administration pages
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_urls_html')
     def admin_urls_html(self, REQUEST=None, RESPONSE=None):
@@ -91,5 +114,11 @@ class CHMSite(NySite):
     def admin_deletions_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_deletions')
+
+    #site pages
+    security.declareProtected(view, 'urlmap_html')
+    def urlmap_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_urlmap')
 
 InitializeClass(CHMSite)

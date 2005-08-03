@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <skel>
 	<forms>
+		<form id="site_sitemap" title="Portal site map"/>
+		<form id="site_urlmap" title="Portal url map"/>
 		<form id="site_admin_deletions" title="Portal administration - submissions"/>
 		<form id="site_admin_submissions" title="Portal administration - deletions"/>
 	</forms>
