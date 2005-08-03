@@ -85,6 +85,11 @@ def initialize(context):
 misc_ = {
 }
 
+#meta types as global variables
+for x in content.values():
+    c = 'METATYPE_%s = \'%s\'' % (x['module'].upper(), x['meta_type'])
+    exec(c)
+
 #images
 for x in dirs:
     misc_['%s.gif' % x] = ImageFile('%s/www/%s.gif' % (x, x), globals())
