@@ -1,0 +1,60 @@
+<h2>Log of broken links found by the automatic checking</h2>
+
+<p>This page presents the URLs found broken at <dtml-var "umFormatDateTimeToString(date_create)">&nbsp;
+by the automatic link checker.</p>
+
+<form name="frm">
+  <dtml-in url_list size=batch_size start="queryStart">
+    <dtml-if sequence-start>
+      <strong><dtml-var sequence-number></strong>
+    </dtml-if>
+    <dtml-if sequence-end>
+      - <strong><dtml-var sequence-number></strong> of <strong><dtml-var "_.len(url_list)"></strong> results
+    </dtml-if>
+  </dtml-in>
+
+<table cellspacing="2" cellpadding="0" width="100%">
+<tr>
+    <th width="5%">&nbsp;</th>
+    <th width="20%">Item</th>
+    <th width="50%">URL</th>
+    <th width="25%">Test result</th>
+</tr>
+    <dtml-in url_list size=batch_size start="queryStart">
+      <dtml-if sequence-odd>
+        <dtml-call "REQUEST.set('class_name', 'cellodd')">
+      <dtml-else>
+        <dtml-call "REQUEST.set('class_name', 'cellevent')">
+      </dtml-if>
+       <dtml-let linkcheckeritem=sequence-item
+                itemid="linkcheckeritem[0]"
+                itemmetatype="linkcheckeritem[1]"
+                itemabsoluteurl="linkcheckeritem[2]"
+                itemicon="linkcheckeritem[3]"
+                itemproperty="linkcheckeritem[4]"
+                itemlink="linkcheckeritem[5]"
+                itemerror="linkcheckeritem[6]"
+                itemmessage="linkcheckeritem[7]">
+                <tr class="<dtml-var class_name>">
+                    <td><img src="<dtml-var itemabsoluteurl>/<dtml-var itemicon>" alt="<dtml-var itemmetatype>" border="0" /></td>
+                    <td><div class="list-item"><a href="<dtml-var "getLocation(itemabsoluteurl).absolute_url(1)">"><dtml-var itemid></a></div></td>
+                    <td><div class="list-item"><dtml-if itemlink><dtml-var itemlink html_quote size=50><dtml-else>&nbsp;</dtml-if></div></td>
+                    <td><div class="list-item"><dtml-var itemmessage html_quote></div></td>
+                </tr>
+        </dtml-let>
+    </dtml-in>
+    </table>
+    <dtml-comment>
+      Previous-Next stuff
+    </dtml-comment>
+    <table border="0" cellspacing="0" cellpadding="0" width="100%">
+      <dtml-if expr="_.len(url_list) != 1">
+      <tr>
+        <td align="left">
+          <div class="list-item"><dtml-in url_list previous size=batch_size start="queryStart"><strong><a href="&dtml-URL;&dtml-sequence-query;queryStart=&dtml-previous-sequence-start-number;"> &lt; Previous</a></strong><dtml-else>&nbsp;</dtml-in></div></td>
+          <td align="right"><div class="list-item"><dtml-in url_list next size=batch_size start="queryStart"><strong><a href="&dtml-URL;&dtml-sequence-query;queryStart=&dtml-next-sequence-start-number;"> Next &gt; </a></strong><dtml-else>&nbsp;</dtml-in></div></td>
+       </tr>
+      </dtml-if>
+    </table>
+
+</form>
