@@ -18,7 +18,6 @@
 		<form id="site_external_search" title="Portal external search"/>
 		<form id="site_search" title="Portal search"/>
 		<form id="site_sitemap" title="Portal site map"/>
-		<form id="site_urlmap" title="Portal url map"/>
 		<form id="site_feedback" title="Portal feedback"/>
 		<form id="site_requestrole" title="Portal request role"/>
 		<form id="site_note" title="Portal note page"/>
