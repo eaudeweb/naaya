@@ -94,7 +94,7 @@
 		<localchannel id="news_rdf" title="News" description="News" language="en" type="" objmetatype="Naaya News" numberofitems="10"/>
 		<remotechannel id="" title="test" url="http://nuecazul.blogspot.com/atom.xml" numbershownitems="10"/>
 	</syndication>
-	<portlets>
+	<portlets left="portlet_maincategories" center="portlet_latestuploads">
 		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="portlet_maincategories" title="Main categories" />
 		<portlet id="portlet_latestuploads" title="Latest uploads" />

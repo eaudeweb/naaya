@@ -266,6 +266,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
                         try: order = abs(int(link.order))
                         except: order = 0
                         linkslist_ob.add_link_item(link.id, link.title, link.description, link.url, relative, link.permission, order)
+                portletstool_ob.manage_left_portlets(skel_handler.root.portlets.left.split(','))
+                portletstool_ob.manage_center_portlets(skel_handler.root.portlets.center.split(','))
             #load properties
             if skel_handler.root.properties is not None:
                 for language in skel_handler.root.properties.languages:
