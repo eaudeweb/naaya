@@ -102,7 +102,7 @@
 			</scheme>
 		</skin>
 	</layout>
-	<portlets>
+	<portlets left="portlet_maincategories" center="portlet_lateststories,portlet_latestnews,portlet_latestuploads">
 		<portlet id="portlet_administration" title="Administration"/>
 		<portlet id="portlet_lateststories" title="Latest stories"/>
 		<portlet id="portlet_latestnews" title="What's new"/>
@@ -133,7 +133,7 @@
 			<link id="112" title="Other searches" description="" url="/external_search_html" relative="1" permission="" order="130"/>
 		</linkslist>
 	</portlets>
-	<content maintopics="">
+	<content maintopics="folder">
 		<folder id="stories" title="Stories" description="" coverage="" keywords="" publicinterface="1" maintainer_email="" sortorder="0" meta_types="Naaya Story">
 		<![CDATA[
 <span tal:replace="structure here/standard_html_header" />
