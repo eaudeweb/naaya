@@ -13,6 +13,7 @@
 	<li tal:condition="canTranslate"><a tal:attributes="href string:${site_url}/admin_translations_html" title="Translate messages" i18n:attributes="title" i18n:translate="">Translate messages</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_linkslists_html" title="Users and security settings" i18n:attributes="title" i18n:translate="">Lists of links</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_urls_html" title="Portal URLS" i18n:attributes="title" i18n:translate="">URL Management</a></li>
+	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_predefined_html" title="Portal predefined latest uploads" i18n:attributes="title" i18n:translate="">Predefined latest uploads</a></li>
 	<li><strong i18n:translate="">Content management</strong></li>
 	<li tal:condition="canAdd"><a tal:attributes="href string:${site_url}/admin_submissions_html" title="Submit content in various parts of the portal" i18n:attributes="title" i18n:translate="">Submissions</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_deletions_html" title="Delete content from various parts of the portal" i18n:attributes="title" i18n:translate="">Deletions</a></li>

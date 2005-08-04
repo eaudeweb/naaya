@@ -1,0 +1,24 @@
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title">
+	<span i18n:translate="" tal:omit-tag="">Latest uploads</span>
+	<a tal:attributes="href string:${here/getSitePath}/latestuploads_rdf"><img src="misc_/NaayaCore/xml.png" width="36" height="14" border="0" alt="Syndication (XML)" i18n:attributes="alt" /></a>
+</tal:block>
+<tal:block metal:fill-slot="portlet_content">
+	<ul>
+		<li tal:repeat="item here/getPredefinedUploads">
+		<tal:block define="url python:item[0]; title python:item[1]; date python:item[2]; icon python:item[3]; meta_type python:item[4]; descr python:item[5]">
+		<img tal:attributes="src icon; alt meta_type; title meta_type" style="vertical-align: -5px;" />
+			<a tal:attributes="href url; title descr" tal:content="title" />
+			[<span i18n:translate="" tal:omit-tag="">posted on:</span> <tal:block tal:content="python:here.utShowDateTime(date)"/>]
+		</tal:block>
+		</li>
+		<li tal:repeat="item here/getLatestUploads">
+		<tal:block condition="python:item.absolute_url(1) not in here.predefined_latest_uploads">
+		<img tal:attributes="src item/icon; alt item/meta_type; title item/meta_type" style="vertical-align: -5px;" />
+			<a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id" />
+			[<span i18n:translate="" tal:omit-tag="">posted on:</span> <tal:block tal:content="python:here.utShowDateTime(item.releasedate)"/>]
+		</tal:block>
+		</li>
+	</ul>
+</tal:block>
+</tal:block>
