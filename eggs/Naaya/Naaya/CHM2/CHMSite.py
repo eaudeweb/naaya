@@ -194,12 +194,12 @@ class CHMSite(NySite):
         return url_struct
 
     def getAllLatestUploads(self):
-        total = len(self.predefined_latest_uploads) + self.number_latest_uploads
-        return CHMSite.inheritedAttribute('getLatestUploads')(self, total)
-
-    def delPred(self):
         """ """
-        self.predefined_latest_uploads = []
+        latest = self.getLatestUploads()
+        pred = self.getPredefinedUploads()
+        latest.extend(pred)
+        self.utFilterObjsListByAttr(latest, 'releasedate', 'releasedate')
+        return latest
 
     def setPredefinedUploads(self, predefined=[], REQUEST=None):
         """ update the predefined list of uploads """
@@ -217,7 +217,7 @@ class CHMSite(NySite):
             if obj is None:
                 self.predefined_latest_uploads.remove(url)
             else:
-                buf.append((obj.absolute_url(1), obj.title_or_id(), obj.releasedate, obj.icon, obj.meta_type, obj.description))
+                buf.append(obj)
         return buf
 
     def getLatestStories(self):
