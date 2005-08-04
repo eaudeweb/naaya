@@ -67,7 +67,7 @@ function fSet(ctrl, value)
 	<input type="text" name="releasedate" id="releasedate" size="20" />
 </div>
 
-<tal:block metal:define-slot="custom_properties"/>
+<tal:block metal:define-slot="custom_properties" />
 
 <div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(kind)">
 	<label tal:attributes="for record/name"><span tal:replace="record/name"/></label>
