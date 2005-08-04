@@ -35,6 +35,7 @@ from DynamicPropertiesTool import DynamicPropertiesTool
 from PortletsTool import PortletsTool
 from FormsTool import FormsTool
 from LayoutTool import LayoutTool
+from ImportExportTool import ImportExportTool
 
 def initialize(context):
     """ """
@@ -118,6 +119,14 @@ def initialize(context):
                 ),
         icon = 'LayoutTool/www/LayoutTool.gif'
         )
+    context.registerClass(
+        ImportExportTool.ImportExportTool,
+        permission = PERMISSION_ADD_NAAYACORE_TOOL,
+        constructors = (
+                ImportExportTool.manage_addImportExportTool,
+                ),
+        icon = 'ImportExportTool/www/ImportExportTool.gif'
+        )
 
 misc_ = {
     'PropertiesTool.gif':ImageFile('PropertiesTool/www/PropertiesTool.gif', globals()),
@@ -144,6 +153,7 @@ misc_ = {
     'Template.gif':ImageFile('LayoutTool/www/Template.gif', globals()),
     'Scheme.gif':ImageFile('LayoutTool/www/Scheme.gif', globals()),
     'Style.gif':ImageFile('LayoutTool/www/Style.gif', globals()),
+    'ImportExportTool.gif':ImageFile('ImportExportTool/www/ImportExportTool.gif', globals()),
 
     'xml.png':ImageFile('SyndicationTool/www/xml.png', globals()),
 }
