@@ -216,7 +216,8 @@ class CHMSite(NySite):
             obj = self.unrestrictedTraverse(url, None)
             if obj is None:
                 self.predefined_latest_uploads.remove(url)
-            buf.append((obj.absolute_url(1), obj.title_or_id(), obj.releasedate, obj.icon, obj.meta_type, obj.description))
+            else:
+                buf.append((obj.absolute_url(1), obj.title_or_id(), obj.releasedate, obj.icon, obj.meta_type, obj.description))
         return buf
 
     def getLatestStories(self):
