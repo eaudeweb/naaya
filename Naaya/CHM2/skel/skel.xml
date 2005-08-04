@@ -10,6 +10,7 @@
 		<form id="site_admin_submissions" title="Portal administration - deletions"/>
 		<form id="site_admin_urls" title="Portal administration - urls"/>
 		<form id="site_admin_linkchecker" title="Portal administration - link checker"/>
+		<form id="site_admin_predefined" title="Portal administration - predefined latest uploads"/>
 	</forms>
 	<layout default_skin_id="chm" default_scheme_id="indigo">
 		<skin id="chm" title="CHM">
@@ -107,6 +108,7 @@
 		<portlet id="portlet_administration" title="Administration"/>
 		<portlet id="portlet_lateststories" title="Latest stories"/>
 		<portlet id="portlet_latestnews" title="What's new"/>
+		<portlet id="portlet_latestuploads" title="Latest uploads"/>
 		<portlet id="portlet_latestphotos" title="Photos"/>
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
 			<link id="100" title="Biodiversity CHM" description="Global Biodiversity Clearing-House Mechanism (CBD)" url="http://www.biodiv.org/chm" relative="0" permission="" order="10"/>
