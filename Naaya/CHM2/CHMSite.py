@@ -82,6 +82,8 @@ class CHMSite(NySite):
             else: return None
         except:
             return None
+    def getPhotoArchive(self): return self._getOb(ID_PHOTOARCHIVE, None)
+
     #api
     def getOnFrontNews(self):
         #returns a list with the news marked as on front
