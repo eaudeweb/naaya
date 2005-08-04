@@ -12,6 +12,7 @@
 		margin: 1.5em 0.1em 1em 0.9em;
 		width:11.5em;
 		background-color:#d9d8b9; /*#c1c19d*/ /* #f9f9f9*/ /*#eeeff0*/ /*#ecf2e1*/
+		float: right;
 	}
 
 	.right_link_portlet .portlet-title{
