@@ -111,8 +111,8 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
         NyCheckControl.__dict__['__init__'](self)
         NyValidation.__dict__['__init__'](self)
 
-    security.declarePrivate('exportThisCustomProperties')
-    def exportThisCustomProperties(self):
+    security.declarePrivate('export_this_tag_custom')
+    def export_this_tag_custom(self):
         return 'pointer="%s"' % self.utXmlEncode(self.pointer)
 
     #zmi actions

@@ -125,13 +125,13 @@ class NyFile(NyAttributes, NyItem, file_item, NyVersioning, NyCheckControl, NyVa
         NyCheckControl.__dict__['__init__'](self)
         NyValidation.__dict__['__init__'](self)
 
-    security.declarePrivate('exportThisCustomProperties')
-    def exportThisCustomProperties(self):
+    security.declarePrivate('export_this_tag_custom')
+    def export_this_tag_custom(self):
         return 'downloadfilename="%s" file="%s" content_type="%s" precondition="%s"' % \
-                (self.utXmlEncode(self.downloadfilename),
-                 self.utBase64Encode(str(self.utNoneToEmpty(self.data))),
-                 self.utXmlEncode(self.content_type),
-                 self.utXmlEncode(self.precondition))
+            (self.utXmlEncode(self.downloadfilename),
+                self.utBase64Encode(str(self.utNoneToEmpty(self.data))),
+                self.utXmlEncode(self.content_type),
+                self.utXmlEncode(self.precondition))
 
     security.declarePrivate('syndicateThis')
     def syndicateThis(self):

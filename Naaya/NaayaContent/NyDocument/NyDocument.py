@@ -128,9 +128,14 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
     def objectkeywords(self, lang):
         return u' '.join([self._objectkeywords(lang), self.getLocalProperty('body', lang)])
 
-    security.declarePrivate('exportThisCustomProperties')
-    def exportThisCustomProperties(self):
-        return 'body="%s"' % self.utXmlEncode(self.body)
+    security.declarePrivate('export_this_body_custom')
+    def export_this_body_custom(self):
+        r = []
+        for l in self.gl_get_languages():
+            v = self.getLocalProperty('body', l)
+            if isinstance(v, unicode): v = v.encode('utf-8')
+            r.append('<body lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+        return ''.join(r)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
