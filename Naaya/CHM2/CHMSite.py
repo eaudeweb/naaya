@@ -37,6 +37,7 @@ from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
 from Products.NaayaPhotoArchive.NyPhotoFolder import manage_addNyPhotoFolder
+from Products.NaayaPhotoArchive.constants import *
 
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addCHMSite(self, id='', title='', lang=None, REQUEST=None):
@@ -103,6 +104,16 @@ class CHMSite(NySite):
             return [x for x in news_ob.objectValues(METATYPE_NYNEWS) if x.approved==1 and x.topitem==1]
         else:
             return []
+
+    def getOnFrontPhotos(self):
+        #returns a list with the photos marked as on front
+        #this requires NyPhotos pluggable content type to be present
+        photo_ob = self._getOb('PhotoArchive', None)
+        if photo_ob is not None:
+            return [x for x in photo_ob.objectValues(METATYPE_NYPHOTO) if x.approved==1 and x.topitem==1]
+        else:
+            return []
+
 
     def getUrlMap(self, sort='title'):
         #process and returns a map with all approved urls in the portal by domain
