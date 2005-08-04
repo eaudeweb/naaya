@@ -55,6 +55,7 @@ from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
 from Products.NaayaCore.PortletsTool.managers.portlets_manager import portlets_manager
 from Products.NaayaCore.FormsTool.FormsTool import manage_addFormsTool
 from Products.NaayaCore.LayoutTool.LayoutTool import manage_addLayoutTool
+from Products.NaayaCore.ImportExportTool.ImportExportTool import manage_addImportExportTool
 from Products.NaayaBase.NyBase import NyBase
 from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
 from Products.NaayaBase.NyPermissions import NyPermissions
@@ -104,7 +105,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
         +
         (
             {'label' : 'Control Panel', 'action' : 'manage_controlpanel_html'},
-            {'label' : 'XML import/export', 'action' : 'manage_xmlimportexport_html'},
         )
     )
 
@@ -170,6 +170,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
         manage_addPortletsTool(self)
         manage_addFormsTool(self)
         manage_addLayoutTool(self)
+        manage_addImportExportTool(self)
         manage_addErrorLog(self)
         self.loadSkeleton(join(NAAYA_PRODUCT_PATH, 'skel'))
 
@@ -1549,9 +1550,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_controlpanel_html')
     manage_controlpanel_html = PageTemplateFile('zpt/site_manage_controlpanel', globals())
-
-    security.declareProtected(view_management_screens, 'manage_xmlimportexport_html')
-    manage_xmlimportexport_html = PageTemplateFile('zpt/site_manage_xmlimportexport', globals())
 
     security.declareProtected(view_management_screens, 'macro_manage_add')
     macro_manage_add = PageTemplateFile('zpt/site_macro_manage_add', globals())
