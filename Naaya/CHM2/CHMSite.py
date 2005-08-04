@@ -197,9 +197,10 @@ class CHMSite(NySite):
         """ """
         latest = self.getLatestUploads()
         pred = self.getPredefinedUploads()
-        latest.extend(pred)
-        self.utFilterObjsListByAttr(latest, 'releasedate', 'releasedate')
-        return latest
+        buf = self.utListDifference(latest, pred)
+        buf.extend(pred)
+        buf = self.utSortObjsListByAttr(buf, 'releasedate', 0)
+        return buf
 
     def setPredefinedUploads(self, predefined=[], REQUEST=None):
         """ update the predefined list of uploads """
