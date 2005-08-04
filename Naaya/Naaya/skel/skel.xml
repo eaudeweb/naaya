@@ -10,6 +10,7 @@
 		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
 		<form id="epoz_toolbox" title="Epoz toolbox"/>
 		<form id="messages_box" title="Box for info or error messages"/>
+		<form id="languages_box" title="Box for changing the language on pages"/>
 		<form id="site_index" title="Portal home page"/>
 		<form id="standard_error_message" title="Portal standard error page"/>
 		<form id="site_login" title="Portal login"/>
