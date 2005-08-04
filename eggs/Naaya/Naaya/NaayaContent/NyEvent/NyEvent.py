@@ -125,24 +125,38 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
     def objectkeywords(self, lang):
         return u' '.join([self._objectkeywords(lang), self.getLocalProperty('details', lang)])
 
-    security.declarePrivate('exportThisCustomProperties')
-    def exportThisCustomProperties(self):
-        return 'location="%s" location_address="%s" location_url="%s" start_date="%s" end_date="%s" host="%s" agenda_url="%s" event_url="%s" details="%s" topitem="%s" event_type="%s" contact_person="%s" contact_email="%s" contact_phone="%s" contact_fax="%s"' % \
-                (self.utXmlEncode(self.location),
-                 self.utXmlEncode(self.location_address),
-                 self.utXmlEncode(self.location_url),
-                 self.utXmlEncode(self.utNoneToEmpty(self.start_date)),
-                 self.utXmlEncode(self.utNoneToEmpty(self.end_date)),
-                 self.utXmlEncode(self.host),
-                 self.utXmlEncode(self.agenda_url),
-                 self.utXmlEncode(self.event_url),
-                 self.utXmlEncode(self.details),
-                 self.utXmlEncode(self.topitem),
-                 self.utXmlEncode(self.event_type),
-                 self.utXmlEncode(self.contact_person),
-                 self.utXmlEncode(self.contact_email),
-                 self.utXmlEncode(self.contact_phone),
-                 self.utXmlEncode(self.contact_fax))
+    security.declarePrivate('export_this_tag_custom')
+    def export_this_tag_custom(self):
+        return 'location_url="%s" start_date="%s" end_date="%s" agenda_url="%s" event_url="%s" topitem="%s" event_type="%s" contact_person="%s" contact_email="%s" contact_phone="%s" contact_fax="%s"' % \
+            (self.utXmlEncode(self.location_url),
+                self.utXmlEncode(self.utNoneToEmpty(self.start_date)),
+                self.utXmlEncode(self.utNoneToEmpty(self.end_date)),
+                self.utXmlEncode(self.agenda_url),
+                self.utXmlEncode(self.event_url),
+                self.utXmlEncode(self.topitem),
+                self.utXmlEncode(self.event_type),
+                self.utXmlEncode(self.contact_person),
+                self.utXmlEncode(self.contact_email),
+                self.utXmlEncode(self.contact_phone),
+                self.utXmlEncode(self.contact_fax))
+
+    security.declarePrivate('export_this_body_custom')
+    def export_this_body_custom(self):
+        r = []
+        for l in self.gl_get_languages():
+            v = self.getLocalProperty('location', l)
+            if isinstance(v, unicode): v = v.encode('utf-8')
+            r.append('<location lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+            v = self.getLocalProperty('location_address', l)
+            if isinstance(v, unicode): v = v.encode('utf-8')
+            r.append('<location_address lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+            v = self.getLocalProperty('host', l)
+            if isinstance(v, unicode): v = v.encode('utf-8')
+            r.append('<host lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+            v = self.getLocalProperty('details', l)
+            if isinstance(v, unicode): v = v.encode('utf-8')
+            r.append('<details lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+        return ''.join(r)
 
     security.declarePrivate('syndicateThis')
     def syndicateThis(self):

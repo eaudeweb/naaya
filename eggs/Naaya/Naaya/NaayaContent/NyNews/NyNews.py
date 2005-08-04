@@ -122,16 +122,26 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
     def objectkeywords(self, lang):
         return u' '.join([self._objectkeywords(lang), self.getLocalProperty('details', lang)])
 
-    security.declarePrivate('exportThisCustomProperties')
-    def exportThisCustomProperties(self):
-        return 'details="%s" expirationdate="%s" topitem="%s" resourceurl="%s" source="%s" smallpicture="%s" bigpicture="%s"' % \
-                (self.utXmlEncode(self.details),
-                 self.utXmlEncode(self.utNoneToEmpty(self.expirationdate)),
-                 self.utXmlEncode(self.topitem),
-                 self.utXmlEncode(self.resourceurl),
-                 self.utXmlEncode(self.source),
-                 self.utBase64Encode(self.utNoneToEmpty(self.smallpicture)),
-                 self.utBase64Encode(self.utNoneToEmpty(self.bigpicture)))
+    security.declarePrivate('export_this_tag_custom')
+    def export_this_tag_custom(self):
+        return 'expirationdate="%s" topitem="%s" resourceurl="%s" smallpicture="%s" bigpicture="%s"' % \
+            (self.utXmlEncode(self.utNoneToEmpty(self.expirationdate)),
+                self.utXmlEncode(self.topitem),
+                self.utXmlEncode(self.resourceurl),
+                self.utBase64Encode(self.utNoneToEmpty(self.smallpicture)),
+                self.utBase64Encode(self.utNoneToEmpty(self.bigpicture)))
+
+    security.declarePrivate('export_this_body_custom')
+    def export_this_body_custom(self):
+        r = []
+        for l in self.gl_get_languages():
+            v = self.getLocalProperty('details', l)
+            if isinstance(v, unicode): v = v.encode('utf-8')
+            r.append('<details lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+            v = self.getLocalProperty('source', l)
+            if isinstance(v, unicode): v = v.encode('utf-8')
+            r.append('<source lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+        return ''.join(r)
 
     security.declarePrivate('syndicateThis')
     def syndicateThis(self):

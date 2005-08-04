@@ -111,8 +111,8 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
         NyCheckControl.__dict__['__init__'](self)
         NyValidation.__dict__['__init__'](self)
 
-    security.declarePrivate('exportThisCustomProperties')
-    def exportThisCustomProperties(self):
+    security.declarePrivate('export_this_tag_custom')
+    def export_this_tag_custom(self):
         return 'locator="%s"' % self.utXmlEncode(self.locator)
 
     #zmi actions

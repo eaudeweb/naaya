@@ -130,10 +130,18 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
     def objectkeywords(self, lang):
         return u' '.join([self._objectkeywords(lang), self.getLocalProperty('body', lang)])
 
-    security.declarePrivate('exportThisCustomProperties')
-    def exportThisCustomProperties(self):
-        return 'body="%s" topitem="%s"' % \
-                (self.utXmlEncode(self.body), self.utXmlEncode(self.topitem))
+    security.declarePrivate('export_this_tag_custom')
+    def export_this_tag_custom(self):
+        return 'topitem="%s"' % self.utXmlEncode(self.topitem)
+
+    security.declarePrivate('export_this_body_custom')
+    def export_this_body_custom(self):
+        r = []
+        for l in self.gl_get_languages():
+            v = self.getLocalProperty('body', l)
+            if isinstance(v, unicode): v = v.encode('utf-8')
+            r.append('<body lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+        return ''.join(r)
 
     security.declarePrivate('syndicateThis')
     def syndicateThis(self):
