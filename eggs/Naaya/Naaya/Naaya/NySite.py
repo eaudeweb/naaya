@@ -507,12 +507,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
     #layer over the Localizer and MessageCatalog
     #the scope is to centralize the list of available languages
     def gl_get_all_languages(self): return self.get_all_languages()
-    def gl_changeLanguage(self, old_lang, REQUEST=None):
-        """ """
-        self.getLocalizer().changeLanguage(old_lang)
-        if REQUEST:
-            REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
-
     def gl_get_languages(self): return self.get_languages()
     def gl_get_languages_mapping(self): return self.get_languages_mapping()
     def gl_get_default_language(self): return self.get_default_language()
@@ -527,6 +521,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
         for l in self.gl_get_languages_mapping():
             ob.add_language(l['code'])
             if l['default']: ob.manage_changeDefaultLang(l['code'])
+    def gl_changeLanguage(self, old_lang, REQUEST=None):
+        """ """
+        self.getLocalizer().changeLanguage(old_lang)
+        if REQUEST: REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
     #layer over NyEpozToolbox
     def getUploadedImages(self): return self.getImagesFolder().objectValues(['Image'])

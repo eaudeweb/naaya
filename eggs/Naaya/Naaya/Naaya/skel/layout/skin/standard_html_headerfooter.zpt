@@ -13,7 +13,7 @@
 <body>
 <div id="header">
 	<div id="language">
-		<span tal:replace="structure python:here.Localizer.changeLanguageForm()" />
+		<span tal:replace="structure here/languages_box"/>
 	</div>
 	<div id="topnav">
 		<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('topnav_links').get_links_list()">
