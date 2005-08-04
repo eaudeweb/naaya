@@ -32,6 +32,7 @@ from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaContent import *
 from Products.Naaya.constants import *
+from Products.NaayaCore.constants import *
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
@@ -69,9 +70,18 @@ class CHMSite(NySite):
     def loadDefaultData(self):
         """ """
         NySite.__dict__['loadDefaultData'](self)
-        manage_addLinkChecker(self, ID_LINKCHECKER, TITLE_LINKCHECKER)
-        manage_addNyPhotoFolder(self, ID_PHOTOARCHIVE, TITLE_PHOTOARCHIVE)
         self.loadSkeleton(join(CHM2_PRODUCT_PATH, 'skel'))
+        manage_addNyPhotoFolder(self, ID_PHOTOARCHIVE, TITLE_PHOTOARCHIVE)
+        #create and configure LinkChecker instance
+        manage_addLinkChecker(self, ID_LINKCHECKER, TITLE_LINKCHECKER)
+        linkchecker_ob = self._getOb(ID_LINKCHECKER)
+        linkchecker_ob.manage_edit(proxy='', batch_size=5, catalog_name=ID_CATALOGTOOL)
+        linkchecker_ob.manage_addMetaType(METATYPE_NYURL)
+        linkchecker_ob.manage_addProperty(METATYPE_NYURL, 'locator')
+        for k,v in self.get_content_urls().items():
+            linkchecker_ob.manage_addMetaType(k)
+            for p in v:
+                linkchecker_ob.manage_addProperty(k, v)
 
     #objects getters
     def getLinkChecker(self): return self._getOb(ID_LINKCHECKER, None)
