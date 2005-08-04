@@ -24,7 +24,7 @@ import sys
 import os, popen2
 
 #Zope imports
-from zLOG import LOG, ERROR, INFO, PROBLEM, DEBUG
+from zLOG import LOG, ERROR, INFO, PROBLEM, DEBUG, WARNING
 from Products.PageTemplates.GlobalTranslationService import setGlobalTranslationService
 
 #Product imports
@@ -140,7 +140,6 @@ for t in converter.getType():
         LOG('naayaHotfix', INFO, 'Converter "%s" for %s NOT registered' % (cv, t))
 
 
-from zLOG import ERROR, WARNING, LOG
 from OFS.content_types import guess_content_type
 from Products.TextIndexNG2.Registry import NormalizerRegistry
 from Products.TextIndexNG2.Registry import SplitterRegistry, RegistryException
