@@ -1,0 +1,13 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+
+<p class="page-description">
+	In order to transfer the portal hierarchical structure of data from a site
+	to another site, the data must be first exported in a proprietary XML format and than imported 
+	in the site. If you need to transfer the data between two sites, it could be simpler to use
+	Zope import/export mechanisms (.zexp file).
+</p>
+
+<a href="exportsite">Export data</a>
+
+<span tal:replace="structure here/manage_page_footer" />
