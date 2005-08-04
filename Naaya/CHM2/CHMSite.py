@@ -76,7 +76,7 @@ class CHMSite(NySite):
         #create and configure LinkChecker instance
         manage_addLinkChecker(self, ID_LINKCHECKER, TITLE_LINKCHECKER)
         linkchecker_ob = self._getOb(ID_LINKCHECKER)
-        linkchecker_ob.manage_edit(proxy='', batch_size=5, catalog_name=ID_CATALOGTOOL)
+        linkchecker_ob.manage_edit(proxy='', batch_size=10, catalog_name=ID_CATALOGTOOL)
         linkchecker_ob.manage_addMetaType(METATYPE_NYURL)
         linkchecker_ob.manage_addProperty(METATYPE_NYURL, 'locator')
         for k,v in self.get_content_urls().items():
