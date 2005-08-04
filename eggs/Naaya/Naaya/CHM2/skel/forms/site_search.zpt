@@ -1,0 +1,90 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<h1 i18n:translate="">Free text search in this portal</h1>
+<p><strong i18n:translate="">Search tips:</strong></p>
+<ul>
+    <li i18n:translate="">The text is searched in local <strong>Folders, News, Stories, Events, Photos, URLs, Documents, Files and Pointers</strong> from this website</li>
+    <li i18n:translate="">You can use the valid boolean operators like <strong>AND</strong>, <strong>OR</strong>, <strong>AND NOT</strong>, etc.</li>
+    <li i18n:translate="">You can use a wildcard <strong>*</strong> (e.g. everything starting with 'port': <strong>port*</strong>)</li>
+</ul>
+
+<p i18n:translate="">
+	<span tal:replace="string:">
+
+	Uncomment this part if you want have an external search defined in your portal.
+	You can also use the link of the centralised external search page.
+
+	You can try searching <a tal:attributes="href string:${here/getSitePath}/external_search_html">all 
+	CHM network</a> for more results.
+	</span>
+</p>
+
+<form method="get" name="frmSearch" action="search_html">
+    <strong i18n:translate="">Query string</strong>
+    <input type="text" name="query" tal:attributes="value python:request.get('query', '')" size="40" maxLength="100" />
+    <input type="submit" value="Search" class="styled_button" i18n:attributes="value" />
+    <input type="hidden" name="sort_order" value="" />
+    <input type="hidden" name="sort_by" value="" />
+</form>
+
+<span tal:condition="python:request.has_key('query') and request['query'] != ''">
+<tal:block define="query python:request.get('query', ''); page_search_start python:request.get('start', 0);
+                    sort_expr python:request.get('sort_by', ''); sort_order python:request.get('sort_order', ''); 
+                    results python:here.internalSearch(query, sort_order, sort_expr, page_search_start);
+                    age here/getItemsAge; number_of_results here/getNumberOfResults;
+                    page_search_querystring string:query=${query}&sort_by=${sort_expr}&sort_order=${sort_order};
+                    list_paging python:results[0]; 
+                    paging_start python:list_paging[0]+1;
+                    paging_upper python:list_paging[1]; 
+                    paging_total python:list_paging[2]; 
+                    paging_prev python:list_paging[3];
+                    paging_next python:list_paging[4]; 
+                    paging_current_page python:list_paging[5]; 
+                    paging_records_page python:list_paging[6];
+                    paging_pages python:list_paging[7]; 
+                    list_result python:results[1]">
+
+<h2 i18n:translate="">Search Results</h2>
+    <span tal:condition="python:paging_total != 0">
+    Age: <span tal:replace="python:here.internal_get_items_age(list_result, age)"/>% are more then <span tal:replace="age"/> month(s) old -
+    <a href="" onClick="document.frmSearch.sort_by.value='bobobase_modification_time'; 
+                        document.frmSearch.sort_order.value='descending'; 
+                        document.frmSearch.submit(); return false;">show newer pages first</a>
+    <dl>
+    <tal:block tal:repeat="record list_result">
+        <dt><img tal:attributes="src record/icon; alt record/meta_type; title record/meta_type" align="absmiddle" /> <a tal:attributes="href record/absolute_url"><span tal:replace="record/title_or_id"/></a> - 
+            <span tal:replace="python:record.utShowDateTime(record.bobobase_modification_time())"/>
+            <span tal:condition="python:here.internal_get_item_age(record.bobobase_modification_time(), age)==1">
+            <strong style="color: #FF9966;" i18n:translate="">Old</strong></span>
+        </dt>
+        <dd><span tal:replace="record/description"/></dd>
+    </tal:block>
+    </dl>
+    <br />
+
+    <p>
+    Results <strong tal:content="paging_start"/>&nbsp;-&nbsp;<strong tal:content="paging_upper"/>&nbsp;of&nbsp;<b tal:content="paging_total"/><br />
+    Page <span tal:condition="python:paging_prev!=-1">&nbsp;&nbsp;
+    <a tal:define="url python:here.absolute_url; start_batch python:(paging_current_page-1)*paging_records_page"
+        tal:attributes="href string:${url}/search_html?start=${start_batch}&${page_search_querystring}">&lt;&lt; Previous</a></span>
+      <span tal:repeat="page paging_pages">
+        <a class="paging-link-off" tal:condition="python:paging_current_page==page" tal:content="python:page+1"></a>
+        <a tal:condition="python:paging_current_page!=page" tal:define="url here/absolute_url; start_batch python:paging_records_page*page"
+            tal:attributes="href string:${url}/search_html?start=${start_batch}&${page_search_querystring}"
+            tal:content="python:page+1">
+        </a>
+      </span>
+      <span tal:condition="python:paging_next!=-1">&nbsp;&nbsp;
+        <a tal:define="url here/absolute_url; start_batch python:(paging_current_page+1)*paging_records_page"
+            tal:attributes="href string:${url}/search_html?start=${start_batch}&${page_search_querystring}">Next &gt;&gt;</a>
+      </span>
+    </p>
+    </span>
+    <span tal:condition="python:paging_total == 0">
+        No results were found for this query.
+    </span>
+
+</tal:block>
+</span>
+
+<span tal:replace="structure here/standard_html_footer"/>
