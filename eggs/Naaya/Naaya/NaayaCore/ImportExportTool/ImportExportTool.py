@@ -23,7 +23,9 @@
 #Zope imports
 from Globals import InitializeClass
 from OFS.SimpleItem import SimpleItem
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens
 
 #Product imports
 from Products.NaayaCore.constants import *
@@ -43,6 +45,11 @@ class ImportExportTool(SimpleItem):
     icon = 'misc_/NaayaCore/ImportExportTool.gif'
 
     manage_options = (
+        (
+            {'label' : 'Export', 'action' : 'manage_export_html'},
+            {'label' : 'Import', 'action' : 'manage_import_html'},
+        )
+        +
         SimpleItem.manage_options
     )
 
@@ -57,5 +64,27 @@ class ImportExportTool(SimpleItem):
     def loadDefaultData(self):
         #load default stuff
         pass
+
+    #zmi actions
+    security.declareProtected(view_management_screens, 'exportsite')
+    def exportsite(self):
+        """ - generates an XML with the site content
+            - it can be imported into another site """
+        l_xml = []
+        l_xml.append('<?xml version="1.0" encoding="utf-8"?>')
+        l_xml.append('<export>')
+        for x in self.getSite().get_containers():
+            l_xml.append(x.exportThis())
+        l_xml.append('</export>')
+        self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/xml')
+        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=exportsite.nyexp')
+        return ''.join(l_xml)
+
+    #zmi pages
+    security.declareProtected(view_management_screens, 'manage_export_html')
+    manage_export_html = PageTemplateFile('zpt/tool_export', globals())
+
+    security.declareProtected(view_management_screens, 'manage_import_html')
+    manage_import_html = PageTemplateFile('zpt/tool_import', globals())
 
 InitializeClass(ImportExportTool)
