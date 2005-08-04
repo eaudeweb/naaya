@@ -42,7 +42,6 @@ PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya News objects'
 OBJECT_FORMS = ['news_add', 'news_edit', 'news_index']
 OBJECT_CONSTRUCTORS = ['manage_addNyNews_html', 'news_add_html', 'addNyNews']
 OBJECT_ADD_FORM = 'news_add_html'
-TOBE_VALIDATED = 0
 DESCRIPTION_OBJECT = 'This is Naaya News type.'
 PREFIX_OBJECT = 'news'
 

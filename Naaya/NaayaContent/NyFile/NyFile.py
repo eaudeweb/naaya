@@ -45,7 +45,6 @@ PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya File objects'
 OBJECT_FORMS = ['file_add', 'file_edit', 'file_index']
 OBJECT_CONSTRUCTORS = ['manage_addNyFile_html', 'file_add_html', 'addNyFile']
 OBJECT_ADD_FORM = 'file_add_html'
-TOBE_VALIDATED = 1
 DESCRIPTION_OBJECT = 'This is Naaya File type.'
 PREFIX_OBJECT = 'file'
 

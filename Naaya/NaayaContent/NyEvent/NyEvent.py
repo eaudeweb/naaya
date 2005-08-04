@@ -42,7 +42,6 @@ PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Event objects'
 OBJECT_FORMS = ['event_add', 'event_edit', 'event_index']
 OBJECT_CONSTRUCTORS = ['manage_addNyEvent_html', 'event_add_html', 'addNyEvent']
 OBJECT_ADD_FORM = 'event_add_html'
-TOBE_VALIDATED = 0
 DESCRIPTION_OBJECT = 'This is Naaya Event type.'
 PREFIX_OBJECT = 'ev'
 

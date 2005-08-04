@@ -45,7 +45,6 @@ PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Story objects'
 OBJECT_FORMS = ['story_add', 'story_edit', 'story_index']
 OBJECT_CONSTRUCTORS = ['manage_addNyStory_html', 'story_add', 'addNyStory']
 OBJECT_ADD_FORM = 'story_add'
-TOBE_VALIDATED = 0
 DESCRIPTION_OBJECT = 'This is Naaya Story type.'
 PREFIX_OBJECT = 'stry'
 

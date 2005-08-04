@@ -29,6 +29,7 @@ from ImageFile import ImageFile
 
 #Product imports
 from constants import *
+from Products.NaayaBase.NyValidation import NyValidation
 
 #read list of directories
 dirs = []
@@ -53,7 +54,7 @@ for x in dirs:
     content[m]['forms'] = copy(eval('%s.OBJECT_FORMS' % x))
     content[m]['constructors'] = copy(eval('%s.OBJECT_CONSTRUCTORS' % x))
     content[m]['addform'] = eval('%s.OBJECT_ADD_FORM' % x)
-    content[m]['validation'] = eval('%s.TOBE_VALIDATED' % x)
+    content[m]['validation'] = eval('issubclass(%s.%s, NyValidation)' % (x, x))
     content[m]['description'] = eval('%s.DESCRIPTION_OBJECT' % x)
     #print '%s INFO Successfully loaded pluggable module %s.' % (time.ctime(), x)
     #except Exception, error:
