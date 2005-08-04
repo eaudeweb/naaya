@@ -153,37 +153,50 @@ class NyBase:
         l_rdf.append(self.syndicateThisFooter())
         return ''.join(l_rdf)
 
-    #Export in xml format
-    security.declarePrivate('exportThisBaseProperties')
-    def exportThisBaseProperties(self):
-        return 'id="%s" title="%s" description="%s" language="%s" coverage="%s" keywords="%s" sortorder="%s" approved="%s" releasedate="%s"' % \
-                (self.utXmlEncode(self.id),
-                 self.utXmlEncode(self.title),
-                 self.utXmlEncode(self.description),
-                 self.utXmlEncode(self.language),
-                 self.utXmlEncode(self.coverage),
-                 self.utXmlEncode(self.keywords),
-                 self.utXmlEncode(self.sortorder),
-                 self.utXmlEncode(self.approved),
-                 self.utXmlEncode(self.releasedate))
+    #Handlers for export in xml format
+    security.declarePrivate('export_this')
+    def export_this(self):
+        r = []
+        r.append(self.export_this_tag())
+        r.append(self.export_this_body())
+        r.append('</ob>')
+        return ''.join(r)
 
-    security.declarePrivate('exportThisCustomProperties')
-    def exportThisCustomProperties(self):
-        raise EXCEPTION_NOTIMPLEMENTED
+    security.declarePrivate('export_this_tag')
+    def export_this_tag(self):
+        return '<ob meta_type="%s" id="%s" sortorder="%s" approved="%s" releasedate="%s" %s>' % \
+            (self.utXmlEncode(self.meta_type),
+             self.utXmlEncode(self.id),
+             self.utXmlEncode(self.sortorder),
+             self.utXmlEncode(self.approved),
+             self.utXmlEncode(self.releasedate),
+             self.export_this_tag_custom())
 
-    security.declarePrivate('exportThisDynamicProperties')
-    def exportThisDynamicProperties(self):
-        l_xml = []
-        for l_dp in self.getDynamicPropertiesTool().getDynamicSearchableProperties(self.meta_type):
-            l_xml.append('%s="%s"' % (self.utXmlEncode(l_dp.id), self.utXmlEncode(self.getPropertyValue(l_dp.id))))
-        return ''.join(l_xml)
+    security.declarePrivate('export_this_tag_custom')
+    def export_this_tag_custom(self):
+        return ''
 
-    security.declarePrivate('exportThis')
-    def exportThis(self):
-        return '<%s %s %s %s/>' % \
-                (self.utXmlEncode(self.meta_type),
-                 self.exportThisBaseProperties(),
-                 self.exportThisCustomProperties(),
-                 self.exportThisDynamicProperties())
+    security.declarePrivate('export_this_body')
+    def export_this_body(self):
+        r = []
+        for l in self.gl_get_languages():
+            v = self.getLocalProperty('title', l)
+            if isinstance(v, unicode): v = v.encode('utf-8')
+            r.append('<title lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+            v = self.getLocalProperty('description', l)
+            if isinstance(v, unicode): v = v.encode('utf-8')
+            r.append('<description lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+            v = self.getLocalProperty('coverage', l)
+            if isinstance(v, unicode): v = v.encode('utf-8')
+            r.append('<coverage lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+            v = self.getLocalProperty('keywords', l)
+            if isinstance(v, unicode): v = v.encode('utf-8')
+            r.append('<keywords lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+        r.append(self.export_this_body_custom())
+        return ''.join(r)
+
+    security.declarePrivate('export_this_body_custom')
+    def export_this_body_custom(self):
+        return ''
 
 InitializeClass(NyBase)
