@@ -157,21 +157,22 @@ class NyFolder(NyAttributes, NyProperties, NyContainer, utils):
         self.uncatalogNyObject(self)
         self.delete_portlet_for_object(item)
 
-    security.declarePrivate('exportThisCustomProperties')
-    def exportThisCustomProperties(self):
-        return 'publicinterface="%s" maintainer_email="%s"' % \
-                (self.utXmlEncode(self.publicinterface), self.utXmlEncode(self.maintainer_email))
+    security.declarePrivate('export_this')
+    def export_this(self):
+        r = []
+        r.append(self.export_this_tag())
+        r.append(self.export_this_body())
+        for x in self.getObjects():
+            r.append(x.export_this())
+        for x in self.getFolders():
+            r.append(x.export_this())
+        r.append('</ob>')
+        return ''.join(r)
 
-    security.declarePrivate('exportThis')
-    def exportThis(self):
-        l_xml = []
-        l_xml.append('<%s %s %s %s>' % (self.utXmlEncode(self.meta_type), self.exportThisBaseProperties(), self.exportThisCustomProperties(), self.exportThisDynamicProperties()))
-        for l_object in self.getObjects():
-            l_xml.append(l_object.exportThis())
-        for l_subfolder in self.objectValues(METATYPE_FOLDER):
-            l_xml.append(l_subfolder.exportThis())
-        l_xml.append('</%s>' % self.utXmlEncode(self.meta_type))
-        return ''.join(l_xml)
+    security.declarePrivate('export_this_tag_custom')
+    def export_this_tag_custom(self):
+        return 'publicinterface="%s" maintainer_email="%s"' % \
+            (self.utXmlEncode(self.publicinterface), self.utXmlEncode(self.maintainer_email))
 
     security.declarePrivate('createPublicInterface')
     def createPublicInterface(self):
@@ -256,6 +257,7 @@ class NyFolder(NyAttributes, NyProperties, NyContainer, utils):
         return (select_all, delete_all, results)
 
     def getObjects(self): return self.objectValues(self.get_meta_types())
+    def getFolders(self): return self.objectValues(METATYPE_FOLDER)
     def hasContent(self): return (len(self.getObjects()) > 0) or (len(self.objectValues(METATYPE_FOLDER)) > 0)
 
     def getPendingFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.approved==0]

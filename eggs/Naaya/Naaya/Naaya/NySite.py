@@ -418,6 +418,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
             l_result.append(l_parent)
         return l_result
 
+    def get_containers(self):
+        #this method returns all container type that can be used in an export operation
+        return self.objectValues(METATYPE_FOLDER)
+
     #api
     def getMainFolders(self):
         #returns a list with all folders objects at the first level
