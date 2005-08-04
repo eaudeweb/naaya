@@ -43,7 +43,6 @@ PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya URL objects'
 OBJECT_FORMS = ['url_add', 'url_edit', 'url_index']
 OBJECT_CONSTRUCTORS = ['manage_addNyURL_html', 'url_add_html', 'addNyURL']
 OBJECT_ADD_FORM = 'url_add_html'
-TOBE_VALIDATED = 1
 DESCRIPTION_OBJECT = 'This is Naaya URL type.'
 PREFIX_OBJECT = 'url'
 

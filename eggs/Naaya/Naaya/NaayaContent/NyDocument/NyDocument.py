@@ -45,7 +45,6 @@ PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Document objects'
 OBJECT_FORMS = ['document_add', 'document_edit', 'document_index']
 OBJECT_CONSTRUCTORS = ['manage_addNyDocument_html', 'document_add', 'addNyDocument']
 OBJECT_ADD_FORM = 'document_add'
-TOBE_VALIDATED = 1
 DESCRIPTION_OBJECT = 'This is Naaya Document type.'
 PREFIX_OBJECT = 'doc'
 

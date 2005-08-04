@@ -43,7 +43,6 @@ PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Pointer objects'
 OBJECT_FORMS = ['pointer_add', 'pointer_edit', 'pointer_index']
 OBJECT_CONSTRUCTORS = ['manage_addNyPointer_html', 'pointer_add_html', 'addNyPointer']
 OBJECT_ADD_FORM = 'pointer_add_html'
-TOBE_VALIDATED = 1
 DESCRIPTION_OBJECT = 'This is Naaya Pointer type.'
 PREFIX_OBJECT = 'pnt'
 
