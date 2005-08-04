@@ -433,11 +433,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
         #sorted by 'order' property
         return self.utSortObjsListByAttr(filter(lambda x: x is not None, map(lambda f, x: f(x, None), (self._getOb,)*len(self.maintopics), self.maintopics)), 'sortorder', 0)
 
-    def getLatestUploads(self):
+    def getLatestUploads(self, howmany=None):
         #returns a list with the latest uploaded objects in the site
         #which are approved
         #the number of objects can be set by modifing the property 'number_latest_uploads'
-        return self.getCatalogedObjects(meta_type=self.get_meta_types(), approved=1, howmany=self.number_latest_uploads, path=['/'.join(x.getPhysicalPath()) for x in self.getMainTopics()])
+        if howmany is None:
+            howmany = self.number_latest_uploads
+        return self.getCatalogedObjects(meta_type=self.get_meta_types(), approved=1, howmany=howmany, path=['/'.join(x.getPhysicalPath()) for x in self.getMainTopics()])
 
     def getFoldersWithPendingItems(self):
         #returns a list with all folders that contains pending(draft) objects
