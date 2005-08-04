@@ -65,6 +65,7 @@ class CHMSite(NySite):
 
     def __init__(self, id, portal_uid, title, lang):
         """ """
+        self.predefined_latest_uploads = []
         NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
 
     security.declarePrivate('loadDefaultData')
@@ -192,6 +193,32 @@ class CHMSite(NySite):
                     url_struct[p_value] = [x, [x.getParentNode()]]
         return url_struct
 
+    def getAllLatestUploads(self):
+        total = len(self.predefined_latest_uploads) + self.number_latest_uploads
+        return CHMSite.inheritedAttribute('getLatestUploads')(self, total)
+
+    def delPred(self):
+        """ """
+        self.predefined_latest_uploads = []
+
+    def setPredefinedUploads(self, predefined=[], REQUEST=None):
+        """ update the predefined list of uploads """
+        urls = self.utConvertToList(predefined)
+        self.predefined_latest_uploads = urls
+        self._p_changed = 1
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/admin_predefined_html' % self.absolute_url())
+
+    def getPredefinedUploads(self):
+        """ get the predefined list of uploads """
+        buf = []
+        for url in self.predefined_latest_uploads:
+            obj = self.unrestrictedTraverse(url, None)
+            if obj is None:
+                self.predefined_latest_uploads.remove(url)
+            buf.append((obj.absolute_url(1), obj.title_or_id(), obj.releasedate, obj.icon, obj.meta_type, obj.description))
+        return buf
+
     def getLatestStories(self):
         #returns a list with approved top stories
         #this requires NyStory pluggable content type to be present
@@ -238,6 +265,11 @@ class CHMSite(NySite):
     def admin_urls_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_urls')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_predefined_html')
+    def admin_predefined_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_predefined')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkchecker_html')
     def admin_linkchecker_html(self, REQUEST=None, RESPONSE=None):

@@ -1,0 +1,48 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Predefined latest uploads</h1>
+
+<tal:block metal:fill-slot="section" tal:define="site here/getSite; predefined site/getPredefinedUploads">
+<p i18n:translate="">
+	This page presents the latest 50 items uploaded in this portal.
+	Automatically, the latest of them appear on the front page in the section <em>Latest uploads</em>,
+	but you can specify for most relevant items to be presented in this section for a longer time.
+	Mark these relevant items and click <em>Save changes</em>.
+</p>
+<form action="setPredefinedUploads" method="post" name="frmPredefined">
+<table border="0" cellspacing="1" cellpadding="1" width="100%">
+	<tr>
+		<th i18n:translate="" witdth="5%">&nbsp;</th>
+		<th i18n:translate="" width="70%">Title</th>
+		<th i18n:translate="" width="*">Date</th>
+	</tr>
+	<tr tal:repeat="item python:predefined">
+		<tal:block tal:define="url python:item[0]; title python:item[1]; date python:item[2]">
+		<td>
+			<input type="checkbox" name="predefined" tal:attributes="value url" CHECKED />
+		</td>
+		<td>
+			<a tal:attributes="href string:${url}" tal:content="python:here.utTruncateString(title, 100)" />
+		</td>
+		<td tal:content="python:site.utShowDateTime(date)" />
+		</tal:block>
+	</tr>
+	<tal:block repeat="latest site/getLatestUploads">
+	<tr tal:condition="python:latest.absolute_url(1) not in site.predefined_latest_uploads">
+		<tal:block tal:define="url python:latest.absolute_url(1); title_or_id latest/title_or_id; date latest/releasedate">
+		<td>
+			<input type="checkbox" name="predefined" tal:attributes="value url" />
+		</td>
+		<td>
+			<a tal:attributes="href string:${url}" tal:content="python:here.utTruncateString(title_or_id, 100)" />
+		</td>
+		<td tal:content="python:site.utShowDateTime(date)" />
+		</tal:block>
+	</tr>
+	</tal:block>
+</table>
+<input type="submit" value="Save changes" />
+</form>
+</tal:block>
+
+</tal:block>
