@@ -70,15 +70,15 @@ class ImportExportTool(SimpleItem):
     def exportsite(self):
         """ - generates an XML with the site content
             - it can be imported into another site """
-        l_xml = []
-        l_xml.append('<?xml version="1.0" encoding="utf-8"?>')
-        l_xml.append('<export>')
+        r = []
+        r.append('<?xml version="1.0" encoding="utf-8"?>')
+        r.append('<export>')
         for x in self.getSite().get_containers():
-            l_xml.append(x.exportThis())
-        l_xml.append('</export>')
+            r.append(x.export_this())
+        r.append('</export>')
         self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/xml')
         self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=exportsite.nyexp')
-        return ''.join(l_xml)
+        return ''.join(r)
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_export_html')
