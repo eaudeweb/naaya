@@ -35,6 +35,8 @@ PERMISSION_ADD_FOLDER = 'Naaya - Add Naaya Folder objects'
 METATYPE_NYSITE = 'Naaya Site'
 METATYPE_FOLDER = 'Naaya Folder'
 
+LABEL_NYFOLDER = 'Folder'
+
 DEFAULT_PORTAL_LANGUAGE_CODE = 'en' #English language is assumed to be the default language
 DEFAULT_SORTORDER = 100
 DEFAULT_NUMBERLATESTUPLOADS = 5

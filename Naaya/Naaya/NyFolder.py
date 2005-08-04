@@ -198,7 +198,7 @@ class NyFolder(NyAttributes, NyProperties, NyContainer, utils):
         #check for adding folders
         if METATYPE_FOLDER in self.folder_meta_types:
             if self.checkPermission(PERMISSION_ADD_FOLDER):
-                r.append(('folder_add_html', 'Folder'))
+                r.append(('folder_add_html', LABEL_NYFOLDER))
         #check pluggable content
         pc = self.get_pluggable_content()
         for k in self.get_pluggable_installed_meta_types():
