@@ -64,8 +64,6 @@ from Products.NaayaCore.managers.catalog_tool import catalog_tool
 from Products.NaayaCore.managers.urlgrab_tool import urlgrab_tool
 from Products.NaayaCore.managers.search_tool import search_tool
 from Products.NaayaCore.managers.session_manager import session_manager
-from Products.NaayaCore.managers.importexport_portal_parser import importexport_portal_parser
-from Products.NaayaCore.managers.ini_content_parser import ini_content_parser
 from Products.NaayaCore.PropertiesTool.managers.contenttypes_tool import contenttypes_tool
 from Products.NaayaCore.PropertiesTool.managers.events_tool import events_tool
 from Products.Localizer.Localizer import manage_addLocalizer
