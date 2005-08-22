@@ -88,23 +88,17 @@ class CHMSite(NySite):
     #objects getters
     def getLinkChecker(self): return self._getOb(ID_LINKCHECKER, None)
     def getLinkCheckerLastLog(self):
-        try:
-            entries = self.utSortObjsListByAttr(self._getOb(ID_LINKCHECKER).objectValues('LogEntry'), 'date_create', p_desc=1)
-            if len(entries) > 0: return entries[0]
-            else: return None
-        except:
-            return None
+        entries = self.utSortObjsListByAttr(self._getOb(ID_LINKCHECKER).objectValues('LogEntry'), 'date_create', p_desc=1)
+        if len(entries) > 0: return entries[0]
+        else: return None
     def getPhotoArchive(self): return self._getOb(ID_PHOTOARCHIVE, None)
+    def getNewsArchive(self): return self._getOb('news', None)
 
     #api
     def getOnFrontNews(self):
         #returns a list with the news marked as on front
         #this requires NyNews pluggable content type to be present
-        news_ob = self._getOb('news', None)
-        if news_ob is not None:
-            return [x for x in news_ob.objectValues(METATYPE_NYNEWS) if x.approved==1 and x.topitem==1]
-        else:
-            return []
+        return [x for x in self.getNewsArchive().objectValues(METATYPE_NYNEWS) if x.approved==1 and x.topitem==1]
 
     def getOnFrontPhotos(self):
         #returns a list with the photos marked as on front
