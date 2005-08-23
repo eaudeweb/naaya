@@ -71,7 +71,7 @@ from Products.Localizer.Localizer import manage_addLocalizer
 from Products.Localizer.MessageCatalog import manage_addMessageCatalog
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from managers.skel_parser import skel_parser
-from NyFolder import NyFolder, addNyFolder
+from NyFolder import NyFolder, addNyFolder, importNyFolder
 
 #constructor
 manage_addNySite_html = PageTemplateFile('zpt/site_manage_add', globals())
@@ -361,6 +361,27 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             nc = BeforeTraverse.NameCaller(self.getId())
             BeforeTraverse.registerBeforeTraverse(container, nc, handle)
         Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
+
+    #import
+    def import_data(self, node, object):
+        #import an object
+        zope_obj = node._getOb(object.id, None)
+        if zope_obj is None:
+            if object.meta_type == METATYPE_FOLDER:
+                importNyFolder(node, object.id, object.attrs,object.properties)
+            elif object.meta_type in self.get_pluggable_installed_meta_types():
+                item = self.get_pluggable_item(object.meta_type)
+                c = 'node.import%s(object.id, object.attrs, object.properties)' % item['module']
+                exec(c)
+            else:
+                self.import_data_custom(node, object)
+            zope_obj = node._getOb(object.id, None)
+        for obj in object.objects:
+            self.import_data(zope_obj, obj)
+
+    def import_data_custom(self, node, object):
+        #import some special type of object
+        print 'Import an object of type [%s]' % object.meta_type
 
     #api
     def get_site_uid(self): return self.__portal_uid
@@ -1451,15 +1472,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def get_coverage_glossary(self):
         try: return self._getOb(self.coverage_glossary)
         except: return None
-
-    def import_object(self, node, object):
-        #import an object
-        zope_obj = node._getOb(object.id, None)
-        if zope_obj is None:
-            print 'create zope_ob'
-        for obj in object.objects:
-            print obj.id, obj.meta_type
-            self.import_object(zope_obj, obj)
 
     #sending emails
     def sendFeedbackEmail(self, p_to, p_username, p_email, p_comments):

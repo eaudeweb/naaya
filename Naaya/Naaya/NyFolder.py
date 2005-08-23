@@ -80,6 +80,12 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
+def importNyFolder(self, id, attrs, properties):
+    #this method is called during the import process
+    sortorder = attrs['sortorder'].encode('utf-8')
+    maintainer_email = attrs['maintainer_email'].encode('utf-8')
+    addNyFolder(self, id=id, sortorder=sortorder, maintainer_email=maintainer_email)
+
 class NyFolder(NyAttributes, NyProperties, NyImport, NyContainer, utils):
     """ """
 
