@@ -48,7 +48,8 @@ def folder_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_FOLDER, 'action': 'addNyFolder'}, 'folder_add')
 
 def addNyFolder(self, id='', title='', description='', coverage='', keywords='', sortorder='',
-    publicinterface='', maintainer_email='', folder_meta_type='', releasedate='', REQUEST=None, **kwargs):
+    publicinterface='', maintainer_email='', folder_meta_type='', contributor=None,
+    releasedate='', REQUEST=None, **kwargs):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_FOLDER + self.utGenRandomId(6)
@@ -57,8 +58,11 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     else: publicinterface = 0
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
-    if self.checkPermissionPublishObjects(): approved = 1
-    else: approved = 0
+    if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+    if self.checkPermissionPublishObjects():
+        approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
+    else:
+        approved, approved_by = 0, None
     releasedate = self.utConvertStringToDateTimeObj(releasedate)
     if releasedate is None:
         releasedate = self.utGetTodayDate()
@@ -66,7 +70,8 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     else: folder_meta_type = self.utConvertToList(folder_meta_type)
     lang = self.gl_get_selected_language()
     ob = NyFolder(id, title, description, coverage, keywords, sortorder, publicinterface,
-                  maintainer_email, approved, folder_meta_type, releasedate, lang)
+            maintainer_email, contributor, approved, approved_by, folder_meta_type,
+            releasedate, lang)
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_FOLDER, REQUEST, kwargs), lang)
     self._setObject(id, ob)
@@ -136,10 +141,12 @@ class NyFolder(NyAttributes, NyProperties, NyImport, NyContainer, utils):
         else:
             return self.meta_types
 
-    def __init__(self, id, title, description, coverage, keywords, sortorder, publicinterface,
-        maintainer_email, approved, folder_meta_types, releasedate, lang):
+    def __init__(self, id, title, description, coverage, keywords, sortorder,
+        publicinterface, maintainer_email, contributor, approved, approved_by,
+        folder_meta_types, releasedate, lang):
         """ """
         self.id = id
+        NyProperties.__dict__['__init__'](self)
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
         self._setLocalPropValue('coverage', lang, coverage)
@@ -147,10 +154,11 @@ class NyFolder(NyAttributes, NyProperties, NyImport, NyContainer, utils):
         self.publicinterface = publicinterface
         self.maintainer_email = maintainer_email
         self.sortorder = sortorder
+        self.contributor = contributor
         self.approved = approved
+        self.approved_by = approved_by
         self.releasedate = releasedate
         self.folder_meta_types = folder_meta_types
-        NyProperties.__dict__['__init__'](self)
 
     def manage_afterAdd(self, item, container):
         """ This method is called, whenever _setObject in ObjectManager gets called. """
@@ -313,6 +321,10 @@ class NyFolder(NyAttributes, NyProperties, NyImport, NyContainer, utils):
         self.approved = approved
         self.releasedate = releasedate
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_FOLDER, REQUEST, kwargs), lang)
+        if approved != self.approved:
+            self.approved = approved
+            if approved == 0: self.approved_by = None
+            else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self._p_changed = 1
         self.recatalogNyObject(self)
         self.createPublicInterface()
