@@ -55,12 +55,12 @@ manage_addNyStory_html.action = 'addNyStory'
 def story_add(self, REQUEST=None, RESPONSE=None):
     """ """
     id = PREFIX_OBJECT + self.utGenRandomId(6)
-    self.addNyStory(id=id, title='', description='', coverage='', keywords='', sortorder='',
-        body='', REQUEST=None)
+    self.addNyStory(id)
     if REQUEST: REQUEST.RESPONSE.redirect('%s/add_html' % self._getOb(id).absolute_url())
 
 def addNyStory(self, id='', title='', description='', coverage='', keywords='', sortorder='',
-    body='', topitem='', contributor=None, releasedate='', lang=None, REQUEST=None, **kwargs):
+    body='', topitem='', resourceurl='', source='', contributor=None, releasedate='',
+    lang=None, REQUEST=None, **kwargs):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
@@ -77,7 +77,7 @@ def addNyStory(self, id='', title='', description='', coverage='', keywords='', 
     if releasedate is None: releasedate = self.utGetTodayDate()
     if lang is None: lang = self.gl_get_selected_language()
     ob = NyStory(id, title, description, coverage, keywords, sortorder, body, topitem,
-        contributor, approved, approved_by, releasedate, lang)
+        resourceurl, source, contributor, approved, approved_by, releasedate, lang)
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
     self._setObject(id, ob)
@@ -120,11 +120,12 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, description, coverage, keywords, sortorder, body, topitem,
-        contributor, approved, approved_by, releasedate, lang):
+    def __init__(self, id, title, description, coverage, keywords, sortorder, body,
+        topitem, resourceurl, source, contributor, approved, approved_by, releasedate, lang):
         """ """
         self.id = id
-        story_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder, body, topitem, releasedate, lang)
+        story_item.__dict__['__init__'](self, title, description, coverage, keywords,
+            sortorder, body, topitem, resourceurl, source, releasedate, lang)
         NyCheckControl.__dict__['__init__'](self)
         self.contributor = contributor
         self.approved = approved
@@ -132,11 +133,12 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
-        return u' '.join([self._objectkeywords(lang), self.getLocalProperty('body', lang)])
+        return u' '.join([self._objectkeywords(lang), self.getLocalProperty('body', lang), self.getLocalProperty('source', lang)])
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
-        return 'topitem="%s"' % self.utXmlEncode(self.topitem)
+        return 'topitem="%s" resource_url="%s"' % \
+            (self.utXmlEncode(self.topitem), self.utXmlEncode(self.resourceurl))
 
     security.declarePrivate('export_this_body_custom')
     def export_this_body_custom(self):
@@ -145,6 +147,9 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
             v = self.getLocalProperty('body', l)
             if isinstance(v, unicode): v = v.encode('utf-8')
             r.append('<body lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+            v = self.getLocalProperty('source', l)
+            if isinstance(v, unicode): v = v.encode('utf-8')
+            r.append('<source lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')
@@ -154,13 +159,14 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         l_rdf.append(self.syndicateThisCommon())
         l_rdf.append('<dc:type>Text</dc:type>')
         l_rdf.append('<dc:format>text</dc:format>')
+        l_rdf.append('<dc:source>%s</dc:source>' % self.utXmlEncode(self.source))
         l_rdf.append(self.syndicateThisFooter())
         return ''.join(l_rdf)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', language='', coverage='', keywords='', sortorder='',
-        approved='', body='', topitem='', releasedate='', REQUEST=None, **kwargs):
+        approved='', body='', topitem='', resourceurl='', source='', releasedate='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -173,7 +179,8 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         releasedate = self.utConvertStringToDateTimeObj(releasedate)
         if releasedate is None: releasedate = self.releasedate
         lang = self.gl_get_selected_language()
-        self.save_properties(title, description, coverage, keywords, sortorder, body, topitem, releasedate, lang)
+        self.save_properties(title, description, coverage, keywords, sortorder, body, topitem,
+            resourceurl, source, releasedate, lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
             self.approved = approved
@@ -186,7 +193,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
     #site actions
     security.declareProtected(PERMISSION_ADD_OBJECT, 'process_add')
     def process_add(self, title='', description='', coverage='', keywords='', sortorder='',
-        body='', topitem='', releasedate='', REQUEST=None, **kwargs):
+        body='', topitem='', resourceurl='', source='', releasedate='', REQUEST=None, **kwargs):
         """ """
         try: sortorder = abs(int(sortorder))
         except: sortorder = DEFAULT_SORTORDER
@@ -195,7 +202,8 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         releasedate = self.utConvertStringToDateTimeObj(releasedate)
         if releasedate is None: releasedate = self.releasedate
         lang = self.gl_get_selected_language()
-        self.save_properties(title, description, coverage, keywords, sortorder, body, topitem, releasedate, lang)
+        self.save_properties(title, description, coverage, keywords, sortorder, body,
+            topitem, resourceurl, source, releasedate, lang)
         self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._p_changed = 1
         self.recatalogNyObject(self)
@@ -214,6 +222,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         self._local_properties = deepcopy(self.version._local_properties)
         self.sortorder = self.version.sortorder
         self.topitem = self.version.topitem
+        self.resourceurl = self.version.resourceurl
         self.releasedate = self.version.releasedate
         self.setProperties(deepcopy(self.version.getProperties()))
         self.checkout = 0
@@ -232,8 +241,9 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
             raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        self.version = story_item(self.title, self.description, self.coverage, self.keywords, self.sortorder,
-            self.body, self.topitem, self.releasedate, self.gl_get_selected_language())
+        self.version = story_item(self.title, self.description, self.coverage,
+            self.keywords, self.sortorder, self.body, self.topitem, self.resourceurl,
+            self.source, self.releasedate, self.gl_get_selected_language())
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
@@ -242,8 +252,9 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
-    def saveProperties(self, title='', description='', coverage='', keywords='', sortorder='',
-        body='', topitem='', releasedate='', lang=None, REQUEST=None, **kwargs):
+    def saveProperties(self, title='', description='', coverage='', keywords='',
+        sortorder='', body='', topitem='', resourceurl='', source='', releasedate='',
+        lang=None, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -256,13 +267,15 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         if lang is None: lang = self.gl_get_selected_language()
         if not self.hasVersion():
             #this object has not been checked out; save changes directly into the object
-            self.save_properties(title, description, coverage, keywords, sortorder, body, topitem, releasedate, lang)
+            self.save_properties(title, description, coverage, keywords, sortorder, body,
+                topitem, resourceurl, source, releasedate, lang)
             self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         else:
             #this object has been checked out; save changes into the version object
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-            self.version.save_properties(title, description, coverage, keywords, sortorder, body, topitem, releasedate, lang)
+            self.version.save_properties(title, description, coverage, keywords, sortorder,
+                body, topitem, resourceurl, source, releasedate, lang)
             self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._p_changed = 1
         self.recatalogNyObject(self)

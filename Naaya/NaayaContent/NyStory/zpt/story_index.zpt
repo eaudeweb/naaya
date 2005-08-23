@@ -15,6 +15,14 @@
 	<th  i18n:translate="">Released</th>
 	<td tal:content="python:here.utShowDateTime(here.releasedate)"/>
 </tr>
+<tr>
+	<th i18n:translate="">Concerned URL</th>
+	<td><a tal:attributes="href here/resourceurl" tal:content="here/resourceurl" /></td>
+</tr>
+<tr>
+	<th i18n:translate="">Source of information</th>
+	<td tal:content="here/source" />
+</tr>
 </table>
 <br />
 <p tal:replace="structure here/body" />

@@ -34,12 +34,16 @@ class story_item(NyProperties):
     coverage = LocalProperty('coverage')
     keywords = LocalProperty('keywords')
     body = LocalProperty('body')
+    source = LocalProperty('source')
 
-    def __init__(self, title, description, coverage, keywords, sortorder, body, topitem, releasedate, lang):
-        self.save_properties(title, description, coverage, keywords, sortorder, body, topitem, releasedate, lang)
+    def __init__(self, title, description, coverage, keywords, sortorder, body,
+        topitem, resourceurl, source, releasedate, lang):
+        self.save_properties(title, description, coverage, keywords, sortorder, body,
+            topitem, resourceurl, source, releasedate, lang)
         NyProperties.__dict__['__init__'](self)
 
-    def save_properties(self, title, description, coverage, keywords, sortorder, body, topitem, releasedate, lang):
+    def save_properties(self, title, description, coverage, keywords, sortorder, body,
+        topitem, resourceurl, source, releasedate, lang):
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
         self._setLocalPropValue('coverage', lang, coverage)
@@ -47,4 +51,6 @@ class story_item(NyProperties):
         self._setLocalPropValue('body', lang, body)
         self.sortorder = sortorder
         self.topitem = topitem
+        self.resourceurl = resourceurl
+        self._setLocalPropValue('source', lang, source)
         self.releasedate = releasedate
