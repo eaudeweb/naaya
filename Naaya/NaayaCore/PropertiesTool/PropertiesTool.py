@@ -48,13 +48,13 @@ class PropertiesTool(SimpleItem, utils, search_tool):
 
     manage_options = (
         (
-            {'label' : 'Settings', 'action' : 'manage_settings_html'},
-            {'label' : 'Main topics', 'action' : 'manage_maintopics_html'},
-            {'label' : 'Subobjects', 'action' : 'manage_subobjects_html'},
-            {'label' : 'Event types', 'action' : 'manage_eventtypes_html'},
-            {'label' : 'File types', 'action' : 'manage_contenttypes_html'},
-            {'label' : 'Languages', 'action' : 'manage_languages_html'},
-            {'label' : 'Search', 'action' : 'manage_search_html'},
+            {'label': 'Settings', 'action': 'manage_settings_html'},
+            {'label': 'Main topics', 'action': 'manage_maintopics_html'},
+            {'label': 'Subobjects', 'action': 'manage_subobjects_html'},
+            {'label': 'Event types', 'action': 'manage_eventtypes_html'},
+            {'label': 'File types', 'action': 'manage_contenttypes_html'},
+            {'label': 'Languages', 'action': 'manage_languages_html'},
+            {'label': 'Search', 'action': 'manage_search_html'},
         )
         +
         SimpleItem.manage_options

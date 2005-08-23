@@ -51,7 +51,7 @@ class LinksList(SimpleItem, links_manager):
 
     manage_options = (
         (
-            {'label' : 'Links', 'action' : 'manage_links_html'},
+            {'label': 'Links', 'action': 'manage_links_html'},
         )
         +
         SimpleItem.manage_options

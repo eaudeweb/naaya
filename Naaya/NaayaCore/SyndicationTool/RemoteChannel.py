@@ -54,9 +54,9 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
 
     manage_options = (
         (
-            {'label' : 'Properties', 'action' : 'manage_properties_html'},
-            {'label' : 'Update information', 'action' : 'manage_update_html'},
-            {'label' : 'Channel data', 'action' : 'index_html'},
+            {'label': 'Properties', 'action': 'manage_properties_html'},
+            {'label': 'Update information', 'action': 'manage_update_html'},
+            {'label': 'Channel data', 'action': 'index_html'},
         )
         +
         SimpleItem.manage_options

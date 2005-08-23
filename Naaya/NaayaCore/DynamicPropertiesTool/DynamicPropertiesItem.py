@@ -48,8 +48,8 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
 
     manage_options = (
         (
-            {'label' : 'Properties', 'action' : 'manage_properties_html'},
-            {'label' : 'Settings', 'action' : 'manage_settings_html'},
+            {'label': 'Properties', 'action': 'manage_properties_html'},
+            {'label': 'Settings', 'action': 'manage_settings_html'},
         )
         +
         SimpleItem.manage_options
