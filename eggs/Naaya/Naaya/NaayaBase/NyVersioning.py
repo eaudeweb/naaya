@@ -36,7 +36,7 @@ class NyVersioning(utils):
     """ """
 
     manage_options = (
-        {'label' : 'Versions', 'action' : 'manage_versions_html'},
+        {'label': 'Versions', 'action': 'manage_versions_html'},
     )
 
     security = ClassSecurityInfo()
@@ -126,9 +126,7 @@ class NyVersioning(utils):
         #given a version id, shows/returns the version data
         raise EXCEPTION_NOTIMPLEMENTED, 'showVersionData'
 
-    ###########################
-    #         ZMI FORMS       #
-    ###########################
+    #zmi pages
     security.declareProtected(view_management_screens, 'manage_versions_html')
     manage_versions_html = PageTemplateFile('zpt/manage_versions', globals())
 
