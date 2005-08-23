@@ -43,7 +43,7 @@ METATYPE_OBJECT = 'Naaya Story'
 LABEL_OBJECT = 'Story'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Story objects'
 OBJECT_FORMS = ['story_add', 'story_edit', 'story_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyStory_html', 'story_add', 'addNyStory']
+OBJECT_CONSTRUCTORS = ['manage_addNyStory_html', 'story_add', 'addNyStory', 'importNyStory']
 OBJECT_ADD_FORM = 'story_add'
 DESCRIPTION_OBJECT = 'This is Naaya Story type.'
 PREFIX_OBJECT = 'stry'
@@ -89,6 +89,11 @@ def addNyStory(self, id='', title='', description='', coverage='', keywords='', 
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
+def importNyStory(self, id, attrs, properties):
+    #this method is called during the import process
+    sortorder = attrs['sortorder'].encode('utf-8')
+    addNyStory(self, id=id, sortorder=sortorder)
+
 class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckControl):
     """ """
 
@@ -100,8 +105,8 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         """ """
         l_options = (NyContainer.manage_options[0],) + story_item.manage_options
         if not self.hasVersion():
-            l_options += ({'label' : 'Properties', 'action' : 'manage_edit_html'},)
-        l_options += ({'label' : 'View', 'action' : 'index_html'},) + NyContainer.manage_options[3:8]
+            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
+        l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
         return l_options
 
     def all_meta_types(self, interfaces=None):

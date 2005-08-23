@@ -43,7 +43,7 @@ METATYPE_OBJECT = 'Naaya Document'
 LABEL_OBJECT = 'Document'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Document objects'
 OBJECT_FORMS = ['document_add', 'document_edit', 'document_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyDocument_html', 'document_add', 'addNyDocument']
+OBJECT_CONSTRUCTORS = ['manage_addNyDocument_html', 'document_add', 'addNyDocument', 'importNyDocument']
 OBJECT_ADD_FORM = 'document_add'
 DESCRIPTION_OBJECT = 'This is Naaya Document type.'
 PREFIX_OBJECT = 'doc'
@@ -87,6 +87,11 @@ def addNyDocument(self, id='', title='', description='', coverage='', keywords='
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
+def importNyDocument(self, id, attrs, properties):
+    #this method is called during the import process
+    sortorder = attrs['sortorder'].encode('utf-8')
+    addNyDocument(self, id=id, sortorder=sortorder)
+
 class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyCheckControl, NyValidation):
     """ """
 
@@ -98,8 +103,8 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         """ """
         l_options = (NyContainer.manage_options[0],) + document_item.manage_options
         if not self.hasVersion():
-            l_options += ({'label' : 'Properties', 'action' : 'manage_edit_html'},)
-        l_options += ({'label' : 'View', 'action' : 'index_html'},) + NyContainer.manage_options[3:8]
+            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
+        l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
         return l_options
 
     def all_meta_types(self, interfaces=None):

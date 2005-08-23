@@ -43,7 +43,7 @@ METATYPE_OBJECT = 'Naaya File'
 LABEL_OBJECT = 'File'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya File objects'
 OBJECT_FORMS = ['file_add', 'file_edit', 'file_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyFile_html', 'file_add_html', 'addNyFile']
+OBJECT_CONSTRUCTORS = ['manage_addNyFile_html', 'file_add_html', 'addNyFile', 'importNyEvent']
 OBJECT_ADD_FORM = 'file_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya File type.'
 PREFIX_OBJECT = 'file'
@@ -93,6 +93,11 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
+def importNyFile(self, id, attrs, properties):
+    #this method is called during the import process
+    sortorder = attrs['sortorder'].encode('utf-8')
+    addNyFile(self, id=id, sortorder=sortorder)
+
 class NyFile(NyAttributes, NyItem, file_item, NyVersioning, NyCheckControl, NyValidation):
     """ """
 
@@ -104,9 +109,9 @@ class NyFile(NyAttributes, NyItem, file_item, NyVersioning, NyCheckControl, NyVa
         """ """
         l_options = ()
         if not self.hasVersion():
-            l_options += ({'label' : 'Properties', 'action' : 'manage_edit_html'},)
+            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
         l_options += file_item.manage_options
-        l_options += ({'label' : 'View', 'action' : 'index_html'},) + NyItem.manage_options
+        l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         l_options += NyVersioning.manage_options
         return l_options
 
