@@ -34,7 +34,7 @@ class NyProperties(LocalPropertyManager):
 
     manage_options = (
         (
-            {'label' : 'Dynamic properties', 'action' : 'manage_dynamicproperties_html'},
+            {'label': 'Dynamic properties', 'action': 'manage_dynamicproperties_html'},
         )
     )
 
