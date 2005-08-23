@@ -41,7 +41,7 @@ METATYPE_OBJECT = 'Naaya Pointer'
 LABEL_OBJECT = 'Pointer'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Pointer objects'
 OBJECT_FORMS = ['pointer_add', 'pointer_edit', 'pointer_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyPointer_html', 'pointer_add_html', 'addNyPointer']
+OBJECT_CONSTRUCTORS = ['manage_addNyPointer_html', 'pointer_add_html', 'addNyPointer', 'importNyPointer']
 OBJECT_ADD_FORM = 'pointer_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Pointer type.'
 PREFIX_OBJECT = 'pnt'
@@ -82,6 +82,11 @@ def addNyPointer(self, id='', title='', description='', coverage='', keywords=''
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
+def importNyPointer(self, id, attrs, properties):
+    #this method is called during the import process
+    sortorder = attrs['sortorder'].encode('utf-8')
+    addNyPointer(self, id=id, sortorder=sortorder)
+
 class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation):
     """ """
 
@@ -93,9 +98,9 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
         """ """
         l_options = ()
         if not self.hasVersion():
-            l_options += ({'label' : 'Properties', 'action' : 'manage_edit_html'},)
+            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
         l_options += pointer_item.manage_options
-        l_options += ({'label' : 'View', 'action' : 'index_html'},) + NyItem.manage_options
+        l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 
     security = ClassSecurityInfo()

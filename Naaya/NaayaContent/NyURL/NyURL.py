@@ -41,7 +41,7 @@ METATYPE_OBJECT = 'Naaya URL'
 LABEL_OBJECT = 'URL'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya URL objects'
 OBJECT_FORMS = ['url_add', 'url_edit', 'url_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyURL_html', 'url_add_html', 'addNyURL']
+OBJECT_CONSTRUCTORS = ['manage_addNyURL_html', 'url_add_html', 'addNyURL', 'importNyURL']
 OBJECT_ADD_FORM = 'url_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya URL type.'
 PREFIX_OBJECT = 'url'
@@ -82,6 +82,11 @@ def addNyURL(self, id='', title='', description='', coverage='', keywords='', so
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
+def importNyURL(self, id, attrs, properties):
+    #this method is called during the import process
+    sortorder = attrs['sortorder'].encode('utf-8')
+    addNyURL(self, id=id, sortorder=sortorder)
+
 class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
     """ """
 
@@ -93,9 +98,9 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
         """ """
         l_options = ()
         if not self.hasVersion():
-            l_options += ({'label' : 'Properties', 'action' : 'manage_edit_html'},)
+            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
         l_options += url_item.manage_options
-        l_options += ({'label' : 'View', 'action' : 'index_html'},) + NyItem.manage_options
+        l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 
     security = ClassSecurityInfo()

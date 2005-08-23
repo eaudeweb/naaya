@@ -40,7 +40,7 @@ METATYPE_OBJECT = 'Naaya Event'
 LABEL_OBJECT = 'Event'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Event objects'
 OBJECT_FORMS = ['event_add', 'event_edit', 'event_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyEvent_html', 'event_add_html', 'addNyEvent']
+OBJECT_CONSTRUCTORS = ['manage_addNyEvent_html', 'event_add_html', 'addNyEvent', 'importNyEvent']
 OBJECT_ADD_FORM = 'event_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Event type.'
 PREFIX_OBJECT = 'ev'
@@ -89,6 +89,11 @@ def addNyEvent(self, id='', title='', description='', language='', coverage='', 
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
+def importNyEvent(self, id, attrs, properties):
+    #this method is called during the import process
+    sortorder = attrs['sortorder'].encode('utf-8')
+    addNyEvent(self, id=id, sortorder=sortorder)
+
 class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
     """ """
 
@@ -100,9 +105,9 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
         """ """
         l_options = ()
         if not self.hasVersion():
-            l_options += ({'label' : 'Properties', 'action' : 'manage_edit_html'},)
+            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
         l_options += event_item.manage_options
-        l_options += ({'label' : 'View', 'action' : 'index_html'},) + NyItem.manage_options
+        l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 
     security = ClassSecurityInfo()

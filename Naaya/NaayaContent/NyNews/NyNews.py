@@ -40,7 +40,7 @@ METATYPE_OBJECT = 'Naaya News'
 LABEL_OBJECT = 'News'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya News objects'
 OBJECT_FORMS = ['news_add', 'news_edit', 'news_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyNews_html', 'news_add_html', 'addNyNews']
+OBJECT_CONSTRUCTORS = ['manage_addNyNews_html', 'news_add_html', 'addNyNews', 'importNyNews']
 OBJECT_ADD_FORM = 'news_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya News type.'
 PREFIX_OBJECT = 'news'
@@ -88,6 +88,11 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='', s
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
+def importNyNews(self, id, attrs, properties):
+    #this method is called during the import process
+    sortorder = attrs['sortorder'].encode('utf-8')
+    addNyNews(self, id=id, sortorder=sortorder)
+
 class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
     """ """
 
@@ -99,9 +104,9 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         """ """
         l_options = ()
         if not self.hasVersion():
-            l_options += ({'label' : 'Properties', 'action' : 'manage_edit_html'},)
+            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
         l_options += news_item.manage_options
-        l_options += ({'label' : 'View', 'action' : 'index_html'},) + NyItem.manage_options
+        l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 
     security = ClassSecurityInfo()
