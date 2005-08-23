@@ -164,11 +164,13 @@ class NyBase:
 
     security.declarePrivate('export_this_tag')
     def export_this_tag(self):
-        return '<ob meta_type="%s" id="%s" sortorder="%s" approved="%s" releasedate="%s" %s>' % \
+        return '<ob meta_type="%s" id="%s" sortorder="%s" contributor="%s" approved="%s" approved_by="%s" releasedate="%s" %s>' % \
             (self.utXmlEncode(self.meta_type),
              self.utXmlEncode(self.id),
              self.utXmlEncode(self.sortorder),
+             self.utXmlEncode(self.contributor),
              self.utXmlEncode(self.approved),
+             self.utXmlEncode(self.approved_by),
              self.utXmlEncode(self.releasedate),
              self.export_this_tag_custom())
 

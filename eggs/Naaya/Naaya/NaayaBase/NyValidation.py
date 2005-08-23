@@ -39,22 +39,15 @@ class NyValidation:
         self.contributor = ''
         self.approved_by = ''
 
-    def checkThis(self, validation_status, validation_comment, validation_by):
-        self.validation_status = validation_status
-        self.validation_date = self.utGetTodayDate()
-        self.validation_by = validation_by
-        if validation_status == -1:
-            self.validation_comment = validation_comment
-        if validation_status in [0, 1] :
-            self.validation_comment = ''
-        self._p_changed = 1
-
-    def checkImportThis(self, validation_status, validation_comment, validation_by, validation_date):
-        self.validation_status = validation_status
-        if validation_date =='' or validation_date =='2010/01/01':
-            self.validation_date = ""
+    def checkThis(self, validation_status, validation_comment, validation_by, validation_date=None):
+        if validation_date is None:
+            validation_date = self.utGetTodayDate()
+        elif validation_date == '' or validation_date =='2010/01/01':
+            validation_date = ''
         else:
-            self.validation_date = self.utGetDate(validation_date)
+            validation_date = self.utGetDate(validation_date)
+        self.validation_status = validation_status
+        self.validation_date = validation_date
         self.validation_by = validation_by
         if validation_status == -1:
             self.validation_comment = validation_comment
