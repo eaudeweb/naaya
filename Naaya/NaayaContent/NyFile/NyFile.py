@@ -120,15 +120,15 @@ class NyFile(NyAttributes, NyItem, file_item, NyVersioning, NyCheckControl, NyVa
     def __init__(self, id, title, description, coverage, keywords, sortorder, file, precondition,
         content_type, downloadfilename, contributor, approved, approved_by, releasedate, lang):
         """ """
+        self.id = id
         file_item.__dict__['__init__'](self, id, title, description, coverage, keywords, sortorder, file,
             precondition, content_type, downloadfilename, releasedate, lang)
-        self.id = id
-        self.contributor = contributor
-        self.approved = approved
-        self.approved_by = approved_by
         NyVersioning.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)
         NyValidation.__dict__['__init__'](self)
+        self.contributor = contributor
+        self.approved = approved
+        self.approved_by = approved_by
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):

@@ -35,7 +35,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from news_item import news_item
 
-#module constants
+#pluggable type metadata
 METATYPE_OBJECT = 'Naaya News'
 LABEL_OBJECT = 'News'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya News objects'
@@ -118,10 +118,10 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         self.id = id
         news_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder,
             details, expirationdate, topitem, smallpicture, bigpicture, resourceurl, source, releasedate, lang)
+        NyCheckControl.__dict__['__init__'](self)
         self.contributor = contributor
         self.approved = approved
         self.approved_by = approved_by
-        NyCheckControl.__dict__['__init__'](self)
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):

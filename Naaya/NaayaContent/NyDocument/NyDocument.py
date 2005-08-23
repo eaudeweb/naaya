@@ -123,11 +123,11 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         """ """
         self.id = id
         document_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder, body, releasedate, lang)
+        NyCheckControl.__dict__['__init__'](self)
+        NyValidation.__dict__['__init__'](self)
         self.contributor = contributor
         self.approved = approved
         self.approved_by = approved_by
-        NyCheckControl.__dict__['__init__'](self)
-        NyValidation.__dict__['__init__'](self)
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
