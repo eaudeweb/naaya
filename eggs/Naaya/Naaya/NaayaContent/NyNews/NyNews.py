@@ -125,7 +125,7 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
-        return u' '.join([self._objectkeywords(lang), self.getLocalProperty('details', lang)])
+        return u' '.join([self._objectkeywords(lang), self.getLocalProperty('details', lang), self.getLocalProperty('source', lang)])
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
@@ -270,7 +270,7 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
     def saveProperties(self, title='', description='', coverage='', keywords='', sortorder='',
         details='', expirationdate='', topitem='', smallpicture='', del_smallpicture='',
         bigpicture='', del_bigpicture='', resourceurl='', source='', releasedate='',
-        lang=None, REQUEST=None, RESPONSE=None, **kwargs):
+        lang=None, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG

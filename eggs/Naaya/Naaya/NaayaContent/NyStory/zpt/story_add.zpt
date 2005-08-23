@@ -80,6 +80,14 @@ function fSet(ctrl, value)
 	<td i18n:translate="">On front</td>
 	<td><input type="checkbox" name="topitem" /></td>
 </tr>
+<tr>
+	<td valign="top" i18n:translate="">Concerned URL</td>
+	<td><input type="text" name="resourceurl" size="50" value="http://" /></td>
+</tr>
+<tr>
+	<td valign="top" i18n:translate="">Source</td>
+	<td><input type="text" name="source:utf8:ustring" size="50" value="" /></td>
+</tr>
 <tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
 	<td><span tal:replace="record/name"/></td>
 	<td tal:content="structure python:record.render(record.defaultvalue)">dynamic html control</td>
