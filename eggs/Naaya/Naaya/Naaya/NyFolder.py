@@ -34,6 +34,7 @@ from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.NyContainer import NyContainer
+from Products.NaayaBase.NyImport import NyImport
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.Localizer.LocalPropertyManager import LocalProperty
@@ -79,7 +80,7 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-class NyFolder(NyAttributes, NyProperties, NyContainer, utils):
+class NyFolder(NyAttributes, NyProperties, NyImport, NyContainer, utils):
     """ """
 
     meta_type = METATYPE_FOLDER
@@ -90,11 +91,13 @@ class NyFolder(NyAttributes, NyProperties, NyContainer, utils):
         NyContainer.manage_options[0:2]
         +
         (
-            {'label' : 'Properties', 'action' : 'manage_edit_html'},
-            {'label' : 'Subobjects', 'action' : 'manage_folder_subobjects_html'},
+            {'label': 'Properties', 'action': 'manage_edit_html'},
+            {'label': 'Subobjects', 'action': 'manage_folder_subobjects_html'},
         )
         +
         NyProperties.manage_options
+        +
+        NyImport.manage_options
         +
         NyContainer.manage_options[3:8]
     )
