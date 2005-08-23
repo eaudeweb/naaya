@@ -33,7 +33,7 @@ class NyImport:
     """ """
 
     manage_options = (
-        {'label': 'Naaya Import', 'action' : 'manage_import_html'},
+        {'label': 'Naaya Import', 'action': 'manage_import_html'},
     )
 
     security = ClassSecurityInfo()
@@ -60,8 +60,7 @@ class NyImport:
             import_handler, error = self.getImportExportTool().parsenyexp(file)
             if import_handler is not None:
                 for obj in import_handler.root.objects:
-                    print obj.id, obj.meta_type
-                    self.import_object(self, obj)
+                    self.import_data(self, obj)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_import_html')
 
     #zmi pages
