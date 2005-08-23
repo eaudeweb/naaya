@@ -56,8 +56,8 @@ class LocalChannel(SimpleItem, utils):
 
     manage_options = (
         (
-            {'label' : 'Properties', 'action' : 'manage_properties_html'},
-            {'label' : 'View', 'action' : 'index_html'},
+            {'label': 'Properties', 'action': 'manage_properties_html'},
+            {'label': 'View', 'action': 'index_html'},
         )
         +
         SimpleItem.manage_options

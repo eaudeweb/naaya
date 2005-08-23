@@ -52,9 +52,9 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
         Folder.manage_options[:1]
         +
         (
-            {'label' : 'Properties', 'action' : 'manage_properties_html'},
-            {'label' : 'Rdf namespaces', 'action' : 'manage_namespaces_html'},
-            {'label' : 'Channel types', 'action' : 'manage_channeltypes_html'},
+            {'label': 'Properties', 'action': 'manage_properties_html'},
+            {'label': 'Rdf namespaces', 'action': 'manage_namespaces_html'},
+            {'label': 'Channel types', 'action': 'manage_channeltypes_html'},
         )
         +
         Folder.manage_options[3:-1]

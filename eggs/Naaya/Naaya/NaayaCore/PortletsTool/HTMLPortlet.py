@@ -62,7 +62,7 @@ class HTMLPortlet(LocalPropertyManager, Folder, NyEpozToolbox):
         Folder.manage_options[:3]
         +
         (
-            {'label' : 'Properties Ex', 'action' : 'manage_properties_html'},
+            {'label': 'Properties Ex', 'action': 'manage_properties_html'},
         )
         +
         Folder.manage_options[3:]

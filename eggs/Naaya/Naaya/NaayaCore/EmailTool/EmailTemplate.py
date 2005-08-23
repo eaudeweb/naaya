@@ -46,7 +46,7 @@ class EmailTemplate(SimpleItem):
 
     manage_options = (
         (
-            {'label' : 'Properties', 'action' : 'manage_properties_html'},
+            {'label': 'Properties', 'action': 'manage_properties_html'},
         )
         +
         SimpleItem.manage_options

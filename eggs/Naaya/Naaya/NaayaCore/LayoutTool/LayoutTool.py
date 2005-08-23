@@ -52,7 +52,7 @@ class LayoutTool(Folder, combosync_tool):
         Folder.manage_options[:1]
         +
         (
-            {'label' : 'Layout', 'action' : 'manage_layout_html'},
+            {'label': 'Layout', 'action': 'manage_layout_html'},
         )
         +
         Folder.manage_options[3:]

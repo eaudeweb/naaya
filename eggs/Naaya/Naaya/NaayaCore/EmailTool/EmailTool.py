@@ -53,7 +53,7 @@ class EmailTool(Folder):
         Folder.manage_options[:1]
         +
         (
-            {'label' : 'Settings', 'action' : 'manage_settings_html'},
+            {'label': 'Settings', 'action': 'manage_settings_html'},
         )
         +
         Folder.manage_options[3:]

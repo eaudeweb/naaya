@@ -19,6 +19,7 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+from copy import deepcopy
 from xml.sax.handler import ContentHandler
 from xml.sax import *
 from cStringIO import StringIO
@@ -36,6 +37,7 @@ class object_struct:
         self.id = id
         self.meta_type = meta_type
         self.attrs = attrs
+        self.properties = {}
         self.objects = []
 
 class saxstack_struct:
@@ -58,11 +60,19 @@ class import_handler(ContentHandler):
             stackObj = saxstack_struct('export', obj)
             self.stack.append(stackObj)
         elif name == 'ob':
-            obj = object_struct(attrs['id'].encode('utf-8'), attrs['meta_type'].encode('utf-8'), attrs)
+            obj = object_struct(attrs['id'].encode('utf-8'),
+                                attrs['meta_type'].encode('utf-8'),
+                                attrs)
             stackObj = saxstack_struct('ob', obj)
             self.stack.append(stackObj)
         else:
-            pass
+            if attrs.has_key('lang') and attrs.has_key('content'):
+                #multilanguage property
+                name = name.encode('utf-8')
+                ob = self.stack[-1].obj
+                if not ob.properties.has_key(name):
+                    ob.properties[name] = {}
+                ob.properties[name][attrs['lang'].encode('utf-8')] = attrs['content']
 
     def endElement(self, name):
         """ """

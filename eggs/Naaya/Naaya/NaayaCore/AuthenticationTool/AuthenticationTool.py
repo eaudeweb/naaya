@@ -53,10 +53,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
     icon = 'misc_/NaayaCore/AuthenticationTool.gif'
 
     manage_options = (
-        {'label' : 'Users', 'action' : 'manage_users_html'},
-        {'label' : 'Roles', 'action' : 'manage_roles_html'},
-        {'label' : 'Permissions', 'action' : 'manage_permissions_html'},
-        {'label' : 'Other sources', 'action' : 'manage_sources_html'},
+        {'label': 'Users', 'action': 'manage_users_html'},
+        {'label': 'Roles', 'action': 'manage_roles_html'},
+        {'label': 'Permissions', 'action': 'manage_permissions_html'},
+        {'label': 'Other sources', 'action': 'manage_sources_html'},
     )
 
     security = ClassSecurityInfo()

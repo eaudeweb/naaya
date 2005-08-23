@@ -53,9 +53,9 @@ class PortletsTool(Folder, utils):
         Folder.manage_options[:1]
         +
         (
-            {'label' : 'Left portlets', 'action' : 'manage_left_portlets_html'},
-            {'label' : 'Center portlets', 'action' : 'manage_center_portlets_html'},
-            {'label' : 'Right portlets', 'action' : 'manage_right_portlets_html'},
+            {'label': 'Left portlets', 'action': 'manage_left_portlets_html'},
+            {'label': 'Center portlets', 'action': 'manage_center_portlets_html'},
+            {'label': 'Right portlets', 'action': 'manage_right_portlets_html'},
         )
         +
         Folder.manage_options[2:]
