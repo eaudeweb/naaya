@@ -58,6 +58,7 @@ from Products.NaayaCore.LayoutTool.LayoutTool import manage_addLayoutTool
 from Products.NaayaCore.ImportExportTool.ImportExportTool import manage_addImportExportTool
 from Products.NaayaBase.NyBase import NyBase
 from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
+from Products.NaayaBase.NyImport import NyImport
 from Products.NaayaBase.NyPermissions import NyPermissions
 from Products.NaayaCore.managers.utils import utils, list_utils, batch_utils, file_utils
 from Products.NaayaCore.managers.catalog_tool import catalog_tool
@@ -85,7 +86,8 @@ def manage_addNySite(self, id='', title='', lang=None, REQUEST=None):
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
-class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox, NyPermissions,
+class NySite(CookieCrumbler, LocalPropertyManager, Folder,
+    NyBase, NyEpozToolbox, NyPermissions, NyImport,
     utils, list_utils, file_utils,
     catalog_tool,
     search_tool,
@@ -102,8 +104,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
         Folder.manage_options
         +
         (
-            {'label' : 'Control Panel', 'action' : 'manage_controlpanel_html'},
+            {'label': 'Control Panel', 'action': 'manage_controlpanel_html'},
         )
+        +
+        NyImport.manage_options
     )
 
     security = ClassSecurityInfo()
@@ -385,6 +389,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
     def getFormsTool(self): return self._getOb(ID_FORMSTOOL)
     def getLocalizer(self): return self._getOb('Localizer')
     def getPortalTranslations(self): return self._getOb(ID_TRANSLATIONSTOOL)
+    def getImportExportTool(self): return self._getOb(ID_IMPORTEXPORTTOOL)
     def getImagesFolder(self): return self._getOb(ID_IMAGESFOLDER)
 
     #objects absolute/relative path getters
@@ -398,6 +403,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
     def getSyndicationToolPath(self, p=0): return self._getOb(ID_SYNDICATIONTOOL).absolute_url(p)
     def getEmailToolPath(self, p=0): return self._getOb(ID_EMAILTOOL).absolute_url(p)
     def getFormsToolPath(self, p=0): return self._getOb(ID_FORMSTOOL).absolute_url(p)
+    def getImportExportToolPath(self, p=0): return self._getOb(ID_IMPORTEXPORTTOOL).absolute_url(p)
     def getFolderByPath(self, p_folderpath): return self.unrestrictedTraverse(p_folderpath, None)
 
     def getFolderMainParent(self, p_folder):
@@ -1445,6 +1451,15 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder, NyBase, NyEpozToolbox
     def get_coverage_glossary(self):
         try: return self._getOb(self.coverage_glossary)
         except: return None
+
+    def import_object(self, node, object):
+        #import an object
+        zope_obj = node._getOb(object.id, None)
+        if zope_obj is None:
+            print 'create zope_ob'
+        for obj in object.objects:
+            print obj.id, obj.meta_type
+            self.import_object(zope_obj, obj)
 
     #sending emails
     def sendFeedbackEmail(self, p_to, p_username, p_email, p_comments):
