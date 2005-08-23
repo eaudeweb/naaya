@@ -85,7 +85,19 @@ def addNyURL(self, id='', title='', description='', coverage='', keywords='', so
 def importNyURL(self, id, attrs, properties):
     #this method is called during the import process
     sortorder = attrs['sortorder'].encode('utf-8')
-    addNyURL(self, id=id, sortorder=sortorder)
+    try: approved = abs(int(attrs['approved'].encode('utf-8')))
+    except: approved = None
+    releasedate = attrs['releasedate'].encode('utf-8')
+    locator = attrs['locator'].encode('utf-8')
+    addNyURL(self, id=id, sortorder=sortorder, locator=locator)
+    ob = self._getOb(id)
+    for property, langs in properties.items():
+        for lang in langs:
+            ob._setLocalPropValue(property, lang, langs[lang])
+    if approved is not None:
+        self.approveThis(approved)
+    self.setReleaseDate(releasedate)
+    self.recatalogNyObject(ob)
 
 class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
     """ """
@@ -110,11 +122,11 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
         """ """
         self.id = id
         url_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder, locator, releasedate, lang)
+        NyCheckControl.__dict__['__init__'](self)
+        NyValidation.__dict__['__init__'](self)
         self.contributor = contributor
         self.approved = approved
         self.approved_by = approved_by
-        NyCheckControl.__dict__['__init__'](self)
-        NyValidation.__dict__['__init__'](self)
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):

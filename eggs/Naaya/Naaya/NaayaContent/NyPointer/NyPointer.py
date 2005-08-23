@@ -110,11 +110,11 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
         """ """
         self.id = id
         pointer_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder, pointer, releasedate, lang)
+        NyCheckControl.__dict__['__init__'](self)
+        NyValidation.__dict__['__init__'](self)
         self.contributor = contributor
         self.approved = approved
         self.approved_by = approved_by
-        NyCheckControl.__dict__['__init__'](self)
-        NyValidation.__dict__['__init__'](self)
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):

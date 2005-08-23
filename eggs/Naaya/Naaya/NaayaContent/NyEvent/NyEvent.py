@@ -121,10 +121,10 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
         event_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder, location,
             location_address, location_url, start_date, end_date, host, agenda_url, event_url,
             details, topitem, event_type, contact_person, contact_email, contact_phone, contact_fax, releasedate, lang)
+        NyCheckControl.__dict__['__init__'](self)
         self.contributor = contributor
         self.approved = approved
         self.approved_by = approved_by
-        NyCheckControl.__dict__['__init__'](self)
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
