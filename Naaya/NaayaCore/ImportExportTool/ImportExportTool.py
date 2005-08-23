@@ -29,6 +29,7 @@ from AccessControl.Permissions import view_management_screens
 
 #Product imports
 from Products.NaayaCore.constants import *
+from managers.import_parser import import_parser
 
 def manage_addImportExportTool(self, REQUEST=None):
     """ """
@@ -46,8 +47,8 @@ class ImportExportTool(SimpleItem):
 
     manage_options = (
         (
-            {'label' : 'Export', 'action' : 'manage_export_html'},
-            {'label' : 'Import', 'action' : 'manage_import_html'},
+            {'label': 'Export', 'action': 'manage_export_html'},
+            {'label': 'Import', 'action': 'manage_import_html'},
         )
         +
         SimpleItem.manage_options
@@ -64,6 +65,11 @@ class ImportExportTool(SimpleItem):
     def loadDefaultData(self):
         #load default stuff
         pass
+
+    #api
+    def parsenyexp(self, p_nyexp):
+        #parses a nyexp file and returns the result
+        return import_parser().parse(p_nyexp)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'exportsite')
