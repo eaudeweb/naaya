@@ -41,11 +41,11 @@
 </div>
 <div class="field">
 	<label for="details" i18n:translate="">Details (HTML)</label>
-	<span tal:replace="structure python:here.Epoz('details:utf8:ustring', data='', toolbox='', lang=here.gl_get_selected_language(), style='width: 400px; height: 200px; border: 1px solid #000000;')" id="details" />
+	<span tal:replace="structure python:here.Epoz('details:utf8:ustring', data='', toolbox='', lang=here.gl_get_selected_language(), style='width: 400px; height: 200px; border: 1px solid #000000;')" />
 </div>
-<div class="field">
+<div class="field-inline">
 	<label for="topitem" i18n:translate="">On front</label>
-	<input type="checkbox" name="topitem" id="topitem" />
+	<input type="checkbox" name="topitem" id="topitem" value="" />
 </div>
 <div class="field">
 	<label for="event_type" i18n:translate="">Type</label>

@@ -7,72 +7,70 @@
 </p>
 
 <tal:block metal:fill-slot="custom_properties" tal:define="eventtypes here/getEventTypesList">
-<tr>
-	<td i18n:translate="">Location</td>
-	<td><input type="text" name="location:utf8:ustring" size="50" tal:attributes="value python:here.getVersionLocalProperty('location', curr_lang)" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">Location address</td>
-	<td><input type="text" name="location_address:utf8:ustring" size="50" tal:attributes="value python:here.getVersionLocalProperty('location_address', curr_lang)" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">Location URL</td>
-	<td><input type="text" name="location_url:utf8:ustring" size="50" tal:attributes="value python:here.getVersionProperty('location_url')" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">Start date (<em>dd/mm/yyyy</em>)</td>
-	<td><input type="text" name="start_date:utf8:ustring" size="10" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getVersionProperty('start_date'))" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">End date (<em>dd/mm/yyyy</em>)</td>
-	<td><input type="text" name="end_date:utf8:ustring" size="10" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getVersionProperty('end_date'))" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">Host</td>
-	<td><input type="text" name="host:utf8:ustring" size="50" tal:attributes="value python:here.getVersionLocalProperty('host', curr_lang)"></td>
-</tr>
-<tr>
-	<td i18n:translate="">Agenda URL</td>
-	<td><input type="text" name="agenda_url:utf8:ustring" size="50" tal:attributes="value python:here.getVersionProperty('agenda_url')"></td>
-</tr>
-<tr>
-	<td i18n:translate="">Event URL</td>
-	<td><input type="text" name="event_url:utf8:ustring" size="50" tal:attributes="value python:here.getVersionProperty('event_url')" /></td>
-</tr>
-<tr>
-	<td valign="top" i18n:translate="">Details (HTML)</td>
-	<td><span tal:replace="structure python:here.Epoz('details:utf8:ustring', data=here.getVersionLocalProperty('details', curr_lang), toolbox='', lang=here.gl_get_selected_language(), style='width: 400px; height: 200px; border: 1px solid #000000;')" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">On front</td>
-	<td><input type="checkbox" name="topitem" tal:attributes="checked python:here.getVersionProperty('topitem')==1" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">Type</td>
-	<td>
-		<select name="event_type:utf8:ustring">
-			<option value=""></option>
-			<option tal:repeat="eventtype eventtypes"
-				tal:attributes="value eventtype/id; selected python:eventtype.id==here.getVersionProperty('event_type')" tal:content="eventtype/title"  i18n:translate="">event</option>
-		</select>
-	</td>
-</tr>
-<tr>
-	<td i18n:translate="">Contact person</td>
-	<td><input type="text" name="contact_person:utf8:ustring" size="50" tal:attributes="value python:here.getVersionProperty('contact_person')" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">Contact email address</td>
-	<td><input type="text" name="contact_email:utf8:ustring" size="50" tal:attributes="value python:here.getVersionProperty('contact_email')" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">Contact phone</td>
-	<td><input type="text" name="contact_phone:utf8:ustring" size="50" tal:attributes="value python:here.getVersionProperty('contact_phone')" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">Contact fax</td>
-	<td><input type="text" name="contact_fax:utf8:ustring" size="50" tal:attributes="value python:here.getVersionProperty('contact_fax')" /></td>
-</tr>
+<div class="field">
+	<label for="location" i18n:translate="">Location</label>
+	<input type="text" name="location:utf8:ustring" id="location" size="50" tal:attributes="value python:here.getVersionLocalProperty('location', curr_lang)" />
+</div>
+<div class="field">
+	<label for="location_address" i18n:translate="">Location address</label>
+	<input type="text" name="location_address:utf8:ustring" id="location_address" size="50" tal:attributes="value python:here.getVersionLocalProperty('location_address', curr_lang)" />
+</div>
+<div class="field">
+	<label for="location_url" i18n:translate="">Location URL</label>
+	<input type="text" name="location_url:utf8:ustring" id="location_url" size="50" tal:attributes="value python:here.getVersionProperty('location_url')" />
+</div>
+<div class="field">
+	<label for="start_date" i18n:translate="">Start date (<em>dd/mm/yyyy</em>)</label>
+	<input type="text" name="start_date:utf8:ustring" id="start_date" size="10" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getVersionProperty('start_date'))" />
+</div>
+<div class="field">
+	<label for="end_date" i18n:translate="">End date (<em>dd/mm/yyyy</em>)</label>
+	<input type="text" name="end_date:utf8:ustring" id="end_date" size="10" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getVersionProperty('end_date'))" />
+</div>
+<div class="field">
+	<label for="host" i18n:translate="">Host</label>
+	<input type="text" name="host:utf8:ustring" id="host" size="50" tal:attributes="value python:here.getVersionLocalProperty('host', curr_lang)" />
+</div>
+<div class="field">
+	<label for="agenda_url" i18n:translate="">Agenda URL</label>
+	<input type="text" name="agenda_url:utf8:ustring" id="agenda_url" size="50" tal:attributes="value python:here.getVersionProperty('agenda_url')" />
+</div>
+<div class="field">
+	<label for="event_url" i18n:translate="">Event URL</label>
+	<input type="text" name="event_url:utf8:ustring" id="event_url" size="50" tal:attributes="value python:here.getVersionProperty('event_url')" />
+</div>
+<div class="field">
+	<label for="" i18n:translate="">Details (HTML)</label>
+	<span tal:replace="structure python:here.Epoz('details:utf8:ustring', data=here.getVersionLocalProperty('details', curr_lang), toolbox='', lang=here.gl_get_selected_language(), style='width: 400px; height: 200px; border: 1px solid #000000;')" />
+</div>
+<div class="field">
+	<label for="" i18n:translate="">On front</label>
+	<input type="checkbox" name="topitem" tal:attributes="checked python:here.getVersionProperty('topitem')==1" />
+</div>
+<div class="field">
+	<label for="" i18n:translate="">Type</label>
+	<select name="event_type:utf8:ustring">
+		<option value=""></option>
+		<option tal:repeat="eventtype eventtypes"
+			tal:attributes="value eventtype/id; selected python:eventtype.id==here.getVersionProperty('event_type')" tal:content="eventtype/title"  i18n:translate="">event</option>
+	</select>
+</div>
+<div class="field">
+	<label for="" i18n:translate="">Contact person</label>
+	<input type="text" name="contact_person:utf8:ustring" size="50" tal:attributes="value python:here.getVersionProperty('contact_person')" />
+</div>
+<div class="field">
+	<label for="" i18n:translate="">Contact email address</label>
+	<input type="text" name="contact_email:utf8:ustring" size="50" tal:attributes="value python:here.getVersionProperty('contact_email')" />
+</div>
+<div class="field">
+	<label for="" i18n:translate="">Contact phone</label>
+	<input type="text" name="contact_phone:utf8:ustring" size="50" tal:attributes="value python:here.getVersionProperty('contact_phone')" />
+</div>
+<div class="field">
+	<label for="" i18n:translate="">Contact fax</label>
+	<input type="text" name="contact_fax:utf8:ustring" size="50" tal:attributes="value python:here.getVersionProperty('contact_fax')" />
+</div>
 </tal:block>
 
 </tal:block>

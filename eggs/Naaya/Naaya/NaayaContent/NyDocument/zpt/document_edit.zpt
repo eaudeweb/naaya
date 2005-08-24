@@ -7,10 +7,10 @@
 </p>
 
 <tal:block metal:fill-slot="custom_properties">
-<tr>
-	<td valign="top" i18n:translate="">Body (HTML)</td>
-	<td><span tal:replace="structure python:here.Epoz('body:utf8:ustring', data=here.getVersionLocalProperty('body', curr_lang), toolbox='%s/toolbox_html' % here.absolute_url(), lang=here.gl_get_selected_language(), style='width: 465px; height: 250px; border: 1px solid #000000;')" /></td>
-</tr>
+<div class="field">
+	<label for="body" i18n:translate="">Body (HTML)</label>
+	<span tal:replace="structure python:here.Epoz('body:utf8:ustring', data=here.getVersionLocalProperty('body', curr_lang), toolbox='%s/toolbox_html' % here.absolute_url(), lang=here.gl_get_selected_language(), style='width: 465px; height: 250px; border: 1px solid #000000;')" />
+</div>
 </tal:block>
 
 </tal:block>
