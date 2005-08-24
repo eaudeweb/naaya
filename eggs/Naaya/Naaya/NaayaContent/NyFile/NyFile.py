@@ -97,7 +97,7 @@ def importNyFile(self, id, attrs, properties):
     #this method is called during the import process
     addNyFile(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),
-        source='file', file=self.utBase64Encode(attrs['file'].encode('utf-8')),
+        source='file', file=self.utBase64Decode(attrs['file'].encode('utf-8')),
         downloadfilename=attrs['downloadfilename'].encode('utf-8'),
         contributor=attrs['contributor'].encode('utf-8'))
     ob = self._getOb(id)

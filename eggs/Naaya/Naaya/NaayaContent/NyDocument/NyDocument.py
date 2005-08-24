@@ -89,8 +89,20 @@ def addNyDocument(self, id='', title='', description='', coverage='', keywords='
 
 def importNyDocument(self, id, attrs, properties):
     #this method is called during the import process
-    sortorder = attrs['sortorder'].encode('utf-8')
-    addNyDocument(self, id=id, sortorder=sortorder)
+    addNyDocument(self, id=id,
+        sortorder=attrs['sortorder'].encode('utf-8'),
+        contributor=attrs['contributor'].encode('utf-8'))
+    ob = self._getOb(id)
+    for property, langs in properties.items():
+        for lang in langs:
+            ob._setLocalPropValue(property, lang, langs[lang])
+    ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
+    ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+    ob.checkThis(attrs['validation_status'].encode('utf-8'),
+        attrs['validation_comment'].encode('utf-8'),
+        attrs['validation_by'].encode('utf-8'),
+        attrs['validation_date'].encode('utf-8'))
+    self.recatalogNyObject(ob)
 
 class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyCheckControl, NyValidation):
     """ """
@@ -101,16 +113,17 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
 
     def manage_options(self):
         """ """
-        l_options = (NyContainer.manage_options[0],) + document_item.manage_options
+        l_options = (NyContainer.manage_options[0],)
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
+        l_options += document_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
         return l_options
 
     def all_meta_types(self, interfaces=None):
         """ """
         y = []
-        additional_meta_types = ['Image', 'File']
+        additional_meta_types = ['Image']
         for x in Products.meta_types:
             if x['name'] in additional_meta_types:
                 y.append(x)
@@ -133,6 +146,14 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
     def objectkeywords(self, lang):
         return u' '.join([self._objectkeywords(lang), self.getLocalProperty('body', lang)])
 
+    security.declarePrivate('export_this_tag_custom')
+    def export_this_tag_custom(self):
+        return 'validation_status="%s" validation_date="%s" validation_by="%s" validation_comment="%s"' % \
+            (self.utXmlEncode(self.validation_status),
+                self.utXmlEncode(self.validation_date),
+                self.utXmlEncode(self.validation_by),
+                self.utXmlEncode(self.validation_comment))
+
     security.declarePrivate('export_this_body_custom')
     def export_this_body_custom(self):
         r = []
@@ -140,6 +161,9 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
             v = self.getLocalProperty('body', l)
             if isinstance(v, unicode): v = v.encode('utf-8')
             r.append('<body lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+        for i in self.getUploadedImages():
+            r.append('<img id="%s" content="%s" />' % \
+                (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(str(i.data)))))
         return ''.join(r)
 
     #zmi actions
