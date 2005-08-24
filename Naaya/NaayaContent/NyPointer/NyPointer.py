@@ -84,8 +84,21 @@ def addNyPointer(self, id='', title='', description='', coverage='', keywords=''
 
 def importNyPointer(self, id, attrs, properties):
     #this method is called during the import process
-    sortorder = attrs['sortorder'].encode('utf-8')
-    addNyPointer(self, id=id, sortorder=sortorder)
+    addNyPointer(self, id=id,
+        sortorder=attrs['sortorder'].encode('utf-8'),
+        pointer=attrs['pointer'].encode('utf-8'),
+        contributor=attrs['contributor'].encode('utf-8'))
+    ob = self._getOb(id)
+    for property, langs in properties.items():
+        for lang in langs:
+            ob._setLocalPropValue(property, lang, langs[lang])
+    ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
+    ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+    ob.checkThis(attrs['validation_status'].encode('utf-8'),
+        attrs['validation_comment'].encode('utf-8'),
+        attrs['validation_by'].encode('utf-8'),
+        attrs['validation_date'].encode('utf-8'))
+    self.recatalogNyObject(ob)
 
 class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation):
     """ """
@@ -118,7 +131,12 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
-        return 'pointer="%s"' % self.utXmlEncode(self.pointer)
+        return 'pointer="%s" validation_status="%s" validation_date="%s" validation_by="%s" validation_comment="%s"' % \
+            (self.utXmlEncode(self.pointer),
+                self.utXmlEncode(self.validation_status),
+                self.utXmlEncode(self.validation_date),
+                self.utXmlEncode(self.validation_by),
+                self.utXmlEncode(self.validation_comment))
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')

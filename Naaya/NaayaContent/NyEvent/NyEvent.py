@@ -91,8 +91,27 @@ def addNyEvent(self, id='', title='', description='', language='', coverage='', 
 
 def importNyEvent(self, id, attrs, properties):
     #this method is called during the import process
-    sortorder = attrs['sortorder'].encode('utf-8')
-    addNyEvent(self, id=id, sortorder=sortorder)
+    addNyEvent(self, id=id,
+        sortorder=attrs['sortorder'].encode('utf-8'),
+        location_url=attrs['location_url'].encode('utf-8'),
+        start_date=self.utConvertDateTimeObjToString(self.utGetDate(attrs['start_date'].encode('utf-8'))),
+        end_date=self.utConvertDateTimeObjToString(self.utGetDate(attrs['end_date'].encode('utf-8'))),
+        agenda_url=attrs['agenda_url'].encode('utf-8'),
+        event_url=attrs['event_url'].encode('utf-8'),
+        topitem=attrs['topitem'].encode('utf-8'),
+        event_type=attrs['event_type'].encode('utf-8'),
+        contact_person=attrs['contact_person'].encode('utf-8'),
+        contact_email=attrs['contact_email'].encode('utf-8'),
+        contact_phone=attrs['contact_phone'].encode('utf-8'),
+        contact_fax=attrs['contact_fax'].encode('utf-8'),
+        contributor=attrs['contributor'].encode('utf-8'))
+    ob = self._getOb(id)
+    for property, langs in properties.items():
+        for lang in langs:
+            ob._setLocalPropValue(property, lang, langs[lang])
+    ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
+    ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+    self.recatalogNyObject(ob)
 
 class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
     """ """
