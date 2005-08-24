@@ -37,6 +37,7 @@ class object_struct:
         self.id = id
         self.meta_type = meta_type
         self.attrs = attrs
+        self.content = None
         self.properties = {}
         self.objects = []
 
@@ -84,6 +85,7 @@ class import_handler(ContentHandler):
             self.root = self.stack[-1].obj
             self.stack.pop()
         elif name == 'ob':
+            self.stack[-1].obj.content = self.stack[-1].content.encode('utf-8')
             self.stack[-2].obj.objects.append(self.stack[-1].obj)
             self.stack.pop()
         elif name == 'img':
@@ -91,6 +93,10 @@ class import_handler(ContentHandler):
             self.stack.pop()
         else:
             pass
+
+    def characters(self, content):
+        if len(self.stack) > 0:
+            self.stack[-1].content += content.strip(' \t')
 
 class import_parser:
     """ """
