@@ -88,7 +88,7 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='', s
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-def importNyNews(self, id, attrs, properties):
+def importNyNews(self, id, attrs, content, properties):
     #this method is called during the import process
     addNyNews(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),

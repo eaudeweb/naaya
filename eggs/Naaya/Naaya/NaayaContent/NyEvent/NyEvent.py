@@ -89,7 +89,7 @@ def addNyEvent(self, id='', title='', description='', language='', coverage='', 
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-def importNyEvent(self, id, attrs, properties):
+def importNyEvent(self, id, attrs, content, properties):
     #this method is called during the import process
     addNyEvent(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),
