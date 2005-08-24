@@ -389,7 +389,7 @@ vertical-align: top;
 		width: 99%;
 	}
 
-		#location{
+		#location-bar{
 			position:relative;
 			right:0px;
 			/*height:4em;*/
@@ -406,12 +406,12 @@ vertical-align: top;
 		width:0px;
 	}
 
-	#location a{
+	#location-bar a{
 		color:#343434; /*#eef0ee*/ /*#0d679c*/ /*#6a8144*/ /*#6a8144*/
 		text-decoration: none;
 	}
 
-	#location a:hover{
+	#location-bar a:hover{
 		color:#676767; /*#ffffff*/ /*#004488*/ /*#99cc66*/ /*#99cc66*/
 	}
 
