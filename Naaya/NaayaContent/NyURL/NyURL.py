@@ -84,19 +84,20 @@ def addNyURL(self, id='', title='', description='', coverage='', keywords='', so
 
 def importNyURL(self, id, attrs, properties):
     #this method is called during the import process
-    sortorder = attrs['sortorder'].encode('utf-8')
-    try: approved = abs(int(attrs['approved'].encode('utf-8')))
-    except: approved = None
-    releasedate = attrs['releasedate'].encode('utf-8')
-    locator = attrs['locator'].encode('utf-8')
-    addNyURL(self, id=id, sortorder=sortorder, locator=locator)
+    addNyURL(self, id=id,
+        sortorder=attrs['sortorder'].encode('utf-8'),
+        locator=attrs['locator'].encode('utf-8'),
+        contributor=attrs['contributor'].encode('utf-8'))
     ob = self._getOb(id)
     for property, langs in properties.items():
         for lang in langs:
             ob._setLocalPropValue(property, lang, langs[lang])
-    if approved is not None:
-        self.approveThis(approved)
-    self.setReleaseDate(releasedate)
+    ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
+    ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+    ob.checkThis(attrs['validation_status'].encode('utf-8'),
+        attrs['validation_comment'].encode('utf-8'),
+        attrs['validation_by'].encode('utf-8'),
+        attrs['validation_date'].encode('utf-8'))
     self.recatalogNyObject(ob)
 
 class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):

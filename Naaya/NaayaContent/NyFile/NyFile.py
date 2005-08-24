@@ -95,8 +95,26 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
 
 def importNyFile(self, id, attrs, properties):
     #this method is called during the import process
-    sortorder = attrs['sortorder'].encode('utf-8')
-    addNyFile(self, id=id, sortorder=sortorder)
+    addNyFile(self, id=id,
+        sortorder=attrs['sortorder'].encode('utf-8'),
+        source='file', file=self.utBase64Encode(attrs['file'].encode('utf-8')),
+        downloadfilename=attrs['downloadfilename'].encode('utf-8'),
+        contributor=attrs['contributor'].encode('utf-8'))
+    ob = self._getOb(id)
+    #set the real content_type and precondition
+    ob.content_type = attrs['content_type'].encode('utf-8')
+    ob.precondition = attrs['precondition'].encode('utf-8')
+    ob._p_changed = 1
+    for property, langs in properties.items():
+        for lang in langs:
+            ob._setLocalPropValue(property, lang, langs[lang])
+    ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
+    ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+    ob.checkThis(attrs['validation_status'].encode('utf-8'),
+        attrs['validation_comment'].encode('utf-8'),
+        attrs['validation_by'].encode('utf-8'),
+        attrs['validation_date'].encode('utf-8'))
+    self.recatalogNyObject(ob)
 
 class NyFile(NyAttributes, NyItem, file_item, NyVersioning, NyCheckControl, NyValidation):
     """ """
@@ -132,11 +150,15 @@ class NyFile(NyAttributes, NyItem, file_item, NyVersioning, NyCheckControl, NyVa
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
-        return 'downloadfilename="%s" file="%s" content_type="%s" precondition="%s"' % \
+        return 'downloadfilename="%s" file="%s" content_type="%s" precondition="%s" validation_status="%s" validation_date="%s" validation_by="%s" validation_comment="%s"' % \
             (self.utXmlEncode(self.downloadfilename),
                 self.utBase64Encode(str(self.utNoneToEmpty(self.data))),
                 self.utXmlEncode(self.content_type),
-                self.utXmlEncode(self.precondition))
+                self.utXmlEncode(self.precondition),
+                self.utXmlEncode(self.validation_status),
+                self.utXmlEncode(self.validation_date),
+                self.utXmlEncode(self.validation_by),
+                self.utXmlEncode(self.validation_comment))
 
     security.declarePrivate('syndicateThis')
     def syndicateThis(self):
