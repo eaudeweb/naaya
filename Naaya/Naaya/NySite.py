@@ -145,6 +145,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.administrator_email = ''
         self.portal_url = ''
         self.maintopics = []
+        self.__network_portals = {}
         self.keywords_glossary = None
         self.coverage_glossary = None
         self.__pluggable_installed_content = {}
@@ -706,7 +707,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def externalSearch(self, servers=[], query='', sort_expr='', order='', page_search_start=''):
         """ """
         list_results = []
-        try:    page_search_start = int(page_search_start)
+        try: page_search_start = int(page_search_start)
         except: page_search_start = 0
         if query.strip() != '':
             query = self.utStrEscapeForSearch(query)
@@ -1046,6 +1047,25 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_linkslist_html?id=%s' % (self.absolute_url(), id))
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addnetworkportal')
+    def admin_addnetworkportal(self, title='', url='', REQUEST=None):
+        """ """
+        self.__network_portals[url] = title
+        self._p_changed = 1
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_network_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletenetworkportal')
+    def admin_deletenetworkportal(self, ids=[], REQUEST=None):
+        """ """
+        for url in self.utConvertToList(ids):
+            del(self.__network_portals[url])
+        self._p_changed = 1
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_network_html' % self.absolute_url())
+
     security.declareProtected(PERMISSION_ADMINISTRATE, 'admin_discardversion')
     def admin_discardversion(self, url=None, REQUEST=None):
         """ """
@@ -1365,6 +1385,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_linkslist')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_network_html')
+    def admin_network_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_network')
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_basket_html')
     def admin_basket_html(self, REQUEST=None, RESPONSE=None):
         """ """
@@ -1454,6 +1479,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     def get_linkslists_noportlet(self):
         return [x for x in self.getPortletsTool().getLinksLists() if not x.exists_portlet_for_object(x)]
+
+    def getNetworkPortals(self):
+        #returns the list of user defined network portals
+        return self.__network_portals
 
     def getRemoteServers(self):
         #get remote servers

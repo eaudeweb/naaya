@@ -40,6 +40,7 @@
 		<form id="site_admin_importexport" title="Portal administration - import export messages"/>
 		<form id="site_admin_linkslists" title="Portal administration - lists of links"/>
 		<form id="site_admin_linkslist" title="Portal administration - list of links"/>
+		<form id="site_admin_network" title="Portal administration - network portals"/>
 		<form id="site_admin_basket" title="Portal administration - centralized basket form"/>
 		<form id="site_admin_validation" title="Portal administration - content checking and validation"/>
 		<form id="site_admin_validation_tree" title="Portal administration - reports of content checking and validation"/>
