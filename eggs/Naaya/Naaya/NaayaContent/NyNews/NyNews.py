@@ -90,8 +90,21 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='', s
 
 def importNyNews(self, id, attrs, properties):
     #this method is called during the import process
-    sortorder = attrs['sortorder'].encode('utf-8')
-    addNyNews(self, id=id, sortorder=sortorder)
+    addNyNews(self, id=id,
+        sortorder=attrs['sortorder'].encode('utf-8'),
+        expirationdate=self.utConvertDateTimeObjToString(self.utGetDate(attrs['expirationdate'].encode('utf-8'))),
+        topitem=attrs['topitem'].encode('utf-8'),
+        smallpicture=self.utBase64Decode(attrs['smallpicture'].encode('utf-8')),
+        bigpicture=self.utBase64Decode(attrs['bigpicture'].encode('utf-8')),
+        resourceurl=attrs['resourceurl'].encode('utf-8'),
+        contributor=attrs['contributor'].encode('utf-8'))
+    ob = self._getOb(id)
+    for property, langs in properties.items():
+        for lang in langs:
+            ob._setLocalPropValue(property, lang, langs[lang])
+    ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
+    ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+    self.recatalogNyObject(ob)
 
 class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
     """ """

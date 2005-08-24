@@ -91,8 +91,18 @@ def addNyStory(self, id='', title='', description='', coverage='', keywords='', 
 
 def importNyStory(self, id, attrs, properties):
     #this method is called during the import process
-    sortorder = attrs['sortorder'].encode('utf-8')
-    addNyStory(self, id=id, sortorder=sortorder)
+    addNyStory(self, id=id,
+        sortorder=attrs['sortorder'].encode('utf-8'),
+        topitem=attrs['topitem'].encode('utf-8'),
+        resourceurl=attrs['resourceurl'].encode('utf-8'),
+        contributor=attrs['contributor'].encode('utf-8'))
+    ob = self._getOb(id)
+    for property, langs in properties.items():
+        for lang in langs:
+            ob._setLocalPropValue(property, lang, langs[lang])
+    ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
+    ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+    self.recatalogNyObject(ob)
 
 class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckControl):
     """ """
@@ -137,7 +147,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
-        return 'topitem="%s" resource_url="%s"' % \
+        return 'topitem="%s" resourceurl="%s"' % \
             (self.utXmlEncode(self.topitem), self.utXmlEncode(self.resourceurl))
 
     security.declarePrivate('export_this_body_custom')
@@ -150,6 +160,9 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
             v = self.getLocalProperty('source', l)
             if isinstance(v, unicode): v = v.encode('utf-8')
             r.append('<source lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+        for i in self.getUploadedImages():
+            r.append('<img id="%s" content="%s" />' % \
+                (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(str(i.data)))))
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')
