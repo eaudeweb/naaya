@@ -93,7 +93,7 @@ def importNyNews(self, id, attrs, properties):
     addNyNews(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),
         expirationdate=self.utConvertDateTimeObjToString(self.utGetDate(attrs['expirationdate'].encode('utf-8'))),
-        topitem=attrs['topitem'].encode('utf-8'),
+        topitem=abs(int(attrs['topitem'].encode('utf-8'))),
         smallpicture=self.utBase64Decode(attrs['smallpicture'].encode('utf-8')),
         bigpicture=self.utBase64Decode(attrs['bigpicture'].encode('utf-8')),
         resourceurl=attrs['resourceurl'].encode('utf-8'),

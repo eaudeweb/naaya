@@ -98,7 +98,7 @@ def importNyEvent(self, id, attrs, properties):
         end_date=self.utConvertDateTimeObjToString(self.utGetDate(attrs['end_date'].encode('utf-8'))),
         agenda_url=attrs['agenda_url'].encode('utf-8'),
         event_url=attrs['event_url'].encode('utf-8'),
-        topitem=attrs['topitem'].encode('utf-8'),
+        topitem=abs(int(attrs['topitem'].encode('utf-8'))),
         event_type=attrs['event_type'].encode('utf-8'),
         contact_person=attrs['contact_person'].encode('utf-8'),
         contact_email=attrs['contact_email'].encode('utf-8'),

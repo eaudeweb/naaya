@@ -93,7 +93,7 @@ def importNyStory(self, id, attrs, properties):
     #this method is called during the import process
     addNyStory(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),
-        topitem=attrs['topitem'].encode('utf-8'),
+        topitem=abs(int(attrs['topitem'].encode('utf-8'))),
         resourceurl=attrs['resourceurl'].encode('utf-8'),
         contributor=attrs['contributor'].encode('utf-8'))
     ob = self._getOb(id)
