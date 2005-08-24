@@ -34,7 +34,7 @@ from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.NyContainer import NyContainer
-from Products.NaayaBase.NyImport import NyImport
+from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.Localizer.LocalPropertyManager import LocalProperty
@@ -91,7 +91,7 @@ def importNyFolder(self, id, attrs, properties):
     maintainer_email = attrs['maintainer_email'].encode('utf-8')
     addNyFolder(self, id=id, sortorder=sortorder, maintainer_email=maintainer_email)
 
-class NyFolder(NyAttributes, NyProperties, NyImport, NyContainer, utils):
+class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     """ """
 
     meta_type = METATYPE_FOLDER
@@ -108,7 +108,7 @@ class NyFolder(NyAttributes, NyProperties, NyImport, NyContainer, utils):
         +
         NyProperties.manage_options
         +
-        NyImport.manage_options
+        NyImportExport.manage_options
         +
         NyContainer.manage_options[3:8]
     )
@@ -160,6 +160,7 @@ class NyFolder(NyAttributes, NyProperties, NyImport, NyContainer, utils):
         self.releasedate = releasedate
         self.folder_meta_types = folder_meta_types
 
+    #overwrite handlers
     def manage_afterAdd(self, item, container):
         """ This method is called, whenever _setObject in ObjectManager gets called. """
         NyContainer.__dict__['manage_afterAdd'](self, item, container)
@@ -173,6 +174,11 @@ class NyFolder(NyAttributes, NyProperties, NyImport, NyContainer, utils):
         NyContainer.__dict__['manage_beforeDelete'](self, item, container)
         self.uncatalogNyObject(self)
         self.delete_portlet_for_object(item)
+
+    #import/export
+    def exportdata_custom(self):
+        #exports all the Naaya content in XML format from this folder
+        return self.export_this()
 
     security.declarePrivate('export_this')
     def export_this(self):
