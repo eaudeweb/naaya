@@ -34,23 +34,28 @@
 </fieldset>
 
 <div style="float:left; width: 40%; margin-right: 10px;">
-<fieldset><legend>CHM portals</legend>
-	<dl>
-	<tal:block
-		tal:define="servers here/getRemoteServers; servers_urls python:here.utConvertToList(request.get('servers', []))"
-		tal:repeat="server_url python:servers.keys()">
-		<dt>
+<fieldset><legend>Other portals</legend>
+	<dl tal:define="servers here/getRemoteServers;
+					servers_urls python:here.utConvertToList(request.get('servers', []));
+					portals here/getNetworkPortals">
+		<dt tal:repeat="url python:servers.keys()">
 			<tal:block tal:condition="python:request.has_key('servers')">
-			<input type="checkbox" name="servers" 
-				tal:attributes="value server_url; checked python:server_url in servers_urls" />
+			<input type="checkbox" name="servers" tal:attributes="value url; checked python:url in servers_urls" />
 			</tal:block>
 			<tal:block tal:condition="python:not request.has_key('servers')">
-			<input type="checkbox" name="servers" 
-				tal:attributes="value server_url" checked="checked" />
+			<input type="checkbox" name="servers" tal:attributes="value url" checked="checked" />
 			</tal:block>
-		<tal:block tal:content="python:servers[server_url]" />
+			<span tal:content="python:servers[url]" />
 		</dt>
-	</tal:block>
+		<dt tal:repeat="url python:portals.keys()">
+			<tal:block tal:condition="python:request.has_key('servers')">
+				<input type="checkbox" name="servers" tal:attributes="value url; checked python:url in servers_urls" />
+			</tal:block>
+			<tal:block tal:condition="python:not request.has_key('servers')">
+				<input type="checkbox" name="servers" tal:attributes="value url" checked="checked" />
+			</tal:block>
+			<span tal:replace="python:portals[url]" />
+		</dt>
 	</dl>
 </fieldset>
 </div>
