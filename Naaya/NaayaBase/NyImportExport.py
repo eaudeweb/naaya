@@ -28,6 +28,7 @@ from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
 from Products.NaayaBase.constants import *
+from managers.import_parser import import_parser
 
 class NyImportExport:
     """ """
@@ -57,7 +58,7 @@ class NyImportExport:
             file, l_ctype = self.grabFromUrl(url) #upload from an url
         if file != '' and file != None:
             #import
-            import_handler, error = self.getImportExportTool().parsenyexp(file)
+            import_handler, error = import_parser().parse(file)
             if import_handler is not None:
                 for obj in import_handler.root.objects:
                     self.import_data(self, obj)
