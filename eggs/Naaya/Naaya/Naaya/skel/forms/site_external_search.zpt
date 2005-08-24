@@ -4,7 +4,7 @@
 
 <form method="get" name="frmSearch" action="external_search_html">
 <strong>Query string</strong>
-<input type="text" name="search_param" tal:attributes="value python:request.get('search_param', '')" size="40" maxLength="100" />
+<input type="text" name="search_param" id="search_param" tal:attributes="value python:request.get('search_param', '')" size="40" maxLength="100" />
 <br />
 
 <fieldset><legend>Search tips</legend>
