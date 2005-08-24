@@ -112,7 +112,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
     def all_meta_types(self, interfaces=None):
         """ """
         y = []
-        additional_meta_types = ['Image', 'File']
+        additional_meta_types = ['Image']
         for x in Products.meta_types:
             if x['name'] in additional_meta_types:
                 y.append(x)
