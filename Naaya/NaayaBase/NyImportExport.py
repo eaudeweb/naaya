@@ -63,10 +63,6 @@ class NyImportExport:
                     self.import_data(self, obj)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_importexport_html')
 
-    ###########################################################################
-    #   ABSTRACT METHODS
-    #   - must be implemented in classes that extends NyImportExport
-    ###########################################################################
     security.declareProtected(view_management_screens, 'exportdata')
     def exportdata(self):
         """ - generates an XML with the site content
@@ -80,7 +76,10 @@ class NyImportExport:
         self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=export.nyexp')
         return ''.join(r)
 
-    security.declareProtected(view_management_screens, 'exportdata_custom')
+    ###########################################################################
+    #   ABSTRACT METHODS
+    #   - must be implemented in classes that extends NyImportExport
+    ###########################################################################
     def exportdata_custom(self):
         #exports all the Naaya content in XML format under the current object
         raise EXCEPTION_NOTIMPLEMENTED, 'exportdata_custom'
