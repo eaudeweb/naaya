@@ -27,13 +27,13 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
-from Products.NaayaCore.constants import *
+from Products.NaayaBase.constants import *
 
-class NyImport:
+class NyImportExport:
     """ """
 
     manage_options = (
-        {'label': 'Naaya Import', 'action': 'manage_import_html'},
+        {'label': 'Naaya Import/Export', 'action': 'manage_importexport_html'},
     )
 
     security = ClassSecurityInfo()
@@ -61,10 +61,32 @@ class NyImport:
             if import_handler is not None:
                 for obj in import_handler.root.objects:
                     self.import_data(self, obj)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_import_html')
+        if REQUEST: REQUEST.RESPONSE.redirect('manage_importexport_html')
+
+    ###########################################################################
+    #   ABSTRACT METHODS
+    #   - must be implemented in classes that extends NyImportExport
+    ###########################################################################
+    security.declareProtected(view_management_screens, 'exportdata')
+    def exportdata(self):
+        """ - generates an XML with the site content
+            - it can be imported into another site """
+        r = []
+        r.append('<?xml version="1.0" encoding="utf-8"?>')
+        r.append('<export>')
+        r.append(self.exportdata_custom())
+        r.append('</export>')
+        self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/xml')
+        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=export.nyexp')
+        return ''.join(r)
+
+    security.declareProtected(view_management_screens, 'exportdata_custom')
+    def exportdata_custom(self):
+        #exports all the Naaya content in XML format under the current object
+        raise EXCEPTION_NOTIMPLEMENTED, 'exportdata_custom'
 
     #zmi pages
-    security.declareProtected(view_management_screens, 'manage_import_html')
-    manage_import_html = PageTemplateFile('zpt/manage_import', globals())
+    security.declareProtected(view_management_screens, 'manage_importexport_html')
+    manage_importexport_html = PageTemplateFile('zpt/manage_importexport', globals())
 
-InitializeClass(NyImport)
+InitializeClass(NyImportExport)
