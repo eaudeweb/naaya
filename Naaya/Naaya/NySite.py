@@ -55,10 +55,9 @@ from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
 from Products.NaayaCore.PortletsTool.managers.portlets_manager import portlets_manager
 from Products.NaayaCore.FormsTool.FormsTool import manage_addFormsTool
 from Products.NaayaCore.LayoutTool.LayoutTool import manage_addLayoutTool
-from Products.NaayaCore.ImportExportTool.ImportExportTool import manage_addImportExportTool
 from Products.NaayaBase.NyBase import NyBase
 from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
-from Products.NaayaBase.NyImport import NyImport
+from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyPermissions import NyPermissions
 from Products.NaayaCore.managers.utils import utils, list_utils, batch_utils, file_utils
 from Products.NaayaCore.managers.catalog_tool import catalog_tool
@@ -87,7 +86,7 @@ def manage_addNySite(self, id='', title='', lang=None, REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class NySite(CookieCrumbler, LocalPropertyManager, Folder,
-    NyBase, NyEpozToolbox, NyPermissions, NyImport,
+    NyBase, NyEpozToolbox, NyPermissions, NyImportExport,
     utils, list_utils, file_utils,
     catalog_tool,
     search_tool,
@@ -107,7 +106,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             {'label': 'Control Panel', 'action': 'manage_controlpanel_html'},
         )
         +
-        NyImport.manage_options
+        NyImportExport.manage_options
     )
 
     security = ClassSecurityInfo()
@@ -172,7 +171,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         manage_addPortletsTool(self)
         manage_addFormsTool(self)
         manage_addLayoutTool(self)
-        manage_addImportExportTool(self)
         manage_addErrorLog(self)
         self.loadSkeleton(join(NAAYA_PRODUCT_PATH, 'skel'))
 
@@ -362,7 +360,14 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             BeforeTraverse.registerBeforeTraverse(container, nc, handle)
         Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
 
-    #import
+    #import/export
+    def exportdata_custom(self):
+        #exports all the Naaya content in XML format from the portal
+        r = []
+        for x in self.getSite().get_containers():
+            r.append(x.export_this())
+        return ''.join(r)
+
     def import_data(self, node, object):
         #import an object
         zope_obj = node._getOb(object.id, None)
@@ -410,7 +415,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def getFormsTool(self): return self._getOb(ID_FORMSTOOL)
     def getLocalizer(self): return self._getOb('Localizer')
     def getPortalTranslations(self): return self._getOb(ID_TRANSLATIONSTOOL)
-    def getImportExportTool(self): return self._getOb(ID_IMPORTEXPORTTOOL)
     def getImagesFolder(self): return self._getOb(ID_IMAGESFOLDER)
 
     #objects absolute/relative path getters
@@ -424,7 +428,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def getSyndicationToolPath(self, p=0): return self._getOb(ID_SYNDICATIONTOOL).absolute_url(p)
     def getEmailToolPath(self, p=0): return self._getOb(ID_EMAILTOOL).absolute_url(p)
     def getFormsToolPath(self, p=0): return self._getOb(ID_FORMSTOOL).absolute_url(p)
-    def getImportExportToolPath(self, p=0): return self._getOb(ID_IMPORTEXPORTTOOL).absolute_url(p)
     def getFolderByPath(self, p_folderpath): return self.unrestrictedTraverse(p_folderpath, None)
 
     def getFolderMainParent(self, p_folder):
