@@ -1,0 +1,10 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_type; alt here/meta_type" border="0" /> <tal:block tal:replace="here/title_or_id" /> - <span i18n:translate="">restictions</span></h1>
+
+<p i18n:translate="">
+	This page allows you to ...
+</p>
+
+
+<span tal:replace="structure here/standard_html_footer"/>

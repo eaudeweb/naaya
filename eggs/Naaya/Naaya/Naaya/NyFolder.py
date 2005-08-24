@@ -529,7 +529,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'folder_edit')
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'basketofapprovals_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'basketofapprovals_html')
     def basketofapprovals_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'folder_basketofapprovals')
@@ -539,10 +539,15 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'folder_basketofvalidation')
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'sortorder_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'sortorder_html')
     def sortorder_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'folder_sortorder')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'restrict_html')
+    def restrict_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'folder_restrict')
 
     security.declareProtected(view, 'menusubmissions')
     def menusubmissions(self, REQUEST=None, RESPONSE=None):
