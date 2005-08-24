@@ -48,7 +48,7 @@ def folder_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_FOLDER, 'action': 'addNyFolder'}, 'folder_add')
 
 def addNyFolder(self, id='', title='', description='', coverage='', keywords='', sortorder='',
-    publicinterface='', maintainer_email='', folder_meta_type='', contributor=None,
+    publicinterface='', maintainer_email='', folder_meta_types='', contributor=None,
     releasedate='', REQUEST=None, **kwargs):
     """ """
     id = self.utCleanupId(id)
@@ -66,11 +66,11 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     releasedate = self.utConvertStringToDateTimeObj(releasedate)
     if releasedate is None:
         releasedate = self.utGetTodayDate()
-    if folder_meta_type == '': folder_meta_type = self.adt_meta_types
-    else: folder_meta_type = self.utConvertToList(folder_meta_type)
+    if folder_meta_types == '': folder_meta_types = self.adt_meta_types
+    else: folder_meta_types = self.utConvertToList(folder_meta_types)
     lang = self.gl_get_selected_language()
     ob = NyFolder(id, title, description, coverage, keywords, sortorder, publicinterface,
-            maintainer_email, contributor, approved, approved_by, folder_meta_type,
+            maintainer_email, contributor, approved, approved_by, folder_meta_types,
             releasedate, lang)
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_FOLDER, REQUEST, kwargs), lang)
@@ -85,11 +85,26 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-def importNyFolder(self, id, attrs, properties):
+def importNyFolder(self, id, attrs, content, properties):
     #this method is called during the import process
-    sortorder = attrs['sortorder'].encode('utf-8')
-    maintainer_email = attrs['maintainer_email'].encode('utf-8')
-    addNyFolder(self, id=id, sortorder=sortorder, maintainer_email=maintainer_email)
+    publicinterface = abs(int(attrs['publicinterface'].encode('utf-8')))
+    addNyFolder(self, id=id,
+        sortorder=attrs['sortorder'].encode('utf-8'),
+        publicinterface=publicinterface,
+        maintainer_email=attrs['maintainer_email'].encode('utf-8'),
+        folder_meta_types=attrs['folder_meta_types'].encode('utf-8').split(','),
+        contributor=attrs['contributor'].encode('utf-8'))
+    ob = self._getOb(id)
+    for property, langs in properties.items():
+        for lang in langs:
+            ob._setLocalPropValue(property, lang, langs[lang])
+    ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
+    ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+    if publicinterface:
+        l_index = ob._getOb('index', None)
+        if l_index is not None:
+            l_index.pt_edit(text=content, content_type='')
+    self.recatalogNyObject(ob)
 
 class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     """ """
@@ -185,6 +200,10 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         r = []
         r.append(self.export_this_tag())
         r.append(self.export_this_body())
+        if self.publicinterface:
+            l_index = self._getOb('index', None)
+            if l_index is not None:
+                r.append('<![CDATA[%s]]>' % l_index.document_src())
         for x in self.getObjects():
             r.append(x.export_this())
         for x in self.getFolders():
@@ -194,8 +213,10 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
-        return 'publicinterface="%s" maintainer_email="%s"' % \
-            (self.utXmlEncode(self.publicinterface), self.utXmlEncode(self.maintainer_email))
+        return 'publicinterface="%s" maintainer_email="%s" folder_meta_types="%s"' % \
+            (self.utXmlEncode(self.publicinterface),
+                self.utXmlEncode(self.maintainer_email),
+                self.utXmlEncode(','.join(self.folder_meta_types)))
 
     security.declarePrivate('createPublicInterface')
     def createPublicInterface(self):
