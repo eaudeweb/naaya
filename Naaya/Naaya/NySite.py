@@ -374,10 +374,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         zope_obj = node._getOb(object.id, None)
         if zope_obj is None:
             if object.meta_type == METATYPE_FOLDER:
-                importNyFolder(node, object.id, object.attrs,object.properties)
+                importNyFolder(node, object.id, object.attrs, object.content, object.properties)
             elif object.meta_type in self.get_pluggable_installed_meta_types():
                 item = self.get_pluggable_item(object.meta_type)
-                c = 'node.import%s(object.id, object.attrs, object.properties)' % item['module']
+                c = 'node.import%s(object.id, object.attrs, object.content, object.properties)' % item['module']
                 exec(c)
             else:
                 self.import_data_custom(node, object)
