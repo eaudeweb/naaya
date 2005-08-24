@@ -20,6 +20,7 @@
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span class="buttons"><img src="/misc_/Naaya/basket" border="0" alt="Basket of approvals" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Basket of Approvals</span></span></a>
 		<a tal:condition="perm_validate_objects" tal:attributes="href string:${this_absolute_url}/basketofvalidation_html"><span class="buttons"><img src="/misc_/Naaya/validate" border="0" alt="Basket of validations" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Basket of Validation</span></span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/sortorder_html"><span class="buttons"><img src="/misc_/Naaya/editfolder" border="0" alt="Set sort order" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Sort order</span></span></a>
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/restrict_html"><span class="buttons"><img src="/misc_/Naaya/editfolder" border="0" alt="Restrict this folder" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Restrict</span></span></a>
 	</tal:block>
 </div>
 </tal:block>

@@ -7,6 +7,7 @@
 		<form id="folder_edit" title="NyFolder edit"/>
 		<form id="folder_index" title="NyFolder default view"/>
 		<form id="folder_sortorder" title="NyFolder sort order"/>
+		<form id="folder_restrict" title="NyFolder restrictions"/>
 		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
 		<form id="epoz_toolbox" title="Epoz toolbox"/>
 		<form id="messages_box" title="Box for info or error messages"/>
