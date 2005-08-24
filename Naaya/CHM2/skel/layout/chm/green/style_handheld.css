@@ -366,7 +366,7 @@
 		width: 99%;
 	}
 
-		#location{
+		#location-bar{
 			
 			right:0px;
 			/*height:4em;*/
@@ -387,12 +387,12 @@
 		width:0px;
 	}
 
-	#location a{
+	#location-bar a{
 		color:#6a8144; /*#343434*/ /*#eef0ee*/ /*#0d679c*/ /*#6a8144*/
 		text-decoration: none;
 	}
 
-	#location a:hover{
+	#location-bar a:hover{
 		color:#99cc66; /*#676767*/ /*#ffffff*/ /*#004488*/ /*#99cc66*/
 	}
 

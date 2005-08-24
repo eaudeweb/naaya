@@ -78,7 +78,7 @@
 		<tr>
 			<td id="left_cell1"></td>
 			<td rowspan="2" id="center_cell">
-				<div id="location">
+				<div id="location-bar">
 					<div id="width_forcer"></div>
 					<div id="location_border_cover">
 						
