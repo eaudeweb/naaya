@@ -89,7 +89,7 @@ def addNyStory(self, id='', title='', description='', coverage='', keywords='', 
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-def importNyStory(self, id, attrs, properties):
+def importNyStory(self, id, attrs, content, properties):
     #this method is called during the import process
     addNyStory(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),

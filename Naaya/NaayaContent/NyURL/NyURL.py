@@ -82,7 +82,7 @@ def addNyURL(self, id='', title='', description='', coverage='', keywords='', so
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-def importNyURL(self, id, attrs, properties):
+def importNyURL(self, id, attrs, content, properties):
     #this method is called during the import process
     addNyURL(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),

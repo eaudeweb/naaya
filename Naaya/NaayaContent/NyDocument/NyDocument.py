@@ -87,7 +87,7 @@ def addNyDocument(self, id='', title='', description='', coverage='', keywords='
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-def importNyDocument(self, id, attrs, properties):
+def importNyDocument(self, id, attrs, content, properties):
     #this method is called during the import process
     addNyDocument(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),

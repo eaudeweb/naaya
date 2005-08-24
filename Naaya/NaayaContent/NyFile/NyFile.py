@@ -93,7 +93,7 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-def importNyFile(self, id, attrs, properties):
+def importNyFile(self, id, attrs, content, properties):
     #this method is called during the import process
     addNyFile(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),

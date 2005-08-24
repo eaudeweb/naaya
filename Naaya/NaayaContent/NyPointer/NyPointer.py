@@ -82,7 +82,7 @@ def addNyPointer(self, id='', title='', description='', coverage='', keywords=''
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-def importNyPointer(self, id, attrs, properties):
+def importNyPointer(self, id, attrs, content, properties):
     #this method is called during the import process
     addNyPointer(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),
