@@ -65,6 +65,10 @@ class import_handler(ContentHandler):
                                 attrs)
             stackObj = saxstack_struct('ob', obj)
             self.stack.append(stackObj)
+        elif name == 'img':
+            obj = object_struct(attrs['id'].encode('utf-8'), 'Image', attrs)
+            stackObj = saxstack_struct('ob', obj)
+            self.stack.append(stackObj)
         else:
             if attrs.has_key('lang') and attrs.has_key('content'):
                 #multilanguage property
@@ -80,6 +84,9 @@ class import_handler(ContentHandler):
             self.root = self.stack[-1].obj
             self.stack.pop()
         elif name == 'ob':
+            self.stack[-2].obj.objects.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'img':
             self.stack[-2].obj.objects.append(self.stack[-1].obj)
             self.stack.pop()
         else:
