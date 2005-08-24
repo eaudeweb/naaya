@@ -386,7 +386,14 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     def import_data_custom(self, node, object):
         #import some special type of object
-        print 'Import an object of type [%s]' % object.meta_type
+        if object.meta_type == 'Image':
+            id = object.attrs['id'].encode('utf-8')
+            node.manage_addImage(id=id, file='')
+            image_ob = node._getOb(id)
+            image_ob.update_data(data=self.utBase64Decode(object.attrs['content'].encode('utf-8')))
+            image_ob._p_changed=1
+        else:
+            print 'Import an object of type [%s]' % object.meta_type
 
     #api
     def get_site_uid(self): return self.__portal_uid
