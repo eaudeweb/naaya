@@ -181,7 +181,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
         #convert data
         user_ob = self.getUser(name)
         roles = self.getUserRoles(user_ob)
-        domains = user_ob.self.getDomains()
+        domains = user_ob.getDomains()
         lastupdated = time.strftime('%d %b %Y %H:%M:%S')
         self._doChangeUser(name, password, roles, domains, firstname, lastname, email, lastupdated)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_users_html')
