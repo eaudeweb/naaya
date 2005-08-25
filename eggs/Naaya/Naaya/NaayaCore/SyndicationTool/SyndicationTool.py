@@ -119,6 +119,7 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
 
     def syndicateSomething(self, p_url, p_items=[]):
         l_site = self.getSite()
+        lang = self.gl_get_selected_language()
         l_rdf = []
         l_rdf.append('<?xml version="1.0" encoding="iso-8859-1"?>')
         l_rdf.append('<rdf:RDF %s>' % self.getNamespacesForRdf())
@@ -132,7 +133,7 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
         l_rdf.append('<dc:creator>%s</dc:creator>' % self.utXmlEncode(self.creator))
         l_rdf.append('<dc:subject>%s</dc:subject>' % self.utXmlEncode(self.site_title))
         l_rdf.append('<dc:subject>%s</dc:subject>' % self.utXmlEncode(self.site_subtitle))
-        l_rdf.append('<dc:language>%s</dc:language>' % self.utXmlEncode(self.gl_get_selected_language()))
+        l_rdf.append('<dc:language>%s</dc:language>' % self.utXmlEncode(lang))
         l_rdf.append('<dc:rights>%s</dc:rights>' % self.utXmlEncode(self.rights))
         l_rdf.append('<dc:source>%s</dc:source>' % self.utXmlEncode(self.publisher))
         l_rdf.append('<items>')
@@ -150,7 +151,7 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
             l_rdf.append('<description>%s</description>' % self.utXmlEncode(self.description))
             l_rdf.append('</image>')
         for l_item in p_items:
-            l_rdf.append(l_item.syndicateThis())
+            l_rdf.append(l_item.syndicateThis(lang))
         l_rdf.append("</rdf:RDF>")
         self.REQUEST.RESPONSE.setHeader('content-type', 'text/xml')
         return ''.join(l_rdf)
