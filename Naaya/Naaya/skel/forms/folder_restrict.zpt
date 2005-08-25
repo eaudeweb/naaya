@@ -6,5 +6,22 @@
 	This page allows you to ...
 </p>
 
+<form method="post" tal:attributes="action string:dd">
+<div i18n:translate="" tal:omit-tag="">Allow access for:</div>
+<div>
+	<input type="radio" name="who" value="all" />
+	<span i18n:translate="" tal:omit-tag="">All users</span>
+</div>
+<div>
+	<input type="radio" name="who" value="other" />
+	<select name="roles" size="5" multiple="multiple">
+		<option tal:repeat="role here/get_valid_roles"
+			tal:attributes="value role"
+			tal:content="role" />
+	</select>
+</div>
+</form>
+
+[<span tal:replace="here/is_for_all_users" />]
 
 <span tal:replace="structure here/standard_html_footer"/>

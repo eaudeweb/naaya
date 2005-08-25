@@ -459,7 +459,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         return self.objectValues(METATYPE_FOLDER)
 
     def get_containers_metatypes(self):
-        #this method is used to display local roles
+        #this method is used to display local roles, called from getUserRoles methods
         return [METATYPE_FOLDER, 'Folder']
 
     #api
