@@ -462,6 +462,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         #this method is used to display local roles, called from getUserRoles methods
         return [METATYPE_FOLDER, 'Folder']
 
+    def get_naaya_containers_metatypes(self):
+        #this method is used to display local roles, called from getUserRoles methods
+        return [METATYPE_FOLDER]
+
     #api
     def getMainFolders(self):
         #returns a list with all folders objects at the first level
@@ -621,10 +625,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def __getSiteMap(self, root, showitems, expand, depth):
         #site map core
         l_tree = []
-        if root is self: l_folders = root.getMainFolders()
+        if root is self: l_folders = root.objectValues(self.get_naaya_containers_metatypes())
         else: l_folders = root.getPublishedFolders()
         for l_folder in l_folders:
-            if (len(l_folder.objectValues(METATYPE_FOLDER)) > 0) or ((len(l_folder.getObjects()) > 0) and showitems==1):
+            if (len(l_folder.objectValues(self.get_naaya_containers_metatypes())) > 0) or ((len(l_folder.getObjects()) > 0) and showitems==1):
                 if l_folder.absolute_url(1) in expand or 'all' in expand:
                     l_tree.append((l_folder, 0, depth))
                     if showitems:
