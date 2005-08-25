@@ -322,6 +322,18 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     def getSortedFolders(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_FOLDER), 'sortorder', 0)
     def getSortedObjects(self): return self.utSortObjsListByAttr(self.getObjects(), 'sortorder', 0)
 
+    #restrictions
+    def get_valid_roles(self):
+        #returns a list of roles that can be used to restrict this folder
+        roles = list(self.valid_roles())
+        filter(roles.remove, ['Administrator', 'Anonymous', 'Manager', 'Owner'])
+        return roles
+
+    def is_for_all_users(self):
+        #check if all users have access to this folder
+        print self.rolesOfPermission(view)
+        print self.permission_settings(view)
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', language='', coverage='', keywords='', sortorder='',
