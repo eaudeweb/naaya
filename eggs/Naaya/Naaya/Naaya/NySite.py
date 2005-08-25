@@ -458,6 +458,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         #this method returns all container type that can be used in an export operation
         return self.objectValues(METATYPE_FOLDER)
 
+    def get_containers_metatypes(self):
+        #this method is used to display local roles
+        return [METATYPE_FOLDER, 'Folder']
+
     #api
     def getMainFolders(self):
         #returns a list with all folders objects at the first level
@@ -959,7 +963,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         msg = err = ''
         try:
-            self.getAuthenticationTool().manage_addUsersRoles(name, roles, location)
+            self.getAuthenticationTool().manage_addUsersRoles(name, roles, loc, location)
         except Exception, error:
             err = error
         else:
