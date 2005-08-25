@@ -129,6 +129,7 @@ class LocalChannel(SimpleItem, utils):
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
         l_site = self.getSite()
+        lang = self.language
         l_items = self.get_objects_for_rdf()
         l_rdf = []
         l_rdf.append('<?xml version="1.0" encoding="iso-8859-1"?>')
@@ -139,14 +140,14 @@ class LocalChannel(SimpleItem, utils):
         l_rdf.append('<description>%s</description>' % self.utXmlEncode(self.description))
         l_rdf.append('<dc:identifier>%s</dc:identifier>' % l_site.absolute_url())
         l_rdf.append('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.utGetTodayDate()))
-        l_rdf.append('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(self.publisher))
-        l_rdf.append('<dc:creator>%s</dc:creator>' % self.utXmlEncode(self.creator))
-        l_rdf.append('<dc:subject>%s</dc:subject>' % self.utXmlEncode(self.site_title))
-        l_rdf.append('<dc:subject>%s</dc:subject>' % self.utXmlEncode(self.site_subtitle))
-        l_rdf.append('<dc:language>%s</dc:language>' % self.utXmlEncode(self.language))
-        l_rdf.append('<dc:rights>%s</dc:rights>' % self.utXmlEncode(self.rights))
+        l_rdf.append('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
+        l_rdf.append('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
+        l_rdf.append('<dc:subject>%s</dc:subject>' % self.utXmlEncode(l_site.getLocalProperty('site_title', lang)))
+        l_rdf.append('<dc:subject>%s</dc:subject>' % self.utXmlEncode(l_site.getLocalProperty('site_subtitle', lang)))
+        l_rdf.append('<dc:language>%s</dc:language>' % self.utXmlEncode(lang))
+        l_rdf.append('<dc:rights>%s</dc:rights>' % self.utXmlEncode(l_site.getLocalProperty('rights', lang)))
         l_rdf.append('<dc:type>%s</dc:type>' % self.utXmlEncode(self.type))
-        l_rdf.append('<dc:source>%s</dc:source>' % self.utXmlEncode(self.publisher))
+        l_rdf.append('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
         l_rdf.append('<items>')
         l_rdf.append('<rdf:Seq>')
         for l_item in l_items:
@@ -162,7 +163,7 @@ class LocalChannel(SimpleItem, utils):
             l_rdf.append('<description>%s</description>' % self.utXmlEncode(self.description))
             l_rdf.append('</image>')
         for l_item in l_items:
-            l_rdf.append(l_item.syndicateThis())
+            l_rdf.append(l_item.syndicateThis(lang))
         l_rdf.append("</rdf:RDF>")
         self.REQUEST.RESPONSE.setHeader('content-type', 'text/xml')
         return ''.join(l_rdf)
