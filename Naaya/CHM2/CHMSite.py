@@ -94,6 +94,14 @@ class CHMSite(NySite):
     def getPhotoArchive(self): return self._getOb(ID_PHOTOARCHIVE, None)
     def getNewsArchive(self): return self._getOb('news', None)
 
+    def get_containers_metatypes(self):
+        #this method is used to display local roles, called from getUserRoles methods
+        return [METATYPE_FOLDER, 'Folder', METATYPE_NYPHOTOFOLDER]
+
+    def get_naaya_containers_metatypes(self):
+        #this method is used to display local roles, called from getUserRoles methods
+        return [METATYPE_FOLDER, METATYPE_NYPHOTOFOLDER]
+
     #api
     def getOnFrontNews(self):
         #returns a list with the news marked as on front
