@@ -190,7 +190,7 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         self.recatalogNyObject(self)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
+            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'deleteObjects')
     def deleteObjects(self, ids=None, REQUEST=None):
@@ -204,6 +204,20 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
             if error: self.setSessionErrors(['Error while delete data.'])
             else: self.setSessionInfo(['Item(s) deleted.'])
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_DELETE_OBJECTS, 'setTopPhotoObjects')
+    def setTopPhotoObjects(self, REQUEST=None):
+        """ """
+        try:
+            for item in self.objectValues():
+                if hasattr(item, 'topitem'): item.topitem = 0
+                if REQUEST.has_key('topitem_' + item.id):
+                    item.topitem = 1
+                item._p_changed = 1
+                self.recatalogNyObject(item)
+        except: self.setSessionErrors(['Error while updating data.'])
+        else: self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+        if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'updateBasketOfApprovals')
     def updateBasketOfApprovals(self, REQUEST=None):
