@@ -104,6 +104,12 @@
 			</scheme>
 		</skin>
 	</layout>
+	<syndication>
+		<channeltype id="Red lists" title="Red lists"/>
+		<channeltype id="Indicators" title="Indicators"/>
+		<channeltype id="Technology transfer" title="Technology transfer"/>
+		<channeltype id="Miscellaneous" title="Miscellaneous"/>
+	</syndication>
 	<portlets left="portlet_maincategories" center="portlet_lateststories,portlet_latestnews,portlet_latestuploads,portlet_latestphotos">
 		<portlet id="portlet_administration" title="Administration"/>
 		<portlet id="portlet_lateststories" title="Latest stories"/>
