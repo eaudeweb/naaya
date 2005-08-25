@@ -258,15 +258,15 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
         """Return the named user object or None"""
         return self.data.get(name, None)
 
-    def getUsersRoles(self):
+    def getUsersRoles(self, p_meta_types=None):
         """ """
+        if p_meta_types is None: p_meta_types = self.get_containers_metatypes()
         users_roles = {}
         for username in self.user_names():   #get the users
             user = self.getUser(username)
             users_roles[username] = [(self.getUserRoles(user), '')]
 
-
-        for folder in self.getCatalogedObjects(meta_type=['Naaya Folder', 'Folder'], has_local_role=1):
+        for folder in self.getCatalogedObjects(meta_type=p_meta_types, has_local_role=1):
             for roles_tuple in folder.get_local_roles():
                 local_roles = self.getLocalRoles(roles_tuple[1])
                 if roles_tuple[0] in self.user_names() and len(local_roles) > 0:

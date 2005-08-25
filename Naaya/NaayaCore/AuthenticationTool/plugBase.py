@@ -59,8 +59,9 @@ class PlugBase(SimpleItem):
             if l_role not in ['Owner', 'Authenticated']: l_temp.append(l_role)
         return l_temp
 
-    def getUsersRoles(self, p_user_folder, p_meta_types):
+    def getUsersRoles(self, p_user_folder, p_meta_types=None):
         #returns a structure with user roles by objects
+        if p_meta_types is None: p_meta_types = self.get_containers_metatypes()
         l_users_roles = {}
         l_folders = self.getCatalogedObjects(meta_type=p_meta_types, has_local_role=1)
         l_folders.append(self.getSite())
