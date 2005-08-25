@@ -59,7 +59,7 @@
 </div>
 <div class="field">
 	<label for="submit-button" class="invisible">Submit button</label>
-	<input type="submit" value="Submit" id="submit-button" i18n:attributes="value" />
+	<input type="submit" value="Save changes" id="submit-button" i18n:attributes="value" />
 </div>
 <input type="hidden" name="lang" id="lang" tal:attributes="value curr_lang" />
 </form>
