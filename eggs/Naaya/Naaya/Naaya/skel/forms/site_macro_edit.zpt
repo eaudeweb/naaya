@@ -6,7 +6,8 @@
 
 <h1 metal:define-slot="title" i18n:translate="">Edit object</h1>
 
-<tal:block define="languages python:here.get_languages_mapping(); curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
+<tal:block define="languages here/get_languages_mapping;
+	curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
 
 <div class="version_box" tal:condition="here/hasVersion">
 	<span i18n:translate="" tal:omit-tag="">
@@ -75,8 +76,11 @@ function fSet(ctrl, value)
 	<td><input type="text" name="sortorder" size="2" tal:attributes="value python:here.getVersionProperty('sortorder')" /></td>
 </tr>
 <tr>
-	<td class="form-label" i18n:translate="">Release date (<em>dd/mm/yyyy</em>)</td>
-	<td><input type="text" name="releasedate" size="20" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getVersionProperty('releasedate'))"/></td>
+	<td class="form-label" i18n:translate="">Release date</td>
+	<td>
+		<input type="text" name="releasedate" size="10" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getVersionProperty('releasedate'))"/>
+		<em i18n:translate="">dd/mm/yyyy</em>
+	</td>
 </tr>
 <tal:block metal:define-slot="custom_properties"/>
 <tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
