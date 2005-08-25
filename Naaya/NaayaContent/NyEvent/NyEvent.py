@@ -183,17 +183,19 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')
-    def syndicateThis(self):
+    def syndicateThis(self, lang=None):
+        l_site = self.getSite()
+        if lang is None: lang = self.gl_get_selected_language()
         l_rdf = []
         l_rdf.append(self.syndicateThisHeader())
-        l_rdf.append(self.syndicateThisCommon())
+        l_rdf.append(self.syndicateThisCommon(lang))
         l_rdf.append('<dc:type>Event</dc:type>')
         l_rdf.append('<dc:format>text</dc:format>')
-        l_rdf.append('<dc:source>%s</dc:source>' % self.utXmlEncode(self.publisher))
+        l_rdf.append('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
         l_rdf.append('<ev:startdate>%s</ev:startdate>' % self.utShowFullDateTimeHTML(self.start_date))
         l_rdf.append('<ev:enddate>%s</ev:enddate>' % self.utShowFullDateTimeHTML(self.end_date))
-        l_rdf.append('<ev:location>%s</ev:location>' % self.utXmlEncode(self.location))
-        l_rdf.append('<ev:organizer>%s</ev:organizer>' % self.utXmlEncode(self.host))
+        l_rdf.append('<ev:location>%s</ev:location>' % self.utXmlEncode(self.getLocalProperty('location', lang)))
+        l_rdf.append('<ev:organizer>%s</ev:organizer>' % self.utXmlEncode(self.getLocalProperty('host', lang)))
         l_rdf.append('<ev:type>%s</ev:type>' % self.utXmlEncode(self.getEventTypeTitle(self.event_type)))
         l_rdf.append(self.syndicateThisFooter())
         return ''.join(l_rdf)
