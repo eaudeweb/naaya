@@ -458,7 +458,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
                 item._p_changed = 1
                 self.recatalogNyObject(item)
         except: self.setSessionErrors(['Error while updating data.'])
-        else: self.setSessionInfo(['Item(s) updated.'])
+        else: self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'updateBasketOfApprovals')
