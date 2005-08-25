@@ -77,7 +77,7 @@ function fSetTopPhotoObjects()
 	<span tal:condition="python:paging_next!=-1"><a tal:define="start python:(paging_current_page+1)*paging_records_page" tal:attributes="href string:${here/absolute_url}/index_html?start=${start}&amp;${query_string}">Next</a></span>
 </div><br />
 
-<div>
+<div tal:condition="permission">
 <div id="toolbar">
 <a href="javascript:fDeleteObjects();"><span><img src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a>
 <a href="javascript:fSetTopPhotoObjects();"><span><input src="/misc_/Naaya/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="" tal:omit-tag="">Save on front</span></span></a>
