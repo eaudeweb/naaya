@@ -76,7 +76,7 @@ class NyBase:
     def istranslated(self, lang):
         #an object is considered to be translated into a language if
         #the value of the 'title' property in that language is not an empty string
-        return self.getLocalProperty('title', lang) != ''
+        return len(self.getLocalProperty('title', lang)) > 0
 
     #security
     def checkPermission(self, p_permission):
@@ -125,31 +125,34 @@ class NyBase:
         return '</item>'
 
     security.declarePrivate('syndicateThisCommon')
-    def syndicateThisCommon(self):
+    def syndicateThisCommon(self, lang):
+        l_site = self.getSite()
         l_rdf = []
         l_rdf.append('<link>%s</link>' % self.absolute_url())
-        l_rdf.append('<dc:title>%s</dc:title>' % self.utXmlEncode(self.title_or_id()))
+        l_rdf.append('<dc:title>%s</dc:title>' % self.utXmlEncode(self.getLocalProperty('title', lang)))
         l_rdf.append('<dc:identifier>%s</dc:identifier>' % self.absolute_url())
         l_rdf.append('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.releasedate))
-        l_rdf.append('<dc:description>%s</dc:description>' % self.utXmlEncode(self.description))
+        l_rdf.append('<dc:description>%s</dc:description>' % self.utXmlEncode(self.getLocalProperty('description', lang)))
         l_rdf.append('<dc:contributor>%s</dc:contributor>' % self.utXmlEncode(self.contributor))
-        l_rdf.append('<dc:coverage>%s</dc:coverage>' % self.utXmlEncode(self.coverage))
-        l_rdf.append('<dc:language>%s</dc:language>' % self.utXmlEncode(self.gl_get_selected_language()))
-        for l_k in self.keywords.split(' '):
+        l_rdf.append('<dc:coverage>%s</dc:coverage>' % self.utXmlEncode(self.getLocalProperty('coverage', lang)))
+        l_rdf.append('<dc:language>%s</dc:language>' % self.utXmlEncode(lang))
+        for l_k in self.getLocalProperty('keywords', lang).split(' '):
             l_rdf.append('<dc:subject>%s</dc:subject>' % self.utXmlEncode(l_k))
-        l_rdf.append('<dc:creator>%s</dc:creator>' % self.utXmlEncode(self.creator))
-        l_rdf.append('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(self.publisher))
-        l_rdf.append('<dc:rights>%s</dc:rights>' % self.utXmlEncode(self.rights))
+        l_rdf.append('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
+        l_rdf.append('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
+        l_rdf.append('<dc:rights>%s</dc:rights>' % self.utXmlEncode(l_site.getLocalProperty('rights', lang)))
         return ''.join(l_rdf)
 
     security.declarePrivate('syndicateThis')
-    def syndicateThis(self):
+    def syndicateThis(self, lang=None):
+        l_site = self.getSite()
+        if lang is None: lang = self.gl_get_selected_language()
         l_rdf = []
         l_rdf.append(self.syndicateThisHeader())
-        l_rdf.append(self.syndicateThisCommon())
+        l_rdf.append(self.syndicateThisCommon(lang))
         l_rdf.append('<dc:type>Text</dc:type>')
         l_rdf.append('<dc:format>text</dc:format>')
-        l_rdf.append('<dc:source>%s</dc:source>' % self.utXmlEncode(self.publisher))
+        l_rdf.append('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
         l_rdf.append(self.syndicateThisFooter())
         return ''.join(l_rdf)
 
