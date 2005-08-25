@@ -35,6 +35,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyItem import NyItem
 from Products.Naaya.constants import *
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from Products.Localizer.LanguageManager import LanguageManager
 
 manage_addNyPhoto_html = PageTemplateFile('zpt/photo_manage_add', globals())
 def addNyPhoto(self, id='', title='', author='', source='', description='', sortorder='',
@@ -92,6 +93,8 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, File):
         )
         +
         NyItem.manage_options
+        +
+        LanguageManager.manage_options
     )
 
     security = ClassSecurityInfo()
