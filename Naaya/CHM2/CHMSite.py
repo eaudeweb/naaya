@@ -239,6 +239,11 @@ class CHMSite(NySite):
         return l_upcoming_events
 
     #rdf channels
+    security.declareProtected(view, 'whatsnew_rdf')
+    def whatsnew_rdf(self):
+        """ """
+        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getOnFrontNews())
+
     security.declareProtected(view, 'lateststories_rdf')
     def lateststories_rdf(self):
         """ """
