@@ -20,7 +20,7 @@
 function emptyLocation()
 {
    if (document.forms['frmUsersRoles'].loc[0].checked == true)
-	   document.forms['frmUsersRoles'].location.value = '';
+       document.forms['frmUsersRoles'].location.value = '';
 }
 
 function pickLocation()
@@ -86,7 +86,7 @@ function createKey(key)
 </form>
 <br />
 
-<form method="post" tal:attributes="action string:${site_url}/admin_addroles">
+<form method="post" name="frmUsersRoles" tal:attributes="action string:${site_url}/admin_addroles">
 <fieldset><legend i18n:translate="">Assign role to an existing user</legend>
 <p i18n:translate="">
 	Select the username from the drop-down list, select the intended role(s) and choose
