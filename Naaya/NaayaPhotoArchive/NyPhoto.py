@@ -33,12 +33,13 @@ from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyItem import NyItem
+from Products.Naaya.constants import *
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from Products.Localizer.LanguageManager import LanguageManager
 
 manage_addNyPhoto_html = PageTemplateFile('zpt/photo_manage_add', globals())
-def addNyPhoto(self, id='', title='', author='', source='', description='', sortorder='', topitem='',
-    onfrontfrom='', onfrontto='', file='', precondition='', content_type='', quality='', REQUEST=None):
+def addNyPhoto(self, id='', title='', author='', source='', description='', sortorder='',
+    topitem='', onfrontfrom='', onfrontto='', file='', precondition='', content_type='',
+    quality='', lang=None, REQUEST=None):
     """ """
     id, title = cookId(id, title, file)
     id = self.utCleanupId(id)
@@ -58,13 +59,12 @@ def addNyPhoto(self, id='', title='', author='', source='', description='', sort
     else:
         approved, approved_by = 0, None
     releasedate = self.utGetTodayDate()
-    lang = self.get_default_language()
+    if lang is None: lang = self.gl_get_selected_language()
     content_type, width, height = getImageInfo(file)
-    ob = NyPhoto(id, title, author, source, description, sortorder, topitem, onfrontfrom, onfrontto, file,
-        precondition, content_type, width, height, quality, displays, approved, approved_by, releasedate, lang)
-    for lang_rec in self.get_languages_mapping():
-        ob.add_language(lang_rec['code'])
-        if lang_rec['default']: ob.manage_changeDefaultLang(lang_rec['code'])
+    ob = NyPhoto(id, title, author, source, description, sortorder, topitem,
+        onfrontfrom, onfrontto, file, precondition, content_type, width, height,
+        quality, displays, approved, approved_by, releasedate, lang)
+    self.gl_add_languages(ob)
     self._setObject(id, ob)
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
@@ -83,8 +83,8 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, File):
 
     manage_options = (
         (
-            {'label' : 'Properties', 'action' : 'manage_edit_html'},
-            {'label' : 'Displays', 'action' : 'manage_displays_html'},
+            {'label': 'Properties', 'action': 'manage_edit_html'},
+            {'label': 'Displays', 'action': 'manage_displays_html'},
         )
         +
         (
@@ -101,8 +101,9 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, File):
     source = LocalProperty('source')
     description = LocalProperty('description')
 
-    def __init__(self, id, title, author, source, description, sortorder, topitem, onfrontfrom, onfrontto,
-        file, precondition, content_type, width, height, quality, displays, approved, approved_by, releasedate, lang):
+    def __init__(self, id, title, author, source, description, sortorder,
+        topitem, onfrontfrom, onfrontto, file, precondition, content_type,
+        width, height, quality, displays, approved, approved_by, releasedate, lang):
         """ """
         File.__dict__['__init__'](self, id, title, file, content_type, precondition)
         self.id = id
@@ -123,10 +124,12 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, File):
         self.releasedate = releasedate
         self.__photos = {}
 
+    security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
-        l_values = [self.getLocalProperty('title', lang), self.getLocalProperty('author', lang),
-            self.getLocalProperty('source', lang), self.getLocalProperty('description', lang)]
-        return ' '.join([x.encode('utf-8') for x in l_values])
+        return u' '.join([self.getLocalProperty('title', lang),
+            self.getLocalProperty('author', lang),
+            self.getLocalProperty('source', lang),
+            self.getLocalProperty('description', lang)])
 
     #core
     def __get_aspect_ratio_size(self, width, height):
@@ -192,8 +195,9 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, File):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', author='', source='', description='', sortorder='', approved='',
-        topitem='', onfrontfrom='', onfrontto='', content_type='', quality='', REQUEST=None):
+    def manageProperties(self, title='', author='', source='', description='',
+        sortorder='', approved='', topitem='', onfrontfrom='', onfrontto='',
+        content_type='', quality='', releasedate='', REQUEST=None):
         """ """
         if self.wl_isLocked():
             raise ResourceLockedError, "File is locked via WebDAV"
@@ -208,7 +212,9 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, File):
         try: quality = abs(int(quality))
         except: quality = DEFAULT_QUALITY
         if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
-        lang = self.get_default_language()
+        releasedate = self.utConvertStringToDateTimeObj(releasedate)
+        if releasedate is None: releasedate = self.releasedate
+        lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('author', lang, author)
         self._setLocalPropValue('source', lang, source)
@@ -223,6 +229,7 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, File):
             self.approved = approved
             if approved == 0: self.approved_by = None
             else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        self.releasedate = releasedate
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
@@ -262,8 +269,9 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, File):
 
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
-    def saveProperties(self, title='', author='', source='', description='', sortorder='', topitem='',
-        onfrontfrom='', onfrontto='', content_type='', quality='', lang=None, REQUEST=None):
+    def saveProperties(self, title='', author='', source='', description='',
+        sortorder='', topitem='', onfrontfrom='', onfrontto='', content_type='',
+        quality='', releasedate='', lang=None, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -278,7 +286,9 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, File):
         try: quality = abs(int(quality))
         except: quality = DEFAULT_QUALITY
         if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
-        if lang is None: lang = self.get_default_language()
+        releasedate = self.utConvertStringToDateTimeObj(releasedate)
+        if releasedate is None: releasedate = self.releasedate
+        if lang is None: lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('author', lang, author)
         self._setLocalPropValue('source', lang, source)
@@ -289,6 +299,7 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, File):
         self.onfrontto = onfrontto
         self.content_type = content_type
         self.quality = quality
+        self.releasedate = releasedate
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST:

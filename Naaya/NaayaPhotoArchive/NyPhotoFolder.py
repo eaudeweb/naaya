@@ -36,20 +36,17 @@ from Products.Localizer.LanguageManager import LanguageManager
 import NyPhoto
 
 manage_addNyPhotoFolder_html = PageTemplateFile('zpt/photofolder_manage_add', globals())
-def manage_addNyPhotoFolder(self, id='', title='', quality='', REQUEST=None):
+def manage_addNyPhotoFolder(self, id='', title='', quality='', lang=None, REQUEST=None):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_NYPHOTOFOLDER + self.utGenRandomId(6)
     try: quality = abs(int(quality))
     except: quality = DEFAULT_QUALITY
     if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
-    lang = self.getLocalizer().get_default_language()
+    if lang is None: lang = self.gl_get_selected_language()
     ob = NyPhotoFolder(id, title, quality, lang)
-    for lang_rec in self.getLocalizer().get_languages_mapping():
-        ob.add_language(lang_rec['code'])
-        if lang_rec['default']: ob.manage_changeDefaultLang(lang_rec['code'])
+    self.gl_add_languages(ob)
     self._setObject(id, ob)
-    self._getOb(id).loadDefaultData()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -63,8 +60,8 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         NyContainer.manage_options[0:2]
         +
         (
-            {'label' : 'Properties', 'action' : 'manage_edit_html'},
-            {'label' : 'Displays', 'action' : 'manage_displays_html'},
+            {'label': 'Properties', 'action': 'manage_edit_html'},
+            {'label': 'Displays', 'action': 'manage_displays_html'},
         )
         +
         NyContainer.manage_options[3:8]
@@ -92,16 +89,9 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         self.quality = quality
         self.displays = DEFAULT_DISPLAYS.copy()
 
-    security.declarePrivate('loadDefaultData')
-    def loadDefaultData(self):
-        #create some indexes in the portal catalog
-        catalog = self.getCatalogTool()
-        try: catalog.addIndex('topitem', 'FieldIndex')
-        except: pass
-
+    security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
-        l_values = [self.getLocalProperty('title', lang)]
-        return ' '.join([x.encode('utf-8') for x in l_values])
+        return u' '.join([self.getLocalProperty('title', lang)])
 
     #api
     def get_photofolder_object(self): return self
@@ -158,7 +148,7 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         try: quality = abs(int(quality))
         except: quality = DEFAULT_QUALITY
         if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
-        lang = self.get_default_language()
+        lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self.quality = quality
         self._p_changed = 1
@@ -193,7 +183,7 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         try: quality = abs(int(quality))
         except: quality = DEFAULT_QUALITY
         if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
-        if lang is None: lang = self.get_default_language()
+        if lang is None: lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self.quality = quality
         self._p_changed = 1

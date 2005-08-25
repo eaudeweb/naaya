@@ -5,6 +5,10 @@
 	Please fill the form below and click <strong>Add</strong>.
 </p>
 
+<p class="form-help">
+	Selected language: <strong tal:content="python:here.gl_get_language_name(here.gl_get_selected_language())" />
+</p>
+
 <form action="manage_addNyPhotoFolder" method="post">
 <table border="0" cellspacing="0" cellpadding="2" width="100%">
 	<tr><td width="25%" class="form-label">Id</td><td width="75%"><input type="text" name="id" size="30" value="" /></td></tr>
