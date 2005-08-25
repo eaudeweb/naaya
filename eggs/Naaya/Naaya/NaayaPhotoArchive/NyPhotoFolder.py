@@ -99,6 +99,9 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
     def getObjects(self): return self.objectValues(METATYPE_NYPHOTO)
     def getPendingObjects(self): return self.utFilterObjsListByAttr(self.getObjects(), 'approved', 0)
     def getPendingContent(self): return self.getPendingObjects()
+    def getPublishedObjects(self): return [x for x in self.getObjects() if x.approved==1]
+    def getPendingFolders(self): return []
+    def getPublishedFolders(self): return []
 
     def get_displays_edit(self):
         #returns a list with all dispays minus 'Thumbnail'
