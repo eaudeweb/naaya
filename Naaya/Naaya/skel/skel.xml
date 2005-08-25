@@ -90,9 +90,9 @@
 		<namespace id="102" prefix="dc" value="http://purl.org/dc/elements/1.1/"/>
 		<namespace id="103" prefix="ev" value="http://purl.org/rss/1.0/modules/event/"/>
 		<namespace id="104" prefix="" value="http://purl.org/rss/1.0/"/>
-		<channeltype id="type1" title="Type 1"/>
-		<channeltype id="type2" title="Type 2"/>
-		<channeltype id="other" title="Other"/>
+		<channeltype id="News" title="News"/>
+		<channeltype id="Events" title="Events"/>
+		<channeltype id="Stories" title="Stories"/>
 		<localchannel id="news_rdf" title="News" description="News" language="en" type="" objmetatype="Naaya News" numberofitems="10"/>
 		<remotechannel id="" title="test" url="http://nuecazul.blogspot.com/atom.xml" numbershownitems="10"/>
 	</syndication>
