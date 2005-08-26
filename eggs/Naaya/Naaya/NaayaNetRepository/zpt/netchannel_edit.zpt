@@ -1,0 +1,50 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 i18n:translate="">Edit channel</h1>
+
+<p i18n:translate="">
+	Change the properties in the form below and click <strong>Save changes</strong>.
+</p>
+<form method="post" tal:attributes="action string:${here/get_netchannel_path}/saveProperties"
+	tal:define="curr_lang python:request.get('lang', None) or here.get_default_language()">
+<table border="0" cellspacing="2" cellpadding="2">
+<tr>
+	<td i18n:translate="">Title</td>
+	<td><input type="text" name="title:utf8:ustring" size="50" tal:attributes="value python:here.getLocalProperty('title', curr_lang)" /></td>
+</tr>
+<tr>
+	<td valign="top" i18n:translate="">Description</td>
+	<td><textarea name="description:utf8:ustring" rows="5" cols="50" tal:content="python:here.getLocalProperty('description', curr_lang)"></textarea></td>
+</tr>
+<tr>
+	<td i18n:translate="">RSS/RDF file URL</td>
+	<td><input type="text" name="url" size="50" tal:attributes="value here/url" /></td>
+</tr>
+<tr>
+	<td i18n:translate="">Language</td>
+	<td>
+		<select name="language">
+			<option tal:repeat="item here/get_all_languages"
+				tal:attributes="value python:item['code']; selected python:here.language==item['code']"
+				tal:content="python:item['name']" />
+		</select>
+	</td>
+</tr>
+<tr>
+	<td i18n:translate="">Type</td>
+	<td>
+		<select name="type">
+			<option tal:repeat="item here/get_channel_types"
+				tal:attributes="value item; selected python:here.type==item"
+				tal:content="item" />
+		</select>
+	</td>
+</tr>
+<tr>
+	<td><input type="hidden" name="lang" tal:attributes="value curr_lang" /></td>
+	<td><input type="submit" value="Save changes" i18n:attributes="value" /></td>
+</tr>
+</table>
+</form>
+
+<span tal:replace="structure here/standard_html_footer" />
