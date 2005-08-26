@@ -131,7 +131,7 @@ class NyNetChannel(NyAttributes, LocalPropertyManager, NyItem, NyFeed):
         self.language = language
         self.type = type
         self._p_changed = 1
-        self.recatalogEWObject(self)
+        self.recatalogNyObject(self)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
