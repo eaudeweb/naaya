@@ -33,7 +33,7 @@ from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyFeed import NyFeed
 from Products.Naaya.constants import *
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-#import EWNetChannel
+import NyNetChannel
 
 manage_addNyNetSite_html = PageTemplateFile('zpt/netsite_manage_add', globals())
 def addNyNetSite(self, id='', title='', description='', url='', lang=None, REQUEST=None):
@@ -76,11 +76,11 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
 
     security = ClassSecurityInfo()
 
-    #security.declareProtected(view_management_screens, 'manage_addNyNetChannel_html')
-    #manage_addNyNetChannel_html = NyNetChannel.manage_addNyNetChannel_html
+    security.declareProtected(view_management_screens, 'manage_addNyNetChannel_html')
+    manage_addNyNetChannel_html = NyNetChannel.manage_addNyNetChannel_html
 
-    #security.declareProtected(PERMISSION_PUBLISH_EWOBJECTS, 'addNyNetChannel')
-    #addNyNetChannel = NyNetChannel.addNyNetChannel
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'addNyNetChannel')
+    addNyNetChannel = NyNetChannel.addNyNetChannel
 
     title = LocalProperty('title')
     description = LocalProperty('description')
@@ -104,11 +104,11 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
     def get_netchannels(self): return self.objectValues(METATYPE_NYNETCHANNEL)
 
     def get_feed_url(self):
-        #method from EWFeed
+        #method from NyFeed
         return '%s/localchannels_rdf' % self.url
 
     def set_new_feed_url(self, new_url):
-        #method from EWFeed
+        #method from NyFeed
         pass
 
     #zmi actions

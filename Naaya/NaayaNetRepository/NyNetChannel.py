@@ -20,55 +20,52 @@
 #Python imports
 
 #Zope imports
-from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from Products.Localizer.LanguageManager import LanguageManager
-from Products.EWPublisher.constants import *
-from Products.EWPublisher.EWBase.EWAttributes import EWAttributes
-from Products.EWPublisher.EWBase.EWItem import EWItem
-from Products.EWPublisher.EWBase.EWFeed import EWFeed
 from constants import *
+from Products.NaayaBase.constants import *
+from Products.NaayaBase.NyAttributes import NyAttributes
+from Products.NaayaBase.NyItem import NyItem
+from Products.NaayaBase.NyFeed import NyFeed
+from Products.Naaya.constants import *
+from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
-manage_addEWNetChannel_html = PageTemplateFile('zpt/EWNetChannel_manage_add', globals())
-def addEWNetChannel(self, id='', title='', description='', url='', language=None, type=None, manual=1, REQUEST=None):
+manage_addNyNetChannel_html = PageTemplateFile('zpt/netchannel_manage_add', globals())
+def addNyNetChannel(self, id='', title='', description='', url='', language=None,
+    type=None, manual=1, lang=None, REQUEST=None):
     """ """
     id = self.utCleanupId(id)
-    if not id: id = PREFIX_NETCHANNEL + self.utGenRandomId(6)
+    if not id: id = PREFIX_NYNETCHANNEL + self.utGenRandomId(6)
     try: manual = abs(int(manual))
     except: manual = 0
-    lang = self.get_default_language()
-    ob = EWNetChannel(id, title, description, url, language, type, manual, lang)
-    for lang_rec in self.get_languages_mapping():
-        ob.add_language(lang_rec['code'])
-        if lang_rec['default']: ob.manage_changeDefaultLang(lang_rec['code'])
+    if lang is None: lang = self.gl_get_selected_language()
+    ob = NyNetChannel(id, title, description, url, language, type, manual, lang)
+    self.gl_add_languages(ob)
     self._setObject(id, ob)
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if l_referer == 'manage_addEWNetChannel_html' or l_referer.find('manage_addEWNetChannel_html') != -1:
+        if l_referer == 'manage_addNyNetChannel_html' or l_referer.find('manage_addNyNetChannel_html') != -1:
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'netchannel_add_html':
-            REQUEST.RESPONSE.redirect('%s/index_html' % self.get_netsite_path())
+            self.setSession('referer', self.absolute_url())
+            REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-class EWNetChannel(EWAttributes, LocalPropertyManager, EWItem, EWFeed):
+class NyNetChannel(NyAttributes, LocalPropertyManager, NyItem, NyFeed):
     """ """
 
-    meta_type = METATYPE_EWNETCHANNEL
-    icon = 'misc_/EWNetRepository/EWNetChannel.gif'
+    meta_type = METATYPE_NYNETCHANNEL
+    icon = 'misc_/NaayaNetRepository/NyNetChannel.gif'
 
     manage_options = (
         (
             {'label' : 'Properties', 'action' : 'manage_edit_html'},
         )
         +
-        LanguageManager.manage_options
-        +
-        EWItem.manage_options
+        NyItem.manage_options
     )
 
     security = ClassSecurityInfo()
@@ -85,43 +82,49 @@ class EWNetChannel(EWAttributes, LocalPropertyManager, EWItem, EWFeed):
         self.language = language
         self.type = type
         self.manual = manual
-        EWFeed.__dict__['__init__'](self)
+        NyFeed.__dict__['__init__'](self)
 
+    security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
-        l_values = [self.getLocalProperty('title', lang), self.getLocalProperty('description', lang)]
-        return ' '.join([x.encode('utf-8') for x in l_values])
+        return u' '.join([self.getLocalProperty('title', lang),
+            self.getLocalProperty('description', lang)])
 
     #api
     def get_netchannel_object(self): return self
     def get_netchannel_path(self, p=0): return self.absolute_url(p)
 
     def get_feed_url(self):
-        #method from EWFeed
+        #method from NyFeed
         return self.url
 
     def set_new_feed_url(self, new_url):
-        #method from EWFeed
+        #method from NyFeed
         self.url = new_url
         self._p_changed = 1
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', url='', language=None, type=None, REQUEST=None):
+    def manageProperties(self, title='', description='', url='', language=None,
+        type=None, REQUEST=None):
         """ """
-        lang = self.get_default_language()
+        lang = self.gl_get_selected_language()
+        if language is None: language = lang
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
         self.url = url
         self.language = language
         self.type = type
         self._p_changed = 1
-        self.recatalogEWObject(self)
+        self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #site actions
-    def saveProperties(self, title='', description='', url='', language=None, type=None, lang=None, REQUEST=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'saveProperties')
+    def saveProperties(self, title='', description='', url='', language=None, type=None,
+        lang=None, REQUEST=None):
         """ """
-        if lang is None: lang = self.get_default_language()
+        if lang is None: lang = self.gl_get_selected_language()
+        if language is None: language = lang
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
         self.url = url
@@ -131,8 +134,9 @@ class EWNetChannel(EWAttributes, LocalPropertyManager, EWItem, EWFeed):
         self.recatalogEWObject(self)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
+            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'update_netchannel')
     def update_netchannel(self, REQUEST=None):
         """ """
         self.harvest_feed()
@@ -143,10 +147,13 @@ class EWNetChannel(EWAttributes, LocalPropertyManager, EWItem, EWFeed):
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
-    manage_edit_html = PageTemplateFile('zpt/EWNetChannel_manage_edit', globals())
+    manage_edit_html = PageTemplateFile('zpt/netchannel_manage_edit', globals())
 
     #site pages
-    index_html = PageTemplateFile('zpt/EWNetChannel_index', globals())
-    edit_html = PageTemplateFile('zpt/EWNetChannel_edit', globals())
+    security.declareProtected(view, 'index_html')
+    index_html = PageTemplateFile('zpt/netchannel_index', globals())
 
-InitializeClass(EWNetChannel)
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'edit_html')
+    edit_html = PageTemplateFile('zpt/netchannel_edit', globals())
+
+InitializeClass(NyNetChannel)
