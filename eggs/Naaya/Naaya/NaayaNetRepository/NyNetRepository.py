@@ -41,6 +41,7 @@ def manage_addNyNetRepository(self, id='', title='', lang=None, REQUEST=None):
     ob = NyNetRepository(id, title, lang)
     self.gl_add_languages(ob)
     self._setObject(id, ob)
+    self._getOb(id).loadDefaultData()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -106,6 +107,7 @@ class NyNetRepository(LocalPropertyManager, Folder):
         if q == '': q = None
         if l == '': l = None
         if t == '': t = None
+        print q, l, t
         return self.query_objects_ex(meta_type=METATYPE_NYNETCHANNEL, q=q, lang=lang, path=self.absolute_url(1), language=l, type=t)
 
     #zmi actions
