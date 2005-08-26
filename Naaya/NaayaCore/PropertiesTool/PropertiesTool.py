@@ -167,48 +167,19 @@ class PropertiesTool(SimpleItem, utils, search_tool):
     security.declareProtected(view_management_screens, 'manage_addLanguage')
     def manage_addLanguage(self, language, REQUEST=None):
         """ """
-        self.getSite().add_language(language)
-        self.getLocalizer().add_language(language)
-        self.getPortalTranslations().add_language(language)
-        self.getCatalogTool().add_indexes_for_lang(language)
-        for x in self.getSiteMap(expand=['all'], root=None, showitems=1):
-            try: x[0].add_language(language)
-            except: pass
-        for x in self.getPortletsTool().get_html_portlets():
-            try: x.add_language(language)
-            except: pass
+        self.getSite().gl_add_site_language(language)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_languages_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manage_delLanguages')
     def manage_delLanguages(self, languages, REQUEST=None):
         """ """
-        for language in languages:
-            self.getSite().del_language(language)
-            self.getLocalizer().del_language(language)
-            self.getPortalTranslations().del_language(language)
-            self.getCatalogTool().del_indexes_for_lang(language)
-        for x in self.getSiteMap(expand=['all'], root=None, showitems=1):
-            for language in languages:
-                try: x[0].del_language(language)
-                except: pass
-        for x in self.getPortletsTool().get_html_portlets():
-            for language in languages:
-                try: x.del_language(language)
-                except: pass
+        self.getSite().gl_del_site_languages(languages)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_languages_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manage_changeDefaultLang')
     def manage_changeDefaultLang(self, language, REQUEST=None):
         """ """
-        self.getSite().manage_changeDefaultLang(language)
-        self.getLocalizer().manage_changeDefaultLang(language)
-        self.getPortalTranslations().manage_changeDefaultLang(language)
-        for x in self.getSiteMap(expand=['all'], root=None, showitems=1):
-            try: x[0].manage_changeDefaultLang(language)
-            except: pass
-        for x in self.getPortletsTool().get_html_portlets():
-            try: x.manage_changeDefaultLang(language)
-            except: pass
+        self.getSite().gl_change_site_defaultlang(language)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_languages_html?save=ok')
 
     #zmi pages
