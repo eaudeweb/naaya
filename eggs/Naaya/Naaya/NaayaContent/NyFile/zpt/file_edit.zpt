@@ -1,7 +1,7 @@
 <span tal:replace="structure here/standard_html_header" />
 
 <tal:block tal:condition="python:(not here.hasVersion()) or (here.hasVersion() and here.isVersionAuthor())">
-<tal:block define="languages python:here.get_languages_mapping();
+<tal:block define="languages here/get_languages_mapping;
 					curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
 
 <h1 i18n:translate="">Edit File</h1>
