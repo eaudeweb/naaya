@@ -393,13 +393,19 @@ class utils:
 
     def utXmlEncode(self, p_string):
         """Encode some special chars"""
-        l_tmp = str(p_string)
+        if isinstance(p_string, unicode): l_tmp = p_string.encode('utf-8')
+        else: l_tmp = str(p_string)
         l_tmp = l_tmp.replace('&', '&amp;')
         l_tmp = l_tmp.replace('<', '&lt;')
         l_tmp = l_tmp.replace('"', '&quot;')
         l_tmp = l_tmp.replace('\'', '&apos;')
         l_tmp = l_tmp.replace('>', '&gt;')
         return l_tmp
+
+    def utToUtf8(self, p_string):
+        #converts the value to utf8
+        if isinstance(p_string, unicode): p_string = p_string.encode('utf-8')
+        return p_string
 
     def utBase64Encode(self, p_string):
         """ """
@@ -701,75 +707,3 @@ class utils:
             res.append('</PRE>')
             pre = 0
         return string.join(res)
-
-    #####################
-    # Emails            #
-    #####################
-
-    def utIsEmailValid(email, bad_domains=''):
-        """ Check is email valid """
-        if type(bad_domains) == type([]) and len(bad_domains) > 0:
-            for dom in bad_domains:
-                if re.compile('@'+dom).search(email) is not None:
-                    return 0
-        if re.compile('\s').search(email) is not None:
-            return 0
-        if re.compile(r'^[_\-\.0-9a-z]+@([0-9a-z][_0-9a-z\.]+)\.([a-z]{2,4}$)', re.IGNORECASE).search(email) is None:
-            return 0
-        return 1
-
-    def utCreateHtmlMail (self, html, text, subject, fromA, to):
-        """Create a mime-message that will render HTML in popular MUAs, text in better ones"""
-        import MimeWriter
-        import mimetools
-        import cStringIO
-
-        out = cStringIO.StringIO() # output buffer for our message 
-        htmlin = cStringIO.StringIO(html)
-        txtin = cStringIO.StringIO(text)
-
-        writer = MimeWriter.MimeWriter(out)
-        #
-        # set up some basic headers... we put subject here
-        # because smtplib.sendmail expects it to be in the
-        # message body
-        #
-        writer.addheader("From", fromA)
-        writer.addheader("To", to)
-        writer.addheader("Subject", subject)
-        #writer.addheader("Date", DateTime())   #do be done!!!!
-        writer.addheader("MIME-Version", "1.0")
-        #
-        # start the multipart section of the message
-        # multipart/alternative seems to work better
-        # on some MUAs than multipart/mixed
-        #
-        writer.startmultipartbody("alternative")
-        writer.flushheaders()
-        #
-        # the plain text section
-        #
-        subpart = writer.nextpart()
-        subpart.addheader("Content-Transfer-Encoding", "quoted-printable")
-        pout = subpart.startbody("text/plain", [("charset", 'us-ascii')])
-        mimetools.encode(txtin, pout, 'quoted-printable')
-        txtin.close()
-        #
-        # start the html subpart of the message
-        #
-        subpart = writer.nextpart()
-        subpart.addheader("Content-Transfer-Encoding", "quoted-printable")
-        #
-        # returns us a file-ish object we can write to
-        #
-        pout = subpart.startbody("text/html", [("charset", 'us-ascii')])
-        mimetools.encode(htmlin, pout, 'quoted-printable')
-        htmlin.close()
-        #
-        # Now that we're done, close our writer and
-        # return the message body
-        #
-        writer.lastpart()
-        msg = out.getvalue()
-        out.close()
-        return msg
