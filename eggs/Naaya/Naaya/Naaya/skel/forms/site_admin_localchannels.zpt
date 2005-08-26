@@ -80,7 +80,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td valign="top" i18n:translate="">Objects meta type to include</td>
+			<td valign="top" i18n:translate="">Objects meta type(s) to include</td>
 			<td>
 				<select name="objmetatype" size="5" multiple="true">
 					<option tal:repeat="item here/get_meta_types"
@@ -97,7 +97,7 @@
 			</td>
 		</tr>
 		<tr tal:condition="python:ob_data[0]=='add'">
-			<td i18n:translate="">Create a portlet</td>
+			<td i18n:translate="">Create a portlet with the content of this channel</td>
 			<td><input type="checkbox" name="portlet" checked="checked" /></td>
 		</tr>
 		<tr>
