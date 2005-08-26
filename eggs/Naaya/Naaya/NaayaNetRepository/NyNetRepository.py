@@ -107,7 +107,6 @@ class NyNetRepository(LocalPropertyManager, Folder):
         if q == '': q = None
         if l == '': l = None
         if t == '': t = None
-        print q, l, t
         return self.query_objects_ex(meta_type=METATYPE_NYNETCHANNEL, q=q, lang=lang, path=self.absolute_url(1), language=l, type=t)
 
     #zmi actions
