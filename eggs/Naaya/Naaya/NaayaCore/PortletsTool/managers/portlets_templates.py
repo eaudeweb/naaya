@@ -91,7 +91,7 @@ LOCALCHANNEL_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLa
 		</li>
 		</tal:block>
 	</ul>
-	<a tal:attributes="href python:here.getSyndicationTool().PORTLET_LOCALCHANNEL_ID.absolute_url()"><img src="misc_/EWCore/xml.png" width="36" height="14" border="0" alt="Syndication (XML)" i18n:attributes="alt" /></a>
+	<a tal:attributes="href python:here.getSyndicationTool().PORTLET_LOCALCHANNEL_ID.absolute_url()"><img src="misc_/NaayaCore/xml.png" width="36" height="14" border="0" alt="Syndication (XML)" i18n:attributes="alt" /></a>
 </tal:block>
 </tal:block>'''
 

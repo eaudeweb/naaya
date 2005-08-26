@@ -81,7 +81,9 @@ class LocalChannel(SimpleItem, utils):
         self.delete_portlet_for_object(item)
 
     security.declarePrivate('syndicateThis')
-    def syndicateThis(self):
+    def syndicateThis(self, lang=None):
+        l_site = self.getSite()
+        if lang is None: lang = self.gl_get_selected_language()
         l_rdf = []
         l_rdf.append('<item rdf:about="%s">' % self.absolute_url())
         l_rdf.append('<link>%s</link>' % self.absolute_url())
@@ -132,7 +134,7 @@ class LocalChannel(SimpleItem, utils):
         lang = self.language
         l_items = self.get_objects_for_rdf()
         l_rdf = []
-        l_rdf.append('<?xml version="1.0" encoding="iso-8859-1"?>')
+        l_rdf.append('<?xml version="1.0" encoding="utf-8"?>')
         l_rdf.append('<rdf:RDF %s>' % self.getNamespacesForRdf())
         l_rdf.append('<channel rdf:about="%s">' % l_site.absolute_url())
         l_rdf.append('<title>%s</title>' % self.utXmlEncode(self.title))
