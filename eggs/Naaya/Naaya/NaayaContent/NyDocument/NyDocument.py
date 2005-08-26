@@ -158,9 +158,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
     def export_this_body_custom(self):
         r = []
         for l in self.gl_get_languages():
-            v = self.getLocalProperty('body', l)
-            if isinstance(v, unicode): v = v.encode('utf-8')
-            r.append('<body lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+            r.append('<body lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('body', l))))
         for i in self.getUploadedImages():
             r.append('<img id="%s" content="%s" />' % \
                 (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(str(i.data)))))
