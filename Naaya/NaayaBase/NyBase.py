@@ -185,18 +185,10 @@ class NyBase:
     def export_this_body(self):
         r = []
         for l in self.gl_get_languages():
-            v = self.getLocalProperty('title', l)
-            if isinstance(v, unicode): v = v.encode('utf-8')
-            r.append('<title lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
-            v = self.getLocalProperty('description', l)
-            if isinstance(v, unicode): v = v.encode('utf-8')
-            r.append('<description lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
-            v = self.getLocalProperty('coverage', l)
-            if isinstance(v, unicode): v = v.encode('utf-8')
-            r.append('<coverage lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
-            v = self.getLocalProperty('keywords', l)
-            if isinstance(v, unicode): v = v.encode('utf-8')
-            r.append('<keywords lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+            r.append('<title lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('title', l))))
+            r.append('<description lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('description', l))))
+            r.append('<coverage lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('coverage', l))))
+            r.append('<keywords lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('keywords', l))))
         r.append(self.export_this_body_custom())
         return ''.join(r)
 
