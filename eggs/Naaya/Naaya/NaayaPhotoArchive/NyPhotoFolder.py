@@ -32,7 +32,6 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaCore.managers.utils import batch_utils
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from Products.Localizer.LanguageManager import LanguageManager
 import NyPhoto
 
 manage_addNyPhotoFolder_html = PageTemplateFile('zpt/photofolder_manage_add', globals())
