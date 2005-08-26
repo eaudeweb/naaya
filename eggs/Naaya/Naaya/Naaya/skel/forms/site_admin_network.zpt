@@ -29,7 +29,7 @@
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
 		<td i18n:translate="">Title</td>
-		<td><input type="text" name="title:ustring:utf8" id="title" size="50" value="" /></td>
+		<td><input type="text" name="title:utf8:ustring" id="title" size="50" value="" /></td>
 	</tr>
 	<tr>
 		<td i18n:translate="">Portal URL</td>
