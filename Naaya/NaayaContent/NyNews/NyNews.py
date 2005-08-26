@@ -153,12 +153,8 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
     def export_this_body_custom(self):
         r = []
         for l in self.gl_get_languages():
-            v = self.getLocalProperty('details', l)
-            if isinstance(v, unicode): v = v.encode('utf-8')
-            r.append('<details lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
-            v = self.getLocalProperty('source', l)
-            if isinstance(v, unicode): v = v.encode('utf-8')
-            r.append('<source lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+            r.append('<details lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('details', l))))
+            r.append('<source lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('source', l))))
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')

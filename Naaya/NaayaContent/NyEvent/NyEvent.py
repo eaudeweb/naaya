@@ -168,18 +168,10 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
     def export_this_body_custom(self):
         r = []
         for l in self.gl_get_languages():
-            v = self.getLocalProperty('location', l)
-            if isinstance(v, unicode): v = v.encode('utf-8')
-            r.append('<location lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
-            v = self.getLocalProperty('location_address', l)
-            if isinstance(v, unicode): v = v.encode('utf-8')
-            r.append('<location_address lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
-            v = self.getLocalProperty('host', l)
-            if isinstance(v, unicode): v = v.encode('utf-8')
-            r.append('<host lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
-            v = self.getLocalProperty('details', l)
-            if isinstance(v, unicode): v = v.encode('utf-8')
-            r.append('<details lang="%s" content="%s"/>' % (l, self.utXmlEncode(v)))
+            r.append('<location lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('location', l))))
+            r.append('<location_address lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('location_address', l))))
+            r.append('<host lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('host', l))))
+            r.append('<details lang="%s" content="%s"/>' % (l, self.utXmlEncode(selfself.getLocalProperty('details', l))))
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')
