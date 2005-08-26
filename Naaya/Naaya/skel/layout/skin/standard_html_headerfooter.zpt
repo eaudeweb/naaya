@@ -31,7 +31,7 @@
 	</div>
 	<div id="menunav">
 		<div id="search">
-			<form method="get" action="search_html">
+			<form method="get" tal:attributes="action string:${site_url}/search_html">
 				<label accesskey="4" for="query">Site search:</label>
 				<input id="query" type="text" name="query" />
 			</form>
