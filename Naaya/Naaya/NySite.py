@@ -579,6 +579,63 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.getLocalizer().changeLanguage(old_lang)
         if REQUEST: REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
+    def gl_add_site_language(self, language):
+        #this is called when a new language is added for the portal
+        print language
+        self.add_language(language)
+        self.getLocalizer().add_language(language)
+        self.getPortalTranslations().add_language(language)
+        self.getCatalogTool().add_indexes_for_lang(language)
+        for x in self.getSiteMap(expand=['all'], root=None, showitems=1):
+            try: x[0].add_language(language)
+            except: pass
+        for x in self.getPortletsTool().get_html_portlets():
+            try: x.add_language(language)
+            except: pass
+        self.gl_add_site_language_custom(language)
+
+    def gl_add_site_language_custom(self, language):
+        #this is called to handle other types of multilanguage objects
+        pass
+
+    def gl_del_site_languages(self, languages):
+        #this is called when one or more languages are deleted from the portal
+        for language in languages:
+            self.del_language(language)
+            self.getLocalizer().del_language(language)
+            self.getPortalTranslations().del_language(language)
+            self.getCatalogTool().del_indexes_for_lang(language)
+        for x in self.getSiteMap(expand=['all'], root=None, showitems=1):
+            for language in languages:
+                try: x[0].del_language(language)
+                except: pass
+        for x in self.getPortletsTool().get_html_portlets():
+            for language in languages:
+                try: x.del_language(language)
+                except: pass
+        self.gl_del_site_languages_custom(languages)
+
+    def gl_del_site_languages_custom(self, languages):
+        #this is called to handle other types of multilanguage objects
+        pass
+
+    def gl_change_site_defaultlang(self, language):
+        #this is called when site default language is changed
+        self.manage_changeDefaultLang(language)
+        self.getLocalizer().manage_changeDefaultLang(language)
+        self.getPortalTranslations().manage_changeDefaultLang(language)
+        for x in self.getSiteMap(expand=['all'], root=None, showitems=1):
+            try: x[0].manage_changeDefaultLang(language)
+            except: pass
+        for x in self.getPortletsTool().get_html_portlets():
+            try: x.manage_changeDefaultLang(language)
+            except: pass
+        self.gl_change_site_defaultlang_custom(language)
+
+    def gl_change_site_defaultlang_custom(self, languages):
+        #this is called to handle other types of multilanguage objects
+        pass
+
     #layer over NyEpozToolbox
     def getUploadedImages(self): return self.getImagesFolder().objectValues(['Image'])
 
