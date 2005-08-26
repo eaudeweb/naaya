@@ -581,7 +581,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     def gl_add_site_language(self, language):
         #this is called when a new language is added for the portal
-        print language
         self.add_language(language)
         self.getLocalizer().add_language(language)
         self.getPortalTranslations().add_language(language)
@@ -632,7 +631,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             except: pass
         self.gl_change_site_defaultlang_custom(language)
 
-    def gl_change_site_defaultlang_custom(self, languages):
+    def gl_change_site_defaultlang_custom(self, language):
         #this is called to handle other types of multilanguage objects
         pass
 
