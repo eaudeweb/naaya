@@ -38,6 +38,7 @@ from Products.NaayaCore.managers.utils import utils
 from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
 from Products.NaayaPhotoArchive.NyPhotoFolder import manage_addNyPhotoFolder
 from Products.NaayaPhotoArchive.constants import *
+from Products.NaayaNetRepository.constants import *
 
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addCHMSite(self, id='', title='', lang=None, REQUEST=None):
@@ -101,6 +102,47 @@ class CHMSite(NySite):
     def get_naaya_containers_metatypes(self):
         #this method is used to display local roles, called from getUserRoles methods
         return [METATYPE_FOLDER, METATYPE_NYPHOTOFOLDER]
+
+    #layer over the Localizer and MessageCatalog
+    #the scope is to centralize the list of available languages
+    def gl_add_site_language_custom(self, language):
+        #this is called to handle other types of multilanguage objects
+        for r in self.objectValues(METATYPE_NYNETREPOSITORY):
+            try: r.add_language(language)
+            except: pass
+            for s in r.get_netsites():
+                try: s.add_language(language)
+                except: pass
+                for c in s.get_netchannels():
+                    try: c.add_language(language)
+                    except: pass
+
+    def gl_del_site_languages_custom(self, languages):
+        #this is called to handle other types of multilanguage objects
+        for r in self.objectValues(METATYPE_NYNETREPOSITORY):
+            for language in languages:
+                try: r.del_language(language)
+                except: pass
+            for s in r.get_netsites():
+                for language in languages:
+                    try: s.del_language(language)
+                    except: pass
+                for c in s.get_netchannels():
+                    for language in languages:
+                        try: c.del_language(language)
+                        except: pass
+
+    def gl_change_site_defaultlang_custom(self, language):
+        #this is called to handle other types of multilanguage objects
+        for r in self.objectValues(METATYPE_NYNETREPOSITORY):
+            try: r.manage_changeDefaultLang(language)
+            except: pass
+            for s in r.get_netsites():
+                try: s.manage_changeDefaultLang(language)
+                except: pass
+                for c in s.get_netchannels():
+                    try: c.manage_changeDefaultLang(language)
+                    except: pass
 
     #api
     def getOnFrontNews(self):
