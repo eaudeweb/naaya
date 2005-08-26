@@ -45,7 +45,7 @@
 
 <div id="nav2">
 	<div id="search">
-		<form action="search_html" method="get">
+		<form method="get" tal:attributes="action string:${site_url}/search_html">
 		<label accesskey="4" for="query" i18n:translate="">Site search: </label>
 		<input id="query" type="text" name="query" />
 		<noscript><input id="sub" type="submit" value="GO!" i18n:attributes="value" /></noscript>
