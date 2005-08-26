@@ -163,15 +163,22 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
             self.deleteObjects([x.id for x in self.objectValues() if x.manual==0])
             #add channels
             for x in self.get_feed_items():
-                id = PREFIX_NETCHANNEL + self.utGenRandomId(6)
-                language, type, description = None, None, ''
+                id = PREFIX_NYNETCHANNEL + self.utGenRandomId(6)
+                language, type, description, lang = None, None, '', None
                 if x.has_key('dc_description'): description = x['dc_description']
                 if x.has_key('language'): language = x['language'].encode('utf-8')
                 elif x.has_key('dc_language'): language = x['dc_language'].encode('utf-8')
                 if x.has_key('type'): type = x['type'].encode('utf-8')
                 elif x.has_key('dc_type'): type = x['dc_type'].encode('utf-8')
+                #choose which language for the content
+                #channel language if channel language is in the list of languages
+                #selected language otherwise
+                if language is not None:
+                    if language in self.gl_get_languages():
+                        lang = language
                 #create channel
-                self.addNyNetChannel(id, x['title'], description, x['link'].encode('utf-8'), language, type, 0)
+                self.addNyNetChannel(id, x['title'], description, x['link'].encode('utf-8'),
+                    language, type, 0, lang)
                 #harvest channel
                 self._getOb(id).update_netchannel()
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
