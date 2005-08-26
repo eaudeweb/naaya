@@ -101,7 +101,7 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
     #api
     def get_netsite_object(self): return self
     def get_netsite_path(self, p=0): return self.absolute_url(p)
-    def get_netchannels(self): return self.objectValues(METATYPE_EWNETCHANNEL)
+    def get_netchannels(self): return self.objectValues(METATYPE_NYNETCHANNEL)
 
     def get_feed_url(self):
         #method from EWFeed
