@@ -7,7 +7,7 @@
 </p>
 
 <tal:block metal:fill-slot="custom_properties"
-	define="languages python:here.get_languages_mapping();
+	define="languages here/get_languages_mapping;
 			curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
 <tr>
 	<td valign="top" i18n:translate="">Details (HTML)</td>
