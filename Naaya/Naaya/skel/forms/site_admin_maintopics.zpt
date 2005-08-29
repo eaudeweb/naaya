@@ -61,15 +61,22 @@ function fSave(action)
 <fieldset>
 <legend i18n:translate="">Add new main topic</legend>
 <form method="post" tal:attributes="action string:${site_url}/admin_addmaintopics">
-<table border="0" cellspacing="2" cellpadding="2" width="100%">
-<tr>
-	<td i18n:translate="">Title</td>
-	<td><input type="text" name="title" size="50" value="" /></td>
-</tr>
-<tr>
-	<td></td>
-	<td><input type="submit" value="Add" i18n:attributes="value" /></td>
-</tr>
+<div class="field" tal:define="selected_language here/gl_get_selected_language">
+	<label i18n:translate="" for="lang">Posting language</label>
+	<select name="lang" id="lang">
+		<option tal:repeat="item here/gl_get_languages_mapping"
+			tal:attributes="value python:item['code']; selected python:item['code']==selected_language"
+			tal:content="python:item['name']" />
+	</select>
+</div>
+<div class="field">
+	<label for="title" i18n:translate="">Title</label>
+	<input type="text" name="title:utf8:ustring" id="title" size="50" />
+</div>
+<div class="field">
+	<label for="submit-button" class="invisible">Submit button</label>
+	<input type="submit" value="Submit" id="submit-button" i18n:attributes="value" />
+</div>
 </form>
 </fieldset>
 </tal:block>

@@ -955,7 +955,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_layout')
     def admin_layout(self, theMasterList='', theSlaveList='', REQUEST=None):
         """ """
-        self.getLayoutTool().manageLayout(theMasterList, theSlaveList)
+        if theMasterList == '' or theSlaveList == '':
+            pass
+        else:
+            self.getLayoutTool().manageLayout(theMasterList, theSlaveList)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_layout_html' % self.absolute_url())
@@ -1142,10 +1145,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             REQUEST.RESPONSE.redirect('%s/admin_versioncontrol_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addmaintopics')
-    def admin_addmaintopics(self, title='', REQUEST=None):
+    def admin_addmaintopics(self, title='', lang=None, REQUEST=None):
         """ """
         id = PREFIX_FOLDER + self.utGenRandomId(6)
-        addNyFolder(self, id=id, title=title)
+        addNyFolder(self, id=id, title=title, lang=lang)
         self.maintopics.append(id)
         self._p_changed = 1
         if REQUEST:
