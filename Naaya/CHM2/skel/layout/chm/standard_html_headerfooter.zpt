@@ -61,7 +61,7 @@
 
 <div  id="log_lang">
 <div id="language">
-	<label for="change_language" i18n:translate="">Select language: </label>
+	<label for="old_lang" i18n:translate="">Select language: </label>
 	<span tal:content="structure here/languages_box" />
 </div>
 <div style="width: 30em;" id="user_id" tal:define="authenticated_user python:request.AUTHENTICATED_USER.getUserName()">
