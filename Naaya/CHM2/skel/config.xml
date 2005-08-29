@@ -5,5 +5,6 @@
 		<entry meta_type="Naaya Event" property="location_url"/>
 		<entry meta_type="Naaya Event" property="agenda_url"/>
 		<entry meta_type="Naaya Event" property="event_url"/>
+		<entry meta_type="Naaya Story" property="resourceurl"/>
 	</urls>
 </config>
