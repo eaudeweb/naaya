@@ -39,6 +39,7 @@ from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
 from Products.NaayaPhotoArchive.NyPhotoFolder import manage_addNyPhotoFolder
 from Products.NaayaPhotoArchive.constants import *
 from Products.NaayaNetRepository.constants import *
+from Products.HelpDeskAgent.HelpDesk import manage_addHelpDesk
 
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addCHMSite(self, id='', title='', lang=None, REQUEST=None):
@@ -85,6 +86,7 @@ class CHMSite(NySite):
             linkchecker_ob.manage_addMetaType(k)
             for p in v:
                 linkchecker_ob.manage_addProperty(k, v)
+        manage_addHelpDesk(self, ID_HELPDESKAGENT, TITLE_HELPDESKAGENT, self.getAuthenticationToolPath(1))
 
     #objects getters
     def getLinkChecker(self): return self._getOb(ID_LINKCHECKER, None)
@@ -93,6 +95,7 @@ class CHMSite(NySite):
         if len(entries) > 0: return entries[0]
         else: return None
     def getPhotoArchive(self): return self._getOb(ID_PHOTOARCHIVE, None)
+    def getHelpDeskAgent(self): return self._getOb(ID_HELPDESKAGENT, None)
     def getNewsArchive(self): return self._getOb('news', None)
 
     def get_containers_metatypes(self):
