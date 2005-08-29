@@ -4,13 +4,15 @@
 </head>
 <body onload="this.focus();">
 <h1>Upload</h1>
+
 <form method="post" action="process_image_upload" enctype="multipart/form-data">
 Upload image
 <input type="file" name="file" />
 <input type="submit" value="Upload" />
 </form>
+
+<p>Available images</p>
 <form method="post" action="process_delete">
-Available images
 <ul>
 	<li tal:repeat="item here/getUploadedImages">
 		<input type="checkbox" name="ids" tal:attributes="value item/id" />
