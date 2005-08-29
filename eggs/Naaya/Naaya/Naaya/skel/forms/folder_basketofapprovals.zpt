@@ -61,7 +61,7 @@ function checkApp(control, operation)
 </form>
 </tal:block>
 <tal:block tal:condition="python:len(pendings)==0">
-	<strong i18n:translate="">No pending items to review.</strong>
+	<p><strong i18n:translate="">No pending items to review.</strong></p>
 </tal:block>
 </tal:block>
 

@@ -31,7 +31,7 @@
 </form>
 </tal:block>
 <tal:block tal:condition="python:len(all_items)==0">
-	<strong i18n:translate="">No items to validate.</strong>
+	<p><strong i18n:translate="">No items to validate.</strong></p>
 </tal:block>
 </tal:block>
 
