@@ -41,7 +41,7 @@
 	</tr>
 	<tr tal:repeat="record linkslist/get_links_list">
 		<td><input type="checkbox" name="ids" tal:attributes="value record/id"></td>
-		<td><a tal:attributes="href string:${site_url}/admin_linkslist_html?id=${linkslist/id}&item=${record/id}" tal:content="record/title">title</a></td>
+		<td><a tal:attributes="href string:${site_url}/admin_linkslist_html?id=${linkslist/id}&item=${record/id}#editlink" tal:content="record/title">title</a></td>
 		<td tal:content="record/description">description</td>
 		<td tal:content="python:here.utTruncateString(test(record.relative, '%s%s' % (site_url, record.url), record.url), 20)">url</td>
 		<td tal:content="record/permission">permission</td>
@@ -55,6 +55,7 @@
 <input type="hidden" name="id" tal:attributes="value linkslist/id" />
 </form>
 <tal:block tal:define="record_data python:linkslist.get_link_item_data(item)">
+<a name="editlink"></a>
 <form method="post" tal:attributes="action python:test(record_data[0]=='add', '%s/admin_addlink' % site_url, '%s/admin_editlink' % site_url)">
 <fieldset><legend tal:condition="python:item==''" i18n:translate="">Add new link</legend>
 <legend tal:condition="python:item!=''" i18n:translate="">Edit link</legend>

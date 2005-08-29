@@ -12,10 +12,6 @@
 </ul>
 </div>
 
-<p i18n:translate="">
-	This form ...
-</p>
-
 <form method="post" tal:attributes="action string:${site_url}/admin_logos" enctype="multipart/form-data">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 <tr>

@@ -49,7 +49,7 @@ def folder_add_html(self, REQUEST=None, RESPONSE=None):
 
 def addNyFolder(self, id='', title='', description='', coverage='', keywords='', sortorder='',
     publicinterface='', maintainer_email='', folder_meta_types='', contributor=None,
-    releasedate='', REQUEST=None, **kwargs):
+    releasedate='', lang=None, REQUEST=None, **kwargs):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_FOLDER + self.utGenRandomId(6)
@@ -68,7 +68,7 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
         releasedate = self.utGetTodayDate()
     if folder_meta_types == '': folder_meta_types = self.adt_meta_types
     else: folder_meta_types = self.utConvertToList(folder_meta_types)
-    lang = self.gl_get_selected_language()
+    if lang is None: lang = self.gl_get_selected_language()
     ob = NyFolder(id, title, description, coverage, keywords, sortorder, publicinterface,
             maintainer_email, contributor, approved, approved_by, folder_meta_types,
             releasedate, lang)

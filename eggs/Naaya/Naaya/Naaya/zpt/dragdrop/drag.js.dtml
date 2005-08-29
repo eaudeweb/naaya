@@ -30,7 +30,7 @@ ToolMan._dragFactory = {
 	},
 
 	_showDragEventStatus : function(dragEvent) {
-		window.status = dragEvent.toString()
+		//window.status = dragEvent.toString()
 	},
 
 	constraints : function() {
