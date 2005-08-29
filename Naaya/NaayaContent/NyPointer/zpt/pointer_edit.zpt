@@ -60,7 +60,7 @@ function fTreeNodeClick(node_path)
 </div>
 <div class="field">
 	<label for="pointer" i18n:translate="">Item</label>
-	<input type="text" name="pointer" size="50" readonly="readonly" tal:attributes="value python:request.get('pointer', here.getVersionProperty('pointer'))" />
+	<input type="text" name="pointer" id="pointer" size="50" readonly="readonly" tal:attributes="value python:request.get('pointer', here.getVersionProperty('pointer'))" />
 </div>
 </tal:block>
 
