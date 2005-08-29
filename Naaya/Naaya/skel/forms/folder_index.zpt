@@ -153,7 +153,7 @@ function fDeleteObjects()
 </div>
 </tal:block>
 
-<p style="clear: both;"><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt"/></a></p>
+<p style="clear: both;"><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a></p>
 
 <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
 	<a tal:attributes="href string:${here/absolute_url}/requestrole_html" i18n:translate="">Apply for a content contributor role in this portal</a>
