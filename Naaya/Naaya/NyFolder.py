@@ -305,7 +305,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     def hasContent(self): return (len(self.getObjects()) > 0) or (len(self.objectValues(METATYPE_FOLDER)) > 0)
 
     def getPendingFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.approved==0]
-    def getPublishedFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.approved==1]
+    def getPublishedFolders(self): return self.utSortObjsListByAttr([x for x in self.objectValues(METATYPE_FOLDER) if x.approved==1], 'sortorder', 0)
     def getPendingObjects(self): return [x for x in self.getObjects() if x.approved==0]
     def getPublishedObjects(self): return [x for x in self.getObjects() if x.approved==1]
 
