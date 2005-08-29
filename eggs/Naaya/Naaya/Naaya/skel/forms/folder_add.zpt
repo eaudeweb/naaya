@@ -7,10 +7,10 @@
 </p>
 
 <tal:block metal:fill-slot="custom_properties">
-<tr>
-	<td class="form-label" i18n:translate="">Maintainer email</td>
-	<td><input type="text" name="maintainer_email" size="50" value="" /></td>
-</tr>
+<div class="field">
+	<label for="maintainer_email" i18n:translate="">Maintainer email</label>
+	<input type="text" name="maintainer_email" id="maintainer_email" size="50" value="" />
+</div>
 </tal:block>
 
 </tal:block>
