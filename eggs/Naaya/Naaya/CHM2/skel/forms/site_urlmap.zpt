@@ -44,7 +44,7 @@
 	<tal:block tal:define="item_url python:item[0]; item_ob python:item[1]">
 		<a tal:attributes="href item_url" target="_blank" tal:content="item_ob/title_or_id" />
 		<a tal:condition="item_ob/checkPermissionEditObject" tal:attributes="href string:${item_ob/absolute_url}/edit_html"><img src="/misc_/Naaya/edit" border="0" alt="Click here to edit object" i18n:attributes="alt" /></a>
-		<span tal:replace="item_ob/description" />
+		<span tal:replace="structure item_ob/description" />
 		<br />
 		<span tal:replace="item_url" />
 	</tal:block>
@@ -56,7 +56,7 @@
 	<tal:block tal:define="item_url python:item[0]; item_ob python:item[1]">
 		<a tal:attributes="href item_url" target="_blank" tal:content="item_ob/title_or_id" />
 		<a tal:condition="item_ob/checkPermissionEditObject" tal:attributes="href string:${item_ob/absolute_url}/edit_html"><img src="/misc_/Naaya/edit" border="0" alt="Click here to edit object" i18n:attributes="alt" /></a>
-		<span tal:replace="item_ob/description" />
+		<span tal:replace="structure item_ob/description" />
 		<br />
 		<span tal:replace="item_url" />
 	</tal:block>
@@ -78,7 +78,7 @@
 		<tal:block tal:define="item_url python:item[0]; item_ob python:item[1]">
 			<a tal:attributes="href item_url" target="_blank" tal:content="item_ob/title_or_id" />
 			<a tal:condition="item_ob/checkPermissionEditObject" tal:attributes="href string:${item_ob/absolute_url}/edit_html"><img src="/misc_/Naaya/edit" border="0" alt="Click here to edit object" i18n:attributes="alt" /></a>
-			<span tal:replace="item_ob/description" />
+			<span tal:replace="structure item_ob/description" />
 			<br />
 			<span tal:replace="item_url" />
 		</tal:block>
@@ -96,7 +96,7 @@
 		<tal:block tal:define="item_url python:item[0]; item_ob python:item[1]">
 			<a tal:attributes="href item_url" target="_blank" tal:content="item_ob/title_or_id" />
 			<a tal:condition="item_ob/checkPermissionEditObject" tal:attributes="href string:${item_ob/absolute_url}/edit_html"><img src="/misc_/Naaya/edit" border="0" alt="Click here to edit object" i18n:attributes="alt" /></a>
-			<span tal:replace="item_ob/description" />
+			<span tal:replace="structure item_ob/description" />
 			<br />
 			<span tal:replace="item_url" />
 		</tal:block>
