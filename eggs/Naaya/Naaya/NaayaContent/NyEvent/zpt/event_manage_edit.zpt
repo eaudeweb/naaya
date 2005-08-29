@@ -14,7 +14,7 @@
 	<td><input type="text" name="location_address" size="50" tal:attributes="value here/location_address" /></td>
 </tr>
 <tr>
-	<td class="form-label">Location url</td>
+	<td class="form-label">Location URL</td>
 	<td><input type="text" name="location_url" size="50" tal:attributes="value here/location_url" /></td>
 </tr>
 <tr>
@@ -30,11 +30,11 @@
 	<td><input type="text" name="host" size="50" tal:attributes="value here/host" /></td>
 </tr>
 <tr>
-	<td class="form-label">Agenda url</td>
+	<td class="form-label">Agenda URL</td>
 	<td><input type="text" name="agenda_url" size="50" tal:attributes="value here/agenda_url" /></td>
 </tr>
 <tr>
-	<td class="form-label">Event url</td>
+	<td class="form-label">Event URL</td>
 	<td><input type="text" name="event_url" size="50" tal:attributes="value here/event_url" /></td>
 </tr>
 <tr>

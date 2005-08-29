@@ -40,36 +40,36 @@
 	<input type="text" name="event_url:utf8:ustring" id="event_url" size="50" tal:attributes="value python:here.getVersionProperty('event_url')" />
 </div>
 <div class="field">
-	<label for="" i18n:translate="">Details (HTML)</label>
+	<label for="details" i18n:translate="">Details (HTML)</label>
 	<span tal:replace="structure python:here.Epoz('details:utf8:ustring', data=here.getVersionLocalProperty('details', curr_lang), toolbox='', lang=here.gl_get_selected_language(), style='width: 400px; height: 200px; border: 1px solid #000000;')" />
 </div>
-<div class="field">
-	<label for="" i18n:translate="">On front</label>
-	<input type="checkbox" name="topitem" tal:attributes="checked python:here.getVersionProperty('topitem')==1" />
+<div class="field-inline">
+	<label for="topitem" i18n:translate="">On front</label>
+	<input type="checkbox" name="topitem" id="topitem" value="" tal:attributes="checked python:here.getVersionProperty('topitem')==1" />
 </div>
 <div class="field">
-	<label for="" i18n:translate="">Type</label>
-	<select name="event_type:utf8:ustring">
+	<label for="event_type" i18n:translate="">Type</label>
+	<select name="event_type:utf8:ustring" id="event_type">
 		<option value=""></option>
 		<option tal:repeat="eventtype eventtypes"
 			tal:attributes="value eventtype/id; selected python:eventtype.id==here.getVersionProperty('event_type')" tal:content="eventtype/title"  i18n:translate="">event</option>
 	</select>
 </div>
 <div class="field">
-	<label for="" i18n:translate="">Contact person</label>
-	<input type="text" name="contact_person:utf8:ustring" size="50" tal:attributes="value python:here.getVersionProperty('contact_person')" />
+	<label for="contact_person" i18n:translate="">Contact person</label>
+	<input type="text" name="contact_person:utf8:ustring" id="contact_person" size="50" tal:attributes="value python:here.getVersionProperty('contact_person')" />
 </div>
 <div class="field">
-	<label for="" i18n:translate="">Contact email address</label>
-	<input type="text" name="contact_email:utf8:ustring" size="50" tal:attributes="value python:here.getVersionProperty('contact_email')" />
+	<label for="contact_email" i18n:translate="">Contact email address</label>
+	<input type="text" name="contact_email:utf8:ustring" id="contact_email" size="50" tal:attributes="value python:here.getVersionProperty('contact_email')" />
 </div>
 <div class="field">
-	<label for="" i18n:translate="">Contact phone</label>
-	<input type="text" name="contact_phone:utf8:ustring" size="50" tal:attributes="value python:here.getVersionProperty('contact_phone')" />
+	<label for="contact_phone" i18n:translate="">Contact phone</label>
+	<input type="text" name="contact_phone:utf8:ustring" id="contact_phone" size="50" tal:attributes="value python:here.getVersionProperty('contact_phone')" />
 </div>
 <div class="field">
-	<label for="" i18n:translate="">Contact fax</label>
-	<input type="text" name="contact_fax:utf8:ustring" size="50" tal:attributes="value python:here.getVersionProperty('contact_fax')" />
+	<label for="contact_fax" i18n:translate="">Contact fax</label>
+	<input type="text" name="contact_fax:utf8:ustring" id="contact_fax" size="50" tal:attributes="value python:here.getVersionProperty('contact_fax')" />
 </div>
 </tal:block>
 

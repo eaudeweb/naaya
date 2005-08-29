@@ -14,7 +14,7 @@
 	<td><input type="text" name="location_address" value="" size="50" /></td>
 </tr>
 <tr>
-	<td class="form-label">Location url</td>
+	<td class="form-label">Location URL</td>
 	<td><input type="text" name="location_url" value="http://" size="50" /></td>
 </tr>
 <tr>
@@ -30,11 +30,11 @@
 	<td><input type="text" name="host" value="" size="50" /></td>
 </tr>
 <tr>
-	<td class="form-label">Agenda url</td>
+	<td class="form-label">Agenda URL</td>
 	<td><input type="text" name="agenda_url" value="" size="50" /></td>
 </tr>
 <tr>
-	<td class="form-label">Event url</td>
+	<td class="form-label">Event URL</td>
 	<td><input type="text" name="event_url" value="http://" size="50" /></td>
 </tr>
 <tr>
