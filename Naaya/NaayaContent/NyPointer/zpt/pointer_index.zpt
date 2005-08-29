@@ -8,6 +8,7 @@
 	</tal:block>
 	<a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><img src="/misc_/Naaya/checkin" border="0" alt="Version control" i18n:attributes="alt" /></a>
 </tal:block>
+
 <table border="0" cellspacing="2" cellpadding="2">
 <tr>
 	<th i18n:translate="">Released</th>
