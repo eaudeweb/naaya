@@ -31,72 +31,63 @@ function fSet(ctrl, value)
 </script>
 
 <form name="frmAdd" method="post" tal:attributes="action string:${here/absolute_url}/process_add">
-<table border="0" cellspacing="2" cellpadding="2">
-<tr>
-	<td i18n:translate="">Posting language</td>
-	<td tal:define="selected_language here/gl_get_selected_language">
-		<select name="lang">
-			<option tal:repeat="item here/gl_get_languages_mapping"
-				tal:attributes="value python:item['code']; selected python:item['code']==selected_language"
-				tal:content="python:item['name']" />
-		</select>
-	</td>
-</tr>
-<tr>
-	<td i18n:translate="">Title</td>
-	<td><input type="text" name="title:utf8:ustring" size="50" /></td>
-</tr>
-<tr>
-	<td valign="top" i18n:translate="">Description</td>
-	<td><span tal:replace="structure python:here.Epoz('description:utf8:ustring', data='', toolbox='', lang=here.gl_get_selected_language(), style='width: 400px; height: 200px; border: 1px solid #000000;')" /></td>
-</tr>
-<tr tal:define="coverage_glossary here/get_coverage_glossary">
-	<td i18n:translate="">Coverage</td>
-	<td>
-		<input type="text" name="coverage:utf8:ustring" size="50" />
-		<tal:block tal:condition="python:coverage_glossary is not None">
-			<input type="button" value="Pick" tal:attributes="onclick string:javascript:fPick('${coverage_glossary/absolute_url}/GlossMap_html?ctrl=coverage');">
-		</tal:block>
-	</td>
-</tr>
-<tr tal:define="keywords_glossary here/get_keywords_glossary">
-	<td i18n:translate="">Keywords</td>
-	<td>
-		<input type="text" name="keywords:utf8:ustring" size="50" />
-		<tal:block tal:condition="python:keywords_glossary is not None">
-			<input type="button" value="Pick" tal:attributes="onclick string:javascript:fPick('${keywords_glossary/absolute_url}/GlossMap_html?ctrl=keywords');">
-		</tal:block>
-	</td>
-</tr>
-<tr>
-	<td class="form-label" i18n:translate="">Release date (<em>dd/mm/yyyy</em>)</td>
-	<td><input type="text" name="releasedate" size="20"/></td>
-</tr>
-<tr>
-	<td valign="top" i18n:translate="">Body (HTML)</td>
-	<td><span tal:replace="structure python:here.Epoz('body:utf8:ustring', data='', toolbox='%s/toolbox_html?gallery=1' % here.absolute_url(), lang=here.gl_get_selected_language(), style='width: 465px; height: 250px; border: 1px solid #000000;')" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">On front</td>
-	<td><input type="checkbox" name="topitem" /></td>
-</tr>
-<tr>
-	<td valign="top" i18n:translate="">Concerned URL</td>
-	<td><input type="text" name="resourceurl" size="50" value="http://" /></td>
-</tr>
-<tr>
-	<td valign="top" i18n:translate="">Source</td>
-	<td><input type="text" name="source:utf8:ustring" size="50" value="" /></td>
-</tr>
-<tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
-	<td><span tal:replace="record/name"/></td>
-	<td tal:content="structure python:record.render(record.defaultvalue)">dynamic html control</td>
-</tr>
-<tr>
-	<td></td>
-	<td><input type="submit" value="Submit" i18n:attributes="value" /></td>
-</tr>
-</table>
+<div class="field-inline" tal:define="selected_language here/gl_get_selected_language">
+	<label i18n:translate="" for="lang">Posting language</label>
+	<select name="lang" id="lang">
+		<option tal:repeat="item here/gl_get_languages_mapping"
+			tal:attributes="value python:item['code']; selected python:item['code']==selected_language"
+			tal:content="python:item['name']" />
+	</select>
+</div>
+<div class="field">
+	<label for="title" i18n:translate="">Title</label>
+	<input type="text" name="title:utf8:ustring" id="title" size="50" />
+</div>
+<div class="field">
+	<label for="description" i18n:translate="">Description</label>
+	<span tal:replace="structure python:here.Epoz('description:utf8:ustring', data='', toolbox='', lang=here.gl_get_selected_language(), style='width: 400px; height: 200px; border: 1px solid #000000;')" />
+</div>
+<div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
+	<label for="coverage" i18n:translate="">Coverage</label>
+	<input type="text" name="coverage:utf8:ustring" id="coverage" size="50" />
+	<tal:block tal:condition="python:coverage_glossary is not None">
+		<label for="pick-coverage" class="invisible">Pick coverage</label><input type="button" id="pick-coverage" value="Pick" tal:attributes="onclick string:javascript:fPick('${coverage_glossary/absolute_url}/GlossMap_html?ctrl=coverage');" />
+	</tal:block>
+</div>
+<div class="field" tal:define="keywords_glossary here/get_keywords_glossary">
+	<label for="keywords" i18n:translate="">Keywords</label>
+	<input type="text" name="keywords:utf8:ustring" id="keywords" size="50" />
+	<tal:block tal:condition="python:keywords_glossary is not None">
+		<label for="pick-keywords" class="invisible">Pick keywords</label><input type="button" value="Pick" id="pick-keywords" tal:attributes="onclick string:javascript:fPick('${keywords_glossary/absolute_url}/GlossMap_html?ctrl=keywords');">
+	</tal:block>
+</div>
+<div class="field">
+	<label for="releasedate" i18n:translate="">Release date (<em>dd/mm/yyyy</em>)</label>
+	<input type="text" name="releasedate" id="releasedate" size="20" />
+</div>
+<div class="field">
+	<label for="body" i18n:translate="">Body (HTML)</label>
+	<span tal:replace="structure python:here.Epoz('body:utf8:ustring', data='', toolbox='%s/toolbox_html?gallery=1' % here.absolute_url(), lang=here.gl_get_selected_language(), style='width: 465px; height: 250px; border: 1px solid #000000;')" />
+</div>
+<div class="field-inline">
+	<label for="topitem" i18n:translate="">On front</label>
+	<input type="checkbox" name="topitem" id="topitem" value="" />
+</div>
+<div class="field">
+	<label for="resourceurl" i18n:translate="">Concerned URL</label>
+	<input type="text" name="resourceurl" id="resourceurl" size="50" value="http://" />
+</div>
+<div class="field">
+	<label for="source" i18n:translate="">Source</label>
+	<input type="text" name="source:utf8:ustring" id="source" size="50" value="" />
+</div>
+<div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
+	<label tal:attributes="for record/id" i18n:translate=""><span tal:replace="record/name"/></label>
+	<tal:block tal:content="structure python:record.render(record.defaultvalue)">dynamic html control</tal:block>
+</div>
+<div class="field">
+	<input type="submit" value="Submit" i18n:attributes="value" />
+</div>
 </form>
 
 <span tal:replace="structure here/standard_html_footer" />
