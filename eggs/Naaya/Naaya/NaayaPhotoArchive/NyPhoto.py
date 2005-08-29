@@ -54,6 +54,10 @@ def addNyPhoto(self, id='', title='', author='', source='', description='', sort
     except: quality = DEFAULT_QUALITY
     if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
     displays = self.displays.copy()
+    if file != '':
+        if hasattr(file, 'filename'):
+            if file.filename == '': file = ''
+        else: file = ''
     if self.checkPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
@@ -313,9 +317,12 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, File):
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if self.wl_isLocked():
             raise ResourceLockedError, "File is locked via WebDAV"
+        if file != '':
+            if hasattr(file, 'filename'):
+                if file.filename != '':
+                    self.manage_upload(file)
+                    self.managePurgeDisplays()
         if lang is None: lang = self.get_default_language()
-        self.manage_upload(file)
-        self.managePurgeDisplays()
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
