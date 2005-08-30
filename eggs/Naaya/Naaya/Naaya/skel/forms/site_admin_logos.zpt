@@ -12,7 +12,7 @@
 </ul>
 </div>
 
-<form method="post" tal:attributes="action string:${site_url}/admin_logos" enctype="multipart/form-data">
+<form method="post" tal:attributes="action string:${site_url}/admin_logos" enctype="multipart/form-data" style="clear:both;">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 <tr>
 	<td valign="top" i18n:translate="">Logo</td>
