@@ -462,16 +462,16 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'updateBasketOfApprovals')
-    def updateBasketOfApprovals(self, REQUEST=None):
+    def updateBasketOfApprovals(self, appids=[], delids=[], REQUEST=None):
         """ """
-        for id in self.utConvertToList(REQUEST.get('app', [])):
+        for id in self.utConvertToList(appids):
             try:
                 ob = self._getOb(id)
                 ob.approveThis()
                 self.recatalogNyObject(ob)
             except:
                 pass
-        for id in self.utConvertToList(REQUEST.get('del', [])):
+        for id in self.utConvertToList(delids):
             try: self._delObject(id)
             except: pass
         if REQUEST:
@@ -497,7 +497,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     security.declareProtected(PERMISSION_VALIDATE_OBJECTS, 'updateBasketOfInvalidObjects')
     def updateBasketOfInvalidObjects(self, id=[], REQUEST=None):
         """ """
-        ids_list = self.utConvertToList(REQUEST.get('id', []))
+        ids_list = self.utConvertToList(id)
         validated_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
         checked_details = []
         i=0
