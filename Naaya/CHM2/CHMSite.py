@@ -283,6 +283,10 @@ class CHMSite(NySite):
                 l_upcoming_events.append(event_obj)
         return l_upcoming_events
 
+    def list_glossaries(self):
+        #return all the glossaries in this portal
+        return self.objectValues('CHM Glossary Centre')
+
     #rdf channels
     security.declareProtected(view, 'whatsnew_rdf')
     def whatsnew_rdf(self):
