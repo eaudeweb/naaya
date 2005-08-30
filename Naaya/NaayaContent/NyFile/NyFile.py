@@ -164,13 +164,13 @@ class NyFile(NyAttributes, NyItem, file_item, NyVersioning, NyCheckControl, NyVa
     def syndicateThis(self, lang=None):
         l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
-        l_rdf.append(self.syndicateThisHeader())
-        l_rdf.append(self.syndicateThisCommon(lang))
-        l_rdf.append('<dc:type>Text</dc:type>')
-        l_rdf.append('<dc:format>application</dc:format>')
-        l_rdf.append('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        l_rdf.append(self.syndicateThisFooter())
-        return ''.join(l_rdf)
+        r.append(self.syndicateThisHeader())
+        r.append(self.syndicateThisCommon(lang))
+        r.append('<dc:type>Text</dc:type>')
+        r.append('<dc:format>application</dc:format>')
+        r.append('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
+        r.append(self.syndicateThisFooter())
+        return ''.join(r)
 
     security.declarePrivate('objectDataForVersion')
     def objectDataForVersion(self):
