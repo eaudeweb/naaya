@@ -35,7 +35,7 @@ class combosync_tool:
         """ """
         l_mastercombo = '<select onchange="OnChangeTopic()" name="%s" style="width: 150px;">' % p_name
         for i in range(0,20):
-            l_mastercombo += '<option value="%s">&nbsp;</option>' % i
+            l_mastercombo += '<option value="">&nbsp;</option>'
         l_mastercombo += '</select>'
         return l_mastercombo
 
@@ -43,7 +43,7 @@ class combosync_tool:
         """ """
         l_mastercombo = '<select onchange="OnChangeScheme()" name="%s" style="width: 150px;">' % p_name
         for i in range(0,20):
-            l_mastercombo += '<option value="%s">&nbsp;</option>' % i
+            l_mastercombo += '<option value="">&nbsp;</option>'
         l_mastercombo += '</select>'
         return l_mastercombo
 
