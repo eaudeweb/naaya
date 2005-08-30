@@ -69,7 +69,6 @@ class FormsTool(Folder):
 
     def getContent(self, p_context={}, p_page=None):
         p_context['skin_files_path'] = self.getLayoutTool().getSkinFilesPath()
-        l_template = self._getOb(p_page)
-        return l_template(p_context)
+        return self._getOb(p_page)(p_context)
 
 InitializeClass(FormsTool)

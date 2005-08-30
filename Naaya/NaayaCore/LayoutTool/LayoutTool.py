@@ -89,23 +89,13 @@ class LayoutTool(Folder, combosync_tool):
         """ """
         pass
 
-    def getCurrentSkinId(self):
-        return self.__current_skin_id
-
-    def getCurrentSkinSchemeId(self):
-        return self.__current_skin_scheme_id
-
-    def getCurrentSkin(self):
-        return self._getOb(self.getCurrentSkinId())
-
+    def getSkinsList(self): return self.objectValues(METATYPE_SKIN)
+    def getCurrentSkinId(self): return self.__current_skin_id
+    def getCurrentSkinSchemeId(self): return self.__current_skin_scheme_id
+    def getCurrentSkin(self): return self._getOb(self.getCurrentSkinId())
     def getCurrentSkinSchemes(self):
-        try:
-            return self._getOb(self.getCurrentSkinId()).getSchemes()
-        except:
-            return []
-
-    def getSkinsList(self):
-        return self.objectValues(METATYPE_SKIN)
+        try: return self._getOb(self.getCurrentSkinId()).getSchemes()
+        except: return []
 
     def getSkinFilesPath(self):
         return '/%s/%s' % (self._getOb(self.getCurrentSkinId()).absolute_url(1), self.getCurrentSkinSchemeId())
@@ -121,9 +111,8 @@ class LayoutTool(Folder, combosync_tool):
 
     def getContent(self, p_context={}, p_page=None):
         l_skin = self._getOb(self.getCurrentSkinId())
-        l_template = l_skin._getOb(p_page)
         p_context['skin_files_path'] = '/%s/%s' % (l_skin.absolute_url(1), self.getCurrentSkinSchemeId())
-        return l_template(p_context)
+        return l_skin._getOb(p_page)(p_context)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageLayout')
