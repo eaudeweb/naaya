@@ -63,7 +63,7 @@ function fSet(ctrl, value)
 	<label for="keywords" i18n:translate="">Keywords</label>
 	<input type="text" name="keywords:utf8:ustring" id="keywords" size="50" tal:attributes="value python:here.getVersionLocalProperty('keywords', curr_lang)" />
 	<tal:block tal:condition="python:keywords_glossary is not None">
-		<label for="pick-keywords" class="invisible">Pick keywords</label><input type="button" value="Pick" id="pick-keywords" tal:attributes="onclick string:javascript:fPick('${keywords_glossary/absolute_url}/GlossMap_html?ctrl=keywords&amp;lang=${curr_lang}');" />
+		<label for="pick-keywords" class="invisible">Pick coverage</label><input type="button" value="Pick" id="pick-keywords" tal:attributes="onclick string:javascript:fPick('${keywords_glossary/absolute_url}/GlossMap_html?ctrl=keywords&amp;lang=${curr_lang}');" />
 	</tal:block>
 </div>
 <div class="field">
