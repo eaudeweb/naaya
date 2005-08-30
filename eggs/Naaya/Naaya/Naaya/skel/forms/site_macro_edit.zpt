@@ -78,7 +78,7 @@ function fSet(ctrl, value)
 <tal:block metal:define-slot="custom_properties"/>
 <div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
 	<label tal:attributes="for record/id" i18n:translate=""><span tal:replace="record/name" /></label>
-	<tal:block tal:content="structure python:record.render(here.getPropertyValue(record.id, curr_lang, 1))">dynamic html control</tal:block>
+	<tal:block tal:content="structure python:record.render(here.getPropertyValue(record.id, curr_lang))">dynamic html control</tal:block>
 </div>
 <div class="field">
 	<input type="hidden" name="lang" tal:attributes="value curr_lang" />
