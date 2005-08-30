@@ -9,56 +9,51 @@
 <tal:block metal:fill-slot="custom_properties"
 	define="languages here/get_languages_mapping;
 			curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
-<tr>
-	<td valign="top" i18n:translate="">Details (HTML)</td>
-	<td><span tal:replace="structure python:here.Epoz('details:utf8:ustring', data=here.getVersionLocalProperty('details', curr_lang), toolbox='', lang=here.gl_get_selected_language(), style='width: 400px; height: 200px; border: 1px solid #000000;')" /></td>
-</tr>
-<tr>
-	<td valign="top" i18n:translate="">Expires (<em>dd/mm/yyyy</em>)</td>
-	<td><input type="text" name="expirationdate" size="10" 
+<div class="field">
+	<label for="details" i18n:translate="">Details (HTML)</label>
+	<span tal:replace="structure python:here.Epoz('details:utf8:ustring', data=here.getVersionLocalProperty('details', curr_lang), toolbox='', lang=here.gl_get_selected_language(), style='width: 400px; height: 200px; border: 1px solid #000000;')" />
+</div>
+<div class="field">
+	<label for="expirationdate" i18n:translate="">Expires (<em>dd/mm/yyyy</em>)</label>
+	<input type="text" name="expirationdate" id="expirationdate" size="10" 
 		tal:attributes="value python:here.utConvertDateTimeObjToString(here.getVersionProperty('expirationdate'))" />
-	</td>
-</tr>
-<tr>
-	<td i18n:translate="">Top story</td>
-	<td><input type="checkbox" name="topitem" tal:attributes="checked python:here.getVersionProperty('topitem')==1" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">Small picture</td>
-	<td><input type="file" name="smallpicture" value="" /></td>
-</tr>
+</div>
+<div class="field-inline">
+	<label for="topitem" i18n:translate="">Top story</label>
+	<input type="checkbox" name="topitem" id="topitem" tal:attributes="checked python:here.getVersionProperty('topitem')==1" />
+</div>
+<div class="field">
+	<label for="smallpicture" i18n:translate="">Small picture</label>
+	<input type="file" name="smallpicture" id="smallpicture" value="" />
+</div>
 <tal:block tal:condition="python:here.hasSmallPicture(1)">
-<tr>
-	<td></td>
-	<td><img src="getSmallPicture?version=1" /></td>
-</tr>
-<tr>
-	<td></td>
-	<td><input type="checkbox" name="del_smallpicture" /> <span i18n:translate="" tal:omit-tag="">check this if you want do delete this picture</span></td>
-</tr>
+<div class="field">
+	<img src="getSmallPicture?version=1" />
+</div>
+<div class="field">
+	<input type="checkbox" name="del_smallpicture" id="del_smallpicture" /> <label for="del_smallpicture" i18n:translate="">check this if you want do delete this picture</label>
+</div>
 </tal:block>
-<tr>
-	<td i18n:translate="">Big picture</td>
-	<td><input type="file" name="bigpicture" value="" /></td>
-</tr>
+<div class="field">
+	<label for="bigpicture" i18n:translate="">Big picture</label>
+	<input type="file" name="bigpicture" id="bigpicture" value="" />
+</div>
 <tal:block tal:condition="python:here.hasBigPicture(1)">
-<tr>
-	<td></td>
-	<td><img src="getBigPicture?version=1" /></td>
-</tr>
-<tr>
-	<td></td>
-	<td><input type="checkbox" name="del_bigpicture" /> <span i18n:translate="" tal:omit-tag="">check this if you want do delete this picture</span></td>
-</tr>
+<div class="field">
+	<img src="getBigPicture?version=1" />
+</div>
+<div class="field">
+	<input type="checkbox" name="del_bigpicture" id="del_bigpicture" /> <label for="del_bigpicture" i18n:translate="">check this if you want do delete this picture</label>
+</div>
 </tal:block>
-<tr>
-	<td valign="top" i18n:translate="">Concerned URL</td>
-	<td><input type="text" name="resourceurl" size="50" tal:attributes="value python:here.getVersionProperty('resourceurl')" /></td>
-</tr>
-<tr>
-	<td valign="top" i18n:translate="">Source</td>
-	<td><input type="text" name="source" size="50" tal:attributes="value python:here.getVersionLocalProperty('source', curr_lang)" /></td>
-</tr>
+<div class="field">
+	<label for="resourceurl" i18n:translate="">Concerned URL</label>
+	<input type="text" name="resourceurl" id="resourceurl" size="50" tal:attributes="value python:here.getVersionProperty('resourceurl')" />
+</div>
+<div class="field">
+	<label for="source" i18n:translate="">Source</label>
+	<input type="text" name="source" id="source" size="50" tal:attributes="value python:here.getVersionLocalProperty('source', curr_lang)" />
+</div>
 </tal:block>
 
 </tal:block>

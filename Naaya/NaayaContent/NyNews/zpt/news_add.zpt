@@ -7,36 +7,35 @@
 </p>
 
 <tal:block metal:fill-slot="custom_properties">
-<tr>
-	<td valign="top" i18n:translate="">Details (HTML)</td>
-	<td><span tal:replace="structure python:here.Epoz('details:utf8:ustring', data='', toolbox='', lang=here.gl_get_selected_language(), style='width: 400px; height: 200px; border: 1px solid #000000;')" /></td>
-</tr>
-<tr>
-	<td valign="top" i18n:translate="">Expires (<em>dd/mm/yyyy</em>)</td>
-	<td><input type="text" name="expirationdate" size="10" 
+<div class="field">
+	<label for="details" i18n:translate="">Details (HTML)</label>
+	<span tal:replace="structure python:here.Epoz('details:utf8:ustring', data='', toolbox='', lang=here.gl_get_selected_language(), style='width: 400px; height: 200px; border: 1px solid #000000;')" />
+</div>
+<div class="field">
+	<label for="expirationdate" i18n:translate="">Expires (<em>dd/mm/yyyy</em>)</label>
+	<input type="text" name="expirationdate" id="expirationdate" size="10" 
 		tal:attributes="value python:here.utConvertDateTimeObjToString(here.ZopeTime()+30)" />
-	</td>
-</tr>
-<tr>
-	<td i18n:translate="">Top story</td>
-	<td><input type="checkbox" name="topitem" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">Small picture</td>
-	<td><input type="file" name="smallpicture" value="" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">Big picture</td>
-	<td><input type="file" name="bigpicture" value="" /></td>
-</tr>
-<tr>
-	<td valign="top" i18n:translate="">Concerned URL</td>
-	<td><input type="text" name="resourceurl" size="50" value="http://" /></td>
-</tr>
-<tr>
-	<td valign="top" i18n:translate="">Source</td>
-	<td><input type="text" name="source:utf8:ustring" size="50" value="" /></td>
-</tr>
+</div>
+<div class="field-inline">
+	<label for="topitem" i18n:translate="">Top story</label>
+	<input type="checkbox" name="topitem" id="topitem" />
+</div>
+<div class="field">
+	<label for="smallpicture" i18n:translate="">Small picture</label>
+	<input type="file" name="smallpicture" id="smallpicture" value="" />
+</div>
+<div class="field">
+	<label for="bigpicture" i18n:translate="">Big picture</label>
+	<input type="file" id="bigpicture" name="bigpicture" value="" />
+</div>
+<div class="field">
+	<label for="resourceurl" i18n:translate="">Concerned URL</label>
+	<input type="text" name="resourceurl" id="resourceurl" size="50" value="http://" />
+</div>
+<div class="field">
+	<label for="source" i18n:translate="">Source</label>
+	<input type="text" name="source:utf8:ustring" id="source" size="50" value="" />
+</div>
 </tal:block>
 
 </tal:block>
