@@ -7,26 +7,25 @@
 </p>
 
 <tal:block metal:fill-slot="custom_properties">
-<tr>
-	<td i18n:translate="">Upload new</td>
-	<td>
-		<input type="radio" name="source" value="file" checked="checked" />
-		<span i18n:translate="" tal:omit-tag="">File</span>
-		<input type="file" name="file" size="40" value="" />
-	</td>
-</tr>
-<tr>
-	<td></td>
-	<td>
-		<input type="radio" name="source" value="url" />
-		<span i18n:translate="" tal:omit-tag="">URL</span>
-		<input type="text" name="url" size="40" value="" />
-	</td>
-</tr>
-<tr>
-	<td i18n:translate="">Filename to download</td>
-	<td><input type="text" name="downloadfilename:utf8:ustring" size="40" value="" /></td>
-</tr>
+<div class="field">
+	<label i18n:translate="">Upload from</label>
+</div>
+<div class="field-inline">
+	<input type="radio" name="source" id="source-file" value="file" checked="checked" />
+	<label for="source-file" i18n:translate="">File</label>
+	<input type="file" name="file" id="file" size="40" value="" />
+	<label for="file" class="invisible" i18n:translate="">(local computer or network)</label>
+</div>
+<div class="field-inline">
+	<input type="radio" name="source" id="source-url" value="url" />
+	<label for="source-url" i18n:translate="">URL</label>
+	<input type="text" name="url" id="url" size="40" value="" />
+	<label for="url" class="invisible" i18n:translate="">(remote address)</label>
+</div>
+<div class="field">
+	<label for="downloadfilename" i18n:translate="">Filename to download</label>
+	<input type="text" name="downloadfilename:utf8:ustring" id="downloadfilename" size="40" value="" />
+</div>
 </tal:block>
 
 </tal:block>
