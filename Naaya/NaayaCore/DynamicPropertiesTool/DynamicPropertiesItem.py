@@ -68,12 +68,11 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
         """ """
         #create objects dynamic properties
         l_dp_dict = {}
-        #XXX
-        curr_lang = self.Localizer.get_languages_mapping()[0]['code']
+        lang = self.gl_get_selected_language()
         for dp in self.getDynamicProperties():
             l_dp_dict[dp.id] = dp.defaultvalue
         for l_object in self.getCatalogedObjects(self.id):
-            l_object.createDynamicProperties(l_dp_dict, curr_lang)
+            l_object.createDynamicProperties(l_dp_dict, lang)
         SimpleItem.inheritedAttribute('manage_afterAdd')(self, item, container)
 
     def manage_beforeDelete(self, item, container):
@@ -93,10 +92,10 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
             REQUEST.RESPONSE.redirect('manage_settings_html')
 
     security.declareProtected(view_management_screens, 'manageAddDynamicProperty')
-    def manageAddDynamicProperty(self, id='', searchable='', name='', type='', required='', defaultvalue='', values='', order='', REQUEST=None):
+    def manageAddDynamicProperty(self, id='', searchable='', name='', type='',
+        required='', defaultvalue='', values='', order='', REQUEST=None):
         """ """
-        #XXX
-        curr_lang = self.Localizer.get_languages_mapping()[0]['code']
+        lang = self.gl_get_selected_language()
         if searchable: searchable=1
         else: searchable=0
         if required: required=1
@@ -106,13 +105,15 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
         self.addDynamicProperty(id, searchable, name, type, required, defaultvalue, values, order)
         #create objects dynamic properties
         for l_object in self.getCatalogedObjects(self.id):
-            l_object.createProperty(id, defaultvalue, curr_lang)
+            l_object.createProperty(id, defaultvalue, lang)
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_properties_html')
 
     security.declareProtected(view_management_screens, 'manageUpdateDynamicProperty')
-    def manageUpdateDynamicProperty(self, id='', searchable='', name='', type='', required='', defaultvalue='', values='', order='', REQUEST=None):
+    def manageUpdateDynamicProperty(self, id='', searchable='', name='', type='',
+        required='', defaultvalue='', values='', order='', REQUEST=None):
         """ """
+        lang = self.gl_get_selected_language()
         if searchable: searchable=1
         else: searchable=0
         if required: required=1
@@ -122,7 +123,7 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
         self.updateDynamicProperty(id, searchable, name, type, required, defaultvalue, values, order)
         #update objects dynamic properties
         for l_object in self.getCatalogedObjects(self.id):
-            l_object.createProperty(id, defaultvalue)
+            l_object.createProperty(id, defaultvalue, lang)
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_properties_html')
 
