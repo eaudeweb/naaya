@@ -164,14 +164,14 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
     security.declarePrivate('syndicateThis')
     def syndicateThis(self, lang=None):
         if lang is None: lang = self.gl_get_selected_language()
-        l_rdf = []
-        l_rdf.append(self.syndicateThisHeader())
-        l_rdf.append(self.syndicateThisCommon(lang))
-        l_rdf.append('<dc:type>Text</dc:type>')
-        l_rdf.append('<dc:format>text</dc:format>')
-        l_rdf.append('<dc:source>%s</dc:source>' % self.utXmlEncode(self.getLocalProperty('source', lang)))
-        l_rdf.append(self.syndicateThisFooter())
-        return ''.join(l_rdf)
+        r = []
+        r.append(self.syndicateThisHeader())
+        r.append(self.syndicateThisCommon(lang))
+        r.append('<dc:type>Text</dc:type>')
+        r.append('<dc:format>text</dc:format>')
+        r.append('<dc:source>%s</dc:source>' % self.utXmlEncode(self.getLocalProperty('source', lang)))
+        r.append(self.syndicateThisFooter())
+        return ''.join(r)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
