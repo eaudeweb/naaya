@@ -435,6 +435,10 @@
 		display: none;
 	}
 
+	.field-inline .invisible {
+		display: none;
+	}
+
 	/*	EPOZ buttons	*/
 	#epoz_button_strikethrough {display:none;}
 	#epoz_button_subscript {display:none;}
