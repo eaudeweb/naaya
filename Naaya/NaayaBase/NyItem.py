@@ -28,10 +28,10 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 
 #Product imports
-from constants import *
 from NyBase import NyBase
+from NyPermissions import NyPermissions
 
-class NyItem(SimpleItem, NyBase):
+class NyItem(SimpleItem, NyBase, NyPermissions):
     """ """
 
     manage_options = (

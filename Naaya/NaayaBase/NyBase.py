@@ -35,24 +35,6 @@ class NyBase:
 
     security = ClassSecurityInfo()
 
-    security.declarePrivate('getObjectOwner')
-    def getObjectOwner(self):
-        o = None
-        o = self.owner_info()
-        if hasattr(o, "has_key") and o.has_key('id'):
-            o = o['id']
-        return o
-
-    security.declarePrivate('getObjectOwnerFullName')
-    def getObjectOwnerFullName(self):
-        ownerid = self.getObjectOwner()
-        user_obj = self.getAuthenticationTool().getUser(ownerid)
-        if user_obj is not None:
-            owner_full_name = user_obj.firstname + ' '+ user_obj.lastname
-            return owner_full_name
-        else:
-            return ownerid
-
     security.declarePrivate('approveThis')
     def approveThis(self, approved=1):
         self.approved = approved
@@ -77,43 +59,6 @@ class NyBase:
         #an object is considered to be translated into a language if
         #the value of the 'title' property in that language is not an empty string
         return len(self.getLocalProperty('title', lang)) > 0
-
-    #security
-    def checkPermission(self, p_permission):
-        return getSecurityManager().checkPermission(p_permission, self)
-
-    def checkPermissionAdministrate(self):
-        return self.checkPermission(PERMISSION_ADMINISTRATE)
-
-    def checkPermissionPublishObjects(self):
-        return self.checkPermission(PERMISSION_PUBLISH_OBJECTS)
-
-    def checkPermissionEditObjects(self):
-        return self.checkPermission(PERMISSION_EDIT_OBJECTS)
-
-    def checkPermissionCopyObjects(self):
-        return self.checkPermission(PERMISSION_PUBLISH_OBJECTS)
-
-    def checkPermissionCutObjects(self):
-        return self.checkPermission(PERMISSION_PUBLISH_OBJECTS)
-
-    def checkPermissionPasteObjects(self):
-        return self.checkPermission(PERMISSION_PUBLISH_OBJECTS)
-
-    def checkPermissionDeleteObjects(self):
-        return self.checkPermission(PERMISSION_DELETE_OBJECTS)
-
-    def checkPermissionValidateObjects(self):
-        return self.checkPermission(PERMISSION_VALIDATE_OBJECTS)
-
-    def checkPermissionTranslatePages(self):
-        return self.checkPermission(PERMISSION_TRANSLATE_PAGES)
-
-    def checkPermissionEditObject(self):
-        return self.checkPermissionEditObjects() and (self.checkPermissionPublishObjects() or (self.getObjectOwner() == self.REQUEST.AUTHENTICATED_USER.getUserName()))
-
-    def checkPermissionDeleteObject(self):
-        return self.checkPermissionDeleteObjects() and self.checkPermissionPublishObjects()
 
     #Syndication RDF
     security.declarePrivate('syndicateThisHeader')
