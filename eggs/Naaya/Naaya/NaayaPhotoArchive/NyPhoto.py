@@ -22,7 +22,7 @@ from cStringIO import StringIO
 import PIL.Image
 
 #Zope imports
-from OFS.Image import File, Image, cookId, getImageInfo
+from OFS.Image import Image, cookId
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -64,12 +64,14 @@ def addNyPhoto(self, id='', title='', author='', source='', description='', sort
         approved, approved_by = 0, None
     releasedate = self.utGetTodayDate()
     if lang is None: lang = self.gl_get_selected_language()
-    content_type, width, height = getImageInfo(file)
     ob = NyPhoto(id, title, author, source, description, sortorder, topitem,
-        onfrontfrom, onfrontto, file, precondition, content_type, width, height,
-        quality, displays, approved, approved_by, releasedate, lang)
+        onfrontfrom, onfrontto, precondition, content_type, quality,
+        displays, approved, approved_by, releasedate, lang)
     self.gl_add_languages(ob)
     self._setObject(id, ob)
+    #handle image upload
+    ob = self._getOb(id)
+    ob.manage_upload(file)
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'manage_addNyPhoto_html' or l_referer.find('manage_addNyPhoto_html') != -1:
@@ -78,7 +80,7 @@ def addNyPhoto(self, id='', title='', author='', source='', description='', sort
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, File):
+class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
     """ """
 
     meta_type = METATYPE_NYPHOTO
@@ -92,7 +94,7 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, File):
         )
         +
         (
-            File.manage_options[1],
+            Image.manage_options[1],
         )
         +
         NyItem.manage_options
@@ -106,10 +108,12 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, File):
     description = LocalProperty('description')
 
     def __init__(self, id, title, author, source, description, sortorder,
-        topitem, onfrontfrom, onfrontto, file, precondition, content_type,
-        width, height, quality, displays, approved, approved_by, releasedate, lang):
+        topitem, onfrontfrom, onfrontto, precondition, content_type,
+        quality, displays, approved, approved_by, releasedate, lang):
         """ """
-        File.__dict__['__init__'](self, id, title, file, content_type, precondition)
+        #image stuff
+        self.content_type = content_type
+        self.precondition = precondition
         self.id = id
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('author', lang, author)
@@ -119,8 +123,6 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, File):
         self.topitem = topitem
         self.onfrontfrom = onfrontfrom
         self.onfrontto = onfrontto
-        self.width = width
-        self.height = height
         self.quality = quality
         self.displays = displays
         self.approved = approved
