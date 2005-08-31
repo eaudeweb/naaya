@@ -74,7 +74,7 @@ class DynamicPropertiesTool(Folder, utils):
     security.declareProtected(view, 'getDynamicSearchableProperties')
     def getDynamicSearchableProperties(self, p_metatype):
         l_dp_item = self._getOb(p_metatype, None)
-        if l_dp_item: return self.utFilterObjsListByAttr(l_dp_item.getDynamicProperties(), 'searchable', 1)
+        if l_dp_item: return [x for x in l_dp_item.getDynamicProperties() if x.searchable==1]
         else: return []
 
 InitializeClass(DynamicPropertiesTool)
