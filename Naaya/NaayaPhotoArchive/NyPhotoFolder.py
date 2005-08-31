@@ -96,7 +96,7 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
     def get_photofolder_object(self): return self
     def get_photofolder_path(self, p=0): return self.absolute_url(p)
     def getObjects(self): return self.objectValues(METATYPE_NYPHOTO)
-    def getPendingObjects(self): return self.utFilterObjsListByAttr(self.getObjects(), 'approved', 0)
+    def getPendingObjects(self): return [x for x in self.getObjects() if x.approved==0]
     def getPendingContent(self): return self.getPendingObjects()
     def getPublishedObjects(self): return [x for x in self.getObjects() if x.approved==1]
     def getPendingFolders(self): return []
