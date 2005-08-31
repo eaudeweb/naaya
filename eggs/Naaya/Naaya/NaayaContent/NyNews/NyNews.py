@@ -81,7 +81,7 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='', s
     ob.setBigPicture(bigpicture)
     self._setObject(id, ob)
     if REQUEST is not None:
-        l_referer = self.utStrSplit(REQUEST['HTTP_REFERER'], '/')[-1]
+        l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'news_manage_add' or l_referer.find('news_manage_add') != -1:
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'news_add_html':
