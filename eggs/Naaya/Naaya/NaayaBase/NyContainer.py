@@ -29,8 +29,9 @@ from AccessControl import ClassSecurityInfo
 
 #Product imports
 from NyBase import NyBase
+from NyPermissions import NyPermissions
 
-class NyContainer(Folder, NyBase):
+class NyContainer(Folder, NyBase, NyPermissions):
     """ """
 
     manage_options = (

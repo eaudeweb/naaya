@@ -56,7 +56,7 @@ class NyVersioning(utils):
         #returns the data for a version entry
         try: return self.__versions[p_version_uid][2]
         except: return None
-        
+
     def __delete_version(self, p_version_uid):
         #deletes a version entry
         raise EXCEPTION_NOTIMPLEMENTED

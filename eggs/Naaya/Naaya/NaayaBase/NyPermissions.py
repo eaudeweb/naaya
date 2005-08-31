@@ -34,16 +34,24 @@ class NyPermissions:
 
     security = ClassSecurityInfo()
 
-    security.declarePrivate('getObjectOwner')
     def getObjectOwner(self):
-        ownerid = None
-        ownerinfo = self.owner_info()
-        if hasattr(ownerinfo, "has_key") and ownerinfo.has_key('id'):
-            ownerid = ownerinfo['id']
-        return ownerid
+        o = None
+        o = self.owner_info()
+        if hasattr(o, "has_key") and o.has_key('id'):
+            o = o['id']
+        return o
 
     def checkPermission(self, p_permission):
         return getSecurityManager().checkPermission(p_permission, self)
+
+    def checkPermissionAdministrate(self):
+        return self.checkPermission(PERMISSION_ADMINISTRATE)
+
+    def checkPermissionValidateObjects(self):
+        return self.checkPermission(PERMISSION_VALIDATE_OBJECTS)
+
+    def checkPermissionTranslatePages(self):
+        return self.checkPermission(PERMISSION_TRANSLATE_PAGES)
 
     def checkPermissionAddObjects(self):
         return self.checkPermission(PERMISSION_ADMINISTRATE)
