@@ -20,6 +20,10 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains the base class of Naaya architecture.
+"""
+
 #Python imports
 
 #Zope imports
@@ -31,12 +35,18 @@ from AccessControl.Permissions import view_management_screens
 from constants import *
 
 class NyBase:
-    """ """
+    """
+    The base class of Naaya architecture. It implements basic functionality
+    common to all classes.
+    """
 
     security = ClassSecurityInfo()
 
     security.declarePrivate('approveThis')
     def approveThis(self, approved=1):
+        """
+        
+        """
         self.approved = approved
         self._p_changed = 1
 
