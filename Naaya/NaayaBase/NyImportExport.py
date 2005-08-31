@@ -27,7 +27,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
-from Products.NaayaBase.constants import *
+from constants import *
 from managers.import_parser import import_parser
 
 class NyImportExport:
