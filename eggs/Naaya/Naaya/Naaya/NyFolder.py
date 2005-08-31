@@ -78,7 +78,7 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     ob = self._getOb(id)
     ob.createPublicInterface()
     if REQUEST is not None:
-        referer = self.utStrSplit(REQUEST['HTTP_REFERER'], '/')[-1]
+        referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if referer == 'folder_manage_add' or referer.find('folder_manage_add') != -1:
             return self.manage_main(self, REQUEST, update_menu=1)
         elif referer == 'folder_add_html':
