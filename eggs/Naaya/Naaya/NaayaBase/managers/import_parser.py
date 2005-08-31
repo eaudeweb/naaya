@@ -48,9 +48,14 @@ class saxstack_struct:
         self.content = ''
 
 class import_handler(ContentHandler):
-    """ """
+    """
+    Implements the ContentHandler callback interface.
+    """
 
     def __init__(self):
+        """
+        Initialize the I{stack} and I{root} variables.
+        """
         self.root = None
         self.stack = []
 
@@ -99,22 +104,29 @@ class import_handler(ContentHandler):
             self.stack[-1].content += content.strip(' \t')
 
 class import_parser:
-    """ """
-
-    def __init__(self):
-        """ """
-        pass
+    """
+    Parses exported XML files and returns the results.
+    If the XML is not valid an error is signaled.
+    """
 
     def parse(self, p_content):
-        """ """
+        """
+        Parses an XML.
+        @param p_content: the content of an XML file
+        @type p_content: string
+        @return:
+            - If an error occures a tuple (None, error) is returned.
+            - If no error, then a tuple (handler, '') is returned. The data
+            stored in the handler object will be imported in the current
+            portal.
+        """
         l_handler = import_handler()
         l_parser = make_parser()
         l_parser.setContentHandler(l_handler)
         l_inpsrc = InputSource()
         l_inpsrc.setByteStream(StringIO(p_content))
-        #try:
-        l_parser.parse(l_inpsrc)
-        #l_handler.testImportTree()
-        return (l_handler, '')
-        #except Exception, error:
-        #    return (None, error)
+        try:
+            l_parser.parse(l_inpsrc)
+            return (l_handler, '')
+        except Exception, error:
+            return (None, error)
