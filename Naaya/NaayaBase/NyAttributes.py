@@ -20,6 +20,10 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains a class for customizing attribute access.
+"""
+
 #Python imports
 
 #Zope imports
@@ -30,7 +34,11 @@ class NyAttributes:
     """ """
 
     def __getattr__(self, name):
-        #used by the catalog to index objects
+        """
+        Called when an attribute lookup has not found the attribute in the usual places.
+        @param name: the attribute name
+        @return: should return the attribute value or raise an I{AttributeError} exception.
+        """
         if name.startswith('objectkeywords_'):
             parts = name.split('_')
             func, lang = parts[0], parts[1]

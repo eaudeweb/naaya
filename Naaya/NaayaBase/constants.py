@@ -18,6 +18,10 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains global constants.
+"""
+
 #Python imports
 
 #Zope imports

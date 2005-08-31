@@ -18,6 +18,10 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains the classes for parsing export Naaya XML files.
+"""
+
 #Python imports
 from copy import deepcopy
 from xml.sax.handler import ContentHandler
@@ -105,7 +109,7 @@ class import_handler(ContentHandler):
 
 class import_parser:
     """
-    Parses exported XML files and returns the results.
+    Parses XML and returns the results.
     If the XML is not valid an error is signaled.
     """
 
@@ -115,8 +119,8 @@ class import_parser:
         @param p_content: the content of an XML file
         @type p_content: string
         @return:
-            - If an error occures a tuple (None, error) is returned.
-            - If no error, then a tuple (handler, '') is returned. The data
+            - if an error occures a tuple (None, error) is returned.
+            - if no error, then a tuple (handler, '') is returned. The data
             stored in the handler object will be imported in the current
             portal.
         """
