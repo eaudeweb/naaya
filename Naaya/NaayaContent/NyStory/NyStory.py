@@ -82,7 +82,7 @@ def addNyStory(self, id='', title='', description='', coverage='', keywords='', 
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
     self._setObject(id, ob)
     if REQUEST is not None:
-        l_referer = self.utStrSplit(REQUEST['HTTP_REFERER'], '/')[-1]
+        l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'story_manage_add' or l_referer.find('story_manage_add') != -1:
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'story_add_html':
