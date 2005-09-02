@@ -1,6 +1,6 @@
 <tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
 
-<h1 metal:fill-slot="title" i18n:translate="">Lists of links</h1>
+<h1 metal:fill-slot="title" i18n:translate="">Edit list of links</h1>
 
 <tal:block metal:fill-slot="section"
 	tal:define="site_url here/getSitePath;
@@ -8,11 +8,10 @@
 				linkslist python:here.getPortletsTool().getLinksListById(id);
 				item python:request.get('item', '')">
 <tal:block tal:condition="python:linkslist is not None">
-<a tal:attributes="href string:${site_url}/admin_linkslists_html" i18n:translate="">Back to the list of links</a>
+[<a tal:attributes="href string:${site_url}/admin_linkslists_html" i18n:translate="">Back to the list of links</a>]
 <p i18n:translate="">
-	This page allows you to define, customise and delete lists (groups) of links to internal or external pages. When these links are displayed in the portal, their titles and descriptions will be translatable from the <em>Translate messages</em> area. If you choose to automatically create a portlet, you can then choose to display it on this portal in the desired location.
 </p>
-<fieldset><legend i18n:translate="">Change the portlet title</legend>
+<fieldset><legend i18n:translate="">Change the list title</legend>
 <form method="post" tal:attributes="action string:${site_url}/admin_editlinkslist">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
@@ -27,7 +26,7 @@
 <input type="hidden" name="id" tal:attributes="value linkslist/id" />
 </form>
 </fieldset>
-<h2 i18n:translate="">Links in this portlet</h2>
+<h2 i18n:translate="">Available links</h2>
 <p i18n:translate="">Click on a link title to edit its attributes.</p>
 <form method="post" tal:attributes="action string:${site_url}/admin_deletelinks">
 <table border="0" cellspacing="0" cellpadding="4" width="100%">
@@ -35,7 +34,7 @@
 		<th width="1%"></th>
 		<th width="10%" i18n:translate="">Title</th>
 		<th width="25%" i18n:translate="">Description</th>
-		<th width="30%" i18n:translate="">Url</th>
+		<th width="30%" i18n:translate="">URL</th>
 		<th width="30%" i18n:translate="">Permission</th>
 		<th width="5%" i18n:translate="">Order</th>
 	</tr>
