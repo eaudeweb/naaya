@@ -77,7 +77,7 @@ class NyContainer(Folder, NyBase, NyPermissions):
         @param p_ids: objects ids
         @type p_ids: list
         """
-        return filter(lambda x: x is not None, map(lambda f, x: f(x, None), (self._getOb,)*len(p_ids), p_ids))
+        return [x for x in map(lambda f, x: f(x, None), (self._getOb,)*len(p_ids), p_ids) if x is not None]
 
     def getObjectsByUrls(self, p_urls):
         """
@@ -86,7 +86,7 @@ class NyContainer(Folder, NyBase, NyPermissions):
         @param p_urls: objects relative paths
         @type p_urls: list
         """
-        return filter(lambda x: x is not None, map(lambda f, x: f(x, None), (self.unrestrictedTraverse,)*len(p_urls), p_urls))
+        return [x for x in map(lambda f, x: f(x, None), (self.unrestrictedTraverse,)*len(p_urls), p_urls) if x is not None]
 
     def manage_afterAdd(self, item, container):
         """
