@@ -9,7 +9,7 @@
 <div id="tabbedmenu">
 <ul>
 	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
-	<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
+	<li tal:repeat="item user_tool/getSources">
 		<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
 	</li>
 </ul>
@@ -118,7 +118,7 @@ function createKey(key)
 		<input type="radio" name="loc" value="allsite" checked="checked" onclick="emptyLocation();"  i18n:translate=""/> Entire portal<br />
 		<input type=radio name="loc" value="other" i18n:translate="" /> Pick other...<br />
 		<input type=text name="location" size="40" onclick="pickLocation();" value="" />
-		<input type="button" value="Pick" i18n:translate="" tal:define="acl_users_path python:here.getAuthenticationTool().absolute_url()" tal:attributes="onclick string:setupWin('${acl_users_path}/sitemap', 300, 500);;" />
+		<input type="button" value="Pick" i18n:translate="" tal:define="acl_users_path user_tool/absolute_url" tal:attributes="onclick string:setupWin('${acl_users_path}/sitemap', 300, 500);;" />
 	</td>
 </tr>
 </table>
