@@ -18,6 +18,10 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains the class that handles versioning for a single object.
+"""
+
 #Python imports
 from binascii import crc32
 from copy import deepcopy
@@ -33,7 +37,9 @@ from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
 
 class NyVersioning(utils):
-    """ """
+    """
+    Class that handles versioning for a single object.
+    """
 
     manage_options = (
         {'label': 'Versions', 'action': 'manage_versions_html'},
@@ -42,52 +48,86 @@ class NyVersioning(utils):
     security = ClassSecurityInfo()
 
     def __init__(self):
-        """ """
+        """
+        Initialize variables:
+
+        B{__current_version_uid} - the id of the current version
+
+        B{__versions} - a dictionary that stores versioned data
+        """
         self.__current_version_uid = None
         self.__versions = {}
 
     def __create_version(self, p_version_uid, p_version_data):
-        #creates a version entry, a tuple of : data, current date, current authenticated user
+        """
+        Creates a version entry, a tuple of:
+            - data
+            - current date
+            - current authenticated user
+        @param p_version_uid: version unique identifier
+        @param p_version_data: object data that is versioned
+        """
         self.__versions[p_version_uid] = (self.utGetTodayDate(), self.REQUEST.AUTHENTICATED_USER.getUserName(), p_version_data)
         self.__current_version_uid = p_version_uid
         self._p_changed = 1
 
     def __get_version_data(self, p_version_uid):
-        #returns the data for a version entry
+        """
+        Returns the data for a version entry.
+        @param p_version_uid: version unique identifier
+        """
         try: return self.__versions[p_version_uid][2]
         except: return None
 
     def __delete_version(self, p_version_uid):
-        #deletes a version entry
+        """
+        Deletes a version entry.
+        @param p_version_uid: version unique identifier
+        """
         raise EXCEPTION_NOTIMPLEMENTED
 
     def __compare_current_version_data_with_data(self, p_version_data, p_data):
-        #crc32 it is used to compare data
+        """
+        Compare a version data with some new data using crc32.
+        @param p_version_data: version data
+        @param p_data: new data
+        """
         return crc32(p_version_data) != crc32(p_data)
 
     def getVersions(self):
-        #returns the dictionary of versions
+        """
+        Returns the dictionary of versions.
+        """
         return self.__versions
 
     def getOlderVersions(self):
-        #returns the dictionary of older versions
-        #this means that current version is removed because
-        #it cointains the current content of the object
+        """
+        Returns the dictionary of older versions. This means that current
+        version is removed because it cointains the current content of the
+        object.
+        """
         buf = deepcopy(self.__versions)
         try: del(buf[self.__current_version_uid])
         except: pass
         return buf
 
     def getCurrentVersionId(self):
-        #returns the current version id
+        """
+        Returns the current version id.
+        """
         return self.__current_version_uid
-        
+
     def getVersion(self, p_version_uid=None):
-        #returns given version entry
+        """
+        Returns given version entry.
+        @param p_version_uid: version unique identifier
+        """
         return self.__get_version_data(p_version_uid)
 
     def createVersion(self):
-        #creates a version entry
+        """
+        Creates a version entry.
+        """
         l_version_uid = self.utGenerateUID()
         if self.__current_version_uid is None:
             #no versions yet
@@ -97,33 +137,55 @@ class NyVersioning(utils):
             if self.__compare_current_version_data_with_data(self.objectVersionDataForVersionCompare(self.__get_version_data(self.__current_version_uid)), self.objectDataForVersionCompare()):
                 self.__create_version(l_version_uid, self.objectDataForVersion())
 
-    ###########################################################################
-    #   ABSTRACT METHODS
-    #   - must be implemented in classes that extends NyVersioning
-    ###########################################################################
     def objectDataForVersion(self):
-        #returns the data that will be stored in a version
-        # can be a property value or a list of properties or any structure
+        """
+        Returns the data that will be stored in a version; it can be a
+        property value or a list of properties or any structure.
+
+        B{This method must be implemented.}
+        """
         raise EXCEPTION_NOTIMPLEMENTED, 'objectDataForVersion'
 
     def objectDataForVersionCompare(self):
-        #returns the object property that is reprezentative for that object
-        #it will support a crc32 comparation againts an older version
-        #in order to determine if is the same value
+        """
+        Rreturns the object property that is reprezentative for that object.
+        It will support a crc32 comparation againts an older version
+        in order to determine if is the same value.
+
+        B{This method must be implemented.}
+        """
         raise EXCEPTION_NOTIMPLEMENTED, 'objectDataForVersionCompare'
 
     def objectVersionDataForVersionCompare(self, p_version_data):
-        #returns the version piece that is reprezentative for a that version
-        #it will support a crc32 comparation againts the object data
-        #in order to determine if is the same value
+        """
+        Returns the version piece that is reprezentative for a that version.
+        It will support a crc32 comparation againts the object data
+        in order to determine if is the same value.
+
+        B{This method must be implemented.}
+
+        @param p_version_data: version data
+        """
         raise EXCEPTION_NOTIMPLEMENTED, 'objectVersionDataForVersionCompare'
 
     def versionForObjectData(self, p_version_data=None):
-        #restores the object data based on a version data
+        """
+        Restores the object data based on a version data.
+
+        B{This method must be implemented.}
+
+        @param p_version_data: version data
+        """
         raise EXCEPTION_NOTIMPLEMENTED, 'versionForObjectData'
 
     def showVersionData(self, vid=None):
-        #given a version id, shows/returns the version data
+        """
+        Given a version id, shows/returns the version data.
+
+        B{This method must be implemented.}
+
+        @param vid: version unique identifier
+        """
         raise EXCEPTION_NOTIMPLEMENTED, 'showVersionData'
 
     #zmi pages
