@@ -47,7 +47,7 @@
 		<form id="site_admin_validation" title="Portal administration - content checking and validation"/>
 		<form id="site_admin_validation_tree" title="Portal administration - reports of content checking and validation"/>
 		<form id="site_admin_versioncontrol" title="Portal administration - version control"/>
-		<form id="site_admin_maintopics" title="Portal administration - main topics"/>
+		<form id="site_admin_maintopics" title="Portal administration - main sections"/>
 		<form id="site_admin_localchannels" title="Portal administration - local channels"/>
 		<form id="site_admin_remotechannels" title="Portal administration - remote channels"/>
 		<form id="site_admin_leftportlets" title="Portal administration - left portlets section"/>
@@ -99,7 +99,7 @@
 	</syndication>
 	<portlets left="portlet_maincategories" center="portlet_latestuploads">
 		<portlet id="portlet_administration" title="Administration" />
-		<portlet id="portlet_maincategories" title="Main categories" />
+		<portlet id="portlet_maincategories" title="Main sections" />
 		<portlet id="portlet_latestuploads" title="Latest uploads" />
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
 			<link id="102" title="Finsiel" description="Finsiel Romania" url="http://www.finsiel.ro" relative="0" permission="" order="2"/>

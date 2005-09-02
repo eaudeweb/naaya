@@ -1,6 +1,6 @@
 <tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
 
-<h1 metal:fill-slot="title" i18n:translate="">Basket of validation (tree view)</h1>
+<h1 metal:fill-slot="title" i18n:translate="">Basket of validation</h1>
 
 <tal:block metal:fill-slot="section">
 <p i18n:translate="">
@@ -10,6 +10,8 @@
 <p>
 	<a tal:attributes="href string:${here/getSitePath}/admin_validation_html"><strong i18n:translate="">View validation statistics</strong></a>
 </p>
+
+<h2>Validation report (tree view)</h2>
 
 <script language="javascript" type="text/javascript">
 <!--
@@ -27,8 +29,8 @@ function fTreeClick(expand)
 						expand python:here.getSiteMapTrail(expand, tree);
 						expand_list python:here.splitToList(expand)">
 <form name="frmSiteMap" method="post" action="">
-<a tal:attributes="href string:javascript:fTreeClick('all')" i18n:translate="">Expand all</a>
-<a tal:attributes="href string:javascript:fTreeClick('')" i18n:translate="">Collapse all</a>
+[<a tal:attributes="href string:javascript:fTreeClick('all')" i18n:translate="">Expand all</a>]
+[<a tal:attributes="href string:javascript:fTreeClick('')" i18n:translate="">Collapse all</a>]
 <dl>
 	<dt tal:repeat="tree_node tree">
 		<img tal:repeat="i python:range(0, tree_node[2])" src="misc_/Naaya/square.gif" border="0" />
