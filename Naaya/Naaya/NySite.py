@@ -743,12 +743,17 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 location_title = obj.title
                 location_maintainer_email = self.getMaintainersEmails(obj)
         #create an account without role
-        errors = []
-        err = self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname, lastname, email, strict=1)
+        try:
+            self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname,
+                lastname, email)
+        except Exception, error:
+            err = error
+        else:
+            err = ''
         if err:
             if REQUEST:
                 self.setSessionErrors(err)
-                self.setUserSession(username, '', '', firstname, lastname, email, '', organisation, comments, location)
+                self.setRequestRoleSession(username, firstname, lastname, email, password, organisation, comments, location)
                 return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         if not err:
             self.sendRequestRoleEmail(location_maintainer_email, firstname + ' ' + lastname, email, organisation, username, location_path, location_title, comments)
