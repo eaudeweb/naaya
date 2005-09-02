@@ -15,7 +15,7 @@
 </div>
 <p i18n:translate="">
 	This page displays the list of available special portlets. These portlets cannot be erased or modified
-	from here; you need to go to the ZMI to do that.
+	using this page.
 </p>
 <table border="0" cellspacing="4" cellpadding="4">
 <tr>
