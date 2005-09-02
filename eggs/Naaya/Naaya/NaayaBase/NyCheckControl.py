@@ -46,7 +46,7 @@ class NyCheckControl:
         """
         Initialize variables:
 
-        B{checkout} - integer value (0 or 1) that store the state of the object
+        B{checkout} - integer value (0 or 1) that stores the state of the object
         (locked/unlocked).
 
         B{checkout_user} - string value that stores the id of the user that
