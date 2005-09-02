@@ -13,14 +13,14 @@
 </div>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_properties" style="clear:both;">
+<p i18n:translate="">
+	The numbers below represent the maximum numbers of items (all types of items
+	or just announcements) looped by date
+	when constructing the list of latest uploaded items; this list is used to build RDF files 
+	display items in portlets, etc.
+</p>
+
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
-<tr>
-	<td colspan="2" i18n:translate="">
-		The numbers below represent the maximum numbers of items (all types of items
-		or just announcements) looped by date
-		when constructing the list of latest uploaded items; this list is used to build RDF files 
-		display items in portlets, etc.</td>
-</tr>
 <tr>
 	<td i18n:translate="">Number of latest uploads</td>
 	<td><input type="text" name="number_latest_uploads" size="3" tal:attributes="value here/number_latest_uploads" /></td>
@@ -59,22 +59,22 @@
 		</select>
 	</td>
 </tr>
-<tr>
-	<td colspan="2" i18n:translate="">
-		The portal URL represents the address this portal can be found at.
-		By setting this parameter the URL will not change, but site administrators can
-		use this information.</td>
-</tr>
+</table>
+<p i18n:translate="">
+	The portal URL represents the address this portal can be found at.
+	By setting this parameter the URL will not change, but site administrators can
+	use this information.
+</p>
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
 <tr>
 	<td i18n:translate="">Portal URL</td>
 	<td><input type="text" name="portal_url" size="30" tal:attributes="value here/portal_url" /></td>
 </tr>
-<tr>
-	<td></td>
-	<td><input type="submit" value="Save changes" i18n:attributes="value" /></td>
-</tr>
 </table>
+
+<input type="submit" value="Save changes" i18n:attributes="value" />
 </form>
+
 </tal:block>
 
 </tal:block>

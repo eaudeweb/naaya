@@ -3,9 +3,13 @@
 <h1 metal:fill-slot="title" i18n:translate="">Portal administration centre</h1>
 
 <tal:block metal:fill-slot="section" i18n:translate="">
-	This section allows administrators to manage the content, the look &amp; feel
-	and maintain various functions of the current portal.<br /><br />
-	Consult the list of available functionality on the right-side menu.
+	<p>This section allows administrators to manage the content, the look &amp; feel and maintain various functions of the current portal.</p>
+
+	<p><strong>All administration functionalities are available from the right-side menu.</strong></p>
+
+	<p>Guidance on how to use the functionalities can be found in the <a href="admin_documentation_html">documentation</a> section. </p>
+
+	<p><img src="misc_/Naaya/admin_schema" border="0" alt="Overview of the administrative functionality" i18n:attributes="alt" /></p>
 </tal:block>
 
 </tal:block>

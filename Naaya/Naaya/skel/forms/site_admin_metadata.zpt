@@ -15,6 +15,10 @@
 </ul>
 </div>
 
+<p i18n:translate="">
+	This form allows you to set the properties that describe this entire website. The title and subtitle are displayed in the top banner of each page. The description will appear on the homepage. All together, the metadata describes your website to search engines and also goes into the local channels that might be  harvested by others.
+</p>
+
 <form method="post" tal:attributes="action string:${site_url}/admin_metadata" style="clear:both;">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 <tr>
@@ -26,7 +30,7 @@
 	<td><input type="text" name="site_subtitle:utf8:ustring" tal:attributes="value python:here.getLocalProperty('site_subtitle', curr_lang)" size="50" /></td>
 </tr>
 <tr>
-	<td valign="top" i18n:translate="">Description (HTML)<br />(appears on the front page)</td>
+	<td valign="top" i18n:translate="">Description (HTML)</td>
 	<td><span tal:replace="structure python:here.Epoz('description:utf8:ustring', data=here.getLocalProperty('description', curr_lang), toolbox='%s/toolbox_html' % here.absolute_url(), lang=curr_lang, style='width: 400px; height: 200px; border: 1px solid #000000;')" /></td>
 </tr>
 <tr>

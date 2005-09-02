@@ -1403,6 +1403,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_layout')
 
+    security.declareProtected('View', 'admin_documentation_html')
+    def admin_documentation_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_documentation')
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_users_html')
     def admin_users_html(self, REQUEST=None, RESPONSE=None):
         """ """

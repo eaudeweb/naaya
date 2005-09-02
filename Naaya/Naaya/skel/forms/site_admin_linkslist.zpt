@@ -10,7 +10,7 @@
 <tal:block tal:condition="python:linkslist is not None">
 <a tal:attributes="href string:${site_url}/admin_linkslists_html" i18n:translate="">Back to the list of links</a>
 <p i18n:translate="">
-	This page allows you to define and delete ...
+	This page allows you to define, customise and delete lists (groups) of links to internal or external pages. When these links are displayed in the portal, their titles and descriptions will be translatable from the <em>Translate messages</em> area. If you choose to automatically create a portlet, you can then choose to display it on this portal in the desired location.
 </p>
 <fieldset><legend i18n:translate="">Change the portlet title</legend>
 <form method="post" tal:attributes="action string:${site_url}/admin_editlinkslist">

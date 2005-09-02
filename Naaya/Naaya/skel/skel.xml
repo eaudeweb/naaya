@@ -31,6 +31,7 @@
 		<form id="site_admin_logos" title="Portal administration - logos"/>
 		<form id="site_admin_properties" title="Portal administration - properties"/>
 		<form id="site_admin_layout" title="Portal administration - layout"/>
+		<form id="site_admin_documentation" title="Portal administration - documentation"/>
 		<form id="site_admin_users" title="Portal administration - users"/>
 		<form id="site_admin_adduser" title="Portal administration - add user"/>
 		<form id="site_admin_edituser" title="Portal administration - edit user"/>
