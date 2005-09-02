@@ -21,7 +21,7 @@
 
 """
 This module contains the class that handles check-in/check-out operations for a
-single object. The object class B{must} extend I{NyCheckControl}.
+single object.
 """
 
 #Python imports
