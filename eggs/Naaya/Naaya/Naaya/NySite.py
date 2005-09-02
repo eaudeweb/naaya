@@ -681,7 +681,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def __getSiteMap(self, root, showitems, expand, depth):
         #site map core
         l_tree = []
-        if root is self: l_folders = root.objectValues(self.get_naaya_containers_metatypes())
+        if root is self: l_folders = [x for x in root.objectValues(self.get_naaya_containers_metatypes()) if x.approved == 1]
         else: l_folders = root.getPublishedFolders()
         for l_folder in l_folders:
             if (len(l_folder.objectValues(self.get_naaya_containers_metatypes())) > 0) or ((len(l_folder.getObjects()) > 0) and showitems==1):
