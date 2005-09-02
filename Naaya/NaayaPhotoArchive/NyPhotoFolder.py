@@ -110,6 +110,10 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
     def getPendingFolders(self): return []
     def getPublishedFolders(self): return []
 
+    def getObjectsForValidation(self): return []
+    def count_notok_objects(self): return 0
+    def count_notchecked_objects(self): return 0
+
     def get_displays_edit(self):
         #returns a list with all dispays minus 'Thumbnail'
         l = self.displays.keys()
