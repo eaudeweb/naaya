@@ -11,6 +11,7 @@
 		<form id="site_admin_urls" title="Portal administration - urls"/>
 		<form id="site_admin_linkchecker" title="Portal administration - link checker"/>
 		<form id="site_admin_predefined" title="Portal administration - predefined latest uploads"/>
+		<form id="site_admin_network" title="Portal administration - network of portals"/>
 	</forms>
 	<layout default_skin_id="chm" default_scheme_id="indigo">
 		<skin id="chm" title="CHM">
