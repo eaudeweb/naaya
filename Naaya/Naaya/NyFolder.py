@@ -263,15 +263,14 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         flag = 0
         for obj in self.utSortObjsListByAttr(p_object, 'sortorder', 0):
             del_permission = obj.checkPermissionDeleteObject()
-            if del_permission == 1 and flag == 0:
-                flag = 1
-                select_all = 1
-                delete_all = 1
             edit_permission = obj.checkPermissionEditObject()
-            if edit_permission == 1 and flag == 0:
+            if del_permission and flag == 0:
                 flag = 1
                 select_all = 1
                 delete_all = 1
+            if edit_permission and flag == 0:
+                flag = 1
+                select_all = 1
             if ((del_permission or edit_permission) and not obj.approved) or obj.approved:
                 results.append((del_permission, edit_permission, obj))
         return (select_all, delete_all, results)
@@ -287,15 +286,14 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         flag= 0
         for folder in self.utSortObjsListByAttr(p_object, 'sortorder', 0):
             del_permission = folder.checkPermissionDeleteObject()
-            if del_permission == 1 and flag == 0:
-                flag = 1
-                select_all = 1
-                delete_all = 1
             edit_permission = folder.checkPermissionEditObject()
-            if edit_permission == 1 and flag == 0:
+            if del_permission and flag == 0:
                 flag = 1
                 select_all = 1
                 delete_all = 1
+            if edit_permission and flag == 0:
+                flag = 1
+                select_all = 1
             if ((del_permission or edit_permission) and not folder.approved) or folder.approved:
                 results.append((del_permission, edit_permission, folder))
         return (select_all, delete_all, results)
@@ -446,7 +444,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         else: self.setSessionInfo(['Item(s) deleted.'])
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
 
-    security.declareProtected(PERMISSION_DELETE_OBJECTS, 'setTopStoryObjects')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'setTopStoryObjects')
     def setTopStoryObjects(self, REQUEST=None):
         """ """
         #ids_list = self.utConvertToList(REQUEST.get('id_topstory', []))
