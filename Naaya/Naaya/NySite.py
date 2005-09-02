@@ -228,10 +228,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 image_ob.update_data(data=content)
                 image_ob._p_changed=1
                 content = self.futRead(join(skel_path, 'layout', 'logobis.gif'), 'rb')
-                image_ob = layouttool_ob._getOb('logobis.gif', None)
+                image_ob = layouttool_ob._getOb('logobis', None)
                 if image_ob is None:
-                    layouttool_ob.manage_addImage(id='logobis.gif', file='', title='Site secondary logo')
-                    image_ob = layouttool_ob._getOb('logobis.gif')
+                    layouttool_ob.manage_addImage(id='logobis', file='', title='Site secondary logo')
+                    image_ob = layouttool_ob._getOb('logobis')
                 image_ob.update_data(data=content)
                 image_ob._p_changed=1
             #load pluggable content types
@@ -929,7 +929,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 if logobis.filename != '':
                     content = logobis.read()
                     if content != '':
-                        image_ob = self.getLayoutTool()._getOb('logobis.gif')
+                        image_ob = self.getLayoutTool()._getOb('logobis')
                         image_ob.update_data(data=content)
                         image_ob._p_changed=1
         if REQUEST:
