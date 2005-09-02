@@ -20,6 +20,10 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains the class that implements permissions and rights checking.
+"""
+
 #Python imports
 
 #Zope imports
@@ -30,11 +34,16 @@ from Globals import InitializeClass
 from constants import *
 
 class NyPermissions:
-    """ """
+    """
+    Class that implements permissions and rights checking.
+    """
 
     security = ClassSecurityInfo()
 
     def getObjectOwner(self):
+        """
+        Returns the name of the user that owns the object.
+        """
         o = None
         o = self.owner_info()
         if hasattr(o, "has_key") and o.has_key('id'):
@@ -42,42 +51,90 @@ class NyPermissions:
         return o
 
     def checkPermission(self, p_permission):
+        """
+        Generic function to check a given permission on the current object.
+        @param p_permission: permissions name
+        @type p_permission: string
+        @return:
+            - B{1} if the current user has the permission
+            - B{None} otherwise
+        """
         return getSecurityManager().checkPermission(p_permission, self)
 
     def checkPermissionAdministrate(self):
+        """
+        Check the access to the administrative area.
+        """
         return self.checkPermission(PERMISSION_ADMINISTRATE)
 
     def checkPermissionValidateObjects(self):
+        """
+        Check the access to objects validation area.
+        """
         return self.checkPermission(PERMISSION_VALIDATE_OBJECTS)
 
     def checkPermissionTranslatePages(self):
+        """
+        Check the access to translations area.
+        """
         return self.checkPermission(PERMISSION_TRANSLATE_PAGES)
 
     def checkPermissionAddObjects(self):
+        """
+        Check the permissions to add different type of objects.
+        """
         return self.checkPermission(PERMISSION_ADMINISTRATE)
 
     def checkPermissionEditObjects(self):
+        """
+        Check the permissions to edit different type of objects.
+        """
         return self.checkPermission(PERMISSION_EDIT_OBJECTS)
 
     def checkPermissionPublishObjects(self):
+        """
+        Check the permissions to publish objects.
+        """
         return self.checkPermission(PERMISSION_PUBLISH_OBJECTS)
 
     def checkPermissionCopyObjects(self):
+        """
+        Check the permissions to copy objects.
+        """
         return self.checkPermission(PERMISSION_PUBLISH_OBJECTS)
 
     def checkPermissionCutObjects(self):
+        """
+        Check the permissions to cut objects.
+        """
         return self.checkPermission(PERMISSION_PUBLISH_OBJECTS)
 
     def checkPermissionPasteObjects(self):
+        """
+        Check the permissions to paste objects.
+        """
         return self.checkPermission(PERMISSION_PUBLISH_OBJECTS)
 
     def checkPermissionDeleteObjects(self):
+        """
+        Check the permissions to delete objects.
+        """
         return self.checkPermission(PERMISSION_DELETE_OBJECTS)
 
     def checkPermissionEditObject(self):
+        """
+        Check the permissions to edit a single object. The user must have
+        the edit objects permission and to be the object's owner or to have
+        the publish permission.
+        """
         return self.checkPermissionEditObjects() and (self.checkPermissionPublishObjects() or (self.getObjectOwner() == self.REQUEST.AUTHENTICATED_USER.getUserName()))
 
     def checkPermissionDeleteObject(self):
+        """
+        Check the permissions to delete a single object. The user must have
+        the delete objects permission and to be the object's owner or to have
+        the publish permission.
+        """
         return self.checkPermissionDeleteObjects() and (self.checkPermissionPublishObjects() or (self.getObjectOwner() == self.REQUEST.AUTHENTICATED_USER.getUserName()))
 
 InitializeClass(NyPermissions)
