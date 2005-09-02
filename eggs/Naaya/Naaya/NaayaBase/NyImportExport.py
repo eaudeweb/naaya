@@ -18,6 +18,11 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains the class that implements import/export functionality
+using Naaya XML format.
+"""
+
 #Python imports
 
 #Zope imports
@@ -31,7 +36,11 @@ from constants import *
 from managers.import_parser import import_parser
 
 class NyImportExport:
-    """ """
+    """
+    Class that implements import/export functionality.
+    It is an I{abstract class} in the sense that a set of functions are not
+    implemented.
+    """
 
     manage_options = (
         {'label': 'Naaya Import/Export', 'action': 'manage_importexport_html'},
@@ -39,15 +48,17 @@ class NyImportExport:
 
     security = ClassSecurityInfo()
 
-    def __init__(self):
-        """ """
-        pass
-
     #zmi actions
     security.declareProtected(view_management_screens, 'manage_import')
     def manage_import(self, source='file', file='', url='', REQUEST=None):
-        """ - imports a site from an XML
-            - it can be an uploaded XML file or the content grabbed from an url """
+        """
+        Import data from an uploaded XML file.
+        @param source: from where the file is uploaded, disk or URL
+        @type source: string - I{file} or I{url}
+        @param file: uploaded file from the disk
+        @param url: the URL from where the file will be grabbed
+        @param REQUEST: I{optional} parameter to do the redirect
+        """
         if source=='file':
             if file != '':
                 if hasattr(file, 'filename'):
@@ -66,8 +77,10 @@ class NyImportExport:
 
     security.declareProtected(view_management_screens, 'exportdata')
     def exportdata(self):
-        """ - generates an XML with the site content
-            - it can be imported into another site """
+        """
+        Generetes an XML with the object content.
+        @return: a downloadable Naaya XML file
+        """
         r = []
         r.append('<?xml version="1.0" encoding="utf-8"?>')
         r.append('<export>')
@@ -77,12 +90,13 @@ class NyImportExport:
         self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=export.nyexp')
         return ''.join(r)
 
-    ###########################################################################
-    #   ABSTRACT METHODS
-    #   - must be implemented in classes that extends NyImportExport
-    ###########################################################################
+    security.declarePrivate('exportdata_custom')
     def exportdata_custom(self):
-        #exports all the Naaya content in XML format under the current object
+        """
+        Exports all the Naaya content of the object in XML format.
+
+        B{This method must be implemented.}
+        """
         raise EXCEPTION_NOTIMPLEMENTED, 'exportdata_custom'
 
     #zmi pages
