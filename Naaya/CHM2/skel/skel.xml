@@ -4,6 +4,7 @@
 		<form id="epoz_toolbox" title="Epoz toolbox form"/>
 		<form id="epoz_gallerybox" title="Epoz toolbox for photos archive"/>
 		<form id="site_search" title="Portal search"/>
+		<form id="site_external_search" title="External search"/>
 		<form id="site_sitemap" title="Portal site map"/>
 		<form id="site_urlmap" title="Portal url map"/>
 		<form id="site_admin_deletions" title="Portal administration - submissions"/>
@@ -34,6 +35,7 @@
 				<image id="tableft_on.gif" title=""/>
 				<image id="tabright.gif" title=""/>
 				<image id="tabright_on.gif" title=""/>
+				<image id="translate.gif" title=""/>
 				<image id="banner.jpg" title=""/>
 				<image id="portlet_right_bullet.gif" title=""/>
 				<image id="separ_1.gif" title=""/>
@@ -55,6 +57,7 @@
 				<image id="tableft_on.gif" title=""/>
 				<image id="tabright.gif" title=""/>
 				<image id="tabright_on.gif" title=""/>
+				<image id="translate.gif" title=""/>
 				<image id="banner.jpg" title=""/>
 				<image id="portlet_right_bullet.gif" title=""/>
 				<image id="separ_1.gif" title=""/>
@@ -76,6 +79,7 @@
 				<image id="tableft_on.gif" title=""/>
 				<image id="tabright.gif" title=""/>
 				<image id="tabright_on.gif" title=""/>
+				<image id="translate.gif" title=""/>
 				<image id="banner.jpg" title=""/>
 				<image id="portlet_right_bullet.gif" title=""/>
 				<image id="separ_1.gif" title=""/>
@@ -97,6 +101,7 @@
 				<image id="tableft_on.gif" title=""/>
 				<image id="tabright.gif" title=""/>
 				<image id="tabright_on.gif" title=""/>
+				<image id="translate.gif" title=""/>
 				<image id="banner.jpg" title=""/>
 				<image id="portlet_right_bullet.gif" title=""/>
 				<image id="separ_1.gif" title=""/>
