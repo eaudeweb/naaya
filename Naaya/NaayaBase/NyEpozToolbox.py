@@ -20,6 +20,12 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains the class that implements functionality for uploading and
+inserting images using the Epoz WYSIWYG editor. This is used to edit object
+properties that contains HTML code.
+"""
+
 #Python imports
 
 #Zope imports
@@ -31,21 +37,28 @@ from OFS.Image import manage_addImage, manage_addFile
 #Product imports
 
 class NyEpozToolbox:
-    """ """
-
-    def __init__(self):
-        """ """
-        pass
+    """
+    Class that implements functionality for uploading and inserting images
+    using the Epoz WYSIWYG editor.
+    """
 
     security = ClassSecurityInfo()
 
     #api
-    def getUploadedImages(self): return self.objectValues(['Image'])
+    def getUploadedImages(self):
+        """
+        Returns a list with all I{Image} objects.
+        """
+        return self.objectValues(['Image'])
 
     #actions
     security.declareProtected(view, 'process_image_upload')
     def process_image_upload(self, file='', REQUEST=None):
-        """ """
+        """
+        Handles the upload of a new image.
+        @param file: uploaded image
+        @param REQUEST: I{optional} parameter to do the redirect
+        """
         if file != '':
             if hasattr(file, 'filename'):
                 if file.filename != '':
@@ -54,7 +67,11 @@ class NyEpozToolbox:
 
     security.declareProtected(view, 'process_file_upload')
     def process_file_upload(self, file='', REQUEST=None):
-        """ """
+        """
+        Handles the upload of a new file.
+        @param file: uploaded file
+        @param REQUEST: I{optional} parameter to do the redirect
+        """
         if file != '':
             if hasattr(file, 'filename'):
                 if file.filename != '':
@@ -63,7 +80,12 @@ class NyEpozToolbox:
 
     security.declareProtected(view, 'process_delete')
     def process_delete(self, ids=[], REQUEST=None):
-        """ """
+        """
+        Handles the deletion of one or more images and files.
+        @param ids: the ids of the objects
+        @type ids: list
+        @param REQUEST: I{optional} parameter to do the redirect
+        """
         try: self.manage_delObjects(self.utConvertToList(ids))
         except: pass
         if REQUEST: REQUEST.RESPONSE.redirect('%s/toolbox_html' % self.absolute_url())
@@ -71,7 +93,10 @@ class NyEpozToolbox:
     #pages
     security.declareProtected(view, 'toolbox_html')
     def toolbox_html(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """
+        The page template that is the interface between the WYSIWYG editor
+        and the uploaded images and files.
+        """
         return self.getFormsTool().getContent({'here': self}, 'epoz_toolbox')
 
 InitializeClass(NyEpozToolbox)
