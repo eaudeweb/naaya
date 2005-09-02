@@ -13,7 +13,7 @@
 	<li i18n:translate=""><strong>Events</strong> in the <a href="events">Meetings and events </a> repository</li>
 	<li i18n:translate=""><strong>Story</strong> items in the <a href="stories">Stories archive</a></li>
 	<li i18n:translate=""><strong>Photos</strong> in the <a href="PhotoArchive">Photo archive</a></li>
-	<li i18n:translate=""><strong>HTML documents</strong>, <strong>files</strong> (MS Word, MS Excel, PDF, etc.), <strong>URLs</strong> (links to remote sources of information), <strong>pointers</strong> to local pages and <strong>folders</strong> into the portal main categories. Consult the <a href="sitemap_html">sitemap</a> to find the best location for your data.</li>
+	<li i18n:translate=""><strong>Files</strong> (MS Word, MS Excel, PDF, etc.), <strong>HTML documents</strong>, <strong>URLs</strong> (links to remote sources of information), <strong>pointers</strong> to local pages and <strong>folders</strong> into the portal main sections. Consult the <a href="sitemap_html">sitemap</a> to find the content to delete.</li>
 </ul>
 </tal:block>
 

@@ -5,14 +5,14 @@
 <tal:block condition="python:here.checkPermissionAddEWObjects()">
 <tal:block metal:fill-slot="section">
 <p i18n:translate="">
-	This page guides you to submit content in this portal. The proposed content will be submitted to the webmaster for approval. The possible content submissions are:
+	This page guides you to submit content in this portal. The proposed content will be submitted to the administrator  for approval. The possible content submissions are:
 </p>
 <ul>
 	<li i18n:translate=""><strong>News</strong> items in the <a href="news">news archive</a></li>
 	<li i18n:translate=""><strong>Events</strong> in the <a href="events">Meetings and events </a> repository</li>
 	<li i18n:translate=""><strong>Story</strong> items in the <a href="stories">Stories archive</a></li>
 	<li i18n:translate=""><strong>Photos</strong> in the <a href="PhotoArchive">Photo archive</a></li>
-	<li i18n:translate=""><strong>HTML documents</strong>, <strong>files</strong> (MS Word, MS Excel, PDF, etc.), <strong>URLs</strong> (links to remote sources of information), <strong>pointers</strong> to local pages and <strong>folders</strong> into the portal main categories. Consult the <a href="sitemap_html">sitemap</a> to find the best location for your data.</li>
+	<li i18n:translate=""><strong>Files</strong> (MS Word, MS Excel, PDF, etc.), <strong>HTML documents</strong>, <strong>URLs</strong> (links to remote sources of information), <strong>pointers</strong> to local pages and <strong>folders</strong> into the portal main sections. Consult the <a href="sitemap_html">sitemap</a> to find the best location for submitting new content.</li>
 </ul>
 </tal:block>
 
