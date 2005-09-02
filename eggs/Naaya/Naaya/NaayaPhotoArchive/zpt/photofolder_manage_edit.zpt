@@ -23,6 +23,14 @@
 		<td class="form-label">Quality</td>
 		<td><input type="text" name="quality" size="3" tal:attributes="value here/quality" /></td>
 	</tr>
+	<tr>
+		<td class="form-label">Approved</td>
+		<td><input type="checkbox" name="approved" tal:attributes="checked here/approved" /></td>
+	</tr>
+	<tr>
+		<td class="form-label" i18n:translate="">Release date (<em>dd/mm/yyyy</em>)</td>
+		<td><input type="text" name="releasedate" size="20" tal:attributes="value python:here.utConvertDateTimeObjToString(here.releasedate)"/></td>
+	</tr>
 	<tr><td></td><td><input type="submit" value="Save changes"></td></tr>
 </table>
 </form>
