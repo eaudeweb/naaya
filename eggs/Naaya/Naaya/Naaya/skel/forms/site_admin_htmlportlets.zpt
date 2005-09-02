@@ -10,10 +10,10 @@
 				curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
 <div id="tabbedmenu">
 <ul>
-	<li><a tal:attributes="href string:${site_url}/admin_specialportlets_html" i18n:translate="">Special portlets</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_specialportlets_html" i18n:translate="">Special</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_remotechportlets_html" i18n:translate="">Remote channels</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_localchportlets_html" i18n:translate="">Local channels</a></li>
-	<li><a tal:attributes="href string:${site_url}/admin_folderportlets_html" i18n:translate="">Folders</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_folderportlets_html" i18n:translate="">For folders</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_linksportlets_html" i18n:translate="">List of links</a></li>
 	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_htmlportlets_html" i18n:translate="">Static HTML</a></li>
 </ul>
