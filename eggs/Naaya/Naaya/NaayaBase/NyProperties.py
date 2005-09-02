@@ -18,6 +18,12 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains the class that handles dynamic properties for a single.
+The I{dynamic properties} are the object properties that can be added and
+managed at runtime.
+"""
+
 #Python imports
 
 #Zope imports
@@ -30,7 +36,9 @@ from AccessControl.Permissions import view_management_screens, view
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
 class NyProperties(LocalPropertyManager):
-    """ """
+    """
+    Class that handles dynamic properties for a single.
+    """
 
     manage_options = (
         (
@@ -46,13 +54,27 @@ class NyProperties(LocalPropertyManager):
 
     security.declarePrivate('createProperty')
     def createProperty(self, p_id, p_value, lang):
-        self.__dynamic_properties[p_id] = ''    #XXX
+        """
+        Add a new property.
+        @param p_id: property id
+        @type p_id: string
+        @param p_value: property value
+        @type p_value: unicode
+        @param lang: language code
+        @type lang: string
+        """
+        self.__dynamic_properties[p_id] = ''
         setattr(self, p_id, LocalProperty(p_id))
         self._setLocalPropValue(p_id, lang, p_value)
         self._p_changed = 1
 
     security.declarePrivate('deleteProperty')
     def deleteProperty(self, p_id):
+        """
+        Delete a property.
+        @param p_id: property id
+        @type p_id: string
+        """
         try:
             del(self.__dynamic_properties[p_id])
             delattr(self, p_id)
@@ -61,23 +83,53 @@ class NyProperties(LocalPropertyManager):
             pass
 
     def getPropertyValue(self, p_id, lang=None):
+        """
+        Returns a property value in the specified language.
+        @param p_id: property id
+        @type p_id: string
+        @param lang: language code
+        @type lang: string
+        """
         if lang is None: lang = self.gl_get_selected_language()
         return self.getLocalProperty(p_id, lang)
 
     def setProperties(self, dict):
+        """
+        A set of properties is stored as a dictionary. this function adds
+        properties to the current object.
+        @param dict: structure that holds properties
+        @type dict: dictionary
+        """
         self.__dynamic_properties = dict
         self._p_changed = 1
 
     def getProperties(self):
+        """
+        Returns all the properties.
+        """
         return self.__dynamic_properties
 
     security.declarePrivate('createDynamicProperties')
     def createDynamicProperties(self, p_dp_dict, lang):
+        """
+        Create properties with values from a given dictionary.
+        @param p_dp_dict: structure that holds the properties values
+        @type p_dp_dict: dictionary
+        @param lang: language code
+        @type lang: string
+        """
         for l_dp in p_dp_dict.keys():
             self.createProperty(l_dp, p_dp_dict.get(l_dp, ''), lang)
 
     security.declarePrivate('updateDynamicProperties')
     def updateDynamicProperties(self, p_dp_dict, lang):
+        """
+        Update properties with values from a given dictionary.
+        @param p_dp_dict: structure that holds the properties values
+        @type p_dp_dict: dictionary
+        @param lang: language code
+        @type lang: string
+        """
         for l_dp in p_dp_dict.keys():
             self.createProperty(l_dp, p_dp_dict.get(l_dp, ''), lang)
 
