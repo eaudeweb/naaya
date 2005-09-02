@@ -42,8 +42,13 @@ def manage_addNyPhotoFolder(self, id='', title='', quality='', lang=None, REQUES
     try: quality = abs(int(quality))
     except: quality = DEFAULT_QUALITY
     if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
+    if self.checkPermissionPublishObjects():
+        approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
+    else:
+        approved, approved_by = 0, None
+    releasedate = self.utGetTodayDate()
     if lang is None: lang = self.gl_get_selected_language()
-    ob = NyPhotoFolder(id, title, quality, lang)
+    ob = NyPhotoFolder(id, title, quality, approved, approved_by, releasedate, lang)
     self.gl_add_languages(ob)
     self._setObject(id, ob)
     if REQUEST is not None:
@@ -81,12 +86,15 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
 
     title = LocalProperty('title')
 
-    def __init__(self, id, title, quality, lang):
+    def __init__(self, id, title, quality, approved, approved_by, releasedate, lang):
         """ """
         self.id = id
         self._setLocalPropValue('title', lang, title)
         self.quality = quality
         self.displays = DEFAULT_DISPLAYS.copy()
+        self.approved = approved
+        self.approved_by = approved_by
+        self.releasedate = releasedate
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
@@ -145,14 +153,24 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', quality='', REQUEST=None):
+    def manageProperties(self, title='', quality='', approved='', releasedate='',
+        REQUEST=None):
         """ """
         try: quality = abs(int(quality))
         except: quality = DEFAULT_QUALITY
         if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
+        if approved: approved = 1
+        else: approved = 0
+        releasedate = self.utConvertStringToDateTimeObj(releasedate)
+        if releasedate is None: releasedate = self.releasedate
         lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self.quality = quality
+        if approved != self.approved:
+            self.approved = approved
+            if approved == 0: self.approved_by = None
+            else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        self.releasedate = releasedate
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
