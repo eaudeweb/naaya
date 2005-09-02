@@ -111,6 +111,21 @@ class session_manager:
         self.__delSession('user_email')
         self.__delSession('user_password')
 
+    def setRequestRoleSession(self, name, firstname, lastname, email, password,
+        organisation, comments, location):
+        """ """
+        self.setUserSession(name, '', '', firstname, lastname, email, password)
+        self.__setSession('user_organisation', organisation)
+        self.__setSession('user_comments', comments)
+        self.__setSession('user_location', location)
+
+    def delRequestRoleSession(self):
+        """ """
+        self.delUserSession()
+        self.__delSession('user_organisation')
+        self.__delSession('user_comments')
+        self.__delSession('user_location')
+
     def getSessionUserName(self, default=''):
         return self.__getSession('user_name', default)
 
@@ -131,3 +146,12 @@ class session_manager:
 
     def getSessionUserPassword(self, default=''):
         return self.__getSession('user_password', default)
+
+    def getSessionUserOrganisation(self, default=''):
+        return self.__getSession('user_organisation', default)
+
+    def getSessionUserComments(self, default=''):
+        return self.__getSession('user_comments', default)
+
+    def getSessionUserLocation(self, default=''):
+        return self.__getSession('user_location', default)
