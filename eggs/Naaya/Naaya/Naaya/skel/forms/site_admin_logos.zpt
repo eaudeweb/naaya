@@ -32,7 +32,7 @@
 </tr>
 <tr>
 	<td></td>
-	<td><img tal:attributes="src string:${here/getLayoutToolPath}/logobis.gif" alt="Portal secondary logo" i18n:attributes="alt" /></td>
+	<td><img tal:attributes="src string:${here/getLayoutToolPath}/logobis" alt="Portal secondary logo" i18n:attributes="alt" /></td>
 </tr>
 <tr>
 	<td></td>
