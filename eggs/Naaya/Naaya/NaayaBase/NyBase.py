@@ -45,42 +45,79 @@ class NyBase:
     security.declarePrivate('approveThis')
     def approveThis(self, approved=1):
         """
-        
+        Set the state of the current object.
+        @param approved: the state flag
+        @type approved: integer - 0 or 1
         """
         self.approved = approved
         self._p_changed = 1
 
-    security.declareProtected(view_management_screens, 'setReleaseDate')
+    security.declarePrivate('setReleaseDate')
     def setReleaseDate(self, releasedate):
-        """ """
+        """
+        Set the release date of the current object.
+        @param releasedate: the date
+        @type releasedate: DateTime
+        """
         self.releasedate = self.utGetDate(releasedate)
         self._p_changed = 1
 
     def _objectkeywords(self, lang):
+        """
+        Builds the object keywords from common multilingual properties.
+        @param lang: the index language
+        @type lang: string
+        """
         v = [self.getLocalProperty('title', lang), self.getLocalProperty('description', lang), self.getLocalProperty('keywords', lang)]
         #for l_dp in self.getDynamicPropertiesTool().getDynamicSearchableProperties(self.meta_type):
         #    v.append(self.getPropertyValue(l_dp.id, lang))
         return u' '.join(v)
 
+    security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
+        """
+        For each portal language an index I{objectkeywords}_I{lang} is created.
+        Process the keywords for the specific catalog index.
+
+        B{This method can be overwritten by some types of objects if additonal
+        properties values must be considered as keywords.}
+        @param lang: the index language
+        @type lang: string
+        """
         return self._objectkeywords(lang)
 
+    security.declarePrivate('istranslated')
     def istranslated(self, lang):
-        #an object is considered to be translated into a language if
-        #the value of the 'title' property in that language is not an empty string
+        """
+        An object is considered to be translated into a language if
+        the value of the I{title} property in that language is not an empty string.
+        @param lang: the index language
+        @type lang: string
+        """
         return len(self.getLocalProperty('title', lang)) > 0
 
     #Syndication RDF
     security.declarePrivate('syndicateThisHeader')
     def syndicateThisHeader(self):
-        return '<item rdf:about="%s">' % self.absolute_url(0)
+        """
+        Opens the item RDF tag for the current object.
+        """
+        return '<item rdf:about="%s">' % self.absolute_url()
 
     security.declarePrivate('syndicateThisFooter')
     def syndicateThisFooter(self):
+        """
+        Closes the item RDF tag for the current object.
+        """
         return '</item>'
 
     security.declarePrivate('syndicateThisCommon')
     def syndicateThisCommon(self, lang):
+        """
+        Common RDF content (tags) for all types of objects.
+        @param lang: content language
+        @type lang: string
+        """
         l_site = self.getSite()
         r = []
         r.append('<link>%s</link>' % self.absolute_url())
@@ -100,6 +137,14 @@ class NyBase:
 
     security.declarePrivate('syndicateThis')
     def syndicateThis(self, lang=None):
+        """
+        Generates RDF item tag for an object.
+
+        B{This method can be overwritten by some types of objects in order to
+        add specific tags.}
+        @param lang: content language
+        @type lang: string
+        """
         l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
         r = []
@@ -114,6 +159,12 @@ class NyBase:
     #Handlers for export in xml format
     security.declarePrivate('export_this')
     def export_this(self):
+        """
+        Exports an object into Naaya XML format.
+
+        B{This method can be overwritten by some types of objects in order to
+        export specific data.}
+        """
         r = []
         r.append(self.export_this_tag())
         r.append(self.export_this_body())
@@ -122,6 +173,10 @@ class NyBase:
 
     security.declarePrivate('export_this_tag')
     def export_this_tag(self):
+        """
+        Opens the object tag for the current object. Common non multilingual
+        object properties are added as tag attributes.
+        """
         return '<ob meta_type="%s" id="%s" sortorder="%s" contributor="%s" approved="%s" approved_by="%s" releasedate="%s" %s>' % \
             (self.utXmlEncode(self.meta_type),
              self.utXmlEncode(self.id),
@@ -134,10 +189,17 @@ class NyBase:
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
+        """
+        B{This method can be overwritten by some types of objects in order to
+        export specific object data as attributes.}
+        """
         return ''
 
     security.declarePrivate('export_this_body')
     def export_this_body(self):
+        """
+        Common multilingual object properties are added as tags.
+        """
         r = []
         for l in self.gl_get_languages():
             r.append('<title lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('title', l))))
@@ -149,6 +211,10 @@ class NyBase:
 
     security.declarePrivate('export_this_body_custom')
     def export_this_body_custom(self):
+        """
+        B{This method can be overwritten by some types of objects in order to
+        export specific object data as tags.}
+        """
         return ''
 
 InitializeClass(NyBase)
