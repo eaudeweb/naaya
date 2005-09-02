@@ -17,6 +17,14 @@
 #
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains the class that implements functionality for grabbing
+RDF/RSS/Atom feeds.
+
+It is based on the I{Universal Feed Parser} python module available at
+U{http://feedparser.org/}.
+"""
+
 #Python imports
 import feedparser
 from copy import deepcopy
@@ -26,10 +34,32 @@ from copy import deepcopy
 #Product imports
 
 class NyFeed:
-    """ """
+    """
+    Class that implements functionality for grabbing RDF/RSS/Atom feeds.
+    """
 
     def __init__(self):
-        """ """
+        """
+        Initialize variables:
+
+        B{__feed_gone} - flag that signals that the feed URL no longer exists
+
+        B{__feed_feed} - contains all the feed parsed data
+
+        B{__feed_status} - HTTP status code returned when the feed was grabbed
+
+        B{__feed_version} - feed version
+
+        B{__feed_bozo_exception} - stores the caught exception if any
+
+        B{__feed_encoding} - feed character encoding
+
+        B{__feed_etag} - HTTP ETag header value
+
+        B{__feed_modified} - HTTP last-modified date of the feed
+
+        B{__feed_entries} - feed items
+        """
         self.__feed_gone = 0
         self.__feed_feed = None
         self.__feed_status = None
@@ -42,7 +72,9 @@ class NyFeed:
 
     def __set_feed(self, gone=0, feed=None, status=None, version=None, bozo_exception=None, encoding=None, etag=None,
         modified=None, entries=None):
-        #set feed info
+        """
+        Set feed data after the feed was parsed.
+        """
         self.__feed_gone = gone
         if feed is not None: self.__feed_feed = deepcopy(feed)
         else: self.__feed_feed = None
@@ -57,45 +89,93 @@ class NyFeed:
         self._p_changed = 1
 
     #api
-    def get_feed_gone(self): return self.__feed_gone
-    def get_feed_status(self): return self.__feed_status
-    def get_feed_version(self): return self.__feed_version
-    def get_feed_bozo_exception(self): return self.__feed_bozo_exception
-    def get_feed_encoding(self): return self.__feed_encoding
-    def get_feed_etag(self): return self.__feed_etag
-    def get_feed_modified(self): return self.__feed_modified
-
+    def get_feed_gone(self):
+        """ Getter for I{__feed_gone}. """
+        return self.__feed_gone
+    def get_feed_status(self):
+        """ Getter for I{__feed_status}. """
+        return self.__feed_status
+    def get_feed_version(self):
+        """ Getter for I{__feed_version}. """
+        return self.__feed_version
+    def get_feed_bozo_exception(self):
+        """ Getter for I{__feed_bozo_exception}. """
+        return self.__feed_bozo_exception
+    def get_feed_encoding(self):
+        """ Getter for I{__feed_encoding}. """
+        return self.__feed_encoding
+    def get_feed_etag(self):
+        """ Getter for I{__feed_etag}. """
+        return self.__feed_etag
+    def get_feed_modified(self):
+        """ Getter for I{__feed_modified}. """
+        return self.__feed_modified
     def get_feed_title(self):
+        """ Getter for feed title. """
         try: return self.__feed_feed.title
         except: return ''
 
     def get_feed_url(self):
-        #abstract method; this should be implemented by the class who extends NyFeed
-        #return the value of the feed url (this can be stored in whatever.. variable)
+        """
+        Returns the value of the feed url (this can be stored in whatever object
+        variable).
+
+        B{Abstract method; this should be implemented by the class who extends
+        I{NyFeed}.}
+        """
         raise NotImplementedError, 'get_feed_url'
 
     def set_new_feed_url(self):
-        #abstract method; this should be implemented by the class who extends NyFeed
-        #after receiving a 301 status code, the feed url must be changed
+        """
+        After receiving a 301 status code, the feed url must be changed.
+
+        B{Abstract method; this should be implemented by the class who extends
+        I{NyFeed}.}
+        """
         raise NotImplementedError, 'set_new_feed_url'
 
-    def get_feed_items(self):return self.__feed_entries
-    def count_feed_items(self): return len(self.__feed_entries)
+    def get_feed_items(self):
+        """ Getter for I{__feed_entries}. """
+        return self.__feed_entries
+    def count_feed_items(self):
+        """ Returns the number of items. """
+        return len(self.__feed_entries)
 
-    def get_feed_item_title(self, item): return item['title']
-    def get_feed_item_link(self, item): return item['link']
+    def get_feed_item_title(self, item):
+        """
+        Returns the title of an item.
+        @param item: feed item
+        """
+        return item['title']
+    def get_feed_item_link(self, item):
+        """
+        Returns the URL of an item.
+        @param item: feed item
+        """
+        return item['link']
     def get_feed_item_keys(self, item):
-        #returns all item keys without 'title' and 'link'
+        """
+        Returns all item keys without I{title} and I{link}.
+        @param item: feed item
+        """
         l_keys = item.keys()
         if 'title' in l_keys: l_keys.remove('title')
         if 'link' in l_keys: l_keys.remove('link')
         return l_keys
     def get_feed_item_value(self, item, key):
+        """
+        Returns an item's key value.
+        @param item: feed item
+        @param key: key name
+        """
         value = item.get(key, None)
         if type(value) == type(u''): value = value
         return value
 
     def harvest_feed(self):
+        """
+        Handles the feed grabbing and parsing.
+        """
         p = feedparser.parse(self.get_feed_url(), etag=self.__feed_etag, modified=self.__feed_modified)
         if p.get('bozo', 0) == 1:
             #some error occurred
