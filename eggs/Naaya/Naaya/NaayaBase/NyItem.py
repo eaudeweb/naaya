@@ -20,6 +20,11 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains the class that implements the Naaya simple item type of object.
+All types of objects that are not containers must extend this class.
+"""
+
 #Python imports
 
 #Zope imports
@@ -32,7 +37,9 @@ from NyBase import NyBase
 from NyPermissions import NyPermissions
 
 class NyItem(SimpleItem, NyBase, NyPermissions):
-    """ """
+    """
+    Class that implements the Naaya simple item type of object.
+    """
 
     manage_options = (
         SimpleItem.manage_options
@@ -41,12 +48,16 @@ class NyItem(SimpleItem, NyBase, NyPermissions):
     security = ClassSecurityInfo()
 
     def manage_afterAdd(self, item, container):
-        """ This method is called, whenever _setObject in ObjectManager gets called."""
+        """
+        This method is called, whenever _setObject in ObjectManager gets called.
+        """
         SimpleItem.inheritedAttribute('manage_afterAdd')(self, item, container)
         self.catalogNyObject(self)
 
     def manage_beforeDelete(self, item, container):
-        """ This method is called, when the object is deleted. """
+        """
+        This method is called, when the object is deleted.
+        """
         SimpleItem.inheritedAttribute('manage_beforeDelete')(self, item, container)
         self.uncatalogNyObject(self)
 
