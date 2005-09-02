@@ -178,7 +178,7 @@ function fDeleteObjects()
 //-->
 </script>
 
-<script language="javascript" type="text/javascript" tal:condition="objects_delete_all">
+<script language="javascript" type="text/javascript" tal:condition="objects_select_all">
 <!--
 	function fSetTopStoryObjects()
 	{	document.objectItems.action="setTopStoryObjects";
@@ -211,7 +211,7 @@ function fDeleteObjects()
 				tal:content="python:item[1]" i18n:translate="" />
 		</select>
 	</span>
-	<tal:block tal:condition="python:perm_edit_object and perm_publish_objects">
+	<tal:block tal:condition="python:perm_edit_object or perm_publish_objects">
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span class="buttons"><img src="/misc_/Naaya/editfolder" border="0" alt="Edit Folder" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Edit Folder</span></span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span class="buttons"><img src="/misc_/Naaya/basket" border="0" alt="Basket of approvals" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Basket of Approvals</span></span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/restrict_html"><span class="buttons"><img src="/misc_/Naaya/editfolder" border="0" alt="Restrict this folder" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Restrict</span></span></a>
@@ -219,10 +219,10 @@ function fDeleteObjects()
 </div>
 </tal:block>
 
-<div tal:condition="objects_select_all">
+<div tal:condition="python:objects_select_all or objects_delete_all">
 	<div id="toolbar">
 		<tal:block tal:condition="objects_delete_all"><a href="javascript:fDeleteObjects();"><span><img src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
-		<tal:block tal:condition="objects_delete_all"><a href="javascript:fSetTopStoryObjects();"><span><input src="/misc_/Naaya/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="" tal:omit-tag="">Save on front</span></span></a></tal:block>
+		<tal:block tal:condition="objects_select_all"><a href="javascript:fSetTopStoryObjects();"><span><input src="/misc_/Naaya/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="" tal:omit-tag="">Save on front</span></span></a></tal:block>
 	</div>
 </div>
 
@@ -230,7 +230,7 @@ function fDeleteObjects()
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tal:block tal:condition="python:objects_select_all">
 <tr>
-	<th class="checkbox" i18n:translate="">Delete</th>
+	<th class="checkbox" i18n:translate="" tal:condition="objects_delete_all">Delete</th>
 	<th class="type" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">On front</th>
@@ -239,18 +239,17 @@ function fDeleteObjects()
 </tal:block>
 <tr tal:repeat="objects objects_list">
 	<tal:block define="del_permission python:objects[0]; edit_permission python:objects[1]; object python:objects[2]">
-	<td class="checkbox" tal:condition="python:del_permission==1" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
-	<td tal:condition="python:del_permission!=1"></td>
+	<td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
 	<td class="type"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" /></td>
 	<td class="title-column">
 		<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
 		<span tal:replace="structure object/description" />
 	</td>
-	<td class="checkin" tal:condition="python:edit_permission==1">
+	<td class="checkin" tal:condition="edit_permission">
 		<input type="checkbox" tal:attributes="name python:'topstory_' + object.id; checked python:object.topitem==1;" />
 	</td>
 	<td class="edit">
-		<tal:block tal:condition="python:edit_permission==1">
+		<tal:block tal:condition="edit_permission">
 			<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
 		</tal:block>
 	</td>
@@ -302,7 +301,7 @@ function fDeleteObjects()
 //-->
 </script>
 
-<script language="javascript" type="text/javascript" tal:condition="objects_delete_all">
+<script language="javascript" type="text/javascript" tal:condition="objects_select_all">
 <!--
 	function fSetTopStoryObjects()
 	{	document.objectItems.action="setTopStoryObjects";
@@ -335,7 +334,7 @@ function fDeleteObjects()
 				tal:content="python:item[1]" i18n:translate="" />
 		</select>
 	</span>
-	<tal:block tal:condition="python:perm_edit_object and perm_publish_objects">
+	<tal:block tal:condition="python:perm_edit_object or perm_publish_objects">
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span class="buttons"><img src="/misc_/Naaya/editfolder" border="0" alt="Edit Folder" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Edit Folder</span></span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span class="buttons"><img src="/misc_/Naaya/basket" border="0" alt="Basket of approvals" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Basket of Approvals</span></span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/restrict_html"><span class="buttons"><img src="/misc_/Naaya/editfolder" border="0" alt="Restrict this folder" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Restrict</span></span></a>
@@ -343,10 +342,10 @@ function fDeleteObjects()
 </div>
 </tal:block>
 
-<div tal:condition="objects_select_all">
+<div tal:condition="python:objects_select_all or objects_delete_all">
 	<div id="toolbar">
 		<tal:block tal:condition="objects_delete_all"><a href="javascript:fDeleteObjects();"><span><img src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
-		<tal:block tal:condition="objects_delete_all"><a href="javascript:fSetTopStoryObjects();"><span><input src="/misc_/Naaya/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="" tal:omit-tag="">Save on front</span></span></a></tal:block>
+		<tal:block tal:condition="objects_select_all"><a href="javascript:fSetTopStoryObjects();"><span><input src="/misc_/Naaya/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="" tal:omit-tag="">Save on front</span></span></a></tal:block>
 	</div>
 </div>
 
@@ -354,7 +353,7 @@ function fDeleteObjects()
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tal:block tal:condition="python:objects_select_all">
 <tr>
-	<th class="checkbox" i18n:translate="">Delete</th>
+	<th class="checkbox" i18n:translate="" tal:condition="objects_delete_all">Delete</th>
 	<th class="type" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">On front</th>
@@ -363,18 +362,17 @@ function fDeleteObjects()
 </tal:block>
 <tr tal:repeat="objects objects_list">
 	<tal:block define="del_permission python:objects[0]; edit_permission python:objects[1]; object python:objects[2]">
-	<td class="checkbox" tal:condition="python:del_permission==1" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
-	<td tal:condition="python:del_permission!=1"></td>
+	<td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
 	<td class="type"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" /></td>
 	<td class="title-column">
 		<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
 		<span tal:replace="structure object/description" />
 	</td>
-	<td class="checkin" tal:condition="python:edit_permission==1">
+	<td class="checkin" tal:condition="edit_permission">
 		<input type="checkbox" tal:attributes="name python:'topstory_' + object.id; checked python:object.topitem==1;" />
 	</td>
 	<td class="edit">
-		<tal:block tal:condition="python:edit_permission==1">
+		<tal:block tal:condition="edit_permission">
 			<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
 		</tal:block>
 	</td>
@@ -451,7 +449,7 @@ function fDeleteObjects()
 				tal:content="python:item[1]" i18n:translate="" />
 		</select>
 	</span>
-	<tal:block tal:condition="python:perm_edit_object and perm_publish_objects">
+	<tal:block tal:condition="python:perm_edit_object or perm_publish_objects">
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span class="buttons"><img src="/misc_/Naaya/editfolder" border="0" alt="Edit Folder" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Edit Folder</span></span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span class="buttons"><img src="/misc_/Naaya/basket" border="0" alt="Basket of approvals" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Basket of Approvals</span></span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/restrict_html"><span class="buttons"><img src="/misc_/Naaya/editfolder" border="0" alt="Restrict this folder" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Restrict</span></span></a>
@@ -459,7 +457,7 @@ function fDeleteObjects()
 </div>
 </tal:block>
 
-<div tal:condition="python:objects_select_all">
+<div tal:condition="python:objects_select_all or objects_delete_all">
 	<div id="toolbar">
 		<tal:block tal:condition="python:folders_delete_all or objects_delete_all"><a href="javascript:fDeleteObjects();"><span><img src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
 	</div>
@@ -469,7 +467,7 @@ function fDeleteObjects()
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tal:block tal:condition="python:folders_select_all or objects_select_all">
 <tr>
-	<th class="checkbox" i18n:translate="">Delete</th>
+	<th class="checkbox" i18n:translate="" tal:condition="objects_delete_all">Delete</th>
 	<th class="type" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="edit" i18n:translate="">Edit</th>
@@ -477,15 +475,14 @@ function fDeleteObjects()
 </tal:block>
 <tr tal:repeat="objects objects_list">
 	<tal:block define="del_permission python:objects[0]; edit_permission python:objects[1]; object python:objects[2]">
-	<td class="checkbox" tal:condition="python:del_permission==1" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
-	<td tal:condition="python:del_permission!=1"></td>
+	<td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
 	<td class="type"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" /></td>
 	<td class="title-column">
 		<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
 		<span tal:replace="structure object/description" />
 	</td>
 	<td class="edit">
-		<tal:block tal:condition="python:edit_permission==1">
+		<tal:block tal:condition="edit_permission">
 			<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
 		</tal:block>
 	</td>
