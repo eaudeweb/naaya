@@ -12,10 +12,14 @@
 </ul>
 </div>
 
+<p i18n:translate="">
+	Change the logo(s) of your website with the one(s) of your organisation using the form below. They will appear in the top banner of each page.
+</p>
+
 <form method="post" tal:attributes="action string:${site_url}/admin_logos" enctype="multipart/form-data" style="clear:both;">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 <tr>
-	<td valign="top" i18n:translate="">Logo</td>
+	<td valign="top" i18n:translate="">Left-side logo</td>
 	<td valign="top"><input type="file" name="logo" /></td>
 </tr>
 <tr>
@@ -23,7 +27,7 @@
 	<td><img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" alt="Portal logo" i18n:attributes="alt" /></td>
 </tr>
 <tr>
-	<td valign="top" i18n:translate="">Secondary logo</td>
+	<td valign="top" i18n:translate="">Right-side logo</td>
 	<td valign="top"><input type="file" name="logobis" /></td>
 </tr>
 <tr>
