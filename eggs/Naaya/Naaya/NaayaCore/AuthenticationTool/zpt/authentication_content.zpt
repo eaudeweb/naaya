@@ -32,7 +32,7 @@
         <td width="3%" nowrap>
             <table border=0>
                 <tr>
-                    <td><input type="checkbox" name="del_users" tal:attributes="value python:here.getUserAccount(user_obj)">
+                    <td><input type="checkbox" name="names" tal:attributes="value python:here.getUserAccount(user_obj)">
                     </td>
                     <td><img src="misc_/NaayaCore/User.gif" alt="user"></td>
                 </tr>
