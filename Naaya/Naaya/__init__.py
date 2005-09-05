@@ -71,7 +71,6 @@ misc_ = {
     'edit':ImageFile('www/edit.gif', globals()),
     'checkin':ImageFile('www/checkin.gif', globals()),
     'checkout':ImageFile('www/checkout.gif', globals()),
-    'admin_schema':ImageFile('www/admin_schema.gif', globals()),
     'checked':ImageFile('www/checked.png', globals()),
 
     #drag & drop files
@@ -82,6 +81,11 @@ misc_ = {
     'drag.js': ImageFile('zpt/dragdrop/drag.js.dtml', globals()),
     'dragsort.js': ImageFile('zpt/dragdrop/dragsort.js.dtml', globals()),
     'cookies.js': ImageFile('zpt/dragdrop/cookies.js.dtml', globals()),
+
+    # documentation
+    'admin_schema':ImageFile('www/documentation/admin_schema.gif', globals()),
+    'workflow':ImageFile('www/documentation/workflow.gif', globals()),
+    'brief_layout':ImageFile('www/documentation/brief_layout.gif', globals()),
 }
 
 #constructors for pluggable content
