@@ -171,7 +171,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
             r.append('<location lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('location', l))))
             r.append('<location_address lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('location_address', l))))
             r.append('<host lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('host', l))))
-            r.append('<details lang="%s" content="%s"/>' % (l, self.utXmlEncode(selfself.getLocalProperty('details', l))))
+            r.append('<details lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('details', l))))
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')
