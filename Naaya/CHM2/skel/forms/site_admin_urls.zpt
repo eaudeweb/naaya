@@ -14,27 +14,18 @@
 	properties of either <em>URL</em> items, <em>news</em> items or <em>events</em>,
 	along with the locations where these appear.
 </p>
-<table border="0" cellspacing="1" cellpadding="1" width="100%">
-	<tr>
-		<th i18n:translate="">Link (Title/URL)</th>
-		<th i18n:translate="">Presence in the portal (containing folder)</th>
-	</tr>
-	<tr tal:repeat="url_struct python:here.getURLProperties().items()">
-		<tal:block tal:define="url python:url_struct[0]; pair python:url_struct[1]">
-		<td>
-			<span tal:replace="python:pair[0].title_or_id()" />
-			(<a tal:attributes="href url" tal:content="python:here.utTruncateString(url, 50)" />)
-		</td>
-		<td>
-			<ul>
-				<li tal:repeat="item python:pair[1]">
-					<a tal:attributes="href item/absolute_url" tal:content="item/title_or_id" />
-				</li>
-			</ul>
-		</td>
-		</tal:block>
-	</tr>
-</table>
+<dl tal:repeat="url_struct python:here.getURLProperties().items()">
+	<tal:block tal:define="url python:url_struct[0]; pairs python:url_struct[1]">
+		<dt>
+			<a tal:attributes="href url" tal:content="python:here.utTruncateString(url, 50)" />
+		</dt>
+		<dd tal:repeat="pair pairs">
+			Title: <strong tal:content="python:pair[0].title_or_id()" /><br />
+			Parent: <a tal:attributes="href python:pair[1].absolute_url()"
+						tal:content="python:pair[1].title_or_id()" />
+		</dd>
+	</tal:block>
+</dl>
 </tal:block>
 
 </tal:block>
