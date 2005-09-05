@@ -121,7 +121,7 @@
 		<portlet id="portlet_lateststories" title="Latest stories"/>
 		<portlet id="portlet_latestnews" title="What's new"/>
 		<portlet id="portlet_latestuploads" title="Latest uploads"/>
-		<portlet id="portlet_latestevents" title="Latest events"/>
+		<portlet id="portlet_latestevents" title="Meetings and events"/>
 		<portlet id="portlet_latestphotos" title="Photos"/>
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
 			<link id="100" title="Biodiversity CHM" description="Global Biodiversity Clearing-House Mechanism (CBD)" url="http://www.biodiv.org/chm" relative="0" permission="" order="10"/>
