@@ -114,7 +114,6 @@
 	</portlets>
 	<properties>
 		<language code="en" />
-		<language code="ro" />
 		<eventtype id="meeting" title="Meeting"/>
 		<eventtype id="event" title="Event"/>
 		<eventtype id="conference" title="Conference"/>
