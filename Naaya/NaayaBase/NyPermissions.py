@@ -59,7 +59,7 @@ class NyPermissions:
             - B{1} if the current user has the permission
             - B{None} otherwise
         """
-        return getSecurityManager().checkPermission(p_permission, self)
+        return getSecurityManager().checkPermission(p_permission, self) is not None
 
     def checkPermissionAdministrate(self):
         """
