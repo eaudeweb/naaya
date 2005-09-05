@@ -6,7 +6,7 @@
 						l python:request.get('l', '');
 						t python:request.get('t', '')">
 <p i18n:translate="">
-	Search channels from repository.
+	Search channels from registry.
 </p>
 <form method="get" action="">
 <table border="0" cellspacing="2" cellpadding="2">
