@@ -88,11 +88,14 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
 def importNyFolder(self, id, attrs, content, properties):
     #this method is called during the import process
     publicinterface = abs(int(attrs['publicinterface'].encode('utf-8')))
+    meta_types = attrs['folder_meta_types'].encode('utf-8')
+    if meta_types == '': meta_types = ''
+    else: meta_types = meta_types.split(',')
     addNyFolder(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),
         publicinterface=publicinterface,
         maintainer_email=attrs['maintainer_email'].encode('utf-8'),
-        folder_meta_types=attrs['folder_meta_types'].encode('utf-8').split(','),
+        folder_meta_types=meta_types,
         contributor=attrs['contributor'].encode('utf-8'))
     ob = self._getOb(id)
     for property, langs in properties.items():
