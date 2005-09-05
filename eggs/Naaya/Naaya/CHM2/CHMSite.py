@@ -97,6 +97,7 @@ class CHMSite(NySite):
     def getPhotoArchive(self): return self._getOb(ID_PHOTOARCHIVE, None)
     def getHelpDeskAgent(self): return self._getOb(ID_HELPDESKAGENT, None)
     def getNewsArchive(self): return self._getOb('news', None)
+    def getEventsArchive(self): return self._getOb('events', None)
 
     def get_containers_metatypes(self):
         #this method is used to display local roles, called from getUserRoles methods
@@ -152,6 +153,11 @@ class CHMSite(NySite):
         #returns a list with the news marked as on front
         #this requires NyNews pluggable content type to be present
         return [x for x in self.getNewsArchive().objectValues(METATYPE_NYNEWS) if x.approved==1 and x.topitem==1]
+
+    def getOnFrontEvents(self):
+        #returns a list with the news marked as on front
+        #this requires NyEvent pluggable content type to be present
+        return [x for x in self.getEventsArchive().objectValues(METATYPE_NYEVENT) if x.approved==1 and x.topitem==1]
 
     def getOnFrontPhotos(self):
         #returns a list with the photos marked as on front
@@ -297,6 +303,11 @@ class CHMSite(NySite):
     def lateststories_rdf(self):
         """ """
         return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestStories())
+
+    security.declareProtected(view, 'latestevents_rdf')
+    def latestevents_rdf(self):
+        """ """
+        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getOnFrontEvents())
 
     security.declareProtected(view, 'upcomingevents_rdf')
     def upcomingevents_rdf(self):
