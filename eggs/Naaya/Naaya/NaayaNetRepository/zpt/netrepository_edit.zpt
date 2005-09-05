@@ -1,6 +1,6 @@
 <span tal:replace="structure here/standard_html_header" />
 
-<h1 i18n:translate="">Edit repository</h1>
+<h1 i18n:translate="">Edit registry</h1>
 
 <p i18n:translate="">
 	Change the properties in the form below and click <strong>Save changes</strong>.
