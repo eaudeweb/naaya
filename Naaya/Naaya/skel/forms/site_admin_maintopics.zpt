@@ -59,7 +59,7 @@ function fSave(action)
 <span tal:replace="structure python:here.DragDropCore('maintopicslist')" />
 
 <fieldset>
-<legend i18n:translate="">Add new main topic</legend>
+<legend i18n:translate="">Add new main section</legend>
 <form method="post" tal:attributes="action string:${site_url}/admin_addmaintopics">
 <div class="field" tal:define="selected_language here/gl_get_selected_language">
 	<label i18n:translate="" for="lang">Posting language</label>
