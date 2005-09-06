@@ -23,7 +23,7 @@ function fDeleteObjects()
 <h1><img tal:attributes="src here/icon; title here/meta_type; alt here/meta_type" border="0" /> <span tal:replace="here/title_or_id" /></h1>
 
 <p i18n:translate="">
-	This page lists all the sites from this repository. To search for channels, please access
+	This page lists all the sites from this registry. To search for channels, please access
 	<strong>Search channels</strong> page.
 </p>
 <tal:block tal:define="permission here/checkPermissionPublishObjects">
