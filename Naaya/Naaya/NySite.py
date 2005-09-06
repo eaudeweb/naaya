@@ -458,6 +458,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         #this method returns all container type that can be used in an export operation
         return self.objectValues(METATYPE_FOLDER)
 
+    def getObjectById(self, p_id):
+        """
+        Returns an object inside this one with the given id.
+        @param p_id: object id
+        @type p_id: string
+        @return:
+            - the object is exists
+            - None otherwise
+        """
+        try: return self._getOb(p_id)
+        except: return None
+
     def get_containers_metatypes(self):
         #this method is used to display local roles, called from getUserRoles methods
         return [METATYPE_FOLDER, 'Folder']
