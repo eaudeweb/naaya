@@ -18,6 +18,7 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+from os.path import join
 
 #Zope imports
 from OFS.Folder import Folder
@@ -29,6 +30,7 @@ from AccessControl.Permissions import view_management_screens, view
 #Product imports
 from constants import *
 from Products.NaayaBase.constants import *
+from Products.NaayaCore.constants import *
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 import NyNetSite
 
@@ -89,6 +91,22 @@ class NyNetRepository(LocalPropertyManager, Folder):
         except: pass
         try: catalog.addIndex('type', 'FieldIndex')
         except: pass
+        #create a portlet
+        portlets_ob = self.getPortletsTool()
+        portlet_id = '%s%s' % (PREFIX_PORTLET, self.id)
+        portlets_ob.addPortlet(portlet_id, self.title_or_id(), 99)
+        portlet_ob = portlets_ob._getOb(portlet_id)
+        content = self.futRead(join(NAAYANETREPOSITORY_PRODUCT_PATH, 'data', 'portlet_netrepository.zpt'), 'r')
+        content = content.replace('PORTLET_NETREPOSITORY_ID', self.id)
+        portlet_ob.pt_edit(text=content, content_type='text/html')
+
+    #overwrite handlers
+    def manage_beforeDelete(self, item, container):
+        """
+        This method is called, when the object is deleted.
+        """
+        Folder.inheritedAttribute('manage_beforeDelete')(self, item, container)
+        self.delete_portlet_for_object(item)
 
     #api
     def get_netrepository_object(self): return self
