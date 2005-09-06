@@ -22,13 +22,14 @@ function fDeleteObjects()
 
 <h1><img tal:attributes="src here/icon; title here/meta_type; alt here/meta_type" border="0" /> <span tal:replace="here/title_or_id" /></h1>
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
-
-<p i18n:translate="">
-	This page lists all the channels published by this site. The list of channels can be updated by
-	clicking on the <strong>Update</strong>.<br />
-	Also, channels can be added/modified/deleted manually.
-</p>
 <tal:block tal:define="permission here/checkPermissionPublishObjects">
+<p i18n:translate="">
+	This page lists all the channels published by this site. <br />
+	<span tal:condition="permission" i18n:translate="">The list of channels can be updated by
+	clicking on the <strong>Update</strong>. Also, channels can be added/modified/deleted manually. The ones harvested automatically cannot be deleted or changed.
+	</span>
+</p>
+
 <div id="admin_this_folder" tal:condition="permission">
 	<a tal:attributes="href string:${here/absolute_url}/netchannel_add_html"><span class="buttons"><img src="/misc_/Naaya/editfolder" border="0" alt="Edit Folder" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Add channel</span></span></a>
 	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span class="buttons"><img src="/misc_/Naaya/editfolder" border="0" alt="Edit Folder" i18n:attributes="alt" /> <span i18n:translate="" tal:omit-tag="">Edit Site</span></span></a>
@@ -53,7 +54,7 @@ function fDeleteObjects()
 	<tr tal:repeat="item here/get_netchannels">
 		<td tal:condition="permission"><input tal:condition="python:item.manual==1" type="checkbox" name="ids" tal:attributes="value item/id" /></td>
 		<td><a tal:attributes="href string:${item/absolute_url}/index_html" tal:content="item/title_or_id" /></td>
-		<td><a tal:attributes="href item/url" tal:content="python:here.utTruncateString(item.url, 30)" /></td>
+		<td><a tal:attributes="href item/url" tal:content="python:here.utTruncateString(item.url, 60)" /></td>
 		<td tal:content="python:here.get_language_name(item.language)" />
 		<td tal:content="item/type" />
 		<td tal:content="item/count_feed_items" />
