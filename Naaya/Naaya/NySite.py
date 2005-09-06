@@ -1722,21 +1722,21 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(view, 'standard_html_header')
     def standard_html_header(self, REQUEST=None, RESPONSE=None):
         """ """
-        context = self.unrestrictedTraverse(self.REQUEST.PATH_INFO)
+        #context = self.unrestrictedTraverse(self.REQUEST.PATH_INFO)
         context = self.REQUEST.PARENTS[0]
         return self.getLayoutTool().getContent({'here': context}, 'standard_html_headerfooter').split('<!--STANDARD_HEADERFOOTER_MARKER-->')[0]
 
     security.declareProtected(view, 'standard_html_footer')
     def standard_html_footer(self, REQUEST=None, RESPONSE=None):
         """ """
-        context = self.unrestrictedTraverse(self.REQUEST.PATH_INFO)
+        #context = self.unrestrictedTraverse(self.REQUEST.PATH_INFO)
         context = self.REQUEST.PARENTS[0]
         return self.getLayoutTool().getContent({'here': context}, 'standard_html_headerfooter').split('<!--STANDARD_HEADERFOOTER_MARKER-->')[1]
 
     security.declareProtected(view, 'standard_error_message')
     def standard_error_message(self, client=None, REQUEST=None, **kwargs):
         """ """
-        context = self.unrestrictedTraverse(self.REQUEST.PATH_INFO)
+        #context = self.unrestrictedTraverse(self.REQUEST.PATH_INFO)
         context = self.REQUEST.PARENTS[0]
         kwargs['here'] = context
         return self.getFormsTool().getContent(kwargs, 'standard_error_message')
