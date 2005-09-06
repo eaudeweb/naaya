@@ -25,17 +25,13 @@
 #Product imports
 
 # Types of portlets:
-#   0 - Static HTML
-#   1 - Links list
-#   2 - RemoteChannel
-#   3 - LocalChannel
-#   4 - Special (e.g. search, administration)
 PORTLETS_TYPES = {
     0: 'Static HTML',
     1: 'Links list',
     2: 'Remote channel',
     3: 'Local channel',
     4: 'Folder',
+    99: 'Other',
     100: 'Special'
 }
 
@@ -106,5 +102,6 @@ PORTLETS_BODIES = {
     2: REMOTECHANNEL_PORTLET_TEMPLATE,
     3: LOCALCHANNEL_PORTLET_TEMPLATE,
     4: FOLDER_PORTLET_TEMPLATE,
+    99: SIMPLE_PORTLET_TEMPLATE,
     100: SIMPLE_PORTLET_TEMPLATE
 }
