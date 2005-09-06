@@ -7,12 +7,20 @@
 /* Required tags - to be implemented in all skins since these classes appear in the forms */
 
 	/* right-side portlets */
+
+	#right_port {
+		margin: 1.5em 0.1em 1em 0.3em;
+		width:11.5em;
+		float: right;
+
+		padding-left: 0.6em;
+		background-color: #ffffff;
+	}
+
 	.right_link_portlet{
 		border-top:1px solid #ffffff; /*1px solid #ffffff*/ /*1px solid #ffffff*/ /*1px solid #ffffff*/ /* 3px solid #99cc33*/
-		margin: 1.5em 0.1em 1em 0.9em;
-		width:11.5em;
 		background-color:#ecf2e1; /*#d9d8b9*/ /*#c1c19d*/ /* #f9f9f9*/ /*#eeeff0*/
-		float: right;
+		margin-bottom:1em;
 	}
 
 	.right_link_portlet .portlet-title{
