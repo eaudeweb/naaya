@@ -893,7 +893,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(view, 'localchannels_rdf')
     def localchannels_rdf(self):
         """ """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), syndication_tool.get_local_channels())
+        syndication_tool = self.getSyndicationTool()
+        return syndication_tool.syndicateSomething(self.absolute_url(), syndication_tool.get_local_channels())
 
     #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_metadata')
