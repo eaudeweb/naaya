@@ -593,12 +593,14 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     def gl_add_site_language(self, language):
         #this is called when a new language is added for the portal
+        catalog_tool = self.getCatalogTool()
         self.add_language(language)
         self.getLocalizer().add_language(language)
         self.getPortalTranslations().add_language(language)
-        self.getCatalogTool().add_indexes_for_lang(language)
-        for x in self.getSiteMap(expand=['all'], root=None, showitems=1):
-            try: x[0].add_language(language)
+        catalog_tool.add_indexes_for_lang(language)
+        for b in self.getCatalogedBrains():
+            x = catalog_tool.getobject(b.data_record_id_)
+            try: x.add_language(language)
             except: pass
         for x in self.getPortletsTool().get_html_portlets():
             try: x.add_language(language)
@@ -611,14 +613,16 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     def gl_del_site_languages(self, languages):
         #this is called when one or more languages are deleted from the portal
+        catalog_tool = self.getCatalogTool()
         for language in languages:
             self.del_language(language)
             self.getLocalizer().del_language(language)
             self.getPortalTranslations().del_language(language)
-            self.getCatalogTool().del_indexes_for_lang(language)
-        for x in self.getSiteMap(expand=['all'], root=None, showitems=1):
+            catalog_tool.del_indexes_for_lang(language)
+        for b in self.getCatalogedBrains():
+            x = catalog_tool.getobject(b.data_record_id_)
             for language in languages:
-                try: x[0].del_language(language)
+                try: x.del_language(language)
                 except: pass
         for x in self.getPortletsTool().get_html_portlets():
             for language in languages:
@@ -632,11 +636,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     def gl_change_site_defaultlang(self, language):
         #this is called when site default language is changed
+        catalog_tool = self.getCatalogTool()
         self.manage_changeDefaultLang(language)
         self.getLocalizer().manage_changeDefaultLang(language)
         self.getPortalTranslations().manage_changeDefaultLang(language)
-        for x in self.getSiteMap(expand=['all'], root=None, showitems=1):
-            try: x[0].manage_changeDefaultLang(language)
+        for b in self.getCatalogedBrains():
+            x = catalog_tool.getobject(b.data_record_id_)
+            try: x.manage_changeDefaultLang(language)
             except: pass
         for x in self.getPortletsTool().get_html_portlets():
             try: x.manage_changeDefaultLang(language)
