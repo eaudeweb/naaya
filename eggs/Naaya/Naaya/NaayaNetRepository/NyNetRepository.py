@@ -143,7 +143,6 @@ class NyNetRepository(LocalPropertyManager, Folder):
         if lang is None: lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self._p_changed = 1
-        self.recatalogNyObject(self)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
