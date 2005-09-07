@@ -129,6 +129,11 @@ class catalog_tool:
         l_results = self.__getObjects(l_results)
         return l_results
 
+    def getCatalogedBrains(self, meta_type=None):
+        l_filter = {}
+        if meta_type is not None: l_filter['meta_type'] = self.utConvertToList(meta_type)
+        return self.__searchCatalog(l_filter)
+
     def query_objects_ex(self, meta_type=None, q=None, lang=None, path=None, howmany=-1, **kwargs):
         l_result = []
         l_filter = {}
