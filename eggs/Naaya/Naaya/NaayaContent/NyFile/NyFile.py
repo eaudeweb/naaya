@@ -116,7 +116,7 @@ def importNyFile(self, id, attrs, content, properties):
         attrs['validation_date'].encode('utf-8'))
     self.recatalogNyObject(ob)
 
-class NyFile(NyAttributes, NyItem, file_item, NyVersioning, NyCheckControl, NyValidation):
+class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyValidation):
     """ """
 
     meta_type = METATYPE_OBJECT
