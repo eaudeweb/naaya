@@ -38,6 +38,9 @@ class file_item(NyProperties, File):
     def __init__(self, id, title, description, coverage, keywords, sortorder, file, precondition, content_type,
         downloadfilename, releasedate, lang):
         File.__dict__['__init__'](self, id, title, file, content_type, precondition)
+        #"dirty" trick to get rid of the File's title property
+        try: del self.title
+        except: pass
         self.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
         NyProperties.__dict__['__init__'](self)
 
