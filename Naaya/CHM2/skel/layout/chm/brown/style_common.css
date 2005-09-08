@@ -414,20 +414,20 @@
 
 	/* styles for forms */
 	.field {
+		margin-top: 1em;
 	}
 
 	.field-inline {
+		margin-top: 1em;
 	}
 
 	.field label {
 		display: block;
-		margin-top: 1em;
 		font-weight: bold;
 		margin-bottom: 0.3em;
 	}
 
 	.field-inline label {
-		margin-top: 6em;
 		font-weight: bold;
 		margin-bottom: 0.3em;
 	}
