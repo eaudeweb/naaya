@@ -52,6 +52,13 @@ class Style(ZopePageTemplate):
         ZopePageTemplate.__dict__['__init__'](self, id, text, 'text/html')
         self.title = title
 
+    def __call__(self, context={}, *args):
+        """ """
+        if not context.has_key('args'):
+            context['args'] = args
+        self.REQUEST.RESPONSE.setHeader('content-type', 'text/css')
+        return self.pt_render(extra_context=context)
+
     def om_icons(self):
         """ """
         icons = ({'path': self.icon, 'alt': self.meta_type, 'title': self.meta_type},)
