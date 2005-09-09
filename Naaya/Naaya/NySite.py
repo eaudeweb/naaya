@@ -331,9 +331,15 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         folder_ob.modifyPublicInterface(folder.index_html)
         for item in folder.items:
             if item.type == METATYPE_NYDOCUMENT:
-                folder_ob.addNyDocument(id=item.id, title=item.title, description=item.description,
-                    coverage=item.coverage, keywords=item.keywords, sortorder=item.sortorder,
-                    body=item.body)
+                document_ob = folder_ob._getOb(item.id, None)
+                if document_ob is None:
+                    folder_ob.addNyDocument(id=item.id, title=item.title, description=item.description,
+                        coverage=item.coverage, keywords=item.keywords, sortorder=item.sortorder,
+                        body=item.body)
+                    document_ob = folder_ob._getOb(item.id, None)
+                document_ob.body = item.body
+                document_ob._p_changed = 1
+                self.recatalogNyObject(document_ob)
         for item in folder.folders:
             self.loadFolderData(folder_ob, item)
 
