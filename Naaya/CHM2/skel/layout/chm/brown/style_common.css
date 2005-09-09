@@ -1,5 +1,3 @@
-<span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')"/>
-
 /* This css is based on a MORE (5 for the moment) IN ONE principle*/
 /******************************************/
 /* Active-css:BROWN; /* DARK GREEN*/ /* BLUE-WHITE*/ /*INDIGO*/ /*GREEN*/
