@@ -26,8 +26,9 @@ from OFS.Image import File
 #Product imports
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
+from Products.NaayaBase.NyComments import NyComments
 
-class file_item(NyProperties, File):
+class file_item(NyProperties, NyComments, File):
     """ """
 
     title = LocalProperty('title')
@@ -35,16 +36,25 @@ class file_item(NyProperties, File):
     coverage = LocalProperty('coverage')
     keywords = LocalProperty('keywords')
 
-    def __init__(self, id, title, description, coverage, keywords, sortorder, file, precondition, content_type,
-        downloadfilename, releasedate, lang):
+    def __init__(self, id, title, description, coverage, keywords, sortorder,
+        file, precondition, content_type, downloadfilename, releasedate, lang):
+        """
+        Constructor.
+        """
         File.__dict__['__init__'](self, id, title, file, content_type, precondition)
         #"dirty" trick to get rid of the File's title property
         try: del self.title
         except: pass
-        self.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
+        self.save_properties(title, description, coverage, keywords, sortorder,
+            downloadfilename, releasedate, lang)
+        NyComments.__dict__['__init__'](self)
         NyProperties.__dict__['__init__'](self)
 
-    def save_properties(self, title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang):
+    def save_properties(self, title, description, coverage, keywords, sortorder,
+        downloadfilename, releasedate, lang):
+        """
+        Save item properties.
+        """
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
         self._setLocalPropValue('coverage', lang, coverage)
@@ -54,6 +64,9 @@ class file_item(NyProperties, File):
         self.releasedate = releasedate
 
     def handleUpload(self, source, file, url):
+        """
+        Upload a file from disk or from a given URL.
+        """
         if source=='file':
             if file != '':
                 if hasattr(file, 'filename'):

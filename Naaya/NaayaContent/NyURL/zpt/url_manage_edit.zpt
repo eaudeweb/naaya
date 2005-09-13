@@ -6,7 +6,7 @@
 
 <tal:block metal:fill-slot="custom_properties">
 <tr>
-	<td class="form-label">Url</td>
+	<td class="form-label">URL</td>
 	<td><input type="text" name="locator" size="50" tal:attributes="value here/locator" /></td>
 </tr>
 </tal:block>

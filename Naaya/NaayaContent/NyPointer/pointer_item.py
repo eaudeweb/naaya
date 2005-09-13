@@ -25,8 +25,9 @@
 #Product imports
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
+from Products.NaayaBase.NyComments import NyComments
 
-class pointer_item(NyProperties):
+class pointer_item(NyProperties, NyComments):
     """ """
 
     title = LocalProperty('title')
@@ -34,11 +35,21 @@ class pointer_item(NyProperties):
     coverage = LocalProperty('coverage')
     keywords = LocalProperty('keywords')
 
-    def __init__(self, title, description, coverage, keywords, sortorder, pointer, releasedate, lang):
-        self.save_properties(title, description, coverage, keywords, sortorder, pointer, releasedate, lang)
+    def __init__(self, title, description, coverage, keywords, sortorder,
+        pointer, releasedate, lang):
+        """
+        Constructor.
+        """
+        self.save_properties(title, description, coverage, keywords, sortorder,
+            pointer, releasedate, lang)
+        NyComments.__dict__['__init__'](self)
         NyProperties.__dict__['__init__'](self)
 
-    def save_properties(self, title, description, coverage, keywords, sortorder, pointer, releasedate, lang):
+    def save_properties(self, title, description, coverage, keywords, sortorder,
+        pointer, releasedate, lang):
+        """
+        Save item properties.
+        """
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
         self._setLocalPropValue('coverage', lang, coverage)

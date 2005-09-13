@@ -15,9 +15,14 @@
 	</tr>
 	<tr>
 		<th i18n:translate="">URL</th>
-		<td><a tal:attributes="href here/locator" target="_blank" tal:content="here/locator"/></td>
+		<td>
+			<a tal:attributes="href here/locator" tal:content="here/locator"/>
+			<small>(<a tal:attributes="href here/locator" target="_blank" i18n:translate="">in a new window</a>)</small>
+		</td>
 	</tr>
 </table>
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+
+<span tal:replace="structure here/comments_box" />
 
 <span tal:replace="structure here/standard_html_footer" />

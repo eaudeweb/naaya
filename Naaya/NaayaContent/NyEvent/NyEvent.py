@@ -53,10 +53,12 @@ def event_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyEvent'}, 'event_add')
 
-def addNyEvent(self, id='', title='', description='', language='', coverage='', keywords='', sortorder='',
-    location='', location_address='', location_url='', start_date='', end_date='', host='', agenda_url='',
-    event_url='', details='', topitem='', event_type='', contact_person='', contact_email='', contact_phone='',
-    contact_fax='', contributor=None, releasedate='', lang=None, REQUEST=None, **kwargs):
+def addNyEvent(self, id='', title='', description='', language='', coverage='',
+    keywords='', sortorder='', location='', location_address='', location_url='',
+    start_date='', end_date='', host='', agenda_url='', event_url='', details='',
+    topitem='', event_type='', contact_person='', contact_email='',
+    contact_phone='', contact_fax='', contributor=None, releasedate='',
+    discussion='', lang=None, REQUEST=None, **kwargs):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
@@ -81,6 +83,7 @@ def addNyEvent(self, id='', title='', description='', language='', coverage='', 
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
     self._setObject(id, ob)
+    if discussion: self._getOb(id).open_for_comments()
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'event_manage_add' or l_referer.find('event_manage_add') != -1:
@@ -141,6 +144,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
             location_address, location_url, start_date, end_date, host, agenda_url, event_url,
             details, topitem, event_type, contact_person, contact_email, contact_phone, contact_fax, releasedate, lang)
         NyCheckControl.__dict__['__init__'](self)
+        NyItem.__dict__['__init__'](self)
         self.contributor = contributor
         self.approved = approved
         self.approved_by = approved_by
@@ -194,10 +198,12 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', language='', coverage='', keywords='', sortorder='',
-        approved='', location='', location_address='', location_url='', start_date='', end_date='',
-        host='', agenda_url='', topitem='', event_url='', details='', event_type='',
-        contact_person='', contact_email='', contact_phone='', contact_fax='', releasedate='', REQUEST=None, **kwargs):
+    def manageProperties(self, title='', description='', language='', coverage='',
+        keywords='', sortorder='', approved='', location='', location_address='',
+        location_url='', start_date='', end_date='', host='', agenda_url='',
+        topitem='', event_url='', details='', event_type='', contact_person='',
+        contact_email='', contact_phone='', contact_fax='', releasedate='',
+        discussion='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -221,6 +227,8 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
             if approved == 0: self.approved_by = None
             else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self._p_changed = 1
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
@@ -248,6 +256,8 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
         self.contact_fax = self.version.contact_fax
         self.releasedate = self.version.releasedate
         self.setProperties(deepcopy(self.version.getProperties()))
+        if self.version.is_open_for_comments(): self.open_for_comments()
+        else: self.close_for_comments()
         self.checkout = 0
         self.checkout_user = None
         self.version = None
@@ -271,6 +281,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
+        if self.is_open_for_comments(): self.version.open_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
@@ -298,6 +309,8 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
                 location_url, start_date, end_date, host, agenda_url, event_url, details, topitem, event_type,
                 contact_person, contact_email, contact_phone, contact_fax, releasedate, lang)
             self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            if discussion: self.open_for_comments()
+            else: self.close_for_comments()
         else:
             #this object has been checked out; save changes into the version object
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
@@ -306,6 +319,8 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
                 location_url, start_date, end_date, host, agenda_url, event_url, details, topitem, event_type,
                 contact_person, contact_email, contact_phone, contact_fax, releasedate, lang)
             self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            if discussion: self.version.open_for_comments()
+            else: self.version.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST:

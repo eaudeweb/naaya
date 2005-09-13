@@ -17,7 +17,10 @@
 </tr>
 <tr>
 	<th i18n:translate="">Concerned URL</th>
-	<td><a tal:attributes="href here/resourceurl" tal:content="here/resourceurl" /></td>
+	<td>
+		<a tal:attributes="href here/resourceurl" tal:content="here/resourceurl" />
+		<small>(<a tal:attributes="href here/resourceurl" target="_blank" i18n:translate="">in a new window</a>)</small>
+	</td>
 </tr>
 <tr>
 	<th i18n:translate="">Source of information</th>
@@ -26,5 +29,7 @@
 </table>
 <br />
 <p tal:replace="structure here/body" />
+
+<span tal:replace="structure here/comments_box" />
 
 <span tal:replace="structure here/standard_html_footer" />

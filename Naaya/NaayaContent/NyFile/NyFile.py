@@ -58,7 +58,7 @@ def file_add_html(self, REQUEST=None, RESPONSE=None):
 
 def addNyFile(self, id='', title='', description='', coverage='', keywords='', sortorder='',
     source='file', file='', url='', precondition='', content_type='', downloadfilename='',
-    contributor=None, releasedate='', lang=None, REQUEST=None, **kwargs):
+    contributor=None, releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
     """ """
     if source=='file': id, title = cookId(id, title, file) #upload from a file
     elif source=='url': l_data, l_ctype = self.grabFromUrl(url) #upload from an url
@@ -84,6 +84,7 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
     ob = self._getOb(id)
     ob.handleUpload(source, file, url)
     ob.createVersion()
+    if discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
@@ -141,9 +142,10 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self.id = id
         file_item.__dict__['__init__'](self, id, title, description, coverage, keywords, sortorder, file,
             precondition, content_type, downloadfilename, releasedate, lang)
-        NyVersioning.__dict__['__init__'](self)
-        NyCheckControl.__dict__['__init__'](self)
         NyValidation.__dict__['__init__'](self)
+        NyCheckControl.__dict__['__init__'](self)
+        NyVersioning.__dict__['__init__'](self)
+        NyItem.__dict__['__init__'](self)
         self.contributor = contributor
         self.approved = approved
         self.approved_by = approved_by
@@ -206,9 +208,9 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', language='', coverage='', keywords='',
-                         sortorder='', approved='', precondition='', content_type='',
-                         downloadfilename='', releasedate='', REQUEST=None, **kwargs):
+    def manageProperties(self, title='', description='', language='', coverage='',
+        keywords='', sortorder='', approved='', precondition='', content_type='',
+        downloadfilename='', releasedate='', discussion='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -230,6 +232,8 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
             if approved == 0: self.approved_by = None
             else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self._p_changed = 1
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
@@ -266,6 +270,8 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self.precondition = self.version.precondition
         self.releasedate = self.version.releasedate
         self.setProperties(deepcopy(self.version.getProperties()))
+        if self.version.is_open_for_comments(): self.open_for_comments()
+        else: self.close_for_comments()
         self.checkout = 0
         self.checkout_user = None
         self.version = None
@@ -290,13 +296,15 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
+        if self.is_open_for_comments(): self.version.open_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
-    def saveProperties(self, title='', description='', coverage='', keywords='', sortorder='',
-        content_type='', precondition="", downloadfilename='', releasedate='', lang=None, REQUEST=None, **kwargs):
+    def saveProperties(self, title='', description='', coverage='', keywords='',
+        sortorder='', content_type='', precondition="", downloadfilename='',
+        releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -311,6 +319,8 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
             self.content_type = content_type
             self.precondition = precondition
             self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            if discussion: self.open_for_comments()
+            else: self.close_for_comments()
         else:
             #this object has been checked out; save changes into the version object
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
@@ -319,6 +329,8 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
             self.version.content_type = content_type
             self.version.precondition = precondition
             self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            if discussion: self.version.open_for_comments()
+            else: self.version.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST:

@@ -25,8 +25,9 @@
 #Product imports
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
+from Products.NaayaBase.NyComments import NyComments
 
-class document_item(NyProperties):
+class document_item(NyProperties, NyComments):
     """ """
 
     title = LocalProperty('title')
@@ -35,11 +36,21 @@ class document_item(NyProperties):
     keywords = LocalProperty('keywords')
     body = LocalProperty('body')
 
-    def __init__(self, title, description, coverage, keywords, sortorder, body, releasedate, lang):
-        self.save_properties(title, description, coverage, keywords, sortorder, body, releasedate, lang)
+    def __init__(self, title, description, coverage, keywords, sortorder, body,
+        releasedate, lang):
+        """
+        Constructor.
+        """
+        self.save_properties(title, description, coverage, keywords, sortorder,
+            body, releasedate, lang)
+        NyComments.__dict__['__init__'](self)
         NyProperties.__dict__['__init__'](self)
 
-    def save_properties(self, title, description, coverage, keywords, sortorder, body, releasedate, lang):
+    def save_properties(self, title, description, coverage, keywords, sortorder,
+        body, releasedate, lang):
+        """
+        Save item properties.
+        """
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
         self._setLocalPropValue('coverage', lang, coverage)

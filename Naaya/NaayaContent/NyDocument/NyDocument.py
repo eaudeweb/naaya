@@ -59,8 +59,9 @@ def document_add(self, REQUEST=None, RESPONSE=None):
         body='', REQUEST=None)
     if REQUEST: REQUEST.RESPONSE.redirect('%s/add_html' % self._getOb(id).absolute_url())
 
-def addNyDocument(self, id='', title='', description='', coverage='', keywords='', sortorder='',
-    body='', contributor=None, releasedate='', lang=None, REQUEST=None, **kwargs):
+def addNyDocument(self, id='', title='', description='', coverage='', keywords='',
+    sortorder='', body='', contributor=None, releasedate='', discussion='',
+    lang=None, REQUEST=None, **kwargs):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
@@ -79,6 +80,7 @@ def addNyDocument(self, id='', title='', description='', coverage='', keywords='
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
     self._setObject(id, ob)
+    if discussion: self._getOb(id).open_for_comments()
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'document_manage_add' or l_referer.find('document_manage_add') != -1:
@@ -136,8 +138,9 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         """ """
         self.id = id
         document_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder, body, releasedate, lang)
-        NyCheckControl.__dict__['__init__'](self)
         NyValidation.__dict__['__init__'](self)
+        NyCheckControl.__dict__['__init__'](self)
+        NyContainer.__dict__['__init__'](self)
         self.contributor = contributor
         self.approved = approved
         self.approved_by = approved_by
@@ -166,8 +169,9 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', language='', coverage='', keywords='', sortorder='',
-        approved='', body='', releasedate='', REQUEST=None, **kwargs):
+    def manageProperties(self, title='', description='', language='',
+        coverage='', keywords='', sortorder='', approved='', body='',
+        releasedate='', discussion='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -185,13 +189,15 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
             if approved == 0: self.approved_by = None
             else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self._p_changed = 1
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #site actions
     security.declareProtected(PERMISSION_ADD_OBJECT, 'process_add')
-    def process_add(self, title='', description='', coverage='', keywords='', sortorder='',
-        body='', releasedate='', REQUEST=None, **kwargs):
+    def process_add(self, title='', description='', coverage='', keywords='',
+        sortorder='', body='', releasedate='', discussion='', REQUEST=None, **kwargs):
         """ """
         try: sortorder = abs(int(sortorder))
         except: sortorder = DEFAULT_SORTORDER
@@ -201,6 +207,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         self.save_properties(title, description, coverage, keywords, sortorder, body, releasedate, lang)
         self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._p_changed = 1
+        if discussion: self.open_for_comments()
         self.recatalogNyObject(self)
         if REQUEST:
             self.setSession('referer', self.getParentNode().absolute_url())
@@ -218,6 +225,8 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         self.sortorder = self.version.sortorder
         self.releasedate = self.version.releasedate
         self.setProperties(deepcopy(self.version.getProperties()))
+        if self.version.is_open_for_comments(): self.open_for_comments()
+        else: self.close_for_comments()
         self.checkout = 0
         self.checkout_user = None
         self.version = None
@@ -239,13 +248,15 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
+        if self.is_open_for_comments(): self.version.open_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
-    def saveProperties(self, title='', description='', coverage='', keywords='', sortorder='',
-        body='', releasedate='', lang=None, REQUEST=None, **kwargs):
+    def saveProperties(self, title='', description='', coverage='', keywords='',
+        sortorder='', body='', releasedate='', discussion='', lang=None,
+        REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -258,12 +269,16 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
             #this object has not been checked out; save changes directly into the object
             self.save_properties(title, description, coverage, keywords, sortorder, body, releasedate, lang)
             self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            if discussion: self.open_for_comments()
+            else: self.close_for_comments()
         else:
             #this object has been checked out; save changes into the version object
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
             self.version.save_properties(title, description, coverage, keywords, sortorder, body, releasedate, lang)
             self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            if discussion: self.version.open_for_comments()
+            else: self.version.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST:

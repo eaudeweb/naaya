@@ -74,6 +74,10 @@ function fSet(ctrl, value)
 	<input type="text" name="releasedate" id="releasedate" size="20" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getVersionProperty('releasedate'))" />
 </div>
 <div class="field">
+	<label for="discussion" i18n:translate="">Open for comments</label>
+	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked python:here.getVersionProperty('discussion')" />
+</div>
+<div class="field">
 	<label for="content_type" i18n:translate="">Content Type</label>
 	<input type="text" name="content_type" id="content_type" size="40" tal:attributes="value python:here.getVersionProperty('content_type')" />
 </div>
