@@ -62,6 +62,10 @@ function fSet(ctrl, value)
 	<input type="text" name="releasedate" id="releasedate" size="20" tal:attributes="value python:here.utConvertDateTimeObjToString(here.releasedate)" />
 </div>
 <div class="field">
+	<label for="discussion" i18n:translate="">Open for comments</label>
+	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked here/is_open_for_comments" />
+</div>
+<div class="field">
 	<label for="maintainer_email" i18n:translate="">Maintainer email</label>
 	<input type="text" name="maintainer_email:utf8:ustring" id="maintainer_email" size="50" tal:attributes="value here/maintainer_email" />
 </div>

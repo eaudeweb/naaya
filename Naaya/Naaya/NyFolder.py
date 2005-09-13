@@ -37,6 +37,7 @@ from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyProperties import NyProperties
+from Products.NaayaBase.NyComments import NyComments
 from Products.Localizer.LocalPropertyManager import LocalProperty
 
 manage_addNyFolder_html = PageTemplateFile('zpt/folder_manage_add', globals())
@@ -49,7 +50,7 @@ def folder_add_html(self, REQUEST=None, RESPONSE=None):
 
 def addNyFolder(self, id='', title='', description='', coverage='', keywords='', sortorder='',
     publicinterface='', maintainer_email='', folder_meta_types='', contributor=None,
-    releasedate='', lang=None, REQUEST=None, **kwargs):
+    releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_FOLDER + self.utGenRandomId(6)
@@ -64,8 +65,7 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     else:
         approved, approved_by = 0, None
     releasedate = self.utConvertStringToDateTimeObj(releasedate)
-    if releasedate is None:
-        releasedate = self.utGetTodayDate()
+    if releasedate is None: releasedate = self.utGetTodayDate()
     if folder_meta_types == '': folder_meta_types = self.adt_meta_types
     else: folder_meta_types = self.utConvertToList(folder_meta_types)
     if lang is None: lang = self.gl_get_selected_language()
@@ -77,6 +77,7 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     self._setObject(id, ob)
     ob = self._getOb(id)
     ob.createPublicInterface()
+    if discussion: ob.open_for_comments()
     if REQUEST is not None:
         referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if referer == 'folder_manage_add' or referer.find('folder_manage_add') != -1:
@@ -109,7 +110,7 @@ def importNyFolder(self, id, attrs, content, properties):
             l_index.pt_edit(text=content, content_type='')
     self.recatalogNyObject(ob)
 
-class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
+class NyFolder(NyAttributes, NyProperties, NyImportExport, NyComments, NyContainer, utils):
     """ """
 
     meta_type = METATYPE_FOLDER
@@ -164,6 +165,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         folder_meta_types, releasedate, lang):
         """ """
         self.id = id
+        NyContainer.__dict__['__init__'](self)
+        NyComments.__dict__['__init__'](self)
         NyProperties.__dict__['__init__'](self)
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
@@ -337,8 +340,9 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', language='', coverage='', keywords='', sortorder='',
-        publicinterface='', maintainer_email='', approved='', releasedate='', REQUEST=None, **kwargs):
+    def manageProperties(self, title='', description='', language='', coverage='',
+        keywords='', sortorder='', publicinterface='', maintainer_email='', approved='',
+        releasedate='', discussion='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -368,6 +372,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         self._p_changed = 1
         self.recatalogNyObject(self)
         self.createPublicInterface()
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manageSubobjects')
@@ -383,8 +389,9 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
 
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
-    def saveProperties(self, title='', description='', language='', coverage='', keywords='', sortorder='',
-            maintainer_email='', releasedate='', lang=None, REQUEST=None, **kwargs):
+    def saveProperties(self, title='', description='', language='', coverage='',
+        keywords='', sortorder='', maintainer_email='', releasedate='', discussion='',
+        lang=None, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -403,6 +410,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_FOLDER, REQUEST, kwargs), lang)
         self._p_changed = 1
         self.recatalogNyObject(self)
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('edit_html?lang=%s' % lang)

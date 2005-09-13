@@ -75,6 +75,10 @@ function fSet(ctrl, value)
 	<input type="text" name="releasedate" id="releasedate" size="10" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getVersionProperty('releasedate'))" />
 	<em i18n:translate="">dd/mm/yyyy</em>
 </div>
+<div class="field">
+	<label for="discussion" i18n:translate="">Open for comments</label>
+	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked python:here.getVersionProperty('discussion')" />
+</div>
 <tal:block metal:define-slot="custom_properties"/>
 <div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
 	<label tal:attributes="for record/id" i18n:translate=""><span tal:replace="record/name" /></label>
