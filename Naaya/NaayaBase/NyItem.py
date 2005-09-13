@@ -47,6 +47,12 @@ class NyItem(SimpleItem, NyBase, NyPermissions):
 
     security = ClassSecurityInfo()
 
+    def __init__(self):
+        """
+        Constructor.
+        """
+        pass
+
     def manage_afterAdd(self, item, container):
         """
         This method is called, whenever _setObject in ObjectManager gets called.

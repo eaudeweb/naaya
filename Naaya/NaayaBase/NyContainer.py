@@ -47,6 +47,12 @@ class NyContainer(Folder, NyBase, NyPermissions):
 
     security = ClassSecurityInfo()
 
+    def __init__(self):
+        """
+        Constructor.
+        """
+        pass
+
     def getObjectById(self, p_id):
         """
         Returns an object inside this one with the given id.
