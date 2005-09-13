@@ -34,11 +34,17 @@
 </tr>
 <tr tal:condition="here/agenda_url">
 	<th i18n:translate="">See the agenda</th>
-	<td><a tal:attributes="href here/agenda_url" tal:content="here/agenda_url">agenda url</a></td>
+	<td>
+		<a tal:attributes="href here/agenda_url" tal:content="here/agenda_url">agenda url</a>
+		<small>(<a tal:attributes="href here/agenda_url" target="_blank" i18n:translate="">in a new window</a>)</small>
+	</td>
 </tr>
 <tr tal:condition="here/event_url">
 	<th i18n:translate="">Event URL</th>
-	<td><a tal:attributes="href here/event_url" tal:content="here/event_url" /></td>
+	<td>
+		<a tal:attributes="href here/event_url" tal:content="here/event_url" />
+		<small>(<a tal:attributes="href here/event_url" target="_blank" i18n:translate="">in a new window</a>)</small>
+	</td>
 </tr>
 <tr>
 	<th valign="top" i18n:translate="">Contact</th>
@@ -60,5 +66,7 @@
 </tr>
 </table>
 <p tal:condition="python:here.details!=''" tal:content="structure here/details" />
+
+<span tal:replace="structure here/comments_box" />
 
 <span tal:replace="structure here/standard_html_footer" />

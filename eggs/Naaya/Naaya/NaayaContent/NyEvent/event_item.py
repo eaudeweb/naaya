@@ -25,8 +25,9 @@
 #Product imports
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
+from Products.NaayaBase.NyComments import NyComments
 
-class event_item(NyProperties):
+class event_item(NyProperties, NyComments):
     """ """
 
     title = LocalProperty('title')
@@ -38,18 +39,29 @@ class event_item(NyProperties):
     host = LocalProperty('host')
     details = LocalProperty('details')
 
-    def __init__(self, title, description, coverage, keywords, sortorder, location,
-            location_address, location_url, start_date, end_date, host, agenda_url, event_url, details,
-            topitem, event_type, contact_person, contact_email, contact_phone, contact_fax, releasedate, lang):
-        self.save_properties(title, description, coverage, keywords, sortorder, location,
-            location_address, location_url, start_date, end_date, host, agenda_url, event_url, details,
-            topitem, event_type, contact_person, contact_email, contact_phone, contact_fax, releasedate, lang)
+    def __init__(self, title, description, coverage, keywords, sortorder,
+        location, location_address, location_url, start_date, end_date, host,
+        agenda_url, event_url, details, topitem, event_type, contact_person,
+        contact_email, contact_phone, contact_fax, releasedate, lang):
+        """
+        Constructor.
+        """
+        self.save_properties(title, description, coverage, keywords, sortorder,
+            location, location_address, location_url, start_date, end_date,
+            host, agenda_url, event_url, details, topitem, event_type,
+            contact_person, contact_email, contact_phone, contact_fax,
+            releasedate, lang)
+        NyComments.__dict__['__init__'](self)
         NyProperties.__dict__['__init__'](self)
 
 
-    def save_properties(self, title, description, coverage, keywords, sortorder, location,
-            location_address, location_url, start_date, end_date, host, agenda_url, event_url, details,
-            topitem, event_type, contact_person, contact_email, contact_phone, contact_fax, releasedate, lang):
+    def save_properties(self, title, description, coverage, keywords, sortorder,
+        location, location_address, location_url, start_date, end_date, host,
+        agenda_url, event_url, details, topitem, event_type, contact_person,
+        contact_email, contact_phone, contact_fax, releasedate, lang):
+        """
+        Save item properties.
+        """
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
         self._setLocalPropValue('coverage', lang, coverage)

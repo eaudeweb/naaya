@@ -19,4 +19,6 @@
 <br />
 <p tal:replace="structure here/body" />
 
+<span tal:replace="structure here/comments_box" />
+
 <span tal:replace="structure here/standard_html_footer" />

@@ -53,9 +53,10 @@ def news_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyNews'}, 'news_add')
 
-def addNyNews(self, id='', title='', description='', coverage='', keywords='', sortorder='',
-    details='', expirationdate='', topitem='', smallpicture='', bigpicture='', resourceurl='',
-    source='', contributor=None, releasedate='', lang=None, REQUEST=None, **kwargs):
+def addNyNews(self, id='', title='', description='', coverage='', keywords='',
+    sortorder='', details='', expirationdate='', topitem='', smallpicture='',
+    bigpicture='', resourceurl='', source='', contributor=None, releasedate='',
+    discussion='', lang=None, REQUEST=None, **kwargs):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
@@ -80,6 +81,7 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='', s
     ob.setSmallPicture(smallpicture)
     ob.setBigPicture(bigpicture)
     self._setObject(id, ob)
+    if discussion: self._getOb(id).open_for_comments()
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'news_manage_add' or l_referer.find('news_manage_add') != -1:
@@ -125,13 +127,15 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, description, coverage, keywords, sortorder,
-        details, expirationdate, topitem, smallpicture, bigpicture, resourceurl, source,
-        contributor, approved, approved_by, releasedate, lang):
+        details, expirationdate, topitem, smallpicture, bigpicture, resourceurl,
+        source, contributor, approved, approved_by, releasedate, lang):
         """ """
         self.id = id
-        news_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder,
-            details, expirationdate, topitem, smallpicture, bigpicture, resourceurl, source, releasedate, lang)
+        news_item.__dict__['__init__'](self, title, description, coverage,
+            keywords, sortorder, details, expirationdate, topitem, smallpicture,
+            bigpicture, resourceurl, source, releasedate, lang)
         NyCheckControl.__dict__['__init__'](self)
+        NyItem.__dict__['__init__'](self)
         self.contributor = contributor
         self.approved = approved
         self.approved_by = approved_by
@@ -201,9 +205,10 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         return self.details
 
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', coverage='', keywords='', sortorder='', approved='',
-        details='', expirationdate='', topitem='', smallpicture='', del_smallpicture='',
-        bigpicture='', del_bigpicture='', resourceurl='', source='', releasedate='', REQUEST=None, **kwargs):
+    def manageProperties(self, title='', description='', coverage='', keywords='',
+        sortorder='', approved='', details='', expirationdate='', topitem='',
+        smallpicture='', del_smallpicture='', bigpicture='', del_bigpicture='',
+        resourceurl='', source='', releasedate='', discussion='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -229,6 +234,8 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         if del_bigpicture != '': self.delBigPicture()
         else: self.setBigPicture(bigpicture)
         self._p_changed = 1
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
@@ -250,6 +257,8 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         self.bigpicture = self.version.bigpicture
         self.releasedate = self.version.releasedate
         self.setProperties(deepcopy(self.version.getProperties()))
+        if self.version.is_open_for_comments(): self.open_for_comments()
+        else: self.close_for_comments()
         self.checkout = 0
         self.checkout_user = None
         self.version = None
@@ -272,15 +281,16 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
+        if self.is_open_for_comments(): self.version.open_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
-    def saveProperties(self, title='', description='', coverage='', keywords='', sortorder='',
-        details='', expirationdate='', topitem='', smallpicture='', del_smallpicture='',
-        bigpicture='', del_bigpicture='', resourceurl='', source='', releasedate='',
-        lang=None, REQUEST=None, **kwargs):
+    def saveProperties(self, title='', description='', coverage='', keywords='',
+        sortorder='', details='', expirationdate='', topitem='', smallpicture='',
+        del_smallpicture='', bigpicture='', del_bigpicture='', resourceurl='',
+        source='', releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -302,6 +312,8 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
             if del_bigpicture != '': self.delBigPicture()
             else: self.setBigPicture(bigpicture)
             self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            if discussion: self.open_for_comments()
+            else: self.close_for_comments()
         else:
             #this object has been checked out; save changes into the version object
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
@@ -314,6 +326,8 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
             if del_bigpicture != '': self.version.delBigPicture()
             else: self.version.setBigPicture(bigpicture)
             self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            if discussion: self.version.open_for_comments()
+            else: self.version.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST:
