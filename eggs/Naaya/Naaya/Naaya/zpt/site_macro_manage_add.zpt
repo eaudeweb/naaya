@@ -38,8 +38,12 @@
 		<td><input type="text" name="sortorder" size="2" value="100" /></td>
 	</tr>
 	<tr>
-		<td class="form-label" i18n:translate="">Release date (<em>dd/mm/yyyy</em>)</td>
+		<td class="form-label">Release date (<em>dd/mm/yyyy</em>)</td>
 		<td><input type="text" name="releasedate" size="20" value="" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Open for comments</td>
+		<td><input type="checkbox" name="discussion" id="discussion" checked="checked" /></td>
 	</tr>
 	<tr><td></td></tr>
 	<tr><td class="form-label" colspan="2">Custom properties</td></tr>
