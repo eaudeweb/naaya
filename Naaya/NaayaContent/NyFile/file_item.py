@@ -50,6 +50,15 @@ class file_item(NyProperties, NyComments, File):
         NyComments.__dict__['__init__'](self)
         NyProperties.__dict__['__init__'](self)
 
+    def del_file_title(self):
+        """
+        Removes the File's object 'title' property.
+        We are using a LocalProperty 'title'.
+        """
+        try: del self.title
+        except: pass
+        self._p_changed = 1
+
     def save_properties(self, title, description, coverage, keywords, sortorder,
         downloadfilename, releasedate, lang):
         """
