@@ -43,13 +43,15 @@ class NyBase:
     security = ClassSecurityInfo()
 
     security.declarePrivate('approveThis')
-    def approveThis(self, approved=1):
+    def approveThis(self, approved=1, approved_by=None):
         """
         Set the state of the current object.
         @param approved: the state flag
         @type approved: integer - 0 or 1
         """
+        if approved_by is None: approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.approved = approved
+        self.approved_by = approved_by
         self._p_changed = 1
 
     security.declarePrivate('setReleaseDate')
