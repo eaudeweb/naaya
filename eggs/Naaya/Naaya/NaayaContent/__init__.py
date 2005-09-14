@@ -21,11 +21,11 @@
 #Python imports
 from os import listdir
 from os.path import join, isdir
-import time
 from copy import copy
 
 #Zope imports
 from ImageFile import ImageFile
+import zLOG
 
 #Product imports
 from constants import *
@@ -41,25 +41,27 @@ for x in listdir(NAAYACONTENT_PRODUCT_PATH):
 content = {}
 err_list = []
 for x in dirs:
-    #try:
-    c = 'from %s import %s' % (x, x)
-    exec(c)
-    m = eval('%s.METATYPE_OBJECT' % x)
-    content[m] = {}
-    content[m]['product'] = NAAYACONTENT_PRODUCT_NAME
-    content[m]['module'] = x
-    content[m]['meta_type'] = m
-    content[m]['label'] = eval('%s.LABEL_OBJECT' % x)
-    content[m]['permission'] = eval('%s.PERMISSION_ADD_OBJECT' % x)
-    content[m]['forms'] = copy(eval('%s.OBJECT_FORMS' % x))
-    content[m]['constructors'] = copy(eval('%s.OBJECT_CONSTRUCTORS' % x))
-    content[m]['addform'] = eval('%s.OBJECT_ADD_FORM' % x)
-    content[m]['validation'] = eval('issubclass(%s.%s, NyValidation)' % (x, x))
-    content[m]['description'] = eval('%s.DESCRIPTION_OBJECT' % x)
-    #print '%s INFO Successfully loaded pluggable module %s.' % (time.ctime(), x)
-    #except Exception, error:
-    #    err_list.append(x)
-    #    print '%s ERROR loading pluggable module %s: %s' % (time.ctime(), x, str(error))
+    try:
+        c = 'from %s import %s' % (x, x)
+        exec(c)
+        m = eval('%s.METATYPE_OBJECT' % x)
+        content[m] = {}
+        content[m]['product'] = NAAYACONTENT_PRODUCT_NAME
+        content[m]['module'] = x
+        content[m]['meta_type'] = m
+        content[m]['label'] = eval('%s.LABEL_OBJECT' % x)
+        content[m]['permission'] = eval('%s.PERMISSION_ADD_OBJECT' % x)
+        content[m]['forms'] = copy(eval('%s.OBJECT_FORMS' % x))
+        content[m]['constructors'] = copy(eval('%s.OBJECT_CONSTRUCTORS' % x))
+        content[m]['addform'] = eval('%s.OBJECT_ADD_FORM' % x)
+        content[m]['validation'] = eval('issubclass(%s.%s, NyValidation)' % (x, x))
+        content[m]['description'] = eval('%s.DESCRIPTION_OBJECT' % x)
+        zLOG.LOG(NAAYACONTENT_PRODUCT_NAME, zLOG.INFO,
+            'Pluggable module "%s" registered' % x)
+    except Exception, error:
+        err_list.append(x)
+        zLOG.LOG(NAAYACONTENT_PRODUCT_NAME, zLOG.WARNING,
+            'Pluggable module "%s" NOT registered because %s' % (x, error))
 
 #clean up
 for x in err_list:
