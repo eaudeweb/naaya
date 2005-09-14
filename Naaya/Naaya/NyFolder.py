@@ -285,12 +285,13 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyComments, NyContain
     def checkPermissionManageFolders(self, p_object=None):
         """ """
         if p_object is None:
-            p_object = self.objectValues(METATYPE_FOLDER)
+            p_object = METATYPE_FOLDER
+        l_objects_list = self.objectValues(p_object)
         results = []
         select_all = 0
         delete_all = 0
         flag= 0
-        for folder in self.utSortObjsListByAttr(p_object, 'sortorder', 0):
+        for folder in self.utSortObjsListByAttr(l_objects_list, 'sortorder', 0):
             del_permission = folder.checkPermissionDeleteObject()
             edit_permission = folder.checkPermissionEditObject()
             if del_permission and flag == 0:
