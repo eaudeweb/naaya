@@ -90,6 +90,14 @@ class NyComments:
         self.__comments_collection = {}
 
     #api
+    def init_comments(self):
+        """
+        Reset comments.
+        """
+        self.discussion = 0
+        self.__comments_collection = {}
+        self._p_changed = 1
+
     def is_open_for_comments(self):
         """
         Test is the object is open for comments.
