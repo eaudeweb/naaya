@@ -78,7 +78,9 @@ def addNyMediaFile(self, id='', title='', description='', coverage='', keywords=
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
     self._setObject(id, ob)
-    if discussion: self._getOb(id).open_for_comments()
+    ob = self._getOb(id)
+    if discussion: ob.open_for_comments()
+    ob.handleMediaUpload(file)
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'mediafile_manage_add' or l_referer.find('mediafile_manage_add') != -1:
@@ -166,6 +168,22 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
         r.append(self.syndicateThisFooter())
         return ''.join(r)
 
+    def getSingleMediaObject(self):
+        """
+        Returns the B{SINGLE} media file if exists.
+        """
+        l = self.objectValues('File')
+        if len(l)>0:
+            return l[0]
+        else:
+            return None
+
+    def getMediaObjects(self):
+        """
+        Returns the list of media files, B{File} objects.
+        """
+        return self.objectValues('File')
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', language='',
@@ -197,14 +215,13 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manageUpload')
-    def manageUpload(self, source='file', file='', url='', version='', REQUEST=None):
+    def manageUpload(self, file='', REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if self.wl_isLocked():
             raise ResourceLockedError, "File is locked via WebDAV"
-        self.handleUpload(source, file, url)
-        if version: self.createVersion()
+        self.handleMediaUpload(file)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manage_upload')
@@ -213,6 +230,17 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
         raise EXCEPTION_NOTACCESIBLE, 'manage_upload'
 
     #site actions
+    def handleMediaUpload(self, file):
+        """
+        Handle upload of a media file. A B{File} object will be created inside
+        the B{NyMediafile} object.
+        """
+        if file != '':
+            if hasattr(file, 'filename'):
+                if file.filename != '':
+                    self.manage_delObjects(self.objectIds())
+                    self.manage_addFile('', file)
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
         """ """
@@ -223,7 +251,6 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
         self._local_properties_metadata = deepcopy(self.version._local_properties_metadata)
         self._local_properties = deepcopy(self.version._local_properties)
         self.sortorder = self.version.sortorder
-        self.update_data(self.version.data, self.version.content_type)
         self.releasedate = self.version.releasedate
         self.setProperties(deepcopy(self.version.getProperties()))
         if self.version.is_open_for_comments(): self.open_for_comments()
@@ -245,9 +272,9 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
             raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        self.version = mediafile_item(self.id, self.title, self.description, self.coverage, self.keywords,
-            self.sortorder, self.data, self.releasedate, self.gl_get_selected_language())
-        self.version.update_data(self.data, self.content_type)
+        self.version = mediafile_item(self.id, self.title, self.description,
+            self.coverage, self.keywords, self.sortorder, self.releasedate,
+            self.gl_get_selected_language())
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
@@ -288,22 +315,14 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveUpload')
-    def saveUpload(self, source='file', file='', url='', version='', lang=None, REQUEST=None):
+    def saveUpload(self, file='', lang=None, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if self.wl_isLocked():
             raise ResourceLockedError, "File is locked via WebDAV"
         if lang is None: lang = self.gl_get_selected_language()
-        if not self.hasVersion():
-            #this object has not been checked out; save changes directly into the object
-            self.handleUpload(source, file, url)
-            if version: self.createVersion()
-        else:
-            #this object has been checked out; save changes into the version object
-            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-            self.version.handleUpload(source, file, url)
+        self.handleMediaUpload(file)
         self.recatalogNyObject(self)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
