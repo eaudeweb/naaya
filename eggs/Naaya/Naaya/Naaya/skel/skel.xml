@@ -166,10 +166,6 @@
 		<role name="Administrator" permissions="Add content,Edit content,Delete content,Browse content,Publish content,Validate content,Manage Users,Translate pages"/>
 	</security>
 	<content maintopics="folder">
-		<folder id="folder" title="Folder" description="" coverage="" keywords="" publicinterface="" maintainer_email="" sortorder="0" meta_types="">
-			<folder id="subfolder1" title="Subfolder 1" description="" coverage="" keywords="" publicinterface="" maintainer_email="" sortorder="0" meta_types="" />
-			<folder id="subfolder2" title="Subfolder 2" description="" coverage="" keywords="" publicinterface="" maintainer_email="" sortorder="1" meta_types="" />
-		</folder>
 		<folder id="info" title="Information" description="" coverage="" keywords="" publicinterface="" maintainer_email="" sortorder="0" meta_types="">
 			<document id="accessibility" title="Accessibility statement" description="" coverage="" keywords="" sortorder="0">
 			<![CDATA[
