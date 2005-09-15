@@ -16,9 +16,29 @@
 </table>
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
-<p>
-	AICI COD DE VAZUT FILMULETE
-</p>
+<tal:block tal:define="mediafile here/getSingleMediaObject" condition="mediafile">
+<h2 i18n:translate="">Play media file</h2>
+<object id="MediaPlayer"
+	classid="CLSID:22D6f312-B0F6-11D0-94AB-0080C74C7E95"
+	standby="Loading Windows Player"
+	type="application/x-oleobject">
+	<embed type="application/x-mplayer2"
+		autostart="False"
+		showstatusbar="True"
+		tal:attributes="filename mediafile/absolute_url"
+		showtracker="True"
+		autorewind="False"
+		showcontrols="True"
+		defaultframe="buf_pic">
+	</embed>
+	<param name="FileName" tal:attributes="value mediafile/absolute_url" />
+	<param name="ShowTracker" value="True">
+	<param name="ShowStatusBar" value="True">
+	<param name="ShowControls" value="True">
+	<param name="AutoRewind" value="False">
+	<param name="AutoStart" value="False">
+</object>
+</tal:block>
 
 <span tal:replace="structure here/comments_box" />
 
