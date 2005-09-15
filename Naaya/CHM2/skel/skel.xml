@@ -110,6 +110,9 @@
 			</scheme>
 		</skin>
 	</layout>
+	<pluggablecontenttypes>
+		<pluggablecontenttype meta_type="Naaya Media File"/>
+	</pluggablecontenttypes>
 	<syndication>
 		<channeltype id="Red lists" title="Red lists"/>
 		<channeltype id="Indicators" title="Indicators"/>
