@@ -37,4 +37,6 @@
 	<img name="imgDisplay" tal:attributes="src string:${here/absolute_url}/view?display=${display}; alt here/title_or_id" border="0" />
 </form>
 
+<span tal:replace="structure here/comments_box" />
+
 <span tal:replace="structure here/standard_html_footer" />

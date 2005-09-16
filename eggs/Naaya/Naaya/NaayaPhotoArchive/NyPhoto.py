@@ -39,7 +39,7 @@ from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalP
 manage_addNyPhoto_html = PageTemplateFile('zpt/photo_manage_add', globals())
 def addNyPhoto(self, id='', title='', author='', source='', description='', sortorder='',
     topitem='', onfrontfrom='', onfrontto='', file='', precondition='', content_type='',
-    quality='', lang=None, REQUEST=None):
+    quality='', lang=None, discussion='', REQUEST=None):
     """ """
     id, title = cookId(id, title, file)
     id = self.utCleanupId(id)
@@ -72,6 +72,7 @@ def addNyPhoto(self, id='', title='', author='', source='', description='', sort
     #handle image upload
     ob = self._getOb(id)
     ob.manage_upload(file)
+    if discussion: ob.open_for_comments()
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'manage_addNyPhoto_html' or l_referer.find('manage_addNyPhoto_html') != -1:
@@ -111,6 +112,7 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
         self.content_type = content_type
         self.precondition = precondition
         self.id = id
+        NyItem.__dict__['__init__'](self)
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('author', lang, author)
         self._setLocalPropValue('source', lang, source)
@@ -199,7 +201,7 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', author='', source='', description='',
         sortorder='', approved='', topitem='', onfrontfrom='', onfrontto='',
-        content_type='', quality='', releasedate='', REQUEST=None):
+        content_type='', quality='', releasedate='', discussion='', REQUEST=None):
         """ """
         if self.wl_isLocked():
             raise ResourceLockedError, "File is locked via WebDAV"
@@ -233,6 +235,8 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
             else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.releasedate = releasedate
         self._p_changed = 1
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
@@ -273,7 +277,7 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', author='', source='', description='',
         sortorder='', topitem='', onfrontfrom='', onfrontto='', content_type='',
-        quality='', releasedate='', lang=None, REQUEST=None):
+        quality='', releasedate='', discussion='', lang=None, REQUEST=None):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -303,6 +307,8 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
         self.quality = quality
         self.releasedate = releasedate
         self._p_changed = 1
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])

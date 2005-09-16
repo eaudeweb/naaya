@@ -53,6 +53,10 @@
 	<input type="text" name="quality" id="quality" size="3" tal:attributes="value here/quality" />
 </div>
 <div class="field">
+	<label for="discussion" i18n:translate="">Open for comments</label>
+	<input type="checkbox" name="discussion" id="discussion" checked="checked" />
+</div>
+<div class="field">
 	<label for="submit-button" class="invisible">Submit button</label>
 	<input type="submit" value="Submit" id="submit-button" i18n:attributes="value" />
 </div>
