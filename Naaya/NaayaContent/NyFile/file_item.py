@@ -26,9 +26,8 @@ from OFS.Image import File
 #Product imports
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
-from Products.NaayaBase.NyComments import NyComments
 
-class file_item(NyProperties, NyComments, File):
+class file_item(NyProperties, File):
     """ """
 
     title = LocalProperty('title')
@@ -47,7 +46,6 @@ class file_item(NyProperties, NyComments, File):
         except: pass
         self.save_properties(title, description, coverage, keywords, sortorder,
             downloadfilename, releasedate, lang)
-        NyComments.__dict__['__init__'](self)
         NyProperties.__dict__['__init__'](self)
 
     def del_file_title(self):

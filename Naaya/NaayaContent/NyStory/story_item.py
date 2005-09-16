@@ -25,9 +25,8 @@
 #Product imports
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
-from Products.NaayaBase.NyComments import NyComments
 
-class story_item(NyProperties, NyComments):
+class story_item(NyProperties):
     """ """
 
     title = LocalProperty('title')
@@ -44,7 +43,6 @@ class story_item(NyProperties, NyComments):
         """
         self.save_properties(title, description, coverage, keywords, sortorder,
             body, topitem, resourceurl, source, releasedate, lang)
-        NyComments.__dict__['__init__'](self)
         NyProperties.__dict__['__init__'](self)
 
     def save_properties(self, title, description, coverage, keywords, sortorder,
