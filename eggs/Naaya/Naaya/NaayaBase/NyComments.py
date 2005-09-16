@@ -65,6 +65,18 @@ class comment_item:
     security = ClassSecurityInfo()
     security.setDefaultAccess("allow")
 
+    security.declarePrivate('export_this')
+    def export_this(self):
+        """
+        Exports object into Naaya XML format.
+        """
+        return '<comment id="%s" title="%s" body="%s" author="%s" date="%s" />' % \
+            (self.utXmlEncode(self.id),
+                self.utXmlEncode(self.title),
+                self.utXmlEncode(self.body),
+                self.utXmlEncode(self.author),
+                self.utXmlEncode(self.date))
+
 InitializeClass(comment_item)
 
 class NyComments:
@@ -160,6 +172,19 @@ class NyComments:
         try: del(self.__comments_collection[id])
         except: pass
         self._p_changed = 1
+
+    security.declarePrivate('export_this_comments')
+    def export_this_comments(self):
+        """
+        Export all the comments in XML format.
+        """
+        r = []
+        ra = r.append
+        ra('<discussion>')
+        for x in self.get_comments_list():
+            ra(x.export_this())
+        ra('</discussion>')
+        return ''.join(r)
 
     #site actions
     security.declareProtected(PERMISSION_COMMENTS_OBJECTS, 'comment_add')
