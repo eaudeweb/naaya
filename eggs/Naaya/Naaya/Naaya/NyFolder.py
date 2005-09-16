@@ -37,7 +37,6 @@ from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyProperties import NyProperties
-from Products.NaayaBase.NyComments import NyComments
 from Products.Localizer.LocalPropertyManager import LocalProperty
 
 manage_addNyFolder_html = PageTemplateFile('zpt/folder_manage_add', globals())
@@ -110,7 +109,7 @@ def importNyFolder(self, id, attrs, content, properties):
             l_index.pt_edit(text=content, content_type='')
     self.recatalogNyObject(ob)
 
-class NyFolder(NyAttributes, NyProperties, NyImportExport, NyComments, NyContainer, utils):
+class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     """ """
 
     meta_type = METATYPE_FOLDER
@@ -166,7 +165,6 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyComments, NyContain
         """ """
         self.id = id
         NyContainer.__dict__['__init__'](self)
-        NyComments.__dict__['__init__'](self)
         NyProperties.__dict__['__init__'](self)
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
