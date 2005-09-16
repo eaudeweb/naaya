@@ -35,8 +35,9 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Product imports
 from constants import *
+from Products.NaayaCore.managers.utils import utils
 
-class comment_item:
+class comment_item(utils):
     """
     Class that implements a comment.
     """
