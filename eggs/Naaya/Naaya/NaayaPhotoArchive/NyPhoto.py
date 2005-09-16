@@ -93,10 +93,6 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
             {'label': 'Displays', 'action': 'manage_displays_html'},
         )
         +
-        (
-            Image.manage_options[1],
-        )
-        +
         NyItem.manage_options
     )
 
