@@ -122,19 +122,20 @@ class NyBase:
         """
         l_site = self.getSite()
         r = []
-        r.append('<link>%s</link>' % self.absolute_url())
-        r.append('<dc:title>%s</dc:title>' % self.utXmlEncode(self.getLocalProperty('title', lang)))
-        r.append('<dc:identifier>%s</dc:identifier>' % self.absolute_url())
-        r.append('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.releasedate))
-        r.append('<dc:description>%s</dc:description>' % self.utXmlEncode(self.getLocalProperty('description', lang)))
-        r.append('<dc:contributor>%s</dc:contributor>' % self.utXmlEncode(self.contributor))
-        r.append('<dc:coverage>%s</dc:coverage>' % self.utXmlEncode(self.getLocalProperty('coverage', lang)))
-        r.append('<dc:language>%s</dc:language>' % self.utXmlEncode(lang))
+        ra = r.append
+        ra('<link>%s</link>' % self.absolute_url())
+        ra('<dc:title>%s</dc:title>' % self.utXmlEncode(self.getLocalProperty('title', lang)))
+        ra('<dc:identifier>%s</dc:identifier>' % self.absolute_url())
+        ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.releasedate))
+        ra('<dc:description>%s</dc:description>' % self.utXmlEncode(self.getLocalProperty('description', lang)))
+        ra('<dc:contributor>%s</dc:contributor>' % self.utXmlEncode(self.contributor))
+        ra('<dc:coverage>%s</dc:coverage>' % self.utXmlEncode(self.getLocalProperty('coverage', lang)))
+        ra('<dc:language>%s</dc:language>' % self.utXmlEncode(lang))
         for k in self.getLocalProperty('keywords', lang).split(' '):
-            r.append('<dc:subject>%s</dc:subject>' % self.utXmlEncode(k))
-        r.append('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
-        r.append('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        r.append('<dc:rights>%s</dc:rights>' % self.utXmlEncode(l_site.getLocalProperty('rights', lang)))
+            ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(k))
+        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
+        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
+        ra('<dc:rights>%s</dc:rights>' % self.utXmlEncode(l_site.getLocalProperty('rights', lang)))
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')
@@ -150,12 +151,13 @@ class NyBase:
         l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
         r = []
-        r.append(self.syndicateThisHeader())
-        r.append(self.syndicateThisCommon(lang))
-        r.append('<dc:type>Text</dc:type>')
-        r.append('<dc:format>text</dc:format>')
-        r.append('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        r.append(self.syndicateThisFooter())
+        ra = r.append
+        ra(self.syndicateThisHeader())
+        ra(self.syndicateThisCommon(lang))
+        ra('<dc:type>Text</dc:type>')
+        ra('<dc:format>text</dc:format>')
+        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
+        ra(self.syndicateThisFooter())
         return ''.join(r)
 
     #Handlers for export in xml format
@@ -168,9 +170,10 @@ class NyBase:
         export specific data.}
         """
         r = []
-        r.append(self.export_this_tag())
-        r.append(self.export_this_body())
-        r.append('</ob>')
+        ra = r.append
+        ra(self.export_this_tag())
+        ra(self.export_this_body())
+        ra('</ob>')
         return ''.join(r)
 
     security.declarePrivate('export_this_tag')
@@ -179,7 +182,8 @@ class NyBase:
         Opens the object tag for the current object. Common non multilingual
         object properties are added as tag attributes.
         """
-        return '<ob meta_type="%s" id="%s" sortorder="%s" contributor="%s" approved="%s" approved_by="%s" releasedate="%s" %s>' % \
+        return '<ob meta_type="%s" id="%s" sortorder="%s" contributor="%s" \
+            approved="%s" approved_by="%s" releasedate="%s" discussion="%s" %s>' % \
             (self.utXmlEncode(self.meta_type),
              self.utXmlEncode(self.id),
              self.utXmlEncode(self.sortorder),
@@ -187,6 +191,7 @@ class NyBase:
              self.utXmlEncode(self.approved),
              self.utXmlEncode(self.approved_by),
              self.utXmlEncode(self.releasedate),
+             self.utXmlEncode(self.discussion),
              self.export_this_tag_custom())
 
     security.declarePrivate('export_this_tag_custom')
@@ -203,12 +208,14 @@ class NyBase:
         Common multilingual object properties are added as tags.
         """
         r = []
+        ra = r.append
         for l in self.gl_get_languages():
-            r.append('<title lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('title', l))))
-            r.append('<description lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('description', l))))
-            r.append('<coverage lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('coverage', l))))
-            r.append('<keywords lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('keywords', l))))
-        r.append(self.export_this_body_custom())
+            ra('<title lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('title', l))))
+            ra('<description lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('description', l))))
+            ra('<coverage lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('coverage', l))))
+            ra('<keywords lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('keywords', l))))
+        ra(self.export_this_body_custom())
+        ra(self.export_this_comments())
         return ''.join(r)
 
     security.declarePrivate('export_this_body_custom')

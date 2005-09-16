@@ -82,10 +82,11 @@ class NyImportExport:
         @return: a downloadable Naaya XML file
         """
         r = []
-        r.append('<?xml version="1.0" encoding="utf-8"?>')
-        r.append('<export>')
-        r.append(self.exportdata_custom())
-        r.append('</export>')
+        ra = r.append
+        ra('<?xml version="1.0" encoding="utf-8"?>')
+        ra('<export>')
+        ra(self.exportdata_custom())
+        ra('</export>')
         self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/xml')
         self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=export.nyexp')
         return ''.join(r)
