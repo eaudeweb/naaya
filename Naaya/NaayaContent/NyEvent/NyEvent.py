@@ -171,11 +171,12 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
     security.declarePrivate('export_this_body_custom')
     def export_this_body_custom(self):
         r = []
+        ra = r.append
         for l in self.gl_get_languages():
-            r.append('<location lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('location', l))))
-            r.append('<location_address lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('location_address', l))))
-            r.append('<host lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('host', l))))
-            r.append('<details lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('details', l))))
+            ra('<location lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('location', l))))
+            ra('<location_address lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('location_address', l))))
+            ra('<host lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('host', l))))
+            ra('<details lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('details', l))))
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')
@@ -183,17 +184,18 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
         l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
         r = []
-        r.append(self.syndicateThisHeader())
-        r.append(self.syndicateThisCommon(lang))
-        r.append('<dc:type>Event</dc:type>')
-        r.append('<dc:format>text</dc:format>')
-        r.append('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        r.append('<ev:startdate>%s</ev:startdate>' % self.utShowFullDateTimeHTML(self.start_date))
-        r.append('<ev:enddate>%s</ev:enddate>' % self.utShowFullDateTimeHTML(self.end_date))
-        r.append('<ev:location>%s</ev:location>' % self.utXmlEncode(self.getLocalProperty('location', lang)))
-        r.append('<ev:organizer>%s</ev:organizer>' % self.utXmlEncode(self.getLocalProperty('host', lang)))
-        r.append('<ev:type>%s</ev:type>' % self.utXmlEncode(self.getEventTypeTitle(self.event_type)))
-        r.append(self.syndicateThisFooter())
+        ra = r.append
+        ra(self.syndicateThisHeader())
+        ra(self.syndicateThisCommon(lang))
+        ra('<dc:type>Event</dc:type>')
+        ra('<dc:format>text</dc:format>')
+        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
+        ra('<ev:startdate>%s</ev:startdate>' % self.utShowFullDateTimeHTML(self.start_date))
+        ra('<ev:enddate>%s</ev:enddate>' % self.utShowFullDateTimeHTML(self.end_date))
+        ra('<ev:location>%s</ev:location>' % self.utXmlEncode(self.getLocalProperty('location', lang)))
+        ra('<ev:organizer>%s</ev:organizer>' % self.utXmlEncode(self.getLocalProperty('host', lang)))
+        ra('<ev:type>%s</ev:type>' % self.utXmlEncode(self.getEventTypeTitle(self.event_type)))
+        ra(self.syndicateThisFooter())
         return ''.join(r)
 
     #zmi actions

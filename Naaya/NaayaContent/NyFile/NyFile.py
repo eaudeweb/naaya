@@ -164,14 +164,16 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
 
     security.declarePrivate('syndicateThis')
     def syndicateThis(self, lang=None):
+        r = []
+        ra = r.append
         l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
-        r.append(self.syndicateThisHeader())
-        r.append(self.syndicateThisCommon(lang))
-        r.append('<dc:type>Text</dc:type>')
-        r.append('<dc:format>application</dc:format>')
-        r.append('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
-        r.append(self.syndicateThisFooter())
+        ra(self.syndicateThisHeader())
+        ra(self.syndicateThisCommon(lang))
+        ra('<dc:type>Text</dc:type>')
+        ra('<dc:format>application</dc:format>')
+        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
+        ra(self.syndicateThisFooter())
         return ''.join(r)
 
     security.declarePrivate('objectDataForVersion')

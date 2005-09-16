@@ -160,10 +160,11 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
     security.declarePrivate('export_this_body_custom')
     def export_this_body_custom(self):
         r = []
+        ra = r.append
         for l in self.gl_get_languages():
-            r.append('<body lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('body', l))))
+            ra('<body lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('body', l))))
         for i in self.getUploadedImages():
-            r.append('<img id="%s" content="%s" />' % \
+            ra('<img id="%s" content="%s" />' % \
                 (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(str(i.data)))))
         return ''.join(r)
 

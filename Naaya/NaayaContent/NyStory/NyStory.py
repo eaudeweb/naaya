@@ -155,11 +155,12 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
     security.declarePrivate('export_this_body_custom')
     def export_this_body_custom(self):
         r = []
+        ra = r.append
         for l in self.gl_get_languages():
-            r.append('<body lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('body', l))))
-            r.append('<source lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('source', l))))
+            ra('<body lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('body', l))))
+            ra('<source lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('source', l))))
         for i in self.getUploadedImages():
-            r.append('<img id="%s" content="%s" />' % \
+            ra('<img id="%s" content="%s" />' % \
                 (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(str(i.data)))))
         return ''.join(r)
 
@@ -167,12 +168,13 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
     def syndicateThis(self, lang=None):
         if lang is None: lang = self.gl_get_selected_language()
         r = []
-        r.append(self.syndicateThisHeader())
-        r.append(self.syndicateThisCommon(lang))
-        r.append('<dc:type>Text</dc:type>')
-        r.append('<dc:format>text</dc:format>')
-        r.append('<dc:source>%s</dc:source>' % self.utXmlEncode(self.getLocalProperty('source', lang)))
-        r.append(self.syndicateThisFooter())
+        ra = r.append
+        ra(self.syndicateThisHeader())
+        ra(self.syndicateThisCommon(lang))
+        ra('<dc:type>Text</dc:type>')
+        ra('<dc:format>text</dc:format>')
+        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(self.getLocalProperty('source', lang)))
+        ra(self.syndicateThisFooter())
         return ''.join(r)
 
     #zmi actions
