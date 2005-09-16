@@ -76,6 +76,10 @@
 				<image id="tableft_on.gif" title="Tabbed menu item"/>
 				<image id="tabright.gif" title="Tabbed menu item"/>
 				<image id="tabright_on.gif" title="Tabbed menu item"/>
+				<image id="addcomment.gif" title=""/>
+				<image id="comment.gif" title=""/>
+				<image id="logintoadd.gif" title=""/>
+				<image id="trash.gif" title=""/>
 			</scheme>
 		</skin>
 	</layout>

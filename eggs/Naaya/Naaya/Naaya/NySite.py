@@ -371,8 +371,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def exportdata_custom(self):
         #exports all the Naaya content in XML format from the portal
         r = []
+        ra = r.append
         for x in self.getSite().get_containers():
-            r.append(x.export_this())
+            ra(x.export_this())
         return ''.join(r)
 
     def import_data(self, node, object):
