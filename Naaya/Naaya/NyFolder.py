@@ -19,6 +19,7 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+from copy import copy
 
 #Zope imports
 from DateTime import DateTime
@@ -152,7 +153,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             #handle uninstalled pluggable meta_types
             pluggable_meta_types = self.get_pluggable_metatypes()
             pluggable_installed_meta_types = self.get_pluggable_installed_meta_types()
-            for x in l:
+            t = copy(l)
+            for x in t:
                 if (x['name'] in pluggable_meta_types) and (x['name'] not in pluggable_installed_meta_types):
                     l.remove(x)
             return l
