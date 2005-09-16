@@ -202,17 +202,18 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     security.declarePrivate('export_this')
     def export_this(self):
         r = []
-        r.append(self.export_this_tag())
-        r.append(self.export_this_body())
+        ra = r.append
+        ra(self.export_this_tag())
+        ra(self.export_this_body())
         if self.publicinterface:
             l_index = self._getOb('index', None)
             if l_index is not None:
-                r.append('<![CDATA[%s]]>' % l_index.document_src())
+                ra('<![CDATA[%s]]>' % l_index.document_src())
         for x in self.getObjects():
-            r.append(x.export_this())
+            ra(x.export_this())
         for x in self.getFolders():
-            r.append(x.export_this())
-        r.append('</ob>')
+            ra(x.export_this())
+        ra('</ob>')
         return ''.join(r)
 
     security.declarePrivate('export_this_tag_custom')
@@ -244,16 +245,17 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     def process_submissions(self):
         #returns info regarding the meta_types that ce be added inside the folder
         r = []
+        ra = r.append
         #check for adding folders
         if METATYPE_FOLDER in self.folder_meta_types:
             if self.checkPermission(PERMISSION_ADD_FOLDER):
-                r.append(('folder_add_html', LABEL_NYFOLDER))
+                ra(('folder_add_html', LABEL_NYFOLDER))
         #check pluggable content
         pc = self.get_pluggable_content()
         for k in self.get_pluggable_installed_meta_types():
             if k in self.folder_meta_types:
                 if self.checkPermission(pc[k]['permission']):
-                    r.append((pc[k]['addform'], pc[k]['label']))
+                    ra((pc[k]['addform'], pc[k]['label']))
         return r
 
     security.declareProtected(view, 'checkPermissionManageObects')

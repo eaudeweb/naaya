@@ -190,3 +190,104 @@
 #epoz_button_anchor {display:none;}
 #epoz_button_undo {display:none;}
 #epoz_button_redo {display:none;}
+
+
+/*	Comment Box Form Styles	*/
+.comment_box {
+	background-color:#FAFAFA; 
+	border: 1px dashed #cccccc; 
+	margin:1em;
+	padding:1em;
+	}
+
+.deletecomment {
+	font-size: 90%;
+	float:right;
+	background-color:#EBEBEB;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-right: 3px;
+	padding-left: 18px;
+	border-top:1px solid #eeeeee;
+	border-left:1px solid #eeeeee;
+	border-bottom:1px solid #777777;
+	border-right:1px solid #777777;
+	color:#666666;
+	text-decoration: none;
+	background-image: url(trash.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+
+	margin-bottom: 0.5em;
+	/*text-indent: 17px;*/
+}
+
+.addcomment {
+	font-size: 90%;
+	background-color:#EBEBEB;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-right: 3px;
+	padding-left: 18px;
+	border-top:1px solid #eeeeee;
+	border-left:1px solid #eeeeee;
+	border-bottom:1px solid #777777;
+	border-right:1px solid #777777;
+	color:#666666;
+	text-decoration: none;
+	background-image: url(addcomment.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	margin-bottom: 0.5em;
+}
+
+.logincomment {
+	font-size: 90%;
+	background-color:#EBEBEB;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-right: 3px;
+	padding-left: 18px;
+	border-top:1px solid #eeeeee;
+	border-left:1px solid #eeeeee;
+	border-bottom:1px solid #777777;
+	border-right:1px solid #777777;
+	color:#666666;
+	text-decoration: none;
+	background-image: url(logintoadd.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	margin-bottom: 0.5em;
+}
+
+.commentbox_title {
+	font-weight: bold;
+	font-size: 110%;
+	/*text-indent: 17px;*/
+	padding-left: 17px;
+	background-image: url(comment.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	
+}
+
+.commentbox_content {
+	color:#666666; 
+	font-size: 80%;
+}
+
+.commentbox_add {
+	margin: 1em;
+	/*padding-left:1em;*/
+}
+
+.hr_addcomment {
+	border-top: 1px solid #eaeaea; 
+	border-bottom:1px solid white;
+}
+
+.hr_inside_comment {
+	border-top: 1px solid #eaeaea; 
+	border-bottom:1px solid white; 
+	margin-top:0.5em;
+}
