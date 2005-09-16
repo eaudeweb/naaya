@@ -41,6 +41,10 @@
 				<image id="separ_1.gif" title=""/>
 				<image id="separ_2.gif" title=""/>
 				<image id="portlet-middle-bullet.gif" title=""/>
+				<image id="addcomment.gif" title=""/>
+				<image id="comment.gif" title=""/>
+				<image id="logintoadd.gif" title=""/>
+				<image id="trash.gif" title=""/>
 			</scheme>
 			<scheme id="brown" title="Brown">
 				<style id="style" title="Main CSS"/>
@@ -63,6 +67,10 @@
 				<image id="separ_1.gif" title=""/>
 				<image id="separ_2.gif" title=""/>
 				<image id="portlet-middle-bullet.gif" title=""/>
+				<image id="addcomment.gif" title=""/>
+				<image id="comment.gif" title=""/>
+				<image id="logintoadd.gif" title=""/>
+				<image id="trash.gif" title=""/>
 			</scheme>
 			<scheme id="green" title="Green">
 				<style id="style" title="Main CSS"/>
@@ -85,6 +93,10 @@
 				<image id="separ_1.gif" title=""/>
 				<image id="separ_2.gif" title=""/>
 				<image id="portlet-middle-bullet.gif" title=""/>
+				<image id="addcomment.gif" title=""/>
+				<image id="comment.gif" title=""/>
+				<image id="logintoadd.gif" title=""/>
+				<image id="trash.gif" title=""/>
 			</scheme>
 			<scheme id="indigo" title="Indigo">
 				<style id="style" title="Main CSS"/>
@@ -107,6 +119,10 @@
 				<image id="separ_1.gif" title=""/>
 				<image id="separ_2.gif" title=""/>
 				<image id="portlet-middle-bullet.gif" title=""/>
+				<image id="addcomment.gif" title=""/>
+				<image id="comment.gif" title=""/>
+				<image id="logintoadd.gif" title=""/>
+				<image id="trash.gif" title=""/>
 			</scheme>
 		</skin>
 	</layout>
