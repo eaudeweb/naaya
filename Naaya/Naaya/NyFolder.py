@@ -373,10 +373,10 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             if approved == 0: self.approved_by = None
             else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self._p_changed = 1
-        self.recatalogNyObject(self)
-        self.createPublicInterface()
         if discussion: self.open_for_comments()
         else: self.close_for_comments()
+        self.recatalogNyObject(self)
+        self.createPublicInterface()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manageSubobjects')
@@ -412,9 +412,9 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         self.releasedate = releasedate
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_FOLDER, REQUEST, kwargs), lang)
         self._p_changed = 1
-        self.recatalogNyObject(self)
         if discussion: self.open_for_comments()
         else: self.close_for_comments()
+        self.recatalogNyObject(self)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('edit_html?lang=%s' % lang)
