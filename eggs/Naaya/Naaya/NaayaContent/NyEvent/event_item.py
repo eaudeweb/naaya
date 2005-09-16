@@ -25,9 +25,8 @@
 #Product imports
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
-from Products.NaayaBase.NyComments import NyComments
 
-class event_item(NyProperties, NyComments):
+class event_item(NyProperties):
     """ """
 
     title = LocalProperty('title')
@@ -51,7 +50,6 @@ class event_item(NyProperties, NyComments):
             host, agenda_url, event_url, details, topitem, event_type,
             contact_person, contact_email, contact_phone, contact_fax,
             releasedate, lang)
-        NyComments.__dict__['__init__'](self)
         NyProperties.__dict__['__init__'](self)
 
 
