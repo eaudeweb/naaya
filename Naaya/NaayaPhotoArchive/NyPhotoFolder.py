@@ -35,7 +35,8 @@ from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalP
 import NyPhoto
 
 manage_addNyPhotoFolder_html = PageTemplateFile('zpt/photofolder_manage_add', globals())
-def manage_addNyPhotoFolder(self, id='', title='', quality='', lang=None, REQUEST=None):
+def manage_addNyPhotoFolder(self, id='', title='', quality='', discussion='',
+    lang=None, REQUEST=None):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_NYPHOTOFOLDER + self.utGenRandomId(6)
@@ -51,6 +52,7 @@ def manage_addNyPhotoFolder(self, id='', title='', quality='', lang=None, REQUES
     ob = NyPhotoFolder(id, title, quality, approved, approved_by, releasedate, lang)
     self.gl_add_languages(ob)
     self._setObject(id, ob)
+    if discussion: self._getOb(id).open_for_comments()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -89,6 +91,7 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
     def __init__(self, id, title, quality, approved, approved_by, releasedate, lang):
         """ """
         self.id = id
+        NyContainer.__dict__['__init__'](self)
         self._setLocalPropValue('title', lang, title)
         self.quality = quality
         self.displays = DEFAULT_DISPLAYS.copy()
@@ -158,7 +161,7 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', quality='', approved='', releasedate='',
-        REQUEST=None):
+        discussion='', REQUEST=None):
         """ """
         try: quality = abs(int(quality))
         except: quality = DEFAULT_QUALITY
@@ -176,6 +179,8 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
             else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.releasedate = releasedate
         self._p_changed = 1
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
@@ -202,7 +207,8 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
 
     #site actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'saveProperties')
-    def saveProperties(self, title='', quality='', lang=None, REQUEST=None):
+    def saveProperties(self, title='', quality='', discussion='', lang=None,
+        REQUEST=None):
         """ """
         try: quality = abs(int(quality))
         except: quality = DEFAULT_QUALITY
@@ -211,6 +217,8 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         self._setLocalPropValue('title', lang, title)
         self.quality = quality
         self._p_changed = 1
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
         self.recatalogNyObject(self)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
