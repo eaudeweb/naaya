@@ -35,8 +35,9 @@ from AccessControl import ClassSecurityInfo
 #Product imports
 from NyBase import NyBase
 from NyPermissions import NyPermissions
+from NyComments import NyComments
 
-class NyItem(SimpleItem, NyBase, NyPermissions):
+class NyItem(SimpleItem, NyComments, NyBase, NyPermissions):
     """
     Class that implements the Naaya simple item type of object.
     """
@@ -51,7 +52,7 @@ class NyItem(SimpleItem, NyBase, NyPermissions):
         """
         Constructor.
         """
-        pass
+        NyComments.__dict__['__init__'](self)
 
     def manage_afterAdd(self, item, container):
         """

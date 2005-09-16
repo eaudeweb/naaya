@@ -35,8 +35,9 @@ from AccessControl import ClassSecurityInfo
 #Product imports
 from NyBase import NyBase
 from NyPermissions import NyPermissions
+from NyComments import NyComments
 
-class NyContainer(Folder, NyBase, NyPermissions):
+class NyContainer(Folder, NyComments, NyBase, NyPermissions):
     """
     Class that implements the Naaya folder type of object.
     """
@@ -51,7 +52,7 @@ class NyContainer(Folder, NyBase, NyPermissions):
         """
         Constructor.
         """
-        pass
+        NyComments.__dict__['__init__'](self)
 
     def getObjectById(self, p_id):
         """
