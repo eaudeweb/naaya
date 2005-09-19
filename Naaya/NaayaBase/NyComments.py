@@ -187,15 +187,28 @@ class NyComments:
         ra('</discussion>')
         return ''.join(r)
 
+    security.declarePrivate('import_comments')
+    def import_comments(self, discussion):
+        """
+        Import comments.
+        """
+        if discussion is not None:
+            for comment in discussion.comments:
+                self.comment_add(comment.id, comment.title, comment.body,
+                    comment.author.encode('utf-8'), comment.date.encode('utf-8'))
+
     #site actions
     security.declareProtected(PERMISSION_COMMENTS_OBJECTS, 'comment_add')
-    def comment_add(self, title='', body='', REQUEST=None):
+    def comment_add(self, id='', title='', body='', author=None, date=None, REQUEST=None):
         """
         Add a comment for this object.
         """
-        self.add_comment_item(self.utGenRandomId(), title, body,
-            self.REQUEST.AUTHENTICATED_USER.getUserName(),
-            self.utGetTodayDate())
+        id = self.utCleanupId(id)
+        if not id: id = self.utGenRandomId()
+        if author is None: author = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        if date is None: date = self.utGetTodayDate()
+        else: date = self.utGetDate(date)
+        self.add_comment_item(id, title, body, author, date)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())

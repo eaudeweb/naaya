@@ -43,7 +43,20 @@ class object_struct:
         self.attrs = attrs
         self.content = None
         self.properties = {}
+        self.dicussion = None
         self.objects = []
+
+class discussion_struct:
+    def __init__(self):
+        self.comments = []
+
+class comment_struct:
+    def __init__(self, id, title, body, author, date):
+        self.id = id
+        self.title = title
+        self.body = body
+        self.author = author
+        self.date = date
 
 class saxstack_struct:
     def __init__(self, name='', obj=None):
@@ -75,9 +88,23 @@ class import_handler(ContentHandler):
                                 attrs)
             stackObj = saxstack_struct('ob', obj)
             self.stack.append(stackObj)
+        elif name == 'discussion':
+            obj = discussion_struct()
+            stackObj = saxstack_struct('discussion', obj)
+            self.stack.append(stackObj)
+        elif name == 'comment':
+            obj = comment_struct(attrs['id'].encode('utf-8'),
+                                 attrs['title'], attrs['body'],
+                                 attrs['author'], attrs['date'])
+            stackObj = saxstack_struct('comment', obj)
+            self.stack.append(stackObj)
         elif name == 'img':
             obj = object_struct(attrs['id'].encode('utf-8'), 'Image', attrs)
             stackObj = saxstack_struct('ob', obj)
+            self.stack.append(stackObj)
+        elif name == 'file':
+            obj = object_struct(attrs['id'].encode('utf-8'), 'File', attrs)
+            stackObj = saxstack_struct('file', obj)
             self.stack.append(stackObj)
         else:
             if attrs.has_key('lang') and attrs.has_key('content'):
@@ -97,7 +124,16 @@ class import_handler(ContentHandler):
             self.stack[-1].obj.content = self.stack[-1].content.encode('utf-8')
             self.stack[-2].obj.objects.append(self.stack[-1].obj)
             self.stack.pop()
+        elif name == 'discussion':
+            self.stack[-2].obj.discussion = self.stack[-1].obj
+            self.stack.pop()
+        elif name == 'comment':
+            self.stack[-2].obj.comments.append(self.stack[-1].obj)
+            self.stack.pop()
         elif name == 'img':
+            self.stack[-2].obj.objects.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'file':
             self.stack[-2].obj.objects.append(self.stack[-1].obj)
             self.stack.pop()
         else:
