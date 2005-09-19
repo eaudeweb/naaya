@@ -45,7 +45,7 @@
 </div>
 <div class="field-inline">
 	<label for="topitem" i18n:translate="">On front</label>
-	<input type="checkbox" name="topitem" id="topitem" value="" tal:attributes="checked python:here.getVersionProperty('topitem')==1" />
+	<input type="checkbox" name="topitem" id="topitem" tal:attributes="checked python:here.getVersionProperty('topitem')==1" />
 </div>
 <div class="field">
 	<label for="event_type" i18n:translate="">Type</label>
