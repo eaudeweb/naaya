@@ -296,7 +296,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
     def saveProperties(self, title='', description='', coverage='', keywords='', sortorder='',
         location='', location_address='', location_url='', start_date='', end_date='', host='', agenda_url='',
         event_url='', details='', topitem='', event_type='', contact_person='', contact_email='', contact_phone='',
-        contact_fax='', releasedate='', lang=None, REQUEST=None, RESPONSE=None, **kwargs):
+        contact_fax='', releasedate='', discussion='', lang=None, REQUEST=None, RESPONSE=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
