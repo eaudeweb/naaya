@@ -156,7 +156,7 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         if q == '': q = None
         if f == '': f = None
         else: f = 1
-        return self._page_result(self.query_objects_ex(meta_type=METATYPE_NYPHOTO, q=q, lang=lang, path=self.absolute_url(1), topitem=f, approved=1, sort_on='releasedate', sort_order='reverse'), p_start)
+        return self._page_result(self.query_objects_ex(meta_type=METATYPE_NYPHOTO, q=q, lang=lang, path='/'.join(self.getPhysicalPath()), topitem=f, approved=1, sort_on='releasedate', sort_order='reverse'), p_start)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
