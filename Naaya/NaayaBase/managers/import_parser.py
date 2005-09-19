@@ -43,7 +43,7 @@ class object_struct:
         self.attrs = attrs
         self.content = None
         self.properties = {}
-        self.dicussion = None
+        self.discussion = None
         self.objects = []
 
 class discussion_struct:
