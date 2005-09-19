@@ -376,21 +376,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             ra(x.export_this())
         return ''.join(r)
 
-    def import_data(self, node, object):
+    def import_data(self, object):
         #import an object
-        zope_obj = node._getOb(object.id, None)
-        if zope_obj is None:
-            if object.meta_type == METATYPE_FOLDER:
-                importNyFolder(node, object.id, object.attrs, object.content, object.properties)
-            elif object.meta_type in self.get_pluggable_installed_meta_types():
-                item = self.get_pluggable_item(object.meta_type)
-                c = 'node.import%s(object.id, object.attrs, object.content, object.properties)' % item['module']
-                exec(c)
-            else:
-                self.import_data_custom(node, object)
-            zope_obj = node._getOb(object.id, None)
-        for obj in object.objects:
-            self.import_data(zope_obj, obj)
+        if object.meta_type == METATYPE_FOLDER:
+            importNyFolder(self, object.id, object.attrs, object.content,
+                object.properties, object.discussion, object.objects)
+        else:
+            self.import_data_custom(self, object)
 
     def import_data_custom(self, node, object):
         #import some special type of object
@@ -400,6 +392,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             image_ob = node._getOb(id)
             image_ob.update_data(data=self.utBase64Decode(object.attrs['content'].encode('utf-8')))
             image_ob._p_changed=1
+        elif object.meta_type == 'File':
+            id = object.attrs['id'].encode('utf-8')
+            node.manage_addFile(id=id, file='')
+            file_ob = node._getOb(id)
+            file_ob.update_data(data=self.tlzBase64Decode(object.attrs['content'].encode('utf-8')))
+            file_ob._p_changed=1
         else:
             print 'Import an object of type [%s]' % object.meta_type
 
