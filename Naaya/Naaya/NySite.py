@@ -396,7 +396,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             id = object.attrs['id'].encode('utf-8')
             node.manage_addFile(id=id, file='')
             file_ob = node._getOb(id)
-            file_ob.update_data(data=self.tlzBase64Decode(object.attrs['content'].encode('utf-8')))
+            file_ob.update_data(data=self.utBase64Decode(object.attrs['content'].encode('utf-8')))
             file_ob._p_changed=1
         else:
             print 'Import an object of type [%s]' % object.meta_type
