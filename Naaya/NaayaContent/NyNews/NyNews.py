@@ -90,7 +90,7 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-def importNyNews(self, id, attrs, content, properties):
+def importNyNews(self, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
     addNyNews(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),
@@ -99,13 +99,15 @@ def importNyNews(self, id, attrs, content, properties):
         smallpicture=self.utBase64Decode(attrs['smallpicture'].encode('utf-8')),
         bigpicture=self.utBase64Decode(attrs['bigpicture'].encode('utf-8')),
         resourceurl=attrs['resourceurl'].encode('utf-8'),
-        contributor=attrs['contributor'].encode('utf-8'))
+        contributor=attrs['contributor'].encode('utf-8'),
+        discussion=abs(int(attrs['discussion'].encode('utf-8'))))
     ob = self._getOb(id)
     for property, langs in properties.items():
         for lang in langs:
             ob._setLocalPropValue(property, lang, langs[lang])
     ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
     ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+    ob.import_comments(discussion)
     self.recatalogNyObject(ob)
 
 class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
@@ -182,7 +184,7 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
             if self.checkout: return self.version.smallpicture
             else: return self.smallpicture
 
-    def getBigPicture(self, version=None):
+    def getBigPicture(self, version=None, REQUEST=None):
         """ """
         if version is None: return self.bigpicture
         else:

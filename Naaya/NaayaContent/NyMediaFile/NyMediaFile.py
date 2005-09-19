@@ -89,12 +89,12 @@ def addNyMediaFile(self, id='', title='', description='', coverage='', keywords=
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-def importNyMediaFile(self, id, attrs, content, properties):
+def importNyMediaFile(self, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
     addNyMediaFile(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),
-        source='file', file=self.utBase64Decode(attrs['file'].encode('utf-8')),
-        contributor=attrs['contributor'].encode('utf-8'))
+        contributor=attrs['contributor'].encode('utf-8'),
+        discussion=abs(int(attrs['discussion'].encode('utf-8'))))
     ob = self._getOb(id)
     for property, langs in properties.items():
         for lang in langs:
@@ -105,7 +105,10 @@ def importNyMediaFile(self, id, attrs, content, properties):
         attrs['validation_comment'].encode('utf-8'),
         attrs['validation_by'].encode('utf-8'),
         attrs['validation_date'].encode('utf-8'))
+    ob.import_comments(discussion)
     self.recatalogNyObject(ob)
+    for object in objects:
+        self.import_data_custom(ob, object)
 
 class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyValidation):
     """ """
@@ -155,6 +158,15 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
                 self.utXmlEncode(self.validation_date),
                 self.utXmlEncode(self.validation_by),
                 self.utXmlEncode(self.validation_comment))
+
+    security.declarePrivate('export_this_body_custom')
+    def export_this_body_custom(self):
+        r = []
+        ra = r.append
+        for i in self.getMediaObjects():
+            ra('<file id="%s" content="%s" />' % \
+                (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(str(i.data)))))
+        return ''.join(r)
 
     security.declarePrivate('syndicateThis')
     def syndicateThis(self, lang=None):

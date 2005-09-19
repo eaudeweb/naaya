@@ -92,7 +92,7 @@ def addNyEvent(self, id='', title='', description='', language='', coverage='',
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-def importNyEvent(self, id, attrs, content, properties):
+def importNyEvent(self, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
     addNyEvent(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),
@@ -107,13 +107,15 @@ def importNyEvent(self, id, attrs, content, properties):
         contact_email=attrs['contact_email'].encode('utf-8'),
         contact_phone=attrs['contact_phone'].encode('utf-8'),
         contact_fax=attrs['contact_fax'].encode('utf-8'),
-        contributor=attrs['contributor'].encode('utf-8'))
+        contributor=attrs['contributor'].encode('utf-8'),
+        discussion=abs(int(attrs['discussion'].encode('utf-8'))))
     ob = self._getOb(id)
     for property, langs in properties.items():
         for lang in langs:
             ob._setLocalPropValue(property, lang, langs[lang])
     ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
     ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+    ob.import_comments(discussion)
     self.recatalogNyObject(ob)
 
 class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):

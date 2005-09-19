@@ -89,11 +89,12 @@ def addNyDocument(self, id='', title='', description='', coverage='', keywords='
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-def importNyDocument(self, id, attrs, content, properties):
+def importNyDocument(self, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
     addNyDocument(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),
-        contributor=attrs['contributor'].encode('utf-8'))
+        contributor=attrs['contributor'].encode('utf-8'),
+        discussion=abs(int(attrs['discussion'].encode('utf-8'))))
     ob = self._getOb(id)
     for property, langs in properties.items():
         for lang in langs:
@@ -104,7 +105,10 @@ def importNyDocument(self, id, attrs, content, properties):
         attrs['validation_comment'].encode('utf-8'),
         attrs['validation_by'].encode('utf-8'),
         attrs['validation_date'].encode('utf-8'))
+    ob.import_comments(discussion)
     self.recatalogNyObject(ob)
+    for object in objects:
+        self.import_data_custom(ob, object)
 
 class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyCheckControl, NyValidation):
     """ """

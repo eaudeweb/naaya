@@ -84,12 +84,13 @@ def addNyURL(self, id='', title='', description='', coverage='', keywords='',
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-def importNyURL(self, id, attrs, content, properties):
+def importNyURL(self, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
     addNyURL(self, id=id,
         sortorder=attrs['sortorder'].encode('utf-8'),
         locator=attrs['locator'].encode('utf-8'),
-        contributor=attrs['contributor'].encode('utf-8'))
+        contributor=attrs['contributor'].encode('utf-8'),
+        discussion=abs(int(attrs['discussion'].encode('utf-8'))))
     ob = self._getOb(id)
     for property, langs in properties.items():
         for lang in langs:
@@ -100,6 +101,7 @@ def importNyURL(self, id, attrs, content, properties):
         attrs['validation_comment'].encode('utf-8'),
         attrs['validation_by'].encode('utf-8'),
         attrs['validation_date'].encode('utf-8'))
+    ob.import_comments(discussion)
     self.recatalogNyObject(ob)
 
 class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
@@ -120,11 +122,12 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, description, coverage, keywords, sortorder, locator,
-        contributor, approved, approved_by, releasedate, lang):
+    def __init__(self, id, title, description, coverage, keywords, sortorder,
+        locator, contributor, approved, approved_by, releasedate, lang):
         """ """
         self.id = id
-        url_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder, locator, releasedate, lang)
+        url_item.__dict__['__init__'](self, title, description, coverage,
+            keywords, sortorder, locator, releasedate, lang)
         NyValidation.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
