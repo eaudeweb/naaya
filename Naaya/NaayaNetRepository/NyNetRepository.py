@@ -125,7 +125,7 @@ class NyNetRepository(LocalPropertyManager, Folder):
         if q == '': q = None
         if l == '': l = None
         if t == '': t = None
-        return self.query_objects_ex(meta_type=METATYPE_NYNETCHANNEL, q=q, lang=lang, path=self.absolute_url(1), language=l, type=t)
+        return self.query_objects_ex(meta_type=METATYPE_NYNETCHANNEL, q=q, lang=lang, path='/'.join(self.getPhysicalPath()), language=l, type=t)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
