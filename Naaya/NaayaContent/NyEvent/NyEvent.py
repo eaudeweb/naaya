@@ -142,9 +142,11 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
         contributor, approved, approved_by, releasedate, lang):
         """ """
         self.id = id
-        event_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder, location,
-            location_address, location_url, start_date, end_date, host, agenda_url, event_url,
-            details, topitem, event_type, contact_person, contact_email, contact_phone, contact_fax, releasedate, lang)
+        event_item.__dict__['__init__'](self, title, description, coverage,
+            keywords, sortorder, location, location_address, location_url,
+            start_date, end_date, host, agenda_url, event_url, details,
+            topitem, event_type, contact_person, contact_email, contact_phone,
+            contact_fax, releasedate, lang)
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor

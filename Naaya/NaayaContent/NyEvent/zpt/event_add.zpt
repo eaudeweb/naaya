@@ -45,7 +45,7 @@
 </div>
 <div class="field-inline">
 	<label for="topitem" i18n:translate="">On front</label>
-	<input type="checkbox" name="topitem" id="topitem" value="" />
+	<input type="checkbox" name="topitem" id="topitem" />
 </div>
 <div class="field">
 	<label for="event_type" i18n:translate="">Type</label>
