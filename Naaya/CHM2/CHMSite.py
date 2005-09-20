@@ -250,12 +250,15 @@ class CHMSite(NySite):
     def getPredefinedUploads(self):
         """ get the predefined list of uploads """
         buf = []
-        for url in self.predefined_latest_uploads:
+        ba = buf.append
+        t = copy(self.predefined_latest_uploads)
+        for url in t:
             obj = self.unrestrictedTraverse(url, None)
             if obj is None:
                 self.predefined_latest_uploads.remove(url)
             else:
-                buf.append(obj)
+                ba(obj)
+        self._p_changed = 1
         return buf
 
     def getLatestStories(self):
