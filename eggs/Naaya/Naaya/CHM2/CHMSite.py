@@ -280,6 +280,30 @@ class CHMSite(NySite):
         #return all the glossaries in this portal
         return self.objectValues('CHM Glossary Centre')
 
+    security.declareProtected(view, 'getArchiveListing')
+    def getArchiveListing(self, p_archive):
+        """ """
+        p_objects = p_archive.getObjects()
+        p_objects.sort(lambda x,y: cmp(y.releasedate, x.releasedate) \
+            or cmp(x.sortorder, y.sortorder))
+        results = []
+        select_all = 0
+        delete_all = 0
+        flag = 0
+        for obj in p_objects:
+            del_permission = obj.checkPermissionDeleteObject()
+            edit_permission = obj.checkPermissionEditObject()
+            if del_permission and flag == 0:
+                flag = 1
+                select_all = 1
+                delete_all = 1
+            if edit_permission and flag == 0:
+                flag = 1
+                select_all = 1
+            if ((del_permission or edit_permission) and not obj.approved) or obj.approved:
+                results.append((del_permission, edit_permission, obj))
+        return (select_all, delete_all, results)
+
     #rdf channels
     security.declareProtected(view, 'whatsnew_rdf')
     def whatsnew_rdf(self):
