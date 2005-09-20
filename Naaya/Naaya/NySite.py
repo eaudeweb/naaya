@@ -462,6 +462,29 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         return [METATYPE_FOLDER]
 
     #api
+    def process_releasedate(self, p_string='', p_date=None):
+        """
+        Process a value for an object's release date.
+
+        @param p_string: represents a date like 'dd/mm/yyyy'
+        @type lang: string
+        @param p_date: represents a date
+        @type p_date: DateTime
+        @return: a DateTime value
+        """
+        releasedate = self.utConvertStringToDateTimeObj(p_string)
+        if releasedate is None:
+            if p_date is None: releasedate = self.utGetTodayDate()
+            else: releasedate = p_date
+        else:
+            if p_date is not None:
+                #check if the day was changed: if no then restore release date
+                if (p_date.year() == releasedate.year()) and \
+                    (p_date.month() == releasedate.month()) and \
+                    (p_date.day() == releasedate.day()):
+                    releasedate = p_date
+        return releasedate
+
     def getMainFolders(self):
         #returns a list with all folders objects at the first level
         #that are approved and sorted by 'order' property

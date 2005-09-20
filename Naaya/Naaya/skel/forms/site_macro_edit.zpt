@@ -77,7 +77,7 @@ function fSet(ctrl, value)
 </div>
 <div class="field">
 	<label for="discussion" i18n:translate="">Open for comments</label>
-	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked python:here.getVersionProperty('discussion')" />
+	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked here/discussion" />
 </div>
 <tal:block metal:define-slot="custom_properties"/>
 <div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
