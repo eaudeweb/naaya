@@ -210,10 +210,10 @@ class NyBase:
         r = []
         ra = r.append
         for l in self.gl_get_languages():
-            ra('<title lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('title', l))))
-            ra('<description lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('description', l))))
-            ra('<coverage lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('coverage', l))))
-            ra('<keywords lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('keywords', l))))
+            ra('<title lang="%s"><![CDATA[%s]]></title>' % (l, self.utToUtf8(self.getLocalProperty('title', l))))
+            ra('<description lang="%s"><![CDATA[%s]]></description>' % (l, self.utToUtf8(self.getLocalProperty('description', l))))
+            ra('<coverage lang="%s"><![CDATA[%s]]></coverage>' % (l, self.utToUtf8(self.getLocalProperty('coverage', l))))
+            ra('<keywords lang="%s"><![CDATA[%s]]></keywords>' % (l, self.utToUtf8(self.getLocalProperty('keywords', l))))
         ra(self.export_this_body_custom())
         ra(self.export_this_comments())
         return ''.join(r)
