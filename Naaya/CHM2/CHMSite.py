@@ -236,7 +236,7 @@ class CHMSite(NySite):
         pred = self.getPredefinedUploads()
         buf = self.utListDifference(latest, pred)
         buf.extend(pred)
-        buf = self.utSortObjsListByAttr(buf, 'releasedate', 0)
+        buf = self.utSortObjsListByAttr(buf, 'releasedate', 1)
         return buf
 
     def setPredefinedUploads(self, predefined=[], REQUEST=None):
