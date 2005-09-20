@@ -278,6 +278,11 @@ class utils:
         """Encode a string using html_quote"""
         return html_quote(p_string)
 
+    def utToUtf8(self, p_string):
+        #convert to utf-8
+        if isinstance(p_string, unicode): return p_string.encode('utf-8')
+        else: return str(p_string)
+
     def utXmlEncode(self, p_string):
         """Encode some special chars"""
         if isinstance(p_string, unicode): l_tmp = p_string.encode('utf-8')
