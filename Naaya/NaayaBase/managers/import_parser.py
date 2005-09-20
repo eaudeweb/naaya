@@ -46,6 +46,11 @@ class object_struct:
         self.discussion = None
         self.objects = []
 
+class property_struct:
+    def __init__(self, name, lang):
+        self.name = name
+        self.lang = lang
+
 class discussion_struct:
     def __init__(self):
         self.comments = []
@@ -106,14 +111,14 @@ class import_handler(ContentHandler):
             obj = object_struct(attrs['id'].encode('utf-8'), 'File', attrs)
             stackObj = saxstack_struct('file', obj)
             self.stack.append(stackObj)
+        elif attrs.has_key('lang'):
+            #multilingual property
+            name = name.encode('utf-8')
+            obj = property_struct(name, attrs['lang'].encode('utf-8'))
+            stackObj = saxstack_struct('name', obj)
+            self.stack.append(stackObj)
         else:
-            if attrs.has_key('lang') and attrs.has_key('content'):
-                #multilanguage property
-                name = name.encode('utf-8')
-                ob = self.stack[-1].obj
-                if not ob.properties.has_key(name):
-                    ob.properties[name] = {}
-                ob.properties[name][attrs['lang'].encode('utf-8')] = attrs['content']
+            pass
 
     def endElement(self, name):
         """ """
@@ -136,6 +141,15 @@ class import_handler(ContentHandler):
         elif name == 'file':
             self.stack[-2].obj.objects.append(self.stack[-1].obj)
             self.stack.pop()
+        elif isinstance(self.stack[-1].obj, property_struct):
+            #multilingual property
+            name, lang = self.stack[-1].obj.name, self.stack[-1].obj.lang
+            content = self.stack[-1].content
+            self.stack.pop()
+            ob = self.stack[-1].obj
+            if not ob.properties.has_key(name):
+                ob.properties[name] = {}
+            ob.properties[name][lang] = content
         else:
             pass
 
