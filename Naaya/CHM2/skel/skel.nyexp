@@ -35,7 +35,7 @@
 		<![CDATA[
 		<span tal:replace="structure here/standard_html_header" />
 
-		<tal:block define="objects_info here/checkPermissionManageObjects;
+		<tal:block define="objects_info python:here.getArchiveListing(here);
 			objects_list python:objects_info[2];
 			objects_delete_all python:objects_info[1];
 			objects_select_all python:objects_info[0]">
@@ -160,7 +160,7 @@
 		<![CDATA[
 		<span tal:replace="structure here/standard_html_header" />
 
-		<tal:block define="objects_info here/checkPermissionManageObjects;
+		<tal:block define="objects_info python:here.getArchiveListing(here);
 			objects_list python:objects_info[2];
 			objects_delete_all python:objects_info[1];
 			objects_select_all python:objects_info[0]">
@@ -285,7 +285,7 @@
 		<![CDATA[
 		<span tal:replace="structure here/standard_html_header" />
 
-		<tal:block define="objects_info here/checkPermissionManageObjects;
+		<tal:block define="objects_info python:here.getArchiveListing(here);
 			objects_list python:objects_info[2];
 			objects_delete_all python:objects_info[1];
 			objects_select_all python:objects_info[0]">
