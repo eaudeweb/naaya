@@ -64,8 +64,7 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
-    releasedate = self.utConvertStringToDateTimeObj(releasedate)
-    if releasedate is None: releasedate = self.utGetTodayDate()
+    releasedate = self.process_releasedate(releasedate)
     if folder_meta_types == '': folder_meta_types = self.adt_meta_types
     else: folder_meta_types = self.utConvertToList(folder_meta_types)
     if lang is None: lang = self.gl_get_selected_language()
@@ -382,8 +381,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         else: publicinterface = 0
         if approved: approved = 1
         else: approved = 0
-        releasedate = self.utConvertStringToDateTimeObj(releasedate)
-        if releasedate is None: releasedate = self.utGetTodayDate()
+        releasedate = self.process_releasedate(releasedate, self.releasedate)
         lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
@@ -427,8 +425,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         try: sortorder = abs(int(sortorder))
         except: sortorder = DEFAULT_SORTORDER
-        releasedate = self.utConvertStringToDateTimeObj(releasedate)
-        if releasedate is None: releasedate = self.utGetTodayDate()
+        releasedate = self.process_releasedate(releasedate, self.releasedate)
         if lang is None: lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
