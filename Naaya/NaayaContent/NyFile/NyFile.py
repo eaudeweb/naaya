@@ -72,9 +72,7 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
-    releasedate = self.utConvertStringToDateTimeObj(releasedate)
-    if releasedate is None:
-        releasedate = self.utGetTodayDate()
+    releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
     ob = NyFile(id, title, description, coverage, keywords, sortorder, '', precondition, content_type,
         downloadfilename, contributor, approved, approved_by, releasedate, lang)
@@ -231,8 +229,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         except: sortorder = DEFAULT_SORTORDER
         if approved: approved = 1
         else: approved = 0
-        releasedate = self.utConvertStringToDateTimeObj(releasedate)
-        if releasedate is None: releasedate = self.utGetTodayDate()
+        releasedate = self.process_releasedate(releasedate, self.releasedate)
         lang = self.gl_get_selected_language()
         self.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
         self.content_type = content_type
@@ -281,8 +278,6 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self.precondition = self.version.precondition
         self.releasedate = self.version.releasedate
         self.setProperties(deepcopy(self.version.getProperties()))
-        if self.version.is_open_for_comments(): self.open_for_comments()
-        else: self.close_for_comments()
         self.checkout = 0
         self.checkout_user = None
         self.version = None
@@ -307,7 +302,6 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
-        if self.is_open_for_comments(): self.version.open_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
@@ -321,27 +315,25 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         try: sortorder = abs(int(sortorder))
         except: sortorder = DEFAULT_SORTORDER
-        releasedate = self.utConvertStringToDateTimeObj(releasedate)
-        if releasedate is None: releasedate = self.utGetTodayDate()
         if lang is None: lang = self.gl_get_selected_language()
         if not self.hasVersion():
             #this object has not been checked out; save changes directly into the object
+            releasedate = self.process_releasedate(releasedate, self.releasedate)
             self.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
             self.content_type = content_type
             self.precondition = precondition
             self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-            if discussion: self.open_for_comments()
-            else: self.close_for_comments()
         else:
             #this object has been checked out; save changes into the version object
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            releasedate = self.process_releasedate(releasedate, self.version.releasedate)
             self.version.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
             self.version.content_type = content_type
             self.version.precondition = precondition
             self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-            if discussion: self.version.open_for_comments()
-            else: self.version.close_for_comments()
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST:

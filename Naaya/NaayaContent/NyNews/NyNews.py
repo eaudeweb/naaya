@@ -70,8 +70,7 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
-    releasedate = self.utConvertStringToDateTimeObj(releasedate)
-    if releasedate is None: releasedate = self.utGetTodayDate()
+    releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
     ob = NyNews(id, title, description, coverage, keywords, sortorder,
         details, expirationdate, topitem, None, None, resourceurl, source,
@@ -231,8 +230,7 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         if approved: approved = 1
         else: approved = 0
         lang = self.gl_get_selected_language()
-        releasedate = self.utConvertStringToDateTimeObj(releasedate)
-        if releasedate is None: releasedate = self.utGetTodayDate()
+        releasedate = self.process_releasedate(releasedate, self.releasedate)
         self.save_properties(title, description, coverage, keywords, sortorder,
             details, expirationdate, topitem, self.smallpicture, self.bigpicture, resourceurl, source, releasedate, lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
@@ -268,8 +266,6 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         self.bigpicture = self.version.bigpicture
         self.releasedate = self.version.releasedate
         self.setProperties(deepcopy(self.version.getProperties()))
-        if self.version.is_open_for_comments(): self.open_for_comments()
-        else: self.close_for_comments()
         self.checkout = 0
         self.checkout_user = None
         self.version = None
@@ -292,7 +288,6 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
-        if self.is_open_for_comments(): self.version.open_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
@@ -310,11 +305,10 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         expirationdate = self.utConvertStringToDateTimeObj(expirationdate)
         if topitem: topitem = 1
         else: topitem = 0
-        releasedate = self.utConvertStringToDateTimeObj(releasedate)
-        if releasedate is None: releasedate = self.utGetTodayDate()
         if lang is None: lang = self.gl_get_selected_language()
         if not self.hasVersion():
             #this object has not been checked out; save changes directly into the object
+            releasedate = self.process_releasedate(releasedate, self.releasedate)
             self.save_properties(title, description, coverage, keywords, sortorder, details,
                 expirationdate, topitem, self.smallpicture, self.bigpicture, resourceurl,
                 source, releasedate, lang)
@@ -323,12 +317,11 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
             if del_bigpicture != '': self.delBigPicture()
             else: self.setBigPicture(bigpicture)
             self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-            if discussion: self.open_for_comments()
-            else: self.close_for_comments()
         else:
             #this object has been checked out; save changes into the version object
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            releasedate = self.process_releasedate(releasedate, self.version.releasedate)
             self.version.save_properties(title, description, coverage, keywords, sortorder, details,
                 expirationdate, topitem, self.version.smallpicture, self.version.bigpicture, resourceurl,
                 source, releasedate, lang)
@@ -337,8 +330,8 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
             if del_bigpicture != '': self.version.delBigPicture()
             else: self.version.setBigPicture(bigpicture)
             self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-            if discussion: self.version.open_for_comments()
-            else: self.version.close_for_comments()
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST:
