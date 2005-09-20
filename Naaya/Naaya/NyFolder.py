@@ -269,7 +269,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
                 object.objects)' % item['module']
             exec(c)
         else:
-            self.import_data_custom(ob, object)
+            self.import_data_custom(self, object)
 
     def process_submissions(self):
         #returns info regarding the meta_types that ce be added inside the folder

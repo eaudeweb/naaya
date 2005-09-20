@@ -318,6 +318,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if import_handler is not None:
             for object in import_handler.root.objects:
                 self.import_data(object)
+        else:
+            raise Exception, EXCEPTION_PARSINGFILE % (join(skel_path, 'skel.nyexp'), error)
 
     #overwrite handlers
     def manage_beforeDelete(self, item, container):
