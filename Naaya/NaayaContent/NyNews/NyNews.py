@@ -160,8 +160,8 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         r = []
         ra = r.append
         for l in self.gl_get_languages():
-            ra('<details lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('details', l))))
-            ra('<source lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('source', l))))
+            ra('<details lang="%s"><![CDATA[%s]]></details>' % (l, self.utToUtf8(self.getLocalProperty('details', l))))
+            ra('<source lang="%s"><![CDATA[%s]]></source>' % (l, self.utToUtf8(self.getLocalProperty('source', l))))
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')

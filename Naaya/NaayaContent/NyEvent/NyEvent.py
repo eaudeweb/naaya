@@ -177,10 +177,10 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
         r = []
         ra = r.append
         for l in self.gl_get_languages():
-            ra('<location lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('location', l))))
-            ra('<location_address lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('location_address', l))))
-            ra('<host lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('host', l))))
-            ra('<details lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('details', l))))
+            ra('<location lang="%s"><![CDATA[%s]]></location>' % (l, self.utToUtf8(self.getLocalProperty('location', l))))
+            ra('<location_address lang="%s"><![CDATA[%s]]></location_address>' % (l, self.utToUtf8(self.getLocalProperty('location_address', l))))
+            ra('<host lang="%s"><![CDATA[%s]]></host>' % (l, self.utToUtf8(self.getLocalProperty('host', l))))
+            ra('<details lang="%s"><![CDATA[%s]]></details>' % (l, self.utToUtf8(self.getLocalProperty('details', l))))
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')

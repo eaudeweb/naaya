@@ -161,8 +161,8 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         r = []
         ra = r.append
         for l in self.gl_get_languages():
-            ra('<body lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('body', l))))
-            ra('<source lang="%s" content="%s"/>' % (l, self.utXmlEncode(self.getLocalProperty('source', l))))
+            ra('<body lang="%s"><![CDATA[%s]]></body>' % (l, self.utToUtf8(self.getLocalProperty('body', l))))
+            ra('<source lang="%s"><![CDATA[%s]]></source>' % (l, self.utToUtf8(self.getLocalProperty('source', l))))
         for i in self.getUploadedImages():
             ra('<img id="%s" content="%s" />' % \
                 (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(str(i.data)))))
