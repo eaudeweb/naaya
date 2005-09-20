@@ -173,7 +173,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
             ra('<body lang="%s"><![CDATA[%s]]></body>' % (l, self.utToUtf8(self.getLocalProperty('body', l))))
             ra('<source lang="%s"><![CDATA[%s]]></source>' % (l, self.utToUtf8(self.getLocalProperty('source', l))))
         for i in self.getUploadedImages():
-            ra('<img id="%s" content="%s" />' % \
+            ra('<img param="0" id="%s" content="%s" />' % \
                 (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(str(i.data)))))
         return ''.join(r)
 

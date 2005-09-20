@@ -173,7 +173,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
         r = []
         ra = r.append
         for i in self.getMediaObjects():
-            ra('<file id="%s" content="%s" />' % \
+            ra('<file param="0" id="%s" content="%s" />' % \
                 (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(str(i.data)))))
         return ''.join(r)
 

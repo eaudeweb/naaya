@@ -114,8 +114,10 @@ def importNyDocument(self, param, id, attrs, content, properties, discussion, ob
             attrs['validation_date'].encode('utf-8'))
         ob.import_comments(discussion)
         self.recatalogNyObject(ob)
-        for object in objects:
-            self.import_data_custom(ob, object)
+    else:
+        ob = self._getOb(id)
+    for object in objects:
+        self.import_data_custom(ob, object)
 
 class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyCheckControl, NyValidation):
     """ """
@@ -175,7 +177,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         for l in self.gl_get_languages():
             ra('<body lang="%s"><![CDATA[%s]]></body>' % (l, self.utToUtf8(self.getLocalProperty('body', l))))
         for i in self.getUploadedImages():
-            ra('<img id="%s" content="%s" />' % \
+            ra('<img param="0" id="%s" content="%s" />' % \
                 (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(str(i.data)))))
         return ''.join(r)
 
