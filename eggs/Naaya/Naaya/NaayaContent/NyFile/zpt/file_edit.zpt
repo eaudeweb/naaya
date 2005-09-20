@@ -75,7 +75,7 @@ function fSet(ctrl, value)
 </div>
 <div class="field">
 	<label for="discussion" i18n:translate="">Open for comments</label>
-	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked python:here.getVersionProperty('discussion')" />
+	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked here/discussion" />
 </div>
 <div class="field">
 	<label for="content_type" i18n:translate="">Content Type</label>

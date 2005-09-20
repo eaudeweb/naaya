@@ -73,8 +73,7 @@ def addNyStory(self, id='', title='', description='', coverage='', keywords='',
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
-    releasedate = self.utConvertStringToDateTimeObj(releasedate)
-    if releasedate is None: releasedate = self.utGetTodayDate()
+    releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
     ob = NyStory(id, title, description, coverage, keywords, sortorder, body, topitem,
         resourceurl, source, contributor, approved, approved_by, releasedate, lang)
@@ -204,8 +203,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         else: approved = 0
         if topitem: topitem = 1
         else: topitem = 0
-        releasedate = self.utConvertStringToDateTimeObj(releasedate)
-        if releasedate is None: releasedate = self.releasedate
+        releasedate = self.process_releasedate(releasedate, self.releasedate)
         lang = self.gl_get_selected_language()
         self.save_properties(title, description, coverage, keywords, sortorder, body, topitem,
             resourceurl, source, releasedate, lang)
@@ -230,8 +228,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         except: sortorder = DEFAULT_SORTORDER
         if topitem: topitem = 1
         else: topitem = 0
-        releasedate = self.utConvertStringToDateTimeObj(releasedate)
-        if releasedate is None: releasedate = self.releasedate
+        releasedate = self.process_releasedate(releasedate, self.releasedate)
         lang = self.gl_get_selected_language()
         self.save_properties(title, description, coverage, keywords, sortorder, body,
             topitem, resourceurl, source, releasedate, lang)
@@ -257,8 +254,6 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         self.resourceurl = self.version.resourceurl
         self.releasedate = self.version.releasedate
         self.setProperties(deepcopy(self.version.getProperties()))
-        if self.version.is_open_for_comments(): self.open_for_comments()
-        else: self.close_for_comments()
         self.checkout = 0
         self.checkout_user = None
         self.version = None
@@ -281,7 +276,6 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
-        if self.is_open_for_comments(): self.version.open_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
@@ -297,25 +291,23 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         except: sortorder = DEFAULT_SORTORDER
         if topitem: topitem = 1
         else: topitem = 0
-        releasedate = self.utConvertStringToDateTimeObj(releasedate)
-        if releasedate is None: releasedate = self.releasedate
         if lang is None: lang = self.gl_get_selected_language()
         if not self.hasVersion():
             #this object has not been checked out; save changes directly into the object
+            releasedate = self.process_releasedate(releasedate, self.releasedate)
             self.save_properties(title, description, coverage, keywords, sortorder, body,
                 topitem, resourceurl, source, releasedate, lang)
             self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-            if discussion: self.open_for_comments()
-            else: self.close_for_comments()
         else:
             #this object has been checked out; save changes into the version object
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            releasedate = self.process_releasedate(releasedate, self.version.releasedate)
             self.version.save_properties(title, description, coverage, keywords, sortorder,
                 body, topitem, resourceurl, source, releasedate, lang)
             self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-            if discussion: self.version.open_for_comments()
-            else: self.version.close_for_comments()
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST:
