@@ -90,22 +90,31 @@ def addNyStory(self, id='', title='', description='', coverage='', keywords='',
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-def importNyStory(self, id, attrs, content, properties, discussion, objects):
+def importNyStory(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
-    addNyStory(self, id=id,
-        sortorder=attrs['sortorder'].encode('utf-8'),
-        topitem=abs(int(attrs['topitem'].encode('utf-8'))),
-        resourceurl=attrs['resourceurl'].encode('utf-8'),
-        contributor=attrs['contributor'].encode('utf-8'),
-        discussion=abs(int(attrs['discussion'].encode('utf-8'))))
-    ob = self._getOb(id)
-    for property, langs in properties.items():
-        for lang in langs:
-            ob._setLocalPropValue(property, lang, langs[lang])
-    ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
-    ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
-    ob.import_comments(discussion)
-    self.recatalogNyObject(ob)
+    try: param = abs(int(param))
+    except: param = 0
+    if param in [0, 1]:
+        if param == 1:
+            #delete the object if exists
+            try: self.manage_delObjects([id])
+            except: pass
+        addNyStory(self, id=id,
+            sortorder=attrs['sortorder'].encode('utf-8'),
+            topitem=abs(int(attrs['topitem'].encode('utf-8'))),
+            resourceurl=attrs['resourceurl'].encode('utf-8'),
+            contributor=attrs['contributor'].encode('utf-8'),
+            discussion=abs(int(attrs['discussion'].encode('utf-8'))))
+        ob = self._getOb(id)
+        for property, langs in properties.items():
+            for lang in langs:
+                ob._setLocalPropValue(property, lang, langs[lang])
+        ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
+        ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+        ob.import_comments(discussion)
+        self.recatalogNyObject(ob)
+    else:
+        ob = self._getOb(id)
     for object in objects:
         self.import_data_custom(ob, object)
 
