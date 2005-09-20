@@ -49,6 +49,7 @@ EXCEPTION_NOVERSION = 'NoVersionStarted'
 EXCEPTION_NOVERSION_MSG = 'The object hasn\'t been locked out'
 EXCEPTION_STARTEDVERSION = 'VersionStarted'
 EXCEPTION_STARTEDVERSION_MSG = 'The object is locked out'
+EXCEPTION_PARSINGFILE = 'Error parsing nyzexp file %s: %s'
 
 #Others
 MESSAGE_SAVEDCHANGES = 'Saved changes. (%s)'

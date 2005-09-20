@@ -181,8 +181,16 @@ class NyBase:
         """
         Opens the object tag for the current object. Common non multilingual
         object properties are added as tag attributes.
+
+        B{param} - this attribute tells the import engine what to do with
+        the current object:
+            - B{0} - try to create the object even if the object exists
+            - B{1} - try to create the object, but if the object exists the old
+              object must be deleted first
+            - B{2} - try to create the object, but if the object exists do
+              nothing
         """
-        return '<ob meta_type="%s" id="%s" sortorder="%s" contributor="%s" \
+        return '<ob meta_type="%s" param="0" id="%s" sortorder="%s" contributor="%s" \
             approved="%s" approved_by="%s" releasedate="%s" discussion="%s" %s>' % \
             (self.utXmlEncode(self.meta_type),
              self.utXmlEncode(self.id),

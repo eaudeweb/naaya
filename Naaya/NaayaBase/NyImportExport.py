@@ -72,7 +72,10 @@ class NyImportExport:
             import_handler, error = import_parser().parse(file)
             if import_handler is not None:
                 for object in import_handler.root.objects:
+                    print object.id, object.param, object.meta_type
                     self.import_data(object)
+            else:
+                raise Exception, EXCEPTION_PARSINGFILE % ('', error)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_importexport_html')
 
     security.declareProtected(view_management_screens, 'exportdata')

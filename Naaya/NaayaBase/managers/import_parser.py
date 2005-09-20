@@ -37,9 +37,10 @@ class export_struct:
         self.objects = []
 
 class object_struct:
-    def __init__(self, id, meta_type, attrs):
+    def __init__(self, id, meta_type, param, attrs):
         self.id = id
         self.meta_type = meta_type
+        self.param = param
         self.attrs = attrs
         self.content = None
         self.properties = {}
@@ -90,6 +91,7 @@ class import_handler(ContentHandler):
         elif name == 'ob':
             obj = object_struct(attrs['id'].encode('utf-8'),
                                 attrs['meta_type'].encode('utf-8'),
+                                attrs['param'].encode('utf-8'),
                                 attrs)
             stackObj = saxstack_struct('ob', obj)
             self.stack.append(stackObj)
@@ -104,11 +106,17 @@ class import_handler(ContentHandler):
             stackObj = saxstack_struct('comment', obj)
             self.stack.append(stackObj)
         elif name == 'img':
-            obj = object_struct(attrs['id'].encode('utf-8'), 'Image', attrs)
+            obj = object_struct(attrs['id'].encode('utf-8'),
+                                'Image',
+                                attrs['param'].encode('utf-8'),
+                                attrs)
             stackObj = saxstack_struct('ob', obj)
             self.stack.append(stackObj)
         elif name == 'file':
-            obj = object_struct(attrs['id'].encode('utf-8'), 'File', attrs)
+            obj = object_struct(attrs['id'].encode('utf-8'),
+                                'File',
+                                attrs['param'].encode('utf-8'),
+                                attrs)
             stackObj = saxstack_struct('file', obj)
             self.stack.append(stackObj)
         elif attrs.has_key('lang'):
