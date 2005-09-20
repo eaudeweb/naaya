@@ -70,6 +70,7 @@ from Products.Localizer.Localizer import manage_addLocalizer
 from Products.Localizer.MessageCatalog import manage_addMessageCatalog
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from managers.skel_parser import skel_parser
+from Products.NaayaBase.managers.import_parser import import_parser
 from NyFolder import NyFolder, addNyFolder, importNyFolder
 
 #constructor
@@ -178,7 +179,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declarePrivate('loadSkeleton')
     def loadSkeleton(self, skel_path):
         """ """
-        #load site skeleton
+        #load site skeleton - configuration
         skel_handler, error = skel_parser().parse(self.futRead(join(skel_path, 'skel.xml'), 'r'))
         if skel_handler is not None:
             properties_tool = self.getPropertiesTool()
@@ -292,11 +293,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     authenticationtool_ob.addRole(role.name, role.permissions)
             #set subobjects for folders
             self.getPropertiesTool().manageSubobjects(subobjects=None, ny_subobjects=self.get_meta_types(1))
-            #load default content
-            if skel_handler.root.content is not None:
-                for folder in skel_handler.root.content.folders:
-                    self.loadFolderData(self, folder)
-                properties_tool.manageMainTopics(skel_handler.root.content.maintopics.split(','))
             #other stuff
             if skel_handler.root.others is not None:
                 if skel_handler.root.others.robots is not None:
@@ -317,31 +313,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     image_ob._p_changed=1
                 if skel_handler.root.others.images is not None:
                     self.manage_addFolder(ID_IMAGESFOLDER, 'Images')
-
-    security.declarePrivate('loadFolderData')
-    def loadFolderData(self, node, folder):
-        #create default folders structure
-        if folder.meta_types == '': meta_types = ''
-        else: meta_types = folder.meta_types.split(',')
-        folder_ob = node._getOb(folder.id, None)
-        if folder_ob is None:
-            addNyFolder(node, folder.id, folder.title, folder.description, folder.coverage, folder.keywords,
-                folder.sortorder, folder.publicinterface, folder.maintainer_email, meta_types)
-            folder_ob = node._getOb(folder.id)
-        folder_ob.modifyPublicInterface(folder.index_html)
-        for item in folder.items:
-            if item.type == METATYPE_NYDOCUMENT:
-                document_ob = folder_ob._getOb(item.id, None)
-                if document_ob is None:
-                    folder_ob.addNyDocument(id=item.id, title=item.title, description=item.description,
-                        coverage=item.coverage, keywords=item.keywords, sortorder=item.sortorder,
-                        body=item.body)
-                    document_ob = folder_ob._getOb(item.id, None)
-                document_ob.body = item.body
-                document_ob._p_changed = 1
-                self.recatalogNyObject(document_ob)
-        for item in folder.folders:
-            self.loadFolderData(folder_ob, item)
+        #load site skeleton - default content
+        import_handler, error = import_parser().parse(self.futRead(join(skel_path, 'skel.nyexp'), 'r'))
+        if import_handler is not None:
+            for object in import_handler.root.objects:
+                self.import_data(object)
 
     #overwrite handlers
     def manage_beforeDelete(self, item, container):
@@ -379,7 +355,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def import_data(self, object):
         #import an object
         if object.meta_type == METATYPE_FOLDER:
-            importNyFolder(self, object.id, object.attrs, object.content,
+            importNyFolder(self, object.param, object.id, object.attrs, object.content,
                 object.properties, object.discussion, object.objects)
         else:
             self.import_data_custom(self, object)

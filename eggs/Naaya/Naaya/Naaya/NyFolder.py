@@ -86,40 +86,44 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
 
-def importNyFolder(self, id, attrs, content, properties, discussion, objects):
+def importNyFolder(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
-    publicinterface = abs(int(attrs['publicinterface'].encode('utf-8')))
-    meta_types = attrs['folder_meta_types'].encode('utf-8')
-    if meta_types == '': meta_types = ''
-    else: meta_types = meta_types.split(',')
-    addNyFolder(self, id=id,
-        sortorder=attrs['sortorder'].encode('utf-8'),
-        publicinterface=publicinterface,
-        maintainer_email=attrs['maintainer_email'].encode('utf-8'),
-        folder_meta_types=meta_types,
-        contributor=attrs['contributor'].encode('utf-8'),
-        discussion=abs(int(attrs['discussion'].encode('utf-8'))))
-    ob = self._getOb(id)
-    for property, langs in properties.items():
-        for lang in langs:
-            ob._setLocalPropValue(property, lang, langs[lang])
-    ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
-    ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
-    if publicinterface:
-        l_index = ob._getOb('index', None)
-        if l_index is not None:
-            l_index.pt_edit(text=content, content_type='')
-    ob.import_comments(discussion)
-    self.recatalogNyObject(ob)
-    pimt = self.get_pluggable_installed_meta_types()
+    try: param = abs(int(param))
+    except: param = 0
+    if param in [0, 1]:
+        if param == 1:
+            #delete the object if exists
+            try: self.manage_delObjects([id])
+            except: pass
+        publicinterface = abs(int(attrs['publicinterface'].encode('utf-8')))
+        meta_types = attrs['folder_meta_types'].encode('utf-8')
+        if meta_types == '': meta_types = ''
+        else: meta_types = meta_types.split(',')
+        #create the object
+        addNyFolder(self, id=id,
+            sortorder=attrs['sortorder'].encode('utf-8'),
+            publicinterface=publicinterface,
+            maintainer_email=attrs['maintainer_email'].encode('utf-8'),
+            folder_meta_types=meta_types,
+            contributor=attrs['contributor'].encode('utf-8'),
+            discussion=abs(int(attrs['discussion'].encode('utf-8'))))
+        ob = self._getOb(id)
+        for property, langs in properties.items():
+            for lang in langs:
+                ob._setLocalPropValue(property, lang, langs[lang])
+        ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
+        ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+        if publicinterface:
+            l_index = ob._getOb('index', None)
+            if l_index is not None:
+                l_index.pt_edit(text=content, content_type='')
+        ob.import_comments(discussion)
+        self.recatalogNyObject(ob)
+    else:
+        ob = self._getOb(id)
+    #go on and import sub objects
     for object in objects:
-        if object.meta_type in pimt:
-            item = self.get_pluggable_item(object.meta_type)
-            c = 'ob.import%s(object.id, object.attrs, object.content, \
-                object.properties, object.discussion, object.objects)' % item['module']
-            exec(c)
-        else:
-            self.import_data_custom(ob, object)
+        ob.import_data(object)
 
 class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     """ """
@@ -255,10 +259,17 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     def import_data(self, object):
         #import an object
         if object.meta_type == METATYPE_FOLDER:
-            importNyFolder(self, object.id, object.attrs, object.content,
-                object.properties, object.discussion, object.objects)
+            importNyFolder(self, object.param, object.id, object.attrs,
+                object.content, object.properties, object.discussion,
+                object.objects)
+        elif object.meta_type in self.get_pluggable_installed_meta_types():
+            item = self.get_pluggable_item(object.meta_type)
+            c = 'self.import%s(object.param, object.id, object.attrs, \
+                object.content, object.properties, object.discussion, \
+                object.objects)' % item['module']
+            exec(c)
         else:
-            self.import_data_custom(self, object)
+            self.import_data_custom(ob, object)
 
     def process_submissions(self):
         #returns info regarding the meta_types that ce be added inside the folder
