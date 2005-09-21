@@ -39,7 +39,7 @@ from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalP
 manage_addNyPhoto_html = PageTemplateFile('zpt/photo_manage_add', globals())
 def addNyPhoto(self, id='', title='', author='', source='', description='', sortorder='',
     topitem='', onfrontfrom='', onfrontto='', file='', precondition='', content_type='',
-    quality='', lang=None, discussion='', REQUEST=None):
+    quality='', lang=None, discussion='', releasedate='', REQUEST=None):
     """ """
     id, title = cookId(id, title, file)
     id = self.utCleanupId(id)
@@ -62,7 +62,7 @@ def addNyPhoto(self, id='', title='', author='', source='', description='', sort
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
-    releasedate = self.utGetTodayDate()
+    releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
     ob = NyPhoto(id, title, author, source, description, sortorder, topitem,
         onfrontfrom, onfrontto, precondition, content_type, quality,
@@ -216,8 +216,7 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
         try: quality = abs(int(quality))
         except: quality = DEFAULT_QUALITY
         if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
-        releasedate = self.utConvertStringToDateTimeObj(releasedate)
-        if releasedate is None: releasedate = self.releasedate
+        releasedate = self.process_releasedate(releasedate, self.releasedate)
         lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('author', lang, author)
@@ -292,8 +291,7 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
         try: quality = abs(int(quality))
         except: quality = DEFAULT_QUALITY
         if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
-        releasedate = self.utConvertStringToDateTimeObj(releasedate)
-        if releasedate is None: releasedate = self.releasedate
+        releasedate = self.process_releasedate(releasedate, self.releasedate)
         if lang is None: lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('author', lang, author)
