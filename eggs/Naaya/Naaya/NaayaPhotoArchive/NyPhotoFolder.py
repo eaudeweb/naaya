@@ -47,7 +47,7 @@ def manage_addNyPhotoFolder(self, id='', title='', quality='', discussion='',
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
-    releasedate = self.utGetTodayDate()
+    releasedate = self.process_releasedate()
     if lang is None: lang = self.gl_get_selected_language()
     ob = NyPhotoFolder(id, title, quality, approved, approved_by, releasedate, lang)
     self.gl_add_languages(ob)
@@ -83,7 +83,7 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
     security.declareProtected(view_management_screens, 'manage_addNyPhoto_html')
     manage_addNyPhoto_html = NyPhoto.manage_addNyPhoto_html
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'addNyPhoto')
+    security.declareProtected(PERMISSION_ADD_PHOTO, 'addNyPhoto')
     addNyPhoto = NyPhoto.addNyPhoto
 
     title = LocalProperty('title')
@@ -117,6 +117,9 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
     def count_notok_objects(self): return 0
     def count_notchecked_objects(self): return 0
 
+    def checkPermissionAddPhotos(self):
+        return self.checkPermission(PERMISSION_ADD_PHOTO)
+
     def get_displays_edit(self):
         #returns a list with all dispays minus 'Thumbnail'
         l = self.displays.keys()
@@ -146,9 +149,10 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         if len(p_result) > 0:
             l_paging_information = batch_utils(NUMBER_OF_RESULTS_PER_PAGE, len(p_result), p_start).butGetPagingInformations()
         if len(p_result) > 0:
-            return (l_paging_information, p_result[l_paging_information[0]:l_paging_information[1]])
+            return (l_paging_information,
+                self.get_archive_listing(p_result[l_paging_information[0]:l_paging_information[1]]))
         else:
-            return (l_paging_information, [])
+            return (l_paging_information, self.get_archive_listing([]))
 
     def query_photos(self, q='', f='', p_start=0):
         #query/filter photos
@@ -168,8 +172,7 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
         if approved: approved = 1
         else: approved = 0
-        releasedate = self.utConvertStringToDateTimeObj(releasedate)
-        if releasedate is None: releasedate = self.releasedate
+        releasedate = self.process_releasedate(releasedate, self.releasedate)
         lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self.quality = quality
@@ -206,7 +209,7 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         if REQUEST: REQUEST.RESPONSE.redirect('manage_displays_html?save=ok')
 
     #site actions
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'saveProperties')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', quality='', discussion='', lang=None,
         REQUEST=None):
         """ """
@@ -224,7 +227,7 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'deleteObjects')
+    security.declareProtected(PERMISSION_DELETE_OBJECTS, 'deleteObjects')
     def deleteObjects(self, ids=None, REQUEST=None):
         """ """
         if ids is None: ids = []
@@ -237,7 +240,7 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
             else: self.setSessionInfo(['Item(s) deleted.'])
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_DELETE_OBJECTS, 'setTopPhotoObjects')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'setTopPhotoObjects')
     def setTopPhotoObjects(self, REQUEST=None):
         """ """
         try:
@@ -279,13 +282,13 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/photofolder_index', globals())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'edit_html')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     edit_html = PageTemplateFile('zpt/photofolder_edit', globals())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'basketofapprovals_html')
     basketofapprovals_html = PageTemplateFile('zpt/photofolder_basketofapprovals', globals())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'photo_add_html')
+    security.declareProtected(PERMISSION_ADD_PHOTO, 'photo_add_html')
     photo_add_html = PageTemplateFile('zpt/photo_add', globals())
 
 InitializeClass(NyPhotoFolder)
