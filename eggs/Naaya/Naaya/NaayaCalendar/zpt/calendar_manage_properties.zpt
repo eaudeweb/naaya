@@ -1,0 +1,102 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+
+<link rel="stylesheet" type="text/css" href="calendar_style_zmi_css" />
+
+<fieldset style="padding-left:10px; padding-right:10px;"><legend><strong i18n:translate="">Generic properties</strong></legend>
+	<form name="frmProperties" action="manageProperties" method="post">
+
+	<div class="layout-label" i18n:translate="">Title</div>
+	<div class="layout-box"><input type="text" name="title" size="30" tal:attributes="value here/title" /></div>
+
+	<div class="layout-label" i18n:translate="">Description</div>
+	<div class="layout-box"><textarea name="description" cols="40" rows="5" tal:content="here/description"></textarea></div>
+
+	<div class="layout-label" i18n:translate="">First day of the week</div>
+	<div class="layout-box">
+		<select name="start_day">
+			<option tal:repeat="long_day python:here.getLongWeekdaysSorted()"
+					tal:attributes="value long_day; selected python:long_day==here.start_day"
+					tal:content="long_day">LONG DAY</option>
+		</select>
+	</div>
+
+	<div class="layout-label" i18n:translate="">Day's name length</div>
+	<div class="layout-box">
+		<select name="day_len">
+			<option tal:repeat="number python:here.getDayLengths()"
+					tal:attributes="value number; selected python:here.day_len==number"
+					tal:content="number" />
+		</select>
+	</div>
+
+	<div class="layout-label" i18n:translate="">Meta Types <br /><small>(to search for)</small></div>
+	<div class="layout-box"><textarea name="cal_meta_types" cols="40" rows="5" tal:content="python:here.getCalMetaTypes()"></textarea></div>
+
+	<div class="layout-label" i18n:translate="">Use catalog <br /><small>(catalog's id)</small></div>
+	<div class="layout-box">
+		<input type="text" name="use_catalog" size="30" tal:attributes="value here/use_catalog" />
+		<small	tal:condition="here/use_catalog"
+				tal:content="python:test(here.testCatalog(),'catalog found', 'catalog not found')"
+				tal:attributes="style python:test(here.testCatalog(), 'color:green', 'color:red')" />
+	</div>
+
+	<div class="layout-button"><input type="submit" value="Save" i18n:attributes="value" /></div>
+	</form>
+</fieldset>
+
+<fieldset style="padding-left:10px; padding-right:10px;" tal:condition="python:here.utTestEmptyList(here.getSortedMetaTypes())"><legend><strong i18n:translate="">Manage date properties for meta types</strong></legend>
+	<div><em i18n:translate="">If left empty, the "Start date" field will take "bobobase_modification_time" as default value.</em></div>
+	<form name="frmProperties" action="manageMetaTypes" method="post" tal:condition="python:len(here.cal_meta_types) != 0">
+
+	<table id="layout-meta-table" cellspacing="0">
+		<tr>
+			<th style="width: 15%;" i18n:translate="">Object type</th>
+			<th style="width: 15%;" i18n:translate="">Start date</th>
+			<th style="width: 14%;" i18n:translate="">Warnings</th>
+			<th style="width: 15%;" i18n:translate="">End date</th>
+			<th style="width: 14%;" i18n:translate="">Warnings</th>
+			<th i18n:translate="">Visualisation condition (python expr.)</th>
+		</tr>
+
+		<tal:block repeat="meta python:here.getSortedMetaTypes()">
+		<tr>
+			<td tal:attributes='class python:test(path("repeat/meta/odd"), "layout-row-odd", "layout-row-even")'
+				tal:content="meta"></td>
+			<td tal:attributes='class python:test(path("repeat/meta/odd"), "layout-row-odd", "layout-row-even")'>
+				<input type="text" size="20" tal:attributes="name meta; value python:here.cal_meta_types[meta][0]" />
+			</td>
+			<td tal:define="msg python:here.testMetaType(meta, here.cal_meta_types[meta][0]);
+							msg_type python:msg[0];
+							msg_body python:msg[1];"
+				tal:attributes='class python:test(path("repeat/meta/odd"), "layout-row-odd", "layout-row-even")'>
+				<span style="color: red;" tal:condition="python:not msg_type" tal:content="msg_body"></span>
+				<span style="color: green;" tal:condition="python:msg_type" tal:content="msg_body"></span>
+			</td>
+			<td tal:attributes='class python:test(path("repeat/meta/odd"), "layout-row-odd", "layout-row-even")'>
+				<input type="text" size="20" tal:attributes="name python:'end_'+meta; value python:here.cal_meta_types[meta][1]" />
+			</td>
+			<td tal:define="msg python:here.testMetaType(meta, here.cal_meta_types[meta][1]);
+							msg_type python:msg[0];
+							msg_body python:msg[1];"
+				tal:attributes='class python:test(path("repeat/meta/odd"), "layout-row-odd", "layout-row-even")'>
+				<span style="color: red;" tal:condition="python:not msg_type" tal:content="msg_body"></span>
+				<span style="color: green;" tal:condition="python:msg_type" tal:content="msg_body"></span>
+			</td>
+			<td tal:attributes='class python:test(path("repeat/meta/odd"), "layout-row-odd", "layout-row-even")'>
+				<input style="float: left;" type="text" size="40" tal:attributes="name python:'app_'+meta; value python:here.cal_meta_types[meta][2]" />
+			</td>
+		</tr>
+		</tal:block>
+
+		<tr>
+			<td colspan="6" style="text-align: center; padding-top: 10px;">
+				<input style="border: 1px solid black; height: 1.6em; width: 5em;" type="submit" value="Save" i18n:attributes="value" />
+			</td>
+		</tr>
+	</table>
+
+	</form>
+</fieldset>
+
+<span tal:replace="structure here/manage_page_footer"/>
