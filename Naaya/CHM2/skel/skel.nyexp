@@ -114,18 +114,18 @@
 
 		<form name="objectItems" method="post" action="">
 		<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
-		<tal:block tal:condition="python:objects_select_all">
 		<tr>
 			<th class="checkbox" i18n:translate="" tal:condition="objects_delete_all">Delete</th>
+			<th class="releasedate" i18n:translate="">Release date</th>
 			<th class="type" i18n:translate="">Type</th>
 			<th class="title-column" i18n:translate="">Title</th>
 			<th class="checkin" i18n:translate="">On front</th>
 			<th class="edit" i18n:translate="">Edit</th>
 		</tr>
-		</tal:block>
 		<tr tal:repeat="objects objects_list">
 			<tal:block define="del_permission python:objects[0]; edit_permission python:objects[1]; object python:objects[2]">
 			<td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
+		        <td class="releasedate"><span tal:replace="python:object.utShowDateTime(object.releasedate)" /></td>
 			<td class="type"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" /></td>
 			<td class="title-column">
 				<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
