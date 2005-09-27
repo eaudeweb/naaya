@@ -64,47 +64,82 @@ def initialize(context):
 LOG('naayaHotfix', DEBUG, 'Patch for Localizer and other stuff')
 
 #patch for TextIndexNG2. 
+import sys
 from Products.TextIndexNG2.converters import doc, ppt, ps, ooffice, pdf, xls
 from Products.TextIndexNG2.Registry import ConverterRegistry
+from Products.TextIndexNG2.converters.stripogram import html2text
 
+#patch converters/doc.py
+def doc_convert(self, doc):
+    """Convert WinWord document to raw text"""
+    tmp_name = self.saveFile(doc)
+    if sys.platform == 'win32':
+        return self.execute('antiword -m UTF-8.txt "%s"' % tmp_name)
+    else:
+        return self.execute('wvWare -c utf-8 --nographics -x "%s" "%s" 2> /dev/null' % (wvConf_file, tmp_name))
 
 def doc_convert2(self, doc, encoding, mimetype):
     if encoding:
         return self.convert(doc), encoding
     return self.convert(doc), 'utf-8'
+
+doc.Converter.convert = doc_convert
 doc.Converter.convert2 = doc_convert2
 
+
+#patch converters/ppt.py
 def ppt_convert2(self, doc, encoding, mimetype):
     if encoding:
         return self.convert(doc), encoding
     return self.convert(doc), 'iso-8859-15'
 ppt.Converter.convert2 = ppt_convert2
 
+#patch converters/ps.py
 def ps_convert2(self, doc, encoding, mimetype):
     if encoding:
         return self.convert(doc), encoding
     return self.convert(doc), 'iso-8859-15'
 ps.Converter.convert2 = ps_convert2
 
+#patch converters/oo.py
 def oo_convert2(self, doc, encoding, mimetype):
     if encoding:
         return self.convert(doc), encoding
     return self.convert(doc), 'utf-8'
 ooffice.Converter.convert2 = oo_convert2
 
+#patch converters/pdf.py
 def pdf_convert2(self, doc, encoding, mimetype):
     """Convert pdf data to raw text"""
     tmp_name = self.saveFile(doc)
-    if encoding:
-        return self.execute('pdftotext -enc UTF-8 "%s" -' % tmp_name), encoding
-    return self.execute('pdftotext -enc UTF-8 "%s" -' % tmp_name), 'utf-8'
+    if sys.platform == 'win32':
+        html = self.execute('pdftohtml -stdout -i -noframes "%s"' % tmp_name)
+        if encoding:
+            return html2text(html,
+                             ignore_tags=('img',),
+                             indent_width=4,
+                             page_width=80), encoding
+        else:
+            return html2text(html,
+                             ignore_tags=('img',),
+                             indent_width=4,
+                             page_width=80), 'utf-8'
+    else:
+        if encoding:
+            return self.execute('pdftotext -enc UTF-8 "%s" -' % tmp_name), encoding
+        return self.execute('pdftotext -enc UTF-8 "%s" -' % tmp_name), 'utf-8'
 pdf.Converter.convert2 = pdf_convert2
 
+#patch converters/xls.py
 def xls_convert(self, doc):
     """Convert Excel document to raw text"""
     tmp_name = self.saveFile(doc)
     if sys.platform == 'win32':
-        return self.execute('xls2csv -d UTF-8 -q 0 "%s" 2> nul:' % tmp_name)
+        html = self.execute('xlhtml "%s"' % tmp_name)
+        return html2text(html,
+                     ignore_tags=('img',),
+                     indent_width=4,
+                     page_width=80)
     else:
         return self.execute('xls2csv -d UTF-8 -q 0 "%s" 2> /dev/null' % tmp_name)
 xls.Converter.convert = xls_convert
@@ -138,7 +173,6 @@ for t in converter.getType():
         LOG('naayaHotfix', INFO, 'Converter "%s" for %s registered' % (cv, t))
     except:
         LOG('naayaHotfix', INFO, 'Converter "%s" for %s NOT registered' % (cv, t))
-
 
 from OFS.content_types import guess_content_type
 from Products.TextIndexNG2.Registry import NormalizerRegistry
