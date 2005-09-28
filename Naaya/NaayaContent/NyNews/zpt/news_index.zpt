@@ -14,14 +14,14 @@
 	<td colspan="2"><a tal:condition="here/hasBigPicture" tal:attributes="href string:${here/absolute_url}/getBigPicture"><img src="getSmallPicture" border="0" alt="" /></a>
 	<img tal:condition="python:not here.hasBigPicture()" src="getSmallPicture" border="0" alt="" /></td>
 </tr>
-<tr>
+<tr tal:condition="python:here.resourceurl and (here.resourceurl !='http://')">
 	<th i18n:translate="">Concerned URL</th>
 	<td>
 		<a tal:attributes="href here/resourceurl" tal:content="here/resourceurl" />
 		<small>(<a tal:attributes="href here/resourceurl" target="_blank" i18n:translate="">in a new window</a>)</small>
 	</td>
 </tr>
-<tr>
+<tr tal:condition="here/source">
 	<th i18n:translate="">Source of information</th>
 	<td tal:content="here/source" />
 </tr>
