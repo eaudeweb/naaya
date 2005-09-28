@@ -13,7 +13,7 @@
 		<th i18n:translate="">Release date</th>
 		<td tal:content="python:here.utShowDateTime(here.releasedate)"/>
 	</tr>
-	<tr>
+	<tr tal:condition="python:here.locator and (here.locator != 'http://')">
 		<th i18n:translate="">URL</th>
 		<td>
 			<a tal:attributes="href here/locator" tal:content="here/locator"/>

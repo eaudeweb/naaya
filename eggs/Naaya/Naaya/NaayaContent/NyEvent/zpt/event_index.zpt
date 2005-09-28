@@ -11,7 +11,7 @@
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
 <table border="0" cellspacing="2" cellpadding="2">
-<tr>
+<tr tal:condition="here/start_date">
 	<th i18n:translate="">Period</th>
 	<td>
 	<tal:block condition="python:here.start_date != here.end_date">
@@ -22,31 +22,36 @@
 	</tal:block>
 	</td>
 </tr>
-<tr>
+<tr tal:condition="here/location">
 	<th i18n:translate="">Location</th>
 	<td>
-		<span tal:replace="here/location" /> <a tal:attributes="href here/location" tal:content="here/location"/> <span tal:replace="here/location_address" />
+                <tal:block tal:condition="python:here.location_url and (here.location_url != 'http://')">
+		<a tal:attributes="href here/location_url" tal:content="here/location"/> <span tal:replace="here/location_address" />
+                </tal:block>
+                <tal:block tal:condition="python:(here.location_url == '') or (here.location_url == 'http://')">                
+                <span tal:replace="here/location" /> <span tal:replace="here/location_address" />
+                </tal:block> 
 	</td>
 </tr>
-<tr>
+<tr tal:condition="here/host">
 	<th i18n:translate="">Host</th>
 	<td tal:content="here/host">host</td>
 </tr>
-<tr tal:condition="here/agenda_url">
+<tr tal:condition="python:here.agenda_url and (here.agenda_url != 'http://')">
 	<th i18n:translate="">See the agenda</th>
 	<td>
 		<a tal:attributes="href here/agenda_url" tal:content="here/agenda_url">agenda url</a>
 		<small>(<a tal:attributes="href here/agenda_url" target="_blank" i18n:translate="">in a new window</a>)</small>
 	</td>
 </tr>
-<tr tal:condition="here/event_url">
+<tr tal:condition="python:here.event_url and (here.event_url != 'http://')">
 	<th i18n:translate="">Event URL</th>
 	<td>
 		<a tal:attributes="href here/event_url" tal:content="here/event_url" />
 		<small>(<a tal:attributes="href here/event_url" target="_blank" i18n:translate="">in a new window</a>)</small>
 	</td>
 </tr>
-<tr>
+<tr tal:condition="python:here.contact_person or here.contact_email or here.contact_phone or  here.contact_fax">
 	<th valign="top" i18n:translate="">Contact</th>
 	<td><span tal:replace="here/contact_person"/>
 		<tal:block condition="here/contact_email">

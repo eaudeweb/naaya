@@ -15,14 +15,14 @@
 	<th  i18n:translate="">Released</th>
 	<td tal:content="python:here.utShowDateTime(here.releasedate)"/>
 </tr>
-<tr>
+<tr tal:condition="python:here.resourceurl and (here.resourceurl !='http://')">
 	<th i18n:translate="">Concerned URL</th>
 	<td>
 		<a tal:attributes="href here/resourceurl" tal:content="here/resourceurl" />
 		<small>(<a tal:attributes="href here/resourceurl" target="_blank" i18n:translate="">in a new window</a>)</small>
 	</td>
 </tr>
-<tr>
+<tr tal:condition="here/source">
 	<th i18n:translate="">Source of information</th>
 	<td tal:content="here/source" />
 </tr>
