@@ -201,7 +201,9 @@ class CHMSite(NySite):
             domain = urlparse(item[0])[1]
             domain = domain.replace('www.', '')
             domain_key = domain.split('.')
+	    print domain_key
             domain_key = domain_key[:-1]
+	    print domain_key
             domain_key.reverse()
             domain_key = '.'.join(domain_key)
             if not domains.has_key(domain_key):

@@ -27,7 +27,7 @@
 		<a tal:attributes="href string:${site_url}/urlmap_html?sort=server" i18n:translate="">group them by server</a>.
 	</tal:block>
 	<tal:block tal:condition="python:sort=='server'">
-		<span i18n:translate="" tal:omit-tag="">groupped bt server. You can also</span>
+		<span i18n:translate="" tal:omit-tag="">groupped by server. You can also</span>
 		<a tal:attributes="href string:${site_url}/urlmap_html?sort=title" i18n:translate="">sort them by title</a>
 		<span i18n:translate="" tal:omit-tag="">or</span>
 		<a tal:attributes="href string:${site_url}/urlmap_html?sort=url" i18n:translate="">sort the items by URL</a>
@@ -36,31 +36,40 @@
 
 <tal:block tal:condition="python:sort=='title' or sort=='url'">
 <tal:block tal:define="map python:here.getUrlMap(sort);
-						urls python:map[0];
-						other_urls python:map[1]">
+		       urls python:map[0];
+		       other_urls python:map[1]">
 <h2 i18n:translate="">Links from URL objects</h2>
 <ul>
-	<li tal:repeat="item urls">
-	<tal:block tal:define="item_url python:item[0]; item_ob python:item[1]">
+	<tal:block tal:repeat="item urls">
+	<tal:block tal:define="item_url python:item[0]; item_ob python:item[1]">        
+        <li tal:condition="python:item_url and (item_url !='http://')">
 		<a tal:attributes="href item_url" target="_blank" tal:content="item_ob/title_or_id" />
 		<a tal:condition="item_ob/checkPermissionEditObject" tal:attributes="href string:${item_ob/absolute_url}/edit_html"><img src="/misc_/Naaya/edit" border="0" alt="Click here to edit object" i18n:attributes="alt" /></a>
 		<span tal:replace="structure item_ob/description" />
 		<br />
 		<span tal:replace="item_url" />
-	</tal:block>
-	</li>
+        </li>
+	</tal:block>        
+        </tal:block>
+	
+        
 </ul>
 <h2 i18n:translate="">Links that appear in other types of objects: news, stories, events</h2>
 <ul>
-	<li tal:repeat="item other_urls">
+	<tal:block tal:repeat="item other_urls">
 	<tal:block tal:define="item_url python:item[0]; item_ob python:item[1]">
+        <tal:block tal:condition="python:item_url and (item_url !='http://')">
+        <li>
 		<a tal:attributes="href item_url" target="_blank" tal:content="item_ob/title_or_id" />
 		<a tal:condition="item_ob/checkPermissionEditObject" tal:attributes="href string:${item_ob/absolute_url}/edit_html"><img src="/misc_/Naaya/edit" border="0" alt="Click here to edit object" i18n:attributes="alt" /></a>
 		<span tal:replace="structure item_ob/description" />
 		<br />
 		<span tal:replace="item_url" />
+        </li>
+        </tal:block>
 	</tal:block>
-	</li>
+        </tal:block>
+	
 </ul>
 </tal:block>
 </tal:block>
@@ -74,15 +83,18 @@
 	<tal:block tal:repeat="domain domains">
 	<strong tal:content="python:urlsmap[domain][0]" />
 	<ul>
-		<li tal:repeat="item python:urlsmap[domain][1]">
-		<tal:block tal:define="item_url python:item[0]; item_ob python:item[1]">
+		<tal:block tal:repeat="item python:urlsmap[domain][1]">
+                <tal:block tal:define="item_url python:item[0]; item_ob python:item[1]">                
+                <li tal:condition="python:item_url and (item_url !='http://')">		
 			<a tal:attributes="href item_url" target="_blank" tal:content="item_ob/title_or_id" />
 			<a tal:condition="item_ob/checkPermissionEditObject" tal:attributes="href string:${item_ob/absolute_url}/edit_html"><img src="/misc_/Naaya/edit" border="0" alt="Click here to edit object" i18n:attributes="alt" /></a>
 			<span tal:replace="structure item_ob/description" />
 			<br />
 			<span tal:replace="item_url" />
-		</tal:block>
 		</li>
+                </tal:block>
+                </tal:block>
+		
 	</ul>
 	</tal:block>
 </tal:block>
@@ -92,15 +104,17 @@
 	<tal:block tal:repeat="domain domains">
 	<strong tal:content="python:urlsmap[domain][0]" />
 	<ul>
-		<li tal:repeat="item python:urlsmap[domain][1]">
+		<tal:block tal:repeat="item python:urlsmap[domain][1]">
 		<tal:block tal:define="item_url python:item[0]; item_ob python:item[1]">
+                <li tal:condition="python:item_url and (item_url !='http://')">		
 			<a tal:attributes="href item_url" target="_blank" tal:content="item_ob/title_or_id" />
 			<a tal:condition="item_ob/checkPermissionEditObject" tal:attributes="href string:${item_ob/absolute_url}/edit_html"><img src="/misc_/Naaya/edit" border="0" alt="Click here to edit object" i18n:attributes="alt" /></a>
 			<span tal:replace="structure item_ob/description" />
 			<br />
 			<span tal:replace="item_url" />
-		</tal:block>
 		</li>
+                </tal:block>
+		</tal:block>
 	</ul>
 	</tal:block>
 </tal:block>
