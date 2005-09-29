@@ -1603,8 +1603,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 l_channel.updateChannel()
             return "Update Remote Channels ended successfully on site %s" % self.absolute_url()
             
-    def getRemoteChannels(self):
-        return self.getSyndicationTool().objectValues(METATYPE_NYSYNDICATIONREMOTECHANNEL)            
+    def getRemoteChannels(self):        
+        return self.getSyndicationTool().objectValues(METATYPE_REMOTECHANNEL)            
 
     def list_glossaries(self):
         #this method *must* be overwritten
