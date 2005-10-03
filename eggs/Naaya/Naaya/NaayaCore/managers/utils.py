@@ -335,6 +335,29 @@ class utils:
         try: return p_date.strftime('%Y-%m-%dT%H:%M:%S')
         except: return ''
 
+    def utShowDateTimePeriod(self, p_start, p_end):
+        """
+        Given two dates, returns a string to show the interval.
+        """
+        if p_start is None and p_end is None:
+            return ''
+        elif p_start is None:
+            return self.utShowDateTime(p_end)
+        elif p_end is None:
+            return self.utShowDateTime(p_start)
+        elif p_start == p_end:
+            return self.utShowDateTime(p_start)
+        else:
+            sd, sm, sy = p_start.day(), p_start.month(), p_start.year()
+            ed, em, ey = p_end.day(), p_end.month(), p_end.year()
+            if sy == ey:    #same year
+                if sm == em:    #same month
+                    return '%s - %s' % (sd, self.utShowDateTime(p_end))
+                else:
+                    return '%s - %s %s' % (p_start.strftime('%d %b'), p_end.strftime('%d %b'), sy)
+            else:
+                return '%s - %s' % (self.utShowDateTime(p_start), self.utShowDateTime(p_end))
+
     def utConvertStringToDateTimeObj(self, p_datestring, p_separator='/'):
         """Takes a string that represents a date like 'dd/mm/yyyy' and returns a DateTime object"""
         try:
