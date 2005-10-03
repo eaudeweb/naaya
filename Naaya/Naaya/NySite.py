@@ -1599,12 +1599,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def updateRemoteChannels(self, uid):
         """ used by cron tools to update the remote channels. The key provided is the uid of the site"""
         if uid == self.get_site_uid():
-            for l_channel in self.getRemoteChannels():
+            for l_channel in self.getSyndicationTool().get_remote_channels():
                 l_channel.updateChannel()
             return "Update Remote Channels ended successfully on site %s" % self.absolute_url()
-            
-    def getRemoteChannels(self):        
-        return self.getSyndicationTool().objectValues(METATYPE_REMOTECHANNEL)            
 
     def list_glossaries(self):
         #this method *must* be overwritten
