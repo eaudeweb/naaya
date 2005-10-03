@@ -95,7 +95,7 @@ class EmailTool(Folder):
         l_writer.flushheaders()
         # the plain text section
         l_subpart = l_writer.nextpart()
-        l_pout = l_subpart.startbody("text/plain", [("charset", 'iso-8859-1')])
+        l_pout = l_subpart.startbody("text/plain", [("charset", 'utf-8')])
         l_pout.write(p_content)
         #close your writer and return the message body
         l_writer.lastpart()
@@ -115,8 +115,8 @@ class EmailTool(Folder):
     def sendEmail(self, p_content, p_to, p_from, p_subject):
         #sends a generic email
         try:
-            p_to = self.__emBuildEmailAddress(p_to)
-            l_message = self.__emCreateEmail(p_content, p_to, p_from, p_subject)
+            p_to = self.__build_addresses(p_to)
+            l_message = self.__create_email(p_content, p_to, p_from, p_subject)
             server = smtplib.SMTP(self.mail_server_name, self.mail_server_port)
             server.sendmail(p_from, p_to, l_message)
             server.quit()
