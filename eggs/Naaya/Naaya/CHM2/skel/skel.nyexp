@@ -127,7 +127,6 @@ tal:content="python:item[1]" i18n:translate="" />
 <td class="releasedate"><span tal:replace="python:object.utShowDateTime(object.releasedate)" /></td>
 <td class="title-column"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" />
 <a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
-<span tal:replace="structure object/description" />
 </td>
 <td class="checkin" tal:condition="edit_permission">
 <input type="checkbox" tal:attributes="name python:'topstory_' + object.id; checked python:object.topitem==1;" />
