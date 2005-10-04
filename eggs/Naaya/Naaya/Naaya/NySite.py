@@ -439,7 +439,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     def get_containers(self):
         #this method returns all container type that can be used in an export operation
-        return self.objectValues(METATYPE_FOLDER)
+        return [x for x in self.objectValues(METATYPE_FOLDER) if x.submitted==1]
 
     def getObjectById(self, p_id):
         """
@@ -488,7 +488,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def getMainFolders(self):
         #returns a list with all folders objects at the first level
         #that are approved and sorted by 'order' property
-        return self.utSortObjsListByAttr([x for x in self.objectValues(METATYPE_FOLDER) if x.approved==1], 'sortorder', 0)
+        return self.utSortObjsListByAttr([x for x in self.objectValues(METATYPE_FOLDER) if x.approved==1 and x.submitted==1], 'sortorder', 0)
 
     def getMainTopics(self):
         #returns the list of main topic folders
@@ -558,8 +558,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         else:
             while 1:
                 if node == self: break
-                if node.maintainer_email != '' and node.maintainer_email not in l_emails:
-                    l_emails.append(node.maintainer_email)
+                if hasattr(node, 'maintainer_email'):
+                    if node.maintainer_email != '' and node.maintainer_email not in l_emails:
+                        l_emails.append(node.maintainer_email)
                 node = node.getParentNode()
         return l_emails
 
