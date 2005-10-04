@@ -1610,13 +1610,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if name != '': return self.getAuthenticationTool().checkGroupPermission(name, context)
         else: return 1
 
-    def updateRemoteChannels(self, uid):
-        """ used by cron tools to update the remote channels. The key provided is the uid of the site"""
-        if uid == self.get_site_uid():
-            for l_channel in self.getSyndicationTool().get_remote_channels():
-                l_channel.updateChannel()
-            return "Update Remote Channels ended successfully on site %s" % self.absolute_url()
-
     def list_glossaries(self):
         #this method *must* be overwritten
         return []
@@ -1733,6 +1726,35 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             del(self.__pluggable_installed_content[meta_type])
             self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html' % self.absolute_url())
+
+    #methods to be runned by OS scheduler - crond
+    def updateRemoteChannels(self, uid):
+        """
+        Used by cron tools to update the remote channels.
+
+        @param uid: site uid
+        @type uid: string
+        """
+        if uid==self.get_site_uid():
+            for l_channel in self.getSyndicationTool().get_remote_channels():
+                l_channel.updateChannel()
+            return "Update Remote Channels ended successfully on site %s" % self.absolute_url()
+
+    def cleanupUnsubmittedObjcets(self, uid):
+        """
+        Used by cron tools to clean up unsubmitted objects older than 1 day.
+
+        @param uid: site uid
+        @type uid: string
+        """
+        if uid==self.get_site_uid():
+            today = self.utGetTodayDate()
+            catalog_tool = self.getCatalogTool()
+            for x in self.getCatalogedUnsubmittedObjects():
+                if x.bobobase_modification_time() + 1 < today:
+                    #delete only unsubmitted objects older than 1 day
+                    x.getParentNode().manage_delObjects([x.id])
+            return "Clean up unsubmitted objects ended successfully on site %s" % self.absolute_url()
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_controlpanel_html')
