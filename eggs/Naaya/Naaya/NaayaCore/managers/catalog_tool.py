@@ -130,7 +130,10 @@ class catalog_tool:
         return l_results
 
     def getCatalogedBrains(self, meta_type=None):
-        l_filter = {'submitted': 1} #only submitted items
+        """
+        Returns a list with all I{brain} objects in the catalog.
+        """
+        l_filter = {}
         if meta_type is not None: l_filter['meta_type'] = self.utConvertToList(meta_type)
         return self.__searchCatalog(l_filter)
 
