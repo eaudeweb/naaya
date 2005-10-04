@@ -51,10 +51,12 @@ def folder_add_html(self, REQUEST=None, RESPONSE=None):
 def addNyFolder(self, id='', title='', description='', coverage='', keywords='', sortorder='',
     publicinterface='', maintainer_email='', folder_meta_types='', contributor=None,
     releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
-    """ """
+    """
+    Create a Folder type of object.
+    """
+    #process parameters
     id = self.utCleanupId(id)
     if not id: id = PREFIX_FOLDER + self.utGenRandomId(6)
-    #process form values
     if publicinterface: publicinterface = 1
     else: publicinterface = 0
     try: sortorder = abs(int(sortorder))
@@ -68,15 +70,20 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     if folder_meta_types == '': folder_meta_types = self.adt_meta_types
     else: folder_meta_types = self.utConvertToList(folder_meta_types)
     if lang is None: lang = self.gl_get_selected_language()
+    #create object
     ob = NyFolder(id, title, description, coverage, keywords, sortorder, publicinterface,
             maintainer_email, contributor, approved, approved_by, folder_meta_types,
             releasedate, lang)
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_FOLDER, REQUEST, kwargs), lang)
     self._setObject(id, ob)
+    #extra settings
     ob = self._getOb(id)
+    ob.submitThis()
     ob.createPublicInterface()
     if discussion: ob.open_for_comments()
+    self.recatalogNyObject(ob)
+    #redirect if case
     if REQUEST is not None:
         referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if referer == 'folder_manage_add' or referer.find('folder_manage_add') != -1:
@@ -195,15 +202,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         self.releasedate = releasedate
         self.folder_meta_types = folder_meta_types
 
-    #overwrite handlers
-    def manage_afterAdd(self, item, container):
-        """ This method is called, whenever _setObject in ObjectManager gets called. """
-        NyContainer.__dict__['manage_afterAdd'](self, item, container)
-        #notify folder's maintainer about the new upload
-        l_emails = self.getMaintainersEmails(container)
-        if len(l_emails) > 0:
-            self.notifyMaintainerEmail(l_emails, self.administrator_email, item.id, self.absolute_url(), '%s/basketofapprovals_html' % container.absolute_url())
-
+    #overwrite handler
     def manage_beforeDelete(self, item, container):
         """ This method is called, when the object is deleted. """
         NyContainer.__dict__['manage_beforeDelete'](self, item, container)
@@ -287,60 +286,49 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         return r
 
     security.declareProtected(view, 'checkPermissionManageObects')
-    def checkPermissionManageObjects(self, p_object=None):
+    def checkPermissionManageObjects(self, p_objects=None):
         """ """
-        if p_object is None:
-            p_object = self.getObjects()
+        if p_objects is None: l = self.getObjects()
+        else: l = [x for x in p_objects if x.submitted==1]
         results = []
-        select_all = 0
-        delete_all = 0
-        flag = 0
-        for obj in self.utSortObjsListByAttr(p_object, 'sortorder', 0):
-            del_permission = obj.checkPermissionDeleteObject()
-            edit_permission = obj.checkPermissionEditObject()
+        select_all, delete_all, flag = 0, 0, 0
+        for x in self.utSortObjsListByAttr(l, 'sortorder', 0):
+            del_permission = x.checkPermissionDeleteObject()
+            edit_permission = x.checkPermissionEditObject()
             if del_permission and flag == 0:
-                flag = 1
-                select_all = 1
-                delete_all = 1
+                select_all, delete_all, flag = 1, 1, 1
             if edit_permission and flag == 0:
-                flag = 1
-                select_all = 1
-            if ((del_permission or edit_permission) and not obj.approved) or obj.approved:
-                results.append((del_permission, edit_permission, obj))
+                select_all, flag = 1, 1
+            if ((del_permission or edit_permission) and not x.approved) or x.approved:
+                results.append((del_permission, edit_permission, x))
         return (select_all, delete_all, results)
 
     security.declareProtected(view, 'checkPermissionManageFolders')
-    def checkPermissionManageFolders(self, p_object=None):
+    def checkPermissionManageFolders(self, p_objects=None):
         """ """
-        if p_object is None:
-            p_object = METATYPE_FOLDER
-        l_objects_list = self.objectValues(p_object)
+        if p_objects is None: l = self.getFolders()
+        else: l = [x for x in p_objects if x.submitted==1]
         results = []
-        select_all = 0
-        delete_all = 0
-        flag= 0
-        for folder in self.utSortObjsListByAttr(l_objects_list, 'sortorder', 0):
-            del_permission = folder.checkPermissionDeleteObject()
-            edit_permission = folder.checkPermissionEditObject()
+        select_all, delete_all, flag = 0, 0, 0
+        for x in self.utSortObjsListByAttr(l, 'sortorder', 0):
+            del_permission = x.checkPermissionDeleteObject()
+            edit_permission = x.checkPermissionEditObject()
             if del_permission and flag == 0:
-                flag = 1
-                select_all = 1
-                delete_all = 1
+                select_all, delete_all, flag = 1, 1, 1
             if edit_permission and flag == 0:
-                flag = 1
-                select_all = 1
-            if ((del_permission or edit_permission) and not folder.approved) or folder.approved:
-                results.append((del_permission, edit_permission, folder))
+                select_all, flag = 1, 1
+            if ((del_permission or edit_permission) and not x.approved) or x.approved:
+                results.append((del_permission, edit_permission, x))
         return (select_all, delete_all, results)
 
-    def getObjects(self): return self.objectValues(self.get_meta_types())
-    def getFolders(self): return self.objectValues(METATYPE_FOLDER)
+    def getObjects(self): return [x for x in self.objectValues(self.get_meta_types()) if x.submitted==1]
+    def getFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.submitted==1]
     def hasContent(self): return (len(self.getObjects()) > 0) or (len(self.objectValues(METATYPE_FOLDER)) > 0)
 
-    def getPendingFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.approved==0]
-    def getPublishedFolders(self): return self.utSortObjsListByAttr([x for x in self.objectValues(METATYPE_FOLDER) if x.approved==1], 'sortorder', 0)
-    def getPendingObjects(self): return [x for x in self.getObjects() if x.approved==0]
-    def getPublishedObjects(self): return [x for x in self.getObjects() if x.approved==1]
+    def getPendingFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.approved==0 and x.submitted==1]
+    def getPublishedFolders(self): return self.utSortObjsListByAttr([x for x in self.objectValues(METATYPE_FOLDER) if x.approved==1 and x.submitted==1], 'sortorder', 0)
+    def getPendingObjects(self): return [x for x in self.getObjects() if x.approved==0 and x.submitted==1]
+    def getPublishedObjects(self): return [x for x in self.getObjects() if x.approved==1 and x.submitted==1]
 
     def hasPendingContent(self): return (len(self.getPendingFolders()) > 0) or (len(self.getPendingObjects()) > 0)
     def getPendingContent(self):
@@ -348,11 +336,11 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         l_result.extend(self.getPendingObjects())
         return l_result
 
-    def getObjectsForValidation(self): return self.objectValues(self.get_pluggable_metatypes_validation())
-    def count_notok_objects(self): return len([x for x in self.getObjectsForValidation() if x.validation_status==-1])
-    def count_notchecked_objects(self): return len([x for x in self.getObjectsForValidation() if x.validation_status==0])
+    def getObjectsForValidation(self): return [x for x in self.objectValues(self.get_pluggable_metatypes_validation()) if x.submitted==1]
+    def count_notok_objects(self): return len([x for x in self.getObjectsForValidation() if x.validation_status==-1 and x.submitted==1])
+    def count_notchecked_objects(self): return len([x for x in self.getObjectsForValidation() if x.validation_status==0 and x.submitted==1])
 
-    def getSortedFolders(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_FOLDER), 'sortorder', 0)
+    def getSortedFolders(self): return self.utSortObjsListByAttr(self.getFolders(), 'sortorder', 0)
     def getSortedObjects(self): return self.utSortObjsListByAttr(self.getObjects(), 'sortorder', 0)
 
     #restrictions
