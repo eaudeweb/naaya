@@ -564,6 +564,16 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 node = node.getParentNode()
         return l_emails
 
+    def notifyFolderMaintainer(self, p_folder, p_object):
+        """
+        Process and notify by email that B{p_object} has been
+        uploaded into the B{p_folder}.
+        """
+        if p_object.submitted==1:
+            l_emails = self.getMaintainersEmails(p_folder)
+            if len(l_emails) > 0:
+                self.notifyMaintainerEmail(l_emails, self.administrator_email, p_object.id, p_folder.absolute_url(), '%s/basketofapprovals_html' % p_folder.absolute_url())
+
     def processDynamicProperties(self, meta_type, REQUEST=None, keywords={}):
         """ """
         if REQUEST:
@@ -706,7 +716,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def __getSiteMap(self, root, showitems, expand, depth):
         #site map core
         l_tree = []
-        if root is self: l_folders = [x for x in root.objectValues(self.get_naaya_containers_metatypes()) if x.approved == 1]
+        if root is self: l_folders = [x for x in root.objectValues(self.get_naaya_containers_metatypes()) if x.approved == 1 and x.submitted==1]
         else: l_folders = root.getPublishedFolders()
         for l_folder in l_folders:
             if (len(l_folder.objectValues(self.get_naaya_containers_metatypes())) > 0) or ((len(l_folder.getObjects()) > 0) and showitems==1):
