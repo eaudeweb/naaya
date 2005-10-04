@@ -59,7 +59,10 @@ def file_add_html(self, REQUEST=None, RESPONSE=None):
 def addNyFile(self, id='', title='', description='', coverage='', keywords='', sortorder='',
     source='file', file='', url='', precondition='', content_type='', downloadfilename='',
     contributor=None, releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
-    """ """
+    """
+    Create a File type of object.
+    """
+    #process parameters
     if source=='file': id, title = cookId(id, title, file) #upload from a file
     elif source=='url': l_data, l_ctype = self.grabFromUrl(url) #upload from an url
     id = self.utCleanupId(id)
@@ -74,16 +77,20 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
         approved, approved_by = 0, None
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
+    #create object
     ob = NyFile(id, title, description, coverage, keywords, sortorder, '', precondition, content_type,
         downloadfilename, contributor, approved, approved_by, releasedate, lang)
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
     self._setObject(id, ob)
+    #extra settings
     ob = self._getOb(id)
+    ob.submitThis()
     ob.handleUpload(source, file, url)
     ob.createVersion()
     if discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
+    #redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'file_manage_add' or l_referer.find('file_manage_add') != -1:

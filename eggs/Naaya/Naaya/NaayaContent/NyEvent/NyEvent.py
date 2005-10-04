@@ -59,7 +59,10 @@ def addNyEvent(self, id='', title='', description='', language='', coverage='',
     topitem='', event_type='', contact_person='', contact_email='',
     contact_phone='', contact_fax='', contributor=None, releasedate='',
     discussion='', lang=None, REQUEST=None, **kwargs):
-    """ """
+    """
+    Create an Event type of object.
+    """
+    #process parameters
     id = self.utCleanupId(id)
     if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
     try: sortorder = abs(int(sortorder))
@@ -75,6 +78,7 @@ def addNyEvent(self, id='', title='', description='', language='', coverage='',
     end_date = self.utConvertStringToDateTimeObj(end_date)
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
+    #create object
     ob = NyEvent(id, title, description, coverage, keywords, sortorder,
         location, location_address, location_url, start_date, end_date, host, agenda_url,
         event_url, details, topitem, event_type, contact_person, contact_email, contact_phone, contact_fax,
@@ -82,7 +86,12 @@ def addNyEvent(self, id='', title='', description='', language='', coverage='',
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
     self._setObject(id, ob)
-    if discussion: self._getOb(id).open_for_comments()
+    #extra settings
+    ob = self._getOb(id)
+    ob.submitThis()
+    if discussion: ob.open_for_comments()
+    self.recatalogNyObject(ob)
+    #redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'event_manage_add' or l_referer.find('event_manage_add') != -1:

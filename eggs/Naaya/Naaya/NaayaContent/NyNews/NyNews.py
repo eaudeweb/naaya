@@ -57,7 +57,10 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
     sortorder='', details='', expirationdate='', topitem='', smallpicture='',
     bigpicture='', resourceurl='', source='', contributor=None, releasedate='',
     discussion='', lang=None, REQUEST=None, **kwargs):
-    """ """
+    """
+    Create a News type of object.
+    """
+    #process parameters
     id = self.utCleanupId(id)
     if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
     try: sortorder = abs(int(sortorder))
@@ -72,6 +75,7 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
         approved, approved_by = 0, None
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
+    #create object
     ob = NyNews(id, title, description, coverage, keywords, sortorder,
         details, expirationdate, topitem, None, None, resourceurl, source,
         contributor, approved, approved_by, releasedate, lang)
@@ -80,7 +84,12 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
     ob.setSmallPicture(smallpicture)
     ob.setBigPicture(bigpicture)
     self._setObject(id, ob)
-    if discussion: self._getOb(id).open_for_comments()
+    #extra settings
+    ob = self._getOb(id)
+    ob.submitThis()
+    if discussion: ob.open_for_comments()
+    self.recatalogNyObject(ob)
+    #redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'news_manage_add' or l_referer.find('news_manage_add') != -1:
