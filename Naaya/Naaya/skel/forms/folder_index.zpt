@@ -89,11 +89,7 @@ function fDeleteObjects()
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <span tal:replace="structure here/menusubmissions" />
 
-<div tal:condition="python:(folders_select_all and here.checkPermissionCopyObjects()) or 
-                            (folders_select_all and here.checkPermissionCopyObjects()) or
-                            (objects_select_all and here.checkPermissionCopyObjects()) or 
-                            (objects_select_all and here.checkPermissionCutObjects()) or 
-                            (here.hasObjectsToPaste() and here.checkPermissionPasteObjects())">
+<div tal:condition="python:(folders_select_all and here.checkPermissionCopyObjects()) or (folders_select_all and here.checkPermissionCopyObjects()) or (objects_select_all and here.checkPermissionCopyObjects()) or (objects_select_all and here.checkPermissionCutObjects()) or (here.hasObjectsToPaste() and here.checkPermissionPasteObjects())">
 	<div id="toolbar">
 		<tal:block tal:condition="python:folders_select_all or objects_select_all"><a href="javascript:toggleSelect();"><span><img src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Select all</span></span></a></tal:block>
 		<tal:block tal:condition="python:here.hasContent() and here.checkPermissionCopyObjects()"><a href="javascript:fCopyObjects();"><span><img src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Copy</span></span></a></tal:block>
@@ -107,11 +103,7 @@ function fDeleteObjects()
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tal:block tal:condition="python:folders_select_all or objects_select_all">
 <tr>
-	<th class="checkbox" i18n:translate="" tal:condition="python:(folders_select_all and here.checkPermissionCopyObjects()) or 
-                                                                (folders_select_all and here.checkPermissionCopyObjects()) or
-                                                                (objects_select_all and here.checkPermissionCopyObjects()) or 
-                                                                (objects_select_all and here.checkPermissionCutObjects()) or 
-                                                                (here.hasObjectsToPaste() and here.checkPermissionPasteObjects())"></th>
+	<th class="checkbox" i18n:translate="" tal:condition="python:(folders_select_all and here.checkPermissionCopyObjects()) or (folders_select_all and here.checkPermissionCopyObjects()) or (objects_select_all and here.checkPermissionCopyObjects()) or (objects_select_all and here.checkPermissionCutObjects()) or (here.hasObjectsToPaste() and here.checkPermissionPasteObjects())"></th>
 	<th class="type" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -120,11 +112,7 @@ function fDeleteObjects()
 </tal:block>
 <tr tal:repeat="folders folders_list">
 	<tal:block define="del_permission python:folders[0]; edit_permission python:folders[1]; folder python:folders[2]">
-        <tal:block tal:condition="python:(folders_select_all and here.checkPermissionCopyObjects()) or 
-                                                                (folders_select_all and here.checkPermissionCopyObjects()) or
-                                                                (objects_select_all and here.checkPermissionCopyObjects()) or 
-                                                                (objects_select_all and here.checkPermissionCutObjects()) or 
-                                                                (here.hasObjectsToPaste() and here.checkPermissionPasteObjects())">
+        <tal:block tal:condition="python:(folders_select_all and here.checkPermissionCopyObjects()) or (folders_select_all and here.checkPermissionCopyObjects()) or (objects_select_all and here.checkPermissionCopyObjects()) or (objects_select_all and here.checkPermissionCutObjects()) or (here.hasObjectsToPaste() and here.checkPermissionPasteObjects())">
 	<td class="checkbox" tal:condition="python:del_permission or edit_permission" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value folder/id"></td>
 	<td class="checkbox" tal:condition="python:not (del_permission or edit_permission)"></td>
         </tal:block>
@@ -140,11 +128,7 @@ function fDeleteObjects()
 </tr>
 <tr tal:repeat="objects objects_list">
 	<tal:block define="del_permission python:objects[0]; edit_permission python:objects[1]; object python:objects[2]">
-        <tal:block tal:condition="python:(folders_select_all and here.checkPermissionCopyObjects()) or 
-                                                                (folders_select_all and here.checkPermissionCopyObjects()) or
-                                                                (objects_select_all and here.checkPermissionCopyObjects()) or 
-                                                                (objects_select_all and here.checkPermissionCutObjects()) or 
-                                                                (here.hasObjectsToPaste() and here.checkPermissionPasteObjects())">
+        <tal:block tal:condition="python:(folders_select_all and here.checkPermissionCopyObjects()) or (folders_select_all and here.checkPermissionCopyObjects()) or (objects_select_all and here.checkPermissionCopyObjects()) or (objects_select_all and here.checkPermissionCutObjects()) or  (here.hasObjectsToPaste() and here.checkPermissionPasteObjects())">
         <td class="checkbox" tal:condition="python:del_permission or edit_permission" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id"></td>
 	<td tal:condition="python:not(del_permission or edit_permission)"></td>
 	</tal:block>	
