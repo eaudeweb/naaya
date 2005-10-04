@@ -104,7 +104,8 @@
 	}
 
 	#admin_this_folder img {
-		display: none;
+		vertical-align: middle;
+		padding-right: 4px;
 	}
 
 	#admin_this_folder select {
