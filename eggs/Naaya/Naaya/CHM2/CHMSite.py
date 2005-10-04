@@ -289,21 +289,16 @@ class CHMSite(NySite):
     def get_archive_listing(self, p_objects):
         """ """
         results = []
-        select_all = 0
-        delete_all = 0
-        flag = 0
-        for obj in p_objects:
-            del_permission = obj.checkPermissionDeleteObject()
-            edit_permission = obj.checkPermissionEditObject()
+        select_all, delete_all, flag = 0, 0, 0
+        for x in p_objects:
+            del_permission = x.checkPermissionDeleteObject()
+            edit_permission = x.checkPermissionEditObject()
             if del_permission and flag == 0:
-                flag = 1
-                select_all = 1
-                delete_all = 1
+                select_all, delete_all, flag = 1, 1, 1
             if edit_permission and flag == 0:
-                flag = 1
-                select_all = 1
-            if ((del_permission or edit_permission) and not obj.approved) or obj.approved:
-                results.append((del_permission, edit_permission, obj))
+                flag, select_all = 1, 1
+            if ((del_permission or edit_permission) and not x.approved) or x.approved:
+                results.append((del_permission, edit_permission, x))
         return (select_all, delete_all, results)
 
     security.declareProtected(view, 'getArchiveListing')
