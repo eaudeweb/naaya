@@ -40,6 +40,16 @@ class NyBase:
     common to all classes.
     """
 
+    def __init__(self):
+        """
+        Initialize variables:
+
+        B{submitted} - flag that signals if the object has been
+        submited or not; it applies for object such as Story and Document.
+
+        """
+        self.submitted = 0
+
     security = ClassSecurityInfo()
 
     security.declarePrivate('approveThis')
@@ -62,6 +72,18 @@ class NyBase:
         @type releasedate: DateTime
         """
         self.releasedate = self.utGetDate(releasedate)
+        self._p_changed = 1
+
+    security.declarePrivate('submitThis')
+    def submitThis(self):
+        """
+        Set the submit flag for the current object.
+
+        B{0} - the objects is not yet fully created
+
+        B{1} - the object has been created
+        """
+        self.submitted = 1
         self._p_changed = 1
 
     def _objectkeywords(self, lang):
