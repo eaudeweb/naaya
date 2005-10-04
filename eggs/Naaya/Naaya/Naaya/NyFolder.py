@@ -288,7 +288,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
 
     security.declareProtected(view, 'checkPermissionManageObects')
     def checkPermissionManageObjects(self, p_objects=None):
-        """ """
+        """ The optional argument is the list of meta types to be looped by this function """
         if p_objects is None: l = self.getObjects()
         else: l = [x for x in p_objects if x.submitted==1]
         results = []
@@ -306,7 +306,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
 
     security.declareProtected(view, 'checkPermissionManageFolders')
     def checkPermissionManageFolders(self, p_objects=None):
-        """ """
+        """ The optional argument is the list of meta types to be looped by this function """
         if p_objects is None: l = self.getFolders()
         else: l = [x for x in p_objects if x.submitted==1]
         results = []

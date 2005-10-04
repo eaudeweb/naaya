@@ -69,6 +69,7 @@ misc_ = {
     'delete.gif':ImageFile('www/delete.gif', globals()),
     'paste.gif':ImageFile('www/paste.gif', globals()),
     'edit':ImageFile('www/edit.gif', globals()),
+    'edit_small':ImageFile('www/edit_small.gif', globals()),
     'checkin':ImageFile('www/checkin.gif', globals()),
     'checkout':ImageFile('www/checkout.gif', globals()),
     'checked':ImageFile('www/checked.png', globals()),
