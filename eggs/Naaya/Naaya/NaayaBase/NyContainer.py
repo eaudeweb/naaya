@@ -52,6 +52,7 @@ class NyContainer(Folder, NyComments, NyBase, NyPermissions):
         """
         Constructor.
         """
+        NyBase.__dict__['__init__'](self)
         NyComments.__dict__['__init__'](self)
 
     def getObjectById(self, p_id):
@@ -101,6 +102,9 @@ class NyContainer(Folder, NyComments, NyBase, NyPermissions):
         """
         Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
         self.catalogNyObject(self)
+        l_emails = self.getMaintainersEmails(container)
+        if len(l_emails) > 0:
+            self.notifyMaintainerEmail(l_emails, self.administrator_email, item.id, self.absolute_url(), '%s/basketofapprovals_html' % container.absolute_url())
 
     def manage_beforeDelete(self, item, container):
         """
