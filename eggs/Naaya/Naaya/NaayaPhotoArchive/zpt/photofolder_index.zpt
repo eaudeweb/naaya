@@ -118,8 +118,8 @@ function fSetTopPhotoObjects()
 	<th class="edit" i18n:translate="">Edit</th>
 </tr>
 </tal:block>
-<tr tal:repeat="objects objects_list">
-	<tal:block define="del_permission python:objects[0]; edit_permission python:objects[1]; object python:objects[2]">
+<tr tal:repeat="obtuple objects_list">
+	<tal:block define="del_permission python:obtuple[0]; edit_permission python:obtuple[1]; object python:obtuple[2]">
 	<td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="ids" tal:attributes="value object/id" /></td>
 	<td><a tal:attributes="href string:${object/absolute_url}/index_html"><img tal:attributes="src string:${object/absolute_url}/view?display=Thumbnail; alt object/title_or_id" border="0" /></a></td>
 	<td tal:content="python:here.utShowDateTime(object.releasedate)" />

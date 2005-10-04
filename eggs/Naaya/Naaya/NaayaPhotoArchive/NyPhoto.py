@@ -40,7 +40,10 @@ manage_addNyPhoto_html = PageTemplateFile('zpt/photo_manage_add', globals())
 def addNyPhoto(self, id='', title='', author='', source='', description='', sortorder='',
     topitem='', onfrontfrom='', onfrontto='', file='', precondition='', content_type='',
     quality='', lang=None, discussion='', releasedate='', REQUEST=None):
-    """ """
+    """
+    Create a Photo type of object.
+    """
+    #process parameters
     id, title = cookId(id, title, file)
     id = self.utCleanupId(id)
     if not id: id = PREFIX_NYPHOTO + self.utGenRandomId(6)
@@ -64,15 +67,19 @@ def addNyPhoto(self, id='', title='', author='', source='', description='', sort
         approved, approved_by = 0, None
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
+    #create object
     ob = NyPhoto(id, title, author, source, description, sortorder, topitem,
         onfrontfrom, onfrontto, precondition, content_type, quality,
         displays, approved, approved_by, releasedate, lang)
     self.gl_add_languages(ob)
     self._setObject(id, ob)
-    #handle image upload
+    #extra settings
     ob = self._getOb(id)
     ob.manage_upload(file)
+    ob.submitThis()
     if discussion: ob.open_for_comments()
+    self.recatalogNyObject(ob)
+    #redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'manage_addNyPhoto_html' or l_referer.find('manage_addNyPhoto_html') != -1:
