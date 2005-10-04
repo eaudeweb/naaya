@@ -37,7 +37,10 @@ import NyPhoto
 manage_addNyPhotoFolder_html = PageTemplateFile('zpt/photofolder_manage_add', globals())
 def manage_addNyPhotoFolder(self, id='', title='', quality='', discussion='',
     lang=None, REQUEST=None):
-    """ """
+    """
+    Create a PhotoFolder type of object.
+    """
+    #process parameters
     id = self.utCleanupId(id)
     if not id: id = PREFIX_NYPHOTOFOLDER + self.utGenRandomId(6)
     try: quality = abs(int(quality))
@@ -49,10 +52,16 @@ def manage_addNyPhotoFolder(self, id='', title='', quality='', discussion='',
         approved, approved_by = 0, None
     releasedate = self.process_releasedate()
     if lang is None: lang = self.gl_get_selected_language()
+    #create object
     ob = NyPhotoFolder(id, title, quality, approved, approved_by, releasedate, lang)
     self.gl_add_languages(ob)
     self._setObject(id, ob)
-    if discussion: self._getOb(id).open_for_comments()
+    #extra settings
+    ob = self._getOb(id)
+    ob.submitThis()
+    if discussion: ob.open_for_comments()
+    self.recatalogNyObject(ob)
+    #redirect if case
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -106,10 +115,10 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
     #api
     def get_photofolder_object(self): return self
     def get_photofolder_path(self, p=0): return self.absolute_url(p)
-    def getObjects(self): return self.objectValues(METATYPE_NYPHOTO)
-    def getPendingObjects(self): return [x for x in self.getObjects() if x.approved==0]
+    def getObjects(self): return [x for x in self.objectValues(METATYPE_NYPHOTO) if x.submitted==1]
+    def getPendingObjects(self): return [x for x in self.getObjects() if x.approved==0 and x.submitted==1]
     def getPendingContent(self): return self.getPendingObjects()
-    def getPublishedObjects(self): return [x for x in self.getObjects() if x.approved==1]
+    def getPublishedObjects(self): return [x for x in self.getObjects() if x.approved==1 and x.submitted==1]
     def getPendingFolders(self): return []
     def getPublishedFolders(self): return []
 
