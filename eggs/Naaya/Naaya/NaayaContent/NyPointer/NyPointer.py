@@ -83,6 +83,7 @@ def addNyPointer(self, id='', title='', description='', coverage='', keywords=''
     ob.submitThis()
     if discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
+    self.notifyFolderMaintainer(self, ob)
     #redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
