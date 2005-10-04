@@ -230,6 +230,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         self.submitThis()
         if discussion: self.open_for_comments()
         self.recatalogNyObject(self)
+        self.notifyFolderMaintainer(self.getParentNode(), self)
         if REQUEST:
             self.setSession('referer', self.getParentNode().absolute_url())
             REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
