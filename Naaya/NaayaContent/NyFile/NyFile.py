@@ -165,6 +165,21 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self.approved = approved
         self.approved_by = approved_by
 
+    #override handlers
+    def manage_afterAdd(self, item, container):
+        """
+        This method is called, whenever _setObject in ObjectManager gets called.
+        """
+        NyFile.inheritedAttribute('manage_afterAdd')(self, item, container)
+        self.catalogNyObject(self)
+
+    def manage_beforeDelete(self, item, container):
+        """
+        This method is called, when the object is deleted.
+        """
+        NyFile.inheritedAttribute('manage_beforeDelete')(self, item, container)
+        self.uncatalogNyObject(self)
+
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
         return 'downloadfilename="%s" file="%s" content_type="%s" precondition="%s" validation_status="%s" validation_date="%s" validation_by="%s" validation_comment="%s"' % \
