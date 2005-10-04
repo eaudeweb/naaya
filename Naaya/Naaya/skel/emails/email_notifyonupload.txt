@@ -1,6 +1,6 @@
 Dear Sir or Madam,
 
-The item @@ITEMID@@ is uploaded to the library @@CONTAINERPATH@@.
+The item '@@ITEMTITLEORID@@' is uploaded to the library @@CONTAINERPATH@@.
 
 Upload time @@UPLOADTIME@@.
 
