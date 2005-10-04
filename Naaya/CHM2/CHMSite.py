@@ -132,20 +132,20 @@ class CHMSite(NySite):
     def getOnFrontNews(self):
         #returns a list with the news marked as on front
         #this requires NyNews pluggable content type to be present
-        r = [x for x in self.getNewsArchive().objectValues(METATYPE_NYNEWS) if x.approved==1 and x.topitem==1]
+        r = [x for x in self.getNewsArchive().objectValues(METATYPE_NYNEWS) if x.approved==1 and x.topitem==1 and x.submitted==1]
         r.sort(lambda x,y: cmp(y.releasedate, x.releasedate) or cmp(x.sortorder, y.sortorder))
         return r
 
     def getOnFrontEvents(self):
         #returns a list with the news marked as on front
         #this requires NyEvent pluggable content type to be present
-        r = [x for x in self.getEventsArchive().objectValues(METATYPE_NYEVENT) if x.approved==1 and x.topitem==1]
+        r = [x for x in self.getEventsArchive().objectValues(METATYPE_NYEVENT) if x.approved==1 and x.topitem==1 and x.submitted==1]
         r.sort(lambda x,y: cmp(y.releasedate, x.releasedate) or cmp(x.sortorder, y.sortorder))
         return r
 
     def getOnFrontPhotos(self):
         #returns a list with the photos marked as on front
-        r = [x for x in self.getPhotoArchive().getObjects() if x.approved==1 and x.topitem==1]
+        r = [x for x in self.getPhotoArchive().getObjects() if x.approved==1 and x.topitem==1 and x.submitted==1]
         r.sort(lambda x,y: cmp(y.releasedate, x.releasedate) or cmp(x.sortorder, y.sortorder))
         return r
 
