@@ -10,9 +10,9 @@
 <tal:block tal:condition="python:len(all_items)>0">
 <form action="updateBasketOfInvalidObjects" method="post">
 <dl tal:repeat="item all_items">
-	<dt><img tal:attributes="src item/icon" border="0" />
+	<dt><img tal:attributes="src python:test(item.approved, item.icon, item.icon_marked); title here/meta_type; alt here/meta_type" border="0" />
 		<a tal:attributes="href string:${item/absolute_url}/index_html"><span tal:content="item/title_or_id"/></a>
-		[<span i18n:translate="">released at</span>: <em tal:content="python:here.utShowDateTime(item.releasedate)" />]</dt>
+		[<span i18n:translate="">released at</span>: <em tal:content="python:here.utShowDateTime(item.releasedate)" />]<span style="color: red;" tal:condition="python: item.approved == 0"> (this item has not been published yet)</span></dt>
 	<dd><fieldset><legend i18n:translate="">Validate</legend>
 		<span i18n:translate="">Last validated</span>: 
 		<em tal:condition="item/validation_date"><span tal:content="python:here.utShowDateTime(item.validation_date)"/>, <span i18n:translate="">by</span> <span tal:content="item/validation_by" /></em>

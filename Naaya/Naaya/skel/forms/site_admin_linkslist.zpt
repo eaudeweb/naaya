@@ -34,15 +34,15 @@
 		<th width="1%"></th>
 		<th width="10%" i18n:translate="">Title</th>
 		<th width="25%" i18n:translate="">Description</th>
-		<th width="30%" i18n:translate="">URL</th>
-		<th width="30%" i18n:translate="">Permission</th>
+		<th width="40%" i18n:translate="">URL</th>
+		<th width="20%" i18n:translate="">Permission</th>
 		<th width="5%" i18n:translate="">Order</th>
 	</tr>
 	<tr tal:repeat="record linkslist/get_links_list">
 		<td><input type="checkbox" name="ids" tal:attributes="value record/id"></td>
 		<td><a tal:attributes="href string:${site_url}/admin_linkslist_html?id=${linkslist/id}&item=${record/id}#editlink" tal:content="record/title">title</a></td>
 		<td tal:content="record/description">description</td>
-		<td tal:content="python:here.utTruncateString(test(record.relative, '%s%s' % (site_url, record.url), record.url), 20)">url</td>
+		<td tal:content="python:here.utTruncateString(test(record.relative, '%s%s' % (site_url, record.url), record.url), 40)">url</td>
 		<td tal:content="record/permission">permission</td>
 		<td tal:content="record/order">Order</td>
 	</tr>
@@ -77,7 +77,7 @@
 	</tr>
 	<tr>
 		<td colspan="2" i18n:translate="">
-			Chooose one of the permissions defined in the system if you want this link
+			Choose one of the permissions defined in the system if you want this link
 			to be displayed only for users with (at least) that permission.
 		</td>
 	</tr>
