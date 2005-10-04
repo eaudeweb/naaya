@@ -57,7 +57,10 @@ def pointer_add_html(self, REQUEST=None, RESPONSE=None):
 def addNyPointer(self, id='', title='', description='', coverage='', keywords='',
     sortorder='', pointer='', contributor=None, releasedate='', discussion='',
     lang=None, REQUEST=None, **kwargs):
-    """ """
+    """
+    Create a Pointer type of object.
+    """
+    #process parameters
     id = self.utCleanupId(id)
     if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
     try: sortorder = abs(int(sortorder))
@@ -69,12 +72,18 @@ def addNyPointer(self, id='', title='', description='', coverage='', keywords=''
         approved, approved_by = 0, None
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
+    #create object
     ob = NyPointer(id, title, description, coverage, keywords, sortorder, pointer,
         contributor, approved, approved_by, releasedate, lang)
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
     self._setObject(id, ob)
-    if discussion: self._getOb(id).open_for_comments()
+    #extra settings
+    ob = self._getOb(id)
+    ob.submitThis()
+    if discussion: ob.open_for_comments()
+    self.recatalogNyObject(ob)
+    #redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'pointer_manage_add' or l_referer.find('pointer_manage_add') != -1:

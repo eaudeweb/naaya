@@ -61,7 +61,10 @@ def story_add(self, REQUEST=None, RESPONSE=None):
 def addNyStory(self, id='', title='', description='', coverage='', keywords='',
     sortorder='', body='', topitem='', resourceurl='', source='', contributor=None,
     releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
-    """ """
+    """
+    Create a Story type of object.
+    """
+    #process parameters
     id = self.utCleanupId(id)
     if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
     try: sortorder = abs(int(sortorder))
@@ -75,12 +78,17 @@ def addNyStory(self, id='', title='', description='', coverage='', keywords='',
         approved, approved_by = 0, None
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
+    #create object
     ob = NyStory(id, title, description, coverage, keywords, sortorder, body, topitem,
         resourceurl, source, contributor, approved, approved_by, releasedate, lang)
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
     self._setObject(id, ob)
-    if discussion: self._getOb(id).open_for_comments()
+    #extra settings
+    ob = self._getOb(id)
+    if discussion: ob.open_for_comments()
+    self.recatalogNyObject(ob)
+    #redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'story_manage_add' or l_referer.find('story_manage_add') != -1:
@@ -110,6 +118,7 @@ def importNyStory(self, param, id, attrs, content, properties, discussion, objec
                 ob._setLocalPropValue(property, lang, langs[lang])
         ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
         ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+        ob.submitThis()
         ob.import_comments(discussion)
         self.recatalogNyObject(ob)
     else:
@@ -234,6 +243,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
             topitem, resourceurl, source, releasedate, lang)
         self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._p_changed = 1
+        self.submitThis()
         if discussion: self.open_for_comments()
         self.recatalogNyObject(self)
         if REQUEST:

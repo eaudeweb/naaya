@@ -59,7 +59,10 @@ def mediafile_add_html(self, REQUEST=None, RESPONSE=None):
 def addNyMediaFile(self, id='', title='', description='', coverage='', keywords='',
     sortorder='', file='', contributor=None, releasedate='', discussion='',
     lang=None, REQUEST=None, **kwargs):
-    """ """
+    """
+    Create a File type of object.
+    """
+    #process parameters
     id = self.utCleanupId(id)
     if id == '': id = PREFIX_OBJECT + self.utGenRandomId(6)
     try: sortorder = abs(int(sortorder))
@@ -71,14 +74,19 @@ def addNyMediaFile(self, id='', title='', description='', coverage='', keywords=
         approved, approved_by = 0, None
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
+    #create object
     ob = NyMediaFile(id, title, description, coverage, keywords, sortorder,
         contributor, approved, approved_by, releasedate, lang)
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
     self._setObject(id, ob)
+    #extra settings
     ob = self._getOb(id)
+    ob.submitThis()
     if discussion: ob.open_for_comments()
     ob.handleMediaUpload(file)
+    self.recatalogNyObject(ob)
+    #redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'mediafile_manage_add' or l_referer.find('mediafile_manage_add') != -1:

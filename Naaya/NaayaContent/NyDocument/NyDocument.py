@@ -62,7 +62,10 @@ def document_add(self, REQUEST=None, RESPONSE=None):
 def addNyDocument(self, id='', title='', description='', coverage='', keywords='',
     sortorder='', body='', contributor=None, releasedate='', discussion='',
     lang=None, REQUEST=None, **kwargs):
-    """ """
+    """
+    Create a Document type og object.
+    """
+    #process parameters
     id = self.utCleanupId(id)
     if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
     try: sortorder = abs(int(sortorder))
@@ -74,12 +77,17 @@ def addNyDocument(self, id='', title='', description='', coverage='', keywords='
         approved, approved_by = 0, None
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
+    #create object
     ob = NyDocument(id, title, description, coverage, keywords, sortorder, body,
         contributor, approved, approved_by, releasedate, lang)
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
     self._setObject(id, ob)
-    if discussion: self._getOb(id).open_for_comments()
+    #extra settings
+    ob = self._getOb(id)
+    if discussion: ob.open_for_comments()
+    self.recatalogNyObject(ob)
+    #redirect if case
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'document_manage_add' or l_referer.find('document_manage_add') != -1:
@@ -111,6 +119,7 @@ def importNyDocument(self, param, id, attrs, content, properties, discussion, ob
             attrs['validation_comment'].encode('utf-8'),
             attrs['validation_by'].encode('utf-8'),
             attrs['validation_date'].encode('utf-8'))
+        ob.submitThis()
         ob.import_comments(discussion)
         self.recatalogNyObject(ob)
     else:
@@ -218,6 +227,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         self.save_properties(title, description, coverage, keywords, sortorder, body, releasedate, lang)
         self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._p_changed = 1
+        self.submitThis()
         if discussion: self.open_for_comments()
         self.recatalogNyObject(self)
         if REQUEST:
