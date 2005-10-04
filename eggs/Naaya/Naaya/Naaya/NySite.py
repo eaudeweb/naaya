@@ -573,7 +573,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if p_object.submitted==1:
             l_emails = self.getMaintainersEmails(p_folder)
             if len(l_emails) > 0:
-                self.notifyMaintainerEmail(l_emails, self.administrator_email, p_object.id, p_folder.absolute_url(), '%s/basketofapprovals_html' % p_folder.absolute_url())
+                if self.portal_url != '': mail_from = 'notifications@%s' % self.portal_url
+                else: mail_from = 'notifications@%s' % self.REQUEST.SERVER_NAME
+                self.notifyMaintainerEmail(l_emails, mail_from, p_object, p_folder.absolute_url(), '%s/basketofapprovals_html' % p_folder.absolute_url())
 
     def processDynamicProperties(self, meta_type, REQUEST=None, keywords={}):
         """ """
@@ -1671,12 +1673,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
         self.getEmailTool().sendEmail(l_content, p_to, p_email, l_subject)
 
-    def notifyMaintainerEmail(self, p_to, p_from, p_itemid, p_container_path, p_container_basketpath):
+    def notifyMaintainerEmail(self, p_to, p_from, p_item, p_container_path, p_container_basketpath):
         #notify folder maintainer when a new upload is done
         email_template = self.getEmailTool()._getOb('email_notifyonupload')
         l_subject = email_template.title
         l_content = email_template.body
-        l_content = l_content.replace('@@ITEMID@@', p_itemid)
+        l_content = l_content.replace('@@ITEMTITLEORID@@', p_item.title_or_id())
         l_content = l_content.replace('@@CONTAINERPATH@@', p_container_path)
         l_content = l_content.replace('@@UPLOADTIME@@', str(self.utGetTodayDate()))
         l_content = l_content.replace('@@CONTAINERBASKETPATH@@', p_container_basketpath)
