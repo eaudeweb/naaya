@@ -71,6 +71,7 @@ from Products.Localizer.MessageCatalog import manage_addMessageCatalog
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from managers.skel_parser import skel_parser
 from Products.NaayaBase.managers.import_parser import import_parser
+from NyVersions import NyVersions
 from NyFolder import NyFolder, addNyFolder, importNyFolder
 
 #constructor
@@ -87,7 +88,7 @@ def manage_addNySite(self, id='', title='', lang=None, REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class NySite(CookieCrumbler, LocalPropertyManager, Folder,
-    NyBase, NyEpozToolbox, NyPermissions, NyImportExport,
+    NyBase, NyEpozToolbox, NyPermissions, NyImportExport, NyVersions,
     utils, list_utils, file_utils,
     catalog_tool,
     search_tool,
