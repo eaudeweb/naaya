@@ -82,7 +82,7 @@ class catalog_tool:
 
     def findCatalogedObjects(self, p_query, p_path, lang):
         l_result = []
-        l_filter = {}
+        l_filter = {'submitted': 1} #only submitted items
         l_filter['path'] = p_path
         #search in 'keywords'
         l_criteria = l_filter.copy()
@@ -112,7 +112,7 @@ class catalog_tool:
 
     def getCatalogedObjects(self, meta_type=None, approved=0, howmany=-1, sort_on='releasedate', sort_order='reverse', has_local_role=0, **kwargs):
         l_results = []
-        l_filter = {}
+        l_filter = {'submitted': 1} #only submitted items
         if approved == 1: l_filter['approved'] = 1
         if has_local_role == 1: l_filter['has_local_role'] = 1
         if sort_on != '':
@@ -130,13 +130,13 @@ class catalog_tool:
         return l_results
 
     def getCatalogedBrains(self, meta_type=None):
-        l_filter = {}
+        l_filter = {'submitted': 1} #only submitted items
         if meta_type is not None: l_filter['meta_type'] = self.utConvertToList(meta_type)
         return self.__searchCatalog(l_filter)
 
     def query_objects_ex(self, meta_type=None, q=None, lang=None, path=None, howmany=-1, **kwargs):
         l_result = []
-        l_filter = {}
+        l_filter = {'submitted': 1} #only submitted items
         if meta_type is not None: l_filter['meta_type'] = self.utConvertToList(meta_type)
         if (q is not None) and (lang is not None): l_filter['objectkeywords_%s' % lang] = q
         if path is not None: l_filter['path'] = path
@@ -148,7 +148,7 @@ class catalog_tool:
 
     def query_translated_objects(self, meta_type=None, lang=None, approved=0, howmany=-1, sort_on='releasedate', sort_order='reverse', **kwargs):
         l_results = []
-        l_filter = {}
+        l_filter = {'submitted': 1} #only submitted items
         if meta_type is not None: l_filter['meta_type'] = self.utConvertToList(meta_type)
         if lang is not None: l_filter['istranslated_%s' % lang] = 1
         if approved == 1: l_filter['approved'] = 1
@@ -162,13 +162,13 @@ class catalog_tool:
         return self.__getObjects(l_results)
 
     def getCatalogCheckedOutObjects(self):
-        return self.__getObjects(self.__searchCatalog({'checkout': 1}))
+        return self.__getObjects(self.__searchCatalog({'submitted': 1, 'checkout': 1}))
 
     def getNotCheckedObjects(self):
-        return self.__getObjects(self.__searchCatalog({'validation_status': 0}))
+        return self.__getObjects(self.__searchCatalog({'submitted': 1, 'validation_status': 0}))
 
     def getCheckedOkObjects(self):
-        return self.__getObjects(self.__searchCatalog({'validation_status': 1}))
+        return self.__getObjects(self.__searchCatalog({'submitted': 1, 'validation_status': 1}))
 
     def getCheckedNotOkObjects(self):
-        return self.__getObjects(self.__searchCatalog({'validation_status': -1}))
+        return self.__getObjects(self.__searchCatalog({'submitted': 1, 'validation_status': -1}))

@@ -86,6 +86,8 @@ class CatalogTool(ZCatalog, utils):
             except: pass
             try: self.addIndex('title', 'TextIndex')
             except: pass
+        try: self.addIndex('submitted', 'FieldIndex')
+        except: pass
         try: self.addIndex('approved', 'FieldIndex')
         except: pass
         try: self.addIndex('topitem', 'FieldIndex')
