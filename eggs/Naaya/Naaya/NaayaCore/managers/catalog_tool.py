@@ -129,6 +129,14 @@ class catalog_tool:
         l_results = self.__getObjects(l_results)
         return l_results
 
+    def getCatalogedUnsubmittedObjects(self, meta_type=None):
+        """
+        Returns a list with all I{brain} objects that are not submitted.
+        """
+        l_filter = {'submitted': 0}
+        if meta_type is not None: l_filter['meta_type'] = self.utConvertToList(meta_type)
+        return self.__getObjects(self.__searchCatalog(l_filter))
+
     def getCatalogedBrains(self, meta_type=None):
         """
         Returns a list with all I{brain} objects in the catalog.
