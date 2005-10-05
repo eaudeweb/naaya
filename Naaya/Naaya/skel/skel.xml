@@ -165,6 +165,7 @@
 			permissions="Naaya - Access administrative area,Manage users"/>
 		<permission name="Translate pages" description="Translate pages in the portal"
 			permissions="Naaya - Access administrative area,Naaya - Translate pages"/>
+		<role name="Anonymous" permissions="Browse content"/>
 		<role name="Contributor" permissions="Add content,Edit content,Browse content,Translate pages"/>
 		<role name="Validator" permissions="Validate content,Browse content"/>
 		<role name="Administrator" permissions="Add content,Edit content,Delete content,Browse content,Publish content,Validate content,Manage Users,Translate pages"/>

@@ -291,7 +291,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 for permission in skel_handler.root.security.permissions:
                     authenticationtool_ob.addPermission(permission.name, permission.description, permission.permissions)
                 for role in skel_handler.root.security.roles:
-                    authenticationtool_ob.addRole(role.name, role.permissions)
+                    if authenticationtool_ob.addRole(role.name, role.permissions) is not None:
+                        #the role exists, just set the permissions
+                        authenticationtool_ob.editRole(role.name, role.permissions)
             #set subobjects for folders
             self.getPropertiesTool().manageSubobjects(subobjects=None, ny_subobjects=self.get_meta_types(1))
             #other stuff
