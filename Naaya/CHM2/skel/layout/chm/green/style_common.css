@@ -84,6 +84,9 @@
 		text-indent: 0.3em;
 	}
 	
+	#admin_this_folder #submission {
+		font-weight: bold;
+	}
 	
 	#admin_this_folder a {
 		text-decoration: none;
