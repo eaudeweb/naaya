@@ -193,7 +193,7 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         ra(self.syndicateThisFooter())
         return ''.join(r)
 
-    def getSmallPicture(self, version=None):
+    def getSmallPicture(self, version=None, REQUEST=None):
         """ """
         if version is None: return self.smallpicture
         else:
@@ -357,6 +357,12 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'news_index')
+
+    security.declareProtected(view, 'picture_html')
+    def picture_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        REQUEST.RESPONSE.setHeader('content-type', 'text/html')
+        return '<img src="getBigPicture" border="0" alt="" />'
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
