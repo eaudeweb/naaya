@@ -33,6 +33,7 @@ from AccessControl.Permissions import view_management_screens
 
 #Product imports
 from constants import *
+from NyCheckControl import NyCheckControl
 
 class NyBase:
     """
@@ -51,6 +52,13 @@ class NyBase:
         self.submitted = 0
 
     security = ClassSecurityInfo()
+
+    #test for subclasses
+    def isVersionable(self):
+        """
+        Test if the current object is instance of the NyCheckControl class.
+        """
+        return isinstance(self, NyCheckControl)
 
     security.declarePrivate('approveThis')
     def approveThis(self, approved=1, approved_by=None):
