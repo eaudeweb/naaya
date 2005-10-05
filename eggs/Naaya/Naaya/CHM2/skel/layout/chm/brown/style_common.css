@@ -84,7 +84,10 @@
 		text-indent: 0.3em;
 	}
 	
-	
+	#admin_this_folder #submission {
+		font-weight: bold;
+	}
+		
 	#admin_this_folder a {
 		text-decoration: none;
 		background-color:#c6c6a5; /*#c4c4a2*/ /* #6dabd0*/ /*#748692*/ /*#f8faf4*/
