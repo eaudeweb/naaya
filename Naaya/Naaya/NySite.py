@@ -112,6 +112,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     )
 
     security = ClassSecurityInfo()
+    security.declareObjectPublic()
 
     title = LocalProperty('title')
     site_title = LocalProperty('site_title')
@@ -383,47 +384,76 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             print 'Import an object of type [%s]' % object.meta_type
 
     #api
+    security.declarePublic('get_site_uid')
     def get_site_uid(self): return self.__portal_uid
 
+    security.declarePublic('get_constant')
     def get_constant(self, c): return eval(c)
 
+    security.declarePublic('get_meta_types')
     def get_meta_types(self, folder=0):
         #returns a list with objects metatypes
         if folder==1: return [METATYPE_FOLDER] + self.get_pluggable_installed_meta_types()
         else: return self.get_pluggable_installed_meta_types()
 
+    security.declarePublic('getProductsMetaTypes')
     def getProductsMetaTypes(self):
         #returns a list with all meta types
         return [x['name'] for x in self.filtered_meta_types()]
 
     #objects getters
+    security.declarePublic('getSite')
     def getSite(self): return self
+    security.declarePublic('getPropertiesTool')
     def getPropertiesTool(self): return self._getOb(ID_PROPERTIESTOOL)
+    security.declarePublic('getPortletsTool')
     def getPortletsTool(self): return self._getOb(ID_PORTLETSTOOL)
+    security.declarePublic('getAuthenticationTool')
     def getAuthenticationTool(self): return self._getOb(ID_AUTHENTICATIONTOOL)
+    security.declarePublic('getDynamicPropertiesTool')
     def getDynamicPropertiesTool(self): return self._getOb(ID_DYNAMICPROPERTIESTOOL)
+    security.declarePublic('getCatalogTool')
     def getCatalogTool(self): return self._getOb(ID_CATALOGTOOL)
+    security.declarePublic('getLayoutTool')
     def getLayoutTool(self): return self._getOb(ID_LAYOUTTOOL)
+    security.declarePublic('getSyndicationTool')
     def getSyndicationTool(self): return self._getOb(ID_SYNDICATIONTOOL)
+    security.declarePublic('getEmailTool')
     def getEmailTool(self): return self._getOb(ID_EMAILTOOL)
+    security.declarePublic('getFormsTool')
     def getFormsTool(self): return self._getOb(ID_FORMSTOOL)
+    security.declarePublic('getLocalizer')
     def getLocalizer(self): return self._getOb('Localizer')
+    security.declarePublic('getPortalTranslations')
     def getPortalTranslations(self): return self._getOb(ID_TRANSLATIONSTOOL)
+    security.declarePublic('getImagesFolder')
     def getImagesFolder(self): return self._getOb(ID_IMAGESFOLDER)
 
     #objects absolute/relative path getters
+    security.declarePublic('getSitePath')
     def getSitePath(self, p=0): return self.absolute_url(p)
+    security.declarePublic('getPropertiesToolPath')
     def getPropertiesToolPath(self, p=0): return self._getOb(ID_PROPERTIESTOOL).absolute_url(p)
+    security.declarePublic('getPortletsToolPath')
     def getPortletsToolPath(self, p=0): return self._getOb(ID_PORTLETSTOOL).absolute_url(p)
+    security.declarePublic('getAuthenticationToolPath')
     def getAuthenticationToolPath(self, p=0): return self._getOb(ID_AUTHENTICATIONTOOL).absolute_url(p)
+    security.declarePublic('getDynamicPropertiesToolPath')
     def getDynamicPropertiesToolPath(self, p=0): return self._getOb(ID_DYNAMICPROPERTIESTOOL).absolute_url(p)
+    security.declarePublic('getCatalogToolPath')
     def getCatalogToolPath(self, p=0): return self._getOb(ID_CATALOGTOOL).absolute_url(p)
+    security.declarePublic('getLayoutToolPath')
     def getLayoutToolPath(self, p=0): return self._getOb(ID_LAYOUTTOOL).absolute_url(p)
+    security.declarePublic('getSyndicationToolPath')
     def getSyndicationToolPath(self, p=0): return self._getOb(ID_SYNDICATIONTOOL).absolute_url(p)
+    security.declarePublic('getEmailToolPath')
     def getEmailToolPath(self, p=0): return self._getOb(ID_EMAILTOOL).absolute_url(p)
+    security.declarePublic('getFormsToolPath')
     def getFormsToolPath(self, p=0): return self._getOb(ID_FORMSTOOL).absolute_url(p)
+    security.declarePublic('getFolderByPath')
     def getFolderByPath(self, p_folderpath): return self.unrestrictedTraverse(p_folderpath, None)
 
+    security.declarePublic('getFolderMainParent')
     def getFolderMainParent(self, p_folder):
         #returns the main parent of the given folder
         l_parent = p_folder
@@ -431,6 +461,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             l_parent = l_parent.getParentNode()
         return l_parent
 
+    security.declarePublic('getAllParents')
     def getAllParents(self, p_folder):
         #returns all parents of a folder, without aquisition
         l_parent = p_folder
@@ -440,10 +471,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             l_result.append(l_parent)
         return l_result
 
+    security.declarePublic('get_containers')
     def get_containers(self):
         #this method returns all container type that can be used in an export operation
         return [x for x in self.objectValues(METATYPE_FOLDER) if x.submitted==1]
 
+    security.declarePublic('getObjectById')
     def getObjectById(self, p_id):
         """
         Returns an object inside this one with the given id.
@@ -456,15 +489,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         try: return self._getOb(p_id)
         except: return None
 
+    security.declarePublic('get_containers_metatypes')
     def get_containers_metatypes(self):
         #this method is used to display local roles, called from getUserRoles methods
         return [METATYPE_FOLDER, 'Folder']
 
+    security.declarePublic('get_naaya_containers_metatypes')
     def get_naaya_containers_metatypes(self):
-        #this method is used to display local roles, called from getUserRoles methods
+        """ this method is used to display local roles, called from getUserRoles methods """
         return [METATYPE_FOLDER]
 
     #api
+    security.declarePublic('process_releasedate')
     def process_releasedate(self, p_string='', p_date=None):
         """
         Process a value for an object's release date.
@@ -488,26 +524,35 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     releasedate = p_date
         return releasedate
 
+    security.declarePublic('getMainFolders')
     def getMainFolders(self):
-        #returns a list with all folders objects at the first level
-        #that are approved and sorted by 'order' property
+        """ 
+        Returns a list with all folders objects at the first level
+        that are approved and sorted by 'order' property
+        """
         return self.utSortObjsListByAttr([x for x in self.objectValues(METATYPE_FOLDER) if x.approved==1 and x.submitted==1], 'sortorder', 0)
 
+    security.declarePublic('getMainTopics')
     def getMainTopics(self):
-        #returns the list of main topic folders
-        #sorted by 'order' property
+        """
+        Returns the list of main topic folders
+        sorted by 'order' property
+        """
         return self.utSortObjsListByAttr(filter(lambda x: x is not None, map(lambda f, x: f(x, None), (self._getOb,)*len(self.maintopics), self.maintopics)), 'sortorder', 0)
 
+    security.declarePublic('getLatestUploads')
     def getLatestUploads(self, howmany=None):
-        #returns a list with the latest uploaded objects in the site
-        #which are approved
-        #the number of objects can be set by modifing the property 'number_latest_uploads'
+        """
+        Returns a list with the latest uploaded objects in the site which are approved
+        The number of objects can be set by modifing the property 'number_latest_uploads'
+        """
         if howmany is None:
             howmany = self.number_latest_uploads
         return self.getCatalogedObjects(meta_type=self.get_meta_types(), approved=1, howmany=howmany, path=['/'.join(x.getPhysicalPath()) for x in self.getMainTopics()])
 
+    security.declarePublic('getFoldersWithPendingItems')
     def getFoldersWithPendingItems(self):
-        #returns a list with all folders that contains pending(draft) objects
+        """ returns a list with all folders that contain pending(draft) objects """
         d = {}
         for x in self.getCatalogedObjects(METATYPE_FOLDER):
             c = len(x.getPendingContent())
@@ -518,12 +563,14 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 d[url][1].append((x, c))
         return d
 
+    security.declarePublic('getCheckedOutObjects')
     def getCheckedOutObjects(self):
-        #return a list with all checked out objects in the portal (open versions)
+        """ Returns a list with all checked out objects in the portal (open versions) """
         return self.getCatalogCheckedOutObjects()
 
+    security.declarePublic('getBreadCrumbTrail')
     def getBreadCrumbTrail(self, REQUEST):
-        #generates the bread crumb trail
+        """ generates the breadcrumb trail """
         root = self.utGetROOT()
         breadcrumbs = []
         vRoot = REQUEST.has_key('VirtualRootPhysicalPath')
@@ -593,16 +640,23 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     #layer over the Localizer and MessageCatalog
     #the scope is to centralize the list of available languages
+    security.declarePublic('gl_get_all_languages')
     def gl_get_all_languages(self): return self.get_all_languages()
+    security.declarePublic('gl_get_languages')
     def gl_get_languages(self): return self.get_languages()
+    security.declarePublic('gl_get_languages_mapping')
     def gl_get_languages_mapping(self): return self.get_languages_mapping()
+    security.declarePublic('gl_get_default_language')
     def gl_get_default_language(self): return self.get_default_language()
+    security.declarePublic('gl_get_selected_language')
     def gl_get_selected_language(self): return self.get_selected_language()
+    security.declarePublic('gl_get_languages_map')
     def gl_get_languages_map(self):
         lang, langs, r = self.gl_get_selected_language(), self.get_available_languages(), []
         for x in langs:
             r.append({'id': x, 'title': self.gl_get_language_name(x), 'selected': x==lang})
         return r
+    security.declarePublic('gl_get_language_name')
     def gl_get_language_name(self, lang): return self.get_language_name(lang)
     def gl_add_languages(self, ob):
         for l in self.gl_get_languages_mapping():
