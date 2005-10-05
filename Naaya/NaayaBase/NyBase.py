@@ -56,7 +56,7 @@ class NyBase:
     #test for subclasses
     def isVersionable(self):
         """
-        Test if the current object is instance of the NyCheckControl class.
+        Test if the current object is instance of the B{NyCheckControl} class.
         """
         return isinstance(self, NyCheckControl)
 
