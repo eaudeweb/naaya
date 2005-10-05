@@ -92,7 +92,8 @@ class NyBase:
         @param lang: the index language
         @type lang: string
         """
-        v = [self.getLocalProperty('title', lang), self.getLocalProperty('description', lang), self.getLocalProperty('keywords', lang)]
+        v = [self.getLocalProperty('title', lang), self.getLocalProperty('description', lang),
+             self.getLocalProperty('coverage', lang), self.getLocalProperty('keywords', lang)]
         #for l_dp in self.getDynamicPropertiesTool().getDynamicSearchableProperties(self.meta_type):
         #    v.append(self.getPropertyValue(l_dp.id, lang))
         return u' '.join(v)
