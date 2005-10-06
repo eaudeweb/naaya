@@ -157,10 +157,12 @@
 			permissions="Naaya - Access administrative area,Naaya - Publish content,Take ownership"/>
 		<permission name="Validate content" description="Validate Naaya objects. Adding, editing and deleting are not granted as a part of this privilege."
 			permissions="Naaya - Access administrative area,Naaya - Validate content,Take ownership"/>
+		<permission name="Add comments" description="Posibility to add comments for each type of content."
+			permissions="Naaya - Add comments for content"/>
 		<permission name="Delete content" description="Delete Naaya objects. Adding, publishing and editing are not granted as a part of this privilege. Delete content is only allowed for owners." 
-			permissions="Naaya - Access administrative area,Naaya - Delete content,Take ownership"/>
+			permissions="Naaya - Access administrative area,Naaya - Delete content,Take ownership,Naaya - Manage comments for content"/>
 		<permission name="Browse content" description="Browse the site structure. This is the base privilege aimed for Anonymous users."
-			permissions="Access Transient Objects,Access contents information,Access session data,Query Vocabulary,Search ZCatalog,Use Database Methods,Use mailhost services,View,WebDAV access,WebDAV Unlock items,WebDAV Lock items,Naaya - Comments for content"/>
+			permissions="Access Transient Objects,Access contents information,Access session data,Query Vocabulary,Search ZCatalog,Use Database Methods,Use mailhost services,View,WebDAV access,WebDAV Unlock items,WebDAV Lock items"/>
 		<permission name="Add content" description="Create Naaya objects. Editing, publishing and deleting them are not granted as a part of thisprivilege."
 			permissions="Naaya - Access administrative area,Naaya - Add Naaya Folder objects,Naaya - Add Naaya Document objects,Naaya - Add Naaya Event objects,Naaya - Add Naaya File objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Pointer objects,Naaya - Add Naaya Story objects,Naaya - Add Naaya URL objects,Naaya - Add Naaya Photo,Naaya - Add Naaya Media File objects,Take ownership"/>
 		<permission name="Manage Users" description="Create/modify/delete users in the portal"
@@ -168,7 +170,7 @@
 		<permission name="Translate pages" description="Translate pages in the portal"
 			permissions="Naaya - Access administrative area,Naaya - Translate pages"/>
 		<role name="Anonymous" permissions="Browse content"/>
-		<role name="Authenticated" permissions="Copy content"/>
+		<role name="Authenticated" permissions="Copy content,Add comments"/>
 		<role name="Contributor" permissions="Add content,Edit content"/>
 		<role name="Validator" permissions="Validate content"/>
 		<role name="Administrator" permissions="Add content,Edit content,Delete content,Publish content,Validate content,Manage Users,Translate pages"/>
