@@ -26,7 +26,7 @@ from DateTime import DateTime
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view
 import Products
 
@@ -466,9 +466,11 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         else: self.setSessionInfo(['Item(s) cut.'])
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'pasteObjects')
+    security.declareProtected(view, 'pasteObjects')
     def pasteObjects(self, REQUEST=None):
         """ """
+        if not self.checkPermissionPasteObjects():
+            raise Unauthorized, 'pasteObjects'
         try: self.manage_pasteObjects(None, REQUEST)
         except: self.setSessionErrors(['Error while paste data.'])
         else: self.setSessionInfo(['Item(s) pasted.'])

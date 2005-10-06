@@ -31,7 +31,7 @@ from OFS.DTMLMethod import addDTMLMethod
 from OFS.DTMLDocument import addDTMLDocument
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from ZPublisher import BeforeTraverse
 from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
