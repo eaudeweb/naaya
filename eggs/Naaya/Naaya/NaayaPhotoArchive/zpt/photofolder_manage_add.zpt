@@ -19,7 +19,7 @@
 	</tr>
 	<tr>
 		<td class="form-label">Open for comments</td>
-		<td><input type="checkbox" name="discussion" id="discussion" checked="checked" /></td>
+		<td><input type="checkbox" name="discussion" id="discussion" /></td>
 	</tr>
 	<tr><td></td><td><input type="submit" value="Add" /></td></tr>
 </table>

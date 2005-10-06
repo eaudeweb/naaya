@@ -58,7 +58,7 @@
 </div>
 <div class="field">
 	<label for="discussion" i18n:translate="">Open for comments</label>
-	<input type="checkbox" name="discussion" id="discussion" checked="checked" />
+	<input type="checkbox" name="discussion" id="discussion" />
 </div>
 <div class="field">
 	<label for="submit-button" class="invisible">Submit button</label>
