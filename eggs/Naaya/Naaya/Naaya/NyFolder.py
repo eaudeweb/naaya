@@ -287,40 +287,60 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         return r
 
     security.declareProtected(view, 'checkPermissionManageObects')
-    def checkPermissionManageObjects(self, p_objects=None):
-        """ The optional argument is the list of meta types to be looped by this function """
-        if p_objects is None: l = self.getObjects()
-        else: l = [x for x in p_objects if x.submitted==1]
-        results = []
-        select_all, delete_all, flag = 0, 0, 0
-        for x in self.utSortObjsListByAttr(l, 'sortorder', 0):
+    def checkPermissionManageObjects(self):
+        """ This function is called on the folder index and it checkes whether or not
+            to display the various buttons on that form
+        """
+        results_folders = []
+        results_objects = []
+        btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate = 0, 0, 0, 0, 0, 0
+        # btn_select - if there is at least one permisson to delete or copy an object
+        # btn_delete - if there is at least one permisson to delete an object
+        # btn_copy - if there is at least one permisson to copy an object
+        # btn_cut - if there is at least one permisson to delete AND copy an object
+        # btn_paste - if there is the add permission and there's some copyed data
+        btn_paste = self.cb_dataValid() and self.checkPermissionPasteObjects()
+        # Naaya folders
+        for x in self.utSortObjsListByAttr(self.getFolders(), 'sortorder', 0):
             del_permission = x.checkPermissionDeleteObject()
+            copy_permission = x.checkPermissionCopyObject()
             edit_permission = x.checkPermissionEditObject()
-            if del_permission and flag == 0:
-                select_all, delete_all, flag = 1, 1, 1
-            if edit_permission and flag == 0:
-                select_all, flag = 1, 1
+            if del_permission or copy_permission: btn_select = 1
+            if del_permission and copy_permission: btn_cut = 1
+            if del_permission: btn_delete = 1
+            if copy_permission: btn_copy = 1
+            if edit_permission: can_operate = 1
+            version_status = 0
             if ((del_permission or edit_permission) and not x.approved) or x.approved:
-                results.append((del_permission, edit_permission, x))
-        return (select_all, delete_all, results)
+                results_folders.append((del_permission, edit_permission, version_status, x))
+        # Naaya objects
+        for x in self.utSortObjsListByAttr(self.getObjects(), 'sortorder', 0):
+            del_permission = x.checkPermissionDeleteObject()
+            copy_permission = x.checkPermissionCopyObject()
+            edit_permission = x.checkPermissionEditObject()
+            if del_permission or copy_permission: btn_select = 1
+            if del_permission and copy_permission: btn_cut = 1
+            if del_permission: btn_delete = 1
+            if copy_permission: btn_copy = 1
+            if edit_permission: can_operate = 1
+            # version_status:  0 - cannot check out for some reason
+            #                  1 - can check in
+            #                  2 - can check out
+            if not edit_permission or not x.isVersionable():
+                version_status = 0
+            elif x.hasVersion():
+                if x.isVersionAuthor(): version_status = 1
+                else: version_status = 0
+            else:
+                version_status = 2
+            if ((del_permission or edit_permission) and not x.approved) or x.approved:
+                results_objects.append((del_permission, edit_permission, version_status, x))
+        can_operate = can_operate or btn_select
+        return (btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate, results_folders, results_objects)
 
-    security.declareProtected(view, 'checkPermissionManageFolders')
-    def checkPermissionManageFolders(self, p_objects=None):
-        """ The optional argument is the list of meta types to be looped by this function """
-        if p_objects is None: l = self.getFolders()
-        else: l = [x for x in p_objects if x.submitted==1]
-        results = []
-        select_all, delete_all, flag = 0, 0, 0
-        for x in self.utSortObjsListByAttr(l, 'sortorder', 0):
-            del_permission = x.checkPermissionDeleteObject()
-            edit_permission = x.checkPermissionEditObject()
-            if del_permission and flag == 0:
-                select_all, delete_all, flag = 1, 1, 1
-            if edit_permission and flag == 0:
-                select_all, flag = 1, 1
-            if ((del_permission or edit_permission) and not x.approved) or x.approved:
-                results.append((del_permission, edit_permission, x))
-        return (select_all, delete_all, results)
+    def isVersionable(self):
+        """ """
+        return 1
 
     def getObjects(self): return [x for x in self.objectValues(self.get_meta_types()) if x.submitted==1]
     def getFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.submitted==1]
@@ -432,7 +452,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('edit_html?lang=%s' % lang)
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'copyObjects')
+    security.declareProtected(PERMISSION_COPY_OBJECTS, 'copyObjects')
     def copyObjects(self, REQUEST=None):
         """ """
         id_list = self.utConvertToList(REQUEST.get('id', []))
@@ -441,7 +461,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         else: self.setSessionInfo(['Item(s) copied.'])
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'cutObjects')
+    security.declareProtected(PERMISSION_DELETE_OBJECTS, 'cutObjects')
     def cutObjects(self, REQUEST=None):
         """ """
         id_list = self.utConvertToList(REQUEST.get('id', []))
@@ -449,11 +469,6 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         except: self.setSessionErrors(['Error while cut data.'])
         else: self.setSessionInfo(['Item(s) cut.'])
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
-
-    security.declareProtected(view, 'hasObjectsToPaste')
-    def hasObjectsToPaste(self):
-        """ """
-        return self.cb_dataValid()
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'pasteObjects')
     def pasteObjects(self, REQUEST=None):
