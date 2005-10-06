@@ -79,7 +79,7 @@
             <span tal:condition="python:here.internal_get_item_age(record.bobobase_modification_time(), age)==1">
             <strong style="color: #FF9966;" i18n:translate="">Old</strong></span>
         </dt>
-        <dd><span tal:replace="record/description"/></dd>
+        <dd><span tal:replace="structure record/description"/></dd>
     </tal:block>
     </dl>
     <br />
