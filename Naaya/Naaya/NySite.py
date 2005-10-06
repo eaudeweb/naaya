@@ -1666,6 +1666,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if name != '': return self.getAuthenticationTool().checkGroupPermission(name, context)
         else: return 1
 
+    def checkPermissionAddFolders(self, context):
+        """
+        Check for adding folders permission in the given context.
+        """
+        return context.checkPermission(PERMISSION_ADD_FOLDER)
+
     def list_glossaries(self):
         #this method *must* be overwritten
         return []
