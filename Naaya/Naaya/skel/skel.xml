@@ -169,7 +169,7 @@
 			permissions="Naaya - Access administrative area,Naaya - Translate pages"/>
 		<role name="Anonymous" permissions="Browse content"/>
 		<role name="Authenticated" permissions="Copy content"/>
-		<role name="Contributor" permissions="Add content,Edit content,Translate pages"/>
+		<role name="Contributor" permissions="Add content,Edit content"/>
 		<role name="Validator" permissions="Validate content"/>
 		<role name="Administrator" permissions="Add content,Edit content,Delete content,Publish content,Validate content,Manage Users,Translate pages"/>
 	</security>
