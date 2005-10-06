@@ -128,7 +128,7 @@ class NyPermissions:
         the edit objects permission and to be the object's owner or to have
         the publish permission.
         """
-        return self.checkPermissionEditObjects() and (self.checkPermissionPublishObjects() or (self.getObjectOwner() == self.REQUEST.AUTHENTICATED_USER.getUserName()))
+        return self.checkPermissionEditObjects()
 
     def checkPermissionDeleteObject(self):
         """
@@ -136,7 +136,7 @@ class NyPermissions:
         the delete objects permission and to be the object's owner or to have
         the publish permission.
         """
-        return self.checkPermissionDeleteObjects() and (self.checkPermissionPublishObjects() or (self.getObjectOwner() == self.REQUEST.AUTHENTICATED_USER.getUserName()))
+        return self.checkPermissionDeleteObjects()
 
     def checkPermissionCopyObject(self):
         """
