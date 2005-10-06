@@ -35,6 +35,7 @@ NAAYABASE_PRODUCT_PATH = Globals.package_home(globals())
 PERMISSION_ADMINISTRATE = 'Naaya - Access administrative area'
 PERMISSION_PUBLISH_OBJECTS = 'Naaya - Publish content'
 PERMISSION_EDIT_OBJECTS = 'Naaya - Edit content'
+PERMISSION_COPY_OBJECTS = 'Naaya - Copy content'
 PERMISSION_DELETE_OBJECTS = 'Naaya - Delete content'
 PERMISSION_TRANSLATE_PAGES = 'Naaya - Translate pages'
 PERMISSION_VALIDATE_OBJECTS = 'Naaya - Validate content'

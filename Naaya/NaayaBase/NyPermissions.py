@@ -81,7 +81,7 @@ class NyPermissions:
 
     def checkPermissionAddObjects(self):
         """
-        Check the permissions to add different type of objects.
+        Check the permissions to add different types of objects.
         """
         return self.checkPermission(PERMISSION_ADMINISTRATE)
 
@@ -101,19 +101,20 @@ class NyPermissions:
         """
         Check the permissions to copy objects.
         """
-        return self.checkPermission(PERMISSION_PUBLISH_OBJECTS)
+        return self.checkPermission(PERMISSION_COPY_OBJECTS)
 
     def checkPermissionCutObjects(self):
         """
         Check the permissions to cut objects.
         """
-        return self.checkPermission(PERMISSION_PUBLISH_OBJECTS)
+        return self.checkPermission(PERMISSION_COPY_OBJECTS) and \
+            self.checkPermission(PERMISSION_DELETE_OBJECTS)
 
     def checkPermissionPasteObjects(self):
         """
         Check the permissions to paste objects.
         """
-        return self.checkPermission(PERMISSION_PUBLISH_OBJECTS)
+        return self.checkPermissionAddObjects()
 
     def checkPermissionDeleteObjects(self):
         """
@@ -136,5 +137,12 @@ class NyPermissions:
         the publish permission.
         """
         return self.checkPermissionDeleteObjects() and (self.checkPermissionPublishObjects() or (self.getObjectOwner() == self.REQUEST.AUTHENTICATED_USER.getUserName()))
+
+    def checkPermissionCopyObject(self):
+        """
+        Check the permissions to copy a single object. The user must have
+        the copy objects permission.
+        """
+        return self.checkPermissionCopyObjects()
 
 InitializeClass(NyPermissions)
