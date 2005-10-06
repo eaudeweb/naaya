@@ -312,7 +312,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             if edit_permission: can_operate = 1
             version_status = 0
             if ((del_permission or edit_permission) and not x.approved) or x.approved:
-                results_folders.append((del_permission, edit_permission, version_status, x))
+                results_folders.append((del_permission, edit_permission, version_status, copy_permission, x))
         # Naaya objects
         for x in self.utSortObjsListByAttr(self.getObjects(), 'sortorder', 0):
             del_permission = x.checkPermissionDeleteObject()
@@ -334,7 +334,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             else:
                 version_status = 2
             if ((del_permission or edit_permission) and not x.approved) or x.approved:
-                results_objects.append((del_permission, edit_permission, version_status, x))
+                results_objects.append((del_permission, edit_permission, version_status, copy_permission, x))
         can_operate = can_operate or btn_select
         return (btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate, results_folders, results_objects)
 

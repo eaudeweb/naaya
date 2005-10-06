@@ -113,8 +113,9 @@ function fDeleteObjects()
 	<tal:block define="del_permission python:folders[0];
 		edit_permission python:folders[1];
 		version_status python:folders[2];
-		folder python:folders[3]">
-	<td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission" type="checkbox" name="id" tal:attributes="value folder/id" /></td>
+		copy_permission python:folders[3];
+		folder python:folders[4]">
+	<td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value folder/id" /></td>
 	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(folder.approved, folder.icon, folder.icon_marked); alt folder/meta_type; title folder/meta_type" border="0" /></td>
 	<td class="title-column">
 		<a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id" />
@@ -132,8 +133,9 @@ function fDeleteObjects()
 	<tal:block define="del_permission python:objects[0];
 			edit_permission python:objects[1];
 			version_status python:objects[2];
-			object python:objects[3]">
-	<td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission" type="checkbox" name="id" tal:attributes="value object/id" /></td>
+			copy_permission python:objects[3];
+			object python:objects[4]">
+	<td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value object/id" /></td>
 	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" /></td>
 	<td class="title-column">
 		<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
