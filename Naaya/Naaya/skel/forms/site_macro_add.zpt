@@ -68,7 +68,7 @@ function fSet(ctrl, value)
 </div>
 <div class="field">
 	<label for="discussion" i18n:translate="">Open for comments</label>
-	<input type="checkbox" name="discussion" id="discussion" checked="checked" />
+	<input type="checkbox" name="discussion" id="discussion" />
 </div>
 
 <tal:block metal:define-slot="custom_properties" />
