@@ -43,7 +43,7 @@
 	</tr>
 	<tr>
 		<td class="form-label">Open for comments</td>
-		<td><input type="checkbox" name="discussion" id="discussion" checked="checked" /></td>
+		<td><input type="checkbox" name="discussion" id="discussion" /></td>
 	</tr>
 	<tr><td></td></tr>
 	<tr><td class="form-label" colspan="2">Custom properties</td></tr>
