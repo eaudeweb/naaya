@@ -533,26 +533,25 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('sortorder_html')
 
-    security.declareProtected(PERMISSION_VALIDATE_OBJECTS, 'updateBasketOfInvalidObjects')
-    def updateBasketOfInvalidObjects(self, id=[], REQUEST=None):
+    security.declareProtected(PERMISSION_VALIDATE_OBJECTS, 'validateObject')
+    def validateObject(self, id='', status='', comment='', REQUEST=None):
         """ """
-        ids_list = self.utConvertToList(id)
-        validated_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        checked_details = []
-        i=0
-        for k in ids_list:
-            checked_details.append((k, int(REQUEST.get('radio_' + k, '')), REQUEST.get('comment_' + k, ''), validated_by))
-            i += 1
-        for item in checked_details:
-            try:
-                ob = self._getOb(item[0])
-                ob.checkThis(item[1], item[2], item[3])
-                self.recatalogNyObject(ob)
-            except:
-                pass
+        msg = err = ''
+        try:
+            status = int(status)
+            if status == -1 and len(comment)<=0:
+                raise Exception, self.getPortalTranslations().translate('', 'You must insert a comment explaining why the items is not ok')
+            ob = self._getOb(id)
+            ob.checkThis(int(status), comment, self.REQUEST.AUTHENTICATED_USER.getUserName())
+            self.recatalogNyObject(ob)
+        except Exception, error:
+            err = error
+        else:
+            msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('basketofvalidation_html')
+            if err != '': self.setSessionErrors([err])
+            if msg != '': self.setSessionInfo([msg])
+            REQUEST.RESPONSE.redirect('%s/basketofvalidation_html' % self.absolute_url())
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
