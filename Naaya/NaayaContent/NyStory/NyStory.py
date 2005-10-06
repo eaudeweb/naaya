@@ -46,7 +46,7 @@ OBJECT_FORMS = ['story_add', 'story_edit', 'story_index']
 OBJECT_CONSTRUCTORS = ['manage_addNyStory_html', 'story_add', 'addNyStory', 'importNyStory']
 OBJECT_ADD_FORM = 'story_add'
 DESCRIPTION_OBJECT = 'This is Naaya Story type.'
-PREFIX_OBJECT = 'stry'
+PREFIX_OBJECT = 'story'
 
 manage_addNyStory_html = PageTemplateFile('zpt/story_manage_add', globals())
 manage_addNyStory_html.kind = METATYPE_OBJECT
