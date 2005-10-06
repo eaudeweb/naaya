@@ -103,6 +103,7 @@ class NyComments:
         self.__comments_collection = {}
 
     #api
+    security.declarePrivate('init_comments')
     def init_comments(self):
         """
         Reset comments.
@@ -131,6 +132,7 @@ class NyComments:
         t.sort()
         return [val for (key, val) in t]
 
+    security.declarePrivate('open_for_comments')
     def open_for_comments(self):
         """
         Enable(open) comments.
@@ -138,6 +140,7 @@ class NyComments:
         self.discussion = 1
         self._p_changed = 1
 
+    security.declarePrivate('close_for_comments')
     def close_for_comments(self):
         """
         Disable(close) comments.
@@ -145,6 +148,7 @@ class NyComments:
         self.discussion = 0
         self._p_changed = 1
 
+    security.declarePrivate('add_comment_item')
     def add_comment_item(self, id, title, body, author, date):
         """
         Create a new comment.
@@ -153,6 +157,7 @@ class NyComments:
         self.__comments_collection[id] = item
         self._p_changed = 1
 
+    security.declarePrivate('update_comment_item')
     def update_comment_item(self, id, title, body):
         """
         Modify a comment.
@@ -166,6 +171,7 @@ class NyComments:
             item.body = body
         self._p_changed = 1
 
+    security.declarePrivate('delete_comment_item')
     def delete_comment_item(self, id):
         """
         Delete 1 comment.
@@ -197,8 +203,21 @@ class NyComments:
                 self.comment_add(comment.id, comment.title, comment.body,
                     comment.author.encode('utf-8'), comment.date.encode('utf-8'))
 
+    #permissions
+    def checkPermissionAddComments(self):
+        """
+        Check for adding comments.
+        """
+        return self.checkPermission(PERMISSION_COMMENTS_ADD)
+
+    def checkPermissionManageComments(self):
+        """
+        Check for managing comments.
+        """
+        return self.checkPermission(PERMISSION_COMMENTS_MANAGE)
+
     #site actions
-    security.declareProtected(PERMISSION_COMMENTS_OBJECTS, 'comment_add')
+    security.declareProtected(PERMISSION_COMMENTS_ADD, 'comment_add')
     def comment_add(self, id='', title='', body='', author=None, date=None, REQUEST=None):
         """
         Add a comment for this object.
@@ -213,7 +232,7 @@ class NyComments:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_COMMENTS_OBJECTS, 'comment_del')
+    security.declareProtected(PERMISSION_COMMENTS_MANAGE, 'comment_del')
     def comment_del(self, id='', REQUEST=None):
         """
         Delete a comment.
@@ -231,7 +250,7 @@ class NyComments:
         """
         return self.getFormsTool().getContent({'here': self}, 'comments_box')
 
-    security.declareProtected(PERMISSION_COMMENTS_OBJECTS, 'comment_add_html')
+    security.declareProtected(PERMISSION_COMMENTS_ADD, 'comment_add_html')
     def comment_add_html(self, REQUEST=None, RESPONSE=None):
         """
         Form for adding a new comment.

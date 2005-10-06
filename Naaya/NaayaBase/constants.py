@@ -39,7 +39,8 @@ PERMISSION_COPY_OBJECTS = 'Naaya - Copy content'
 PERMISSION_DELETE_OBJECTS = 'Naaya - Delete content'
 PERMISSION_TRANSLATE_PAGES = 'Naaya - Translate pages'
 PERMISSION_VALIDATE_OBJECTS = 'Naaya - Validate content'
-PERMISSION_COMMENTS_OBJECTS = 'Naaya - Comments for content'
+PERMISSION_COMMENTS_ADD = 'Naaya - Add comments for content'
+PERMISSION_COMMENTS_MANAGE = 'Naaya - Manage comments for content'
 
 # Exceptions
 EXCEPTION_NOTIMPLEMENTED = 'NotImplemented'
