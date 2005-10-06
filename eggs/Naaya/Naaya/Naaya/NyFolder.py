@@ -338,10 +338,6 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         can_operate = can_operate or btn_select
         return (btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate, results_folders, results_objects)
 
-    def isVersionable(self):
-        """ """
-        return 1
-
     def getObjects(self): return [x for x in self.objectValues(self.get_meta_types()) if x.submitted==1]
     def getFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.submitted==1]
     def hasContent(self): return (len(self.getObjects()) > 0) or (len(self.objectValues(METATYPE_FOLDER)) > 0)
