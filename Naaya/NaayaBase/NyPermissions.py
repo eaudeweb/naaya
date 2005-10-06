@@ -83,7 +83,15 @@ class NyPermissions:
         """
         Check the permissions to add different types of objects.
         """
-        return self.checkPermission(PERMISSION_ADMINISTRATE)
+        #check folder
+        p = self.checkPermissionAddFolders(self)
+        if not p:
+            #check pluggable content
+            pc = self.get_pluggable_content()
+            for k in self.get_pluggable_installed_meta_types():
+                p = p or self.checkPermission(pc[k]['permission'])
+                if p: break
+        return p
 
     def checkPermissionEditObjects(self):
         """
