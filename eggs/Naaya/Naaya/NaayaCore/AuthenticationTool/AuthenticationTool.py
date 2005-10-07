@@ -8,10 +8,10 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 #
-# The Original Code is EEAWebUpdate version 0.1
+# The Original Code is Naaya version 1.0
 #
 # The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by CMG and Finsiel Romania are
+# Agency (EEA).  Portions created by Finsiel Romania are
 # Copyright (C) European Environment Agency.  All
 # Rights Reserved.
 #
@@ -293,6 +293,18 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
     def getUserLastName(self, user_obj):
         """ Return the lastname"""
         return user_obj.lastname
+
+    def getUserFullName(self, user_obj):
+        """ Return the full name of the user """
+        return user_obj.firstname + ' ' + user_obj.lastname
+
+    def getUserFullNameByID(self, user_str):
+        """ Return the full name of the user """
+        user_obj = self.getUser(user_str)
+        if user_obj is not None:
+            return user_obj.firstname + ' ' + user_obj.lastname
+        else:
+            return user_str
 
     def getUserEmail(self, user_obj):
         """ Return the email """
