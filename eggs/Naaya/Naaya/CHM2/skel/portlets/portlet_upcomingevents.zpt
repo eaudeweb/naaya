@@ -1,0 +1,10 @@
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"><span i18n:translate="" tal:omit-tag="">Upcoming Events</span></tal:block>
+<tal:block metal:fill-slot="portlet_content">
+<tal:block tal:repeat="item here/getUpcomingEvents">
+<a tal:attributes="href item/absolute_url" tal:content="item/title_or_id">item</a>	
+		<div tal:content="structure item/description" />
+	<span tal:replace="python:item.utShowDateTime(item.start_date)" />, <span tal:replace="item/location" />
+</tal:block>
+</tal:block>
+</tal:block>
