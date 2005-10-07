@@ -86,7 +86,7 @@ class CHMSite(NySite):
         for k,v in self.get_content_urls().items():
             linkchecker_ob.manage_addMetaType(k)
             for p in v:
-                linkchecker_ob.manage_addProperty(k, v)
+                linkchecker_ob.manage_addProperty(k, p)
         manage_addHelpDesk(self, ID_HELPDESKAGENT, TITLE_HELPDESKAGENT, self.getAuthenticationToolPath(1))
 
     #objects getters
