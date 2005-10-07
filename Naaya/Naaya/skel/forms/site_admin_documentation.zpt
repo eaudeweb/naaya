@@ -1,157 +1,173 @@
 <tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
 
-<h1 metal:fill-slot="title" i18n:translate="">Administrative user guide</h1>
+<h1 metal:fill-slot="title">Administrative user guide</h1>
 
 <tal:block metal:fill-slot="section">
 
-<p i18n:translate="">
-	The software support for this portal is called <strong>Naaya</strong> (previously EWPublisher). It is a framework that works on top of the <a href="http://www.zope.org">Zope</a> open source web application server and development system, built for the <strong>European Community Biodiversity Clearing House Mechanism</strong> (<a href="http://biodiversity-chm.eea.eu.int">http://biodiversity-chm.eea.eu.int</a>) and the <strong>EnviroWindows</strong> (<a href="http://www.ewindows.eu.org">http://www.ewindows.eu.org</a>) networks. 
+<div i18n:translate="">
+
+<h2>Overview and main features</h2>
+
+<p>
+	This portal is based on the <strong>Naaya</strong> portal toolkit. It is a framework that works on top of the <a href="http://www.zope.org">Zope</a> open source web application server and development system, built for the <strong>European Community Biodiversity Clearing House Mechanism</strong> (<a href="http://biodiversity-chm.eea.eu.int">http://biodiversity-chm.eea.eu.int</a>) and the <strong>EnviroWindows</strong> (<a href="http://www.ewindows.eu.org">http://www.ewindows.eu.org</a>) networks.
+</p>
+<p>
+	<strong>Naaya</strong> is a <strong>multilingual web content management system</strong> that allows users with all kind of backgrounds to administrate various aspects of a portal, with respect to their privileges and areas of expertise (content contributors, validators or managers, technical or non technical administrators, translators, etc.).
 </p>
 
-<p i18n:translate="">
-	It is a <strong>multilingual web content management system</strong> that allows users with all kind of backgrounds to administrate various aspects of a portal, with respect to their privileges and areas of expertise (content contributors, validators or managers, technical or non technical administrators, translators, etc.).
-</p>
-<h3 i18n:translate="">Easy to install</h3>
+<h3>Easy to install</h3>
 
-<p i18n:translate="">
+<p>
 	Installation kits for Windows and Linux platforms are available. You can have an out of the box portal with a full content management system running on your computer in just a few minutes.
 </p>
 
-<h3 i18n:translate="">User friendly</h3>
+<h3>User friendly</h3>
 
-<p i18n:translate="">
+<p>
 	Non-technical users can easily create and manage content using features like the integrated WYSIWYG editor. Complete content management functionalities are available: cut/copy/paste, delete, submit/approve/validate content, edit, translate, check-in/edit/check-out of single items.
 </p>
 
-<h3 i18n:translate="">Multilingual support</h3>
+<h3>Multilingual support</h3>
 
-<p i18n:translate="">
-	The interface can be translated in one or more languages; managing multilingual content for multiple types (e.g. folders, news, files, HTML documents, URLs, events). Multilingual searches can be performed internal or across a network of portals.
+<p>
+	The interface can be translated in one or more languages, the content (e.g. folders, news, files, HTML documents, URLs, events) is also multilingual and the syndication model is language-aware. Multilingual searches can be performed internal or across a network of portals.
 </p>
 
-<h3 i18n:translate="">Skinable</h3>
+<h3>Skinable</h3>
 
-<p i18n:translate="">
-	Skinable layout where multiple color schemes can be defined with the use of just cascade style sheets and images, completely independent from the context or business logic layers. This implies a separation of the content (data), logic (functionality and behavior) and presentation (layout) layers. Default view customizable for single folders.
+<p>
+	Interchangable layouts can be defined by managers, each one having one or more color schemes.
+	Such feature is possible due to the separation of the content (data), logic (functionality and behavior) and presentation (layout) layers made in Naaya. Web designers can make use of just cascade style sheets and images to define new schemes.
 </p>
 
-<h3 i18n:translate="">Workflow and version control</h3>
+<h3>Workflow and version control</h3>
 
-<p i18n:translate="">
-	Built-in workflow ensures content provision and maintenance, delegation of authority and data quality assessments. Files uploaded in a Naaya portal have support for storing old versions for future consultation.
+<p>
+	Built-in workflow process ensures the content provision and maintenance, delegation of authority and data quality assessments. Files uploaded in a Naaya portal have support for storing old versions for future consultation.
 </p>
 
-<h3 i18n:translate="">Syndication</h3>
+<h3>Syndication</h3>
 
-<p i18n:translate="">
-	Powerful syndication tools to expose the local channels of data and grab remote ones. Export of content in RDF based formats (channels such as latest uploads, latest news, content of folders, etc.).
+<p>
+	Powerful syndication tools expose the local channels of data and grab remote ones; export of content in RDF -based formats (channels such as latest uploads, latest news, content of folders, etc.).
 </p>
 
-<h3 i18n:translate="">Import/export</h3>
+<h3>Import/export</h3>
 
-<p i18n:translate="">
-	Easy import/export of the content can be done using a proprietary XML format - useful feature when it comes to porting data from one server architecture to another, e.g. relational database and PHP to Zope. Also, Zope's native import/export facility (zexp files) is available to transfer data from one Naaya portal to another.
+<p>
+	Easy import/export of the content can be done using a proprietary XML format - useful feature when it comes to migrating data from sites built under different platforms into Naaya (e.g. relational database and PHP to Zope). Also, Zope's native import/export facility (zexp files) is available to transfer data from one Naaya portal to another. Due to the use of XML, the migration is independent of the operating systems or technologies used.
 </p>
 
-<h3 i18n:translate="">Security model</h3>
+<h3>Security model</h3>
 
-<p i18n:translate="">
-	Naaya comes with a powerful user/roles management system. Enhanced user credentials are kept, along with the possibility to plug different user sources (LDAP, MySQL, etc.). Certain areas of the website can be protected from usual visitors and browsing rights can be granted to certain groups of users.
+<p>
+	Naaya comes with a powerful user/roles/permissions management system. Enhanced user credentials are kept, along with the possibility to plug different user sources (LDAP, MySQL, etc.). Certain areas of the website can be protected from usual visitors and browsing rights can be granted to certain groups of users.
 </p>
 
-<h3 i18n:translate="">Standards used</h3>
+<h2>Search mechanisms</h2>
 
-<p i18n:translate="">
+<p>
+	An internal search mechanism is built-in Naaya portals, based on the indexing and cataloging of all data types present. To be noted that this mechanism is also searching inside the uploaded files such as PDF, Word, Excel.
+</p>
+<p>
+	Optionally, an external search facility can be linked for searching across multiple portals of the same network. Websites and web applications built using different technologies can participate in this global search process if they can retrieve the search results via XML/RPC in the specified format.
+</p>
+
+<h3>Standards used</h3>
+
+<p>
 	All pages are <strong>XHTML 1.0 Transitional</strong> (<a href="http://www.w3.org/TR/xhtml1/">http://www.w3.org/TR/xhtml1/</a>) compliant and the style sheets are using <strong>CSS2</strong> Specification (<a href="http://www.w3.org/TR/REC-CSS2/">http://www.w3.org/TR/REC-CSS2/</a>). In terms of accessibility, the <strong>Web Content Accessibility Guidelines 1.0</strong> priority 2 (WAI-AA) is followed for the user interface and priority 1 (WAI-A) for the administrative forms (<a href="http://www.w3.org/TR/WAI-WEBCONTENT/wai-pageauth.html">http://www.w3.org/TR/WAI-WEBCONTENT/wai-pageauth.html</a>).
 </p>
 
-<h3 i18n:translate="">Expandable</h3>
+<h3>Expandable</h3>
 
-<p i18n:translate="">
-	Add-on products for Naaya are available to add new features and content types. Generic Zope products can be easily integrated to add more functionality: newsletters, issue trackers, upload notifications, forums.
+<p>
+	Pluggable products are available for Naaya in order to extend the functionality available and the content types offered by default. Also, generic Zope products can be easily integrated to add features like newsletters, issue trackers, upload notifications, forums, etc.
+</p>
+<p>
+	The Naaya architecture is mudular and flexible, built as a core set of generic products to which custom components can be developed and added to fit the needs of a particular organisation or network.
 </p>
 
+<h2>Content types</h2>
 
-<h2 i18n:translate="">Search mechanisms</h2>
-
-<p i18n:translate="">
-	An internal search mechanism is built-in Naaya portals, based on the indexing and cataloging of all data types present. To be noted that this mechanism is also searching inside the uploaded files such as PDF, Word, Excel.
+<p>
+	The default content types provided by Naaya portals are generic ones. They are pluggable, in the sense that:
 </p>
+<ul>
+	<li>managers can uninstall a subset of them from a certain portal in which case they will not be available for use inside that website</li>
+	<li>programmers can create new ones place the Python class along with the corresponding add/edit and index forms in the specific folder from the <em>NaayaContent</em> product and managers can import and use them into a Naaya portal</li>
+</ul>
 
-<p i18n:translate="">
-	Optionally, an external search facility can be linked for searching across multiple portals of the same network.
-</p>
+<h2>Graphical interface</h2>
 
-<h2 i18n:translate="">Graphical interface</h2>
-
-<p i18n:translate="">
+<p>
 	The Naaya platform was developed ensuring the complete separation among data, presentation and business logic. This approach allowed the creation of different layouts each one having one or more color schemes without interfering with in the information published in the portal or with its behavior.
 </p>
 
-<p i18n:translate="">
+<p>
 	For each portal a new layout can be created or existing ones can be used and just the color palette can differ. This implies the definition of a set of standard elements that appear on every page (e.g.  the search bar, the navigation breadcrumb trail, the listing of a set of links, etc.), the way these are presented using style sheets and how these are arranged (top, left side, footer, etc.).
 </p>
 
-<p i18n:translate="">
+<p>
 	All portal pages are based on the same kind of templates for the header and footer, a set of portlets which provide quick access to the important areas of the portal and the variable page content. This offers a consistent look and feel throughout the entire site and gives visitors a sense of place and easy navigation. Moreover, the left and right-side portlets are configurable by administrators from the corresponding area of the administrative centre.
 </p>
 
 <img src="misc_/Naaya/brief_layout" alt="Generic page layout" />
 
-<p i18n:translate="">
+<p>
 	The prebuilt layouts respect modern design standards such as:
 </p>
-<ul i18n:translate="">
+<ul>
 	<li>accessibility of the information towards all users (including users with disabilities), all target medias (different browsers, PDAs and mobile phones, TVs, speech synthesizers, Braille interpreters, TVs, printers, etc.) and search engines</li>
 	<li>usability standards</li>
 	<li>modern markup (XHTML, CSS2, SVG)</li>
 </ul>
 
-<h2 i18n:translate="">Content structure</h2>
+<h2>Content structure</h2>
 
-<p i18n:translate="">
+<p>
 	The portal content is structured into specialised archives (folders) that group items of the same kind (news, events, stories, photos) and a set of main sections which contain hierarchically arranged information of various types (files, HTML documents, news, events, links to remote sources of information, pointers to local data, etc.).
 </p>
 
-<p i18n:translate="">
+<p>
 	Direct access to these main sections and archives is ensured from each page of the website. 
 </p>
 
-<p i18n:translate="">
+<p>
 	All types of content are based on:
 </p>
 
-<ul i18n:translate="">
+<ul>
 	<li>a common set of properties (metadata): e.g. title, description, keywords</li>
 	<li>a set of custom relevant attributes: e.g. binary versions of data for files, start date/end date for events, images for news item</li>
 	<li>dynamic properties that can be added by managers for each type of data and are immediately propagated on existing object instances from a running site; when defining such properties, it is possible to specify their type, if they are searchable, a default value, etc.</li>
 </ul>
 
-<p i18n:translate="">
+<p>
 	Other types of content can be created by programmers using the existing Python classes and templates implemented in the Naaya's core with minimum effort.
 </p>
 
-<p i18n:translate="">
+<p>
 	Content management workflow (easily changeable and configurable when it comes to types of actors involved):
 </p>
 <img src="misc_/Naaya/workflow" alt="Content management workflow diagram" />
 
-<h2 i18n:translate="">Administrative centre</h2>
+<h2>Administrative centre</h2>
 
-<p i18n:translate="">
+<p>
 	A central space is available for non-technical users in order to view and be guided to execute all operations that can be accomplished to maintain their portal or just parts of it. 
 </p>
 
-<p i18n:translate="">
+<p>
 	Being a matter of content management, graphical interface adjustments, defining the syndication model, translation in different languages or managing users and delegating authority, users with all kinds of roles (administrator, translators, content managers or quality checkers) will find here a set of forms that allow them to do their job without having to contact technical people for that.
 </p>
 
-<h2 i18n:translate="">Users and security</h2>
+<h2>Users and security</h2>
 
-<p i18n:translate="">
+<p>
 	The security model of a Naaya-based portal is based on the concept what you see is what you can do, meaning that whenever a user sees the link to an operation, he/she has the necessary rights to execute that operation. By default a set of groups of users (roles) are defined:
 </p>
-<ul i18n:translate="">
+<ul>
 	<li>Content contributors</li>
 	<li>Content validators</li>
 	<li>User interface translators </li>
@@ -159,63 +175,64 @@
 	<li>Technical Managers, with full rights to execute any set of operations </li>
 </ul>
 
-<p i18n:translate="">
+<p>
 	The list of roles can be tailored according with each specific portal needs, taking into account the wideness, skills and availability of the community that provides content and administrates the website.
 </p>
 
-<p i18n:translate="">
+<p>
 	Once users are defined in the system (have an account), they might be granted with any subset of the above roles (obviously having the Manager role eliminates the need for additional ones) on the entire portal or just on the locations (folders) they need to perform the operations that fall under their areas of expertise.
 </p>
 
-<h2 i18n:translate="">Collaboration</h2>
+<h2>Collaboration</h2>
 
-<p i18n:translate="">
+<p>
 	In order for the portal information to be correctly transmitted and picked up to/from remote websites and search engines, it is automatically exported in XML formats, starting from the simple RDF form on to dedicated extended formats. The same approach is used for harvesting data from remote sources.
 </p>
 
-<p i18n:translate="">
+<p>
 	All the necessary mechanisms are included in Naaya so that administrators can easily:
 </p>
-<ul i18n:translate="">
+<ul>
 	<li>define and describe the relevant channels in their portal </li>
 	<li>pick up remote channels and publish them in their website based on language, type, area of interest (e.g. latest news from a related organisation's portal)</li>
 </ul>
 
-<p i18n:translate="">
+<p>
 	The data harvested from remote sources is automatically updated on regular basis by the system.
 </p>
 
 <h2>Glossaries and thesauri</h2>
 
-<p i18n:translate="">
+<p>
 	Specialised multilingual glossaries and thesauri can be added for the harmonization of metadata fields such as keywords and coverage. This is useful for the published data to be properly categorized, indexed and searched.
 </p>
 
-<p i18n:translate="">
+<p>
 	Depending on the areas of interest covered by such a portal, the terms associated with the various data types can come from biodiversity glossaries (the case of the Clearing House Mechanism websites), the agreed EEA's environmental glossary for the EnviroWindows network, etc.
 </p>
 
-<p i18n:translate="">
+<p>
 	An additional Python product for Zope called <strong>NaayaGlossary</strong> accomplishes the job of storing and indexing the terms and a site administrator decides to associate glossaries to the corresponding fields (keywords or geographical coverage of the items) through a friendly Web form from the administration centre. If such a source is detected, the add/edit forms for each type of object published in the portal (news items, documents, files, etc.) are automatically changed to contain picklists instead of simple text inputs. This ensures the flexibility of adding/changing/deleting the source of glossaries terms used.
 </p>
 
-<p i18n:translate="">
+<p>
 	XML/RDF/SKOS import/export procedures allow the transfer of glossaries' data from one or more existing sources to a Naaya portal.
 </p>
 
 <h2>Technical details</h2>
 
-<p i18n:translate="">
+<p>
 	<strong>Naaya</strong> is developed as a set of reusable plug-and-play products for <a href="http://www.zope.org">Zope</a> that allow the creation of multiple websites within the same Zope server, all benefiting from the same functionalities, but independently customisable. This feature decreases the deployment time usually requested for such a procedure and allows instant creation of new independent sites within the same server installation. Due to the modular structure of Zope and the flexibility of Naaya, additional functionality (e.g. calendars of events, notifications of uploads, forums, issue trackers) can be added on top of the content management system at any time by installing the corresponding component.
 </p>
 
-<p i18n:translate="">
+<p>
 	<strong>Naaya</strong> is written in <a href="http://www.python.org">Python</a>, an powerful open source object oriented programming language. Python can be used to add new functionality to Naaya, and to understand and make changes to the existing architecture. Naaya stores all the data in Zope's built in transactional object database ZODB. The presentation part is coded using the <strong>TAL/METAL</strong> tag-based scripting languages.
 </p>
 
-<p i18n:translate="">
+<p>
 	Naaya runs on Windows, Linux, BSD, Mac OS X, and many other platforms supported by Python.
 </p>
+</div>
 
 </tal:block>
 
