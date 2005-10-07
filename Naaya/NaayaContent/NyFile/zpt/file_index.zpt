@@ -12,7 +12,7 @@
 </div>
 </tal:block>
 <table border="0" cellspacing="2" cellpadding="2">
-<tr>
+<tr tal:condition="python:here.size>0">
 	<th i18n:translate="">Download</th>
 	<td>
 		<a tal:define="size python:here.utShowSizeKb(here.size); content_type python:here.getContentTypeTitle(here.content_type)"
