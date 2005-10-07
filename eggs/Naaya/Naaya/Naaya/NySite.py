@@ -137,6 +137,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self._setLocalPropValue('rights', lang, u'')
         self.adt_meta_types = []
         self.search_age = 1
+        self.searchable_content = []
         self.numberresultsperpage = 10
         self.number_latest_uploads = DEFAULT_NUMBERLATESTUPLOADS
         self.number_announcements = DEFAULT_NUMBERANNOUNCEMENTS
@@ -317,6 +318,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     image_ob._p_changed=1
                 if skel_handler.root.others.images is not None:
                     self.manage_addFolder(ID_IMAGESFOLDER, 'Images')
+        #set default searchable content
+        l = self.get_pluggable_installed_meta_types()
+        l.append(METATYPE_FOLDER)
+        self.setSearchableContent(l)
         #load site skeleton - default content
         import_handler, error = import_parser().parse(self.futRead(join(skel_path, 'skel.nyexp'), 'r'))
         if import_handler is not None:
@@ -348,6 +353,14 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             nc = BeforeTraverse.NameCaller(self.getId())
             BeforeTraverse.registerBeforeTraverse(container, nc, handle)
         Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
+
+    security.declarePrivate('setSearchableContent')
+    def setSearchableContent(self, p_meta_types):
+        """
+        Set the meta types to be considered in searches.
+        """
+        self.searchable_content = self.utConvertToList(p_meta_types)
+        self._p_changed = 1
 
     #import/export
     def exportdata_custom(self):
