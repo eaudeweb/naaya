@@ -120,7 +120,7 @@
 		<td tal:content="repeat/message/number" />
 		<td>
 			<a tal:define="mesg python:catalog.msgEncode(message[0])"
-				tal:attributes="href string:${site_url}/admin_messages_html?skey=${skey}&amp;rkey=${rkey}&amp;query=${query}&amp;msg=${mesg}"
+				tal:attributes="href string:${site_url}/admin_messages_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;query=${query}&amp;msg=${mesg}"
 				tal:content="python:message[0][:50]" />
 		</td>
 		<td tal:repeat="trans python:message[1:]">

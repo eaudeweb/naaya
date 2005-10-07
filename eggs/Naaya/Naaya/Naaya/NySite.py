@@ -1149,7 +1149,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             REQUEST.RESPONSE.redirect('%s/admin_roles_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_editmessage')
-    def admin_editmessage(self, message, language, translation, skey, rkey, query, REQUEST=None):
+    def admin_editmessage(self, message, language, translation, start, skey, rkey, query, REQUEST=None):
         """ """
         ob = self.getPortalTranslations()
         message_encoded = message
@@ -1157,7 +1157,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         ob.message_edit(message, language, translation, '')
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/admin_messages_html?msg=%s&skey=%s&rkey=%s&query=%s' % (self.absolute_url(), quote(message_encoded), skey, rkey, query))
+            REQUEST.RESPONSE.redirect('%s/admin_messages_html?msg=%s&start=%s&skey=%s&rkey=%s&query=%s' % \
+                (self.absolute_url(), quote(message_encoded), start, skey, rkey, query))
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_exportmessages')
     def admin_exportmessages(self, x, REQUEST=None, RESPONSE=None):

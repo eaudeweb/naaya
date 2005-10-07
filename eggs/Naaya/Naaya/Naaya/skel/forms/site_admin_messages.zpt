@@ -5,16 +5,18 @@
 <tal:block metal:fill-slot="section"
 	tal:define="site_url here/getSitePath;
 			query python:request.get('query', '');
+			start python:request.get('start', '');
 			skey python:request.get('skey', 'msg');
 			rkey python:request.get('rkey', '');
-			sort_qs python:'skey=%s&amp;rkey=%s&amp;query=%s' % (skey, rkey, query);
+			sort_qs python:'start=%s&amp;skey=%s&amp;rkey=%s&amp;query=%s' % (start, skey, rkey, query);
 			catalog here/getPortalTranslations;
 			languages python:catalog.tt_get_languages_mapping();
 			msg_encoded python:request.get('msg', '');
 			message python:catalog.message_decode(msg_encoded)">
 
 <p>
-	<a tal:attributes="href string:${site_url}/admin_translations_html?${sort_qs}" i18n:translate="">Back to translation form</a>
+	<a tal:attributes="href string:${site_url}/admin_translations_html?${sort_qs}"
+		i18n:translate="">Back to translation form</a>
 </p>
 
 <fieldset>
@@ -33,6 +35,7 @@
 		<div><textarea name="translation:utf8:ustring" cols="60" rows="6" wrap="off" tal:content="python:catalog.get_msg_translations(message, language['code'])" /></div>
 		<input type="hidden" name="message:utf8:ustring" tal:attributes="value msg_encoded" />
 		<input type="hidden" name="language" tal:attributes="value python:language['code']">
+		<input type="hidden" name="start" tal:attributes="value start" />
 		<input type="hidden" name="skey" tal:attributes="value skey" />
 		<input type="hidden" name="rkey" tal:attributes="value rkey" />
 		<input type="hidden" name="query" tal:attributes="value query" />
