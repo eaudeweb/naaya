@@ -83,6 +83,7 @@ class catalog_tool:
     def findCatalogedObjects(self, p_query, p_path, lang):
         l_result = []
         l_filter = {'submitted': 1} #only submitted items
+        l_filter['meta_type'] = self.searchable_content #only the specified meta types
         l_filter['path'] = p_path
         #search in 'keywords'
         l_criteria = l_filter.copy()
@@ -102,9 +103,7 @@ class catalog_tool:
         return l_results
 
     def findCatalogedObjectsByGenericQuery(self, p_query):
-        l_result = []
-        l_result.extend(self.__searchCatalog(p_query))
-        return l_result
+        return self.__searchCatalog(p_query)
 
     def clearCatalog(self):
         self.__clearCatalog()
@@ -120,6 +119,7 @@ class catalog_tool:
             if sort_order != '':
                 l_filter['sort_order'] = sort_order
         if meta_type: l_filter['meta_type'] = self.utConvertToList(meta_type)
+        else: l_filter['meta_type'] = self.searchable_content
         #extra filters
         l_filter.update(kwargs)
         #perform the search
@@ -134,7 +134,8 @@ class catalog_tool:
         Returns a list with all I{brain} objects that are not submitted.
         """
         l_filter = {'submitted': 0}
-        if meta_type is not None: l_filter['meta_type'] = self.utConvertToList(meta_type)
+        if meta_type: l_filter['meta_type'] = self.utConvertToList(meta_type)
+        else: l_filter['meta_type'] = self.searchable_content
         return self.__getObjects(self.__searchCatalog(l_filter))
 
     def getCatalogedBrains(self, meta_type=None):
@@ -142,13 +143,15 @@ class catalog_tool:
         Returns a list with all I{brain} objects in the catalog.
         """
         l_filter = {}
-        if meta_type is not None: l_filter['meta_type'] = self.utConvertToList(meta_type)
+        if meta_type: l_filter['meta_type'] = self.utConvertToList(meta_type)
+        else: l_filter['meta_type'] = self.searchable_content
         return self.__searchCatalog(l_filter)
 
     def query_objects_ex(self, meta_type=None, q=None, lang=None, path=None, howmany=-1, **kwargs):
         l_result = []
         l_filter = {'submitted': 1} #only submitted items
-        if meta_type is not None: l_filter['meta_type'] = self.utConvertToList(meta_type)
+        if meta_type: l_filter['meta_type'] = self.utConvertToList(meta_type)
+        else: l_filter['meta_type'] = self.searchable_content
         if (q is not None) and (lang is not None): l_filter['objectkeywords_%s' % lang] = q
         if path is not None: l_filter['path'] = path
         for key, value in kwargs.items():
@@ -160,7 +163,8 @@ class catalog_tool:
     def query_translated_objects(self, meta_type=None, lang=None, approved=0, howmany=-1, sort_on='releasedate', sort_order='reverse', **kwargs):
         l_results = []
         l_filter = {'submitted': 1} #only submitted items
-        if meta_type is not None: l_filter['meta_type'] = self.utConvertToList(meta_type)
+        if meta_type: l_filter['meta_type'] = self.utConvertToList(meta_type)
+        else: l_filter['meta_type'] = self.searchable_content
         if lang is not None: l_filter['istranslated_%s' % lang] = 1
         if approved == 1: l_filter['approved'] = 1
         if sort_on != '':
@@ -173,13 +177,13 @@ class catalog_tool:
         return self.__getObjects(l_results)
 
     def getCatalogCheckedOutObjects(self):
-        return self.__getObjects(self.__searchCatalog({'submitted': 1, 'checkout': 1}))
+        return self.__getObjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'checkout': 1}))
 
     def getNotCheckedObjects(self):
-        return self.__getObjects(self.__searchCatalog({'submitted': 1, 'validation_status': 0}))
+        return self.__getObjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'validation_status': 0}))
 
     def getCheckedOkObjects(self):
-        return self.__getObjects(self.__searchCatalog({'submitted': 1, 'validation_status': 1}))
+        return self.__getObjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'validation_status': 1}))
 
     def getCheckedNotOkObjects(self):
-        return self.__getObjects(self.__searchCatalog({'submitted': 1, 'validation_status': -1}))
+        return self.__getObjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'validation_status': -1}))

@@ -74,10 +74,11 @@ class PropertiesTool(SimpleItem, utils, search_tool):
 
     #Internal search
     security.declareProtected(view_management_screens, 'manageInternalSearch')
-    def manageInternalSearch(self, search_age=0, results_number=10, REQUEST=None):
+    def manageInternalSearch(self, search_age=0, results_number=10, content=[], REQUEST=None):
         """ Manage the properties for internal search"""
         self.setItemsAge(search_age)
         self.setNumberOfResults(results_number)
+        self.setSearchableContent(content)
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect('manage_search_html?save=ok')
 
