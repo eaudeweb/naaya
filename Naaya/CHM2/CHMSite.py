@@ -68,6 +68,7 @@ class CHMSite(NySite):
     def __init__(self, id, portal_uid, title, lang):
         """ """
         self.predefined_latest_uploads = []
+        self.show_releasedate = 1
         NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
 
     security.declarePrivate('loadDefaultData')
@@ -329,6 +330,32 @@ class CHMSite(NySite):
     def upcomingevents_rdf(self):
         """ """
         return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getUpcomingEvents())
+
+    #administration actions
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
+    def admin_properties(self, number_latest_uploads='', number_announcements='',
+        show_releasedate='', http_proxy='', repository_url='', keywords_glossary='',
+        coverage_glossary='', portal_url='', REQUEST=None):
+        """ """
+        try: number_latest_uploads = int(number_latest_uploads)
+        except: number_latest_uploads = self.number_latest_uploads
+        try: number_announcements = int(number_announcements)
+        except: number_announcements = self.number_announcements
+        if show_releasedate: show_releasedate = 1
+        else: show_releasedate = 0
+        if keywords_glossary == '': keywords_glossary = None
+        if coverage_glossary == '': coverage_glossary = None
+        self.number_latest_uploads = number_latest_uploads
+        self.number_announcements = number_announcements
+        self.show_releasedate = show_releasedate
+        self.http_proxy = http_proxy
+        self.repository_url = repository_url
+        self.keywords_glossary = keywords_glossary
+        self.coverage_glossary = coverage_glossary
+        self.portal_url = portal_url
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_properties_html' % self.absolute_url())
 
     #administration pages
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_urls_html')
