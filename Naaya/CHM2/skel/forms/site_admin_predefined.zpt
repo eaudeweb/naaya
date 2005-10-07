@@ -5,14 +5,14 @@
 <tal:block metal:fill-slot="section" tal:define="site here/getSite; predefined site/getPredefinedUploads">
 <p i18n:translate="">
 	This page presents the latest 50 items uploaded in this portal.
-	Automatically, the latest <spant tal:replace="site/number_latest_uploads" /> of them appear on the front page in the section <em>Latest uploads</em>,
-	but you can specify for most relevant items to be presented in this section for a longer time.
+	Automatically, the latest <spant tal:replace="site/number_latest_uploads" /> of them appear on the front page in the section <em>Latest uploads</em>;
+	additionally, you can specify for most relevant items to be presented in this section for a longer time.
 	Mark these relevant items and click <em>Save changes</em>.
 </p>
 <form action="setPredefinedUploads" method="post" name="frmPredefined">
 <table border="0" cellspacing="1" cellpadding="1" width="100%">
 	<tr>
-		<th i18n:translate="" witdth="5%">&nbsp;</th>
+		<th i18n:translate="" witdth="5%"> </th>
 		<th i18n:translate="" width="70%">Title</th>
 		<th i18n:translate="" width="*">Date</th>
 	</tr>
