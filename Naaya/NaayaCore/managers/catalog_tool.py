@@ -82,7 +82,7 @@ class catalog_tool:
 
     def findCatalogedObjects(self, p_query, p_path, lang):
         l_result = []
-        l_filter = {'submitted': 1} #only submitted items
+        l_filter = {'submitted': 1, 'approved': 1} #only submitted items
         l_filter['meta_type'] = self.searchable_content #only the specified meta types
         l_filter['path'] = p_path
         #search in 'keywords'

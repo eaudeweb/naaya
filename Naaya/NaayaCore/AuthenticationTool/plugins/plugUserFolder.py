@@ -8,10 +8,10 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 #
-# The Original Code is EEAWebUpdate version 0.1
+# The Original Code is Naaya version 1.0
 #
 # The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by CMG and Finsiel Romania are
+# Agency (EEA).  Portions created by Finsiel Romania are
 # Copyright (C) European Environment Agency.  All
 # Rights Reserved.
 #
