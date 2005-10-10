@@ -119,6 +119,12 @@ class session_manager:
         self.__setSession('user_comments', comments)
         self.__setSession('user_location', location)
 
+    def setCreateAccountSession(self, name, firstname, lastname, email, password,
+        organisation):
+        """ """
+        self.setUserSession(name, '', '', firstname, lastname, email, password)
+        self.__setSession('user_organisation', organisation)
+
     def delRequestRoleSession(self):
         """ """
         self.delUserSession()
