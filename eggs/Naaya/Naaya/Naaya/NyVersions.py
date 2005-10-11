@@ -48,4 +48,13 @@ class NyVersions:
             self.recatalogNyObject(x)
         return "Upgrading OK: 'submitted' property added for all objects."
 
+    security.declareProtected(view_management_screens, 'upgrade_mailfrom')
+    def upgrade_mailfrom(self):
+        """
+        Add 'mail_address_from' property for Naaya sites
+        """
+        self.mail_address_from = ''
+        self._p_changed = 1
+        return "Upgraded OK: created email from property for portal"
+
 InitializeClass(NyVersions)
