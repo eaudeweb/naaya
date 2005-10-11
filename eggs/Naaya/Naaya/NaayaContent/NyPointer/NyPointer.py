@@ -111,8 +111,10 @@ def importNyPointer(self, param, id, attrs, content, properties, discussion, obj
         for property, langs in properties.items():
             for lang in langs:
                 ob._setLocalPropValue(property, lang, langs[lang])
-        ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
-        ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+        ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
+            approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
+        if attrs['releasedate'].encode('utf-8') != '':
+            ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
         ob.checkThis(attrs['validation_status'].encode('utf-8'),
             attrs['validation_comment'].encode('utf-8'),
             attrs['validation_by'].encode('utf-8'),

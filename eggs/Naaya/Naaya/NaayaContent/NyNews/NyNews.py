@@ -121,8 +121,10 @@ def importNyNews(self, param, id, attrs, content, properties, discussion, object
         for property, langs in properties.items():
             for lang in langs:
                 ob._setLocalPropValue(property, lang, langs[lang])
-        ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
-        ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+        ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
+            approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
+        if attrs['releasedate'].encode('utf-8') != '':
+            ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
         ob.import_comments(discussion)
         self.recatalogNyObject(ob)
 
