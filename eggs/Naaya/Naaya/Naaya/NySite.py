@@ -146,8 +146,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.repository_url = ''
         self.mail_server_name = DEFAULT_MAILSERVERNAME
         self.mail_server_port = DEFAULT_MAILSERVERPORT
-        # The email address (must exist) from which the email tool sends mails
-        self.mail_address_from = ''
         self.administrator_email = ''
         self.portal_url = ''
         self.maintopics = []
