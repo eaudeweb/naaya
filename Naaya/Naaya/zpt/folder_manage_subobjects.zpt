@@ -4,13 +4,13 @@
 <p class="page-title">Naaya Folder subobjects</p>
 
 <div class="system-msg" tal:condition="python:request.has_key('save')">
-    Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+    Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
 </div>
 
 <p class="page-description">
     The list below presents all the types of objects installed on this server.  
     Every time you install a new product and want to add instances of its objects inside Naaya Folders,
-    select them from the list below and press <b>Save changes</b>.
+    select them from the list below and press <strong>Save changes</strong>.
 </p>
 
 <form method="post" action="manageSubobjects">
