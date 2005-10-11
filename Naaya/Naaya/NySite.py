@@ -820,7 +820,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.sendFeedbackEmail(self.administrator_email, username, email, comments)
         if REQUEST:
-            REQUEST.RESPONSE.redirect('%s/note_html' % self.absolute_url())
+            self.setSession('title', 'Thank you for your feedback')
+            self.setSession('body', 'The administrator will process your comments and get back to you.')
+            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
     security.declareProtected(view, 'processChangeCredentials')
     def processChangeCredentials(self, password='', confirm='', firstname='', lastname='', email='', REQUEST=None):
@@ -867,6 +869,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if not err:
             self.sendRequestRoleEmail(location_maintainer_email, firstname + ' ' + lastname, email, organisation, username, location_path, location_title, comments)
         if REQUEST:
+            self.setSession('title', 'Thank you for registering')
+            self.setSession('body', 'An account has been created for you. \
+                The administrator will be informed of your request and may \
+                or may not grant your account with the approriate role.')
             REQUEST.RESPONSE.redirect('%s/note_html' % self.absolute_url())
 
     security.declareProtected(view, 'processNotifyOnErrors')
