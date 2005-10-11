@@ -23,8 +23,8 @@
 				<td>
 					<table border=0 cellspacing="0" cellpadding="0">
 						<tr>
-							<td><b><a tal:attributes="href string:manage_editPermission_html?name=${permission}"
-								tal:content="permission">permission name</a></b></td>
+							<td><strong><a tal:attributes="href string:manage_editPermission_html?name=${permission}"
+								tal:content="permission">permission name</a></strong></td>
 						</tr>
 						<tr>
 							<td tal:define="description python:here.getPermissionDescription(permission)"

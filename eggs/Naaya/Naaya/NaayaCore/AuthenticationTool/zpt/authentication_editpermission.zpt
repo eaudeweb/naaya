@@ -10,7 +10,7 @@
     <table border=0>
         <tr>
             <td valign="top"><img src="misc_/NaayaCore/Permission.gif" valign="top"></td>
-            <td><b>Permission&nbsp;name</b></td>
+            <td><strong>Permission&nbsp;name</strong></td>
         </tr>
     </table>
     </legend>

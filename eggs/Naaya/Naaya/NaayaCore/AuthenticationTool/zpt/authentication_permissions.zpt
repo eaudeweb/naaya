@@ -11,7 +11,7 @@
 <table border=0 width="80%" cellspacing="3">
     <tr>
         <td>
-            <fieldset><legend><b>Groups of permissions</b></legend>
+            <fieldset><legend><strong>Groups of permissions</strong></legend>
             <tal:block define="permissions here/listPermissions">
             <table border="0" cellspacing="0" cellpadding="4" width="80%">
                 <tr tal:repeat="permission python:permissions.keys()">
@@ -22,8 +22,8 @@
                     <td>
                         <table border=0 cellspacing="0" cellpadding="0">
                             <tr>
-                                <td><b><a tal:attributes="href string:manage_editPermission_html?name=${permission}"
-                                    tal:content="permission">permission name</a></b></td>
+                                <td><strong><a tal:attributes="href string:manage_editPermission_html?name=${permission}"
+                                    tal:content="permission">permission name</a></strong></td>
                             </tr>
                             <tr>
                                 <td tal:define="description python:here.getPermissionDescription(permission)" 

@@ -17,7 +17,7 @@
 <table border=0 width="80%" cellspacing="3">
     <tr>
         <td>
-        <fieldset tal:condition="here/isSessionErrors"><legend><b>Errors</b></legend>
+        <fieldset tal:condition="here/isSessionErrors"><legend><strong>Errors</strong></legend>
         <table border="0" cellspacing="0" cellpadding="0" width="80%">
             <tr tal:repeat="error_value here/getSessionErrors">
                 <td>&nbsp;</td>
@@ -26,7 +26,7 @@
         </table>
         </fieldset>
         <br>
-        <fieldset><legend><b>Personal&nbsp;Settings</b></legend>
+        <fieldset><legend><strong>Personal&nbsp;settings</strong></legend>
         <table border="0" cellspacing="2" cellpadding="3" width="80%">
             <tr>
                 <td nowrap>First Name:</td>
@@ -51,7 +51,7 @@
         </table>
         </fieldset>
         <br>
-        <fieldset><legend><b>User&nbsp;Settings</b></legend>
+        <fieldset><legend><strong>User&nbsp;settings</strong></legend>
         <table border="0" cellspacing="0" cellpadding="3">
             <tr>
                 <td nowrap>Username:</td>
@@ -84,7 +84,7 @@
             </tr>
         </table>
         <br>
-        <fieldset><legend><b>Record&nbsp;Information</b></legend>
+        <fieldset><legend><strong>Record&nbsp;information</strong></legend>
         <table cellpadding="3" cellspacing="0" border="0">
             <tr>
                 <td width="20%">Created:</td>
