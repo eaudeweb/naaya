@@ -331,6 +331,48 @@ class CHMSite(NySite):
         """ """
         return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getUpcomingEvents())
 
+    security.declareProtected(view, 'processCreateAccountForm')
+    def processCreateAccountForm(self, username='', password='', confirm='', firstname='', lastname='', email='', REQUEST=None):
+        """ Creates an account on the local acl_users and sends an email to the maintainer 
+            with the account infomation
+        """
+        #create an account without any role
+        try:
+            self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname,
+                lastname, email)
+        except Exception, error:
+            err = error
+        else:
+            err = ''
+        if err:
+            if REQUEST:
+                self.setSessionErrors(err)
+                self.setCreateAccountSession(username, firstname, lastname, email, password)
+                return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        if not err:
+            self.sendCreateAccountEmail(firstname + ' ' + lastname, email, username, REQUEST)
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/accountcreated_html' % self.absolute_url())
+
+    security.declareProtected(view, 'accountcreated_html')
+    def accountcreated_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_accountcreated')
+
+    def sendCreateAccountEmail(self, p_name, p_email, p_username, REQUEST):
+        #sends a confirmation email to the newlly created account's owner
+        email_template = self.getEmailTool()._getOb('email_createaccount')
+        l_subject = email_template.title
+        l_content = email_template.body
+        l_content = l_content.replace('@@PORTAL_URL@@', self.portal_url)
+        l_content = l_content.replace('@@PORTAL_TITLE@@', self.site_title)
+        l_content = l_content.replace('@@NAME@@', p_name)
+        l_content = l_content.replace('@@EMAIL@@', p_email)
+        l_content = l_content.replace('@@USERNAME@@', p_username)
+        l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
+        mail_from = self.mail_address_from
+        self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
+
     #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
     def admin_properties(self, number_latest_uploads='', number_announcements='',
