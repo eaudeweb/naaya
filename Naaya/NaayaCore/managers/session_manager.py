@@ -119,18 +119,20 @@ class session_manager:
         self.__setSession('user_comments', comments)
         self.__setSession('user_location', location)
 
-    def setCreateAccountSession(self, name, firstname, lastname, email, password,
-        organisation):
-        """ """
-        self.setUserSession(name, '', '', firstname, lastname, email, password)
-        self.__setSession('user_organisation', organisation)
-
     def delRequestRoleSession(self):
         """ """
         self.delUserSession()
         self.__delSession('user_organisation')
         self.__delSession('user_comments')
         self.__delSession('user_location')
+
+    def setCreateAccountSession(self, name, firstname, lastname, email, password):
+        """ """
+        self.setUserSession(name, '', '', firstname, lastname, email, password)
+
+    def delCreateAccountSession(self):
+        """ """
+        self.delUserSession()
 
     def getSessionUserName(self, default=''):
         return self.__getSession('user_name', default)
