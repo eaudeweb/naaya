@@ -2,7 +2,7 @@
 <span tal:replace="structure here/manage_tabs" />
 
 <p>
-	Change the properties in the form below and click <b>Save changes</b>.
+	Change the properties in the form below and click <strong>Save changes</strong>.
 </p>
 
 <div class="system-msg" tal:condition="python:request.has_key('save')">
@@ -14,23 +14,23 @@
 	<tr><td class="form-label" colspan="2">Base properties</td></tr>
 	<tr>
 		<td class="form-label">Title</td>
-		<td><input type="text" name="title" size="50" tal:attributes="value python:request.get('title', here.title)"></td>
+		<td><input type="text" name="title" size="50" tal:attributes="value python:request.get('title', here.title)" /></td>
 	</tr>
 	<tr>
 		<td class="form-label" valign="top">Description</td>
-		<td><textarea name="description" rows="5" cols="50" tal:content="python:request.get('description', here.description)"/></td>
+		<td><textarea name="description" rows="5" cols="50" tal:content="python:request.get('description', here.description)" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Coverage</td>
-		<td><input type="text" name="coverage" size="50" tal:attributes="value python:request.get('coverage', here.coverage)"></td>
+		<td><input type="text" name="coverage" size="50" tal:attributes="value python:request.get('coverage', here.coverage)" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Keywords</td>
-		<td><input type="text" name="keywords" size="50" tal:attributes="value python:request.get('keywords', here.keywords)"></td>
+		<td><input type="text" name="keywords" size="50" tal:attributes="value python:request.get('keywords', here.keywords)" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Sort order</td>
-		<td><input type="text" name="sortorder" size="2" tal:attributes="value python:request.get('sortorder', here.sortorder)"></td>
+		<td><input type="text" name="sortorder" size="2" tal:attributes="value python:request.get('sortorder', here.sortorder)" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Approved</td>
@@ -38,7 +38,7 @@
 	</tr>
 	<tr>
 		<td class="form-label">Release date (<em>dd/mm/yyyy</em>)</td>
-		<td><input type="text" name="releasedate" size="20" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getVersionProperty('releasedate'))"/></td>
+		<td><input type="text" name="releasedate" size="20" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getVersionProperty('releasedate'))" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Open for comments</td>
@@ -48,19 +48,19 @@
 	<tr><td class="form-label" colspan="2">Custom properties</td></tr>
 	<tr>
 		<td class="form-label">Content Type</td>
-		<td><input type="text" name="content_type" size="40" tal:attributes="value here/content_type"></td>
+		<td><input type="text" name="content_type" size="40" tal:attributes="value here/content_type" /></td>
 	</tr>
 	<tr>
 		<td class="form-optional">Precondition</td>
-		<td><input type="text" name="precondition" size="40" tal:attributes="value here/precondition"></td>
+		<td><input type="text" name="precondition" size="40" tal:attributes="value here/precondition" /></td>
 	</tr>
 	<tr>
 		<td class="form-optional">File Size</td>
-		<td><span tal:replace="here/size"/> bytes</td>
+		<td><span tal:replace="here/size" /> bytes</td>
 	</tr>
 	<tr>
 		<td class="form-label">Filename to download</td>
-		<td><input type="text" name="downloadfilename" size="40" tal:attributes="value here/downloadfilename"></td>
+		<td><input type="text" name="downloadfilename" size="40" tal:attributes="value here/downloadfilename" /></td>
 	</tr>
 	<tr><td class="form-label" colspan="2"></td></tr>
 	<tr><td class="form-label" colspan="2">Dynamic properties</td></tr>
@@ -77,7 +77,7 @@
 	<tr>
 		<td class="form-label">Upload new</td>
 		<td>
-			<input type="radio" name="source" value="file" checked="checked">
+			<input type="radio" name="source" value="file" checked="checked" />
 			File
 			<input type="file" name="file" size="40" value="" />
 		</td>
@@ -86,7 +86,7 @@
 		<td></td>
 		<td>
 			<input type="radio" name="source" value="url" />
-			Url
+			URL
 			<input type="text" name="url" size="40" value="" />
 		</td>
 	</tr>

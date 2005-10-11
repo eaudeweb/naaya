@@ -47,7 +47,7 @@
 	<label for="topitem" i18n:translate="">On front</label>
 	<input type="checkbox" name="topitem" id="topitem" tal:attributes="checked python:here.getVersionProperty('topitem')==1" />
 </div>
-<div class="field">
+<div class="field-inline">
 	<label for="event_type" i18n:translate="">Type</label>
 	<select name="event_type:utf8:ustring" id="event_type">
 		<option value=""></option>
