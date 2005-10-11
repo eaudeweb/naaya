@@ -105,7 +105,7 @@ def importNyPointer(self, param, id, attrs, content, properties, discussion, obj
         addNyPointer(self, id=id,
             sortorder=attrs['sortorder'].encode('utf-8'),
             pointer=attrs['pointer'].encode('utf-8'),
-            contributor=attrs['contributor'].encode('utf-8'),
+            contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
             discussion=abs(int(attrs['discussion'].encode('utf-8'))))
         ob = self._getOb(id)
         for property, langs in properties.items():

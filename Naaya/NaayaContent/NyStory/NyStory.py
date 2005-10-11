@@ -110,7 +110,7 @@ def importNyStory(self, param, id, attrs, content, properties, discussion, objec
             sortorder=attrs['sortorder'].encode('utf-8'),
             topitem=abs(int(attrs['topitem'].encode('utf-8'))),
             resourceurl=attrs['resourceurl'].encode('utf-8'),
-            contributor=attrs['contributor'].encode('utf-8'),
+            contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
             discussion=abs(int(attrs['discussion'].encode('utf-8'))))
         ob = self._getOb(id)
         for property, langs in properties.items():

@@ -123,7 +123,7 @@ def importNyEvent(self, param, id, attrs, content, properties, discussion, objec
             contact_email=attrs['contact_email'].encode('utf-8'),
             contact_phone=attrs['contact_phone'].encode('utf-8'),
             contact_fax=attrs['contact_fax'].encode('utf-8'),
-            contributor=attrs['contributor'].encode('utf-8'),
+            contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
             discussion=abs(int(attrs['discussion'].encode('utf-8'))))
         ob = self._getOb(id)
         for property, langs in properties.items():
