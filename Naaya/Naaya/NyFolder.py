@@ -112,7 +112,7 @@ def importNyFolder(self, param, id, attrs, content, properties, discussion, obje
             publicinterface=publicinterface,
             maintainer_email=attrs['maintainer_email'].encode('utf-8'),
             folder_meta_types=meta_types,
-            contributor=attrs['contributor'].encode('utf-8'),
+            contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
             discussion=abs(int(attrs['discussion'].encode('utf-8'))))
         ob = self._getOb(id)
         for property, langs in properties.items():

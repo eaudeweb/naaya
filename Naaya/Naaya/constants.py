@@ -18,6 +18,10 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains global constants.
+"""
+
 #Python imports
 from os.path import join
 
@@ -48,4 +52,3 @@ PREFIX_SITE = 'portal'
 PREFIX_FOLDER = 'fol'
 
 ID_IMAGESFOLDER = 'images'
-
