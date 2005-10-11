@@ -263,17 +263,48 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         else: self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'updateBasketOfApprovals')
-    def updateBasketOfApprovals(self, REQUEST=None):
-        """ """
-        for id in self.utConvertToList(REQUEST.get('app', [])):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPendingContent')
+    def processPendingContent(self, appids=[], delids=[], REQUEST=None):
+        """
+        Process the pending content inside this folder.
+
+        Objects with ids in appids list will be approved.
+
+        Objects with ids in delids will be deleted.
+        """
+        for id in self.utConvertToList(appids):
             try:
                 ob = self._getOb(id)
                 ob.approveThis()
                 self.recatalogNyObject(ob)
             except:
                 pass
-        for id in self.utConvertToList(REQUEST.get('del', [])):
+        for id in self.utConvertToList(delids):
+            try: self._delObject(id)
+            except: pass
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/basketofapprovals_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPublishedContent')
+    def processPublishedContent(self, appids=[], delids=[], REQUEST=None):
+        """
+        Process the published content inside this folder.
+
+        Objects with ids in appids list will be unapproved.
+
+        Objects with ids in delids will be deleted.
+        """
+        for id in self.utConvertToList(appids):
+            try:
+                ob = self._getOb(id)
+                ob.approveThis()
+                ob.approved = 0
+                ob.approved_by = None
+                self.recatalogNyObject(ob)
+            except:
+                pass
+        for id in self.utConvertToList(delids):
             try: self._delObject(id)
             except: pass
         if REQUEST:
