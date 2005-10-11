@@ -113,7 +113,7 @@ def importNyFile(self, param, id, attrs, content, properties, discussion, object
             sortorder=attrs['sortorder'].encode('utf-8'),
             source='file', file=self.utBase64Decode(attrs['file'].encode('utf-8')),
             downloadfilename=attrs['downloadfilename'].encode('utf-8'),
-            contributor=attrs['contributor'].encode('utf-8'),
+            contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
             discussion=abs(int(attrs['discussion'].encode('utf-8'))))
         ob = self._getOb(id)
         #set the real content_type and precondition
