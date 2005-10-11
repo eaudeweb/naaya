@@ -75,6 +75,35 @@
 		margin-bottom: 1em;
 	}
 
+	/* Operations buttons */
+	.floated-buttons {
+		float: right;
+		margin-right: 0.5em;
+	}
+
+	.buttons {
+		font-weight: bold;
+	}
+
+	.buttons a {
+		text-decoration: none;
+		background-color:#c6c6a5; /*#c4c4a2*/ /* #6dabd0*/ /*#748692*/ /*#f8faf4*/
+		color:#343434; /**/ /* #ffffff*/ /*#ffffff*/ /*#336633*/
+		line-height: 2em;
+		border-left:2px solid #ecefe2;  /*4px solid #c4c4a2*/ /*2px solid #EEEEEE*/ /*2px solid #E0E7E9*/ /*2px solid #CCCCCC*/
+		border-top:2px solid #ecefe2; /**/ /*2px solid #EEEEEE*/ /*2px solid #E0E7E9*/ /*2px solid #CCCCCC*/
+		border-bottom:2px solid #4D4D31; /**/ /*2px solid #2F6C91*/ /*2px solid #56656D*/ /*2px solid #8EB64E*/
+		border-right:2px solid #4D4D31; /**/ /*2px solid #2F6C91*/ /*2px solid #56656D*/ /*2px solid #8EB64E*/
+		padding:0.2em 0.5em;
+		margin: 0em 0.3em;
+		font-size: 90%;
+		font-weight: bold;
+	}
+
+	.buttons a:visited {
+		color:#343434; /**/ /* #ffffff*/ /*#ffffff*/ /*#336633*/
+	}
+
 	/* folder index styles */
 	#admin_this_folder{
 		padding: 0.5em;
@@ -99,6 +128,7 @@
 		border-bottom:2px solid #4D4D31; /**/ /*2px solid #2F6C91*/ /*2px solid #56656D*/ /*2px solid #8EB64E*/
 		border-right:2px solid #4D4D31; /**/ /*2px solid #2F6C91*/ /*2px solid #56656D*/ /*2px solid #8EB64E*/
 		padding:2px 2px; 
+		font-size: 90%;
 	}
 
 	#admin_this_folder span {

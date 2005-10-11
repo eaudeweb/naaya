@@ -19,7 +19,7 @@
 	<tr tal:repeat="item python:predefined">
 		<tal:block tal:define="url python:item.absolute_url(1); title python:item.title_or_id(); date python:item.releasedate">
 		<td>
-			<input type="checkbox" name="predefined" tal:attributes="value url" CHECKED />
+			<input type="checkbox" name="predefined" tal:attributes="value url" checked="checked" />
 		</td>
 		<td>
 			<a tal:attributes="href string:${url}" tal:content="python:here.utTruncateString(title, 100)" />
