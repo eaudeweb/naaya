@@ -2,7 +2,7 @@
 <span tal:replace="structure here/manage_tabs" />
 
 <p>
-	Change the properties in the form below and click <b>Save changes</b>.
+	Change the properties in the form below and click <strong>Save changes</strong>.
 </p>
 
 <div class="system-msg" tal:condition="python:request.has_key('save')">

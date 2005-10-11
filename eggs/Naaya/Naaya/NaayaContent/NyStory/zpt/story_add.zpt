@@ -65,7 +65,7 @@ function fSet(ctrl, value)
 	<label for="releasedate" i18n:translate="">Release date (<em>dd/mm/yyyy</em>)</label>
 	<input type="text" name="releasedate" id="releasedate" size="20" />
 </div>
-<div class="field">
+<div class="field-inline">
 	<label for="discussion" i18n:translate="">Open for comments</label>
 	<input type="checkbox" name="discussion" id="discussion" />
 </div>
