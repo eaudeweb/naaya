@@ -95,7 +95,7 @@ def addNyStory(self, id='', title='', description='', coverage='', keywords='',
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'story_add_html':
             self.setSession('referer', self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
+            REQUEST.RESPONSE.redirect('%s/messages_html' % self.getSitePath())
 
 def importNyStory(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
@@ -251,7 +251,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         self.notifyFolderMaintainer(self.getParentNode(), self)
         if REQUEST:
             self.setSession('referer', self.getParentNode().absolute_url())
-            REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
+            REQUEST.RESPONSE.redirect('%s/messages_html' % self.getSitePath())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):

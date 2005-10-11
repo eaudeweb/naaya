@@ -98,7 +98,7 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'file_add_html':
             self.setSession('referer', self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
+            REQUEST.RESPONSE.redirect('%s/messages_html' % self.getSitePath())
 
 def importNyFile(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process

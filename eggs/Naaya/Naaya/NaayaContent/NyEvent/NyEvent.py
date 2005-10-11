@@ -99,7 +99,7 @@ def addNyEvent(self, id='', title='', description='', language='', coverage='',
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'event_add_html':
             self.setSession('referer', self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
+            REQUEST.RESPONSE.redirect('%s/messages_html' % self.getSitePath())
 
 def importNyEvent(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
