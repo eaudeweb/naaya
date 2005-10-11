@@ -1,4 +1,5 @@
-An error was encountered at the following adrress @@URL@@.
+This is an automatically generated message to inform you that an error was encountered
+at the following adrress: @@URL@@.
 
 Error type - @@ERRORTYPE@@.
 Error value - @@ERRORVALUE@@.

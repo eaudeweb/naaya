@@ -1,9 +1,6 @@
-Dear Sir or Madam,
-
-The item '@@ITEMTITLEORID@@' is uploaded to the library @@CONTAINERPATH@@.
+This is an automatically generated message to inform you that 
+the item '@@ITEMTITLEORID@@' is uploaded to the library @@CONTAINERPATH@@.
 
 Upload time @@UPLOADTIME@@.
 
-Click here to approve it @@CONTAINERBASKETPATH@@.
-
-Best Regards
+Review the pending item at @@CONTAINERBASKETPATH@@.

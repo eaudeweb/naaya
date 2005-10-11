@@ -1,5 +1,5 @@
-An account has been created on the portal @@PORTAL_TITLE@@ (@@PORTAL_URL@@) 
-with the following credentials:
+This is an automatically generated message to inform you that an account has been created 
+on the portal @@PORTAL_TITLE@@ (@@PORTAL_URL@@) with the following credentials:
 
 Name: @@NAME@@
 Username: @@USERNAME@@
