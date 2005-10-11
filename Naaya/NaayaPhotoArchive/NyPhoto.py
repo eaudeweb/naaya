@@ -86,7 +86,7 @@ def addNyPhoto(self, id='', title='', author='', source='', description='', sort
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'photo_add_html':
             self.setSession('referer', self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
+            REQUEST.RESPONSE.redirect('%s/messages_html' % self.getSitePath())
 
 class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
     """ """
