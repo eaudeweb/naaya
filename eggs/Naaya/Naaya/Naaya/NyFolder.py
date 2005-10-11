@@ -118,8 +118,10 @@ def importNyFolder(self, param, id, attrs, content, properties, discussion, obje
         for property, langs in properties.items():
             for lang in langs:
                 ob._setLocalPropValue(property, lang, langs[lang])
-        ob.approveThis(abs(int(attrs['approved'].encode('utf-8'))))
-        ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+        ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
+            approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
+        if attrs['releasedate'].encode('utf-8') != '':
+            ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
         if publicinterface:
             l_index = ob._getOb('index', None)
             if l_index is not None:
@@ -342,16 +344,19 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     def getFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.submitted==1]
     def hasContent(self): return (len(self.getObjects()) > 0) or (len(self.objectValues(METATYPE_FOLDER)) > 0)
 
-    def getPendingFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.approved==0 and x.submitted==1]
     def getPublishedFolders(self): return self.utSortObjsListByAttr([x for x in self.objectValues(METATYPE_FOLDER) if x.approved==1 and x.submitted==1], 'sortorder', 0)
-    def getPendingObjects(self): return [x for x in self.getObjects() if x.approved==0 and x.submitted==1]
     def getPublishedObjects(self): return [x for x in self.getObjects() if x.approved==1 and x.submitted==1]
+    def getPublishedContent(self):
+        r = self.getPublishedFolders()
+        r.extend(self.getPublishedObjects())
+        return r
 
-    def hasPendingContent(self): return (len(self.getPendingFolders()) > 0) or (len(self.getPendingObjects()) > 0)
+    def getPendingFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.approved==0 and x.submitted==1]
+    def getPendingObjects(self): return [x for x in self.getObjects() if x.approved==0 and x.submitted==1]
     def getPendingContent(self):
-        l_result = self.getPendingFolders()
-        l_result.extend(self.getPendingObjects())
-        return l_result
+        r = self.getPendingFolders()
+        r.extend(self.getPendingObjects())
+        return r
 
     def getObjectsForValidation(self): return [x for x in self.objectValues(self.get_pluggable_metatypes_validation()) if x.submitted==1]
     def count_notok_objects(self): return len([x for x in self.getObjectsForValidation() if x.validation_status==-1 and x.submitted==1])
@@ -500,9 +505,15 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         else: self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'updateBasketOfApprovals')
-    def updateBasketOfApprovals(self, appids=[], delids=[], REQUEST=None):
-        """ """
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPendingContent')
+    def processPendingContent(self, appids=[], delids=[], REQUEST=None):
+        """
+        Process the pending content inside this folder.
+
+        Objects with ids in appids list will be approved.
+
+        Objects with ids in delids will be deleted.
+        """
         for id in self.utConvertToList(appids):
             try:
                 ob = self._getOb(id)
@@ -515,7 +526,32 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             except: pass
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('basketofapprovals_html')
+            REQUEST.RESPONSE.redirect('%s/basketofapprovals_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPublishedContent')
+    def processPublishedContent(self, appids=[], delids=[], REQUEST=None):
+        """
+        Process the published content inside this folder.
+
+        Objects with ids in appids list will be unapproved.
+
+        Objects with ids in delids will be deleted.
+        """
+        for id in self.utConvertToList(appids):
+            try:
+                ob = self._getOb(id)
+                ob.approveThis()
+                ob.approved = 0
+                ob.approved_by = None
+                self.recatalogNyObject(ob)
+            except:
+                pass
+        for id in self.utConvertToList(delids):
+            try: self._delObject(id)
+            except: pass
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/basketofapprovals_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'setSortOrder')
     def setSortOrder(self, ids, REQUEST):
