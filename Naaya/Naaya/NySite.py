@@ -1484,7 +1484,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_htmlportlets_html?id=%s' % (self.absolute_url(), id))
 
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletehtmlportlet')
     def admin_deletehtmlportlet(self, ids=[], REQUEST=None):
         """ """
@@ -1872,6 +1871,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_index')
 
+    security.declareProtected(view, 'messages_html')
+    def messages_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_messages')
+
     security.declareProtected(view, 'messages_box')
     def messages_box(self, REQUEST=None, RESPONSE=None):
         """ """
@@ -1916,11 +1920,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def feedback_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_feedback')
-
-    security.declareProtected(view, 'note_html')
-    def note_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_note')
 
     security.declareProtected(view, 'requestrole_html')
     def requestrole_html(self, REQUEST=None, RESPONSE=None):

@@ -1,0 +1,15 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<h1 tal:content="python:here.getSession('title', request.get('title', 'Thank you for your submission'))"
+	i18n:translate="" />
+
+<p tal:content="python:here.getSession('body', request.get('body', 'The administrator will analyze your request and you will be notified about the result shortly.'))"
+	i18n:translate="" />
+
+<p>
+	<a tal:attributes="href python:here.getSession('referer', request['HTTP_REFERER'])"
+		title="Go back to the page you came from"
+		i18n:translate="" i18:attributes="title">Go back.</a>
+</p>
+
+<span tal:replace="structure here/standard_html_footer"/>
