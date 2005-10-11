@@ -23,6 +23,13 @@
 		<td><input type="text" name="mail_server_port" size="3" tal:attributes="value here/mail_server_port" /></td>
 	</tr>
 	<tr>
+		<td  colspan="2">Notifications sent by this portal (e.g. on errors, upon creating accounts) have to come from a valid email address accepted by the system.</td>
+	</tr>
+	<tr>
+		<td class="form-label">Default from address</td>
+		<td><input type="text" name="mail_address_from" size="3" tal:attributes="value here/mail_address_from" /></td>
+	</tr>
+	<tr>
 		<td class="form-label">Administrator email</td>
 		<td><input type="text" name="administrator_email" size="50" tal:attributes="value here/administrator_email" /></td>
 	</tr>

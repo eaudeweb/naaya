@@ -111,7 +111,7 @@ class EmailTool(Folder):
             return '<%s>' % '>, <'.join(p_emails)
 
     #api
-    security.declareProtected(view, 'sendGenericEmail')
+    security.declareProtected(view, 'sendEmail')
     def sendEmail(self, p_content, p_to, p_from, p_subject):
         #sends a generic email
         try:
@@ -126,7 +126,7 @@ class EmailTool(Folder):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageSettings')
-    def manageSettings(self, mail_server_name='', mail_server_port='', administrator_email='', notify_on_errors='', REQUEST=None):
+    def manageSettings(self, mail_server_name='', mail_server_port='', administrator_email='', mail_address_from='', notify_on_errors='', REQUEST=None):
         """ """
         site = self.getSite()
         try: mail_server_port = int(mail_server_port)
@@ -135,6 +135,7 @@ class EmailTool(Folder):
         else: notify_on_errors = 0
         site.mail_server_name = mail_server_name
         site.mail_server_port = mail_server_port
+        site.mail_address_from = mail_address_from
         site.administrator_email = administrator_email
         site.notify_on_errors = notify_on_errors
         self._p_changed = 1
