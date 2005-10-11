@@ -52,7 +52,7 @@ def addNyNetChannel(self, id='', title='', description='', url='', language=None
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'netchannel_add_html':
             self.setSession('referer', self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
+            REQUEST.RESPONSE.redirect('%s/messages_html' % self.getSitePath())
 
 class NyNetChannel(NyAttributes, LocalPropertyManager, NyItem, NyFeed):
     """ """
