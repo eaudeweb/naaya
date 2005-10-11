@@ -51,7 +51,7 @@ def addNyNetSite(self, id='', title='', description='', url='', lang=None, REQUE
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'netsite_add_html':
             self.setSession('referer', self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/note_html' % self.getSitePath())
+            REQUEST.RESPONSE.redirect('%s/messages_html' % self.getSitePath())
 
 class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
     """ """
