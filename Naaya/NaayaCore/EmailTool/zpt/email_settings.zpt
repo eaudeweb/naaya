@@ -27,7 +27,7 @@
 	</tr>
 	<tr>
 		<td class="form-label">Default from address</td>
-		<td><input type="text" name="mail_address_from" size="3" tal:attributes="value here/mail_address_from" /></td>
+		<td><input type="text" name="mail_address_from" size="50" tal:attributes="value here/mail_address_from" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Administrator email</td>
