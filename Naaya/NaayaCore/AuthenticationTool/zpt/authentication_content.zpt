@@ -38,9 +38,9 @@
                 </tr>
             </table>
         </td>
-        <td><b><a tal:define="user python:here.getUserAccount(user_obj)"
+        <td><strong><a tal:define="user python:here.getUserAccount(user_obj)"
             tal:attributes="href string:manage_editUser_html?name=${user}" 
-            tal:content="user">username</a></b></td>
+            tal:content="user">username</a></strong></td>
         <td tal:content="python:here.getUserFirstName(user_obj) + ' ' + here.getUserLastName(user_obj)">firstname + lastname</td>
         <td align="left" tal:content="python:here.getUserEmail(user_obj)">email</td>
         </tal:block>

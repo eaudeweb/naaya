@@ -11,7 +11,7 @@
 <table border=0 width="80%" cellspacing="3">
     <tr>
         <td>
-            <fieldset><legend><b>Roles</b></legend>
+            <fieldset><legend><strong>Roles</strong></legend>
             <table border="0" cellspacing="0" cellpadding="4">
                 <tr tal:repeat="role here/list_valid_roles">
                     <td width="2%" valign="top"><input type="checkbox" name="roles"
