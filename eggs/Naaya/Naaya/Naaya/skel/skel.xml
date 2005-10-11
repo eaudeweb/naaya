@@ -16,6 +16,7 @@
 		<form id="comments_box" title="Box for content comments"/>
 		<form id="site_index" title="Portal home page"/>
 		<form id="standard_error_message" title="Portal standard error page"/>
+		<form id="site_messages" title="Portal messages page"/>
 		<form id="site_login" title="Portal login"/>
 		<form id="site_logout" title="Portal logout"/>
 		<form id="site_unauthorized" title="Portal logout"/>
@@ -24,7 +25,6 @@
 		<form id="site_sitemap" title="Portal site map"/>
 		<form id="site_feedback" title="Portal feedback"/>
 		<form id="site_requestrole" title="Portal request role"/>
-		<form id="site_note" title="Portal note page"/>
 		<form id="site_macro_add" title="Macro for add forms"/>
 		<form id="site_macro_edit" title="Macro for edit forms"/>
 		<form id="site_admin_template" title="Portal administration - macro"/>
