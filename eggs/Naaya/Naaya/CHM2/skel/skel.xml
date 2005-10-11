@@ -14,6 +14,8 @@
 		<form id="site_admin_predefined" title="Portal administration - predefined latest uploads"/>
 		<form id="site_admin_network" title="Portal administration - network of portals"/>
 		<form id="site_admin_properties" title="Portal administration - properties"/>
+		<form id="site_accountcreated" title="Message for account creation"/>
+		<form id="site_requestrole" title="Request account page"/>
 	</forms>
 	<layout default_skin_id="chm" default_scheme_id="indigo">
 		<skin id="chm" title="CHM">
@@ -171,6 +173,9 @@
 			<link id="112" title="Other searches" description="" url="/external_search_html" relative="1" permission="" order="130"/>
 		</linkslist>
 	</portlets>
+	<emails>
+		<emailtemplate id="email_createaccount" title="Create account"/>
+	</emails>
 	<others>
 		<favicon />
 		<robots />

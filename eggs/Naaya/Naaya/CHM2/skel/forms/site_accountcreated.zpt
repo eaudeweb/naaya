@@ -1,0 +1,9 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+<h1>Account created</h1>
+
+<p>You can now log in this portal using this account.</p>
+
+<span tal:replace="python:here.delSession('referer')" />
+
+<span tal:replace="structure here/standard_html_footer"/>
