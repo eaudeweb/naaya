@@ -57,7 +57,7 @@ def manage_addCatalogTool(self, languages=None, REQUEST=None):
 
 class CatalogTool(ZCatalog, utils):
     """
-    Class that implements a catalog.
+    Class that implements the tool.
     """
 
     meta_type = METATYPE_CATALOGTOOL

@@ -39,7 +39,7 @@ from Products.NaayaCore.LayoutTool.Template import manage_addTemplateForm, manag
 
 def manage_addFormsTool(self, REQUEST=None):
     """
-    ZMI method that creates an object of this type.
+    Class that implements the tool.
     """
     ob = FormsTool(ID_FORMSTOOL, TITLE_FORMSTOOL)
     self._setObject(ID_FORMSTOOL, ob)
