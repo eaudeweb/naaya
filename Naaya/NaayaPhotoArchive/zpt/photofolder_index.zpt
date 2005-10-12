@@ -121,7 +121,13 @@ function fSetTopPhotoObjects()
 <tr tal:repeat="obtuple objects_list">
 	<tal:block define="del_permission python:obtuple[0]; edit_permission python:obtuple[1]; object python:obtuple[2]">
 	<td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="ids" tal:attributes="value object/id" /></td>
-	<td><a tal:attributes="href string:${object/absolute_url}/index_html"><img tal:attributes="src string:${object/absolute_url}/view?display=Thumbnail; alt object/title_or_id" border="0" /></a></td>
+	<td>
+		<a tal:attributes="href string:${object/absolute_url}/index_html"><img tal:attributes="src string:${object/absolute_url}/view?display=Thumbnail; alt object/title_or_id" border="0" /></a>
+		<tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
+			[<span tal:replace="object/count_comments" />
+			<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+		</tal:block>
+	</td>
 	<td tal:content="python:here.utShowDateTime(object.releasedate)" />
 	<td tal:condition="edit_permission"><input type="checkbox" tal:attributes="name python:'topitem_' + object.id; value object/id; checked python:object.topitem==1" /></td>
 	<td><span tal:replace="python:here.utShowDateTime(object.onfrontfrom)" /> - <span tal:replace="python:here.utShowDateTime(object.onfrontto)" /></td>
