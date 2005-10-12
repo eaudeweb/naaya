@@ -1,11 +1,11 @@
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
 <tal:block metal:fill-slot="portlet_title">
 	<span i18n:translate="" tal:omit-tag="">Latest uploads</span>
-	<a tal:attributes="href string:${here/getSitePath}/latestuploads_rdf"><img src="misc_/NaayaCore/xml.png" width="36" height="14" border="0" alt="Syndication (XML)" i18n:attributes="alt" /></a>
+	<a tal:attributes="href string:${here/getSitePath}/latestrelevantuploads_rdf"><img src="misc_/NaayaCore/xml.png" width="36" height="14" border="0" alt="Syndication (XML)" i18n:attributes="alt" /></a>
 </tal:block>
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
-		<li tal:repeat="item here/getAllLatestUploads"><img tal:attributes="src item/icon; alt item/meta_type; title item/meta_type" style="vertical-align: -5px;" />
+		<li tal:repeat="item here/getLatestRelevantUploads"><img tal:attributes="src item/icon; alt item/meta_type; title item/meta_type" style="vertical-align: -5px;" />
 			<a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id" />
 			<tal:block tal:condition="here/show_releasedate">
 				[<span i18n:translate="" tal:omit-tag="">posted on:</span>

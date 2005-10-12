@@ -237,14 +237,9 @@ class CHMSite(NySite):
                         url_struct[p_value] = [(x, x.getParentNode())]
         return url_struct
 
-    def getAllLatestUploads(self):
+    def getLatestRelevantUploads(self):
         """ """
-        latest = self.getLatestUploads()
-        pred = self.getPredefinedUploads()
-        buf = self.utListDifference(latest, pred)
-        buf.extend(pred)
-        buf = self.utSortObjsListByAttr(buf, 'releasedate', 1)
-        return buf
+        return self.utSortObjsListByAttr(self.getPredefinedUploads(), 'releasedate', 1)
 
     def setPredefinedUploads(self, predefined=[], REQUEST=None):
         """ update the predefined list of uploads """
@@ -311,6 +306,11 @@ class CHMSite(NySite):
         return self.get_archive_listing(p_objects)
 
     #rdf channels
+    security.declareProtected(view, 'latestrelevantuploads_rdf')
+    def latestrelevantuploads_rdf(self):
+        """ """
+        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestRelevantUploads())
+
     security.declareProtected(view, 'whatsnew_rdf')
     def whatsnew_rdf(self):
         """ """
