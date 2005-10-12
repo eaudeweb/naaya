@@ -46,7 +46,7 @@ def manage_addNyPhotoFolder(self, id='', title='', quality='', discussion='',
     try: quality = abs(int(quality))
     except: quality = DEFAULT_QUALITY
     if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
-    if self.checkPermissionPublishObjects():
+    if self.glCheckPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
