@@ -63,6 +63,15 @@
 		</select>
 	</td>
 </tr>
+<tr>
+	<td i18n:translate="">Submit unapproved</td>
+	<td>
+		<input type="checkbox" name="submit_unapproved" tal:attributes="checked here/submit_unapproved" />
+		<span tal:omit-tag="" i18n:translate="">
+			check this property if all submissions should be unapproved regardless of the user role
+		</span>
+	</td>
+</tr>
 </table>
 <p i18n:translate="">
 	The portal URL represents the address this portal can be found at.

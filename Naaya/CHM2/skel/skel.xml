@@ -182,5 +182,6 @@
 	<others>
 		<favicon />
 		<robots />
+		<submit_unapproved />
 	</others>
 </skel>
