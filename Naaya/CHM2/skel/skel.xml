@@ -175,6 +175,10 @@
 	<emails>
 		<emailtemplate id="email_createaccount" title="Create account"/>
 	</emails>
+	<security>
+		<role name="Authenticated" grouppermissions="Copy content,Add comments" permissions="Naaya - Add Naaya Story objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Event objects"/>
+		<role name="Validator" grouppermissions="Validate content" permissions=""/>
+	</security>
 	<others>
 		<favicon />
 		<robots />
