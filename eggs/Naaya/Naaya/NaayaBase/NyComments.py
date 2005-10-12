@@ -132,6 +132,12 @@ class NyComments:
         t.sort()
         return [val for (key, val) in t]
 
+    def count_comments(self):
+        """
+        Returns the number of comments.
+        """
+        return len(self.__comments_collection.keys())
+
     security.declarePrivate('open_for_comments')
     def open_for_comments(self):
         """
