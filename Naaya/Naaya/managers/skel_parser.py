@@ -39,7 +39,6 @@ class skel_struct:
         self.portlets = None
         self.properties = None
         self.emails = None
-        self.content = None
         self.security = None
         self.others = None
 
@@ -189,40 +188,9 @@ class emailtemplate_struct:
         self.id = id
         self.title = title
 
-class content_struct:
-    def __init__(self, maintopics):
-        self.maintopics = maintopics
-        self.folders = []
-
-class folder_struct:
-    def __init__(self, id, title, description, coverage, keywords, publicinterface, maintainer_email, sortorder, meta_types):
-        self.id = id
-        self.title = title
-        self.description = description
-        self.coverage = coverage
-        self.keywords = keywords
-        self.publicinterface = publicinterface
-        self.maintainer_email = maintainer_email
-        self.sortorder = sortorder
-        self.meta_types = meta_types
-        self.folders = []
-        self.items = []
-        self.index_html = None
-
-class document_struct:
-    def __init__(self, id, title, description, coverage, keywords, sortorder):
-        self.type = METATYPE_NYDOCUMENT
-        self.id = id
-        self.title = title
-        self.description = description
-        self.coverage = coverage
-        self.keywords = keywords
-        self.sortorder = sortorder
-        self.body = None
-
 class security_struct:
     def __init__(self):
-        self.permissions = []
+        self.grouppermissions = []
         self.roles = []
 
 class permission_struct:
@@ -235,9 +203,10 @@ class permission_struct:
 
 class role_struct:
     """ """
-    def __init__(self, name, permissions):
+    def __init__(self, name, grouppermissions, permissions):
         """ """
         self.name = name
+        self.grouppermissions = grouppermissions
         self.permissions = permissions
 
 class others_struct:
@@ -366,28 +335,16 @@ class skel_handler(ContentHandler):
             obj = emailtemplate_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'))
             stackObj = saxstack_struct('emailtemplate', obj)
             self.stack.append(stackObj)
-        elif name == 'content':
-            obj = content_struct(attrs['maintopics'].encode('utf-8'))
-            stackObj = saxstack_struct('content', obj)
-            self.stack.append(stackObj)
-        elif name == 'folder':
-            obj = folder_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['description'].encode('utf-8'), attrs['coverage'].encode('utf-8'), attrs['keywords'].encode('utf-8'), attrs['publicinterface'].encode('utf-8'), attrs['maintainer_email'].encode('utf-8'), attrs['sortorder'].encode('utf-8'), attrs['meta_types'].encode('utf-8'))
-            stackObj = saxstack_struct('folder', obj)
-            self.stack.append(stackObj)
-        elif name == 'document':
-            obj = document_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['description'].encode('utf-8'), attrs['coverage'].encode('utf-8'), attrs['keywords'].encode('utf-8'), attrs['sortorder'].encode('utf-8'))
-            stackObj = saxstack_struct('document', obj)
-            self.stack.append(stackObj)
         elif name == 'security':
             obj = security_struct()
             stackObj = saxstack_struct('security', obj)
             self.stack.append(stackObj)
-        elif name == 'permission':
+        elif name == 'grouppermissions':
             obj = permission_struct(attrs['name'].encode('utf-8'), attrs['description'].encode('utf-8'), attrs['permissions'].encode('utf-8').split(','))
-            stackObj = saxstack_struct('permission', obj)
+            stackObj = saxstack_struct('grouppermissions', obj)
             self.stack.append(stackObj)
         elif name == 'role':
-            obj = role_struct(attrs['name'].encode('utf-8'), attrs['permissions'].encode('utf-8').split(','))
+            obj = role_struct(attrs['name'].encode('utf-8'), attrs['grouppermissions'].encode('utf-8').split(','), attrs['permissions'].encode('utf-8').split(','))
             stackObj = saxstack_struct('role', obj)
             self.stack.append(stackObj)
         elif name == 'others':
@@ -481,22 +438,11 @@ class skel_handler(ContentHandler):
         elif name == 'emailtemplate':
             self.stack[-2].obj.emailtemplates.append(self.stack[-1].obj)
             self.stack.pop()
-        elif name == 'content':
-            self.stack[-2].obj.content = self.stack[-1].obj
-            self.stack.pop()
-        elif name == 'folder':
-            self.stack[-1].obj.index_html = self.stack[-1].content.encode('utf-8')
-            self.stack[-2].obj.folders.append(self.stack[-1].obj)
-            self.stack.pop()
-        elif name == 'document':
-            self.stack[-1].obj.body = self.stack[-1].content.encode('utf-8')
-            self.stack[-2].obj.items.append(self.stack[-1].obj)
-            self.stack.pop()
         elif name == 'security':
             self.stack[-2].obj.security = self.stack[-1].obj
             self.stack.pop()
-        elif name == 'permission':
-            self.stack[-2].obj.permissions.append(self.stack[-1].obj)
+        elif name == 'grouppermissions':
+            self.stack[-2].obj.grouppermissions.append(self.stack[-1].obj)
             self.stack.pop()
         elif name == 'role':
             self.stack[-2].obj.roles.append(self.stack[-1].obj)
