@@ -22,6 +22,11 @@
 
 """
 This module contains a class for customizing attribute access.
+It is used to provide values for two catalog indexes:
+
+    - B{objectkeywords_I{lang}} where lang is the a language code
+
+    - B{istranslated_I{lang}} where lang is the a language code
 """
 
 #Python imports
