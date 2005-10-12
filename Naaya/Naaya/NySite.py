@@ -155,6 +155,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.keywords_glossary = None
         self.coverage_glossary = None
         self.__pluggable_installed_content = {}
+        self.submit_unapproved = 0
         contenttypes_tool.__dict__['__init__'](self)
         events_tool.__dict__['__init__'](self)
         CookieCrumbler.__dict__['__init__'](self)
@@ -322,6 +323,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     image_ob._p_changed=1
                 if skel_handler.root.others.images is not None:
                     self.manage_addFolder(ID_IMAGESFOLDER, 'Images')
+                if skel_handler.root.others.submit_unapproved is not None:
+                    self.submit_unapproved = 1
+                    self._p_changed = 1
         #set default searchable content
         l = self.get_pluggable_installed_meta_types()
         l.append(METATYPE_FOLDER)
@@ -1055,8 +1059,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             REQUEST.RESPONSE.redirect('%s/admin_logos_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
-    def admin_properties(self, number_latest_uploads='', number_announcements='', http_proxy='',
-        repository_url='', keywords_glossary='', coverage_glossary='', portal_url='', REQUEST=None):
+    def admin_properties(self, number_latest_uploads='', number_announcements='',
+        http_proxy='', repository_url='', keywords_glossary='', coverage_glossary='',
+        submit_unapproved='', portal_url='', REQUEST=None):
         """ """
         try: number_latest_uploads = int(number_latest_uploads)
         except: number_latest_uploads = self.number_latest_uploads
@@ -1064,12 +1069,15 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         except: number_announcements = self.number_announcements
         if keywords_glossary == '': keywords_glossary = None
         if coverage_glossary == '': coverage_glossary = None
+        if submit_unapproved: submit_unapproved = 1
+        else: submit_unapproved = 0
         self.number_latest_uploads = number_latest_uploads
         self.number_announcements = number_announcements
         self.http_proxy = http_proxy
         self.repository_url = repository_url
         self.keywords_glossary = keywords_glossary
         self.coverage_glossary = coverage_glossary
+        self.submit_unapproved = submit_unapproved
         self.portal_url = portal_url
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])

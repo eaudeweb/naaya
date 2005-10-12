@@ -214,6 +214,7 @@ class others_struct:
         self.favicon = None
         self.robots = None
         self.images = None
+        self.submit_unapproved = None
 
 class saxstack_struct:
     def __init__(self, name='', obj=None):
@@ -357,6 +358,8 @@ class skel_handler(ContentHandler):
             pass
         elif name == 'images':
             pass
+        elif name == 'submit_unapproved':
+            pass
 
     def endElement(self, name):
         """ """
@@ -456,6 +459,8 @@ class skel_handler(ContentHandler):
             self.stack[-1].obj.robots = 1
         elif name == 'images':
             self.stack[-1].obj.images = 1
+        elif name == 'submit_unapproved':
+            self.stack[-1].obj.submit_unapproved = 1
 
     def characters(self, content):
         if len(self.stack) > 0:
