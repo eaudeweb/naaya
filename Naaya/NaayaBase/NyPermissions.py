@@ -99,6 +99,19 @@ class NyPermissions:
         """
         return self.checkPermission(PERMISSION_EDIT_OBJECTS)
 
+    def glCheckPermissionPublishObjects(self):
+        """
+        B{Verifies the publishing policy: normally all users having the permission
+        I{Naaya - Publish content} have their submissions published immediately
+        while the rest of the users have to wait for administrator's review.
+
+        In special cases this policy can be overwritten: based on the
+        I{submit_unapproved} property of each portal all submissions have to pass
+        administrator's review before publishing.}
+        """
+        if self.submit_unapproved: return 0
+        else: return self.checkPermissionPublishObjects()
+
     def checkPermissionPublishObjects(self):
         """
         Check the permissions to publish objects.
