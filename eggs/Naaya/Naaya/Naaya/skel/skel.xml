@@ -149,31 +149,30 @@
 		<emailtemplate id="email_notifyonupload" title="Upload notification"/>
 	</emails>
 	<security>
-		<permission name="Edit content" description="Adding, publishing and deleting are not granted as a part of this privilege. Edit content is only allowed for owners if users do not have the 'Naaya - Publish content' permission."
-			permissions="Naaya - Access administrative area,Naaya - Edit content,Take ownership"/>
-		<permission name="Copy content" description="Copy content. Adding, publishing and deleting are not granted as a part of this privilege. In order to be able to paste the copied content, users must have the add permission in the target location."
-			permissions="Naaya - Copy content,Take ownership"/>
-		<permission name="Publish content" description="Publish Naaya objects. Adding, editing and deleting are not granted as a part of this privilege."
-			permissions="Naaya - Access administrative area,Naaya - Publish content,Take ownership"/>
-		<permission name="Validate content" description="Validate Naaya objects. Adding, editing and deleting are not granted as a part of this privilege."
-			permissions="Naaya - Access administrative area,Naaya - Validate content,Take ownership"/>
-		<permission name="Add comments" description="Posibility to add comments for each type of content."
-			permissions="Naaya - Add comments for content"/>
-		<permission name="Delete content" description="Delete Naaya objects. Adding, publishing and editing are not granted as a part of this privilege. Delete content is only allowed for owners." 
-			permissions="Naaya - Access administrative area,Naaya - Delete content,Take ownership,Naaya - Manage comments for content"/>
-		<permission name="Browse content" description="Browse the site structure. This is the base privilege aimed for Anonymous users."
+		<grouppermissions name="Browse content" description="Browse the site structure. This is the base privilege aimed for Anonymous users."
 			permissions="Access Transient Objects,Access contents information,Access session data,Query Vocabulary,Search ZCatalog,Use Database Methods,Use mailhost services,View,WebDAV access,WebDAV Unlock items,WebDAV Lock items"/>
-		<permission name="Add content" description="Create Naaya objects. Editing, publishing and deleting them are not granted as a part of thisprivilege."
+		<grouppermissions name="Add content" description="Create Naaya objects. Editing, publishing and deleting them are not granted as a part of thisprivilege."
 			permissions="Naaya - Access administrative area,Naaya - Add Naaya Folder objects,Naaya - Add Naaya Document objects,Naaya - Add Naaya Event objects,Naaya - Add Naaya File objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Pointer objects,Naaya - Add Naaya Story objects,Naaya - Add Naaya URL objects,Naaya - Add Naaya Photo,Naaya - Add Naaya Media File objects,Take ownership"/>
-		<permission name="Manage Users" description="Create/modify/delete users in the portal"
-			permissions="Naaya - Access administrative area,Manage users"/>
-		<permission name="Translate pages" description="Translate pages in the portal"
+		<grouppermissions name="Add comments" description="Posibility to add comments for each type of content."
+			permissions="Naaya - Add comments for content"/>
+		<grouppermissions name="Edit content" description="Adding, publishing and deleting are not granted as a part of this privilege. Edit content is only allowed for owners if users do not have the 'Naaya - Publish content' permission."
+			permissions="Naaya - Access administrative area,Naaya - Edit content,Take ownership"/>
+		<grouppermissions name="Copy content" description="Copy content. Adding, publishing and deleting are not granted as a part of this privilege. In order to be able to paste the copied content, users must have the add permission in the target location."
+			permissions="Naaya - Copy content,Take ownership"/>
+		<grouppermissions name="Publish content" description="Publish Naaya objects. Adding, editing and deleting are not granted as a part of this privilege."
+			permissions="Naaya - Access administrative area,Naaya - Publish content,Take ownership"/>
+		<grouppermissions name="Delete content" description="Delete Naaya objects. Adding, publishing and editing are not granted as a part of this privilege. Delete content is only allowed for owners." 
+			permissions="Naaya - Access administrative area,Naaya - Delete content,Take ownership,Naaya - Manage comments for content"/>
+		<grouppermissions name="Validate content" description="Validate Naaya objects. Adding, editing and deleting are not granted as a part of this privilege."
+			permissions="Naaya - Access administrative area,Naaya - Validate content,Take ownership"/>
+		<grouppermissions name="Translate pages" description="Translate pages in the portal"
 			permissions="Naaya - Access administrative area,Naaya - Translate pages"/>
-		<role name="Anonymous" permissions="Browse content"/>
-		<role name="Authenticated" permissions="Copy content,Add comments"/>
-		<role name="Contributor" permissions="Add content,Edit content"/>
-		<role name="Validator" permissions="Validate content"/>
-		<role name="Administrator" permissions="Add content,Edit content,Delete content,Publish content,Validate content,Manage Users,Translate pages"/>
+		<grouppermissions name="Manage Users" description="Create/modify/delete users in the portal"
+			permissions="Naaya - Access administrative area,Manage users"/>
+		<role name="Anonymous" grouppermissions="Browse content" permissions=""/>
+		<role name="Authenticated" grouppermissions="Add comments" permissions=""/>
+		<role name="Contributor" grouppermissions="Add content" permissions=""/>
+		<role name="Administrator" grouppermissions="Browse content,Add content,Add comments,Edit content,Copy content,Publish content,Delete content,Validate content,Translate pages,Manage Users" permissions=""/>
 	</security>
 	<others>
 		<favicon />

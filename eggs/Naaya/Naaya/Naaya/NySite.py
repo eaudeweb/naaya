@@ -292,12 +292,14 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     emailtool_ob.manage_addEmailTemplate(emailtemplate.id, emailtemplate.title, content)
             #load security permissions and roles
             if skel_handler.root.security is not None:
-                for permission in skel_handler.root.security.permissions:
+                for permission in skel_handler.root.security.grouppermissions:
                     authenticationtool_ob.addPermission(permission.name, permission.description, permission.permissions)
                 for role in skel_handler.root.security.roles:
-                    if authenticationtool_ob.addRole(role.name, role.permissions) is not None:
-                        #the role exists, just set the permissions
-                        authenticationtool_ob.editRole(role.name, role.permissions)
+                    authenticationtool_ob.addRole(role.name, role.grouppermissions)
+                    #set the grouppermissions
+                    authenticationtool_ob.editRole(role.name, role.grouppermissions)
+                    #set individual permissions
+                    self.manage_role(role.name, role.permissions)
             #set subobjects for folders
             self.getPropertiesTool().manageSubobjects(subobjects=None, ny_subobjects=self.get_meta_types(1))
             #other stuff
