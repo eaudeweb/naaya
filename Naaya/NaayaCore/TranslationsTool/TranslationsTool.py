@@ -54,7 +54,7 @@ def manage_addTranslationsTool(self, languages=None, REQUEST=None):
 
 class TranslationsTool(MessageCatalog):
     """
-    Class that implements a message catalog.
+    Class that implements the tool.
     """
 
     meta_type = METATYPE_TRANSLATIONSTOOL

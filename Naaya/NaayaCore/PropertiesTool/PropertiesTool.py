@@ -18,6 +18,14 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains the class that implements a tool for
+configuring a portal.
+
+This is a core tool of the Naaya CMF.
+Every portal B{must} have an object of this type inside.
+"""
+
 #Python imports
 
 #Zope imports
@@ -33,7 +41,9 @@ from Products.NaayaCore.managers.utils import utils
 from Products.NaayaCore.managers.search_tool import search_tool
 
 def manage_addPropertiesTool(self, REQUEST=None):
-    """ """
+    """
+    ZMI method that creates an object of this type.
+    """
     ob = PropertiesTool(ID_PROPERTIESTOOL, TITLE_PROPERTIESTOOL)
     self._setObject(ID_PROPERTIESTOOL, ob)
     self._getOb(ID_PROPERTIESTOOL).loadDefaultData()
@@ -41,7 +51,9 @@ def manage_addPropertiesTool(self, REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class PropertiesTool(SimpleItem, utils, search_tool):
-    """ """
+    """
+    Class that implements the tool.
+    """
 
     meta_type = METATYPE_PROPERTIESTOOL
     icon = 'misc_/NaayaCore/PropertiesTool.gif'
@@ -63,19 +75,26 @@ class PropertiesTool(SimpleItem, utils, search_tool):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title):
-        """ """
+        """
+        Initialize variables.
+        """
         self.id = id
         self.title = title
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
-        #load default stuff
+        """
+        Creates default stuff.
+        I{(Nothing for the moment.)}
+        """
         pass
 
     #Internal search
     security.declareProtected(view_management_screens, 'manageInternalSearch')
     def manageInternalSearch(self, search_age=0, results_number=10, content=[], REQUEST=None):
-        """ Manage the properties for internal search"""
+        """
+        Manage the properties for internal search.
+        """
         self.setItemsAge(search_age)
         self.setNumberOfResults(results_number)
         self.setSearchableContent(content)
@@ -83,22 +102,30 @@ class PropertiesTool(SimpleItem, utils, search_tool):
             REQUEST.RESPONSE.redirect('manage_search_html?save=ok')
 
     def setSearchedItems(self, items):
-        """ set the searcheble items list """
+        """
+        Set the searcheble items list.
+        """
         self.searched_items.append(items)
 
     def getSearchedItems(self):
-        """ get the searcheble items list """
+        """
+        Get the searcheble items list.
+        """
         return self.searched_items
 
     def delSearchedItems(self, item):
-        """ delete a searcheble item from the list """
+        """
+        Delete a searcheble item from the list.
+        """
         try: self.searched_items.remove(item)
         except ValueError: pass
 
     #Main topics
     security.declareProtected(view_management_screens, 'manageMainTopics')
     def manageMainTopics(self, maintopics=None, REQUEST=None):
-        """ Update main topics """
+        """
+        Update main topics.
+        """
         site = self.getSite()
         if maintopics is None: maintopics = []
         else: maintopics = self.utConvertToList(maintopics)
@@ -106,54 +133,65 @@ class PropertiesTool(SimpleItem, utils, search_tool):
         site._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_maintopics_html?save=ok')
 
-    #Event types
     security.declareProtected(view_management_screens, 'manageAddEventType')
     def manageAddEventType(self, id='', title='', REQUEST=None):
-        """ """
+        """
+        Add a new event type.
+        """
         self.createEventType(id, title)
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_eventtypes_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manageUpdateEventType')
     def manageUpdateEventType(self, id='', title='', REQUEST=None):
-        """ """
+        """
+        Update an event type.
+        """
         self.modifyEventType(id, title)
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_eventtypes_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manageDeleteEventTypes')
     def manageDeleteEventTypes(self, id=[], REQUEST=None):
-        """ """
+        """
+        Delete one or more event types.
+        """
         self.deleteEventType(self.utConvertToList(id))
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_eventtypes_html?save=ok')
 
-    #Content types
     security.declareProtected(view_management_screens, 'manageAddContentType')
     def manageAddContentType(self, id='', title='', picture='', REQUEST=None):
-        """ """
+        """
+        Add a new content type.
+        """
         self.createContentType(id, title, picture)
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_contenttypes_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manageUpdateContentType')
     def manageUpdateContentType(self, id='', title='', picture='', REQUEST=None):
-        """ """
+        """
+        Update a content type.
+        """
         self.modifyContentType(id, title, picture)
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_contenttypes_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manageDeleteContentTypes')
     def manageDeleteContentTypes(self, id=[], REQUEST=None):
-        """ """
+        """
+        Delete one or more content types.
+        """
         self.deleteContentType(self.utConvertToList(id))
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_contenttypes_html?save=ok')
 
-    #Subobjects
     security.declareProtected(view_management_screens, 'manageSubobjects')
     def manageSubobjects(self, subobjects=None, ny_subobjects=None, REQUEST=None):
-        """ Update the additional meta types for all objects """
+        """
+        Update the additional meta types for all objects.
+        """
         if subobjects is None: subobjects = []
         else: subobjects = self.utConvertToList(subobjects)
         if ny_subobjects is None: ny_subobjects = []
@@ -164,22 +202,27 @@ class PropertiesTool(SimpleItem, utils, search_tool):
         site._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_subobjects_html?save=ok')
 
-    #Languages
     security.declareProtected(view_management_screens, 'manage_addLanguage')
     def manage_addLanguage(self, language, REQUEST=None):
-        """ """
+        """
+        Add a new language for this portal.
+        """
         self.getSite().gl_add_site_language(language)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_languages_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manage_delLanguages')
     def manage_delLanguages(self, languages, REQUEST=None):
-        """ """
+        """
+        Delete one or more languages.
+        """
         self.getSite().gl_del_site_languages(languages)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_languages_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manage_changeDefaultLang')
     def manage_changeDefaultLang(self, language, REQUEST=None):
-        """ """
+        """
+        Change the default portal language.
+        """
         self.getSite().gl_change_site_defaultlang(language)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_languages_html?save=ok')
 
