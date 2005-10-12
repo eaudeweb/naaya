@@ -20,6 +20,14 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains the class that implements a message catalog
+for Naaya CMF messages (labels).
+
+This is a core tool of the Naaya CMF.
+Every portal B{must} have an object of this type inside.
+"""
+
 #Python import
 import base64
 import re
@@ -34,7 +42,9 @@ from Products.Localizer.MessageCatalog import MessageCatalog
 from Products.NaayaCore.constants import *
 
 def manage_addTranslationsTool(self, languages=None, REQUEST=None):
-    """ """
+    """
+    ZMI method that creates an object of this type.
+    """
     if languages is None: languages = []
     ob = TranslationsTool(ID_TRANSLATIONSTOOL, TITLE_TRANSLATIONSTOOL)
     self._setObject(ID_TRANSLATIONSTOOL, ob)
@@ -43,7 +53,9 @@ def manage_addTranslationsTool(self, languages=None, REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class TranslationsTool(MessageCatalog):
-    """ """
+    """
+    Class that implements a message catalog.
+    """
 
     meta_type = METATYPE_TRANSLATIONSTOOL
     icon = 'misc_/NaayaCore/TranslationsTool.gif'
@@ -55,34 +67,51 @@ class TranslationsTool(MessageCatalog):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title):
+        """
+        Initialize variables.
+        """
         self.id = id
         self.title = title
         MessageCatalog.__dict__['__init__'](self, id, title, sourcelang='en', languages=['en'])
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self, languages):
-        #creates default stuff
+        """
+        Creates default stuff.
+        I{(Nothing for the moment.)}
+        """
         pass
 
     def get_msg_translations(self, message='', lang=''):
+        """
+        Returns the translation of the given message in the given language.
+        @param message: the message
+        @type message: string
+        @param lang: language code
+        @type lang: string
+        """
         mesg = self._messages.get(message, None)
         if mesg:
             return mesg.get(lang, '')
 
     def msgEncode(self, message):
+        """
+        Encodes a message in order to be passed as parameter in
+        the query string.
+        """
         return quote(self.message_encode(message))
 
-    def get_all_messages(self, message, lang, regex, batch_start):
-        """ return all messages"""
-        res = []
-        messages = self.filter(message, lang, 1, regex, batch_start)
-        for i in messages['messages']:
-            res.append(i['message'])
-        return res
-
-    #new stuff
     def tt_get_messages(self, query, skey, rkey):
-        #returns all messages
+        """
+        Returns a list of messages, filtered and sorted according with
+        the given parameters.
+        @param query: query against the list of messages
+        @type query: string
+        @param skey: the sorting key
+        @type skey: string
+        @param rkey: indicates if the list must be reversed
+        @type rkey: string
+        """
         msgs = []
         langs = self.tt_get_languages_mapping()
         if skey == 'msg': skey = 0
@@ -105,8 +134,10 @@ class TranslationsTool(MessageCatalog):
         return msgs
 
     def tt_get_languages_mapping(self):
-        #returns the languages mapping without the english language
-        #remove the entry for the 'code' = 'en'
+        """
+        Returns the languages mapping without the english language.
+        Remove the entry for the 'code' = 'en'.
+        """
         d = []
         for x in self.get_languages_mapping():
             if x['code'] != 'en':
