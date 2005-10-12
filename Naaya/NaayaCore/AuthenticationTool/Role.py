@@ -24,33 +24,44 @@
 
 #Zope imports
 from AccessControl.Role import RoleManager
-from Globals import MessageDialog
+from Globals import MessageDialog, InitializeClass
+from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
 from Products.NaayaCore.managers.utils import utils
 
-class Role(RoleManager):
+class Role(RoleManager, utils):
     """ """
+
+    security = ClassSecurityInfo()
+
     def __init__(self):
-        """ """
+        """
+        Initialize variables.
+        """
         self._permissions = {}  #{permission_name:{'description':permission_description, 'permissions':[list_of_zope_permissions]}, ....}
         self._roles = {}    # {role_name:[list_of_zope_permissions]}
         self._roles_permissions = {}    # {role_name:[list_of_permissions_name]}
         utils.__dict__['__init__'](self)
 
-    #############
-    # ROLES     #
-    #############
-
     def _addRole(self, role):
+        """
+        Creates a new role in the current portal.
+        """
         site = self.getSite()
         data = list(site.__ac_roles__)
         data.append(role)
         site.__ac_roles__ = tuple(data)
 
     def _delRole(self, roles):
+        """
+        Delete one or more roles.
+        @param roles: list of roles
+        @type roles: list
+        """
         site = self.getSite()
-        data=list(site.__ac_roles__)
+        data = list(site.__ac_roles__)
         for role in roles:
             del self._roles[role]
             del self._roles_permissions[role]
@@ -61,7 +72,7 @@ class Role(RoleManager):
         site.__ac_roles__ = tuple(data)
 
     def addRole(self, role='', permissions=[], REQUEST=None):
-        "add role"
+        """add role"""
         if REQUEST is not None and REQUEST.has_key('CancelButton'):
             return REQUEST.RESPONSE.redirect('manage_roles_html')
         zope_permissions = {}
@@ -121,6 +132,13 @@ class Role(RoleManager):
                 self._p_changed = 1
         return self._roles_permissions[role]
 
+    security.declareProtected(view_management_screens, 'list_all_roles')
+    def list_all_roles(self):
+        """
+        Returns a list with all roles.
+        """
+        return list(self.getSite().valid_roles())
+
     def list_valid_roles(self):
         """ """
         roles = list(self.getSite().valid_roles())
@@ -133,29 +151,6 @@ class Role(RoleManager):
             if role not in ['Owner', 'Authenticated']:
                 tmplist.append(role)
         return tmplist
-
-#    def list_zope_roles(self):
-#        """ """
-#        #split the permissions dictionary in three lists
-#        first = []
-#        second = []
-#        third = []
-#        roles = self.getSite().valid_roles()
-#        i = 0
-#        for role in roles:
-#            if role not in ['Anonymous', 'Authenticated', 'Owner']:
-#                i = i + 1
-#                if i%3 == 1:
-#                    first.append(role)
-#                elif i%3 == 2:
-#                    second.append(role)
-#                elif i%3 == 0:
-#                    third.append(role)
-#        return map(None, first, second, third)  #return [(first[0], second[0], third[0]), ...]
-
-    ###############
-    # PERMISSIONS #
-    ###############
 
     def _addPermission(self, name, description, permissions):
         self._permissions[name] = {'description':description, 'permissions':list(permissions)}
@@ -247,3 +242,4 @@ class Role(RoleManager):
                 third.append(permission['name'])
         return map(None, first, second, third)  #return [(first[0], second[0], third[0]), ...]
 
+InitializeClass(Role)
