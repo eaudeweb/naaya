@@ -68,7 +68,7 @@ def addNyMediaFile(self, id='', title='', description='', coverage='', keywords=
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
-    if self.checkPermissionPublishObjects():
+    if self.glCheckPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
