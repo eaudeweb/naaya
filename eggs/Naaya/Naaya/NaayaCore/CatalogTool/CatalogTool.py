@@ -20,6 +20,14 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains the class that implements a catalog
+for Naaya CMF objects.
+
+This is a core tool of the Naaya CMF.
+Every portal B{must} have an object of this type inside.
+"""
+
 #Python imports
 
 #Zope imports
@@ -37,7 +45,9 @@ except ImportError:
     txng_version = 0
 
 def manage_addCatalogTool(self, languages=None, REQUEST=None):
-    """ """
+    """
+    ZMI method that creates an object of this type.
+    """
     if languages is None: languages = []
     ob = CatalogTool(ID_CATALOGTOOL, TITLE_CATALOGTOOL)
     self._setObject(ID_CATALOGTOOL, ob)
@@ -46,7 +56,9 @@ def manage_addCatalogTool(self, languages=None, REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class CatalogTool(ZCatalog, utils):
-    """ """
+    """
+    Class that implements a catalog.
+    """
 
     meta_type = METATYPE_CATALOGTOOL
     icon = 'misc_/NaayaCore/CatalogTool.gif'
@@ -58,15 +70,18 @@ class CatalogTool(ZCatalog, utils):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title):
-        #constructor
+        """
+        Initialize variables.
+        """
         ZCatalog.__dict__['__init__'](self, id, title, None, None)
         self.id = id
         self.title = title
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self, languages):
-        #creates default indexes and other stuff
-        #create indexes
+        """
+        Creates default indexes and metadata.
+        """
         languages = self.utConvertToList(languages)
         try: self.addIndex('bobobase_modification_time', 'FieldIndex')
         except: pass
@@ -115,6 +130,13 @@ class CatalogTool(ZCatalog, utils):
 
     security.declarePrivate('add_indexes_for_lang')
     def add_indexes_for_lang(self, lang):
+        """
+        For each portal language related indexes are created:
+        - B{objectkeywords_I{lang}}
+        - B{istranslated_I{lang}}
+        @param lang: language code
+        @type lang: string
+        """
         if txng_version == 2:
             try:
                 self.manage_addIndex('objectkeywords_%s' % lang, 'TextIndexNG2', extra={'default_encoding': 'utf-8'})
@@ -132,6 +154,11 @@ class CatalogTool(ZCatalog, utils):
 
     security.declarePrivate('del_indexes_for_lang')
     def del_indexes_for_lang(self, lang):
+        """
+        Delete indexes when a language is removed from the portal.
+        @param lang: language code
+        @type lang: string
+        """
         try: self.delIndex('objectkeywords_%s' % lang)
         except: pass
         try: self.delIndex('istranslated_%s' % lang)

@@ -18,6 +18,14 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains the class that implements a container
+for Naaya CMF common forms (page templates).
+
+This is a core tool of the Naaya CMF.
+Every portal B{must} have an object of this type inside.
+"""
+
 #Python imports
 
 #Zope imports
@@ -30,7 +38,9 @@ from Products.NaayaCore.constants import *
 from Products.NaayaCore.LayoutTool.Template import manage_addTemplateForm, manage_addTemplate
 
 def manage_addFormsTool(self, REQUEST=None):
-    """ """
+    """
+    ZMI method that creates an object of this type.
+    """
     ob = FormsTool(ID_FORMSTOOL, TITLE_FORMSTOOL)
     self._setObject(ID_FORMSTOOL, ob)
     self._getOb(ID_FORMSTOOL).loadDefaultData()
@@ -38,7 +48,9 @@ def manage_addFormsTool(self, REQUEST=None):
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class FormsTool(Folder):
-    """ """
+    """
+    Class that implements a container for forms.
+    """
 
     meta_type = METATYPE_FORMSTOOL
     icon = 'misc_/NaayaCore/FormsTool.gif'
@@ -58,16 +70,28 @@ class FormsTool(Folder):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title):
-        """ """
+        """
+        Initialize variables.
+        """
         self.id = id
         self.title = title
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
-        #load default stuff
+        """
+        Creates default stuff.
+        I{(Nothing for the moment.)}
+        """
         pass
 
     def getContent(self, p_context={}, p_page=None):
+        """
+        Renders the given form and return the result.
+        @param p_context: extra parameters for the ZPT
+        @type p_context: dictionary
+        @param p_page: the id of the ZPT
+        @type p_page: string
+        """
         p_context['skin_files_path'] = self.getLayoutTool().getSkinFilesPath()
         return self._getOb(p_page)(p_context)
 
