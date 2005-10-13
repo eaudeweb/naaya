@@ -57,4 +57,14 @@ class NyVersions:
         self._p_changed = 1
         return "Upgraded OK: created email from property for portal"
 
+    security.declareProtected(view_management_screens, 'upgrade_others')
+    def upgrade_others(self):
+        """
+        Upgrade other stuff.
+        """
+        self.show_releasedate = 1
+        self.submit_unapproved = 1
+        self._p_changed = 1
+        return "Upgraded OK: show_releasedate and submit_unapproved"
+
 InitializeClass(NyVersions)
