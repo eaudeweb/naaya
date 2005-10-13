@@ -1,0 +1,20 @@
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"></tal:block>
+<tal:block metal:fill-slot="portlet_content">
+<tal:block tal:repeat="item here/getLatestStories">
+	<div class="header_story">
+	<div class="title_story"><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id">item</a></div>
+	</div>
+	<tal:block tal:condition="here/show_releasedate">
+		<div class="release_story">
+			<span i18n:translate="">Released on </span>
+			<strong tal:content="python:here.utShowDateTime(item.releasedate)" />
+		</div>
+	</tal:block>
+	<div class="content_story" >
+		<div class="text_story" tal:content="structure item/description" />
+		<div class="bottom_border"> </div>
+	</div>
+</tal:block>
+</tal:block>
+</tal:block>

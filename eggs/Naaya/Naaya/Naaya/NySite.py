@@ -155,6 +155,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.keywords_glossary = None
         self.coverage_glossary = None
         self.__pluggable_installed_content = {}
+        self.show_releasedate = 1
         self.submit_unapproved = 0
         contenttypes_tool.__dict__['__init__'](self)
         events_tool.__dict__['__init__'](self)
@@ -476,7 +477,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declarePublic('getFolderMainParent')
     def getFolderMainParent(self, p_folder):
-        #returns the main parent of the given folder
+        """
+        Returns the main parent of the given folder.
+        @param p_folder: a folder object
+        @type p_folder: NyFolder
+        @return: a NyFolder object
+        """
         l_parent = p_folder
         while l_parent.getParentNode().meta_type != self.meta_type:
             l_parent = l_parent.getParentNode()
@@ -484,7 +490,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declarePublic('getAllParents')
     def getAllParents(self, p_folder):
-        #returns all parents of a folder, without aquisition
+        """
+        Returns all parents of a folder, without aquisition.
+        @param p_folder: a folder object
+        @type p_folder: NyFolder
+        @return: a list of NyFolder objects
+        """
         l_parent = p_folder
         l_result = [l_parent]
         while l_parent.getParentNode().meta_type != self.meta_type:
@@ -564,12 +575,46 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declarePublic('getLatestUploads')
     def getLatestUploads(self, howmany=None):
         """
-        Returns a list with the latest uploaded objects in the site which are approved
-        The number of objects can be set by modifing the property 'number_latest_uploads'
+        Returns a list with the latest uploads in the site's B{main topics}
+        which are approved.
+        The number of objects can be set by modifing the property
+        I{number_latest_uploads}.
         """
-        if howmany is None:
-            howmany = self.number_latest_uploads
+        if howmany is None: howmany = self.number_latest_uploads
         return self.getCatalogedObjects(meta_type=self.get_meta_types(), approved=1, howmany=howmany, path=['/'.join(x.getPhysicalPath()) for x in self.getMainTopics()])
+
+    security.declarePublic('getLatestNews')
+    def getLatestNews(self, howmany=None):
+        """
+        Returns a list with the latest news in the site's B{main topics}
+        which are approved.
+        This requires B{NyNews} pluggable content type to be installed.
+        The number of objects can be set by modifing the property
+        I{number_announcements}.
+        """
+        if howmany is None: howmany = self.number_announcements
+        return self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, approved=1, howmany=howmany, path=['/'.join(x.getPhysicalPath()) for x in self.getMainTopics()])
+
+    security.declarePublic('getLatestStories')
+    def getLatestStories(self):
+        """
+        Returns a list with the latest stories in the site which are approved
+        and marked as I{topitem}.
+        This requires B{NyStory} pluggable content type to be installed.
+        """
+        return self.getCatalogedObjects(meta_type=METATYPE_NYSTORY, approved=1, topitem=1)
+
+    def getUpcomingEvents(self):
+        """
+        Returns a list with the latest events in the site that will follow the
+        current date.
+        This requires B{NyEvent} pluggable content type to be installed.
+        """
+        r, d = [], self.utGetTodayDate()
+        ra = r.append
+        for e in self.getCatalogedObjects(meta_type=METATYPE_NYEVENT, approved=1):
+            if e.start_date > d: ra(e)
+        return r
 
     security.declarePublic('getFoldersWithPendingItems')
     def getFoldersWithPendingItems(self):
@@ -1008,12 +1053,37 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     #rdf files
     security.declareProtected(view, 'latestuploads_rdf')
     def latestuploads_rdf(self):
-        """ """
+        """
+        Returns a RDF feed with latest uploads.
+        """
         return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestUploads())
+
+    security.declareProtected(view, 'latestnews_rdf')
+    def latestnews_rdf(self):
+        """
+        Returns a RDF feed with latest news.
+        """
+        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestNews())
+
+    security.declareProtected(view, 'lateststories_rdf')
+    def lateststories_rdf(self):
+        """
+        Returns a RDF feed with latest stories.
+        """
+        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestStories())
+
+    security.declareProtected(view, 'upcomingevents_rdf')
+    def upcomingevents_rdf(self):
+        """
+        Returns a RDF feed with upcoming events.
+        """
+        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getUpcomingEvents())
 
     security.declareProtected(view, 'localchannels_rdf')
     def localchannels_rdf(self):
-        """ """
+        """
+        Returns a RDF feed with all local channels.
+        """
         syndication_tool = self.getSyndicationTool()
         return syndication_tool.syndicateSomething(self.absolute_url(), syndication_tool.get_local_channels())
 
@@ -1058,21 +1128,25 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_logos_html' % self.absolute_url())
 
+    #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
     def admin_properties(self, number_latest_uploads='', number_announcements='',
-        http_proxy='', repository_url='', keywords_glossary='', coverage_glossary='',
-        submit_unapproved='', portal_url='', REQUEST=None):
+        show_releasedate='', http_proxy='', repository_url='', keywords_glossary='',
+        coverage_glossary='', submit_unapproved='', portal_url='', REQUEST=None):
         """ """
         try: number_latest_uploads = int(number_latest_uploads)
         except: number_latest_uploads = self.number_latest_uploads
         try: number_announcements = int(number_announcements)
         except: number_announcements = self.number_announcements
+        if show_releasedate: show_releasedate = 1
+        else: show_releasedate = 0
         if keywords_glossary == '': keywords_glossary = None
         if coverage_glossary == '': coverage_glossary = None
         if submit_unapproved: submit_unapproved = 1
         else: submit_unapproved = 0
         self.number_latest_uploads = number_latest_uploads
         self.number_announcements = number_announcements
+        self.show_releasedate = show_releasedate
         self.http_proxy = http_proxy
         self.repository_url = repository_url
         self.keywords_glossary = keywords_glossary
