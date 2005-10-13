@@ -67,4 +67,13 @@ class NyVersions:
         self._p_changed = 1
         return "Upgraded OK: show_releasedate and submit_unapproved"
 
+    security.declareProtected(view_management_screens, 'upgrade_photoarchive')
+    def upgrade_photoarchive(self):
+        """
+        Upgrade other stuff.
+        """
+        self.PhotoArchive.submitted = 1
+        self._p_changed = 1
+        return "Upgraded OK: submitted for PhotoArchive"
+
 InitializeClass(NyVersions)
