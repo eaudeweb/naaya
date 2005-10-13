@@ -30,6 +30,10 @@
 	<td><input type="text" name="number_announcements" size="3" tal:attributes="value here/number_announcements" /></td>
 </tr>
 <tr>
+	<td i18n:translate="">Show release date</td>
+	<td><input type="checkbox" name="show_releasedate" tal:attributes="checked here/show_releasedate" /></td>
+</tr>
+<tr>
 	<td i18n:translate="">HTTP Proxy</td>
 	<td><input type="text" name="http_proxy" size="50" tal:attributes="value here/http_proxy" /></td>
 </tr>
