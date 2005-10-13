@@ -1,11 +1,12 @@
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
 <tal:block metal:fill-slot="portlet_title">
 	<span i18n:translate="" tal:omit-tag="">Meetings and events</span>
-	<a tal:attributes="href string:${here/getSitePath}/latestevents_rdf"><img src="misc_/NaayaCore/xml.png" width="36" height="14" border="0" alt="Syndication (XML)" i18n:attributes="alt" /></a>
+	<a tal:attributes="href string:${here/getSitePath}/meetingsevents_rdf"><img src="misc_/NaayaCore/xml.png" width="36" height="14" border="0" alt="Syndication (XML)" i18n:attributes="alt" /></a>
 </tal:block>
 <tal:block metal:fill-slot="portlet_content">
 <ul>
-<li tal:repeat="item here/getOnFrontEvents"><img tal:attributes="src item/icon; alt item/meta_type; title item/meta_type" style="vertical-align: -5px;" />
+<li tal:repeat="item here/getMeetingsEvents">
+	<img tal:attributes="src item/icon; alt item/meta_type; title item/meta_type" style="vertical-align: -5px;" />
 	<a tal:attributes="href item/absolute_url" tal:content="item/title_or_id">item</a>
 	<span tal:replace="structure item/description" />
 	<br />

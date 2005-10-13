@@ -5,7 +5,7 @@
 </tal:block>
 <tal:block metal:fill-slot="portlet_content">
 <ul>
-<li tal:repeat="item here/getOnFrontNews"><img tal:attributes="src item/icon; alt item/meta_type; title item/meta_type" style="vertical-align: -5px;" />
+<li tal:repeat="item here/getWhatsNew"><img tal:attributes="src item/icon; alt item/meta_type; title item/meta_type" style="vertical-align: -5px;" />
 	<a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id">item</a>
 	<tal:block tal:condition="here/show_releasedate">
 		[<span i18n:translate="" tal:omit-tag="">posted on:</span>
