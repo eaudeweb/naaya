@@ -13,7 +13,6 @@
 		<form id="site_admin_linkchecker" title="Portal administration - link checker"/>
 		<form id="site_admin_predefined" title="Portal administration - predefined latest uploads"/>
 		<form id="site_admin_network" title="Portal administration - network of portals"/>
-		<form id="site_admin_properties" title="Portal administration - properties"/>
 		<form id="site_requestrole" title="Request account page"/>
 	</forms>
 	<layout default_skin_id="chm" default_scheme_id="indigo">
@@ -137,13 +136,11 @@
 		<channeltype id="Technology transfer" title="Technology transfer"/>
 		<channeltype id="Miscellaneous" title="Miscellaneous"/>
 	</syndication>
-	<portlets left="portlet_maincategories" center="portlet_lateststories,portlet_latestnews,portlet_latestevents,portlet_relevantuploads,portlet_latestphotos">
+	<portlets left="portlet_maincategories" center="portlet_lateststories,portlet_meetingsevents,portlet_whatsnew,portlet_relevantuploads,portlet_latestphotos">
 		<portlet id="portlet_administration" title="Administration"/>
-		<portlet id="portlet_lateststories" title="Latest stories"/>
-		<portlet id="portlet_latestnews" title="What's new"/>
+		<portlet id="portlet_meetingsevents" title="Meetings and events"/>
 		<portlet id="portlet_relevantuploads" title="Latest relevant uploads"/>
-		<portlet id="portlet_latestevents" title="Meetings and events"/>
-		<portlet id="portlet_upcomingevents" title="Upcoming events"/>
+		<portlet id="portlet_whatsnew" title="What's new"/>
 		<portlet id="portlet_latestphotos" title="Photos"/>
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
 			<link id="100" title="Biodiversity CHM" description="Global Biodiversity Clearing-House Mechanism (CBD)" url="http://www.biodiv.org/chm" relative="0" permission="" order="10"/>

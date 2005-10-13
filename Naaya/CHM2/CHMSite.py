@@ -130,16 +130,20 @@ class CHMSite(NySite):
             except: pass
 
     #api
-    def getOnFrontNews(self):
-        #returns a list with the news marked as on front
-        #this requires NyNews pluggable content type to be present
+    def getWhatsNew(self):
+        """
+        Returns a list with the news marked as I{on front} from the B{news archive}.
+        This requires NyNews pluggable content type to be installed.
+        """
         r = [x for x in self.getNewsArchive().objectValues(METATYPE_NYNEWS) if x.approved==1 and x.topitem==1 and x.submitted==1]
         r.sort(lambda x,y: cmp(y.releasedate, x.releasedate) or cmp(x.sortorder, y.sortorder))
         return r
 
-    def getOnFrontEvents(self):
-        #returns a list with the news marked as on front
-        #this requires NyEvent pluggable content type to be present
+    def getMeetingsEvents(self):
+        """
+        Returns a list with the news marked as I{on front} from the B{events archive}.
+        This requires B{NyEvent} pluggable content type to be installed.
+        """
         r = [x for x in self.getEventsArchive().objectValues(METATYPE_NYEVENT) if x.approved==1 and x.topitem==1 and x.submitted==1]
         r.sort(lambda x,y: cmp(y.releasedate, x.releasedate) or cmp(x.sortorder, y.sortorder))
         return r
@@ -149,6 +153,10 @@ class CHMSite(NySite):
         r = [x for x in self.getPhotoArchive().getObjects() if x.approved==1 and x.topitem==1 and x.submitted==1]
         r.sort(lambda x,y: cmp(y.releasedate, x.releasedate) or cmp(x.sortorder, y.sortorder))
         return r
+
+    def getLatestRelevantUploads(self):
+        """ """
+        return self.utSortObjsListByAttr(self.getPredefinedUploads(), 'releasedate', 1)
 
     def getUrlMap(self, sort='title'):
         #process and returns a map with all approved urls in the portal by domain
@@ -237,10 +245,6 @@ class CHMSite(NySite):
                         url_struct[p_value] = [(x, x.getParentNode())]
         return url_struct
 
-    def getLatestRelevantUploads(self):
-        """ """
-        return self.utSortObjsListByAttr(self.getPredefinedUploads(), 'releasedate', 1)
-
     def setPredefinedUploads(self, predefined=[], REQUEST=None):
         """ update the predefined list of uploads """
         urls = self.utConvertToList(predefined)
@@ -262,21 +266,6 @@ class CHMSite(NySite):
                 ba(obj)
         self._p_changed = 1
         return buf
-
-    def getLatestStories(self):
-        #returns a list with approved top stories
-        #this requires NyStory pluggable content type to be present
-        return self.getCatalogedObjects(meta_type=METATYPE_NYSTORY, approved=1, topitem=1)
-
-    def getUpcomingEvents(self):
-        #returns a list with the approved events that will follow the current date
-        #this requires NyEvent pluggable content type to be present
-        l_upcoming_events = []
-        l_today = self.utGetTodayDate()
-        for event_obj in self.getCatalogedObjects(meta_type=METATYPE_NYEVENT, approved=1):
-            if event_obj.start_date > l_today:
-                l_upcoming_events.append(event_obj)
-        return l_upcoming_events
 
     def list_glossaries(self):
         #return all the glossaries in this portal
@@ -308,28 +297,24 @@ class CHMSite(NySite):
     #rdf channels
     security.declareProtected(view, 'latestrelevantuploads_rdf')
     def latestrelevantuploads_rdf(self):
-        """ """
+        """
+        Returns a RDF feed with latest relevant uploads.
+        """
         return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestRelevantUploads())
 
     security.declareProtected(view, 'whatsnew_rdf')
     def whatsnew_rdf(self):
-        """ """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getOnFrontNews())
+        """
+        Returns a RDF feed with what's new.
+        """
+        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getWhatsNew())
 
-    security.declareProtected(view, 'lateststories_rdf')
-    def lateststories_rdf(self):
-        """ """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestStories())
-
-    security.declareProtected(view, 'latestevents_rdf')
-    def latestevents_rdf(self):
-        """ """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getOnFrontEvents())
-
-    security.declareProtected(view, 'upcomingevents_rdf')
-    def upcomingevents_rdf(self):
-        """ """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getUpcomingEvents())
+    security.declareProtected(view, 'meetingsevents_rdf')
+    def meetingsevents_rdf(self):
+        """
+        Returns a RDF feed with meetings and events.
+        """
+        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getMeetingsEvents())
 
     security.declareProtected(view, 'processCreateAccountForm')
     def processCreateAccountForm(self, username='', password='', confirm='', firstname='', lastname='', email='', REQUEST=None):
@@ -369,35 +354,6 @@ class CHMSite(NySite):
         l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
         mail_from = self.mail_address_from
         self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
-
-    #administration actions
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
-    def admin_properties(self, number_latest_uploads='', number_announcements='',
-        show_releasedate='', http_proxy='', repository_url='', keywords_glossary='',
-        coverage_glossary='', submit_unapproved='', portal_url='', REQUEST=None):
-        """ """
-        try: number_latest_uploads = int(number_latest_uploads)
-        except: number_latest_uploads = self.number_latest_uploads
-        try: number_announcements = int(number_announcements)
-        except: number_announcements = self.number_announcements
-        if show_releasedate: show_releasedate = 1
-        else: show_releasedate = 0
-        if keywords_glossary == '': keywords_glossary = None
-        if coverage_glossary == '': coverage_glossary = None
-        if submit_unapproved: submit_unapproved = 1
-        else: submit_unapproved = 0
-        self.number_latest_uploads = number_latest_uploads
-        self.number_announcements = number_announcements
-        self.show_releasedate = show_releasedate
-        self.http_proxy = http_proxy
-        self.repository_url = repository_url
-        self.keywords_glossary = keywords_glossary
-        self.coverage_glossary = coverage_glossary
-        self.submit_unapproved = submit_unapproved
-        self.portal_url = portal_url
-        if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/admin_properties_html' % self.absolute_url())
 
     #administration pages
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_urls_html')
