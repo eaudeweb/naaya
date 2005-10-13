@@ -924,7 +924,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.setSession('body', 'An account has been created for you. \
                 The administrator will be informed of your request and may \
                 or may not grant your account with the approriate role.')
-            REQUEST.RESPONSE.redirect('%s/note_html' % self.absolute_url())
+            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
     security.declareProtected(view, 'processNotifyOnErrors')
     def processNotifyOnErrors(self, error_type, error_value, REQUEST):
