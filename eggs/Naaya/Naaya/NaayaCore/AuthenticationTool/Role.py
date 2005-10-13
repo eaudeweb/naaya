@@ -122,10 +122,16 @@ class Role(RoleManager, utils):
 
     def getRolePermissions(self, role):
         """ return the permissions coresponding with role"""
+        if not self._roles.has_key(role):
+            self._roles[role] = []
+            self._p_changed = 1
+        if not self._roles_permissions.has_key(role):
+            self._roles_permissions[role] = []
+            self._p_changed = 1
         temp = []
         for k in self._permissions.keys():
             temp.append(k)
-        #update the role's permission list 
+        #update the role's permission list
         for permission in self._roles_permissions[role]:
             if permission not in temp:
                 self._roles_permissions[role].remove(permission)
