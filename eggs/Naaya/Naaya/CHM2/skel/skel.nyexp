@@ -125,7 +125,7 @@ tal:content="python:item[1]" i18n:translate="" />
 <td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
 <td class="releasedate"><span tal:replace="python:object.utShowDateTime(object.releasedate)" /></td>
 <td class="title-column"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" />
-<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
+<a tal:attributes="href object/absolute_url; title object/description" tal:content="object/title_or_id" />
 <tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
 	[<span tal:replace="object/count_comments" />
 	<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
@@ -251,12 +251,11 @@ tal:content="python:item[1]" i18n:translate="" />
 			<td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
 			<td class="releasedate"><span tal:replace="python:object.utShowDateTime(object.releasedate)" /></td>
 			<td class="title-column"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" />
-				<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
+				<a tal:attributes="href object/absolute_url; title object/description" tal:content="object/title_or_id" />
 				<tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
 					[<span tal:replace="object/count_comments" />
 					<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
 				</tal:block>
-				<span tal:replace="structure object/description" />
 			</td>
 			<td style="width:40%;"><span tal:replace="python: object.utTruncateString(object.source, 40)" /></td>
 			<td class="checkin" tal:condition="edit_permission">
@@ -382,12 +381,11 @@ tal:content="python:item[1]" i18n:translate="" />
 <td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
 <td class="releasedate"><span tal:replace="python:object.utShowDateTime(object.releasedate)"/></td>
 <td class="title-column"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" />
-<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
+<a tal:attributes="href object/absolute_url; title object/description" tal:content="object/title_or_id" />
 <tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
 	[<span tal:replace="object/count_comments" />
 	<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
 </tal:block>
-<span tal:replace="structure object/description" />
 </td>
 <td class="location"><span tal:replace="object/location" /></td>
 <td class="period" tal:content="python:object.utShowDateTimePeriod(object.start_date, object.end_date)" />
