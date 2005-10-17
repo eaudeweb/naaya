@@ -23,7 +23,7 @@
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_network_html" title="Portals in your network" i18n:attributes="title" i18n:translate="">Portals in your network</a></li>
 	<li tal:condition="canPublish"><strong i18n:translate="">Portlets</strong></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_leftportlets_html" title="Arrange portlets around the site" i18n:attributes="title" i18n:translate="">Arrange</a></li>
-	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_specialportlets_html" title="Manage portlets" i18n:attributes="title" i18n:translate="">Manage</a></li>
+	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_remotechportlets_html" title="Manage portlets" i18n:attributes="title" i18n:translate="">Manage</a></li>
 </ul>
 </tal:block>
 </tal:block>
