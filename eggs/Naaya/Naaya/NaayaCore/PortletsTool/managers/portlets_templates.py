@@ -91,9 +91,11 @@ LOCALCHANNEL_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLa
 </tal:block>
 </tal:block>'''
 
-FOLDER_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
-<tal:block metal:fill-slot="portlet_title" tal:content="python:here.getFolderByPath('PORTLET_FOLDER_PATH').title_or_id()"></tal:block>
-<tal:block metal:fill-slot="portlet_content" tal:content="structure python:here.getFolderByPath('PORTLET_FOLDER_PATH').description"></tal:block>
+FOLDER_PORTLET_TEMPLATE = '''<tal:block tal:define="folder python:here.getFolderByPath('PORTLET_FOLDER_PATH')">
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"><a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id" /></tal:block>
+<tal:block metal:fill-slot="portlet_content" tal:content="structure folder/description"></tal:block>
+</tal:block>
 </tal:block>'''
 
 PORTLETS_BODIES = {
