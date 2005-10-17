@@ -288,7 +288,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
                     ra((pc[k]['addform'], pc[k]['label']))
         return r
 
-    security.declareProtected(view, 'checkPermissionManageObects')
+    security.declareProtected(view, 'checkPermissionManageObjects')
     def checkPermissionManageObjects(self):
         """ This function is called on the folder index and it checkes whether or not
             to display the various buttons on that form
@@ -372,10 +372,28 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         filter(roles.remove, ['Administrator', 'Anonymous', 'Manager', 'Owner'])
         return roles
 
-    def is_for_all_users(self):
-        #check if all users have access to this folder
-        print self.rolesOfPermission(view)
-        print self.permission_settings(view)
+    def can_be_seen(self):
+        """
+        Indicates if the current user has access to the current folder.
+        """
+        return self.checkPermission(view)
+
+    def has_restrictions(self):
+        """
+        Indicates if this folder has restrictions for the current user.
+        """
+        return not self.acquiredRolesAreUsedBy(view)
+
+    def get_roles_with_access(self):
+        """
+        Returns a list of roles that have access to this folder.
+        """
+        r = []
+        ra = r.append
+        for x in self.rolesOfPermission(view):
+            if x['selected'] and x['name'] not in ['Administrator', 'Anonymous', 'Manager', 'Owner']:
+                ra(x['name'])
+        return r
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
@@ -588,6 +606,35 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             if err != '': self.setSessionErrors([err])
             if msg != '': self.setSessionInfo([msg])
             REQUEST.RESPONSE.redirect('%s/basketofvalidation_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'setRestrictions')
+    def setRestrictions(self, access='all', roles=[], REQUEST=None):
+        """
+        Restrict access to current folder for given roles.
+        """
+        msg = err = ''
+        if access == 'all':
+            #remove restrictions
+            try:
+                self.manage_permission(view, roles=[], acquire=1)
+            except Exception, error:
+                err = error
+            else:
+                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+        else:
+            #restrict for given roles
+            try:
+                roles = self.utConvertToList(roles)
+                roles.extend(['Manager', 'Administrator'])
+                self.manage_permission(view, roles=roles, acquire=0)
+            except Exception, error:
+                err = error
+            else:
+                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+        if REQUEST:
+            if err != '': self.setSessionErrors([err])
+            if msg != '': self.setSessionInfo([msg])
+            REQUEST.RESPONSE.redirect('%s/restrict_html' % self.absolute_url())
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
