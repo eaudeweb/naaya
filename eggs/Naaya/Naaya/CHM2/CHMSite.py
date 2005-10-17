@@ -116,11 +116,28 @@ class CHMSite(NySite):
             try: r.add_language(language)
             except: pass
 
+        try:    from Products.CHMGlossary.CHMGlossary_constants import *
+        except: CHM_GLOSSARY_CENTRE_METATYPE = ''
+        for r in self.objectValues(CHM_GLOSSARY_CENTRE_METATYPE):
+            try:
+                r.set_languages_list(language, '', self.gl_get_language_name(language))
+                r._p_changed = 1
+            except: pass
+
     def gl_del_site_languages_custom(self, languages):
         #this is called to handle other types of multilanguage objects
         for r in self.objectValues(METATYPE_NYNETREPOSITORY):
             for language in languages:
                 try: r.del_language(language)
+                except: pass
+
+        try:    from Products.CHMGlossary.CHMGlossary_constants import *
+        except: CHM_GLOSSARY_CENTRE_METATYPE = ''
+        for r in self.objectValues(CHM_GLOSSARY_CENTRE_METATYPE):
+            for language in languages:
+                try: 
+                    r.del_language_from_list(language)
+                    r._p_changed = 1
                 except: pass
 
     def gl_change_site_defaultlang_custom(self, language):
