@@ -40,6 +40,8 @@ from Products.NaayaPhotoArchive.NyPhotoFolder import manage_addNyPhotoFolder
 from Products.NaayaPhotoArchive.constants import *
 from Products.NaayaNetRepository.constants import *
 from Products.HelpDeskAgent.HelpDesk import manage_addHelpDesk
+from Products.CHMGlossary.CHMGlossary_constants import *
+
 
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addCHMSite(self, id='', title='', lang=None, REQUEST=None):
@@ -115,9 +117,6 @@ class CHMSite(NySite):
         for r in self.objectValues(METATYPE_NYNETREPOSITORY):
             try: r.add_language(language)
             except: pass
-
-        try:    from Products.CHMGlossary.CHMGlossary_constants import *
-        except: CHM_GLOSSARY_CENTRE_METATYPE = ''
         for r in self.objectValues(CHM_GLOSSARY_CENTRE_METATYPE):
             try:
                 r.set_languages_list(language, '', self.gl_get_language_name(language))
@@ -130,9 +129,6 @@ class CHMSite(NySite):
             for language in languages:
                 try: r.del_language(language)
                 except: pass
-
-        try:    from Products.CHMGlossary.CHMGlossary_constants import *
-        except: CHM_GLOSSARY_CENTRE_METATYPE = ''
         for r in self.objectValues(CHM_GLOSSARY_CENTRE_METATYPE):
             for language in languages:
                 try: 
