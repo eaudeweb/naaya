@@ -37,7 +37,7 @@ class portlets_manager:
 
     #api
     def get_left_portlets_ids(self): return self.__left_portlets_ids
-    def get_left_portlets_ids(self): return self.__left_portlets_ids
+    def get_center_portlets_ids(self): return self.__center_portlets_ids
     def get_right_portlets_locations(self): return self.__right_portlets_locations
 
     def set_left_portlets_ids(self, p_ids):
