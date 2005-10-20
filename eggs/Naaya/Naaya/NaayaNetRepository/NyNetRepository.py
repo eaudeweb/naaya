@@ -43,7 +43,9 @@ def manage_addNyNetRepository(self, id='', title='', lang=None, REQUEST=None):
     ob = NyNetRepository(id, title, lang)
     self.gl_add_languages(ob)
     self._setObject(id, ob)
-    self._getOb(id).loadDefaultData()
+    ob = self._getOb(id)
+    ob.submitThis()
+    ob.loadDefaultData()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 

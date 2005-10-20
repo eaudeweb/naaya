@@ -46,6 +46,8 @@ def addNyNetChannel(self, id='', title='', description='', url='', language=None
     ob = NyNetChannel(id, title, description, url, language, type, manual, lang)
     self.gl_add_languages(ob)
     self._setObject(id, ob)
+    ob = self._getOb(id)
+    ob.submitThis()
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'manage_addNyNetChannel_html' or l_referer.find('manage_addNyNetChannel_html') != -1:
