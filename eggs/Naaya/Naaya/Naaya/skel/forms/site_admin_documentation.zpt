@@ -4,6 +4,10 @@
 
 <tal:block metal:fill-slot="section">
 
+<p>
+	<strong>Work in progress</strong>
+</p>
+
 <div i18n:translate="">
 
 <p>
