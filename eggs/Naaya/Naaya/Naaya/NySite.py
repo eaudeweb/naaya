@@ -196,6 +196,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             portletstool_ob = self.getPortletsTool()
             emailtool_ob = self.getEmailTool()
             authenticationtool_ob = self.getAuthenticationTool()
+            #load pluggable content types
+            if skel_handler.root.pluggablecontenttypes is not None:
+                for pluggablecontenttype in skel_handler.root.pluggablecontenttypes.pluggablecontenttypes:
+                    self.manage_install_pluggableitem(meta_type=pluggablecontenttype.meta_type)
             #load forms
             if skel_handler.root.forms is not None:
                 for form in skel_handler.root.forms.forms:
@@ -242,10 +246,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     image_ob = layouttool_ob._getOb('logobis')
                 image_ob.update_data(data=content)
                 image_ob._p_changed=1
-            #load pluggable content types
-            if skel_handler.root.pluggablecontenttypes is not None:
-                for pluggablecontenttype in skel_handler.root.pluggablecontenttypes.pluggablecontenttypes:
-                    self.manage_install_pluggableitem(meta_type=pluggablecontenttype.meta_type)
             #load syndication
             if skel_handler.root.syndication is not None:
                 for namespace in skel_handler.root.syndication.namespaces:
@@ -708,22 +708,29 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     #the scope is to centralize the list of available languages
     security.declarePublic('gl_get_all_languages')
     def gl_get_all_languages(self): return self.get_all_languages()
+
     security.declarePublic('gl_get_languages')
     def gl_get_languages(self): return self.get_languages()
+
     security.declarePublic('gl_get_languages_mapping')
     def gl_get_languages_mapping(self): return self.get_languages_mapping()
+
     security.declarePublic('gl_get_default_language')
     def gl_get_default_language(self): return self.get_default_language()
+
     security.declarePublic('gl_get_selected_language')
     def gl_get_selected_language(self): return self.get_selected_language()
+
     security.declarePublic('gl_get_languages_map')
     def gl_get_languages_map(self):
         lang, langs, r = self.gl_get_selected_language(), self.get_available_languages(), []
         for x in langs:
             r.append({'id': x, 'title': self.gl_get_language_name(x), 'selected': x==lang})
         return r
+
     security.declarePublic('gl_get_language_name')
     def gl_get_language_name(self, lang): return self.get_language_name(lang)
+
     def gl_add_languages(self, ob):
         for l in self.gl_get_languages_mapping():
             ob.add_language(l['code'])
