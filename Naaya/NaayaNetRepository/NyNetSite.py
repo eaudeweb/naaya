@@ -45,6 +45,8 @@ def addNyNetSite(self, id='', title='', description='', url='', lang=None, REQUE
     ob = NyNetSite(id, title, description, url, lang)
     self.gl_add_languages(ob)
     self._setObject(id, ob)
+    ob = self._getOb(id)
+    ob.submitThis()
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'manage_addNyNetSite_html' or l_referer.find('manage_addNyNetSite_html') != -1:
