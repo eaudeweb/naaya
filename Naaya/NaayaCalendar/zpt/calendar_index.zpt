@@ -16,7 +16,7 @@
 						days_matrix python:here.getDaysMatrix(here.getRange(here.getCounter(date[0])), here.getRange(date[1]));">
 
 <!-- Calendar begin -->
-	<table id="calendar-container" cellspacing="0">
+	<table id="calendar-container" cellspacing="1">
 		<!-- Title area begin -->
 		<caption id="calendar-title" tal:content="python:here.title">TITLE</caption>
 		<!-- Title area end -->
