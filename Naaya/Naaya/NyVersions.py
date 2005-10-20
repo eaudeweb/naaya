@@ -76,4 +76,21 @@ class NyVersions:
         self._p_changed = 1
         return "Upgraded OK: submitted for PhotoArchive"
 
+    security.declareProtected(view_management_screens, 'upgrade_netregistry')
+    def upgrade_netregistry(self):
+        """
+        Upgrade other stuff.
+        """
+        self.net_repository.submitted = 1
+        self._p_changed = 1
+        for site in self.net_repository.get_netsites():
+            site.submitted = 1
+            site._p_changed = 1
+            self.recatalogNyObject(site)
+            for channel in site.get_netchannels():
+                channel.submitted = 1
+                channel._p_changed = 1
+                self.recatalogNyObject(channel)
+        return "Upgraded OK: submitted for NetRepository"
+
 InitializeClass(NyVersions)
