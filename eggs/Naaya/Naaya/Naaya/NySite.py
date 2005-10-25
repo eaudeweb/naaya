@@ -301,7 +301,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     #set the grouppermissions
                     authenticationtool_ob.editRole(role.name, role.grouppermissions)
                     #set individual permissions
-                    self.manage_role(role.name, role.permissions)
+                    b = [x['name'] for x in self.permissionsOfRole(role.name) if x['selected']=='SELECTED']
+                    b.extend(role.permissions)
+                    self.manage_role(role.name, b)
             #set subobjects for folders
             self.getPropertiesTool().manageSubobjects(subobjects=None, ny_subobjects=self.get_meta_types(1))
             #other stuff
