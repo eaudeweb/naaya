@@ -189,7 +189,7 @@ BOOL CInstallPage::StartInstallation(CString strLogFile)
     }
 
 	// Run some scripts to set stuff
-    /*arrLog.RemoveAll();
+    arrLog.RemoveAll();
     arrLog.Add(CRString(IDS_START_RUNSCRIPTS));
     if (!RunScripts(arrLog))
     {   // In case of an error, write to log and return
@@ -201,7 +201,7 @@ BOOL CInstallPage::StartInstallation(CString strLogFile)
     {
         arrLog.Add(CRString(IDS_END_RUNSCRIPTS));
         toolz.InternalWriteToFile(strLogFile, arrLog);
-    }*/
+    }
 
 	// Clean up process
     /*arrLog.RemoveAll();
@@ -424,7 +424,7 @@ BOOL CInstallPage::ModifyConfigurationFiles(CStringArray& arrLog)
 		// @@ZOPE_PATH@@
 		// @@BIN_PATH@@
 		strContent.Replace("@@ZOPE_PATH@@", pWizardData->m_strPath);
-		strContent.Replace("@@BIN_PATH@@", pWizardData->m_strPath);
+		strContent.Replace("@@BIN_PATH@@", pWizardData->m_strPath + strBinFolder);
 
 		// write modified content back to file
 		toolz.WriteFileContent(strFilePath, strContent, arrLog);
