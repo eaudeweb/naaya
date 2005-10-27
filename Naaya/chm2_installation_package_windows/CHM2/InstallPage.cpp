@@ -615,6 +615,13 @@ void CInstallPage::UpdateRegistry(CStringArray& arrLog)
 	arrLog.Add(strBuffer);
 	toolz.CreateRegistryKey(strRegString, "Zope path", pWizardData->m_strPath + CRString(IDS_FOLDER_ZOPE));
 
+	// set instance path
+	strBuffer.Format("\t\tRegDB Name: Instance path");
+	arrLog.Add(strBuffer);
+	strBuffer.Format("\t\tRegDB Value: %s", pWizardData->m_strPath + CRString(IDS_FOLDER_INSTANCE));
+	arrLog.Add(strBuffer);
+	toolz.CreateRegistryKey(strRegString, "Instance path", pWizardData->m_strPath + CRString(IDS_FOLDER_INSTANCE));
+
 	// set bin path
 	strBuffer.Format("\t\tRegDB Name: Bin path");
 	arrLog.Add(strBuffer);
