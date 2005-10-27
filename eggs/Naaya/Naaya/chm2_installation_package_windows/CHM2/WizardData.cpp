@@ -20,8 +20,8 @@ CWizardData::CWizardData()
 {
 	// InstallPath page
 	m_strPath = "";
-	m_n64SpaceRequired = 260*1024*1024;
-	m_strSpaceRequired = "260";
+	m_n64SpaceRequired = 90*1024*1024;
+	m_strSpaceRequired = "90";
 
 	// Parameters page
 	m_strFullHostName = "";

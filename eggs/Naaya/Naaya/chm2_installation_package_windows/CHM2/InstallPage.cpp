@@ -133,7 +133,7 @@ BOOL CInstallPage::OnWizardFinish()
 		strDirectory = ((CCHM2Dlg*)GetParent())->m_pWizardData->m_strPath;
 		strDirectory += CRString(IDS_FOLDER_BIN);
 		strFile = strDirectory;
-		strFile += "\\RepoToolConsole.exe";
+		strFile += "\\CHM2Console.exe";
 
 		CStringArray arrLog;
 		HANDLE process = toolz.launchViaShellExecute(strFile, "", strDirectory, SW_RESTORE | SW_SHOWNORMAL);
@@ -300,7 +300,7 @@ BOOL CInstallPage::CopyNecessaryFiles(CStringArray& arrLog)
 	// move CHM2Unins.exe from bin to application path
 	CString strFilePath, strBuffer;
 	strFilePath.Format("%s\\CHM2Unins.exe", pWizardData->m_strPath + strBinFolder);
-	strBuffer.Format(CRString(IDS_MOVE_FILE), strFilePath, pWizardData->m_strPath + "\\RepoToolUnins.exe");
+	strBuffer.Format(CRString(IDS_MOVE_FILE), strFilePath, pWizardData->m_strPath + "\\CHM2Unins.exe");
     arrLog.Add(strBuffer);
 	if (toolz.InternalMoveFile(pWizardData->m_strPath + strBinFolder + "\\CHM2Unins.exe", pWizardData->m_strPath + "\\CHM2Unins.exe"))
 	{
