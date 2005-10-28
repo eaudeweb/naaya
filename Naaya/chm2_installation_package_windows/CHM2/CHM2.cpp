@@ -16,6 +16,7 @@
 #include "ParametersPage.h"
 #include "PortsPage.h"
 #include "PortalMetadataPage.h"
+#include "PortalAdministrativePage.h"
 #include "FinishPage.h"
 #include "InstallPage.h"
 
@@ -102,7 +103,8 @@ BOOL CCHM2App::InitInstance()
 			CInstallPathPage InstallPathPage;
 			CParametersPage ParametersPage;
 			CPortsPage PortsPage;
-			CPortalMetadataPage PortalMetadata;
+			CPortalMetadataPage PortalMetadataPage;
+			CPortalAdministrativePage PortalAdministrativePage;
 			CFinishPage FinishPage;
 			CInstallPage InstallPage;
 
@@ -111,7 +113,8 @@ BOOL CCHM2App::InitInstance()
 			dlg.AddPage(&InstallPathPage, CInstallPathPage::IDD);
 			dlg.AddPage(&ParametersPage, CParametersPage::IDD);
 			dlg.AddPage(&PortsPage, CPortsPage::IDD);
-			dlg.AddPage(&PortalMetadata, CPortalMetadataPage::IDD);
+			dlg.AddPage(&PortalMetadataPage, CPortalMetadataPage::IDD);
+			dlg.AddPage(&PortalAdministrativePage, CPortalAdministrativePage::IDD);
 			dlg.AddPage(&FinishPage, CFinishPage::IDD);
 			dlg.AddPage(&InstallPage, CInstallPage::IDD);
 

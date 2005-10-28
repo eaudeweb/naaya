@@ -6,6 +6,8 @@
 #include "CHM2.h"
 #include "WizardData.h"
 
+#include <fstream.h>
+
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
@@ -45,6 +47,34 @@ CWizardData::CWizardData()
 	m_strPortalContributor = "EC CHM";
 	m_strPortalCreator = "EC CHM";
 	m_strPortalRights = "EEA";
+
+	// Portal administrative
+	m_strPortalURL = "";
+
+	// load languages codes and names
+	ifstream languagesfile ("D:\\CHM2_KIT_FILES\\zope\\bin\\Lib\\site-packages\\itools\\i18n\\languages.txt");
+	CString strLine, strLanguageCode, strLanguageName;
+	int nPos;
+
+	if (languagesfile.is_open())
+	{
+		while (!languagesfile.eof())
+		{
+			languagesfile.getline(strLine.GetBuffer(100), 100);
+			strLine.ReleaseBuffer();
+			strLine.TrimLeft();
+			strLine.TrimRight();
+			if (strLine != "" && strLine[0] != '#')
+			{
+				nPos = strLine.Find(" ");
+				strLanguageCode = strLine.Left(nPos);
+				strLanguageName = strLine.Right(strLine.GetLength()-nPos-1);
+				m_arrLanguagesCodes.Add(strLanguageCode);
+				m_arrLanguagesNames.Add(strLanguageName);
+			}
+			
+		}
+	}
 }
 
 CWizardData::~CWizardData()

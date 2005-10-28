@@ -47,6 +47,11 @@ public:
 	CString m_strPortalRights;
 
 	// Portal administrative page
+	CString m_strPortalURL;
+
+	//languages code and names
+	CStringArray m_arrLanguagesCodes;
+	CStringArray m_arrLanguagesNames;
 
 	// Other
     unsigned __int64 m_n64TotalSize;

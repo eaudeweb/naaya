@@ -55,6 +55,7 @@
 #define IDS_END_UPDATEREGISTRY          139
 #define IDW_PORTALMETADATA              139
 #define IDS_COPY_ZOPE                   140
+#define IDW_PORTALADMINISTRATIVE        140
 #define IDS_FAILED_CREATE_DIRECTORY     141
 #define IDS_COPY_BIN                    142
 #define IDS_MOVE_FILE                   144
@@ -145,14 +146,17 @@
 #define IDC_PORTAL_CREATOR              1042
 #define IDC_PORTAL_RIGHTS               1043
 #define IDC_PORTALMETADATA_TITLE        1044
+#define IDC_PORTALADMINISTRATIVE_TITLE  1045
+#define IDC_PORTAL_LANGUAGES            1048
+#define IDC_PORTAL_URL                  1049
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        140
+#define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1045
+#define _APS_NEXT_CONTROL_VALUE         1050
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
