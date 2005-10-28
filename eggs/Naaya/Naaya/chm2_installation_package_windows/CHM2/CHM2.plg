@@ -6,35 +6,13 @@
 --------------------Configuration: CHM2 - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating command line "rc.exe /l 0x409 /fo"Debug/CHM2.res" /d "_DEBUG" /d "_AFXDLL" "D:\C++\CHM\CHM2\CHM2.rc"" 
-Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSPBB.tmp" with contents
+Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP1BE.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/CHM2.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"D:\C++\CHM\CHM2\AgreementPage.cpp"
-"D:\C++\CHM\CHM2\CHM2.cpp"
-"D:\C++\CHM\CHM2\CHM2Dlg.cpp"
-"D:\C++\CHM\CHM2\ErrorPage.cpp"
-"D:\C++\CHM\CHM2\FinishPage.cpp"
-"D:\C++\CHM\CHM2\InstallPage.cpp"
-"D:\C++\CHM\CHM2\InstallPathPage.cpp"
-"D:\C++\CHM\CHM2\NewWizDialog.cpp"
-"D:\C++\CHM\CHM2\NewWizPage.cpp"
-"D:\C++\CHM\CHM2\ParametersPage.cpp"
-"D:\C++\CHM\CHM2\PortalMetadataPage.cpp"
-"D:\C++\CHM\CHM2\PortsPage.cpp"
-"D:\C++\CHM\CHM2\ServiceManager.cpp"
-"D:\C++\CHM\CHM2\WelcomePage.cpp"
-"D:\C++\CHM\CHM2\WizardData.cpp"
-"D:\C++\CHM\CHM2\WizardToolz.cpp"
+"D:\C++\CHM\CHM2\PortalAdministrativePage.cpp"
 ]
-Creating command line "cl.exe @C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSPBB.tmp" 
-Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSPBC.tmp" with contents
-[
-/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/CHM2.pch" /Yc"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"D:\C++\CHM\CHM2\StdAfx.cpp"
-]
-Creating command line "cl.exe @C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSPBC.tmp" 
-Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSPBD.tmp" with contents
+Creating command line "cl.exe @C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP1BE.tmp" 
+Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP1BF.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/CHM2.pdb" /debug /machine:I386 /out:"Debug/CHM2.exe" /pdbtype:sept 
 ".\Debug\AgreementPage.obj"
@@ -55,30 +33,12 @@ Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSPBD.tmp" with 
 ".\Debug\WizardData.obj"
 ".\Debug\WizardToolz.obj"
 ".\Debug\CHM2.res"
+".\Debug\PortalAdministrativePage.obj"
 ]
-Creating command line "link.exe @C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSPBD.tmp"
+Creating command line "link.exe @C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP1BF.tmp"
 <h3>Output Window</h3>
-Compiling resources...
 Compiling...
-StdAfx.cpp
-Compiling...
-AgreementPage.cpp
-CHM2.cpp
-CHM2Dlg.cpp
-ErrorPage.cpp
-FinishPage.cpp
-InstallPage.cpp
-InstallPathPage.cpp
-NewWizDialog.cpp
-NewWizPage.cpp
-ParametersPage.cpp
-PortalMetadataPage.cpp
-PortsPage.cpp
-ServiceManager.cpp
-WelcomePage.cpp
-WizardData.cpp
-WizardToolz.cpp
-Generating Code...
+PortalAdministrativePage.cpp
 Linking...
 
 

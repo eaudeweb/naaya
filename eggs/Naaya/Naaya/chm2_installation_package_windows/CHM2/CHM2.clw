@@ -2,13 +2,13 @@
 
 [General Info]
 Version=1
-LastClass=CPortalMetadataPage
+LastClass=CPortalAdministrativePage
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "chm2.h"
 LastPage=0
 
-ClassCount=14
+ClassCount=15
 Class1=CAgreementPage
 Class2=CCHM2App
 Class3=CAboutDlg
@@ -24,18 +24,20 @@ Class12=CPortalMetadataPage
 Class13=CPortsPage
 Class14=CWelcomePage
 
-ResourceCount=11
-Resource1=IDD_ABOUTBOX
-Resource2=IDD_CHM2_DIALOG
-Resource3=IDW_ERROR
-Resource4=IDW_WELCOME
-Resource5=IDW_AGREEMENT
-Resource6=IDW_INSTALLPATH
-Resource7=IDW_PARAMETERS
-Resource8=IDW_PORTS
-Resource9=IDW_FINISH
-Resource10=IDW_INSTALL
-Resource11=IDW_PORTALMETADATA
+ResourceCount=12
+Resource1=IDW_WELCOME
+Resource2=IDW_INSTALLPATH
+Resource3=IDW_PARAMETERS
+Resource4=IDW_PORTS
+Resource5=IDW_FINISH
+Resource6=IDW_INSTALL
+Resource7=IDW_PORTALMETADATA
+Resource8=IDD_ABOUTBOX
+Resource9=IDD_CHM2_DIALOG
+Resource10=IDW_ERROR
+Resource11=IDW_AGREEMENT
+Class15=CPortalAdministrativePage
+Resource12=IDW_PORTALADMINISTRATIVE
 
 [CLS:CAgreementPage]
 Type=0
@@ -260,4 +262,23 @@ Control2=IDC_STATIC,static,1342308352
 Control3=IDC_STATIC,static,1342177294
 Control4=IDC_STATIC,static,1342308352
 Control5=IDC_STATIC,static,1342308352
+
+[DLG:IDW_PORTALADMINISTRATIVE]
+Type=1
+Class=CPortalAdministrativePage
+ControlCount=6
+Control1=IDC_PORTALADMINISTRATIVE_TITLE,static,1342308352
+Control2=IDC_STATIC,static,1342177294
+Control3=IDC_STATIC,static,1342308352
+Control4=IDC_PORTAL_URL,edit,1350631552
+Control5=IDC_STATIC,static,1342308352
+Control6=IDC_PORTAL_LANGUAGES,listbox,1352728841
+
+[CLS:CPortalAdministrativePage]
+Type=0
+HeaderFile=PortalAdministrativePage.h
+ImplementationFile=PortalAdministrativePage.cpp
+BaseClass=CNewWizPage
+Filter=D
+LastObject=CPortalAdministrativePage
 
