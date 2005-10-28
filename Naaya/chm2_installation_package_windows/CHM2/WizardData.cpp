@@ -37,6 +37,14 @@ CWizardData::CWizardData()
 
 	// Run as service default
 	m_nRunAsService = 1;
+
+	// Portal metadata
+	m_strPortalTitle = "";
+	m_strPortalSubtitle = "";
+	m_strPortalPublisher = "EEA";
+	m_strPortalContributor = "EC CHM";
+	m_strPortalCreator = "EC CHM";
+	m_strPortalRights = "EEA";
 }
 
 CWizardData::~CWizardData()

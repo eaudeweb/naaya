@@ -53,6 +53,7 @@
 #define IDB_SETUP                       138
 #define IDS_START_UPDATEREGISTRY        138
 #define IDS_END_UPDATEREGISTRY          139
+#define IDW_PORTALMETADATA              139
 #define IDS_COPY_ZOPE                   140
 #define IDS_FAILED_CREATE_DIRECTORY     141
 #define IDS_COPY_BIN                    142
@@ -137,14 +138,21 @@
 #define IDC_PORTS_ZOPEFTPPORT_EDIT      1034
 #define IDC_PORTS_ZOPEWEBDAVPORT_EDIT   1035
 #define IDC_WELCOME_TITLE               1036
+#define IDC_PORTAL_TITLE                1037
+#define IDC_PORTAL_SUBTITLE             1039
+#define IDC_PORTAL_PUBLISHER            1040
+#define IDC_PORTAL_CONTRIBUTOR          1041
+#define IDC_PORTAL_CREATOR              1042
+#define IDC_PORTAL_RIGHTS               1043
+#define IDC_PORTALMETADATA_TITLE        1044
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        139
+#define _APS_NEXT_RESOURCE_VALUE        140
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1037
+#define _APS_NEXT_CONTROL_VALUE         1045
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

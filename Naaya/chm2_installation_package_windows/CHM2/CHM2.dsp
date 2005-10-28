@@ -134,6 +134,10 @@ SOURCE=.\ParametersPage.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\PortalMetadataPage.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\PortsPage.cpp
 # End Source File
 # Begin Source File
@@ -200,6 +204,10 @@ SOURCE=.\NewWizPage.h
 # Begin Source File
 
 SOURCE=.\ParametersPage.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\PortalMetadataPage.h
 # End Source File
 # Begin Source File
 
