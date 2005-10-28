@@ -38,6 +38,16 @@ public:
 	// Run page
 	int m_nRunAsService;
 
+	// Portal metadata page
+	CString m_strPortalTitle;
+	CString m_strPortalSubtitle;
+	CString m_strPortalPublisher;
+	CString m_strPortalContributor;
+	CString m_strPortalCreator;
+	CString m_strPortalRights;
+
+	// Portal administrative page
+
 	// Other
     unsigned __int64 m_n64TotalSize;
     unsigned __int64 m_n64PieceSize;
