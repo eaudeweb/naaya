@@ -46,6 +46,10 @@ public:
 	CString m_strPortalCreator;
 	CString m_strPortalRights;
 
+	//Portal logos
+	CString m_strLogoPath;
+	CString m_strLogoBisPath;
+
 	// Portal administrative page
 	CString m_strPortalURL;
 

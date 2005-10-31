@@ -57,6 +57,7 @@
 #define IDS_COPY_ZOPE                   140
 #define IDW_PORTALADMINISTRATIVE        140
 #define IDS_FAILED_CREATE_DIRECTORY     141
+#define IDW_PORTALLOGOS                 141
 #define IDS_COPY_BIN                    142
 #define IDS_MOVE_FILE                   144
 #define IDS_FAILED_MOVE_FILE            145
@@ -106,6 +107,7 @@
 #define IDS_SHORTCUT_UNINSTALL_NAME     190
 #define IDS_SHORTCUT_UNINSTALL_DESCRIPTION 191
 #define IDS_MAILSERVERPORT_INVALID      192
+#define IDS_DATASOURCE_IMAGEFILES       193
 #define IDC_SHEETRECT                   1004
 #define IDC_AGREEMENT_TITLE             1005
 #define IDC_AGREEMENT_INFORMATION       1006
@@ -152,7 +154,12 @@
 #define IDC_PORTAL_URL                  1049
 #define IDC_PORTAL_MAILSERVERNAME       1050
 #define IDC_PORTAL_MAILSERVERPORT       1051
+#define IDC_LOGO_PATH                   1051
 #define IDC_PORTAL_DEFAULTFROMADDRESS   1052
+#define IDC_LOGO_BROWSE_BUTTON          1052
+#define IDC_LOGOBIS_PATH                1053
+#define IDC_LOGOBIS_BROWSE_BUTTON       1054
+#define IDC_PORTALLOGOS_TITLE           1055
 
 // Next default values for new objects
 // 
@@ -160,7 +167,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1051
+#define _APS_NEXT_CONTROL_VALUE         1056
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

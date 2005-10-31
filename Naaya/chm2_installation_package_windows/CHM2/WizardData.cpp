@@ -48,6 +48,10 @@ CWizardData::CWizardData()
 	m_strPortalCreator = "EC CHM";
 	m_strPortalRights = "EEA";
 
+	//Portal logos
+	m_strLogoPath = "";
+	m_strLogoBisPath = "";
+
 	// Portal administrative
 	m_strPortalURL = "";
 	// load languages codes and names

@@ -6,13 +6,8 @@
 --------------------Configuration: CHM2 - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP231.tmp" with contents
-[
-/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/CHM2.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"D:\C++\CHM\CHM2\PortalAdministrativePage.cpp"
-]
-Creating command line "cl.exe @C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP231.tmp" 
-Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP232.tmp" with contents
+Creating command line "rc.exe /l 0x409 /fo"Debug/CHM2.res" /d "_DEBUG" /d "_AFXDLL" "D:\C++\CHM\CHM2\CHM2.rc"" 
+Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP2E4.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/CHM2.pdb" /debug /machine:I386 /out:"Debug/CHM2.exe" /pdbtype:sept 
 ".\Debug\AgreementPage.obj"
@@ -34,11 +29,11 @@ Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP232.tmp" with
 ".\Debug\WizardData.obj"
 ".\Debug\WizardToolz.obj"
 ".\Debug\CHM2.res"
+".\Debug\PortalLogosPage.obj"
 ]
-Creating command line "link.exe @C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP232.tmp"
+Creating command line "link.exe @C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP2E4.tmp"
 <h3>Output Window</h3>
-Compiling...
-PortalAdministrativePage.cpp
+Compiling resources...
 Linking...
 
 
