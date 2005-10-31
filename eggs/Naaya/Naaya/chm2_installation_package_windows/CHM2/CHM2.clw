@@ -25,17 +25,17 @@ Class13=CPortsPage
 Class14=CWelcomePage
 
 ResourceCount=12
-Resource1=IDW_WELCOME
-Resource2=IDW_INSTALLPATH
-Resource3=IDW_PARAMETERS
-Resource4=IDW_PORTS
-Resource5=IDW_FINISH
-Resource6=IDW_INSTALL
-Resource7=IDW_PORTALMETADATA
-Resource8=IDD_ABOUTBOX
-Resource9=IDD_CHM2_DIALOG
-Resource10=IDW_ERROR
-Resource11=IDW_AGREEMENT
+Resource1=IDW_AGREEMENT
+Resource2=IDW_PARAMETERS
+Resource3=IDW_PORTS
+Resource4=IDW_FINISH
+Resource5=IDW_INSTALL
+Resource6=IDW_PORTALMETADATA
+Resource7=IDD_ABOUTBOX
+Resource8=IDD_CHM2_DIALOG
+Resource9=IDW_ERROR
+Resource10=IDW_WELCOME
+Resource11=IDW_INSTALLPATH
 Class15=CPortalAdministrativePage
 Resource12=IDW_PORTALADMINISTRATIVE
 
@@ -266,13 +266,19 @@ Control5=IDC_STATIC,static,1342308352
 [DLG:IDW_PORTALADMINISTRATIVE]
 Type=1
 Class=CPortalAdministrativePage
-ControlCount=6
+ControlCount=12
 Control1=IDC_PORTALADMINISTRATIVE_TITLE,static,1342308352
 Control2=IDC_STATIC,static,1342177294
 Control3=IDC_STATIC,static,1342308352
 Control4=IDC_PORTAL_URL,edit,1350631552
 Control5=IDC_STATIC,static,1342308352
 Control6=IDC_PORTAL_LANGUAGES,listbox,1352728841
+Control7=IDC_STATIC,static,1342308352
+Control8=IDC_STATIC,static,1342308352
+Control9=IDC_STATIC,static,1342308352
+Control10=IDC_PORTAL_MAILSERVERNAME,edit,1350631552
+Control11=IDC_PORTAL_MAILSERVERPORT,edit,1350639744
+Control12=IDC_PORTAL_DEFAULTFROMADDRESS,edit,1350631552
 
 [CLS:CPortalAdministrativePage]
 Type=0
@@ -280,5 +286,5 @@ HeaderFile=PortalAdministrativePage.h
 ImplementationFile=PortalAdministrativePage.cpp
 BaseClass=CNewWizPage
 Filter=D
-LastObject=CPortalAdministrativePage
+LastObject=IDC_PORTAL_MAILSERVERPORT
 

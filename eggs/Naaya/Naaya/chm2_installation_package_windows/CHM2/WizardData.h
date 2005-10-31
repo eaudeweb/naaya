@@ -52,6 +52,10 @@ public:
 	//languages code and names
 	CStringArray m_arrLanguagesCodes;
 	CStringArray m_arrLanguagesNames;
+	CArray<int, int> m_arrLanguagesSel;
+	CString m_strMailServerName;
+	int m_nMailServerPort;
+	CString m_strDefaultFromAddress;
 
 	// Other
     unsigned __int64 m_n64TotalSize;
