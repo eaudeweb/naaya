@@ -54,8 +54,15 @@ CWizardData::CWizardData()
 
 	// Portal administrative
 	m_strPortalURL = "";
+	//process languages file path
+    // get current folder path
+    CString strCurrentDirectory;
+	GetCurrentDirectory(1024, strCurrentDirectory.GetBuffer(1024));
+    strCurrentDirectory.ReleaseBuffer();
+    CString strZopeFolder = CRString(IDS_FOLDER_ZOPE);
+
 	// load languages codes and names
-	ifstream languagesfile ("D:\\CHM2_KIT_FILES\\zope\\bin\\Lib\\site-packages\\itools\\i18n\\languages.txt");
+	ifstream languagesfile (strCurrentDirectory + strZopeFolder + "\\bin\\Lib\\site-packages\\itools\\i18n\\languages.txt");
 	CString strLine, strLanguageCode, strLanguageName;
 	int nPos;
 	if (languagesfile.is_open())
