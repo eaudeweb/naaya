@@ -306,7 +306,34 @@ BOOL CInstallPage::CopyNecessaryFiles(CStringArray& arrLog)
 	{
 		strError.Format(CRString(IDS_FAILED_MOVE_FILE), pWizardData->m_strPath + strBinFolder + "\\CHM2Unins.exe", pWizardData->m_strPath + "\\CHM2Unins.exe");
 		arrLog.Add(strError);
-		//return FALSE;
+		return FALSE;
+	}
+
+	//copy logo files
+	if (pWizardData->m_strLogoPath != "")
+	{
+		strFilePath.Format("%s%s\\Products\\CHM2\\skel\\layout\\logo.gif", pWizardData->m_strPath, strInstanceFolder);
+		strBuffer.Format(CRString(IDS_COPY_LOGO), pWizardData->m_strLogoPath, strFilePath);
+		arrLog.Add(strBuffer);
+		if (toolz.InternalOverwriteFile(pWizardData->m_strLogoPath, strFilePath))
+		{
+			strError.Format(CRString(IDS_FAILED_MOVE_FILE), pWizardData->m_strLogoPath, strFilePath);
+			arrLog.Add(strError);
+			return FALSE;
+		}
+	}
+
+	if (pWizardData->m_strLogoBisPath != "")
+	{
+		strFilePath.Format("%s%s\\Products\\CHM2\\skel\\layout\\logobis.gif", pWizardData->m_strPath, strInstanceFolder);
+		strBuffer.Format(CRString(IDS_COPY_LOGO), pWizardData->m_strLogoBisPath, strFilePath);
+		arrLog.Add(strBuffer);
+		if (toolz.InternalOverwriteFile(pWizardData->m_strLogoBisPath, strFilePath))
+		{
+			strError.Format(CRString(IDS_FAILED_MOVE_FILE), pWizardData->m_strLogoBisPath, strFilePath);
+			arrLog.Add(strError);
+			return FALSE;
+		}
 	}
 
     return TRUE;

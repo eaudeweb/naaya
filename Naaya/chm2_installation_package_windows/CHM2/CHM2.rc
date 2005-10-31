@@ -603,6 +603,7 @@ BEGIN
                             "The mail server port number must be an integer between 1 and 65535"
     IDS_DATASOURCE_IMAGEFILES 
                             "All Image Formats (*.gif;*.jpg;*.jpeg;*.png)|*.gif;*.jpg;*.jpeg;*.png|GIFs (*.gif)|*.gif|JPEGs (*.jpg)|*.jpg;*.jpeg|PNGs (*.png)|*.png||"
+    IDS_COPY_LOGO           "\tCopy logo file from ""%s"" to ""%s"""
 END
 
 #endif    // English (U.S.) resources
