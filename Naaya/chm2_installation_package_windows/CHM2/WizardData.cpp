@@ -50,12 +50,10 @@ CWizardData::CWizardData()
 
 	// Portal administrative
 	m_strPortalURL = "";
-
 	// load languages codes and names
 	ifstream languagesfile ("D:\\CHM2_KIT_FILES\\zope\\bin\\Lib\\site-packages\\itools\\i18n\\languages.txt");
 	CString strLine, strLanguageCode, strLanguageName;
 	int nPos;
-
 	if (languagesfile.is_open())
 	{
 		while (!languagesfile.eof())
@@ -75,6 +73,9 @@ CWizardData::CWizardData()
 			
 		}
 	}
+	m_strMailServerName = "localhost";
+	m_nMailServerPort = 25;
+	m_strDefaultFromAddress = "";
 }
 
 CWizardData::~CWizardData()

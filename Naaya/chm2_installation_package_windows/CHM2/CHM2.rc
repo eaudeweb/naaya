@@ -266,11 +266,19 @@ BEGIN
     LTEXT           "Portal Administrative",IDC_PORTALADMINISTRATIVE_TITLE,
                     85,7,229,16
     CONTROL         138,IDC_STATIC,"Static",SS_BITMAP,0,0,107,193
-    LTEXT           "Portal URL",IDC_STATIC,85,35,48,8
-    EDITTEXT        IDC_PORTAL_URL,141,33,154,13,ES_AUTOHSCROLL
-    LTEXT           "Languages",IDC_STATIC,85,62,36,8
-    LISTBOX         IDC_PORTAL_LANGUAGES,141,60,154,63,LBS_MULTIPLESEL | 
+    LTEXT           "Portal URL",IDC_STATIC,85,36,48,8
+    EDITTEXT        IDC_PORTAL_URL,160,34,154,13,ES_AUTOHSCROLL
+    LTEXT           "Languages",IDC_STATIC,85,56,36,8
+    LISTBOX         IDC_PORTAL_LANGUAGES,160,52,154,63,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Mail server name",IDC_STATIC,85,124,54,8
+    LTEXT           "Mail server port",IDC_STATIC,85,142,49,8
+    LTEXT           "Default from address",IDC_STATIC,85,159,66,8
+    EDITTEXT        IDC_PORTAL_MAILSERVERNAME,160,120,124,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PORTAL_MAILSERVERPORT,160,138,29,13,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    EDITTEXT        IDC_PORTAL_DEFAULTFROMADDRESS,160,156,124,13,
+                    ES_AUTOHSCROLL
 END
 
 
@@ -564,6 +572,12 @@ BEGIN
     IDS_SHORTCUT_CONSOLE_DESCRIPTION "CHM2 console"
     IDS_SHORTCUT_UNINSTALL_NAME "\\CHM2 uninstaller.lnk"
     IDS_SHORTCUT_UNINSTALL_DESCRIPTION "CHM2 uninstaller"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_MAILSERVERPORT_INVALID 
+                            "The mail server port number must be an integer between 1 and 65535"
 END
 
 #endif    // English (U.S.) resources
