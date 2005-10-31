@@ -56,13 +56,24 @@ void CFinishPage::OnSetActive()
 {
     // set information
     CString strInformation;
-    CString strBuffer;
+    CString strBuffer, strRunning, strLanguages;
 
 	CWizardData* pWizardData = ((CCHM2Dlg*)GetParent())->m_pWizardData;
     if (pWizardData->m_nRunAsService)
-        strBuffer = CRString(IDS_RUN_SERVICE);
+        strRunning = CRString(IDS_RUN_SERVICE);
     else
-        strBuffer = CRString(IDS_RUN_MANUAL);
+        strRunning = CRString(IDS_RUN_MANUAL);
+
+	for (int i=0; i<pWizardData->m_arrLanguagesSel.GetSize(); i++)
+	{
+		int x = pWizardData->m_arrLanguagesSel.GetAt(i);
+		strBuffer.Format("%s [%s]",
+			pWizardData->m_arrLanguagesNames.GetAt(x),
+			pWizardData->m_arrLanguagesCodes.GetAt(x));
+		strLanguages += strBuffer;
+		if (i < pWizardData->m_arrLanguagesSel.GetSize()-1)
+			strLanguages += ", ";
+	}
 
 	strInformation.Format(CRString(IDS_SUMMARY),
 			pWizardData->m_strPath,
@@ -73,8 +84,21 @@ void CFinishPage::OnSetActive()
 			pWizardData->m_nZopeHTTPPort,
 			pWizardData->m_nZopeFTPPort,
 			pWizardData->m_nZopeWEBDAVPort,
+			pWizardData->m_strPortalTitle,
+			pWizardData->m_strPortalSubtitle,
+			pWizardData->m_strPortalPublisher,
+			pWizardData->m_strPortalContributor,
+			pWizardData->m_strPortalCreator,
+			pWizardData->m_strPortalRights,
+			pWizardData->m_strLogoPath,
+			pWizardData->m_strLogoBisPath,
+			pWizardData->m_strPortalURL,
+			strLanguages,
+			pWizardData->m_strMailServerName,
+			pWizardData->m_nMailServerPort,
+			pWizardData->m_strDefaultFromAddress,
 			CRString(IDS_MENU_FOLDER_NAME),
-			strBuffer);
+			strRunning);
 
 	GetDlgItem(IDC_FINISH_SUMMARY_EDIT)->SetWindowText(strInformation);
 }

@@ -138,6 +138,10 @@ SOURCE=.\PortalAdministrativePage.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\PortalLogosPage.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\PortalMetadataPage.cpp
 # End Source File
 # Begin Source File
@@ -212,6 +216,10 @@ SOURCE=.\ParametersPage.h
 # Begin Source File
 
 SOURCE=.\PortalAdministrativePage.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\PortalLogosPage.h
 # End Source File
 # Begin Source File
 

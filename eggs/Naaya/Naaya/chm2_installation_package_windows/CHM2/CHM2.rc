@@ -281,6 +281,20 @@ BEGIN
                     ES_AUTOHSCROLL
 END
 
+IDW_PORTALLOGOS DIALOG DISCARDABLE  0, 0, 321, 193
+STYLE WS_CHILD | WS_DISABLED
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Portal Logos",IDC_PORTALLOGOS_TITLE,85,7,229,16
+    CONTROL         138,IDC_STATIC,"Static",SS_BITMAP,0,0,107,193
+    LTEXT           "Select left logo (138x96px)",IDC_STATIC,85,44,229,8
+    EDITTEXT        IDC_LOGO_PATH,85,57,177,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",IDC_LOGO_BROWSE_BUTTON,264,55,50,14
+    LTEXT           "Select right logo (382x94px)",IDC_STATIC,85,103,229,8
+    EDITTEXT        IDC_LOGOBIS_PATH,85,115,177,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",IDC_LOGOBIS_BROWSE_BUTTON,264,114,50,14
+END
+
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -436,6 +450,15 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 186
     END
+
+    IDW_PORTALLOGOS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 314
+        VERTGUIDE, 85
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 186
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -470,7 +493,7 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_SUMMARY             "Installation parameters and ports:\r\n\r\n\tLocation: %s\r\n\r\n\tFull Host Name: %s\r\n\r\n\tHost IP Address: %s\r\n\r\n\tUsername: %s\r\n\r\n\tPassword: **********\r\n\r\n\tAdministrator's Email Address: %s\r\n\r\n\tZope HTTP port: %d\r\n\r\n\tZope FTP port: %d\r\n\r\n\tZope WEBDAV port: %d\r\n\r\nStart Menu folder:\r\n\r\n\t%s\r\n\r\nCHM2 running:\r\n\r\n\t%s\r\n\r\n"
+    IDS_SUMMARY             "Installation parameters and ports:\r\n\r\n\tLocation: %s\r\n\r\n\tFull Host Name: %s\r\n\r\n\tHost IP Address: %s\r\n\r\n\tUsername: %s\r\n\r\n\tPassword: **********\r\n\r\n\tAdministrator's Email Address: %s\r\n\r\n\tZope HTTP port: %d\r\n\r\n\tZope FTP port: %d\r\n\r\n\tZope WEBDAV port: %d\r\n\r\nPortal Metadata:\r\n\r\n\tTitle: %s\r\n\r\n\tSubtitle: %s\r\n\r\n\tPublisher: %s\r\n\r\n\tContributor: %s\r\n\r\n\tCreator: %s\r\n\r\n\tRights: %s\r\n\r\nPortal logos:\r\n\r\n\tLeft logo: %s\r\n\r\n\tRight logo: %s\r\n\r\nPortal Administrative:\r\n\r\n\tPortal URL: %s\r\n\r\n\tLanguages: %s\r\n\r\n\tMail server name: %s\r\n\r\n\tMail server port: %d\r\n\r\n\tDefault from address: %s\r\n\r\nStart Menu folder:\r\n\r\n\t%s\r\n\r\nCHM2 running:\r\n\r\n\t%s\r\n\r\n"
     IDS_MENU_FOLDER_NAME    "CHM2"
     IDS_INSTALLATION_START  "Installing... Please wait."
     IDS_FILE_LOG            "\\install.log"
@@ -578,6 +601,8 @@ STRINGTABLE DISCARDABLE
 BEGIN
     IDS_MAILSERVERPORT_INVALID 
                             "The mail server port number must be an integer between 1 and 65535"
+    IDS_DATASOURCE_IMAGEFILES 
+                            "All Image Formats (*.gif;*.jpg;*.jpeg;*.png)|*.gif;*.jpg;*.jpeg;*.png|GIFs (*.gif)|*.gif|JPEGs (*.jpg)|*.jpg;*.jpeg|PNGs (*.png)|*.png||"
 END
 
 #endif    // English (U.S.) resources

@@ -2,13 +2,13 @@
 
 [General Info]
 Version=1
-LastClass=CPortalAdministrativePage
+LastClass=CPortalLogosPage
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "chm2.h"
 LastPage=0
 
-ClassCount=15
+ClassCount=16
 Class1=CAgreementPage
 Class2=CCHM2App
 Class3=CAboutDlg
@@ -24,20 +24,22 @@ Class12=CPortalMetadataPage
 Class13=CPortsPage
 Class14=CWelcomePage
 
-ResourceCount=12
+ResourceCount=13
 Resource1=IDW_AGREEMENT
 Resource2=IDW_PARAMETERS
 Resource3=IDW_PORTS
 Resource4=IDW_FINISH
 Resource5=IDW_INSTALL
-Resource6=IDW_PORTALMETADATA
+Resource6=IDW_PORTALADMINISTRATIVE
 Resource7=IDD_ABOUTBOX
 Resource8=IDD_CHM2_DIALOG
 Resource9=IDW_ERROR
 Resource10=IDW_WELCOME
 Resource11=IDW_INSTALLPATH
 Class15=CPortalAdministrativePage
-Resource12=IDW_PORTALADMINISTRATIVE
+Resource12=IDW_PORTALMETADATA
+Class16=CPortalLogosPage
+Resource13=IDW_PORTALLOGOS
 
 [CLS:CAgreementPage]
 Type=0
@@ -286,5 +288,26 @@ HeaderFile=PortalAdministrativePage.h
 ImplementationFile=PortalAdministrativePage.cpp
 BaseClass=CNewWizPage
 Filter=D
-LastObject=IDC_PORTAL_MAILSERVERPORT
+LastObject=CPortalAdministrativePage
+
+[DLG:IDW_PORTALLOGOS]
+Type=1
+Class=CPortalLogosPage
+ControlCount=8
+Control1=IDC_PORTALLOGOS_TITLE,static,1342308352
+Control2=IDC_STATIC,static,1342177294
+Control3=IDC_STATIC,static,1342308352
+Control4=IDC_LOGO_PATH,edit,1350631552
+Control5=IDC_LOGO_BROWSE_BUTTON,button,1342242816
+Control6=IDC_STATIC,static,1342308352
+Control7=IDC_LOGOBIS_PATH,edit,1350631552
+Control8=IDC_LOGOBIS_BROWSE_BUTTON,button,1342242816
+
+[CLS:CPortalLogosPage]
+Type=0
+HeaderFile=PortalLogosPage.h
+ImplementationFile=PortalLogosPage.cpp
+BaseClass=CNewWizPage
+Filter=D
+LastObject=CPortalLogosPage
 
