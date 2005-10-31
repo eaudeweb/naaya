@@ -41,6 +41,7 @@ public:
 	int RecDeleteFolder(CString);
 	BOOL InternalCreateFile(CString);
 	int InternalCopyFile(CString, CString);
+	int InternalOverwriteFile(CString, CString);
 	int InternalMoveFile(CString srcFile, CString destFile);
 	int InternalDeleteFile(CString);
 	BOOL InternalWriteToFile(CString, CStringArray&);

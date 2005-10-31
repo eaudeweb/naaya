@@ -58,20 +58,36 @@ BOOL CPortalLogosPage::OnInitDialog()
 
 void CPortalLogosPage::OnLogoBrowseButton() 
 {
+	//store current directory
+    CString strCurrentDirectory;
+	GetCurrentDirectory(1024, strCurrentDirectory.GetBuffer(1024));
+    strCurrentDirectory.ReleaseBuffer();
+
 	CFileDialog dlgFile(TRUE, NULL, NULL, OFN_HIDEREADONLY, CRString(IDS_DATASOURCE_IMAGEFILES), this);
 	if( dlgFile.DoModal() == IDOK)
 	{
 		GetDlgItem(IDC_LOGO_PATH)->SetWindowText(dlgFile.GetPathName());
 	}
+
+	//restore current directory
+	SetCurrentDirectory(strCurrentDirectory);
 }
 
 void CPortalLogosPage::OnLogobisBrowseButton() 
 {
+	//store current directory
+    CString strCurrentDirectory;
+	GetCurrentDirectory(1024, strCurrentDirectory.GetBuffer(1024));
+    strCurrentDirectory.ReleaseBuffer();
+
 	CFileDialog dlgFile(TRUE, NULL, NULL, OFN_HIDEREADONLY, CRString(IDS_DATASOURCE_IMAGEFILES), this);
 	if( dlgFile.DoModal() == IDOK)
 	{
 		GetDlgItem(IDC_LOGOBIS_PATH)->SetWindowText(dlgFile.GetPathName());
 	}
+
+	//restore current directory
+	SetCurrentDirectory(strCurrentDirectory);
 }
 
 void CPortalLogosPage::OnOK()

@@ -549,6 +549,14 @@ int CWizardToolz::InternalCopyFile(CString srcFile, CString destFile)
     return 0;
 }
 
+int CWizardToolz::InternalOverwriteFile(CString srcFile, CString destFile)
+{
+    int err = ::CopyFile(srcFile, destFile, FALSE);		
+    if(err == 0)
+        return ::GetLastError();
+    return 0;
+}
+
 int CWizardToolz::InternalMoveFile(CString srcFile, CString destFile)
 {
     int err = ::MoveFile(srcFile, destFile);		
