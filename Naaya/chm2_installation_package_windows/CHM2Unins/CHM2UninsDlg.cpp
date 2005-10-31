@@ -414,6 +414,7 @@ BOOL CCHM2UninsDlg::DeleteNecessaryFiles(CString& strError)
     // first compute total files size
     unsigned __int64 n64TotalSize = 0;
 	n64TotalSize += toolz.getFolderSize(m_strZopePath);
+	n64TotalSize += toolz.getFolderSize(m_strInstancePath);
 	n64TotalSize += toolz.getFolderSize(m_strBinPath);
     toolz.m_n64TotalSize = n64TotalSize;
     toolz.m_n64PieceSize = n64TotalSize/100;
