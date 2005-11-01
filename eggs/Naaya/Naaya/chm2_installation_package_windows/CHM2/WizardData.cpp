@@ -78,8 +78,12 @@ CWizardData::CWizardData()
 				nPos = strLine.Find(" ");
 				strLanguageCode = strLine.Left(nPos);
 				strLanguageName = strLine.Right(strLine.GetLength()-nPos-1);
-				m_arrLanguagesCodes.Add(strLanguageCode);
-				m_arrLanguagesNames.Add(strLanguageName);
+				if (strLanguageCode != "en")
+				{
+					//don't load English language, is the default one
+					m_arrLanguagesCodes.Add(strLanguageCode);
+					m_arrLanguagesNames.Add(strLanguageName);
+				}
 			}
 			
 		}

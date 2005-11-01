@@ -423,19 +423,46 @@ BOOL CInstallPage::ModifyConfigurationFiles(CStringArray& arrLog)
     arrLog.Add(strBuffer);
 	if (toolz.ReadFileContent(strFilePath, strContent, arrLog))
     {	// have to replace the following values:
-		// @@ZOPE_PATH@@
-		// @@IP_ADDRESS@@
 		// @@USERNAME@@
-		// @@PASSWORD@@
 		// @@BIN_PATH@@
-		// @@ZOPE_HTTP_PORT@@
-		strContent.Replace("@@ZOPE_PATH@@", pWizardData->m_strPath);
-		strContent.Replace("@@IP_ADDRESS@@", pWizardData->m_strHostIPAddress);
+		// @@PORTAL_TITLE@@
+		// @@PORTAL_SUBTITLE@@
+		// @@PORTAL_PUBLISHER@@
+		// @@PORTAL_CONTRIBUTOR@@
+		// @@PORTAL_CREATOR@@
+		// @@PORTAL_RIGHTS@@
+		// @@PORTAL_MAILSERVERNAME@@
+		// @@PORTAL_MAILSERVERPORT@@
+		// @@PORTAL_ADMINISTRATOREMAIL@@
+		// @@PORTAL_DEFAULTFROMADDRESS@@
+		// @@PORTAL_URL@@
+		// @@PORTAL_LANGUAGES@@
 		strContent.Replace("@@USERNAME@@", pWizardData->m_strUsername);
-		strContent.Replace("@@PASSWORD@@", pWizardData->m_strPassword);
-		strBuffer.Format("%d", pWizardData->m_nZopeHTTPPort);
-		strContent.Replace("@@ZOPE_HTTP_PORT@@", strBuffer);
 		strContent.Replace("@@BIN_PATH@@", pWizardData->m_strPath + strBinFolder);
+		strContent.Replace("@@PORTAL_TITLE@@", pWizardData->m_strPortalTitle);
+		strContent.Replace("@@PORTAL_SUBTITLE@@", pWizardData->m_strPortalSubtitle);
+		strContent.Replace("@@PORTAL_PUBLISHER@@", pWizardData->m_strPortalPublisher);
+		strContent.Replace("@@PORTAL_CONTRIBUTOR@@", pWizardData->m_strPortalContributor);
+		strContent.Replace("@@PORTAL_CREATOR@@", pWizardData->m_strPortalCreator);
+		strContent.Replace("@@PORTAL_RIGHTS@@", pWizardData->m_strPortalRights);
+		strContent.Replace("@@PORTAL_MAILSERVERNAME@@", pWizardData->m_strMailServerName);
+		strBuffer.Format("%d", pWizardData->m_nMailServerPort);
+		strContent.Replace("@@PORTAL_MAILSERVERPORT@@", strBuffer);
+		strContent.Replace("@@PORTAL_ADMINISTRATOREMAIL@@", pWizardData->m_strAdministratorEmail);
+		strContent.Replace("@@PORTAL_DEFAULTFROMADDRESS@@", pWizardData->m_strDefaultFromAddress);
+		strContent.Replace("@@PORTAL_URL@@", pWizardData->m_strPortalURL);
+
+
+		CString strLanguages ;
+		for (int i=0; i<pWizardData->m_arrLanguagesSel.GetSize(); i++)
+		{
+			int x = pWizardData->m_arrLanguagesSel.GetAt(i);
+			strBuffer.Format("'%s'", pWizardData->m_arrLanguagesCodes.GetAt(x));
+			strLanguages += strBuffer;
+			if (i < pWizardData->m_arrLanguagesSel.GetSize()-1)
+				strLanguages += ", ";
+		}
+		strContent.Replace("@@PORTAL_LANGUAGES@@", strLanguages);
 
 		// write modified content back to file
 		toolz.WriteFileContent(strFilePath, strContent, arrLog);
