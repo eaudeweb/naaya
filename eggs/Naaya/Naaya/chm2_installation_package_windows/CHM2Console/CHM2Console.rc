@@ -75,7 +75,7 @@ IDR_MAINFRAME           ICON    DISCARDABLE     "res\\CHM2Console.ico"
 
 IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "About CHM2Console"
+CAPTION "About CHM server console"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
@@ -89,8 +89,8 @@ IDD_CHM2CONSOLE_DIALOG DIALOGEX 0, 0, 295, 282
 STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
     WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "CHM2 console"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+CAPTION "CHM server console"
+FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "Close",IDOK,230,262,50,14
     CONTROL         "Tab1",IDC_CHM2_TAB,"SysTabControl32",0x0,7,44,281,206
@@ -273,13 +273,13 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_ABOUTBOX            "&About CHM2Console..."
-    IDS_ABORT_CONSOLE       "CHM2 Console cannot continue because you do not have Administrator rights on this computer. Please login as Administrator or arrange these rights otherwise."
-    IDS_BOX_CAPTION         "CHM2 console"
+    IDS_ABOUTBOX            "&About CHM server console..."
+    IDS_ABORT_CONSOLE       "CHM server console cannot continue because you do not have Administrator rights on this computer. Please login as Administrator or arrange these rights otherwise."
+    IDS_BOX_CAPTION         "CHM server console"
     IDS_SERVICE_NAME_ZOPE   "CHM2Zope"
     IDS_SERVICE_DISPLAY_ZOPE "Zope (CHM2Zope)"
     IDS_REGCOMPANY          "CHM"
-    IDS_REGAPPLICATION      "CHM2"
+    IDS_REGAPPLICATION      "CHM PTK2"
     IDS_FIELDS_MANDATORY    "All the fields are mandatory!"
     IDS_USERNAME_ALPHANUMERIC "The Username must be alphanumeric!"
     IDS_PASSWORD_ALPHANUMERIC "The Password must be alphanumeric!"
