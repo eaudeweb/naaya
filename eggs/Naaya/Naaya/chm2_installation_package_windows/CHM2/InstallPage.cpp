@@ -424,6 +424,8 @@ BOOL CInstallPage::ModifyConfigurationFiles(CStringArray& arrLog)
 	if (toolz.ReadFileContent(strFilePath, strContent, arrLog))
     {	// have to replace the following values:
 		// @@USERNAME@@
+		// @@HOSTNAME@@
+		// @@ZOPE_PORT@@
 		// @@BIN_PATH@@
 		// @@PORTAL_TITLE@@
 		// @@PORTAL_SUBTITLE@@
@@ -438,6 +440,9 @@ BOOL CInstallPage::ModifyConfigurationFiles(CStringArray& arrLog)
 		// @@PORTAL_URL@@
 		// @@PORTAL_LANGUAGES@@
 		strContent.Replace("@@USERNAME@@", pWizardData->m_strUsername);
+		strContent.Replace("@@HOSTNAME@@", pWizardData->m_strFullHostName);
+		strBuffer.Format("%d", pWizardData->m_nZopeHTTPPort);
+		strContent.Replace("@@ZOPE_PORT@@", strBuffer);
 		strContent.Replace("@@BIN_PATH@@", pWizardData->m_strPath + strBinFolder);
 		strContent.Replace("@@PORTAL_TITLE@@", pWizardData->m_strPortalTitle);
 		strContent.Replace("@@PORTAL_SUBTITLE@@", pWizardData->m_strPortalSubtitle);
