@@ -625,7 +625,7 @@ BOOL CInstallPage::CreateShortcuts(CStringArray& arrLog)
 	toolz.InternalCreateFolder(strDirectoryPath);
 
 	// create shortcut to CHM2
-	strLinkAddress.Format("http://%s:%d/index_html", pWizardData->m_strHostIPAddress, pWizardData->m_nZopeHTTPPort);
+	strLinkAddress.Format("http://%s:%d/chm2/index_html", pWizardData->m_strHostIPAddress, pWizardData->m_nZopeHTTPPort);
 	strLinkPath.Format("%s.url", CRString(IDS_SHORTCUT_CHM2_NAME));
 	toolz.CreateInternetShortcut(strLinkAddress, strDirectoryPath + strLinkPath, CRString(IDS_SHORTCUT_CHM2_DESCRIPTION));
 	strBuffer.Format(CRString(IDS_CREATE_SHORTCUT), CRString(IDS_SHORTCUT_CHM2_DESCRIPTION));
