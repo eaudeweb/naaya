@@ -95,22 +95,22 @@ BEGIN
     DEFPUSHBUTTON   "Close",IDOK,230,262,50,14
     CONTROL         "Tab1",IDC_CHM2_TAB,"SysTabControl32",0x0,7,44,281,206
     LTEXT           "",IDC_TOP,0,0,295,34
-    LTEXT           "Welcome to CHM2 console",IDC_TITLE,7,9,281,14
+    LTEXT           "Welcome to CHM server console",IDC_TITLE,7,9,281,14
 END
 
 IDD_TAB_SERVICE DIALOG DISCARDABLE  0, 0, 278, 191
 STYLE WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "This administration dialog permits you to manage the various services encompassed in the CHM2.",
-                    IDC_STATIC,7,7,264,59
+    LTEXT           "This administration dialog permits you to manage the Zope service encompassed in the CHM portal.",
+                    IDC_STATIC,7,46,264,59
 END
 
 IDD_TAB_ZOPE DIALOG DISCARDABLE  0, 0, 278, 191
 STYLE WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "From here you can manage the Zope service used by CHM2.\r\nThe Zope server is needed in order to run the CHM2 portal. Below you can find information about this service.",
+    LTEXT           "From here you can manage the Zope service used by CHM portal.\r\nThe Zope server is needed in order to run the CHM portal. Below you can find information about this service.",
                     IDC_STATIC,7,7,264,29
     PUSHBUTTON      "Start",IDOK,86,170,50,14
     PUSHBUTTON      "Stop",IDCANCEL,147,170,50,14
