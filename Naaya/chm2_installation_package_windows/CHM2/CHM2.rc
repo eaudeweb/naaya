@@ -500,7 +500,7 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_SUMMARY             "Installation parameters and ports:\r\n\r\n\tLocation: %s\r\n\r\n\tFull Host Name: %s\r\n\r\n\tHost IP Address: %s\r\n\r\n\tUsername: %s\r\n\r\n\tPassword: **********\r\n\r\n\tAdministrator's Email Address: %s\r\n\r\n\tZope HTTP port: %d\r\n\r\n\tZope FTP port: %d\r\n\r\n\tZope WEBDAV port: %d\r\n\r\nPortal Metadata:\r\n\r\n\tTitle: %s\r\n\r\n\tSubtitle: %s\r\n\r\n\tPublisher: %s\r\n\r\n\tContributor: %s\r\n\r\n\tCreator: %s\r\n\r\n\tRights: %s\r\n\r\nPortal logos:\r\n\r\n\tLeft logo: %s\r\n\r\n\tRight logo: %s\r\n\r\nPortal Administrative:\r\n\r\n\tPortal URL: %s\r\n\r\n\tLanguages: %s\r\n\r\n\tMail server name: %s\r\n\r\n\tMail server port: %d\r\n\r\n\tDefault from address: %s\r\n\r\nStart Menu folder:\r\n\r\n\t%s\r\n\r\nCHM2 running:\r\n\r\n\t%s\r\n\r\n"
+    IDS_SUMMARY             "Installation parameters and ports:\r\n\r\n\tLocation: %s\r\n\r\n\tFull Host Name: %s\r\n\r\n\tHost IP Address: %s\r\n\r\n\tUsername: %s\r\n\r\n\tPassword: **********\r\n\r\n\tAdministrator's Email Address: %s\r\n\r\n\tZope HTTP port: %d\r\n\r\n\tZope FTP port: %d\r\n\r\n\tZope WEBDAV port: %d\r\n\r\nPortal Metadata:\r\n\r\n\tTitle: %s\r\n\r\n\tSubtitle: %s\r\n\r\n\tPublisher: %s\r\n\r\n\tContributor: %s\r\n\r\n\tCreator: %s\r\n\r\n\tRights: %s\r\n\r\nPortal logos:\r\n\r\n\tLeft logo: %s\r\n\r\n\tRight logo: %s\r\n\r\nPortal Administrative:\r\n\r\n\tPortal URL: %s\r\n\r\n\tLanguages: %s\r\n\r\n\tMail server name: %s\r\n\r\n\tMail server port: %d\r\n\r\n\tPortal mailbox: %s\r\n\r\nStart Menu folder:\r\n\r\n\t%s\r\n\r\nCHM2 running:\r\n\r\n\t%s\r\n\r\n"
     IDS_MENU_FOLDER_NAME    "CHM2"
     IDS_INSTALLATION_START  "Installing... Please wait."
     IDS_FILE_LOG            "\\install.log"
