@@ -43,10 +43,10 @@ CWizardData::CWizardData()
 	// Portal metadata
 	m_strPortalTitle = "";
 	m_strPortalSubtitle = "";
-	m_strPortalPublisher = "EEA";
-	m_strPortalContributor = "EC CHM";
-	m_strPortalCreator = "EC CHM";
-	m_strPortalRights = "EEA";
+	m_strPortalPublisher = "";
+	m_strPortalContributor = "";
+	m_strPortalCreator = "";
+	m_strPortalRights = "";
 
 	//Portal logos
 	m_strLogoPath = "";

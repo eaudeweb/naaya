@@ -87,7 +87,7 @@ END
 IDD_CHM2_DIALOG DIALOGEX 0, 0, 320, 221
 STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "CHM2 Install Wizard"
+CAPTION "CHM Portal Toolkit version 2"
 FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,210,200,50,14
@@ -113,12 +113,13 @@ IDW_WELCOME DIALOG DISCARDABLE  0, 0, 321, 193
 STYLE WS_CHILD | WS_DISABLED
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "Welcome to CHM2 Install Wizard",IDC_WELCOME_TITLE,85,7,
-                    229,18
+    LTEXT           "Welcome to CHM Portal Toolkit version 2 Installation Wizard",
+                    IDC_WELCOME_TITLE,85,7,229,34
     LTEXT           "Click Next to continue, or Cancel to exit Setup.",
                     IDC_STATIC,85,178,229,8
     CONTROL         138,IDC_STATIC,"Static",SS_BITMAP,0,0,107,193
-    LTEXT           "This will install ...",IDC_STATIC,85,63,229,21
+    LTEXT           "This wizard will install a Zope server  with a preconfigured CHM-like portal ready to run.",
+                    IDC_STATIC,85,63,229,21
     LTEXT           "It is recommended that you close all other applications before continuing.",
                     IDC_STATIC,85,158,229,13
 END
@@ -129,16 +130,14 @@ FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "User Agreement",IDC_AGREEMENT_TITLE,85,7,229,13
     CONTROL         138,IDC_STATIC,"Static",SS_BITMAP,0,0,107,193
-    LTEXT           "We have taken our best efforts to make available to you quality software that does not have adverse effects or venture beyond its intended use.",
-                    IDC_STATIC,85,30,229,17
+    LTEXT           "This toolkit is based on the EC CHM portal (http://biodiversity-chm.eea.eu.int) software and it is released as subject to the Mozilla Public License Version 1.1 (http://www.mozilla.org/MPL/). ",
+                    IDC_STATIC,85,30,229,32
     CONTROL         "I Accept the Agreement",IDC_AGREEMENT_RB_ACCEPT,"Button",
                     BS_AUTORADIOBUTTON,120,160,91,10
     CONTROL         "I Do Not Accept the Agreement",IDC_AGREEMENT_RB_DECLINE,
                     "Button",BS_AUTORADIOBUTTON,120,176,115,10
-    EDITTEXT        IDC_AGREEMENT_INFORMATION,85,90,229,63,ES_MULTILINE | 
+    EDITTEXT        IDC_AGREEMENT_INFORMATION,85,69,229,84,ES_MULTILINE | 
                     ES_READONLY | WS_VSCROLL | NOT WS_TABSTOP
-    LTEXT           "The source code is freely available for you to examine. However, before continuing, we must ask your consent with the following:",
-                    IDC_STATIC,85,54,229,29
 END
 
 IDW_INSTALLPATH DIALOG DISCARDABLE  0, 0, 321, 193
@@ -170,7 +169,7 @@ BEGIN
     LTEXT           "Installation Parameters",IDC_PARAMETERS_TITLE,85,7,229,
                     16
     CONTROL         138,IDC_STATIC,"Static",SS_BITMAP,0,0,107,193
-    LTEXT           "The installation will be done using the following parameters to alter the configuration files. The username and password that you choose here are necessary in order to administrate the providers.",
+    LTEXT           "The installation will be done using the following parameters to alter the configuration files. The username and password that you choose here are necessary in order to enter the portal management console and administrate it.",
                     IDC_STATIC,85,30,229,35
     LTEXT           "Full Host Name",IDC_STATIC,85,73,49,8
     EDITTEXT        IDC_PARAMETERS_FULLHOSTNAME_EDIT,156,72,84,13,
@@ -196,12 +195,10 @@ IDW_PORTS DIALOG DISCARDABLE  0, 0, 321, 193
 STYLE WS_CHILD | WS_DISABLED
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "Zope Ports Settings",IDC_PORTS_TITLE,85,7,229,14
+    LTEXT           "Zope Port Settings",IDC_PORTS_TITLE,85,7,229,14
     CONTROL         138,IDC_STATIC,"Static",SS_BITMAP,0,0,107,193
-    LTEXT           "If you already have some of these components installed and wouldn't like to reproduce them, we recommend that you install those anyway using non-standard ports, examine the administrator's guide and the configuration files, and remove what you don't need.",
-                    IDC_STATIC,85,30,229,36
-    LTEXT           "However, to ease future upgrades, we recommand that you install the entire package with defaults.",
-                    IDC_STATIC,85,71,229,18
+    LTEXT           "Your portal will be accessible via HTTP on the following port. You can always change this parameter later from the Zope configuration file.",
+                    IDC_STATIC,85,44,229,28
     EDITTEXT        IDC_PORTS_ZOPEHTTPPORT_EDIT,153,109,29,13,ES_AUTOHSCROLL | 
                     ES_NUMBER
     LTEXT           "HTTP",IDC_STATIC,189,111,20,8
@@ -235,7 +232,7 @@ BEGIN
     CONTROL         "Progress1",IDC_PROGRESS_INSTALLATION,"msctls_progress32",
                     WS_BORDER,85,57,229,13
     LTEXT           "Static",IDC_STATIC_INSTALLATION,85,85,229,76
-    CONTROL         "Start CHM2 console now?",IDC_CHECK_START,"Button",
+    CONTROL         "Start server console now?",IDC_CHECK_START,"Button",
                     BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,85,176,229,10
 END
 
@@ -245,18 +242,20 @@ FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "Portal Metadata",IDC_PORTALMETADATA_TITLE,85,7,229,16
     CONTROL         138,IDC_STATIC,"Static",SS_BITMAP,0,0,107,193
-    LTEXT           "Title",IDC_STATIC,85,35,48,8
-    LTEXT           "Subtitle",IDC_STATIC,85,60,47,8
-    LTEXT           "Publisher",IDC_STATIC,85,85,36,8
-    LTEXT           "Contributor",IDC_STATIC,85,110,35,8
-    LTEXT           "Creator",IDC_STATIC,85,135,24,8
-    LTEXT           "Rights",IDC_STATIC,85,160,21,8
-    EDITTEXT        IDC_PORTAL_TITLE,141,33,154,13,ES_AUTOHSCROLL
-    EDITTEXT        IDC_PORTAL_SUBTITLE,141,58,154,13,ES_AUTOHSCROLL
-    EDITTEXT        IDC_PORTAL_PUBLISHER,141,83,154,13,ES_AUTOHSCROLL
-    EDITTEXT        IDC_PORTAL_CONTRIBUTOR,141,108,154,13,ES_AUTOHSCROLL
-    EDITTEXT        IDC_PORTAL_CREATOR,141,133,154,13,ES_AUTOHSCROLL
-    EDITTEXT        IDC_PORTAL_RIGHTS,141,158,154,13,ES_AUTOHSCROLL
+    LTEXT           "Title",IDC_STATIC,85,67,48,8
+    LTEXT           "Subtitle",IDC_STATIC,85,88,47,8
+    LTEXT           "Publisher",IDC_STATIC,85,110,36,8
+    LTEXT           "Contributor",IDC_STATIC,85,130,35,8
+    LTEXT           "Creator",IDC_STATIC,85,152,24,8
+    LTEXT           "Rights",IDC_STATIC,85,172,21,8
+    EDITTEXT        IDC_PORTAL_TITLE,141,65,154,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PORTAL_SUBTITLE,141,86,154,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PORTAL_PUBLISHER,141,107,154,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PORTAL_CONTRIBUTOR,141,128,154,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PORTAL_CREATOR,141,149,154,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PORTAL_RIGHTS,141,170,154,13,ES_AUTOHSCROLL
+    LTEXT           "These parameters are referring to the entire portal and can be changed at a later time from the portal Administration centre. They are a subset of the Dublin Core elements set - see http://dublincore.org for details.",
+                    IDC_STATIC,85,29,229,28
 END
 
 IDW_PORTALADMINISTRATIVE DIALOG DISCARDABLE  0, 0, 321, 193
@@ -266,19 +265,23 @@ BEGIN
     LTEXT           "Portal Administrative",IDC_PORTALADMINISTRATIVE_TITLE,
                     85,7,229,16
     CONTROL         138,IDC_STATIC,"Static",SS_BITMAP,0,0,107,193
-    LTEXT           "Portal URL",IDC_STATIC,85,36,48,8
-    EDITTEXT        IDC_PORTAL_URL,160,34,154,13,ES_AUTOHSCROLL
-    LTEXT           "Languages",IDC_STATIC,85,56,36,8
-    LISTBOX         IDC_PORTAL_LANGUAGES,160,52,154,63,LBS_MULTIPLESEL | 
+    LTEXT           "Portal URL",IDC_STATIC,85,120,48,8
+    EDITTEXT        IDC_PORTAL_URL,160,117,154,13,ES_AUTOHSCROLL
+    LTEXT           "Languages",IDC_STATIC,85,53,36,8
+    LISTBOX         IDC_PORTAL_LANGUAGES,160,49,154,38,LBS_MULTIPLESEL | 
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Mail server name",IDC_STATIC,85,124,54,8
-    LTEXT           "Mail server port",IDC_STATIC,85,142,49,8
-    LTEXT           "Default from address",IDC_STATIC,85,159,66,8
-    EDITTEXT        IDC_PORTAL_MAILSERVERNAME,160,120,124,13,ES_AUTOHSCROLL
-    EDITTEXT        IDC_PORTAL_MAILSERVERPORT,160,138,29,13,ES_AUTOHSCROLL | 
+    LTEXT           "Mail server name",IDC_STATIC,85,141,54,8
+    LTEXT           "Mail server port",IDC_STATIC,85,159,49,8
+    LTEXT           "Portal mailbox",IDC_STATIC,85,176,44,8
+    EDITTEXT        IDC_PORTAL_MAILSERVERNAME,160,137,124,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_PORTAL_MAILSERVERPORT,160,155,29,13,ES_AUTOHSCROLL | 
                     ES_NUMBER
-    EDITTEXT        IDC_PORTAL_DEFAULTFROMADDRESS,160,156,124,13,
+    EDITTEXT        IDC_PORTAL_DEFAULTFROMADDRESS,160,173,124,13,
                     ES_AUTOHSCROLL
+    LTEXT           "Select the languages in which your portal will be available. English is included by default.",
+                    IDC_STATIC,85,25,229,18
+    LTEXT           "The parameters below are essential for the well functioning of the portal. See Installation guide for details.",
+                    IDC_STATIC,85,94,229,18
 END
 
 IDW_PORTALLOGOS DIALOG DISCARDABLE  0, 0, 321, 193
@@ -287,12 +290,16 @@ FONT 8, "MS Sans Serif"
 BEGIN
     LTEXT           "Portal Logos",IDC_PORTALLOGOS_TITLE,85,7,229,16
     CONTROL         138,IDC_STATIC,"Static",SS_BITMAP,0,0,107,193
-    LTEXT           "Select left logo (138x96px)",IDC_STATIC,85,44,229,8
-    EDITTEXT        IDC_LOGO_PATH,85,57,177,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "Browse",IDC_LOGO_BROWSE_BUTTON,264,55,50,14
-    LTEXT           "Select right logo (382x94px)",IDC_STATIC,85,103,229,8
-    EDITTEXT        IDC_LOGOBIS_PATH,85,115,177,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "Browse",IDC_LOGOBIS_BROWSE_BUTTON,264,114,50,14
+    LTEXT           "Select left logo (138x96px)",IDC_STATIC,85,108,229,8
+    EDITTEXT        IDC_LOGO_PATH,85,121,177,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",IDC_LOGO_BROWSE_BUTTON,264,119,50,14
+    LTEXT           "Select right logo (382x94px)",IDC_STATIC,85,148,229,8
+    EDITTEXT        IDC_LOGOBIS_PATH,85,161,177,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",IDC_LOGOBIS_BROWSE_BUTTON,264,159,50,14
+    LTEXT           "Upload logo(s) for your website. They will appear in the top banner of each page. The left side logo is representative for your organisation, while the right side logo can be left with the default image, the same as the one on the EC CHM website.",
+                    IDC_STATIC,85,30,229,35
+    LTEXT           "Both of them can be changed at a later time from the portal Administration centre.",
+                    IDC_STATIC,85,71,229,19
 END
 
 
@@ -477,15 +484,15 @@ IDB_SETUP               BITMAP  DISCARDABLE     "res\\setup.bmp"
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_ABOUTBOX            "&About CHM2..."
-    IDS_ABORT_WIZARD_CAPTION "CHM2 Install Wizard"
+    IDS_ABOUTBOX            "&About CHM Portal Toolkit version 2"
+    IDS_ABORT_WIZARD_CAPTION "CHM Portal Toolkit version 2"
     IDS_COPY_DIRECTORY      "\t\tCopying files to %s"
     IDS_FAILED_COPY_DIRECTORY "\tFailed to copy folder %s"
     IDS_FAILED_COPY_FILE    "\tFailed to copy file %s"
     IDS_ERROR_OPEN_FILE     "\t\tCould not open file %s"
     IDS_ABORT_WIZARD_MESSAGE 
-                            "CHM2 Install Wizard cannot continue because you do not have Administrator rights on this computer. Please login as Administrator or arrange these rights otherwise."
-    IDS_AGREEMENT           "I accept to use this software as is and ..."
+                            "CHM Portal Toolkit Install Wizard cannot continue because you do not have Administrator rights on this computer. Please login as Administrator or arrange these rights otherwise."
+    IDS_AGREEMENT           "I accept to use this software as is and not hold EEA or its Contractors liable for any possible damage, direct or indirect, that might be caused by this software.\r\n\r\nSoftware distributed under the Mozilla Public License is distributed on an ""AS IS"" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the license at http://www.mozilla.org/MPL/ for the specific language governing rights and limitations.\r\n\r\nThe Initial Owner of the Original Code is European Environment Agency (EEA).  Portions created by Finsiel Romania are Copyright (C) European Environment Agency.  All Rights Reserved."
     IDS_ACCEPT_AGREEMENT    "The installation cannot proceed if you cannot accept these terms :-("
     IDS_RUN_SERVICE         "Run as a service"
     IDS_RUN_MANUAL          "Run manual"
@@ -497,7 +504,7 @@ BEGIN
     IDS_MENU_FOLDER_NAME    "CHM2"
     IDS_INSTALLATION_START  "Installing... Please wait."
     IDS_FILE_LOG            "\\install.log"
-    IDS_LABEL_END_INSTALL   "Installation process was completed!\r\n\r\nYou can access the CHM2 using the URL\r\nhttp://%s:%d\r\n\r\n"
+    IDS_LABEL_END_INSTALL   "Installation process was completed!\r\n\r\nYou can access your website using the URL\r\nhttp://%s:%d/chm2\r\n\r\n"
     IDS_INSTALLATION_COMPLETE "Installation complete"
     IDS_REMOVING_FILES      "Deleting installation files..."
     IDS_DELETE_INSTALLATION_FILES 
@@ -542,7 +549,7 @@ BEGIN
     IDS_LABEL_START_CREATESHORTCUTS "Start creating menu shortcuts..."
     IDS_LABEL_END_CREATESHORTCUTS "Done creating menu shortcuts.\r\n"
     IDS_REGCOMPANY          "CHM"
-    IDS_REGAPPLICATION      "CHM2"
+    IDS_REGAPPLICATION      "CHM PTK2"
     IDS_AVAILABLESPACE      "Space available on drive %s :"
     IDS_REQUIREDSPACE       "Space  required on drive %s :"
     IDS_INSTALLATION_DEFAULT_PATH "C:\\CHM2"
@@ -587,14 +594,14 @@ BEGIN
                             "The ""%s"" shortcuts folder already exists.\r\n"
     IDS_LABEL_EXIT_BUTTON   "Exit"
     IDS_FOLDER_INSTANCE     "\\instance"
-    IDS_COPY_INSTANCE       "Copying CHM2 instance files..."
+    IDS_COPY_INSTANCE       "Copying application instance files..."
     IDS_SHORTCUT_CHM2_NAME  "\\CHM2 Portal"
     IDS_SHORTCUT_CHM2_DESCRIPTION "CHM2 Portal"
     IDS_CREATE_SHORTCUT     "\tCreate shortcut for %s"
-    IDS_SHORTCUT_CONSOLE_NAME "\\CHM2 console.lnk"
-    IDS_SHORTCUT_CONSOLE_DESCRIPTION "CHM2 console"
-    IDS_SHORTCUT_UNINSTALL_NAME "\\CHM2 uninstaller.lnk"
-    IDS_SHORTCUT_UNINSTALL_DESCRIPTION "CHM2 uninstaller"
+    IDS_SHORTCUT_CONSOLE_NAME "\\CHM2 server console.lnk"
+    IDS_SHORTCUT_CONSOLE_DESCRIPTION "CHM2 server console"
+    IDS_SHORTCUT_UNINSTALL_NAME "\\CHM2 portal uninstaller.lnk"
+    IDS_SHORTCUT_UNINSTALL_DESCRIPTION "CHM2 portal uninstaller"
 END
 
 STRINGTABLE DISCARDABLE 

@@ -59,7 +59,7 @@ BOOL CParametersPage::OnInitDialog()
         ((CIPAddressCtrl*)GetDlgItem(IDC_PARAMETERS_HOSTIDADDRESS_IPADDRESS))->SetAddress(nIpField0, nIpField1, nIpField2, nIpField3);
     }
 
-	GetDlgItem(IDC_PARAMETERS_ADMINEMAIL_EDIT)->SetWindowText(CRString(IDS_DEFAULT_ADMINISTRATOREMAIL));
+	//GetDlgItem(IDC_PARAMETERS_ADMINEMAIL_EDIT)->SetWindowText(CRString(IDS_DEFAULT_ADMINISTRATOREMAIL));
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
