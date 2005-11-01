@@ -80,6 +80,9 @@
 				<image id="comment.gif" title=""/>
 				<image id="logintoadd.gif" title=""/>
 				<image id="trash.gif" title=""/>
+				<style id="sort_asc.gif" title="Sort in ascending order"/>
+				<style id="sort_desc.gif" title="Sort in descending order"/>
+				<style id="translate.gif" title="Translating language"/>
 			</scheme>
 		</skin>
 	</layout>
