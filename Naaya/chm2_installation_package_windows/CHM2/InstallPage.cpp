@@ -363,7 +363,8 @@ BOOL CInstallPage::ModifyConfigurationFiles(CStringArray& arrLog)
 		// @@ZOPE_HTTP_PORT@@
 		// @@ZOPE_FTP_PORT@@
 		// @@ZOPE_WEBDAV_PORT@@
-		strContent.Replace("@@ZOPE_PATH@@", pWizardData->m_strPath);
+		strContent.Replace("@@ZOPE_PATH@@", pWizardData->m_strPath + strZopeFolder);
+		strContent.Replace("@@INSTANCE_PATH@@", pWizardData->m_strPath + strInstanceFolder);
 		strBuffer.Format("%d", pWizardData->m_nZopeHTTPPort);
 		strContent.Replace("@@ZOPE_HTTP_PORT@@", strBuffer);
 		strBuffer.Format("%d", pWizardData->m_nZopeFTPPort);
