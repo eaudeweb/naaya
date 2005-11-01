@@ -82,8 +82,6 @@ void CFinishPage::OnSetActive()
 			pWizardData->m_strUsername,
 			pWizardData->m_strAdministratorEmail,
 			pWizardData->m_nZopeHTTPPort,
-			pWizardData->m_nZopeFTPPort,
-			pWizardData->m_nZopeWEBDAVPort,
 			pWizardData->m_strPortalTitle,
 			pWizardData->m_strPortalSubtitle,
 			pWizardData->m_strPortalPublisher,
