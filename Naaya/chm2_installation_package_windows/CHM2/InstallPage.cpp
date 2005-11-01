@@ -189,7 +189,7 @@ BOOL CInstallPage::StartInstallation(CString strLogFile)
     }
 
 	// Run some scripts to set stuff
-    arrLog.RemoveAll();
+    /*arrLog.RemoveAll();
     arrLog.Add(CRString(IDS_START_RUNSCRIPTS));
     if (!RunScripts(arrLog))
     {   // In case of an error, write to log and return
@@ -201,10 +201,10 @@ BOOL CInstallPage::StartInstallation(CString strLogFile)
     {
         arrLog.Add(CRString(IDS_END_RUNSCRIPTS));
         toolz.InternalWriteToFile(strLogFile, arrLog);
-    }
+    }*/
 
 	// Clean up process
-    arrLog.RemoveAll();
+    /*arrLog.RemoveAll();
     arrLog.Add(CRString(IDS_START_CLEANUP));
     if (!CleanUp(arrLog))
     {   // In case of an error, write to log and return
@@ -216,7 +216,7 @@ BOOL CInstallPage::StartInstallation(CString strLogFile)
     {
         arrLog.Add(CRString(IDS_END_CLEANUP));
         toolz.InternalWriteToFile(strLogFile, arrLog);
-    }
+    }*/
 
     // create shortcuts
     CreateShortcuts(arrLog);
@@ -444,18 +444,48 @@ BOOL CInstallPage::ModifyConfigurationFiles(CStringArray& arrLog)
 		strBuffer.Format("%d", pWizardData->m_nZopeHTTPPort);
 		strContent.Replace("@@ZOPE_PORT@@", strBuffer);
 		strContent.Replace("@@BIN_PATH@@", pWizardData->m_strPath + strBinFolder);
-		strContent.Replace("@@PORTAL_TITLE@@", pWizardData->m_strPortalTitle);
-		strContent.Replace("@@PORTAL_SUBTITLE@@", pWizardData->m_strPortalSubtitle);
-		strContent.Replace("@@PORTAL_PUBLISHER@@", pWizardData->m_strPortalPublisher);
-		strContent.Replace("@@PORTAL_CONTRIBUTOR@@", pWizardData->m_strPortalContributor);
-		strContent.Replace("@@PORTAL_CREATOR@@", pWizardData->m_strPortalCreator);
-		strContent.Replace("@@PORTAL_RIGHTS@@", pWizardData->m_strPortalRights);
-		strContent.Replace("@@PORTAL_MAILSERVERNAME@@", pWizardData->m_strMailServerName);
+		strBuffer = pWizardData->m_strPortalTitle;
+		strBuffer.Replace("\\", "\\\\'");
+		strBuffer.Replace("'", "\\'");
+		strContent.Replace("@@PORTAL_TITLE@@", strBuffer);
+		strBuffer = pWizardData->m_strPortalSubtitle;
+		strBuffer.Replace("\\", "\\\\'");
+		strBuffer.Replace("'", "\\'");
+		strContent.Replace("@@PORTAL_SUBTITLE@@", strBuffer);
+		strBuffer = pWizardData->m_strPortalPublisher;
+		strBuffer.Replace("\\", "\\\\'");
+		strBuffer.Replace("'", "\\'");
+		strContent.Replace("@@PORTAL_PUBLISHER@@", strBuffer);
+		strBuffer = pWizardData->m_strPortalContributor;
+		strBuffer.Replace("\\", "\\\\'");
+		strBuffer.Replace("'", "\\'");
+		strContent.Replace("@@PORTAL_CONTRIBUTOR@@", strBuffer);
+		strBuffer = pWizardData->m_strPortalCreator;
+		strBuffer.Replace("\\", "\\\\'");
+		strBuffer.Replace("'", "\\'");
+		strContent.Replace("@@PORTAL_CREATOR@@", strBuffer);
+		strBuffer = pWizardData->m_strPortalRights;
+		strBuffer.Replace("\\", "\\\\'");
+		strBuffer.Replace("'", "\\'");
+		strContent.Replace("@@PORTAL_RIGHTS@@", strBuffer);
+		strBuffer = pWizardData->m_strMailServerName;
+		strBuffer.Replace("\\", "\\\\'");
+		strBuffer.Replace("'", "\\'");
+		strContent.Replace("@@PORTAL_MAILSERVERNAME@@", strBuffer);
 		strBuffer.Format("%d", pWizardData->m_nMailServerPort);
 		strContent.Replace("@@PORTAL_MAILSERVERPORT@@", strBuffer);
-		strContent.Replace("@@PORTAL_ADMINISTRATOREMAIL@@", pWizardData->m_strAdministratorEmail);
-		strContent.Replace("@@PORTAL_DEFAULTFROMADDRESS@@", pWizardData->m_strDefaultFromAddress);
-		strContent.Replace("@@PORTAL_URL@@", pWizardData->m_strPortalURL);
+		strBuffer = pWizardData->m_strAdministratorEmail;
+		strBuffer.Replace("\\", "\\\\'");
+		strBuffer.Replace("'", "\\'");
+		strContent.Replace("@@PORTAL_ADMINISTRATOREMAIL@@", strBuffer);
+		strBuffer = pWizardData->m_strDefaultFromAddress;
+		strBuffer.Replace("\\", "\\\\'");
+		strBuffer.Replace("'", "\\'");
+		strContent.Replace("@@PORTAL_DEFAULTFROMADDRESS@@", strBuffer);
+		strBuffer = pWizardData->m_strPortalURL;
+		strBuffer.Replace("\\", "\\\\'");
+		strBuffer.Replace("'", "\\'");
+		strContent.Replace("@@PORTAL_URL@@", strBuffer);
 
 
 		CString strLanguages ;

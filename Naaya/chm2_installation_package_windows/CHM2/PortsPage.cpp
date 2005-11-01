@@ -51,8 +51,8 @@ BOOL CPortsPage::OnInitDialog()
 	GetDlgItem(IDC_PORTS_TITLE)->SetFont(&((CCHM2Dlg*)GetParent())->m_fontTitle, TRUE);
 
 	GetDlgItem(IDC_PORTS_ZOPEHTTPPORT_EDIT)->SetWindowText(CRString(IDS_DEFAULT_ZOPEHTTPPORT));
-	GetDlgItem(IDC_PORTS_ZOPEFTPPORT_EDIT)->SetWindowText(CRString(IDS_DEFAULT_ZOPEFTPPORT));
-	GetDlgItem(IDC_PORTS_ZOPEWEBDAVPORT_EDIT)->SetWindowText(CRString(IDS_DEFAULT_ZOPEWEBDAVPORT));
+	//GetDlgItem(IDC_PORTS_ZOPEFTPPORT_EDIT)->SetWindowText(CRString(IDS_DEFAULT_ZOPEFTPPORT));
+	//GetDlgItem(IDC_PORTS_ZOPEWEBDAVPORT_EDIT)->SetWindowText(CRString(IDS_DEFAULT_ZOPEWEBDAVPORT));
 		
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -72,11 +72,11 @@ LRESULT CPortsPage::OnWizardNext()
 
 	// load data from controls
 	GetDlgItem(IDC_PORTS_ZOPEHTTPPORT_EDIT)->GetWindowText(strZopeHTTPPort);
-	GetDlgItem(IDC_PORTS_ZOPEFTPPORT_EDIT)->GetWindowText(strZopeFTPPort);
-	GetDlgItem(IDC_PORTS_ZOPEWEBDAVPORT_EDIT)->GetWindowText(strZopeWEBDAVPort);
+	//GetDlgItem(IDC_PORTS_ZOPEFTPPORT_EDIT)->GetWindowText(strZopeFTPPort);
+	//GetDlgItem(IDC_PORTS_ZOPEWEBDAVPORT_EDIT)->GetWindowText(strZopeWEBDAVPort);
 
 	// verify that all fields have been filled
-	if (strZopeHTTPPort == "" || strZopeFTPPort == "" || strZopeWEBDAVPort == "")
+	if (strZopeHTTPPort == "")
 	{
 		AfxMessageBox(IDS_REQUIREDFIELDS);
 		return -1;
@@ -84,8 +84,8 @@ LRESULT CPortsPage::OnWizardNext()
 	
 	// convert to numbers
 	nZopeHTTPPort = atoi(strZopeHTTPPort);
-	nZopeFTPPort = atoi(strZopeFTPPort);
-	nZopeWEBDAVPort = atoi(strZopeWEBDAVPort);
+	//nZopeFTPPort = atoi(strZopeFTPPort);
+	//nZopeWEBDAVPort = atoi(strZopeWEBDAVPort);
 
 	// verify ports values
 	// check that the ports are free at the time of installation
@@ -103,7 +103,7 @@ LRESULT CPortsPage::OnWizardNext()
 			return -1;
 		}
 	}
-	if (nZopeFTPPort < 1 || nZopeFTPPort > 65535)
+	/*if (nZopeFTPPort < 1 || nZopeFTPPort > 65535)
 	{
 		AfxMessageBox(CRString(IDS_ZOPEFTPPORT_INVALID));
 		return -1;
@@ -130,13 +130,13 @@ LRESULT CPortsPage::OnWizardNext()
 			AfxMessageBox(strError);
 			return -1;
 		}
-	}
+	}*/
 
 	// store path in wizard data
 	CWizardData* pWizardData = ((CCHM2Dlg*)GetParent())->m_pWizardData;
 	pWizardData->m_nZopeHTTPPort = nZopeHTTPPort;
-	pWizardData->m_nZopeFTPPort = nZopeFTPPort;
-	pWizardData->m_nZopeWEBDAVPort = nZopeWEBDAVPort;
+	//pWizardData->m_nZopeFTPPort = nZopeFTPPort;
+	//pWizardData->m_nZopeWEBDAVPort = nZopeWEBDAVPort;
 
 	return 0;
 }
