@@ -302,12 +302,14 @@ BOOL CInstallPage::CopyNecessaryFiles(CStringArray& arrLog)
 	strFilePath.Format("%s\\CHM2Unins.exe", pWizardData->m_strPath + strBinFolder);
 	strBuffer.Format(CRString(IDS_MOVE_FILE), strFilePath, pWizardData->m_strPath + "\\CHM2Unins.exe");
     arrLog.Add(strBuffer);
-	if (toolz.InternalMoveFile(pWizardData->m_strPath + strBinFolder + "\\CHM2Unins.exe", pWizardData->m_strPath + "\\CHM2Unins.exe"))
+	if (toolz.InternalOverwriteFile(pWizardData->m_strPath + strBinFolder + "\\CHM2Unins.exe", pWizardData->m_strPath + "\\CHM2Unins.exe"))
 	{
 		strError.Format(CRString(IDS_FAILED_MOVE_FILE), pWizardData->m_strPath + strBinFolder + "\\CHM2Unins.exe", pWizardData->m_strPath + "\\CHM2Unins.exe");
 		arrLog.Add(strError);
 		return FALSE;
 	}
+	else
+		toolz.InternalDeleteFile(pWizardData->m_strPath + strBinFolder + "\\CHM2Unins.exe");
 
 	//copy logo files
 	if (pWizardData->m_strLogoPath != "")
