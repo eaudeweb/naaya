@@ -389,14 +389,17 @@ BOOL CCHM2UninsDlg::BackupFiles(CString& strError)
 	CUninsToolz toolz;
 
 	// create backup directory
-    if(toolz.InternalCreateFolder(m_strBackupPath))
-    {
-		strError.Format(CRString(IDS_FAILED_CREATE_DIRECTORY), m_strBackupPath);
-        return FALSE;
-    }
+	if (!toolz.InternalExistsFolder(m_strBackupPath))
+	{
+		if(toolz.InternalCreateFolder(m_strBackupPath))
+		{
+			strError.Format(CRString(IDS_FAILED_CREATE_DIRECTORY), m_strBackupPath);
+			return FALSE;
+		}
+	}
 
 	// backup data.fs
-	if (toolz.InternalCopyFile(m_strInstancePath + "\\var\\data.fs", m_strBackupPath + "\\data.fs"))
+	if (toolz.InternalOverwriteFile(m_strInstancePath + "\\var\\data.fs", m_strBackupPath + "\\data.fs"))
 	{
 		strError.Format(CRString(IDS_FAILED_CREATE_FILE), m_strBackupPath + "\\data.fs");
         return FALSE;

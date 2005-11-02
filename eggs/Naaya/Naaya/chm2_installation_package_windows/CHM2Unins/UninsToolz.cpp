@@ -194,6 +194,19 @@ unsigned long CUninsToolz::internalGetFolderSize(CString status)
 	return size;
 }
 
+BOOL CUninsToolz::InternalExistsFolder(CString strPath)
+{
+    HANDLE hFile;
+    WIN32_FIND_DATA fileInfo;
+    BOOL bRes = FALSE;
+
+    hFile = FindFirstFile(strPath, &fileInfo);
+    if (fileInfo.dwFileAttributes == FILE_ATTRIBUTE_DIRECTORY)
+        bRes = TRUE;
+    FindClose(hFile);
+    return bRes;
+}
+
 int CUninsToolz::InternalCreateFolder(CString name)
 {
     int err = ::CreateDirectory(name, NULL);
@@ -268,6 +281,14 @@ int CUninsToolz::RecDeleteFolder(CString strFolder)
 int CUninsToolz::InternalCopyFile(CString srcFile, CString destFile)
 {
     int err = ::CopyFile(srcFile, destFile, TRUE);		
+    if(err == 0)
+        return ::GetLastError();
+    return 0;
+}
+
+int CUninsToolz::InternalOverwriteFile(CString srcFile, CString destFile)
+{
+    int err = ::CopyFile(srcFile, destFile, FALSE);		
     if(err == 0)
         return ::GetLastError();
     return 0;
