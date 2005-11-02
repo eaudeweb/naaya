@@ -80,30 +80,23 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     log_html = Globals.DTMLFile("dtml/LinkChecker_log", globals())
     view_log = Globals.DTMLFile("dtml/LinkChecker_logForm",globals())
 
-    def __init__(self, id, title='',objectMetaType={}, proxy='', batch_size=10, log_urls=0):
+    def __init__(self, id, title='',objectMetaType={}, proxy='', batch_size=10):
         "initialize a new instance of LinkChecker"
         self.id = id
         self.title = title
         self.objectMetaType = objectMetaType
         self.proxy = proxy
         self.batch_size = int(batch_size)
-        self.log_urls = log_urls
         self.use_catalog = 0
         self.catalog_name = ''
-        self.temp_dict_links = {} #temporary dictionary of links.Used for manual checking
         UtilsManager.__dict__['__init__'](self)
 
-
     security.declareProtected(view_management_screens, 'manage_edit')
-    def manage_edit(self, proxy, batch_size, catalog_name='', log_urls=0, REQUEST=None):
+    def manage_edit(self, proxy, batch_size, catalog_name='', REQUEST=None):
         """Edits the summary's characteristics"""
         self.proxy = proxy
         self.batch_size = int(batch_size)
         if REQUEST is not None:
-            if REQUEST.has_key('log_urls'):
-                self.log_urls = 1
-            else:
-                self.log_urls = 0
             if REQUEST.has_key('use_catalog'):
                 self.use_catalog = 1
                 self.catalog_name = catalog_name
@@ -114,7 +107,6 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         else:
             self.use_catalog = 1
             self.catalog_name = catalog_name
-            self.log_urls = log_urls
 
     def getObjectMetaTypes(self):
         """Get all added meta types"""
@@ -185,24 +177,11 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         self.manage_addLogEntry(self.REQUEST.AUTHENTICATED_USER.getUserName(), time.localtime(), log_entries)
         return
 
-    security.declareProtected(view_management_screens, 'manageUpdateCache')
-    def manageUpdateCache(self, REQUEST=None):
-        """ """
-        self.init_manualCheck()
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('manage_properties')
-
-    security.declarePrivate('init_manualCheck')
-    def init_manualCheck(self):
-        """ """
-        self.temp_dict_links = self.processObjects()
-        self._p_changed = 1
-
     security.declareProtected('Run Manual Check', 'manualCheck')
     def manualCheck(self, start, stop):
         """ """
         #build a list with all links
-        links_dict = self.temp_dict_links
+        links_dict = self.processObjects()
         l_temp_list = []
         for link_value in links_dict.values():
             for link_item in link_value:

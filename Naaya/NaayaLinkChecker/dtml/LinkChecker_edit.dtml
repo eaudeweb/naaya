@@ -21,11 +21,6 @@ addresses and they must not be from the local server.</p>
 <span class="strong_note">Number of results</span>
 <input type="text" name="batch_size" size="2" value="<dtml-var batch_size missing>" class="input_small" />
 
-<p class="note">You can choose what to store in log: all the urls (valid or broken) or only the broken urls. If you check the following option, information about all checked urls is stored in log.</p>
-
-<span class="strong_note">Log all checked URLs</span>
-<input type="checkbox" name="log_urls" size="2" value="on" class="input_small" <dtml-if log_urls>checked="checked"</dtml-if> />
-
 <p class="note">You can choose to search using an existing ZCatalog(faster). You must create a ZCatalog in the root folder and specify its id below.</p>
 <span class="strong_note">Use Catalog</span>
 <input type="checkbox" name="use_catalog" size="2" class="input_small" value="on" <dtml-if use_catalog>checked="checked"</dtml-if> /><br />
@@ -38,16 +33,6 @@ addresses and they must not be from the local server.</p>
 </fieldset>
 
 <br />
-
-<fieldset><legend class="strong_note">Object types</legend>
-<form name="frmUpdateCache" action="manageUpdateCache">
-<p class="note">
-    This Link Checker will loop all the objects of the meta types specified below and 
-    check their properties that you indicate for every one to build a temporary list of links to
-    be checked in the manual check process.
-</p>
-<input type="submit" name="btnUpdateCache" value="Update Cache" class="input_small" />
-</form>
 
 <p class="note">Specify the meta_type of the objects you want to check.<br /><strong>Example: </strong>Yihaw URL</p>
 <form action="manage_addMetaType" method="post">
