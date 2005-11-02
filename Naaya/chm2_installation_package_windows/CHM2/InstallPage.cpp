@@ -189,7 +189,7 @@ BOOL CInstallPage::StartInstallation(CString strLogFile)
     }
 
 	// Run some scripts to set stuff
-    /*arrLog.RemoveAll();
+    arrLog.RemoveAll();
     arrLog.Add(CRString(IDS_START_RUNSCRIPTS));
     if (!RunScripts(arrLog))
     {   // In case of an error, write to log and return
@@ -201,10 +201,10 @@ BOOL CInstallPage::StartInstallation(CString strLogFile)
     {
         arrLog.Add(CRString(IDS_END_RUNSCRIPTS));
         toolz.InternalWriteToFile(strLogFile, arrLog);
-    }*/
+    }
 
 	// Clean up process
-    /*arrLog.RemoveAll();
+    arrLog.RemoveAll();
     arrLog.Add(CRString(IDS_START_CLEANUP));
     if (!CleanUp(arrLog))
     {   // In case of an error, write to log and return
@@ -216,7 +216,7 @@ BOOL CInstallPage::StartInstallation(CString strLogFile)
     {
         arrLog.Add(CRString(IDS_END_CLEANUP));
         toolz.InternalWriteToFile(strLogFile, arrLog);
-    }*/
+    }
 
     // create shortcuts
     CreateShortcuts(arrLog);
