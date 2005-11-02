@@ -16,6 +16,10 @@
 		<th i18n:translate="">Release date</th>
 		<td tal:content="python:here.utShowDateTime(here.releasedate)"/>
 	</tr>
+	<tr>
+		<th i18n:translate="">Contributor</th>
+		<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
+	</tr>
 	<tr tal:condition="python:here.locator and (here.locator != 'http://')">
 		<th i18n:translate="">URL</th>
 		<td>

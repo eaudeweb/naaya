@@ -18,6 +18,10 @@
 	<td tal:content="python:here.utShowDateTime(here.releasedate)"/>
 </tr>
 <tr>
+	<th i18n:translate="">Contributor</th>
+	<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
+</tr>
+<tr>
 	<th i18n:translate="">Pointer</th>
 	<td><a tal:define="pointer here/pointer"
 			tal:attributes="href string:/${pointer}"

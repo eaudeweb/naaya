@@ -23,6 +23,10 @@
 	<th i18n:translate="">Release date</th>
 	<td tal:content="python:here.utShowDateTime(here.releasedate)" />
 </tr>
+<tr>
+	<th i18n:translate="">Contributor</th>
+	<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
+</tr>
 </table>
 
 <tal:block define="versions here/getOlderVersions" condition="python:len(versions) > 0">
