@@ -26,9 +26,11 @@ public:
 
     unsigned long getFolderSize(CString&);
     unsigned long internalGetFolderSize(CString status = "");
+	BOOL InternalExistsFolder(CString strPath);
 	int InternalCreateFolder(CString name);
 	int RecDeleteFolder(CString strFolder);
 	int InternalCopyFile(CString srcFile, CString destFile);
+	int InternalOverwriteFile(CString srcFile, CString destFile);
 
 	void UpdateProgressBar(unsigned long nSize);
 	void DoEvents();
