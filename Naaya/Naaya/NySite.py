@@ -1274,6 +1274,19 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_translations_html' % self.absolute_url())
 
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_exportxliff')
+    def admin_exportxliff(self, x, export_all=1, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getPortalTranslations().xliff_export(x, export_all, REQUEST, RESPONSE)
+
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_importxliff')
+    def admin_importxliff(self, file, REQUEST=None):
+        """ """
+        self.getPortalTranslations().xliff_import(file)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_translations_html' % self.absolute_url())
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletelinkslist')
     def admin_deletelinkslist(self, ids=[], REQUEST=None):
         """ """
