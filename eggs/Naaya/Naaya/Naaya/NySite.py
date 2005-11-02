@@ -503,6 +503,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         while l_parent.getParentNode().meta_type != self.meta_type:
             l_parent = l_parent.getParentNode()
             l_result.append(l_parent)
+        l_result.reverse()
         return l_result
 
     security.declarePublic('get_containers')
