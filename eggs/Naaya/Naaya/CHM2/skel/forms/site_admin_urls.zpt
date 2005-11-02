@@ -21,8 +21,11 @@
 		</dt>
 		<dd tal:repeat="pair pairs">
 			Title: <strong tal:content="python:pair[0].title_or_id()" /><br />
-			Parent: <a tal:attributes="href python:pair[1].absolute_url()"
-						tal:content="python:pair[1].title_or_id()" />
+			Parent(s):
+			<tal:block tal:repeat="item python:here.getAllParents(pair[1])">
+				<a tal:attributes="href item/absolute_url" tal:content="item/title_or_id" />
+				<tal:block tal:condition="python:not path('repeat/item/end')">/</tal:block>
+			</tal:block>
 		</dd>
 	</tal:block>
 </dl>
