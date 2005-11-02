@@ -72,6 +72,10 @@
 	<th i18n:translate="">Released</th>
 	<td tal:content="python:here.utShowDateTime(here.releasedate)"/>
 </tr>
+<tr>
+	<th i18n:translate="">Contributor</th>
+	<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
+</tr>
 </table>
 <p tal:condition="python:here.details!=''" tal:content="structure here/details" />
 
