@@ -86,6 +86,12 @@ misc_ = {
     'admin_schema':ImageFile('www/documentation/admin_schema.gif', globals()),
     'workflow':ImageFile('www/documentation/workflow.gif', globals()),
     'brief_layout':ImageFile('www/documentation/brief_layout.gif', globals()),
+    'select_language_box':ImageFile('www/documentation/select_language_box.gif', globals()),
+    'translate_edit':ImageFile('www/documentation/translate_edit.gif', globals()),
+    'translate_add':ImageFile('www/documentation/translate_add.gif', globals()),
+    'translate_tooltips':ImageFile('www/documentation/translate_tooltips.gif', globals()),
+    'translate_demo':ImageFile('www/documentation/translate_demo.gif', globals()),
+    'translate_messages':ImageFile('www/documentation/translate_messages.gif', globals()),
 }
 
 #constructors for pluggable content

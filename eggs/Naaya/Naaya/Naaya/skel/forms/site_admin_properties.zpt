@@ -53,7 +53,7 @@
 	</td>
 </tr>
 <tr>
-	<td i18n:translate="">Coverage glossary</td>
+	<td i18n:translate="">Geographical coverage glossary</td>
 	<td>
 		<select name="coverage_glossary">
 			<option value="" i18n:translate="">[None]</option>
