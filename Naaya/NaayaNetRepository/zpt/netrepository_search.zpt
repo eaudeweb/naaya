@@ -6,12 +6,12 @@
 						l python:request.get('l', '');
 						t python:request.get('t', '')">
 <p i18n:translate="">
-	Search channels from registry.
+	Search channels exposed by portals registered in this network.
 </p>
 <form method="get" action="">
 <table border="0" cellspacing="2" cellpadding="2">
 <tr>
-	<td i18n:translate="">Query</td>
+	<td i18n:translate="">Text to find</td>
 	<td><input type="text" name="q" size="50" tal:attributes="value q" /></td>
 </tr>
 <tr>
@@ -43,22 +43,30 @@
 </table>
 </form>
 <tal:block tal:condition="python:request.has_key('q')">
-<table border="0" cellspacing="2" cellpadding="2" width="100%">
+<h2>Search results</h2>
+
+<tal:block tal:define="results python:here.search_channels(q, l, t)">
+<table tal:condition="python:len(results) > 0" border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
-		<th i18n:translate="">Title</th>
+		<th i18n:translate="">Channel title</th>
 		<th i18n:translate="">URL</th>
 		<th i18n:translate="">Language</th>
 		<th i18n:translate="">Type</th>
 		<th i18n:translate="">Items</th>
 	</tr>
-	<tr tal:repeat="item python:here.search_channels(q, l, t)">
+	<tr tal:repeat="item results">
 		<td><a tal:attributes="href string:${item/absolute_url}/index_html" tal:content="item/title_or_id" /></td>
-		<td><a tal:attributes="href item/url" tal:content="python:here.utTruncateString(item.url, 30)" /></td>
+		<td><a tal:attributes="href item/url" tal:content="python:here.utTruncateString(item.url, 40)" /></td>
 		<td tal:content="python:item.get_language_name(item.language)" />
 		<td tal:content="item/type" />
 		<td tal:content="item/count_feed_items" />
 	</tr>
 </table>
+<p tal:condition="python:len(results) == 0">
+	No channels were found for this filter.
+</p>
+</tal:block>
+
 </tal:block>
 </tal:block>
 
