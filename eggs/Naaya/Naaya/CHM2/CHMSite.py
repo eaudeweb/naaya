@@ -40,7 +40,7 @@ from Products.NaayaPhotoArchive.NyPhotoFolder import manage_addNyPhotoFolder
 from Products.NaayaPhotoArchive.constants import *
 from Products.NaayaNetRepository.constants import *
 from Products.HelpDeskAgent.HelpDesk import manage_addHelpDesk
-from Products.CHMGlossary.CHMGlossary_constants import *
+from Products.NaayaGlossary.constants import *
 
 
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
@@ -117,10 +117,17 @@ class CHMSite(NySite):
         for r in self.objectValues(METATYPE_NYNETREPOSITORY):
             try: r.add_language(language)
             except: pass
-        for r in self.objectValues(CHM_GLOSSARY_CENTRE_METATYPE):
+
+        for gloss in self.objectValues(NAAYAGLOSSARY_CENTRE_METATYPE):
             try:
-                r.set_languages_list(language, '', self.gl_get_language_name(language))
-                r._p_changed = 1
+                catalog_obj = gloss._getOb(NAAYAGLOSSARY_CATALOG_NAME)
+                index_extra = record()
+                index_extra.default_encoding = 'utf-8'
+                try:    catalog_obj.manage_addIndex(self.gl_get_language_name(language), 'TextIndexNG2',index_extra)
+                except:    pass
+
+                gloss.set_languages_list(language, self.gl_get_language_name(language))
+                gloss._p_changed = 1
             except: pass
 
     def gl_del_site_languages_custom(self, languages):
@@ -129,11 +136,12 @@ class CHMSite(NySite):
             for language in languages:
                 try: r.del_language(language)
                 except: pass
-        for r in self.objectValues(CHM_GLOSSARY_CENTRE_METATYPE):
+
+        for gloss in self.objectValues(NAAYAGLOSSARY_CENTRE_METATYPE):
             for language in languages:
                 try: 
-                    r.del_language_from_list(language)
-                    r._p_changed = 1
+                    gloss.del_language_from_list(language)
+                    gloss._p_changed = 1
                 except: pass
 
     def gl_change_site_defaultlang_custom(self, language):
@@ -282,7 +290,7 @@ class CHMSite(NySite):
 
     def list_glossaries(self):
         #return all the glossaries in this portal
-        return self.objectValues('CHM Glossary Centre')
+        return self.objectValues(NAAYAGLOSSARY_CENTRE_METATYPE)
 
     def get_archive_listing(self, p_objects):
         """ """
