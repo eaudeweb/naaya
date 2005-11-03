@@ -55,7 +55,7 @@
 		<form id="site_admin_leftportlets" title="Portal administration - left portlets section"/>
 		<form id="site_admin_frontportlets" title="Portal administration - front portlets section"/>
 		<form id="site_admin_rightportlets" title="Portal administration - right portlets section"/>
-		<form id="site_admin_specialportlets" title="Portal administration - special portlets section"/>
+		<form id="site_admin_specialportlets" title="Portal administration - system portlets section"/>
 		<form id="site_admin_remotechportlets" title="Portal administration - remote channels portlets section"/>
 		<form id="site_admin_localchportlets" title="Portal administration - local channels section"/>
 		<form id="site_admin_folderportlets" title="Portal administration - portlets for folders section"/>

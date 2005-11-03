@@ -26,7 +26,7 @@
 		<td><textarea name="description:utf8:ustring" rows="5" cols="50"></textarea></td>
 	</tr>
 	<tr>
-		<td class="form-label">Coverage</td>
+		<td class="form-label">Geographical coverage</td>
 		<td><input type="text" name="coverage:utf8:ustring" size="50" value="" /></td>
 	</tr>
 	<tr>
