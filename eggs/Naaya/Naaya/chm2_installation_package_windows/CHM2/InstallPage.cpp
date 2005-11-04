@@ -224,7 +224,7 @@ BOOL CInstallPage::StartInstallation(CString strLogFile)
 	// create registry entry
     arrLog.RemoveAll();
     arrLog.Add(CRString(IDS_START_UPDATEREGISTRY));
-	UpdateRegistry(arrLog);
+	UpdateRegistryEnvironment(arrLog);
     arrLog.Add(CRString(IDS_END_UPDATEREGISTRY));
 	toolz.InternalWriteToFile(strLogFile, arrLog);
 
@@ -680,7 +680,7 @@ BOOL CInstallPage::CreateShortcuts(CStringArray& arrLog)
     return TRUE;
 }
 
-void CInstallPage::UpdateRegistry(CStringArray& arrLog)
+void CInstallPage::UpdateRegistryEnvironment(CStringArray& arrLog)
 {
 	CWizardToolz toolz;
 	CWizardData* pWizardData = ((CCHM2Dlg*)GetParent())->m_pWizardData;
@@ -720,6 +720,36 @@ void CInstallPage::UpdateRegistry(CStringArray& arrLog)
 	strBuffer.Format("\t\tRegDB Value: %s", pWizardData->m_strPath + CRString(IDS_FOLDER_BIN));
 	arrLog.Add(strBuffer);
 	toolz.CreateRegistryKey(strRegString, "Bin path", pWizardData->m_strPath + CRString(IDS_FOLDER_BIN));
+
+	// set environment variables
+	CString strRegSystemEnvironment = "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment\\";
+	
+	strBuffer.Format("\tRegDB Key: HKEY_LOCAL_MACHINE\\%s", strRegSystemEnvironment);
+	arrLog.Add(strBuffer);
+
+	// set ANDTIOWORDHOME
+	strBuffer.Format("\t\tRegDB Name: ANTIWORDHOME");
+	arrLog.Add(strBuffer);
+	strBuffer.Format("\t\tRegDB Value: %s", pWizardData->m_strPath + CRString(IDS_FOLDER_BIN) + "\\converters\\antiword");
+	arrLog.Add(strBuffer);
+	toolz.CreateRegistryKey(strRegSystemEnvironment, "ANTIWORDHOME", pWizardData->m_strPath + CRString(IDS_FOLDER_BIN) + "\\converters\\antiword");
+
+	// update Path
+	CString strRegPath;
+	toolz.ReadRegistryKey(strRegSystemEnvironment, "Path", strRegPath);
+	if (strRegPath.GetAt(strRegPath.GetLength()-1) != ';')
+	{
+		strRegPath += ";";
+	}
+	strRegPath += pWizardData->m_strPath + CRString(IDS_FOLDER_BIN) + "\\converters\\antiword;";
+	strRegPath += pWizardData->m_strPath + CRString(IDS_FOLDER_BIN) + "\\converters\\xlHtml;";
+	strRegPath += pWizardData->m_strPath + CRString(IDS_FOLDER_BIN) + "\\converters\\pdftohtml";
+
+	strBuffer.Format("\t\tRegDB Name: Path");
+	arrLog.Add(strBuffer);
+	strBuffer.Format("\t\tRegDB Value: %s", strRegPath);
+	arrLog.Add(strBuffer);
+	toolz.CreateRegistryKey(strRegSystemEnvironment, "Path", strRegPath);
 }
 
 BOOL CInstallPage::StartProgram(CString strFile, CString strParameters, CString strDirectory, CStringArray& arrLog, int nShow)

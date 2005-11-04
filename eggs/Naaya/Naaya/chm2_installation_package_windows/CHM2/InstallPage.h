@@ -46,7 +46,7 @@ public:
 	BOOL RunScripts(CStringArray&);
 	BOOL CleanUp(CStringArray&);
     BOOL CreateShortcuts(CStringArray&);
-	void UpdateRegistry(CStringArray&);
+	void UpdateRegistryEnvironment(CStringArray&);
 protected:
 	BOOL OnWizardFinish();
 
