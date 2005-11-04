@@ -750,6 +750,10 @@ void CInstallPage::UpdateRegistryEnvironment(CStringArray& arrLog)
 	strBuffer.Format("\t\tRegDB Value: %s", strRegPath);
 	arrLog.Add(strBuffer);
 	toolz.CreateRegistryKey(strRegSystemEnvironment, "Path", strRegPath);
+
+	// propagate the environment variables
+	DWORD dwResult;
+	SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, 0, (LPARAM) "Environment", SMTO_ABORTIFHUNG, 5000, &dwResult);
 }
 
 BOOL CInstallPage::StartProgram(CString strFile, CString strParameters, CString strDirectory, CStringArray& arrLog, int nShow)
