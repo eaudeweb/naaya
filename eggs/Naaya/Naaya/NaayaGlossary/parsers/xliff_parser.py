@@ -125,12 +125,12 @@ class xliff_handler(ContentHandler):
             self.__note = content
 
         if name == 'trans-unit':
-            self.setBody(self.__tuid, {'source':self.__source,
-                                       'target':self.__target,
-                                       'context':self.__context,
-                                       'context-name':self.__context_name,
-                                       'note':self.__note,
-                                       'approved':self.__approved})
+            self.setBody((self.__tuid, self.__context_name), {'source':self.__source,
+                                                              'target':self.__target,
+                                                              'context':self.__context,
+                                                              'context-name':self.__context_name,
+                                                              'note':self.__note,
+                                                              'approved':self.__approved})
 
         self.__currentTag = ''
 
@@ -184,7 +184,6 @@ class xliff_parser:
                 filecontent = file.read()
                 inputsrc.setByteStream(StringIO(filecontent))
             parser.parse(inputsrc)
-            print inputsrc
             return chandler
         except:
             return None
