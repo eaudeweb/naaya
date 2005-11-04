@@ -186,6 +186,9 @@ BOOL CCHM2UninsDlg::OnInitDialog()
 	strBuffer.Format(CRString(IDS_REMOVE_REGKEY), m_strRegApplicationKey);
 	strSummary += strBuffer;
 
+	strBuffer.Format(CRString(IDS_REMOVE_REGKEY), "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment\\ANTIWORDHOME");
+	strSummary += strBuffer;
+
 	m_edtSummary.SetWindowText(strSummary);
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -457,5 +460,21 @@ BOOL CCHM2UninsDlg::DeleteRegistry(CString& strError)
 	if (!toolz.UTDeleteRegistryKey(m_strRegApplicationKey, strError))
 		return FALSE;
 	else
-		return TRUE;
+	{
+		CString strRegSystemEnvironment = "SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment\\";
+	
+		// delete ANDTIOWORDHOME
+		if (!toolz.UTDeleteRegistryValue(strRegSystemEnvironment, "ANTIWORDHOME", strError))
+			return FALSE;
+
+		// delete converters from Path
+		CString strRegPath;
+		toolz.UTReadRegistryKey(strRegSystemEnvironment, "Path", strRegPath);
+		strRegPath.Replace(";" + m_strBinPath + "\\converters\\antiword", "");
+		strRegPath.Replace(";" + m_strBinPath + "\\converters\\xlHtml", "");
+		strRegPath.Replace(";" + m_strBinPath + "\\converters\\pdftohtml", "");
+		toolz.UTCreateRegistryKey(strRegSystemEnvironment, "Path", strRegPath);
+	}
+
+	return TRUE;
 }
