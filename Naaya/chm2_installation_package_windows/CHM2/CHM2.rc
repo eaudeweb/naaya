@@ -498,7 +498,7 @@ BEGIN
     IDS_MENU_FOLDER_NAME    "CHM2"
     IDS_INSTALLATION_START  "Installing... Please wait."
     IDS_FILE_LOG            "\\install.log"
-    IDS_LABEL_END_INSTALL   "Installation process was completed!\r\n\r\nYou can access your website using the URL\r\nhttp://%s:%d/chm2\r\n\r\n"
+    IDS_LABEL_END_INSTALL   "Installation process was completed!\r\n\r\nPlease restart your computer in order for the portal to work properly.\r\n\r\nYou can access your website using the URL\r\nhttp://%s:%d/chm2\r\n\r\n"
     IDS_INSTALLATION_COMPLETE "Installation complete"
     IDS_REMOVING_FILES      "Deleting installation files..."
     IDS_DELETE_INSTALLATION_FILES 
