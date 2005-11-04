@@ -150,6 +150,17 @@ BOOL CUninsToolz::UTDeleteRegistryKey(CString strKeyName, CString& strError)
 	return TRUE;
 }
 
+BOOL CUninsToolz::UTDeleteRegistryValue(CString strKeyName, CString strKeyValue, CString& strError)
+{
+	if (SHDeleteValue(HKEY_LOCAL_MACHINE, strKeyName, strKeyValue) != ERROR_SUCCESS)
+	{
+		strError.Format(CRString(IDS_FAILED_DELETE_REGKEY), strKeyName + "\\" + strKeyValue);
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
 unsigned long CUninsToolz::getFolderSize(CString &folderName)
 {
 	char buffer[1024];
@@ -474,4 +485,46 @@ void CUninsToolz::DoEvents()
 			break;
 		}
 	}
+}
+
+void CUninsToolz::UTCreateRegistryKey(CString strRegString, CString strKeyName, CString strKeyValue)
+{
+   HKEY hKey;
+   char* strSn = strKeyValue.GetBuffer(strKeyValue.GetLength());
+   strKeyValue.ReleaseBuffer();
+   DWORD dwBufLen = strlen(strSn);
+   DWORD dwDisposition;
+   LONG lRet;
+   if(RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+               TEXT(strRegString),
+               0,
+               KEY_SET_VALUE,
+               &hKey) != ERROR_SUCCESS)
+   {
+             if (RegCreateKeyEx(HKEY_LOCAL_MACHINE,
+               TEXT(strRegString),
+               0,
+               TEXT(""),
+               REG_OPTION_NON_VOLATILE,
+               STANDARD_RIGHTS_WRITE | KEY_SET_VALUE | KEY_CREATE_SUB_KEY,
+               NULL,
+               &hKey,
+               &dwDisposition) != ERROR_SUCCESS)
+           return;
+       RegCloseKey(hKey);
+       if(RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+               TEXT(strRegString),
+               0,
+               KEY_SET_VALUE,
+               &hKey) != ERROR_SUCCESS)
+           return;
+   }
+ 
+   lRet = RegSetValueEx(hKey,
+       TEXT(strKeyName),
+       NULL,
+       REG_SZ,
+       (LPBYTE)strSn,
+       dwBufLen);
+	RegCloseKey(hKey);
 }

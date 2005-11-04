@@ -23,6 +23,8 @@ public:
 
 	BOOL UTReadRegistryKey(CString strRegString, CString strKeyName, CString& strKeyValue);
 	BOOL UTDeleteRegistryKey(CString strKeyName, CString& strError);
+	BOOL UTDeleteRegistryValue(CString strKeyName, CString strKeyValue, CString& strError);
+	void UTCreateRegistryKey(CString strRegString, CString strKeyName, CString strKeyValue);
 
     unsigned long getFolderSize(CString&);
     unsigned long internalGetFolderSize(CString status = "");
