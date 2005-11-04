@@ -7,7 +7,7 @@
 </h3>
 <h3>Command Lines</h3>
 Creating command line "rc.exe /l 0x409 /fo"Release/CHM2Console.res" /d "NDEBUG" "D:\C++\CHM\CHM2Console\CHM2Console.rc"" 
-Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP215.tmp" with contents
+Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP418.tmp" with contents
 [
 /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"Release/CHM2Console.pch" /Yu"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
 "D:\C++\CHM\CHM2Console\CHM2Console.cpp"
@@ -20,14 +20,14 @@ Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP215.tmp" with
 "D:\C++\CHM\CHM2Console\TabZope.cpp"
 "D:\C++\CHM\CHM2Console\ZEUDlg.cpp"
 ]
-Creating command line "cl.exe @C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP215.tmp" 
-Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP216.tmp" with contents
+Creating command line "cl.exe @C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP418.tmp" 
+Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP419.tmp" with contents
 [
 /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"Release/CHM2Console.pch" /Yc"stdafx.h" /Fo"Release/" /Fd"Release/" /FD /c 
 "D:\C++\CHM\CHM2Console\StdAfx.cpp"
 ]
-Creating command line "cl.exe @C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP216.tmp" 
-Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP217.tmp" with contents
+Creating command line "cl.exe @C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP419.tmp" 
+Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP41A.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:no /pdb:"Release/CHM2Console.pdb" /machine:I386 /out:"Release/CHM2Console.exe" 
 ".\Release\CHM2Console.obj"
@@ -42,7 +42,7 @@ Creating temporary file "C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP217.tmp" with
 ".\Release\ZEUDlg.obj"
 ".\Release\CHM2Console.res"
 ]
-Creating command line "link.exe @C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP217.tmp"
+Creating command line "link.exe @C:\DOCUME~1\DRAGOS~1.FIN\LOCALS~1\Temp\RSP41A.tmp"
 <h3>Output Window</h3>
 Compiling resources...
 Compiling...

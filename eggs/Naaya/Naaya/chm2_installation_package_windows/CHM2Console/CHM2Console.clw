@@ -15,14 +15,14 @@ Class3=CAboutDlg
 ResourceCount=7
 Resource1=IDD_TAB_ABOUT
 Resource2=IDR_MAINFRAME
-Resource3=IDD_ABOUTBOX
+Resource3=IDD_TAB_ZOPE
 Class4=CCHM2TabCtrl
 Class5=CTabService
-Resource4=IDD_TAB_SERVICE
+Resource4=IDD_CHM2CONSOLE_DIALOG
 Class6=CTabZope
-Resource5=IDD_CHM2CONSOLE_DIALOG
+Resource5=IDD_ABOUTBOX
 Class7=CTabAbout
-Resource6=IDD_TAB_ZOPE
+Resource6=IDD_TAB_SERVICE
 Resource7=IDD_ZEU_DIALOG
 
 [CLS:CCHM2ConsoleApp]
