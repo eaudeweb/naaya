@@ -405,7 +405,6 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     return REQUEST.RESPONSE.redirect('languages_html')
         elif self.utUpdateObjectAction(REQUEST):
             if string.strip(lang)=='' or string.strip(english_name)=='':
-                print 11
                 return REQUEST.RESPONSE.redirect('languages_html')
             else:
                 self.del_language_from_list(old_english_name)
@@ -500,19 +499,19 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
         body_info = chandler.getBody() #return a dictionary {id: (source, target)}
         obj = mapTiny()
-        for elem_id, translation in body_info.items():
-            elem_id = elem_id.encode('utf-8')
+        for ids, translation in body_info.items():
+            elem_id = ids[0].encode('utf-8')
 
             if elem_id!='':
                 l_context_name = translation['context-name'].encode('utf-8')
                 if l_context_name:
-                    folder_id = l_context_name
+                    folder_id = ids[1].encode('utf-8')
                 else:
-                    folder_id = self.utf8_to_latin1(string.upper(elem_id[:1]))
+                    folder_id = string.upper(elem_id[:1])
                 folder = self.unrestrictedTraverse(folder_id, None)
                 if folder is None:
                     try:
-                        self.manage_addGlossaryFolder(folder_id, '', [], '', '', 1)
+                        self.manage_addGlossaryFolder(folder_id, translation['context'].encode('utf-8'), [], '', '', 1)
                         folder = self._getOb(folder_id)
                         folder.set_translations_list(target_language, translation['context'].encode('utf-8'))
                     except Exception, error:
@@ -520,8 +519,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 else:
                     folder.set_translations_list(target_language, translation['context'].encode('utf-8'))
                 if target_language in self.get_english_names():
-                    obj.entry = self.utf8_to_latin1(translation['source'])
-                    obj.translations[target_language] = translation['target']
+                    obj.entry = translation['source'].encode('utf-8')
+                    obj.translations[target_language] = translation['target'].encode('utf-8')
                 if obj.entry!='':
                     elem_ob = folder._getOb(obj.entry, None)
                     if elem_ob is not None:
@@ -538,10 +537,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
                             #name translation
                             for k,v in obj.translations.items():
-                                elem_ob.set_translations_list(k, v.encode('utf-8'))
+                                elem_ob.set_translations_list(k, v)
 
                             #definition translation
-                            elem_ob.set_def_trans_list(target_language, translation['note'])
+                            elem_ob.set_def_trans_list(target_language, translation['note'].encode('utf-8'))
                             elem_ob.cu_recatalog_object(elem_ob)
             obj.emptyObject()
         if REQUEST: return REQUEST.RESPONSE.redirect('import_html')
