@@ -100,7 +100,7 @@ class NyVersions:
         set contributor for objects with an empty string as contributor.
         """
         naaya_site = self.getSite()
-        for i in naaya_site.objectValues('Naaya Folder')
+        for i in naaya_site.objectValues('Naaya Folder'):
             if i.id==folder_name:
                 if x.contributor=="":
                     x.setContributor(new_contributor)
