@@ -95,16 +95,15 @@ class NyVersions:
             
 
     security.declareProtected(view_management_screens, 'set_contributor')
-    def set_contributor(self, new_contributor):
+    def set_contributor(self, new_contributor, folder_name):
         """
         set contributor for objects with an empty string as contributor.
         """
-        catalog_tool = self.getCatalogTool()
-        for b in self.getCatalogedBrains():
-            x = catalog_tool.getobject(b.data_record_id_)
-            if x.contributor=="":
-                x.setContributor(new_contributor)
-            self.recatalogNyObject(x)       
+        naaya_site = self.getSite()
+        for i in naaya_site.objectValues('Naaya Folder')
+            if i.id==folder_name:
+                if x.contributor=="":
+                    x.setContributor(new_contributor)
         return "Contributor set up."
 
 
