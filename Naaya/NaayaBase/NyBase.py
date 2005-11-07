@@ -29,7 +29,6 @@ This module contains the base class of Naaya architecture.
 #Zope imports
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Globals import InitializeClass
-from AccessControl.Permissions import view_management_screens
 
 #Product imports
 from constants import *
@@ -60,6 +59,16 @@ class NyBase:
         Test if the current object is instance of the B{NyCheckControl} class.
         """
         return isinstance(self, NyCheckControl)
+
+    security.declarePrivate('setContributor')
+    def setContributor(self, contributor):
+        """
+        Set the contributor for the current object.
+        @param contributor: the contributor
+        @type contributor: string
+        """
+        self.contributor = contributor
+        self._p_changed = 1
 
     security.declarePrivate('approveThis')
     def approveThis(self, approved=1, approved_by=None):
