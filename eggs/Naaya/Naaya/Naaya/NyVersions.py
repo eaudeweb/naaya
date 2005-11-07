@@ -92,5 +92,20 @@ class NyVersions:
                 channel._p_changed = 1
                 self.recatalogNyObject(channel)
         return "Upgraded OK: submitted for NetRepository"
+            
+
+    security.declareProtected(view_management_screens, 'set_contributor')
+    def set_contributor(self, new_contributor):
+        """
+        set contributor for objects with an empty string as contributor.
+        """
+        catalog_tool = self.getCatalogTool()
+        for b in self.getCatalogedBrains():
+            x = catalog_tool.getobject(b.data_record_id_)
+            if x.contributor=="":
+                x.setContributor(new_contributor)
+            self.recatalogNyObject(x)       
+        return "Contributor set up."
+
 
 InitializeClass(NyVersions)
