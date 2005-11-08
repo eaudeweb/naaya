@@ -58,6 +58,12 @@ class list_utils:
         """Constructor"""
         pass
 
+    def stripHTMLTags(self, s):
+        """ Takes a text and removes the HTML tags leaving just plain text """
+        strip_html_pattern = re.compile(r'<[^>]*>')
+        plaintext = strip_html_pattern.sub('', s)
+        return plaintext.replace('  ', ' ')
+
     def splitToList(self, s):
         """Gets a comma separated string and returns a list"""
         res = []
