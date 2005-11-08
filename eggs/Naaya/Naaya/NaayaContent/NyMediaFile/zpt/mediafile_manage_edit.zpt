@@ -21,7 +21,7 @@
 		<td><textarea name="description" rows="5" cols="50" tal:content="python:request.get('description', here.description)"/></td>
 	</tr>
 	<tr>
-		<td class="form-label">Coverage</td>
+		<td class="form-label">Geographical coverage</td>
 		<td><input type="text" name="coverage" size="50" tal:attributes="value python:request.get('coverage', here.coverage)"></td>
 	</tr>
 	<tr>
