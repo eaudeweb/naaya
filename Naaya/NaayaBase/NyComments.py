@@ -240,6 +240,7 @@ class NyComments:
         if date is None: date = self.utGetTodayDate()
         else: date = self.utGetDate(date)
         self.add_comment_item(id, title, body, author, date)
+        self.recatalogNyObject(self)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
@@ -250,6 +251,7 @@ class NyComments:
         Delete a comment.
         """
         self.delete_comment_item(id)
+        self.recatalogNyObject(self)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
