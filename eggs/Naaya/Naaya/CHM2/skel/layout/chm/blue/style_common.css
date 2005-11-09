@@ -175,7 +175,12 @@
 		}
 
 	table#folderfile_list{
+	<tal:block tal:condition="python: len(here.get_right_portlets_locations_objects(here)) > 0">
 		width: 79%;
+	</tal:block>
+	<tal:block tal:condition="python: len(here.get_right_portlets_locations_objects(here)) == 0">
+		width: 100%;
+	</tal:block>
 	}
 
 	#folderfile_list th{
