@@ -132,6 +132,12 @@ class NyComments:
         t.sort()
         return [val for (key, val) in t]
 
+    def has_comments(self):
+        """
+        Returns the number of comments.
+        """
+        return len(self.__comments_collection.keys()) > 0
+
     def count_comments(self):
         """
         Returns the number of comments.
