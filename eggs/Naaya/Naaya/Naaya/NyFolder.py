@@ -365,36 +365,6 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     def getSortedFolders(self): return self.utSortObjsListByAttr(self.getFolders(), 'sortorder', 0)
     def getSortedObjects(self): return self.utSortObjsListByAttr(self.getObjects(), 'sortorder', 0)
 
-    #restrictions
-    def get_valid_roles(self):
-        #returns a list of roles that can be used to restrict this folder
-        roles = list(self.valid_roles())
-        filter(roles.remove, ['Administrator', 'Anonymous', 'Manager', 'Owner'])
-        return roles
-
-    def can_be_seen(self):
-        """
-        Indicates if the current user has access to the current folder.
-        """
-        return self.checkPermission(view)
-
-    def has_restrictions(self):
-        """
-        Indicates if this folder has restrictions for the current user.
-        """
-        return not self.acquiredRolesAreUsedBy(view)
-
-    def get_roles_with_access(self):
-        """
-        Returns a list of roles that have access to this folder.
-        """
-        r = []
-        ra = r.append
-        for x in self.rolesOfPermission(view):
-            if x['selected'] and x['name'] not in ['Administrator', 'Anonymous', 'Manager', 'Owner']:
-                ra(x['name'])
-        return r
-
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', language='', coverage='',
