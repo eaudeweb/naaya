@@ -31,6 +31,7 @@ All types of objects that are containers must extend this class.
 from OFS.Folder import Folder
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view
 
 #Product imports
 from NyBase import NyBase
@@ -109,5 +110,35 @@ class NyContainer(Folder, NyComments, NyBase, NyPermissions):
         """
         Folder.inheritedAttribute('manage_beforeDelete')(self, item, container)
         self.uncatalogNyObject(self)
+
+    #restrictions
+    def get_valid_roles(self):
+        #returns a list of roles that can be used to restrict this folder
+        roles = list(self.valid_roles())
+        filter(roles.remove, ['Administrator', 'Anonymous', 'Manager', 'Owner'])
+        return roles
+
+    def can_be_seen(self):
+        """
+        Indicates if the current user has access to the current folder.
+        """
+        return self.checkPermission(view)
+
+    def has_restrictions(self):
+        """
+        Indicates if this folder has restrictions for the current user.
+        """
+        return not self.acquiredRolesAreUsedBy(view)
+
+    def get_roles_with_access(self):
+        """
+        Returns a list of roles that have access to this folder.
+        """
+        r = []
+        ra = r.append
+        for x in self.rolesOfPermission(view):
+            if x['selected'] and x['name'] not in ['Administrator', 'Anonymous', 'Manager', 'Owner']:
+                ra(x['name'])
+        return r
 
 InitializeClass(NyContainer)
