@@ -397,6 +397,11 @@ class CHMSite(NySite):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_urls')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_comments_html')
+    def admin_comments_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_comments')
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_predefined_html')
     def admin_predefined_html(self, REQUEST=None, RESPONSE=None):
         """ """

@@ -10,6 +10,7 @@
 		<form id="site_admin_deletions" title="Portal administration - submissions"/>
 		<form id="site_admin_submissions" title="Portal administration - deletions"/>
 		<form id="site_admin_urls" title="Portal administration - urls"/>
+		<form id="site_admin_comments" title="Portal administration - comments for content"/>
 		<form id="site_admin_linkchecker" title="Portal administration - link checker"/>
 		<form id="site_admin_predefined" title="Portal administration - predefined latest uploads"/>
 		<form id="site_admin_network" title="Portal administration - network of portals"/>
