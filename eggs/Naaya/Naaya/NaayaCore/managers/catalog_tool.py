@@ -176,6 +176,9 @@ class catalog_tool:
         if howmany != -1: l_results = l_results[:howmany]
         return self.__getObjects(l_results)
 
+    def getCommentedObjects(self):
+        return self.__getObjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'has_comments': 1}))
+
     def getCatalogCheckedOutObjects(self):
         return self.__getObjects(self.__searchCatalog({'meta_type': self.searchable_content, 'submitted': 1, 'checkout': 1}))
 
