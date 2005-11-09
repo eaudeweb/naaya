@@ -45,6 +45,14 @@ function fTreeClick(expand)
 		</tal:block>
 		<img border="0" tal:attributes="src python:tree_node[0].icon" />
 		<a tal:define="node_path python:tree_node[0].absolute_url()" tal:attributes="href node_path" tal:content="python:tree_node[0].title_or_id()">folder</a>
+		<tal:block tal:condition="python:tree_node[0].can_be_seen()">
+			<tal:block tal:condition="python:tree_node[0].has_restrictions()" i18n:translate="">
+				[Limited access]
+			</tal:block>
+		</tal:block>
+		<tal:block tal:condition="python:not tree_node[0].can_be_seen()" i18n:translate="">
+			[Restricted access]
+		</tal:block>
 	</dt>
 </dl>
 <input type="hidden" name="expand" tal:attributes="value expand" />
