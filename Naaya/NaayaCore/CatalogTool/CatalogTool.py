@@ -111,6 +111,8 @@ class CatalogTool(ZCatalog, utils):
         except: pass
         try: self.addIndex('validation_status', 'FieldIndex')
         except: pass
+        try: self.addIndex('has_comments', 'FieldIndex')
+        except: pass
         for lang in languages: self.add_indexes_for_lang(lang)
         try: self.addIndex('releasedate', 'FieldIndex')
         except: pass
