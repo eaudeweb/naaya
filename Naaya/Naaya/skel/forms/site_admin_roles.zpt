@@ -96,12 +96,12 @@ function createKey(key)
 <tr>
 	<td align="top" width="20%" class="form-label" i18n:translate="">Username:</td>
 	<td align="top" width="*" tal:define="users user_tool/user_names">
-		<select name="name">
+		<select name="names" size="5" multiple="multiple">
 			<option tal:repeat="user users" tal:attributes="value user" tal:content="user" />
 		<select>
-	 </td>
- </tr>
- <tr>
+	</td>
+</tr>
+<tr>
 	<td align="top" width="20%" i18n:translate="">Roles:</td>
 	<td align="top" width="*" tal:define="roles user_tool/list_valid_roles">
 		<select name="roles" size="5" multiple="multiple">

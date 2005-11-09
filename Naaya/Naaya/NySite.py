@@ -1236,15 +1236,20 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             REQUEST.RESPONSE.redirect('%s/admin_roles_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addroles')
-    def admin_addroles(self, name='', roles=[], loc='allsite', location='', REQUEST=None):
+    def admin_addroles(self, names=[], roles=[], loc='allsite', location='', REQUEST=None):
         """ """
         msg = err = ''
-        try:
-            self.getAuthenticationTool().manage_addUsersRoles(name, roles, loc, location)
-        except Exception, error:
-            err = error
+        names = self.utConvertToList(names)
+        if len(names)<=0:
+            err = 'An username must be specified'
         else:
-            msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+            try:
+                for name in names:
+                    self.getAuthenticationTool().manage_addUsersRoles(name, roles, loc, location)
+            except Exception, error:
+                err = error
+            else:
+                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
         if REQUEST:
             if err != '': self.setSessionErrors([err])
             if msg != '': self.setSessionInfo([msg])
