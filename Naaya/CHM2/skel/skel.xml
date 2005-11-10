@@ -160,7 +160,6 @@
 			<link id="103" title="Stories" description="Stories archive" url="/stories/" relative="1" permission="" order="40"/>
 			<link id="104" title="Events" description="Events archive" url="/events/" relative="1" permission="" order="50"/>
 			<link id="105" title="Photos" description="Photo archive" url="/PhotoArchive/" relative="1" permission="" order="60"/>
-			<link id="106" title="Who's who" description="" url="/General_stuff/" relative="1" permission="" order="70"/>
 			<link id="107" title="About" description="" url="/About/" relative="1" permission="" order="80"/>
 			<link id="108" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="90"/>
 			<link id="109" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="100"/>
