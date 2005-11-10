@@ -156,7 +156,6 @@
 			<link id="109" title="EC ABS" description="EC Access and Benefit Sharing portal" url="/information/F1046684686/F1058442682/" relative="1" permission="" order="100"/>
 		</linkslist>
 		<linkslist id="menunav_links" title="Menu navigation links" portlet="">
-			<link id="101" title="Login" description="Login page" url="login_html" relative="0" permission="" order="20"/>
 			<link id="102" title="News" description="News archive" url="/news/" relative="1" permission="" order="30"/>
 			<link id="103" title="Stories" description="Stories archive" url="/stories/" relative="1" permission="" order="40"/>
 			<link id="104" title="Events" description="Events archive" url="/events/" relative="1" permission="" order="50"/>
