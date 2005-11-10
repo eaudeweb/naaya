@@ -140,7 +140,7 @@
 	<portlets left="portlet_maincategories" center="portlet_lateststories,portlet_meetingsevents,portlet_whatsnew,portlet_relevantuploads,portlet_latestphotos">
 		<portlet id="portlet_administration" title="Administration"/>
 		<portlet id="portlet_meetingsevents" title="Meetings and events"/>
-		<portlet id="portlet_relevantuploads" title="Latest relevant uploads"/>
+		<portlet id="portlet_relevantuploads" title="Selected uploads"/>
 		<portlet id="portlet_whatsnew" title="What's new"/>
 		<portlet id="portlet_latestphotos" title="Photos"/>
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">

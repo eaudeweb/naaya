@@ -1,6 +1,6 @@
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
 <tal:block metal:fill-slot="portlet_title">
-	<span i18n:translate="" tal:omit-tag="">Latest uploads</span>
+	<span i18n:translate="" tal:omit-tag="">Selected uploads</span>
 	<a tal:attributes="href string:${here/getSitePath}/latestrelevantuploads_rdf"><img src="misc_/NaayaCore/xml.png" width="36" height="14" border="0" alt="Syndication (XML)" i18n:attributes="alt" /></a>
 </tal:block>
 <tal:block metal:fill-slot="portlet_content">
