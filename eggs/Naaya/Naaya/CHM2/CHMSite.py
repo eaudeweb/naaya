@@ -96,6 +96,10 @@ class CHMSite(NySite):
         self._getOb(ID_GLOSSARY_KEYWORDS).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_keywords.xml')))
         manage_addGlossaryCentre(self, ID_GLOSSARY_COVERAGE, TITLE_GLOSSARY_COVERAGE)
         self._getOb(ID_GLOSSARY_COVERAGE).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_coverage.xml')))
+        #set glossary for pick lists
+        self.keywords_glossary = ID_GLOSSARY_KEYWORDS
+        self.coverage_glossary = ID_GLOSSARY_COVERAGE
+        self._p_changed = 1
 
     #objects getters
     def getLinkChecker(self): return self._getOb(ID_LINKCHECKER, None)
