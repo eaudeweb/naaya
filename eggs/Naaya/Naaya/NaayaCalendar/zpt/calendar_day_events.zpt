@@ -1,13 +1,11 @@
 <tal:block tal:replace="structure here/standard_html_header"/>
 <span metal:use-macro="here/calendar_template/macros/calendar_page">
 
-
 <tal:block metal:fill-slot="page_body">
 	<tal:block define="cday python:request.get('cday', '').split('/')[0];
 					   cmonth python:request.get('cday', '').split('/')[1];
 					   cyear python:request.get('cday', '').split('/')[2];">
-<div id="middle_port" style='margin-right:0;'>
-
+	<div id="middle_port" style='margin-right:0;'>
 		<h3 id="Event-Title">
 			<span tal:omit-tag="" i18n:translate="">Day Events for</span>&nbsp;<span tal:replace="python:cday+' '+here.getMonthName(cmonth)+' '+cyear"/>
 		</h3>
@@ -27,10 +25,9 @@
 				<td tal:content="python:obj[1]"></td>
 			</tr>
 		</table>
-</div>
+	</div>
 	</tal:block>
 </tal:block>
-
 
 </span>
 <tal:block tal:replace="structure here/standard_html_footer"/>

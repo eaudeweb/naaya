@@ -127,8 +127,11 @@ class DateFunctions:
 
     def getDayIndex(self, p_day):
         """ return the day index """
-        for key in self.getLongWeekdays().keys():
-            if self.getLongWeekdays()[key] == p_day:  return int(key)
+        for key in self.LongWeekdays.keys():
+            if self.LongWeekdays[key] == p_day:  return int(key)
+#the code bellow will not work if week days will be translated:
+#        for key in self.getLongWeekdays().keys():
+#            if self.getLongWeekdays()[key] == p_day:  return int(key)
 
     def getDayLengths(self):
         """ return the choises for day length """

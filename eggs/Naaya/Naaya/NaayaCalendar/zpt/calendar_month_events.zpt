@@ -11,7 +11,7 @@
 						forw_year python:next_date[1];
 						back_month python:prev_date[0];
 						back_year python:prev_date[1];">
-<div id="middle_port" 'margin-right:0;'>
+<div id="middle_port" style='margin-right:0;'>
 		<a tal:attributes="href string:${here/getArrowURL}cmonth=${back_month}&cyear=${back_year};" title="Previous month" i18n:attributes="title"><img tal:attributes="src string:${here/getEventCalendarURL}/left_arrow" title="Previous month" alt="Previous month" border="0" i18n:attributes="title alt" /></a>
 		<h3 id="Event-Title">
 			<span tal:omit-tag="" i18n:translate="">Month Events for</span>&nbsp;<span tal:replace="python:here.getMonthName(cmonth)+' '+cyear" />
