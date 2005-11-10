@@ -77,9 +77,9 @@ class Role(RoleManager, utils):
             return REQUEST.RESPONSE.redirect('manage_roles_html')
         zope_permissions = {}
         if not role:
-            return MessageDialog(title  ='Incomplete', message='You must specify a role name', action ='manage_roles_html')
-        if role in self.__ac_roles__:
-            return MessageDialog(title  ='Role Exists', message='The given role is already defined', action ='manage_roles_html')
+            raise Exception, 'You must specify a role name'
+        if role in self.__ac_roles__ or role in self._roles.keys():
+            raise Exception, 'The given role is already defined'
         permissions = self.utConvertToList(permissions)
         self.getSite()._addRole(role)
         for permission in permissions:
@@ -96,7 +96,7 @@ class Role(RoleManager, utils):
     def delRole(self, roles=[], REQUEST=None):
         """ delete role"""
         if not roles:
-            return MessageDialog(title  ='Incomplete', message='You must specify a role name', action ='manage_roles_html')
+            raise Exception, 'You must specify a role name'
         roles = self.utConvertToList(roles)
         self._delRole(roles)
         if REQUEST is not None: 
