@@ -1,8 +1,8 @@
 <h2>Log of broken links found by the automatic checking</h2>
 
 
-<p>
-This page presents the most recent broken links log, obtained at <dtml-var "umFormatDateTimeToString(date_create)">&nbsp; by the automatic link checker. The links below appear in URL, news and events items from this portal.
+<p i18n:translate="">
+This page presents the most recent broken links log, obtained at <dtml-var "umFormatDateTimeToString(date_create)"> by the automatic URLs checker. The links below appear in <em>URL</em>, <em>news</em> and <em>events</em> items from this portal.
 </p>
 
 <form name="frm">

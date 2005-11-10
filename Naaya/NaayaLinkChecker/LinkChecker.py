@@ -52,8 +52,8 @@ def manage_addLinkChecker(self, id, title, REQUEST=None):
             executeAt = checker_ob.umGetTodayDate() + 0.0021,
             periodDays = 0.0021)
     else: 
-        checker_ob.manage_addDTMLMethod('runChecker','Run the LinkChecker',file = 'Content-Type: text/plain\n\n<dtml-with '+ checker_ob.id +'>\n<dtml-call automaticCheck>\n</dtml-with>')
-    checker_ob.manage_addDTMLMethod('automatic_log','Logs of the automatic link checkings',file = '<dtml-var standard_html_header>\n\n<h1>Automatic link checker logs</h1>\n\n<dtml-var view_log>\n\n<dtml-var standard_html_footer>')
+        checker_ob.manage_addDTMLMethod('runChecker','Run the URL checker',file = 'Content-Type: text/plain\n\n<dtml-with '+ checker_ob.id +'>\n<dtml-call automaticCheck>\n</dtml-with>')
+    checker_ob.manage_addDTMLMethod('automatic_log','Logs of the automatic URL checkings',file = '<dtml-var standard_html_header>\n\n<h1>Automatic URL checker logs</h1>\n\n<dtml-var view_log>\n\n<dtml-var standard_html_footer>')
 
     getattr(checker_ob,'runChecker').manage_proxy(['Manager'])
 
