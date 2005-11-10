@@ -41,7 +41,7 @@ from Products.NaayaPhotoArchive.constants import *
 from Products.NaayaNetRepository.constants import *
 from Products.HelpDeskAgent.HelpDesk import manage_addHelpDesk
 from Products.NaayaGlossary.constants import *
-
+from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
 
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addCHMSite(self, id='', title='', lang=None, REQUEST=None):
@@ -89,7 +89,13 @@ class CHMSite(NySite):
             linkchecker_ob.manage_addMetaType(k)
             for p in v:
                 linkchecker_ob.manage_addProperty(k, p)
+        #create helpdesk instance
         manage_addHelpDesk(self, ID_HELPDESKAGENT, TITLE_HELPDESKAGENT, self.getAuthenticationToolPath(1))
+        #create and fill glossaries
+        manage_addGlossaryCentre(self, ID_GLOSSARY_KEYWORDS, TITLE_GLOSSARY_KEYWORDS)
+        self._getOb(ID_GLOSSARY_KEYWORDS).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_keywords.xml')))
+        manage_addGlossaryCentre(self, ID_GLOSSARY_COVERAGE, TITLE_GLOSSARY_COVERAGE)
+        self._getOb(ID_GLOSSARY_COVERAGE).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_coverage.xml')))
 
     #objects getters
     def getLinkChecker(self): return self._getOb(ID_LINKCHECKER, None)
@@ -117,7 +123,6 @@ class CHMSite(NySite):
         for r in self.objectValues(METATYPE_NYNETREPOSITORY):
             try: r.add_language(language)
             except: pass
-
         for gloss in self.objectValues(NAAYAGLOSSARY_CENTRE_METATYPE):
             try:
                 catalog_obj = gloss._getOb(NAAYAGLOSSARY_CATALOG_NAME)
@@ -125,7 +130,6 @@ class CHMSite(NySite):
                 index_extra.default_encoding = 'utf-8'
                 try:    catalog_obj.manage_addIndex(self.gl_get_language_name(language), 'TextIndexNG2',index_extra)
                 except:    pass
-
                 gloss.set_languages_list(language, self.gl_get_language_name(language))
                 gloss._p_changed = 1
             except: pass
@@ -136,7 +140,6 @@ class CHMSite(NySite):
             for language in languages:
                 try: r.del_language(language)
                 except: pass
-
         for gloss in self.objectValues(NAAYAGLOSSARY_CENTRE_METATYPE):
             for language in languages:
                 try: 
