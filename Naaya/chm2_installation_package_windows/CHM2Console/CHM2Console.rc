@@ -137,8 +137,9 @@ IDD_TAB_ABOUT DIALOG DISCARDABLE  0, 0, 278, 191
 STYLE WS_CHILD
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "The packaging of these tools is provided by CHM.",
-                    IDC_STATIC,39,36,181,53
+    LTEXT           "The packaging of these tools is provided by EC CHM.\r\nhttp://biodiversity-chm.eea.eu.int/",
+                    IDC_STATIC,39,36,181,30
+    LTEXT           "© Copyright EEA 2005",IDC_STATIC,82,75,91,33
 END
 
 IDD_ZEU_DIALOG DIALOG DISCARDABLE  0, 0, 239, 159
