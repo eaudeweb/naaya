@@ -13,38 +13,31 @@
 </div>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_properties" style="clear:both;">
-<p i18n:translate="">
-	The numbers below represent the maximum numbers of items (all types of items
-	or just announcements) looped by date
-	when constructing the list of latest uploaded items; this list is used to build RDF files 
-	display items in portlets, etc.
-</p>
-
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 <tr>
-	<td i18n:translate="">Number of latest uploads</td>
-	<td><input type="text" name="number_latest_uploads" size="3" tal:attributes="value here/number_latest_uploads" /></td>
+	<td colspan="2" i18n:translate="">The front page usually displays portlets containing the latest news, events, etc. You can decide not to show their release date if, for instance, the items are too old and this would impact on the vitality of your portal.
+	</td>
 </tr>
 <tr>
-	<td i18n:translate="">Number of announcements</td>
-	<td><input type="text" name="number_announcements" size="3" tal:attributes="value here/number_announcements" /></td>
+	<td><strong><label for="show_releasedate" i18n:translate="">Show release date</label></strong></td>
+	<td><input type="checkbox" name="show_releasedate" id="show_releasedate" tal:attributes="checked here/show_releasedate" /></td>
 </tr>
 <tr>
-	<td i18n:translate="">Show release date</td>
-	<td><input type="checkbox" name="show_releasedate" tal:attributes="checked here/show_releasedate" /></td>
+	<td colspan="2" i18n:translate="">If you are using a network registry to automatically find the network participants, specify its URL address in the field below.
+	</td>
 </tr>
 <tr>
-	<td i18n:translate="">HTTP Proxy</td>
-	<td><input type="text" name="http_proxy" size="50" tal:attributes="value here/http_proxy" /></td>
+	<td><strong><label for="repository_url" i18n:translate="">Network registry</label></strong></td>
+	<td><input type="text" name="repository_url" id="repository_url" size="50" tal:attributes="value here/repository_url" /></td>
 </tr>
 <tr>
-	<td i18n:translate="">Network registry</td>
-	<td><input type="text" name="repository_url" size="50" tal:attributes="value here/repository_url" /></td>
+	<td colspan="2" i18n:translate="">Without selecting any glossary or thesaurus for the <em>keywords</em> or <em>geographical coverage</em> fields, all content types in this portal will only contain free text in these properties. If you select a glossary (from the ones present in the website) for those, the add/edit forms of all content types will contain buttons to pick words from the picklists containing these glossaries.
+	</td>
 </tr>
 <tr>
-	<td i18n:translate="">Keywords glossary</td>
+	<td><strong><label for="keywords_glossary" i18n:translate="">Keywords glossary</label></strong></td>
 	<td>
-		<select name="keywords_glossary">
+		<select name="keywords_glossary" id="keywords_glossary">
 			<option value="" i18n:translate="">[None]</option>
 			<option tal:repeat="item here/list_glossaries"
 				tal:attributes="value item/id; selected python:item.id==here.keywords_glossary"
@@ -53,9 +46,9 @@
 	</td>
 </tr>
 <tr>
-	<td i18n:translate="">Geographical coverage glossary</td>
+	<td><strong><label for="coverage_glossary" i18n:translate="">Geographical coverage glossary</label></strong></td>
 	<td>
-		<select name="coverage_glossary">
+		<select name="coverage_glossary" id="coverage_glossary">
 			<option value="" i18n:translate="">[None]</option>
 			<option tal:repeat="item here/list_glossaries"
 				tal:attributes="value item/id; selected python:item.id==here.coverage_glossary"
@@ -64,12 +57,13 @@
 	</td>
 </tr>
 <tr>
-	<td i18n:translate="">Submit unapproved</td>
+	<td colspan="2" i18n:translate="">By default, the users having higher roles such as <em>administrators</em> or <em>managers</em> have their submitted content immediately published on the portal. However, if you check the property below, all content submissions will pass an administrator's review (basket of approvals) before being published.
+	</td>
+</tr>
+<tr>
+	<td><strong><label for="submit_unapproved" i18n:translate="">Submit unapproved</label></strong></td>
 	<td>
-		<input type="checkbox" name="submit_unapproved" tal:attributes="checked here/submit_unapproved" />
-		<span tal:omit-tag="" i18n:translate="">
-			check this property if all submissions should be unapproved regardless of the user role
-		</span>
+		<input type="checkbox" name="submit_unapproved" id="submit_unapproved" tal:attributes="checked here/submit_unapproved" />
 	</td>
 </tr>
 </table>
@@ -80,8 +74,8 @@
 </p>
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 <tr>
-	<td i18n:translate="">Portal URL</td>
-	<td><input type="text" name="portal_url" size="30" tal:attributes="value here/portal_url" /></td>
+	<td><strong><label for="portal_url" i18n:translate="">Portal URL</label></strong></td>
+	<td><input type="text" name="portal_url" id="portal_url" size="30" tal:attributes="value here/portal_url" /></td>
 </tr>
 </table>
 

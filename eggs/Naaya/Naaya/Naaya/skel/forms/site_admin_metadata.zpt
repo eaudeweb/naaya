@@ -16,7 +16,8 @@
 </div>
 
 <p i18n:translate="">
-	This form allows you to set the properties that describe this entire website. The title and subtitle are displayed in the top banner of each page. The description will appear on the homepage. All together, the metadata describes your website to search engines and also goes into the local channels that might be  harvested by others.
+	This form allows you to set the metadata that describe this entire website. This is a subset of the <strong>Dublin Core</strong> element set - see the <a href="http://www.dublincore.org">Dublin Core website</a> for further information about their meaning.
+	The <em>title</em> and <em>subtitle</em> are displayed in the top banner of each page. The <em>description</em> will appear on the homepage. All together, the metadata describes your website to search engines and also goes into the local channels that might be  harvested by others.
 </p>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_metadata" style="clear:both;">
