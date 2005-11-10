@@ -31,7 +31,7 @@
 	<td><input type="text" name="repository_url" id="repository_url" size="50" tal:attributes="value here/repository_url" /></td>
 </tr>
 <tr>
-	<td colspan="2" i18n:translate="">Without selecting any glossary or thesaurus for the <em>keywords</em> or <em>geographical coverage</em> fields, all content types in this portal will only contain free text in these properties. If you select a glossary (from the ones present in the website) for those, the add/edit forms of all content types will contain buttons to pick words from the picklists containing these glossaries.
+	<td colspan="2" i18n:translate="">Without selecting any glossary or thesaurus for the <em>keywords</em> or <em>geographical coverage</em> fields, all content types in this portal can only contain free text entered by users in these properties. If you select a glossary (from the ones present in the website) for those, the add/edit forms of all content types will contain buttons to pick words from the picklists containing terms from these glossaries.
 	</td>
 </tr>
 <tr>
