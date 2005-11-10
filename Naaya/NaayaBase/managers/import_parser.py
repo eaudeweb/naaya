@@ -110,7 +110,7 @@ class import_handler(ContentHandler):
                                 'Image',
                                 attrs['param'].encode('utf-8'),
                                 attrs)
-            stackObj = saxstack_struct('ob', obj)
+            stackObj = saxstack_struct('img', obj)
             self.stack.append(stackObj)
         elif name == 'file':
             obj = object_struct(attrs['id'].encode('utf-8'),
@@ -118,6 +118,13 @@ class import_handler(ContentHandler):
                                 attrs['param'].encode('utf-8'),
                                 attrs)
             stackObj = saxstack_struct('file', obj)
+            self.stack.append(stackObj)
+        elif name == 'template':
+            obj = object_struct(attrs['id'].encode('utf-8'),
+                                'Page Template',
+                                attrs['param'].encode('utf-8'),
+                                attrs)
+            stackObj = saxstack_struct('template', obj)
             self.stack.append(stackObj)
         elif attrs.has_key('lang'):
             #multilingual property
@@ -147,6 +154,10 @@ class import_handler(ContentHandler):
             self.stack[-2].obj.objects.append(self.stack[-1].obj)
             self.stack.pop()
         elif name == 'file':
+            self.stack[-2].obj.objects.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'template':
+            self.stack[-1].obj.content = self.stack[-1].content.encode('utf-8')
             self.stack[-2].obj.objects.append(self.stack[-1].obj)
             self.stack.pop()
         elif isinstance(self.stack[-1].obj, property_struct):
