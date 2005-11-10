@@ -31,6 +31,7 @@ from OFS.DTMLMethod import addDTMLMethod
 from OFS.DTMLDocument import addDTMLDocument
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from ZPublisher import BeforeTraverse
@@ -404,6 +405,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             file_ob = node._getOb(id)
             file_ob.update_data(data=self.utBase64Decode(object.attrs['content'].encode('utf-8')))
             file_ob._p_changed=1
+        elif object.meta_type == 'Page Template':
+            id = object.attrs['id'].encode('utf-8')
+            title = object.attrs['title'].encode('utf-8')
+            manage_addPageTemplate(node, id=id, title=title, text='')
+            pt_obj = node._getOb(id)
+            pt_obj.pt_edit(text=object.content, content_type='')
         else:
             print 'Import an object of type [%s]' % object.meta_type
 
