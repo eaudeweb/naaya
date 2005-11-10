@@ -164,7 +164,7 @@
 			<link id="107" title="About" description="" url="/About/" relative="1" permission="" order="80"/>
 			<link id="108" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="90"/>
 			<link id="109" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="100"/>
-			<link id="110" title="Glossary" description="" url="/glossary" relative="1" permission="" order="110"/>
+			<link id="110" title="Glossary" description="" url="/glossary_keywords" relative="1" permission="" order="110"/>
 			<link id="111" title="Fora" description="" url="/messageboard" relative="1" permission="" order="120"/>
 			<link id="112" title="Other searches" description="" url="/external_search_html" relative="1" permission="" order="130"/>
 		</linkslist>

@@ -41,3 +41,8 @@ TITLE_HELPDESKAGENT = 'Helpdesk'
 
 ID_PHOTOARCHIVE = 'PhotoArchive'
 TITLE_PHOTOARCHIVE = 'Photo archive'
+
+ID_GLOSSARY_KEYWORDS = 'glossary_keywords'
+TITLE_GLOSSARY_KEYWORDS = 'Keywords glossary'
+ID_GLOSSARY_COVERAGE = 'glossary_coverage'
+TITLE_GLOSSARY_COVERAGE = 'Coverage glossary'
