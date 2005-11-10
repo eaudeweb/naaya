@@ -298,7 +298,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 for permission in skel_handler.root.security.grouppermissions:
                     authenticationtool_ob.addPermission(permission.name, permission.description, permission.permissions)
                 for role in skel_handler.root.security.roles:
-                    authenticationtool_ob.addRole(role.name, role.grouppermissions)
+                    try: authenticationtool_ob.addRole(role.name, role.grouppermissions)
+                    except: pass
                     #set the grouppermissions
                     authenticationtool_ob.editRole(role.name, role.grouppermissions)
                     #set individual permissions
@@ -1234,6 +1235,24 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 self.setSessionInfo([msg])
             REQUEST.RESPONSE.redirect('%s/admin_edituser_html?name=%s' % (self.absolute_url(), name))
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addrole')
+    def admin_addrole(self, role='', permissions=[], REQUEST=None):
+        """ """
+        msg = err = ''
+        try:
+            self.getAuthenticationTool().addRole(role, permissions)
+        except Exception, error:
+            err = error
+        else:
+            msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+        if REQUEST:
+            if err != '':
+                self.setSessionErrors([err])
+                return REQUEST.RESPONSE.redirect('%s/admin_addrole_html' % self.absolute_url())
+            if msg != '':
+                self.setSessionInfo([msg])
+                return REQUEST.RESPONSE.redirect('%s/admin_users_html' % self.absolute_url())
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_revokeroles')
     def admin_revokeroles(self, roles=[], REQUEST=None):
         """ """
@@ -1662,6 +1681,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def admin_edituser_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_edituser')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addrole_html')
+    def admin_addrole_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_addrole')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_roles_html')
     def admin_roles_html(self, REQUEST=None, RESPONSE=None):

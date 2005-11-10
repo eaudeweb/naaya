@@ -37,6 +37,7 @@
 		<form id="site_admin_users" title="Portal administration - users"/>
 		<form id="site_admin_adduser" title="Portal administration - add user"/>
 		<form id="site_admin_edituser" title="Portal administration - edit user"/>
+		<form id="site_admin_addrole" title="Portal administration - add role"/>
 		<form id="site_admin_roles" title="Portal administration - users and roles"/>
 		<form id="site_admin_sources" title="Portal administration - other users sources"/>
 		<form id="site_admin_translations" title="Portal administration - translate messages"/>

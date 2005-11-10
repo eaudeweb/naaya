@@ -49,6 +49,7 @@
 <p>
 <input type="button" value="Add user" onclick="document.location.href='admin_adduser_html';" i18n:attributes="value" />
 <input type="submit" value="Delete user"  i18n:attributes="value" />
+<input type="button" value="Add role" onclick="document.location.href='admin_addrole_html';"  i18n:attributes="value" />
 <input type="button" value="Users & Roles" onclick="document.location.href='admin_roles_html';"  i18n:attributes="value" />
 </p>
 </form>
