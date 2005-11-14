@@ -1091,11 +1091,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestStories())
 
     security.declareProtected(view, 'upcomingevents_rdf')
-    def upcomingevents_rdf(self):
+    def upcomingevents_rdf(self, channel_lang=None):
         """
         Returns a RDF feed with upcoming events.
         """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getUpcomingEvents())
+        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getUpcomingEvents(), channel_lang)
 
     security.declareProtected(view, 'localchannels_rdf')
     def localchannels_rdf(self):

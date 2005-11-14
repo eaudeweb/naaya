@@ -6,7 +6,8 @@
 </h1>
 
 <tal:block metal:fill-slot="section"
-	tal:define="site_url here/getSitePath;
+	tal:define="site here/getSite;
+				site_url here/getSitePath;
 				syndication_tool here/getSyndicationTool;
 				ob_id python:request.get('id', '');
 				ob_data python:syndication_tool.get_data_local_channel(ob_id)">
@@ -25,6 +26,19 @@
 		<th i18n:translate="">Language</th>
 		<th i18n:translate="">Type</th>
 		<th i18n:translate="">Actions</th>
+	</tr>
+	<tr>
+		<td valign="top"></td>
+		<td valign="top" i18n:translate="">Upcoming events</td>
+		<td valign="top">
+			<span tal:replace="site/title_or_id" />
+			<span i18n:translate="" tal:omit-tag="">upcoming events</span>
+		</td>
+		<td valign="top">-</td>
+		<td valign="top" i18n:translate="">Events</td>
+		<td valign="top">
+			[<a tal:attributes="href string:${site_url}/upcomingevents_rdf" i18n:translate="">Preview RDF</a>]
+		</td>
 	</tr>
 	<tr tal:repeat="channel syndication_tool/get_local_channels">
 		<td valign="top"><input type="checkbox" name="ids" tal:attributes="value channel/id" /></td>
