@@ -117,8 +117,9 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
     def getNamespacesForRdf(self):
         return ' '.join(map(lambda x: str(x), self.getNamespaceItemsList()))
 
-    def syndicateSomething(self, p_url, p_items=[]):
-        s, lang = self.getSite(), self.gl_get_selected_language()
+    def syndicateSomething(self, p_url, p_items=[], lang=None):
+        s = self.getSite()
+        if lang is None: lang = self.gl_get_selected_language()
         r = []
         ra = r.append
         ra('<?xml version="1.0" encoding="utf-8"?>')
