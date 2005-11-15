@@ -60,7 +60,6 @@ def addNyPhoto(self, id='', title='', author='', source='', description='', sort
     if file != '':
         if hasattr(file, 'filename'):
             if file.filename == '': file = ''
-        else: file = ''
     if self.glCheckPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
