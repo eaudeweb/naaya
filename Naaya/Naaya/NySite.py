@@ -1982,6 +1982,23 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     x.getParentNode().manage_delObjects([x.id])
             return "Clean up unsubmitted objects ended successfully on site %s" % self.absolute_url()
 
+    #xxx delete messages // for internal administration
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_delmsg')
+    def admin_delmsg(self, messages=[], REQUEST=None):
+        """ """
+        ob = self.getPortalTranslations()
+        messages = self.utConvertToList(messages)
+        for message in messages:
+            ob.message_del(message)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_delmesg_html' % self.absolute_url())
+
+    security.declareProtected(view, 'admin_delmesg_html')
+    def admin_delmesg_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_delmessages')
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_controlpanel_html')
     manage_controlpanel_html = PageTemplateFile('zpt/site_manage_controlpanel', globals())
