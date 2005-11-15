@@ -385,6 +385,22 @@ class CHMSite(NySite):
         mail_from = self.mail_address_from
         self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
 
+
+    security.declareProtected(view_management_screens, 'duplicate_translate')
+    def duplicate_translate(self, property, source_lang, target_lang):
+        """
+        Duplicates translate in one language.
+        """
+        catalog_tool = self.getCatalogTool()
+        for b in self.getCatalogedBrains():
+            x = catalog_tool.getobject(b.data_record_id_)
+            v = x.getLocalProperty(property, target_lang)
+            if len(v) <= 0 :
+                x._setLocalPropValue(property, target_lang, x.getLocalProperty(property, source_lang))
+                x._p_changed = 1
+                self.recatalogNyObject(x)
+        return "done"
+
     #administration pages
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_urls_html')
     def admin_urls_html(self, REQUEST=None, RESPONSE=None):
