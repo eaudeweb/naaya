@@ -1994,7 +1994,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_delmesg_html' % self.absolute_url())
 
-    security.declareProtected(view, 'admin_delmesg_html')
+    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_delmesg_html')
     def admin_delmesg_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_delmessages')
