@@ -87,7 +87,8 @@
 					</div>
 					<div id="location1">
 						<tal:block repeat="crumb python:here.getBreadCrumbTrail(request)">
-						<a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" />
+                            <a tal:condition="python:path('repeat/crumb/index')<=0" tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" i18n:translate="">Home</a>
+        					<a tal:condition="python:path('repeat/crumb/index')>0" tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="python:test(len(crumb.title_or_id())<25, crumb.title_or_id()[:25], str(crumb.title_or_id()[:25]+ '...'))" i18n:translate="" />
 						<span tal:condition="not:repeat/crumb/end"> &raquo; </span>
 						</tal:block>
 					</div>
