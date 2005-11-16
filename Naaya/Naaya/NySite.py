@@ -601,6 +601,14 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 d[url][1].append((x, c))
         return d
 
+    security.declarePublic('getLatestUploads')
+    def getLatestUploads(self, howmany=None):
+        """
+        Returns a list with the latest published items in the portal
+        """
+        if howmany is None: howmany = 50
+        return self.getCatalogedObjects(meta_type=self.get_meta_types(), approved=1, howmany=howmany, path=['/'.join(x.getPhysicalPath()) for x in self.getMainTopics()])
+
     security.declarePublic('getCheckedOutObjects')
     def getCheckedOutObjects(self):
         """ Returns a list with all checked out objects in the portal (open versions) """
@@ -1083,19 +1091,15 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
-    def admin_properties(self, number_latest_uploads='', show_releasedate='',
-        http_proxy='', repository_url='', keywords_glossary='',
-        coverage_glossary='', submit_unapproved='', portal_url='', REQUEST=None):
+    def admin_properties(self, show_releasedate='', http_proxy='', repository_url='',
+        keywords_glossary='', coverage_glossary='', submit_unapproved='', portal_url='', REQUEST=None):
         """ """
-        try: number_latest_uploads = int(number_latest_uploads)
-        except: number_latest_uploads = self.number_latest_uploads
         if show_releasedate: show_releasedate = 1
         else: show_releasedate = 0
         if keywords_glossary == '': keywords_glossary = None
         if coverage_glossary == '': coverage_glossary = None
         if submit_unapproved: submit_unapproved = 1
         else: submit_unapproved = 0
-        self.number_latest_uploads = number_latest_uploads
         self.show_releasedate = show_releasedate
         self.http_proxy = http_proxy
         self.repository_url = repository_url
