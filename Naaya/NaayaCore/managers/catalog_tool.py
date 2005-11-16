@@ -143,7 +143,7 @@ class catalog_tool:
         Returns a list with all I{brain} objects in the catalog.
         """
         l_filter = {}
-        if meta_type: l_filter['meta_type'] = self.utConvertToList(meta_type)
+        if meta_type is not None: l_filter['meta_type'] = self.utConvertToList(meta_type)
         else: l_filter['meta_type'] = self.searchable_content
         return self.__searchCatalog(l_filter)
 
