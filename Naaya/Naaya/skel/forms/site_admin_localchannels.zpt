@@ -27,17 +27,14 @@
 		<th i18n:translate="">Type</th>
 		<th i18n:translate="">Actions</th>
 	</tr>
-	<tr>
-		<td valign="top"></td>
-		<td valign="top" i18n:translate="">Upcoming events</td>
+	<tr tal:repeat="channel syndication_tool/get_script_channels">
+		<td valign="top"><input type="checkbox" name="ids" tal:attributes="value channel/id" /></td>
+		<td valign="top" tal:content="channel/title_or_id" />
+		<td valign="top" tal:content="channel/description" />
+		<td valign="top" tal:content="python:here.gl_get_language_name(channel.language)" />
+		<td valign="top" tal:content="python:syndication_tool.get_channeltype_title(channel.type)" />
 		<td valign="top">
-			<span tal:replace="site/title_or_id" />
-			<span i18n:translate="" tal:omit-tag="">upcoming events</span>
-		</td>
-		<td valign="top">-</td>
-		<td valign="top" i18n:translate="">Events</td>
-		<td valign="top">
-			[<a tal:attributes="href string:${site_url}/upcomingevents_rdf" i18n:translate="">Preview RDF</a>]
+			[<a tal:attributes="href channel/absolute_url" i18n:translate="">Preview RDF</a>]
 		</td>
 	</tr>
 	<tr tal:repeat="channel syndication_tool/get_local_channels">
