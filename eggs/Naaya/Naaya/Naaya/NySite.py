@@ -140,8 +140,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.search_age = 1
         self.searchable_content = []
         self.numberresultsperpage = 10
-        self.number_latest_uploads = DEFAULT_NUMBERLATESTUPLOADS
-        self.number_announcements = DEFAULT_NUMBERANNOUNCEMENTS
         self.notify_on_errors = 1
         self.http_proxy = ''
         self.repository_url = ''
@@ -1083,14 +1081,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
-    def admin_properties(self, number_latest_uploads='', number_announcements='',
-        show_releasedate='', http_proxy='', repository_url='', keywords_glossary='',
+    def admin_properties(self, number_latest_uploads='', show_releasedate='',
+        http_proxy='', repository_url='', keywords_glossary='',
         coverage_glossary='', submit_unapproved='', portal_url='', REQUEST=None):
         """ """
         try: number_latest_uploads = int(number_latest_uploads)
         except: number_latest_uploads = self.number_latest_uploads
-        try: number_announcements = int(number_announcements)
-        except: number_announcements = self.number_announcements
         if show_releasedate: show_releasedate = 1
         else: show_releasedate = 0
         if keywords_glossary == '': keywords_glossary = None
@@ -1098,7 +1094,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if submit_unapproved: submit_unapproved = 1
         else: submit_unapproved = 0
         self.number_latest_uploads = number_latest_uploads
-        self.number_announcements = number_announcements
         self.show_releasedate = show_releasedate
         self.http_proxy = http_proxy
         self.repository_url = repository_url
