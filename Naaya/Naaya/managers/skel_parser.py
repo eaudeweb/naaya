@@ -90,6 +90,7 @@ class syndication_struct:
     def __init__(self):
         self.namespaces = []
         self.channeltypes = []
+        self.scriptchannels = []
         self.localchannels = []
         self.remotechannels = []
 
@@ -103,6 +104,15 @@ class channeltype_struct:
     def __init__(self, id, title):
         self.id = id
         self.title = title
+
+class scriptchannel_struct:
+    def __init__(self, id, title, description, language, type, numberofitems):
+        self.id = id
+        self.title = title
+        self.description = description
+        self.language = language
+        self.type = type
+        self.numberofitems = numberofitems
 
 class localchannel_struct:
     def __init__(self, id, title, description, language, type, objmetatype, numberofitems):
@@ -279,6 +289,10 @@ class skel_handler(ContentHandler):
             obj = channeltype_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'))
             stackObj = saxstack_struct('namespace', obj)
             self.stack.append(stackObj)
+        elif name == 'scriptchannel':
+            obj = scriptchannel_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['description'].encode('utf-8'), attrs['language'].encode('utf-8'), attrs['type'].encode('utf-8'), attrs['numberofitems'].encode('utf-8'))
+            stackObj = saxstack_struct('scriptchannel', obj)
+            self.stack.append(stackObj)
         elif name == 'localchannel':
             obj = localchannel_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['description'].encode('utf-8'), attrs['language'].encode('utf-8'), attrs['type'].encode('utf-8'), attrs['objmetatype'].encode('utf-8'), attrs['numberofitems'].encode('utf-8'))
             stackObj = saxstack_struct('localchannel', obj)
@@ -398,6 +412,9 @@ class skel_handler(ContentHandler):
             self.stack.pop()
         elif name == 'channeltype':
             self.stack[-2].obj.channeltypes.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'scriptchannel':
+            self.stack[-2].obj.scriptchannels.append(self.stack[-1].obj)
             self.stack.pop()
         elif name == 'localchannel':
             self.stack[-2].obj.localchannels.append(self.stack[-1].obj)

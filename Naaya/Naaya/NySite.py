@@ -253,6 +253,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     syndicationtool_ob.createNamespaceItem(namespace.id, namespace.prefix, namespace.value)
                 for channeltype in skel_handler.root.syndication.channeltypes:
                     syndicationtool_ob.add_channeltype_item(channeltype.id, channeltype.title)
+                for channel in skel_handler.root.syndication.scriptchannels:
+                    language = self.utEmptyToNone(channel.language)
+                    type = self.utEmptyToNone(channel.type)
+                    body = self.futRead(join(skel_path, 'syndication', '%s.py' % channel.id), 'r')
+                    syndicationtool_ob.manage_addScriptChannel(channel.id, channel.title, channel.description, language, type, body, channel.numberofitems, 1)
                 for channel in skel_handler.root.syndication.localchannels:
                     language = self.utEmptyToNone(channel.language)
                     type = self.utEmptyToNone(channel.type)
@@ -582,50 +587,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         sorted by 'order' property
         """
         return self.utSortObjsListByAttr(filter(lambda x: x is not None, map(lambda f, x: f(x, None), (self._getOb,)*len(self.maintopics), self.maintopics)), 'sortorder', 0)
-
-    security.declarePublic('getLatestUploads')
-    def getLatestUploads(self, howmany=None):
-        """
-        Returns a list with the latest uploads in the site's B{main topics}
-        which are approved.
-        The number of objects can be set by modifing the property
-        I{number_latest_uploads}.
-        """
-        if howmany is None: howmany = self.number_latest_uploads
-        return self.getCatalogedObjects(meta_type=self.get_meta_types(), approved=1, howmany=howmany, path=['/'.join(x.getPhysicalPath()) for x in self.getMainTopics()])
-
-    security.declarePublic('getLatestNews')
-    def getLatestNews(self, howmany=None):
-        """
-        Returns a list with the latest news in the site's B{main topics}
-        which are approved.
-        This requires B{NyNews} pluggable content type to be installed.
-        The number of objects can be set by modifing the property
-        I{number_announcements}.
-        """
-        if howmany is None: howmany = self.number_announcements
-        return self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, approved=1, howmany=howmany, path=['/'.join(x.getPhysicalPath()) for x in self.getMainTopics()])
-
-    security.declarePublic('getLatestStories')
-    def getLatestStories(self):
-        """
-        Returns a list with the latest stories in the site which are approved
-        and marked as I{topitem}.
-        This requires B{NyStory} pluggable content type to be installed.
-        """
-        return self.getCatalogedObjects(meta_type=METATYPE_NYSTORY, approved=1, topitem=1)
-
-    def getUpcomingEvents(self):
-        """
-        Returns a list with the latest events in the site that will follow the
-        current date.
-        This requires B{NyEvent} pluggable content type to be installed.
-        """
-        r, d = [], self.utGetTodayDate()
-        ra = r.append
-        for e in self.getCatalogedObjects(meta_type=METATYPE_NYEVENT, approved=1):
-            if e.start_date > d: ra(e)
-        return r
 
     security.declarePublic('getFoldersWithPendingItems')
     def getFoldersWithPendingItems(self):
@@ -1069,41 +1030,15 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             return (l_paging_information, [])
 
     #rdf files
-    security.declareProtected(view, 'latestuploads_rdf')
-    def latestuploads_rdf(self):
-        """
-        Returns a RDF feed with latest uploads.
-        """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestUploads())
-
-    security.declareProtected(view, 'latestnews_rdf')
-    def latestnews_rdf(self):
-        """
-        Returns a RDF feed with latest news.
-        """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestNews())
-
-    security.declareProtected(view, 'lateststories_rdf')
-    def lateststories_rdf(self):
-        """
-        Returns a RDF feed with latest stories.
-        """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestStories())
-
-    security.declareProtected(view, 'upcomingevents_rdf')
-    def upcomingevents_rdf(self, channel_lang=None):
-        """
-        Returns a RDF feed with upcoming events.
-        """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getUpcomingEvents(), channel_lang)
-
     security.declareProtected(view, 'localchannels_rdf')
     def localchannels_rdf(self):
         """
         Returns a RDF feed with all local channels.
         """
         syndication_tool = self.getSyndicationTool()
-        return syndication_tool.syndicateSomething(self.absolute_url(), syndication_tool.get_local_channels())
+        r = syndication_tool.get_script_channels()
+        r.extend(syndication_tool.get_local_channels())
+        return syndication_tool.syndicateSomething(self.absolute_url(), r)
 
     #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_metadata')
