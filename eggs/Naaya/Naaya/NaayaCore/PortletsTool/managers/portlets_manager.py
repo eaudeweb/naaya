@@ -160,3 +160,13 @@ class portlets_manager:
         portlet_ob = portlets_ob._getOb(portlet_id)
         content = portlet_ob.document_src().replace('PORTLET_FOLDER_PATH', folder_ob.absolute_url(1))
         portlet_ob.pt_edit(text=content, content_type='text/html')
+
+    #script channel
+    def create_portlet_for_scriptchannel(self, channel_ob):
+        #create a portlet for this channel using the specific template, TYPE = 5
+        portlets_ob = self.getPortletsTool()
+        portlet_id = '%s%s' % (PREFIX_PORTLET, channel_ob.id)
+        portlets_ob.addPortlet(portlet_id, channel_ob.title_or_id(), 5)
+        portlet_ob = portlets_ob._getOb(portlet_id)
+        content = portlet_ob.document_src().replace('PORTLET_SCRIPTCHANNEL_ID', channel_ob.id)
+        portlet_ob.pt_edit(text=content, content_type='text/html')

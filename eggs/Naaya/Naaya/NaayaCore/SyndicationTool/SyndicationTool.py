@@ -34,6 +34,7 @@ from managers.namespaces_tool import namespaces_tool
 from managers.channeltypes_manager import channeltypes_manager
 import LocalChannel
 import RemoteChannel
+import ScriptChannel
 
 def manage_addSyndicationTool(self, REQUEST=None):
     """ """
@@ -63,6 +64,7 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
     meta_types = (
         {'name': METATYPE_LOCALCHANNEL, 'action': 'manage_addLocalChannelForm'},
         {'name': METATYPE_REMOTECHANNEL, 'action': 'manage_addRemoteChannelForm'},
+        {'name': METATYPE_SCRIPTCHANNEL, 'action': 'manage_addScriptChannelForm'},
     )
     all_meta_types = meta_types
 
@@ -71,6 +73,8 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
     manage_addLocalChannel = LocalChannel.manage_addLocalChannel
     manage_addRemoteChannelForm = RemoteChannel.manage_addRemoteChannelForm
     manage_addRemoteChannel = RemoteChannel.manage_addRemoteChannel
+    manage_addScriptChannelForm = ScriptChannel.manage_addScriptChannelForm
+    manage_addScriptChannel = ScriptChannel.manage_addScriptChannel
 
     security = ClassSecurityInfo()
 
@@ -95,6 +99,7 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
 
     def get_local_channels(self): return self.objectValues(METATYPE_LOCALCHANNEL)
     def get_remote_channels(self): return self.objectValues(METATYPE_REMOTECHANNEL)
+    def get_script_channels(self): return self.objectValues(METATYPE_SCRIPTCHANNEL)
 
     def get_data_local_channel(self, id):
         ob = self._getOb(id, None)

@@ -128,6 +128,7 @@ misc_ = {
     'SyndicationTool.gif':ImageFile('SyndicationTool/www/SyndicationTool.gif', globals()),
     'RemoteChannel.gif':ImageFile('SyndicationTool/www/RemoteChannel.gif', globals()),
     'LocalChannel.gif':ImageFile('SyndicationTool/www/LocalChannel.gif', globals()),
+    'ScriptChannel.gif':ImageFile('SyndicationTool/www/ScriptChannel.gif', globals()),
     'AuthenticationTool.gif':ImageFile('AuthenticationTool/www/AuthenticationTool.gif', globals()),
     'User.gif':ImageFile('AuthenticationTool/www/User.gif', globals()),
     'Permission.gif':ImageFile('AuthenticationTool/www/Permission.gif', globals()),
