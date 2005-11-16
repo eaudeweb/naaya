@@ -136,12 +136,12 @@
 		<channeltype id="Indicators" title="Indicators"/>
 		<channeltype id="Technology transfer" title="Technology transfer"/>
 		<channeltype id="Miscellaneous" title="Miscellaneous"/>
+		<scriptchannel id="meetingsevents_rdf" title="Meetings and events" description="Meetings and events" language="en" type="Events" numberofitems="5"/>
+		<scriptchannel id="whatsnew_rdf" title="What's new" description="What's new" language="en" type="Miscellaneous" numberofitems="5"/>
+		<scriptchannel id="latestrelevantuploads_rdf" title="Selected uploads" description="Selected uploads" language="en" type="Miscellaneous" numberofitems="5"/>
 	</syndication>
-	<portlets left="portlet_maincategories" center="portlet_lateststories,portlet_meetingsevents,portlet_whatsnew,portlet_relevantuploads,portlet_latestphotos">
+	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_meetingsevents_rdf,portlet_whatsnew_rdf,portlet_latestrelevantuploads_rdf,portlet_latestphotos">
 		<portlet id="portlet_administration" title="Administration"/>
-		<portlet id="portlet_meetingsevents" title="Meetings and events"/>
-		<portlet id="portlet_relevantuploads" title="Selected uploads"/>
-		<portlet id="portlet_whatsnew" title="What's new"/>
 		<portlet id="portlet_latestphotos" title="Photos"/>
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
 			<link id="100" title="Biodiversity CHM" description="Global Biodiversity Clearing-House Mechanism (CBD)" url="http://www.biodiv.org/chm" relative="0" permission="" order="10"/>

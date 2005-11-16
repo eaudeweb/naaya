@@ -5,9 +5,8 @@
 <tal:block metal:fill-slot="section" tal:define="site here/getSite; predefined site/getPredefinedUploads">
 <p i18n:translate="">
 	This page presents the latest 50 items uploaded in this portal.
-	Automatically, the latest <spant tal:replace="site/number_latest_uploads" /> of them appear on the front page in the section <em>Latest uploads</em>;
-	additionally, you can specify for most relevant items to be presented in this section for a longer time.
-	Mark these relevant items and click <em>Save changes</em>.
+	Select the items that you want to appear in the <em>Selected uploads</em> portlet
+	from the latest 50 items published on the website and click <em>Save changes</em>.
 </p>
 <form action="setPredefinedUploads" method="post" name="frmPredefined">
 <table border="0" cellspacing="1" cellpadding="1" width="100%">
@@ -27,7 +26,7 @@
 		<td tal:content="python:site.utShowDateTime(date)" />
 		</tal:block>
 	</tr>
-	<tal:block repeat="latest python:site.getLatestUploads(50)">
+	<tal:block repeat="latest python:site.getLatestUploads()">
 	<tr tal:condition="python:latest.absolute_url(1) not in site.predefined_latest_uploads">
 		<tal:block tal:define="url python:latest.absolute_url(1); title_or_id latest/title_or_id; date latest/releasedate">
 		<td>
