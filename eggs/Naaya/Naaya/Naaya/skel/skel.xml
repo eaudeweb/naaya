@@ -105,16 +105,16 @@
 		<channeltype id="News" title="News"/>
 		<channeltype id="Events" title="Events"/>
 		<channeltype id="Stories" title="Stories"/>
-		<localchannel id="news_rdf" title="News" description="News" language="en" type="News" objmetatype="Naaya News" numberofitems="10"/>
+		<scriptchannel id="latestuploads_rdf" title="Latest uploads" description="Latest uploads" language="en" type="Miscellaneous" numberofitems="5"/>
+		<scriptchannel id="latestnews_rdf" title="Latest news" description="Latest news" language="en" type="News" numberofitems="5"/>
+		<scriptchannel id="lateststories_rdf" title="Latest stories" description="Latest stories" language="en" type="Stories" numberofitems="5"/>
+		<scriptchannel id="upcomingevents_rdf" title="Upcoming events" description="Upcoming events" language="en" type="Events" numberofitems="5"/>
+		<localchannel id="news_rdf" title="News" description="News" language="en" type="News" objmetatype="Naaya News" numberofitems="5"/>
 		<!-- remotechannel id="" title="Example" url="http://" numbershownitems="10" /-->
 	</syndication>
-	<portlets left="portlet_maincategories" center="portlet_lateststories,portlet_latestnews,portlet_upcomingevents,portlet_latestuploads">
+	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_latestnews_rdf,portlet_upcomingevents_rdf,portlet_latestuploads_rdf">
 		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="portlet_maincategories" title="Main sections" />
-		<portlet id="portlet_latestuploads" title="Latest uploads" />
-		<portlet id="portlet_latestnews" title="Latest news" />
-		<portlet id="portlet_lateststories" title="Latest stories"/>
-		<portlet id="portlet_upcomingevents" title="Upcoming events"/>
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
 			<link id="102" title="Finsiel" description="Finsiel Romania" url="http://www.finsiel.ro" relative="0" permission="" order="2"/>
 			<link id="103" title="Naaya" description="EnviroWindows Publisher" url="http://publisher.finsiel.ro/" relative="0" permission="" order="3"/>
