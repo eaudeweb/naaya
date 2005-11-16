@@ -160,33 +160,11 @@ class CHMSite(NySite):
             except: pass
 
     #api
-    def getWhatsNew(self):
-        """
-        Returns a list with the news marked as I{on front} from the B{news archive}.
-        This requires NyNews pluggable content type to be installed.
-        """
-        r = [x for x in self.getNewsArchive().objectValues(METATYPE_NYNEWS) if x.approved==1 and x.topitem==1 and x.submitted==1]
-        r.sort(lambda x,y: cmp(y.releasedate, x.releasedate) or cmp(x.sortorder, y.sortorder))
-        return r
-
-    def getMeetingsEvents(self):
-        """
-        Returns a list with the news marked as I{on front} from the B{events archive}.
-        This requires B{NyEvent} pluggable content type to be installed.
-        """
-        r = [x for x in self.getEventsArchive().objectValues(METATYPE_NYEVENT) if x.approved==1 and x.topitem==1 and x.submitted==1]
-        r.sort(lambda x,y: cmp(y.releasedate, x.releasedate) or cmp(x.sortorder, y.sortorder))
-        return r
-
     def getOnFrontPhotos(self):
         #returns a list with the photos marked as on front
         r = [x for x in self.getPhotoArchive().getObjects() if x.approved==1 and x.topitem==1 and x.submitted==1]
         r.sort(lambda x,y: cmp(y.releasedate, x.releasedate) or cmp(x.sortorder, y.sortorder))
         return r
-
-    def getLatestRelevantUploads(self):
-        """ """
-        return self.utSortObjsListByAttr(self.getPredefinedUploads(), 'releasedate', 1)
 
     def getUrlMap(self, sort='title'):
         #process and returns a map with all approved urls in the portal by domain
@@ -323,28 +301,6 @@ class CHMSite(NySite):
         p_objects.sort(lambda x,y: cmp(y.releasedate, x.releasedate) \
             or cmp(x.sortorder, y.sortorder))
         return self.get_archive_listing(p_objects)
-
-    #rdf channels
-    security.declareProtected(view, 'latestrelevantuploads_rdf')
-    def latestrelevantuploads_rdf(self):
-        """
-        Returns a RDF feed with latest relevant uploads.
-        """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getLatestRelevantUploads())
-
-    security.declareProtected(view, 'whatsnew_rdf')
-    def whatsnew_rdf(self):
-        """
-        Returns a RDF feed with what's new.
-        """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getWhatsNew())
-
-    security.declareProtected(view, 'meetingsevents_rdf')
-    def meetingsevents_rdf(self):
-        """
-        Returns a RDF feed with meetings and events.
-        """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getMeetingsEvents())
 
     security.declareProtected(view, 'processCreateAccountForm')
     def processCreateAccountForm(self, username='', password='', confirm='', firstname='', lastname='', email='', REQUEST=None):
