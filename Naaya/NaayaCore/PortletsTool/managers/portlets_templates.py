@@ -31,6 +31,7 @@ PORTLETS_TYPES = {
     2: 'Remote channel',
     3: 'Local channel',
     4: 'Folder',
+    5: 'Script channel',
     99: 'Other',
     100: 'Special'
 }
@@ -77,17 +78,15 @@ REMOTECHANNEL_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getL
 </tal:block>
 </tal:block>'''
 
-LOCALCHANNEL_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
-<tal:block metal:fill-slot="portlet_title"><span tal:replace="python:here.getSyndicationTool().PORTLET_LOCALCHANNEL_ID.title_or_id()" /></tal:block>
+LOCALCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.getSyndicationTool().PORTLET_LOCALCHANNEL_ID">
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"><span tal:replace="channel/title_or_id" /></tal:block>
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
-		<tal:block tal:repeat="item python:here.getSyndicationTool().PORTLET_LOCALCHANNEL_ID.get_objects_for_rdf()">
-		<li>
-			<a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id" />
-		</li>
-		</tal:block>
+		<li tal:repeat="item channel/get_objects_for_rdf"><a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id" /></li>
 	</ul>
-	<a tal:attributes="href python:here.getSyndicationTool().PORTLET_LOCALCHANNEL_ID.absolute_url()"><img src="misc_/NaayaCore/xml.png" width="36" height="14" border="0" alt="Syndication (XML)" i18n:attributes="alt" /></a>
+	<a tal:attributes="href channel/absolute_url"><img src="misc_/NaayaCore/xml.png" width="36" height="14" border="0" alt="Syndication (XML)" i18n:attributes="alt" /></a>
+</tal:block>
 </tal:block>
 </tal:block>'''
 
@@ -98,12 +97,25 @@ FOLDER_PORTLET_TEMPLATE = '''<tal:block tal:define="folder python:here.getFolder
 </tal:block>
 </tal:block>'''
 
+SCRIPTCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.getSyndicationTool().PORTLET_SCRIPTCHANNEL_ID">
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"><span tal:replace="channel/title_or_id" /></tal:block>
+<tal:block metal:fill-slot="portlet_content">
+	<ul>
+		<li tal:repeat="item channel/get_objects_for_rdf"><a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id" /></li>
+	</ul>
+	<a tal:attributes="href channel/absolute_url"><img src="misc_/NaayaCore/xml.png" width="36" height="14" border="0" alt="Syndication (XML)" i18n:attributes="alt" /></a>
+</tal:block>
+</tal:block>
+</tal:block>'''
+
 PORTLETS_BODIES = {
     0: HTML_PORTLET_TEMPLATE,
     1: LINKSLIST_PORTLET_TEMPLATE,
     2: REMOTECHANNEL_PORTLET_TEMPLATE,
     3: LOCALCHANNEL_PORTLET_TEMPLATE,
     4: FOLDER_PORTLET_TEMPLATE,
+    5: SCRIPTCHANNEL_PORTLET_TEMPLATE,
     99: SIMPLE_PORTLET_TEMPLATE,
     100: SIMPLE_PORTLET_TEMPLATE
 }
