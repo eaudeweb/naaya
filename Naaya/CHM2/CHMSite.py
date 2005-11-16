@@ -126,6 +126,11 @@ class CHMSite(NySite):
     #the scope is to centralize the list of available languages
     def gl_add_site_language_custom(self, language):
         #this is called to handle other types of multilanguage objects
+        catalog_tool = self.getCatalogTool()
+        for b in self.getCatalogedBrains(meta_type=[METATYPE_NYPHOTOFOLDER, METATYPE_NYPHOTO]):
+            x = catalog_tool.getobject(b.data_record_id_)
+            try: x.add_language(language)
+            except: pass
         for r in self.objectValues(METATYPE_NYNETREPOSITORY):
             try: r.add_language(language)
             except: pass
@@ -142,6 +147,12 @@ class CHMSite(NySite):
 
     def gl_del_site_languages_custom(self, languages):
         #this is called to handle other types of multilanguage objects
+        catalog_tool = self.getCatalogTool()
+        for b in self.getCatalogedBrains(meta_type=[METATYPE_NYPHOTOFOLDER, METATYPE_NYPHOTO]):
+            x = catalog_tool.getobject(b.data_record_id_)
+            for language in languages:
+                try: x.del_language(language)
+                except: pass
         for r in self.objectValues(METATYPE_NYNETREPOSITORY):
             for language in languages:
                 try: r.del_language(language)
@@ -155,6 +166,11 @@ class CHMSite(NySite):
 
     def gl_change_site_defaultlang_custom(self, language):
         #this is called to handle other types of multilanguage objects
+        catalog_tool = self.getCatalogTool()
+        for b in self.getCatalogedBrains(meta_type=[METATYPE_NYPHOTOFOLDER, METATYPE_NYPHOTO]):
+            x = catalog_tool.getobject(b.data_record_id_)
+            try: x.manage_changeDefaultLang(language)
+            except: pass
         for r in self.objectValues(METATYPE_NYNETREPOSITORY):
             try: r.manage_changeDefaultLang(language)
             except: pass
