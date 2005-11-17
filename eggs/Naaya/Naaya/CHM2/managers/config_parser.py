@@ -101,8 +101,8 @@ class config_parser:
         l_parser.setContentHandler(l_handler)
         l_inpsrc = InputSource()
         l_inpsrc.setByteStream(StringIO(p_content))
-        #try:
-        l_parser.parse(l_inpsrc)
-        return (l_handler, '')
-        #except Exception, error:
-        #    return (None, error)
+        try:
+            l_parser.parse(l_inpsrc)
+            return (l_handler, '')
+        except Exception, error:
+            return (None, error)
