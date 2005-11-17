@@ -105,36 +105,41 @@ def importNyEvent(self, param, id, attrs, content, properties, discussion, objec
     #this method is called during the import process
     try: param = abs(int(param))
     except: param = 0
-    if param in [0, 1]:
-        if param == 1:
-            #delete the object if exists
-            try: self.manage_delObjects([id])
-            except: pass
-        addNyEvent(self, id=id,
-            sortorder=attrs['sortorder'].encode('utf-8'),
-            location_url=attrs['location_url'].encode('utf-8'),
-            start_date=self.utConvertDateTimeObjToString(self.utGetDate(attrs['start_date'].encode('utf-8'))),
-            end_date=self.utConvertDateTimeObjToString(self.utGetDate(attrs['end_date'].encode('utf-8'))),
-            agenda_url=attrs['agenda_url'].encode('utf-8'),
-            event_url=attrs['event_url'].encode('utf-8'),
-            topitem=abs(int(attrs['topitem'].encode('utf-8'))),
-            event_type=attrs['event_type'].encode('utf-8'),
-            contact_person=attrs['contact_person'].encode('utf-8'),
-            contact_email=attrs['contact_email'].encode('utf-8'),
-            contact_phone=attrs['contact_phone'].encode('utf-8'),
-            contact_fax=attrs['contact_fax'].encode('utf-8'),
-            contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
-            discussion=abs(int(attrs['discussion'].encode('utf-8'))))
-        ob = self._getOb(id)
-        for property, langs in properties.items():
-            for lang in langs:
-                ob._setLocalPropValue(property, lang, langs[lang])
-        ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
-            approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
-        if attrs['releasedate'].encode('utf-8') != '':
-            ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
-        ob.import_comments(discussion)
-        self.recatalogNyObject(ob)
+    if param == 3:
+        #just try to delete the object
+        try: self.manage_delObjects([id])
+        except: pass
+    else:
+        if param in [0, 1]:
+            if param == 1:
+                #delete the object if exists
+                try: self.manage_delObjects([id])
+                except: pass
+            addNyEvent(self, id=id,
+                sortorder=attrs['sortorder'].encode('utf-8'),
+                location_url=attrs['location_url'].encode('utf-8'),
+                start_date=self.utConvertDateTimeObjToString(self.utGetDate(attrs['start_date'].encode('utf-8'))),
+                end_date=self.utConvertDateTimeObjToString(self.utGetDate(attrs['end_date'].encode('utf-8'))),
+                agenda_url=attrs['agenda_url'].encode('utf-8'),
+                event_url=attrs['event_url'].encode('utf-8'),
+                topitem=abs(int(attrs['topitem'].encode('utf-8'))),
+                event_type=attrs['event_type'].encode('utf-8'),
+                contact_person=attrs['contact_person'].encode('utf-8'),
+                contact_email=attrs['contact_email'].encode('utf-8'),
+                contact_phone=attrs['contact_phone'].encode('utf-8'),
+                contact_fax=attrs['contact_fax'].encode('utf-8'),
+                contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
+                discussion=abs(int(attrs['discussion'].encode('utf-8'))))
+            ob = self._getOb(id)
+            for property, langs in properties.items():
+                for lang in langs:
+                    ob._setLocalPropValue(property, lang, langs[lang])
+            ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
+                approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
+            if attrs['releasedate'].encode('utf-8') != '':
+                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+            ob.import_comments(discussion)
+            self.recatalogNyObject(ob)
 
 class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
     """ """
