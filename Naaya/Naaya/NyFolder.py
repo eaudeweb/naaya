@@ -97,42 +97,47 @@ def importNyFolder(self, param, id, attrs, content, properties, discussion, obje
     #this method is called during the import process
     try: param = abs(int(param))
     except: param = 0
-    if param in [0, 1]:
-        if param == 1:
-            #delete the object if exists
-            try: self.manage_delObjects([id])
-            except: pass
-        publicinterface = abs(int(attrs['publicinterface'].encode('utf-8')))
-        meta_types = attrs['folder_meta_types'].encode('utf-8')
-        if meta_types == '': meta_types = ''
-        else: meta_types = meta_types.split(',')
-        #create the object
-        addNyFolder(self, id=id,
-            sortorder=attrs['sortorder'].encode('utf-8'),
-            publicinterface=publicinterface,
-            maintainer_email=attrs['maintainer_email'].encode('utf-8'),
-            folder_meta_types=meta_types,
-            contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
-            discussion=abs(int(attrs['discussion'].encode('utf-8'))))
-        ob = self._getOb(id)
-        for property, langs in properties.items():
-            for lang in langs:
-                ob._setLocalPropValue(property, lang, langs[lang])
-        ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
-            approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
-        if attrs['releasedate'].encode('utf-8') != '':
-            ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
-        if publicinterface:
-            l_index = ob._getOb('index', None)
-            if l_index is not None:
-                l_index.pt_edit(text=content, content_type='')
-        ob.import_comments(discussion)
-        self.recatalogNyObject(ob)
+    if param == 3:
+        #just try to delete the object
+        try: self.manage_delObjects([id])
+        except: pass
     else:
-        ob = self._getOb(id)
-    #go on and import sub objects
-    for object in objects:
-        ob.import_data(object)
+        if param in [0, 1]:
+            if param == 1:
+                #delete the object if exists
+                try: self.manage_delObjects([id])
+                except: pass
+            publicinterface = abs(int(attrs['publicinterface'].encode('utf-8')))
+            meta_types = attrs['folder_meta_types'].encode('utf-8')
+            if meta_types == '': meta_types = ''
+            else: meta_types = meta_types.split(',')
+            #create the object
+            addNyFolder(self, id=id,
+                sortorder=attrs['sortorder'].encode('utf-8'),
+                publicinterface=publicinterface,
+                maintainer_email=attrs['maintainer_email'].encode('utf-8'),
+                folder_meta_types=meta_types,
+                contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
+                discussion=abs(int(attrs['discussion'].encode('utf-8'))))
+            ob = self._getOb(id)
+            for property, langs in properties.items():
+                for lang in langs:
+                    ob._setLocalPropValue(property, lang, langs[lang])
+            ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
+                approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
+            if attrs['releasedate'].encode('utf-8') != '':
+                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+            if publicinterface:
+                l_index = ob._getOb('index', None)
+                if l_index is not None:
+                    l_index.pt_edit(text=content, content_type='')
+            ob.import_comments(discussion)
+            self.recatalogNyObject(ob)
+        else:
+            ob = self._getOb(id)
+        #go on and import sub objects
+        for object in objects:
+            ob.import_data(object)
 
 class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     """ """
