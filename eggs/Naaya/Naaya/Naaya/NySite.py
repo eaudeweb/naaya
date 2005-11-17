@@ -198,7 +198,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             #load pluggable content types
             if skel_handler.root.pluggablecontenttypes is not None:
                 for pluggablecontenttype in skel_handler.root.pluggablecontenttypes.pluggablecontenttypes:
-                    self.manage_install_pluggableitem(meta_type=pluggablecontenttype.meta_type)
+                    try: action = abs(int(pluggablecontenttype.action))
+                    except: action = 1
+                    if action == 0:
+                        self.manage_uninstall_pluggableitem(meta_type=pluggablecontenttype.meta_type)
+                    else:
+                        self.manage_install_pluggableitem(meta_type=pluggablecontenttype.meta_type)
             #load forms
             if skel_handler.root.forms is not None:
                 for form in skel_handler.root.forms.forms:

@@ -89,13 +89,13 @@
 		</skin>
 	</layout>
 	<pluggablecontenttypes>
-		<pluggablecontenttype meta_type="Naaya News"/>
-		<pluggablecontenttype meta_type="Naaya Event"/>
-		<pluggablecontenttype meta_type="Naaya Document"/>
-		<pluggablecontenttype meta_type="Naaya URL"/>
-		<pluggablecontenttype meta_type="Naaya File"/>
-		<pluggablecontenttype meta_type="Naaya Pointer"/>
-		<pluggablecontenttype meta_type="Naaya Story"/>
+		<pluggablecontenttype meta_type="Naaya News" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Event" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Document" action="1"/>
+		<pluggablecontenttype meta_type="Naaya URL" action="1"/>
+		<pluggablecontenttype meta_type="Naaya File" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Pointer" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Story" action="1"/>
 	</pluggablecontenttypes>
 	<syndication>
 		<namespace id="101" prefix="rdf" value="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>

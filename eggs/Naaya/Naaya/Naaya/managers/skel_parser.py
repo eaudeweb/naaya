@@ -136,8 +136,9 @@ class pluggablecontenttypes_struct:
         self.pluggablecontenttypes = []
 
 class pluggablecontenttype_struct:
-    def __init__(self, meta_type):
+    def __init__(self, meta_type, action):
         self.meta_type = meta_type
+        self.action = action
 
 class portlets_struct:
     def __init__(self, left, center):
@@ -315,7 +316,7 @@ class skel_handler(ContentHandler):
             stackObj = saxstack_struct('pluggablecontenttypes', obj)
             self.stack.append(stackObj)
         elif name == 'pluggablecontenttype':
-            obj = pluggablecontenttype_struct(attrs['meta_type'].encode('utf-8'))
+            obj = pluggablecontenttype_struct(attrs['meta_type'].encode('utf-8'), attrs['action'].encode('utf-8'))
             stackObj = saxstack_struct('pluggablecontenttype', obj)
             self.stack.append(stackObj)
         elif name == 'portlets':
