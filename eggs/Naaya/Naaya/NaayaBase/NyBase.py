@@ -228,7 +228,8 @@ class NyBase:
             - B{0} - try to create the object even if the object exists
             - B{1} - try to create the object, but if the object exists the old
               object must be deleted first
-            - B{2} - the object already exists
+            - B{2} - the object already exists (do nothing)
+            - B{3} - try to delete the object and implicit all its content
         """
         return '<ob meta_type="%s" param="0" id="%s" sortorder="%s" contributor="%s" \
             approved="%s" approved_by="%s" releasedate="%s" discussion="%s" %s>' % \
