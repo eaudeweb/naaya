@@ -129,7 +129,7 @@
 		</skin>
 	</layout>
 	<pluggablecontenttypes>
-		<pluggablecontenttype meta_type="Naaya Media File"/>
+		<pluggablecontenttype meta_type="Naaya Media File" action="1"/>
 	</pluggablecontenttypes>
 	<syndication>
 		<channeltype id="Red lists" title="Red lists"/>
