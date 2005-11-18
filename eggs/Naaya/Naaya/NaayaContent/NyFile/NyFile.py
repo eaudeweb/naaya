@@ -247,7 +247,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', language='', coverage='',
+    def manageProperties(self, title='', description='', coverage='',
         keywords='', sortorder='', approved='', precondition='', content_type='',
         downloadfilename='', releasedate='', discussion='', REQUEST=None, **kwargs):
         """ """

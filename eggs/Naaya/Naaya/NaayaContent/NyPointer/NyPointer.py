@@ -168,7 +168,7 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', language='', coverage='',
+    def manageProperties(self, title='', description='', coverage='',
         keywords='', sortorder='', approved='', pointer='', releasedate='',
         discussion='', REQUEST=None, **kwargs):
         """ """

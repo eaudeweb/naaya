@@ -198,9 +198,9 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', language='',
-        coverage='', keywords='', sortorder='', approved='', body='',
-        releasedate='', discussion='', REQUEST=None, **kwargs):
+    def manageProperties(self, title='', description='', coverage='', keywords='',
+        sortorder='', approved='', body='', releasedate='', discussion='',
+        REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
