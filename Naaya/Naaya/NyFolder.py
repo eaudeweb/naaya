@@ -372,7 +372,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', language='', coverage='',
+    def manageProperties(self, title='', description='', coverage='',
         keywords='', sortorder='', publicinterface='', maintainer_email='', approved='',
         releasedate='', discussion='', REQUEST=None, **kwargs):
         """ """
@@ -420,7 +420,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
 
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
-    def saveProperties(self, title='', description='', language='', coverage='',
+    def saveProperties(self, title='', description='', coverage='',
         keywords='', sortorder='', maintainer_email='', releasedate='', discussion='',
         lang=None, REQUEST=None, **kwargs):
         """ """
