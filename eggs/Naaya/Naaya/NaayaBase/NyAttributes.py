@@ -52,4 +52,8 @@ class NyAttributes:
             parts = name.split('_')
             func, lang = parts[0], parts[1]
             return self.istranslated(lang)
+        elif name.startswith('coverage_'):
+            parts = name.split('_')
+            func, lang = parts[0], parts[1]
+            return self.getLocalProperty('coverage', lang)
         raise AttributeError, name
