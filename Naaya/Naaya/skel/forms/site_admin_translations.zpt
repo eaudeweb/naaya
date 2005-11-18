@@ -93,7 +93,7 @@
 				<tal:block tal:condition="python:rkey==''">
 					<th class="sort_asc_th">
 						<a tal:attributes="href string:${site_url}/admin_translations_html?skey=${skey}&amp;rkey=1&amp;query=${query}">
-							<span tal:replace="python:language['name']" />
+							<span i18n:translate="" tal:omit-tag="" tal:content="python:language['name']" />
 							<img src="misc_/Naaya/sort_asc.gif" border="0" align="absmiddle" alt="" />
 						</a>
 					</th>
@@ -101,7 +101,7 @@
 				<tal:block tal:condition="python:rkey=='1'">
 					<th class="sort_desc_th">
 						<a tal:attributes="href string:${site_url}/admin_translations_html?skey=${skey}&amp;query=${query}">
-							<span tal:replace="python:language['name']" />
+							<span i18n:translate="" tal:omit-tag="" tal:content="python:language['name']" />
 							<img src="misc_/Naaya/sort_desc.gif" border="0" align="absmiddle" alt="" />
 						</a>
 					</th>
@@ -109,7 +109,7 @@
 			</tal:block>
 			<tal:block tal:condition="python:skey!=language['code']">
 				<th class="sort_th" tal:define="language_code python:language['code']">
-					<a tal:attributes="href string:${site_url}/admin_translations_html?skey=${language_code}&amp;query=${query}" tal:content="python:language['name']" />
+					<a tal:attributes="href string:${site_url}/admin_translations_html?skey=${language_code}&amp;query=${query}" i18n:translate="" tal:content="python:language['name']" />
 				</th>
 			</tal:block>
 		</tal:block>

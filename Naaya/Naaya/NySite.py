@@ -1966,7 +1966,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(view, 'standard_error_message')
     def standard_error_message(self, client=None, REQUEST=None, **kwargs):
         """ """
-        #context = self.unrestrictedTraverse(self.REQUEST.PATH_INFO)
         context = self.REQUEST.PARENTS[0]
         kwargs['here'] = context
         return self.getFormsTool().getContent(kwargs, 'standard_error_message')
