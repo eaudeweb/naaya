@@ -133,7 +133,7 @@ class CatalogTool(ZCatalog, utils):
     security.declarePrivate('add_index_for_lang')
     def add_index_for_lang(self, name, lang):
         """
-        Create an index for given language:
+        Create an I{TextIndexNG2} or I{TextIndex} index for given language:
         - B{I{name}_I{lang}}
         @param name: index name
         @type name: string
