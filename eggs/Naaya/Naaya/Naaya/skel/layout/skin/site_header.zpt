@@ -58,13 +58,8 @@
 	<a name="startcontent" id="startcontent"></a>
 	<span tal:replace="structure here/messages_box"/>
 
-	<!--STANDARD_HEADERFOOTER_MARKER-->
+	<!--SITE_HEADERFOOTER_MARKER-->
 
-</div>
-<div id="last_modified">Page last modified: dd-mm-yyyy </div>
-<div id="footer">
-	[<a tal:attributes="href string:${site_url}/info/contact" i18n:translate="">Contact us</a>]
-	[<a tal:attributes="href string:${site_url}/info/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>]
 </div>
 </body>
 </html>
