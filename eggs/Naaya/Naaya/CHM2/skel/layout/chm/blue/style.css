@@ -552,7 +552,7 @@ vertical-align: top;
 		padding:0em;
 	}
 
-	.portlet_folder div{
+	.portlet_folder div.portlet_folder_title{
 		background-color:#ffcc66; /*#abb8c1*/ /*#ff9900*/ /*#343434*/ /*#343434*/
 		background-position:100% 5%;
 		background-repeat:no-repeat;
