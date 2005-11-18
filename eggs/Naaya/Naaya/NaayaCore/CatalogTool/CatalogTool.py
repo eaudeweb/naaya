@@ -130,6 +130,29 @@ class CatalogTool(ZCatalog, utils):
         try: self.addColumn('summary')
         except: pass
 
+    security.declarePrivate('add_index_for_lang')
+    def add_index_for_lang(self, name, lang):
+        """
+        Create an index for given language:
+        - B{I{name}_I{lang}}
+        @param name: index name
+        @type name: string
+        @param lang: language code
+        @type lang: string
+        """
+        if txng_version == 2:
+            try:
+                self.manage_addIndex('%s_%s' % (name, lang), 'TextIndexNG2', extra={'default_encoding': 'utf-8'})
+                self.reindexIndex('%s_%s' % (name, lang), self.REQUEST)
+            except:
+                pass
+        else:
+            try:
+                self.addIndex('%s_%s' % (name, lang), 'TextIndex')
+                self.reindexIndex('%s_%s' % (name, lang), self.REQUEST)
+            except:
+                pass
+
     security.declarePrivate('add_indexes_for_lang')
     def add_indexes_for_lang(self, lang):
         """
@@ -139,19 +162,24 @@ class CatalogTool(ZCatalog, utils):
         @param lang: language code
         @type lang: string
         """
-        if txng_version == 2:
-            try:
-                self.manage_addIndex('objectkeywords_%s' % lang, 'TextIndexNG2', extra={'default_encoding': 'utf-8'})
-                self.reindexIndex('objectkeywords_%s' % lang, self.REQUEST)
-            except: pass
-        else:
-            try:
-                self.addIndex('objectkeywords_%s' % lang, 'TextIndex')
-                self.reindexIndex('objectkeywords_%s' % lang, self.REQUEST)
-            except: pass
+        self.add_index_for_lang('objectkeywords', lang)
         try:
             self.addIndex('istranslated_%s' % lang, 'FieldIndex')
             self.reindexIndex('istranslated_%s' % lang, self.REQUEST)
+        except:
+            pass
+
+    security.declarePrivate('del_index_for_lang')
+    def del_index_for_lang(self, name, lang):
+        """
+        Delete an index when a language is removed from the portal.
+        - B{I{name}_I{lang}}
+        @param name: index name
+        @type name: string
+        @param lang: language code
+        @type lang: string
+        """
+        try: self.delIndex('%s_%s' % (name, lang))
         except: pass
 
     security.declarePrivate('del_indexes_for_lang')
@@ -161,9 +189,7 @@ class CatalogTool(ZCatalog, utils):
         @param lang: language code
         @type lang: string
         """
-        try: self.delIndex('objectkeywords_%s' % lang)
-        except: pass
-        try: self.delIndex('istranslated_%s' % lang)
-        except: pass
+        self.del_index_for_lang('objectkeywords', lang)
+        self.del_index_for_lang('istranslated', lang)
 
 InitializeClass(CatalogTool)
