@@ -223,7 +223,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', language='',
+    def manageProperties(self, title='', description='',
         coverage='', keywords='', sortorder='', approved='', releasedate='',
         discussion='', REQUEST=None, **kwargs):
         """ """

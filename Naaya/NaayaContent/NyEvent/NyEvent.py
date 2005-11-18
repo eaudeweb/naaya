@@ -53,7 +53,7 @@ def event_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyEvent'}, 'event_add')
 
-def addNyEvent(self, id='', title='', description='', language='', coverage='',
+def addNyEvent(self, id='', title='', description='', coverage='',
     keywords='', sortorder='', location='', location_address='', location_url='',
     start_date='', end_date='', host='', agenda_url='', event_url='', details='',
     topitem='', event_type='', contact_person='', contact_email='',
@@ -227,7 +227,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', language='', coverage='',
+    def manageProperties(self, title='', description='', coverage='',
         keywords='', sortorder='', approved='', location='', location_address='',
         location_url='', start_date='', end_date='', host='', agenda_url='',
         topitem='', event_url='', details='', event_type='', contact_person='',

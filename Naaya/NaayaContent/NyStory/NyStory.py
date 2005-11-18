@@ -207,7 +207,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', language='', coverage='',
+    def manageProperties(self, title='', description='', coverage='',
         keywords='', sortorder='', approved='', body='', topitem='', resourceurl='',
         source='', releasedate='', discussion='', REQUEST=None, **kwargs):
         """ """
