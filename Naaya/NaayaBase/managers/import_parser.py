@@ -174,7 +174,7 @@ class import_handler(ContentHandler):
 
     def characters(self, content):
         if len(self.stack) > 0:
-            self.stack[-1].content += content.strip(' \t')
+            self.stack[-1].content += content.strip(' ')
 
 class import_parser:
     """
