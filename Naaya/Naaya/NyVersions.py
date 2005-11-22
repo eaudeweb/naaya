@@ -107,11 +107,16 @@ class NyVersions:
         return "Contributor set up."
 
     security.declareProtected(view_management_screens, 'set_contributor_all')
-    def change_contributor(self, new_contributor):
+    def change_contributor(self, old_contributor, new_contributor):
         """
         change contributor for objects.
         """
-        self.setContributor(new_contributor)
-        return "Contributor set up."
+        catalog_tool = self.getCatalogTool()
+        for b in self.getCatalogedBrains():
+            x = catalog_tool.getobject(b.data_record_id_)
+            if x.contributor==old_contributor:
+                x.setContributor(newcontributor)
+                self.recatalogNyObject(x)
+        return "Contributor changed."
 
 InitializeClass(NyVersions)
