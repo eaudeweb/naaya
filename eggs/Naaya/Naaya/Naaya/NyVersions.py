@@ -106,5 +106,12 @@ class NyVersions:
                     x.setContributor(new_contributor)
         return "Contributor set up."
 
+    security.declareProtected(view_management_screens, 'set_contributor_all')
+    def change_contributor(self, new_contributor):
+        """
+        change contributor for objects.
+        """
+        self.setContributor(new_contributor)
+        return "Contributor set up."
 
 InitializeClass(NyVersions)
