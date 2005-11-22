@@ -115,7 +115,7 @@ class NyVersions:
         for b in self.getCatalogedBrains():
             x = catalog_tool.getobject(b.data_record_id_)
             if x.contributor==old_contributor:
-                x.setContributor(newcontributor)
+                x.setContributor(new_contributor)
                 self.recatalogNyObject(x)
         return "Contributor changed."
 
