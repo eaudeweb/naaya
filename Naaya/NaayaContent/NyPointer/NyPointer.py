@@ -91,7 +91,7 @@ def addNyPointer(self, id='', title='', description='', coverage='', keywords=''
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'pointer_add_html':
             self.setSession('referer', self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.getSitePath())
+            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
 def importNyPointer(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
