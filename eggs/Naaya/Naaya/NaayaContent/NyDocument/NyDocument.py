@@ -94,7 +94,7 @@ def addNyDocument(self, id='', title='', description='', coverage='', keywords='
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'document_add':
             self.setSession('referer', self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.getSitePath())
+            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
 def importNyDocument(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
@@ -240,7 +240,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         self.notifyFolderMaintainer(self.getParentNode(), self)
         if REQUEST:
             self.setSession('referer', self.getParentNode().absolute_url())
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.getSitePath())
+            REQUEST.RESPONSE.redirect('%s/messages_html' % self.getParentNode().absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
