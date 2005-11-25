@@ -64,7 +64,7 @@
 <div id="log_lang">
 <div id="language">
 	<label for="old_lang" i18n:translate="">Select language: </label>
-	<span tal:content="structure here/languages_box" />
+	<span tal:replace="structure here/languages_box" />
 </div>
 <div style="width: 30em;" id="user_id" tal:define="authenticated_user python:request.AUTHENTICATED_USER.getUserName()">
 	<span id="log1" tal:condition="python: authenticated_user != 'Anonymous User'" i18n:translate="">You are logged in as:</span>
