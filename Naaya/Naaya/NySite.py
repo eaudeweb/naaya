@@ -66,7 +66,6 @@ from Products.NaayaCore.managers.urlgrab_tool import urlgrab_tool
 from Products.NaayaCore.managers.search_tool import search_tool
 from Products.NaayaCore.managers.session_manager import session_manager
 from Products.NaayaCore.PropertiesTool.managers.contenttypes_tool import contenttypes_tool
-from Products.NaayaCore.PropertiesTool.managers.events_tool import events_tool
 from Products.Localizer.Localizer import manage_addLocalizer
 from Products.Localizer.MessageCatalog import manage_addMessageCatalog
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
@@ -94,7 +93,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     catalog_tool,
     search_tool,
     contenttypes_tool,
-    events_tool,
     session_manager,
     portlets_manager):
     """ """
@@ -157,7 +155,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.show_releasedate = 1
         self.submit_unapproved = 0
         contenttypes_tool.__dict__['__init__'](self)
-        events_tool.__dict__['__init__'](self)
         CookieCrumbler.__dict__['__init__'](self)
         catalog_tool.__dict__['__init__'](self)
         search_tool.__dict__['__init__'](self)
@@ -302,8 +299,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             if skel_handler.root.properties is not None:
                 for language in skel_handler.root.properties.languages:
                     properties_tool.manage_addLanguage(language.code)
-                for eventtype in skel_handler.root.properties.eventtypes:
-                    self.createEventType(eventtype.id, eventtype.title)
                 for contenttype in skel_handler.root.properties.contenttypes:
                     content = self.futRead(join(skel_path, 'contenttypes', contenttype.picture), 'rb')
                     self.createContentType(contenttype.id, contenttype.title, content)
@@ -560,6 +555,23 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def get_naaya_containers_metatypes(self):
         """ this method is used to display local roles, called from getUserRoles methods """
         return [METATYPE_FOLDER]
+
+    #layer over selection lists
+    security.declarePublic('getEventTypesList')
+    def getEventTypesList(self):
+        """
+        Return the selection list for event types.
+        """
+        return self.getPortletsTool().getRefListById('event_types').get_list()
+
+    def getEventTypeTitle(self, id):
+        """
+        Return the title of an item for the selection list for event types.
+        """
+        try:
+            return self.getPortletsTool().getRefListById('event_types').get_item(id).title
+        except:
+            return ''
 
     #api
     security.declarePublic('process_releasedate')

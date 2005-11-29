@@ -184,18 +184,12 @@ class item_struct:
 
 class properties_struct:
     def __init__(self):
-        self.eventtypes = []
         self.contenttypes = []
         self.languages = []
 
 class language_struct:
     def __init__(self, code):
         self.code = code
-
-class eventtype_struct:
-    def __init__(self, id, title):
-        self.id = id
-        self.title = title
 
 class contenttype_struct:
     def __init__(self, id, title, picture):
@@ -357,10 +351,6 @@ class skel_handler(ContentHandler):
             obj = language_struct(attrs['code'].encode('utf-8'))
             stackObj = saxstack_struct('language', obj)
             self.stack.append(stackObj)
-        elif name == 'eventtype':
-            obj = eventtype_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'))
-            stackObj = saxstack_struct('eventtype', obj)
-            self.stack.append(stackObj)
         elif name == 'contenttype':
             obj = contenttype_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['picture'].encode('utf-8'))
             stackObj = saxstack_struct('contenttype', obj)
@@ -474,9 +464,6 @@ class skel_handler(ContentHandler):
             self.stack.pop()
         elif name == 'language':
             self.stack[-2].obj.languages.append(self.stack[-1].obj)
-            self.stack.pop()
-        elif name == 'eventtype':
-            self.stack[-2].obj.eventtypes.append(self.stack[-1].obj)
             self.stack.pop()
         elif name == 'contenttype':
             self.stack[-2].obj.contenttypes.append(self.stack[-1].obj)
