@@ -79,7 +79,8 @@ class Skin(Folder):
     security.declarePrivate('createSkinFiles')
     def createSkinFiles(self):
         #Creates the default template files with empty content
-        self.manage_addTemplate('standard_html_headerfooter', 'Portal standard HTML header and footer')
+        self.manage_addTemplate('site_header', 'Portal standard HTML header')
+        self.manage_addTemplate('site_footer', 'Portal standard HTML footer')
         self.manage_addTemplate('portlet_left_macro', 'Macro for left portlets')
         self.manage_addTemplate('portlet_center_macro', 'Macro for center portlets')
         self.manage_addTemplate('portlet_right_macro', 'Macro for right portlets')
