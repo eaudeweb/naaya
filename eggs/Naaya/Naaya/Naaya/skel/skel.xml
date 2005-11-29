@@ -137,10 +137,6 @@
 	</portlets>
 	<properties>
 		<language code="en" />
-		<eventtype id="meeting" title="Meeting"/>
-		<eventtype id="event" title="Event"/>
-		<eventtype id="conference" title="Conference"/>
-		<eventtype id="other" title="Other"/>
 		<contenttype id="text/plain" title="TXT" picture="text.gif"/>
 		<contenttype id="text/html" title="HTML" picture="html.gif"/>
 		<contenttype id="text/xml" title="XML" picture="xml.gif"/>
