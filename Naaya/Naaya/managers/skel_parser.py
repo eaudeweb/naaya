@@ -146,6 +146,7 @@ class portlets_struct:
         self.center = center
         self.portlets = []
         self.linkslists = []
+        self.reflists = []
 
 class portlet_struct:
     def __init__(self, id, title):
@@ -168,6 +169,18 @@ class link_struct:
         self.relative = relative
         self.permission = permission
         self.order = order
+
+class reflist_struct:
+    def __init__(self, id, title, description):
+        self.id = id
+        self.title = title
+        self.description = description
+        self.items = []
+
+class item_struct:
+    def __init__(self, id, title):
+        self.id = id
+        self.title = title
 
 class properties_struct:
     def __init__(self):
@@ -311,6 +324,15 @@ class skel_handler(ContentHandler):
                 obj = link_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['description'].encode('utf-8'), attrs['url'].encode('utf-8'), attrs['relative'].encode('utf-8'), attrs['permission'].encode('utf-8'), attrs['order'].encode('utf-8'))
                 stackObj = saxstack_struct('link', obj)
                 self.stack.append(stackObj)
+        elif name == 'reflist':
+            obj = reflist_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['description'].encode('utf-8'))
+            stackObj = saxstack_struct('reflist', obj)
+            self.stack.append(stackObj)
+        elif name == 'item':
+            if len(self.stack) >=2:
+                obj = item_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'))
+                stackObj = saxstack_struct('item', obj)
+                self.stack.append(stackObj)
         elif name == 'pluggablecontenttypes':
             obj = pluggablecontenttypes_struct()
             stackObj = saxstack_struct('pluggablecontenttypes', obj)
@@ -435,11 +457,17 @@ class skel_handler(ContentHandler):
         elif name == 'portlet':
             self.stack[-2].obj.portlets.append(self.stack[-1].obj)
             self.stack.pop()
-        if name == 'linkslist':
+        elif name == 'linkslist':
             self.stack[-2].obj.linkslists.append(self.stack[-1].obj)
             self.stack.pop()
         elif name == 'link':
             self.stack[-2].obj.links.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'reflist':
+            self.stack[-2].obj.reflists.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'item':
+            self.stack[-2].obj.items.append(self.stack[-1].obj)
             self.stack.pop()
         elif name == 'properties':
             self.stack[-2].obj.properties = self.stack[-1].obj

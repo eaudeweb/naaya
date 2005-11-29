@@ -45,6 +45,8 @@
 		<form id="site_admin_importexport" title="Portal administration - import export messages"/>
 		<form id="site_admin_linkslists" title="Portal administration - lists of links"/>
 		<form id="site_admin_linkslist" title="Portal administration - list of links"/>
+		<form id="site_admin_reflists" title="Portal administration - selection lists"/>
+		<form id="site_admin_reflist" title="Portal administration - list of items"/>
 		<form id="site_admin_network" title="Portal administration - network portals"/>
 		<form id="site_admin_basket" title="Portal administration - centralized basket form"/>
 		<form id="site_admin_validation" title="Portal administration - content checking and validation"/>
@@ -126,6 +128,12 @@
 			<link id="109" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="9"/>
 			<link id="110" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="10"/>
 		</linkslist>
+		<reflist id="event_types" title="Event types" description="Types of events used by Naaya Event objects. When adding or editing Naaya Events, the end users will be able to choose from list below.">
+			<item id="meeting" title="Meeting"/>
+			<item id="event" title="Event"/>
+			<item id="conference" title="Conference"/>
+			<item id="other" title="Other"/>
+		</reflist>
 	</portlets>
 	<properties>
 		<language code="en" />

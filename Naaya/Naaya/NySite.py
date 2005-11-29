@@ -287,6 +287,15 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                         try: order = abs(int(link.order))
                         except: order = 0
                         linkslist_ob.add_link_item(link.id, link.title, link.description, link.url, relative, link.permission, order)
+                for reflist in skel_handler.root.portlets.reflists:
+                    reflist_ob = portletstool_ob._getOb(reflist.id, None)
+                    if reflist_ob is None:
+                        portletstool_ob.manage_addRefList(reflist.id, reflist.title, reflist.description)
+                        reflist_ob = portletstool_ob._getOb(reflist.id)
+                    else:
+                        reflist_ob.manage_delete_items(reflist_ob.get_collection().keys())
+                    for item in reflist.items:
+                        reflist_ob.add_item(item.id, item.title)
                 portletstool_ob.manage_left_portlets(skel_handler.root.portlets.left.split(','))
                 portletstool_ob.manage_center_portlets(skel_handler.root.portlets.center.split(','))
             #load properties
@@ -1260,6 +1269,63 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_translations_html' % self.absolute_url())
 
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletereflist')
+    def admin_deletereflist(self, ids=[], REQUEST=None):
+        """ """
+        self.getPortletsTool().manage_delObjects(self.utConvertToList(ids))
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_reflists_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addreflist')
+    def admin_addreflist(self, id='', title='', description='', REQUEST=None):
+        """ """
+        self.getPortletsTool().manage_addRefList(id, title, description)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_reflists_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editreflist')
+    def admin_editreflist(self, id='', title='', description='', REQUEST=None):
+        """ """
+        ob = self.getPortletsTool().getRefListById(id)
+        if ob is not None:
+            ob.manageProperties(title, description)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' % (self.absolute_url(), id))
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteitems')
+    def admin_deleteitems(self, id='', ids=[], REQUEST=None):
+        """ """
+        ob = self.getPortletsTool().getRefListById(id)
+        if ob is not None:
+            ob.manage_delete_items(self.utConvertToList(ids))
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' % (self.absolute_url(), id))
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_additem')
+    def admin_additem(self, id='', item='', title='', REQUEST=None):
+        """ """
+        ob = self.getPortletsTool().getRefListById(id)
+        if ob is not None:
+            ob.manage_add_item(item, title)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' % (self.absolute_url(), id))
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edititem')
+    def admin_edititem(self, id='', item='', title='', REQUEST=None):
+        """ """
+        ob = self.getPortletsTool().getRefListById(id)
+        if ob is not None:
+            ob.manage_update_item(item, title)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_reflist_html?id=%s' % (self.absolute_url(), id))
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletelinkslist')
     def admin_deletelinkslist(self, ids=[], REQUEST=None):
         """ """
@@ -1653,15 +1719,25 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_importexport')
 
-    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_linkslists_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkslists_html')
     def admin_linkslists_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_linkslists')
 
-    security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_linkslist_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkslist_html')
     def admin_linkslist_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_linkslist')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_reflists_html')
+    def admin_reflists_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_reflists')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_reflist_html')
+    def admin_reflist_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_reflist')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_network_html')
     def admin_network_html(self, REQUEST=None, RESPONSE=None):
