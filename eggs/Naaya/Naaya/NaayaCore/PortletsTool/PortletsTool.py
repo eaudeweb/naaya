@@ -34,6 +34,7 @@ from managers.portlets_templates import *
 from Portlet import manage_addPortlet_html, addPortlet
 from HTMLPortlet import manage_addHTMLPortlet_html, addHTMLPortlet
 from LinksList import manage_addLinksListForm, manage_addLinksList
+from RefList import manage_addRefListForm, manage_addRefList
 
 def manage_addPortletsTool(self, REQUEST=None):
     """ """
@@ -67,6 +68,7 @@ class PortletsTool(Folder, utils):
         {'name': METATYPE_PORTLET, 'action': 'manage_addPortlet_html'},
         {'name': METATYPE_HTMLPORTLET, 'action': 'manage_addHTMLPortlet_html'},
         {'name': METATYPE_LINKSLIST, 'action': 'manage_addLinksListForm'},
+        {'name': METATYPE_REFLIST, 'action': 'manage_addRefListForm'},
     )
     all_meta_types = meta_types
 
@@ -77,6 +79,8 @@ class PortletsTool(Folder, utils):
     addHTMLPortlet = addHTMLPortlet
     manage_addLinksListForm = manage_addLinksListForm
     manage_addLinksList = manage_addLinksList
+    manage_addRefListForm = manage_addRefListForm
+    manage_addRefList = manage_addRefList
 
     def __init__(self, id, title):
         """ """
