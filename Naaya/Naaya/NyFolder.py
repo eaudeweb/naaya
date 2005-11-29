@@ -345,6 +345,45 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         can_operate = can_operate or btn_select
         return (btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate, results_folders, results_objects)
 
+    security.declareProtected(view, 'checkPermissionManageObjectsMixed')
+    def checkPermissionManageObjectsMixed(self):
+        """ This function is called on the folder index, returns a mixed list of folders and objects and it checkes whether or not
+            to display the various buttons on that form
+        """
+        results_folders = []
+        results_objects = []
+        btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate = 0, 0, 0, 0, 0, 0
+        # btn_select - if there is at least one permisson to delete or copy an object
+        # btn_delete - if there is at least one permisson to delete an object
+        # btn_copy - if there is at least one permisson to copy an object
+        # btn_cut - if there is at least one permisson to delete AND copy an object
+        # btn_paste - if there is the add permission and there's some copyed data
+        btn_paste = self.cb_dataValid() and self.checkPermissionPasteObjects()
+        mixed_list = self.getFolders() + self.getObjects()
+        for x in self.utSortObjsListByAttr(mixed_list, 'sortorder', 0):
+            del_permission = x.checkPermissionDeleteObject()
+            copy_permission = x.checkPermissionCopyObject()
+            edit_permission = x.checkPermissionEditObject()
+            if del_permission or copy_permission: btn_select = 1
+            if del_permission and copy_permission: btn_cut = 1
+            if del_permission: btn_delete = 1
+            if copy_permission: btn_copy = 1
+            if edit_permission: can_operate = 1
+            if x.meta_type == METATYPE_FOLDER:
+                version_status = 0
+            else:
+                if not edit_permission or not x.isVersionable():
+                    version_status = 0
+                elif x.hasVersion():
+                    if x.isVersionAuthor(): version_status = 1
+                    else: version_status = 0
+                else:
+                    version_status = 2
+            if ((del_permission or edit_permission) and not x.approved) or x.approved:
+                results_mixed_objects.append((del_permission, edit_permission, version_status, copy_permission, x))
+        can_operate = can_operate or btn_select
+        return (btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate, results_mixed_objects)
+
     def getObjects(self): return [x for x in self.objectValues(self.get_meta_types()) if x.submitted==1]
     def getFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.submitted==1]
     def hasContent(self): return (len(self.getObjects()) > 0) or (len(self.objectValues(METATYPE_FOLDER)) > 0)
