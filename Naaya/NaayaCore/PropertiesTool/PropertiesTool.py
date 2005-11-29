@@ -63,7 +63,6 @@ class PropertiesTool(SimpleItem, utils, search_tool):
             {'label': 'Settings', 'action': 'manage_settings_html'},
             {'label': 'Main sections', 'action': 'manage_maintopics_html'},
             {'label': 'Subobjects', 'action': 'manage_subobjects_html'},
-            {'label': 'Event types', 'action': 'manage_eventtypes_html'},
             {'label': 'File types', 'action': 'manage_contenttypes_html'},
             {'label': 'Languages', 'action': 'manage_languages_html'},
             {'label': 'Search', 'action': 'manage_search_html'},
@@ -132,33 +131,6 @@ class PropertiesTool(SimpleItem, utils, search_tool):
         site.maintopics = maintopics
         site._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_maintopics_html?save=ok')
-
-    security.declareProtected(view_management_screens, 'manageAddEventType')
-    def manageAddEventType(self, id='', title='', REQUEST=None):
-        """
-        Add a new event type.
-        """
-        self.createEventType(id, title)
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('manage_eventtypes_html?save=ok')
-
-    security.declareProtected(view_management_screens, 'manageUpdateEventType')
-    def manageUpdateEventType(self, id='', title='', REQUEST=None):
-        """
-        Update an event type.
-        """
-        self.modifyEventType(id, title)
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('manage_eventtypes_html?save=ok')
-
-    security.declareProtected(view_management_screens, 'manageDeleteEventTypes')
-    def manageDeleteEventTypes(self, id=[], REQUEST=None):
-        """
-        Delete one or more event types.
-        """
-        self.deleteEventType(self.utConvertToList(id))
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('manage_eventtypes_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manageAddContentType')
     def manageAddContentType(self, id='', title='', picture='', REQUEST=None):
@@ -235,9 +207,6 @@ class PropertiesTool(SimpleItem, utils, search_tool):
 
     security.declareProtected(view_management_screens, 'manage_maintopics_html')
     manage_maintopics_html = PageTemplateFile('zpt/properties_maintopics', globals())
-
-    security.declareProtected(view_management_screens, 'manage_eventtypes_html')
-    manage_eventtypes_html = PageTemplateFile('zpt/properties_eventtypes', globals())
 
     security.declareProtected(view_management_screens, 'manage_contenttypes_html')
     manage_contenttypes_html = PageTemplateFile('zpt/properties_contenttypes', globals())

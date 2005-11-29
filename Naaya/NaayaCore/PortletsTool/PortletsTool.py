@@ -96,6 +96,7 @@ class PortletsTool(Folder, utils):
     def getPortletsTypes(self): return PORTLETS_TYPES
     def getPortlets(self): return self.objectValues([METATYPE_PORTLET, METATYPE_HTMLPORTLET])
     def getLinksLists(self): return self.objectValues(METATYPE_LINKSLIST)
+    def getRefLists(self): return self.objectValues(METATYPE_REFLIST)
     def getPortletsIds(self): return self.objectIds([METATYPE_PORTLET, METATYPE_HTMLPORTLET])
 
     def get_html_portlets(self):
@@ -125,6 +126,14 @@ class PortletsTool(Folder, utils):
         except: ob = None
         if ob is not None:
             if ob.meta_type != METATYPE_LINKSLIST: ob = None
+        return ob
+
+    def getRefListById(self, p_id):
+        #return the selection list with the given id
+        try: ob = self._getOb(p_id)
+        except: ob = None
+        if ob is not None:
+            if ob.meta_type != METATYPE_REFLIST: ob = None
         return ob
 
     #zmi actions
