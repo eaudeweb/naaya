@@ -128,7 +128,7 @@
 			<link id="109" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="9"/>
 			<link id="110" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="10"/>
 		</linkslist>
-		<reflist id="event_types" title="Event types" description="Types of events used by Naaya Event objects. When adding or editing Naaya Events, the end users will be able to choose from list below.">
+		<reflist id="event_types" title="Event types" description="Types of events used by Naaya Event objects. When adding or editing events, the end users will be able to choose from list below.">
 			<item id="meeting" title="Meeting"/>
 			<item id="event" title="Event"/>
 			<item id="conference" title="Conference"/>
