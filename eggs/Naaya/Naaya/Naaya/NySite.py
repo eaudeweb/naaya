@@ -1020,7 +1020,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 path = where
             if type(query) == type(''):
                 query = self.utStrEscapeForSearch(query)
-            results = self.searchCatalog(query, path, lang)
+            try:
+                results = self.searchCatalog(query, path, lang)
+            except:
+                results = []
             batch_obj = batch_utils(self.numberresultsperpage, len(results), page_search_start)
             if sort_expr!='' and order=='ascending':
                 results = self.utSortObjsListByAttr(results, sort_expr, 0)   # sort ascending
