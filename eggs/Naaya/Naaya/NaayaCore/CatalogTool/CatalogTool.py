@@ -94,7 +94,7 @@ class CatalogTool(ZCatalog, utils):
         if txng_version == 2:
             try: self.manage_addIndex('PrincipiaSearchSource', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'use_converters':1, 'autoexpand':1})
             except: pass
-            try: self.manage_addIndex('title', 'TextIndexNG2', extra={'default_encoding': 'utf-8'})
+            try: self.manage_addIndex('title', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
             except: pass
         else:
             try: self.addIndex('PrincipiaSearchSource', 'TextIndex')
@@ -142,7 +142,7 @@ class CatalogTool(ZCatalog, utils):
         """
         if txng_version == 2:
             try:
-                self.manage_addIndex('%s_%s' % (name, lang), 'TextIndexNG2', extra={'default_encoding': 'utf-8'})
+                self.manage_addIndex('%s_%s' % (name, lang), 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
                 self.reindexIndex('%s_%s' % (name, lang), self.REQUEST)
             except:
                 pass
