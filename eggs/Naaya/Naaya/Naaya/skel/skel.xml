@@ -118,6 +118,7 @@
 	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_latestnews_rdf,portlet_upcomingevents_rdf,portlet_latestuploads_rdf">
 		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="portlet_maincategories" title="Main sections" />
+		<portlet id="portlet_localchannels" title="Local channels" />
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
 			<link id="102" title="Finsiel" description="Finsiel Romania" url="http://www.finsiel.ro" relative="0" permission="" order="2"/>
 			<link id="103" title="Naaya" description="EnviroWindows Publisher" url="http://publisher.finsiel.ro/" relative="0" permission="" order="3"/>
@@ -187,6 +188,15 @@
 		<role name="Contributor" grouppermissions="Add content" permissions=""/>
 		<role name="Administrator" grouppermissions="Browse content,Add content,Add comments,Edit content,Copy content,Publish content,Delete content,Validate content,Translate pages,Manage Users" permissions=""/>
 	</security>
+	<notification>
+		<newsmetatype meta_type="Naaya News" action="1"/>
+		<newsmetatype meta_type="Naaya Story" action="1"/>
+		<newsmetatype meta_type="Naaya Event" action="1"/>
+		<uploadmetatype meta_type="Naaya URL" action="1"/>
+		<uploadmetatype meta_type="Naaya Document" action="1"/>
+		<uploadmetatype meta_type="Naaya File" action="1"/>
+		<foldermetatype meta_type="Naaya Folder" action="1"/>
+	</notification>
 	<others>
 		<favicon />
 		<robots />

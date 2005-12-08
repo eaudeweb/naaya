@@ -56,6 +56,7 @@ from Products.NaayaCore.PortletsTool.PortletsTool import manage_addPortletsTool
 from Products.NaayaCore.PortletsTool.managers.portlets_manager import portlets_manager
 from Products.NaayaCore.FormsTool.FormsTool import manage_addFormsTool
 from Products.NaayaCore.LayoutTool.LayoutTool import manage_addLayoutTool
+from Products.NaayaCore.NotificationTool.NotificationTool import manage_addNotificationTool
 from Products.NaayaBase.NyBase import NyBase
 from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
 from Products.NaayaBase.NyImportExport import NyImportExport
@@ -176,6 +177,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         manage_addPortletsTool(self)
         manage_addFormsTool(self)
         manage_addLayoutTool(self)
+        manage_addNotificationTool(self)
         manage_addErrorLog(self)
         self.loadSkeleton(join(NAAYA_PRODUCT_PATH, 'skel'))
 
@@ -192,6 +194,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             portletstool_ob = self.getPortletsTool()
             emailtool_ob = self.getEmailTool()
             authenticationtool_ob = self.getAuthenticationTool()
+            notificationtool_ob = self.getNotificationTool()
             #load pluggable content types
             if skel_handler.root.pluggablecontenttypes is not None:
                 for pluggablecontenttype in skel_handler.root.pluggablecontenttypes.pluggablecontenttypes:
@@ -322,6 +325,29 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     self.manage_role(role.name, b)
             #set subobjects for folders
             self.getPropertiesTool().manageSubobjects(subobjects=None, ny_subobjects=self.get_meta_types(1))
+            #load notification related stuff
+            if skel_handler.root.notification is not None:
+                for newsmetatype in skel_handler.root.notification.newsmetatypes:
+                    try: action = abs(int(newsmetatype.action))
+                    except: action = 1
+                    if action == 0:
+                        notificationtool_ob.del_newsmetatype(newsmetatype.meta_type)
+                    else:
+                        notificationtool_ob.add_newsmetatype(newsmetatype.meta_type)
+                for uploadmetatype in skel_handler.root.notification.uploadmetatypes:
+                    try: action = abs(int(uploadmetatype.action))
+                    except: action = 1
+                    if action == 0:
+                        notificationtool_ob.del_uploadmetatype(uploadmetatype.meta_type)
+                    else:
+                        notificationtool_ob.add_uploadmetatype(uploadmetatype.meta_type)
+                for foldermetatype in skel_handler.root.notification.foldermetatypes:
+                    try: action = abs(int(foldermetatype.action))
+                    except: action = 1
+                    if action == 0:
+                        notificationtool_ob.del_foldermetatype(foldermetatype.meta_type)
+                    else:
+                        notificationtool_ob.add_foldermetatype(foldermetatype.meta_type)
             #other stuff
             if skel_handler.root.others is not None:
                 if skel_handler.root.others.robots is not None:
@@ -474,6 +500,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def getPortalTranslations(self): return self._getOb(ID_TRANSLATIONSTOOL)
     security.declarePublic('getImagesFolder')
     def getImagesFolder(self): return self._getOb(ID_IMAGESFOLDER)
+    security.declarePublic('getNotificationTool')
+    def getNotificationTool(self): return self._getOb(ID_NOTIFICATIONTOOL)
 
     #objects absolute/relative path getters
     security.declarePublic('getSitePath')
@@ -498,6 +526,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def getFormsToolPath(self, p=0): return self._getOb(ID_FORMSTOOL).absolute_url(p)
     security.declarePublic('getFolderByPath')
     def getFolderByPath(self, p_folderpath): return self.unrestrictedTraverse(p_folderpath, None)
+    security.declarePublic('getNotificationToolPath')
+    def getNotificationToolPath(self, p=0): return self._getOb(ID_NOTIFICATIONTOOL).absolute_url(p)
 
     security.declarePublic('getFolderMainParent')
     def getFolderMainParent(self, p_folder):
