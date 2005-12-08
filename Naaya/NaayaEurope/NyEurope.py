@@ -135,6 +135,7 @@ class NyEurope(SimpleItem, country_manager):
         """ """
         try: state = abs(int(state))
         except: state = DEFAULT_COUNTRY_STATE
+        if state not in COUNTRY_STATE.keys(): state = DEFAULT_COUNTRY_STATE
         self.add_item(country, country, organisation, contact, state, url, host)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
@@ -146,6 +147,7 @@ class NyEurope(SimpleItem, country_manager):
         """ """
         try: state = abs(int(state))
         except: state = DEFAULT_COUNTRY_STATE
+        if state not in COUNTRY_STATE.keys(): state = DEFAULT_COUNTRY_STATE
         self.update_item(country, country, organisation, contact, state, url, host)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
