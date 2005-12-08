@@ -206,6 +206,16 @@ class utils:
         if len(values) == 0: return ''
         else: return '\r\n'.join(values)
 
+    def utConvertLinesToList(self, value):
+        """Takes a value from a textarea control and returns a list of values"""
+        if type(value) == type([]): return value
+        elif value == '': return []
+        else:
+            values = []
+            for v in value.split('\r\n'):
+                if v != '': values.append(v)
+        return values
+
     def utListDifference(self, p_l1, p_l2):
         #return a list with elements from p_l1 that are not in p_l2
         return [l_e1 for l_e1 in p_l1 if l_e1 not in p_l2]

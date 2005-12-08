@@ -47,7 +47,7 @@ class EmailTool(Folder):
     """ """
 
     meta_type = METATYPE_EMAILTOOL
-    icon = 'misc_/NaayaCore/email.gif'
+    icon = 'misc_/NaayaCore/EmailTool.gif'
 
     manage_options = (
         Folder.manage_options[:1]
