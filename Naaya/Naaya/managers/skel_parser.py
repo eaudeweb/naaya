@@ -40,6 +40,7 @@ class skel_struct:
         self.properties = None
         self.emails = None
         self.security = None
+        self.notification = None
         self.others = None
 
 class forms_struct:
@@ -227,6 +228,27 @@ class role_struct:
         self.grouppermissions = grouppermissions
         self.permissions = permissions
 
+class notification_struct:
+    def __init__(self):
+        self.newsmetatypes = []
+        self.uploadmetatypes = []
+        self.foldermetatypes = []
+
+class newsmetatype_struct:
+    def __init__(self, meta_type, action):
+        self.meta_type = meta_type
+        self.action = action
+
+class uploadmetatype_struct:
+    def __init__(self, meta_type, action):
+        self.meta_type = meta_type
+        self.action = action
+
+class foldermetatype_struct:
+    def __init__(self, meta_type, action):
+        self.meta_type = meta_type
+        self.action = action
+
 class others_struct:
     def __init__(self):
         self.favicon = None
@@ -375,6 +397,22 @@ class skel_handler(ContentHandler):
             obj = role_struct(attrs['name'].encode('utf-8'), attrs['grouppermissions'].encode('utf-8').split(','), attrs['permissions'].encode('utf-8').split(','))
             stackObj = saxstack_struct('role', obj)
             self.stack.append(stackObj)
+        elif name == 'notification':
+            obj = notification_struct()
+            stackObj = saxstack_struct('notification', obj)
+            self.stack.append(stackObj)
+        elif name == 'newsmetatype':
+            obj = newsmetatype_struct(attrs['meta_type'].encode('utf-8'), attrs['action'].encode('utf-8'))
+            stackObj = saxstack_struct('newsmetatype', obj)
+            self.stack.append(stackObj)
+        elif name == 'uploadmetatype':
+            obj = uploadmetatype_struct(attrs['meta_type'].encode('utf-8'), attrs['action'].encode('utf-8'))
+            stackObj = saxstack_struct('uploadmetatype', obj)
+            self.stack.append(stackObj)
+        elif name == 'foldermetatype':
+            obj = foldermetatype_struct(attrs['meta_type'].encode('utf-8'), attrs['action'].encode('utf-8'))
+            stackObj = saxstack_struct('foldermetatype', obj)
+            self.stack.append(stackObj)
         elif name == 'others':
             obj = others_struct()
             stackObj = saxstack_struct('others', obj)
@@ -483,6 +521,18 @@ class skel_handler(ContentHandler):
         elif name == 'role':
             self.stack[-2].obj.roles.append(self.stack[-1].obj)
             self.stack.pop()
+        elif name == 'notification':
+            self.stack[-2].obj.notification = self.stack[-1].obj
+            self.stack.pop()
+        elif name == 'newsmetatype':
+            self.stack[-2].obj.newsmetatypes.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'uploadmetatype':
+            self.stack[-2].obj.uploadmetatypes.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'foldermetatype':
+            self.stack[-2].obj.foldermetatypes.append(self.stack[-1].obj)
+            self.stack.pop()
         elif name == 'others':
             self.stack[-2].obj.others = self.stack[-1].obj
             self.stack.pop()
@@ -513,8 +563,8 @@ class skel_parser:
         l_parser.setContentHandler(l_handler)
         l_inpsrc = InputSource()
         l_inpsrc.setByteStream(StringIO(p_content))
-        try:
-            l_parser.parse(l_inpsrc)
-            return (l_handler, '')
-        except Exception, error:
-            return (None, error)
+        #try:
+        l_parser.parse(l_inpsrc)
+        return (l_handler, '')
+        #except Exception, error:
+        #    return (None, error)
