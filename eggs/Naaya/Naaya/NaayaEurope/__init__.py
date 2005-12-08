@@ -40,4 +40,5 @@ def initialize(context):
 
 misc_ = {
     'NyEurope.gif':ImageFile('www/NyEurope.gif', globals()),
+    'europe.swf': ImageFile('www/europe.swf', globals()),
 }

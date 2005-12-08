@@ -94,16 +94,17 @@ class NyEurope(SimpleItem, country_manager):
         """
         Return the label associated with country state
         """
-        return COUNTRY_STATE.get(state, COUNTRY_STATE.get(0))
+        return COUNTRY_STATE.get(state, COUNTRY_STATE.get(DEFAULT_COUNTRY_STATE))
 
     #layer over selection lists
-    security.declarePublic('getCountriesList')
+    security.declarePublic('getEuropeCountriesList')
     def getEuropeCountriesList(self):
         """
         Return the selection list for Europe countries.
         """
         return self.getPortletsTool().getRefListById(ID_REFLIST).get_list()
 
+    security.declarePublic('getEuropeCountryTitle')
     def getEuropeCountryTitle(self, id):
         """
         Return the title of an item for the selection list for Europe countries.
@@ -114,30 +115,18 @@ class NyEurope(SimpleItem, country_manager):
             return ''
 
     #xml-rpc interface for the flash application
-    security.declarePublic('get_europe_countries')
-    def get_europe_countries(self):
+    security.declarePublic('get_flash_data')
+    def get_flash_data(self):
         """
-        Returns two lists, one with country codes and one with names.
+        Returns all the data needed by the flash application.
         """
         l = self.getEuropeCountriesList()
-        return [x.id for x in l], [x.title for x in l]
-
-    def get_europe_countries_in_network(self):
-        """
-        Returns a list with countries with a portal and in network.
-        """
-        pass
-
-    security.declarePublic('get_europe_country_info')
-    def get_europe_country_info(self, code):
-        """
-        Returns a list with country properties.
-        """
-        c = self.get_item(code)
-        if c is not None:
-            return [self.getEuropeCountryTitle(c.id), c.organisation, c.contact, c.url, c.host]
-        else:
-            return ['', '', '', '', '']
+        l1 = [x.id for x in l]
+        l2 = [x.title for x in l]
+        l3 = []
+        for c in self.get_list():
+            l3.append([c.id, self.getEuropeCountryTitle(c.id), c.organisation, c.contact, c.state, c.url, c.host])
+        return l1, l2, l3
 
     #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addcountry')
@@ -145,7 +134,7 @@ class NyEurope(SimpleItem, country_manager):
         url='', host='', REQUEST=None):
         """ """
         try: state = abs(int(state))
-        except: state = 0
+        except: state = DEFAULT_COUNTRY_STATE
         self.add_item(country, country, organisation, contact, state, url, host)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
@@ -156,7 +145,7 @@ class NyEurope(SimpleItem, country_manager):
         url='', host='', REQUEST=None):
         """ """
         try: state = abs(int(state))
-        except: state = 0
+        except: state = DEFAULT_COUNTRY_STATE
         self.update_item(country, country, organisation, contact, state, url, host)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
@@ -173,5 +162,9 @@ class NyEurope(SimpleItem, country_manager):
     #administration pages
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_countries_html')
     admin_countries_html= PageTemplateFile('zpt/europe_admin_countries', globals())
+
+    #site pages
+    security.declareProtected(view, 'index_html')
+    index_html= PageTemplateFile('zpt/europe_index', globals())
 
 InitializeClass(NyEurope)
