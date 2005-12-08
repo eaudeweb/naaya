@@ -98,7 +98,7 @@ class country_manager:
         if item is not None:
             return ['update', item.id, item.title, item.organisation, item.contact, item.state, item.url, item.host]
         else:
-            return ['add', '', '', '', '', 0, '', '']
+            return ['add', '', '', '', '', 1, '', '']
 
     def add_item(self, id, title, organisation, contact, state, url, host):
         #create a new item
