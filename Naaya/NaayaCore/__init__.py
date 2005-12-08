@@ -35,6 +35,7 @@ from DynamicPropertiesTool import DynamicPropertiesTool
 from PortletsTool import PortletsTool
 from FormsTool import FormsTool
 from LayoutTool import LayoutTool
+from NotificationTool import NotificationTool
 
 def initialize(context):
     """ """
@@ -118,6 +119,14 @@ def initialize(context):
                 ),
         icon = 'LayoutTool/www/LayoutTool.gif'
         )
+    context.registerClass(
+        NotificationTool.NotificationTool,
+        permission = PERMISSION_ADD_NAAYACORE_TOOL,
+        constructors = (
+                NotificationTool.manage_addNotificationTool,
+                ),
+        icon = 'NotificationTool/www/NotificationTool.gif'
+        )
 
 misc_ = {
     'PropertiesTool.gif':ImageFile('PropertiesTool/www/PropertiesTool.gif', globals()),
@@ -146,6 +155,7 @@ misc_ = {
     'Template.gif':ImageFile('LayoutTool/www/Template.gif', globals()),
     'Scheme.gif':ImageFile('LayoutTool/www/Scheme.gif', globals()),
     'Style.gif':ImageFile('LayoutTool/www/Style.gif', globals()),
+    'NotificationTool.gif':ImageFile('NotificationTool/www/NotificationTool.gif', globals()),
 
     'xml.png':ImageFile('SyndicationTool/www/xml.png', globals()),
 }
