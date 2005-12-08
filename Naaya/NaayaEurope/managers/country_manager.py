@@ -30,11 +30,12 @@ from AccessControl import ClassSecurityInfo
 class country_item:
     """ """
 
-    def __init__(self, id, title, organisation, contact, url, host):
+    def __init__(self, id, title, organisation, contact, state, url, host):
         self.id = id
         self.title = title
         self.organisation = organisation
         self.contact = contact
+        self.state = state
         self.url = url
         self.host = host
 
@@ -53,12 +54,12 @@ class country_manager:
     #security stuff
     security = ClassSecurityInfo()
 
-    def __add_item(self, id, title, organisation, contact, url, host):
+    def __add_item(self, id, title, organisation, contact, state, url, host):
         #create a new item
-        item = country_item(id, title, organisation, contact, url, host)
+        item = country_item(id, title, organisation, contact, state, url, host)
         self.__collection[id] = item
 
-    def __update_item(self, id, title, organisation, contact, url, host):
+    def __update_item(self, id, title, organisation, contact, state, url, host):
         #modify an item
         try:
             item = self.__collection[id]
@@ -68,6 +69,7 @@ class country_manager:
             item.title = title
             item.organisation = organisation
             item.contact = contact
+            item.state = state
             item.url = url
             item.host = host
 
@@ -94,18 +96,18 @@ class country_manager:
         #get an item data
         item = self.get_item(id)
         if item is not None:
-            return ['update', item.id, item.title, item.organisation, item.contact, item.url, item.host]
+            return ['update', item.id, item.title, item.organisation, item.contact, item.state, item.url, item.host]
         else:
-            return ['add', '', '', '', '', '', '']
+            return ['add', '', '', '', '', 0, '', '']
 
-    def add_item(self, id, title, organisation, contact, url, host):
+    def add_item(self, id, title, organisation, contact, state, url, host):
         #create a new item
-        self.__add_item(id, title, organisation, contact, url, host)
+        self.__add_item(id, title, organisation, contact, state, url, host)
         self._p_changed = 1
 
-    def update_item(self, id, title, organisation, contact, url, host):
+    def update_item(self, id, title, organisation, contact, state, url, host):
         #modify an item
-        self.__update_item(id, title, organisation, contact, url, host)
+        self.__update_item(id, title, organisation, contact, state, url, host)
         self._p_changed = 1
 
     def delete_item(self, ids):

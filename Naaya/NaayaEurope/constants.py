@@ -32,7 +32,14 @@ PERMISSION_ADD_EUROPE = 'Add Naaya Europe'
 METATYPE_NYEUROPE = 'Naaya Europe'
 
 ID_NYEUROPE = 'portal_europe'
-TITLE_NYEUROPE = 'Portal Europe'
+TITLE_NYEUROPE = 'Countries map'
 
 ID_REFLIST = 'europe'
 TITLE_REFLIST = 'Europe countries'
+
+COUNTRY_STATE = {
+    0: 'Other European countries',
+    1: 'EEA memeber and associated country',
+    2: 'Countries collaborating in other ways',
+    3: 'Countries using the CHM portal toolkit'
+}
