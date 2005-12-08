@@ -81,6 +81,21 @@ class NyEurope(SimpleItem, country_manager):
         try: self.getPortletsTool()._delObject(ID_REFLIST)
         except: pass
 
+    #api
+    security.declarePublic('getEuropeCountryStateList')
+    def getEuropeCountryStateList(self):
+        """
+        Return a list with country state.
+        """
+        return COUNTRY_STATE
+
+    security.declarePublic('getEuropeCountryState')
+    def getEuropeCountryState(self, state):
+        """
+        Return the label associated with country state
+        """
+        return COUNTRY_STATE.get(state, COUNTRY_STATE.get(0))
+
     #layer over selection lists
     security.declarePublic('getCountriesList')
     def getEuropeCountriesList(self):
@@ -126,17 +141,23 @@ class NyEurope(SimpleItem, country_manager):
 
     #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addcountry')
-    def admin_addcountry(self, country='', organisation='', contact='', url='', host='', REQUEST=None):
+    def admin_addcountry(self, country='', organisation='', contact='', state='',
+        url='', host='', REQUEST=None):
         """ """
-        self.add_item(country, country, organisation, contact, url, host)
+        try: state = abs(int(state))
+        except: state = 0
+        self.add_item(country, country, organisation, contact, state, url, host)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_countries_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editcountry')
-    def admin_editcountry(self, country='', organisation='', contact='', url='', host='', REQUEST=None):
+    def admin_editcountry(self, country='', organisation='', contact='', state='',
+        url='', host='', REQUEST=None):
         """ """
-        self.update_item(country, country, organisation, contact, url, host)
+        try: state = abs(int(state))
+        except: state = 0
+        self.update_item(country, country, organisation, contact, state, url, host)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_countries_html' % self.absolute_url())
