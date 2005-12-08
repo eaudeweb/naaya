@@ -221,7 +221,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
         ra('<ev:enddate>%s</ev:enddate>' % self.utShowFullDateTimeHTML(self.end_date))
         ra('<ev:location>%s</ev:location>' % self.utXmlEncode(self.getLocalProperty('location', lang)))
         ra('<ev:organizer>%s</ev:organizer>' % self.utXmlEncode(self.getLocalProperty('host', lang)))
-        ra('<ev:type>%s</ev:type>' % self.utXmlEncode(self.getEventTypeTitle(self.event_type)))
+        ra('<ev:type>%s</ev:type>' % self.utXmlEncode(self.getPortalTranslations().translate('', self.getEventTypeTitle(self.event_type))))
         ra(self.syndicateThisFooter())
         return ''.join(r)
 
