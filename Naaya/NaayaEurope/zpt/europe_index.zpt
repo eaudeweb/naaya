@@ -1,0 +1,19 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 i18n:translate="" tal:content="here/title_or_id" />
+
+<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
+		codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0"
+		width="530" height="365" id="europe" align="middle">
+	<param name="allowScriptAccess" value="sameDomain" />
+	<param name="FlashVars" tal:attributes="value string:xmlrpcserver=${here/absolute_url}" />
+	<param name="movie" value="misc_/NaayaEurope/europe.swf" />
+	<param name="quality" value="high" />
+	<param name="bgcolor" value="#ffffff" />
+	<embed tal:attributes="src string:misc_/NaayaEurope/europe.swf?xmlrpcserver=${here/absolute_url}"
+		quality="high" bgcolor="#ffffff" width="530" height="365" name="europe" align="middle"
+		allowScriptAccess="sameDomain" type="application/x-shockwave-flash"
+		pluginspage="http://www.macromedia.com/go/getflashplayer"></embed>
+</object>
+
+<span tal:replace="structure here/standard_html_footer" />

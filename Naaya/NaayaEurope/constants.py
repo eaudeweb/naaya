@@ -37,8 +37,8 @@ TITLE_NYEUROPE = 'Countries map'
 ID_REFLIST = 'europe'
 TITLE_REFLIST = 'Europe countries'
 
+DEFAULT_COUNTRY_STATE = 1
 COUNTRY_STATE = {
-    0: 'Other European countries',
     1: 'EEA memeber and associated country',
     2: 'Countries collaborating in other ways',
     3: 'Countries using the CHM portal toolkit'
