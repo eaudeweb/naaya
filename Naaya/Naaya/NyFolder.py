@@ -102,7 +102,8 @@ def importNyFolder(self, param, id, attrs, content, properties, discussion, obje
         try: self.manage_delObjects([id])
         except: pass
     else:
-        if param in [0, 1]:
+        ob = self._getOb(id, None)
+        if param in [0, 1] or (param==2 and ob is None):
             if param == 1:
                 #delete the object if exists
                 try: self.manage_delObjects([id])
@@ -133,8 +134,6 @@ def importNyFolder(self, param, id, attrs, content, properties, discussion, obje
                     l_index.pt_edit(text=content, content_type='')
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
-        else:
-            ob = self._getOb(id)
         #go on and import sub objects
         for object in objects:
             ob.import_data(object)
@@ -222,7 +221,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         #exports all the Naaya content in XML format from this folder
         return self.export_this()
 
-    security.declarePrivate('export_this')
+    security.declarePublic('export_this')
     def export_this(self):
         r = []
         ra = r.append
@@ -237,6 +236,18 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         for x in self.getFolders():
             ra(x.export_this())
         ra('</ob>')
+        return ''.join(r)
+
+    security.declarePublic('export_this_withoutcontent')
+    def export_this_withoutcontent(self):
+        r = []
+        ra = r.append
+        ra(self.export_this_tag())
+        ra(self.export_this_body())
+        if self.publicinterface:
+            l_index = self._getOb('index', None)
+            if l_index is not None:
+                ra('<![CDATA[%s]]>' % l_index.document_src())
         return ''.join(r)
 
     security.declarePrivate('export_this_tag_custom')
