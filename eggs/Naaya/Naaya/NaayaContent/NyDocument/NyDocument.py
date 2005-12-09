@@ -105,7 +105,8 @@ def importNyDocument(self, param, id, attrs, content, properties, discussion, ob
         try: self.manage_delObjects([id])
         except: pass
     else:
-        if param in [0, 1]:
+        ob = self._getOb(id, None)
+        if param in [0, 1] or (param==2 and ob is None):
             if param == 1:
                 #delete the object if exists
                 try: self.manage_delObjects([id])
@@ -129,8 +130,6 @@ def importNyDocument(self, param, id, attrs, content, properties, discussion, ob
             ob.submitThis()
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
-        else:
-            ob = self._getOb(id)
         for object in objects:
             self.import_data_custom(ob, object)
 
