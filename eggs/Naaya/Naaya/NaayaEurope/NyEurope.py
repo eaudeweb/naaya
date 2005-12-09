@@ -125,7 +125,7 @@ class NyEurope(SimpleItem, country_manager):
         l2 = [x.title for x in l]
         l3 = []
         for c in self.get_list():
-            l3.append([c.id, self.getEuropeCountryTitle(c.id), c.organisation, c.contact, c.state, c.url, c.host])
+            l3.append([c.id, self.getEuropeCountryTitle(c.id), c.organisation, self.utNewlinetoBr(c.contact), c.state, c.url, c.host])
         return l1, l2, l3
 
     #administration actions
