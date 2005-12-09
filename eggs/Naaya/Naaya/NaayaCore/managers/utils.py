@@ -216,6 +216,12 @@ class utils:
                 if v != '': values.append(v)
         return values
 
+    def utNewlinetoBr(self, p_string):
+        #convert new lines to <br /> for html display
+        if p_string.find('\r') >= 0: p_string = ''.join(p_string.split('\r'))
+        if p_string.find('\n') >= 0: p_string = '<br />'.join(p_string.split('\n'))
+        return p_string
+
     def utListDifference(self, p_l1, p_l2):
         #return a list with elements from p_l1 that are not in p_l2
         return [l_e1 for l_e1 in p_l1 if l_e1 not in p_l2]
