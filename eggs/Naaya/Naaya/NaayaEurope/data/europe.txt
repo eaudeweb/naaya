@@ -41,7 +41,7 @@ sk	Slovakia
 sl	Slovenia
 es	Spain
 se	Sweden
-yu	Serbia &amp; Montenegro (ex-Yugoslavia)
+yu	Serbia & Montenegro (ex-Yugoslavia)
 sj	Svalbard and Jan Mayen Islands
 ch	Switzerland
 tr	Turkey

@@ -6,7 +6,9 @@
 	tal:define="ob_id python:request.get('id', '');
 				ob_data python:here.get_item_data(ob_id)">
 <p i18n:translate="">
-	bla bla bla
+	Choose the countries from Europe from the list below and define how these will be displayed on the map.
+	Those using the CHM portal toolkit and the ones which collaborate in other ways will be clickable on the
+	map and the related information will be displayed next to them.
 </p>
 <form method="post" tal:attributes="action string:${here/absolute_url}/admin_deletecountry">
 <table border="0" cellspacing="1" cellpadding="1">
