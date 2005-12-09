@@ -66,7 +66,7 @@ class comment_item(utils):
     security = ClassSecurityInfo()
     security.setDefaultAccess("allow")
 
-    security.declarePrivate('export_this')
+    security.declarePublic('export_this')
     def export_this(self):
         """
         Exports object into Naaya XML format.

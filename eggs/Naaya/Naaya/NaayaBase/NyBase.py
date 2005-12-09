@@ -202,7 +202,7 @@ class NyBase:
         return ''.join(r)
 
     #Handlers for export in xml format
-    security.declarePrivate('export_this')
+    security.declarePublic('export_this')
     def export_this(self):
         """
         Exports an object into Naaya XML format.
