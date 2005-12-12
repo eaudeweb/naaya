@@ -68,6 +68,18 @@
 			text-decoration: none;
 		}
 
+		.right_link_portlet .portlet-title a {
+			color: #FF944C;
+			text-decoration:  none; 
+			font-size: 105%;
+		}
+		.right_link_portlet .portlet-title a:hover {
+
+		}
+		.right_link_portlet .portlet-title a:visited {
+			color: #FF944C;
+		}
+
 	/* errors and messages box */
 	.system-msg {
 		border: 1px solid black;
