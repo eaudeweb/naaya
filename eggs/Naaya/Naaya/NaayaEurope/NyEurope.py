@@ -25,6 +25,7 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.SimpleItem import SimpleItem
+from OFS.PropertyManager import PropertyManager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Product imports
@@ -40,13 +41,15 @@ def manage_addNyEurope(self, REQUEST=None):
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
-class NyEurope(SimpleItem, country_manager):
+class NyEurope(SimpleItem, PropertyManager, country_manager):
     """ """
 
     meta_type = METATYPE_NYEUROPE
     icon = 'misc_/NaayaEurope/NyEurope.gif'
 
     manage_options = (
+        PropertyManager.manage_options
+        +
         SimpleItem.manage_options
     )
 

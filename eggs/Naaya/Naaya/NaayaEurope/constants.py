@@ -32,7 +32,7 @@ PERMISSION_ADD_EUROPE = 'Add Naaya Europe'
 METATYPE_NYEUROPE = 'Naaya Europe'
 
 ID_NYEUROPE = 'portal_europe'
-TITLE_NYEUROPE = 'Countries map'
+TITLE_NYEUROPE = 'CHM collaborating countries'
 
 ID_REFLIST = 'europe'
 TITLE_REFLIST = 'Europe countries'
