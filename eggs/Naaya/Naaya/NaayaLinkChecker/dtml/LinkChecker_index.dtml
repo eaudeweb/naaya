@@ -14,6 +14,7 @@
     </dtml-if>
 </dtml-in>
 
+<dtml-if "_.len(links_list)">
 <dtml-call "REQUEST.set('row_type', 'cellodd')">
 <table border="0" width="100%" cellpadding="0" cellspacing="2">
     <tr>
@@ -47,6 +48,9 @@
     </dtml-let>
 </dtml-in>
 </table>
+<dtml-else>
+	<strong>No broken links were found.</strong>
+</dtml-if>
 
 <dtml-comment>
     Previous-Next stuff
