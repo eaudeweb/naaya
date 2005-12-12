@@ -68,18 +68,6 @@
 			text-decoration: none;
 		}
 
-		.right_link_portlet .portlet-title a {
-			color: white;
-			text-decoration:  none; 
-			font-size: 105%;
-		}
-		.right_link_portlet .portlet-title a:hover {
-
-		}
-		.right_link_portlet .portlet-title a:visited {
-			color: white;
-		}
-
 	/* errors and messages box */
 	.system-msg {
 		border: 1px solid black;
@@ -187,13 +175,19 @@
 			top:1px;
 		}
 
+	div.folderfile_container {
+		margin-right:200px;
+	}
+
 	table#folderfile_list{
+	/*
 	<tal:block tal:condition="python: len(here.get_right_portlets_locations_objects(here)) > 0">
 		width: 79%;
 	</tal:block>
 	<tal:block tal:condition="python: len(here.get_right_portlets_locations_objects(here)) == 0">
 		width: 100%;
 	</tal:block>
+	*/
 	}
 
 	#folderfile_list th{
