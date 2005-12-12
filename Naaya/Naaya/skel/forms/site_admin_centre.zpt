@@ -7,8 +7,6 @@
 
 	<p><strong>All administration functionalities are available from the right-side menu.</strong></p>
 
-	<p>Guidance on how to use the functionalities can be found in the <a href="admin_documentation_html">documentation</a> section. </p>
-
 	<p><img src="misc_/Naaya/admin_schema" border="0" alt="Overview of the administrative functionality" i18n:attributes="alt" /></p>
 </tal:block>
 

@@ -54,6 +54,7 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     """
     Create a Folder type of object.
     """
+    site = self.getSite()
     #process parameters
     id = self.utCleanupId(id)
     if not id: id = PREFIX_FOLDER + self.utGenRandomId(6)
@@ -67,7 +68,10 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     else:
         approved, approved_by = 0, None
     releasedate = self.process_releasedate(releasedate)
-    if folder_meta_types == '': folder_meta_types = self.adt_meta_types
+    if folder_meta_types == '':
+        #inherit allowd meta types from the parent
+        if self.meta_type == site.meta_type: folder_meta_types = self.adt_meta_types
+        else: folder_meta_types = self.folder_meta_types
     else: folder_meta_types = self.utConvertToList(folder_meta_types)
     if lang is None: lang = self.gl_get_selected_language()
     #create object
@@ -83,7 +87,7 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     ob.createPublicInterface()
     if discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
-    self.notifyFolderMaintainer(ob.getSite(), ob)
+    self.notifyFolderMaintainer(site, ob)
     #redirect if case
     if REQUEST is not None:
         referer = REQUEST['HTTP_REFERER'].split('/')[-1]
