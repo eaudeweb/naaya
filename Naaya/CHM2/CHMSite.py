@@ -79,6 +79,7 @@ class CHMSite(NySite):
         NySite.__dict__['loadDefaultData'](self)
         self.loadSkeleton(join(CHM2_PRODUCT_PATH, 'skel'))
         manage_addNyPhotoFolder(self, ID_PHOTOARCHIVE, TITLE_PHOTOARCHIVE)
+        self._getOb(ID_PHOTOARCHIVE).approveThis()
         #create and configure LinkChecker instance
         manage_addLinkChecker(self, ID_LINKCHECKER, TITLE_LINKCHECKER)
         linkchecker_ob = self._getOb(ID_LINKCHECKER)
