@@ -36,7 +36,7 @@ class LogEntry(SimpleItem, UtilsManager):
     """LogEntry class"""
 
     meta_type = 'LogEntry'
-    icon = 'misc_/LinkChecker/logentry'
+    icon = 'misc_/NaayaLinkChecker/logentry'
 
     manage_options = (
         {'label': 'View', 'action': 'index_html',},)
