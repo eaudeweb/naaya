@@ -1516,7 +1516,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updateremotechannel')
     def admin_updateremotechannel(self, id='', REQUEST=None):
         """ """
-        res = self.getSyndicationTool().get_channel(id).updateChannel()
+        res = self.getSyndicationTool().get_channel(id).updateChannel(self.get_site_uid())
         if REQUEST:
             if res == '':
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
@@ -2025,7 +2025,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """
         if uid==self.get_site_uid():
             for l_channel in self.getSyndicationTool().get_remote_channels():
-                l_channel.updateChannel()
+                l_channel.updateChannel(uid)
             return "Update Remote Channels ended successfully on site %s" % self.absolute_url()
 
     def cleanupUnsubmittedObjects(self, uid):
