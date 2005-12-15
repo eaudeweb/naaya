@@ -5,7 +5,7 @@
 	RDF channel update.
 </p>
 
-<tal:block tal:define="res_update python:here.updateChannel()">
+<tal:block tal:define="res_update python:here.updateChannel(here.getSite().get_site_uid())">
 <p class="form-help" tal:condition="python:res_update==''">
 	Channel successfully updated.
 </p>
