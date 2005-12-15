@@ -93,6 +93,14 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
         if self.numbershownitems > 0: return l[:self.numbershownitems]
         else: return l
 
+    def updateChannel(self, uid):
+        """ """
+        if uid==self.get_site_uid():
+            self.harvest_feed()
+            if self.get_feed_bozo_exception() is not None: error = self.get_feed_bozo_exception()
+            else: error = ''
+            return str(error)
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', url='', numbershownitems='', REQUEST=None):
@@ -105,13 +113,6 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
         self._p_changed = 1
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_properties_html')
-
-    security.declareProtected(view_management_screens, 'updateChannel')
-    def updateChannel(self):
-        self.harvest_feed()
-        if self.get_feed_bozo_exception() is not None: error = self.get_feed_bozo_exception()
-        else: error = ''
-        return str(error)
 
     #zmi forms
     security.declareProtected(view_management_screens, 'manage_properties_html')
