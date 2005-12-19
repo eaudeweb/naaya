@@ -30,7 +30,7 @@ from AccessControl import ClassSecurityInfo
 class country_item:
     """ """
 
-    def __init__(self, id, title, organisation, contact, state, url, host):
+    def __init__(self, id, title, organisation, contact, state, url, host, cbd_url):
         self.id = id
         self.title = title
         self.organisation = organisation
@@ -38,6 +38,7 @@ class country_item:
         self.state = state
         self.url = url
         self.host = host
+        self.cbd_url = cbd_url
 
     security = ClassSecurityInfo()
     security.setDefaultAccess("allow")
@@ -54,12 +55,12 @@ class country_manager:
     #security stuff
     security = ClassSecurityInfo()
 
-    def __add_item(self, id, title, organisation, contact, state, url, host):
+    def __add_item(self, id, title, organisation, contact, state, url, host, cbd_url):
         #create a new item
-        item = country_item(id, title, organisation, contact, state, url, host)
+        item = country_item(id, title, organisation, contact, state, url, host, cbd_url)
         self.__collection[id] = item
 
-    def __update_item(self, id, title, organisation, contact, state, url, host):
+    def __update_item(self, id, title, organisation, contact, state, url, host, cbd_url):
         #modify an item
         try:
             item = self.__collection[id]
@@ -72,6 +73,7 @@ class country_manager:
             item.state = state
             item.url = url
             item.host = host
+            item.cbd_url = cbd_url
 
     def __delete_item(self, id):
         #delete an item
@@ -87,6 +89,12 @@ class country_manager:
         #get a list with all items
         return self.__collection.values()
 
+    def get_sorted_list(self):
+        #return a list with all items sorted by title ascendent
+        l = [(self.getEuropeCountryTitle(x.id), x) for x in self.__collection.values()]
+        l.sort()
+        return [x[1] for x in l]
+
     def get_item(self, id):
         #get an item
         try: return self.__collection[id]
@@ -96,18 +104,18 @@ class country_manager:
         #get an item data
         item = self.get_item(id)
         if item is not None:
-            return ['update', item.id, item.title, item.organisation, item.contact, item.state, item.url, item.host]
+            return ['update', item.id, item.title, item.organisation, item.contact, item.state, item.url, item.host, item.cbd_url]
         else:
-            return ['add', '', '', '', '', 1, '', '']
+            return ['add', '', '', '', '', 1, '', '', '']
 
-    def add_item(self, id, title, organisation, contact, state, url, host):
+    def add_item(self, id, title, organisation, contact, state, url, host, cbd_url):
         #create a new item
-        self.__add_item(id, title, organisation, contact, state, url, host)
+        self.__add_item(id, title, organisation, contact, state, url, host, cbd_url)
         self._p_changed = 1
 
-    def update_item(self, id, title, organisation, contact, state, url, host):
+    def update_item(self, id, title, organisation, contact, state, url, host, cbd_url):
         #modify an item
-        self.__update_item(id, title, organisation, contact, state, url, host)
+        self.__update_item(id, title, organisation, contact, state, url, host, cbd_url)
         self._p_changed = 1
 
     def delete_item(self, ids):
