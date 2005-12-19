@@ -29,16 +29,16 @@
 <div id="banner_logo">
 	<div id="banner">
 	<div id="logo">
-		<img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif; alt string:${here/site_title} logo" i18n:attributes="alt" />
+		<img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif; alt string:${here/site_title}" />
 	</div>
 		<div id="banner_image">
 			<img tal:attributes="src string:${here/getLayoutToolPath}/logobis; alt string:${here/site_title} secondary logo" />
 		</div>
 		<div id="site-title">
-			<div id="title_content" tal:content="here/site_title" i18n:translate="" />
+			<div id="title_content" tal:content="here/site_title" />
 		</div>
 		<div id="site-subtitle">
-			<div id="subtitle_content" tal:content="here/site_subtitle" i18n:translate="" />
+			<div id="subtitle_content" tal:content="here/site_subtitle" />
 		</div>
 	</div>
 </div>
