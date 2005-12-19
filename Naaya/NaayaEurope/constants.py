@@ -39,7 +39,7 @@ TITLE_REFLIST = 'Europe countries'
 
 DEFAULT_COUNTRY_STATE = 1
 COUNTRY_STATE = {
-    1: 'EEA member and associated country',
+    1: 'CHM European network',
     2: 'Countries collaborating in other ways',
     3: 'Countries using the CHM portal toolkit'
 }

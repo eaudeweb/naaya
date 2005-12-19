@@ -15,20 +15,14 @@
 	<tr>
 		<th width="1%"></th>
 		<th i18n:translate="">Name</th>
-		<th i18n:translate="">Organisation</th>
-		<th i18n:translate="">Contact</th>
-		<th i18n:translate="">URL</th>
 		<th i18n:translate="">Hosted at</th>
-		<th i18n:translate="">State</th>
+		<th i18n:translate="">URL</th>
 	</tr>
-	<tr tal:repeat="country here/get_list">
+	<tr tal:repeat="country here/get_sorted_list">
 		<td valign="top"><input type="checkbox" name="ids" tal:attributes="value country/id" /></td>
 		<td valign="top"><a tal:attributes="href string:${here/absolute_url}/admin_countries_html?id=${country/id}" tal:content="python:here.getEuropeCountryTitle(country.id)" i18n:translate="" /></td>
-		<td valign="top" tal:content="country/organisation" />
-		<td valign="top" tal:content="country/contact" />
-		<td valign="top"><a tal:attributes="href country/url" tal:content="country/url" /></td>
 		<td valign="top" tal:content="country/host" />
-		<td valign="top" tal:content="python:here.getEuropeCountryState(country.state)" />
+		<td valign="top"><a tal:attributes="href country/url" tal:content="country/url" /></td>
 	</tr>
 	<tr><td></td><td><input type="submit" value="Delete" i18n:attributes="value" /></td></tr>
 </table>
@@ -78,6 +72,10 @@
 		<tr>
 			<td i18n:translate="">Hosted at</td>
 			<td><input type="text" name="host" size="50" tal:attributes="value python:ob_data[7]" /></td>
+		</tr>
+		<tr>
+			<td i18n:translate="">Link to CBD</td>
+			<td><input type="text" name="cbd_url" size="50" tal:attributes="value python:ob_data[8]" /></td>
 		</tr>
 		<tr>
 			<td></td>

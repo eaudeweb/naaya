@@ -128,30 +128,30 @@ class NyEurope(SimpleItem, PropertyManager, country_manager):
         l2 = [x.title for x in l]
         l3 = []
         for c in self.get_list():
-            l3.append([c.id, self.getEuropeCountryTitle(c.id), c.organisation, self.utNewlinetoBr(c.contact), c.state, c.url, c.host])
+            l3.append([c.id, self.getEuropeCountryTitle(c.id), c.organisation, self.utNewlinetoBr(c.contact), c.state, c.url, c.host, c.cbd_url])
         return l1, l2, l3
 
     #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addcountry')
     def admin_addcountry(self, country='', organisation='', contact='', state='',
-        url='', host='', REQUEST=None):
+        url='', host='', cbd_url='', REQUEST=None):
         """ """
         try: state = abs(int(state))
         except: state = DEFAULT_COUNTRY_STATE
         if state not in COUNTRY_STATE.keys(): state = DEFAULT_COUNTRY_STATE
-        self.add_item(country, country, organisation, contact, state, url, host)
+        self.add_item(country, country, organisation, contact, state, url, host, cbd_url)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_countries_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editcountry')
     def admin_editcountry(self, country='', organisation='', contact='', state='',
-        url='', host='', REQUEST=None):
+        url='', host='', cbd_url='', REQUEST=None):
         """ """
         try: state = abs(int(state))
         except: state = DEFAULT_COUNTRY_STATE
         if state not in COUNTRY_STATE.keys(): state = DEFAULT_COUNTRY_STATE
-        self.update_item(country, country, organisation, contact, state, url, host)
+        self.update_item(country, country, organisation, contact, state, url, host, cbd_url)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_countries_html' % self.absolute_url())
@@ -171,5 +171,15 @@ class NyEurope(SimpleItem, PropertyManager, country_manager):
     #site pages
     security.declareProtected(view, 'index_html')
     index_html= PageTemplateFile('zpt/europe_index', globals())
+
+    #update scripts
+    security.declareProtected(view_management_screens, 'add_cbd_url')
+    def add_cbd_url(self):
+        """
+        New property for each country object.
+        """
+        for item in self.get_list():
+            item.cbd_url = ''
+        self._p_changed = 1
 
 InitializeClass(NyEurope)
