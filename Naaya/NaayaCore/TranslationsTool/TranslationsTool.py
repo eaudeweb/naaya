@@ -32,6 +32,7 @@ Every portal B{must} have an object of this type inside.
 import base64
 import re
 from urllib import quote
+import locale
 
 #Zope imports
 from Globals import InitializeClass
@@ -128,7 +129,11 @@ class TranslationsTool(MessageCatalog):
                     i = i + 1
                 msgs_append(tuple(e))
         t = [(x[skey], x) for x in msgs]
-        t.sort()
+        default_locale = locale.setlocale(locale.LC_ALL)
+        try: locale.setlocale(locale.LC_ALL, 'en')
+        except: locale.setlocale(locale.LC_ALL, 'en_EN')
+        t.sort(lambda x, y: locale.strcoll(x[0], y[0]))
+        locale.setlocale(locale.LC_ALL, default_locale)
         if rkey: t.reverse()
         msgs = [val for (key, val) in t]
         return msgs
