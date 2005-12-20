@@ -48,11 +48,8 @@ Manage the list of possible languages in which glossary terms can be translated.
 					<td tal:attributes='class python:test(path("repeat/item/odd"), "cellodd", "celleven")' width="1%">
 						<input type="checkbox" name="ids"  tal:attributes="value python:item['lang']" />
 					</td>
-					<td tal:attributes='class python:test(path("repeat/item/odd"), "cellodd", "celleven")'>
-						<a class="itemlink" tal:content=" python:item['english_name']"
-											tal:define="item_lang  python:item['lang']"
-											tal:attributes="href string:languages_html?code=${item_lang}" />
-					</td>
+					<td tal:attributes='class python:test(path("repeat/item/odd"), "cellodd", "celleven")'
+						tal:content=" python:item['english_name']" />
 					<td tal:attributes='class python:test(path("repeat/item/odd"), "cellodd", "celleven")'
 						tal:content=" python:item['lang']" />
 					<td tal:attributes='class python:test(path("repeat/item/odd"), "cellodd", "celleven")'>&nbsp;</td>

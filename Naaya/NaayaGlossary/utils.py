@@ -272,11 +272,6 @@ class catalog_utils:
         catalog = self.getGlossaryCatalog()
         return catalog.index_objects()
 
-    def cu_reindexCatalogIndex(self, name, REQUEST):
-        """ reindex an index from ZCatalog """
-        catalog = self.getGlossaryCatalog()
-        catalog.reindexIndex(name, REQUEST)
-
     def cu_get_cataloged_objects(self, meta_type=None, approved=0, howmany=-1, sort_on='bobobase_modification_time', 
         sort_order='reverse', path=''):
         """ return objects from catalog """
