@@ -392,6 +392,23 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 ret = 0
         return ret
 
+    def updateObjectsByLang(self, language):
+        """ update objects when a new language is added """
+        for l_folder in self.objectValues(NAAYAGLOSSARY_FOLDER_METATYPE):
+            try:
+                trans = getattr(l_folder, language)
+                if trans: self.cu_recatalog_object(l_folder)
+            except:
+                setattr(l_folder, language, '')
+
+            for l_element in l_folder.objectValues(NAAYAGLOSSARY_ELEMENT_METATYPE):
+                try:
+                    trans = getattr(l_element, language)
+                    if trans: self.cu_recatalog_object(l_element)
+                except:
+                    setattr(l_element, language, '')
+        return 'done'
+
     def manageLanguagesProperties(self, ids='', lang='', english_name='', old_english_name='', REQUEST=None):
         """ manage languages for NyGlossary """
         if self.utAddObjectAction(REQUEST):
@@ -400,16 +417,19 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             else:
                 if self.check_language_exists(english_name):
                     self.set_languages_list(lang, english_name)
+                    self.updateObjectsByLang(english_name)
+
+                    try:
+                        catalog_obj = self.getGlossaryCatalog()
+                        index_extra = record()
+                        index_extra.default_encoding = 'utf-8'
+                        try:    catalog_obj.manage_addIndex(english_name, 'TextIndexNG2',index_extra)
+                        except: pass
+                    except: pass
+
                     self._p_changed = 1
                 else:
                     return REQUEST.RESPONSE.redirect('languages_html')
-        elif self.utUpdateObjectAction(REQUEST):
-            if string.strip(lang)=='' or string.strip(english_name)=='':
-                return REQUEST.RESPONSE.redirect('languages_html')
-            else:
-                self.del_language_from_list(old_english_name)
-                self.set_languages_list(lang, english_name)
-                self._p_changed = 1
         elif self.utDeleteObjectAction(REQUEST):
             if not ids or len(ids) == 0:
                 return REQUEST.RESPONSE.redirect('languages_html')
@@ -466,16 +486,6 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     def get_all_elements(self):
         """ return sorted objects by name """
         return self.cu_get_cataloged_objects(meta_type=[NAAYAGLOSSARY_ELEMENT_METATYPE,], sort_on='id', sort_order='')
-
-    def reindexCatalog(self, REQUEST=None):
-        """ reindex the catalog """
-        try:
-            indexes = self.cu_getIndexes()
-            for index in indexes:
-                self.cu_reindexCatalogIndex(index.id, REQUEST)
-            return 1
-        except:
-            return 0
 
     def xliff_import(self, file, REQUEST=None):
         """ XLIFF is the XML Localization Interchange File Format
