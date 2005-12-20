@@ -300,6 +300,10 @@ class utils:
         """Encode a string using html_quote"""
         return html_quote(p_string)
 
+    def utUrlEncode(self, p_string):
+        """Encode a string using url_quote"""
+        return url_quote(p_string)
+
     def utToUtf8(self, p_string):
         #convert to utf-8
         if isinstance(p_string, unicode): return p_string.encode('utf-8')
