@@ -137,12 +137,14 @@ class CHMSite(NySite):
             except: pass
         for gloss in self.objectValues(NAAYAGLOSSARY_CENTRE_METATYPE):
             try:
-                catalog_obj = gloss._getOb(NAAYAGLOSSARY_CATALOG_NAME)
+                language_name = self.gl_get_language_name(language)
+                catalog_obj = gloss.getGlossaryCatalog()
                 index_extra = record()
                 index_extra.default_encoding = 'utf-8'
-                try:    catalog_obj.manage_addIndex(self.gl_get_language_name(language), 'TextIndexNG2',index_extra)
+                try:    catalog_obj.manage_addIndex(language_name, 'TextIndexNG2',index_extra)
                 except:    pass
-                gloss.set_languages_list(language, self.gl_get_language_name(language))
+                gloss.set_languages_list(language, language_name)
+                gloss.updateObjectsByLang(language_name)
                 gloss._p_changed = 1
             except: pass
 
