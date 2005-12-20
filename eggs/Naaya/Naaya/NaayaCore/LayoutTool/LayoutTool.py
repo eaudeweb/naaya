@@ -92,7 +92,8 @@ class LayoutTool(Folder, combosync_tool):
     def getSkinsList(self): return self.objectValues(METATYPE_SKIN)
     def getCurrentSkinId(self): return self.__current_skin_id
     def getCurrentSkinSchemeId(self): return self.__current_skin_scheme_id
-    def getCurrentSkin(self): return self._getOb(self.getCurrentSkinId())
+    def getCurrentSkin(self): return self._getOb(self.__current_skin_id)
+    def getCurrentSkinScheme(self): return self._getOb(self.__current_skin_id)._getOb(self.__current_skin_scheme_id)
     def getCurrentSkinSchemes(self):
         try: return self._getOb(self.getCurrentSkinId()).getSchemes()
         except: return []
