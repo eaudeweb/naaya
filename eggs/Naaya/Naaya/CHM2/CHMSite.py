@@ -26,6 +26,7 @@ from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
+from ZPublisher.HTTPRequest import record
 
 #Product imports
 from constants import *
@@ -146,7 +147,8 @@ class CHMSite(NySite):
                 gloss.set_languages_list(language, language_name)
                 gloss.updateObjectsByLang(language_name)
                 gloss._p_changed = 1
-            except: pass
+            except:
+                pass
 
     def gl_del_site_languages_custom(self, languages):
         #this is called to handle other types of multilanguage objects
