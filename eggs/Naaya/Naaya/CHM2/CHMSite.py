@@ -420,4 +420,46 @@ class CHMSite(NySite):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_urlmap')
 
+    #update scripts
+    security.declareProtected(view_management_screens, 'fix_selection_lists')
+    def fix_selection_lists(self, REQUEST=None):
+        """ """
+        from Products.Naaya.managers.skel_parser import skel_parser
+        #remove absolete eventtypes property
+        try:
+            delattr(self, '_events_tool__eventtypes')
+            self._p_changed = 1
+        except:
+            pass
+        #reload Naaya Event pluggable type
+        self.manage_uninstall_pluggableitem(meta_type=METATYPE_NYEVENT)
+        self.manage_install_pluggableitem(meta_type=METATYPE_NYEVENT)
+        #reload administration portlet
+        self.getPortletsTool()._getOb('portlet_administration').pt_edit(text=self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'portlets', 'portlet_administration.zpt'), 'r'), content_type='')
+        #load data
+        for x in [NAAYA_PRODUCT_PATH, CHM2_PRODUCT_PATH]:
+            skel_handler, error = skel_parser().parse(self.futRead(join(x, 'skel', 'skel.xml'), 'r'))
+            if skel_handler is not None:
+                formstool_ob = self.getFormsTool()
+                portletstool_ob = self.getPortletsTool()
+                if skel_handler.root.forms is not None:
+                    for form in skel_handler.root.forms.forms:
+                        content = self.futRead(join(x, 'skel', 'forms', '%s.zpt' % form.id), 'r')
+                        form_ob = formstool_ob._getOb(form.id, None)
+                        if form_ob is None:
+                            formstool_ob.manage_addTemplate(id=form.id, title=form.title, file='')
+                            form_ob = formstool_ob._getOb(form.id, None)
+                        form_ob.pt_edit(text=content, content_type='')
+                if skel_handler.root.portlets is not None:
+                    for reflist in skel_handler.root.portlets.reflists:
+                        reflist_ob = portletstool_ob._getOb(reflist.id, None)
+                        if reflist_ob is None:
+                            portletstool_ob.manage_addRefList(reflist.id, reflist.title, reflist.description)
+                            reflist_ob = portletstool_ob._getOb(reflist.id)
+                        else:
+                            reflist_ob.manage_delete_items(reflist_ob.get_collection().keys())
+                        for item in reflist.items:
+                            reflist_ob.add_item(item.id, item.title)
+        return 'Script OK.'
+
 InitializeClass(CHMSite)
