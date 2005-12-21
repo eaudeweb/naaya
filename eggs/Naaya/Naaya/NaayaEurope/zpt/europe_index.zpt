@@ -2,6 +2,8 @@
 
 <h1 i18n:translate="" tal:content="here/title_or_id" />
 
+<p i18n:translate="">The map below was created using Macromedia Flash 8. If you do not see it properly install the latest plugin from the <a href="http://www.macromedia.com/go/getflashplayer">Macromedia site</a>.</p>
+
 <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
 		codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0"
 		width="530" height="365" id="europe" align="middle">
