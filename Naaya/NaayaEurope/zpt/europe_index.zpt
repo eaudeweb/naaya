@@ -7,15 +7,23 @@
 <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"
 		codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0"
 		width="530" height="365" id="europe" align="middle">
-	<param name="allowScriptAccess" value="sameDomain" />
 	<param name="FlashVars" tal:attributes="value string:xmlrpcserver=${here/absolute_url}" />
 	<param name="movie" value="misc_/NaayaEurope/europe.swf" />
 	<param name="quality" value="high" />
 	<param name="bgcolor" value="#ffffff" />
-	<embed tal:attributes="src string:misc_/NaayaEurope/europe.swf?xmlrpcserver=${here/absolute_url}"
-		quality="high" bgcolor="#ffffff" width="530" height="365" name="europe" align="middle"
-		allowScriptAccess="sameDomain" type="application/x-shockwave-flash"
-		pluginspage="http://www.macromedia.com/go/getflashplayer"></embed>
+
+    <object data="misc_/NaayaEurope/europe.swf"
+            width="530" height="365" type="application/x-shockwave-flash">
+		 <param name="FlashVars" tal:attributes="value string:xmlrpcserver=${here/absolute_url}" />
+		 <!--param name="movie" value="misc_/NaayaEurope/europe.swf" /-->
+		 <param name="quality" value="high" />
+		 <param name="bgcolor" value="#FFFFFF" />
+		 <param name="pluginurl" value="http://www.macromedia.com/go/getflashplayer" />
+		 <div i18n:translate="">In order to see the content of this page properly you must intall Flash Player.
+		 <a href="http://www.macromedia.com/go/getflashplayer">Get flash player from Macromedia site</a></div>
+	</object>
+
+
 </object>
 
 <span tal:replace="structure here/standard_html_footer" />
