@@ -131,7 +131,7 @@ class TranslationsTool(MessageCatalog):
         t = [(x[skey], x) for x in msgs]
         default_locale = locale.setlocale(locale.LC_ALL)
         try: locale.setlocale(locale.LC_ALL, 'en')
-        except: locale.setlocale(locale.LC_ALL, 'en_EN')
+        except: locale.setlocale(locale.LC_ALL, 'en_US')
         t.sort(lambda x, y: locale.strcoll(x[0], y[0]))
         locale.setlocale(locale.LC_ALL, default_locale)
         if rkey: t.reverse()
