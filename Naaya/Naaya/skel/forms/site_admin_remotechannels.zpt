@@ -48,7 +48,7 @@
 	</legend>
 	<form method="post" tal:attributes="action python:test(ob_data[0]=='add', '%s/admin_addremotechannel' % site_url, '%s/admin_editremotechannel' % site_url)">
 	<input type="hidden" name="id" tal:attributes="value python:ob_data[1]" />
-	<table border="0" cellspacing="2" cellpadding="2" width="100%">
+	<table border="0" cellspacing="2" cellpadding="2" width="90%">
 		<tr>
 			<td i18n:translate="">Title</td>
 			<td><input type="text" name="title" size="50" tal:attributes="value python:ob_data[2]" /></td>

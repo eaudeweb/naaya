@@ -21,7 +21,7 @@
 </p>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_metadata" style="clear:both;">
-<table border="0" cellspacing="2" cellpadding="2" width="100%">
+<table border="0" cellspacing="2" cellpadding="2" width="90%">
 <tr>
 	<td i18n:translate="">Site title</td>
 	<td><input type="text" name="site_title:utf8:ustring" tal:attributes="value python:here.getLocalProperty('title', curr_lang)" size="50" /></td>

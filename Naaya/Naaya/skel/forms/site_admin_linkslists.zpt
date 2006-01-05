@@ -21,7 +21,7 @@
 </form>
 <fieldset><legend i18n:translate="">Add new list of links</legend>
 <form method="post" tal:attributes="action string:${site_url}/admin_addlinkslist">
-<table border="0" cellspacing="2" cellpadding="2" width="100%">
+<table border="0" cellspacing="2" cellpadding="2" width="90%">
 	<tr>
 		<td i18n:translate="">Id</td>
 		<td><input type="text" name="id" value="" /></td>

@@ -11,9 +11,9 @@
 	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
 </ul>
 </div>
-
-<form method="post" tal:attributes="action string:${site_url}/admin_properties" style="clear:both;">
-<table border="0" cellspacing="2" cellpadding="2" width="100%">
+&nbsp;
+<form method="post" tal:attributes="action string:${site_url}/admin_properties">
+<table border="0" cellspacing="2" cellpadding="2" width="90%">
 <tr>
 	<td colspan="2" i18n:translate="">The front page usually displays portlets containing the latest news, events, etc. You can decide not to show their release date if, for instance, the items are too old and this would impact on the vitality of your portal.
 	</td>
@@ -72,7 +72,7 @@
 	By setting this parameter the URL will not change, but site administrators can
 	use this information.
 </p>
-<table border="0" cellspacing="2" cellpadding="2" width="100%">
+<table border="0" cellspacing="2" cellpadding="2" width="90%">
 <tr>
 	<td><strong><label for="portal_url" i18n:translate="">Portal URL</label></strong></td>
 	<td><input type="text" name="portal_url" id="portal_url" size="30" tal:attributes="value here/portal_url" /></td>

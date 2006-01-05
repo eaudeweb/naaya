@@ -117,7 +117,7 @@
                     list_result python:results[1]">
 
     <span tal:condition="python:paging_total != 0">
-    <table cellspacing="4" cellpadding="4" border="0" width="99%">
+    <table cellspacing="4" cellpadding="4" border="0" width="95%">
         <tr>
             <td><strong>Search Results</strong><br>
                 Age: <span tal:replace="python:here.external_get_items_age(list_result, age)"/>% are more then <span tal:replace="age"/> month(s) old -
@@ -136,7 +136,7 @@
             </td>
         </tr>
     </table>
-    <table border="0" cellspacing="0" cellpadding="2" width="99%">
+    <table border="0" cellspacing="0" cellpadding="2" width="95%">
         <tr>
             <td width="1%">Results</td>
             <td width="100%" nowrap><b tal:content="paging_start"/>&nbsp;-&nbsp;<b tal:content="paging_upper"/>&nbsp;of&nbsp;
