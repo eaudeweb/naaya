@@ -21,7 +21,7 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
-from os.path import join
+from os.path import join, isfile
 from urllib import quote
 
 #Zope imports
@@ -473,33 +473,54 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         #returns a list with all meta types
         return [x['name'] for x in self.filtered_meta_types()]
 
+    def get_data_path(self):
+        """
+        Returns the path to the data directory.
+        All classes that extends I{NySite} B{must} overwrite
+        this method.
+        """
+        return NAAYA_PRODUCT_PATH
+
     #objects getters
     security.declarePublic('getSite')
     def getSite(self): return self
+
     security.declarePublic('getPropertiesTool')
     def getPropertiesTool(self): return self._getOb(ID_PROPERTIESTOOL)
+
     security.declarePublic('getPortletsTool')
     def getPortletsTool(self): return self._getOb(ID_PORTLETSTOOL)
+
     security.declarePublic('getAuthenticationTool')
     def getAuthenticationTool(self): return self._getOb(ID_AUTHENTICATIONTOOL)
+
     security.declarePublic('getDynamicPropertiesTool')
     def getDynamicPropertiesTool(self): return self._getOb(ID_DYNAMICPROPERTIESTOOL)
+
     security.declarePublic('getCatalogTool')
     def getCatalogTool(self): return self._getOb(ID_CATALOGTOOL)
+
     security.declarePublic('getLayoutTool')
     def getLayoutTool(self): return self._getOb(ID_LAYOUTTOOL)
+
     security.declarePublic('getSyndicationTool')
     def getSyndicationTool(self): return self._getOb(ID_SYNDICATIONTOOL)
+
     security.declarePublic('getEmailTool')
     def getEmailTool(self): return self._getOb(ID_EMAILTOOL)
+
     security.declarePublic('getFormsTool')
     def getFormsTool(self): return self._getOb(ID_FORMSTOOL)
+
     security.declarePublic('getLocalizer')
     def getLocalizer(self): return self._getOb('Localizer')
+
     security.declarePublic('getPortalTranslations')
     def getPortalTranslations(self): return self._getOb(ID_TRANSLATIONSTOOL)
+
     security.declarePublic('getImagesFolder')
     def getImagesFolder(self): return self._getOb(ID_IMAGESFOLDER)
+
     security.declarePublic('getNotificationTool')
     def getNotificationTool(self): return self._getOb(ID_NOTIFICATIONTOOL)
 
@@ -1989,12 +2010,19 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(view_management_screens, 'manage_install_pluggableitem')
     def manage_install_pluggableitem(self, meta_type=None, REQUEST=None):
         """ """
+        data_path = join(self.get_data_path(), 'skel', 'forms')
         if meta_type is not None:
             pitem = self.get_pluggable_item(meta_type)
             #load pluggable item's data
             formstool_ob = self.getFormsTool()
             for frm in pitem['forms']:
-                content = self.futRead(join(NAAYACONTENT_PRODUCT_PATH, pitem['module'], 'zpt', '%s.zpt' % frm), 'r')
+                frm_name = '%s.zpt' % frm
+                if isfile(join(data_path, frm_name)):
+                    #load form from the 'forms' directory because it si customized
+                    content = self.futRead(join(data_path, frm_name), 'r')
+                else:
+                    #load form from the pluggable meta type folder
+                    content = self.futRead(join(NAAYACONTENT_PRODUCT_PATH, pitem['module'], 'zpt', frm_name), 'r')
                 formstool_ob.manage_addTemplate(id=frm, title='', file='')
                 formstool_ob._getOb(frm).pt_edit(text=content, content_type='text/html')
             #remember that this meta_type was installed
