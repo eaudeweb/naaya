@@ -13,7 +13,7 @@
 </p>
 <fieldset><legend i18n:translate="">Change the list title</legend>
 <form method="post" tal:attributes="action string:${site_url}/admin_editlinkslist">
-<table border="0" cellspacing="2" cellpadding="2" width="100%">
+<table border="0" cellspacing="2" cellpadding="2" width="90%">
 	<tr>
 		<td i18n:translate="">Title</td>
 		<td><input type="title" name="title" tal:attributes="value linkslist/title" /></td>
@@ -29,7 +29,7 @@
 <h2 i18n:translate="">Available links</h2>
 <p i18n:translate="">Click on a link title to edit its attributes.</p>
 <form method="post" tal:attributes="action string:${site_url}/admin_deletelinks">
-<table border="0" cellspacing="0" cellpadding="4" width="100%">
+<table border="0" cellspacing="0" cellpadding="4" width="90%">
 	<tr>
 		<th width="1%"></th>
 		<th width="10%" i18n:translate="">Title</th>
@@ -58,7 +58,7 @@
 <form method="post" tal:attributes="action python:test(record_data[0]=='add', '%s/admin_addlink' % site_url, '%s/admin_editlink' % site_url)">
 <fieldset><legend tal:condition="python:item==''" i18n:translate="">Add new link</legend>
 <legend tal:condition="python:item!=''" i18n:translate="">Edit link</legend>
-<table border="0" cellspacing="2" cellpadding="2" width="100%">
+<table border="0" cellspacing="2" cellpadding="2" width="90%">
 	<tr>
 		<td class="form-label" i18n:translate="">Title</td>
 		<td><input type="text" name="title" size="30" tal:attributes="value python:record_data[2]"></td>

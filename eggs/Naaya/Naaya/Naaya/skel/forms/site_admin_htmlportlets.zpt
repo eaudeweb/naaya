@@ -15,7 +15,7 @@
 	<li><a tal:attributes="href string:${site_url}/admin_folderportlets_html" i18n:translate="">For folders</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_linksportlets_html" i18n:translate="">List of links</a></li>
 	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_htmlportlets_html" i18n:translate="">Static HTML</a></li>
-	<li><a tal:attributes="href string:${site_url}/admin_specialportlets_html" i18n:translate="">System</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_specialportlets_html" i18n:translate="">Special</a></li>
 </ul>
 </div>
 <p i18n:translate="">
@@ -42,7 +42,7 @@
 	<legend i18n:translate="">Edit portlet</legend>
 	<form method="post" tal:attributes="action string:${site_url}/admin_edithtmlportlet">
 	<input type="hidden" name="id" tal:attributes="value ob_id" />
-	<table border="0" cellspacing="2" cellpadding="2" width="100%">
+	<table border="0" cellspacing="2" cellpadding="2" width="90%">
 		<tr>
 			<td i18n:translate="">Title</td>
 			<td><input type="text" name="title:utf8:ustring" size="50" tal:attributes="value python:ob.getLocalProperty('title', curr_lang)" /></td>

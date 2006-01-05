@@ -61,10 +61,10 @@
 		<span tal:condition="python:paging_next!=-1"><a tal:define="start python:(paging_current_page+1)*paging_records_page" tal:attributes="href string:${site_url}/admin_translations_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${query_string}" i18n:translate="">Next</a></span>
 	</div>
 </div>
-<table cellspacing="0" border="0" width="100%">
+<table cellspacing="0" border="0" width="95%">
 <thead>
 	<tr>
-		<th class="notsortable_th"></th>
+		<th class="notsortable_th">&nbsp;</th>
 		<tal:block tal:condition="python:skey=='msg'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="sort_asc_th">

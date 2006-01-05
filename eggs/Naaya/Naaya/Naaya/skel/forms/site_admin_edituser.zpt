@@ -28,7 +28,7 @@
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_edituser">
 <fieldset><legend i18n:translate="">Personal settings</legend>
-<table border="0" cellspacing="0" cellpadding="3" width="100%">
+<table border="0" cellspacing="0" cellpadding="3" width="90%">
 	<tr>
 		<td nowrap="nowrap" i18n:translate="">First name:</td>
 		<td><input type="text" name="firstname" size="35" maxLength="255"

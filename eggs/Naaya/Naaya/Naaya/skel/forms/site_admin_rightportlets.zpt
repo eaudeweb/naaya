@@ -148,7 +148,7 @@ function dosubmit()
 								expand_list python:here.splitToList(expand);
 								tree python:here.getSiteMap(expand_list, None, 0);
 								folder python:request.get('folder', '')">
-		<table border="0" cellspacing="1" cellpadding="1" width="100%">
+		<table border="0" cellspacing="1" cellpadding="1" width="90%">
 		<tr tal:repeat="tree_node tree">
 			<td>
 				<table border="0" cellspacing="1" cellpadding="1">
@@ -228,7 +228,7 @@ function dosubmit()
 	where right-side portlets have been defined. Click on a location to edit its list of right side portlets.
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_deleterightportlets">
-<table border="0" cellspacing="2" cellpadding="4" width="100%">
+<table border="0" cellspacing="2" cellpadding="4" width="90%">
 	<tr>
 		<th width="1%"></th>
 		<th width="60%" i18n:translate="">Location</th>
