@@ -105,6 +105,10 @@ class CHMSite(NySite):
         #add EC CHM to network portals list
         self.admin_addnetworkportal('EC CHM', 'http://biodiversity-chm.eea.eu.int/')
 
+    def get_data_path(self):
+        """ """
+        return CHM2_PRODUCT_PATH
+
     #objects getters
     def getLinkChecker(self): return self._getOb(ID_LINKCHECKER, None)
     def getLinkCheckerLastLog(self):
