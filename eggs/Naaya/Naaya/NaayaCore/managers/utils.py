@@ -197,7 +197,7 @@ class utils:
     def utConvertToList(self, something):
         """Convert to list"""
         ret = something
-        if type(something) is type(''):
+        if not isinstance(something, list):
             ret = [something]
         return ret
 
