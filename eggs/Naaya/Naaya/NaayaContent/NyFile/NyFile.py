@@ -416,4 +416,11 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.downloadfilename)
         return file_item.inheritedAttribute('index_html')(self, REQUEST, RESPONSE)
 
+    security.declareProtected(view, 'view')
+    def view(self, REQUEST, RESPONSE):
+        """ """
+        self.REQUEST.RESPONSE.setHeader('Content-Type', self.content_type)
+        self.REQUEST.RESPONSE.setHeader('Content-Length', self.size)
+        return file_item.inheritedAttribute('index_html')(self, REQUEST, RESPONSE)
+
 InitializeClass(NyFile)
