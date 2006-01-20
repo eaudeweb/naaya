@@ -672,6 +672,31 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     manage_folder_subobjects_html = PageTemplateFile('zpt/folder_manage_subobjects', globals())
 
     #site pages
+    security.declareProtected(view, 'standard_html_header')
+    def standard_html_header(self, REQUEST=None, RESPONSE=None, **args):
+        """ """
+        context = self.REQUEST.PARENTS[0]
+        pt = self._getOb('header', None)
+        if pt is None:
+            return self.getParentNode().standard_html_header(REQUEST, RESPONSE)
+        else:
+            if not args.has_key('show_edit'): args['show_edit'] = 0
+            args['here'] = context
+            args['skin_files_path'] = self.getLayoutTool().getSkinFilesPath()
+            return pt.pt_render(extra_context=args).split('<!--SITE_HEADERFOOTER_MARKER-->')[0]
+
+    security.declareProtected(view, 'standard_html_header')
+    def standard_html_footer(self, REQUEST=None, RESPONSE=None):
+        """ """
+        context = self.REQUEST.PARENTS[0]
+        pt = self._getOb('footer', None)
+        if pt is None:
+            return self.getParentNode().standard_html_footer(REQUEST, RESPONSE)
+        else:
+            pt_context = {'here': context}
+            pt_context['skin_files_path'] = self.getLayoutTool().getSkinFilesPath()
+            return pt.pt_render(extra_context=pt_context).split('<!--SITE_HEADERFOOTER_MARKER-->')[1]
+
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
