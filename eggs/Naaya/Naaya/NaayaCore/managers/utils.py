@@ -408,3 +408,9 @@ class utils:
             return l_day + p_separator + l_month + p_separator + l_year
         else:
             return ''
+
+    def utLinkValue(self, url):
+        """
+        Takes the value of an url and test if is not empty.
+        """
+        return url != '' and url != 'http://' and url != 'https://'
