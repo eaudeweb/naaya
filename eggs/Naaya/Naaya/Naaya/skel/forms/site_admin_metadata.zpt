@@ -20,7 +20,7 @@
 	The <em>title</em> and <em>subtitle</em> are displayed in the top banner of each page. The <em>description</em> will appear on the homepage. All together, the metadata describes your website to search engines and also goes into the local channels that might be  harvested by others.
 </p>
 
-<form method="post" tal:attributes="action string:${site_url}/admin_metadata" style="clear:both;">
+<form method="post" tal:attributes="action string:${site_url}/admin_metadata">
 <table border="0" cellspacing="2" cellpadding="2" width="90%">
 <tr>
 	<td i18n:translate="">Site title</td>
