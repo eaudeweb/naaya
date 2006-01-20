@@ -5,6 +5,7 @@
 		<form id="folder_basketofapprovals" title="NyFolder basket of approvals"/>
 		<form id="folder_basketofvalidation" title="NyFolder basket of invalid items"/>
 		<form id="folder_edit" title="NyFolder edit"/>
+		<form id="folder_editlogo" title="NyFolder edit logo"/>
 		<form id="folder_index" title="NyFolder default view"/>
 		<form id="folder_sortorder" title="NyFolder sort order"/>
 		<form id="folder_restrict" title="NyFolder restrictions"/>

@@ -423,6 +423,45 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     def getSortedFolders(self): return self.utSortObjsListByAttr(self.getFolders(), 'sortorder', 0)
     def getSortedObjects(self): return self.utSortObjsListByAttr(self.getObjects(), 'sortorder', 0)
 
+    def getFolderLogo(self):
+        """
+        Returns the logo for this folder. The logo is an object
+        with the B{logo.gif} id.
+        """
+        return self._getOb('logo.gif', None)
+
+    def setLogo(self, source, file, url):
+        """
+        Upload the logo.
+        """
+        logo = self.getFolderLogo()
+        if logo is None:
+            self.manage_addImage(id='logo.gif', file='')
+            logo = self.getFolderLogo()
+        if source=='file':
+            if file != '':
+                if hasattr(file, 'filename'):
+                    if file.filename != '':
+                        data, size = logo._read_data(file)
+                        content_type = logo._get_content_type(file, data, logo.__name__, 'application/octet-stream')
+                        logo.update_data(data, content_type, size)
+                else:
+                    logo.update_data(file)
+        elif source=='url':
+            if url != '':
+                l_data, l_ctype = self.grabFromUrl(url)
+                if l_data is not None:
+                    logo.update_data(l_data, l_ctype)
+                    logo.content_type = l_ctype
+        logo._p_changed = 1
+
+    def delLogo(self):
+        """
+        Delete the folder logo.
+        """
+        try: self.manage_delObjects('logo.gif')
+        except: pass
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='',
@@ -498,6 +537,17 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('edit_html?lang=%s' % lang)
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveLogo')
+    def saveLogo(self, source='file', file='', url='', del_logo='', REQUEST=None, **kwargs):
+        """ """
+        if not self.checkPermissionEditObject():
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+        if del_logo != '': self.delLogo()
+        else: self.setLogo(source, file, url)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('editlogo_html')
 
     security.declareProtected(PERMISSION_COPY_OBJECTS, 'copyObjects')
     def copyObjects(self, REQUEST=None):
@@ -714,6 +764,11 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'folder_edit')
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'editlogo_html')
+    def editlogo_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'folder_editlogo')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'basketofapprovals_html')
     def basketofapprovals_html(self, REQUEST=None, RESPONSE=None):
