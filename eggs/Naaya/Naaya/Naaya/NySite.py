@@ -2026,12 +2026,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 if args.has_key(k):    #property found in parameters list
                     value = args.get(k)
                     if v[1] == MUST_BE_NONEMPTY:
-                        if len(value) <=0: la(translate('', v[2]))
-                    elif v[1] == MUST_BE_FLOAT:
-                        pass
-                    elif v[1] == MUST_BE_INTEGER:
-                        pass
-                        #la(translate('', v[2]))
+                        if self.utIsEmptyString(value): la(translate('', v[2]))
         return l
 
     def set_pluggable_item_session(self, meta_type, **args):
