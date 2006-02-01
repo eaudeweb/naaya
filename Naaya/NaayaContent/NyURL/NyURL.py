@@ -45,6 +45,15 @@ OBJECT_CONSTRUCTORS = ['manage_addNyURL_html', 'url_add_html', 'addNyURL', 'impo
 OBJECT_ADD_FORM = 'url_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya URL type.'
 PREFIX_OBJECT = 'url'
+PROPERTIES_OBJECT = {
+    'id': (0, '', ''),
+    'title': (1, MUST_BE_NONEMPTY, 'Title should have a value.'),
+    'description': (0, '', ''),
+    'coverage': (0, '', ''),
+    'keywords': (0, '', ''),
+    'sortorder': (0, MUST_BE_INTEGER, ''),
+    'locator': (0, '', ''),
+}
 
 manage_addNyURL_html = PageTemplateFile('zpt/url_manage_add', globals())
 manage_addNyURL_html.kind = METATYPE_OBJECT
@@ -72,26 +81,45 @@ def addNyURL(self, id='', title='', description='', coverage='', keywords='',
         approved, approved_by = 0, None
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
-    #create object
-    ob = NyURL(id, title, description, coverage, keywords, sortorder, locator,
-        contributor, approved, approved_by, releasedate, lang)
-    self.gl_add_languages(ob)
-    ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-    self._setObject(id, ob)
-    #extra settings
-    ob = self._getOb(id)
-    ob.submitThis()
-    if discussion: ob.open_for_comments()
-    self.recatalogNyObject(ob)
-    self.notifyFolderMaintainer(self, ob)
-    #redirect if case
-    if REQUEST is not None:
-        l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if l_referer == 'url_manage_add' or l_referer.find('url_manage_add') != -1:
-            return self.manage_main(self, REQUEST, update_menu=1)
-        elif l_referer == 'url_add_html':
-            self.setSession('referer', self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+    #check mandatory fiels
+    r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
+        description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
+        locator=locator)
+    if len(r) <= 0:
+        #create object
+        ob = NyURL(id, title, description, coverage, keywords, sortorder, locator,
+            contributor, approved, approved_by, releasedate, lang)
+        self.gl_add_languages(ob)
+        ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        self._setObject(id, ob)
+        #extra settings
+        ob = self._getOb(id)
+        ob.submitThis()
+        if discussion: ob.open_for_comments()
+        self.recatalogNyObject(ob)
+        self.notifyFolderMaintainer(self, ob)
+        #redirect if case
+        if REQUEST is not None:
+            l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
+            if l_referer == 'url_manage_add' or l_referer.find('url_manage_add') != -1:
+                return self.manage_main(self, REQUEST, update_menu=1)
+            elif l_referer == 'url_add_html':
+                self.setSession('referer', self.absolute_url())
+                REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+    else:
+        #some mandatory fields are missing
+        if REQUEST is not None:
+            self.setSessionErrors(r)
+            self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
+                description=description, coverage=coverage, keywords=keywords,
+                sortorder=sortorder, locator=locator)
+            l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
+            if l_referer == 'semevent_manage_add' or l_referer.find('semevent_manage_add') != -1:
+                REQUEST.RESPONSE.redirect('%s/?%%3Amethod=manage_addProduct%%2FNaayaContent%%2Fsemevent_manage_add&submit=Add+Naaya+Semide+Event' % self.absolute_url())
+            elif l_referer == 'semevent_add_html':
+                REQUEST.RESPONSE.redirect('%s/semevent_add_html' % self.absolute_url())
+        else:
+            raise Exception, '%s' % ', '.join(r)
 
 def importNyURL(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
