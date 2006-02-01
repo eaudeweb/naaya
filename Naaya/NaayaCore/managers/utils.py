@@ -414,3 +414,9 @@ class utils:
         Takes the value of an url and test if is not empty.
         """
         return url != '' and url != 'http://' and url != 'https://'
+
+    def utIsEmptyString(self, p_str):
+        """Test if empty string"""
+        if p_str:
+            if p_str.count(" ") != len(p_str): return 0
+        return 1
