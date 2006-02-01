@@ -45,6 +45,7 @@ OBJECT_CONSTRUCTORS = ['manage_addNyPointer_html', 'pointer_add_html', 'addNyPoi
 OBJECT_ADD_FORM = 'pointer_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Pointer type.'
 PREFIX_OBJECT = 'pnt'
+PROPERTIES_OBJECT = {}
 
 manage_addNyPointer_html = PageTemplateFile('zpt/pointer_manage_add', globals())
 manage_addNyPointer_html.kind = METATYPE_OBJECT

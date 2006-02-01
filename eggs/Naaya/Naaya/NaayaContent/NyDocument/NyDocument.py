@@ -47,6 +47,7 @@ OBJECT_CONSTRUCTORS = ['manage_addNyDocument_html', 'document_add', 'addNyDocume
 OBJECT_ADD_FORM = 'document_add'
 DESCRIPTION_OBJECT = 'This is Naaya Document type.'
 PREFIX_OBJECT = 'doc'
+PROPERTIES_OBJECT = {}
 
 manage_addNyDocument_html = PageTemplateFile('zpt/document_manage_add', globals())
 manage_addNyDocument_html.kind = METATYPE_OBJECT

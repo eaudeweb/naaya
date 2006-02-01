@@ -47,6 +47,7 @@ OBJECT_CONSTRUCTORS = ['manage_addNyFile_html', 'file_add_html', 'addNyFile', 'i
 OBJECT_ADD_FORM = 'file_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya File type.'
 PREFIX_OBJECT = 'file'
+PROPERTIES_OBJECT = {}
 
 manage_addNyFile_html = PageTemplateFile('zpt/file_manage_add', globals())
 manage_addNyFile_html.kind = METATYPE_OBJECT
