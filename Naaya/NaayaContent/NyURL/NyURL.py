@@ -46,13 +46,15 @@ OBJECT_ADD_FORM = 'url_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya URL type.'
 PREFIX_OBJECT = 'url'
 PROPERTIES_OBJECT = {
-    'id': (0, '', ''),
-    'title': (1, MUST_BE_NONEMPTY, 'Title should have a value.'),
-    'description': (0, '', ''),
-    'coverage': (0, '', ''),
-    'keywords': (0, '', ''),
-    'sortorder': (0, MUST_BE_INTEGER, ''),
-    'locator': (0, '', ''),
+    'id':           (0, '', ''),
+    'title':        (1, MUST_BE_NONEMPTY, 'Title must have a value.'),
+    'description':  (0, '', ''),
+    'coverage':     (0, '', ''),
+    'keywords':     (0, '', ''),
+    'sortorder':    (0, '', ''),
+    'locator':      (0, '', ''),
+    'releasedate':  (0, '', ''),
+    'discussion':   (0, '', ''),
 }
 
 manage_addNyURL_html = PageTemplateFile('zpt/url_manage_add', globals())
@@ -82,9 +84,14 @@ def addNyURL(self, id='', title='', description='', coverage='', keywords='',
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
     #check mandatory fiels
-    r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
-        description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
-        locator=locator)
+    l_referer = ''
+    if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
+    if not(l_referer == 'url_manage_add' or l_referer.find('url_manage_add') != -1):
+        r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
+            description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
+            locator=locator, releasedate=releasedate, discussion=discussion)
+    else:
+        r = []
     if len(r) <= 0:
         #create object
         ob = NyURL(id, title, description, coverage, keywords, sortorder, locator,
@@ -100,24 +107,20 @@ def addNyURL(self, id='', title='', description='', coverage='', keywords='',
         self.notifyFolderMaintainer(self, ob)
         #redirect if case
         if REQUEST is not None:
-            l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
             if l_referer == 'url_manage_add' or l_referer.find('url_manage_add') != -1:
                 return self.manage_main(self, REQUEST, update_menu=1)
             elif l_referer == 'url_add_html':
                 self.setSession('referer', self.absolute_url())
                 REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
     else:
-        #some mandatory fields are missing
         if REQUEST is not None:
             self.setSessionErrors(r)
             self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                 description=description, coverage=coverage, keywords=keywords,
-                sortorder=sortorder, locator=locator)
-            l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-            if l_referer == 'semevent_manage_add' or l_referer.find('semevent_manage_add') != -1:
-                REQUEST.RESPONSE.redirect('%s/?%%3Amethod=manage_addProduct%%2FNaayaContent%%2Fsemevent_manage_add&submit=Add+Naaya+Semide+Event' % self.absolute_url())
-            elif l_referer == 'semevent_add_html':
-                REQUEST.RESPONSE.redirect('%s/semevent_add_html' % self.absolute_url())
+                sortorder=sortorder, locator=locator, releasedate=releasedate, \
+                discussion=discussion)
+            if l_referer == 'url_add_html':
+                REQUEST.RESPONSE.redirect('%s/url_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)
 
@@ -271,25 +274,40 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
         try: sortorder = abs(int(sortorder))
         except: sortorder = DEFAULT_SORTORDER
         if lang is None: lang = self.gl_get_selected_language()
-        if not self.hasVersion():
-            #this object has not been checked out; save changes directly into the object
-            releasedate = self.process_releasedate(releasedate, self.releasedate)
-            self.save_properties(title, description, coverage, keywords, sortorder, locator, releasedate, lang)
-            self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        #check mandatory fiels
+        r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, title=title, \
+            description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
+            locator=locator, releasedate=releasedate, discussion=discussion)
+        if len(r) <= 0:
+            if not self.hasVersion():
+                #this object has not been checked out; save changes directly into the object
+                releasedate = self.process_releasedate(releasedate, self.releasedate)
+                self.save_properties(title, description, coverage, keywords, sortorder, locator, releasedate, lang)
+                self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            else:
+                #this object has been checked out; save changes into the version object
+                if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
+                    raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                releasedate = self.process_releasedate(releasedate, self.version.releasedate)
+                self.version.save_properties(title, description, coverage, keywords, sortorder, locator, releasedate, lang)
+                self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            if discussion: self.open_for_comments()
+            else: self.close_for_comments()
+            self._p_changed = 1
+            self.recatalogNyObject(self)
+            if REQUEST:
+                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
         else:
-            #this object has been checked out; save changes into the version object
-            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-            releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-            self.version.save_properties(title, description, coverage, keywords, sortorder, locator, releasedate, lang)
-            self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-        if discussion: self.open_for_comments()
-        else: self.close_for_comments()
-        self._p_changed = 1
-        self.recatalogNyObject(self)
-        if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            if REQUEST is not None:
+                self.setSessionErrors(r)
+                self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
+                    description=description, coverage=coverage, keywords=keywords,
+                    sortorder=sortorder, locator=locator, releasedate=releasedate, \
+                    discussion=discussion)
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            else:
+                raise Exception, '%s' % ', '.join(r)
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')

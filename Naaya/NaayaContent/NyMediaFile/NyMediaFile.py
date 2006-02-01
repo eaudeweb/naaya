@@ -47,6 +47,7 @@ OBJECT_CONSTRUCTORS = ['manage_addNyMediaFile_html', 'mediafile_add_html', 'addN
 OBJECT_ADD_FORM = 'mediafile_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Media File type.'
 PREFIX_OBJECT = 'media'
+PROPERTIES_OBJECT = {}
 
 manage_addNyMediaFile_html = PageTemplateFile('zpt/mediafile_manage_add', globals())
 manage_addNyMediaFile_html.kind = METATYPE_OBJECT

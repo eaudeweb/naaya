@@ -44,6 +44,7 @@ OBJECT_CONSTRUCTORS = ['manage_addNyEvent_html', 'event_add_html', 'addNyEvent',
 OBJECT_ADD_FORM = 'event_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Event type.'
 PREFIX_OBJECT = 'ev'
+PROPERTIES_OBJECT = {}
 
 manage_addNyEvent_html = PageTemplateFile('zpt/event_manage_add', globals())
 manage_addNyEvent_html.kind = METATYPE_OBJECT

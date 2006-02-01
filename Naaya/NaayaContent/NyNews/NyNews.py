@@ -44,6 +44,7 @@ OBJECT_CONSTRUCTORS = ['manage_addNyNews_html', 'news_add_html', 'addNyNews', 'i
 OBJECT_ADD_FORM = 'news_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya News type.'
 PREFIX_OBJECT = 'news'
+PROPERTIES_OBJECT = {}
 
 manage_addNyNews_html = PageTemplateFile('zpt/news_manage_add', globals())
 manage_addNyNews_html.kind = METATYPE_OBJECT
