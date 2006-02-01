@@ -56,6 +56,7 @@ for x in dirs:
         content[m]['addform'] = eval('%s.OBJECT_ADD_FORM' % x)
         content[m]['validation'] = eval('issubclass(%s.%s, NyValidation)' % (x, x))
         content[m]['description'] = eval('%s.DESCRIPTION_OBJECT' % x)
+        content[m]['properties'] = eval('%s.PROPERTIES_OBJECT' % x)
         zLOG.LOG(NAAYACONTENT_PRODUCT_NAME, zLOG.INFO,
             'Pluggable module "%s" registered' % x)
     except Exception, error:
