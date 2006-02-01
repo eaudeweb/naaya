@@ -2007,6 +2007,41 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def is_pluggable_item_installed(self, meta_type):
         return self.__pluggable_installed_content.has_key(meta_type)
 
+    #pluggable meta types properties
+    def get_pluggable_item_properties_ids(self, meta_type):
+        return get_pluggable_content().get(meta_type, None)['properties'].keys()
+
+    def get_pluggable_item_properties_item(self, meta_type, prop):
+        return get_pluggable_content().get(meta_type, None)['properties'][prop]
+
+    def get_pluggable_item_property_mandatory(self, meta_type, prop):
+        return get_pluggable_content().get(meta_type, None)['properties'][prop][0]
+
+    def check_pluggable_item_properties(self, meta_type, **args):
+        l = []
+        la = l.append
+        translate = self.getPortalTranslations().translate
+        for k, v in get_pluggable_content().get(meta_type, None)['properties'].items():
+            if v[0] == 1:   #this property is mandatory
+                if args.has_key(k):    #property found in parameters list
+                    value = args.get(k)
+                    if v[1] == MUST_BE_NONEMPTY:
+                        if len(value) <=0: la(translate('', v[2]))
+                    elif v[1] == MUST_BE_FLOAT:
+                        pass
+                    elif v[1] == MUST_BE_INTEGER:
+                        pass
+                        #la(translate('', v[2]))
+        return l
+
+    def set_pluggable_item_session(self, meta_type, **args):
+        for l_prop in self.get_pluggable_item_properties_ids(meta_type):
+            self.setSession(l_prop, args.get(l_prop, ''))
+
+    def del_pluggable_item_session(self, meta_type):
+        for l_prop in self.get_pluggable_item_properties_ids(meta_type):
+            self.delSession(l_prop)
+
     security.declareProtected(view_management_screens, 'manage_install_pluggableitem')
     def manage_install_pluggableitem(self, meta_type=None, REQUEST=None):
         """ """
