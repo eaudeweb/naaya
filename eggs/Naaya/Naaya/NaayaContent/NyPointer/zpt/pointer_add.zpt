@@ -3,7 +3,8 @@
 <h1 metal:fill-slot="title" i18n:translate="">Submit Pointer</h1>
 
 <p metal:fill-slot="description" i18n:translate="">
-	Fill the properties in the form below and click <strong>Submit</strong>. Pick the location to which this item will point by clicking on the corresponding item from the sitemap.
+	Fill the properties in the form below and click <strong>Submit</strong>. Pick the location to which this item will point by clicking on the corresponding item from the sitemap.<br />
+	Fields marked with <span class="mandatory_field">*</span> are mandatory.
 </p>
 
 <tal:block metal:fill-slot="custom_properties">
@@ -59,8 +60,8 @@ function fTreeNodeClick(node_path)
 	</tal:block>
 </div>
 <div class="field">
-	<label for="pointer" i18n:translate="">Item</label>
-	<input type="text" name="pointer" id="pointer" size="50" readonly="readonly" tal:attributes="value python:request.get('pointer', '')" />
+	<label for="pointer"><span i18n:translate="" tal:omit-tag="">Item</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'pointer')" class="mandatory_field"> *</span></label>
+	<input type="text" name="pointer" id="pointer" size="50" readonly="readonly" tal:attributes="value python:here.getSession('pointer', request.get('pointer', ''))" />
 </div>
 </tal:block>
 
