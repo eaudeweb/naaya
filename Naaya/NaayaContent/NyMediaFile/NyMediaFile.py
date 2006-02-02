@@ -47,7 +47,17 @@ OBJECT_CONSTRUCTORS = ['manage_addNyMediaFile_html', 'mediafile_add_html', 'addN
 OBJECT_ADD_FORM = 'mediafile_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Media File type.'
 PREFIX_OBJECT = 'media'
-PROPERTIES_OBJECT = {}
+PROPERTIES_OBJECT = {
+    'id':           (0, '', ''),
+    'title':        (1, MUST_BE_NONEMPTY, 'Title must have a value.'),
+    'description':  (0, '', ''),
+    'coverage':     (0, '', ''),
+    'keywords':     (0, '', ''),
+    'sortorder':    (0, '', ''),
+    'releasedate':  (0, '', ''),
+    'discussion':   (0, '', ''),
+    'file':         (0, '', ''),
+}
 
 manage_addNyMediaFile_html = PageTemplateFile('zpt/mediafile_manage_add', globals())
 manage_addNyMediaFile_html.kind = METATYPE_OBJECT
@@ -75,27 +85,46 @@ def addNyMediaFile(self, id='', title='', description='', coverage='', keywords=
         approved, approved_by = 0, None
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
-    #create object
-    ob = NyMediaFile(id, title, description, coverage, keywords, sortorder,
-        contributor, approved, approved_by, releasedate, lang)
-    self.gl_add_languages(ob)
-    ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-    self._setObject(id, ob)
-    #extra settings
-    ob = self._getOb(id)
-    ob.submitThis()
-    if discussion: ob.open_for_comments()
-    ob.handleMediaUpload(file)
-    self.recatalogNyObject(ob)
-    self.notifyFolderMaintainer(self, ob)
-    #redirect if case
-    if REQUEST is not None:
-        l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if l_referer == 'mediafile_manage_add' or l_referer.find('mediafile_manage_add') != -1:
-            return self.manage_main(self, REQUEST, update_menu=1)
-        elif l_referer == 'mediafile_add_html':
-            self.setSession('referer', self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+    #check mandatory fiels
+    l_referer = ''
+    if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
+    if not(l_referer == 'mediafile_manage_add' or l_referer.find('mediafile_manage_add') != -1):
+        r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
+            description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
+            releasedate=releasedate, discussion=discussion, file=file)
+    else:
+        r = []
+    if len(r) <= 0:
+        #create object
+        ob = NyMediaFile(id, title, description, coverage, keywords, sortorder,
+            contributor, approved, approved_by, releasedate, lang)
+        self.gl_add_languages(ob)
+        ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        self._setObject(id, ob)
+        #extra settings
+        ob = self._getOb(id)
+        ob.submitThis()
+        if discussion: ob.open_for_comments()
+        ob.handleMediaUpload(file)
+        self.recatalogNyObject(ob)
+        self.notifyFolderMaintainer(self, ob)
+        #redirect if case
+        if REQUEST is not None:
+            l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
+            if l_referer == 'mediafile_manage_add' or l_referer.find('mediafile_manage_add') != -1:
+                return self.manage_main(self, REQUEST, update_menu=1)
+            elif l_referer == 'mediafile_add_html':
+                self.setSession('referer', self.absolute_url())
+                REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+    else:
+        if REQUEST is not None:
+            self.setSessionErrors(r)
+            self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
+                description=description, coverage=coverage, keywords=keywords, \
+                sortorder=sortorder, releasedate=releasedate, discussion=discussion)
+            REQUEST.RESPONSE.redirect('%s/mediafile_add_html' % self.absolute_url())
+        else:
+            raise Exception, '%s' % ', '.join(r)
 
 def importNyMediaFile(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
@@ -324,25 +353,39 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
         try: sortorder = abs(int(sortorder))
         except: sortorder = DEFAULT_SORTORDER
         if lang is None: lang = self.gl_get_selected_language()
-        if not self.hasVersion():
-            #this object has not been checked out; save changes directly into the object
-            releasedate = self.process_releasedate(releasedate, self.releasedate)
-            self.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang)
-            self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        #check mandatory fiels
+        r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, title=title, \
+            description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
+            releasedate=releasedate, discussion=discussion, file=file)
+        if len(r) <= 0:
+            if not self.hasVersion():
+                #this object has not been checked out; save changes directly into the object
+                releasedate = self.process_releasedate(releasedate, self.releasedate)
+                self.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang)
+                self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            else:
+                #this object has been checked out; save changes into the version object
+                if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
+                    raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                releasedate = self.process_releasedate(releasedate, self.version.releasedate)
+                self.version.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang)
+                self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            if discussion: self.open_for_comments()
+            else: self.close_for_comments()
+            self._p_changed = 1
+            self.recatalogNyObject(self)
+            if REQUEST:
+                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
         else:
-            #this object has been checked out; save changes into the version object
-            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-            releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-            self.version.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang)
-            self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-        if discussion: self.open_for_comments()
-        else: self.close_for_comments()
-        self._p_changed = 1
-        self.recatalogNyObject(self)
-        if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            if REQUEST is not None:
+                self.setSessionErrors(r)
+                self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
+                    description=description, coverage=coverage, keywords=keywords, \
+                    sortorder=sortorder, releasedate=releasedate, discussion=discussion)
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            else:
+                raise Exception, '%s' % ', '.join(r)
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveUpload')
     def saveUpload(self, file='', lang=None, REQUEST=None):

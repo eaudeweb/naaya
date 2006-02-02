@@ -52,9 +52,9 @@ PROPERTIES_OBJECT = {
     'coverage':     (0, '', ''),
     'keywords':     (0, '', ''),
     'sortorder':    (0, '', ''),
-    'locator':      (0, '', ''),
     'releasedate':  (0, '', ''),
     'discussion':   (0, '', ''),
+    'locator':      (0, '', ''),
 }
 
 manage_addNyURL_html = PageTemplateFile('zpt/url_manage_add', globals())
@@ -89,7 +89,7 @@ def addNyURL(self, id='', title='', description='', coverage='', keywords='',
     if not(l_referer == 'url_manage_add' or l_referer.find('url_manage_add') != -1):
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
-            locator=locator, releasedate=releasedate, discussion=discussion)
+            releasedate=releasedate, discussion=discussion, locator=locator)
     else:
         r = []
     if len(r) <= 0:
@@ -116,11 +116,10 @@ def addNyURL(self, id='', title='', description='', coverage='', keywords='',
         if REQUEST is not None:
             self.setSessionErrors(r)
             self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
-                description=description, coverage=coverage, keywords=keywords,
-                sortorder=sortorder, locator=locator, releasedate=releasedate, \
-                discussion=discussion)
-            if l_referer == 'url_add_html':
-                REQUEST.RESPONSE.redirect('%s/url_add_html' % self.absolute_url())
+                description=description, coverage=coverage, keywords=keywords, \
+                sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
+                locator=locator)
+            REQUEST.RESPONSE.redirect('%s/url_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)
 
@@ -277,7 +276,7 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
         #check mandatory fiels
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
-            locator=locator, releasedate=releasedate, discussion=discussion)
+            releasedate=releasedate, discussion=discussion, locator=locator)
         if len(r) <= 0:
             if not self.hasVersion():
                 #this object has not been checked out; save changes directly into the object
@@ -302,9 +301,9 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
             if REQUEST is not None:
                 self.setSessionErrors(r)
                 self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
-                    description=description, coverage=coverage, keywords=keywords,
-                    sortorder=sortorder, locator=locator, releasedate=releasedate, \
-                    discussion=discussion)
+                    description=description, coverage=coverage, keywords=keywords, \
+                    sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
+                    locator=locator)
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
             else:
                 raise Exception, '%s' % ', '.join(r)

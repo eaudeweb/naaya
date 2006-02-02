@@ -47,7 +47,20 @@ OBJECT_CONSTRUCTORS = ['manage_addNyStory_html', 'story_add', 'addNyStory', 'imp
 OBJECT_ADD_FORM = 'story_add'
 DESCRIPTION_OBJECT = 'This is Naaya Story type.'
 PREFIX_OBJECT = 'story'
-PROPERTIES_OBJECT = {}
+PROPERTIES_OBJECT = {
+    'id':           (0, '', ''),
+    'title':        (1, MUST_BE_NONEMPTY, 'Title must have a value.'),
+    'description':  (0, '', ''),
+    'coverage':     (0, '', ''),
+    'keywords':     (0, '', ''),
+    'sortorder':    (0, '', ''),
+    'releasedate':  (0, '', ''),
+    'discussion':   (0, '', ''),
+    'body':         (0, '', ''),
+    'topitem':      (0, '', ''),
+    'resourceurl':  (0, '', ''),
+    'source':       (0, '', ''),
+}
 
 manage_addNyStory_html = PageTemplateFile('zpt/story_manage_add', globals())
 manage_addNyStory_html.kind = METATYPE_OBJECT
@@ -246,17 +259,39 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         else: topitem = 0
         releasedate = self.process_releasedate(releasedate, self.releasedate)
         lang = self.gl_get_selected_language()
-        self.save_properties(title, description, coverage, keywords, sortorder, body,
-            topitem, resourceurl, source, releasedate, lang)
-        self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-        self._p_changed = 1
-        self.submitThis()
-        if discussion: self.open_for_comments()
-        self.recatalogNyObject(self)
-        self.notifyFolderMaintainer(self.getParentNode(), self)
-        if REQUEST:
-            self.setSession('referer', self.getParentNode().absolute_url())
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.getParentNode().absolute_url())
+        #check mandatory fiels
+        l_referer = ''
+        if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
+        if not(l_referer == 'story_manage_add' or l_referer.find('story_manage_add') != -1):
+            r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
+                description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
+                releasedate=releasedate, discussion=discussion, body=body, topitem=topitem, \
+                resourceurl=resourceurl, source=source)
+        else:
+            r = []
+        if len(r) <= 0:
+            self.save_properties(title, description, coverage, keywords, sortorder, body,
+                topitem, resourceurl, source, releasedate, lang)
+            self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            self._p_changed = 1
+            self.submitThis()
+            if discussion: self.open_for_comments()
+            self.recatalogNyObject(self)
+            self.notifyFolderMaintainer(self.getParentNode(), self)
+            if REQUEST:
+                self.setSession('referer', self.getParentNode().absolute_url())
+                REQUEST.RESPONSE.redirect('%s/messages_html' % self.getParentNode().absolute_url())
+        else:
+            if REQUEST is not None:
+                l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
+                self.setSessionErrors(r)
+                self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
+                    description=description, coverage=coverage, keywords=keywords, \
+                    sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
+                    body=body, topitem=topitem, resourceurl=resourceurl, source=source)
+                REQUEST.RESPONSE.redirect('%s/add_html' % self.absolute_url())
+            else:
+                raise Exception, '%s' % ', '.join(r)
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
@@ -310,27 +345,43 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         if topitem: topitem = 1
         else: topitem = 0
         if lang is None: lang = self.gl_get_selected_language()
-        if not self.hasVersion():
-            #this object has not been checked out; save changes directly into the object
-            releasedate = self.process_releasedate(releasedate, self.releasedate)
-            self.save_properties(title, description, coverage, keywords, sortorder, body,
-                topitem, resourceurl, source, releasedate, lang)
-            self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        #check mandatory fiels
+        r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, title=title, \
+            description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
+            releasedate=releasedate, discussion=discussion, body=body, topitem=topitem, \
+            resourceurl=resourceurl, source=source)
+        if len(r) <= 0:
+            if not self.hasVersion():
+                #this object has not been checked out; save changes directly into the object
+                releasedate = self.process_releasedate(releasedate, self.releasedate)
+                self.save_properties(title, description, coverage, keywords, sortorder, body,
+                    topitem, resourceurl, source, releasedate, lang)
+                self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            else:
+                #this object has been checked out; save changes into the version object
+                if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
+                    raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                releasedate = self.process_releasedate(releasedate, self.version.releasedate)
+                self.version.save_properties(title, description, coverage, keywords, sortorder,
+                    body, topitem, resourceurl, source, releasedate, lang)
+                self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            if discussion: self.open_for_comments()
+            else: self.close_for_comments()
+            self._p_changed = 1
+            self.recatalogNyObject(self)
+            if REQUEST:
+                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
         else:
-            #this object has been checked out; save changes into the version object
-            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-            releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-            self.version.save_properties(title, description, coverage, keywords, sortorder,
-                body, topitem, resourceurl, source, releasedate, lang)
-            self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-        if discussion: self.open_for_comments()
-        else: self.close_for_comments()
-        self._p_changed = 1
-        self.recatalogNyObject(self)
-        if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            if REQUEST is not None:
+                self.setSessionErrors(r)
+                self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
+                    description=description, coverage=coverage, keywords=keywords, \
+                    sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
+                    body=body, topitem=topitem, resourceurl=resourceurl, source=source)
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            else:
+                raise Exception, '%s' % ', '.join(r)
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')

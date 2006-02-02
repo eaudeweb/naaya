@@ -44,7 +44,25 @@ OBJECT_CONSTRUCTORS = ['manage_addNyNews_html', 'news_add_html', 'addNyNews', 'i
 OBJECT_ADD_FORM = 'news_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya News type.'
 PREFIX_OBJECT = 'news'
-PROPERTIES_OBJECT = {}
+PROPERTIES_OBJECT = {
+    'id':               (0, '', ''),
+    'title':            (1, MUST_BE_NONEMPTY, 'Title must have a value.'),
+    'description':      (0, '', ''),
+    'coverage':         (0, '', ''),
+    'keywords':         (0, '', ''),
+    'sortorder':        (0, '', ''),
+    'releasedate':      (0, '', ''),
+    'discussion':       (0, '', ''),
+    'details':          (0, '', ''),
+    'expirationdate':   (0, '', ''),
+    'topitem':          (0, '', ''),
+    'smallpicture':     (0, '', ''),
+    'del_smallpicture': (0, '', ''),
+    'bigpicture':       (0, '', ''),
+    'del_bigpicture':   (0, '', ''),
+    'resourceurl':      (0, '', ''),
+    'source':           (0, '', ''),
+}
 
 manage_addNyNews_html = PageTemplateFile('zpt/news_manage_add', globals())
 manage_addNyNews_html.kind = METATYPE_OBJECT
@@ -76,29 +94,55 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
         approved, approved_by = 0, None
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
-    #create object
-    ob = NyNews(id, title, description, coverage, keywords, sortorder,
-        details, expirationdate, topitem, None, None, resourceurl, source,
-        contributor, approved, approved_by, releasedate, lang)
-    self.gl_add_languages(ob)
-    ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-    ob.setSmallPicture(smallpicture)
-    ob.setBigPicture(bigpicture)
-    self._setObject(id, ob)
-    #extra settings
-    ob = self._getOb(id)
-    ob.submitThis()
-    if discussion: ob.open_for_comments()
-    self.recatalogNyObject(ob)
-    self.notifyFolderMaintainer(self, ob)
-    #redirect if case
-    if REQUEST is not None:
-        l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if l_referer == 'news_manage_add' or l_referer.find('news_manage_add') != -1:
-            return self.manage_main(self, REQUEST, update_menu=1)
-        elif l_referer == 'news_add_html':
-            self.setSession('referer', self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+    #check mandatory fiels
+    l_referer = ''
+    if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
+    if not(l_referer == 'news_manage_add' or l_referer.find('news_manage_add') != -1):
+        r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
+            description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
+            releasedate=releasedate, discussion=discussion, details=details, expirationdate=expirationdate, \
+            topitem=topitem, smallpicture=smallpicture, bigpicture=bigpicture, resourceurl=resourceurl, \
+            source=source)
+    else:
+        r = []
+    if len(r) <= 0:
+        #create object
+        ob = NyNews(id, title, description, coverage, keywords, sortorder,
+            details, expirationdate, topitem, None, None, resourceurl, source,
+            contributor, approved, approved_by, releasedate, lang)
+        self.gl_add_languages(ob)
+        ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        ob.setSmallPicture(smallpicture)
+        ob.setBigPicture(bigpicture)
+        self._setObject(id, ob)
+        #extra settings
+        ob = self._getOb(id)
+        ob.submitThis()
+        if discussion: ob.open_for_comments()
+        self.recatalogNyObject(ob)
+        self.notifyFolderMaintainer(self, ob)
+        #redirect if case
+        if REQUEST is not None:
+            if l_referer == 'news_manage_add' or l_referer.find('news_manage_add') != -1:
+                return self.manage_main(self, REQUEST, update_menu=1)
+            elif l_referer == 'news_add_html':
+                self.setSession('referer', self.absolute_url())
+                REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+    else:
+        if REQUEST is not None:
+            self.setSessionErrors(r)
+            if hasattr(smallpicture, 'filename'):
+                smallpicture = smallpicture.filename
+            if hasattr(bigpicture, 'filename'):
+                bigpicture = bigpicture.filename
+            self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
+                description=description, coverage=coverage, keywords=keywords, \
+                sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
+                details=details, expirationdate=expirationdate, topitem=topitem, \
+                resourceurl=resourceurl, source=source)
+            REQUEST.RESPONSE.redirect('%s/news_add_html' % self.absolute_url())
+        else:
+            raise Exception, '%s' % ', '.join(r)
 
 def importNyNews(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
@@ -325,37 +369,56 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         if topitem: topitem = 1
         else: topitem = 0
         if lang is None: lang = self.gl_get_selected_language()
-        if not self.hasVersion():
-            #this object has not been checked out; save changes directly into the object
-            releasedate = self.process_releasedate(releasedate, self.releasedate)
-            self.save_properties(title, description, coverage, keywords, sortorder, details,
-                expirationdate, topitem, self.smallpicture, self.bigpicture, resourceurl,
-                source, releasedate, lang)
-            if del_smallpicture != '': self.delSmallPicture()
-            else: self.setSmallPicture(smallpicture)
-            if del_bigpicture != '': self.delBigPicture()
-            else: self.setBigPicture(bigpicture)
-            self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        #check mandatory fiels
+        r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, title=title, \
+            description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
+            releasedate=releasedate, discussion=discussion, details=details, expirationdate=expirationdate, \
+            topitem=topitem, smallpicture=smallpicture, bigpicture=bigpicture, resourceurl=resourceurl, \
+            source=source)
+        if len(r) <= 0:
+            if not self.hasVersion():
+                #this object has not been checked out; save changes directly into the object
+                releasedate = self.process_releasedate(releasedate, self.releasedate)
+                self.save_properties(title, description, coverage, keywords, sortorder, details,
+                    expirationdate, topitem, self.smallpicture, self.bigpicture, resourceurl,
+                    source, releasedate, lang)
+                if del_smallpicture != '': self.delSmallPicture()
+                else: self.setSmallPicture(smallpicture)
+                if del_bigpicture != '': self.delBigPicture()
+                else: self.setBigPicture(bigpicture)
+                self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            else:
+                #this object has been checked out; save changes into the version object
+                if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
+                    raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                releasedate = self.process_releasedate(releasedate, self.version.releasedate)
+                self.version.save_properties(title, description, coverage, keywords, sortorder, details,
+                    expirationdate, topitem, self.version.smallpicture, self.version.bigpicture, resourceurl,
+                    source, releasedate, lang)
+                if del_smallpicture != '': self.version.delSmallPicture()
+                else: self.version.setSmallPicture(smallpicture)
+                if del_bigpicture != '': self.version.delBigPicture()
+                else: self.version.setBigPicture(bigpicture)
+                self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            if discussion: self.open_for_comments()
+            else: self.close_for_comments()
+            self._p_changed = 1
+            self.recatalogNyObject(self)
+            if REQUEST:
+                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
         else:
-            #this object has been checked out; save changes into the version object
-            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-            releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-            self.version.save_properties(title, description, coverage, keywords, sortorder, details,
-                expirationdate, topitem, self.version.smallpicture, self.version.bigpicture, resourceurl,
-                source, releasedate, lang)
-            if del_smallpicture != '': self.version.delSmallPicture()
-            else: self.version.setSmallPicture(smallpicture)
-            if del_bigpicture != '': self.version.delBigPicture()
-            else: self.version.setBigPicture(bigpicture)
-            self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-        if discussion: self.open_for_comments()
-        else: self.close_for_comments()
-        self._p_changed = 1
-        self.recatalogNyObject(self)
-        if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            if REQUEST is not None:
+                self.setSessionErrors(r)
+                self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
+                    description=description, coverage=coverage, keywords=keywords, \
+                    sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
+                    details=details, expirationdate=expirationdate, topitem=topitem, \
+                    resourceurl=resourceurl, del_smallpicture=del_smallpicture, \
+                    del_bigpicture=del_bigpicture, source=source)
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            else:
+                raise Exception, '%s' % ', '.join(r)
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
