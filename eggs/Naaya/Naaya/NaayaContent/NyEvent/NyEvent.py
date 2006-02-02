@@ -44,7 +44,31 @@ OBJECT_CONSTRUCTORS = ['manage_addNyEvent_html', 'event_add_html', 'addNyEvent',
 OBJECT_ADD_FORM = 'event_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Event type.'
 PREFIX_OBJECT = 'ev'
-PROPERTIES_OBJECT = {}
+PROPERTIES_OBJECT = {
+    'id':               (0, '', ''),
+    'title':            (1, MUST_BE_NONEMPTY, 'Title must have a value.'),
+    'description':      (0, '', ''),
+    'coverage':         (0, '', ''),
+    'keywords':         (0, '', ''),
+    'sortorder':        (0, '', ''),
+    'releasedate':      (0, '', ''),
+    'discussion':       (0, '', ''),
+
+    'location':         (0, '', ''),
+    'location_address': (0, '', ''),
+    'location_url':     (0, '', ''),
+    'start_date':       (0, '', ''),
+    'end_date':         (0, '', ''),
+    'host':             (0, '', ''),
+    'agenda_url':       (0, '', ''),
+    'event_url':        (0, '', ''),
+    'details':          (0, '', ''),
+    'topitem':          (0, '', ''),
+    'contact_person':   (0, '', ''),
+    'contact_email':    (0, '', ''),
+    'contact_phone':    (0, '', ''),
+    'contact_fax':      (0, '', ''),
+}
 
 manage_addNyEvent_html = PageTemplateFile('zpt/event_manage_add', globals())
 manage_addNyEvent_html.kind = METATYPE_OBJECT
@@ -79,28 +103,56 @@ def addNyEvent(self, id='', title='', description='', coverage='',
     end_date = self.utConvertStringToDateTimeObj(end_date)
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
-    #create object
-    ob = NyEvent(id, title, description, coverage, keywords, sortorder,
-        location, location_address, location_url, start_date, end_date, host, agenda_url,
-        event_url, details, topitem, event_type, contact_person, contact_email, contact_phone, contact_fax,
-        contributor, approved, approved_by, releasedate, lang)
-    self.gl_add_languages(ob)
-    ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-    self._setObject(id, ob)
-    #extra settings
-    ob = self._getOb(id)
-    ob.submitThis()
-    if discussion: ob.open_for_comments()
-    self.recatalogNyObject(ob)
-    self.notifyFolderMaintainer(self, ob)
-    #redirect if case
-    if REQUEST is not None:
-        l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if l_referer == 'event_manage_add' or l_referer.find('event_manage_add') != -1:
-            return self.manage_main(self, REQUEST, update_menu=1)
-        elif l_referer == 'event_add_html':
-            self.setSession('referer', self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+    #check mandatory fiels
+    l_referer = ''
+    if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
+    if not(l_referer == 'event_manage_add' or l_referer.find('event_manage_add') != -1):
+        r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
+            description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
+            releasedate=releasedate, discussion=discussion, location=location, location_address=location_address, \
+            location_url=location_url, start_date=start_date, end_date=end_date, \
+            host=host, agenda_url=agenda_url, event_url=event_url, details=details, \
+            topitem=topitem, contact_person=contact_person, contact_email=contact_email, \
+            contact_phone=contact_phone, contact_fax=contact_fax)
+    else:
+        r = []
+    if len(r) <= 0:
+        #create object
+        ob = NyEvent(id, title, description, coverage, keywords, sortorder,
+            location, location_address, location_url, start_date, end_date, host, agenda_url,
+            event_url, details, topitem, event_type, contact_person, contact_email, contact_phone, contact_fax,
+            contributor, approved, approved_by, releasedate, lang)
+        self.gl_add_languages(ob)
+        ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        self._setObject(id, ob)
+        #extra settings
+        ob = self._getOb(id)
+        ob.submitThis()
+        if discussion: ob.open_for_comments()
+        self.recatalogNyObject(ob)
+        self.notifyFolderMaintainer(self, ob)
+        #redirect if case
+        if REQUEST is not None:
+            l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
+            if l_referer == 'event_manage_add' or l_referer.find('event_manage_add') != -1:
+                return self.manage_main(self, REQUEST, update_menu=1)
+            elif l_referer == 'event_add_html':
+                self.setSession('referer', self.absolute_url())
+                REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+    else:
+        if REQUEST is not None:
+            self.setSessionErrors(r)
+            self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
+                description=description, coverage=coverage, keywords=keywords, \
+                sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
+                location=location, location_address=location_address, \
+                location_url=location_url, start_date=start_date, end_date=end_date, \
+                host=host, agenda_url=agenda_url, event_url=event_url, details=details, \
+                topitem=topitem, contact_person=contact_person, contact_email=contact_email, \
+                contact_phone=contact_phone, contact_fax=contact_fax)
+            REQUEST.RESPONSE.redirect('%s/event_add_html' % self.absolute_url())
+        else:
+            raise Exception, '%s' % ', '.join(r)
 
 def importNyEvent(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
@@ -328,29 +380,52 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
         if topitem: topitem = 1
         else: topitem = 0
         if lang is None: lang = self.gl_get_selected_language()
-        if not self.hasVersion():
-            #this object has not been checked out; save changes directly into the object
-            releasedate = self.process_releasedate(releasedate, self.releasedate)
-            self.save_properties(title, description, coverage, keywords, sortorder, location, location_address,
-                location_url, start_date, end_date, host, agenda_url, event_url, details, topitem, event_type,
-                contact_person, contact_email, contact_phone, contact_fax, releasedate, lang)
-            self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        #check mandatory fiels
+        r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, title=title, \
+            description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
+            releasedate=releasedate, discussion=discussion, location=location, location_address=location_address, \
+            location_url=location_url, start_date=start_date, end_date=end_date, \
+            host=host, agenda_url=agenda_url, event_url=event_url, details=details, \
+            topitem=topitem, contact_person=contact_person, contact_email=contact_email, \
+            contact_phone=contact_phone, contact_fax=contact_fax)
+        if len(r) <= 0:
+            if not self.hasVersion():
+                #this object has not been checked out; save changes directly into the object
+                releasedate = self.process_releasedate(releasedate, self.releasedate)
+                self.save_properties(title, description, coverage, keywords, sortorder, location, location_address,
+                    location_url, start_date, end_date, host, agenda_url, event_url, details, topitem, event_type,
+                    contact_person, contact_email, contact_phone, contact_fax, releasedate, lang)
+                self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            else:
+                #this object has been checked out; save changes into the version object
+                if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
+                    raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+                releasedate = self.process_releasedate(releasedate, self.version.releasedate)
+                self.version.save_properties(title, description, coverage, keywords, sortorder, location, location_address,
+                    location_url, start_date, end_date, host, agenda_url, event_url, details, topitem, event_type,
+                    contact_person, contact_email, contact_phone, contact_fax, releasedate, lang)
+                self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+            if discussion: self.open_for_comments()
+            else: self.close_for_comments()
+            self._p_changed = 1
+            self.recatalogNyObject(self)
+            if REQUEST:
+                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
         else:
-            #this object has been checked out; save changes into the version object
-            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-            releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-            self.version.save_properties(title, description, coverage, keywords, sortorder, location, location_address,
-                location_url, start_date, end_date, host, agenda_url, event_url, details, topitem, event_type,
-                contact_person, contact_email, contact_phone, contact_fax, releasedate, lang)
-            self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-        if discussion: self.open_for_comments()
-        else: self.close_for_comments()
-        self._p_changed = 1
-        self.recatalogNyObject(self)
-        if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            if REQUEST is not None:
+                self.setSessionErrors(r)
+                self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
+                    description=description, coverage=coverage, keywords=keywords, \
+                    sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
+                    location=location, location_address=location_address, \
+                    location_url=location_url, start_date=start_date, end_date=end_date, \
+                    host=host, agenda_url=agenda_url, event_url=event_url, details=details, \
+                    topitem=topitem, contact_person=contact_person, contact_email=contact_email, \
+                    contact_phone=contact_phone, contact_fax=contact_fax)
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            else:
+                raise Exception, '%s' % ', '.join(r)
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
