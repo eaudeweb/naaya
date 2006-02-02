@@ -2009,13 +2009,17 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     #pluggable meta types properties
     def get_pluggable_item_properties_ids(self, meta_type):
-        return get_pluggable_content().get(meta_type, None)['properties'].keys()
+        if self.is_pluggable_item_installed(meta_type):
+            return get_pluggable_content().get(meta_type, None)['properties'].keys()
+        return {}
 
     def get_pluggable_item_properties_item(self, meta_type, prop):
         return get_pluggable_content().get(meta_type, None)['properties'][prop]
 
     def get_pluggable_item_property_mandatory(self, meta_type, prop):
-        return get_pluggable_content().get(meta_type, None)['properties'][prop][0]
+        if self.is_pluggable_item_installed(meta_type):
+            return get_pluggable_content().get(meta_type, None)['properties'][prop][0]
+        return 0
 
     def check_pluggable_item_properties(self, meta_type, **args):
         l = []

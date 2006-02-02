@@ -47,15 +47,15 @@ function fSet(ctrl, value)
 
 <form name="frmEdit" method="post" action="saveProperties" enctype="multipart/form-data">
 <div class="field">
-	<label for="title" i18n:translate="">Title<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'title')" class="mandatory_field"> *</span></label>
+	<label for="title"><span i18n:translate="" tal:omit-tag="">Title</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'title')" class="mandatory_field"> *</span></label>
 	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', here.getVersionLocalProperty('title', curr_lang))" />
 </div>
 <div class="field">
-	<label for="description" i18n:translate="">Description<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'description')" class="mandatory_field"> *</span></label>
+	<label for="description"><span i18n:translate="" tal:omit-tag="">Description</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'description')" class="mandatory_field"> *</span></label>
 	<span tal:replace="structure python:here.Epoz('description:utf8:ustring', data=here.getSession('description', here.getVersionLocalProperty('description', curr_lang)), toolbox='', lang=curr_lang, style='width: 400px; height: 200px; border: 1px solid #000000;')" />
 </div>
 <div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
-	<label for="coverage" i18n:translate="">Geographical coverage<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'coverage')" class="mandatory_field"> *</span></label>
+	<label for="coverage"><span i18n:translate="" tal:omit-tag="">Geographical coverage</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'coverage')" class="mandatory_field"> *</span></label>
 	<tal:block tal:condition="python:coverage_glossary is not None">
 		<p i18n:translate=""><strong>Tip:</strong> you can type free text in the field below or pick words from the list</p>
 	</tal:block>
@@ -65,7 +65,7 @@ function fSet(ctrl, value)
 	</tal:block>
 </div>
 <div class="field" tal:define="keywords_glossary here/get_keywords_glossary">
-	<label for="keywords" i18n:translate="">Keywords<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'keywords')" class="mandatory_field"> *</span></label>
+	<label for="keywords"><span i18n:translate="" tal:omit-tag="">Keywords</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'keywords')" class="mandatory_field"> *</span></label>
 	<tal:block tal:condition="python:keywords_glossary is not None">
 		<p i18n:translate=""><strong>Tip:</strong> you can type free text in the field below or pick words from the list</p>
 	</tal:block>
@@ -75,16 +75,16 @@ function fSet(ctrl, value)
 	</tal:block>
 </div>
 <div class="field">
-	<label for="sortorder" i18n:translate="">Sort order<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'sortorder')" class="mandatory_field"> *</span></label>
+	<label for="sortorder"><span i18n:translate="" tal:omit-tag="">Sort order</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'sortorder')" class="mandatory_field"> *</span></label>
 	<input type="text" name="sortorder" id="sortorder" size="2" tal:attributes="value python:here.getSession('sortorder', here.getVersionProperty('sortorder'))" />
 </div>
 <div class="field">
-	<label for="releasedate" i18n:translate="">Release date<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'releasedate')" class="mandatory_field"> *</span></label>
+	<label for="releasedate"><span i18n:translate="" tal:omit-tag="">Release date</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'releasedate')" class="mandatory_field"> *</span></label>
 	<input type="text" name="releasedate" id="releasedate" size="10" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.getVersionProperty('releasedate')))" />
 	<em i18n:translate="">dd/mm/yyyy</em>
 </div>
 <div class="field">
-	<label for="discussion" i18n:translate="">Open for comments<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'discussion')" class="mandatory_field"> *</span></label>
+	<label for="discussion"><span i18n:translate="" tal:omit-tag="">Open for comments</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'discussion')" class="mandatory_field"> *</span></label>
 	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked python:test(here.getSession('discussion', here.discussion), 'checked', '')" />
 </div>
 <tal:block metal:define-slot="custom_properties"/>
