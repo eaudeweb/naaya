@@ -64,6 +64,7 @@ PROPERTIES_OBJECT = {
     'event_url':        (0, '', ''),
     'details':          (0, '', ''),
     'topitem':          (0, '', ''),
+    'event_type':       (0, '', ''),
     'contact_person':   (0, '', ''),
     'contact_email':    (0, '', ''),
     'contact_phone':    (0, '', ''),
@@ -113,7 +114,7 @@ def addNyEvent(self, id='', title='', description='', coverage='',
             location_url=location_url, start_date=start_date, end_date=end_date, \
             host=host, agenda_url=agenda_url, event_url=event_url, details=details, \
             topitem=topitem, contact_person=contact_person, contact_email=contact_email, \
-            contact_phone=contact_phone, contact_fax=contact_fax)
+            contact_phone=contact_phone, contact_fax=contact_fax, event_type=event_type)
     else:
         r = []
     if len(r) <= 0:
@@ -149,7 +150,7 @@ def addNyEvent(self, id='', title='', description='', coverage='',
                 location_url=location_url, start_date=start_date, end_date=end_date, \
                 host=host, agenda_url=agenda_url, event_url=event_url, details=details, \
                 topitem=topitem, contact_person=contact_person, contact_email=contact_email, \
-                contact_phone=contact_phone, contact_fax=contact_fax)
+                contact_phone=contact_phone, contact_fax=contact_fax, event_type=event_type)
             REQUEST.RESPONSE.redirect('%s/event_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)
@@ -387,7 +388,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
             location_url=location_url, start_date=start_date, end_date=end_date, \
             host=host, agenda_url=agenda_url, event_url=event_url, details=details, \
             topitem=topitem, contact_person=contact_person, contact_email=contact_email, \
-            contact_phone=contact_phone, contact_fax=contact_fax)
+            contact_phone=contact_phone, contact_fax=contact_fax, event_type=event_type)
         if len(r) <= 0:
             if not self.hasVersion():
                 #this object has not been checked out; save changes directly into the object
@@ -422,7 +423,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
                     location_url=location_url, start_date=start_date, end_date=end_date, \
                     host=host, agenda_url=agenda_url, event_url=event_url, details=details, \
                     topitem=topitem, contact_person=contact_person, contact_email=contact_email, \
-                    contact_phone=contact_phone, contact_fax=contact_fax)
+                    contact_phone=contact_phone, contact_fax=contact_fax, event_type=event_type)
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
             else:
                 raise Exception, '%s' % ', '.join(r)
