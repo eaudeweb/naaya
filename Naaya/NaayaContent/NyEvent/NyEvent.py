@@ -53,7 +53,6 @@ PROPERTIES_OBJECT = {
     'sortorder':        (0, '', ''),
     'releasedate':      (0, '', ''),
     'discussion':       (0, '', ''),
-
     'location':         (0, '', ''),
     'location_address': (0, '', ''),
     'location_url':     (0, '', ''),
