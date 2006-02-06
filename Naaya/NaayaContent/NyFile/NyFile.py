@@ -49,7 +49,7 @@ DESCRIPTION_OBJECT = 'This is Naaya File type.'
 PREFIX_OBJECT = 'file'
 PROPERTIES_OBJECT = {
     'id':               (0, '', ''),
-    'title':            (1, MUST_BE_NONEMPTY, 'Title must have a value.'),
+    'title':            (0, '', ''),
     'description':      (0, '', ''),
     'coverage':         (0, '', ''),
     'keywords':         (0, '', ''),
