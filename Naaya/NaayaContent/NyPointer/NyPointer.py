@@ -86,7 +86,7 @@ def addNyPointer(self, id='', title='', description='', coverage='', keywords=''
     #check mandatory fiels
     l_referer = ''
     if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-    if not(l_referer == 'pointer_manage_add' or l_referer.find('pointer_manage_add') != -1):
+    if not(l_referer == 'pointer_manage_add' or l_referer.find('pointer_manage_add') != -1) and REQUEST:
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion, pointer=pointer)
