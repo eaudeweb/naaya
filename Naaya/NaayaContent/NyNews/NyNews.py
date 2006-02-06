@@ -46,7 +46,7 @@ DESCRIPTION_OBJECT = 'This is Naaya News type.'
 PREFIX_OBJECT = 'news'
 PROPERTIES_OBJECT = {
     'id':               (0, '', ''),
-    'title':            (1, MUST_BE_NONEMPTY, 'Title must have a value.'),
+    'title':            (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
     'description':      (0, '', ''),
     'coverage':         (0, '', ''),
     'keywords':         (0, '', ''),
