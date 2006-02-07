@@ -2031,6 +2031,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     value = args.get(k)
                     if v[1] == MUST_BE_NONEMPTY:
                         if self.utIsEmptyString(value): la(translate('', v[2]))
+                    elif v[1] == MUST_BE_DATETIME:
+                        if not self.utIsDateTimeObj(value): la(translate('', v[2]))
         return l
 
     def set_pluggable_item_session(self, meta_type, **args):
