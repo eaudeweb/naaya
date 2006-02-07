@@ -2026,13 +2026,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         la = l.append
         translate = self.getPortalTranslations().translate
         for k, v in get_pluggable_content().get(meta_type, None)['properties'].items():
-            if v[0] == 1:   #this property is mandatory
+            if v[0] == 1 or v[1]:   #this property is mandatory
                 if args.has_key(k):    #property found in parameters list
                     value = args.get(k)
                     if v[1] == MUST_BE_NONEMPTY:
                         if self.utIsEmptyString(value): la(translate('', v[2]))
                     elif v[1] == MUST_BE_DATETIME:
-                        if not self.utIsDateTimeObj(value): la(translate('', v[2]))
+                        if not self.utIsValidDateTime(value): la(translate('', v[2]))
+                    elif v[1] == MUST_BE_DATETIME_STRICT:
+                        if self.utIsEmptyString(value) or not self.utIsValidDateTime(value):
+                            la(translate('', v[2]))
+                    elif v[1] == MUST_BE_POSITIV_INT:
+                        if not self.utIsAbsInteger(value): la(translate('', v[2]))
         return l
 
     def set_pluggable_item_session(self, meta_type, **args):
