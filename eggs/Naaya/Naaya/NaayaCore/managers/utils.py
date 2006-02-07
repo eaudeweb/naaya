@@ -420,3 +420,7 @@ class utils:
         if p_str:
             if p_str.count(" ") != len(p_str): return 0
         return 1
+
+    def utIsDateTimeObj(self, p_obj):
+        """Test if DateTime object"""
+        return type(p_obj) == type(DateTime())
