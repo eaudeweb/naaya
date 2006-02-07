@@ -421,6 +421,17 @@ class utils:
             if p_str.count(" ") != len(p_str): return 0
         return 1
 
-    def utIsDateTimeObj(self, p_obj):
-        """Test if DateTime object"""
-        return type(p_obj) == type(DateTime())
+    def utIsValidDateTime(self, p_str):
+        """Test if the string is a valid date"""
+        if p_str:
+            return type(self.utConvertStringToDateTimeObj(p_str)) == type(DateTime())
+        else:
+            return 1
+
+    def utIsAbsInteger(self, p_data):
+        """Test if the p_data parameter is integer"""
+        try:
+            p_data = int(p_data)
+            return p_data >= 0
+        except:
+            return 0
