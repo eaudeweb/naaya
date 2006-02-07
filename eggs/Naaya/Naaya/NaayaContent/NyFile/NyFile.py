@@ -53,8 +53,8 @@ PROPERTIES_OBJECT = {
     'description':      (0, '', ''),
     'coverage':         (0, '', ''),
     'keywords':         (0, '', ''),
-    'sortorder':        (0, '', ''),
-    'releasedate':      (0, '', ''),
+    'sortorder':        (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positiv integer.'),
+    'releasedate':      (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':       (0, '', ''),
     'file':             (0, '', ''),
     'url':              (0, '', ''),
@@ -83,13 +83,6 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
     if downloadfilename == '': downloadfilename = id
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
-    if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
-    if self.glCheckPermissionPublishObjects():
-        approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
-    else:
-        approved, approved_by = 0, None
-    releasedate = self.process_releasedate(releasedate)
-    if lang is None: lang = self.gl_get_selected_language()
     #check mandatory fiels
     l_referer = ''
     if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
@@ -100,7 +93,15 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
             downloadfilename=downloadfilename)
     else:
         r = []
-    if len(r) <= 0:
+    if not len(r):
+        #process parameters
+        if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        if self.glCheckPermissionPublishObjects():
+            approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
+        else:
+            approved, approved_by = 0, None
+        releasedate = self.process_releasedate(releasedate)
+        if lang is None: lang = self.gl_get_selected_language()
         #create object
         ob = NyFile(id, title, description, coverage, keywords, sortorder, '', precondition, content_type,
             downloadfilename, contributor, approved, approved_by, releasedate, lang)
@@ -377,14 +378,14 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        try: sortorder = abs(int(sortorder))
-        except: sortorder = DEFAULT_SORTORDER
+        if not sortorder: sortorder = DEFAULT_SORTORDER
         if lang is None: lang = self.gl_get_selected_language()
         #check mandatory fiels
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion, downloadfilename=downloadfilename)
-        if len(r) <= 0:
+        if not len(r):
+            sortorder = int(sortorder)
             if not self.hasVersion():
                 #this object has not been checked out; save changes directly into the object
                 releasedate = self.process_releasedate(releasedate, self.releasedate)

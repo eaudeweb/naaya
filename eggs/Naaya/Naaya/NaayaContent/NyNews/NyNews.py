@@ -50,11 +50,11 @@ PROPERTIES_OBJECT = {
     'description':      (0, '', ''),
     'coverage':         (0, '', ''),
     'keywords':         (0, '', ''),
-    'sortorder':        (0, '', ''),
-    'releasedate':      (0, '', ''),
+    'sortorder':        (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positiv integer.'),
+    'releasedate':      (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':       (0, '', ''),
     'details':          (0, '', ''),
-    'expirationdate':   (0, '', ''),
+    'expirationdate':   (0, MUST_BE_DATETIME, 'The Expires field must contain a valid date.'),
     'topitem':          (0, '', ''),
     'smallpicture':     (0, '', ''),
     'del_smallpicture': (0, '', ''),
@@ -82,18 +82,10 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
     #process parameters
     id = self.utCleanupId(id)
     if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
-    try: sortorder = abs(int(sortorder))
-    except: sortorder = DEFAULT_SORTORDER
-    expirationdate = self.utConvertStringToDateTimeObj(expirationdate)
     if topitem: topitem = 1
-    else: topitem = 0
-    if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
-    if self.glCheckPermissionPublishObjects():
-        approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
-    else:
-        approved, approved_by = 0, None
-    releasedate = self.process_releasedate(releasedate)
-    if lang is None: lang = self.gl_get_selected_language()
+    else:       topitem = 0
+    try: sortorder =    abs(int(sortorder))
+    except: sortorder = DEFAULT_SORTORDER
     #check mandatory fiels
     l_referer = ''
     if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
@@ -105,7 +97,16 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
             source=source)
     else:
         r = []
-    if len(r) <= 0:
+    if not len(r):
+        #process parameters
+        if lang is None: lang = self.gl_get_selected_language()
+        if self.glCheckPermissionPublishObjects():
+            approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
+        else:
+            approved, approved_by = 0, None
+        if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        expirationdate = self.utConvertStringToDateTimeObj(expirationdate)
+        releasedate = self.process_releasedate(releasedate)
         #create object
         ob = NyNews(id, title, description, coverage, keywords, sortorder,
             details, expirationdate, topitem, None, None, resourceurl, source,
@@ -131,10 +132,6 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
     else:
         if REQUEST is not None:
             self.setSessionErrors(r)
-            if hasattr(smallpicture, 'filename'):
-                smallpicture = smallpicture.filename
-            if hasattr(bigpicture, 'filename'):
-                bigpicture = bigpicture.filename
             self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                 description=description, coverage=coverage, keywords=keywords, \
                 sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
@@ -363,9 +360,7 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        try: sortorder = abs(int(sortorder))
-        except: sortorder = DEFAULT_SORTORDER
-        expirationdate = self.utConvertStringToDateTimeObj(expirationdate)
+        if not sortorder: sortorder = DEFAULT_SORTORDER
         if topitem: topitem = 1
         else: topitem = 0
         if lang is None: lang = self.gl_get_selected_language()
@@ -375,7 +370,9 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
             releasedate=releasedate, discussion=discussion, details=details, expirationdate=expirationdate, \
             topitem=topitem, smallpicture=smallpicture, bigpicture=bigpicture, resourceurl=resourceurl, \
             source=source)
-        if len(r) <= 0:
+        if not len(r):
+            sortorder = int(sortorder)
+            expirationdate = self.utConvertStringToDateTimeObj(expirationdate)
             if not self.hasVersion():
                 #this object has not been checked out; save changes directly into the object
                 releasedate = self.process_releasedate(releasedate, self.releasedate)
