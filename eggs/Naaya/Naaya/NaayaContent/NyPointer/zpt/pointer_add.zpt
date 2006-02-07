@@ -3,8 +3,7 @@
 <h1 metal:fill-slot="title" i18n:translate="">Submit Pointer</h1>
 
 <p metal:fill-slot="description" i18n:translate="">
-	Fill the properties in the form below and click <strong>Submit</strong>. Pick the location to which this item will point by clicking on the corresponding item from the sitemap.<br />
-	Fields marked with <span class="mandatory_field">*</span> are mandatory.
+	Fill the properties in the form below and click <strong>Submit</strong>. Pick the location to which this item will point by clicking on the corresponding item from the sitemap. Fields marked with <span class="mandatory_field">*</span> are mandatory.
 </p>
 
 <tal:block metal:fill-slot="custom_properties">

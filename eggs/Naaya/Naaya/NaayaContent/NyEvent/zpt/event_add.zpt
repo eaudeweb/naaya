@@ -3,8 +3,7 @@
 <h1 metal:fill-slot="title" i18n:translate="">Submit Event</h1>
 
 <p metal:fill-slot="description" i18n:translate="">
-	Fill the properties in the form below and click <strong>Submit</strong>.<br />
-	Fields marked with <span class="mandatory_field">*</span> are mandatory.
+	Fill the properties in the form below and click <strong>Submit</strong>. Fields marked with <span class="mandatory_field">*</span> are mandatory.
 </p>
 
 <tal:block metal:fill-slot="custom_properties" tal:define="eventtypes here/getEventTypesList">
@@ -22,11 +21,11 @@
 </div>
 <div class="field">
 	<label for="start_date"><span i18n:translate="" tal:omit-tag="">Start date (<em>dd/mm/yyyy</em>)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'start_date')" class="mandatory_field"> *</span></label>
-	<input type="text" name="start_date:utf8:ustring" size="10" id="start_date" tal:attributes="value python:here.getSession('start_date', '')" />
+	<input type="text" name="start_date:utf8:ustring" size="10" id="start_date" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getSession('start_date', ''))" />
 </div>
 <div class="field">
 	<label for="end_date"><span i18n:translate="" tal:omit-tag="">End date (<em>dd/mm/yyyy</em>)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'end_date')" class="mandatory_field"> *</span></label>
-	<input type="text" name="end_date:utf8:ustring" size="10" id="end_date" tal:attributes="value python:here.getSession('end_date', '')" />
+	<input type="text" name="end_date:utf8:ustring" size="10" id="end_date" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getSession('end_date', ''))" />
 </div>
 <div class="field">
 	<label for="host"><span i18n:translate="" tal:omit-tag="">Host</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'host')" class="mandatory_field"> *</span></label>

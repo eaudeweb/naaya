@@ -3,8 +3,7 @@
 <h1 metal:fill-slot="title" i18n:translate="">Edit News</h1>
 
 <p metal:fill-slot="description" i18n:translate="">
-	Change the properties in the form below and click <strong>Save changes</strong>.<br />
-	Fields marked with <span class="mandatory_field">*</span> are mandatory.
+	Change the properties in the form below and click <strong>Save changes</strong>. Fields marked with <span class="mandatory_field">*</span> are mandatory.
 </p>
 
 <tal:block metal:fill-slot="custom_properties"
@@ -17,7 +16,7 @@
 <div class="field">
 	<label for="expirationdate"><span i18n:translate="" tal:omit-tag="">Expires (<em>dd/mm/yyyy</em>)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'expirationdate')" class="mandatory_field"> *</span></label>
 	<input type="text" name="expirationdate" id="expirationdate" size="10" 
-		tal:attributes="value python:here.getSession('expirationdate', here.utConvertDateTimeObjToString(here.getVersionProperty('expirationdate')))" />
+		tal:attributes="value python:here.utConvertDateTimeObjToString(here.getSession('expirationdate', here.getVersionProperty('expirationdate')))" />
 </div>
 <div class="field-inline">
 	<label for="topitem"><span i18n:translate="" tal:omit-tag="">Top story</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'topitem')" class="mandatory_field"> *</span></label>
