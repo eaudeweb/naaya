@@ -70,7 +70,7 @@ function fSet(ctrl, value)
 </div>
 <div class="field">
 	<label for="releasedate"><span i18n:translate="" tal:omit-tag="">Release date (<em>dd/mm/yyyy</em>)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'releasedate')" class="mandatory_field"> *</span></label>
-	<input type="text" name="releasedate" id="releasedate" size="20" tal:attributes="value python:here.getSession('releasedate', '')" />
+	<input type="text" name="releasedate" id="releasedate" size="20" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getSession('releasedate', here.utGetTodayDate()))" />
 </div>
 <div class="field-inline">
 	<label for="discussion"><span i18n:translate="" tal:omit-tag="">Open for comments</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'discussion')" class="mandatory_field"> *</span></label>
