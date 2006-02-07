@@ -50,14 +50,14 @@ PROPERTIES_OBJECT = {
     'description':      (0, '', ''),
     'coverage':         (0, '', ''),
     'keywords':         (0, '', ''),
-    'sortorder':        (0, '', ''),
-    'releasedate':      (0, '', ''),
+    'sortorder':        (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positiv integer.'),
+    'releasedate':      (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':       (0, '', ''),
     'location':         (0, '', ''),
     'location_address': (0, '', ''),
     'location_url':     (0, '', ''),
-    'start_date':       (0, '', ''),
-    'end_date':         (0, '', ''),
+    'start_date':       (0, MUST_BE_DATETIME, 'The Start date field must contain a valid date.'),
+    'end_date':         (0, MUST_BE_DATETIME, 'The End date field must contain a valid date.'),
     'host':             (0, '', ''),
     'agenda_url':       (0, '', ''),
     'event_url':        (0, '', ''),
@@ -94,15 +94,6 @@ def addNyEvent(self, id='', title='', description='', coverage='',
     except: sortorder = DEFAULT_SORTORDER
     if topitem: topitem = 1
     else: topitem = 0
-    if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
-    if self.glCheckPermissionPublishObjects():
-        approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
-    else:
-        approved, approved_by = 0, None
-    start_date = self.utConvertStringToDateTimeObj(start_date)
-    end_date = self.utConvertStringToDateTimeObj(end_date)
-    releasedate = self.process_releasedate(releasedate)
-    if lang is None: lang = self.gl_get_selected_language()
     #check mandatory fiels
     l_referer = ''
     if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
@@ -116,7 +107,17 @@ def addNyEvent(self, id='', title='', description='', coverage='',
             contact_phone=contact_phone, contact_fax=contact_fax, event_type=event_type)
     else:
         r = []
-    if len(r) <= 0:
+    if not len(r):
+        #process parameters
+        if lang is None: lang = self.gl_get_selected_language()
+        if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        if self.glCheckPermissionPublishObjects():
+            approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
+        else:
+            approved, approved_by = 0, None
+        start_date = self.utConvertStringToDateTimeObj(start_date)
+        end_date = self.utConvertStringToDateTimeObj(end_date)
+        releasedate = self.process_releasedate(releasedate)
         #create object
         ob = NyEvent(id, title, description, coverage, keywords, sortorder,
             location, location_address, location_url, start_date, end_date, host, agenda_url,
@@ -372,10 +373,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        try: sortorder = abs(int(sortorder))
-        except: sortorder = DEFAULT_SORTORDER
-        start_date = self.utConvertStringToDateTimeObj(start_date)
-        end_date = self.utConvertStringToDateTimeObj(end_date)
+        if not sortorder: sortorder = DEFAULT_SORTORDER
         if topitem: topitem = 1
         else: topitem = 0
         if lang is None: lang = self.gl_get_selected_language()
@@ -387,7 +385,10 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
             host=host, agenda_url=agenda_url, event_url=event_url, details=details, \
             topitem=topitem, contact_person=contact_person, contact_email=contact_email, \
             contact_phone=contact_phone, contact_fax=contact_fax, event_type=event_type)
-        if len(r) <= 0:
+        if not len(r):
+            sortorder = int(sortorder)
+            start_date = self.utConvertStringToDateTimeObj(start_date)
+            end_date = self.utConvertStringToDateTimeObj(end_date)
             if not self.hasVersion():
                 #this object has not been checked out; save changes directly into the object
                 releasedate = self.process_releasedate(releasedate, self.releasedate)

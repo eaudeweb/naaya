@@ -53,8 +53,8 @@ PROPERTIES_OBJECT = {
     'description':  (0, '', ''),
     'coverage':     (0, '', ''),
     'keywords':     (0, '', ''),
-    'sortorder':    (0, '', ''),
-    'releasedate':  (0, '', ''),
+    'sortorder':    (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positiv integer.'),
+    'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':   (0, '', ''),
     'body':         (0, '', ''),
     'topitem':      (0, '', ''),
@@ -257,8 +257,6 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         except: sortorder = DEFAULT_SORTORDER
         if topitem: topitem = 1
         else: topitem = 0
-        releasedate = self.process_releasedate(releasedate, self.releasedate)
-        lang = self.gl_get_selected_language()
         #check mandatory fiels
         l_referer = ''
         if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
@@ -269,7 +267,9 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
                 resourceurl=resourceurl, source=source)
         else:
             r = []
-        if len(r) <= 0:
+        if not len(r):
+            releasedate = self.process_releasedate(releasedate, self.releasedate)
+            lang = self.gl_get_selected_language()
             self.save_properties(title, description, coverage, keywords, sortorder, body,
                 topitem, resourceurl, source, releasedate, lang)
             self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
@@ -340,8 +340,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        try: sortorder = abs(int(sortorder))
-        except: sortorder = DEFAULT_SORTORDER
+        if not sortorder: sortorder = DEFAULT_SORTORDER
         if topitem: topitem = 1
         else: topitem = 0
         if lang is None: lang = self.gl_get_selected_language()
@@ -350,7 +349,8 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion, body=body, topitem=topitem, \
             resourceurl=resourceurl, source=source)
-        if len(r) <= 0:
+        if not len(r):
+            sortorder = int(sortorder)
             if not self.hasVersion():
                 #this object has not been checked out; save changes directly into the object
                 releasedate = self.process_releasedate(releasedate, self.releasedate)

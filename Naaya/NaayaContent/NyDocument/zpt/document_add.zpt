@@ -1,6 +1,6 @@
 <span tal:replace="structure here/standard_html_header" />
 
-<h1 i18n:translate="">Submit Document</h1>
+<h1 i18n:translate="">Submit HTML Document</h1>
 
 <p i18n:translate="">
 	Fill the properties in the form below and click <strong>Submit</strong>. Fields marked with <span class="mandatory_field">*</span> are mandatory.
@@ -69,7 +69,7 @@ function fSet(ctrl, value)
 </div>
 <div class="field">
 	<label for="releasedate"><span i18n:translate="" tal:omit-tag="">Release date (<em>dd/mm/yyyy</em>)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'releasedate')" class="mandatory_field"> *</span></label>
-	<input type="text" name="releasedate" id="releasedate" size="20" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getSession('releasedate', here.utGetTodayDate()))" />
+	<input type="text" name="releasedate" id="releasedate" size="20" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" />
 </div>
 <div class="field-inline">
 	<label for="discussion"><span i18n:translate="" tal:omit-tag="">Open for comments</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'discussion')" class="mandatory_field"> *</span></label>

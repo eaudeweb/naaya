@@ -40,7 +40,7 @@ from document_item import document_item
 
 #module constants
 METATYPE_OBJECT = 'Naaya Document'
-LABEL_OBJECT = 'Document'
+LABEL_OBJECT = 'HTML Document'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Document objects'
 OBJECT_FORMS = ['document_add', 'document_edit', 'document_index']
 OBJECT_CONSTRUCTORS = ['manage_addNyDocument_html', 'document_add', 'addNyDocument', 'importNyDocument']
@@ -53,8 +53,8 @@ PROPERTIES_OBJECT = {
     'description':  (0, '', ''),
     'coverage':     (0, '', ''),
     'keywords':     (0, '', ''),
-    'sortorder':    (0, '', ''),
-    'releasedate':  (0, '', ''),
+    'sortorder':    (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positiv integer.'),
+    'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':   (0, '', ''),
     'body':         (0, '', ''),
 }
@@ -239,8 +239,6 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         """ """
         try: sortorder = abs(int(sortorder))
         except: sortorder = DEFAULT_SORTORDER
-        lang = self.gl_get_selected_language()
-        releasedate = self.process_releasedate(releasedate, self.releasedate)
         #check mandatory fiels
         l_referer = ''
         if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
@@ -250,7 +248,9 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
                 releasedate=releasedate, discussion=discussion, body=body)
         else:
             r = []
-        if len(r) <= 0:
+        if not len(r):
+            lang = self.gl_get_selected_language()
+            releasedate = self.process_releasedate(releasedate, self.releasedate)
             self.save_properties(title, description, coverage, keywords, sortorder, body, releasedate, lang)
             self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             self._p_changed = 1
@@ -316,14 +316,14 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        try: sortorder = abs(int(sortorder))
-        except: sortorder = DEFAULT_SORTORDER
+        if not sortorder: sortorder = DEFAULT_SORTORDER
         if lang is None: lang = self.gl_get_selected_language()
         #check mandatory fiels
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion, body=body)
-        if len(r) <= 0:
+        if not len(r):
+            sortorder = int(sortorder)
             if not self.hasVersion():
                 #this object has not been checked out; save changes directly into the object
                 releasedate = self.process_releasedate(releasedate, self.releasedate)
