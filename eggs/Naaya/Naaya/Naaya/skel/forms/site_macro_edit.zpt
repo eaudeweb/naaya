@@ -80,7 +80,7 @@ function fSet(ctrl, value)
 </div>
 <div class="field">
 	<label for="releasedate"><span i18n:translate="" tal:omit-tag="">Release date</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'releasedate')" class="mandatory_field"> *</span></label>
-	<input type="text" name="releasedate" id="releasedate" size="10" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getSession('releasedate', here.getVersionProperty('releasedate')))" />
+	<input type="text" name="releasedate" id="releasedate" size="10" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.getVersionProperty('releasedate')))" />
 	<em i18n:translate="">dd/mm/yyyy</em>
 </div>
 <div class="field">
