@@ -166,16 +166,15 @@ class NyBase:
         ra = r.append
         ra('<link>%s</link>' % self.absolute_url())
         ra('<dc:title>%s</dc:title>' % self.utXmlEncode(self.getLocalProperty('title', lang)))
-        ra('<dc:identifier>%s</dc:identifier>' % self.absolute_url())
+        ra('<dc:identifier>%s</dc:identifier>' % self.identifier())
         ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.releasedate))
         ra('<dc:description>%s</dc:description>' % self.utXmlEncode(self.getLocalProperty('description', lang)))
         ra('<dc:contributor>%s</dc:contributor>' % self.utXmlEncode(self.contributor))
-        ra('<dc:coverage>%s</dc:coverage>' % self.utXmlEncode(self.getLocalProperty('coverage', lang)))
         ra('<dc:language>%s</dc:language>' % self.utXmlEncode(lang))
-        for k in self.getLocalProperty('keywords', lang).split(' '):
-            ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(k))
-        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
-        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
+        for k in self.getLocalProperty('coverage', lang).split(','):
+            ra('<dc:coverage>%s</dc:coverage>' % self.utXmlEncode(k.strip()))
+        for k in self.getLocalProperty('keywords', lang).split(','):
+            ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(k.strip()))
         ra('<dc:rights>%s</dc:rights>' % self.utXmlEncode(l_site.getLocalProperty('rights', lang)))
         return ''.join(r)
 
@@ -195,8 +194,10 @@ class NyBase:
         ra = r.append
         ra(self.syndicateThisHeader())
         ra(self.syndicateThisCommon(lang))
-        ra('<dc:type>Text</dc:type>')
-        ra('<dc:format>text</dc:format>')
+        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
+        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
+        ra('<dc:type>%s</dc:type>' % self.type())
+        ra('<dc:format>%s</dc:format>' % self.format())
         ra('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
         ra(self.syndicateThisFooter())
         return ''.join(r)
