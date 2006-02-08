@@ -2134,10 +2134,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(view_management_screens, 'manage_controlpanel_html')
     manage_controlpanel_html = PageTemplateFile('zpt/site_manage_controlpanel', globals())
 
-    security.declareProtected(view_management_screens, 'macro_manage_add')
+    security.declareProtected(view, 'macro_manage_add')
     macro_manage_add = PageTemplateFile('zpt/site_macro_manage_add', globals())
 
-    security.declareProtected(view_management_screens, 'macro_manage_edit')
+    security.declareProtected(view, 'macro_manage_edit')
     macro_manage_edit= PageTemplateFile('zpt/site_macro_manage_edit', globals())
 
     #site pages
