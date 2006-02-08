@@ -232,6 +232,7 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
 
     security.declarePrivate('syndicateThis')
     def syndicateThis(self, lang=None):
+        l_site = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
         r = []
         ra = r.append
@@ -240,6 +241,8 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         ra('<dc:type>Text</dc:type>')
         ra('<dc:format>text</dc:format>')
         ra('<dc:source>%s</dc:source>' % self.utXmlEncode(self.getLocalProperty('source', lang)))
+        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
+        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
         ra(self.syndicateThisFooter())
         return ''.join(r)
 
