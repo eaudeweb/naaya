@@ -1,0 +1,33 @@
+<html>
+<head>
+<title>Pick stuff</title>
+</head>
+<body onload="this.focus();">
+<a tal:attributes="href string:${here/absolute_url}/gallerybox_html">Pick an image from photo gallery</a>
+<hr />
+<h1>Upload</h1>
+<form method="post" action="process_image_upload" enctype="multipart/form-data">
+Upload image
+<input type="file" name="file" />
+<input type="submit" value="Upload" />
+</form>
+<form method="post" action="process_delete">
+Available images
+<ul>
+	<li tal:repeat="item here/getUploadedImages">
+		<input type="checkbox" name="ids" tal:attributes="value item/id" />
+		<img tal:attributes="src item/absolute_url;
+				alt item/title_or_id;
+				onclick string:window.opener.CreateImage('${item/absolute_url}');; window.close();;"
+			border="0" width="16" height="16" style="cursor: pointer;" />
+	</li>
+</ul>
+<input type="submit" value="Delete" />
+</form>
+
+<form>
+<input type="button" value="Close window" onclick="javascript:window.close();" />
+</form>
+
+</body>
+</html>
