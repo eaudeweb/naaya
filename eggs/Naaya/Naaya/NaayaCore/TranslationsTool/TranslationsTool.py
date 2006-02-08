@@ -129,11 +129,16 @@ class TranslationsTool(MessageCatalog):
                     i = i + 1
                 msgs_append(tuple(e))
         t = [(x[skey], x) for x in msgs]
-        default_locale = locale.setlocale(locale.LC_ALL)
-        try: locale.setlocale(locale.LC_ALL, 'en')
-        except: locale.setlocale(locale.LC_ALL, 'en_US')
-        t.sort(lambda x, y: locale.strcoll(x[0], y[0]))
-        locale.setlocale(locale.LC_ALL, default_locale)
+        if skey == 0:
+            #sort by message
+            default_locale = locale.setlocale(locale.LC_ALL)
+            try: locale.setlocale(locale.LC_ALL, 'en')
+            except: locale.setlocale(locale.LC_ALL, 'en_US')
+            t.sort(lambda x, y: locale.strcoll(x[0], y[0]))
+            locale.setlocale(locale.LC_ALL, default_locale)
+        else:
+            #sort by translation status
+            t.sort()
         if rkey: t.reverse()
         msgs = [val for (key, val) in t]
         return msgs
