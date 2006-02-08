@@ -19,6 +19,7 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+from os.path import join
 
 #Zope imports
 from ImageFile import ImageFile
