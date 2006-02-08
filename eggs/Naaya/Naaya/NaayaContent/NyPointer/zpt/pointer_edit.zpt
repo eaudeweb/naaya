@@ -7,60 +7,25 @@
 </p>
 
 <tal:block metal:fill-slot="custom_properties">
-<script language="javascript" type="text/javascript">
-<!--
-function fTreeClick(expand)
-{
-	document.frmEdit.action = '';
-	document.frmEdit.expand.value = expand;
-	document.frmEdit.submit();
-}
-function fTreeNodeClick(node_path)
-{
-	document.frmEdit.pointer.value = node_path;
-}
-//-->
-</script>
 <div class="field">
-	<label i18n:translate="">Site map</label>
-	<tal:block tal:define="expand python:request.get('expand', '');
-							tree python:here.getSiteMap(here.splitToList(expand), None, 1);
-							expand python:here.getSiteMapTrail(expand, tree);
-							expand_list python:here.splitToList(expand)">
-		[<a tal:attributes="href string:javascript:fTreeClick('all')" i18n:translate="">Expand all</a>]
-		[<a tal:attributes="href string:javascript:fTreeClick('')" i18n:translate="">Collapse all</a>]
-		<br /><br />
-		<div tal:repeat="tree_node tree">
-		<table border="0" cellspacing="1" cellpadding="1">
-		<tr>
-			<td>
-				<img tal:repeat="i python:range(0, tree_node[2])"
-					 src="misc_/Naaya/square.gif" border="0" />
-				<tal:block tal:condition="python:tree_node[1]==-1">
-					<img src="misc_/Naaya/square.gif" border="0" />
-				</tal:block>
-				<tal:block
-					tal:define="node_expand python:here.processCollapse(expand_list, tree_node[0].absolute_url(1))"
-					tal:condition="python:tree_node[1]==0">
-					<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/minus.gif" alt="Collapse" border="0"  i18n:attributes="alt"/></a>
-				</tal:block>
-				<tal:block
-					tal:define="node_expand python:here.processExpand(expand_list, tree_node[0].absolute_url(1))"
-					tal:condition="python:tree_node[1]==1">
-					<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/plus.gif" alt="Expand" border="0"  i18n:attributes="alt"/></a>
-				</tal:block>
-			</td>
-			<td><img border="0" tal:attributes="src python:tree_node[0].icon" /></td>
-			<td><a tal:define="node_path python:tree_node[0].absolute_url(1)" tal:attributes="href string:javascript:fTreeNodeClick('${node_path}')" tal:content="python:tree_node[0].title_or_id()">folder</a></td>
-		</tr>
-		</table>
-		</div>
-		<input type="hidden" name="expand" tal:attributes="value expand" />
-	</tal:block>
-</div>
-<div class="field">
-	<label for="pointer"><span i18n:translate="" tal:omit-tag="">Item</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'pointer')" class="mandatory_field"> *</span></label>
-	<input type="text" name="pointer" id="pointer" size="50" readonly="readonly" tal:attributes="value python:here.getSession('pointer', request.get('pointer', here.getVersionProperty('pointer')))" />
+	<script language="JavaScript">
+	<!--
+	function setupWin(url, theWidth, theHeight)
+	{
+		wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
+		wwinn.focus();
+		return true;
+	}
+
+	function createKey(key)
+	{
+		document.forms['frmEdit'].pointer.value = key;
+	}
+	// -->
+	</script>
+	<label for="pointer"><span i18n:translate="" tal:omit-tag="">Pointer</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'pointer')" class="mandatory_field"> *</span></label>
+	<input type="text" name="pointer" id="pointer" size="50" tal:attributes="value python:here.getSession('pointer', here.getVersionProperty('pointer'))" />
+	<input type="button" value="Pick" i18n:translate="" tal:define="sitemap_path here/getSitePath" tal:attributes="onclick string:setupWin('${sitemap_path}/sitemap_add_html', 300, 500);;" />
 </div>
 </tal:block>
 
