@@ -33,7 +33,7 @@ import Products
 #Product imports
 from constants import *
 from Products.NaayaBase.constants import *
-from Products.NaayaContent import get_pluggable_content
+#from Products.NaayaContent import get_pluggable_content
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyImportExport import NyImportExport
@@ -174,14 +174,14 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     addNyFolder = addNyFolder
 
     #pluggable content constructors
-    for k,v in get_pluggable_content().items():
-        for cns in v['constructors']:
-            c = 'from Products.NaayaContent.%s import %s' % (v['module'], v['module'])
-            exec(c)
-            c = '%s = %s.%s' % (cns, v['module'], cns)
-            exec(c)
-            c = 'security.declareProtected(\'%s\', \'%s\')' % (v['permission'], cns)
-            exec(c)
+    #for k,v in get_pluggable_content().items():
+    #    for cns in v['constructors']:
+    #        c = 'from Products.NaayaContent.%s import %s' % (v['module'], v['module'])
+    #        exec(c)
+    #        c = '%s = %s.%s' % (cns, v['module'], cns)
+    #        exec(c)
+    #        c = 'security.declareProtected(\'%s\', \'%s\')' % (v['permission'], cns)
+    #        exec(c)
 
     title = LocalProperty('title')
     description = LocalProperty('description')
