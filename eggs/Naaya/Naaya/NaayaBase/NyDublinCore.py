@@ -52,6 +52,13 @@ class NyDublinCore:
         """
         return 'text/html'
 
+    security.declarePublic('type')
+    def type(self):
+        """
+        The nature or genre of the content of the resource.
+        """
+        return 'Text'
+
     security.declarePublic('identifier')
     def identifier(self):
         """
