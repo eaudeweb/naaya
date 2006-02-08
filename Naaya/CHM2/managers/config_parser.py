@@ -27,8 +27,6 @@ from cStringIO import StringIO
 #Zope imports
 
 #Product imports
-from Products.Naaya.constants import *
-from Products.NaayaContent import *
 
 class config_struct:
     def __init__(self):
