@@ -20,11 +20,15 @@
 		<th i18n:translate="">Contributor</th>
 		<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
 	</tr>
+	<tr tal:condition="python:here.coverage">
+		<th i18n:translate="">Geographical coverage</th>
+		<td tal:content="here/coverage" />
+	</tr>
 	<tr tal:condition="python:here.locator and (here.locator != 'http://')">
 		<th i18n:translate="">URL</th>
 		<td>
 			<a tal:attributes="href here/locator" tal:content="here/locator"/>
-			<small>(<a tal:attributes="href here/locator" target="_blank" i18n:translate="">in a new window</a>)</small>
+			<small>[<a tal:attributes="href here/locator" target="_blank" i18n:translate="">open in new window</a>]</small>
 		</td>
 	</tr>
 </table>

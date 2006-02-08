@@ -54,7 +54,7 @@ PROPERTIES_OBJECT = {
     'sortorder':    (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positiv integer.'),
     'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':   (0, '', ''),
-    'locator':      (0, '', ''),
+    'locator':      (0, '', '')
 }
 
 manage_addNyURL_html = PageTemplateFile('zpt/url_manage_add', globals())
@@ -163,6 +163,8 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
     """ """
 
     meta_type = METATYPE_OBJECT
+    meta_label = LABEL_OBJECT
+
     icon = 'misc_/NaayaContent/NyURL.gif'
     icon_marked = 'misc_/NaayaContent/NyURL_marked.gif'
 
