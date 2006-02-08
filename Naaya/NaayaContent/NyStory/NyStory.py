@@ -150,6 +150,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
     """ """
 
     meta_type = METATYPE_OBJECT
+    meta_label = LABEL_OBJECT
     icon = 'misc_/NaayaContent/NyStory.py'
     icon_marked = 'misc_/NaayaContent/NyStory_marked.gif'
 
