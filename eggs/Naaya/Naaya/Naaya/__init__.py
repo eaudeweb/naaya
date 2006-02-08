@@ -25,7 +25,6 @@ from ImageFile import ImageFile
 
 #Product imports
 from constants import *
-from Products.NaayaContent import get_pluggable_content
 import NySite
 import NyFolder
 
@@ -93,14 +92,6 @@ misc_ = {
     'translate_demo':ImageFile('www/documentation/translate_demo.gif', globals()),
     'translate_messages':ImageFile('www/documentation/translate_messages.gif', globals()),
 }
-
-#constructors for pluggable content
-for k,v in get_pluggable_content().items():
-    for cns in v['constructors']:
-        c = 'from Products.NaayaContent.%s import %s' % (v['module'], v['module'])
-        exec(c)
-        c = 'NyFolder.NyFolder.%s = %s.%s' % (cns, v['module'], cns)
-        exec(c)
 
 #make drag & drop available globally
 def DragDropCore(self, name):
