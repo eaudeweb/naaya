@@ -93,6 +93,8 @@ misc_ = {
 for x in content.values():
     c = 'METATYPE_%s = \'%s\'' % (x['module'].upper(), x['meta_type'])
     exec(c)
+    c = 'PERMISSION_ADD_%s = \'%s\'' % (x['module'].upper(), x['permission'])
+    exec(c)
 
 #images
 for x in dirs:
