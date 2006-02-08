@@ -80,7 +80,7 @@ class EnvPortal(NySite):
         """ """
         NySite.__dict__['loadDefaultData'](self)
         self.loadSkeleton(join(ENVPORTAL_PRODUCT_PATH, 'skel'))
-        self.getPropertiesTool().manageMainTopics(maintopics=['convention', 'cooperation', '3', '4'])
+        self.getPropertiesTool().manageMainTopics(maintopics=['country_profile', 'reports', 'themes_indicators', 'projects', 'products', 'publications'])
         manage_addNyPhotoFolder(self, ID_PHOTOARCHIVE, TITLE_PHOTOARCHIVE)
         self._getOb(ID_PHOTOARCHIVE).approveThis()
         #create and configure LinkChecker instance

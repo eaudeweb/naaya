@@ -4,11 +4,11 @@
 		<title lang="en"><![CDATA[Country Profile]]></title>
 		<description lang="en"><![CDATA[
 		Country Profiles typically contain the following:
-        <p> * Overview of relevant administrations and regulatory drivers, including how policy and laws are made, implemented and enforced, and which authorities are responsible for which programmes </p>
-        <p> * Directory of relevant administrations and agencies, at national, regional and local levels (including, as appropriate, permitting authorities, enforcement authorities, and others both for environmental programmes and for occupational safety and health matters)</p>
-        <p> * Full listings of applicable laws, regulations and, where appropriate, codes of practice, including full citations in original language and with English translations</p>
-        <p> * Detailed summaries of key laws, regulations, standards and codes of practice, grouped under appropriate headings for ease of use.</p>
-        ]]></description>
+		<p> * Overview of relevant administrations and regulatory drivers, including how policy and laws are made, implemented and enforced, and which authorities are responsible for which programmes </p>
+		<p> * Directory of relevant administrations and agencies, at national, regional and local levels (including, as appropriate, permitting authorities, enforcement authorities, and others both for environmental programmes and for occupational safety and health matters)</p>
+		<p> * Full listings of applicable laws, regulations and, where appropriate, codes of practice, including full citations in original language and with English translations</p>
+		<p> * Detailed summaries of key laws, regulations, standards and codes of practice, grouped under appropriate headings for ease of use.</p>
+		]]></description>
 		<coverage lang="en"><![CDATA[]]></coverage>
 		<keywords lang="en"><![CDATA[]]></keywords>
 		<ob meta_type="Naaya Folder" param="0" id="fol491748" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
@@ -16,195 +16,193 @@
 			<description lang="en"><![CDATA[Reference environmental bodies]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		  <ob meta_type="Naaya Document" id="doc441315" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0">
+		  <ob meta_type="Naaya Document"  param="0" id="doc441315" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0"  validation_status="0" validation_date="" validation_by="" validation_comment="">
 			<title lang="en"><![CDATA[Primary Contact Points and National Reference Centres]]></title>
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
 		  </ob>
+		</ob>
 		<ob meta_type="Naaya Folder" param="0" id="fol303901" sortorder="20" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
 			<title lang="en"><![CDATA[Applicable laws, regulations and codes of practice]]></title>
 			<description lang="en"><![CDATA[Full listings of applicable laws, regulations and, where appropriate, codes of practice, including full citations in original language and with English translations.]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-    		<ob meta_type="Naaya Folder" param="0" id="fol204724" sortorder="20" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-    			<title lang="en"><![CDATA[Applicable laws, regulations and codes of practice]]></title>
-    			<description lang="en"><![CDATA[Full listings of applicable laws, regulations and, where appropriate, codes of practice, including full citations in original language and with English translations.]]></description>
-    			<coverage lang="en"><![CDATA[]]></coverage>
-    			<keywords lang="en"><![CDATA[]]></keywords>
-    		</ob>
-    		<ob meta_type="Naaya Folder" param="0" id="fol318371" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-    			<title lang="en"><![CDATA[Acts in force]]></title>
-    			<description lang="en"><![CDATA[]]></description>
-    			<coverage lang="en"><![CDATA[]]></coverage>
-    			<keywords lang="en"><![CDATA[]]></keywords>
-    		</ob>
-    		<ob meta_type="Naaya Folder" param="0" id="fol619267" sortorder="20" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-    			<title lang="en"><![CDATA[Acts not in force]]></title>
-    			<description lang="en"><![CDATA[]]></description>
-    			<coverage lang="en"><![CDATA[]]></coverage>
-    			<keywords lang="en"><![CDATA[]]></keywords>
-    		</ob>
-    		<ob meta_type="Naaya Folder" param="0" id="fol957993" sortorder="20" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-    			<title lang="en"><![CDATA[Ministerial orders in force]]></title>
-    			<description lang="en"><![CDATA[]]></description>
-    			<coverage lang="en"><![CDATA[]]></coverage>
-    			<keywords lang="en"><![CDATA[]]></keywords>
-    		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="cbd_global" sortorder="30" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[CBD at Global level]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="cbd_regional" sortorder="40" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[CBD at Pan-European and Regional level]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="cbd_ec" sortorder="50" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[CBD at European Community level]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="cbd_national" sortorder="60" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[CBD at National level]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="other_conv" sortorder="70" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Other biodiversity related conventions, Europe]]></title>
+			<ob meta_type="Naaya Folder" param="0" id="fol204724" sortorder="40" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+				<title lang="en"><![CDATA[Ministerial orders not in force]]></title>
+				<description lang="en"><![CDATA[]]></description>
+				<coverage lang="en"><![CDATA[]]></coverage>
+				<keywords lang="en"><![CDATA[]]></keywords>
+			</ob>
+			<ob meta_type="Naaya Folder" param="0" id="fol318371" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+				<title lang="en"><![CDATA[Acts in force]]></title>
+				<description lang="en"><![CDATA[]]></description>
+				<coverage lang="en"><![CDATA[]]></coverage>
+				<keywords lang="en"><![CDATA[]]></keywords>
+			</ob>
+			<ob meta_type="Naaya Folder" param="0" id="fol619267" sortorder="30" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+				<title lang="en"><![CDATA[Acts not in force]]></title>
+				<description lang="en"><![CDATA[]]></description>
+				<coverage lang="en"><![CDATA[]]></coverage>
+				<keywords lang="en"><![CDATA[]]></keywords>
+			</ob>
+			<ob meta_type="Naaya Folder" param="0" id="fol957993" sortorder="20" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+				<title lang="en"><![CDATA[Ministerial orders in force]]></title>
+				<description lang="en"><![CDATA[]]></description>
+				<coverage lang="en"><![CDATA[]]></coverage>
+				<keywords lang="en"><![CDATA[]]></keywords>
+			</ob>
+			<ob meta_type="Naaya Document"  param="0" id="doc178271" sortorder="50" contributor="" approved="1" approved_by="" releasedate="" discussion="0"  validation_status="0" validation_date="" validation_by="" validation_comment="">
+				<title lang="en"><![CDATA[International Environmental Conventions]]></title>
+				<description lang="en"><![CDATA[]]></description>
+				<coverage lang="en"><![CDATA[]]></coverage>
+				<keywords lang="en"><![CDATA[]]></keywords>
+			</ob>
+		</ob>   
+		<ob meta_type="Naaya Folder" param="0" id="fol519321" sortorder="30" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Detailed summaries of key laws, regulations]]></title>
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
 		</ob>
 	</ob>
-	<ob meta_type="Naaya Folder" param="0" id="cooperation" sortorder="20" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="Naaya Folder,Naaya URL,Naaya File,Naaya Pointer,Naaya Document">
-		<title lang="en"><![CDATA[Cooperation]]></title>
+	<ob meta_type="Naaya Folder" param="0" id="reports" sortorder="20" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="Naaya Folder,Naaya URL,Naaya File,Naaya Pointer,Naaya Document">
+		<title lang="en"><![CDATA[Environmental Reports]]></title>
 		<description lang="en"><![CDATA[]]></description>
 		<coverage lang="en"><![CDATA[]]></coverage>
 		<keywords lang="en"><![CDATA[]]></keywords>
-		<ob meta_type="Naaya Folder" param="0" id="tech_coop" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Technical / scientific cooperation]]></title>
+		<ob meta_type="Naaya Folder" param="0" id="fol709661" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[State of the Environment Reports]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+			<ob meta_type="Naaya URL"  param="0" id="url440101" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0"  validation_status="0" validation_date="" validation_by="" validation_comment="" locator="">
+				<title lang="en"><![CDATA[State of the Environment Report 1997-1998]]></title>
+				<description lang="en"><![CDATA[]]></description>
+				<coverage lang="en"><![CDATA[]]></coverage>
+				<keywords lang="en"><![CDATA[]]></keywords>
+			</ob>
+		</ob>
+		<ob meta_type="Naaya Folder" param="0" id="fol338221" sortorder="20" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Reporting within the EEA]]></title>
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
 		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="research" sortorder="20" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Research directories, programmes, projects]]></title>
+		<ob meta_type="Naaya Folder" param="0" id="fol526111" sortorder="30" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Kiev Report Data Collection]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+			<ob meta_type="Naaya URL"  param="0" id="url442584" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0"  validation_status="0" validation_date="" validation_by="" validation_comment="" locator="">
+				<title lang="en"><![CDATA[Kiev Report Data Collection]]></title>
+				<description lang="en"><![CDATA[Link to the EIONET Central Data Repository]]></description>
+				<coverage lang="en"><![CDATA[]]></coverage>
+				<keywords lang="en"><![CDATA[]]></keywords>
+			</ob>
+		</ob>
+	</ob>
+	<ob meta_type="Naaya Folder" param="0" id="themes_indicators" sortorder="30" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="Naaya Folder,Naaya URL,Naaya File,Naaya Pointer,Naaya Document">
+		<title lang="en"><![CDATA[Themes/Indicators]]></title>
+		<description lang="en"><![CDATA[]]></description>
+		<coverage lang="en"><![CDATA[]]></coverage>
+		<keywords lang="en"><![CDATA[]]></keywords>
+		<ob meta_type="Naaya Folder" param="0" id="fol320550" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Air quality]]></title>
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
 		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="funding" sortorder="30" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Funding of biodiversity projects]]></title>
+		<ob meta_type="Naaya Folder" param="0" id="fol816096" sortorder="20" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Biodiversity change]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+		</ob>
+		<ob meta_type="Naaya Folder" param="0" id="fol780919" sortorder="30" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Climate change]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+		</ob>
+		<ob meta_type="Naaya Folder" param="0" id="fol766246" sortorder="40" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Human health]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+		</ob>
+		<ob meta_type="Naaya Folder" param="0" id="fol543924" sortorder="50" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Natural resources]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+		</ob>
+		<ob meta_type="Naaya Folder" param="0" id="fol113398" sortorder="60" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Noise]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+		</ob>
+		<ob meta_type="Naaya Folder" param="0" id="fol058032" sortorder="70" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Ozone depletion]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+		</ob>
+		<ob meta_type="Naaya Folder" param="0" id="fol101144" sortorder="80" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Waste]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+		</ob>
+		<ob meta_type="Naaya Folder" param="0" id="fol414638" sortorder="90" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Various other issues]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+		</ob>
+		<ob meta_type="Naaya Folder" param="0" id="fol004498" sortorder="100" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Chemicals]]></title>
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
 		</ob>
 	</ob>
-	<ob meta_type="Naaya Folder" param="0" id="network" sortorder="30" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="Naaya Folder,Naaya URL,Naaya File,Naaya Pointer,Naaya Document">
-		<title lang="en"><![CDATA[Organisations and Networks]]></title>
+	<ob meta_type="Naaya Folder" param="0" id="projects" sortorder="40" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="Naaya Folder,Naaya URL,Naaya File,Naaya Pointer,Naaya Document">
+		<title lang="en"><![CDATA[Projects]]></title>
 		<description lang="en"><![CDATA[]]></description>
 		<coverage lang="en"><![CDATA[]]></coverage>
 		<keywords lang="en"><![CDATA[]]></keywords>
-		<ob meta_type="Naaya Folder" param="0" id="global" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[CBD's who's who]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="europe" sortorder="20" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[European Community who's who]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="other" sortorder="30" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Other biodiversity organisations and networks]]></title>
+		<ob meta_type="Naaya Folder" param="0" id="fol436454" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Popular reviews of the environmental projects]]></title>
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
 		</ob>
 	</ob>
-	<ob meta_type="Naaya Folder" param="0" id="information" sortorder="40" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="Naaya Folder,Naaya URL,Naaya File,Naaya Pointer,Naaya Document">
-		<title lang="en"><![CDATA[Information]]></title>
+	<ob meta_type="Naaya Folder" param="0" id="products" sortorder="50" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="Naaya Folder,Naaya URL,Naaya File,Naaya Pointer,Naaya Document">
+		<title lang="en"><![CDATA[Products]]></title>
+		<description lang="en"><![CDATA[Insert items like:
+			<p>State of Environment report</p>
+			<p>Catalogue of Data Sources</p>
+			<p>Annual bulletins</p>
+			<p>Daily bulletin for the air pollution and radiological situation in your country</p>]]></description>
+		<coverage lang="en"><![CDATA[]]></coverage>
+		<keywords lang="en"><![CDATA[]]></keywords>
+	</ob>
+	<ob meta_type="Naaya Folder" param="0" id="publications" sortorder="60" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="Naaya Folder,Naaya URL,Naaya File,Naaya Pointer,Naaya Document">
+		<title lang="en"><![CDATA[Publications]]></title>
 		<description lang="en"><![CDATA[]]></description>
 		<coverage lang="en"><![CDATA[]]></coverage>
 		<keywords lang="en"><![CDATA[]]></keywords>
-		<ob meta_type="Naaya Folder" param="0" id="profile" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Biodiversity data profiles]]></title>
+		<ob meta_type="Naaya Folder" param="0" id="fol122493" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Latest Publications]]></title>
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
 		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="indicator" sortorder="20" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Biodiversity monitoring and indicators]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="database" sortorder="30" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Databases and information sites]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="directory_reference" sortorder="40" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Directories and reference services]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="document" sortorder="50" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Documents and Images]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="red_list" sortorder="60" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Red Lists]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="F1046684522" sortorder="70" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Selected species groups]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="F1046684686" sortorder="80" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Genetic resources, EC ABS portal, EC Biotechnology]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="F1051869800" sortorder="90" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Biodiversity projects, temporary refs]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="F1059808330" sortorder="100" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Invasive Alien Species - IAS]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="F1111052657" sortorder="110" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Geo-referenced biodiversity data and maps]]></title>
-			<description lang="en"><![CDATA[]]></description>
-			<coverage lang="en"><![CDATA[]]></coverage>
-			<keywords lang="en"><![CDATA[]]></keywords>
-		</ob>
-		<ob meta_type="Naaya Folder" param="0" id="F1100262622" sortorder="120" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
-			<title lang="en"><![CDATA[Public participation, Biodiversity for young people]]></title>
+		<ob meta_type="Naaya Folder" param="0" id="fol250215" sortorder="10" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
+			<title lang="en"><![CDATA[Publications archive]]></title>
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
@@ -236,12 +234,30 @@
 				</p>]]>
 			</body>
 		</ob>
-	</ob>
-	<ob meta_type="Naaya Folder" param="0" id="About" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="Naaya Folder,Naaya URL,Naaya File,Naaya Pointer,Naaya Document">
-		<title lang="en"><![CDATA[About]]></title>
-		<description lang="en"><![CDATA[]]></description>
-		<coverage lang="en"><![CDATA[]]></coverage>
-		<keywords lang="en"><![CDATA[]]></keywords>
+		<ob meta_type="Naaya Document" param="0" id="privacy_policy" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
+			<title lang="en"><![CDATA[Privacy policy]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+			<body lang="en"><![CDATA[Enter privacy policy here]]>
+			</body>
+		</ob>
+		<ob meta_type="Naaya Document" param="0" id="trademarks" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
+			<title lang="en"><![CDATA[Trademarks]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+			<body lang="en"><![CDATA[Enter trademarks here]]>
+			</body>
+		</ob>
+		<ob meta_type="Naaya Document" param="0" id="terms_conds" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
+			<title lang="en"><![CDATA[Terms and conditions]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+			<body lang="en"><![CDATA[Enter Terms and conditions here]]>
+			</body>
+		</ob>
 	</ob>
 	<ob meta_type="Naaya Folder" param="0" id="stories" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="1" maintainer_email="" folder_meta_types="Naaya Story">
 		<title lang="en"><![CDATA[Stories]]></title>

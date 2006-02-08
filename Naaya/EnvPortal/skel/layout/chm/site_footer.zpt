@@ -36,7 +36,9 @@
 <div class="horizlist">
 	[<a tal:attributes="href string:${site_url}/info/copyright" i18n:translate="">Copyright</a>]
 	[<a tal:attributes="href string:${site_url}/HelpDesk/" accesskey="9" i18n:translate="">Feedback and helpdesk</a>]
-	[<a tal:attributes="href string:${site_url}/info/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>]
+	[<a tal:attributes="href string:${site_url}/info/privacy_policy" i18n:translate="">Privacy Policy</a>]
+	[<a tal:attributes="href string:${site_url}/info/trademarks" i18n:translate="">Trademarks</a>]
+	[<a tal:attributes="href string:${site_url}/info/terms_conds" i18n:translate="">Terms and conditions</a>]
 </div>
 </div>
 </body>
