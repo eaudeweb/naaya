@@ -13,7 +13,7 @@
 </tal:block>
 <table border="0" cellspacing="2" cellpadding="2">
 	<tr>
-		<th i18n:translate="">Release date</th>
+		<th i18n:translate="">Released</th>
 		<td tal:content="python:here.utShowDateTime(here.releasedate)"/>
 	</tr>
 	<tr>
