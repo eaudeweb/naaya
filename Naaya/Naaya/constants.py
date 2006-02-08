@@ -23,7 +23,6 @@ This module contains global constants.
 """
 
 #Python imports
-from os.path import join
 
 #Zope imports
 import Globals
