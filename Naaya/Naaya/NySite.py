@@ -2210,6 +2210,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_sitemap')
 
+    security.declareProtected(view, 'sitemap_add_html')
+    def sitemap_add_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'sitemap_add')
+
     security.declareProtected(view, 'feedback_html')
     def feedback_html(self, REQUEST=None, RESPONSE=None):
         """ """
