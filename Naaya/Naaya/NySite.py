@@ -269,6 +269,19 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     syndicationtool_ob.manage_addLocalChannel(channel.id, channel.title, channel.description, language, type, channel.objmetatype.split(','), channel.numberofitems, 1)
                 for channel in skel_handler.root.syndication.remotechannels:
                     syndicationtool_ob.manage_addRemoteChannel(channel.id, channel.title, channel.url, channel.numbershownitems, 1)
+            #load security permissions and roles
+            if skel_handler.root.security is not None:
+                for permission in skel_handler.root.security.grouppermissions:
+                    authenticationtool_ob.addPermission(permission.name, permission.description, permission.permissions)
+                for role in skel_handler.root.security.roles:
+                    try: authenticationtool_ob.addRole(role.name, role.grouppermissions)
+                    except: pass
+                    #set the grouppermissions
+                    authenticationtool_ob.editRole(role.name, role.grouppermissions)
+                    #set individual permissions
+                    b = [x['name'] for x in self.permissionsOfRole(role.name) if x['selected']=='SELECTED']
+                    b.extend(role.permissions)
+                    self.manage_role(role.name, b)
             #load portlets and links lists
             if skel_handler.root.portlets is not None:
                 for portlet in skel_handler.root.portlets.portlets:
@@ -310,19 +323,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 for emailtemplate in skel_handler.root.emails.emailtemplates:
                     content = self.futRead(join(skel_path, 'emails', '%s.txt' % emailtemplate.id), 'r')
                     emailtool_ob.manage_addEmailTemplate(emailtemplate.id, emailtemplate.title, content)
-            #load security permissions and roles
-            if skel_handler.root.security is not None:
-                for permission in skel_handler.root.security.grouppermissions:
-                    authenticationtool_ob.addPermission(permission.name, permission.description, permission.permissions)
-                for role in skel_handler.root.security.roles:
-                    try: authenticationtool_ob.addRole(role.name, role.grouppermissions)
-                    except: pass
-                    #set the grouppermissions
-                    authenticationtool_ob.editRole(role.name, role.grouppermissions)
-                    #set individual permissions
-                    b = [x['name'] for x in self.permissionsOfRole(role.name) if x['selected']=='SELECTED']
-                    b.extend(role.permissions)
-                    self.manage_role(role.name, b)
             #set subobjects for folders
             self.getPropertiesTool().manageSubobjects(subobjects=None, ny_subobjects=self.get_meta_types(1))
             #load notification related stuff
