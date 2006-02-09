@@ -49,7 +49,7 @@ DESCRIPTION_OBJECT = 'This is Naaya File type.'
 PREFIX_OBJECT = 'file'
 PROPERTIES_OBJECT = {
     'id':               (0, '', ''),
-    'title':            (0, '', ''),
+    'title':            (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
     'description':      (0, '', ''),
     'coverage':         (0, '', ''),
     'keywords':         (0, '', ''),
@@ -59,6 +59,7 @@ PROPERTIES_OBJECT = {
     'file':             (0, '', ''),
     'url':              (0, '', ''),
     'downloadfilename': (0, '', ''),
+    'content_type':     (0, '', '')
 }
 
 manage_addNyFile_html = PageTemplateFile('zpt/file_manage_add', globals())
@@ -76,8 +77,7 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
     Create a File type of object.
     """
     #process parameters
-    if source=='file': id, title = cookId(id, title, file) #upload from a file
-    elif source=='url': l_data, l_ctype = self.grabFromUrl(url) #upload from an url
+    if source=='file': id = cookId(id, title, file)[0] #upload from a file
     id = self.utCleanupId(id)
     if id == '': id = PREFIX_OBJECT + self.utGenRandomId(6)
     if downloadfilename == '': downloadfilename = id
@@ -417,7 +417,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
                 self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                     description=description, coverage=coverage, keywords=keywords, \
                     sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
-                    downloadfilename=downloadfilename)
+                    downloadfilename=downloadfilename, content_type=content_type)
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
             else:
                 raise Exception, '%s' % ', '.join(r)

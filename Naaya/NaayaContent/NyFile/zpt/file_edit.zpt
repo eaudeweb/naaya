@@ -86,8 +86,8 @@ function fSet(ctrl, value)
 	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked python:test(here.getSession('disussion', here.discussion), 'checked', '')" />
 </div>
 <div class="field">
-	<label for="content_type"><span i18n:translate="" tal:omit-tag="">Content Type</span></label>
-	<input type="text" name="content_type" id="content_type" size="40" tal:attributes="value python:here.getVersionProperty('content_type')" />
+	<label for="content_type"><span i18n:translate="" tal:omit-tag="">Content Type</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'downloadfilename')" class="mandatory_field"> *</span></label>
+	<input type="text" name="content_type" id="content_type" size="40" tal:attributes="value python:here.getSession('content_type', here.getVersionProperty('content_type'))" />
 </div>
 <div class="field-inline">
 	<label i18n:translate="">File Size</label>
