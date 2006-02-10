@@ -32,7 +32,7 @@ function fSet(ctrl, value)
 
 <form name="frmAdd" method="post" tal:attributes="action action" enctype="multipart/form-data">
 
-<div class="field-inline" tal:define="selected_language here/gl_get_selected_language">
+<div class="field-inline" tal:define="selected_language python:here.getSession('lang', here.gl_get_selected_language())">
 	<label i18n:translate="" for="lang">Posting language</label>
 	<select name="lang" id="lang">
 		<option tal:repeat="item here/gl_get_languages_mapping"
