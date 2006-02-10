@@ -166,6 +166,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
     """ """
 
     meta_type = METATYPE_OBJECT
+    meta_label = LABEL_OBJECT
     icon = 'misc_/NaayaContent/NyMediaFile.gif'
     icon_marked = 'misc_/NaayaContent/NyMediaFile_marked.gif'
 
