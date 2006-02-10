@@ -164,6 +164,7 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
     """ """
 
     meta_type = METATYPE_OBJECT
+    meta_label = LABEL_OBJECT
     icon = 'misc_/NaayaContent/NyPointer.gif'
     icon_marked = 'misc_/NaayaContent/NyPointer_marked.gif'
 
