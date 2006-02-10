@@ -148,6 +148,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
     """ """
 
     meta_type = METATYPE_OBJECT
+    meta_label = LABEL_OBJECT
     icon = 'misc_/NaayaContent/NyDocument.gif'
     icon_marked = 'misc_/NaayaContent/NyDocument_marked.gif'
 
