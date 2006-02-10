@@ -181,6 +181,7 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
     """ """
 
     meta_type = METATYPE_OBJECT
+    meta_label = LABEL_OBJECT
     icon = 'misc_/NaayaContent/NyNews.gif'
     icon_marked = 'misc_/NaayaContent/NyNews_marked.gif'
 
