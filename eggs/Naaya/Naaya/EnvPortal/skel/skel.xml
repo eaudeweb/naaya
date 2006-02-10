@@ -129,12 +129,7 @@
 			</scheme>
 		</skin>
 	</layout>
-	<pluggablecontenttypes>
-		<pluggablecontenttype meta_type="Naaya Media File" action="1"/>
-	</pluggablecontenttypes>
 	<syndication>
-		<channeltype id="Red lists" title="Red lists"/>
-		<channeltype id="Indicators" title="Indicators"/>
 		<channeltype id="Technology transfer" title="Technology transfer"/>
 		<channeltype id="Miscellaneous" title="Miscellaneous"/>
 		<scriptchannel id="meetingsevents_rdf" title="Meetings and events" description="Meetings and events" language="en" type="Events" numberofitems="5"/>
