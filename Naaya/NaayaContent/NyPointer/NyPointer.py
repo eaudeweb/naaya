@@ -55,6 +55,7 @@ PROPERTIES_OBJECT = {
     'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':   (0, '', ''),
     'pointer':      (0, '', ''),
+    'lang':         (0, '', '')
 }
 
 manage_addNyPointer_html = PageTemplateFile('zpt/pointer_manage_add', globals())
@@ -119,7 +120,7 @@ def addNyPointer(self, id='', title='', description='', coverage='', keywords=''
             self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                 description=description, coverage=coverage, keywords=keywords, \
                 sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
-                pointer=pointer)
+                pointer=pointer, lang=lang)
             REQUEST.RESPONSE.redirect('%s/pointer_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)

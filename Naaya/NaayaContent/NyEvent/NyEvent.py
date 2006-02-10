@@ -68,6 +68,7 @@ PROPERTIES_OBJECT = {
     'contact_email':    (0, '', ''),
     'contact_phone':    (0, '', ''),
     'contact_fax':      (0, '', ''),
+    'lang':             (0, '', '')
 }
 
 manage_addNyEvent_html = PageTemplateFile('zpt/event_manage_add', globals())
@@ -149,7 +150,7 @@ def addNyEvent(self, id='', title='', description='', coverage='',
                 location_url=location_url, start_date=start_date, end_date=end_date, \
                 host=host, agenda_url=agenda_url, event_url=event_url, details=details, \
                 topitem=topitem, contact_person=contact_person, contact_email=contact_email, \
-                contact_phone=contact_phone, contact_fax=contact_fax, event_type=event_type)
+                contact_phone=contact_phone, contact_fax=contact_fax, event_type=event_type, lang=lang)
             REQUEST.RESPONSE.redirect('%s/event_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)

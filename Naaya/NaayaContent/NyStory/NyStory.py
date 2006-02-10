@@ -60,6 +60,7 @@ PROPERTIES_OBJECT = {
     'topitem':      (0, '', ''),
     'resourceurl':  (0, '', ''),
     'source':       (0, '', ''),
+    'lang':         (0, '', '')
 }
 
 manage_addNyStory_html = PageTemplateFile('zpt/story_manage_add', globals())
@@ -255,7 +256,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
     security.declareProtected(PERMISSION_ADD_OBJECT, 'process_add')
     def process_add(self, title='', description='', coverage='', keywords='',
         sortorder='', body='', topitem='', resourceurl='', source='', releasedate='',
-        discussion='', REQUEST=None, **kwargs):
+        discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         try: sortorder = abs(int(sortorder))
         except: sortorder = DEFAULT_SORTORDER
@@ -273,7 +274,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
             r = []
         if not len(r):
             releasedate = self.process_releasedate(releasedate, self.releasedate)
-            lang = self.gl_get_selected_language()
+            if not lang: lang = self.gl_get_selected_language()
             self.save_properties(title, description, coverage, keywords, sortorder, body,
                 topitem, resourceurl, source, releasedate, lang)
             self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
@@ -292,7 +293,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
                 self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                     description=description, coverage=coverage, keywords=keywords, \
                     sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
-                    body=body, topitem=topitem, resourceurl=resourceurl, source=source)
+                    body=body, topitem=topitem, resourceurl=resourceurl, source=source, lang=lang)
                 REQUEST.RESPONSE.redirect('%s/add_html' % self.absolute_url())
             else:
                 raise Exception, '%s' % ', '.join(r)
