@@ -199,6 +199,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
     """ """
 
     meta_type = METATYPE_OBJECT
+    meta_label = LABEL_OBJECT
     icon = 'misc_/NaayaContent/NyEvent.gif'
     icon_marked = 'misc_/NaayaContent/NyEvent_marked.gif'
 
