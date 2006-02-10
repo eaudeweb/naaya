@@ -178,6 +178,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
     """ """
 
     meta_type = METATYPE_OBJECT
+    meta_label = LABEL_OBJECT
     icon = 'misc_/NaayaContent/NyFile.gif'
     icon_marked = 'misc_/NaayaContent/NyFile_marked.gif'
 
