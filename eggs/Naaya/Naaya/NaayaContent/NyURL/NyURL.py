@@ -54,7 +54,8 @@ PROPERTIES_OBJECT = {
     'sortorder':    (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positiv integer.'),
     'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':   (0, '', ''),
-    'locator':      (0, '', '')
+    'locator':      (0, '', ''),
+    'lang':         (0, '', '')
 }
 
 manage_addNyURL_html = PageTemplateFile('zpt/url_manage_add', globals())
@@ -119,7 +120,7 @@ def addNyURL(self, id='', title='', description='', coverage='', keywords='',
             self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                 description=description, coverage=coverage, keywords=keywords, \
                 sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
-                locator=locator)
+                locator=locator, lang=lang)
             REQUEST.RESPONSE.redirect('%s/url_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)

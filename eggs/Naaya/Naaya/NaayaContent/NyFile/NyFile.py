@@ -59,7 +59,8 @@ PROPERTIES_OBJECT = {
     'file':             (0, '', ''),
     'url':              (0, '', ''),
     'downloadfilename': (0, '', ''),
-    'content_type':     (0, '', '')
+    'content_type':     (0, '', ''),
+    'lang':             (0, '', '')
 }
 
 manage_addNyFile_html = PageTemplateFile('zpt/file_manage_add', globals())
@@ -129,7 +130,7 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
             self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                 description=description, coverage=coverage, keywords=keywords, \
                 sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
-                url=url, downloadfilename=downloadfilename)
+                url=url, downloadfilename=downloadfilename, lang=lang)
             REQUEST.RESPONSE.redirect('%s/file_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)

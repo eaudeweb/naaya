@@ -57,6 +57,7 @@ PROPERTIES_OBJECT = {
     'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':   (0, '', ''),
     'body':         (0, '', ''),
+    'lang':         (0, '', '')
 }
 
 manage_addNyDocument_html = PageTemplateFile('zpt/document_manage_add', globals())
@@ -236,7 +237,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
     #site actions
     security.declareProtected(PERMISSION_ADD_OBJECT, 'process_add')
     def process_add(self, title='', description='', coverage='', keywords='',
-        sortorder='', body='', releasedate='', discussion='', REQUEST=None, **kwargs):
+        sortorder='', body='', releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         try: sortorder = abs(int(sortorder))
         except: sortorder = DEFAULT_SORTORDER
@@ -250,7 +251,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         else:
             r = []
         if not len(r):
-            lang = self.gl_get_selected_language()
+            if not lang: lang = self.gl_get_selected_language()
             releasedate = self.process_releasedate(releasedate, self.releasedate)
             self.save_properties(title, description, coverage, keywords, sortorder, body, releasedate, lang)
             self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
@@ -268,7 +269,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
                 self.setSessionErrors(r)
                 self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                     description=description, coverage=coverage, keywords=keywords, \
-                    sortorder=sortorder, releasedate=releasedate, discussion=discussion, body=body)
+                    sortorder=sortorder, releasedate=releasedate, discussion=discussion, body=body, lang=lang)
                 REQUEST.RESPONSE.redirect('%s/add_html' % self.absolute_url())
             else:
                 raise Exception, '%s' % ', '.join(r)

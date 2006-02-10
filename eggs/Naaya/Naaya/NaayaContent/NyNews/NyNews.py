@@ -62,6 +62,7 @@ PROPERTIES_OBJECT = {
     'del_bigpicture':   (0, '', ''),
     'resourceurl':      (0, '', ''),
     'source':           (0, '', ''),
+    'lang':             (0, '', '')
 }
 
 manage_addNyNews_html = PageTemplateFile('zpt/news_manage_add', globals())
@@ -136,7 +137,7 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
                 description=description, coverage=coverage, keywords=keywords, \
                 sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
                 details=details, expirationdate=expirationdate, topitem=topitem, \
-                resourceurl=resourceurl, source=source)
+                resourceurl=resourceurl, source=source, lang=lang)
             REQUEST.RESPONSE.redirect('%s/news_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)

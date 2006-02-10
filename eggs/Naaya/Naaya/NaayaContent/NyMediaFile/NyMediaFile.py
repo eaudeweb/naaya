@@ -57,6 +57,7 @@ PROPERTIES_OBJECT = {
     'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':   (0, '', ''),
     'file':         (0, '', ''),
+    'lang':         (0, '', '')
 }
 
 manage_addNyMediaFile_html = PageTemplateFile('zpt/mediafile_manage_add', globals())
@@ -121,7 +122,7 @@ def addNyMediaFile(self, id='', title='', description='', coverage='', keywords=
             self.setSessionErrors(r)
             self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                 description=description, coverage=coverage, keywords=keywords, \
-                sortorder=sortorder, releasedate=releasedate, discussion=discussion)
+                sortorder=sortorder, releasedate=releasedate, discussion=discussion, lang=lang)
             REQUEST.RESPONSE.redirect('%s/mediafile_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)
