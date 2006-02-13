@@ -146,6 +146,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     """ """
 
     meta_type = METATYPE_FOLDER
+    meta_label = LABEL_NYFOLDER
     icon = 'misc_/Naaya/NyFolder.gif'
     icon_marked = 'misc_/Naaya/NyFolder_marked.gif'
 

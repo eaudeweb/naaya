@@ -47,7 +47,7 @@
                         document.frmSearch.submit(); return false;">show newer pages first</a>
     <dl>
     <tal:block tal:repeat="record list_result">
-        <dt><img tal:attributes="src record/icon; alt record/meta_type; title record/meta_type" align="absmiddle" /> <a tal:attributes="href record/absolute_url"><span tal:replace="record/title_or_id"/></a> - 
+        <dt><img tal:attributes="src record/icon; alt python:test(hasattr(record, 'meta_label'), record.meta_label, record.meta_type); title python:test(hasattr(record, 'meta_label'), record.meta_label, record.meta_type)" align="absmiddle" /> <a tal:attributes="href record/absolute_url"><span tal:replace="record/title_or_id"/></a> - 
             <span tal:replace="python:record.utShowDateTime(record.bobobase_modification_time())"/>
             <span tal:condition="python:here.internal_get_item_age(record.bobobase_modification_time(), age)==1">
             <strong style="color: #FF9966;" i18n:translate="">Old</strong></span>
