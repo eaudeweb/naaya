@@ -98,7 +98,7 @@ function createKey(key)
 	<td align="top" width="*" tal:define="users user_tool/user_names">
 		<select name="names" size="5" multiple="multiple">
 			<option tal:repeat="user users" tal:attributes="value user" tal:content="user" />
-		<select>
+		</select>
 	</td>
 </tr>
 <tr>
@@ -109,7 +109,7 @@ function createKey(key)
 			<option tal:condition="python:role=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')" tal:attributes="value role" tal:content="role" />
 			<option tal:condition="python:role!='Manager'" tal:attributes="value role" tal:content="role" />
 			</tal:block>
-		<select>
+		</select>
 	</td>
 </tr>
 <tr>
