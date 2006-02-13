@@ -59,8 +59,8 @@ function fTreeClick(expand)
 
 					<td>
 						<img border="0" tal:attributes="src python:item.icon;
-															alt item/meta_type;
-															title item/meta_type" />
+															alt python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type);
+															title python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type)" />
 					</td>
 					<td>
 						<a	tal:condition="translation"
