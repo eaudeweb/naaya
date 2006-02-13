@@ -15,7 +15,7 @@
 	<input type="hidden" name="id" tal:attributes="value item/id" />
 	<fieldset>
 		<legend>
-			<img tal:attributes="src python:test(item.approved, item.icon, item.icon_marked); title here/meta_type; alt here/meta_type" border="0" />
+			<img tal:attributes="src python:test(item.approved, item.icon, item.icon_marked); title here/meta_label; alt here/meta_label" border="0" />
 			<a tal:attributes="href string:${item/absolute_url}/index_html" tal:content="item/title_or_id" />
 			[<span i18n:translate="">released at</span>:
 			<em tal:content="python:here.utShowDateTime(item.releasedate)" />]
