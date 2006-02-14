@@ -2038,6 +2038,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                             la(translate('', v[2]))
                     elif v[1] == MUST_BE_POSITIV_INT:
                         if not self.utIsAbsInteger(value): la(translate('', v[2]))
+                    elif v[1] == MUST_BE_POSITIV_FLOAT:
+                        if not self.utIsFloat(value): la(translate('', v[2]))
         return l
 
     def set_pluggable_item_session(self, meta_type, **args):
