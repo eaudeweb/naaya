@@ -53,7 +53,7 @@ PROPERTIES_OBJECT = {
     'description':      (0, '', ''),
     'coverage':         (0, '', ''),
     'keywords':         (0, '', ''),
-    'sortorder':        (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positiv integer.'),
+    'sortorder':        (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positive integer.'),
     'releasedate':      (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':       (0, '', ''),
     'file':             (0, '', ''),
