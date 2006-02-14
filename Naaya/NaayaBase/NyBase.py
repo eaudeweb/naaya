@@ -161,7 +161,6 @@ class NyBase:
         @param lang: content language
         @type lang: string
         """
-        l_site = self.getSite()
         r = []
         ra = r.append
         ra('<link>%s</link>' % self.absolute_url())
@@ -175,7 +174,7 @@ class NyBase:
             ra('<dc:coverage>%s</dc:coverage>' % self.utXmlEncode(k.strip()))
         for k in self.getLocalProperty('keywords', lang).split(','):
             ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(k.strip()))
-        ra('<dc:rights>%s</dc:rights>' % self.utXmlEncode(l_site.getLocalProperty('rights', lang)))
+        ra('<dc:rights>%s</dc:rights>' % self.utXmlEncode(self.getLocalProperty('rights', lang)))
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')
