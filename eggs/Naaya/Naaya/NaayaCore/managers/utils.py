@@ -391,6 +391,7 @@ class utils:
             l_intYear = int(l_dateparts[2], 10)
             l_intMonth = int(l_dateparts[1], 10)
             l_intDay = int(l_dateparts[0], 10)
+            if l_intMonth<1 or l_intMonth>12: return None
             return DateTime(str(l_intYear) + '/' + str(l_intMonth) + '/' + str(l_intDay) + ' 00:00:00')
         except:
             return None
