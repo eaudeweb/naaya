@@ -136,7 +136,7 @@
 		<scriptchannel id="whatsnew_rdf" title="What's new" description="What's new" language="en" type="News" numberofitems="5"/>
 		<scriptchannel id="latestrelevantuploads_rdf" title="Selected uploads" description="Selected uploads" language="en" type="Miscellaneous" numberofitems="5"/>
 	</syndication>
-	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_meetingsevents_rdf,portlet_whatsnew_rdf,portlet_latestrelevantuploads_rdf,portlet_latestphotos">
+	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_meetingsevents_rdf,portlet_whatsnew_rdf,portlet_latestuploads_rdf,portlet_latestphotos">
 		<portlet id="portlet_administration" title="Administration"/>
 		<portlet id="portlet_latestphotos" title="Photos"/>
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
