@@ -31,12 +31,12 @@ function fDeleteObjects()
 </div>
 
 <tal:block tal:condition="python:len(messages)>0">
-<div tal:condition="permission">
+<form tal:attributes="action string:${here/absolute_url}/deleteMessages" method="post">
+<div>
 	<div id="toolbar">
-		<a href="javascript:fDeleteObjects();"><span><img src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a>
+		<input type="submit" value="Delete" i18n:attributes="value" />
 	</div>
 </div>
-<form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 	<tr>
 		<th class="checkbox" tal:condition="permission" width="1%"></th>

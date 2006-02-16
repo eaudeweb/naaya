@@ -10,7 +10,7 @@
 </div>
 
 <tal:block tal:condition="python:len(topics)>0">
-<form tal:attributes="action string:${here/absolute_url}/deleteObjects" method="post">
+<form tal:attributes="action string:${here/absolute_url}/deleteTopics" method="post">
 <div>
 	<div id="toolbar">
 		<input type="submit" value="Delete" i18n:attributes="value" />

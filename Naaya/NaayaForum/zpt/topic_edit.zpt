@@ -8,11 +8,11 @@
 
 <form tal:attributes="action string:${here/absolute_url}/saveProperties" method="post">
 <div class="field">
-	<label for="title"><span i18n:translate="" tal:omit-tag="">Subject</span></label>
+	<label for="title" i18n:translate="">Subject</label>
 	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value here/title_or_id" />
 </div>
 <div class="field">
-	<label for="category"><span i18n:translate="" tal:omit-tag="">Category</span></label>
+	<label for="category" i18n:translate="">Category</label>
 	<select name="category:utf8:ustring" id="category">
 		<option tal:repeat="item here/get_forum_categories"
 			tal:attributes="value item; selected python:here.category==item"
@@ -20,8 +20,13 @@
 	</select>
 </div>
 <div class="field">
-	<label for="description"><span i18n:translate="" tal:omit-tag="">Text</span></label>
+	<label for="description" i18n:translate="">Text</label>
 	<textarea name="description:utf8:ustring" id="description" rows="10" cols="50" tal:content="here/description"></textarea>
+</div>
+<div class="field">
+	<label for="notify" i18n:translate="">Notify</label>
+	<input type="checkbox" name="notify" id="notify" tal:attributes="checked here/notify" />
+	<span i18n:translate="">Notify me by e-mail if someone answers to this</span>
 </div>
 <div class="field-inline">
 	<strong tal:content="python:here.utShowFullDateTime(here.postdate)" />, <strong tal:content="here/author" />
@@ -67,7 +72,7 @@
 
 <form tal:attributes="action string:${here/absolute_url}/addAttachment" method="post" enctype="multipart/form-data">
 <div class="field">
-	<label for="attachment"><span i18n:translate="" tal:omit-tag="">Attachment</span></label>
+	<label for="attachment" i18n:translate="">Attachment</label>
 	<input type="file" name="attachment" id="attachment" />
 </div>
 <div class="field">
