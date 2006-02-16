@@ -333,6 +333,23 @@ class utils:
         """ transform a file size in Kb """
         return int(p_size/1024 + 1)
 
+    def utShowSize(self, p_size):
+        #Transform a file size in Kb, Mb ..
+        l_bytes = float(p_size)
+        l_type = ''
+        l_res = ''
+        if l_bytes >= 1000:
+            l_bytes = l_bytes/1024
+            l_type = 'Kb'
+            if l_bytes >= 1000:
+                l_bytes = l_bytes/1024
+                l_type = 'Mb'
+            l_res = '%s %s' % ('%4.2f' % l_bytes, l_type)
+        else:
+            l_type = 'Bytes'
+            l_res = '%s %s' % ('%4.0f' % l_bytes, l_type)
+        return l_res
+
     def utUnquote(self, value):
         #transform escapes in single characters
         return urllib.unquote(value)
