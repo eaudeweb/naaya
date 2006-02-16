@@ -1193,6 +1193,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_properties_html' % self.absolute_url())
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_email')
+    def admin_email(self, mail_server_name, mail_server_port='', administrator_email='', mail_address_from='', notify_on_errors='', lang=None, REQUEST=None):
+        """ """
+        if lang is None: lang = self.gl_get_selected_language()
+        if mail_server_name is not None:
+            self.getEmailTool().manageSettings(mail_server_name, mail_server_port, administrator_email, mail_address_from, notify_on_errors='')
+            if REQUEST:
+                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                REQUEST.RESPONSE.redirect('%s/admin_email_html?lang=%s' % (self.absolute_url(), lang))
+        else:
+            REQUEST.RESPONSE.redirect('%s/admin_email_html?lang=%s' % (self.absolute_url(), lang))
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_layout')
     def admin_layout(self, theMasterList='', theSlaveList='', REQUEST=None):
         """ """
@@ -1722,6 +1734,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_metadata')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_email_html')
+    def admin_email_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_email')
+    
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_logos_html')
     def admin_logos_html(self, REQUEST=None, RESPONSE=None):
         """ """
