@@ -124,8 +124,8 @@ class NyForum(Folder, utils):
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #site actions
-    security.declareProtected(PERMISSION_MANAGE_FORUMTOPIC, 'deleteObjects')
-    def deleteObjects(self, ids='', REQUEST=None):
+    security.declareProtected(PERMISSION_MANAGE_FORUMTOPIC, 'deleteTopics')
+    def deleteTopics(self, ids='', REQUEST=None):
         """ """
         try: self.manage_delObjects(self.utConvertToList(ids))
         except: self.setSessionErrors(['Error while delete data.'])

@@ -34,14 +34,16 @@ from constants import *
 manage_addNyForumMessage_html = PageTemplateFile('zpt/message_manage_add', globals())
 message_add_html = PageTemplateFile('zpt/message_add', globals())
 def addNyForumMessage(self, id='', title='', description='', attachment='',
-    REQUEST=None):
+    notify='', REQUEST=None):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_NYFORUMMESSAGE + self.utGenRandomId(6)
+    if notify: notify = 1
+    else: notify = 0
     author, postdate = self.processIdentity()
     if self.meta_type == METATYPE_NYFORUMTOPIC: uid = None
     else: uid = self.utGenerateUID()
-    ob = NyForumMessage(id, title, description, author, postdate, uid)
+    ob = NyForumMessage(id, title, description, notify, author, postdate, uid)
     self._setObject(id, ob)
     self.handleAttachmentUpload(self._getOb(id), attachment)
     if REQUEST is not None:
@@ -79,11 +81,12 @@ class NyForumMessage(Folder):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, description, author, postdate, uid):
+    def __init__(self, id, title, description, notify, author, postdate, uid):
         """ """
         self.id = id
         self.title = title
         self.description = description
+        self.notify = notify
         self.author = author
         self.postdate = postdate
         self._uid = uid
@@ -96,10 +99,13 @@ class NyForumMessage(Folder):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', REQUEST=None):
+    def manageProperties(self, title='', description='', notify='', REQUEST=None):
         """ """
+        if notify: notify = 1
+        else: notify = 0
         self.title = title
         self.description = description
+        self.notify = notify
         self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
