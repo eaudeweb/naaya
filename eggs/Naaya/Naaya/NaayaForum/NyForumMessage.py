@@ -38,7 +38,10 @@ def addNyForumMessage(self, id='', title='', description='', attachment='',
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_NYFORUMMESSAGE + self.utGenRandomId(6)
-    ob = NyForumMessage(id, title, description)
+    author, postdate = self.processIdentity()
+    if self.meta_type == METATYPE_NYFORUMTOPIC: uid = None
+    else: uid = self.utGenerateUID()
+    ob = NyForumMessage(id, title, description, author, postdate, uid)
     self._setObject(id, ob)
     self.handleAttachmentUpload(self._getOb(id), attachment)
     if REQUEST is not None:
@@ -76,15 +79,19 @@ class NyForumMessage(Folder):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, description):
+    def __init__(self, id, title, description, author, postdate, uid):
         """ """
         self.id = id
         self.title = title
         self.description = description
+        self.author = author
+        self.postdate = postdate
+        self._uid = uid
 
     #api
     def get_message_object(self): return self
     def get_message_path(self, p=0): return self.absolute_url(p)
+    def get_message_uid(self): return self._uid
     def get_attachments(self): return self.objectValues('File')
 
     #zmi actions
