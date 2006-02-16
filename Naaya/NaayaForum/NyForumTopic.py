@@ -112,6 +112,26 @@ class NyForumTopic(Folder):
     def count_messages(self): return len(self.objectIds(METATYPE_NYFORUMMESSAGE))
     def get_attachments(self): return self.objectValues('File')
 
+    def __get_messages_thread(self, msgs, node, depth):
+        """
+        Recursive function that process the given messages and returns
+        a tree like structure.
+        """
+        tree = []
+        l = [msg for msg in msgs if msg._inreplyto == node]
+        map(msgs.remove, l)
+        for msg in l:
+            tree.append((depth, msg))
+            tree.extend(self.__get_messages_thread(msgs, msg._uid, depth+1))
+        return tree
+
+    def get_messages_thread(self):
+        """
+        Process all the messages and returns a structure to be displayed as
+        a tree.
+        """
+        return self.__get_messages_thread(self.objectValues(METATYPE_NYFORUMMESSAGE), None, 0)
+
     def get_last_message(self):
         """
         Returns the last posted message. If the topic has no messages then
@@ -172,15 +192,6 @@ class NyForumTopic(Folder):
         self.notify = notify
         self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
-
-    #site actions
-    security.declareProtected(PERMISSION_MANAGE_FORUMTOPIC, 'deleteMessages')
-    def deleteMessages(self, ids='', REQUEST=None):
-        """ """
-        try: self.manage_delObjects(self.utConvertToList(ids))
-        except: self.setSessionErrors(['Error while delete data.'])
-        else: self.setSessionInfo(['Messages(s) deleted.'])
-        if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
