@@ -12,7 +12,7 @@
 <form method="post" action="manageProperties">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
-		<td class="form-label">Title</td>
+		<td class="form-label">Subject</td>
 		<td><input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value here/title" /></td>
 	</tr>
 	<tr>
@@ -26,7 +26,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Description</td>
+		<td class="form-label" valign="top">Text</td>
 		<td><textarea name="description:utf8:ustring" id="description" rows="10" cols="50" tal:content="here/description"></textarea></td>
 	</tr>
 	<tr><td></td><td><input type="submit" value="Save changes"></td></tr>

@@ -12,7 +12,7 @@
 		<td width="75%"><input type="text" name="id" id="id" size="30" value="" /></td>
 	</tr>
 	<tr>
-		<td class="form-label">Title</td>
+		<td class="form-label">Subject</td>
 		<td><input type="text" name="title:utf8:ustring" id="title" size="50" value="" /></td>
 	</tr>
 	<tr>
@@ -25,7 +25,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Description</td>
+		<td class="form-label" valign="top">Text</td>
 		<td><textarea name="description:utf8:ustring" id="description" rows="10" cols="50"></textarea></td>
 	</tr>
 	<tr>
