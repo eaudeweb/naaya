@@ -30,6 +30,7 @@ from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
 from constants import *
+from Products.NaayaBase.constants import *
 
 manage_addNyForumMessage_html = PageTemplateFile('zpt/message_manage_add', globals())
 message_add_html = PageTemplateFile('zpt/message_add', globals())
@@ -101,6 +102,36 @@ class NyForumMessage(Folder):
     def get_message_uid(self): return self._uid
     def get_attachments(self): return self.objectValues('File')
 
+    #site actions
+    security.declareProtected(PERMISSION_MANAGE_FORUMMESSAGE, 'saveProperties')
+    def saveProperties(self, title='', description='', notify='', REQUEST=None):
+        """ """
+        if notify: notify = 1
+        else: notify = 0
+        self.title = title
+        self.description = description
+        self.notify = notify
+        self._p_changed = 1
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_MANAGE_FORUMMESSAGE, 'deleteAttachments')
+    def deleteAttachments(self, ids='', REQUEST=None):
+        """ """
+        try: self.manage_delObjects(self.utConvertToList(ids))
+        except: self.setSessionErrors(['Error while delete data.'])
+        else: self.setSessionInfo(['Attachment(s) deleted.'])
+        if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_MANAGE_FORUMMESSAGE, 'addAttachment')
+    def addAttachment(self, attachment='', REQUEST=None):
+        """ """
+        self.handleAttachmentUpload(self, attachment)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', notify='', REQUEST=None):
@@ -116,5 +147,9 @@ class NyForumMessage(Folder):
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/message_manage_edit', globals())
+
+    #site pages
+    security.declareProtected(PERMISSION_MANAGE_FORUMMESSAGE, 'edit_html')
+    edit_html = PageTemplateFile('zpt/message_edit', globals())
 
 InitializeClass(NyForumMessage)
