@@ -57,6 +57,7 @@ from Products.NaayaCore.PortletsTool.managers.portlets_manager import portlets_m
 from Products.NaayaCore.FormsTool.FormsTool import manage_addFormsTool
 from Products.NaayaCore.LayoutTool.LayoutTool import manage_addLayoutTool
 from Products.NaayaCore.NotificationTool.NotificationTool import manage_addNotificationTool
+from Products.NaayaCore.ProfilesTool.ProfilesTool import manage_addProfilesTool
 from Products.NaayaBase.NyBase import NyBase
 from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
 from Products.NaayaBase.NyImportExport import NyImportExport
@@ -178,6 +179,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         manage_addFormsTool(self)
         manage_addLayoutTool(self)
         manage_addNotificationTool(self)
+        manage_addProfilesTool(self)
         manage_addErrorLog(self)
         self.loadSkeleton(join(NAAYA_PRODUCT_PATH, 'skel'))
 
