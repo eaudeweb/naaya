@@ -1,0 +1,34 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 i18n:translate="">Submit Topic</h1>
+
+<p i18n:translate="">
+	Fill the properties in the form below and click <strong>Submit</strong>.
+</p>
+
+<form tal:attributes="action string:${here/absolute_url}/addNyForumTopic" method="post" enctype="multipart/form-data">
+<div class="field">
+	<label for="title"><span i18n:translate="" tal:omit-tag="">Title</span></label>
+	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value string:" />
+</div>
+<div class="field">
+	<label for="category"><span i18n:translate="" tal:omit-tag="">Category</span></label>
+	<select name="category:utf8:ustring" id="category">
+		<option tal:repeat="item here/get_forum_categories"
+			tal:attributes="value item" tal:content="item" />
+	</select>
+</div>
+<div class="field">
+	<label for="description"><span i18n:translate="" tal:omit-tag="">Description</span></label>
+	<textarea name="description:utf8:ustring" id="description" rows="10" cols="50" tal:content="string:"></textarea>
+</div>
+<div class="field">
+	<label for="attachment"><span i18n:translate="" tal:omit-tag="">Attachment</span></label>
+	<input type="file" name="attachment" id="attachment" />
+</div>
+<div class="field">
+	<input type="submit" value="Submit" i18n:attributes="value" />
+</div>
+</form>
+
+<span tal:replace="structure here/standard_html_footer" />
