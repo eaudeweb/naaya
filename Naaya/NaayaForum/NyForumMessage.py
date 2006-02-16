@@ -33,17 +33,17 @@ from constants import *
 
 manage_addNyForumMessage_html = PageTemplateFile('zpt/message_manage_add', globals())
 message_add_html = PageTemplateFile('zpt/message_add', globals())
-def addNyForumMessage(self, id='', title='', description='', attachment='',
+def addNyForumMessage(self, id='', inreplyto='', title='', description='', attachment='',
     notify='', REQUEST=None):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_NYFORUMMESSAGE + self.utGenRandomId(6)
+    if inreplyto == '': inreplyto = None
     if notify: notify = 1
     else: notify = 0
     author, postdate = self.processIdentity()
-    if self.meta_type == METATYPE_NYFORUMTOPIC: uid = None
-    else: uid = self.utGenerateUID()
-    ob = NyForumMessage(id, title, description, notify, author, postdate, uid)
+    uid = self.utGenerateUID()
+    ob = NyForumMessage(id, inreplyto, title, description, notify, author, postdate, uid)
     self._setObject(id, ob)
     self.handleAttachmentUpload(self._getOb(id), attachment)
     if REQUEST is not None:
@@ -58,6 +58,7 @@ class NyForumMessage(Folder):
     """ """
 
     meta_type = METATYPE_NYFORUMMESSAGE
+    meta_label = LABEL_NYFORUMMESSAGE
     icon = 'misc_/NaayaForum/NyForumMessage.gif'
 
     manage_options = (
@@ -81,9 +82,11 @@ class NyForumMessage(Folder):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, description, notify, author, postdate, uid):
+    def __init__(self, id, inreplyto, title, description, notify, author,
+        postdate, uid):
         """ """
         self.id = id
+        self._inreplyto = inreplyto
         self.title = title
         self.description = description
         self.notify = notify
@@ -94,6 +97,7 @@ class NyForumMessage(Folder):
     #api
     def get_message_object(self): return self
     def get_message_path(self, p=0): return self.absolute_url(p)
+    def get_message_inreplyto(self): return self._inreplyto
     def get_message_uid(self): return self._uid
     def get_attachments(self): return self.objectValues('File')
 

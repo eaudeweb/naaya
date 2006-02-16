@@ -1,6 +1,6 @@
 <span tal:replace="structure here/standard_html_header" />
 
-<h1><img tal:attributes="src here/icon; title here/meta_type; alt here/meta_type" border="0" /> <span tal:replace="here/title_or_id" /></h1>
+<h1><img tal:attributes="src here/icon; title here/meta_label; alt here/meta_label" border="0" /> <span tal:replace="here/title_or_id" /></h1>
 <p tal:content="structure here/description" />
 
 <tal:block tal:define="permission python:1; topics here/get_topics">
@@ -30,7 +30,7 @@
 	<tbody>
 		<tr tal:repeat="item topics">
 			<td tal:condition="permission"><input type="checkbox" name="ids" tal:attributes="value item/id" /></td>
-			<td><img src="/misc_/NaayaForum/NyForumTopic.gif" alt="Topic" i18n:attributes="alt" /></td>
+			<td><img src="/misc_/NaayaForum/NyForumTopic.gif" tal:attributes="alt item/meta_label; title item/meta_label" /></td>
 			<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id" /></td>
 			<td tal:content="item/category" />
 			<td tal:content="item/author" />

@@ -20,7 +20,7 @@
 </div>
 <div class="field">
 	<label for="description" i18n:translate="">Text</label>
-	<textarea name="description:utf8:ustring" id="description" rows="10" cols="50" tal:content="string:"></textarea>
+	<span tal:replace="structure python:here.Epoz('description:utf8:ustring', data='', toolbox='', lang=here.gl_get_selected_language(), style='width: 400px; height: 200px; border: 1px solid #000000;')" />
 </div>
 <div class="field">
 	<label for="attachment" i18n:translate="">Attachment</label>

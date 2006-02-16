@@ -16,6 +16,10 @@
 		<td tal:content="string:${here/get_message_uid}" />
 	</tr>
 	<tr>
+		<td class="form-label">In reply to</td>
+		<td tal:content="string:${here/get_message_inreplyto}" />
+	</tr>
+	<tr>
 		<td class="form-label">Subject</td>
 		<td><input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value here/title" /></td>
 	</tr>
