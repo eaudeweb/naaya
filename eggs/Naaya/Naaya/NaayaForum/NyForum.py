@@ -47,6 +47,7 @@ class NyForum(Folder, utils):
     """ """
 
     meta_type = METATYPE_NYFORUM
+    meta_label = LABEL_NYFORUM
     icon = 'misc_/NaayaForum/NyForum.gif'
 
     manage_options = (

@@ -12,6 +12,17 @@
 		<td width="75%"><input type="text" name="id" id="id" size="30" value="" /></td>
 	</tr>
 	<tr>
+		<td class="form-label">In reply to</td>
+		<td>
+			<select name="inreplyto" id="inreplyto">
+				<option value="">To topic itself</option>
+				<option tal:repeat="item here/get_messages"
+					tal:attributes="value item/get_message_uid"
+					tal:content="item/title_or_id" />
+			</select>
+		</td>
+	</tr>
+	<tr>
 		<td class="form-label">Subject</td>
 		<td><input type="text" name="title:utf8:ustring" id="title" size="50" value="" /></td>
 	</tr>
