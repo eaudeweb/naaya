@@ -32,6 +32,7 @@ from AccessControl.Permissions import view_management_screens, view
 from constants import *
 
 manage_addNyForumMessage_html = PageTemplateFile('zpt/message_manage_add', globals())
+message_add_html = PageTemplateFile('zpt/message_add', globals())
 def addNyForumMessage(self, id='', title='', description='', attachment='',
     REQUEST=None):
     """ """

@@ -31,7 +31,7 @@ from AccessControl.Permissions import view_management_screens, view
 #Product imports
 from constants import *
 from Products.NaayaBase.constants import *
-from NyForumMessage import manage_addNyForumMessage_html, addNyForumMessage
+from NyForumMessage import manage_addNyForumMessage_html, message_add_html, addNyForumMessage
 
 manage_addNyForumTopic_html = PageTemplateFile('zpt/topic_manage_add', globals())
 topic_add_html = PageTemplateFile('zpt/topic_add', globals())
@@ -84,6 +84,9 @@ class NyForumTopic(Folder):
 
     security.declareProtected(view_management_screens, 'manage_addNyForumMessage_html')
     manage_addNyForumMessage_html = manage_addNyForumMessage_html
+
+    security.declareProtected(PERMISSION_ADD_FORUMMESSAGE, 'message_add_html')
+    message_add_html = message_add_html
 
     security.declareProtected(PERMISSION_ADD_FORUMMESSAGE, 'addNyForumMessage')
     addNyForumMessage = addNyForumMessage
