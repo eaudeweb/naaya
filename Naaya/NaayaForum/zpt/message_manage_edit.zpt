@@ -12,6 +12,10 @@
 <form method="post" action="manageProperties">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
+		<td class="form-label">UID</td>
+		<td tal:content="string:${here/get_message_uid}" />
+	</tr>
+	<tr>
 		<td class="form-label">Subject</td>
 		<td><input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value here/title" /></td>
 	</tr>

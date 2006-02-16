@@ -23,6 +23,9 @@
 	<label for="description"><span i18n:translate="" tal:omit-tag="">Text</span></label>
 	<textarea name="description:utf8:ustring" id="description" rows="10" cols="50" tal:content="here/description"></textarea>
 </div>
+<div class="field-inline">
+	<strong tal:content="python:here.utShowFullDateTime(here.postdate)" />, <strong tal:content="here/author" />
+</div>
 <div class="field">
 	<input type="submit" value="Submit" i18n:attributes="value" />
 </div>
@@ -34,7 +37,7 @@
 	Explanatory text here ...
 </p>
 
-<form tal:attributes="action string:${here/absolute_url}/deleteAttachment" method="post">
+<form tal:attributes="action string:${here/absolute_url}/deleteAttachments" method="post">
 <div>
 	<div id="toolbar">
 		<input type="submit" value="Delete" i18n:attributes="value" />

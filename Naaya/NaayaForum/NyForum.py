@@ -90,6 +90,15 @@ class NyForum(Folder, utils):
     def get_topics(self): return self.objectValues(METATYPE_NYFORUMTOPIC)
     def count_topics(self): return len(self.objectIds(METATYPE_NYFORUMTOPIC))
 
+    security.declarePrivate('processIdentity')
+    def processIdentity(self):
+        """
+        Returns information about the user who created the topic/message
+        and the posting date.
+        """
+        return self.REQUEST.AUTHENTICATED_USER.getUserName(), self.utGetTodayDate()
+
+    security.declarePrivate('handleAttachmentUpload')
     def handleAttachmentUpload(self, ob, file):
         """
         Handle upload of a file. A B{File} object will be created inside
@@ -113,6 +122,15 @@ class NyForum(Folder, utils):
         self.categories = self.utConvertLinesToList(categories)
         self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
+
+    #site actions
+    security.declareProtected(PERMISSION_MANAGE_FORUMTOPIC, 'deleteObjects')
+    def deleteObjects(self, ids='', REQUEST=None):
+        """ """
+        try: self.manage_delObjects(self.utConvertToList(ids))
+        except: self.setSessionErrors(['Error while delete data.'])
+        else: self.setSessionInfo(['Topic(s) deleted.'])
+        if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')

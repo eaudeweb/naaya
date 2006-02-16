@@ -40,7 +40,8 @@ def addNyForumTopic(self, id='', title='', category='', description='',
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_NYFORUMTOPIC + self.utGenRandomId(6)
-    ob = NyForumTopic(id, title, category, description)
+    author, postdate = self.processIdentity()
+    ob = NyForumTopic(id, title, category, description, author, postdate)
     self._setObject(id, ob)
     self.handleAttachmentUpload(self._getOb(id), attachment)
     if REQUEST is not None:
@@ -91,12 +92,14 @@ class NyForumTopic(Folder):
     security.declareProtected(PERMISSION_ADD_FORUMMESSAGE, 'addNyForumMessage')
     addNyForumMessage = addNyForumMessage
 
-    def __init__(self, id, title, category, description):
+    def __init__(self, id, title, category, description, author, postdate):
         """ """
         self.id = id
         self.title = title
         self.category = category
         self.description = description
+        self.author = author
+        self.postdate = postdate
 
     #api
     def get_topic_object(self): return self
@@ -104,6 +107,17 @@ class NyForumTopic(Folder):
     def get_messages(self): return self.objectValues(METATYPE_NYFORUMMESSAGE)
     def count_messages(self): return len(self.objectIds(METATYPE_NYFORUMMESSAGE))
     def get_attachments(self): return self.objectValues('File')
+
+    def get_last_message(self):
+        """
+        Returns the last posted message. If the topic has no messages then
+        it returns the topic itself, otherwise the last posted message.
+        """
+        l = self.objectValues(METATYPE_NYFORUMMESSAGE)
+        if len(l)==0:
+            return self
+        else:
+            return self.utSortObjsListByAttr(l, 'postdate', 1)[0]
 
     #permissions
     def checkPermissionAddForumMessage(self):
@@ -121,8 +135,8 @@ class NyForumTopic(Folder):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_MANAGE_FORUMTOPIC, 'deleteAttachment')
-    def deleteAttachment(self, ids='', REQUEST=None):
+    security.declareProtected(PERMISSION_MANAGE_FORUMTOPIC, 'deleteAttachments')
+    def deleteAttachments(self, ids='', REQUEST=None):
         """ """
         try: self.manage_delObjects(self.utConvertToList(ids))
         except: self.setSessionErrors(['Error while delete data.'])
