@@ -161,4 +161,16 @@ class NotificationTool(Folder):
     security.declareProtected(view_management_screens, 'manage_settings_html')
     manage_settings_html = PageTemplateFile('zpt/notification_settings', globals())
 
+    def getNotificationGroups(self):
+        """ """
+        pass
+
+    def admin_del_notif_groups(self):
+        """ """
+        pass
+
+    def admin_add_notif_group(self):
+        """ """
+        pass
+
 InitializeClass(NotificationTool)
