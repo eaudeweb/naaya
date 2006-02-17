@@ -456,8 +456,10 @@ class utils:
 
     def utIsFloat(self, p_data):
         """Test if the p_data parameter is float"""
-        try:
-            p_data = float(p_data)
-            return p_data >= 0
-        except:
-            return 0
+        if p_data:
+            try:
+                p_data = float(p_data)
+                return p_data >= 0
+            except:
+                return 0
+        return 1
