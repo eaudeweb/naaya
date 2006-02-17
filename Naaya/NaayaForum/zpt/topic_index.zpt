@@ -41,8 +41,8 @@
 		<div style="background-color:#b7d2e7;padding:5px;margin-bottom:5px;">
 			<div style="float:right;" tal:condition="python:add_permission or edit_permission">
 				<a tal:condition="edit_permission" tal:attributes="href string:${item/absolute_url}/edit_html" i18n:translate="">Edit</a>
-				<a tal:condition="edit_permission" tal:attributes="href string:${item/absolute_url}/edit_html" i18n:translate="">Delete</a>
-				<a tal:condition="add_permission" tal:attributes="href string:${item/absolute_url}/edit_html" i18n:translate="">Reply</a>
+				<a tal:condition="edit_permission" tal:attributes="href string:${item/absolute_url}/delete_html" i18n:translate="">Delete</a>
+				<a tal:condition="add_permission" tal:attributes="href string:${item/absolute_url}/reply_html" i18n:translate="">Reply</a>
 			</div>
 			<img src="/misc_/NaayaForum/NyForumMessage.gif" tal:attributes="alt item/meta_label; title item/meta_label" />
 			<strong tal:content="item/title_or_id" />
@@ -54,6 +54,7 @@
 		<div style="padding:5px;" tal:content="structure item/description" />
 		<div tal:define="attachments item/get_attachments" tal:condition="python:len(attachments)>0"
 			style="padding:5px;border-top:1px solid #dddddd;">
+			<img src="/misc_/NaayaForum/attachment.gif" alt="Attachments" i18n:attributes="alt" />
 			<span i18n:translate="" tal:omit-tag="">Attachments:</span>
 			<tal:block repeat="file attachments">
 				<a tal:attributes="href file/absolute_url; title file/title_or_id">
