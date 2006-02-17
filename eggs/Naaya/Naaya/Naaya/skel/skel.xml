@@ -67,6 +67,8 @@
 		<form id="site_admin_linksportlets" title="Portal administration - list of links portlets section"/>
 		<form id="site_admin_htmlportlets" title="Portal administration - html portlets section"/>
 		<form id="site_admin_delmessages" title="Portal administration - delete message translations"/>
+        <form id="site_admin_notifications" title="Portal administration - notifications settings"/>
+        <form id="site_admin_notif_sitemap" title="Portal administration - notifications sitemap"/>
 		<form id="sitemap_add" title="Sitemap"/>
 	</forms>
 	<layout default_skin_id="skin" default_scheme_id="scheme">
