@@ -133,8 +133,8 @@
 					edit_permission here/checkPermissionModifyForumTopic"
 		tal:condition="python:add_permission or edit_permission">
 		<div class="message_top_buttons2">
-			<a tal:condition="edit_permission" tal:attributes="href string:${here/absolute_url}/edit_html"><span class="buttons" i18n:translate="">Edit</span></a>
-			<a tal:condition="add_permission" tal:attributes="href string:${here/absolute_url}/message_add_html"><span class="buttons" i18n:translate="">Reply</span></a>
+			<a tal:condition="edit_permission" tal:attributes="href string:${here/get_topic_path}/edit_html"><span class="buttons" i18n:translate="">Edit</span></a>
+			<a tal:condition="add_permission" tal:attributes="href string:${here/get_topic_path}/message_add_html"><span class="buttons" i18n:translate="">Reply</span></a>
 		</div>
 	</div>
 	<div class="forum_topic_author">
