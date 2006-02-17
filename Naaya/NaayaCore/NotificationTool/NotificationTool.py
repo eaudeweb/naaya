@@ -68,6 +68,9 @@ class NotificationTool(Folder):
         self.newsmetatypes = []
         self.uploadmetatypes = []
         self.foldermetatypes = []
+        self.subject_notifications=''
+        self.subject_newsletter=''
+        self.from_email=''
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
@@ -172,5 +175,13 @@ class NotificationTool(Folder):
     def admin_add_notif_group(self):
         """ """
         pass
+
+    def set_email_credentials(self, from_email, subject_notifications='', subject_newsletter=''):
+        """sets the subject of the newsletter, of the newsletter and of the sender in the lang language"""
+        pass
+        self.subject_notifications = subject_notifications
+        self.subject_newsletter = subject_newsletter
+        self.from_email = from_email
+        self._p_changed = 1
 
 InitializeClass(NotificationTool)
