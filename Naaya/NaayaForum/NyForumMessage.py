@@ -47,7 +47,9 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
     uid = self.utGenerateUID()
     ob = NyForumMessage(id, inreplyto, title, description, notify, author, postdate, uid)
     self._setObject(id, ob)
-    self.handleAttachmentUpload(self._getOb(id), attachment)
+    ob = self._getOb(id)
+    self.handleAttachmentUpload(ob, attachment)
+    self.notifyOnMessage(ob)
     if REQUEST is not None:
         referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if referer == 'manage_addNyForumMessage_html' or \
@@ -133,6 +135,23 @@ class NyForumMessage(Folder, NyForumBase):
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_ADD_FORUMMESSAGE, 'replyMessage')
+    def replyMessage(self, title='', description='', attachment='', notify='',
+        REQUEST=None):
+        """ """
+        addNyForumMessage(self.get_topic_object(), '', self.get_message_uid(),
+            title, description, attachment, notify)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect(self.get_topic_path())
+
+    security.declareProtected(PERMISSION_ADD_FORUMMESSAGE, 'deleteMessage')
+    def deleteMessage(self, nodes='', REQUEST=None):
+        """ """
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect(self.get_topic_path())
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')

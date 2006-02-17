@@ -94,6 +94,13 @@ class NyForum(Folder, NyForumBase, utils):
     def count_topics(self): return len(self.objectIds(METATYPE_NYFORUMTOPIC))
 
     security.declarePrivate('processIdentity')
+    def get_message_parents(self, ob):
+        """
+        Returns a list with all node parents.
+        """
+        pass
+
+    security.declarePrivate('processIdentity')
     def processIdentity(self):
         """
         Returns information about the user who created the topic/message
@@ -111,6 +118,15 @@ class NyForum(Folder, NyForumBase, utils):
             if hasattr(file, 'filename'):
                 if file.filename != '':
                     ob.manage_addFile(id='', file=file)
+
+    security.declarePrivate('notifyOnMessage')
+    def notifyOnMessage(self, ob):
+        """
+        When a new message is created, checks all its parents
+        for B{notify} flag. If on, then send email notification.
+        """
+        print 'xxx'
+
 
     security.declareProtected(view, 'checkTopicsPermissions')
     def checkTopicsPermissions(self):

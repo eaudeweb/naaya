@@ -120,11 +120,11 @@ class NyForumTopic(Folder, NyForumBase):
         a tree like structure.
         """
         tree = []
-        l = [msg for msg in msgs if msg._inreplyto == node]
+        l = [msg for msg in msgs if msg.get_message_inreplyto() == node]
         map(msgs.remove, l)
         for msg in l:
             tree.append((depth, msg))
-            tree.extend(self.__get_messages_thread(msgs, msg._uid, depth+1))
+            tree.extend(self.__get_messages_thread(msgs, msg.get_message_uid(), depth+1))
         return tree
 
     def get_messages_thread(self):
@@ -132,7 +132,7 @@ class NyForumTopic(Folder, NyForumBase):
         Process all the messages and returns a structure to be displayed as
         a tree.
         """
-        return self.__get_messages_thread(self.objectValues(METATYPE_NYFORUMMESSAGE), None, 0)
+        return self.__get_messages_thread(self.objectValues(METATYPE_NYFORUMMESSAGE), None, 1)
 
     def get_last_message(self):
         """

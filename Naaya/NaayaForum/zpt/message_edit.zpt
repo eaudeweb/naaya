@@ -52,7 +52,7 @@
 	<tbody>
 		<tr tal:repeat="item here/get_attachments">
 			<td><input type="checkbox" name="ids" tal:attributes="value item/id" /></td>
-			<td tal:content="item/title_or_id" />
+			<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id" /></td>
 			<td tal:content="item/content_type" />
 			<td tal:content="python:here.utShowSize(item.size)" />
 		</tr>
