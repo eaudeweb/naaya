@@ -170,6 +170,9 @@ class NyForumMessage(Folder, NyForumBase):
     manage_edit_html = PageTemplateFile('zpt/message_manage_edit', globals())
 
     #site pages
+    security.declareProtected(view, 'index_html')
+    index_html = PageTemplateFile('zpt/message_index', globals())
+
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'edit_html')
     edit_html = PageTemplateFile('zpt/message_edit', globals())
 
