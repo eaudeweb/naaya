@@ -1,0 +1,20 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 i18n:translate="">Delete message</h1>
+
+<div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/get_topic_path" i18n:translate="">Back to list</a></span></div>
+
+<form tal:attributes="action string:${here/absolute_url}/deleteMessage" method="post" enctype="multipart/form-data">
+<div class="field" i18n:translate="">
+	Explanatory text here ...
+</div>
+<div class="field">
+	<input type="checkbox" name="nodes" id="nodes" />
+	<span i18n:translate="" tal:omit-tag="">Erase also all the child nodes</span>
+</div>
+<div class="field">
+	<input type="submit" value="Submit" i18n:attributes="value" />
+</div>
+</form>
+
+<span tal:replace="structure here/standard_html_footer" />
