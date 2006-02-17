@@ -30,6 +30,7 @@ from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
 from constants import *
+from NyForumBase import NyForumBase
 from Products.NaayaBase.constants import *
 
 manage_addNyForumMessage_html = PageTemplateFile('zpt/message_manage_add', globals())
@@ -55,7 +56,7 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
         elif referer == 'message_add_html':
             REQUEST.RESPONSE.redirect(self.absolute_url())
 
-class NyForumMessage(Folder):
+class NyForumMessage(Folder, NyForumBase):
     """ """
 
     meta_type = METATYPE_NYFORUMMESSAGE
@@ -94,6 +95,7 @@ class NyForumMessage(Folder):
         self.author = author
         self.postdate = postdate
         self._uid = uid
+        NyForumBase.__dict__['__init__'](self)
 
     #api
     def get_message_object(self): return self
@@ -103,7 +105,7 @@ class NyForumMessage(Folder):
     def get_attachments(self): return self.objectValues('File')
 
     #site actions
-    security.declareProtected(PERMISSION_MANAGE_FORUMMESSAGE, 'saveProperties')
+    security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'saveProperties')
     def saveProperties(self, title='', description='', notify='', REQUEST=None):
         """ """
         if notify: notify = 1
@@ -116,7 +118,7 @@ class NyForumMessage(Folder):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_MANAGE_FORUMMESSAGE, 'deleteAttachments')
+    security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'deleteAttachments')
     def deleteAttachments(self, ids='', REQUEST=None):
         """ """
         try: self.manage_delObjects(self.utConvertToList(ids))
@@ -124,7 +126,7 @@ class NyForumMessage(Folder):
         else: self.setSessionInfo(['Attachment(s) deleted.'])
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_MANAGE_FORUMMESSAGE, 'addAttachment')
+    security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'addAttachment')
     def addAttachment(self, attachment='', REQUEST=None):
         """ """
         self.handleAttachmentUpload(self, attachment)
@@ -149,7 +151,7 @@ class NyForumMessage(Folder):
     manage_edit_html = PageTemplateFile('zpt/message_manage_edit', globals())
 
     #site pages
-    security.declareProtected(PERMISSION_MANAGE_FORUMMESSAGE, 'edit_html')
+    security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'edit_html')
     edit_html = PageTemplateFile('zpt/message_edit', globals())
 
 InitializeClass(NyForumMessage)
