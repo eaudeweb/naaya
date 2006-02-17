@@ -29,7 +29,7 @@
 		<th class="title-column" i18n:translate="">Author</th>
 		<th class="title-column" i18n:translate="">Replies</th>
 		<th class="title-column" i18n:translate="">Last message</th>
-		<th class="edit" i18n:translate="">Edit</th>
+		<th class="edit" i18n:translate="" tal:condition="can_operate">Edit</th>
 	</tr>
 	<tbody>
 		<tr tal:repeat="topic topics">

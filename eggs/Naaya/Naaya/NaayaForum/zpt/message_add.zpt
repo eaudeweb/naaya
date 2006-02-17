@@ -1,6 +1,8 @@
 <span tal:replace="structure here/standard_html_header" />
 
-<h1 i18n:translate="">Submit Message</h1>
+<h1 i18n:translate="">Submit message</h1>
+
+<div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/get_topic_path" i18n:translate="">Back to list</a></span></div>
 
 <p i18n:translate="">
 	Fill the properties in the form below and click <strong>Submit</strong>.

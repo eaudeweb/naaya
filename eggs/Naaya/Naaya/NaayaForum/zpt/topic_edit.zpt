@@ -1,6 +1,6 @@
 <span tal:replace="structure here/standard_html_header" />
 
-<h1 i18n:translate="">Edit Topic</h1>
+<h1 i18n:translate="">Edit topic</h1>
 
 <div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span></div>
 
@@ -11,7 +11,7 @@
 <form tal:attributes="action string:${here/absolute_url}/saveProperties" method="post">
 <div class="field">
 	<label for="title" i18n:translate="">Subject</label>
-	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value here/title_or_id" />
+	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value here/title" />
 </div>
 <div class="field">
 	<label for="category" i18n:translate="">Category</label>

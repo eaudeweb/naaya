@@ -154,4 +154,10 @@ class NyForumMessage(Folder, NyForumBase):
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'edit_html')
     edit_html = PageTemplateFile('zpt/message_edit', globals())
 
+    security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'delete_html')
+    delete_html = PageTemplateFile('zpt/message_delete', globals())
+
+    security.declareProtected(PERMISSION_ADD_FORUMMESSAGE, 'reply_html')
+    reply_html = PageTemplateFile('zpt/message_reply', globals())
+
 InitializeClass(NyForumMessage)
