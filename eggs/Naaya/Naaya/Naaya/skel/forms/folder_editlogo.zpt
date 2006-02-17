@@ -24,7 +24,7 @@
 </div>
 <tal:block tal:condition="logo">
 <div class="field">
-	<img tal:attributes="src logo/absolute_url" alt="Folder ogo" i18n:attributes="alt" />
+	<img tal:attributes="src logo/absolute_url" alt="Folder logo" i18n:attributes="alt" />
 </div>
 <div class="field-inline">
 	<input type="checkbox" name="del_logo" id="del_logo" />
