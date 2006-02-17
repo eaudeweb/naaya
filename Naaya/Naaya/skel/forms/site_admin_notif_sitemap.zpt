@@ -15,7 +15,7 @@
 </div>
 
 <p i18n:translate="">
-Sub constructie
+These are the folders 
 </p>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_notif_sitemap">

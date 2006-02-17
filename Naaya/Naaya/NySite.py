@@ -1206,12 +1206,20 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             REQUEST.RESPONSE.redirect('%s/admin_email_html?lang=%s' % (self.absolute_url(), lang))
             
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notifications')
-    def admin_notifications(self, newsmetatypes='', uploadmetatypes='', foldermetatypes='', lang=None, REQUEST=None):
+    def admin_notifications(self, newsmetatypes='', uploadmetatypes='', foldermetatypes='', subject_notifications='', subject_newsletter='', from_email='', lang=None, REQUEST=None):
         """."""
-        self.getNotificationTool().manageSettings(newsmetatypes=newsmetatypes, uploadmetatypes=uploadmetatypes, foldermetatypes=foldermetatypes)
-        if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/admin_notifications_html?lang=%s' % (self.absolute_url(), lang))
+        if from_email=='' and self.mail_address_from=='': 
+            if REQUEST:
+                self.setSessionInfo([MESSAGE_NOTFROMEMAIL % self.utGetTodayDate()])
+                REQUEST.RESPONSE.redirect('%s/admin_notifications_html?lang=%s' % (self.absolute_url(), lang))
+        else:
+            self.getNotificationTool().manageSettings(newsmetatypes=newsmetatypes, uploadmetatypes=uploadmetatypes, foldermetatypes=foldermetatypes)
+            if from_email=='': from_email = self.mail_address_from
+            if subject_notifications != '' or subject_newsletter != '':
+                self.getNotificationTool().set_email_credentials(from_email, subject_notifications, subject_newsletter)
+            if REQUEST:
+                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                REQUEST.RESPONSE.redirect('%s/admin_notifications_html?lang=%s' % (self.absolute_url(), lang))
     
     
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notif_sitemap')
