@@ -1204,6 +1204,24 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 REQUEST.RESPONSE.redirect('%s/admin_email_html?lang=%s' % (self.absolute_url(), lang))
         else:
             REQUEST.RESPONSE.redirect('%s/admin_email_html?lang=%s' % (self.absolute_url(), lang))
+            
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notifications')
+    def admin_notifications(self, newsmetatypes='', uploadmetatypes='', foldermetatypes='', lang=None, REQUEST=None):
+        """."""
+        self.getNotificationTool().manageSettings(newsmetatypes=newsmetatypes, uploadmetatypes=uploadmetatypes, foldermetatypes=foldermetatypes)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_notifications_html?lang=%s' % (self.absolute_url(), lang))
+    
+    
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notif_sitemap')
+    def admin_notif_sitemap(self, proprietati, REQUEST=None):
+        """."""
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_notif_sitemap_html?lang=%s' % (self.absolute_url(), lang))
+        
+        
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_layout')
     def admin_layout(self, theMasterList='', theSlaveList='', REQUEST=None):
@@ -1908,6 +1926,16 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def admin_htmlportlets_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_htmlportlets')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notifications_html')
+    def admin_notifications_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_notifications')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notif_sitemap_html')
+    def admin_notif_sitemap_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_notif_sitemap')
 
     #others
     def get_localch_noportlet(self):
