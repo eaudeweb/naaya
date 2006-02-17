@@ -29,6 +29,7 @@ from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
 from constants import *
+from NyForumBase import NyForumBase
 from Products.NaayaCore.managers.utils import utils
 from NyForumTopic import manage_addNyForumTopic_html, topic_add_html, addNyForumTopic
 
@@ -43,7 +44,7 @@ def manage_addNyForum(self, id='', title='', description='', categories='', REQU
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
-class NyForum(Folder, utils):
+class NyForum(Folder, NyForumBase, utils):
     """ """
 
     meta_type = METATYPE_NYFORUM
@@ -71,10 +72,10 @@ class NyForum(Folder, utils):
     security.declareProtected(view_management_screens, 'manage_addNyForumTopic_html')
     manage_addNyForumTopic_html = manage_addNyForumTopic_html
 
-    security.declareProtected(PERMISSION_MANAGE_FORUMTOPIC, 'topic_add_html')
+    security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'topic_add_html')
     topic_add_html = topic_add_html
 
-    security.declareProtected(PERMISSION_MANAGE_FORUMTOPIC, 'addNyForumTopic')
+    security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'addNyForumTopic')
     addNyForumTopic = addNyForumTopic
 
     def __init__(self, id, title, description, categories):
@@ -83,6 +84,7 @@ class NyForum(Folder, utils):
         self.title = title
         self.description = description
         self.categories = categories
+        NyForumBase.__dict__['__init__'](self)
 
     #api
     def get_forum_object(self): return self
@@ -110,9 +112,26 @@ class NyForum(Folder, utils):
                 if file.filename != '':
                     ob.manage_addFile(id='', file=file)
 
-    #permissions
-    def checkPermissionManageForumTopic(self):
-        return getSecurityManager().checkPermission(PERMISSION_MANAGE_FORUMTOPIC, self) is not None
+    security.declareProtected(view, 'checkTopicsPermissions')
+    def checkTopicsPermissions(self):
+        """
+        This function is called on the forum index and it checkes whether or not
+        to display the various buttons on that form.
+        """
+        r = []
+        ra = r.append
+        btn_select, btn_delete, can_operate = 0, 0, 0
+        # btn_select - if there is at least one permisson to delete or copy an object
+        # btn_delete - if there is at least one permisson to delete an object
+        for x in self.objectValues(METATYPE_NYFORUMTOPIC):
+            del_permission = x.checkPermissionModifyForumTopic()
+            edit_permission = x.checkPermissionModifyForumTopic()
+            if del_permission: btn_select = 1
+            if del_permission: btn_delete = 1
+            if edit_permission: can_operate = 1
+            ra((del_permission, edit_permission, x))
+        can_operate = can_operate or btn_select
+        return btn_select, btn_delete, can_operate, r
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
@@ -125,7 +144,7 @@ class NyForum(Folder, utils):
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #site actions
-    security.declareProtected(PERMISSION_MANAGE_FORUMTOPIC, 'deleteTopics')
+    security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'deleteTopics')
     def deleteTopics(self, ids='', REQUEST=None):
         """ """
         try: self.manage_delObjects(self.utConvertToList(ids))

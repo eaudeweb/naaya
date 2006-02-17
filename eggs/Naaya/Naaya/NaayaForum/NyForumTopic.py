@@ -30,6 +30,7 @@ from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
 from constants import *
+from NyForumBase import NyForumBase
 from Products.NaayaBase.constants import *
 from NyForumMessage import manage_addNyForumMessage_html, message_add_html, addNyForumMessage
 
@@ -54,7 +55,7 @@ def addNyForumTopic(self, id='', title='', category='', description='',
         elif referer == 'topic_add_html':
             REQUEST.RESPONSE.redirect(self.absolute_url())
 
-class NyForumTopic(Folder):
+class NyForumTopic(Folder, NyForumBase):
     """ """
 
     meta_type = METATYPE_NYFORUMTOPIC
@@ -104,6 +105,7 @@ class NyForumTopic(Folder):
         self.notify = notify
         self.author = author
         self.postdate = postdate
+        NyForumBase.__dict__['__init__'](self)
 
     #api
     def get_topic_object(self): return self
@@ -143,12 +145,8 @@ class NyForumTopic(Folder):
         else:
             return self.utSortObjsListByAttr(l, 'postdate', 1)[0]
 
-    #permissions
-    def checkPermissionAddForumMessage(self):
-        return getSecurityManager().checkPermission(PERMISSION_ADD_FORUMMESSAGE, self) is not None
-
     #site actions
-    security.declareProtected(PERMISSION_MANAGE_FORUMTOPIC, 'saveProperties')
+    security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'saveProperties')
     def saveProperties(self, title='', category='', description='', notify='',
         REQUEST=None):
         """ """
@@ -163,7 +161,7 @@ class NyForumTopic(Folder):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_MANAGE_FORUMTOPIC, 'deleteAttachments')
+    security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'deleteAttachments')
     def deleteAttachments(self, ids='', REQUEST=None):
         """ """
         try: self.manage_delObjects(self.utConvertToList(ids))
@@ -171,7 +169,7 @@ class NyForumTopic(Folder):
         else: self.setSessionInfo(['Attachment(s) deleted.'])
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_MANAGE_FORUMTOPIC, 'addAttachment')
+    security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'addAttachment')
     def addAttachment(self, attachment='', REQUEST=None):
         """ """
         self.handleAttachmentUpload(self, attachment)
@@ -201,7 +199,7 @@ class NyForumTopic(Folder):
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/topic_index', globals())
 
-    security.declareProtected(PERMISSION_MANAGE_FORUMTOPIC, 'edit_html')
+    security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'edit_html')
     edit_html = PageTemplateFile('zpt/topic_edit', globals())
 
 InitializeClass(NyForumTopic)

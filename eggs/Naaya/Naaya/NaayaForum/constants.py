@@ -33,9 +33,9 @@ NAAYAFORUM_PRODUCT_NAME = 'NaayaForum'
 NAAYAFORUM_PRODUCT_PATH = Globals.package_home(globals())
 
 PERMISSION_ADD_FORUM = 'Add Naaya Forum'
-PERMISSION_MANAGE_FORUMTOPIC = 'Add/Edit/Delete Naaya Forum Topic'
+PERMISSION_MODIFY_FORUMTOPIC = 'Add/Edit/Delete Naaya Forum Topic'
 PERMISSION_ADD_FORUMMESSAGE = 'Add Naaya Forum Message'
-PERMISSION_MANAGE_FORUMMESSAGE = 'Edit/Delete Forum Message'
+PERMISSION_MODIFY_FORUMMESSAGE = 'Edit/Delete Forum Message'
 
 METATYPE_NYFORUM = 'Naaya Forum'
 METATYPE_NYFORUMTOPIC = 'Naaya Forum Topic'
