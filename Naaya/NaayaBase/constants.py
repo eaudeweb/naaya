@@ -55,4 +55,5 @@ EXCEPTION_PARSINGFILE = 'Error parsing nyzexp file %s: %s'
 
 #Others
 MESSAGE_SAVEDCHANGES = 'Saved changes. (%s)'
+MESSAGE_NOTFROMEMAIL = 'The Sender email was not provided. Changes NOT saved (%s)'
 ERROR_NOTHING_SELECTED = 'Nothing was selected.'
