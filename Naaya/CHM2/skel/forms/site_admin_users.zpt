@@ -9,6 +9,13 @@
 
 <div id="tabbedmenu">
 <ul>
+	<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Groups</a></li>
+	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Users</a></li>
+</ul>
+</div>
+
+<div id="tabbedmenu">
+<ul>
 	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
 	<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
 		<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
@@ -23,7 +30,7 @@
 	&amp; Roles</strong> button.
 </p>
 
-<form method="post">
+<form method="post" tal:attributes="action string:${site_url}/admin_deleteusers">
 <table border="0" cellspacing="4" cellpadding="4">
 	<tr>
 		<th width="5%" align="left" i18n:translate="">Delete</th>
@@ -47,9 +54,9 @@
 	</tr>
 </table>
 <p>
-<input type="submit" name="admin_adduser_html" value="Add user" i18n:attributes="value" />
-<input type="submit" name="admin_deleteusers" value="Delete user"  i18n:attributes="value" />
-<input type="submit" name="admin_addrole_html" value="Add role" i18n:attributes="value" />
+<input type="button" value="Add user" onclick="document.location.href='admin_adduser_html';" i18n:attributes="value" />
+<input type="submit" value="Delete user"  i18n:attributes="value" />
+<input type="button" value="Add role" onclick="document.location.href='admin_addrole_html';"  i18n:attributes="value" />
 </p>
 </form>
 
