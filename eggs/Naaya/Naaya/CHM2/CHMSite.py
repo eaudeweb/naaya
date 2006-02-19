@@ -72,6 +72,7 @@ class CHMSite(NySite):
         """ """
         self.predefined_latest_uploads = []
         self.show_releasedate = 1
+        self.workgroups = []
         NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
 
     security.declarePrivate('loadDefaultData')
@@ -127,6 +128,39 @@ class CHMSite(NySite):
     def get_naaya_containers_metatypes(self):
         #this method is used to display local roles, called from getUserRoles methods
         return [METATYPE_FOLDER, METATYPE_NYPHOTOFOLDER]
+
+    def getWorkgroupsList(self):
+        """ """
+        return self.workgroups
+
+    def getWorkgroupById(self, id):
+        """ """
+        for x in self.workgroups:
+            if x[0]==id: return x
+        return None
+
+    def getWorkgroupUsers(self, id):
+        """ """
+        wg = self.getWorkgroupById(id)
+        if wg:
+            r = []
+            loc = self.unrestrictedTraverse(wg[2])
+            print loc.get_local_roles()
+            #remove local roles
+            for x in loc.get_local_roles():
+                roles = list(x[1])
+                if 'Owner' in x[1]: roles.remove('Owner')
+                if roles: r.append((x[0], roles))
+            return r
+        return []
+
+    def add_userto_workgroup(self, loc, name, roles):
+        """ """
+        loc.manage_setLocalRoles(name, roles)
+
+    def del_userfrom_workgroup(self, loc, name):
+        """ """
+        loc.manage_delLocalRoles([name])
 
     #layer over the Localizer and MessageCatalog
     #the scope is to centralize the list of available languages
@@ -382,6 +416,58 @@ class CHMSite(NySite):
                 self.recatalogNyObject(x)
         return "done"
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addworkgroup')
+    def admin_addworkgroup(self, title='', location='', role='', REQUEST=None):
+        """ """
+        err = []
+        if title=='': err.append('Title is required')
+        if location=='': err.append('Location is required')
+        if role=='': err.append('Role is required')
+        if err:
+            if REQUEST:
+                self.setSessionErrors(err)
+                self.setSession('title', title)
+                self.setSession('location', location)
+                self.setSession('role', role)
+                return REQUEST.RESPONSE.redirect('%s/admin_addworkgroup_html' % self.absolute_url())
+        else:
+            self.workgroups.append((self.utGenRandomId(4), title, location, role))
+            self._p_changed = 1
+            if REQUEST:
+                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                return REQUEST.RESPONSE.redirect('%s/admin_workgroups_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_delworkgroup')
+    def admin_delworkgroup(self, id='', REQUEST=None):
+        """ """
+        wg = self.getWorkgroupById(id)
+        if wg:
+            loc = self.unrestrictedTraverse(wg[2])
+            #remove local roles
+            for x in loc.get_local_roles():
+                isowner = 0
+                if 'Owner' in x[1]: isowner = 1
+                self.del_userfrom_workgroup(loc, x[0])
+                if isowner: self.add_userto_workgroup(wg, loc, x[0], ['Owner'])
+            #remove workgroup
+            self.workgroups.remove(wg)
+            self._p_changed = 1
+            if REQUEST:
+                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                return REQUEST.RESPONSE.redirect('%s/admin_workgroups_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_delworkgroup')
+    def admin_adduserstoworkgroup(self, id='', names='', REQUEST=None):
+        """ """
+        wg = self.getWorkgroupById(id)
+        if wg:
+            loc = self.unrestrictedTraverse(wg[2])
+            for name in self.utConvertToList(names):
+                self.add_userto_workgroup(loc, name, [wg[3]])
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            return REQUEST.RESPONSE.redirect('%s/admin_workgroups_html' % self.absolute_url())
+
     #administration pages
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_urls_html')
     def admin_urls_html(self, REQUEST=None, RESPONSE=None):
@@ -427,6 +513,11 @@ class CHMSite(NySite):
     def admin_users_workgroup(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_users_workgroup')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addworkgroup_html')
+    def admin_addworkgroup_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_addworkgroup')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkchecker_html')
     def admin_linkchecker_html(self, REQUEST=None, RESPONSE=None):
