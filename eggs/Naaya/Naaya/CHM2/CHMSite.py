@@ -413,6 +413,21 @@ class CHMSite(NySite):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_predefined')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_users_assigned')
+    def admin_users_assigned(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_users_assigned')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_users_unnassigned')
+    def admin_users_unnassigned(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_users_unnassigned')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_users_workgroup')
+    def admin_users_workgroup(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_users_workgroup')
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkchecker_html')
     def admin_linkchecker_html(self, REQUEST=None, RESPONSE=None):
         """ """
