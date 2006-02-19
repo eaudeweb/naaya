@@ -15,6 +15,14 @@
 		<form id="site_admin_predefined" title="Portal administration - predefined latest uploads"/>
 		<form id="site_admin_network" title="Portal administration - network of portals"/>
 		<form id="site_requestrole" title="Request account page"/>
+		<form id="site_admin_addrole" title="Add new role"/>
+		<form id="site_admin_adduser" title="Add new user"/>
+		<form id="site_admin_edituser" title="Edit user form"/>
+		<form id="site_admin_roles" title="Users and roles"/>
+		<form id="site_admin_users" title="All users view"/>
+		<form id="site_admin_users_workgroup" title="View workgroups"/>
+		<form id="site_admin_users_unnassigned" title="View users with no roles"/>
+		<form id="site_admin_users_assigned" title="View users with roles"/>
 	</forms>
 	<layout default_skin_id="chm" default_scheme_id="indigo">
 		<skin id="chm" title="CHM">
