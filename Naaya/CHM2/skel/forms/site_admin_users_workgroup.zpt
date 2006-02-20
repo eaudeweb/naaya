@@ -9,27 +9,34 @@
 				users python:user_tool.getUserNames();
 				current_w python:request.get('w', '')">
 
-<div class="tabs_admin">
-<ul>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
-	<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Users</a></li>
-</ul>
+<div class="tabs_firstlevel">
+	<ul>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
+		<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Users</a></li>
+	</ul>
 </div>
+
+<hr class= "hr_invisible" />
+
+<div class="second_tab_set">
 
 <div class="tabs_admin">
 <ul>
 	<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Users with roles</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Unassigned users</a></li>
 	<tal:block tal:repeat="wg here/getWorkgroupsList">
-		<li tal:define="wg_id python:wg[0]" tal:condition="python:wg_id==current_w" id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}"><tal:block tal:content="python:wg[1]" /></a></li>
-		<li tal:define="wg_id python:wg[0]" tal:condition="python:wg[0] != current_w"><a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}"><tal:block tal:content="python:wg[1]" /></a></li>
+		<li tal:define="wg_id python:wg[0]" tal:condition="python:str(wg_id)==str(current_w)" class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
+		<li tal:define="wg_id python:wg[0]" tal:condition="python:wg_id != current_w"><a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
 	</tal:block>
 </ul>
 </div>
 
+<div class="second_tabset_content">
+	<h2 i18n:translate=""></h2>
+
 <tal:block tal:condition="current_w">
 <p i18n:translate="">
-	This page shows all users that are part of this working group.
+	This page shows all users that are part of this working group and their local role(s).
 </p>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_delusersfromworkgroup">
@@ -39,7 +46,7 @@
 				rkey_inv python:test(rkey=='0', '1', '0');
 				usernames python:here.getWorkgroupUsers(current_w, skey, rkey)">
 	<tr>
-		<th width="5%"></th>
+		<th width="5%">&nbsp;</th>
 		<th width="15%" align="left">
 			<a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${current_w}&skey=username&rkey=${rkey_inv}">
 				<span i18n:translate="" tal:omit-tag="">Username</span>
@@ -47,7 +54,7 @@
 				<img tal:condition="python:rkey=='0'" width="12" height="12" alt="" tal:attributes="src string:${skin_files_path}/sortup.gif" />
 			</a>
 		</th>
-		<th width="*" align="left">Roles</th>
+		<th width="*" align="left" i18n:translate="">Role(s)</th>
 	</tr>
 	<tr tal:repeat="item usernames" tal:attributes="class python:test(path('repeat/item/odd'), 'row-odd', 'row-even')">
 		<td nowrap="nowrap">
@@ -66,8 +73,9 @@
 	</tr>
 </table>
 <input type="hidden" name="id" id="id" tal:attributes="value current_w" />
-<input type="submit" value="Unassign" i18n:attributes="value" />
+<input type="submit" value="Revoke role(s)" i18n:attributes="value" class="submission_button" />
 </form>
+
 
 </tal:block>
 
@@ -75,5 +83,6 @@
 	No group selected.
 </p>
 
+</div>
 </tal:block>
 </tal:block>
