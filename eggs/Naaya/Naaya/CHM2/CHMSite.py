@@ -175,25 +175,32 @@ class CHMSite(NySite):
         if rkey=='1': l.reverse()
         return l, users_roles
 
-    def getUnassignedUsers(self):
+    def getUnassignedUsers(self, skey='username', rkey='0'):
         """
         Returns the list of users that do not belong to any group and
         don't have any permissions at all in the portal.
         """
-        return self.utListDifference(self.getAuthenticationTool().user_names(), self.getUsersWithRoles()[0])
+        l = self.utListDifference(self.getAuthenticationTool().user_names(), self.getUsersWithRoles()[0])
+        for wg in self.workgroups:
+            wusers = [x[0] for x in self.getWorkgroupUsers(wg[0])]
+            l = self.utListDifference(l, wusers)
+        l.sort()
+        if rkey=='1': l.reverse()
+        return l
 
-    def getWorkgroupUsers(self, id):
+    def getWorkgroupUsers(self, id, skey='username', rkey='0'):
         """ """
         wg = self.getWorkgroupById(id)
         if wg:
             r = []
             loc = self.unrestrictedTraverse(wg[2])
-            print loc.get_local_roles()
             #remove local roles
             for x in loc.get_local_roles():
                 roles = list(x[1])
                 if 'Owner' in x[1]: roles.remove('Owner')
                 if roles: r.append((x[0], roles))
+            r.sort()
+            if rkey=='1': r.reverse()
             return r
         return []
 
@@ -471,6 +478,14 @@ class CHMSite(NySite):
                     res=res+key+'='+str(self.REQUEST.form[key])+'&'
         return res
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_users_unassigned_delete')
+    def admin_users_unassigned_delete(self, names=[], REQUEST=None):
+        """ """
+        self.getAuthenticationTool().manage_delUsers(names)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_users_unnassigned' % self.absolute_url())
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addworkgroup')
     def admin_addworkgroup(self, title='', location='', role='', REQUEST=None):
         """ """
@@ -503,7 +518,7 @@ class CHMSite(NySite):
                 isowner = 0
                 if 'Owner' in x[1]: isowner = 1
                 self.del_userfrom_workgroup(loc, x[0])
-                if isowner: self.add_userto_workgroup(wg, loc, x[0], ['Owner'])
+                if isowner: self.add_userto_workgroup(loc, x[0], ['Owner'])
             #remove workgroup
             self.workgroups.remove(wg)
             self._p_changed = 1
@@ -512,8 +527,9 @@ class CHMSite(NySite):
                 return REQUEST.RESPONSE.redirect('%s/admin_workgroups_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_delworkgroup')
-    def admin_adduserstoworkgroup(self, id='', names='', REQUEST=None):
+    def admin_adduserstoworkgroup(self, id='', names=[], REQUEST=None):
         """ """
+        print id, names
         wg = self.getWorkgroupById(id)
         if wg:
             loc = self.unrestrictedTraverse(wg[2])
@@ -521,7 +537,23 @@ class CHMSite(NySite):
                 self.add_userto_workgroup(loc, name, [wg[3]])
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            return REQUEST.RESPONSE.redirect('%s/admin_workgroups_html' % self.absolute_url())
+            return REQUEST.RESPONSE.redirect('%s/admin_users_unnassigned' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_delusersfromworkgroup')
+    def admin_delusersfromworkgroup(self, id='', names=[], REQUEST=None):
+        """ """
+        wg = self.getWorkgroupById(id)
+        if wg:
+            loc = self.unrestrictedTraverse(wg[2])
+            for x in loc.get_local_roles():
+                if x[0] in self.utConvertToList(names):
+                    isowner = 0
+                    if 'Owner' in x[1]: isowner = 1
+                    self.del_userfrom_workgroup(loc, x[0])
+                    if isowner: self.add_userto_workgroup(loc, x[0], ['Owner'])
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            return REQUEST.RESPONSE.redirect('%s/admin_users_workgroup?w=%s' % (self.absolute_url(), id))
 
     #administration pages
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_urls_html')

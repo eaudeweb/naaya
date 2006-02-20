@@ -1,3 +1,4 @@
+
 <tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
 
 <h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
@@ -6,7 +7,7 @@
 	tal:define="site_url here/getSitePath;
 				user_tool here/getAuthenticationTool;
 				users python:user_tool.getUserNames();
-				current_w python:request.get('w', '')"">
+				current_w python:request.get('w', '')">
 
 <div class="tabs_admin">
 <ul>
@@ -19,22 +20,60 @@
 <ul>
 	<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Users with roles</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Unassigned users</a></li>
-	<tal:block tal:repeat="wg python:here.getWorkgroupsList()">
-		<li tal:condition="python:wg[0] == current_w" id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg[0]}"><tal:block tal:content="python:wg[1]" /></a></li>
-		<li tal:condition="python:wg[0] != current_w"><a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg[0]}"><tal:block tal:content="python:wg[1]" /></a></li>
+	<tal:block tal:repeat="wg here/getWorkgroupsList">
+		<li tal:define="wg_id python:wg[0]" tal:condition="python:wg_id==current_w" id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}"><tal:block tal:content="python:wg[1]" /></a></li>
+		<li tal:define="wg_id python:wg[0]" tal:condition="python:wg[0] != current_w"><a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}"><tal:block tal:content="python:wg[1]" /></a></li>
 	</tal:block>
 </ul>
 </div>
 
-<p i18n:translate="" tal:condition="w">
+<tal:block tal:condition="current_w">
+<p i18n:translate="">
 	This page shows all users that are part of this working group.
 </p>
 
-<p i18n:translate="" tal:condition="python:not w">
+<form method="post" tal:attributes="action string:${site_url}/admin_delusersfromworkgroup">
+<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list" class="sortable"
+	tal:define="skey python:request.get('skey', 'username');
+				rkey python:request.get('rkey', '0');
+				rkey_inv python:test(rkey=='0', '1', '0');
+				usernames python:here.getWorkgroupUsers(current_w, skey, rkey)">
+	<tr>
+		<th width="5%"></th>
+		<th width="15%" align="left">
+			<a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${current_w}&skey=username&rkey=${rkey_inv}">
+				<span i18n:translate="" tal:omit-tag="">Username</span>
+				<img tal:condition="python:rkey=='1'" width="12" height="12" alt="" tal:attributes="src string:${skin_files_path}/sortdown.gif" />
+				<img tal:condition="python:rkey=='0'" width="12" height="12" alt="" tal:attributes="src string:${skin_files_path}/sortup.gif" />
+			</a>
+		</th>
+		<th width="*" align="left">Roles</th>
+	</tr>
+	<tr tal:repeat="item usernames" tal:attributes="class python:test(path('repeat/item/odd'), 'row-odd', 'row-even')">
+		<td nowrap="nowrap">
+			<input type="checkbox" name="names" tal:attributes="value python:item[0]" />
+		</td>
+		<td tal:define="username python:item[0]">
+			<strong><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${username}" tal:content="username" /></strong>
+		</td>
+		<td>
+			<ul>
+				<li tal:repeat="role python:item[1]">
+					<strong tal:content="role" />
+				</li>
+			</ul>
+		</td>
+	</tr>
+</table>
+<input type="hidden" name="id" id="id" tal:attributes="value current_w" />
+<input type="submit" value="Unassign" i18n:attributes="value" />
+</form>
+
+</tal:block>
+
+<p i18n:translate="" tal:condition="python:not current_w">
 	No group selected.
 </p>
-
-
 
 </tal:block>
 </tal:block>
