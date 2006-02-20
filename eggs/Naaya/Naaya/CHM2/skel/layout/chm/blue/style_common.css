@@ -609,3 +609,52 @@
 		border-bottom:1px solid white; 
 		margin-top:0.5em;
 	}
+/* +++++++++++++++++++++++  modified on febr 19 2006 +++++++++++++++++*/
+
+	.tabs_admin {
+		float:left;
+		width:100%;
+		border-bottom: thin solid #E3E2D3;
+		font-size: 1em;
+		line-height:normal;
+		margin-bottom: 1em;
+		font-size: 80%;
+	}
+	.tabs_admin ul {
+		margin:0;
+		padding:10px 10px 0;
+		list-style:none;
+	}
+	.tabs_admin li {
+		float:left;
+		background:url("tableft.gif") no-repeat left top;
+		margin:0;
+		padding:0 0 0 9px;
+		white-space: nowrap;
+	}
+	.tabs_admin a {
+		display:block;
+		text-decoration: none;
+		font-weight: bold;
+		color: black;
+		background:url("tabright.gif") no-repeat right top;
+		padding:5px 15px 4px 6px;
+	}
+	.tabs_admin #currenttab {
+		background-image:url("tableft_on.gif");
+	}
+	.tabs_admin #currenttab a {
+		text-decoration: none;
+		font-weight: bold;
+		background-image:url("tabright_on.gif");
+		padding-bottom: 5px;
+	}
+	.tabs_admin #currenttab span {
+		display:block;
+		text-decoration: none;
+		font-weight: bold;
+		background:url("tabright_on.gif") no-repeat right top;
+		padding:5px 15px 4px 6px;
+	}
+
+/* +++++++++++++++++++++++ END  modified on febr 19 2006 +++++++++++++++++*/
