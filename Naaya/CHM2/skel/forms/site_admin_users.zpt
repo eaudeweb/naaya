@@ -4,8 +4,7 @@
 
 <tal:block metal:fill-slot="section"
 	tal:define="site_url here/getSitePath;
-				user_tool here/getAuthenticationTool;
-				users python:user_tool.getUserNames()">
+				user_tool here/getAuthenticationTool">
 
 <div class="tabs_admin">
 <ul>
@@ -34,7 +33,8 @@
 
 <tal:block define="	skey python:request.get('skey', 'username');
 							rkey python:request.get('rkey', test(request.has_key('skey'),'','1'));
-							rkey_param python:test(rkey, '', '&amp;rkey=1');">
+							rkey_param python:test(rkey, '', '&amp;rkey=1');
+							users python:user_tool.getUserNamesSortedByAttr(skey=skey, rkey=rkey)">
 
 <table	border="0" cellpadding="0" cellspacing="0" id="folderfile_list" class="sortable"
 		tal:define="sortup_gif string:${skin_files_path}/sortup.gif;
@@ -43,24 +43,24 @@
 					req_params python:here.getRequestParams(request)">
 
 	<tr>
-		<th width="5%" align="left" i18n:translate="">Delete</th>
+		<th width="5%" align="left" title="not sortable" i18n:attributes="title">&nbsp;</th>
 		<th width="15%" align="left">
-			<a	tal:define="rkey_param_local python:test(skey=='username',rkey_param,'')"
-				tal:attributes="href string:${here/absolute_url}/admin_users_html?${req_params}skey=username${rkey_param_local};
-								title python:test(skey=='username', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title"><span tal:omit-tag="" i18n:translate="">Username</span>
-			<img tal:attributes="src python:test(skey=='username', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
+			<a	tal:define="rkey_param_local python:test(skey=='name',rkey_param,'')"
+				tal:attributes="href string:${here/absolute_url}/admin_users_html?${req_params}skey=name${rkey_param_local};
+								title python:test(skey=='name', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title"><span tal:omit-tag="" i18n:translate="">Username</span>
+			<img tal:attributes="src python:test(skey=='name', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
 				 width="12" height="12" alt=""/>
 			</a>
 		</th>
-		<th width="30%" align="left">
-			<a	tal:define="rkey_param_local python:test(skey=='fullname',rkey_param,'')"
-				tal:attributes="href string:${here/absolute_url}/admin_users_html?${req_params}skey=fullname${rkey_param_local};
-								title python:test(skey=='fullname', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title"><span tal:omit-tag="" i18n:translate="">Name</span>
-			<img tal:attributes="src python:test(skey=='fullname', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
+		<th width="20%" align="left">
+			<a	tal:define="rkey_param_local python:test(skey=='firstname',rkey_param,'')"
+				tal:attributes="href string:${here/absolute_url}/admin_users_html?${req_params}skey=firstname${rkey_param_local};
+								title python:test(skey=='firstname', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title"><span tal:omit-tag="" i18n:translate="">Name</span>
+			<img tal:attributes="src python:test(skey=='firstname', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
 				 width="12" height="12" alt=""/>
 			</a>
 		</th>
-		<th width="*" align="left" i18n:translate="">
+		<th width="20%" align="left" i18n:translate="">
 			<a	tal:define="rkey_param_local python:test(skey=='email',rkey_param,'')"
 				tal:attributes="href string:${here/absolute_url}/admin_users_html?${req_params}skey=email${rkey_param_local};
 								title python:test(skey=='email', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title"><span tal:omit-tag="" i18n:translate="">Email</span>
@@ -68,6 +68,7 @@
 				 width="12" height="12" alt=""/>
 			</a>
 		</th>
+		<th width="*" align="left" i18n:translate="" title="not sortable" i18n:attributes="title">Roles</th>
 	</tr>
 	<tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
 		<tal:block tal:define="user_obj python:user_tool.getUser(user)">
@@ -78,6 +79,12 @@
 		<td><strong><a tal:define="user python:user_tool.getUserAccount(user_obj)" tal:attributes="href string:${site_url}/admin_edituser_html?name=${user}" tal:content="user">username</a></strong></td>
 		<td tal:content="python:user_tool.getUserFirstName(user_obj) + ' ' + user_tool.getUserLastName(user_obj)" />
 		<td tal:content="python:user_tool.getUserEmail(user_obj)" />
+		<td tal:define="roles python:user_tool.getUserRoles(user_obj)">
+			<tal:block condition="roles" repeat="role roles">
+				<tal:block replace="role" /><span tal:condition="not:repeat/subject/end" tal:replace="string:," />
+			</tal:block>
+			<tal:block condition="not:roles">&nbsp;</tal:block>
+		</td>
 		</tal:block>
 	</tr>
 	<tr tal:condition="python:len(users) == 0">
