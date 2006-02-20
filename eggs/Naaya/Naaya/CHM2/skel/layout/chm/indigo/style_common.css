@@ -652,3 +652,33 @@
 	}
 
 /* +++++++++++++++++++++++ END  modified on febr 19 2006 +++++++++++++++++*/
+
+/* SORTABLE TABLES second, to be merged with the existing one */
+.sortable {
+	font-size: 0.9em;
+	line-height:normal;
+}
+.sortable th {
+	background: #ccc;
+	border: 1px outset #fff;
+	margin:0;
+	padding:0;
+	white-space: nowrap;
+	vertical-align: top;
+}
+.sortable th a:link, .sortable th a:visited, .sortable th span {
+	display:block;
+	text-decoration: none;
+	font-weight: normal;
+	color: black;
+	padding:1px 0.5em;
+}
+
+.sortable th a:hover {
+	color:white;
+	background: #aaa;
+}
+.sortable tbody tr.zebraeven {
+	background-color: white;
+}
+/* END STYLE */
