@@ -10,7 +10,7 @@
 <div id="tabbedmenu">
 <ul>
 	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_notifications_html" i18n:translate="">Settings</a></li>
-	<li><a tal:attributes="href string:${site_url}/admin_notif_sitemap_html" i18n:translate="">Sitemap</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_notif_sitemap_html" i18n:translate="">Monitorised folders</a></li>
 </ul>
 </div>
 
