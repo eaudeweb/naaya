@@ -609,6 +609,7 @@
 		border-bottom:1px solid white; 
 		margin-top:0.5em;
 	}
+
 /* +++++++++++++++++++++++  modified on febr 19 2006 +++++++++++++++++*/
 
 	.tabs_admin {
@@ -626,13 +627,61 @@
 		list-style:none;
 	}
 	.tabs_admin li {
+		float: left;
+		background: url("tableft.gif") no-repeat left top;
+		margin: 0;
+		padding: 0 0 0 9px;
+		white-space: nowrap;
+	}
+	.tabs_admin a {
+		display: block;
+		text-decoration: none;
+		font-weight: bold;
+		color: black;
+		background: url("tabright.gif") no-repeat right top;
+		padding: 5px 15px 4px 6px;
+	}
+	.tabs_admin .currenttab {
+		background-image: url("tableft_on.gif");
+	}
+	.tabs_admin .currenttab a {
+		text-decoration: none;
+		font-weight: bold;
+		background-image: url("tabright_on.gif");
+		padding-bottom: 5px;
+	}
+	.tabs_admin .currenttab span {
+		display: block;
+		text-decoration: none;
+		font-weight: bold;
+		background: url("tabright_on.gif") no-repeat right top;
+		padding: 5px 15px 4px 6px;
+	}
+
+
+
+	.tabs_firstlevel {
+		float:left;
+		width:100%;
+		border-bottom: thin solid #E3E2D3;
+		font-size: 1em;
+		line-height:normal;
+		margin-bottom: 1em;
+		font-size: 80%;
+	}
+	.tabs_firstlevel ul {
+		margin:0;
+		padding:10px 10px 0;
+		list-style:none;
+	}
+	.tabs_firstlevel li {
 		float:left;
 		background:url("tableft.gif") no-repeat left top;
 		margin:0;
 		padding:0 0 0 9px;
 		white-space: nowrap;
 	}
-	.tabs_admin a {
+	.tabs_firstlevel a {
 		display:block;
 		text-decoration: none;
 		font-weight: bold;
@@ -640,22 +689,84 @@
 		background:url("tabright.gif") no-repeat right top;
 		padding:5px 15px 4px 6px;
 	}
-	.tabs_admin #currenttab {
+	.tabs_firstlevel .currenttab {
 		background-image:url("tableft_on.gif");
 	}
-	.tabs_admin #currenttab a {
+	.tabs_firstlevel .currenttab a {
 		text-decoration: none;
 		font-weight: bold;
 		background-image:url("tabright_on.gif");
 		padding-bottom: 5px;
 	}
-	.tabs_admin #currenttab span {
+	.tabs_firstlevel .currenttab span {
 		display:block;
 		text-decoration: none;
 		font-weight: bold;
 		background:url("tabright_on.gif") no-repeat right top;
 		padding:5px 15px 4px 6px;
 	}
+
+
+
+.hr_invisible {
+	clear: both; 
+	border: 1px solid white;
+}
+
+.second_tab_set {
+/*	background-color: red; */
+	margin-right: 10px; 
+/*	border-right: 1px solid green; */
+	padding:0;
+}
+.second_tab_set .tabs_admin {
+	background-color: white; 
+	padding: 0; 
+	margin: 0;
+	border-bottom: 1px solid #776655; /*under tabs line !!! */
+
+}
+
+.second_tab_set .tabs_admin ul {
+	background-color: white; 
+	padding: 0; 
+	margin: 0;
+}
+
+.second_tabset_content {
+	background-color: #F8F7F4; 
+	
+	/*	background-color: #F0F0F0;  border: 2px solid blue; */
+	font-size: 80%; 
+	padding: 0px 10px 10px 10px;
+	border: 1px solid #776655;
+	border-top-width: 0.01em;
+}
+
+.second_tabset_content h2 {
+	clear: both;
+	margin: 0px;
+	padding-top: 15px;
+}
+
+.role_name_row label {
+	vertical-align: middle;
+	display: block;
+	margin-top: 2px;
+}
+
+.role_name_row input {
+	border: 1px solid #666666;
+	font-size: 110%;
+	margin-bottom: 14px;
+}
+
+.second_tabset_content .submition_button {
+	margin-top: 20px;
+	border: 1px solid #333333;
+}
+
+
 
 /* +++++++++++++++++++++++ END  modified on febr 19 2006 +++++++++++++++++*/
 
