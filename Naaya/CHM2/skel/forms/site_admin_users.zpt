@@ -6,21 +6,28 @@
 	tal:define="site_url here/getSitePath;
 				user_tool here/getAuthenticationTool">
 
-<div class="tabs_admin">
-<ul>
-	<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Users</a></li>
-</ul>
+<div class="tabs_firstlevel">
+	<ul>
+		<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Users</a></li>
+	</ul>
 </div>
+
+<hr class= "hr_invisible" />
+
+<div class="second_tab_set">
 
 <div class="tabs_admin">
 <ul>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
+	<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
 	<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
 		<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
 	</li>
 </ul>
 </div>
+
+<div class="second_tabset_content">
+<h2 i18n:translate="">Users' listing</h2>
 
 <p i18n:translate="">
 	This page lists the users defined in this portal along with their credentials.
@@ -88,17 +95,18 @@
 		</tal:block>
 	</tr>
 	<tr tal:condition="python:len(users) == 0">
-		<td colspan="4" i18n:translate=""> Users' list empty </td>
+		<td colspan="5" i18n:translate="">Users' list empty</td>
 	</tr>
 </table>
 </tal:block>
 
 <p>
-<input type="button" value="Add user" onclick="document.location.href='admin_adduser_html';" i18n:attributes="value" />
-<input type="submit" value="Delete user"  i18n:attributes="value" />
-<input type="button" value="Add role" onclick="document.location.href='admin_addrole_html';"  i18n:attributes="value" />
+	<input type="button" value="Add user" onclick="document.location.href='admin_adduser_html';" i18n:attributes="value" class="submission_button" />
+	<input type="submit" value="Delete user"  i18n:attributes="value" class="submission_button" />
+	<input type="button" value="Add role" onclick="document.location.href='admin_addrole_html';"  i18n:attributes="value" class="submission_button" />
 </p>
 </form>
+</div>
 
 </tal:block>
 </tal:block>

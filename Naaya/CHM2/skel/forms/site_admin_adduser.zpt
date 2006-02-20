@@ -69,7 +69,7 @@
 	</table>
 	</fieldset>
 	<br />
-	<input type="submit" value="Add" i18n:attributes="value" />
+	<input type="submit" value="Add" i18n:attributes="value" class="submission_button" />
 	</form>
 </div>
 
