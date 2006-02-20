@@ -8,20 +8,27 @@
 				users python:user_tool.getUserNames();
 				wgs here/getWorkgroupsList">
 
-<div class="tabs_admin">
+<div class="tabs_firstlevel" >
 <ul>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
+	<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Users</a></li>
 </ul>
 </div>
 
+<hr class= "hr_invisible" />
+
+<div class="second_tab_set">
+
 <div class="tabs_admin">
-<ul>
-	<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Users with roles</a></li>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Unassigned users</a></li>
-	<li tal:repeat="wg wgs"><a tal:define="wg_id python:wg[0]" tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
-</ul>
+	<ul>
+		<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Users with roles</a></li>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Unassigned users</a></li>
+		<li tal:repeat="wg python:here.getWorkgroupsList()"><a tal:define="wg_id python:wg[0]" tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
+	</ul>
 </div>
+
+<div class="second_tabset_content">
+	<h2 i18n:translate=""></h2>
 
 <p i18n:translate="">
 	This page lists the users that have accounts in this portal, but that have no role granted to them. Therefore, they only have the rights to submit news, events and stories and comment on content.
@@ -34,7 +41,7 @@
 				rkey_inv python:test(rkey=='0', '1', '0');
 				usernames python:here.getUnassignedUsers(skey, rkey)">
 	<tr>
-		<th width="5%" align="left"></th>
+		<th width="5%" align="left">&nbsp;</th>
 		<th width="95%" align="left">
 			<a tal:attributes="href string:${site_url}/admin_users_unnassigned?skey=username&rkey=${rkey_inv}">
 				<span i18n:translate="" tal:omit-tag="">Username</span>
@@ -45,18 +52,20 @@
 	</tr>
 	<tr tal:repeat="username usernames" tal:attributes="class python:test(path('repeat/username/odd'), 'row-odd', 'row-even')">
 		<td nowrap="nowrap">
-			<input type="checkbox" name="names" tal:attributes="value username" />
+			<input tal:condition="wgs" type="checkbox" name="names" tal:attributes="value username" />
+			<img src="misc_/NaayaCore/User.gif" alt="User" i18n:attributes="alt" />
 		</td>
 		<td><strong><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${username}" tal:content="username" /></strong></td>
 	</tr>
 </table>
-<span i18n:translate="" tal:omit-tag="">Workgroup</span>
-<select name="id" id="id">
+<span tal:condition="wgs" i18n:translate="" tal:omit-tag="">Assign selected users to workgroup</span>
+<select tal:condition="wgs" name="id" id="id">
 	<option tal:repeat="wg wgs"
 		tal:attributes="value python:wg[0]"
 		tal:content="python:wg[1]" />
 </select>
-<input type="submit" value="Assign" i18n:attributes="value" />
+<input tal:condition="wgs" type="submit" value="Assign" i18n:attributes="value" class="submission_button" />
+<p i18n:translate="" tal:condition="not:wgs">No workgroups defined in this portal.</p>
 </form>
 
 </tal:block>

@@ -48,7 +48,7 @@
 		</td>
 	</tr>
 	</table>
-	<input type="submit" value="Add role" i18n:attributes="value" />
+	<input type="submit" value="Add role" i18n:attributes="value" class="submission_button" />
 	</form>
 </div>
 

@@ -27,18 +27,17 @@
 </div>
 
 <div class="second_tabset_content">
-<h2 i18n:translate="">Users' listing</h2>
+<h2 i18n:translate=""></h2>
 
 <p i18n:translate="">
 	This page lists the users defined in this portal along with their credentials.
 	Click on a username to modify the corresponding information.
-	In order to assign roles to users in various parts of the portal, click on the <strong>Users
-	&amp; Roles</strong> button.
+	In order to assign roles to users in various parts of the portal, click on the user record and edit it.
 </p>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteusers">
 
-<tal:block define="	skey python:request.get('skey', 'username');
+<tal:block define="	skey python:request.get('skey', 'name');
 							rkey python:request.get('rkey', test(request.has_key('skey'),'','1'));
 							rkey_param python:test(rkey, '', '&amp;rkey=1');
 							users python:user_tool.getUserNamesSortedByAttr(skey=skey, rkey=rkey)">
@@ -95,7 +94,7 @@
 		</tal:block>
 	</tr>
 	<tr tal:condition="python:len(users) == 0">
-		<td colspan="5" i18n:translate="">Users' list empty</td>
+		<td colspan="5" i18n:translate=""> Users' list empty </td>
 	</tr>
 </table>
 </tal:block>

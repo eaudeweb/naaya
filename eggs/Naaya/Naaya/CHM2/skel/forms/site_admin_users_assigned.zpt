@@ -7,23 +7,30 @@
 				user_tool here/getAuthenticationTool;
 				users python:user_tool.getUserNames()">
 
-<div class="tabs_admin">
+<div class="tabs_firstlevel" >
 <ul>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
+	<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Users</a></li>
 </ul>
 </div>
 
+<hr class= "hr_invisible" />
+
+<div class="second_tab_set">
+
 <div class="tabs_admin">
-<ul>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Users with roles</a></li>
-	<li><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Unassigned users</a></li>
-	<li tal:repeat="wg python:here.getWorkgroupsList()"><a tal:define="wg_id python:wg[0]" tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
-</ul>
+	<ul>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Users with roles</a></li>
+		<li><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Unassigned users</a></li>
+		<li tal:repeat="wg python:here.getWorkgroupsList()"><a tal:define="wg_id python:wg[0]" tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
+	</ul>
 </div>
 
+<div class="second_tabset_content">
+	<h2 i18n:translate=""></h2>
+
 <p i18n:translate="">
-	This page lists the portal users that have at least a role granted to them either on the entire portal or just specific location(s).
+	This page lists the portal users that have at least a role granted to them either on the entire portal or just on specific location(s).
 </p>
 
 <form>
@@ -35,7 +42,7 @@
 				usernames python:result[0];
 				data python:result[1]">
 	<tr>
-		<th width="5%"></th>
+		<th width="5%">&nbsp;</th>
 		<th width="15%" align="left">
 			<a tal:attributes="href string:${site_url}/admin_users_assigned?skey=username&rkey=${rkey_inv}">
 				<span i18n:translate="" tal:omit-tag="">Username</span>
@@ -46,7 +53,7 @@
 		<th width="*" align="left">Roles</th>
 	</tr>
 	<tr tal:repeat="username usernames" tal:attributes="class python:test(path('repeat/username/odd'), 'row-odd', 'row-even')">
-		<td></td>
+		<td><img src="misc_/NaayaCore/User.gif" alt="User" i18n:attributes="alt" /></td>
 		<td>
 			<strong><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${username}" tal:content="username" /></strong>
 		</td>
@@ -64,6 +71,8 @@
 	</tr>
 </table>
 </form>
+
+</div>
 
 </tal:block>
 </tal:block>

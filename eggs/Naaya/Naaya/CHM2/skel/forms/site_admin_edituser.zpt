@@ -7,13 +7,11 @@
 				user_tool here/getAuthenticationTool;
 				name python:request.get('name', '')">
 
-<div id="tabbedmenu">
-<ul>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
-	<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
-		<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
-	</li>
-</ul>
+<div class="tabs_firstlevel" >
+	<ul>
+		<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Users</a></li>
+	</ul>
 </div>
 
 <tal:block define="user_obj python:user_tool.getUser(request.get('name', '')); 
@@ -23,8 +21,24 @@
 		user_created python:user_tool.getUserCreatedDate(user_obj); user_lastupdated python:user_tool.getUserLastUpdated(user_obj);
 		session python:user_tool.setUserSession(user_account, user_roles, '', user_firstname, user_lastname, user_email, '')">
 
+<hr class= "hr_invisible" />
+
+<div class="second_tab_set">
+
+<div class="tabs_admin">
+	<ul>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
+		<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
+			<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
+		</li>
+	</ul>
+</div>
+
+<div class="second_tabset_content">
+<h2 i18n:translate="">Edit user</h2>
+
 <p i18n:translate="">
-	Change the form below with user's credentials and account and click <em>Save changes</em>:
+	Change the user's credentials and account in the form below and click <em>Save changes</em>:
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_edituser">
 <fieldset><legend i18n:translate="">Personal settings</legend>
@@ -48,7 +62,7 @@
 </table>
 </fieldset>
 <br />
-<fieldset><legend i18n:translate="">User settings</legend>
+<fieldset><legend i18n:translate="">Account settings</legend>
 <table border="0" cellspacing="0" cellpadding="3">
 	<tr>
 		<td i18n:translate="">Username:</td>
@@ -60,7 +74,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td nowrap="nowrap" i18n:translate="">Password Verification:</td>
+		<td nowrap="nowrap" i18n:translate="">Password confirmation:</td>
 		<td><input type="password" name="confirm" value="" />
 		</td>
 	</tr>
@@ -68,15 +82,18 @@
 </fieldset>
 <br />
 <input type="hidden" name="name" tal:attributes="value user_account" />
-<input type="submit" value="Save changes" i18n:attributes="value" />
+<input type="submit" value="Save changes" i18n:attributes="value" class="submission_button" />
 <br /><br />
 <fieldset><legend i18n:translate="">Record information</legend>
 <p>
 	<span i18n:translate="" tal:omit-tag="">Created: </span><tal:block tal:content="python:test(user_created=='', ' - ', user_created)" /><br />
-	<span i18n:translate="" tal:omit-tag="">Last updated: </span><tal:block tal:content="python:test(user_lastupdated=='', ' - ', user_lastupdated)" />
+	<span i18n:translate="" tal:omit-tag="">Last updated: </span><tal:block tal:content="python:test(user_lastupdated=='', user_created, user_lastupdated)" />
 </p>
 </fieldset>
 </form>
+
+</div>
+
 <span tal:replace="here/delUserSession" />
 </tal:block>
 
