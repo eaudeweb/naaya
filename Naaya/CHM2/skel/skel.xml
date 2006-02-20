@@ -57,6 +57,9 @@
 				<image id="comment.gif" title=""/>
 				<image id="logintoadd.gif" title=""/>
 				<image id="trash.gif" title=""/>
+				<image id="sortdown.gif" title="Sorted downwards"/>
+				<image id="sortnot.gif" title="Not sorted"/>
+				<image id="sortup.gif" title="Sorted upwards"/>
 			</scheme>
 			<scheme id="brown" title="Brown">
 				<style id="style" title="Main CSS"/>
@@ -83,6 +86,9 @@
 				<image id="comment.gif" title=""/>
 				<image id="logintoadd.gif" title=""/>
 				<image id="trash.gif" title=""/>
+				<image id="sortdown.gif" title="Sorted downwards"/>
+				<image id="sortnot.gif" title="Not sorted"/>
+				<image id="sortup.gif" title="Sorted upwards"/>
 			</scheme>
 			<scheme id="green" title="Green">
 				<style id="style" title="Main CSS"/>
@@ -109,6 +115,9 @@
 				<image id="comment.gif" title=""/>
 				<image id="logintoadd.gif" title=""/>
 				<image id="trash.gif" title=""/>
+				<image id="sortdown.gif" title="Sorted downwards"/>
+				<image id="sortnot.gif" title="Not sorted"/>
+				<image id="sortup.gif" title="Sorted upwards"/>
 			</scheme>
 			<scheme id="indigo" title="Indigo">
 				<style id="style" title="Main CSS"/>
@@ -135,6 +144,9 @@
 				<image id="comment.gif" title=""/>
 				<image id="logintoadd.gif" title=""/>
 				<image id="trash.gif" title=""/>
+				<image id="sortdown.gif" title="Sorted downwards"/>
+				<image id="sortnot.gif" title="Not sorted"/>
+				<image id="sortup.gif" title="Sorted upwards"/>
 			</scheme>
 		</skin>
 	</layout>
