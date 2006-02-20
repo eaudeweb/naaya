@@ -34,7 +34,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #product imports
 from Products.NaayaCore.constants import *
-from Products.NaayaCore.managers.utils import file_utils
+from Products.NaayaCore.managers.utils import file_utils,utils
 from Products.NaayaCore.managers.session_manager import session_manager
 from plugins_tool import plugins_tool
 from User import User
@@ -235,6 +235,17 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
         names=self.data.keys()
         names.sort()
         return names
+
+    security.declareProtected(manage_users, 'getUserNamesSortedByAttr')
+    def getUserNamesSortedByAttr(self, skey='', rkey=0):
+        """Return a list of usernames sorted by a specified attribute"""
+        if not skey or skey=='__':skey = 'name'
+        users_obj=self.data.values()
+        users_obj = utils().utSortObjsListByAttr(users_obj,skey,rkey)
+        res=[]
+        for user_obj in users_obj:
+            res.append(user_obj.name)
+        return res
 
     security.declareProtected(view, 'isLocalUser')
     def isLocalUser(self, REQUEST=None):
