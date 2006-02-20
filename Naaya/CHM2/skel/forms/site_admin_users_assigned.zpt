@@ -16,8 +16,8 @@
 
 <div class="tabs_admin">
 <ul>
-	<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Users with roles</a></li>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Unassigned users</a></li>
+	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Users with roles</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Unassigned users</a></li>
 	<li tal:repeat="wg python:here.getWorkgroupsList()"><a tal:define="wg_id python:wg[0]" tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
 </ul>
 </div>
@@ -26,7 +26,42 @@
 	This page lists the portal users that have at least a role granted to them either on the entire portal or just specific location(s).
 </p>
 
-
+<form>
+<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list" class="sortable"
+	tal:define="skey python:request.get('skey', 'username');
+				rkey python:request.get('rkey', '0');
+				rkey_inv python:test(rkey=='0', '1', '0');
+				result python:here.getUsersWithRoles(skey, rkey);
+				usernames python:result[0];
+				data python:result[1]">
+	<tr>
+		<th width="15%" align="left">
+			<a tal:attributes="href string:${site_url}/admin_users_assigned?skey=username&rkey=${rkey_inv}">
+				<span i18n:translate="" tal:omit-tag="">Username</span>
+				<img tal:condition="python:rkey=='1'" width="12" height="12" alt="" tal:attributes="src string:${skin_files_path}/sortdown.gif" />
+				<img tal:condition="python:rkey=='0'" width="12" height="12" alt="" tal:attributes="src string:${skin_files_path}/sortup.gif" />
+			</a>
+		</th>
+		<th width="*" align="left">Roles</th>
+	</tr>
+	<tr tal:repeat="username usernames" tal:attributes="class python:test(path('repeat/username/odd'), 'row-odd', 'row-even')">
+		<td>
+			<strong><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${username}" tal:content="username" /></strong>
+		</td>
+		<td>
+			<ul>
+				<li tal:repeat="item python:data[username]">
+					<strong tal:content="python:item[0]" /> - 
+					<span tal:condition="python:item[1]=='/'" i18n:translate="">Entire portal</span>
+					<span tal:condition="python:item[1]!='/'" tal:define="obj python:here.utGetObject(item[1])">
+						<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"/>
+					</span>
+				</li>
+			</ul>
+		</td>
+	</tr>
+</table>
+</form>
 
 </tal:block>
 </tal:block>

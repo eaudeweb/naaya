@@ -18,7 +18,7 @@
 <ul>
 	<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Users with roles</a></li>
 	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Unassigned users</a></li>
-	<li tal:repeat="wg python:here.getWorkgroupsList()"><a tal:define="wg_id python:wg[0]" tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
+	<li tal:repeat="wg here/getWorkgroupsList"><a tal:define="wg_id python:wg[0]" tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
 </ul>
 </div>
 
@@ -26,7 +26,25 @@
 	This page lists the users that have accounts in this portal, but that have no role granted to them. Therefore, they only have the rights to submit news, events and stories and comment on content.
 </p>
 
-
+<form method="post" action="">
+<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list" class="sortable">
+	<tr>
+		<th width="5%" align="left">Delete</th>
+		<th width="95%" align="left">
+			<a tal:attributes="href string:${site_url}/admin_users_unnassigned?skey=username" title="sorted descending">Username
+			<img width="12" height="12" alt="" src="/chm2/portal_layout/chm/indigo/sortdown.gif" />
+			</a>
+		</th>
+	</tr>
+	<tr tal:repeat="username here/getUnassignedUsers" tal:attributes="class python:test(path('repeat/username/odd'), 'row-odd', 'row-even')">
+		<td nowrap="nowrap">
+			<input type="checkbox" name="names" tal:attributes="value username" />
+			<img src="misc_/NaayaCore/User.gif" alt="User" />
+		</td>
+		<td><strong><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${username}" tal:content="username" /></strong></td>
+	</tr>
+</table>
+</form>
 
 </tal:block>
 </tal:block>

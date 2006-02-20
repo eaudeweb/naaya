@@ -129,6 +129,7 @@ class CHMSite(NySite):
         #this method is used to display local roles, called from getUserRoles methods
         return [METATYPE_FOLDER, METATYPE_NYPHOTOFOLDER]
 
+    #workgroups API
     def getWorkgroupsList(self):
         """ """
         return self.workgroups
@@ -138,6 +139,48 @@ class CHMSite(NySite):
         for x in self.workgroups:
             if x[0]==id: return x
         return None
+
+    def getWorkgoupsLocations(self):
+        """ """
+        return [x[2] for x in self.workgroups]
+
+    def getUsersWithRoles(self, skey='username', rkey='0'):
+        """
+        Returns the list of users that do not belong to any group, but
+        they have some permissions in the portal.
+        """
+        meta_types = self.get_containers_metatypes()
+        #from Root
+        auth_tool = self.getAuthenticationTool()
+        users_roles = {}
+        for username in auth_tool.user_names():
+            user = auth_tool.getUser(username)
+            roles = auth_tool.getUserRoles(user)
+            for role in roles:
+                if not users_roles.has_key(username): users_roles[username] = []
+                users_roles[username].append((role, '/'))
+        #from site
+        wg_locations = self.getWorkgoupsLocations()
+        for folder in self.getCatalogedObjects(meta_type=meta_types, has_local_role=1):
+            if folder.absolute_url(1) not in wg_locations:
+                for roles_tuple in folder.get_local_roles():
+                    local_roles = auth_tool.getLocalRoles(roles_tuple[1])
+                    if roles_tuple[0] in auth_tool.user_names() and len(local_roles) > 0:
+                        for role in local_roles:
+                            username = str(roles_tuple[0])
+                            if not users_roles.has_key(username): users_roles[username] = []
+                            users_roles[username].append((role, folder.absolute_url(1)))
+        l = users_roles.keys()
+        l.sort()
+        if rkey=='1': l.reverse()
+        return l, users_roles
+
+    def getUnassignedUsers(self):
+        """
+        Returns the list of users that do not belong to any group and
+        don't have any permissions at all in the portal.
+        """
+        return self.utListDifference(self.getAuthenticationTool().user_names(), self.getUsersWithRoles()[0])
 
     def getWorkgroupUsers(self, id):
         """ """
