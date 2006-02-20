@@ -71,6 +71,7 @@ class NotificationTool(Folder):
         self.subject_notifications=''
         self.subject_newsletter=''
         self.from_email=''
+        self.monitorized_folders=[]
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
@@ -144,10 +145,37 @@ class NotificationTool(Folder):
             self.foldermetatypes.remove(m)
             self._p_changed = 1
 
+    security.declarePublic('get_monitorized_folders')
+    def get_monitorized_folders(self):
+        return self.monitorized_folders
+    
+    security.declarePrivate('add_monitorized_folder')
+    def add_monitorized_folder(self, folder_path):
+        self.monitorized_folders.append(folder_path)
+        self._p_changed = 1
+    
+    security.declarePrivate('del_monitorized_folder')
+    def del_monitorized_folder(self, folder_path):
+        self.monitorized_folders.remove(folder_path)
+        self._p_changed = 1
+
+    security.declarePrivate('del_folders_from_notification_list')
+    def del_folders_from_notification_list(self, folders_list=[]):
+        if folders_list != []:
+            for i in folders_list:
+                self.del_monitorized_folder(i)
+
+    security.declarePrivate('add_folders_to_notification_list')
+    def add_folders_to_notification_list(self, folders_path_list=[]):
+        if folders_path_list != []:
+            for i in folders_path_list:
+                try: self.add_monitorized_folder(i)
+                except: pass
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageSettings')
     def manageSettings(self, newsmetatypes='', uploadmetatypes='',
-        foldermetatypes='', REQUEST=None):
+        foldermetatypes='', subject_notifications='', subject_newsletter='', from_email='', monitorized_folders=[], REQUEST=None):
         """ """
         newsmetatypes = self.utConvertLinesToList(newsmetatypes)
         uploadmetatypes = self.utConvertLinesToList(uploadmetatypes)
@@ -178,7 +206,6 @@ class NotificationTool(Folder):
 
     def set_email_credentials(self, from_email, subject_notifications='', subject_newsletter=''):
         """sets the subject of the newsletter, of the newsletter and of the sender in the lang language"""
-        pass
         self.subject_notifications = subject_notifications
         self.subject_newsletter = subject_newsletter
         self.from_email = from_email
