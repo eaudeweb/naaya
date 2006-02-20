@@ -1215,8 +1215,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         else:
             self.getNotificationTool().manageSettings(newsmetatypes=newsmetatypes, uploadmetatypes=uploadmetatypes, foldermetatypes=foldermetatypes)
             if from_email=='': from_email = self.mail_address_from
-            if subject_notifications != '' or subject_newsletter != '':
-                self.getNotificationTool().set_email_credentials(from_email, subject_notifications, subject_newsletter)
+            self.getNotificationTool().set_email_credentials(from_email, subject_notifications, subject_newsletter)
             if REQUEST:
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
                 REQUEST.RESPONSE.redirect('%s/admin_notifications_html?lang=%s' % (self.absolute_url(), lang))
