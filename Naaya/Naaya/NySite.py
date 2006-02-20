@@ -1207,7 +1207,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notifications')
     def admin_notifications(self, newsmetatypes='', uploadmetatypes='', foldermetatypes='', subject_notifications='', subject_newsletter='', from_email='', lang=None, REQUEST=None):
-        """."""
+        """sets the email credentials (subjects of emails, sender) and the metatypes of objects the users will be notified about"""
         if from_email=='' and self.mail_address_from=='': 
             if REQUEST:
                 self.setSessionInfo([MESSAGE_NOTFROMEMAIL % self.utGetTodayDate()])
@@ -1221,15 +1221,44 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
                 REQUEST.RESPONSE.redirect('%s/admin_notifications_html?lang=%s' % (self.absolute_url(), lang))
     
-    
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notif_sitemap')
-    def admin_notif_sitemap(self, proprietati, REQUEST=None):
-        """."""
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notif_delete_folders')
+    def admin_notif_delete_folders(self, absolute_urls_to_be_deleted =[], lang=None, REQUEST=None):
+        """sends a list of folders(absolute_urls) to be deleted from notifications list"""
+        self.getNotificationTool().del_folders_from_notification_list(self.utConvertToList(absolute_urls_to_be_deleted))
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_notif_sitemap_html?lang=%s' % (self.absolute_url(), lang))
-        
-        
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notif_add_folder')
+    def admin_notif_add_folders(self, absolute_urls_to_be_added=[], lang=None, REQUEST=None):
+        """sends a list of folders(absolute_urls) to be added to notifications list"""        
+        self.getNotificationTool().add_folders_to_notification_list(self.utConvertToList(absolute_urls_to_be_added))
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_notif_sitemap_html?lang=%s' % (self.absolute_url(), lang))
+    
+    #security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'get_maintopics_children')
+    def get_maintopics_children(self, first_level='0', foldermetatypes=[METATYPE_FOLDER]):
+        """returns a list of tuples, with maintopics and their children, used in notification sitemap form
+        (first_level_folder, [the list of children])
+        first_level can be one of:
+        0 --> only the maintopics will be parsed
+        1 --> all firstlevel NaayaFolders will be parsed (approved & not approved)
+        2 --> all firstlevel Folders & NaayaFolders will be parsed 
+        2 --> approved firstlevel Naaya Folders will be parsed
+        """
+        first_folders_children=[]
+        first_level_folders=[]
+        if first_level == '0': first_level_folders = self.getMainTopics()
+        elif first_level == '1': first_level_folders = self.objectValues(METATYPE_FOLDER)
+        elif first_level == '2': first_level_folders = self.objectValues(self.get_containers_metatypes())
+        else: 
+            for x in self.objectValues(foldermetatypes):
+                if x.approved: first_level_folders.append(x)
+        for x in first_level_folders:            
+            children = x.objectValues(foldermetatypes)
+            first_folders_children.append((x,children))
+        return first_folders_children
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_layout')
     def admin_layout(self, theMasterList='', theSlaveList='', REQUEST=None):
