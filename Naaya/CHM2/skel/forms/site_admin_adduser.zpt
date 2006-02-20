@@ -5,6 +5,13 @@
 <tal:block metal:fill-slot="section"
 	tal:define="site_url here/getSitePath">
 
+<div class="tabs_admin">
+<ul>
+	<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
+	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Users</a></li>
+</ul>
+</div>
+
 <div id="tabbedmenu">
 <ul>
 	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
@@ -14,29 +21,31 @@
 </ul>
 </div>
 
+<h2 i18n:translate="">Add user</h2>
+
 <form method="post" tal:attributes="action string:${site_url}/admin_adduser">
 <p i18n:translate="">Fill the form below with user's credentials and account and click on <em>Add</em>:</p>
 <fieldset><legend i18n:translate="">Personal settings</legend>
 <table border="0" cellspacing="0" cellpadding="3">
 	<tr>
-		<td nowrap="nowrap" i18n:translate="">First Name:</td>
+		<td nowrap="nowrap" i18n:translate="">First name:</td>
 		<td><input type="text" name="firstname" tal:attributes="value here/getSessionUserFirstname" size="35" />
 		</td>
 	</tr>
 	<tr>
-		<td nowrap="nowrap" i18n:translate="">Last Name:</td>
+		<td nowrap="nowrap" i18n:translate="">Last name:</td>
 		<td><input type="text" name="lastname" tal:attributes="value here/getSessionUserLastname" size="35" />
 		</td>
 	</tr>
 	<tr>
-		<td nowrap i18n:translate="">Email address:</td>
+		<td nowrap="nowrap" i18n:translate="">Email address:</td>
 		<td><input type="text" name="email" tal:attributes="value here/getSessionUserEmail" size="35" />
 		</td>
 	</tr>
 </table>
 </fieldset>
 <br />
-<fieldset><legend><strong i18n:translate="">User&nbsp;settings</strong></legend>
+<fieldset><legend><strong i18n:translate="">Account information</strong></legend>
 <table border="0" cellspacing="0" cellpadding="3">
 <tr>
 	<td i18n:translate="">Username:</td>
@@ -48,7 +57,7 @@
 	</td>
 </tr>
 <tr>
-	<td nowrap="nowrap" i18n:translate="">Password Verification:</td>
+	<td nowrap="nowrap" i18n:translate="">Password confirmation:</td>
 	<td><input type="password" name="confirm" value="" size="30" maxLength="255" />
 	</td>
 </tr>
