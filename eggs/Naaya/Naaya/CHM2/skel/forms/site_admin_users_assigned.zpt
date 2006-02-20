@@ -16,16 +16,14 @@
 
 <div class="tabs_admin">
 <ul>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Users with roles</a></li>
-	<li><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Unassigned users</a></li>
-	<li tal:repeat="wg python:here.getWorkgroupsList()"><a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg[0]}"><tal:block tal:content="python:wg[1]" /></a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Users with roles</a></li>
+	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Unassigned users</a></li>
+	<li tal:repeat="wg python:here.getWorkgroupsList()"><a tal:define="wg_id python:wg[0]" tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
 </ul>
 </div>
 
-<h2 i18n:translate=""></h2>
-
 <p i18n:translate="">
-	
+	This page lists the portal users that have at least a role granted to them either on the entire portal or just specific location(s).
 </p>
 
 
