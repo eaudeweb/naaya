@@ -416,6 +416,18 @@ class CHMSite(NySite):
                 self.recatalogNyObject(x)
         return "done"
 
+    security.declareProtected(view, 'getRequestParams')
+    def getRequestParams(self, REQUEST=None):
+        """returns a REQUEST.QUERY_STRING (using REQUEST.form,
+            REQUEST.form=REQUEST.QUERY_STRING as a dictionary)"""
+        ignore_list = ['skey', 'rkey']
+        res=''
+        if REQUEST:
+            for key in self.REQUEST.form.keys():
+                if key not in ignore_list:
+                    res=res+key+'='+str(self.REQUEST.form[key])+'&'
+        return res
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addworkgroup')
     def admin_addworkgroup(self, title='', location='', role='', REQUEST=None):
         """ """

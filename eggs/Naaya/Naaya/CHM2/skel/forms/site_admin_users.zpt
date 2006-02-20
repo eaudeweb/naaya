@@ -32,7 +32,6 @@
 
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteusers">
 
-<!-- start sortable table modification (by Lehel) (watch for commented areas) -->
 <tal:block define="	skey python:request.get('skey', 'username');
 							rkey python:request.get('rkey', test(request.has_key('skey'),'','1'));
 							rkey_param python:test(rkey, '', '&amp;rkey=1');">
@@ -41,8 +40,7 @@
 		tal:define="sortup_gif string:${skin_files_path}/sortup.gif;
 					sortnot_gif string:${skin_files_path}/sortnot.gif;
 					sortdown_gif string:${skin_files_path}/sortdown.gif;
-					req_params string:additional_param=1&">
-<!--					req_params python:here.getRequestParams(request)">   UPPER ROW REPLACE-->
+					req_params python:here.getRequestParams(request)">
 
 	<tr>
 		<th width="5%" align="left" i18n:translate="">Delete</th>
@@ -87,7 +85,6 @@
 	</tr>
 </table>
 </tal:block>
-<!-- end sortable table modifications -->
 
 <p>
 <input type="button" value="Add user" onclick="document.location.href='admin_adduser_html';" i18n:attributes="value" />
