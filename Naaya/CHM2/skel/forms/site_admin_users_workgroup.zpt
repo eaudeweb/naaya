@@ -10,7 +10,7 @@
 
 <div class="tabs_admin">
 <ul>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Groups</a></li>
+	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Users</a></li>
 </ul>
 </div>
@@ -27,7 +27,7 @@
 </div>
 
 <p i18n:translate="" tal:condition="w">
-	This page shown all users that are part of this working group.
+	This page shows all users that are part of this working group.
 </p>
 
 <p i18n:translate="" tal:condition="python:not w">

@@ -9,7 +9,7 @@
 
 <div class="tabs_admin">
 <ul>
-	<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Groups</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
 	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Users</a></li>
 </ul>
 </div>
