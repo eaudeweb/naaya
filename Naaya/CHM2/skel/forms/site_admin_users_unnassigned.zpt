@@ -5,7 +5,8 @@
 <tal:block metal:fill-slot="section"
 	tal:define="site_url here/getSitePath;
 				user_tool here/getAuthenticationTool;
-				users python:user_tool.getUserNames()">
+				users python:user_tool.getUserNames();
+				wgs here/getWorkgroupsList">
 
 <div class="tabs_admin">
 <ul>
@@ -18,7 +19,7 @@
 <ul>
 	<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Users with roles</a></li>
 	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Unassigned users</a></li>
-	<li tal:repeat="wg here/getWorkgroupsList"><a tal:define="wg_id python:wg[0]" tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
+	<li tal:repeat="wg wgs"><a tal:define="wg_id python:wg[0]" tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
 </ul>
 </div>
 
@@ -26,24 +27,36 @@
 	This page lists the users that have accounts in this portal, but that have no role granted to them. Therefore, they only have the rights to submit news, events and stories and comment on content.
 </p>
 
-<form method="post" action="">
-<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list" class="sortable">
+<form method="post" tal:attributes="action string:${site_url}/admin_adduserstoworkgroup">
+<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list" class="sortable"
+	tal:define="skey python:request.get('skey', 'username');
+				rkey python:request.get('rkey', '0');
+				rkey_inv python:test(rkey=='0', '1', '0');
+				usernames python:here.getUnassignedUsers(skey, rkey)">
 	<tr>
-		<th width="5%" align="left">Delete</th>
+		<th width="5%" align="left"></th>
 		<th width="95%" align="left">
-			<a tal:attributes="href string:${site_url}/admin_users_unnassigned?skey=username" title="sorted descending">Username
-			<img width="12" height="12" alt="" src="/chm2/portal_layout/chm/indigo/sortdown.gif" />
+			<a tal:attributes="href string:${site_url}/admin_users_unnassigned?skey=username&rkey=${rkey_inv}">
+				<span i18n:translate="" tal:omit-tag="">Username</span>
+				<img tal:condition="python:rkey=='1'" width="12" height="12" alt="" tal:attributes="src string:${skin_files_path}/sortdown.gif" />
+				<img tal:condition="python:rkey=='0'" width="12" height="12" alt="" tal:attributes="src string:${skin_files_path}/sortup.gif" />
 			</a>
 		</th>
 	</tr>
-	<tr tal:repeat="username here/getUnassignedUsers" tal:attributes="class python:test(path('repeat/username/odd'), 'row-odd', 'row-even')">
+	<tr tal:repeat="username usernames" tal:attributes="class python:test(path('repeat/username/odd'), 'row-odd', 'row-even')">
 		<td nowrap="nowrap">
 			<input type="checkbox" name="names" tal:attributes="value username" />
-			<img src="misc_/NaayaCore/User.gif" alt="User" />
 		</td>
 		<td><strong><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${username}" tal:content="username" /></strong></td>
 	</tr>
 </table>
+<span i18n:translate="" tal:omit-tag="">Workgroup</span>
+<select name="id" id="id">
+	<option tal:repeat="wg wgs"
+		tal:attributes="value python:wg[0]"
+		tal:content="python:wg[1]" />
+</select>
+<input type="submit" value="Assign" i18n:attributes="value" />
 </form>
 
 </tal:block>

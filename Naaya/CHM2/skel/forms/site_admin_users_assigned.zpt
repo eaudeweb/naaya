@@ -35,6 +35,7 @@
 				usernames python:result[0];
 				data python:result[1]">
 	<tr>
+		<th width="5%"></th>
 		<th width="15%" align="left">
 			<a tal:attributes="href string:${site_url}/admin_users_assigned?skey=username&rkey=${rkey_inv}">
 				<span i18n:translate="" tal:omit-tag="">Username</span>
@@ -45,6 +46,7 @@
 		<th width="*" align="left">Roles</th>
 	</tr>
 	<tr tal:repeat="username usernames" tal:attributes="class python:test(path('repeat/username/odd'), 'row-odd', 'row-even')">
+		<td></td>
 		<td>
 			<strong><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${username}" tal:content="username" /></strong>
 		</td>
