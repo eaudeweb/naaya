@@ -140,6 +140,12 @@ class CHMSite(NySite):
             if x[0]==id: return x
         return None
 
+    def getWorkgroupByLocation(self, loc):
+        """ """
+        for x in self.workgroups:
+            if x[2]==loc: return x
+        return None
+
     def getWorkgoupsLocations(self):
         """ """
         return [x[2] for x in self.workgroups]
@@ -458,7 +464,6 @@ class CHMSite(NySite):
         mail_from = self.mail_address_from
         self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
 
-
     security.declareProtected(view_management_screens, 'duplicate_translate')
     def duplicate_translate(self, property, source_lang, target_lang):
         """
@@ -502,9 +507,14 @@ class CHMSite(NySite):
         if location=='': err.append('Location is required')
         else:
             try:
+                #check for a valid location
                 ob = self.unrestrictedTraverse(location)
             except:
                 err.append('Invalid location')
+            else:
+                #check if no group was defiend for this location
+                if self.getWorkgroupByLocation(location):
+                    err.append('A workgroup is already defined for this location')
         if role=='': err.append('Role is required')
         if err:
             if REQUEST:
