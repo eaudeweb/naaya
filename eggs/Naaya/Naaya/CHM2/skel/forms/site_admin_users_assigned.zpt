@@ -57,14 +57,18 @@
 		<td>
 			<strong><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${username}" tal:content="username" /></strong>
 		</td>
-		<td>
-			<ul>
-				<li tal:repeat="item python:data[username]">
-					<strong tal:content="python:item[0]" /> - 
-					<span tal:condition="python:item[1]=='/'" i18n:translate="">Entire portal</span>
-					<span tal:condition="python:item[1]!='/'" tal:define="obj python:here.utGetObject(item[1])">
+		<td class="roles_per_folder">
+			<ul >
+				<li tal:repeat="item python:here.groupByLocation(data[username])">
+				<tal:block tal:define="location python:item[0]; roles python:item[1]">
+<div class="folder_of_roles"> 
+					<span tal:condition="python:location=='/'" i18n:translate="">Entire portal</span>
+					<span tal:condition="python:location!='/'" tal:define="obj python:here.utGetObject(location)">
 						<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"/>
 					</span>
+</div> - 
+<div class="list_of_roles"><strong tal:content="python:', '.join(roles)" />  </div>
+				</tal:block>
 				</li>
 			</ul>
 		</td>
@@ -74,7 +78,7 @@
 
 </div>
 
-<form action="admin_addworkgroup_html" method="post" style="display:inline; float: right; width: 10%">
+<form action="admin_addworkgroup_html" method="post" style="display:inline; float: right; width: 10%; margin-right: 4em;">
 	<input type="submit" value="Add workgroup" i18n:attributes="value" class="submission_button" />
 </form>
 

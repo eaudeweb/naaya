@@ -835,4 +835,36 @@
 .sortable tbody tr.zebraeven {
 	background-color: white;
 }
+
+/* +++++++++ modified on february 21 USERS-ROLES listing #############*/
+.roles_per_folder {
+	
+}
+.roles_per_folder ul {
+	margin: 0 0 0 1px;
+	padding: 0px 3px 0px 3px;
+	list-style: none;
+	color: #555555;
+	border: 1px solid #97A7B0;
+}
+
+.roles_per_folder li {
+	margin: 3px 0 3px 0px;
+	background-color: #eaeaea; 
+
+	padding: 4px;
+	
+}
+
+.folder_of_roles {
+	display: inline; 
+
+}
+
+.list_of_roles {
+	display: inline; 
+
+}
+/* +++++++++ END modified on february 21 USERS-ROLES listing #############*/
+
 /* END STYLE */
