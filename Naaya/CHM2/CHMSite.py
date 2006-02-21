@@ -204,6 +204,14 @@ class CHMSite(NySite):
             return r
         return []
 
+    def getNonWorkgroupUsers(self, id):
+        """ """
+        all_users = self.getAuthenticationTool().user_names()
+        wg_users = [x[0] for x in self.getWorkgroupUsers(id)]
+        l = self.utListDifference(all_users, wg_users)
+        l.sort()
+        return l
+
     def add_userto_workgroup(self, loc, name, roles):
         """ """
         loc.manage_setLocalRoles(name, roles)
@@ -492,6 +500,11 @@ class CHMSite(NySite):
         err = []
         if title=='': err.append('Title is required')
         if location=='': err.append('Location is required')
+        else:
+            try:
+                ob = self.unrestrictedTraverse(location)
+            except:
+                err.append('Invalid location')
         if role=='': err.append('Role is required')
         if err:
             if REQUEST:
@@ -501,11 +514,12 @@ class CHMSite(NySite):
                 self.setSession('role', role)
                 return REQUEST.RESPONSE.redirect('%s/admin_addworkgroup_html' % self.absolute_url())
         else:
-            self.workgroups.append((self.utGenRandomId(4), title, location, role))
+            id = self.utGenRandomId(4)
+            self.workgroups.append((id, title, location, role))
             self._p_changed = 1
             if REQUEST:
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-                return REQUEST.RESPONSE.redirect('%s/admin_workgroups_html' % self.absolute_url())
+                return REQUEST.RESPONSE.redirect('%s/admin_users_workgroup?w=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_delworkgroup')
     def admin_delworkgroup(self, id='', REQUEST=None):
@@ -526,10 +540,20 @@ class CHMSite(NySite):
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
                 return REQUEST.RESPONSE.redirect('%s/admin_workgroups_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_delworkgroup')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addusertoworkgroup')
+    def admin_addusertoworkgroup(self, id='', name='', REQUEST=None):
+        """ """
+        wg = self.getWorkgroupById(id)
+        if wg:
+            loc = self.unrestrictedTraverse(wg[2])
+            self.add_userto_workgroup(loc, name, [wg[3]])
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            return REQUEST.RESPONSE.redirect('%s/admin_users_workgroup?w=%s' % (self.absolute_url(), id))
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduserstoworkgroup')
     def admin_adduserstoworkgroup(self, id='', names=[], REQUEST=None):
         """ """
-        print id, names
         wg = self.getWorkgroupById(id)
         if wg:
             loc = self.unrestrictedTraverse(wg[2])

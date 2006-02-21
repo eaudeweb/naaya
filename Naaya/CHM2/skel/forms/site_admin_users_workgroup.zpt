@@ -76,6 +76,17 @@
 <input type="submit" value="Revoke role(s)" i18n:attributes="value" class="submission_button" />
 </form>
 
+<form method="post" tal:attributes="action string:${site_url}/admin_addusertoworkgroup">
+<span i18n:translate="" tal:omit-tag="">Assign user</span>
+<select name="name" id="name">
+	<option tal:repeat="user python:here.getNonWorkgroupUsers(current_w)"
+		tal:attributes="value user"
+		tal:content="user" />
+</select>
+<span i18n:translate="" tal:omit-tag="">to this workgroup</span>
+<input type="hidden" name="id" id="id" tal:attributes="value current_w" />
+<input type="submit" value="Assign" i18n:attributes="value" class="submission_button" />
+</form>
 
 </tal:block>
 
