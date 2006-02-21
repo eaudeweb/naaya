@@ -37,6 +37,15 @@
 <div class="second_tabset_content">
 <h2 i18n:translate="">Edit user</h2>
 
+<hr />
+<div class="tabs_admin">
+	<ul>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${name}" i18n:translate="">Credentials</a></li>
+		<li><a tal:attributes="href string:${site_url}/admin_userroles_html?name=${name}" i18n:translate="">Roles</a></li>
+	</ul>
+</div>
+<hr />
+
 <p i18n:translate="">
 	Change the user's credentials and account in the form below and click <em>Save changes</em>:
 </p>

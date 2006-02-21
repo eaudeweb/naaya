@@ -131,11 +131,17 @@ class CHMSite(NySite):
 
     #workgroups API
     def getWorkgroupsList(self):
-        """ """
+        """
+        Returns the list of worgroups as a list of tuples
+        where a tuple identifies a workgroup.
+        """
         return self.workgroups
 
     def getWorkgroupById(self, id):
-        """ """
+        """
+        Returns the workgroup with the given id.
+        If no workgroup exists then B{None} is returned.
+        """
         for x in self.workgroups:
             if x[0]==id: return x
         return None
@@ -181,6 +187,14 @@ class CHMSite(NySite):
         if rkey=='1': l.reverse()
         return l, users_roles
 
+    def getUserAdditionalRoles(self, name):
+        """
+        Returns a list with an user additional roles.
+        """
+        l,d = self.getUsersWithRoles()
+        if name in l: return d[name]
+        else: return []
+
     def getUnassignedUsers(self, skey='username', rkey='0'):
         """
         Returns the list of users that do not belong to any group and
@@ -209,6 +223,36 @@ class CHMSite(NySite):
             if rkey=='1': r.reverse()
             return r
         return []
+
+    def isUserInWorkgroup(self, id, name):
+        """
+        Test if the given user is part of the workgroup
+        with the specified id.
+        """
+        wg = self.getWorkgroupById(id)
+        if wg:
+            r = []
+            loc = self.unrestrictedTraverse(wg[2])
+            for x in loc.get_local_roles():
+                roles = list(x[1])
+                if 'Owner' in x[1]: roles.remove('Owner')
+                if roles and x[0]==name: return 1
+        return 0
+
+    def getUsersWorkgroups(self, name):
+        """
+        Returns a list with all workgroups that the
+        user is part of.
+        """
+        l = []
+        for wg in self.workgroups:
+            r = []
+            loc = self.unrestrictedTraverse(wg[2])
+            for x in loc.get_local_roles():
+                roles = list(x[1])
+                if 'Owner' in x[1]: roles.remove('Owner')
+                if roles and x[0]==name: l.append(wg)
+        return l
 
     def getNonWorkgroupUsers(self, id):
         """ """
@@ -533,7 +577,9 @@ class CHMSite(NySite):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_delworkgroup')
     def admin_delworkgroup(self, id='', REQUEST=None):
-        """ """
+        """
+        Delete a workgroup.
+        """
         wg = self.getWorkgroupById(id)
         if wg:
             loc = self.unrestrictedTraverse(wg[2])
@@ -550,9 +596,62 @@ class CHMSite(NySite):
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
                 return REQUEST.RESPONSE.redirect('%s/admin_workgroups_html' % self.absolute_url())
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_userworkgroups')
+    def admin_userworkgroups(self, name='', ids=[], REQUEST=None):
+        """
+        (Un)Assign an user from/to one or more workgroups.
+        """
+        ids = self.utConvertToList(ids)
+        user_wgs = [x[0] for x in self.getUsersWorkgroups(name)]
+        #add to new workgroups
+        for id in self.utListDifference(ids, user_wgs):
+            self.admin_addusertoworkgroup(id, name)
+        #remove from workgroups
+        for id in self.utListDifference(user_wgs, ids):
+            self.admin_delusersfromworkgroup(id, [name])
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s' % (self.absolute_url(), name))
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_revokeuserroles')
+    def admin_revokeuserroles(self, name='', roles=[], REQUEST=None):
+        """
+        Revoke roles from an user.
+        """
+        for t in self.utConvertToList(roles):
+            role, location = t.split('||')
+            loc = self.unrestrictedTraverse(location)
+            res = self.utListDifference(loc.get_local_roles_for_userid(name), [role])
+            if len(res):
+                loc.manage_setLocalRoles(name, res)
+            else:
+                loc.manage_delLocalRoles(name)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s' % (self.absolute_url(), name))
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduserroles')
+    def admin_adduserroles(self, name='', roles=[], loc='allsite', location='', REQUEST=None):
+        """
+        Add roles for an user.
+        """
+        msg = err = ''
+        try:
+            self.getAuthenticationTool().manage_addUsersRoles(name, roles, loc, location)
+        except Exception, error:
+            err = error
+        else:
+            msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+        if REQUEST:
+            if err != '': self.setSessionErrors([err])
+            if msg != '': self.setSessionInfo([msg])
+            return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s' % (self.absolute_url(), name))
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addusertoworkgroup')
     def admin_addusertoworkgroup(self, id='', name='', REQUEST=None):
-        """ """
+        """
+        Assign an user to an workgroup.
+        """
         wg = self.getWorkgroupById(id)
         if wg:
             loc = self.unrestrictedTraverse(wg[2])
@@ -563,7 +662,9 @@ class CHMSite(NySite):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduserstoworkgroup')
     def admin_adduserstoworkgroup(self, id='', names=[], REQUEST=None):
-        """ """
+        """
+        Assign one or more users to a workgroup.
+        """
         wg = self.getWorkgroupById(id)
         if wg:
             loc = self.unrestrictedTraverse(wg[2])
@@ -575,7 +676,9 @@ class CHMSite(NySite):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_delusersfromworkgroup')
     def admin_delusersfromworkgroup(self, id='', names=[], REQUEST=None):
-        """ """
+        """
+        Unassign one or more users from a workgroup.
+        """
         wg = self.getWorkgroupById(id)
         if wg:
             loc = self.unrestrictedTraverse(wg[2])
@@ -639,6 +742,11 @@ class CHMSite(NySite):
     def admin_addworkgroup_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_addworkgroup')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_userroles_html')
+    def admin_userroles_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_userroles')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkchecker_html')
     def admin_linkchecker_html(self, REQUEST=None, RESPONSE=None):
