@@ -270,6 +270,14 @@ class CHMSite(NySite):
         """ """
         loc.manage_delLocalRoles([name])
 
+    def groupByLocation(self, roles):
+        """ """
+        d = {}
+        for role in roles:
+            if not d.has_key(role[1]): d[role[1]] = []
+            d[role[1]].append(role[0])
+        return d.items()
+
     #layer over the Localizer and MessageCatalog
     #the scope is to centralize the list of available languages
     def gl_add_site_language_custom(self, language):
