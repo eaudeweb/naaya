@@ -50,7 +50,7 @@ function createKey(key)
 	<p i18n:translate="">
 		Use this page to add a new category of users that will form a workgroup on a portal section (folder). Each user added to this workgroup will have by default a certain role that you specify here. The roles users have inside a workgroup are modifiable from the workgroup tab in the Users' management area.
 	</p>
-	<form method="post" name="frmWorkgroup" tal:attributes="action string:${site_url}/admin_users_workgroup">
+	<form method="post" name="frmWorkgroup" tal:attributes="action string:${site_url}/admin_addworkgroup">
 	<table border="0" cellspacing="0" cellpadding="3">
 	<tr>
 		<td nowrap="nowrap" i18n:translate="">Workgroup name:</td>
