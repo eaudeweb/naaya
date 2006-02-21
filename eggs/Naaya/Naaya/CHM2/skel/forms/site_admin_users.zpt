@@ -102,10 +102,13 @@
 <p>
 	<input type="button" value="Add user" onclick="document.location.href='admin_adduser_html';" i18n:attributes="value" class="submission_button" />
 	<input type="submit" value="Delete user"  i18n:attributes="value" class="submission_button" />
-	<input type="button" value="Add role" onclick="document.location.href='admin_addrole_html';"  i18n:attributes="value" class="submission_button" />
 </p>
 </form>
 </div>
+
+<form action="admin_addrole_html" method="post" style="display:inline; float: right; width: 10%">
+	<input type="submit" value="Add role" i18n:attributes="value" class="submission_button" />
+</form>
 
 </tal:block>
 </tal:block>
