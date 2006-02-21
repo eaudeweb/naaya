@@ -70,7 +70,7 @@
 
 </div>
 
-<form action="admin_addworkgroup_html" method="post" style="display:inline; float: right; width: 10%">
+<form action="admin_addworkgroup_html" method="post" style="display:inline; float: right; width: 10%; margin-right: 4em;">
 	<input type="submit" value="Add workgroup" i18n:attributes="value" class="submission_button" />
 </form>
 
