@@ -76,10 +76,12 @@
 <input type="submit" value="Revoke role(s)" i18n:attributes="value" class="submission_button" />
 </form>
 
-<form method="post" tal:attributes="action string:${site_url}/admin_addusertoworkgroup">
+<form method="post" tal:attributes="action string:${site_url}/admin_addusertoworkgroup"
+	tal:define="users python:here.getNonWorkgroupUsers(current_w)"
+	tal:condition="users">
 <span i18n:translate="" tal:omit-tag="">Assign user</span>
 <select name="name" id="name">
-	<option tal:repeat="user python:here.getNonWorkgroupUsers(current_w)"
+	<option tal:repeat="user users"
 		tal:attributes="value user"
 		tal:content="user" />
 </select>
