@@ -12,12 +12,8 @@
 <form method="post" action="manageProperties">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
-		<td class="form-label">UID</td>
-		<td tal:content="string:${here/get_message_uid}" />
-	</tr>
-	<tr>
 		<td class="form-label">In reply to</td>
-		<td tal:content="string:${here/get_message_inreplyto}" />
+		<td tal:content="string:${here/inreplyto}" />
 	</tr>
 	<tr>
 		<td class="form-label">Subject</td>

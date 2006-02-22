@@ -17,7 +17,7 @@
 			<select name="inreplyto" id="inreplyto">
 				<option value="">To topic itself</option>
 				<option tal:repeat="item here/get_messages"
-					tal:attributes="value item/get_message_uid"
+					tal:attributes="value item/id"
 					tal:content="item/title_or_id" />
 			</select>
 		</td>
