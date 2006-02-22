@@ -103,6 +103,9 @@ class NyForumMessage(Folder, NyForumBase):
     def get_message_object(self): return self
     def get_message_path(self, p=0): return self.absolute_url(p)
     def get_message_inreplyto(self): return self._inreplyto
+    def set_message_inreplyto(self, v):
+        self._inreplyto = v
+        self._p_changed = 1
     def get_message_uid(self): return self._uid
     def get_attachments(self): return self.objectValues('File')
 
@@ -149,9 +152,23 @@ class NyForumMessage(Folder, NyForumBase):
     security.declareProtected(PERMISSION_ADD_FORUMMESSAGE, 'deleteMessage')
     def deleteMessage(self, nodes='', REQUEST=None):
         """ """
+        topic = self.get_topic_object()
+        parent_msg = self.get_message_parent(self)
+        child_msgs = self.get_message_childs(self)
+        if nodes:
+            #remove all child nodes
+            topic.manage_delObjects([x.id for x in child_msgs])
+        else:
+            #move child nodes (replies to this message)
+            if parent_msg is None: new_puid = None
+            else: new_puid = parent_msg.get_message_uid()
+            for msg in child_msgs:
+                msg.set_message_inreplyto(new_puid)
+        #remove message itself
+        topic.manage_delObjects([self.id])
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect(self.get_topic_path())
+            REQUEST.RESPONSE.redirect(topic.absolute_url())
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
