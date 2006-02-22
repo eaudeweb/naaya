@@ -809,4 +809,10 @@ class CHMSite(NySite):
                             reflist_ob.add_item(item.id, item.title)
         return 'Script OK.'
 
+    def updateWG(self):
+        """ """
+        self.workgroups = []
+        self._p_changed = 1
+        return 'OK'
+
 InitializeClass(CHMSite)
