@@ -143,13 +143,14 @@ class NyForumMessage(Folder, NyForumBase):
     def replyMessage(self, title='', description='', attachment='', notify='',
         REQUEST=None):
         """ """
-        addNyForumMessage(self.get_topic_object(), '', self.get_message_uid(),
+        id = PREFIX_NYFORUMMESSAGE + self.utGenRandomId(6)
+        addNyForumMessage(self.get_topic_object(), id, self.get_message_uid(),
             title, description, attachment, notify)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect(self.get_topic_path())
+            REQUEST.RESPONSE.redirect('%s#%s' % (self.get_topic_path(), id))
 
-    security.declareProtected(PERMISSION_ADD_FORUMMESSAGE, 'deleteMessage')
+    security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'deleteMessage')
     def deleteMessage(self, nodes='', REQUEST=None):
         """ """
         topic = self.get_topic_object()

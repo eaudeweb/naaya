@@ -120,9 +120,10 @@ class NyForumTopic(Folder, NyForumBase):
         Returns the parent of the given message.
         """
         puid = ob.get_message_inreplyto()
-        l = [msg for msg in self.objectValues(METATYPE_NYFORUMMESSAGE) if msg.get_message_uid() == puid]
-        if l: return l[0]
-        else: return None
+        for msg in self.objectValues(METATYPE_NYFORUMMESSAGE):
+            if msg.get_message_uid() == puid:
+                return msg
+        return None
 
     security.declarePrivate('get_message_childs')
     def get_message_childs(self, ob):
@@ -131,6 +132,13 @@ class NyForumTopic(Folder, NyForumBase):
         """
         uid = ob.get_message_uid()
         return [msg for msg in self.objectValues(METATYPE_NYFORUMMESSAGE) if msg.get_message_inreplyto() == uid]
+
+    def get_message_parents(self, ob):
+        """
+        Returns a list with the parents chain from the topic's root
+        to the given message.
+        """
+        return []
 
     def __get_messages_thread(self, msgs, node, depth):
         """
@@ -145,6 +153,7 @@ class NyForumTopic(Folder, NyForumBase):
             tree.extend(self.__get_messages_thread(msgs, msg.get_message_uid(), depth+1))
         return tree
 
+    security.declareProtected(view, 'get_messages_thread')
     def get_messages_thread(self):
         """
         Process all the messages and returns a structure to be displayed as
@@ -152,16 +161,15 @@ class NyForumTopic(Folder, NyForumBase):
         """
         return self.__get_messages_thread(self.objectValues(METATYPE_NYFORUMMESSAGE), None, 1)
 
+    security.declareProtected(view, 'get_last_message')
     def get_last_message(self):
         """
         Returns the last posted message. If the topic has no messages then
         it returns the topic itself, otherwise the last posted message.
         """
         l = self.objectValues(METATYPE_NYFORUMMESSAGE)
-        if len(l)==0:
-            return self
-        else:
-            return self.utSortObjsListByAttr(l, 'postdate', 1)[0]
+        if len(l)==0: return self
+        else: return self.utSortObjsListByAttr(l, 'postdate', 1)[0]
 
     #site actions
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'saveProperties')

@@ -2,7 +2,7 @@
 
 <h1 i18n:translate="">Edit message</h1>
 
-<div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/get_topic_path" i18n:translate="">Back to list</a></span></div>
+<div class="floated-buttons"><span class="buttons"><a tal:attributes="href string:${here/get_topic_path}#${here/id}" i18n:translate="">Back to list</a></span></div>
 
 <p i18n:translate="">
 	Fill the properties in the form below and click <strong>Submit</strong>.
