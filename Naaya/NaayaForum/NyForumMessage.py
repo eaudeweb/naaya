@@ -39,13 +39,12 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
     notify='', REQUEST=None):
     """ """
     id = self.utCleanupId(id)
-    if not id: id = PREFIX_NYFORUMMESSAGE + self.utGenRandomId(6)
+    if not id: id = PREFIX_NYFORUMMESSAGE + self.utGenRandomId(10)
     if inreplyto == '': inreplyto = None
     if notify: notify = 1
     else: notify = 0
     author, postdate = self.processIdentity()
-    uid = self.utGenerateUID()
-    ob = NyForumMessage(id, inreplyto, title, description, notify, author, postdate, uid)
+    ob = NyForumMessage(id, inreplyto, title, description, notify, author, postdate)
     self._setObject(id, ob)
     ob = self._getOb(id)
     self.handleAttachmentUpload(ob, attachment)
@@ -86,27 +85,23 @@ class NyForumMessage(Folder, NyForumBase):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, inreplyto, title, description, notify, author,
-        postdate, uid):
+    def __init__(self, id, inreplyto, title, description, notify, author, postdate):
         """ """
         self.id = id
-        self._inreplyto = inreplyto
+        self.inreplyto = inreplyto
         self.title = title
         self.description = description
         self.notify = notify
         self.author = author
         self.postdate = postdate
-        self._uid = uid
         NyForumBase.__dict__['__init__'](self)
 
     #api
     def get_message_object(self): return self
     def get_message_path(self, p=0): return self.absolute_url(p)
-    def get_message_inreplyto(self): return self._inreplyto
     def set_message_inreplyto(self, v):
-        self._inreplyto = v
+        self.inreplyto = v
         self._p_changed = 1
-    def get_message_uid(self): return self._uid
     def get_attachments(self): return self.objectValues('File')
 
     #site actions
@@ -143,8 +138,8 @@ class NyForumMessage(Folder, NyForumBase):
     def replyMessage(self, title='', description='', attachment='', notify='',
         REQUEST=None):
         """ """
-        id = PREFIX_NYFORUMMESSAGE + self.utGenRandomId(6)
-        addNyForumMessage(self.get_topic_object(), id, self.get_message_uid(),
+        id = PREFIX_NYFORUMMESSAGE + self.utGenRandomId(10)
+        addNyForumMessage(self.get_topic_object(), id, self.id,
             title, description, attachment, notify)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
@@ -161,10 +156,10 @@ class NyForumMessage(Folder, NyForumBase):
             topic.manage_delObjects([x.id for x in child_msgs])
         else:
             #move child nodes (replies to this message)
-            if parent_msg is None: new_puid = None
-            else: new_puid = parent_msg.get_message_uid()
+            if parent_msg is None: new_pid = None
+            else: new_pid = parent_msg.id
             for msg in child_msgs:
-                msg.set_message_inreplyto(new_puid)
+                msg.set_message_inreplyto(new_pid)
         #remove message itself
         topic.manage_delObjects([self.id])
         if REQUEST:

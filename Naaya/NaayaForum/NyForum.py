@@ -113,11 +113,12 @@ class NyForum(Folder, NyForumBase, utils):
                     ob.manage_addFile(id='', file=file)
 
     security.declarePrivate('notifyOnMessage')
-    def notifyOnMessage(self, ob):
+    def notifyOnMessage(self, msg):
         """
         When a new message is created, checks all its parents
         for B{notify} flag. If on, then send email notification.
         """
+        print msg.get_message_parents(msg)
         print 'xxx'
 
     security.declareProtected(view, 'checkTopicsPermissions')

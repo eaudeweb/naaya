@@ -115,30 +115,35 @@ class NyForumTopic(Folder, NyForumBase):
     def get_attachments(self): return self.objectValues('File')
 
     security.declarePrivate('get_message_parent')
-    def get_message_parent(self, ob):
+    def get_message_parent(self, msg):
         """
         Returns the parent of the given message.
+        If the message is a reply to the topic then B{None} is returned.
         """
-        puid = ob.get_message_inreplyto()
-        for msg in self.objectValues(METATYPE_NYFORUMMESSAGE):
-            if msg.get_message_uid() == puid:
-                return msg
-        return None
+        try: return self._getOb(msg.inreplyto)
+        except: return None
 
-    security.declarePrivate('get_message_childs')
-    def get_message_childs(self, ob):
-        """
-        Returns a list with all child nodes.
-        """
-        uid = ob.get_message_uid()
-        return [msg for msg in self.objectValues(METATYPE_NYFORUMMESSAGE) if msg.get_message_inreplyto() == uid]
-
-    def get_message_parents(self, ob):
+    security.declarePrivate('get_message_parents')
+    def get_message_parents(self, msg):
         """
         Returns a list with the parents chain from the topic's root
         to the given message.
         """
-        return []
+        l, p = [], msg
+        while p is not None:
+            print p, p.id
+            p = self.get_message_parent(p)
+            if p: l.append(p)
+        l.append(self)
+        l.reverse()
+        return l
+
+    security.declarePrivate('get_message_childs')
+    def get_message_childs(self, msg):
+        """
+        Returns a list with all child nodes.
+        """
+        return [x for x in self.objectValues(METATYPE_NYFORUMMESSAGE) if x.inreplyto == msg.id]
 
     def __get_messages_thread(self, msgs, node, depth):
         """
@@ -146,11 +151,11 @@ class NyForumTopic(Folder, NyForumBase):
         a tree like structure.
         """
         tree = []
-        l = [msg for msg in msgs if msg.get_message_inreplyto() == node]
+        l = [x for x in msgs if x.inreplyto == node]
         map(msgs.remove, l)
-        for msg in l:
-            tree.append((depth, msg))
-            tree.extend(self.__get_messages_thread(msgs, msg.get_message_uid(), depth+1))
+        for x in l:
+            tree.append((depth, x))
+            tree.extend(self.__get_messages_thread(msgs, x.id, depth+1))
         return tree
 
     security.declareProtected(view, 'get_messages_thread')
