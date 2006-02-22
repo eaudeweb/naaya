@@ -166,6 +166,7 @@
 					add_permission item/checkPermissionAddForumMessage;
 					edit_permission item/checkPermissionModifyForumMessage"
 		tal:attributes="style string:margin-left:${depth}px;;" class="forum_message">
+		<a tal:attributes="name item/id"></a>
 		<div class="forum_message_top">
 			<div class="message_top_buttons" tal:condition="python:add_permission or edit_permission">
 				<a tal:condition="edit_permission" tal:attributes="href string:${item/absolute_url}/edit_html" i18n:translate="">Edit</a>
