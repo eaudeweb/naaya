@@ -114,6 +114,24 @@ class NyForumTopic(Folder, NyForumBase):
     def count_messages(self): return len(self.objectIds(METATYPE_NYFORUMMESSAGE))
     def get_attachments(self): return self.objectValues('File')
 
+    security.declarePrivate('get_message_parent')
+    def get_message_parent(self, ob):
+        """
+        Returns the parent of the given message.
+        """
+        puid = ob.get_message_inreplyto()
+        l = [msg for msg in self.objectValues(METATYPE_NYFORUMMESSAGE) if msg.get_message_uid() == puid]
+        if l: return l[0]
+        else: return None
+
+    security.declarePrivate('get_message_childs')
+    def get_message_childs(self, ob):
+        """
+        Returns a list with all child nodes.
+        """
+        uid = ob.get_message_uid()
+        return [msg for msg in self.objectValues(METATYPE_NYFORUMMESSAGE) if msg.get_message_inreplyto() == uid]
+
     def __get_messages_thread(self, msgs, node, depth):
         """
         Recursive function that process the given messages and returns
