@@ -55,7 +55,7 @@ def addNyForumTopic(self, id='', title='', category='', description='',
         elif referer == 'topic_add_html':
             REQUEST.RESPONSE.redirect(self.absolute_url())
 
-class NyForumTopic(Folder, NyForumBase):
+class NyForumTopic(NyForumBase, Folder):
     """ """
 
     meta_type = METATYPE_NYFORUMTOPIC
@@ -106,6 +106,9 @@ class NyForumTopic(Folder, NyForumBase):
         self.author = author
         self.postdate = postdate
         NyForumBase.__dict__['__init__'](self)
+        #make this object available for portal search engine
+        self.submitted = 1
+        self.approved = 1
 
     #api
     def get_topic_object(self): return self
@@ -131,7 +134,6 @@ class NyForumTopic(Folder, NyForumBase):
         """
         l, p = [], msg
         while p is not None:
-            print p, p.id
             p = self.get_message_parent(p)
             if p: l.append(p)
         l.append(self)

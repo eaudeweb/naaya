@@ -26,6 +26,8 @@ from ImageFile import ImageFile
 #Product imports
 from constants import *
 import NyForum
+import NyForumTopic
+import NyForumMessage
 
 def initialize(context):
     """ """
@@ -39,6 +41,26 @@ def initialize(context):
                 NyForum.manage_addNyForum,
                 ),
         icon = 'www/NyForum.gif'
+        )
+
+    context.registerClass(
+        NyForumTopic.NyForumTopic,
+        permission = PERMISSION_MODIFY_FORUMTOPIC,
+        constructors = (
+                NyForumTopic.manage_addNyForumTopic_html,
+                NyForumTopic.addNyForumTopic,
+                ),
+        icon = 'www/NyForumTopic.gif'
+        )
+
+    context.registerClass(
+        NyForumMessage.NyForumMessage,
+        permission = PERMISSION_ADD_FORUMMESSAGE,
+        constructors = (
+                NyForumMessage.manage_addNyForumMessage_html,
+                NyForumMessage.addNyForumMessage,
+                ),
+        icon = 'www/NyForumMessage.gif'
         )
 
 misc_ = {

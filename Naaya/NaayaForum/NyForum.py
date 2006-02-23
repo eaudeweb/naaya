@@ -46,7 +46,7 @@ def manage_addNyForum(self, id='', title='', description='', categories='', REQU
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
-class NyForum(Folder, NyForumBase, utils):
+class NyForum(NyForumBase, Folder, utils):
     """ """
 
     meta_type = METATYPE_NYFORUM
@@ -87,6 +87,9 @@ class NyForum(Folder, NyForumBase, utils):
         self.description = description
         self.categories = categories
         NyForumBase.__dict__['__init__'](self)
+        #make this object available for portal search engine
+        self.submitted = 1
+        self.approved = 1
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
