@@ -48,7 +48,10 @@ class User(SimpleUser, Persistent):
 
     def getUserName(self):
         """Return the username of a user"""
-        if find(self.REQUEST.HTTP_REFERER, 'login_html') != -1:
-            self.history = time.strftime('%d %b %Y %H:%M:%S')
+        try:
+            if find(self.REQUEST.HTTP_REFERER, 'login_html') != -1:
+                self.history = time.strftime('%d %b %Y %H:%M:%S')
+        except:
+            pass
         return self.name
 
