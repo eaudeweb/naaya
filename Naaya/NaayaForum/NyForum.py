@@ -19,6 +19,7 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+from os.path import join
 
 #Zope imports
 from OFS.Folder import Folder
@@ -41,6 +42,7 @@ def manage_addNyForum(self, id='', title='', description='', categories='', REQU
     categories = self.utConvertLinesToList(categories)
     ob = NyForum(id, title, description, categories)
     self._setObject(id, ob)
+    self._getOb(id).loadDefaultData()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -86,6 +88,18 @@ class NyForum(Folder, NyForumBase, utils):
         self.categories = categories
         NyForumBase.__dict__['__init__'](self)
 
+    security.declarePrivate('loadDefaultData')
+    def loadDefaultData(self):
+        """
+        Load data:
+            - specific email template
+        """
+        #load specific email template
+        emailtool_ob = self.getEmailTool()
+        if emailtool_ob._getOb(EMAILTEMPLATE_NOTIFICATIONONREPLY_ID, None) is None:
+            content = self.futRead(join(NAAYAFORUM_PRODUCT_PATH, 'data', '%s.txt' % EMAILTEMPLATE_NOTIFICATIONONREPLY_ID), 'r')
+            emailtool_ob.manage_addEmailTemplate(EMAILTEMPLATE_NOTIFICATIONONREPLY_ID, EMAILTEMPLATE_NOTIFICATIONONREPLY_TITLE, content)
+
     #api
     def get_forum_object(self): return self
     def get_forum_path(self, p=0): return self.absolute_url(p)
@@ -118,8 +132,22 @@ class NyForum(Folder, NyForumBase, utils):
         When a new message is created, checks all its parents
         for B{notify} flag. If on, then send email notification.
         """
-        print msg.get_message_parents(msg)
-        print 'xxx'
+        #process the list of emails
+        authenticationtool_ob = self.getAuthenticationTool()
+        d = {}
+        for x in msg.get_message_parents(msg):
+            if x.notify:
+                ob = authenticationtool_ob.getUser(x.author)
+                if ob: d[ob.email] = 0
+        #send emails
+        emailtool_ob = self.getEmailTool()
+        email_template = emailtool_ob._getOb(EMAILTEMPLATE_NOTIFICATIONONREPLY_ID)
+        l_from = self.getSite().mail_address_from
+        l_subject = email_template.title
+        l_content = email_template.body
+        l_content = l_content.replace('@@URL@@', '%s#%s' % (msg.get_topic_path(), msg.id))
+        for e in d.keys():
+            emailtool_ob.sendEmail(l_content, e, l_from, l_subject)
 
     security.declareProtected(view, 'checkTopicsPermissions')
     def checkTopicsPermissions(self):

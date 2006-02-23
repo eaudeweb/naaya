@@ -61,7 +61,6 @@
 	margin-top: 10px;
 }
 
-
 .forum_topic_bottom {
 	padding:5px;
 	border-top: 1px dashed #dddddd;
@@ -69,7 +68,6 @@
 }
 
 .forum_messages_slot {
-/*	border: 1px solid green;*/
 	margin-top: 15px;
 }
 
