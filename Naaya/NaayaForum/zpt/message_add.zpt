@@ -2,6 +2,31 @@
 
 <h1 i18n:translate="">Submit message</h1>
 
+<div class="forum_topic">
+	<div class="forum_message_top">
+		<div class="message_top_buttons2">
+			<span tal:replace="here/title_or_id" />
+		</div>
+	</div>
+	<div class="forum_topic_author">
+		<span tal:replace="python:here.utShowFullDateTime(here.postdate)" />,
+		<a tal:attributes="href string:#" tal:content="here/author" />
+	</div>
+	<p tal:content="structure here/description" class="forum_topic_content" />
+	<div tal:define="attachments here/get_attachments" tal:condition="python:len(attachments)>0"
+		class="forum_topic_bottom">
+		<img src="/misc_/NaayaForum/attachment.gif" alt="Attachments" i18n:attributes="alt" align="absmiddle" />
+		<span i18n:translate="" tal:omit-tag="">Attachments:</span>
+		<tal:block repeat="file attachments">
+			<a tal:attributes="href file/absolute_url; title file/title_or_id">
+				<span tal:replace="file/title_or_id" />
+				(<span tal:replace="python:here.utShowSize(file.size)" />)
+			</a>
+			<span tal:condition="python:not path('repeat/file/end')" tal:omit-tag="">,</span>
+		</tal:block>
+	</div>
+</div>
+
 <div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/get_topic_path" i18n:translate="">Back to list</a></span></div>
 
 <p i18n:translate="">
