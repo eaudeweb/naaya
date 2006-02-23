@@ -57,7 +57,7 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
         elif referer == 'message_add_html':
             REQUEST.RESPONSE.redirect(self.absolute_url())
 
-class NyForumMessage(Folder, NyForumBase):
+class NyForumMessage(NyForumBase, Folder):
     """ """
 
     meta_type = METATYPE_NYFORUMMESSAGE
@@ -95,6 +95,9 @@ class NyForumMessage(Folder, NyForumBase):
         self.author = author
         self.postdate = postdate
         NyForumBase.__dict__['__init__'](self)
+        #make this object available for portal search engine
+        self.submitted = 1
+        self.approved = 1
 
     #api
     def get_message_object(self): return self

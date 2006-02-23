@@ -27,13 +27,15 @@ This module contains the base class of Naaya Forum.
 #Python imports
 
 #Zope imports
+from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Globals import InitializeClass
 
 #Product imports
 from constants import *
+from Products.NaayaBase.NyAttributes import NyAttributes
 
-class NyForumBase:
+class NyForumBase(NyAttributes):
     """
     The base class of Naaya Forum. It implements basic functionality
     common to all classes.
@@ -46,6 +48,20 @@ class NyForumBase:
         pass
 
     security = ClassSecurityInfo()
+
+    def manage_afterAdd(self, item, container):
+        """
+        This method is called, whenever _setObject in ObjectManager gets called.
+        """
+        Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
+        self.catalogNyObject(self)
+
+    def manage_beforeDelete(self, item, container):
+        """
+        This method is called, when the object is deleted.
+        """
+        Folder.inheritedAttribute('manage_beforeDelete')(self, item, container)
+        self.uncatalogNyObject(self)
 
     def _objectkeywords(self, lang):
         """
