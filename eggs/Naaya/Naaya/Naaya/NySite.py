@@ -523,6 +523,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declarePublic('getImagesFolder')
     def getImagesFolder(self): return self._getOb(ID_IMAGESFOLDER)
 
+    security.declarePublic('getProfilesTool')
+    def getProfilesTool(self): return self._getOb(ID_PROFILESTOOL)
+
     security.declarePublic('getNotificationTool')
     def getNotificationTool(self): return self._getOb(ID_NOTIFICATIONTOOL)
 
@@ -549,6 +552,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def getFormsToolPath(self, p=0): return self._getOb(ID_FORMSTOOL).absolute_url(p)
     security.declarePublic('getFolderByPath')
     def getFolderByPath(self, p_folderpath): return self.unrestrictedTraverse(p_folderpath, None)
+
+    security.declarePublic('getProfilesToolPath')
+    def getProfilesToolPath(self, p=0): return self._getOb(ID_PROFILESTOOL).absolute_url(p)
+
     security.declarePublic('getNotificationToolPath')
     def getNotificationToolPath(self, p=0): return self._getOb(ID_NOTIFICATIONTOOL).absolute_url(p)
 
@@ -753,9 +760,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     def processDynamicProperties(self, meta_type, REQUEST=None, keywords={}):
         """ """
-        if REQUEST:
-            for l_prop in self.getDynamicPropertiesTool().getDynamicProperties(meta_type):
-                keywords[l_prop.id] = REQUEST.get(l_prop.id, '')
+        for l_prop in self.getDynamicPropertiesTool().getDynamicProperties(meta_type):
+            try: keywords[l_prop.id] = REQUEST.get(l_prop.id, '')
+            except: keywords[l_prop.id] = ''
         return keywords
 
     def getItemsAge(self): return self.search_age
