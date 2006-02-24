@@ -49,7 +49,7 @@ class dynamic_property(utils):
         """ """
         l_html = []
         if self.type == 'string' or self.type == 'date' or self.type == 'integer' or self.type == 'float':
-            l_html.append('<input type="text" name="%s:utf8:ustring" id="%s" value="%s" />' % (self.utHtmlEncode(self.id), self.utHtmlEncode(self.id), self.utHtmlEncode(default)))
+            l_html.append('<input type="text" name="%s:utf8:ustring" id="%s" value="%s" size="50" />' % (self.utHtmlEncode(self.id), self.utHtmlEncode(self.id), self.utHtmlEncode(default)))
         elif self.type == 'boolean':
             l_html.append('<input type="checkbox" name="%s:utf8:ustring" id="%s"' % (self.utHtmlEncode(self.id), self.utHtmlEncode(self.id)))
             if default != '' and default is not None: l_html.append(' checked')
