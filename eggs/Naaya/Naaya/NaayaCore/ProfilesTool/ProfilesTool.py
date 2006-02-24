@@ -46,13 +46,7 @@ class ProfilesTool(Folder, utils):
     icon = 'misc_/NaayaCore/ProfilesTool.gif'
 
     manage_options = (
-        Folder.manage_options[:1]
-        +
-        (
-            {'label': 'Properties', 'action': 'manage_properties_html'},
-        )
-        +
-        Folder.manage_options[3:-1]
+        Folder.manage_options
     )
 
     meta_types = ()
@@ -65,21 +59,8 @@ class ProfilesTool(Folder, utils):
         self.id = id
         self.title = title
 
-    #zmi actions
-    security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', REQUEST=None):
-        """ """
-        self.title = title
-        self._p_changed = 1
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('manage_properties_html?save=ok')
-
     def test(self):
         """ """
         manage_addProfile(self, 'mimi', 'bibi')
-
-    #zmi pages
-    security.declareProtected(view_management_screens, 'manage_properties_html')
-    manage_properties_html = PageTemplateFile('zpt/profiles_properties', globals())
 
 InitializeClass(ProfilesTool)
