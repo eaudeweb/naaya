@@ -54,8 +54,4 @@ class ProfileSheet(PropertyManager, SimpleItem, utils):
         self.id = id
         self.title = title
 
-    def test(self):
-        """ """
-        manage_addProfileSheet(self, 'mimi', 'bibi')
-
 InitializeClass(ProfileSheet)
