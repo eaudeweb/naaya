@@ -64,6 +64,16 @@ class ProfilesTool(Folder, utils):
         self.title = title
         self.profiles_meta = {}
 
+    #api
+    def getProfiles(self): return self.objectValues(METATYPE_PROFILE)
+
+    def getInstanceSheetId(self, instance_url):
+        """
+        Generate an UID based on instance url. This UID is the id of the
+        profile sheet associated with the instance.
+        """
+        return self.utGenerateUID(instance_url)
+
     def test(self):
         """ """
         manage_addProfile(self, 'mimi', 'bibi')
@@ -78,6 +88,14 @@ class ProfilesTool(Folder, utils):
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html?save=ok' % self.absolute_url())
 
+    security.declareProtected(view_management_screens, 'manageAddProfileMeta')
+    def manageDeleteInstanceMeta(self, meta_type='', location='', REQUEST=None):
+        """ """
+        if location == '': ob = self.getSite()
+        else: ob = self.utGetObject(location)
+        if ob: ob.loadProfileMeta()
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html?save=ok' % self.absolute_url())
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_controlpanel_html')

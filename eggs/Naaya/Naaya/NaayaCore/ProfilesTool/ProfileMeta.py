@@ -28,6 +28,7 @@ from Globals import InitializeClass
 #Product imports
 from Products.NaayaBase.constants import *
 from managers.profilemeta_parser import profilemeta_parser
+from ProfileSheet import manage_addProfileSheet
 
 class ProfileMeta:
     """
@@ -43,23 +44,32 @@ class ProfileMeta:
     def _loadProfileMeta(self, module_path):
         """
         """
-        print self.id, self.meta_type, self.absolute_url(1)
+        instance_url = self.absolute_url(1)
+        print self.id, self.meta_type, instance_url
         profilemeta_path = join(module_path, 'profilemeta.xml')
         profilemeta_handler, error = profilemeta_parser().parse(self.futRead(profilemeta_path, 'r'))
         if profilemeta_handler is not None:
             if profilemeta_handler.root is not None:
                 profiles_tool = self.getProfilesTool()
                 #add entry in profiles tool
-                profiles_tool.profiles_meta[self.meta_type] = {
-                    'title': profilemeta_handler.root.title,
-                    'properties': [],
-                    'instances': [self.absolute_url(1)]
-                }
-                propsa = profiles_tool.profiles_meta[self.meta_type]['properties'].append
-                for p in profilemeta_handler.root.properties:
-                    propsa({'id': p.id, 'type': p.type, 'mode': p.mode})
-                profiles_tool._p_chanaged = 1
-                print profiles_tool.profiles_meta
+                if not profiles_tool.profiles_meta.has_key(self.meta_type):
+                    profiles_tool.profiles_meta[self.meta_type] = {
+                        'title': profilemeta_handler.root.title,
+                        'properties': [],
+                        'instances': []
+                    }
+                    psa = profiles_tool.profiles_meta[self.meta_type]['properties'].append
+                    for p in profilemeta_handler.root.properties:
+                        psa({'id': p.id, 'type': p.type, 'mode': p.mode})
+                if instance_url not in profiles_tool.profiles_meta[self.meta_type]['instances']:
+                    #update profile meta instances list
+                    profiles_tool.profiles_meta[self.meta_type]['instances'].append(instance_url)
+                    profiles_tool._p_chanaged = 1
+                    #update all existing profiles
+                    sheet_id = self.getInstanceSheetId(instance_url)
+                    for profile_ob in profiles_tool.getProfiles():
+                        manage_addProfileSheet(profile_ob, '%s at %s' % (profilemeta_handler.root.title, instance_url))
+            print profiles_tool.profiles_meta
         else:
             raise Exception, EXCEPTION_PARSINGFILE % (profilemeta_path, error)
 
