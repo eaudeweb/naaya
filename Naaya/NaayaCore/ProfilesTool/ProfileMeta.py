@@ -109,4 +109,44 @@ class ProfileMeta:
             except: pass
         profiles_tool._p_changed = 1
 
+    def _processProfileProperties(self, REQUEST, kwargs):
+        """
+        Try to extract values for profile defined properties.
+        """
+        profiles_tool = self.getProfilesTool()
+        properties = {}
+        #process properties
+        for p in profiles_tool.profiles_meta[self.meta_type]['properties']:
+            v = None
+            if REQUEST: v = REQUEST.get(p['id'], None)
+            if v is None: v = kwargs.get(p['id'], None)
+            properties[p['id']] = v
+        return properties
+
+    security.declarePrivate('_profilesheet')
+    def _profilesheet(self, name, properties):
+        """
+        Updates the profile of the given user.
+        """
+        profiles_tool = self.getProfilesTool()
+        profile_ob = profiles_tool._getOb(name, None)
+        if profile_ob:
+            sheet_ob = profile_ob._getOb(self.getInstanceSheetId(), None)
+            if sheet_ob:
+                for k, v in properties.items():
+                    sheet_ob._updateProperty(k, v)
+
+    def profilesheet(self, name, REQUEST=None, **kwargs):
+        """
+        Updates the profile of the given user. Must be implemented.
+        """
+        raise EXCEPTION_NOTIMPLEMENTED
+
+    #site pages
+    def profilesheet_html(self, REQUEST=None, RESPONSE=None):
+        """
+        View for instance associated sheet. Must be implemented.
+        """
+        raise EXCEPTION_NOTIMPLEMENTED
+
 InitializeClass(ProfileMeta)

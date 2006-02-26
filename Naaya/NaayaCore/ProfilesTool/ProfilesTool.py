@@ -68,6 +68,19 @@ class ProfilesTool(Folder, utils):
     #api
     def getProfiles(self): return self.objectValues(METATYPE_PROFILE)
 
+    def getProfile(self, name=None):
+        """
+        Returns the profile for the given user. If the user is None
+        the current AUTHENTICATED_USER is assumed. If no profile is found
+        for the user then it will be created.
+        """
+        if name is None: name = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        profile_ob = self._getOb(name, None)
+        if profile_ob is None:
+            manage_addProfile(self, name, name)
+            profile_ob = self._getOb(name, None)
+        return profile_ob
+
     def getInstanceByIdentifier(self, identifier):
         """
         Returns an object by its identifier.
@@ -76,7 +89,7 @@ class ProfilesTool(Folder, utils):
 
     def test(self):
         """ """
-        manage_addProfile(self, 'mimi', 'bibi')
+        manage_addProfile(self, 'admin', 'admin')
 
     security.declarePrivate('loadProfileSheets')
     def loadProfileSheets(self, profile_ob):
