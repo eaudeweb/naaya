@@ -21,17 +21,14 @@
 #Python imports
 
 #Zope imports
+from OFS.Folder import Folder
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view
-from OFS.SimpleItem import SimpleItem
-from OFS.PropertyManager import PropertyManager
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Product imports
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
-
+from ProfileSheet import manage_addProfileSheet
 
 def manage_addProfile(self, id, title='', REQUEST=None):
     """ """
@@ -40,16 +37,18 @@ def manage_addProfile(self, id, title='', REQUEST=None):
     if REQUEST: return self.manage_main(self, REQUEST, update_menu=1)
 
 
-class Profile(PropertyManager, SimpleItem, utils):
+class Profile(Folder, utils):
     """ """
 
     meta_type = METATYPE_PROFILE
     icon = 'misc_/NaayaCore/Profile.gif'
 
     manage_options = (
-        PropertyManager.manage_options +
-        SimpleItem.manage_options
+        Folder.manage_options
     )
+
+    meta_types = ()
+    all_meta_types = meta_types
 
     security = ClassSecurityInfo()
 
@@ -57,5 +56,9 @@ class Profile(PropertyManager, SimpleItem, utils):
         """ """
         self.id = id
         self.title = title
+
+    def test(self):
+        """ """
+        manage_addProfileSheet(self, 'mimi', 'bibi')
 
 InitializeClass(Profile)
