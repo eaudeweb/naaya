@@ -87,10 +87,6 @@ class ProfilesTool(Folder, utils):
         """
         return self.utGetObject(identifier)
 
-    def test(self):
-        """ """
-        manage_addProfile(self, 'admin', 'admin')
-
     security.declarePrivate('loadProfileSheets')
     def loadProfileSheets(self, profile_ob):
         """

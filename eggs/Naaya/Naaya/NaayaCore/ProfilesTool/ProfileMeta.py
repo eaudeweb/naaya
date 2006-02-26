@@ -90,7 +90,7 @@ class ProfileMeta:
     security.declarePrivate('loadProfileMeta')
     def loadProfileMeta(self):
         """
-        Loads profile metadata and updates existing profiles.
+        Loads profile metadata and updates existing profiles. Must be implemented.
         """
         raise EXCEPTION_NOTIMPLEMENTED
 
