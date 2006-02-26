@@ -19,3 +19,43 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+
+#Zope imports
+from OFS.SimpleItem import SimpleItem
+from OFS.PropertyManager import PropertyManager
+from Globals import InitializeClass
+from AccessControl import ClassSecurityInfo
+
+#Product imports
+from Products.NaayaCore.constants import *
+from Products.NaayaCore.managers.utils import utils
+
+def manage_addProfileSheet(self, id, title='', REQUEST=None):
+    """ """
+    ob = ProfileSheet(id, title)
+    self._setObject(id, ob)
+    if REQUEST: return self.manage_main(self, REQUEST, update_menu=1)
+
+class ProfileSheet(PropertyManager, SimpleItem, utils):
+    """ """
+
+    meta_type = METATYPE_PROFILESHEET
+    icon = 'misc_/NaayaCore/ProfileSheet.gif'
+
+    manage_options = (
+        PropertyManager.manage_options +
+        SimpleItem.manage_options
+    )
+
+    security = ClassSecurityInfo()
+
+    def __init__(self, id, title):
+        """ """
+        self.id = id
+        self.title = title
+
+    def test(self):
+        """ """
+        manage_addProfileSheet(self, 'mimi', 'bibi')
+
+InitializeClass(ProfileSheet)

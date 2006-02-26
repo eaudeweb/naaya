@@ -40,18 +40,34 @@ class ProfileMeta:
         pass
 
     security.declarePrivate('_loadProfileMeta')
-    def _loadProfileMeta(self, meta_type, module_path):
+    def _loadProfileMeta(self, module_path):
         """
         """
+        print self.id, self.meta_type, self.absolute_url(1)
         profilemeta_path = join(module_path, 'profilemeta.xml')
         profilemeta_handler, error = profilemeta_parser().parse(self.futRead(profilemeta_path, 'r'))
         if profilemeta_handler is not None:
             if profilemeta_handler.root is not None:
                 profiles_tool = self.getProfilesTool()
-                print profilemeta_handler.root.title
+                #add entry in profiles tool
+                profiles_tool.profiles_meta[self.meta_type] = {
+                    'title': profilemeta_handler.root.title,
+                    'properties': [],
+                    'instances': [self.absolute_url(1)]
+                }
+                propsa = profiles_tool.profiles_meta[self.meta_type]['properties'].append
                 for p in profilemeta_handler.root.properties:
-                    print p.id, p.type, p.mode
+                    propsa({'id': p.id, 'type': p.type, 'mode': p.mode})
+                profiles_tool._p_chanaged = 1
+                print profiles_tool.profiles_meta
         else:
             raise Exception, EXCEPTION_PARSINGFILE % (profilemeta_path, error)
+
+    security.declarePrivate('loadProfileMeta')
+    def loadProfileMeta(self):
+        """
+        Loads profile metadata and updates existing profiles.
+        """
+        raise EXCEPTION_NOTIMPLEMENTED
 
 InitializeClass(ProfileMeta)
