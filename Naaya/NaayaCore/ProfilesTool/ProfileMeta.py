@@ -19,14 +19,17 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+from os.path import join
 
 #Zope imports
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
 #Product imports
+from Products.NaayaBase.constants import *
+from managers.profilemeta_parser import profilemeta_parser
 
-class ProfileBase:
+class ProfileMeta:
     """
     """
 
@@ -36,11 +39,19 @@ class ProfileBase:
         """ """
         pass
 
-    security.declarePrivate('loadProfileMeta')
-    def loadProfileMeta(self, meta_type, path):
+    security.declarePrivate('_loadProfileMeta')
+    def _loadProfileMeta(self, meta_type, module_path):
         """
         """
-        profiles_tool = self.getProfilesTool()
-        profiles_tool.manage_addProfileMeta(meta_type, 'TITLE', path, properties)
+        profilemeta_path = join(module_path, 'profilemeta.xml')
+        profilemeta_handler, error = profilemeta_parser().parse(self.futRead(profilemeta_path, 'r'))
+        if profilemeta_handler is not None:
+            if profilemeta_handler.root is not None:
+                profiles_tool = self.getProfilesTool()
+                print profilemeta_handler.root.title
+                for p in profilemeta_handler.root.properties:
+                    print p.id, p.type, p.mode
+        else:
+            raise Exception, EXCEPTION_PARSINGFILE % (profilemeta_path, error)
 
-InitializeClass(ProfileBase)
+InitializeClass(ProfileMeta)

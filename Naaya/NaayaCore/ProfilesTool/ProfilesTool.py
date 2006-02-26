@@ -47,6 +47,10 @@ class ProfilesTool(Folder, utils):
 
     manage_options = (
         Folder.manage_options
+        +
+        (
+            {'label': 'Control Panel', 'action': 'manage_controlpanel_html'},
+        )
     )
 
     meta_types = ()
@@ -58,9 +62,25 @@ class ProfilesTool(Folder, utils):
         """ """
         self.id = id
         self.title = title
+        self.profiles_meta = {}
 
     def test(self):
         """ """
         manage_addProfile(self, 'mimi', 'bibi')
+
+    #zmi actions
+    security.declareProtected(view_management_screens, 'manageAddProfileMeta')
+    def manageAddProfileMeta(self, location='', REQUEST=None):
+        """ """
+        if location == '': ob = self.getSite()
+        else: ob = self.utGetObject(location)
+        if ob: ob.loadProfileMeta()
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html?save=ok' % self.absolute_url())
+
+
+    #zmi pages
+    security.declareProtected(view_management_screens, 'manage_controlpanel_html')
+    manage_controlpanel_html = PageTemplateFile('zpt/profiles_controlpanel', globals())
 
 InitializeClass(ProfilesTool)

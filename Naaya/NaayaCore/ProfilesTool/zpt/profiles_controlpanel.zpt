@@ -6,22 +6,20 @@
 </div>
 
 <p class="page-description">
-	Profiles properties
+	Profiles meta
 </p>
 
-<form method="post" action="manageProperties" enctype="multipart/form-data">
-<fieldset>
+<form method="post" action="manageAddProfileMeta" enctype="multipart/form-data">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 <tr>
-	<td class="form-label">Title</td>
-	<td><input type="text" name="title" size="50" tal:attributes="value here/title" /></td>
+	<td class="form-label">Object's location</td>
+	<td><input type="text" name="location" id="location" size="50" value="" /></td>
 </tr>
 <tr>
 	<td></td>
 	<td><input type="submit" name="submit" value="Save changes" /></td>
 </tr>
 </table>
-</fieldset>
 </form>
 
 <span tal:replace="structure here/manage_page_footer" />
