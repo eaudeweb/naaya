@@ -33,8 +33,8 @@ def manage_addProfile(self, id, title='', REQUEST=None):
     """ """
     ob = Profile(id, title)
     self._setObject(id, ob)
+    self.loadProfileSheets(self._getOb(id))
     if REQUEST: return self.manage_main(self, REQUEST, update_menu=1)
-
 
 class Profile(Folder, utils):
     """ """

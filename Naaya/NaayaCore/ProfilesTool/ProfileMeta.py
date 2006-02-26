@@ -84,7 +84,6 @@ class ProfileMeta:
                         sheet_ob = profile_ob._getOb(sheet_id)
                         for p in profilemeta_handler.root.properties:
                             sheet_ob.manage_addProperty(p.id, p.value, p.type)
-            print profiles_tool.profiles_meta
         else:
             raise Exception, EXCEPTION_PARSINGFILE % (profilemeta_path, error)
 
