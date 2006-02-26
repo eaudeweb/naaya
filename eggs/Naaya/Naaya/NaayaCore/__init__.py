@@ -167,6 +167,7 @@ misc_ = {
     'NotificationTool.gif':ImageFile('NotificationTool/www/NotificationTool.gif', globals()),
     'ProfilesTool.gif':ImageFile('ProfilesTool/www/ProfilesTool.gif', globals()),
     'Profile.gif':ImageFile('ProfilesTool/www/Profile.gif', globals()),
+    'ProfileSheet.gif':ImageFile('ProfilesTool/www/ProfileSheet.gif', globals()),
 
     'xml.png':ImageFile('SyndicationTool/www/xml.png', globals()),
 }

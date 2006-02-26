@@ -60,6 +60,7 @@ METATYPE_STYLE = 'Naaya Style'
 METATYPE_NOTIFICATIONTOOL = 'Naaya Notification Tool'
 METATYPE_PROFILESTOOL = 'Naaya Profiles Tool'
 METATYPE_PROFILE = 'Naaya Profile'
+METATYPE_PROFILESHEET = 'Naaya Profile Sheet'
 
 ID_CATALOGTOOL = 'portal_catalog'
 TITLE_CATALOGTOOL = 'Portal catalog'
