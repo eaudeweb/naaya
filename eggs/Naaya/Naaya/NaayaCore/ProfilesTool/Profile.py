@@ -56,4 +56,7 @@ class Profile(Folder, utils):
         self.id = id
         self.title = title
 
+    #api
+    def getSheetById(self, id): return self._getOb(id, None)
+
 InitializeClass(Profile)
