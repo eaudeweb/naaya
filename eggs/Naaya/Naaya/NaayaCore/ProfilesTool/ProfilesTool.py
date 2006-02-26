@@ -67,12 +67,11 @@ class ProfilesTool(Folder, utils):
     #api
     def getProfiles(self): return self.objectValues(METATYPE_PROFILE)
 
-    def getInstanceSheetId(self, instance_url):
+    def getInstanceByIdentifier(self, identifier):
         """
-        Generate an UID based on instance url. This UID is the id of the
-        profile sheet associated with the instance.
+        Returns an object by its identifier.
         """
-        return self.utGenerateUID(instance_url)
+        return self.utGetObject(identifier)
 
     def test(self):
         """ """
@@ -83,17 +82,18 @@ class ProfilesTool(Folder, utils):
     def manageAddProfileMeta(self, location='', REQUEST=None):
         """ """
         if location == '': ob = self.getSite()
-        else: ob = self.utGetObject(location)
+        else: ob = self.getInstanceByIdentifier(location)
         if ob: ob.loadProfileMeta()
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html?save=ok' % self.absolute_url())
 
-    security.declareProtected(view_management_screens, 'manageAddProfileMeta')
-    def manageDeleteInstanceMeta(self, meta_type='', location='', REQUEST=None):
+    security.declareProtected(view_management_screens, 'manageDeleteProfileInstanceMeta')
+    def manageDeleteProfileInstanceMeta(self, meta_type='', location='', REQUEST=None):
         """ """
-        if location == '': ob = self.getSite()
-        else: ob = self.utGetObject(location)
-        if ob: ob.loadProfileMeta()
+        entry = self.profiles_meta.get(meta_type, None)
+        if entry:
+            ob = self.getInstanceByIdentifier(location)
+            if ob: ob.unloadProfileInstanceMeta(meta_type)
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html?save=ok' % self.absolute_url())
 
