@@ -6,7 +6,7 @@
 </div>
 
 <p class="page-description">
-	Profiles meta
+	Add profiles meta
 </p>
 
 <form method="post" action="manageAddProfileMeta" enctype="multipart/form-data">
@@ -21,5 +21,50 @@
 </tr>
 </table>
 </form>
+
+<p class="page-description">
+	Profiles meta definitions
+</p>
+
+<tal:block tal:repeat="entry here/profiles_meta">
+<h2 tal:content="python:here.profiles_meta[entry]['title']" />
+<p class="page-description">
+	Properties
+</p>
+<table border="1" cellspacing="2" cellpadding="2">
+	<tr>
+		<th>Id</th>
+		<th>Type</th>
+		<th>Mode</th>
+	</tr>
+	<tr tal:repeat="item python:here.profiles_meta[entry]['properties']">
+		<td tal:content="item/id" />
+		<td tal:content="item/type" />
+		<td tal:content="item/mode" />
+	</tr>
+</table>
+<p class="page-description">
+	Instances
+</p>
+<table border="1" cellspacing="2" cellpadding="2">
+	<tr>
+		<th>Location</th>
+		<th>Sheet id</th>
+		<th></th>
+	</tr>
+	<tr tal:repeat="item python:here.profiles_meta[entry]['instances']">
+		<form method="post" tal:attributes="action string:${here/absolute_url}/"
+			tal:define="ob python:here.utGetObject(item)">
+			<td><a tal:attributes="href string:${ob/absolute_url}/manage_workspace" tal:content="ob/title_or_id" /></td>
+			<td tal:content="python:here.getInstanceSheetId(ob.absolute_url(1))" />
+			<td>
+				<input type="hidden" name="meta_type" tal:attributes="value entry" />
+				<input type="hidden" name="location" tal:attributes="value python:ob.absolute_url(1)" />
+				<input type="submit" value="Delete" />
+			</td>
+		</form>
+	</tr>
+</table>
+</tal:block>
 
 <span tal:replace="structure here/manage_page_footer" />

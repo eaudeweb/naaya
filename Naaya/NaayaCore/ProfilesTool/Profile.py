@@ -28,7 +28,6 @@ from AccessControl import ClassSecurityInfo
 #Product imports
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
-from ProfileSheet import manage_addProfileSheet
 
 def manage_addProfile(self, id, title='', REQUEST=None):
     """ """
@@ -56,9 +55,5 @@ class Profile(Folder, utils):
         """ """
         self.id = id
         self.title = title
-
-    def test(self):
-        """ """
-        manage_addProfileSheet(self, 'mimi', 'bibi')
 
 InitializeClass(Profile)
