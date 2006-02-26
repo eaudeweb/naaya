@@ -40,12 +40,24 @@ class ProfileMeta:
         """ """
         pass
 
+    def getInstanceIdentifier(self):
+        """
+        Returns a value that identifies this instance.
+        """
+        return self.absolute_url(1)
+
+    def getInstanceSheetId(self):
+        """
+        Generate an UID based on instance url. This UID is the id of the
+        profile sheet associated with the instance.
+        """
+        return self.utGenerateUID(self.getInstanceIdentifier())
+
     security.declarePrivate('_loadProfileMeta')
     def _loadProfileMeta(self, module_path):
         """
         """
-        instance_url = self.absolute_url(1)
-        print self.id, self.meta_type, instance_url
+        instance_identifier = self.getInstanceIdentifier()
         profilemeta_path = join(module_path, 'profilemeta.xml')
         profilemeta_handler, error = profilemeta_parser().parse(self.futRead(profilemeta_path, 'r'))
         if profilemeta_handler is not None:
@@ -60,15 +72,18 @@ class ProfileMeta:
                     }
                     psa = profiles_tool.profiles_meta[self.meta_type]['properties'].append
                     for p in profilemeta_handler.root.properties:
-                        psa({'id': p.id, 'type': p.type, 'mode': p.mode})
-                if instance_url not in profiles_tool.profiles_meta[self.meta_type]['instances']:
+                        psa({'id': p.id, 'value': p.value, 'type': p.type})
+                if instance_identifier not in profiles_tool.profiles_meta[self.meta_type]['instances']:
                     #update profile meta instances list
-                    profiles_tool.profiles_meta[self.meta_type]['instances'].append(instance_url)
-                    profiles_tool._p_chanaged = 1
+                    profiles_tool.profiles_meta[self.meta_type]['instances'].append(instance_identifier)
+                    profiles_tool._p_changed = 1
                     #update all existing profiles
-                    sheet_id = self.getInstanceSheetId(instance_url)
+                    sheet_id = self.getInstanceSheetId()
                     for profile_ob in profiles_tool.getProfiles():
-                        manage_addProfileSheet(profile_ob, '%s at %s' % (profilemeta_handler.root.title, instance_url))
+                        manage_addProfileSheet(profile_ob, sheet_id, '%s at %s' % (profilemeta_handler.root.title, instance_identifier))
+                        sheet_ob = profile_ob._getOb(sheet_id)
+                        for p in profilemeta_handler.root.properties:
+                            sheet_ob.manage_addProperty(p.id, p.value, p.type)
             print profiles_tool.profiles_meta
         else:
             raise Exception, EXCEPTION_PARSINGFILE % (profilemeta_path, error)
@@ -79,5 +94,20 @@ class ProfileMeta:
         Loads profile metadata and updates existing profiles.
         """
         raise EXCEPTION_NOTIMPLEMENTED
+
+    security.declarePrivate('unloadProfileInstanceMeta')
+    def unloadProfileInstanceMeta(self, meta_type):
+        """
+        """
+        instance_identifier = self.getInstanceIdentifier()
+        sheet_id = self.getInstanceSheetId()
+        profiles_tool = self.getProfilesTool()
+        #remove instance entry from profile metadata
+        try: profiles_tool.profiles_meta[meta_type]['instances'].remove(instance_identifier)
+        except: pass
+        for profile_ob in profiles_tool.getProfiles():
+            try: profile_ob.manage_delObjects([sheet_id])
+            except: pass
+        profiles_tool._p_changed = 1
 
 InitializeClass(ProfileMeta)

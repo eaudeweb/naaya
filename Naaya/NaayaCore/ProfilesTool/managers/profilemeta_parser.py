@@ -32,10 +32,10 @@ class profilemeta_struct:
         self.properties = []
 
 class property_struct:
-    def __init__(self, id, type, mode):
+    def __init__(self, id, value, type):
         self.id = id
+        self.value = value
         self.type = type
-        self.mode = mode
 
 class saxstack_struct:
     def __init__(self, name='', obj=None):
@@ -57,7 +57,7 @@ class profilemeta_handler(ContentHandler):
             stackObj = saxstack_struct('profilemeta', obj)
             self.stack.append(stackObj)
         elif name == 'property':
-            obj = property_struct(attrs['id'].encode('utf-8'), attrs['type'].encode('utf-8'), attrs['mode'].encode('utf-8'))
+            obj = property_struct(attrs['id'].encode('utf-8'), attrs['value'].encode('utf-8'), attrs['type'].encode('utf-8'))
             stackObj = saxstack_struct('property', obj)
             self.stack.append(stackObj)
 
