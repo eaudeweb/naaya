@@ -31,6 +31,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
 from Profile import manage_addProfile
+from ProfileSheet import manage_addProfileSheet
 
 def manage_addProfilesTool(self, REQUEST=None):
     """ """
@@ -77,6 +78,23 @@ class ProfilesTool(Folder, utils):
         """ """
         manage_addProfile(self, 'mimi', 'bibi')
 
+    security.declarePrivate('loadProfileSheets')
+    def loadProfileSheets(self, profile_ob):
+        """
+        Given a profile object, it loads all needed sheets according
+        with profile metadata definitions.
+        """
+        for k, v in self.profiles_meta.items():
+            title = v['title']
+            properties = v['properties']
+            for x in v['instances']:
+                instance_ob = self.getInstanceByIdentifier(x)
+                sheet_id = instance_ob.getInstanceSheetId()
+                manage_addProfileSheet(profile_ob, sheet_id, '%s at %s' % (title, x))
+                sheet_ob = profile_ob._getOb(sheet_id)
+                for p in properties:
+                    sheet_ob.manage_addProperty(p['id'], p['value'], p['type'])
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageAddProfileMeta')
     def manageAddProfileMeta(self, location='', REQUEST=None):
@@ -90,8 +108,8 @@ class ProfilesTool(Folder, utils):
     security.declareProtected(view_management_screens, 'manageDeleteProfileInstanceMeta')
     def manageDeleteProfileInstanceMeta(self, meta_type='', location='', REQUEST=None):
         """ """
-        entry = self.profiles_meta.get(meta_type, None)
-        if entry:
+        v = self.profiles_meta.get(meta_type, None)
+        if v:
             ob = self.getInstanceByIdentifier(location)
             if ob: ob.unloadProfileInstanceMeta(meta_type)
         if REQUEST:
