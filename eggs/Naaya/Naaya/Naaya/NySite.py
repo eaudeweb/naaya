@@ -1098,6 +1098,23 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         else:
             return []
 
+    security.declareProtected(view, 'process_profile')
+    def process_profile(self, firstname='', lastname='', email='', name='', password='',
+        confirm='', REQUEST=None):
+        """ """
+        msg = err = ''
+        try:
+            self.getAuthenticationTool().manage_changeUser(name, password, confirm, [], [], firstname,
+                lastname, email)
+        except Exception, error:
+            err = error
+        else:
+            msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+        if REQUEST:
+            if err != '':self.setSessionErrors([err]) 
+            if msg != '': self.setSessionInfo([msg])
+            REQUEST.RESPONSE.redirect('%s/profile_html' % self.absolute_url())
+
     #paging stuff
     def process_querystring(self, p_querystring):
         #eliminates empty values and the 'start' key
@@ -2316,5 +2333,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def requestrole_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self.REQUEST.PARENTS[0]}, 'site_requestrole')
+
+    security.declareProtected(view, 'profile_html')
+    def profile_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_userprofile')
 
 InitializeClass(NySite)
