@@ -192,18 +192,6 @@ class NotificationTool(Folder):
     security.declareProtected(view_management_screens, 'manage_settings_html')
     manage_settings_html = PageTemplateFile('zpt/notification_settings', globals())
 
-    def getNotificationGroups(self):
-        """ """
-        pass
-
-    def admin_del_notif_groups(self):
-        """ """
-        pass
-
-    def admin_add_notif_group(self):
-        """ """
-        pass
-
     def set_email_credentials(self, from_email, subject_notifications='', subject_newsletter=''):
         """sets the subject of the newsletter, of the newsletter and of the sender in the lang language"""
         self.subject_notifications = subject_notifications
