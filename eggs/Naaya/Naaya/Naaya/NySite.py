@@ -163,7 +163,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         portlets_manager.__dict__['__init__'](self)
 
     security.declarePrivate('loadDefaultData')
-    def loadDefaultData(self):
+    def loadDefaultData(self, exclude_meta_types=[]):
         """ """
         self.manage_addProperty('management_page_charset', 'utf-8', 'string')
         languages = [DEFAULT_PORTAL_LANGUAGE_CODE]
@@ -181,10 +181,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         manage_addNotificationTool(self)
         manage_addProfilesTool(self)
         manage_addErrorLog(self)
-        self.loadSkeleton(join(NAAYA_PRODUCT_PATH, 'skel'))
+        self.loadSkeleton(join(NAAYA_PRODUCT_PATH, 'skel'), exclude_meta_types)
 
     security.declarePrivate('loadSkeleton')
-    def loadSkeleton(self, skel_path):
+    def loadSkeleton(self, skel_path, exclude_meta_types=[]):
         """ """
         #load site skeleton - configuration
         skel_handler, error = skel_parser().parse(self.futRead(join(skel_path, 'skel.xml'), 'r'))
@@ -326,7 +326,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     content = self.futRead(join(skel_path, 'emails', '%s.txt' % emailtemplate.id), 'r')
                     emailtool_ob.manage_addEmailTemplate(emailtemplate.id, emailtemplate.title, content)
             #set subobjects for folders
-            self.getPropertiesTool().manageSubobjects(subobjects=None, ny_subobjects=self.get_meta_types(1))
+            self.getPropertiesTool().manageSubobjects(subobjects=None, ny_subobjects=[x for x in self.get_meta_types(1) if x not in exclude_meta_types])
             #load notification related stuff
             if skel_handler.root.notification is not None:
                 for newsmetatype in skel_handler.root.notification.newsmetatypes:
