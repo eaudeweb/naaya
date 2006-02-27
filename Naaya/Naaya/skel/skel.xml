@@ -33,7 +33,7 @@
 		<form id="site_admin_metadata" title="Portal administration - medata"/>
 		<form id="site_admin_logos" title="Portal administration - logos"/>
 		<form id="site_admin_properties" title="Portal administration - properties"/>
-	        <form id="site_admin_email" title="Portal administration - email settings"/>
+		<form id="site_admin_email" title="Portal administration - email settings"/>
 		<form id="site_admin_layout" title="Portal administration - layout"/>
 		<form id="site_admin_documentation" title="Portal administration - documentation"/>
 		<form id="site_admin_users" title="Portal administration - users"/>
@@ -67,9 +67,11 @@
 		<form id="site_admin_linksportlets" title="Portal administration - list of links portlets section"/>
 		<form id="site_admin_htmlportlets" title="Portal administration - html portlets section"/>
 		<form id="site_admin_delmessages" title="Portal administration - delete message translations"/>
-        <form id="site_admin_notifications" title="Portal administration - notifications settings"/>
-        <form id="site_admin_notif_sitemap" title="Portal administration - notifications sitemap"/>
+		<form id="site_admin_notifications" title="Portal administration - notifications settings"/>
+		<form id="site_admin_notif_sitemap" title="Portal administration - notifications sitemap"/>
 		<form id="sitemap_add" title="Sitemap"/>
+		<form id="site_userprofile_macro" title="Macro for user profile's sheets"/>
+		<form id="site_userprofile" title="Default user profile sheet"/>
 	</forms>
 	<layout default_skin_id="skin" default_scheme_id="scheme">
 		<skin id="skin" title="Skin">

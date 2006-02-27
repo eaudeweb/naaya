@@ -1,0 +1,34 @@
+<tal:block metal:define-macro="page">
+
+<span tal:replace="structure here/standard_html_header" />
+
+<tal:block tal:define="username python:request.AUTHENTICATED_USER.getUserName()">
+
+<tal:block tal:condition="python:username!='Anonymous User'">
+<div class="middle_port">
+	<h1 metal:define-slot="title" i18n:translate="">Profile sheet title</h1>
+	<div id="tabbedmenu">
+	<ul tal:define="profiles_tool python:here.getProfilesTool();
+					profile python:profiles_tool.getProfile(username);
+					sheets profile/getSheets">
+		<li><a tal:attributes="href string:${here/getSitePath}/profile_html" i18n:translate="">User profile</a></li>
+		<li tal:repeat="sheet sheets">
+		<tal:block tal:define="ob python:profiles_tool.getInstanceByIdentifier(sheet.instance_identifier)">
+			<a tal:attributes="href string:${ob/absolute_url}/profilesheet_html" tal:content="sheet/title_or_id" />
+		</tal:block>
+		</li>
+	</ul>
+	</div>
+	<tal:block metal:define-slot="section">Profile sheet content</tal:block>
+</div>
+</tal:block>
+
+<tal:block tal:condition="python:username=='Anonymous User'">
+	NU AI VOIE AICI!!
+</tal:block>
+
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />
+
+</tal:block>
