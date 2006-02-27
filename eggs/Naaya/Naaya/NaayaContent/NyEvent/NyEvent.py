@@ -123,12 +123,13 @@ def addNyEvent(self, id='', title='', description='', coverage='',
         ob = NyEvent(id, title, description, coverage, keywords, sortorder,
             location, location_address, location_url, start_date, end_date, host, agenda_url,
             event_url, details, topitem, event_type, contact_person, contact_email, contact_phone, contact_fax,
-            contributor, approved, approved_by, releasedate, lang)
+            contributor, releasedate, lang)
         self.gl_add_languages(ob)
         ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._setObject(id, ob)
         #extra settings
         ob = self._getOb(id)
+        ob.approveThis(approved, approved_by)
         ob.submitThis()
         if discussion: ob.open_for_comments()
         self.recatalogNyObject(ob)
@@ -218,7 +219,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
     def __init__(self, id, title, description, coverage, keywords, sortorder,
         location, location_address, location_url, start_date, end_date, host, agenda_url,
         event_url, details, topitem, event_type, contact_person, contact_email, contact_phone, contact_fax,
-        contributor, approved, approved_by, releasedate, lang):
+        contributor, releasedate, lang):
         """ """
         self.id = id
         event_item.__dict__['__init__'](self, title, description, coverage,
@@ -229,8 +230,6 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
-        self.approved = approved
-        self.approved_by = approved_by
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
@@ -309,9 +308,9 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
             details, topitem, event_type, contact_person, contact_email, contact_phone, contact_fax, releasedate, lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
-            self.approved = approved
-            if approved == 0: self.approved_by = None
-            else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            if approved == 0: approved_by = None
+            else: approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            self.approveThis(approved, approved_by)
         self._p_changed = 1
         if discussion: self.open_for_comments()
         else: self.close_for_comments()
