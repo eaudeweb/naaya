@@ -12,7 +12,7 @@
 <form method="post" action="manageSettings">
 <table border="1" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
-		<td class="form-label" valign="top">News meta types</td>
+		<td class="form-label" valign="top">Title</td>
 		<td>
 			<textarea name="newsmetatypes" rows="6" cols="30"
 				tal:content="python:here.utConvertListToLines(here.newsmetatypes)"></textarea>
