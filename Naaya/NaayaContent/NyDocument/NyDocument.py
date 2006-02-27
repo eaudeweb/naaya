@@ -83,15 +83,11 @@ def addNyDocument(self, id='', title='', description='', coverage='', keywords='
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
-    if self.glCheckPermissionPublishObjects():
-        approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
-    else:
-        approved, approved_by = 0, None
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
     #create object
     ob = NyDocument(id, title, description, coverage, keywords, sortorder, body,
-        contributor, approved, approved_by, releasedate, lang)
+        contributor, releasedate, lang)
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
     self._setObject(id, ob)
@@ -174,7 +170,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, description, coverage, keywords, sortorder, body,
-        contributor, approved, approved_by, releasedate, lang):
+        contributor, releasedate, lang):
         """ """
         self.id = id
         document_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder, body, releasedate, lang)
@@ -182,8 +178,6 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         NyCheckControl.__dict__['__init__'](self)
         NyContainer.__dict__['__init__'](self)
         self.contributor = contributor
-        self.approved = approved
-        self.approved_by = approved_by
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
@@ -225,9 +219,9 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         self.save_properties(title, description, coverage, keywords, sortorder, body, releasedate, lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
-            self.approved = approved
-            if approved == 0: self.approved_by = None
-            else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            if approved == 0: approved_by = None
+            else: approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            self.approveThis(approved, approved_by)
         self._p_changed = 1
         if discussion: self.open_for_comments()
         else: self.close_for_comments()
@@ -253,9 +247,14 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         if not len(r):
             if not lang: lang = self.gl_get_selected_language()
             releasedate = self.process_releasedate(releasedate, self.releasedate)
+            if self.glCheckPermissionPublishObjects():
+                approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
+            else:
+                approved, approved_by = 0, None
             self.save_properties(title, description, coverage, keywords, sortorder, body, releasedate, lang)
             self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             self._p_changed = 1
+            self.approveThis(approved, approved_by)
             self.submitThis()
             if discussion: self.open_for_comments()
             self.recatalogNyObject(self)

@@ -111,7 +111,7 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
         #create object
         ob = NyNews(id, title, description, coverage, keywords, sortorder,
             details, expirationdate, topitem, None, None, resourceurl, source,
-            contributor, approved, approved_by, releasedate, lang)
+            contributor, releasedate, lang)
         self.gl_add_languages(ob)
         ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         ob.setSmallPicture(smallpicture)
@@ -119,6 +119,7 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
         self._setObject(id, ob)
         #extra settings
         ob = self._getOb(id)
+        ob.approveThis(approved, approved_by)
         ob.submitThis()
         if discussion: ob.open_for_comments()
         self.recatalogNyObject(ob)
@@ -198,7 +199,7 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
 
     def __init__(self, id, title, description, coverage, keywords, sortorder,
         details, expirationdate, topitem, smallpicture, bigpicture, resourceurl,
-        source, contributor, approved, approved_by, releasedate, lang):
+        source, contributor, releasedate, lang):
         """ """
         self.id = id
         news_item.__dict__['__init__'](self, title, description, coverage,
@@ -207,8 +208,6 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
-        self.approved = approved
-        self.approved_by = approved_by
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
@@ -300,9 +299,9 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
             details, expirationdate, topitem, self.smallpicture, self.bigpicture, resourceurl, source, releasedate, lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
-            self.approved = approved
-            if approved == 0: self.approved_by = None
-            else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            if approved == 0: approved_by = None
+            else: approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            self.approveThis(approved, approved_by)
         if del_smallpicture != '': self.delSmallPicture()
         else: self.setSmallPicture(smallpicture)
         if del_bigpicture != '': self.delBigPicture()

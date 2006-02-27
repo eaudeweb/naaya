@@ -97,12 +97,13 @@ def addNyPointer(self, id='', title='', description='', coverage='', keywords=''
         if lang is None: lang = self.gl_get_selected_language()
         #create object
         ob = NyPointer(id, title, description, coverage, keywords, sortorder, pointer,
-            contributor, approved, approved_by, releasedate, lang)
+            contributor, releasedate, lang)
         self.gl_add_languages(ob)
         ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._setObject(id, ob)
         #extra settings
         ob = self._getOb(id)
+        ob.approveThis(approved, approved_by)
         ob.submitThis()
         if discussion: ob.open_for_comments()
         self.recatalogNyObject(ob)
@@ -180,7 +181,7 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, description, coverage, keywords, sortorder, pointer,
-        contributor, approved, approved_by, releasedate, lang):
+        contributor, releasedate, lang):
         """ """
         self.id = id
         pointer_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder, pointer, releasedate, lang)
@@ -188,8 +189,6 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
-        self.approved = approved
-        self.approved_by = approved_by
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
@@ -217,9 +216,9 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
         self.save_properties(title, description, coverage, keywords, sortorder, pointer, releasedate, lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
-            self.approved = approved
-            if approved == 0: self.approved_by = None
-            else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            if approved == 0: approved_by = None
+            else: approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            self.approveThis(approved, approved_by)
         self._p_changed = 1
         if discussion: self.open_for_comments()
         else: self.close_for_comments()

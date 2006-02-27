@@ -105,13 +105,14 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
         if lang is None: lang = self.gl_get_selected_language()
         #create object
         ob = NyFile(id, title, description, coverage, keywords, sortorder, '', precondition, content_type,
-            downloadfilename, contributor, approved, approved_by, releasedate, lang)
+            downloadfilename, contributor, releasedate, lang)
         self.gl_add_languages(ob)
         ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._setObject(id, ob)
         #extra settings
         ob = self._getOb(id)
         ob.submitThis()
+        ob.approveThis(approved, approved_by)
         ob.handleUpload(source, file, url)
         ob.createVersion()
         if discussion: ob.open_for_comments()
@@ -196,7 +197,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, description, coverage, keywords, sortorder, file, precondition,
-        content_type, downloadfilename, contributor, approved, approved_by, releasedate, lang):
+        content_type, downloadfilename, contributor, releasedate, lang):
         """ """
         self.id = id
         file_item.__dict__['__init__'](self, id, title, description, coverage, keywords, sortorder, file,
@@ -206,8 +207,6 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         NyVersioning.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
-        self.approved = approved
-        self.approved_by = approved_by
 
     #override handlers
     def manage_afterAdd(self, item, container):
@@ -305,9 +304,9 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self.precondition = precondition
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
-            self.approved = approved
-            if approved == 0: self.approved_by = None
-            else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            if approved == 0: approved_by = None
+            else: approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            self.approveThis(approved, approved_by)
         self._p_changed = 1
         if discussion: self.open_for_comments()
         else: self.close_for_comments()
