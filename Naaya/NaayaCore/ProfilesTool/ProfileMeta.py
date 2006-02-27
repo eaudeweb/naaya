@@ -80,7 +80,7 @@ class ProfileMeta:
                     #update all existing profiles
                     sheet_id = self.getInstanceSheetId()
                     for profile_ob in profiles_tool.getProfiles():
-                        manage_addProfileSheet(profile_ob, sheet_id, '%s at %s' % (profilemeta_handler.root.title, instance_identifier))
+                        manage_addProfileSheet(profile_ob, sheet_id, '%s at %s' % (profilemeta_handler.root.title, instance_identifier), instance_identifier)
                         sheet_ob = profile_ob._getOb(sheet_id)
                         for p in profilemeta_handler.root.properties:
                             sheet_ob.manage_addProperty(p.id, p.value, p.type)
@@ -128,13 +128,11 @@ class ProfileMeta:
         """
         Updates the profile of the given user.
         """
-        profiles_tool = self.getProfilesTool()
-        profile_ob = profiles_tool._getOb(name, None)
-        if profile_ob:
-            sheet_ob = profile_ob._getOb(self.getInstanceSheetId(), None)
-            if sheet_ob:
-                for k, v in properties.items():
-                    sheet_ob._updateProperty(k, v)
+        profile_ob = self.getProfilesTool().getProfile(name)
+        sheet_ob = profile_ob._getOb(self.getInstanceSheetId(), None)
+        if sheet_ob:
+            for k, v in properties.items():
+                sheet_ob._updateProperty(k, v)
 
     def profilesheet(self, name, REQUEST=None, **kwargs):
         """

@@ -99,7 +99,7 @@ class ProfilesTool(Folder, utils):
             for x in v['instances']:
                 instance_ob = self.getInstanceByIdentifier(x)
                 sheet_id = instance_ob.getInstanceSheetId()
-                manage_addProfileSheet(profile_ob, sheet_id, '%s at %s' % (title, x))
+                manage_addProfileSheet(profile_ob, sheet_id, '%s at %s' % (title, x), x)
                 sheet_ob = profile_ob._getOb(sheet_id)
                 for p in properties:
                     sheet_ob.manage_addProperty(p['id'], p['value'], p['type'])

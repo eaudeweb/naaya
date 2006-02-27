@@ -30,9 +30,9 @@ from AccessControl import ClassSecurityInfo
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
 
-def manage_addProfileSheet(self, id, title='', REQUEST=None):
+def manage_addProfileSheet(self, id, title='', instance_identifier='', REQUEST=None):
     """ """
-    ob = ProfileSheet(id, title)
+    ob = ProfileSheet(id, title, instance_identifier)
     self._setObject(id, ob)
     if REQUEST: return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -47,11 +47,17 @@ class ProfileSheet(PropertyManager, SimpleItem, utils):
         SimpleItem.manage_options
     )
 
+    _properties=(
+        {'id':'title', 'type': 'string', 'mode': 'w'},
+        {'id':'instance_identifier', 'type': 'string', 'mode': 'w'},
+    )
+
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title):
+    def __init__(self, id, title, instance_identifier):
         """ """
         self.id = id
         self.title = title
+        self.instance_identifier = instance_identifier
 
 InitializeClass(ProfileSheet)

@@ -265,6 +265,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
             f(data[n])
         return users
 
+    security.declareProtected(view, 'getUser')
     def getUser(self, name):
         """Return the named user object or None"""
         return self.data.get(name, None)
