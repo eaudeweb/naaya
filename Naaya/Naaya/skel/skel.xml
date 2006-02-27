@@ -69,7 +69,7 @@
 		<form id="site_admin_delmessages" title="Portal administration - delete message translations"/>
 		<form id="site_admin_notifications" title="Portal administration - notifications settings"/>
 		<form id="site_admin_notif_sitemap" title="Portal administration - notifications sitemap"/>
-		<form id="sitemap_add" title="Sitemap"/>
+		<form id="sitemap_add" title="Sitemap for picklists"/>
 		<form id="site_userprofile_macro" title="Macro for user profile's sheets"/>
 		<form id="site_userprofile" title="Default user profile sheet"/>
 	</forms>
