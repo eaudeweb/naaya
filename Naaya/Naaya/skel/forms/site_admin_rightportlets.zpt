@@ -235,11 +235,14 @@ function dosubmit()
 		<th width="40%" i18n:translate="">Portlets</th>
 	</tr>
 	<tr tal:repeat="record python:records.keys()">
-		<td></td>
-		<td valign="top">
-			<a tal:attributes="href string:admin_rightportlets_html?mode=edit&location=${record}" tal:content="python:here.getFolderByPath(record).title_or_id()">location</a>
+		<td style="border-bottom: 1px solid #a0a0a0;"> </td>
+		<td style="border-bottom: 1px solid #a0a0a0;" valign="top" tal:define="fol python:here.getFolderByPath(record)">
+			<a tal:condition="python:fol" tal:attributes="href string:admin_rightportlets_html?mode=edit&location=${record}" 
+			tal:content="python:fol.title_or_id()">location</a>
+			<span tal:condition="python:not fol" style="color: red;" i18n:translate="">Folder deleted:</span>
+			<span tal:condition="python:not fol" style="color: red; font-weight: bold;" tal:content="record" />
 		</td>
-		<td>
+		<td style="border-bottom: 1px solid #a0a0a0;">
 			<tal:block tal:repeat="item python:map(here.getPortletsTool().getPortletById, records[record])">
 				<tal:block tal:condition="python:item is not None">
 					<input type="checkbox" name="portlets" tal:attributes="value python:'%s||%s' % (record, item.id)" />
