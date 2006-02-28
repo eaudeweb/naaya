@@ -1078,8 +1078,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 path = ''
             else:
                 path = where
-            if type(query) == type(''):
-                query = self.utStrEscapeForSearch(query)
+            #if type(query) == type(''):
+            #    query = self.utStrEscapeForSearch(query)
+            #don't elimintate any characters anymore!
             try:
                 results = self.searchCatalog(query, path, lang)
             except:
