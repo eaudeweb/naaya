@@ -11,12 +11,13 @@
 	<ul tal:define="profiles_tool python:here.getProfilesTool();
 					profile python:profiles_tool.getProfile(username);
 					sheets profile/getSheets">
-		<li><a tal:attributes="href string:${here/getSitePath}/profile_html" i18n:translate="">User profile</a></li>
-		<li tal:repeat="sheet sheets">
-		<tal:block tal:define="ob python:profiles_tool.getInstanceByIdentifier(sheet.instance_identifier)">
+		<li tal:attributes="id python:test(tab_ob is None, 'currenttab', 'notcurrenttab')"><a tal:attributes="href string:${here/getSitePath}/profile_html" i18n:translate="">User profile</a></li>
+		<tal:block tal:repeat="sheet sheets">
+		<li tal:define="ob python:profiles_tool.getInstanceByIdentifier(sheet.instance_identifier)"
+			tal:attributes="id python:test(ob==tab_ob, 'currenttab', 'notcurrenttab')">
 			<a tal:attributes="href string:${ob/absolute_url}/profilesheet_html" tal:content="sheet/title_or_id" />
-		</tal:block>
 		</li>
+		</tal:block>
 	</ul>
 	</div>
 	<tal:block metal:define-slot="section">Profile sheet content</tal:block>
