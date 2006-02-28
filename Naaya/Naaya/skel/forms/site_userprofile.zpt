@@ -4,6 +4,8 @@
 
 <tal:block metal:fill-slot="section"
 	tal:define="user python:here.getAuthenticationTool().getUser(username)">
+
+<tal:block tal:condition="user">
 <form method="post" tal:attributes="action string:${here/absolute_url}/process_profile">
 <div class="field">
 	<label for="firstname" i18n:translate="">First name</label>
@@ -30,6 +32,12 @@
 </div>
 <input type="hidden" name="name" tal:attributes="value username" />
 </form>
+</tal:block>
+
+<tal:block tal:condition="python:not user">
+	NU E USER LOCAL , nu poti edita profilul de aici.
+</tal:block>
+
 </tal:block>
 
 </tal:block>
