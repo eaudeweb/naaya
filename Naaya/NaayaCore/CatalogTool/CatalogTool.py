@@ -114,7 +114,7 @@ class CatalogTool(ZCatalog, utils):
         try: self.addIndex('has_comments', 'FieldIndex')
         except: pass
         for lang in languages: self.add_indexes_for_lang(lang)
-        try: self.addIndex('releasedate', 'FieldIndex')
+        try: self.addIndex('releasedate', 'DateIndex')
         except: pass
         #create columns
         try: self.addColumn('id')
