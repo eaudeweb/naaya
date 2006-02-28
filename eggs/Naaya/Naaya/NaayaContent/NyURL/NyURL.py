@@ -205,7 +205,7 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='',
         keywords='', sortorder='', approved='', locator='', releasedate='',
-        discussion='', REQUEST=None, **kwargs):
+        discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -214,7 +214,7 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
         if approved: approved = 1
         else: approved = 0
         releasedate = self.process_releasedate(releasedate, self.releasedate)
-        lang = self.gl_get_selected_language()
+        if not lang: lang = self.gl_get_selected_language()
         self.save_properties(title, description, coverage, keywords, sortorder, locator, releasedate, lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:

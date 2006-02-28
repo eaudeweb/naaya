@@ -282,7 +282,7 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
     def manageProperties(self, title='', description='', coverage='', keywords='',
         sortorder='', approved='', details='', expirationdate='', topitem='',
         smallpicture='', del_smallpicture='', bigpicture='', del_bigpicture='',
-        resourceurl='', source='', releasedate='', discussion='', REQUEST=None, **kwargs):
+        resourceurl='', source='', releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -293,7 +293,7 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         expirationdate = self.utConvertStringToDateTimeObj(expirationdate)
         if approved: approved = 1
         else: approved = 0
-        lang = self.gl_get_selected_language()
+        if not lang: lang = self.gl_get_selected_language()
         releasedate = self.process_releasedate(releasedate, self.releasedate)
         self.save_properties(title, description, coverage, keywords, sortorder,
             details, expirationdate, topitem, self.smallpicture, self.bigpicture, resourceurl, source, releasedate, lang)

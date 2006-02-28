@@ -205,7 +205,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='', keywords='',
-        sortorder='', approved='', body='', releasedate='', discussion='',
+        sortorder='', approved='', body='', releasedate='', discussion='', lang='',
         REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
@@ -215,7 +215,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         if approved: approved = 1
         else: approved = 0
         releasedate = self.process_releasedate(releasedate, self.releasedate)
-        lang = self.gl_get_selected_language()
+        if not lang: lang = self.gl_get_selected_language()
         self.save_properties(title, description, coverage, keywords, sortorder, body, releasedate, lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:

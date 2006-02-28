@@ -289,7 +289,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
         location_url='', start_date='', end_date='', host='', agenda_url='',
         topitem='', event_url='', details='', event_type='', contact_person='',
         contact_email='', contact_phone='', contact_fax='', releasedate='',
-        discussion='', REQUEST=None, **kwargs):
+        discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -302,7 +302,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
         if topitem: topitem = 1
         else: topitem = 0
         releasedate = self.process_releasedate(releasedate, self.releasedate)
-        lang = self.gl_get_selected_language()
+        if not lang: lang = self.gl_get_selected_language()
         self.save_properties(title, description, coverage, keywords, sortorder, location,
             location_address, location_url, start_date, end_date, host, agenda_url, event_url,
             details, topitem, event_type, contact_person, contact_email, contact_phone, contact_fax, releasedate, lang)
