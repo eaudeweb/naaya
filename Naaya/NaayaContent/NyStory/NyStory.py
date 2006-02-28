@@ -221,7 +221,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='',
         keywords='', sortorder='', approved='', body='', topitem='', resourceurl='',
-        source='', releasedate='', discussion='', REQUEST=None, **kwargs):
+        source='', releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -232,7 +232,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         if topitem: topitem = 1
         else: topitem = 0
         releasedate = self.process_releasedate(releasedate, self.releasedate)
-        lang = self.gl_get_selected_language()
+        if not lang: lang = self.gl_get_selected_language()
         self.save_properties(title, description, coverage, keywords, sortorder, body, topitem,
             resourceurl, source, releasedate, lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)

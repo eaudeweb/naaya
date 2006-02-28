@@ -287,7 +287,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='',
         keywords='', sortorder='', approved='', precondition='', content_type='',
-        downloadfilename='', releasedate='', discussion='', REQUEST=None, **kwargs):
+        downloadfilename='', releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -298,7 +298,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         if approved: approved = 1
         else: approved = 0
         releasedate = self.process_releasedate(releasedate, self.releasedate)
-        lang = self.gl_get_selected_language()
+        if not lang: lang = self.gl_get_selected_language()
         self.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
         self.content_type = content_type
         self.precondition = precondition
