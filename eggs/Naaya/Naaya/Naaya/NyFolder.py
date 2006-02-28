@@ -76,13 +76,13 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     if lang is None: lang = self.gl_get_selected_language()
     #create object
     ob = NyFolder(id, title, description, coverage, keywords, sortorder, publicinterface,
-            maintainer_email, contributor, approved, approved_by, folder_meta_types,
-            releasedate, lang)
+            maintainer_email, contributor, folder_meta_types, releasedate, lang)
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_FOLDER, REQUEST, kwargs), lang)
     self._setObject(id, ob)
     #extra settings
     ob = self._getOb(id)
+    ob.approveThis(approved, approved_by)
     ob.submitThis()
     ob.createPublicInterface()
     if discussion: ob.open_for_comments()
@@ -195,8 +195,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             return self.meta_types
 
     def __init__(self, id, title, description, coverage, keywords, sortorder,
-        publicinterface, maintainer_email, contributor, approved, approved_by,
-        folder_meta_types, releasedate, lang):
+        publicinterface, maintainer_email, contributor, folder_meta_types,
+        releasedate, lang):
         """ """
         self.id = id
         NyContainer.__dict__['__init__'](self)
@@ -209,8 +209,6 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         self.maintainer_email = maintainer_email
         self.sortorder = sortorder
         self.contributor = contributor
-        self.approved = approved
-        self.approved_by = approved_by
         self.releasedate = releasedate
         self.folder_meta_types = folder_meta_types
 
@@ -490,9 +488,9 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         self.releasedate = releasedate
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_FOLDER, REQUEST, kwargs), lang)
         if approved != self.approved:
-            self.approved = approved
-            if approved == 0: self.approved_by = None
-            else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            if approved == 0: approved_by = None
+            else: approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            self.approveThis(approved, approved_by)
         self._p_changed = 1
         if discussion: self.open_for_comments()
         else: self.close_for_comments()
@@ -637,9 +635,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         for id in self.utConvertToList(appids):
             try:
                 ob = self._getOb(id)
-                ob.approveThis()
-                ob.approved = 0
-                ob.approved_by = None
+                ob.approveThis(0, None)
                 self.recatalogNyObject(ob)
             except:
                 pass
