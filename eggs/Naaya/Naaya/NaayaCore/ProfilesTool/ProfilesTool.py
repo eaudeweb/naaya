@@ -120,7 +120,7 @@ class ProfilesTool(Folder, utils):
         v = self.profiles_meta.get(meta_type, None)
         if v:
             ob = self.getInstanceByIdentifier(location)
-            if ob: ob.unloadProfileInstanceMeta(meta_type)
+            if ob: ob.unloadProfileInstanceMeta()
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html?save=ok' % self.absolute_url())
 

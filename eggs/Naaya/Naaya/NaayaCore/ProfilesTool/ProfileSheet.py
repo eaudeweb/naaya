@@ -18,6 +18,10 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains the class that implements the profile sheet.
+"""
+
 #Python imports
 
 #Zope imports
@@ -37,7 +41,9 @@ def manage_addProfileSheet(self, id, title='', instance_identifier='', REQUEST=N
     if REQUEST: return self.manage_main(self, REQUEST, update_menu=1)
 
 class ProfileSheet(PropertyManager, SimpleItem, utils):
-    """ """
+    """
+    Class that implements the profile sheet.
+    """
 
     meta_type = METATYPE_PROFILESHEET
     icon = 'misc_/NaayaCore/ProfileSheet.gif'
@@ -55,7 +61,17 @@ class ProfileSheet(PropertyManager, SimpleItem, utils):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, instance_identifier):
-        """ """
+        """
+        Initialize variables:
+
+        B{id} - id of the sheet
+
+        B{title} - title of the sheet
+
+        B{instanced_identifier} - stores a reference to the object
+        associated with this sheet; based on this value the object
+        can be accessed.
+        """
         self.id = id
         self.title = title
         self.instance_identifier = instance_identifier
