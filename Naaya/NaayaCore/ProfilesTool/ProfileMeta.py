@@ -95,14 +95,15 @@ class ProfileMeta:
         raise EXCEPTION_NOTIMPLEMENTED
 
     security.declarePrivate('unloadProfileInstanceMeta')
-    def unloadProfileInstanceMeta(self, meta_type):
+    def unloadProfileInstanceMeta(self):
         """
+        Remove profile entry for this instance.
         """
         instance_identifier = self.getInstanceIdentifier()
         sheet_id = self.getInstanceSheetId()
         profiles_tool = self.getProfilesTool()
         #remove instance entry from profile metadata
-        try: profiles_tool.profiles_meta[meta_type]['instances'].remove(instance_identifier)
+        try: profiles_tool.profiles_meta[self.meta_type]['instances'].remove(instance_identifier)
         except: pass
         for profile_ob in profiles_tool.getProfiles():
             try: profile_ob.manage_delObjects([sheet_id])

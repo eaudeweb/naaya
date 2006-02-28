@@ -18,6 +18,10 @@
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
 
+"""
+This module contains the class that implements the user profile.
+"""
+
 #Python imports
 
 #Zope imports
@@ -37,7 +41,9 @@ def manage_addProfile(self, id, title='', REQUEST=None):
     if REQUEST: return self.manage_main(self, REQUEST, update_menu=1)
 
 class Profile(Folder, utils):
-    """ """
+    """
+    Class that implements the user profile.
+    """
 
     meta_type = METATYPE_PROFILE
     icon = 'misc_/NaayaCore/Profile.gif'
@@ -52,13 +58,32 @@ class Profile(Folder, utils):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title):
-        """ """
+        """
+        Initialize variables:
+
+        B{id} - id of the sheet
+
+        B{title} - title of the sheet
+        """
         self.id = id
         self.title = title
 
     #api
-    def getSheets(self): return self.objectValues(METATYPE_PROFILESHEET)
-    def getSheetById(self, id): return self._getOb(id, None)
+    def getSheets(self):
+        """
+        Returns a list with all profile sheets.
+        """
+        return self.objectValues(METATYPE_PROFILESHEET)
 
+    def getSheetById(self, id):
+        """
+        Returns a sheet object with the given id.
+        @param lang: the index language
+        @type lang: string
+        @return:
+            - the object is exists
+            - None otherwise
+        """
+        return self._getOb(id, None)
 
 InitializeClass(Profile)
