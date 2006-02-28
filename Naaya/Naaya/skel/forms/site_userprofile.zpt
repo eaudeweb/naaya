@@ -1,3 +1,4 @@
+<tal:block tal:define="tab_ob python:None">
 <tal:block metal:use-macro="python:here.getFormsTool().site_userprofile_macro.macros['page']">
 
 <h1 metal:fill-slot="title" i18n:translate="">Preferences</h1>
@@ -40,4 +41,5 @@
 
 </tal:block>
 
+</tal:block>
 </tal:block>
