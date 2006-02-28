@@ -29,6 +29,7 @@ import md5
 import base64
 import urllib
 import time
+import codecs
 
 #Zope imports
 from Products.PythonScripts.standard import url_quote, html_quote
@@ -114,6 +115,10 @@ class file_utils:
     def futRead(self, p_path, p_flag='r'):
         """ """
         return open(p_path, p_flag).read()
+
+    def futReadEnc(self, p_path, p_flag='r', p_encode='utf-8'):
+        """ """
+        return codecs.open(p_path, p_flag, p_encode).read()
 
 class batch_utils:
     """ """
