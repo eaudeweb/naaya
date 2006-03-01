@@ -27,8 +27,7 @@ from cStringIO import StringIO
 #Product imports
 
 class profilemeta_struct:
-    def __init__(self, title):
-        self.title = title
+    def __init__(self):
         self.properties = []
 
 class property_struct:
@@ -53,7 +52,7 @@ class profilemeta_handler(ContentHandler):
     def startElement(self, name, attrs):
         """ """
         if name == 'profilemeta':
-            obj = profilemeta_struct(attrs['title'])
+            obj = profilemeta_struct()
             stackObj = saxstack_struct('profilemeta', obj)
             self.stack.append(stackObj)
         elif name == 'property':
