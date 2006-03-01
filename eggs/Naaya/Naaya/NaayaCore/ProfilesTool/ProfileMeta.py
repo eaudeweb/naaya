@@ -63,10 +63,11 @@ class ProfileMeta:
         if profilemeta_handler is not None:
             if profilemeta_handler.root is not None:
                 profiles_tool = self.getProfilesTool()
+                entry_title = 'Profile at %s' % instance_identifier
                 #add entry in profiles tool
                 if not profiles_tool.profiles_meta.has_key(self.meta_type):
                     profiles_tool.profiles_meta[self.meta_type] = {
-                        'title': profilemeta_handler.root.title,
+                        'title': entry_title,
                         'properties': [],
                         'instances': []
                     }
@@ -80,7 +81,7 @@ class ProfileMeta:
                     #update all existing profiles
                     sheet_id = self.getInstanceSheetId()
                     for profile_ob in profiles_tool.getProfiles():
-                        manage_addProfileSheet(profile_ob, sheet_id, '%s at %s' % (profilemeta_handler.root.title, instance_identifier), instance_identifier)
+                        manage_addProfileSheet(profile_ob, sheet_id, entry_title, instance_identifier)
                         sheet_ob = profile_ob._getOb(sheet_id)
                         for p in profilemeta_handler.root.properties:
                             sheet_ob.manage_addProperty(p.id, p.value, p.type)
