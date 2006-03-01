@@ -15,7 +15,7 @@
 		<tal:block tal:repeat="sheet sheets">
 		<li tal:define="ob python:profiles_tool.getInstanceByIdentifier(sheet.instance_identifier)"
 			tal:attributes="id python:test(ob==tab_ob, 'currenttab', 'notcurrenttab')">
-			<a tal:attributes="href string:${ob/absolute_url}/profilesheet_html" tal:content="sheet/title_or_id" />
+			<a tal:attributes="href string:${ob/absolute_url}/profilesheet_html" tal:content="ob/title_or_id" />
 		</li>
 		</tal:block>
 	</ul>
