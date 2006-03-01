@@ -262,7 +262,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     language = self.utEmptyToNone(channel.language)
                     type = self.utEmptyToNone(channel.type)
                     body = self.futRead(join(skel_path, 'syndication', '%s.py' % channel.id), 'r')
-                    syndicationtool_ob.manage_addScriptChannel(channel.id, channel.title, channel.description, language, type, body, channel.numberofitems, 1)
+                    channel_ob = syndicationtool_ob._getOb(channel.id, None)
+                    if channel_ob is None:
+                        syndicationtool_ob.manage_addScriptChannel(channel.id, channel.title, channel.description, language, type, body, channel.numberofitems, 1)
+                        channel_ob = syndicationtool_ob._getOb(channel.id)
+                    else:
+                        channel_ob.write(body)
                     content = self.futRead(join(skel_path, 'syndication', '%s.zpt' % channel.id), 'r')
                     portletstool_ob._getOb('%s%s' % (PREFIX_PORTLET, channel.id)).pt_edit(text=content, content_type='')
                 for channel in skel_handler.root.syndication.localchannels:
