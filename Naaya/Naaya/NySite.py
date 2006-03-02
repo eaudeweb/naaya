@@ -414,6 +414,23 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             BeforeTraverse.registerBeforeTraverse(container, nc, handle)
         Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
 
+    #hooks
+    def hook_after_approve(self, ob):
+        """
+        This method is called after an object is approved. Can be overwritten.
+        @param ob: the object
+        @type ob: naaya object instance
+        """
+        pass
+
+    def hook_after_unapprove(self, ob):
+        """
+        This method is called after an object is unapproved. Can be overwritte.
+        @param ob: the object
+        @type ob: naaya object instance
+        """
+        pass
+
     security.declarePrivate('setSearchableContent')
     def setSearchableContent(self, p_meta_types):
         """
