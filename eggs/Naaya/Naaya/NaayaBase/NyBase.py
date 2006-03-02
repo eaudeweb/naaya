@@ -81,9 +81,11 @@ class NyBase:
         self.approved = approved
         self.approved_by = approved_by
         self._p_changed = 1
+        #call hooks for (un)approve operations
         if self.approved:
-            #NOTIFICATION HOOK HERE
-            pass
+            self.hook_after_approve(self)
+        else:
+            self.hook_after_unapprove(self)
 
     security.declarePrivate('setReleaseDate')
     def setReleaseDate(self, releasedate):
