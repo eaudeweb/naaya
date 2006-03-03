@@ -551,6 +551,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declarePublic('getNotificationTool')
     def getNotificationTool(self): return self._getOb(ID_NOTIFICATIONTOOL)
 
+    security.declarePublic('getProfilesTool')
+    def getProfilesTool(self): return self._getOb(ID_PROFILESTOOL)
+
     #objects absolute/relative path getters
     security.declarePublic('getSitePath')
     def getSitePath(self, p=0): return self.absolute_url(p)
@@ -580,6 +583,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declarePublic('getNotificationToolPath')
     def getNotificationToolPath(self, p=0): return self._getOb(ID_NOTIFICATIONTOOL).absolute_url(p)
+    security.declarePublic('getProfilesToolPath')
+    def getProfilesToolPath(self, p=0): return self._getOb(ID_PROFILESTOOL).absolute_url(p)
 
     security.declarePublic('getFolderMainParent')
     def getFolderMainParent(self, p_folder):
@@ -1411,6 +1416,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             if err != '': self.setSessionErrors([err])
             if msg != '': self.setSessionInfo([msg])
             REQUEST.RESPONSE.redirect('%s/admin_roles_html' % self.absolute_url())
+
+    security.declareProtected(view, 'admin_welcome_page')
+    def admin_welcome_page(self, REQUEST=None):
+        """ redirect to welcome page """
+        REQUEST.RESPONSE.redirect('%s' % self.absolute_url())
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_editmessage')
     def admin_editmessage(self, message, language, translation, start, skey, rkey, query, REQUEST=None):
