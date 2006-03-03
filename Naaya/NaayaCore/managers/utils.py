@@ -370,6 +370,12 @@ class utils:
 
     def utShowDateTime(self, p_date):
         """date is a DateTime object. This function returns a string 'dd month_name yyyy'"""
+        try: return p_date.strftime('%d/%m/%Y')
+        except: return ''
+
+    # generic function, must be replaced for CHM and other sites!!!!!!!!!!!1
+    def utShowDateTime1(self, p_date):
+        """date is a DateTime object. This function returns a string 'dd month_name yyyy'"""
         try: return p_date.strftime('%d %b %Y')
         except: return ''
 
