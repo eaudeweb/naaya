@@ -34,6 +34,8 @@ from constants                                          import *
 from utils                                              import utils, catalog_utils
 from Products.NaayaGlossary.parsers.import_parsers      import glossary_export
 
+#constants
+LABEL_OBJECT = 'Glossary folder'
 
 manage_addGlossaryFolder_html = PageTemplateFile('zpt/NaayaGlossaryFolder/add', globals())
 
@@ -54,6 +56,7 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
     """ NyGlossaryFolder """
 
     meta_type =     NAAYAGLOSSARY_FOLDER_METATYPE
+    meta_label = LABEL_OBJECT
     product_name =  NAAYAGLOSSARY_PRODUCT_NAME
     icon =          'misc_/NaayaGlossary/folder.gif'
 
