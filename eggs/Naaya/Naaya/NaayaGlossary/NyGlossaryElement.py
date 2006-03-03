@@ -32,6 +32,8 @@ from AccessControl.Permissions                  import view_management_screens, 
 from constants  import *
 from utils      import utils, catalog_utils
 
+# constants
+LABEL_OBJECT = 'Glossary element'
 
 class ElementBasic:
     """ define the basic properties for NyGlossaryElement """
@@ -59,6 +61,7 @@ class NyGlossaryElement(SimpleItem, ElementBasic, utils, catalog_utils):
     """ NyGlossaryElement """
 
     meta_type = NAAYAGLOSSARY_ELEMENT_METATYPE
+    meta_label = LABEL_OBJECT
     product_name = NAAYAGLOSSARY_PRODUCT_NAME
     icon = 'misc_/NaayaGlossary/element.gif'
 

@@ -47,6 +47,8 @@ from Products.NaayaGlossary.parsers.subjects_parser     import subjects_parser
 from Products.NaayaGlossary.parsers.stop_words_parser   import stop_words_parser
 from Products.NaayaGlossary.parsers.import_parsers      import glossary_export
 
+#constants
+LABEL_OBJECT = 'Glossary'
 
 manage_addGlossaryCentre_html = PageTemplateFile('zpt/NaayaGlossary/add', globals())
 def manage_addGlossaryCentre(self, id, title='', REQUEST=None):
@@ -71,6 +73,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     """ NyGlossary """
 
     meta_type =     NAAYAGLOSSARY_CENTRE_METATYPE
+    meta_label = LABEL_OBJECT
     product_name =  NAAYAGLOSSARY_PRODUCT_NAME
     icon =          "misc_/NaayaGlossary/glossary.gif"
 
