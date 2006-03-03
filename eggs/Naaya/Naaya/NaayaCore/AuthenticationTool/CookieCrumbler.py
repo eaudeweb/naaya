@@ -297,7 +297,9 @@ class CookieCrumbler:
                 return RESPONSE.redirect(came_from)
             else:
                 #redirect in expert area
-                return RESPONSE.redirect(self.absolute_url(0))
+                #return RESPONSE.redirect(self.absolute_url(0))
+                #redirect to welcome page
+                return self.admin_welcome_page(REQUEST=REQUEST)
 
     security.declarePublic('logout')
     def logout(self):
