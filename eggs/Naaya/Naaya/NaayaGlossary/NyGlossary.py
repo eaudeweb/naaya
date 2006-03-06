@@ -521,7 +521,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     folder_id = ids[1].encode('utf-8')
                 else:
                     folder_id = string.upper(elem_id[:1])
-                folder = self.unrestrictedTraverse(folder_id, None)
+                folder = self._getOb(folder_id, None)
                 if folder is None:
                     try:
                         self.manage_addGlossaryFolder(folder_id, translation['context'].encode('utf-8'), [], '', '', 1)
