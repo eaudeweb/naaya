@@ -35,6 +35,7 @@ from managers.channeltypes_manager import channeltypes_manager
 import LocalChannel
 import RemoteChannel
 import ScriptChannel
+import RemoteChannelFacade
 
 def manage_addSyndicationTool(self, REQUEST=None):
     """ """
@@ -65,6 +66,7 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
         {'name': METATYPE_LOCALCHANNEL, 'action': 'manage_addLocalChannelForm'},
         {'name': METATYPE_REMOTECHANNEL, 'action': 'manage_addRemoteChannelForm'},
         {'name': METATYPE_SCRIPTCHANNEL, 'action': 'manage_addScriptChannelForm'},
+        {'name': METATYPE_REMOTECHANNELFACADE, 'action': 'manage_addRemoteChannelFacadeForm'},
     )
     all_meta_types = meta_types
 
@@ -75,6 +77,8 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
     manage_addRemoteChannel = RemoteChannel.manage_addRemoteChannel
     manage_addScriptChannelForm = ScriptChannel.manage_addScriptChannelForm
     manage_addScriptChannel = ScriptChannel.manage_addScriptChannel
+    manage_addRemoteChannelFacadeForm = RemoteChannelFacade.manage_addRemoteChannelFacadeForm
+    manage_addRemoteChannelFacade = RemoteChannelFacade.manage_addRemoteChannelFacade
 
     security = ClassSecurityInfo()
 
