@@ -16,6 +16,14 @@
 		<td><input type="text" name="url" size="50" /></td>
 	</tr>
 	<tr>
+		<td class="form-label">Provider name</td>
+		<td><input type="text" name="providername" size="50" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Location</td>
+		<td><input type="text" name="location" size="50" /></td>
+	</tr>
+	<tr>
 		<td class="form-label">Number shown items</td>
 		<td><input type="text" name="numbershownitems" size="3" /> (0 for all items)</td>
 	</tr>
