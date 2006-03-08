@@ -31,17 +31,17 @@ from Products.NaayaCore.constants import *
 from RemoteChannel import RemoteChannel
 
 manage_addRemoteChannelFacadeForm = PageTemplateFile('zpt/remotechannelfacade_manage_add', globals())
-def manage_addRemoteChannelFacade(self, id='', title='', url='', numbershownitems='',
-    portlet='', REQUEST=None):
+def manage_addRemoteChannelFacade(self, id='', title='', url='', providername='',
+    location='', numbershownitems='', portlet='', REQUEST=None):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_SUFIX_REMOTECHANNELFACADE % self.utGenRandomId(6)
     try: numbershownitems = abs(int(numbershownitems))
     except: numbershownitems = 0
-    ob = RemoteChannelFacade(id, title, url, numbershownitems)
+    ob = RemoteChannelFacade(id, title, url, providername, location, numbershownitems)
     self._setObject(id, ob)
     if portlet:
-        self.create_portlet_for_remotechannel(self._getOb(id))
+        self.create_portlet_for_remotechannelfacade(self._getOb(id))
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -57,20 +57,29 @@ class RemoteChannelFacade(RemoteChannel):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, url, numbershownitems):
+    def __init__(self, id, title, url, providername, location, numbershownitems):
         """ """
         RemoteChannel.__dict__['__init__'](self, id, title, url, numbershownitems)
+        self.providername = providername
+        self.location = location
+
+    def manage_beforeDelete(self, item, container):
+        """ This method is called, when the object is deleted. """
+        RemoteChannelFacade.inheritedAttribute('manage_beforeDelete')(self, item, container)
 
     #api
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', url='', numbershownitems='', REQUEST=None):
+    def manageProperties(self, title='', url='', providername='', location='',
+        numbershownitems='', REQUEST=None):
         """ """
         try: numbershownitems = abs(int(numbershownitems))
         except: numbershownitems = self.numbershownitems
         self.title = title
         self.url = url
+        self.providername = providername
+        self.location = location
         self.numbershownitems = numbershownitems
         self._p_changed = 1
         if REQUEST:
@@ -78,6 +87,6 @@ class RemoteChannelFacade(RemoteChannel):
 
     #zmi forms
     security.declareProtected(view_management_screens, 'manage_properties_html')
-    manage_properties_html = PageTemplateFile('zpt/remotechannel_properties', globals())
+    manage_properties_html = PageTemplateFile('zpt/remotechannelfacade_properties', globals())
 
 InitializeClass(RemoteChannelFacade)

@@ -32,6 +32,7 @@ PORTLETS_TYPES = {
     3: 'Local channel',
     4: 'Folder',
     5: 'Script channel',
+    6: 'Remote channel facade',
     99: 'Other',
     100: 'Special'
 }
@@ -116,6 +117,7 @@ PORTLETS_BODIES = {
     3: LOCALCHANNEL_PORTLET_TEMPLATE,
     4: FOLDER_PORTLET_TEMPLATE,
     5: SCRIPTCHANNEL_PORTLET_TEMPLATE,
+    6: REMOTECHANNEL_PORTLET_TEMPLATE,
     99: SIMPLE_PORTLET_TEMPLATE,
     100: SIMPLE_PORTLET_TEMPLATE
 }
