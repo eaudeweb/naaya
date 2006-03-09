@@ -44,7 +44,7 @@ function fSet(ctrl, value)
 	<form style="display: inline;" action="discardVersion"><input type="submit" value="Discard" i18n:attributes="value" /></form>
 </div>
 
-<form method="post" action="saveProperties">
+<form method="post" action="saveProperties" name="frmEdit">
 <div class="field">
 	<label for="title"><span i18n:translate="" tal:omit-tag="">Title</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'title')" class="mandatory_field"> *</span></label>
 	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', here.getVersionLocalProperty('title', curr_lang))" />
@@ -69,11 +69,11 @@ function fSet(ctrl, value)
 <div class="field" tal:define="keywords_glossary here/get_keywords_glossary">
 	<label for="keywords"><span i18n:translate="" tal:omit-tag="">Keywords</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'keywords')" class="mandatory_field"> *</span></label>
 	<tal:block tal:condition="python:keywords_glossary is not None">
-		<p><strong>Tip:</strong> you can type free text in the field below or pick words from the glossary</p>
+		<p i18n:translate=""><strong>Tip:</strong> you can type free text in the field below or pick words from the glossary</p>
 	</tal:block>
 	<input type="text" name="keywords:utf8:ustring" id="keywords" size="50" tal:attributes="value python:here.getSession('keywords', here.getVersionLocalProperty('keywords', curr_lang))" />
 	<tal:block tal:condition="python:keywords_glossary is not None">
-		<label for="pick-keywords" class="invisible">Pick keywords</label><input type="button" value="Pick" id="pick-keywords" tal:attributes="onclick string:javascript:fPick('${keywords_glossary/absolute_url}/GlossMap_html?ctrl=keywords&amp;lang=${curr_lang}');" />
+		<label for="pick-keywords" class="invisible" i18n:translate="">Pick keywords</label><input type="button" value="Pick" id="pick-keywords" tal:attributes="onclick string:javascript:fPick('${keywords_glossary/absolute_url}/GlossMap_html?ctrl=keywords&amp;lang=${curr_lang}');" />
 	</tal:block>
 </div>
 <div class="field-inline">
