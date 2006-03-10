@@ -699,7 +699,15 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         Returns the list of main topic folders
         sorted by 'order' property
         """
-        return self.utSortObjsListByAttr(filter(lambda x: x is not None, map(lambda f, x: f(x, None), (self._getOb,)*len(self.maintopics), self.maintopics)), 'sortorder', 0)
+        return self.utSortObjsListByAttr(filter(lambda x: x is not None, map(lambda f, x: f(x, None), (self.utGetObject,)*len(self.maintopics), self.maintopics)), 'sortorder', 0)
+
+    security.declarePublic('getMainTopicByURL')
+    def getMainTopicByURL(self, url):
+        """ 
+        Returns the main topic folder object 
+        given the URL
+        """
+        return self.utGetObject(url)
 
     security.declarePublic('getFoldersWithPendingItems')
     def getFoldersWithPendingItems(self):
@@ -1607,7 +1615,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         id = PREFIX_FOLDER + self.utGenRandomId(6)
         addNyFolder(self, id=id, title=title, lang=lang)
-        self.maintopics.append(id)
+        folder_ob = self.utGetObject(id)
+        self.maintopics.append(folder_ob.absolute_url(1))
+        self._p_changed = 1
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updatemaintopics')
+    def admin_updatemaintopics(self, folder_url='', REQUEST=None):
+        """ """
+        if folder_url not in self.maintopics:
+            self.maintopics.append(folder_url)
         self._p_changed = 1
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
@@ -1620,7 +1639,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             sortorder = 0
             for x in positions.split('|'):
                 try:
-                    ob = self._getOb(x)
+                    ob = self.getMainTopicByURL(x)
                     ob.sortorder = sortorder
                     ob._p_changed = 1
                     sortorder = sortorder + 1
