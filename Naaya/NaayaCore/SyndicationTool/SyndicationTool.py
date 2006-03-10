@@ -103,6 +103,7 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
 
     def get_local_channels(self): return self.objectValues(METATYPE_LOCALCHANNEL)
     def get_remote_channels(self): return self.objectValues(METATYPE_REMOTECHANNEL)
+    def get_remote_channels_facade(self): return self.objectValues(METATYPE_REMOTECHANNELFACADE)
     def get_script_channels(self): return self.objectValues(METATYPE_SCRIPTCHANNEL)
 
     def get_data_local_channel(self, id):
@@ -114,9 +115,13 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
     def get_data_remote_channel(self, id):
         ob = self._getOb(id, None)
         if ob:
-            return ['edit', ob.id, ob.title, ob.url, ob.numbershownitems]
+            if ob.meta_type == METATYPE_REMOTECHANNEL:
+                return ['edit', METATYPE_REMOTECHANNEL, ob.id, ob.title, ob.url, ob.numbershownitems]
+            elif ob.meta_type == METATYPE_REMOTECHANNELFACADE:
+                return ['edit', METATYPE_REMOTECHANNELFACADE, ob.id, ob.title, ob.url,
+                    ob.numbershownitems, ob.providername, ob.location, ob.obtype]
         else:
-            return ['add', '', '', '', 0, '', '']
+            return ['add']
 
     security.declareProtected(view, 'getImage')
     def getImage(self):
