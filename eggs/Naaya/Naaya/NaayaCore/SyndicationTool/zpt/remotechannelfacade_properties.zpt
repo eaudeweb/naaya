@@ -24,6 +24,15 @@
 		<td><input type="text" name="location" size="50" tal:attributes="value here/location" /></td>
 	</tr>
 	<tr>
+		<td class="form-label">Type</td>
+		<td>
+			<select name="obtype">
+				<option value="news" tal:attributes="selected python:here.obtype=='news'">News</option>
+				<option value="events" tal:attributes="selected python:here.obtype=='events'">Events</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
 		<td class="form-label">Number shown items</td>
 		<td><input type="text" name="numbershownitems" size="3" tal:attributes="value here/numbershownitems" /> (0 for all items)</td>
 	</tr>

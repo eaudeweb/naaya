@@ -32,13 +32,13 @@ from RemoteChannel import RemoteChannel
 
 manage_addRemoteChannelFacadeForm = PageTemplateFile('zpt/remotechannelfacade_manage_add', globals())
 def manage_addRemoteChannelFacade(self, id='', title='', url='', providername='',
-    location='', numbershownitems='', portlet='', REQUEST=None):
+    location='', obtype='news', numbershownitems='', portlet='', REQUEST=None):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_SUFIX_REMOTECHANNELFACADE % self.utGenRandomId(6)
     try: numbershownitems = abs(int(numbershownitems))
     except: numbershownitems = 0
-    ob = RemoteChannelFacade(id, title, url, providername, location, numbershownitems)
+    ob = RemoteChannelFacade(id, title, url, providername, location, obtype, numbershownitems)
     self._setObject(id, ob)
     if portlet:
         self.create_portlet_for_remotechannelfacade(self._getOb(id))
@@ -57,22 +57,35 @@ class RemoteChannelFacade(RemoteChannel):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, url, providername, location, numbershownitems):
+    def __init__(self, id, title, url, providername, location, obtype, numbershownitems):
         """ """
         RemoteChannel.__dict__['__init__'](self, id, title, url, numbershownitems)
         self.providername = providername
         self.location = location
+        self.obtype = obtype
 
     def manage_beforeDelete(self, item, container):
         """ This method is called, when the object is deleted. """
         RemoteChannelFacade.inheritedAttribute('manage_beforeDelete')(self, item, container)
 
     #api
+    def generateContent(self):
+        """
+        Generates object in channel's defined location. The objects are by default
+        unapproved.
+        """
+        location_ob = self.utGetObject(self.location)
+        if location_ob:
+            #start create objects from RDF items
+            for feed_item in self.get_feed_items():
+                print feed_item.keys()
+        else:
+            pass
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', url='', providername='', location='',
-        numbershownitems='', REQUEST=None):
+        obtype='news', numbershownitems='', REQUEST=None):
         """ """
         try: numbershownitems = abs(int(numbershownitems))
         except: numbershownitems = self.numbershownitems
@@ -80,6 +93,7 @@ class RemoteChannelFacade(RemoteChannel):
         self.url = url
         self.providername = providername
         self.location = location
+        self.obtype = obtype
         self.numbershownitems = numbershownitems
         self._p_changed = 1
         if REQUEST:
