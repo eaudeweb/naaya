@@ -1763,7 +1763,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def admin_addremotechportlet(self, id='', REQUEST=None):
         """ """
         ob = self.getSyndicationTool().get_channel(id)
-        if ob is not None: self.create_portlet_for_remotechannel(ob)
+        if ob is not None:
+            if ob.meta_type == METATYPE_REMOTECHANNEL:
+                self.create_portlet_for_remotechannel(ob)
+            elif ob.meta_type == METATYPE_REMOTECHANNELFACADE:
+                self.create_portlet_for_remotechannelfacade(ob)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_remotechportlets_html' % self.absolute_url())
@@ -2050,7 +2054,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         return [x for x in self.getSyndicationTool().get_local_channels() if not self.exists_portlet_for_object(x)]
 
     def get_remotech_noportlet(self):
-        return [x for x in self.getSyndicationTool().get_remote_channels() if not x.exists_portlet_for_object(x)]
+        syndicationtool_ob = self.getSyndicationTool()
+        l = syndicationtool_ob.get_remote_channels()
+        l.extend(syndicationtool_ob.get_remote_channels_facade())
+        return [x for x in l if not x.exists_portlet_for_object(x)]
 
     def get_linkslists_noportlet(self):
         return [x for x in self.getPortletsTool().getLinksLists() if not x.exists_portlet_for_object(x)]
@@ -2250,8 +2257,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         @type uid: string
         """
         if uid==self.get_site_uid():
-            for l_channel in self.getSyndicationTool().get_remote_channels():
-                l_channel.updateChannel(uid)
+            syndicationtool_ob = self.getSyndicationTool()
+            for c in syndicationtool_ob.get_remote_channels():
+                c.updateChannel(uid)
+            for c in syndicationtool_ob.get_remote_channels_facade():
+                c.updateChannel(uid)
             return "Update Remote Channels ended successfully on site %s" % self.absolute_url()
 
     def cleanupUnsubmittedObjects(self, uid):
