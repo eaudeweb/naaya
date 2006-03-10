@@ -77,8 +77,35 @@ class RemoteChannelFacade(RemoteChannel):
         location_ob = self.utGetObject(self.location)
         if location_ob:
             #start create objects from RDF items
-            for feed_item in self.get_feed_items():
-                print feed_item.keys()
+            if self.obtype == 'news':
+                #create news objects
+                for feed_item in self.get_feed_items():
+                    id = self.utToUtf8(feed_item.id.split('/')[-1])
+                    tags = [x['term'] for x in feed_item.tags]
+                    keywords = [x.strip() for x in feed_item.ut_keywords.split(',')]
+                    subject = self.utListDifference(tags, feed_item.ut_keywords)
+                    location_ob.addNySemNews(id=id,
+                        creator=feed_item.author,
+                        creator_email=feed_item.ut_creator_mail,
+                        contact_person=feed_item.ut_contact_name,
+                        contact_email=feed_item.ut_contact_mail,
+                        contact_phone=feed_item.ut_contact_phone,
+                        rights=feed_item.rights,
+                        title=feed_item.title_detail['value'],
+                        news_type=feed_item.ut_news_type,
+                        file_link=feed_item.ut_file_link,
+                        file_link_local=feed_item.ut_file_link_local,
+                        source=feed_item.dc_source,
+                        source_link=feed_item.ut_source_link,
+                        keywords=feed_item.ut_keywords,
+                        description=feed_item.dc_description,
+                        subject=subject,
+                        relation=feed_item.dc_relation,
+                        coverage=feed_item.dc_coverage,
+                        news_date=self.utConvertDateTimeHTMLToString(feed_item.ut_start_date),
+                        lang=feed_item.language)
+                    ob = location_ob._getOb(id)
+                    ob.approveThis(0, None)
         else:
             pass
 

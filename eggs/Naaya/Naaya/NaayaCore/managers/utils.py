@@ -389,6 +389,14 @@ class utils:
         try: return p_date.strftime('%Y-%m-%dT%H:%M:%S')
         except: return ''
 
+    def utConvertDateTimeHTMLToString(self, p_datestring):
+        """ """
+        try:
+            y, m, d = p_datestring.split('T')[0].split('-')
+            return '%s/%s/%s' % (d, m, y)
+        except:
+            return ''
+
     def utShowDateTimePeriod(self, p_start, p_end):
         """
         Given two dates, returns a string to show the interval.
