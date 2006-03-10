@@ -105,6 +105,8 @@ class PortletsTool(Folder, utils):
         return [x for x in self.objectValues(METATYPE_PORTLET) if x.portlettype==1]
     def get_remotechannels_portlets(self):
         return [x for x in self.objectValues(METATYPE_PORTLET) if x.portlettype==2]
+    def get_remotechannelsfacade_portlets(self):
+        return [x for x in self.objectValues(METATYPE_PORTLET) if x.portlettype==6]
     def get_localchannels_portlets(self):
         return [x for x in self.objectValues(METATYPE_PORTLET) if x.portlettype==3]
     def get_folders_portlets(self):
