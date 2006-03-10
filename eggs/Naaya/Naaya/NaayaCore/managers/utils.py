@@ -181,9 +181,9 @@ class utils:
         """ get the ROOT object"""
         return self.unrestrictedTraverse(('',))
 
-    def utGetObject(self, path=None):
+    def utGetObject(self, path=None, default=None):
         """ get an object by path """
-        try: return self.unrestrictedTraverse(path)
+        try: return self.unrestrictedTraverse(path, default)
         except: return None
 
     def utGenRandomId(self, p_length=10, p_chars=string.digits):
