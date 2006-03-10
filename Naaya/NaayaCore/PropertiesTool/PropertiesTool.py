@@ -128,7 +128,10 @@ class PropertiesTool(SimpleItem, utils, search_tool):
         site = self.getSite()
         if maintopics is None: maintopics = []
         else: maintopics = self.utConvertToList(maintopics)
-        site.maintopics = maintopics
+        site.maintopics = []
+        for maintopic in maintopics:
+            folder_ob = self.utGetObject(maintopic)
+            site.maintopics.append(folder_ob.absolute_url(1))
         site._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_maintopics_html?save=ok')
 

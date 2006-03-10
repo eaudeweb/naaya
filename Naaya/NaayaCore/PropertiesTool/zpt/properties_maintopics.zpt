@@ -21,7 +21,7 @@
         <td width="80%" tal:define="item_list here/getMainFolders">
             <select name="maintopics" size="10" multiple="true">
                 <option tal:repeat="item item_list"
-                        tal:attributes="value item/id; selected python:item.id in here.maintopics"
+                        tal:attributes="value item/id; selected python:item.absolute_url(1) in here.maintopics"
                         tal:content="item/title_or_id">Main topic</option>
             </select>
         </td>
