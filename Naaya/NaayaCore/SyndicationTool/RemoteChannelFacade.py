@@ -69,6 +69,17 @@ class RemoteChannelFacade(RemoteChannel):
         RemoteChannelFacade.inheritedAttribute('manage_beforeDelete')(self, item, container)
 
     #api
+    def updateChannel(self, uid):
+        """ """
+        if uid==self.get_site_uid():
+            self.harvest_feed()
+            if self.get_feed_bozo_exception() is not None: error = self.get_feed_bozo_exception()
+            else:
+                error = ''
+                self.generateContent()
+            return str(error)
+
+    security.declarePrivate('generateContent')
     def generateContent(self):
         """
         Generates object in channel's defined location. The objects are by default
@@ -81,31 +92,70 @@ class RemoteChannelFacade(RemoteChannel):
                 #create news objects
                 for feed_item in self.get_feed_items():
                     id = self.utToUtf8(feed_item.id.split('/')[-1])
-                    tags = [x['term'] for x in feed_item.tags]
-                    keywords = [x.strip() for x in feed_item.ut_keywords.split(',')]
-                    subject = self.utListDifference(tags, feed_item.ut_keywords)
-                    location_ob.addNySemNews(id=id,
-                        creator=feed_item.author,
-                        creator_email=feed_item.ut_creator_mail,
-                        contact_person=feed_item.ut_contact_name,
-                        contact_email=feed_item.ut_contact_mail,
-                        contact_phone=feed_item.ut_contact_phone,
-                        rights=feed_item.rights,
-                        title=feed_item.title_detail['value'],
-                        news_type=feed_item.ut_news_type,
-                        file_link=feed_item.ut_file_link,
-                        file_link_local=feed_item.ut_file_link_local,
-                        source=feed_item.dc_source,
-                        source_link=feed_item.ut_source_link,
-                        keywords=feed_item.ut_keywords,
-                        description=feed_item.dc_description,
-                        subject=subject,
-                        relation=feed_item.dc_relation,
-                        coverage=feed_item.dc_coverage,
-                        news_date=self.utConvertDateTimeHTMLToString(feed_item.ut_start_date),
-                        lang=feed_item.language)
-                    ob = location_ob._getOb(id)
-                    ob.approveThis(0, None)
+                    ob = location_ob._getOb(id, None)
+                    if ob is None:
+                        tags = [x['term'] for x in feed_item.tags]
+                        keywords = [x.strip() for x in feed_item.ut_keywords.split(',')]
+                        subject = self.utListDifference(tags, feed_item.ut_keywords)
+                        location_ob.addNySemNews(id=id,
+                            creator=feed_item.author,
+                            creator_email=feed_item.ut_creator_mail,
+                            contact_person=feed_item.ut_contact_name,
+                            contact_email=feed_item.ut_contact_mail,
+                            contact_phone=feed_item.ut_contact_phone,
+                            rights=feed_item.rights,
+                            title=feed_item.title_detail['value'],
+                            news_type=feed_item.ut_news_type,
+                            file_link=feed_item.ut_file_link,
+                            file_link_local=feed_item.ut_file_link_local,
+                            source=self.providername,
+                            source_link=feed_item.ut_source_link,
+                            keywords=feed_item.ut_keywords,
+                            description=feed_item.dc_description,
+                            subject=subject,
+                            relation=feed_item.dc_relation,
+                            coverage=feed_item.dc_coverage,
+                            news_date=self.utConvertDateTimeHTMLToString(feed_item.ut_start_date),
+                            lang=feed_item.language)
+                        ob = location_ob._getOb(id)
+                        ob.approveThis(0, None)
+            elif self.obtype == 'events':
+                #create event objects
+                for feed_item in self.get_feed_items():
+                    id = self.utToUtf8(feed_item.id.split('/')[-1])
+                    ob = location_ob._getOb(id, None)
+                    if ob is None:
+                        tags = [x['term'] for x in feed_item.tags]
+                        keywords = [x.strip() for x in feed_item.ut_keywords.split(',')]
+                        subject = self.utListDifference(tags, feed_item.ut_keywords)
+                        location_ob.addNySemEvent(id=id,
+                            title=feed_item.title_detail['value'],
+                            description=feed_item.dc_description,
+                            coverage=feed_item.dc_coverage,
+                            keywords=feed_item.ut_keywords,
+                            creator=feed_item.author,
+                            creator_email=feed_item.ut_creator_mail,
+                            rights=feed_item.rights,
+                            event_type=feed_item.ut_event_type,
+                            source=self.providername,
+                            source_link=feed_item.ut_source_link,
+                            file_link=feed_item.ut_file_link,
+                            file_link_copy=feed_item.ut_file_link_copy,
+                            subject=subject,
+                            relation=feed_item.dc_relation,
+                            organizer=feed_item.ut_organizer,
+                            duration=feed_item.ut_duration,
+                            geozone=feed_item.ut_geozone,
+                            address=feed_item.ut_address,
+                            start_date=self.utConvertDateTimeHTMLToString(feed_item.ut_start_date),
+                            end_date=self.utConvertDateTimeHTMLToString(feed_item.ut_end_date),
+                            event_status=feed_item.ut_event_status,
+                            contact_person=feed_item.ut_contact_name,
+                            contact_email=feed_item.ut_contact_mail,
+                            contact_phone=feed_item.ut_contact_phone,
+                            lang=feed_item.language)
+                        ob = location_ob._getOb(id)
+                        ob.approveThis(0, None)
         else:
             pass
 
