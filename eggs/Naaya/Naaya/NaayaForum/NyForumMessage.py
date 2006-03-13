@@ -98,6 +98,7 @@ class NyForumMessage(NyForumBase, Folder):
         #make this object available for portal search engine
         self.submitted = 1
         self.approved = 1
+        self.releasedate = postdate
 
     #api
     def get_message_object(self): return self
