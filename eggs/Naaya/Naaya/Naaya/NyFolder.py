@@ -82,6 +82,7 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     self._setObject(id, ob)
     #extra settings
     ob = self._getOb(id)
+    ob.updatePropertiesFromGlossary(lang)
     ob.approveThis(approved, approved_by)
     ob.submitThis()
     ob.createPublicInterface()
@@ -486,6 +487,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         self.maintainer_email = maintainer_email
         self.approved = approved
         self.releasedate = releasedate
+        self.updatePropertiesFromGlossary(lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_FOLDER, REQUEST, kwargs), lang)
         if approved != self.approved:
             if approved == 0: approved_by = None
@@ -528,6 +530,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         self.sortorder = sortorder
         self.maintainer_email = maintainer_email
         self.releasedate = releasedate
+        self.updatePropertiesFromGlossary(lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_FOLDER, REQUEST, kwargs), lang)
         self._p_changed = 1
         if discussion: self.open_for_comments()
