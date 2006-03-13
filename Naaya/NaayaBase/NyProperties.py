@@ -35,6 +35,18 @@ from AccessControl.Permissions import view_management_screens, view
 #Product imports
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
+try:
+    from Products.NaayaGlossary.constants import NAAYAGLOSSARY_CENTRE_METATYPE
+    module_glossary_metatype = NAAYAGLOSSARY_CENTRE_METATYPE
+except:
+    module_glossary_metatype = None
+
+try:
+    from Products.NaayaThesaurus.constants import NAAYATHESAURUS_METATYPE
+    module_thesaurus_metatype = NAAYATHESAURUS_METATYPE
+except:
+    module_thesaurus_metatype = None
+
 class NyProperties(LocalPropertyManager):
     """
     Class that handles dynamic properties for a single.
@@ -132,6 +144,62 @@ class NyProperties(LocalPropertyManager):
         """
         for l_dp in p_dp_dict.keys():
             self.createProperty(l_dp, p_dp_dict.get(l_dp, ''), lang)
+
+    def __updatePropertyFromGlossary(self, provider, prop, lang, lang_name):
+        """
+        Updates the given property for all languages.
+        @param provider: provider object (can be a glossary or a thesaurus)
+        @type provider: instance
+        @param prop: property name
+        @type prop: string
+        @param lang: current language code
+        @type lang: string
+        @param lang_name: current language name
+        @type lang_name: string
+        """
+        #clean up the other translations
+        langs = self.gl_get_languages_mapping()
+        for l in langs:
+            if l['name'] != lang_name:
+                self._setLocalPropValue(prop, l['code'], '')
+        if provider.meta_type == module_glossary_metatype:
+            for v in self.getLocalProperty(prop, lang).split(','):
+                gloss_elem = provider.searchGlossary(query=v, language=lang_name, definition='')
+                if gloss_elem[2]:
+                    gloss_elem = gloss_elem[2][0]
+                    for l in langs:
+                        curr_trans = self.getLocalProperty(prop, l['code'])
+                        if l['name'] != lang_name:
+                            trans = gloss_elem.get_translation_by_language(l['name'])
+                            if curr_trans: self._setLocalPropValue(prop, l['code'], '%s, %s' % (curr_trans, trans))
+                            else: self._setLocalPropValue(prop, l['code'], trans)
+        elif provider.meta_type == module_thesaurus_metatype:
+            for v in self.getLocalProperty(prop, lang).split(','):
+                th_concept = provider.searchThesaurusNames(query=v, lang=lang)
+                if th_concept:
+                    th_concept = th_concept[0]
+                    for l in langs:
+                        curr_trans = self.getLocalProperty(prop, l['code'])
+                        if l['name'] != lang_name:
+                            th_term = provider.getTermByID(th_concept.concept_id, l['code'])
+                            if th_term:
+                                trans = th_term.concept_name
+                                if curr_trans: self._setLocalPropValue(prop, l['code'], '%s, %s' % (curr_trans, trans))
+                                else: self._setLocalPropValue(prop, l['code'], trans)
+
+    security.declarePrivate('updatePropertiesFromGlossary')
+    def updatePropertiesFromGlossary(self, lang):
+        """
+        Update the B{keywords} and B{coverage} properties from the associated
+        glossary for each language other than the current one.
+        """
+        lang_name = self.gl_get_language_name(lang)
+        provider_keywords = self.get_keywords_glossary()
+        if provider_keywords:
+            self.__updatePropertyFromGlossary(provider_keywords, 'keywords', lang, lang_name)
+        provider_coverage = self.get_coverage_glossary()
+        if provider_coverage:
+            self.__updatePropertyFromGlossary(provider_coverage, 'coverage', lang, lang_name)
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_dynamicproperties_html')
