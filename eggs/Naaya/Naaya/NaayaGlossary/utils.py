@@ -304,11 +304,6 @@ class catalog_utils:
         """ search catalog """
         catalog = self.getGlossaryCatalog()
         command= "catalog(meta_type=" + str(meta_type) + ", " + language + "='" + query + "', definition='" + definition + "')"
-        command_name= "catalog(meta_type=" + str(meta_type) + ", " + language + "='" + "" + "', definition='" + definition + "', name='" + query + "')"
-#        print 'AICI e o eroare, cateodata nu vine language ca parametru'
-#        print command
         results = eval(command)
-        results_name = eval(command_name)
         res = self.__get_objects(results)
-        res.extend(self.__get_objects(results_name))
         return self.utEliminateDuplicates(res)[:int(size)]
