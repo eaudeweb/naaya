@@ -129,6 +129,7 @@ def addNyEvent(self, id='', title='', description='', coverage='',
         self._setObject(id, ob)
         #extra settings
         ob = self._getOb(id)
+        ob.updatePropertiesFromGlossary(lang)
         ob.approveThis(approved, approved_by)
         ob.submitThis()
         if discussion: ob.open_for_comments()
@@ -306,6 +307,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
         self.save_properties(title, description, coverage, keywords, sortorder, location,
             location_address, location_url, start_date, end_date, host, agenda_url, event_url,
             details, topitem, event_type, contact_person, contact_email, contact_phone, contact_fax, releasedate, lang)
+        self.updatePropertiesFromGlossary(lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
             if approved == 0: approved_by = None
@@ -398,6 +400,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
                 self.save_properties(title, description, coverage, keywords, sortorder, location, location_address,
                     location_url, start_date, end_date, host, agenda_url, event_url, details, topitem, event_type,
                     contact_person, contact_email, contact_phone, contact_fax, releasedate, lang)
+                self.updatePropertiesFromGlossary(lang)
                 self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             else:
                 #this object has been checked out; save changes into the version object
@@ -407,6 +410,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
                 self.version.save_properties(title, description, coverage, keywords, sortorder, location, location_address,
                     location_url, start_date, end_date, host, agenda_url, event_url, details, topitem, event_type,
                     contact_person, contact_email, contact_phone, contact_fax, releasedate, lang)
+                self.version.updatePropertiesFromGlossary(lang)
                 self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             if discussion: self.open_for_comments()
             else: self.close_for_comments()

@@ -97,6 +97,7 @@ def addNyStory(self, id='', title='', description='', coverage='', keywords='',
     self._setObject(id, ob)
     #extra settings
     ob = self._getOb(id)
+    ob.updatePropertiesFromGlossary(lang)
     if discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     #redirect if case
@@ -235,6 +236,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         if not lang: lang = self.gl_get_selected_language()
         self.save_properties(title, description, coverage, keywords, sortorder, body, topitem,
             resourceurl, source, releasedate, lang)
+        self.updatePropertiesFromGlossary(lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
             if approved == 0: approved_by = None
@@ -278,6 +280,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
             self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             self._p_changed = 1
             self.approveThis(approved, approved_by)
+            self.updatePropertiesFromGlossary(lang)
             self.submitThis()
             if discussion: self.open_for_comments()
             self.recatalogNyObject(self)
@@ -360,6 +363,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
                 releasedate = self.process_releasedate(releasedate, self.releasedate)
                 self.save_properties(title, description, coverage, keywords, sortorder, body,
                     topitem, resourceurl, source, releasedate, lang)
+                self.updatePropertiesFromGlossary(lang)
                 self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             else:
                 #this object has been checked out; save changes into the version object
@@ -368,6 +372,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
                 releasedate = self.process_releasedate(releasedate, self.version.releasedate)
                 self.version.save_properties(title, description, coverage, keywords, sortorder,
                     body, topitem, resourceurl, source, releasedate, lang)
+                self.version.updatePropertiesFromGlossary(lang)
                 self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             if discussion: self.open_for_comments()
             else: self.close_for_comments()

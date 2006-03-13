@@ -93,6 +93,7 @@ def addNyDocument(self, id='', title='', description='', coverage='', keywords='
     self._setObject(id, ob)
     #extra settings
     ob = self._getOb(id)
+    ob.updatePropertiesFromGlossary(lang)
     if discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     #redirect if case
@@ -217,6 +218,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         releasedate = self.process_releasedate(releasedate, self.releasedate)
         if not lang: lang = self.gl_get_selected_language()
         self.save_properties(title, description, coverage, keywords, sortorder, body, releasedate, lang)
+        self.updatePropertiesFromGlossary(lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
             if approved == 0: approved_by = None
@@ -254,6 +256,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
             self.save_properties(title, description, coverage, keywords, sortorder, body, releasedate, lang)
             self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             self._p_changed = 1
+            self.updatePropertiesFromGlossary(lang)
             self.approveThis(approved, approved_by)
             self.submitThis()
             if discussion: self.open_for_comments()
@@ -329,6 +332,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
                 #this object has not been checked out; save changes directly into the object
                 releasedate = self.process_releasedate(releasedate, self.releasedate)
                 self.save_properties(title, description, coverage, keywords, sortorder, body, releasedate, lang)
+                self.updatePropertiesFromGlossary(lang)
                 self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             else:
                 #this object has been checked out; save changes into the version object
@@ -336,6 +340,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
                     raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
                 releasedate = self.process_releasedate(releasedate, self.version.releasedate)
                 self.version.save_properties(title, description, coverage, keywords, sortorder, body, releasedate, lang)
+                self.version.updatePropertiesFromGlossary(lang)
                 self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             if discussion: self.open_for_comments()
             else: self.close_for_comments()
