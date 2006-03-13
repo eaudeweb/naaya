@@ -386,7 +386,7 @@ class utils:
 
     def utShowFullDateTimeHTML(self, p_date):
         """date is a DateTime object. This function returns a string 'dd month_name yyyy hh:mm:ss'"""
-        try: return p_date.strftime('%Y-%m-%dT%H:%M:%S')
+        try: return p_date.strftime('%Y-%m-%dT%H:%M:%SZ')
         except: return ''
 
     def utConvertDateTimeHTMLToString(self, p_datestring):
