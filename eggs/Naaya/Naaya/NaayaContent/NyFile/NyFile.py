@@ -111,6 +111,7 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
         self._setObject(id, ob)
         #extra settings
         ob = self._getOb(id)
+        ob.updatePropertiesFromGlossary(lang)
         ob.submitThis()
         ob.approveThis(approved, approved_by)
         ob.handleUpload(source, file, url)
@@ -302,6 +303,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
         self.content_type = content_type
         self.precondition = precondition
+        self.updatePropertiesFromGlossary(lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
             if approved == 0: approved_by = None
@@ -393,6 +395,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
                 #this object has not been checked out; save changes directly into the object
                 releasedate = self.process_releasedate(releasedate, self.releasedate)
                 self.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
+                self.updatePropertiesFromGlossary(lang)
                 self.content_type = content_type
                 self.precondition = precondition
                 self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
@@ -402,6 +405,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
                     raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
                 releasedate = self.process_releasedate(releasedate, self.version.releasedate)
                 self.version.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
+                self.version.updatePropertiesFromGlossary(lang)
                 self.version.content_type = content_type
                 self.version.precondition = precondition
                 self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)

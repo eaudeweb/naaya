@@ -119,6 +119,7 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
         self._setObject(id, ob)
         #extra settings
         ob = self._getOb(id)
+        ob.updatePropertiesFromGlossary(lang)
         ob.approveThis(approved, approved_by)
         ob.submitThis()
         if discussion: ob.open_for_comments()
@@ -297,6 +298,7 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
         releasedate = self.process_releasedate(releasedate, self.releasedate)
         self.save_properties(title, description, coverage, keywords, sortorder,
             details, expirationdate, topitem, self.smallpicture, self.bigpicture, resourceurl, source, releasedate, lang)
+        self.updatePropertiesFromGlossary(lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
             if approved == 0: approved_by = None
@@ -387,6 +389,7 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
                 else: self.setSmallPicture(smallpicture)
                 if del_bigpicture != '': self.delBigPicture()
                 else: self.setBigPicture(bigpicture)
+                self.updatePropertiesFromGlossary(lang)
                 self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             else:
                 #this object has been checked out; save changes into the version object
@@ -400,7 +403,8 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
                 else: self.version.setSmallPicture(smallpicture)
                 if del_bigpicture != '': self.version.delBigPicture()
                 else: self.version.setBigPicture(bigpicture)
-                self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+                self.version.updatePropertiesFromGlossary(lang)
+                self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             if discussion: self.open_for_comments()
             else: self.close_for_comments()
             self._p_changed = 1

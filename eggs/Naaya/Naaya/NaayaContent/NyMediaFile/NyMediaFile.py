@@ -105,6 +105,7 @@ def addNyMediaFile(self, id='', title='', description='', coverage='', keywords=
         self._setObject(id, ob)
         #extra settings
         ob = self._getOb(id)
+        ob.updatePropertiesFromGlossary(lang)
         ob.approveThis(approved, approved_by)
         ob.submitThis()
         if discussion: ob.open_for_comments()
@@ -271,6 +272,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
         if not lang: lang = self.gl_get_selected_language()
         self.save_properties(title, description, coverage, keywords, sortorder,
             releasedate, lang)
+        self.updatePropertiesFromGlossary(lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
             if approved == 0: approved_by = None
@@ -365,6 +367,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
                 #this object has not been checked out; save changes directly into the object
                 releasedate = self.process_releasedate(releasedate, self.releasedate)
                 self.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang)
+                self.updatePropertiesFromGlossary(lang)
                 self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             else:
                 #this object has been checked out; save changes into the version object
@@ -372,6 +375,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
                     raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
                 releasedate = self.process_releasedate(releasedate, self.version.releasedate)
                 self.version.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang)
+                self.version.updatePropertiesFromGlossary(lang)
                 self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             if discussion: self.open_for_comments()
             else: self.close_for_comments()
