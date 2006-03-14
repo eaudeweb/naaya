@@ -163,7 +163,7 @@ class NyProperties(LocalPropertyManager):
             if l['name'] != lang_name:
                 self._setLocalPropValue(prop, l['code'], '')
         if provider.meta_type == module_glossary_metatype:
-            for v in self.getLocalProperty(prop, lang).split(','):
+            for v in self.splitToList(self.getLocalProperty(prop, lang)):
                 gloss_elem = provider.searchGlossary(query=v, language=lang_name, definition='')
                 if gloss_elem[2]:
                     gloss_elem = gloss_elem[2][0]
@@ -174,7 +174,7 @@ class NyProperties(LocalPropertyManager):
                             if curr_trans: self._setLocalPropValue(prop, l['code'], '%s, %s' % (curr_trans, trans))
                             else: self._setLocalPropValue(prop, l['code'], trans)
         elif provider.meta_type == module_thesaurus_metatype:
-            for v in self.getLocalProperty(prop, lang).split(','):
+            for v in self.splitToList(self.getLocalProperty(prop, lang)):
                 th_concept = provider.searchThesaurusNames(query=v, lang=lang)
                 if th_concept:
                     th_concept = th_concept[0]
