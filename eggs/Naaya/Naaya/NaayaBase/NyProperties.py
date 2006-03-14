@@ -157,35 +157,45 @@ class NyProperties(LocalPropertyManager):
         @param lang_name: current language name
         @type lang_name: string
         """
-        #clean up the other translations
         langs = self.gl_get_languages_mapping()
+        res = {}
+
+        #creates the results dictionary
         for l in langs:
             if l['name'] != lang_name:
-                self._setLocalPropValue(prop, l['code'], '')
+                res[l['code']] = ''
+
+        #get associated translations from glossary/thesaurus
         if provider.meta_type == module_glossary_metatype:
             for v in self.splitToList(self.getLocalProperty(prop, lang)):
                 gloss_elem = provider.searchGlossary(query=v, language=lang_name, definition='')
                 if gloss_elem[2]:
                     gloss_elem = gloss_elem[2][0]
                     for l in langs:
-                        curr_trans = self.getLocalProperty(prop, l['code'])
-                        if l['name'] != lang_name:
-                            trans = gloss_elem.get_translation_by_language(l['name'])
-                            if curr_trans: self._setLocalPropValue(prop, l['code'], '%s, %s' % (curr_trans, trans))
-                            else: self._setLocalPropValue(prop, l['code'], trans)
+                        l_code = l['code']
+                        l_name = l['name']
+                        if l_name != lang_name:
+                            trans = gloss_elem.get_translation_by_language(l_name)
+                            if res[l_code] and trans:        res[l_code] = '%s, %s' % (res[l_code], trans)
+                            elif not res[l_code] and trans:  res[l_code] = trans
         elif provider.meta_type == module_thesaurus_metatype:
             for v in self.splitToList(self.getLocalProperty(prop, lang)):
                 th_concept = provider.searchThesaurusNames(query=v, lang=lang)
                 if th_concept:
                     th_concept = th_concept[0]
                     for l in langs:
-                        curr_trans = self.getLocalProperty(prop, l['code'])
-                        if l['name'] != lang_name:
-                            th_term = provider.getTermByID(th_concept.concept_id, l['code'])
+                        l_code = l['code']
+                        l_name = l['name']
+                        if l_name != lang_name:
+                            th_term = provider.getTermByID(th_concept.concept_id, l_code)
                             if th_term:
                                 trans = th_term.concept_name
-                                if curr_trans: self._setLocalPropValue(prop, l['code'], '%s, %s' % (curr_trans, trans))
-                                else: self._setLocalPropValue(prop, l['code'], trans)
+                                if res[l_code] and trans:       res[l_code] = '%s, %s' % (res[l_code], trans)
+                                elif not res[l_code] and trans: res[l_code] = trans
+
+        #set values
+        for k in res.keys():
+            if res[k]: self._setLocalPropValue(prop, k, res[k])
 
     security.declarePrivate('updatePropertiesFromGlossary')
     def updatePropertiesFromGlossary(self, lang):
