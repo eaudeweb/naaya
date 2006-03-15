@@ -116,7 +116,7 @@ Pick a folder from this portal and press the <em>Submit</em> button in order to 
 	<input type="text" name="folder_url" id="folder_url" size="50" />
 	<input type="button" value="Pick" i18n:translate="" 
 			tal:define="sitemap_path here/getSitePath" 
-			tal:attributes="onclick string:setupWin('${sitemap_path}/sitemap_add_html?display_root=0', 300, 500);;" />
+			tal:attributes="onclick string:setupWin('${sitemap_path}/sitemap_add_html?display_root=0&showitems=0', 300, 500);;" />
 </div>
 <div class="field">
 	<label for="submit-button" class="invisible">Submit button</label>
