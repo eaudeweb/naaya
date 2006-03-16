@@ -528,7 +528,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                         folder = self._getOb(folder_id)
                         folder.set_translations_list(target_language, translation['context'].encode('utf-8'))
                     except Exception, error:
-                        print error
+                        #print error
+                        pass
                 else:
                     folder.set_translations_list(target_language, translation['context'].encode('utf-8'))
                 if target_language in self.get_english_names():
@@ -544,7 +545,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                         try:
                             folder.manage_addGlossaryElement(elem_id, obj.entry, '', [], '', self.utConvertToInt(translation['approved'].encode('utf-8')))
                         except Exception, error:
-                            print error
+                            #print error
+                            pass
                         elem_ob = folder._getOb(elem_id, None)
                         if elem_ob is not None:
 
