@@ -33,7 +33,7 @@
 </tr>
 <tr>
 	<td valign="top" i18n:translate="">Description (HTML)</td>
-	<td><span tal:replace="structure python:here.Epoz('description:utf8:ustring', data=here.getLocalProperty('description', curr_lang), toolbox='%s/toolbox_html' % here.absolute_url(), lang=curr_lang, style='width: 400px; height: 200px; border: 1px solid #000000;')" /></td>
+	<td><span tal:replace="structure python:here.get_wysiwyg_widget('description:utf8:ustring', here.getLocalProperty('description', curr_lang), toolbox='%s/toolbox_html' % here.absolute_url())" /></td>
 </tr>
 <tr>
 	<td i18n:translate="">Publisher</td>
