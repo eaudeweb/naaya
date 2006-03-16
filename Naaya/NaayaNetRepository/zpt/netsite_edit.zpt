@@ -15,7 +15,7 @@
 </div>
 <div class="field">
 	<label for="description" i18n:translate="">Description</label>
-	<span tal:replace="structure python:here.Epoz('description:utf8:ustring', data=here.getLocalProperty('description', curr_lang), toolbox='', lang=here.gl_get_selected_language(), style='width: 400px; height: 200px; border: 1px solid #000000;')" />
+	<span tal:replace="structure python:here.get_wysiwyg_widget('description:utf8:ustring', here.getLocalProperty('description', curr_lang))" />
 </div>
 <div class="field">
 	<label for="url" i18n:translate="">URL</label>
