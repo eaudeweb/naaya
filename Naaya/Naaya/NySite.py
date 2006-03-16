@@ -525,7 +525,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if size == 'big':
             width, height = 600, 300
         elif size == 'medium':
-            width, height = 400, 200
+            width, height = 450, 200
         else: #small
             width, height = 300, 200
         return self.Epoz(name=name, data=data, toolbox=toolbox, lang=lang,

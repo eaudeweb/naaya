@@ -49,7 +49,7 @@
 		</tr>
 		<tr>
 			<td i18n:translate="" valign="top">Body</td>
-			<td><span tal:replace="structure python:here.Epoz('body:utf8:ustring', data=ob.getLocalProperty('body', curr_lang), toolbox='%s/toolbox_html' % ob.absolute_url(), lang=here.gl_get_selected_language(), style='width: 300px; height: 200px; border: 1px solid #000000;')" /></td>
+			<td><span tal:replace="structure python:here.get_wysiwyg_widget('body:utf8:ustring', ob.getLocalProperty('body', curr_lang), toolbox='%s/toolbox_html' % ob.absolute_url(), size='medium')" /></td>
 		</tr>
 		<tr>
 			<td><input type="hidden" name="lang" tal:attributes="value curr_lang" /></td>

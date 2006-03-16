@@ -13,7 +13,7 @@
 </div>
 <div class="field">
 	<label for="body" i18n:translate="">Body</label>
-	<span tal:replace="structure python:here.Epoz('body:utf8:ustring', data='', toolbox='', lang=here.gl_get_selected_language(), style='width: 400px; height: 200px; border: 1px solid #000000;')" />
+	<span tal:replace="structure python:here.get_wysiwyg_widget('body:utf8:ustring')" />
 </div>
 <div class="field">
 	<input type="submit" value="Submit" i18n:attributes="value" />
