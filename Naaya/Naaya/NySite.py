@@ -505,6 +505,32 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """
         return NAAYA_PRODUCT_PATH
 
+    #Epoz layer
+    def get_wysiwyg_widget(self, name, data='', toolbox='', size='big', lang=None):
+        """
+        Returns an WYSIWYG widget. The Epoz is used for the moment.
+        Also the widget will have a black border.
+        @param name: name of the HTML control
+        @type name: string
+        @param data: piece of text to be displayed inside
+        @type data: string
+        @param toolbox: a link to a HTML-Page which delivers additional tools
+        @type toolbox: string
+        @param size: speciefies the size of the widget
+        @type size: string
+        @param lang: language code
+        @type lang: string
+        """
+        if lang is None: lang = self.gl_get_selected_language()
+        if size == 'big':
+            width, height = 600, 300
+        elif size == 'medium':
+            width, height = 400, 200
+        else: #small
+            width, height = 300, 200
+        return self.Epoz(name=name, data=data, toolbox=toolbox, lang=lang,
+            style='width:%spx;height:%spx;border:1px solid #000000;' % (width, height))
+
     #objects getters
     security.declarePublic('getSite')
     def getSite(self): return self
