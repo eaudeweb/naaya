@@ -299,7 +299,6 @@ class catalog_utils:
             dict[l_object.id] = l_object
         return dict.values()
 
-
     def cu_search_catalog(self, meta_type=None, query='', size=10000, language='English', definition=''):
         """ search catalog """
         catalog = self.getGlossaryCatalog()

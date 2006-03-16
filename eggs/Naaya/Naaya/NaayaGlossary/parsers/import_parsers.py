@@ -206,7 +206,8 @@ class glossary_export:
                     self.manage_addGlossaryFolder(folder_id, '', [], '', '', 1)
                     folder = self._getOb(folder_id)
                 except Exception, error:
-                    print error
+                    #print error
+                    pass
             elem_ob = folder._getOb(k, None)
             if elem_ob is not None:
                 for lang,trans in chandler.TMXContent[k].items():
@@ -218,7 +219,8 @@ class glossary_export:
                     elem_name = self.utf8_to_latin1(chandler.TMXContent[k]['English'])
                     folder.manage_addGlossaryElement(elem_name, elem_name, '', [], '', 1)
                 except Exception, error:
-                    print error
+                    #print error
+                    pass
                 elem_ob = folder._getOb(elem_name, None)
                 if elem_ob is not None:
                     for lang,trans in chandler.TMXContent[k].items():
