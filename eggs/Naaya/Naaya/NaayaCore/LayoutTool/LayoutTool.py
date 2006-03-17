@@ -99,7 +99,7 @@ class LayoutTool(Folder, combosync_tool):
         except: return []
 
     def getSkinFilesPath(self):
-        return '/%s/%s' % (self._getOb(self.getCurrentSkinId()).absolute_url(1), self.getCurrentSkinSchemeId())
+        return '%s/%s' % (self._getOb(self.__current_skin_id).absolute_url(), self.getCurrentSkinSchemeId())
 
     def getDataForLayoutSettings(self):
         l_data = []
@@ -108,11 +108,11 @@ class LayoutTool(Folder, combosync_tool):
             for l_scheme in l_skin.getSchemes():
                 l_schemes.append((l_scheme.title_or_id(), l_scheme.id))
             l_data.append((l_skin.id, l_skin.title_or_id(), l_schemes))
-        return (self.getCurrentSkinId(), self.getCurrentSkinSchemeId(), l_data)
+        return (self.__current_skin_id, self.getCurrentSkinSchemeId(), l_data)
 
     def getContent(self, p_context={}, p_page=None):
-        l_skin = self._getOb(self.getCurrentSkinId())
-        p_context['skin_files_path'] = '/%s/%s' % (l_skin.absolute_url(1), self.getCurrentSkinSchemeId())
+        l_skin = self._getOb(self.__current_skin_id)
+        p_context['skin_files_path'] = '%s/%s' % (l_skin.absolute_url(), self.getCurrentSkinSchemeId())
         return l_skin._getOb(p_page)(p_context)
 
     #zmi actions
