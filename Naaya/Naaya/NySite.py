@@ -528,8 +528,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             width, height = 450, 200
         else: #small
             width, height = 300, 200
+        sfp = self.getLayoutTool().getSkinFilesPath()
         return self.Epoz(name=name, data=data, toolbox=toolbox, lang=lang,
-            style='width:%spx;height:%spx;border:1px solid #000000;' % (width, height))
+            style='width:%spx;height:%spx;border:1px solid #000000;' % (width, height),
+            css='%s/style' % sfp,
+            customcss='%s/style_common' % sfp)
 
     #objects getters
     security.declarePublic('getSite')
