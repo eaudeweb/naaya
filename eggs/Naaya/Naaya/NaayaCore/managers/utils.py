@@ -291,6 +291,10 @@ class utils:
         if len(p_string) > p_len: return '%s..' % p_string[0:p_len]
         else: return p_string
 
+    def utStripString(self, p_string):
+        """ strip a given string """
+        return string.strip(p_string)
+
     def utNoneToEmpty(self, value):
         """ """
         if value == None: return ''
@@ -313,6 +317,11 @@ class utils:
         #convert to utf-8
         if isinstance(p_string, unicode): return p_string.encode('utf-8')
         else: return str(p_string)
+
+    def utToUnicode(self, p_string):
+        #convert to unicode
+        if not isinstance(p_string, unicode): return unicode(p_string, 'utf-8')
+        else: return p_string
 
     def utXmlEncode(self, p_string):
         """Encode some special chars"""
@@ -373,7 +382,7 @@ class utils:
         try: return p_date.strftime('%d/%m/%Y')
         except: return ''
 
-    # generic function, must be replaced for CHM and other sites!!!!!!!!!!!1
+    # generic function, must be replaced for CHM and other sites !!!
     def utShowDateTime1(self, p_date):
         """date is a DateTime object. This function returns a string 'dd month_name yyyy'"""
         try: return p_date.strftime('%d %b %Y')
@@ -388,14 +397,6 @@ class utils:
         """date is a DateTime object. This function returns a string 'dd month_name yyyy hh:mm:ss'"""
         try: return p_date.strftime('%Y-%m-%dT%H:%M:%SZ')
         except: return ''
-
-    def utConvertDateTimeHTMLToString(self, p_datestring):
-        """ """
-        try:
-            y, m, d = p_datestring.split('T')[0].split('-')
-            return '%s/%s/%s' % (d, m, y)
-        except:
-            return ''
 
     def utShowDateTimePeriod(self, p_start, p_end):
         """
