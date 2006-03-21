@@ -24,6 +24,7 @@
 		<form id="site_admin_users_workgroup" title="View workgroups"/>
 		<form id="site_admin_users_unnassigned" title="View users with no roles"/>
 		<form id="site_admin_users_assigned" title="View users with roles"/>
+		<form id="site_admin_userroles" title="View the roles of a user"/>
 	</forms>
 	<layout default_skin_id="chm" default_scheme_id="indigo">
 		<skin id="chm" title="CHM">
