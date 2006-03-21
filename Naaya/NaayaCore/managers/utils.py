@@ -447,6 +447,14 @@ class utils:
         else:
             return ''
 
+    def utConvertDateTimeHTMLToString(self, p_datestring):
+        """ """
+        try:
+            y, m, d = p_datestring.split('T')[0].split('-')
+            return '%s/%s/%s' % (d, m, y)
+        except:
+            return ''
+
     def utLinkValue(self, url):
         """
         Takes the value of an url and test if is not empty.
