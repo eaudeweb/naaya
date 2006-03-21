@@ -85,11 +85,18 @@
 		<td><strong><a tal:define="user python:user_tool.getUserAccount(user_obj)" tal:attributes="href string:${site_url}/admin_edituser_html?name=${user}" tal:content="user">username</a></strong></td>
 		<td tal:content="python:user_tool.getUserFirstName(user_obj) + ' ' + user_tool.getUserLastName(user_obj)" />
 		<td tal:content="python:user_tool.getUserEmail(user_obj)" />
-		<td tal:define="roles python:user_tool.getUserRoles(user_obj)">
-			<tal:block condition="roles" repeat="role roles">
-				<tal:block replace="role" /><span tal:condition="not:repeat/subject/end" tal:replace="string:," />
-			</tal:block>
-			<tal:block condition="not:roles">&nbsp;</tal:block>
+		<td class="roles_per_folder" tal:define="roles python:user_tool.getUserAdditionalRoles(user)">
+                <ul tal:condition="python:roles">
+        	   <li tal:repeat="role roles">
+	        	<strong tal:content="python:role[0]" /> - 
+		        <span tal:condition="python:role[1]=='/'" i18n:translate="">Entire portal</span>
+        		<span tal:condition="python:role[1]!='/'" tal:define="obj python:here.utGetObject(role[1])">
+	        		<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"/>
+        		</span>
+                   </li>
+                </ul>
+<!--				<tal:block replace="role" /><span tal:condition="not:repeat/role/end" tal:replace="string:," /> -->
+		<tal:block condition="not:roles">&nbsp;</tal:block>
 		</td>
 		</tal:block>
 	</tr>
