@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language"
-	tal:define="site_url here/getSitePath; isArabic here/isArabicLanguage; noArabic not:isArabic">
+	tal:define="site_url here/getSitePath;">
 	<head tal:define="skin_file_path python:here.getLayoutTool().getSkinFilesPath()">
 		<title i18n:translate="">Pick user location</title>
 		<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${skin_file_path}/style_common" />
