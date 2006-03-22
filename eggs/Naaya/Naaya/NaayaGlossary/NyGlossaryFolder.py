@@ -103,6 +103,11 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
             obj_lst.append(ob)
         return obj_lst
 
+    def get_objets_sorted(self, lang_code):
+        """ """
+        l_elems = self.objectValues([NAAYAGLOSSARY_ELEMENT_METATYPE])
+        return self.utSortObjsListByAttr(l_elems, self.get_language_by_code(lang_code), 0)
+
     ##########################
     #   META TYPES FUNCTIONS #
     ##########################
