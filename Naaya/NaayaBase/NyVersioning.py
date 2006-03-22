@@ -58,7 +58,7 @@ class NyVersioning(utils):
         self.__current_version_uid = None
         self.__versions = {}
 
-    def __create_version(self, p_version_uid, p_version_data):
+    def __create_version(self, p_version_uid, p_version_data, p_username):
         """
         Creates a version entry, a tuple of:
             - data
@@ -67,7 +67,7 @@ class NyVersioning(utils):
         @param p_version_uid: version unique identifier
         @param p_version_data: object data that is versioned
         """
-        self.__versions[p_version_uid] = (self.utGetTodayDate(), self.REQUEST.AUTHENTICATED_USER.getUserName(), p_version_data)
+        self.__versions[p_version_uid] = (self.utGetTodayDate(), p_username, p_version_data)
         self.__current_version_uid = p_version_uid
         self._p_changed = 1
 
@@ -100,6 +100,14 @@ class NyVersioning(utils):
         """
         return self.__versions
 
+    def setVersions(self, versions):
+        """
+        Set versions structure for current object.
+        @param versions: dictionary with versions info
+        """
+        self.__versions = deepcopy(versions)
+        self._p_changed = 1
+
     def getOlderVersions(self):
         """
         Returns the dictionary of older versions. This means that current
@@ -117,6 +125,14 @@ class NyVersioning(utils):
         """
         return self.__current_version_uid
 
+    def setCurrentVersionId(self, id):
+        """
+        Set the current version id.
+        @param id: version unique identifier
+        """
+        self.__current_version_uid = id
+        self._p_changed = 1
+
     def getVersion(self, p_version_uid=None):
         """
         Returns given version entry.
@@ -124,18 +140,27 @@ class NyVersioning(utils):
         """
         return self.__get_version_data(p_version_uid)
 
-    def createVersion(self):
+    def copyVersions(self, target):
+        """
+        Copy all information about versions from the
+        current object to the target object.
+        @param target: target object
+        """
+        self.setCurrentVersionId(target.getCurrentVersionId())
+        self.setVersions(target.getVersions())
+
+    def createVersion(self, username):
         """
         Creates a version entry.
         """
         l_version_uid = self.utGenerateUID()
         if self.__current_version_uid is None:
             #no versions yet
-            self.__create_version(l_version_uid, self.objectDataForVersion())
+            self.__create_version(l_version_uid, self.objectDataForVersion(), username)
         else:
             #compare with current version
             if self.__compare_current_version_data_with_data(self.objectVersionDataForVersionCompare(self.__get_version_data(self.__current_version_uid)), self.objectDataForVersionCompare()):
-                self.__create_version(l_version_uid, self.objectDataForVersion())
+                self.__create_version(l_version_uid, self.objectDataForVersion(), username)
 
     def objectDataForVersion(self):
         """
