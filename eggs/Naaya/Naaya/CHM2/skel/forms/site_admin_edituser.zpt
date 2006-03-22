@@ -35,7 +35,7 @@
 </div>
 
 <div class="second_tabset_content">
-<h2 i18n:translate="">Edit user</h2>
+<h2 i18n:translate="">Edit user: <span tal:replace="python:name" /></h2>
 
 <hr />
 <div class="tabs_admin">

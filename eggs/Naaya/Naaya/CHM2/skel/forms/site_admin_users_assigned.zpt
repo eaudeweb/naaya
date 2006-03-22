@@ -20,8 +20,8 @@
 
 <div class="tabs_admin">
 	<ul>
-		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Users with roles</a></li>
-		<li><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Unassigned users</a></li>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Privileged users</a></li>
+		<li><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Registered users</a></li>
 		<li tal:repeat="wg python:here.getWorkgroupsList()"><a tal:define="wg_id python:wg[0]" tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
 	</ul>
 </div>
@@ -78,9 +78,13 @@
 
 </div>
 
-<form action="admin_addworkgroup_html" method="post" style="display:inline; float: right; width: 10%; margin-right: 4em;">
+<form action="admin_delworkgroup_html" method="post" style="display:inline; float: right; width: 10%; margin-right: 4em;">
+	<input type="submit" value="Delete workgroup" i18n:attributes="value" class="submission_button" />
+</form>
+<form action="admin_addworkgroup_html" method="post" style="display:inline; float: right; width: 10%; margin-right: 0.1em;">
 	<input type="submit" value="Add workgroup" i18n:attributes="value" class="submission_button" />
 </form>
+
 
 </tal:block>
 </tal:block>

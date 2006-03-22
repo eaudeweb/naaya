@@ -584,25 +584,26 @@ class CHMSite(NySite):
                 return REQUEST.RESPONSE.redirect('%s/admin_users_workgroup?w=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_delworkgroup')
-    def admin_delworkgroup(self, id='', REQUEST=None):
+    def admin_delworkgroup(self, ids=[], REQUEST=None):
         """
-        Delete a workgroup.
+        Delete workgroup(s).
         """
-        wg = self.getWorkgroupById(id)
-        if wg:
-            loc = self.unrestrictedTraverse(wg[2])
-            #remove local roles
-            for x in loc.get_local_roles():
-                isowner = 0
-                if 'Owner' in x[1]: isowner = 1
-                self.del_userfrom_workgroup(loc, x[0])
-                if isowner: self.add_userto_workgroup(loc, x[0], ['Owner'])
-            #remove workgroup
-            self.workgroups.remove(wg)
-            self._p_changed = 1
-            if REQUEST:
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-                return REQUEST.RESPONSE.redirect('%s/admin_workgroups_html' % self.absolute_url())
+        for id in self.utConvertToList(ids):
+            wg = self.getWorkgroupById(id)
+            if wg:
+                loc = self.unrestrictedTraverse(wg[2])
+                #remove local roles
+                for x in loc.get_local_roles():
+                    isowner = 0
+                    if 'Owner' in x[1]: isowner = 1
+                    self.del_userfrom_workgroup(loc, x[0])
+                    if isowner: self.add_userto_workgroup(loc, x[0], ['Owner'])
+                #remove workgroup
+                self.workgroups.remove(wg)
+                self._p_changed = 1
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            return REQUEST.RESPONSE.redirect('%s/admin_delworkgroup_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_userworkgroups')
     def admin_userworkgroups(self, name='', ids=[], REQUEST=None):
@@ -628,12 +629,16 @@ class CHMSite(NySite):
         """
         for t in self.utConvertToList(roles):
             role, location = t.split('||')
+            if location == '/': location = ''
             loc = self.unrestrictedTraverse(location)
-            res = self.utListDifference(loc.get_local_roles_for_userid(name), [role])
-            if len(res):
-                loc.manage_setLocalRoles(name, res)
+            if location != '':
+                res = self.utListDifference(loc.get_local_roles_for_userid(name), [role])
+                if len(res):
+                    loc.manage_setLocalRoles(name, res)
+                else:
+                    loc.manage_delLocalRoles(name)
             else:
-                loc.manage_delLocalRoles(name)
+                self.getAuthenticationTool()._doDelUserRoles(name)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s' % (self.absolute_url(), name))
@@ -751,6 +756,11 @@ class CHMSite(NySite):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_addworkgroup')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_delworkgroup_html')
+    def admin_delworkgroup_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_delworkgroup')
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_userroles_html')
     def admin_userroles_html(self, REQUEST=None, RESPONSE=None):
         """ """
@@ -814,5 +824,10 @@ class CHMSite(NySite):
         self.workgroups = []
         self._p_changed = 1
         return 'OK'
+
+    security.declareProtected(view, 'admin_welcome_page')
+    def admin_welcome_page(self, REQUEST=None):
+        """ redirect to welcome page """
+        REQUEST.RESPONSE.redirect('%s' % self.absolute_url())
 
 InitializeClass(CHMSite)
