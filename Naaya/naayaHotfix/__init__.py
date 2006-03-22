@@ -66,6 +66,7 @@ LOG('naayaHotfix', DEBUG, 'Patch for Localizer and other stuff')
 #patch for TextIndexNG2. 
 import sys
 from Products.TextIndexNG2.converters import doc, ppt, ps, ooffice, pdf, xls
+from Products.TextIndexNG2.converters.doc import wvConf_file
 from Products.TextIndexNG2.Registry import ConverterRegistry
 from Products.TextIndexNG2.converters.stripogram import html2text
 
