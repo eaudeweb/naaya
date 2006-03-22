@@ -115,7 +115,7 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
         ob.submitThis()
         ob.approveThis(approved, approved_by)
         ob.handleUpload(source, file, url)
-        ob.createVersion()
+        ob.createVersion(self.REQUEST.AUTHENTICATED_USER.getUserName())
         if discussion: ob.open_for_comments()
         self.recatalogNyObject(ob)
         self.notifyFolderMaintainer(self, ob)
@@ -323,7 +323,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         if self.wl_isLocked():
             raise ResourceLockedError, "File is locked via WebDAV"
         self.handleUpload(source, file, url)
-        if version: self.createVersion()
+        if version: self.createVersion(self.REQUEST.AUTHENTICATED_USER.getUserName())
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manage_upload')
@@ -351,7 +351,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self.checkout = 0
         self.checkout_user = None
         self.version = None
-        self.createVersion()
+        self.createVersion(self.REQUEST.AUTHENTICATED_USER.getUserName())
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
@@ -378,7 +378,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', coverage='', keywords='',
-        sortorder='', content_type='', precondition="", downloadfilename='',
+        sortorder='', content_type='', precondition='', downloadfilename='',
         releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
@@ -438,7 +438,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         if not self.hasVersion():
             #this object has not been checked out; save changes directly into the object
             self.handleUpload(source, file, url)
-            if version: self.createVersion()
+            if version: self.createVersion(self.REQUEST.AUTHENTICATED_USER.getUserName())
         else:
             #this object has been checked out; save changes into the version object
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():

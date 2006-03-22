@@ -19,16 +19,17 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+from copy import deepcopy
 
 #Zope imports
-from OFS.Image import File
+from Acquisition import Implicit
 
 #Product imports
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
-from file_item import file_item
+from Products.NaayaContent.NyExFile.file_item import file_item
 
-class exfile_item(NyProperties):
+class exfile_item(Implicit, NyProperties):
     """ """
 
     title = LocalProperty('title')
@@ -47,9 +48,56 @@ class exfile_item(NyProperties):
             downloadfilename, releasedate, lang)
         NyProperties.__dict__['__init__'](self)
 
-    def file_for_lang(self, lang):
+    def getFileItems(self): return self.__files
+    def setFileItems(self, files):
+        self.__files = files
+        self._p_changed = 1
+
+    def copyFileItems(self, source, target):
         """ """
-        return self.__files.get(lang, None)
+        files = {}
+        for k, v in source.getFileItems().items():
+            files[k] = file_item(v.getId(), v.title, v.data, v.content_type, v.precondition)
+            files[k].content_type = v.content_type
+            files[k].precondition = v.precondition
+            files[k].copyVersions(v)
+        target.setFileItems(files)
+
+    def getFileItem(self, lang):
+        """ """
+        if not self.__files.has_key(lang):
+            self.__files[lang] = file_item('', '', '', '', '')
+        self._p_changed = 1
+        return self.__files[lang]
+
+    def size(self, lang=None):
+        """ """
+        if lang is None: lang = self.gl_get_selected_language()
+        try: return self.getFileItem(lang).size
+        except: return 0
+
+    def content_type(self, lang=None):
+        """ """
+        if lang is None: lang = self.gl_get_selected_language()
+        return self.getFileItem(lang).content_type
+        #try: 
+        #except: return 'application/octet-stream'
+
+    def precondition(self, lang=None):
+        """ """
+        if lang is None: lang = self.gl_get_selected_language()
+        try: return self.getFileItem(lang).precondition
+        except: return ''
+
+    def set_content_type(self, content_type, lang):
+        """ """
+        try: self.getFileItem(lang).content_type = content_type
+        except: pass
+
+    def set_precondition(self, precondition, lang):
+        """ """
+        try: self.getFileItem(lang).precondition = precondition
+        except: pass
 
     def save_properties(self, title, description, coverage, keywords, sortorder,
         downloadfilename, releasedate, lang):
@@ -64,11 +112,19 @@ class exfile_item(NyProperties):
         self.downloadfilename = downloadfilename
         self.releasedate = releasedate
 
-    def handleUpload(self, source, file, url, lang):
+    def handleUpload(self, source, file, url, lang=None):
         """
         Upload a file from disk or from a given URL.
         """
-        if not self.__files.has_key(lang):
-            self.__files[lang] = file_item(self.id, self.title, '', '', '')
-        self.__files[lang].handleUpload(source, file, url)
-        self._p_changed = 1
+        if lang is None: lang = self.gl_get_selected_language()
+        self.getFileItem(lang).handleUpload(source, file, url)
+
+    def getOlderVersions(self, lang=None):
+        """
+        Returns the dictionary of older versions. This means that current
+        version is removed because it cointains the current content of the
+        object.
+        """
+        if lang is None: lang = self.gl_get_selected_language()
+        try: return self.getFileItem(lang).getOlderVersions()
+        except: return []
