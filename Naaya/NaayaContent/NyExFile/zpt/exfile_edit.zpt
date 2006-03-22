@@ -90,11 +90,11 @@ function fSet(ctrl, value)
 </div>
 <div class="field">
 	<label for="content_type"><span i18n:translate="" tal:omit-tag="">Content Type</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'downloadfilename')" class="mandatory_field"> *</span></label>
-	<input type="text" name="content_type" id="content_type" size="40" tal:attributes="value python:here.getSession('content_type', here.getVersionProperty('content_type'))" />
+	<input type="text" name="content_type" id="content_type" size="40" tal:attributes="value python:here.getSession('content_type', here.getVersionContentType(curr_lang))" />
 </div>
 <div class="field-inline">
 	<label i18n:translate="">File Size</label>
-	<span tal:replace="here/size" /> <span i18n:translate="" tal:omit-tag="">bytes</span>
+	<span tal:replace="python:here.size(curr_lang)" /> <span i18n:translate="" tal:omit-tag="">bytes</span>
 </div>
 <div class="field">
 	<label for="downloadfilename"><span i18n:translate="" tal:omit-tag="">Filename to download</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'downloadfilename')" class="mandatory_field"> *</span></label>
@@ -145,6 +145,7 @@ function fSet(ctrl, value)
 	<label for="version" i18:translate="">Check this to create a new version and maintain the previous one(s)</label>
 </div>
 <div class="field">
+	<input type="hidden" name="lang" tal:attributes="value curr_lang" />
 	<input type="submit" value="Upload" i18n:attributes="value" />
 </div>
 </form>
