@@ -105,6 +105,13 @@ class list_utils:
             l = [l]
         return l
 
+    def utElimintateDuplicates(self, p_objects, p_attr='id'):
+        """ eliminate duplicates from a list of objects (with ids) """
+        dict = {}
+        for l_object in p_objects:
+            dict[getattr(l_object, p_attr)] = l_object
+        return dict.values()
+
 class file_utils:
     """ """
 
