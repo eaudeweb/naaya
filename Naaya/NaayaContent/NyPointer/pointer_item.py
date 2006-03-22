@@ -19,6 +19,7 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+from Acquisition import Implicit
 
 #Zope imports
 
@@ -26,7 +27,7 @@
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
 
-class pointer_item(NyProperties):
+class pointer_item(Implicit, NyProperties):
     """ """
 
     title = LocalProperty('title')

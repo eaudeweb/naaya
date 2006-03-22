@@ -21,12 +21,13 @@
 #Python imports
 
 #Zope imports
+from Acquisition import Implicit
 
 #Product imports
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
 
-class story_item(NyProperties):
+class story_item(Implicit, NyProperties):
     """ """
 
     title = LocalProperty('title')
