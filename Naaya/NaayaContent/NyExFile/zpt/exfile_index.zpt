@@ -12,11 +12,11 @@
 </div>
 </tal:block>
 <table border="0" cellspacing="2" cellpadding="2">
-<tr tal:condition="python:here.size>0">
+<tr tal:condition="python:here.size()>0">
 	<th i18n:translate="">Download</th>
 	<td>
-		<a tal:define="size python:here.utShowSizeKb(here.size); content_type python:here.getContentTypeTitle(here.content_type)"
-			tal:attributes="href string:${here/absolute_url}/download"><img tal:attributes="src string:getContentTypePicture?id=${here/getContentType}" border="0" alt="" /> <span tal:replace="string:${here/downloadfilename} (${content_type}, ${size} Kb)"/></a>
+		<a tal:define="size python:here.utShowSizeKb(here.size()); content_type here/content_type; content_type_title python:here.getContentTypeTitle(content_type)"
+			tal:attributes="href string:${here/absolute_url}/download"><img tal:attributes="src string:getContentTypePicture?id=${content_type}" border="0" alt="" /> <span tal:replace="string:${here/downloadfilename} (${content_type_title}, ${size} Kb)"/></a>
 	</td>
 </tr>
 <tr>
