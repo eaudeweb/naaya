@@ -22,8 +22,8 @@
 
 <div class="tabs_admin">
 <ul>
-	<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Users with roles</a></li>
-	<li><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Unassigned users</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Privileged users</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Registered users</a></li>
 	<tal:block tal:repeat="wg here/getWorkgroupsList">
 		<li tal:define="wg_id python:wg[0]" tal:condition="python:str(wg_id)==str(current_w)" class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
 		<li tal:define="wg_id python:wg[0]" tal:condition="python:wg_id != current_w"><a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
@@ -36,7 +36,13 @@
 
 <tal:block tal:condition="current_w">
 <p i18n:translate="">
-	This page shows all users that are part of this working group and their local role(s).
+	This page shows all users that are part of this working group. 
+	<tal:block tal:define="wg python:here.getWorkgroupById(current_w)">
+	Being part of this workgroup provides a default role of <strong><span tal:replace="python:wg[3]" /></strong> in <span tal:define="obj python:here.utGetObject(wg[2])"> 
+	<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"/></span>.
+	</tal:block>
+
+
 </p>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_delusersfromworkgroup">
@@ -98,7 +104,10 @@
 
 </div>
 
-<form action="admin_addworkgroup_html" method="post" style="display:inline; float: right; width: 10%; margin-right: 4em;">
+<form action="admin_delworkgroup_html" method="post" style="display:inline; float: right; width: 10%; margin-right: 4em;">
+	<input type="submit" value="Delete workgroup" i18n:attributes="value" class="submission_button" />
+</form>
+<form action="admin_addworkgroup_html" method="post" style="display:inline; float: right; width: 10%; margin-right: 0.1em;">
 	<input type="submit" value="Add workgroup" i18n:attributes="value" class="submission_button" />
 </form>
 

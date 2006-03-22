@@ -36,27 +36,28 @@
 
 <div class="second_tabset_content">
 
-<h2 i18n:translate="">Edit user</h2>
+<h2 i18n:translate="">Edit user: <span tal:replace="python:name" /></h2>
 
-<hr />
 <div class="tabs_admin">
 	<ul>
 		<li><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${name}" i18n:translate="">Credentials</a></li>
 		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_userroles_html?name=${name}" i18n:translate="">Roles</a></li>
 	</ul>
 </div>
-<hr />
+
 
 <tal:block tal:define="wgs here/getWorkgroupsList" tal:condition="wgs">
 <h3 i18n:translate="">Workgroups</h3>
 <p i18n:translate="">
-	explanatory text here ...
+	The listing below shows all the workgroups defined in this portal and this user is part of the checked ones.
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_userworkgroups">
 <ul>
 	<li tal:repeat="wg wgs">
 		<input type="checkbox" name="ids" tal:attributes="value python:wg[0]; checked python:here.isUserInWorkgroup(wg[0], name)" />
 		<a tal:define="wg_id python:wg[0]" tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" />
+		&nbsp;(<strong><span tal:replace="python:wg[3]" /></strong> - <span tal:define="obj python:here.utGetObject(wg[2])"> 
+		<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"/></span>)
 	</li>
 </ul>
 <input type="hidden" name="name" tal:attributes="value name" />
@@ -65,6 +66,7 @@
 </tal:block>
 
 <tal:block tal:define="roles python:here.getUserAdditionalRoles(name)" tal:condition="roles">
+<hr />
 <h3 i18n:translate="">Extra roles</h3>
 <p i18n:translate="">
 	explanatory text here ...
@@ -85,7 +87,7 @@
 </form>
 </tal:block>
 
-
+<hr />
 <h3 i18n:translate="">Assign role</h3>
 <p i18n:translate="">
 	explanatory text here ...

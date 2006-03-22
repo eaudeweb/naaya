@@ -36,8 +36,8 @@ function createKey(key)
 
 <div class="tabs_admin">
 	<ul>
-		<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Users with roles</a></li>
-		<li><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Unassigned users</a></li>
+		<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Privileged users</a></li>
+		<li><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Registered users</a></li>
 		<tal:block tal:repeat="wg here/getWorkgroupsList">
 			<li tal:define="wg_id python:wg[0]"><a tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
 		</tal:block>
@@ -60,7 +60,7 @@ function createKey(key)
 	<tr>
 		<td nowrap="nowrap" i18n:translate="">Location:</td>
 		<td>
-			<input type=text name="location" id="location" size="40" onclick="pickLocation();" tal:attributes="value python:here.getSession('location', '')" />
+			<input type=text disabled="disabled" name="location" id="location" size="40" onclick="pickLocation();" tal:attributes="value python:here.getSession('location', '')" />
 			<input type="button" value="Pick" i18n:attributes="value" tal:define="acl_users_path user_tool/absolute_url" tal:attributes="onclick string:setupWin('${acl_users_path}/sitemap', 300, 500);;" />
 		</td>
 	</tr>
