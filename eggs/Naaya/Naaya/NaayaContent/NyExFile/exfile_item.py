@@ -119,6 +119,13 @@ class exfile_item(Implicit, NyProperties):
         if lang is None: lang = self.gl_get_selected_language()
         self.getFileItem(lang).handleUpload(source, file, url)
 
+    def createversion(self, username, lang=None):
+        """
+        Creates a version.
+        """
+        if lang is None: lang = self.gl_get_selected_language()
+        self.getFileItem(lang).createVersion(username)
+
     def getOlderVersions(self, lang=None):
         """
         Returns the dictionary of older versions. This means that current

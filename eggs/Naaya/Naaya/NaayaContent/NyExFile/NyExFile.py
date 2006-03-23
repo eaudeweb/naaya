@@ -119,7 +119,7 @@ def addNyExFile(self, id='', title='', description='', coverage='', keywords='',
         ob.submitThis()
         ob.approveThis(approved, approved_by)
         ob.handleUpload(source, file, url, lang)
-        ob.getFileItem(lang).createVersion(self.REQUEST.AUTHENTICATED_USER.getUserName())
+        ob.createversion(self.REQUEST.AUTHENTICATED_USER.getUserName(), lang)
         if discussion: ob.open_for_comments()
         self.recatalogNyObject(ob)
         self.notifyFolderMaintainer(self, ob)
@@ -141,10 +141,52 @@ def addNyExFile(self, id='', title='', description='', coverage='', keywords='',
         else:
             raise Exception, '%s' % ', '.join(r)
 
-
 def importNyExFile(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
-    pass
+    try: param = abs(int(param))
+    except: param = 0
+    if param == 3:
+        #just try to delete the object
+        try: self.manage_delObjects([id])
+        except: pass
+    else:
+        ob = self._getOb(id, None)
+        if param in [0, 1] or (param==2 and ob is None):
+            if param == 1:
+                #delete the object if exists
+                try: self.manage_delObjects([id])
+                except: pass
+            addNyExFile(self, id=id,
+                sortorder=attrs['sortorder'].encode('utf-8'),
+                downloadfilename=attrs['downloadfilename'].encode('utf-8'),
+                contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
+                discussion=abs(int(attrs['discussion'].encode('utf-8'))))
+            ob = self._getOb(id)
+            for property, langs in properties.items():
+                for lang in langs:
+                    ob._setLocalPropValue(property, lang, langs[lang])
+            ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
+                approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
+            if attrs['releasedate'].encode('utf-8') != '':
+                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
+            ob.checkThis(attrs['validation_status'].encode('utf-8'),
+                attrs['validation_comment'].encode('utf-8'),
+                attrs['validation_by'].encode('utf-8'),
+                attrs['validation_date'].encode('utf-8'))
+            #import file items
+            for object in objects:
+                lang = object.attrs['lang'].encode('utf-8')
+                ob.handleUpload('file',
+                    self.utBase64Decode(object.attrs['file'].encode('utf-8')), '',
+                    lang)
+                ob.set_content_type(object.attrs['content_type'].encode('utf-8'), lang)
+                ob.set_precondition(object.attrs['precondition'].encode('utf-8'), lang)
+                if lang != self.gl_get_selected_language():
+                    #don't create version for selected language because
+                    #has been already created in the addNyExFile method
+                    ob.createversion(self.REQUEST.AUTHENTICATED_USER.getUserName(), lang)
+            ob.import_comments(discussion)
+            self.recatalogNyObject(ob)
 
 class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
     """ """
@@ -153,6 +195,15 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
     meta_label = LABEL_OBJECT
     icon = 'misc_/NaayaContent/NyExFile.gif'
     icon_marked = 'misc_/NaayaContent/NyExFile_marked.gif'
+
+    def manage_options(self):
+        """ """
+        l_options = ()
+        if not self.hasVersion():
+            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
+        l_options += exfile_item.manage_options
+        l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
+        return l_options
 
     security = ClassSecurityInfo()
 
@@ -166,15 +217,6 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
-
-    def manage_options(self):
-        """ """
-        l_options = ()
-        if not self.hasVersion():
-            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += exfile_item.manage_options
-        l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
-        return l_options
 
     #override handlers
     def manage_afterAdd(self, item, container):
@@ -190,6 +232,43 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         """
         NyExFile.inheritedAttribute('manage_beforeDelete')(self, item, container)
         self.uncatalogNyObject(self)
+
+    security.declarePrivate('export_this_tag_custom')
+    def export_this_tag_custom(self):
+        return 'downloadfilename="%s" validation_status="%s" validation_date="%s" validation_by="%s" validation_comment="%s"' % \
+            (self.utXmlEncode(self.downloadfilename),
+                self.utXmlEncode(self.validation_status),
+                self.utXmlEncode(self.validation_date),
+                self.utXmlEncode(self.validation_by),
+                self.utXmlEncode(self.validation_comment))
+
+    security.declarePrivate('export_this_body_custom')
+    def export_this_body_custom(self):
+        r = []
+        ra = r.append
+        for lang, fileitem in self.getFileItems().items():
+            ra('<item lang="%s" file="%s" content_type="%s" precondition="%s" />' % \
+            (lang,
+                self.utBase64Encode(str(self.utNoneToEmpty(fileitem.data))),
+                self.utXmlEncode(fileitem.content_type),
+                self.utXmlEncode(fileitem.precondition)))
+        return ''.join(r)
+
+    security.declarePrivate('syndicateThis')
+    def syndicateThis(self, lang=None):
+        r = []
+        ra = r.append
+        l_site = self.getSite()
+        if lang is None: lang = self.gl_get_selected_language()
+        ra(self.syndicateThisHeader())
+        ra(self.syndicateThisCommon(lang))
+        ra('<dc:type>Text</dc:type>')
+        ra('<dc:format>application</dc:format>')
+        ra('<dc:source>%s</dc:source>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
+        ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(l_site.getLocalProperty('creator', lang)))
+        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(l_site.getLocalProperty('publisher', lang)))
+        ra(self.syndicateThisFooter())
+        return ''.join(r)
 
     def _fileitemkeywords(self, lang):
         """ """
@@ -275,7 +354,7 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         lang = self.gl_get_selected_language()
         self.handleUpload(source, file, url, lang)
         if version:
-            self.getFileItem(lang).createVersion(self.REQUEST.AUTHENTICATED_USER.getUserName())
+            self.createversion(self.REQUEST.AUTHENTICATED_USER.getUserName(), lang)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manage_upload')
@@ -387,14 +466,14 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
             #this object has not been checked out; save changes directly into the object
             self.handleUpload(source, file, url, lang)
             if version:
-                self.getFileItem(lang).createVersion(self.REQUEST.AUTHENTICATED_USER.getUserName())
+                self.createversion(self.REQUEST.AUTHENTICATED_USER.getUserName(), lang)
         else:
             #this object has been checked out; save changes into the version object
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
             self.version.handleUpload(source, file, url, lang)
             if version:
-                self.version.getFileItem(lang).createVersion(self.REQUEST.AUTHENTICATED_USER.getUserName())
+                self.version.createversion(self.REQUEST.AUTHENTICATED_USER.getUserName(), lang)
         self.recatalogNyObject(self)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
