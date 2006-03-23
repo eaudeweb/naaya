@@ -289,13 +289,18 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         return res
 
     security.declarePrivate('objectkeywords')
-    def objectkeywords(self, lang):
-        return u' '.join([self._objectkeywords(lang).encode('utf-8'), self._fileitemkeywords(lang)])
+    def objectkeywords(self, lang=None):
+        return u' '.join([self._objectkeywords(lang), self.toUnicode(self._fileitemkeywords(lang))])
 
     def getVersionContentType(self, lang):
         """ """
         if self.checkout: return self.version.content_type(lang)
         else: return self.content_type(lang)
+
+    def toUnicode(self, p_string):
+        #convert to unicode
+        if not isinstance(p_string, unicode): return unicode(p_string, 'utf-8', errors='ignore')
+        else: return p_string
 
     security.declarePublic('showVersionData')
     def showVersionData(self, vid=None, lang=None, REQUEST=None, RESPONSE=None):
