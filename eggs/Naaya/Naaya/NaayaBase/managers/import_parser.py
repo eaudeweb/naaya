@@ -47,6 +47,11 @@ class object_struct:
         self.discussion = None
         self.objects = []
 
+class item_struct:
+    def __init__(self, attrs):
+        self.attrs = attrs
+        self.content = None
+
 class property_struct:
     def __init__(self, name, lang):
         self.name = name
@@ -126,6 +131,10 @@ class import_handler(ContentHandler):
                                 attrs)
             stackObj = saxstack_struct('template', obj)
             self.stack.append(stackObj)
+        elif name == 'item':
+            obj = item_struct(attrs)
+            stackObj = saxstack_struct('item', obj)
+            self.stack.append(stackObj)
         elif attrs.has_key('lang'):
             #multilingual property
             name = name.encode('utf-8')
@@ -157,6 +166,10 @@ class import_handler(ContentHandler):
             self.stack[-2].obj.objects.append(self.stack[-1].obj)
             self.stack.pop()
         elif name == 'template':
+            self.stack[-1].obj.content = self.stack[-1].content.encode('utf-8')
+            self.stack[-2].obj.objects.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'item':
             self.stack[-1].obj.content = self.stack[-1].content.encode('utf-8')
             self.stack[-2].obj.objects.append(self.stack[-1].obj)
             self.stack.pop()
