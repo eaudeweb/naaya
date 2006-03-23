@@ -300,7 +300,7 @@ class utils:
 
     def utStripString(self, p_string):
         """ strip a given string """
-        return string.strip(p_string)
+        return string.strip(self.utToUtf8(p_string))
 
     def utNoneToEmpty(self, value):
         """ """
