@@ -23,6 +23,7 @@ from copy import deepcopy
 
 #Zope imports
 from OFS.Image import File, cookId
+from OFS.content_types import guess_content_type
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -36,6 +37,11 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from exfile_item import exfile_item
+try:
+    from Products.TextIndexNG2.Registry import ConverterRegistry
+    txng_converters = 1
+except ImportError:
+    txng_converters = 0
 
 #module constants
 METATYPE_OBJECT = 'Naaya Extended File'
@@ -184,6 +190,28 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         """
         NyExFile.inheritedAttribute('manage_beforeDelete')(self, item, container)
         self.uncatalogNyObject(self)
+
+    def _fileitemkeywords(self, lang):
+        """ """
+        res = ''
+        if txng_converters:
+            fileitem = self.getFileItem(lang)
+            data = str(fileitem.data)
+            mimetype, encoding = guess_content_type(self.getId(), data)
+            converter = ConverterRegistry.get(mimetype)
+            if converter:
+                try:
+                    res, encoding = converter.convert2(data, encoding, mimetype)
+                except:
+                    try:
+                        res = converter.convert(data)
+                    except:
+                        pass
+        return res
+
+    security.declarePrivate('objectkeywords')
+    def objectkeywords(self, lang):
+        return u' '.join([self._objectkeywords(lang).encode('utf-8'), self._fileitemkeywords(lang)])
 
     def getVersionContentType(self, lang):
         """ """
