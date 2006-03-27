@@ -27,10 +27,6 @@
 			tal:attributes="href string:/${pointer}"
 			tal:content="pointer"/></td>
 </tr>
-<tr tal:condition="here/coverage">
-	<th i18n:translate="">Geographical coverage</th>
-	<td tal:content="here/coverage" />
-</tr>
 </table>
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
