@@ -158,7 +158,6 @@ def importNyExFile(self, param, id, attrs, content, properties, discussion, obje
                 except: pass
             addNyExFile(self, id=id,
                 sortorder=attrs['sortorder'].encode('utf-8'),
-                downloadfilename=attrs['downloadfilename'].encode('utf-8'),
                 contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
                 discussion=abs(int(attrs['discussion'].encode('utf-8'))))
             ob = self._getOb(id)
@@ -235,9 +234,8 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
-        return 'downloadfilename="%s" validation_status="%s" validation_date="%s" validation_by="%s" validation_comment="%s"' % \
-            (self.utXmlEncode(self.downloadfilename),
-                self.utXmlEncode(self.validation_status),
+        return 'validation_status="%s" validation_date="%s" validation_by="%s" validation_comment="%s"' % \
+            (self.utXmlEncode(self.validation_status),
                 self.utXmlEncode(self.validation_date),
                 self.utXmlEncode(self.validation_by),
                 self.utXmlEncode(self.validation_comment))
@@ -246,6 +244,7 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
     def export_this_body_custom(self):
         r = []
         ra = r.append
+        ra('<downloadfilename lang="%s"><![CDATA[%s]]></downloadfilename>' % (l, self.utToUtf8(self.getLocalProperty('downloadfilename', l))))
         for lang, fileitem in self.getFileItems().items():
             ra('<item lang="%s" file="%s" content_type="%s" precondition="%s" />' % \
             (lang,

@@ -36,6 +36,8 @@ class exfile_item(Implicit, NyProperties):
     description = LocalProperty('description')
     coverage = LocalProperty('coverage')
     keywords = LocalProperty('keywords')
+    downloadfilename = LocalProperty('downloadfilename')
+
 
     def __init__(self, id, title, description, coverage, keywords, sortorder,
         file, precondition, content_type, downloadfilename, releasedate, lang):
@@ -115,8 +117,8 @@ class exfile_item(Implicit, NyProperties):
         self._setLocalPropValue('description', lang, description)
         self._setLocalPropValue('coverage', lang, coverage)
         self._setLocalPropValue('keywords', lang, keywords)
+        self._setLocalPropValue('downloadfilename', lang, downloadfilename)
         self.sortorder = sortorder
-        self.downloadfilename = downloadfilename
         self.releasedate = releasedate
 
     def handleUpload(self, source, file, url, lang=None):
