@@ -22,10 +22,6 @@
 	<th i18n:translate="">Contributor</th>
 	<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
 </tr>
-<tr tal:condition="here/coverage">
-	<th i18n:translate="">Geographical coverage</th>
-	<td tal:content="here/coverage" />
-</tr>
 </table>
 <br />
 <p tal:replace="structure here/body" />
