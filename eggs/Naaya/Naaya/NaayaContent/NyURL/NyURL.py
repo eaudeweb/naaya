@@ -144,7 +144,6 @@ def importNyURL(self, param, id, attrs, content, properties, discussion, objects
                 except: pass
             addNyURL(self, id=id,
                 sortorder=attrs['sortorder'].encode('utf-8'),
-                locator=attrs['locator'].encode('utf-8'),
                 contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
                 discussion=abs(int(attrs['discussion'].encode('utf-8'))))
             ob = self._getOb(id)
@@ -195,12 +194,19 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
-        return 'locator="%s" validation_status="%s" validation_date="%s" validation_by="%s" validation_comment="%s"' % \
-            (self.utXmlEncode(self.locator),
-                self.utXmlEncode(self.validation_status),
+        return 'validation_status="%s" validation_date="%s" validation_by="%s" validation_comment="%s"' % \
+                (self.utXmlEncode(self.validation_status),
                 self.utXmlEncode(self.validation_date),
                 self.utXmlEncode(self.validation_by),
                 self.utXmlEncode(self.validation_comment))
+
+    security.declarePrivate('export_this_body_custom')
+    def export_this_body_custom(self):
+        r = []
+        ra = r.append
+        for l in self.gl_get_languages():
+            ra('<locator lang="%s"><![CDATA[%s]]></locator>' % (l, self.utToUtf8(self.getLocalProperty('locator', l))))
+        return ''.join(r)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')

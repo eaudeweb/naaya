@@ -34,6 +34,8 @@ class url_item(Implicit, NyProperties):
     description = LocalProperty('description')
     coverage = LocalProperty('coverage')
     keywords = LocalProperty('keywords')
+    locator = LocalProperty('locator')
+
 
     def __init__(self, title, description, coverage, keywords, sortorder,
         locator, releasedate, lang):
@@ -53,6 +55,6 @@ class url_item(Implicit, NyProperties):
         self._setLocalPropValue('description', lang, description)
         self._setLocalPropValue('coverage', lang, coverage)
         self._setLocalPropValue('keywords', lang, keywords)
+        self._setLocalPropValue('locator', lang, locator)
         self.sortorder = sortorder
-        self.locator = locator
         self.releasedate = releasedate
