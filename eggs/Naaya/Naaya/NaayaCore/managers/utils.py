@@ -65,11 +65,11 @@ class list_utils:
         plaintext = strip_html_pattern.sub('', s)
         return plaintext.replace('  ', ' ')
 
-    def splitToList(self, s):
+    def splitToList(self, s, separator=','):
         """Gets a comma separated string and returns a list"""
         res = []
         if s!='':
-            res = s.split(',')
+            res = s.split(separator)
         return res
 
     def joinToList(self, l):
