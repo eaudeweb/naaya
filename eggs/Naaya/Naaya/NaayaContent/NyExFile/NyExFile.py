@@ -244,7 +244,8 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
     def export_this_body_custom(self):
         r = []
         ra = r.append
-        ra('<downloadfilename lang="%s"><![CDATA[%s]]></downloadfilename>' % (l, self.utToUtf8(self.getLocalProperty('downloadfilename', l))))
+        for l in self.gl_get_languages():
+            ra('<downloadfilename lang="%s"><![CDATA[%s]]></downloadfilename>' % (l, self.utToUtf8(self.getLocalProperty('downloadfilename', l))))
         for lang, fileitem in self.getFileItems().items():
             ra('<item lang="%s" file="%s" content_type="%s" precondition="%s" />' % \
             (lang,
