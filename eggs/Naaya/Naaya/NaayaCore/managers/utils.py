@@ -105,11 +105,11 @@ class list_utils:
             l = [l]
         return l
 
-    def utElimintateDuplicates(self, p_objects, p_attr='id'):
-        """ eliminate duplicates from a list of objects (with ids) """
+    def utEliminateDuplicatesByURL(self, p_objects):
+        """ eliminate duplicates from a list of objects """
         dict = {}
         for l_object in p_objects:
-            dict[getattr(l_object, p_attr)] = l_object
+                dict[l_object.absolute_url()] = l_object
         return dict.values()
 
 class file_utils:
