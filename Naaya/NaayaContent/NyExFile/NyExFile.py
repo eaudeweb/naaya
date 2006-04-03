@@ -311,7 +311,7 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
             if version_data is not None:
                 #show data for file: set content type and return data
                 RESPONSE.setHeader('Content-Type', version_data[1])
-                REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.downloadfilename)
+                REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + utToUtf8(self.downloadfilename))
                 return version_data[0]
             else:
                 return 'Invalid version data!'
@@ -504,7 +504,7 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         """ """
         self.REQUEST.RESPONSE.setHeader('Content-Type', self.content_type)
         self.REQUEST.RESPONSE.setHeader('Content-Length', self.size)
-        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.downloadfilename)
+        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
         data = self.getFileItem(self.gl_get_selected_language()).data
         if type(data) is type(''):
             RESPONSE.setBase(None)
