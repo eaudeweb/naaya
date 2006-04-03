@@ -277,7 +277,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
             if version_data is not None:
                 #show data for file: set content type and return data
                 RESPONSE.setHeader('Content-Type', version_data[1])
-                REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.downloadfilename)
+                REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + utToUtf8(self.downloadfilename))
                 return version_data[0]
             else:
                 return 'Invalid version data!'
@@ -441,7 +441,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
             if version: self.createVersion(self.REQUEST.AUTHENTICATED_USER.getUserName())
         else:
             #this object has been checked out; save changes into the version object
-            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
+            if self. checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
             self.version.handleUpload(source, file, url)
         self.recatalogNyObject(self)
@@ -469,7 +469,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         """ """
         self.REQUEST.RESPONSE.setHeader('Content-Type', self.content_type)
         self.REQUEST.RESPONSE.setHeader('Content-Length', self.size)
-        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.downloadfilename)
+        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
         return file_item.inheritedAttribute('index_html')(self, REQUEST, RESPONSE)
 
     security.declareProtected(view, 'view')
