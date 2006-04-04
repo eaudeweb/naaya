@@ -60,7 +60,7 @@ function createKey(key)
 	<tr>
 		<td nowrap="nowrap" i18n:translate="">Location:</td>
 		<td>
-			<input type=text disabled="disabled" name="location" id="location" size="40" onclick="pickLocation();" tal:attributes="value python:here.getSession('location', '')" />
+			<input type=text name="location" id="location" size="40" onclick="pickLocation();" tal:attributes="value python:here.getSession('location', '')" />
 			<input type="button" value="Pick" i18n:attributes="value" tal:define="acl_users_path user_tool/absolute_url" tal:attributes="onclick string:setupWin('${acl_users_path}/sitemap', 300, 500);;" />
 		</td>
 	</tr>
