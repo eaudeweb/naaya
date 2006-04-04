@@ -473,8 +473,8 @@ class CHMSite(NySite):
     def getArchiveListing(self, p_archive):
         """ """
         p_objects = p_archive.getObjects()
-        p_objects.sort(lambda x,y: cmp(y.releasedate, x.releasedate) \
-            or cmp(x.sortorder, y.sortorder))
+        p_objects.sort(lambda x,y: cmp(x.sortorder, y.sortorder) \
+            or cmp(y.releasedate, x.releasedate))
         return self.get_archive_listing(p_objects)
 
     security.declareProtected(view, 'processCreateAccountForm')
