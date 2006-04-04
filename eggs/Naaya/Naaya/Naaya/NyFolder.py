@@ -37,6 +37,7 @@ from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyAttributes import NyAttributes
+from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.Localizer.LocalPropertyManager import LocalProperty
 
@@ -143,7 +144,7 @@ def importNyFolder(self, param, id, attrs, content, properties, discussion, obje
         for object in objects:
             ob.import_data(object)
 
-class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
+class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozToolbox, utils):
     """ """
 
     meta_type = METATYPE_FOLDER
@@ -260,6 +261,15 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             (self.utXmlEncode(self.publicinterface),
                 self.utXmlEncode(self.maintainer_email),
                 self.utXmlEncode(','.join(self.folder_meta_types)))
+
+    security.declarePrivate('export_this_body_custom')
+    def export_this_body_custom(self):
+        r = []
+        ra = r.append
+        for i in self.getUploadedImages():
+            ra('<img param="0" id="%s" content="%s" />' % \
+                (self.utXmlEncode(i.id()), self.utXmlEncode(self.utBase64Encode(str(i.data)))))
+        return ''.join(r)
 
     security.declarePrivate('createPublicInterface')
     def createPublicInterface(self):
