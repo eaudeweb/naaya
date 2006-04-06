@@ -31,6 +31,11 @@ import urllib
 import time
 import codecs
 
+import csv
+import tempfile
+import os
+
+
 #Zope imports
 from Products.PythonScripts.standard import url_quote, html_quote
 from DateTime import DateTime
@@ -498,3 +503,18 @@ class utils:
             except:
                 return 0
         return 1
+
+
+class tmpfile:
+
+    def __init__(self, data):
+        self.fname = tempfile.mktemp()
+        writer = csv.writer(open(self.fname,'wb'))
+        for row in data:
+            writer.writerow(row)
+
+    def __str__(self): return self.fname
+    __repr__ = __str__
+
+    def __del__(self):
+        os.unlink(self.fname)
