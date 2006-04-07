@@ -2,10 +2,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <tal:block define="	selected_lang here/getSelectedLang;
+					isArabic here/isArabicLanguage;
+					noArabic not:isArabic;
 					skin_path python:here.getLayoutTool().getSkinFilesPath();
 					ctrl python:request.get('ctrl', '')">
 
-	<html xmlns="http://www.w3.org/1999/xhtml" tal:attributes="xml:lang selected_lang; lang selected_lang">
+	<html xmlns="http://www.w3.org/1999/xhtml" tal:attributes="xml:lang selected_lang; lang selected_lang; dir python:test(isArabic, 'rtl', 'ltr')">
 	<head>
 		<title tal:content="here/title_or_id" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
