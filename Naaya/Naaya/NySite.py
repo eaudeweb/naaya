@@ -505,6 +505,30 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """
         return NAAYA_PRODUCT_PATH
 
+    security.declarePublic('isArabicLanguage')
+    def isArabicLanguage(self, lang=None):
+        """ test if lang is a RTL language """
+        #Arabic          [AR]
+        #Azerbaijani     [AZ]
+        #Persian         [FA]
+        #Javanese        [JV]
+        #Kashmiri        [KS]
+        #Kazakh          [KK]
+        #Kurdish         [KU]
+        #Malay           [MS]
+        #Malayalam       [ML]
+        #Pashto          [PS]
+        #Punjabi         [PA]
+        #Sindhi          [SD]
+        #Somali          [SO]
+        #Turkmen         [TK]
+        #Hebrew          [HE]
+        #Yiddish         [YI]
+        #Urdu            [UR]
+        if not lang: lang = self.gl_get_selected_language()
+        return lang in ['ar', 'az', 'fa', 'jv', 'ks', 'kk', 'ku', 'ms', 'ml',\
+                        'ps', 'pa', 'sd', 'so', 'tk', 'he', 'yi', 'ur']
+
     #Epoz layer
     def get_wysiwyg_widget(self, name, data='', toolbox='', size='big', lang=None):
         """
