@@ -179,6 +179,36 @@ class NyForumTopic(NyForumBase, Folder):
         if len(l)==0: return self
         else: return self.utSortObjsListByAttr(l, 'postdate', 1)[0]
 
+    #restrictions
+    def get_valid_roles(self):
+        #returns a list of roles that can be used to restrict this folder
+        roles = list(self.valid_roles())
+        filter(roles.remove, ['Administrator', 'Anonymous', 'Manager', 'Owner'])
+        return roles
+
+    def can_be_seen(self):
+        """
+        Indicates if the current user has access to the current folder.
+        """
+        return self.checkPermission(view)
+
+    def has_restrictions(self):
+        """
+        Indicates if this folder has restrictions for the current user.
+        """
+        return not self.acquiredRolesAreUsedBy(view)
+
+    def get_roles_with_access(self):
+        """
+        Returns a list of roles that have access to this folder.
+        """
+        r = []
+        ra = r.append
+        for x in self.rolesOfPermission(view):
+            if x['selected'] and x['name'] not in ['Administrator', 'Anonymous', 'Manager', 'Owner']:
+                ra(x['name'])
+        return r
+
     #site actions
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'saveProperties')
     def saveProperties(self, title='', category='', description='', notify='',
@@ -211,6 +241,35 @@ class NyForumTopic(NyForumBase, Folder):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
+    security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'setRestrictions')
+    def setRestrictions(self, access='all', roles=[], REQUEST=None):
+        """
+        Restrict access to current folder for given roles.
+        """
+        msg = err = ''
+        if access == 'all':
+            #remove restrictions
+            try:
+                self.manage_permission(view, roles=[], acquire=1)
+            except Exception, error:
+                err = error
+            else:
+                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+        else:
+            #restrict for given roles
+            try:
+                roles = self.utConvertToList(roles)
+                roles.extend(['Manager', 'Administrator'])
+                self.manage_permission(view, roles=roles, acquire=0)
+            except Exception, error:
+                err = error
+            else:
+                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+        if REQUEST:
+            if err != '': self.setSessionErrors([err])
+            if msg != '': self.setSessionInfo([msg])
+            REQUEST.RESPONSE.redirect('%s/restrict_html' % self.absolute_url())
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', category='', description='', notify='',
@@ -235,5 +294,8 @@ class NyForumTopic(NyForumBase, Folder):
 
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'edit_html')
     edit_html = PageTemplateFile('zpt/topic_edit', globals())
+
+    security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'restrict_html')
+    restrict_html = PageTemplateFile('zpt/topic_restrict', globals())
 
 InitializeClass(NyForumTopic)
