@@ -134,7 +134,7 @@ class NyBase:
         """
         return self._objectkeywords(lang)
 
-    security.declarePrivate('istranslated')
+    security.declarePublic('istranslated')
     def istranslated(self, lang):
         """
         An object is considered to be translated into a language if
