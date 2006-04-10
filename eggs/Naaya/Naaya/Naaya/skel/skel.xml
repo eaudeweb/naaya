@@ -13,6 +13,7 @@
 		<form id="epoz_toolbox" title="Epoz toolbox"/>
 		<form id="messages_box" title="Box for info or error messages"/>
 		<form id="languages_box" title="Box for changing the language on pages"/>
+		<form id="form_languages_box" title="Box for changing the language when translating content"/>
 		<form id="comment_add" title="Add comment for content" />
 		<form id="comments_box" title="Box for content comments"/>
 		<form id="site_index" title="Portal home page"/>

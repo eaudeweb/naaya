@@ -2419,6 +2419,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'languages_box')
 
+    security.declareProtected(view, 'form_languages_box')
+    def form_languages_box(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'form_languages_box')
+
     security.declareProtected(view, 'login_html')
     def login_html(self, REQUEST=None, RESPONSE=None):
         """ """
