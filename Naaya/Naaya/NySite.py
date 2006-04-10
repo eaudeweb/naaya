@@ -1195,10 +1195,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         try:
             self.getAuthenticationTool().manage_changeUser(name, password, confirm, [], [], firstname,
                 lastname, email)
+            #keep authentication
+            self.credentialsChanged(name, name, password)
         except Exception, error:
             err = error
         else:
             msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+
         if REQUEST:
             if err != '':self.setSessionErrors([err]) 
             if msg != '': self.setSessionInfo([msg])
