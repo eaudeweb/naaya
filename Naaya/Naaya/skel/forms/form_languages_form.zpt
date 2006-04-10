@@ -1,0 +1,14 @@
+<div class="translate" tal:define="languages here/get_languages_mapping;
+	curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
+	<span  i18n:translate="" tal:omit-tag="">Translate in</span>
+	<tal:block tal:repeat="language languages">
+		<strong tal:condition="python:language['code'] == curr_lang">
+			<a class="current"
+				tal:attributes="href string:?lang=${language/code}; title python:language['name']"
+				tal:content="python:language['name']" />
+		</strong>
+		<a tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="href string:?lang=${language/code}; title python:language['name']"
+			tal:content="python:language['name']" />
+	</tal:block>
+</div>
