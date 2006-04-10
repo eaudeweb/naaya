@@ -7,7 +7,7 @@
 	tal:define="user python:here.getAuthenticationTool().getUser(username)">
 <tal:block tal:condition="user">
 <p i18n:translate="">
-	From this page you can edit the prefereces for your account.
+	From this page you can edit the preferences for your account.
 </p>
 <form method="post" tal:attributes="action string:${here/absolute_url}/process_profile">
 <table>
@@ -37,7 +37,15 @@
 </tr>
 <tr class="field">
 	<th>
-		<label for="password" i18n:translate="">Password</label>
+		<label for="old_pass" i18n:translate="">Old password</label>
+	</th>
+	<td>
+		<input type="password" name="old_pass" id="old_pass" size="20" value="" />
+	</td>
+</tr>
+<tr class="field">
+	<th>
+		<label for="password" i18n:translate="">New password</label>
 	</th>
 	<td>
 		<input type="password" name="password" id="password" size="20" value="" />
@@ -45,7 +53,7 @@
 </tr>
 <tr class="field">
 	<th>
-		<label for="confirm" i18n:translate="">Confirm Password</label>
+		<label for="confirm" i18n:translate="">Confirm New password</label>
 	</th>
 	<td>
 		<input type="password" name="confirm" id="confirm" size="20" value="" />

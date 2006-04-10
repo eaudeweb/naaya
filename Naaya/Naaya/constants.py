@@ -49,3 +49,5 @@ PREFIX_SITE = 'portal'
 PREFIX_FOLDER = 'fol'
 
 ID_IMAGESFOLDER = 'images'
+
+WRONG_PASSWORD = 'Current password is not correct. Changes NOT saved.'
