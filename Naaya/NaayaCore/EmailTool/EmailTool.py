@@ -115,12 +115,14 @@ class EmailTool(Folder):
     def sendEmail(self, p_content, p_to, p_from, p_subject):
         #sends a generic email
         try:
-            p_to = self.__build_addresses(p_to)
-            l_message = self.__create_email(p_content, p_to, p_from, p_subject)
-            server = smtplib.SMTP(self.mail_server_name, self.mail_server_port)
-            server.sendmail(p_from, p_to, l_message)
-            server.quit()
-            return 1
+            if self.mail_server_name and self.mail_server_port and p_to:
+                p_to = self.__build_addresses(p_to)
+                l_message = self.__create_email(p_content, p_to, p_from, p_subject)
+                server = smtplib.SMTP(self.mail_server_name, self.mail_server_port)
+                server.sendmail(p_from, p_to, l_message)
+                server.quit()
+                return 1
+            return 0
         except:
             return 0
 
