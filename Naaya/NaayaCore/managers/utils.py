@@ -209,7 +209,9 @@ class utils:
 
     def utCleanupId(self, p_id=''):
         """ """
-        return p_id.translate(TRANSMAP)
+        if isinstance(p_id, unicode): x = p_id.encode('utf-8')
+        else: x = str(p_id)
+        return x.translate(TRANSMAP)
 
     def utConvertToList(self, something):
         """Convert to list"""
