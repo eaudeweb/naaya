@@ -1188,20 +1188,26 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             return []
 
     security.declareProtected(view, 'process_profile')
-    def process_profile(self, firstname='', lastname='', email='', name='', password='',
+    def process_profile(self, firstname='', lastname='', email='', name='', old_pass='', password='',
         confirm='', REQUEST=None):
         """ """
         msg = err = ''
-        try:
-            self.getAuthenticationTool().manage_changeUser(name, password, confirm, [], [], firstname,
-                lastname, email)
+	auth_user = REQUEST.AUTHENTICATED_USER.getUserName()
+	user = self.getAuthenticationTool().getUser(auth_user)
+	if password == '': password = confirm = old_pass
+	if user._getPassword() == old_pass: 
+            try:
+                self.getAuthenticationTool().manage_changeUser(name, password, confirm, [], [], firstname,
+	            lastname, email)
+                self.credentialsChanged(name, name, password)	            
             #keep authentication
-            self.credentialsChanged(name, name, password)
-        except Exception, error:
-            err = error
-        else:
-            msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
-
+	    except Exception, error:
+    	        err = error
+            else:
+	        msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+	else:
+	    err = WRONG_PASSWORD
+        
         if REQUEST:
             if err != '':self.setSessionErrors([err]) 
             if msg != '': self.setSessionInfo([msg])
