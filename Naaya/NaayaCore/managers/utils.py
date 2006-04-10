@@ -400,6 +400,11 @@ class utils:
         try: return p_date.strftime('%d %b %Y')
         except: return ''
 
+    def utStringDate(self, p_date):
+        """ """
+        try: return p_date.strftime('%d%m%Y')
+        except: return ''
+
     def utShowFullDateTime(self, p_date):
         """date is a DateTime object. This function returns a string 'dd month_name yyyy hh:mm:ss'"""
         try: return p_date.strftime('%d %b %Y %H:%M:%S')
