@@ -1,3 +1,5 @@
+<span tal:condition="python:error_type=='NotFound'" tal:replace="python:request.RESPONSE.redirect('messages_html?title=Not found&body=Sorry, the requested resource does not exist on this server.', lock=1)" />
+
 <span tal:replace="structure here/standard_html_header"/>
 
 <h1>Error page</h1>
