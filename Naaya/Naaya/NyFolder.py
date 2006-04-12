@@ -116,7 +116,7 @@ def importNyFolder(self, param, id, attrs, content, properties, discussion, obje
                 except: pass
             publicinterface = abs(int(attrs['publicinterface'].encode('utf-8')))
             meta_types = attrs['folder_meta_types'].encode('utf-8')
-            if meta_types == '': meta_types = ''
+            if meta_types == '': meta_types = []
             else: meta_types = meta_types.split(',')
             #create the object
             addNyFolder(self, id=id,
