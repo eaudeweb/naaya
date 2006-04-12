@@ -1,6 +1,8 @@
 <span tal:replace="structure here/manage_page_header"/>
 <span tal:replace="structure here/manage_tabs"/>
 
+<h2>Add role</h2>
+
 <form method="post" name="frmAddRole">
 <table border=0 width="80%" cellspacing="3">
 <tr>
