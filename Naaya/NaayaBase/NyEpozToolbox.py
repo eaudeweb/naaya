@@ -35,6 +35,7 @@ from AccessControl.Permissions import view
 from OFS.Image import manage_addImage, manage_addFile
 
 #Product imports
+from Products.NaayaCore.managers.utils import utils
 
 class NyEpozToolbox:
     """
@@ -62,7 +63,16 @@ class NyEpozToolbox:
         if file != '':
             if hasattr(file, 'filename'):
                 if file.filename != '':
-                    manage_addImage(self, '', file)
+                    pos = max(file.filename.rfind('/'), file.filename.rfind('\\'), file.filename.rfind(':'))+1
+                    id = file.filename[pos:]
+                    ph = file.filename[:pos]
+                    while True:
+                        try:
+                            manage_addImage(self, '', file)
+                            break
+                        except:
+                            rand_id = utils().utGenRandomId(6)
+                            file.filename = '%s%s_%s' % (ph, rand_id , id)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/toolbox_html' % self.absolute_url())
 
     security.declareProtected(view, 'process_file_upload')
