@@ -247,6 +247,23 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
             res.append(user_obj.name)
         return res
 
+    security.declareProtected(manage_users, 'searchUsers')
+    def searchUsers(self, query, limit=0):
+        """ search users """
+        if query:
+            users = []
+            users_a = users.append
+            for user in self.getUsers():
+                if self.utToUnicode(user.name).find(query)!=-1 or user.email.find(query)!=-1 or \
+                        self.utToUnicode(user.firstname).find(query)!=-1 or self.utToUnicode(user.lastname).find(query)!=-1:
+                    users_a((user.name, '%s %s' % (user.firstname, user.lastname), user.email))
+            if limit and len(users) > int(limit):
+                return 0, []
+            else:
+                return 1, users
+        else:
+            return 2, []
+
     security.declareProtected(view, 'isLocalUser')
     def isLocalUser(self, REQUEST=None):
         """ check if authenticated user is stored localy """
@@ -285,6 +302,14 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
                     users_roles[str(roles_tuple[0])].append((local_roles, folder.absolute_url(1)))
         return users_roles
 
+    security.declareProtected(manage_users, 'getUsersWithRoles')
+    def getUsersWithRoles(self):
+        """ return the users with their roles """
+        users = {}
+        for k, v in self.getUsersRoles().items():
+            if (len(v) > 1 and len(v[1][0]) > 0) or (len(v) == 1 and len(v[0][0]) > 0):
+                users[k] = v
+        return users
 
     def getUserAccount(self, user_obj):
         """ Return the username"""
