@@ -152,7 +152,7 @@ class NyContainer(Folder, NyComments, NyBase, NyPermissions, NyDublinCore):
         while True:
             attempts -= 1
             if not attempts: raise "IdGenerationError", "Unable to generate unique id after attempting for %s times" % max_attempts
-            id = p_prefix + self.utGenRandomId(1)
+            id = p_prefix + self.utGenRandomId(6)
             try:
                 dummy = self._getOb(id)
             except:
