@@ -1,7 +1,7 @@
 <span tal:replace="structure here/manage_page_header"/>
 <span tal:replace="structure here/manage_tabs"/>
 
-	<p class="page-subtitle">The list of available plugins</p>
+	<h2>The list of available plugins</h2>
 	<form action="managePlugins"><input type="submit" value="Refresh plugins list"></form>
 	<form>
 	<table border="0" cellspacing="0" cellpadding="4" width="100%">

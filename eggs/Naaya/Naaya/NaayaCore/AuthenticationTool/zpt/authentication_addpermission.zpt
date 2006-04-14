@@ -1,6 +1,8 @@
 <span tal:replace="structure here/manage_page_header"/>
 <span tal:replace="structure here/manage_tabs"/>
 
+<h2>Add permission</h2>
+
 <form name="frmAddPermission" method="post" action="addPermission">
 
 <fieldset><legend>
