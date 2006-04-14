@@ -975,9 +975,17 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if file != '':
             if hasattr(file, 'filename'):
                 if file.filename != '':
-                    manage_addFile(self.getImagesFolder(), '', file)
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('%s/toolbox_html' % self.absolute_url())
+                    pos = max(file.filename.rfind('/'), file.filename.rfind('\\'), file.filename.rfind(':'))+1
+                    id = file.filename[pos:]
+                    ph = file.filename[:pos]
+                    while True:
+                        try:
+                            manage_addFile(self.getImagesFolder(), '', file)
+                            break
+                        except:
+                            rand_id = utils().utGenRandomId(6)
+                            file.filename = '%s%s_%s' % (ph, rand_id , id)
+        if REQUEST: REQUEST.RESPONSE.redirect('%s/toolbox_html' % self.absolute_url())
 
     security.declareProtected(view, 'process_delete')
     def process_delete(self, ids=[], REQUEST=None):
