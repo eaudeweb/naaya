@@ -18,20 +18,24 @@
 	</head>
 <body onload="this.focus();">
 <div class="pick_pop_up">
-<h1 i18n:translate="">Image upload and insertion</h1>
+<h1 i18n:translate="">Image insertion</h1>
 
-<p i18n:translate="">In this window you can upload images and insert them in your text.</p>
+<p i18n:translate="">This window allows you to <strong>upload</strong> images and <strong>insert</strong> them in your text.</p>
 
-<form method="post" action="process_image_upload" enctype="multipart/form-data">
-<h2 i18n:translate="">Upload image</h2><br /> 
+<form method="post" action="process_image_upload" enctype="multipart/form-data"  style="margin-bottom:1.2em;">
+<a name="upload"></a>
+<strong i18n:translate="">Upload an image</strong><br /><br />
 <input type="file" name="file" />
 <input type="submit" value="Upload" />
 </form>
 
+	<a name="insert"></a>
+	<strong i18n:translate="">Insert an image</strong>
 <tal:block  define="images here/getUploadedImages">
 <tal:block condition="images">
-<p i18n:translate="">Click on an image to insert it in your text.</p>
+<p i18n:translate="">Click on an image to insert it in your text. Also you can select images for deletion.</p>
 <form method="post" action="process_delete">
+<input tal:condition="python:len(images)>5" type="submit" value="Delete selected images" i18n:attributes="value" />
 <ul style="list-style:none;">
 	<li tal:repeat="item images">
 		<input type="checkbox" name="ids" tal:attributes="value item/id" />
@@ -45,12 +49,12 @@
 </form>
 </tal:block>
 <tal:block condition="not:images">
-<p i18n:translate="">No images available.</p>
+<p i18n:translate="">No images available. In order to insert an image in your text please <strong>upload</strong> one first.</p>
 </tal:block>
 </tal:block>
 <hr style="border: 1px solid #f0f0f0; background-color:white;" />
 <form>
-<input type="button" value="Close window" onclick="javascript:window.close();" />
+<input type="button" value="Close window" onclick="javascript:window.close();" i18n:attributes="value" />
 </form>
 </div>
 </body>
