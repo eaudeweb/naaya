@@ -211,6 +211,7 @@ class utils:
         """ """
         if isinstance(p_id, unicode): x = p_id.encode('utf-8')
         else: x = str(p_id)
+        x = x.strip()
         return x.translate(TRANSMAP)
 
     def utConvertToList(self, something):
