@@ -23,7 +23,7 @@
 <p i18n:translate="">In this window you can upload images and insert them in your text.</p>
 
 <form method="post" action="process_image_upload" enctype="multipart/form-data">
-<span tal:omit-tag="" i18n:translate="">Upload image</span><br /> 
+<h2 i18n:translate="">Upload image</h2><br /> 
 <input type="file" name="file" />
 <input type="submit" value="Upload" />
 </form>
