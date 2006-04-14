@@ -143,4 +143,21 @@ class NyContainer(Folder, NyComments, NyBase, NyPermissions, NyDublinCore):
                 ra(x['name'])
         return r
 
+    def generateItemId(self, p_prefix):
+        """
+        Returns a unique id within the container's context
+        """
+        max_attempts = 20000
+        attempts = max_attempts
+        while True:
+            attempts -= 1
+            if not attempts: raise "IdGenerationError", "Unable to generate unique id after attempting for %s times" % max_attempts
+            id = p_prefix + self.utGenRandomId(1)
+            try:
+                dummy = self._getOb(id)
+            except:
+                break
+        return id
+
+
 InitializeClass(NyContainer)
