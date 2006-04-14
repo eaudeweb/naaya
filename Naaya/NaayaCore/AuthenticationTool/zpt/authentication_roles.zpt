@@ -1,7 +1,7 @@
 <span tal:replace="structure here/manage_page_header" />
 <span tal:replace="structure here/manage_tabs" />
 
-<p class="page-title">Roles list</p>
+<h2>Roles list</h2>
 <p class="page-description">
 	You can define new roles by clicking the "Add Role" button.
 	Enter a role name to set the groups of permissions granted.

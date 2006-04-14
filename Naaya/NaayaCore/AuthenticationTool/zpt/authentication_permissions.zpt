@@ -1,7 +1,7 @@
 <span tal:replace="structure here/manage_page_header"/>
 <span tal:replace="structure here/manage_tabs"/>
 
-<p class="page-title">Permissions list</p>
+<h2>Permissions list</h2>
 <p class="page-description">
     This page lists user defined groups of Zope permissions so that the roles can be tailored 
     in a more comprehensive manor.

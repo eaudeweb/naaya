@@ -1,6 +1,8 @@
 <span tal:replace="structure here/manage_page_header"/>
 <span tal:replace="structure here/manage_tabs"/>
 
+<h2>Edit permission</h2>
+
 <tal:block define="permission_name python:here.getPermissionName(request.get('name', ''));
     permission_description python:here.getPermissionDescription(permission_name);
     zope_permissions python:here.getZopePermissions(permission_name)">

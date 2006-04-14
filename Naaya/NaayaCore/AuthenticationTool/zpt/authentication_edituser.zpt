@@ -1,6 +1,8 @@
 <span tal:replace="structure here/manage_page_header"/>
 <span tal:replace="structure here/manage_tabs"/>
 
+<h2>Edit user</h2>
+
 <div class="system-msg" tal:condition="python:request.has_key('save')">
     Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
 </div>
