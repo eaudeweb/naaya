@@ -31,6 +31,9 @@ import zLOG
 from constants import *
 from Products.NaayaBase.NyValidation import NyValidation
 
+misc_ = {
+}
+
 #read list of directories
 dirs = []
 for x in listdir(NAAYACONTENT_PRODUCT_PATH):
@@ -85,9 +88,6 @@ def initialize(context):
             visibility=None
         )""" % (m, m, p, m, m, m, m, m, a, m, m)
         exec(c)
-
-misc_ = {
-}
 
 #meta types as global variables
 for x in content.values():
