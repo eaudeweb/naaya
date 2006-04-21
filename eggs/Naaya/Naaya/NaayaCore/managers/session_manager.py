@@ -58,6 +58,9 @@ class session_manager:
     def delSession(self, key):
         """ Delete a key from session """
         return self.__delSession(key)
+    def delSessionKeys(self, keys):
+        """ Delete one or more keys from session """
+        map(self.__delSession, keys)
     def isSession(self, key):
         """ Returns true if this key exists in session """
         return self.__isSession(key)
