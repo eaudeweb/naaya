@@ -96,6 +96,16 @@ class NyGlossaryElement(SimpleItem, ElementBasic, utils, catalog_utils):
         self.cu_recatalog_object(self)
         if REQUEST: return REQUEST.RESPONSE.redirect('properties_html?save=ok')
 
+    def manage_afterAdd(self, item, container):
+        """ this method is called, whenever _setObject in ObjectManager gets called """
+        SimpleItem.inheritedAttribute('manage_afterAdd')(self, item, container)
+        self.cu_catalog_object(self)
+
+    def manage_beforeDelete(self, item, container):
+        """ this method is called, when the object is deleted """
+        SimpleItem.inheritedAttribute('manage_beforeDelete')(self, item, container)
+        self.cu_uncatalog_object(self)
+
     #########################
     #     THEME FUNCTIONS   #
     #########################
