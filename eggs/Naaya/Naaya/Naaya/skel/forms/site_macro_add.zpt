@@ -93,7 +93,8 @@ function fSet(ctrl, value)
 
 </form>
 
-<span tal:content="python:here.del_pluggable_item_session(kind)" tal:omit-tag="" />
+<span tal:replace="python:here.del_pluggable_item_session(kind)" />
+
 <tal:block tal:replace="structure here/standard_html_footer"/>
 
 </tal:block>
