@@ -2317,8 +2317,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 else:
                     #load form from the pluggable meta type folder
                     content = self.futRead(join(NAAYACONTENT_PRODUCT_PATH, pitem['module'], 'zpt', frm_name), 'r')
-                formstool_ob.manage_addTemplate(id=frm, title='', file='')
-                formstool_ob._getOb(frm).pt_edit(text=content, content_type='text/html')
+                form_ob = formstool_ob._getOb(frm, None)
+                if form_ob is None:
+                    formstool_ob.manage_addTemplate(id=frm, title='', file='')
+                    form_ob = formstool_ob._getOb(frm, None)
+                form_ob.pt_edit(text=content, content_type='text/html')
             #remember that this meta_type was installed
             self.__pluggable_installed_content[meta_type] = 1
             self._p_changed = 1
