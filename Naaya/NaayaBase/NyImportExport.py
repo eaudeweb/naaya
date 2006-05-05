@@ -90,7 +90,7 @@ class NyImportExport:
         ra(self.exportdata_custom())
         ra('</export>')
         self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/xml')
-        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=export.nyexp')
+        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=%s.nyexp' % self.id)
         return ''.join(r)
 
     security.declarePrivate('exportdata_custom')
