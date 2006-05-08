@@ -85,6 +85,27 @@ class RefTree(LocalPropertyManager, Folder):
     def get_tree_path(self, p=0): return self.absolute_url(p)
     def get_tree_nodes(self): return self.objectValues(METATYPE_REFTREENODE)
 
+    def __get_tree_thread(self, nodes, parent, depth):
+        """
+        Recursive function that process the given messages and returns
+        a tree like structure.
+        """
+        tree = []
+        l = [x for x in nodes if x.parent == parent]
+        map(nodes.remove, l)
+        for x in l:
+            tree.append((depth, x))
+            tree.extend(self.__get_tree_thread(nodes, x.id, depth+1))
+        return tree
+
+    security.declareProtected(view, 'get_tree_thread')
+    def get_tree_thread(self):
+        """
+        Process all the nodes and returns a structure to be displayed as
+        a tree.
+        """
+        return self.__get_tree_thread(self.objectValues(METATYPE_REFTREENODE), None, 1)
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', lang=None, REQUEST=None):
