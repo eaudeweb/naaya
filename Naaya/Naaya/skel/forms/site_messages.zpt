@@ -12,4 +12,5 @@
 		i18n:translate="" i18:attributes="title">Go back.</a>
 </p>
 
+<span tal:replace="structure python:here.delSessionKeys(['title', 'body', 'referer'])"/>
 <span tal:replace="structure here/standard_html_footer"/>
