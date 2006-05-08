@@ -32,13 +32,16 @@ from Products.NaayaCore.constants import *
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
 manage_addRefTreeNodeForm = PageTemplateFile('zpt/reftreenode_manage_add', globals())
-def manage_addRefTreeNode(self, id='', title='', parent=None, lang=None, REQUEST=None):
+def manage_addRefTreeNode(self, id='', title='', parent=None, pickable='',
+    lang=None, REQUEST=None):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_SUFIX_REFTREE % self.utGenRandomId(6)
     if parent == '': parent = None
+    if pickable: pickable = 1
+    else: pickable = 0
     if lang is None: lang = self.gl_get_selected_language()
-    ob = RefTreeNode(id, title, parent, lang)
+    ob = RefTreeNode(id, title, parent, pickable, lang)
     self.gl_add_languages(ob)
     self._setObject(id, ob)
     if REQUEST is not None:
@@ -62,20 +65,25 @@ class RefTreeNode(LocalPropertyManager, SimpleItem):
 
     title = LocalProperty('title')
 
-    def __init__(self, id, title, parent, lang):
+    def __init__(self, id, title, parent, pickable, lang):
         """ """
         self.id = id
         self._setLocalPropValue('title', lang, title)
         self.parent = parent
+        self.pickable = pickable
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', parent='', lang=None, REQUEST=None):
+    def manageProperties(self, title='', parent='', pickable='',
+        lang=None, REQUEST=None):
         """ """
         if parent == '': parent = None
+        if pickable: pickable = 1
+        else: pickable = 0
         if lang is None: lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self.parent = parent
+        self.pickable = pickable
         self._p_changed = 1
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_edit_html')
