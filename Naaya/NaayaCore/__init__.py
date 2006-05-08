@@ -159,6 +159,8 @@ misc_ = {
     'HTMLPortlet.gif':ImageFile('PortletsTool/www/HTMLPortlet.gif', globals()),
     'LinksList.gif':ImageFile('PortletsTool/www/LinksList.gif', globals()),
     'RefList.gif':ImageFile('PortletsTool/www/RefList.gif', globals()),
+    'RefTree.gif':ImageFile('PortletsTool/www/RefTree.gif', globals()),
+    'RefTreeNode.gif':ImageFile('PortletsTool/www/RefTreeNode.gif', globals()),
     'FormsTool.gif':ImageFile('FormsTool/www/FormsTool.gif', globals()),
     'LayoutTool.gif':ImageFile('LayoutTool/www/LayoutTool.gif', globals()),
     'Skin.gif':ImageFile('LayoutTool/www/Skin.gif', globals()),

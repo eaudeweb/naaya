@@ -35,6 +35,7 @@ from Portlet import manage_addPortlet_html, addPortlet
 from HTMLPortlet import manage_addHTMLPortlet_html, addHTMLPortlet
 from LinksList import manage_addLinksListForm, manage_addLinksList
 from RefList import manage_addRefListForm, manage_addRefList
+from RefTree import manage_addRefTreeForm, manage_addRefTree
 
 def manage_addPortletsTool(self, REQUEST=None):
     """ """
@@ -69,6 +70,7 @@ class PortletsTool(Folder, utils):
         {'name': METATYPE_HTMLPORTLET, 'action': 'manage_addHTMLPortlet_html'},
         {'name': METATYPE_LINKSLIST, 'action': 'manage_addLinksListForm'},
         {'name': METATYPE_REFLIST, 'action': 'manage_addRefListForm'},
+        {'name': METATYPE_REFTREE, 'action': 'manage_addRefTreeForm'},
     )
     all_meta_types = meta_types
 
@@ -81,6 +83,8 @@ class PortletsTool(Folder, utils):
     manage_addLinksList = manage_addLinksList
     manage_addRefListForm = manage_addRefListForm
     manage_addRefList = manage_addRefList
+    manage_addRefTreeForm = manage_addRefTreeForm
+    manage_addRefTree = manage_addRefTree
 
     def __init__(self, id, title):
         """ """
@@ -97,6 +101,7 @@ class PortletsTool(Folder, utils):
     def getPortlets(self): return self.objectValues([METATYPE_PORTLET, METATYPE_HTMLPORTLET])
     def getLinksLists(self): return self.objectValues(METATYPE_LINKSLIST)
     def getRefLists(self): return self.objectValues(METATYPE_REFLIST)
+    def getRefTree(self): return self.objectValues(METATYPE_REFTREE)
     def getPortletsIds(self): return self.objectIds([METATYPE_PORTLET, METATYPE_HTMLPORTLET])
 
     def get_html_portlets(self):
@@ -136,6 +141,14 @@ class PortletsTool(Folder, utils):
         except: ob = None
         if ob is not None:
             if ob.meta_type != METATYPE_REFLIST: ob = None
+        return ob
+
+    def getRefTreeById(self, p_id):
+        #return the selection tree with the given id
+        try: ob = self._getOb(p_id)
+        except: ob = None
+        if ob is not None:
+            if ob.meta_type != METATYPE_REFTREE: ob = None
         return ob
 
     #zmi actions
