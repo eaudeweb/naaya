@@ -78,6 +78,7 @@ class CHMSite(NySite):
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
         """ """
+        NySite.__dict__['createPortalTools'](self)
         NySite.__dict__['loadDefaultData'](self)
         self.loadSkeleton(join(CHM2_PRODUCT_PATH, 'skel'))
         manage_addNyPhotoFolder(self, ID_PHOTOARCHIVE, TITLE_PHOTOARCHIVE)
