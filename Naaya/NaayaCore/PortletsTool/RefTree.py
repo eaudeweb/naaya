@@ -87,14 +87,14 @@ class RefTree(LocalPropertyManager, Folder):
 
     def __get_tree_thread(self, nodes, parent, depth):
         """
-        Recursive function that process the given messages and returns
+        Recursive function that process the given nodes and returns
         a tree like structure.
         """
         tree = []
         l = [x for x in nodes if x.parent == parent]
         map(nodes.remove, l)
         for x in l:
-            tree.append((depth, x))
+            tree.append({'depth': depth, 'ob': x})
             tree.extend(self.__get_tree_thread(nodes, x.id, depth+1))
         return tree
 
@@ -105,6 +105,34 @@ class RefTree(LocalPropertyManager, Folder):
         a tree.
         """
         return self.__get_tree_thread(self.objectValues(METATYPE_REFTREENODE), None, 1)
+
+    def __get_tree_expand(self, nodes, parent, depth, expand):
+        """
+        Recursive function that process the given nodes and returns
+        a tree like structure. The B{expand} prameter indicates which
+        nodes to be expanded
+        """
+        tree = []
+        l = [x for x in nodes if x.parent == parent]
+        map(nodes.remove, l)
+        for x in l:
+            expandable = 0
+            for y in nodes:
+                if y.parent == x.id:
+                    expandable = 1
+                    break
+            tree.append({'depth': depth, 'ob': x, 'expandable': expandable})
+            if x.id in expand:
+                tree.extend(self.__get_tree_expand(nodes, x.id, depth+1, expand))
+        return tree
+
+    security.declareProtected(view, 'get_tree_expand')
+    def get_tree_expand(self, expand=[]):
+        """
+        Process nodes an returns only main nodes and the exapndable
+        ones given in B{expand} parameter.
+        """
+        return self.__get_tree_expand(self.objectValues(METATYPE_REFTREENODE), None, 1, expand)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
