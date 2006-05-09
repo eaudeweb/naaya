@@ -101,7 +101,7 @@ class PortletsTool(Folder, utils):
     def getPortlets(self): return self.objectValues([METATYPE_PORTLET, METATYPE_HTMLPORTLET])
     def getLinksLists(self): return self.objectValues(METATYPE_LINKSLIST)
     def getRefLists(self): return self.objectValues(METATYPE_REFLIST)
-    def getRefTree(self): return self.objectValues(METATYPE_REFTREE)
+    def getRefTrees(self): return self.objectValues(METATYPE_REFTREE)
     def getPortletsIds(self): return self.objectIds([METATYPE_PORTLET, METATYPE_HTMLPORTLET])
 
     def get_html_portlets(self):
