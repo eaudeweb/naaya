@@ -104,7 +104,7 @@ class RefTree(LocalPropertyManager, Folder):
         Process all the nodes and returns a structure to be displayed as
         a tree.
         """
-        return self.__get_tree_thread(self.objectValues(METATYPE_REFTREENODE), None, 1)
+        return self.__get_tree_thread(self.get_tree_nodes(), None, 1)
 
     def __get_tree_expand(self, nodes, parent, depth, expand):
         """
@@ -132,7 +132,7 @@ class RefTree(LocalPropertyManager, Folder):
         Process nodes an returns only main nodes and the exapndable
         ones given in B{expand} parameter.
         """
-        return self.__get_tree_expand(self.objectValues(METATYPE_REFTREENODE), None, 1, expand)
+        return self.__get_tree_expand(self.get_tree_nodes(), None, 1, expand)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
