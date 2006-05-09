@@ -85,7 +85,9 @@ def manage_addNySite(self, id='', title='', lang=None, REQUEST=None):
     if not id: id = PREFIX_SITE + ut.utGenRandomId(6)
     portal_uid = '%s_%s' % (PREFIX_SITE, ut.utGenerateUID())
     self._setObject(id, NySite(id, portal_uid, title, lang))
-    self._getOb(id).loadDefaultData()
+    ob = self._getOb(id)
+    ob.createPortalTools()
+    ob.loadDefaultData()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -162,8 +164,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         search_tool.__dict__['__init__'](self)
         portlets_manager.__dict__['__init__'](self)
 
-    security.declarePrivate('loadDefaultData')
-    def loadDefaultData(self, exclude_meta_types=[]):
+    security.declarePrivate('createPortalTools')
+    def createPortalTools(self):
         """ """
         self.manage_addProperty('management_page_charset', 'utf-8', 'string')
         languages = [DEFAULT_PORTAL_LANGUAGE_CODE]
@@ -181,6 +183,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         manage_addNotificationTool(self)
         manage_addProfilesTool(self)
         manage_addErrorLog(self)
+
+    security.declarePrivate('loadDefaultData')
+    def loadDefaultData(self, exclude_meta_types=[]):
+        """ """
         self.loadSkeleton(join(NAAYA_PRODUCT_PATH, 'skel'), exclude_meta_types)
 
     security.declarePrivate('loadSkeleton')
