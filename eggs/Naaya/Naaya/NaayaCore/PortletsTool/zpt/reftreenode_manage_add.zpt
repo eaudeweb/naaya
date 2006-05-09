@@ -16,9 +16,13 @@
 		<td>
 			<select name="parent" id="parent">
 				<option value="">[is main node]</option>
-				<option tal:repeat="item here/get_tree_nodes"
-					tal:attributes="value item/id"
-					tal:content="item/title_or_id" />
+				<tal:block tal:repeat="tuple here/get_tree_thread">
+				<option tal:define="depth tuple/depth; item tuple/ob"
+					tal:attributes="value item/id">
+					<tal:block tal:repeat="i python:range(0, depth*2)">&nbsp;</tal:block>
+					<span tal:replace="item/title_or_id" />
+				</option>
+				</tal:block>
 			</select>
 		</td>
 	</tr>
