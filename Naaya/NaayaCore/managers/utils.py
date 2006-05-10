@@ -35,7 +35,6 @@ import csv
 import tempfile
 import os
 
-
 #Zope imports
 from Products.PythonScripts.standard import url_quote, html_quote
 from DateTime import DateTime
@@ -337,6 +336,13 @@ class utils:
         #convert to unicode
         if not isinstance(p_string, unicode): return unicode(p_string, 'utf-8')
         else: return p_string
+
+    def utLatinToUTF(self, p_string):
+        """ accepts only strings """
+        if p_string is None:
+            return '-'
+        uni = unicode(p_string, 'latin-1')
+        return uni.encode('utf-8')
 
     def utXmlEncode(self, p_string):
         """Encode some special chars"""
