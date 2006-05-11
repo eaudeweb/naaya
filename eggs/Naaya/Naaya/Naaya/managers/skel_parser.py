@@ -148,6 +148,7 @@ class portlets_struct:
         self.portlets = []
         self.linkslists = []
         self.reflists = []
+        self.reftrees = []
 
 class portlet_struct:
     def __init__(self, id, title):
@@ -182,6 +183,24 @@ class item_struct:
     def __init__(self, id, title):
         self.id = id
         self.title = title
+
+class reftree_struct:
+    def __init__(self, id):
+        self.id = id
+        self.properties = {}
+        self.nodes = []
+
+class property_struct:
+    def __init__(self, name, lang):
+        self.name = name
+        self.lang = lang
+
+class node_struct:
+    def __init__(self, id, parent, pickable):
+        self.id = id
+        self.parent = parent
+        self.pickable = pickable
+        self.properties = {}
 
 class properties_struct:
     def __init__(self):
@@ -349,6 +368,15 @@ class skel_handler(ContentHandler):
                 obj = item_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'))
                 stackObj = saxstack_struct('item', obj)
                 self.stack.append(stackObj)
+        elif name == 'reftree':
+            obj = reftree_struct(attrs['id'].encode('utf-8'))
+            stackObj = saxstack_struct('reftree', obj)
+            self.stack.append(stackObj)
+        elif name == 'node':
+            if len(self.stack) >=2:
+                obj = node_struct(attrs['id'].encode('utf-8'), attrs['parent'].encode('utf-8'), attrs['pickable'].encode('utf-8'))
+                stackObj = saxstack_struct('node', obj)
+                self.stack.append(stackObj)
         elif name == 'pluggablecontenttypes':
             obj = pluggablecontenttypes_struct()
             stackObj = saxstack_struct('pluggablecontenttypes', obj)
@@ -425,6 +453,12 @@ class skel_handler(ContentHandler):
             pass
         elif name == 'submit_unapproved':
             pass
+        elif attrs.has_key('lang'):
+            #multilingual property
+            name = name.encode('utf-8')
+            obj = property_struct(name, attrs['lang'].encode('utf-8'))
+            stackObj = saxstack_struct('name', obj)
+            self.stack.append(stackObj)
 
     def endElement(self, name):
         """ """
@@ -497,6 +531,12 @@ class skel_handler(ContentHandler):
         elif name == 'item':
             self.stack[-2].obj.items.append(self.stack[-1].obj)
             self.stack.pop()
+        elif name == 'reftree':
+            self.stack[-2].obj.reftrees.append(self.stack[-1].obj)
+            self.stack.pop()
+        elif name == 'node':
+            self.stack[-2].obj.nodes.append(self.stack[-1].obj)
+            self.stack.pop()
         elif name == 'properties':
             self.stack[-2].obj.properties = self.stack[-1].obj
             self.stack.pop()
@@ -544,6 +584,15 @@ class skel_handler(ContentHandler):
             self.stack[-1].obj.images = 1
         elif name == 'submit_unapproved':
             self.stack[-1].obj.submit_unapproved = 1
+        elif isinstance(self.stack[-1].obj, property_struct):
+            #multilingual property
+            name, lang = self.stack[-1].obj.name, self.stack[-1].obj.lang
+            content = self.stack[-1].content
+            self.stack.pop()
+            ob = self.stack[-1].obj
+            if not ob.properties.has_key(name):
+                ob.properties[name] = {}
+            ob.properties[name][lang] = content
 
     def characters(self, content):
         if len(self.stack) > 0:
@@ -563,8 +612,8 @@ class skel_parser:
         l_parser.setContentHandler(l_handler)
         l_inpsrc = InputSource()
         l_inpsrc.setByteStream(StringIO(p_content))
-        #try:
-        l_parser.parse(l_inpsrc)
-        return (l_handler, '')
-        #except Exception, error:
-        #    return (None, error)
+        try:
+            l_parser.parse(l_inpsrc)
+            return (l_handler, '')
+        except Exception, error:
+            return (None, error)
