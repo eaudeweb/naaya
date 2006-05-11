@@ -212,6 +212,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                         self.manage_uninstall_pluggableitem(meta_type=pluggablecontenttype.meta_type)
                     else:
                         self.manage_install_pluggableitem(meta_type=pluggablecontenttype.meta_type)
+            #load properties
+            if skel_handler.root.properties is not None:
+                for language in skel_handler.root.properties.languages:
+                    properties_tool.manage_addLanguage(language.code)
+                for contenttype in skel_handler.root.properties.contenttypes:
+                    content = self.futRead(join(skel_path, 'contenttypes', contenttype.picture), 'rb')
+                    self.createContentType(contenttype.id, contenttype.title, content)
             #load forms
             if skel_handler.root.forms is not None:
                 for form in skel_handler.root.forms.forms:
@@ -322,15 +329,24 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                         reflist_ob.manage_delete_items(reflist_ob.get_collection().keys())
                     for item in reflist.items:
                         reflist_ob.add_item(item.id, item.title)
+                for reftree in skel_handler.root.portlets.reftrees:
+                    reftree_ob = portletstool_ob._getOb(reftree.id, None)
+                    if reftree_ob is None:
+                        portletstool_ob.manage_addRefTree(reftree.id)
+                        reftree_ob = portletstool_ob._getOb(reftree.id)
+                        for property, langs in reftree.properties.items():
+                            for lang in langs:
+                                reftree_ob._setLocalPropValue(property, lang, langs[lang])
+                    else:
+                        reftree_ob.manage_delObjects(reftree_ob.objectIds())
+                    for node in reftree.nodes:
+                        reftree_ob.manage_addRefTreeNode(node.id, '', node.parent, node.pickable)
+                        node_ob = reftree_ob._getOb(node.id)
+                        for property, langs in node.properties.items():
+                            for lang in langs:
+                                node_ob._setLocalPropValue(property, lang, langs[lang])
                 portletstool_ob.manage_left_portlets(skel_handler.root.portlets.left.split(','))
                 portletstool_ob.manage_center_portlets(skel_handler.root.portlets.center.split(','))
-            #load properties
-            if skel_handler.root.properties is not None:
-                for language in skel_handler.root.properties.languages:
-                    properties_tool.manage_addLanguage(language.code)
-                for contenttype in skel_handler.root.properties.contenttypes:
-                    content = self.futRead(join(skel_path, 'contenttypes', contenttype.picture), 'rb')
-                    self.createContentType(contenttype.id, contenttype.title, content)
             #load email templates
             if skel_handler.root.emails is not None:
                 for emailtemplate in skel_handler.root.emails.emailtemplates:
