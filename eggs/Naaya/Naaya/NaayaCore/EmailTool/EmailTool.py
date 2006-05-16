@@ -108,7 +108,7 @@ class EmailTool(Folder):
         if type(p_emails) == type(''):
             return p_emails
         elif type(p_emails) == type([]):
-            return '<%s>' % '>, <'.join(p_emails)
+            return ', '.join(p_emails)
 
     #api
     security.declareProtected(view, 'sendEmail')
@@ -116,8 +116,7 @@ class EmailTool(Folder):
         #sends a generic email
         try:
             if self.mail_server_name and self.mail_server_port and p_to:
-                p_to = self.__build_addresses(p_to)
-                l_message = self.__create_email(p_content, p_to, p_from, p_subject)
+                l_message = self.__create_email(p_content, self.__build_addresses(p_to), p_from, p_subject)
                 server = smtplib.SMTP(self.mail_server_name, self.mail_server_port)
                 server.sendmail(p_from, p_to, l_message)
                 server.quit()
