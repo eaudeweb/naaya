@@ -1,0 +1,15 @@
+<dtml-var standard_html_header>
+
+<p>
+
+<dtml-var "menu_html(None, _, pagetab=-1)">
+
+<form name="frm">
+  ... ERROR ...
+
+  <a href="<dtml-var "REQUEST['HTTP_REFERER']">">BACK</a>
+</form>
+
+</p>
+
+<dtml-var standard_html_footer>

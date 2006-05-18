@@ -1,0 +1,75 @@
+<dtml-var standard_html_header>
+
+<dtml-var style_html>
+
+<p>
+
+<dtml-var "menu_html(None, _, pagetab=1)">
+
+<dtml-let error="REQUEST.get('error', '')">
+    <dtml-if "error!=''">
+        <span class="alert"><dtml-var error html_quote></span>
+    </dtml-if>
+</dtml-let>
+
+<dtml-comment>
+    LOAD DATA FROM REQUEST
+</dtml-comment>
+<dtml-let req_subject="REQUEST.get('subject', '')" req_category="REQUEST.get('category', '')" req_priority="REQUEST.get('priority', '')" req_description="REQUEST.get('description', '')" req_link="REQUEST.get('link', getDefaultAdviceLink())" req_user_name="REQUEST.get('user_name', getUserName(getAuthenticatedUser()))" req_user_email="REQUEST.get('user_email', getUserEmail(getAuthenticatedUser()))" req_user_phone="REQUEST.get('user_phone', '')">
+<form name="frm" action="HDAddIssue" method="post" enctype="multipart/form-data">
+    <table border="0" cellspacing="2" cellpadding="2" width="100%">
+        <tr><td class="label" width="20%" nowrap="true">Ticket Number</td><td>(generated after submit)</td></tr>
+        <tr><td class="label" nowrap="true">Opened</td><td><dtml-var "CurrentDate()"></td></tr>
+        <tr><td colspan="2">&nbsp;</td></tr>
+        <tr><td class="label" nowrap="true">Subject/Title</td><td><input type="text" name="subject" size="50" value="<dtml-var req_subject html_quote>"><span style="color:#FF0000;">*<dtml-if "REQUEST.has_key('FORM_ERROR' + '_subject')">&nbsp;&nbsp;<dtml-var "REQUEST['FORM_ERROR'+'_subject']"></dtml-if></span></td></tr>
+        <tr>
+            <td class="label" nowrap="true">Category</td>
+            <td>
+            <select name="category">
+                <option value=""></option>
+                <dtml-in "getListIssueCategory()" sort=title>
+                <option value="<dtml-var id html_quote>" <dtml-if "id==req_category">selected</dtml-if>><dtml-var title html_quote></option>
+                </dtml-in>
+            </select><span style="color:#FF0000;">*<dtml-if "REQUEST.has_key('FORM_ERROR' + '_category')">&nbsp;&nbsp;<dtml-var "REQUEST['FORM_ERROR'+'_category']"></dtml-if></span>
+            </td>
+        </tr>
+        <dtml-unless "default_priority">
+        <tr>
+            <td class="label" nowrap="true">Priority</td>
+            <td>
+            <select name="priority">
+                <option value=""></option>
+                <dtml-in "getListIssuePriority()" sort=value>
+                <option value="<dtml-var id html_quote>" <dtml-if "id==req_priority">selected</dtml-if>><dtml-var title html_quote></option>
+                </dtml-in>
+            </select>
+            </td>
+        </tr>
+        </dtml-unless>
+        <tr><td class="label" nowrap="true">Description</td><td><textarea name="description" rows="10" cols="70"><dtml-var req_description html_quote></textarea><span style="color:#FF0000;">*<dtml-if "REQUEST.has_key('FORM_ERROR' + '_description')">&nbsp;&nbsp;<dtml-var "REQUEST['FORM_ERROR'+'_description']"></dtml-if></span></td></tr>
+        <dtml-if "isSecurityFlagPublic()">
+        <tr><td class="label" nowrap="true">Confidential?</td><td><input type="checkbox" name="security" value="on" <dtml-if "isSecurityFlagPrivate()">checked</dtml-if>></td></tr>
+        </dtml-if>
+        <tr><td class="label" nowrap="true">Link</td><td><input type="text" name="link" size="50" value="<dtml-var req_link html_quote>"></td></tr>
+        <tr><td colspan="2">&nbsp;</td></tr>
+        <tr><td colspan="2"><b>User information</b></td></tr>
+        <tr><td class="label" nowrap="true">Name</td><td><input type="text" name="user_name" size="50" value="<dtml-var req_user_name html_quote>"></td></tr>
+        <tr><td class="label" nowrap="true">Email</td><td><input type="text" name="user_email" size="50" value="<dtml-var req_user_email html_quote>"></td></tr>
+        <tr><td class="label" nowrap="true">Phone</td><td><input type="text" name="user_phone" size="50" value="<dtml-var req_user_phone html_quote>"></td></tr>
+        <dtml-if "isAuthenticated()">
+        <tr><td colspan="2">&nbsp;</td></tr>
+        <tr><td class="label" nowrap="true">Attachment</td><td><input type="file" name="attachment" size="20"></td></tr>
+	<dtml-else>
+	<tr><td colspan="3">If you are logged in, you can attach a file</td></tr>
+        </dtml-if>
+        <tr><td>&nbsp;</td><td><input type="submit" name="addIssue" value="Post"></td></tr>
+    </table>
+    <script>try{document.frm.user_name.focus();}catch(e){}</script>
+</form>
+</dtml-let>
+
+<dtml-var "info_login_html(None, _)">
+
+</p>
+
+<dtml-var standard_html_footer>

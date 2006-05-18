@@ -1,0 +1,103 @@
+<form name="frm" >
+
+<p>
+    Total number of issues <b><dtml-var "_.len(getAllIssues())" html_quote></b>.
+</p>
+
+<table border="0" cellspacing="1" cellpadding="2" width="100%">
+    <tr>
+        <td colspan="2" align="center" class="cellheader">Group by Category</td>
+    </tr>
+    <tr>
+        <td class="cellheader" width="50%" nowrap="true"><b>Category</b></td>
+        <td class="cellheader" width="50%"><b>Issues</b></td>
+    </tr>
+    <dtml-in "getListIssueCategory()">
+        <dtml-if sequence-odd>
+            <dtml-call "REQUEST.set('cellclass', 'cellodd')">
+        <dtml-else>
+            <dtml-call "REQUEST.set('cellclass', 'celleven')">
+        </dtml-if>
+        <tr>
+            <td class="<dtml-var cellclass>"><dtml-var title html_quote null=-></td>
+            <td class="<dtml-var cellclass>"><dtml-var "_.len(SearchSortIssues('', '', '', category=id))"></td>
+        </tr>
+    </dtml-in>
+</table>
+
+<br>
+<hr noshade size="1">
+<br>
+
+<table border="0" cellspacing="1" cellpadding="2" width="100%">
+    <tr>
+        <td colspan="2" align="center" class="cellheader">Group by Priority</td>
+    </tr>
+    <tr>
+        <td class="cellheader" width="50%" nowrap="true"><b>Priority</b></td>
+        <td class="cellheader" width="50%"><b>Issues</b></td>
+    </tr>
+    <dtml-in "getListIssuePriority()" sort=value>
+        <dtml-if sequence-odd>
+            <dtml-call "REQUEST.set('cellclass', 'cellodd')">
+        <dtml-else>
+            <dtml-call "REQUEST.set('cellclass', 'celleven')">
+        </dtml-if>
+        <tr>
+            <td class="<dtml-var cellclass>"><dtml-var title html_quote null=-></td>
+            <td class="<dtml-var cellclass>"><dtml-var "_.len(SearchSortIssues('', '', '', priority=id))"></td>
+        </tr>
+    </dtml-in>
+</table>
+
+<br>
+<hr noshade size="1">
+<br>
+
+<table border="0" cellspacing="1" cellpadding="2" width="100%">
+    <tr>
+        <td colspan="2" align="center" class="cellheader">Group by Status</td>
+    </tr>
+    <tr>
+        <td class="cellheader" width="50%" nowrap="true"><b>Status</b></td>
+        <td class="cellheader" width="50%"><b>Issues</b></td>
+    </tr>
+    <dtml-in "getListIssueStatus()" sort=order>
+        <dtml-if sequence-odd>
+            <dtml-call "REQUEST.set('cellclass', 'cellodd')">
+        <dtml-else>
+            <dtml-call "REQUEST.set('cellclass', 'celleven')">
+        </dtml-if>
+        <tr>
+            <td class="<dtml-var cellclass>"><dtml-var title html_quote null=-></td>
+            <td class="<dtml-var cellclass>"><dtml-var "_.len(SearchSortIssues('', '', '', status=id))"></td>
+        </tr>
+    </dtml-in>
+</table>
+
+<br>
+<hr noshade size="1">
+<br>
+
+<table border="0" cellspacing="1" cellpadding="2" width="100%">
+    <tr>
+        <td colspan="2" align="center" class="cellheader">Group by Resolver</td>
+    </tr>
+    <tr>
+        <td class="cellheader" width="50%" nowrap="true"><b>Assigned to</b></td>
+        <td class="cellheader" width="50%"><b>Issues</b></td>
+    </tr>
+    <dtml-in "getListUserConsultant()">
+        <dtml-if sequence-odd>
+            <dtml-call "REQUEST.set('cellclass', 'cellodd')">
+        <dtml-else>
+            <dtml-call "REQUEST.set('cellclass', 'celleven')">
+        </dtml-if>
+        <tr>
+            <td class="<dtml-var cellclass>"><dtml-let user_name="getUserName(id)"><dtml-if "((user_name!=' ') and (user_name!=''))"><dtml-var user_name html_quote><dtml-else>&nbsp;-&nbsp;</dtml-if></dtml-let></td>
+            <td class="<dtml-var cellclass>"><dtml-var "_.len(SearchSortIssues('', '', '', consultant=id))"></td>
+        </tr>
+    </dtml-in>
+</table>
+
+</form>

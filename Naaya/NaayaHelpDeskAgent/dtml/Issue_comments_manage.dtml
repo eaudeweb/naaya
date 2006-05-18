@@ -1,0 +1,9 @@
+<html>
+<head><title>Issue Comments</title></head>
+<body>
+    <dtml-var style_html>
+    <dtml-var manage_tabs>
+    <h2>Issue Comments</h2>
+    <dtml-var comments_form_html>
+</body>
+</html>

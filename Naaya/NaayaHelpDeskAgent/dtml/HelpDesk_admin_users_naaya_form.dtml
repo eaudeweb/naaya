@@ -1,0 +1,52 @@
+<dtml-comment>
+    load form data in variables
+</dtml-comment>
+<dtml-let HDUserName="REQUEST.get('user', '')" HDUser="getUser(HDUserName)">
+    <dtml-if HDUser>
+        <dtml-call "REQUEST.set('var_mode', 'update')">
+        <dtml-call "REQUEST.set('var_form_name', 'frmupdate')">
+        <dtml-call "REQUEST.set('var_form_submit_name', 'update')">
+        <dtml-call "REQUEST.set('var_form_submit_value', 'Update')">
+        <dtml-call "REQUEST.set('var_zope_user', HDUser.zope_user)">
+        <dtml-call "REQUEST.set('var_role', HDUser.role)">
+    <dtml-else>
+        <dtml-call "REQUEST.set('var_mode', 'add')">
+        <dtml-call "REQUEST.set('var_form_name', 'frmadd')">
+        <dtml-call "REQUEST.set('var_form_submit_name', 'add')">
+        <dtml-call "REQUEST.set('var_form_submit_value', 'Add')">
+        <dtml-call "REQUEST.set('var_zope_user', '')">
+        <dtml-call "REQUEST.set('var_role', [])">
+    </dtml-if>
+</dtml-let>
+
+<form name="<dtml-var var_form_name>" method="post" action="manageUser">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+    <tr>
+        <td class="cell">User:</td>
+        <td>
+            <dtml-if "var_mode == 'update'">
+                <b><dtml-var var_zope_user html_quote></b><input type="hidden" name="zope_user" value="<dtml-var var_zope_user html_quote>">
+            <dtml-else>
+                <dtml-let hd_users="hd_users_folder.getUserNames()">
+                <select name="zope_user">
+                    <option value=""></option>
+                    <dtml-in hd_users><option value="<dtml-var sequence-item html_quote>" <dtml-if "var_zope_user==_['sequence-item']">selected</dtml-if>><dtml-var sequence-item html_quote></option></dtml-in>
+                </select>
+                </dtml-let>
+            </dtml-if>
+        </td>
+    </tr>
+    <tr>
+        <td class="cell">Role:</td>
+        <td>
+            <dtml-let administratorRole="getHDRoleAdministrator()" consultantRole="getHDRoleConsultant()">
+            <select name="role" size="2" multiple>
+                <option value="<dtml-var administratorRole html_quote>" <dtml-if "administratorRole in var_role">selected</dtml-if>><dtml-var administratorRole html_quote></option>
+                <option value="<dtml-var consultantRole html_quote>" <dtml-if "consultantRole in var_role">selected</dtml-if>><dtml-var consultantRole html_quote></option>
+            </select>
+            </dtml-let>
+        </td>
+    </tr>
+    <tr><td class="cell">&nbsp;</td><td class="cell"><input type="submit" name="<dtml-var var_form_submit_name>" value="<dtml-var var_form_submit_value>"></td></tr>
+</table>
+</form>

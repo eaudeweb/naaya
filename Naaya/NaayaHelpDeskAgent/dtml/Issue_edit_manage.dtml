@@ -1,0 +1,9 @@
+<html>
+<head><title>Issue Details</title></head>
+<body>
+    <dtml-var style_html>
+    <dtml-var manage_tabs>
+    <h2>Issue Details</h2>
+    <dtml-var edit_form_html>
+</body>
+</html>

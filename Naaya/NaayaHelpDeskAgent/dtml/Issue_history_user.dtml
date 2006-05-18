@@ -1,0 +1,30 @@
+<dtml-var standard_html_header>
+
+<dtml-var style_html>
+
+<dtml-let hasRoleHelpDeskAdministrator="isHelpDeskAdministrator()" hasRoleHelpConsultant="isHelpDeskConsultant()">
+
+<p>
+
+<dtml-var "aq_parent.menu_html(None, _, pagetab=-1)">
+
+<dtml-comment>
+    ONLY HELPDESK ADMINISTRATORS CAN ACCESS PRIVATE ISSUES
+</dtml-comment>
+<dtml-if "hasRoleHelpDeskAdministrator or (hasRoleHelpConsultant and (consultant==AUTHENTICATED_USER.getUserName()))">
+    <dtml-var "menu_html(None, _, pagetab=3)">
+    <dtml-var history_form_html>
+<dtml-else>
+    <br>
+    <center>
+    <span class="alert">You don't have access to this issue.</span>
+    </center>
+</dtml-if>
+
+</p>
+
+</dtml-let>
+
+<dtml-var "footer_html(None, _)">
+
+<dtml-var standard_html_footer>

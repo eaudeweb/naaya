@@ -1,0 +1,41 @@
+<form name="frm" method="post" action="manageHelpDeskProperties">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+    <tr>
+        <td class="cell">User Folder:</td>
+        <td>
+            <select name="user_folder">
+                <dtml-in "superValues(['User Folder', 'LDAPUserFolder', 'Naaya User Folder'])">
+                    <option value="<dtml-var "absolute_url(1)" html_quote>" <dtml-if "user_folder==absolute_url(1)">selected</dtml-if>><dtml-var meta_type html_quote>&nbsp;-&nbsp;<dtml-var "absolute_url(1)" html_quote></option>
+                </dtml-in>
+            </select>
+        </td>
+    </tr>
+    <tr><td class="cell">Mail server name:</td><td><input type="text" name="mail_server_name" size="50" value="<dtml-var mail_server_name html_quote missing>"></td></tr>
+    <tr><td class="cell">Mail server port:</td><td><input type="text" name="mail_server_port" size="3" value="<dtml-var mail_server_port html_quote missing>"></td></tr>
+    <tr><td class="cell">Notify users when:</td><td><input type="checkbox" name="notify_add" value="1" <dtml-if "notifyNewIssue()">checked</dtml-if>> adding issues</td></tr>
+    <tr><td class="cell">&nbsp;</td><td><input type="checkbox" name="notify_modify" value="1" <dtml-if "notifyModifyIssue()">checked</dtml-if>> modifying issues</td></tr>
+    <tr><td class="cell">From address:</td><td><input type="text" name="mail_from_address" size="50" value="<dtml-var mail_from_address html_quote missing>"></td></tr>
+    <tr><td class="cell">Add Issue Email Subject:</td><td><input type="text" name="add_issue_email_subject" size="50" value="<dtml-var add_issue_email_subject html_quote>"></td></tr>
+    <tr><td class="cell">Update Issue Email Subject:</td><td><input type="text" name="update_issue_email_subject" size="50" value="<dtml-var update_issue_email_subject html_quote>"></td></tr>
+    <tr><td class="cell">Delete Issue Email Subject:</td><td><input type="text" name="delete_issue_email_subject" size="50" value="<dtml-var delete_issue_email_subject html_quote>"></td></tr>
+    <tr><td class="cell">Add Issue Comment Email Subject:</td><td><input type="text" name="add_issue_comment_email_subject" size="50" value="<dtml-var add_issue_comment_email_subject html_quote>"></td></tr>
+    <tr><td class="cell">Update Issue Comment Email Subject:</td><td><input type="text" name="update_issue_comment_email_subject" size="50" value="<dtml-var update_issue_comment_email_subject html_quote>"></td></tr>
+    <tr><td class="cell">Delete Issue Comment Email Subject:</td><td><input type="text" name="delete_issue_comment_email_subject" size="50" value="<dtml-var delete_issue_comment_email_subject html_quote>"></td></tr>
+    <tr><td class="cell">Issue ticket length:</td><td><input type="text" name="issue_ticket_length" size="3" value="<dtml-var issue_ticket_length html_quote>"></td></tr>
+    <tr>
+        <td class="cell">Default Issue confidentiality:</td>
+        <td>
+            <select name="security">
+                <option value="<dtml-var "getIssuePrivate()">" <dtml-if "isSecurityFlagPrivate()">selected</dtml-if>><dtml-var "getIssuePrivate()"></option>
+                <option value="<dtml-var "getIssuePublic()">" <dtml-if "isSecurityFlagPublic()">selected</dtml-if>><dtml-var "getIssuePublic()"></option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="cell">Priority set by</td>
+        <td><input type="radio" name="default_priority" value="1" <dtml-if "default_priority==1">checked</dtml-if>>manager <input type="radio" name="default_priority" value="0" <dtml-if "default_priority==0">checked</dtml-if>>user</td>
+    </tr>
+    <tr><td class="cell">&nbsp;</td><td><input type="submit" name="update" value="Save changes"></td></tr>
+</table>
+</form>
+<script>try{document.frm.mail_server_name.focus();}catch(e){}</script>
