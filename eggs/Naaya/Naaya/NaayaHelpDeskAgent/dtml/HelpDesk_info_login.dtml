@@ -1,0 +1,9 @@
+<dtml-if "isHelpDeskAdministrator() or isHelpDeskConsultant()">
+    <table border="0" cellspacing="2" cellpadding="2" width="100%">
+        <tr>
+            <td class="infologin">
+                You are logged in as <b><dtml-var "getUserName(AUTHENTICATED_USER.getUserName())" html_quote></b>.
+            </td>
+        </tr>
+    </table>
+</dtml-if>

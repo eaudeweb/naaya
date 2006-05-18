@@ -1,0 +1,42 @@
+<dtml-let hasRoleHelpDeskAdministrator="isHelpDeskAdministrator()" hasRoleHelpDeskConsultant="isHelpDeskConsultant()">
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+    <tr>
+        <td>
+            <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                    <td nowrap="true"><img src="<dtml-var icon>" border="0" alt="<dtml-var meta_type html_quote>">&nbsp;<a class="title1" href="<dtml-var "absolute_url(0)">/index_html"><dtml-var title_or_id html_quote></a></td>
+                    <td width="100%">&nbsp;</td>
+                    <dtml-unless "AUTHENTICATED_USER.has_role('Authenticated')">
+                        <td class="taboff" align="left" valign="top"><img src="misc_/HelpDeskAgent/menu_top_left" border="0"></td>
+                        <td class="taboff" nowrap="true"><a class="tablink" href="<dtml-var "absolute_url(0)">/login_html" title="Login">Login</a></td>
+                        <td class="taboff" align="right" valign="top"><img src="misc_/HelpDeskAgent/menu_top_right" border="0"></td>
+                        <td><img src="misc_/HelpDeskAgent/spacer" border="0" height="3" width="3"></td>
+                    </dtml-unless>
+                    <td class="<dtml-if "pagetab==0">tabon<dtml-else>taboff</dtml-if>" align="left" valign="top"><img src="misc_/HelpDeskAgent/menu_top_left" border="0"></td>
+                    <td class="<dtml-if "pagetab==0">tabon<dtml-else>taboff</dtml-if>" nowrap="true"><a class="tablink" href="<dtml-var "absolute_url(0)">/list_html" title="List issues">List Issues</a></td>
+                    <td class="<dtml-if "pagetab==0">tabon<dtml-else>taboff</dtml-if>" align="right" valign="top"><img src="misc_/HelpDeskAgent/menu_top_right" border="0"></td>
+                    <td><img src="misc_/HelpDeskAgent/spacer" border="0" height="3" width="3"></td>
+                    <td class="<dtml-if "pagetab==1">tabon<dtml-else>taboff</dtml-if>" align="left" valign="top"><img src="misc_/HelpDeskAgent/menu_top_left" border="0"></td>
+                    <td class="<dtml-if "pagetab==1">tabon<dtml-else>taboff</dtml-if>" nowrap="true"><a class="tablink" href="<dtml-var "absolute_url(0)">/add_issue_html" title="Post a new issue">Post Issue</a></td>
+                    <td class="<dtml-if "pagetab==1">tabon<dtml-else>taboff</dtml-if>" align="right" valign="top"><img src="misc_/HelpDeskAgent/menu_top_right" border="0"></td>
+                    <td><img src="misc_/HelpDeskAgent/spacer" border="0" height="3" width="3"></td>
+                    <td class="<dtml-if "pagetab==2">tabon<dtml-else>taboff</dtml-if>" align="left" valign="top"><img src="misc_/HelpDeskAgent/menu_top_left" border="0"></td>
+                    <td class="<dtml-if "pagetab==2">tabon<dtml-else>taboff</dtml-if>" nowrap="true"><a class="tablink" href="<dtml-var "absolute_url(0)">/add_issue_quick_html" title="Quick post of a new issue">Post Quick Issue</a></td>
+                    <td class="<dtml-if "pagetab==2">tabon<dtml-else>taboff</dtml-if>" align="right" valign="top"><img src="misc_/HelpDeskAgent/menu_top_right" border="0"></td>
+                    <dtml-if "hasRoleHelpDeskAdministrator or hasRoleHelpDeskConsultant">
+                        <td><img src="misc_/HelpDeskAgent/spacer" border="0" height="3" width="3"></td>
+                        <td class="<dtml-if "pagetab==3">tabon<dtml-else>taboff</dtml-if>" align="left" valign="top"><img src="misc_/HelpDeskAgent/menu_top_left" border="0"></td>
+                        <td class="<dtml-if "pagetab==3">tabon<dtml-else>taboff</dtml-if>" nowrap="true"><a class="tablink" href="<dtml-var "absolute_url(0)">/reports_user_html" title="Reports section">Reports</a></td>
+                        <td class="<dtml-if "pagetab==3">tabon<dtml-else>taboff</dtml-if>" align="right" valign="top"><img src="misc_/HelpDeskAgent/menu_top_right" border="0"></td>
+                    </dtml-if>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="tabon"><img src="misc_/HelpDeskAgent/spacer" border="0" height="3" width="3"></td>
+    </tr>
+</table>
+
+</dtml-let>

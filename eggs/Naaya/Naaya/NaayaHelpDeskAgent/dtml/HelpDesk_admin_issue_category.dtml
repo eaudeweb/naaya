@@ -1,0 +1,91 @@
+<dtml-let record_id="REQUEST.get('id', '')" records="getListIssueCategory()" priorities="getListIssuePriority()">
+
+<form name="frm" method="post" action="manageIssueCategory">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+    <tr>
+        <td class="cellheader" width="1%">&nbsp;</td>
+        <td class="cellheader"><b>Title</b></td>
+        <td class="cellheader"><b>Description</b></td>
+        <td class="cellheader"><b>Priority</b></td>
+        <td class="cellheader"><b>Issues Resolver</b></td>
+        <td class="cellheader">&nbsp;</td>
+    </tr>
+    <dtml-in records>
+        <dtml-if sequence-odd>
+            <dtml-call "REQUEST.set('cellclass', 'cellodd')">
+        <dtml-else>
+            <dtml-call "REQUEST.set('cellclass', 'celleven')">
+        </dtml-if>
+        <dtml-if "record_id == id">
+        <tr>
+            <td class="<dtml-var cellclass>" width="1%"><input type="hidden" name="id" value="<dtml-var id html_quote>"></td>
+            <td class="<dtml-var cellclass>" colspan="4">
+                <table border="0" cellspacing="2" cellpadding="2" width="100%">
+                    <tr><td class="<dtml-var cellclass>" colspan="2"><hr noshade size="1"></td></tr>
+                    <tr><td class="<dtml-var cellclass>">Title:</td><td><input type="text" name="title" size="30" value="<dtml-var title html_quote>"></td></tr>
+                    <tr><td class="<dtml-var cellclass>">Description:</td><td><input type="text" name="description" size="50" value="<dtml-var description html_quote>"></td></tr>
+                    <tr><td class="<dtml-var cellclass>">Default priority:</td><td><select name="priority"><option value=""></option><dtml-in priorities sort=value><option value="<dtml-var id html_quote>" <dtml-if "priority==id">selected</dtml-if>><dtml-var title html_quote></option></dtml-in></select></td></tr>
+                    <tr><td class="<dtml-var cellclass>">Implicit Advice:</td><td><textarea name="advice" rows="3" cols="30"><dtml-var advice html_quote></textarea></td></tr>
+                    <tr><td class="<dtml-var cellclass>">Advice link:</td><td><input type="text" name="advicelink" size="50" value="<dtml-var advicelink html_quote>"></td></tr>
+                    <tr>
+                        <td class="<dtml-var cellclass>">Assign issues to:</td>
+                        <td>
+                            <select name="issuesconsultant">
+                                <option value=""></option>
+                                <dtml-in "getListUserConsultant()">
+                                <option value="<dtml-var id html_quote>" <dtml-if "id==issuesconsultant">selected</dtml-if>><dtml-var "getUserName(id)" html_quote></option>
+                                </dtml-in>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr><td class="<dtml-var cellclass>" colspan="2"><hr noshade size="1"></td></tr>
+                </table>
+            <td class="<dtml-var cellclass>"><input type="submit" name="update" value="Update"></td>
+        </tr>
+        <dtml-else>
+        <tr>
+            <td class="<dtml-var cellclass>" width="1%"><input type="checkbox" name="ids" value="<dtml-var id html_quote>"></td>
+            <td class="<dtml-var cellclass>"><a class="itemlink" href="admin_html?pagetab=5&amp;id=<dtml-var id url_quote>"><dtml-var title html_quote null=-></a></td>
+            <td class="<dtml-var cellclass>"><dtml-var description html_quote null=-></td>
+            <td class="<dtml-var cellclass>"><dtml-let pobj="getIssuePriority(priority)"><dtml-if "pobj!=None"><dtml-var "pobj.title" html_quote null=-><dtml-else>-</dtml-if></dtml-let></td>
+            <td class="<dtml-var cellclass>"><dtml-var "getUserName(issuesconsultant)" html_quote null=-></td>
+            <td class="<dtml-var cellclass>">&nbsp;</td>
+        </tr>
+        </dtml-if>
+    </dtml-in>
+    <dtml-if "record_id==''">
+    <tr>
+        <td class="celleven" width="1%">&nbsp;</td>
+        <td class="celleven" colspan="4">
+            <table border="0" cellspacing="2" cellpadding="2" width="100%">
+                <tr><td class="cell" colspan="2"><hr noshade size="1"></td></tr>
+                <tr><td class="cell">Title:</td><td><input type="text" name="title" size="30" value=""></td></tr>
+                <tr><td class="cell">Description:</td><td><input type="text" name="description" size="50" value=""></td></tr>
+                <tr><td class="cell">Default priority:</td><td><select name="priority"><option value=""></option><dtml-in priorities sort=value><option value="<dtml-var id html_quote>"><dtml-var title html_quote></option></dtml-in></select></td></tr>
+                <tr><td class="cell">Implicit Advice:</td><td><textarea name="advice" rows="5" cols="50"></textarea></td></tr>
+                <tr><td class="cell">Advice link:</td><td><input type="text" name="advicelink" size="50" value=""></td></tr>
+                <tr>
+                    <td class="cell">Assign issues to:</td>
+                    <td>
+                        <select name="issuesconsultant">
+                            <option value=""></option>
+                            <dtml-in "getListUserConsultant()">
+                            <option value="<dtml-var id html_quote>"><dtml-var "getUserName(id)" html_quote></option>
+                            </dtml-in>
+                        </select>
+                    </td>
+                </tr>
+                <tr><td class="cell" colspan="2"><hr noshade size="1"></td></tr>
+            </table>
+        <td class="cell"><input type="submit" name="add" value="Add"></td>
+    </tr>
+    </dtml-if>
+    <tr>
+        <td class="cell" width="1%">&nbsp;</td>
+        <td class="cell" colspan="5"><input type="submit" name="delete" value="Delete"></td>
+    </tr>
+</table>
+</form>
+<script>try{document.frm.title.focus();}catch(e){}</script>
+
+</dtml-let>
