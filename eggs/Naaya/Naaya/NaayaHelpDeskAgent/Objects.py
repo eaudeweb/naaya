@@ -21,6 +21,13 @@
 # Objects included in HelpDesk instances
 # Managed from the Zope Console, 'Administration' tab
 
+#Python imports
+
+#Zope imports
+from Globals import InitializeClass
+from AccessControl import ClassSecurityInfo
+
+#Product improts
 from Toolz import *
 from Constants import *
 
@@ -35,6 +42,10 @@ class IssuePriority:
         self.description = description
         self.value = int(value)
 
+    security = ClassSecurityInfo()
+    security.setDefaultAccess("allow")
+
+InitializeClass(IssuePriority)
 
 class IssueStatus:
     """Define IssueStatus for REQUESTS"""
@@ -46,6 +57,10 @@ class IssueStatus:
         self.description = description
         self.order = int(order)
 
+    security = ClassSecurityInfo()
+    security.setDefaultAccess("allow")
+
+InitializeClass(IssueStatus)
 
 class IssueSendType:
     """Define IssueSendType for REQUESTS
@@ -57,6 +72,10 @@ class IssueSendType:
         self.title = title
         self.description = description
 
+    security = ClassSecurityInfo()
+    security.setDefaultAccess("allow")
+
+InitializeClass(IssueSendType)
 
 class IssueCategory:
     """Define IssueCategory of REQUESTS"""
@@ -71,6 +90,10 @@ class IssueCategory:
         self.advicelink = advicelink
         self.issuesconsultant = issuesconsultant
 
+    security = ClassSecurityInfo()
+    security.setDefaultAccess("allow")
+
+InitializeClass(IssueCategory)
 
 class IssueComment:
     """Define IssueComment"""
@@ -83,6 +106,10 @@ class IssueComment:
         self.content_type = content_type   #1 - plain text, 0 - html
         self.content = content
 
+    security = ClassSecurityInfo()
+    security.setDefaultAccess("allow")
+
+InitializeClass(IssueComment)
 
 class IssueHistory:
     """Define IssueHistory"""
@@ -98,6 +125,10 @@ class IssueHistory:
         self.consultant = consultant
         self.comments = comments
 
+    security = ClassSecurityInfo()
+    security.setDefaultAccess("allow")
+
+InitializeClass(IssueHistory)
 
 class User:
     """Define an User for HelpDesk system"""
@@ -110,3 +141,8 @@ class User:
         self.last_name = last_name
         self.email = email
         self.role = ConvertToList(role)
+
+    security = ClassSecurityInfo()
+    security.setDefaultAccess("allow")
+
+InitializeClass(User)
