@@ -1039,7 +1039,6 @@ class HelpDesk(Folder, EmailSender):
         """Generate a random password"""
         return GenRandomId(10)
 
-    security.declarePrivate('CurrentDate')
     def CurrentDate(self):
         """Returns a string with current date"""
         return self.FormatDate(DateTime())
@@ -1302,10 +1301,10 @@ class HelpDesk(Folder, EmailSender):
     login_html = DTMLFile('dtml/HelpDesk_login', globals())
 
     security.declareProtected(view, 'add_issue_html')
-    add_issue_html = DTMLFile('dtml/HelpDesk_add_issue', globals())
+    add_issue_html = PageTemplateFile('zpt/HelpDesk_add_issue', globals())
 
     security.declareProtected(view, 'add_issue_quick_html')
-    add_issue_quick_html = DTMLFile('dtml/HelpDesk_add_issue_quick', globals())
+    add_issue_quick_html = PageTemplateFile('zpt/HelpDesk_add_issue_quick', globals())
 
     security.declareProtected(view, 'list_html')
     list_html = DTMLFile('dtml/HelpDesk_list', globals())
