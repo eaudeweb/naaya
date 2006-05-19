@@ -25,7 +25,7 @@ from os.path import join
 #Zope imports
 import Products
 from OFS.Folder import Folder
-from Globals import DTMLFile, InitializeClass, MessageDialog
+from Globals import InitializeClass, MessageDialog
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens,view
@@ -96,8 +96,8 @@ class HelpDesk(Folder, EmailSender):
         (HELPDESK_ROLE_AUTHENTICATED, HELPDESK_ROLE_ADMINISTRATOR,
          HELPDESK_ROLE_CONSULTANT, 'Manager'))
 
+    product_name = NAAYAHELPDESKAGENT_PRODUCT_NAME
     meta_type = HELPDESK_META_TYPE_LABEL
-    product_name = HELPDESK_META_TYPE_LABEL
 
     manage_options = (
         Folder.manage_options
@@ -1256,49 +1256,45 @@ class HelpDesk(Folder, EmailSender):
     security.declarePrivate('InitHelpDesk')
     def InitHelpDesk(self):
         """Create some default objects: priority, status, send type"""
-        try:
-            file = open(join(NAAYAHELPDESK_PRODUCT_PATH, 'HelpDesk.ini'), 'r')
-            for line in file.readlines():
-                line = line.strip()
-                if line != '':
-                    iType, iValues = line.split('=')
-                    if iType == INIFILE_ISSUE_PRIORITY:
-                        #add IssuePriority
-                        iId, iTitle, iDescription, iValue = iValues.split(',')
-                        self.addIssuePriority(iId, IssuePriority(iId, iTitle, iDescription, iValue))
-                    elif iType == INIFILE_ISSUE_STATUS:
-                        #add IssueStatus
-                        iId, iTitle, iDescription, iOrder = iValues.split(',')
-                        self.addIssueStatus(iId, IssueStatus(iId, iTitle, iDescription, iOrder))
-                    elif iType == INIFILE_ISSUE_SENDTYPE:
-                        #add IssueSendType
-                        iId, iTitle, iDescription = iValues.split(',')
-                        self.addIssueSendType(iId, IssueSendType(iId, iTitle, iDescription))
-                    elif iType == INIFILE_ISSUE_CATEGORY:
-                        #add IssueCategory
-                        iId, iTitle, iDescription, iPriority, iAdvice, iAdvicelink = iValues.split(',')
-                        self.addIssueCategory(iId, IssueCategory(iId, iTitle, iDescription, iPriority, iAdvice, iAdvicelink, ''))
-            file.close()
-        except:
-            pass
-        return 1
-
+        file = open(join(NAAYAHELPDESKAGENT_PRODUCT_PATH, 'HelpDesk.ini'), 'r')
+        for line in file.readlines():
+            print line
+            line = line.strip()
+            if line != '':
+                iType, iValues = line.split('=')
+                if iType == INIFILE_ISSUE_PRIORITY:
+                    #add IssuePriority
+                    iId, iTitle, iDescription, iValue = iValues.split(',')
+                    self.addIssuePriority(iId, IssuePriority(iId, iTitle, iDescription, iValue))
+                elif iType == INIFILE_ISSUE_STATUS:
+                    #add IssueStatus
+                    iId, iTitle, iDescription, iOrder = iValues.split(',')
+                    self.addIssueStatus(iId, IssueStatus(iId, iTitle, iDescription, iOrder))
+                elif iType == INIFILE_ISSUE_SENDTYPE:
+                    #add IssueSendType
+                    iId, iTitle, iDescription = iValues.split(',')
+                    self.addIssueSendType(iId, IssueSendType(iId, iTitle, iDescription))
+                elif iType == INIFILE_ISSUE_CATEGORY:
+                    #add IssueCategory
+                    iId, iTitle, iDescription, iPriority, iAdvice, iAdvicelink = iValues.split(',')
+                    self.addIssueCategory(iId, IssueCategory(iId, iTitle, iDescription, iPriority, iAdvice, iAdvicelink, ''))
+        file.close()
 
     ########################################
     security.declareProtected(view, 'menu_html')
-    menu_html = DTMLFile('dtml/HelpDesk_menu', globals())
+    menu_html = PageTemplateFile('zpt/HelpDesk_menu', globals())
 
     security.declareProtected(view, 'style_html')
-    style_html = DTMLFile('dtml/HelpDesk_style', globals())
+    style_html = PageTemplateFile('zpt/HelpDesk_style', globals())
 
     security.declareProtected(view, 'index_html')
-    index_html = DTMLFile('dtml/HelpDesk_index', globals())
+    index_html = PageTemplateFile('zpt/HelpDesk_index', globals())
 
     security.declareProtected(view, 'info_login_html')
-    info_login_html = DTMLFile('dtml/HelpDesk_info_login', globals())
+    info_login_html = PageTemplateFile('zpt/HelpDesk_info_login', globals())
 
     security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'login_html')
-    login_html = DTMLFile('dtml/HelpDesk_login', globals())
+    login_html = PageTemplateFile('zpt/HelpDesk_login', globals())
 
     security.declareProtected(view, 'add_issue_html')
     add_issue_html = PageTemplateFile('zpt/HelpDesk_add_issue', globals())
@@ -1307,55 +1303,55 @@ class HelpDesk(Folder, EmailSender):
     add_issue_quick_html = PageTemplateFile('zpt/HelpDesk_add_issue_quick', globals())
 
     security.declareProtected(view, 'list_html')
-    list_html = DTMLFile('dtml/HelpDesk_list', globals())
+    list_html = PageTemplateFile('zpt/HelpDesk_list', globals())
 
     security.declareProtected(view, 'error_html')
-    error_html = DTMLFile('dtml/HelpDesk_error', globals())
+    error_html = PageTemplateFile('zpt/HelpDesk_error', globals())
 
     security.declareProtected(view_management_screens, 'admin_html')
     admin_html = PageTemplateFile('zpt/HelpDesk_admin', globals())
 
     security.declareProtected(view_management_screens, 'admin_settings_html')
-    admin_settings_html = DTMLFile('dtml/HelpDesk_admin_settings', globals())
+    admin_settings_html = PageTemplateFile('zpt/HelpDesk_admin_settings', globals())
 
     security.declareProtected(view_management_screens, 'admin_catalog_html')
-    admin_catalog_html = DTMLFile('dtml/HelpDesk_admin_catalog', globals())
+    admin_catalog_html = PageTemplateFile('zpt/HelpDesk_admin_catalog', globals())
 
     security.declareProtected(view_management_screens, 'admin_issue_priority_html')
-    admin_issue_priority_html = DTMLFile('dtml/HelpDesk_admin_issue_priority', globals())
+    admin_issue_priority_html = PageTemplateFile('zpt/HelpDesk_admin_issue_priority', globals())
 
     security.declareProtected(view_management_screens, 'admin_issue_status_html')
-    admin_issue_status_html = DTMLFile('dtml/HelpDesk_admin_issue_status', globals())
+    admin_issue_status_html = PageTemplateFile('zpt/HelpDesk_admin_issue_status', globals())
 
     security.declareProtected(view_management_screens, 'admin_issue_sendtype_html')
-    admin_issue_sendtype_html = DTMLFile('dtml/HelpDesk_admin_issue_sendtype', globals())
+    admin_issue_sendtype_html = PageTemplateFile('zpt/HelpDesk_admin_issue_sendtype', globals())
 
     security.declareProtected(view_management_screens, 'admin_issue_category_html')
-    admin_issue_category_html = DTMLFile('dtml/HelpDesk_admin_issue_category', globals())
+    admin_issue_category_html = PageTemplateFile('zpt/HelpDesk_admin_issue_category', globals())
 
     security.declareProtected(view_management_screens, 'admin_users_html')
-    admin_users_html = DTMLFile('dtml/HelpDesk_admin_users', globals())
+    admin_users_html = PageTemplateFile('zpt/HelpDesk_admin_users', globals())
 
     security.declareProtected(view_management_screens, 'admin_users_ldap_form_html')
-    admin_users_ldap_form_html = DTMLFile('dtml/HelpDesk_admin_users_ldap_form', globals())
+    admin_users_ldap_form_html = PageTemplateFile('zpt/HelpDesk_admin_users_ldap_form', globals())
 
     security.declareProtected(view_management_screens, 'admin_users_zope_form_html')
-    admin_users_zope_form_html = DTMLFile('dtml/HelpDesk_admin_users_zope_form', globals())
+    admin_users_zope_form_html = PageTemplateFile('zpt/HelpDesk_admin_users_zope_form', globals())
 
     security.declareProtected(view_management_screens, 'admin_users_naaya_form_html')
-    admin_users_naaya_form_html = DTMLFile('dtml/HelpDesk_admin_users_naaya_form', globals())
+    admin_users_naaya_form_html = PageTemplateFile('zpt/HelpDesk_admin_users_naaya_form', globals())
 
     security.declareProtected(view_management_screens, 'admin_presentation_html')
-    admin_presentation_html = DTMLFile('dtml/HelpDesk_admin_presentation', globals())
+    admin_presentation_html = PageTemplateFile('zpt/HelpDesk_admin_presentation', globals())
 
     security.declarePrivate('reports_form_html')
-    reports_form_html = DTMLFile('dtml/HelpDesk_reports_form', globals())
+    reports_form_html = PageTemplateFile('zpt/HelpDesk_reports_form', globals())
 
     security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'reports_user_html')
-    reports_user_html = DTMLFile('dtml/HelpDesk_reports_user', globals())
+    reports_user_html = PageTemplateFile('zpt/HelpDesk_reports_user', globals())
 
     security.declareProtected(view_management_screens, 'reports_manage_html')
-    reports_manage_html = DTMLFile('dtml/HelpDesk_reports_manage', globals())
+    reports_manage_html = PageTemplateFile('zpt/HelpDesk_reports_manage', globals())
 
     #Declare permission defaults
     security.setPermissionDefault(PERMISSION_MANAGE_HELPDESK_SETTINGS, [HELPDESK_ROLE_ADMINISTRATOR, HELPDESK_ROLE_CONSULTANT])
