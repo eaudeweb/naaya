@@ -19,7 +19,12 @@
 # Dragos Chirila, Finsiel Romania
 
 
+import Globals
+
 # define some constants
+
+NAAYAHELPDESK_PRODUCT_NAME = 'NaayaHelpDesk'
+NAAYAHELPDESK_PRODUCT_PATH = Globals.package_home(globals())
 
 #ini file headers
 INIFILE_ISSUE_PRIORITY = 'IssuePriority'

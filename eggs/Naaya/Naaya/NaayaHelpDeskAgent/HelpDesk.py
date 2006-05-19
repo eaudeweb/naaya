@@ -20,6 +20,7 @@
 
 #Python imports
 import operator
+from os.path import join
 
 #Zope imports
 import Products
@@ -1255,9 +1256,8 @@ class HelpDesk(Folder, EmailSender):
     security.declarePrivate('InitHelpDesk')
     def InitHelpDesk(self):
         """Create some default objects: priority, status, send type"""
-        from os.path import join
         try:
-            file = open(join(INSTANCE_HOME, 'Products', 'HelpDeskAgent', 'HelpDesk.ini'), 'r')
+            file = open(join(NAAYAHELPDESK_PRODUCT_PATH, 'HelpDesk.ini'), 'r')
             for line in file.readlines():
                 line = line.strip()
                 if line != '':
@@ -1313,7 +1313,7 @@ class HelpDesk(Folder, EmailSender):
     error_html = DTMLFile('dtml/HelpDesk_error', globals())
 
     security.declareProtected(view_management_screens, 'admin_html')
-    admin_html = DTMLFile('dtml/HelpDesk_admin', globals())
+    admin_html = PageTemplateFile('zpt/HelpDesk_admin', globals())
 
     security.declareProtected(view_management_screens, 'admin_settings_html')
     admin_settings_html = DTMLFile('dtml/HelpDesk_admin_settings', globals())
