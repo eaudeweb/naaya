@@ -18,33 +18,27 @@
 # Contributor(s):
 # Dragos Chirila, Finsiel Romania
 
-# Main class for the product.
-
-
-from OFS.PropertyManager import PropertyManager
-from OFS import SimpleItem
-from OFS.Folder import Folder
-from Globals import default__class_init__, SOFTWARE_HOME
-from Globals import MessageDialog
-from Globals import DTMLFile, InitializeClass
-import AccessControl.Role
-from AccessControl import ClassSecurityInfo
-import Products
-import OFS.ObjectManager
+#Python imports
 import operator
-from Products.ZCatalog.CatalogPathAwareness import CatalogAware
+
+#Zope imports
+import Products
+from OFS.Folder import Folder
+from Globals import DTMLFile, InitializeClass, MessageDialog
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens,view
 from Products.ZCatalog.ZCatalog import ZCatalog
 from DateTime import DateTime
-from AccessControl.Permissions import view_management_screens,view
+
+#Product imports
 from Objects import *
 from Toolz import *
 from Constants import *
 import Issue
 from EmailSender import EmailSender
 
-
-manage_addHelpDeskForm = DTMLFile('dtml/HelpDesk_addForm', globals())
-
+manage_addHelpDeskForm = PageTemplateFile('zpt/HelpDesk_addForm', globals())
 def manage_addHelpDesk(self, id, title, user_folder,
         mail_server_name='localhost', mail_server_port=25, notify_add='', notify_modify='',
         mail_from_address='IssueTracker@localhost',
@@ -90,11 +84,7 @@ def manage_addHelpDesk(self, id, title, user_folder,
     if REQUEST:
         return self.manage_main(self,REQUEST)
 
-
-class HelpDesk(CatalogAware,
-                Folder,
-                PropertyManager,
-                EmailSender):
+class HelpDesk(Folder, EmailSender):
     """HelpDesk object"""
 
     #security stuff
@@ -106,23 +96,31 @@ class HelpDesk(CatalogAware,
          HELPDESK_ROLE_CONSULTANT, 'Manager'))
 
     meta_type = HELPDESK_META_TYPE_LABEL
-    default_catalog = 'Catalog'
     product_name = HELPDESK_META_TYPE_LABEL
 
-    manage_options = (OFS.ObjectManager.ObjectManager.manage_options[0],) + (
-            PropertyManager.manage_options + (
-                    {'label' : HELPDESK_MANAGE_OPTION_VIEW,
-                     'action' : 'index_html'},
-                    {'label' : HELPDESK_MANAGE_OPTION_ADMINISTRATION,
-                     'action' : 'admin_html'},
-                    {'label' : HELPDESK_MANAGE_OPTION_REPORTS,
-                     'action' : 'reports_manage_html'},)
-                    + SimpleItem.SimpleItem.manage_options )
+    manage_options = (
+        Folder.manage_options
+        +
+        (
+            {'label' : HELPDESK_MANAGE_OPTION_VIEW, 'action' : 'index_html'},
+            {'label' : HELPDESK_MANAGE_OPTION_ADMINISTRATION, 'action' : 'admin_html'},
+            {'label' : HELPDESK_MANAGE_OPTION_REPORTS, 'action' : 'reports_manage_html'},
+        )
+    )
 
     meta_types = (
             {'name': ISSUE_META_TYPE_LABEL, 'action': 'manage_addIssueForm'},
     )
     all_meta_types = meta_types
+
+    #constructors
+    manage_addIssueForm = Issue.manage_addIssueForm
+    manage_addIssue = Issue.manage_addIssue
+
+    security.declareProtected(view, 'HDAddIssue')
+    HDAddIssue = Issue.AddIssue
+    security.declareProtected(view, 'HDAddIssueQuick')
+    HDAddIssueQuick = Issue.AddIssueQuick
 
     def __init__(self, id, title, user_folder,
             mail_server_name, mail_server_port, notify, mail_from_address,
@@ -155,39 +153,6 @@ class HelpDesk(CatalogAware,
         self.issues_perpage = _DEFAULT_ISSUES_PERPAGE
         EmailSender.__dict__['__init__'](self)
 
-    def __setstate__(self,state):
-        """Updates"""
-        HelpDesk.inheritedAttribute("__setstate__") (self, state)
-        if not hasattr(self, 'default_security_flag'):
-            self.default_security_flag = _DEFAULT_ISSUE_SECURITY
-        if not hasattr(self, 'date_format'):
-            self.date_format = _DEFAULT_DATE_FORMAT
-        if not hasattr(self, 'show_time'):
-            self.show_time = 0
-        if not hasattr(self, 'css_style'):
-            self.css_style = _DEFAULT_CSS_STYLE
-        if not hasattr(self, 'issues_perpage'):
-            self.issues_perpage = _DEFAULT_ISSUES_PERPAGE
-        if not hasattr(self, 'mail_from_address'):
-            self.mail_from_address = HELPDESK_DEFAULT_MAIL_FROM_ADDRESS
-        if not hasattr(self, 'default_priority'):
-            self.default_priority = 1
-        if not hasattr(self, 'notify'):
-            self.notify = NOTIFY_ALL
-        #update all issue categories
-        for issuecategory in self.getListIssueCategory():
-            if not hasattr(issuecategory, 'issuesconsultant'):
-                issuecategory.issuesconsultant = ''
-                self.__issuecategory[issuecategory.id] = issuecategory
-
-    security.declareProtected(view_management_screens, 'updateScript')
-    def updateScript(self):
-        """ """
-        try: self.__catalog.addIndex('issuecomments', 'TextIndex')
-        except: pass
-        for issue in self.getAllIssues():
-            self.RecatalogIssue(issue)
-
     def manage_delObjects(self, ids=[], REQUEST=None):
         """Delete a subordinate object."""
         #-> some checks before delete
@@ -216,16 +181,6 @@ class HelpDesk(CatalogAware,
             del ids[-1]
         if REQUEST is not None:
             return self.manage_main(self, REQUEST, update_menu=1)
-
-    # manage
-    manage_addIssueForm = Issue.manage_addIssueForm
-    manage_addIssue = Issue.manage_addIssue
-
-    #front
-    security.declareProtected(view, 'HDAddIssue')
-    HDAddIssue = Issue.AddIssue
-    security.declareProtected(view, 'HDAddIssueQuick')
-    HDAddIssueQuick = Issue.AddIssueQuick
 
     def updateHelpDeskProperties(self, user_folder,
             mail_server_name, mail_server_port, notify, mail_from_address,
