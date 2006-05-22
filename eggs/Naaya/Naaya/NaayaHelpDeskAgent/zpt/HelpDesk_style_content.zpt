@@ -1,0 +1,211 @@
+.cell
+{
+    color: #000000;
+    background: #FFFFFF;
+}
+.cellheader
+{
+    color: #000000;
+    background: #<span tal:replace="here/getCssHeaderColor" />;
+}
+.celleven
+{
+    color: #000000;
+    background: #FFFFFF;
+}
+.cellodd
+{
+    color: #000000;
+    background: #<span tal:replace="here/getCssLineColor" />;
+}
+.celltextarea
+{
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1.2em;
+    color: #000000;
+    background: #FAFAFA;
+}
+.label
+{
+    font-weight: bold;
+    color: #505050;
+    background: #FFFFFF;
+}
+
+.note
+{
+    font-weight: normal;
+    color: #303030;
+}
+
+.alert
+{
+    font-weight: bold;
+    font-style: normal;
+    color: #FF0000;
+    background: #FFFFFF;
+}
+
+a.menulinkon
+{
+    font-weight: bold;
+    color: #333333;
+    text-decoration: none;
+}
+a.menulinkon:hover
+{
+    font-weight: bold;
+    color: #333333;
+    text-decoration: none;
+}
+
+a.menulinkoff
+{
+    font-weight: bold;
+    color: #483D8b;
+    text-decoration: none;
+}
+a.menulinkoff:hover
+{
+    font-weight: bold;
+    color: #483D8b;
+    text-decoration: none;
+}
+
+a.itemlink
+{
+    font-weight: normal;
+    color: #000000;
+    text-decoration: underline;
+}
+a.itemlink:hover
+{
+    font-weight: normal;
+    color: #505050;
+    text-decoration: underline;
+}
+
+a.sortlink
+{
+    font-weight: bold;
+    color: #000000;
+    text-decoration: none;
+}
+a.sortlink:hover
+{
+    font-weight: bold;
+    color: #505050;
+    text-decoration: none;
+}
+
+a.urllink
+{
+    font-weight: normal;
+    color: #0000FF;
+    text-decoration: none;
+}
+a.urllink:hover
+{
+    font-weight: normal;
+    color: #0000FF;
+    text-decoration: underline;
+}
+
+a.issuelink
+{
+    font-weight: bold;
+    color: #FFFFFF;
+    background: #FF0000;
+    text-decoration: underline;
+}
+a.issuelink:hover
+{
+    font-weight: bold;
+    color: FFFFFF;
+    background: #FF0000;
+    text-decoration: underline;
+}
+
+a.feedbacklink
+{
+    font-weight: bold;
+    color: #000066;
+    text-decoration: underline;
+}
+a.feedbacklink:hover
+{
+    font-weight: bold;
+    color: #000066;
+    text-decoration: underline;
+}
+
+a.batchlink
+{
+    font-weight: bold;
+    color: #505050;
+    text-decoration: none;
+}
+a.batchlink:hover
+{
+    font-weight: bold;
+    color: #808080;
+    text-decoration: none;
+}
+
+a.tablink
+{
+    font-weight: bold;
+    color: #000000;
+    text-decoration: none;
+}
+a.tablink:hover
+{
+    font-weight: bold;
+    color: #000000;
+    text-decoration: none;
+}
+
+.taboff
+{
+    background: #<span tal:replace="here/getCssLineColor" />;
+}
+.tabon
+{
+    background: #<span tal:replace="here/getCssHeaderColor" />;
+}
+
+.infologin
+{
+    color: #000066;
+}
+
+a.title1
+{
+    font-weight: bold;
+    font-size: 1.4em;
+    color: #000066;
+    text-decoration: none;
+}
+a.title1:hover
+{
+    font-weight: bold;
+    font-size: 1.4em;
+    color: #000066;
+    text-decoration: none;
+}
+
+a.title2
+{
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #000066;
+    text-decoration: none;
+}
+a.title2:hover
+{
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #000066;
+    text-decoration: none;
+}
