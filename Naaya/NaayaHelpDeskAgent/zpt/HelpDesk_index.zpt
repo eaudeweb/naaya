@@ -2,59 +2,93 @@
 
 <span tal:replace="structure here/style_html" />
 
-<p>
-	<span tal:replace="structure python:here.menu_html(pagetab=-1)" />
+<span tal:replace="structure python:here.menu_html(pagetab=-1)" />
 
-	<tal:block tal:define="hasRoleHelpDeskAdministrator here/isHelpDeskAdministrator;
-		newissue python:request.get('newissue', '')"
-		tal:condition="python:newissue!=''">
-		<table border="0" cellspacing="2" cellpadding="2" width="90%" align="center">
-			<tr>
-				<td style="color:#FFFFFF;background-color:#FF0000;" i18n:translate="">
-					Your submission has been received. If you entered a valid email you will
-					be notified about any changes. If you marked your issue as confidential
-					it will not appear in the listing unless released by an administrator.
-				</td>
-			</tr>
-			<tr tal:define="issue python:here.getIssuesObject(newissue)">
-				<td align="center">
+<tal:block tal:define="hasRoleHelpDeskAdministrator here/isHelpDeskAdministrator; newissue python:request.get('newissue', '')">
+
+	<tal:block tal:condition="python:newissue!=''">
+	<table border="0" cellspacing="2" cellpadding="2" width="90%" align="center">
+		<tr>
+			<td style="color:#FFFFFF;background-color:#FF0000;" i18n:translate="">
+				Your submission has been received. If you entered a valid email you will
+				be notified about any changes. If you marked your issue as confidential
+				it will not appear in the listing unless released by an administrator.
+			</td>
+		</tr>
+		<tr tal:define="issue python:here.getIssuesObject(newissue)">
+			<td align="center">
 				<table border="0" cellspacing="2" cellpadding="2">
-					<tr><td nowrap="true" colspan="2" align="left">Last modified:<dtml-var "FormatDate(date_modify)" html_quote>,&nbsp;Opened:<dtml-var "FormatDate(date_open)" html_quote>,&nbsp;Ticket Number:<dtml-var id html_quote></td></tr>
-					<tr><td colspan="2">&nbsp;</td></tr>
-					<tr><td nowrap="true"width="15%">Subject/Title:</td><td align="left"><b><dtml-var subject html_quote null=-></b></td></tr>
-					<tr><td nowrap="true" valign="top">Description:</td><td class="celltextarea" align="left"><dtml-var "EncodeTextareaContent(description)" null=-></td></tr>
-					<tr><td nowrap="true" colspan="2" align="left">Status:<dtml-var "getIssueStatusTitle(status)" html_quote null=->,&nbsp;Priority:<dtml-var "getIssuePriorityTitle(priority)" html_quote null=->,&nbsp;Category:<dtml-var "getIssueCategoryTitle(category)" html_quote null=-></td></tr>
-					<tr><td colspan="2">&nbsp;</td></tr>
-					<tr><td nowrap="true">Assigned to:</td><td align="left"><dtml-var "getUserName(consultant)" html_quote null=-></td></tr>
-					<dtml-if hasRoleHelpDeskAdministrator>
-					<tr><td nowrap="true">Security:</td><td align="left"><dtml-var security html_quote null=-></td></tr>
-					</dtml-if>
-					<tr><td colspan="2">&nbsp;</td></tr>
-					<tr><td colspan="2"><b>User information</b></td></tr>
-					<tr><td nowrap="true">Name:</td><td align="left"><dtml-var user_name html_quote null=-></td></tr>
-					<tr><td nowrap="true">Email:</td><td align="left"><dtml-var user_email html_quote null=-></td></tr>
-					<tr><td nowrap="true">Phone:</td><td align="left"><dtml-var user_phone html_quote null=-></td></tr>
-					<tr><td colspan="2">&nbsp;</td></tr>
-					<tr><td nowrap="true">Link:</td><td align="left"><dtml-if "link!=''"><a class="urllink" href="<dtml-var link html_quote>" target="_blank"><dtml-var link html_quote></a><dtml-else>-</dtml-if></td></tr>
 					<tr>
-						<td nowrap="true">Attachment:</td>
-						<td align="left">
-							<dtml-let res="getAttachmentForIssue()" attobj="res[0]" attFileName="res[1]">
-								<dtml-if "attobj != None">
-									<a href="<dtml-var "attobj.absolute_url(0)">" target="_blank"><dtml-var attFileName html_quote></a>
-								<dtml-else>
-									&nbsp;
-								</dtml-if>
-							</dtml-let>
+						<td nowrap="nowrap" colspan="2" align="left">
+							<span i18n:translate="" tal:omit-tag="">Last modified:</span>
+							<span tal:replace="python:issue.FormatDate(issue.date_modify)" />,
+							<span i18n:translate="" tal:omit-tag="">Opened:</span>
+							<span tal:replace="python:issue.FormatDate(issue.date_open)" />,
+							<span i18n:translate="" tal:omit-tag="">Ticket Number:</span>
+							<span tal:replace="issue/id" />
+						</td>
+					</tr>
+					<tr><td colspan="2"></td></tr>
+					<tr>
+						<td nowrap="nowrap" width="15%" i18n:translate="">Subject/Title:</td>
+						<td align="left"><strong tal:content="issue/subject" /></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" valign="top" i18n:translate="">Description:</td>
+						<td class="celltextarea" align="left" tal:content="python:issue.EncodeTextareaContent(issue.description)" />
+					</tr>
+					<tr>
+						<td nowrap="nowrap" colspan="2" align="left">
+							<span i18n:translate="" tal:omit-tag="">Status:</span>
+							<span tal:replace="python:issue.getIssueStatusTitle(issue.status)" />,
+							<span i18n:translate="" tal:omit-tag="">Priority:</span>
+							<span tal:replace="python:issue.getIssuePriorityTitle(issue.priority)" />,
+							<span i18n:translate="" tal:omit-tag="">Category:</span>
+							<span tal:replace="python:issue.getIssueCategoryTitle(issue.category)" />
+						</td>
+					</tr>
+					<tr><td colspan="2"></td></tr>
+					<tr>
+						<td nowrap="nowrap" i18n:translate="">Assigned to:</td>
+						<td align="left" tal:content="python:issue.getUserName(issue.consultant)" />
+					</tr>
+					<tr tal:condition="hasRoleHelpDeskAdministrator">
+						<td nowrap="nowrap" i18n:translate="">Security:</td>
+						<td align="left" tal:content="issue/security" />
+					</tr>
+					<tr><td colspan="2"></td></tr>
+					<tr><td colspan="2"><strong i18n:translate="">User information</strong></td></tr>
+					<tr>
+						<td nowrap="nowrap" i18n:translate="">Name:</td>
+						<td align="left" tal:content="issue/user_name" />
+					</tr>
+					<tr>
+						<td nowrap="nowrap" i18n:translate="">Email:</td>
+						<td align="left" tal:content="issue/user_email" />
+					</tr>
+					<tr>
+						<td nowrap="nowrap" i18n:translate="">Phone:</td>
+						<td align="left" tal:content="issue/user_phone" />
+					</tr>
+					<tr><td colspan="2"></td></tr>
+					<tr>
+						<td nowrap="nowrap" i18n:translate="">Link:</td>
+						<td align="left"><a class="urllink" tal:condition="python:issue.link!=''" tal:attributes="href issue/link" target="_blank" tal:content="issue/link" /></td>
+					</tr>
+					<tr>
+						<td nowrap="nowrap" i18n:translate="">Attachment:</td>
+						<td align="left" tal:define="res issue/getAttachmentForIssue; attobj python:res[0]; attFileName python:res[1]">
+							<tal:block tal:condition="attobj">
+								<a tal:attributes="href attobj/absolute_url" target="_blank" tal:content="attFileName" />
+							</tal:block>
 						</td>
 					</tr>
 				</table>
-				</td>
-			</tr>
-		</table>
-		<br /><hr noshade size="1" /><br />
+			</td>
+		</tr>
+	</table>
+	<br /><hr noshade size="1" /><br />
 	</tal:block>
-
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td class="note">
@@ -95,29 +129,39 @@
 						comments to them
 					</li>
 				</ul>
-	<dtml-if "isHelpDeskAdministrator() or isHelpDeskConsultant()">
-		<b>Issue management</b>
-		<ul>
-		<li>when new issues are posted, the Administrators receive e-mails with the URL and are in title to review the
-		submission and edit it: by changing the <b>Security</b> from <em>private</em> to <em>public</em> 
-		the item will be visible for everyone; also, a Resolver can be assigned from the existing list 
-		to handle the issue. From that moment on, 
-		the Resolver will be also notified by e-mail about the changes in the item<br><br></li>
-		<li>Issue Administrators and Resolvers are able to filter and browse the entire archive of 
-		issues (public or not) and to add comments to any of them<br><br></li>
-		<li>Issue Resolvers are only able to edit and see the history of the issues that have 
-		been assigned to them, while the Administrators have full rights on all issues - edit, make 
-		public, view history, delete<br><br></li>
-		<li>Issue Administrators can consult the <em>Reports</em> that display statistics regarding 
-		the existing issues and resolvers that handle them<br><br></li>
-		</ul>
-	</dtml-if>
+				<tal:block tal:condition="python:hasRoleHelpDeskAdministrator or here.isHelpDeskConsultant()">
+				<strong i18n:translate="">Issue management</strong>
+				<ul>
+					<li i18n:translate="">
+						when new issues are posted, the Administrators receive e-mails with
+						the URL and are in title to review the submission and edit it: by
+						changing the <strong>Security</strong> from <em>private</em> to
+						<em>public</em> the item will be visible for everyone; also, a Resolver
+						can be assigned from the existing list to handle the issue. From that
+						moment on, the Resolver will be also notified by e-mail about the changes
+						in the item<br /><br />
+					</li>
+					<li i18n:translate="">
+						Issue Administrators and Resolvers are able to filter and browse the
+						entire archive of issues (public or not) and to add comments to any of
+						them<br /><br />
+					</li>
+					<li i18n:translate="">
+						Issue Resolvers are only able to edit and see the history of the issues
+						that have been assigned to them, while the Administrators have full rights
+						on all issues - edit, make public, view history, delete<br /><br />
+					</li>
+					<li i18n:translate="">
+						Issue Administrators can consult the <em>Reports</em> that display statistics
+						regarding the existing issues and resolvers that handle them<br /><br />
+					</li>
+				</ul>
+				</tal:block>
 			</td>
 		</tr>
-	  </table>
+	</table>
+</tal:block>
 
-	<span tal:replace="structure here/info_login_html" />
-
-</p>
+<span tal:replace="structure here/info_login_html" />
 
 <span tal:replace="structure here/standard_html_footer" />

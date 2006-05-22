@@ -1048,7 +1048,6 @@ class HelpDesk(Folder, EmailSender):
         """Returns a string with current date time"""
         return self.FormatDateTime(DateTime())
 
-    security.declarePrivate('FormatDate')
     def FormatDate(self, datetime):
         """Returns a string with date"""
         return FormatDateByModel(datetime, self.getDateFormatModel())
