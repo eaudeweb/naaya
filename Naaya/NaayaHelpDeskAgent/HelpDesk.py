@@ -1258,7 +1258,6 @@ class HelpDesk(Folder, EmailSender):
         """Create some default objects: priority, status, send type"""
         file = open(join(NAAYAHELPDESKAGENT_PRODUCT_PATH, 'HelpDesk.ini'), 'r')
         for line in file.readlines():
-            print line
             line = line.strip()
             if line != '':
                 iType, iValues = line.split('=')

@@ -3,13 +3,13 @@
 	priorities here/getListIssuePriority">
 
 <form method="post" action="manageIssueCategory">
-<table border="1" cellspacing="2" cellpadding="2" width="100%">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
 		<td class="cellheader" width="1%"></td>
-		<td class="cellheader"><b>Title</b></td>
-		<td class="cellheader"><b>Description</b></td>
-		<td class="cellheader"><b>Priority</b></td>
-		<td class="cellheader"><b>Issues Resolver</b></td>
+		<td class="cellheader">Title</td>
+		<td class="cellheader">Description</td>
+		<td class="cellheader">Priority</td>
+		<td class="cellheader">Issues Resolver</td>
 		<td class="cellheader"></td>
 	</tr>
 	<tal:block tal:repeat="record records">
@@ -58,7 +58,7 @@
 				<tr><td class="cell" colspan="2"><hr noshade size="1"></td></tr>
 				<tr><td class="cell">Title:</td><td><input type="text" name="title" size="30" value=""></td></tr>
 				<tr><td class="cell">Description:</td><td><input type="text" name="description" size="50" value=""></td></tr>
-				<tr><td class="cell">Default priority:</td><td><select name="priority"><option value=""></option><dtml-in priorities sort=value><option value="<dtml-var id html_quote>"><dtml-var title html_quote></option></dtml-in></select></td></tr>
+				<tr><td class="cell">Default priority:</td><td><select name="priority"><option value=""></option><option tal:repeat="item priorities" tal:attributes="value item/id" tal:content="item/title" /></select></td></tr>
 				<tr><td class="cell">Implicit Advice:</td><td><textarea name="advice" rows="5" cols="50"></textarea></td></tr>
 				<tr><td class="cell">Advice link:</td><td><input type="text" name="advicelink" size="50" value=""></td></tr>
 				<tr>

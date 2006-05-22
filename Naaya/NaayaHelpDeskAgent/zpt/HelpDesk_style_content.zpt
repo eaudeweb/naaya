@@ -7,6 +7,7 @@
 {
     color: #000000;
     background: #<span tal:replace="here/getCssHeaderColor" />;
+	font-weight: bold;
 }
 .celleven
 {
