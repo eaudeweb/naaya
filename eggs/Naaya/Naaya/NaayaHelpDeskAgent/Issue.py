@@ -181,7 +181,7 @@ class Issue(Folder):
     icon = 'misc_/NaayaHelpDeskAgent/Issue'
 
     manage_options = (
-        Folder.manage_options[0]
+        Folder.manage_options
         +
         (
             {'label': ISSUE_MANAGE_OPTION_VIEW, 'action': 'index_html',},

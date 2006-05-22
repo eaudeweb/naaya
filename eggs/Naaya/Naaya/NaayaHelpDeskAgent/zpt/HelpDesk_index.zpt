@@ -3,9 +3,120 @@
 <span tal:replace="structure here/style_html" />
 
 <p>
-<span tal:replace="structure python:here.menu_html(pagetab=-1)" />
+	<span tal:replace="structure python:here.menu_html(pagetab=-1)" />
 
-<span tal:replace="structure here/info_login_html" />
+	<tal:block tal:define="hasRoleHelpDeskAdministrator here/isHelpDeskAdministrator;
+		newissue python:request.get('newissue', '')"
+		tal:condition="python:newissue!=''">
+		<table border="0" cellspacing="2" cellpadding="2" width="90%" align="center">
+			<tr>
+				<td style="color:#FFFFFF;background-color:#FF0000;" i18n:translate="">
+					Your submission has been received. If you entered a valid email you will
+					be notified about any changes. If you marked your issue as confidential
+					it will not appear in the listing unless released by an administrator.
+				</td>
+			</tr>
+			<tr tal:define="issue python:here.getIssuesObject(newissue)">
+				<td align="center">
+				<table border="0" cellspacing="2" cellpadding="2">
+					<tr><td nowrap="true" colspan="2" align="left">Last modified:<dtml-var "FormatDate(date_modify)" html_quote>,&nbsp;Opened:<dtml-var "FormatDate(date_open)" html_quote>,&nbsp;Ticket Number:<dtml-var id html_quote></td></tr>
+					<tr><td colspan="2">&nbsp;</td></tr>
+					<tr><td nowrap="true"width="15%">Subject/Title:</td><td align="left"><b><dtml-var subject html_quote null=-></b></td></tr>
+					<tr><td nowrap="true" valign="top">Description:</td><td class="celltextarea" align="left"><dtml-var "EncodeTextareaContent(description)" null=-></td></tr>
+					<tr><td nowrap="true" colspan="2" align="left">Status:<dtml-var "getIssueStatusTitle(status)" html_quote null=->,&nbsp;Priority:<dtml-var "getIssuePriorityTitle(priority)" html_quote null=->,&nbsp;Category:<dtml-var "getIssueCategoryTitle(category)" html_quote null=-></td></tr>
+					<tr><td colspan="2">&nbsp;</td></tr>
+					<tr><td nowrap="true">Assigned to:</td><td align="left"><dtml-var "getUserName(consultant)" html_quote null=-></td></tr>
+					<dtml-if hasRoleHelpDeskAdministrator>
+					<tr><td nowrap="true">Security:</td><td align="left"><dtml-var security html_quote null=-></td></tr>
+					</dtml-if>
+					<tr><td colspan="2">&nbsp;</td></tr>
+					<tr><td colspan="2"><b>User information</b></td></tr>
+					<tr><td nowrap="true">Name:</td><td align="left"><dtml-var user_name html_quote null=-></td></tr>
+					<tr><td nowrap="true">Email:</td><td align="left"><dtml-var user_email html_quote null=-></td></tr>
+					<tr><td nowrap="true">Phone:</td><td align="left"><dtml-var user_phone html_quote null=-></td></tr>
+					<tr><td colspan="2">&nbsp;</td></tr>
+					<tr><td nowrap="true">Link:</td><td align="left"><dtml-if "link!=''"><a class="urllink" href="<dtml-var link html_quote>" target="_blank"><dtml-var link html_quote></a><dtml-else>-</dtml-if></td></tr>
+					<tr>
+						<td nowrap="true">Attachment:</td>
+						<td align="left">
+							<dtml-let res="getAttachmentForIssue()" attobj="res[0]" attFileName="res[1]">
+								<dtml-if "attobj != None">
+									<a href="<dtml-var "attobj.absolute_url(0)">" target="_blank"><dtml-var attFileName html_quote></a>
+								<dtml-else>
+									&nbsp;
+								</dtml-if>
+							</dtml-let>
+						</td>
+					</tr>
+				</table>
+				</td>
+			</tr>
+		</table>
+		<br /><hr noshade size="1" /><br />
+	</tal:block>
+
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td class="note">
+				<p i18n:translate="">
+					The HelpDesk Agent allows administrators of this portal to successfully
+					track and respond to ticket HelpDesk issues. Documentation of relevant
+					cases is kept into archives and it is easily accessible by performing
+					searches using various filters: <em>List Issues</em>.
+				</p>
+				<strong i18n:translate="">Usage</strong>
+				<ul>
+					<li i18n:translate="">
+						insert your problem (issue) using one of the available forms -
+						<strong>Post issue</strong> and <strong>Post quick issue</strong>.
+						Use <em>quick issue</em> if you just want to notify the Issue 
+						Administrator about a problem and you don't need follow-ups to it;
+						in this case you will not be asked to insert your personal details.
+						Otherwise, use the <em>Post issue</em> form<br /><br />
+					</li>
+					<li i18n:translate="">
+						you will receive a confirmation e-mail when adding an issue and one
+						for every modification brought to it (assignation of a person to handle
+						the issue, comments added, etc.). Comments can be added by the person
+						assigned to handle your request or by a regular end user of the portal
+						<br /><br />
+					</li>
+					<li i18n:translate="">
+						a ticket number will be automatically generated at addition time and
+						you will be provided with the URL of the issue for later consultation
+						<br /><br />
+					</li>
+					<li i18n:translate="">
+						consult the evolution of the issues submitted by accessing the Issue
+						tracker URL and listing issues<br /><br />
+					</li>
+					<li i18n:translate="">
+						you are also able to consult and filter public issues and to add
+						comments to them
+					</li>
+				</ul>
+	<dtml-if "isHelpDeskAdministrator() or isHelpDeskConsultant()">
+		<b>Issue management</b>
+		<ul>
+		<li>when new issues are posted, the Administrators receive e-mails with the URL and are in title to review the
+		submission and edit it: by changing the <b>Security</b> from <em>private</em> to <em>public</em> 
+		the item will be visible for everyone; also, a Resolver can be assigned from the existing list 
+		to handle the issue. From that moment on, 
+		the Resolver will be also notified by e-mail about the changes in the item<br><br></li>
+		<li>Issue Administrators and Resolvers are able to filter and browse the entire archive of 
+		issues (public or not) and to add comments to any of them<br><br></li>
+		<li>Issue Resolvers are only able to edit and see the history of the issues that have 
+		been assigned to them, while the Administrators have full rights on all issues - edit, make 
+		public, view history, delete<br><br></li>
+		<li>Issue Administrators can consult the <em>Reports</em> that display statistics regarding 
+		the existing issues and resolvers that handle them<br><br></li>
+		</ul>
+	</dtml-if>
+			</td>
+		</tr>
+	  </table>
+
+	<span tal:replace="structure here/info_login_html" />
 
 </p>
 
