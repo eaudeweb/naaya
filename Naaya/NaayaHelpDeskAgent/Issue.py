@@ -23,8 +23,9 @@ from OFS.SimpleItem import SimpleItem
 from OFS.Folder import Folder
 from OFS.Image import cookId
 import OFS.ObjectManager
-from Globals import DTMLFile, InitializeClass
+from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ZCatalog.CatalogPathAwareness import CatalogAware
 import types, time
 from DateTime import DateTime
@@ -37,7 +38,7 @@ from Constants import *
 #####################################
 #   ADD ISSUES FROM ZOPE CONSOLE    #
 #####################################
-manage_addIssueForm = DTMLFile('dtml/Issue_manage_addForm', globals())
+manage_addIssueForm = PageTemplateFile('zpt/Issue_manage_addForm', globals())
 def manage_addIssue(self, title=ISSUE_DEFAULT_TITLE,
     user_name=ANONYMOUS_USER_NAME, user_email='', user_phone='',
     subject='', category='', priority='',
@@ -172,26 +173,30 @@ def AddIssueQuick(self, title=ISSUE_QUICK_DEFAULT_TITLE, subject='', category=''
         REQUEST.RESPONSE.redirect(str(self.absolute_url(0)) + '/?newissue=' + str(id))
 
 
-class Issue(Folder, CatalogAware):
+class Issue(Folder):
     """Issue Object"""
 
+    product_name = NAAYAHELPDESKAGENT_PRODUCT_NAME
     meta_type = ISSUE_META_TYPE_LABEL
-    default_catalog = 'Catalog'
-    product_name = ISSUE_META_TYPE_LABEL
-    icon = 'misc_/HelpDeskAgent/Issue'
+    icon = 'misc_/NaayaHelpDeskAgent/Issue'
 
-    manage_options = (OFS.ObjectManager.ObjectManager.manage_options[0],) + (
-            (
-                    {'label': ISSUE_MANAGE_OPTION_VIEW, 'action': 'index_html',},
-                    {'label': ISSUE_MANAGE_OPTION_PROPERTIES, 'action': 'edit_manage_html',},
-                    {'label': ISSUE_MANAGE_OPTION_COMMENTS, 'action':'comments_manage_html',},
-                    {'label': ISSUE_MANAGE_OPTION_HISTORY, 'action': 'history_manage_html',},
-            ) +
-            SimpleItem.manage_options
+    manage_options = (
+        Folder.manage_options[0]
+        +
+        (
+            {'label': ISSUE_MANAGE_OPTION_VIEW, 'action': 'index_html',},
+            {'label': ISSUE_MANAGE_OPTION_PROPERTIES, 'action': 'edit_manage_html',},
+            {'label': ISSUE_MANAGE_OPTION_COMMENTS, 'action':'comments_manage_html',},
+            {'label': ISSUE_MANAGE_OPTION_HISTORY, 'action': 'history_manage_html',},
+        )
     )
 
     meta_types = ()
     all_meta_types = meta_types
+
+    #security stuff
+    security = ClassSecurityInfo()
+    security.setDefaultAccess("allow")
 
     # security property ->
     #       - 0: private
@@ -211,29 +216,6 @@ class Issue(Folder, CatalogAware):
         self.__issuecomment = {}
         self.__historycounter = 1
         self.__issuehistory = {}
-
-    def __setstate__(self,state):
-        """Updates"""
-        Issue.inheritedAttribute("__setstate__") (self, state)
-        if self.title == ISSUE_QUICK_DEFAULT_TITLE:
-            self.title = self.subject
-        if self.title == ISSUE_DEFAULT_TITLE:
-            self.title = self.subject
-        if type(self.date_modify) is types.TupleType:
-            self.date_modify = DateTime(time.mktime(self.date_modify))
-        if type(self.date_open) is types.TupleType:
-            self.date_open = DateTime(time.mktime(self.date_open))
-        for item in self.getListIssueHistory():
-            if type(item.date) is types.TupleType:
-                item.date = DateTime(time.mktime(item.date))
-            if hasattr(item, 'comments'):
-                pass
-            else:
-                self.comments = ''
-
-    #security stuff
-    security = ClassSecurityInfo()
-    security.setDefaultAccess("allow")
 
     def _setModifyTime(self, newtime):
         """Update date_modify"""
@@ -518,7 +500,6 @@ class Issue(Folder, CatalogAware):
                 - replace \n with <br>"""
         return TEXTAREAEncode(content)
 
-
     #############
     # SECURITY  #
     #############
@@ -533,46 +514,44 @@ class Issue(Folder, CatalogAware):
 
     ########################################
     security.declareProtected('View', 'index_html')
-    index_html = DTMLFile('dtml/Issue_index', globals())
+    index_html = PageTemplateFile('zpt/Issue_index', globals())
 
     security.declareProtected('View', 'menu_html')
-    menu_html = DTMLFile('dtml/Issue_menu', globals())
+    menu_html = PageTemplateFile('zpt/Issue_menu', globals())
 
     security.declareProtected('View', 'footer_html')
-    footer_html = DTMLFile('dtml/Issue_footer', globals())
+    footer_html = PageTemplateFile('zpt/Issue_footer', globals())
 
     security.declareProtected('View', 'feedback_html')
-    feedback_html = DTMLFile('dtml/Issue_feedback', globals())
+    feedback_html = PageTemplateFile('zpt/Issue_feedback', globals())
 
     security.declarePrivate('edit_form_html')
-    edit_form_html = DTMLFile('dtml/Issue_edit_form', globals())
+    edit_form_html = PageTemplateFile('zpt/Issue_edit_form', globals())
 
     security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'edit_user_html')
-    edit_user_html = DTMLFile('dtml/Issue_edit_user', globals())
+    edit_user_html = PageTemplateFile('zpt/Issue_edit_user', globals())
 
     security.declareProtected('View management screens', 'edit_manage_html')
-    edit_manage_html = DTMLFile('dtml/Issue_edit_manage', globals())
+    edit_manage_html = PageTemplateFile('zpt/Issue_edit_manage', globals())
 
     security.declarePrivate('comments_form_html')
-    comments_form_html = DTMLFile('dtml/Issue_comments_form', globals())
+    comments_form_html = PageTemplateFile('zpt/Issue_comments_form', globals())
 
     security.declareProtected('View', 'comments_user_html')
-    comments_user_html = DTMLFile('dtml/Issue_comments_user', globals())
+    comments_user_html = PageTemplateFile('zpt/Issue_comments_user', globals())
 
     security.declareProtected('View management screens', 'comments_manage_html')
-    comments_manage_html = DTMLFile('dtml/Issue_comments_manage', globals())
+    comments_manage_html = PageTemplateFile('zpt/Issue_comments_manage', globals())
 
     security.declarePrivate('history_form_html')
-    history_form_html = DTMLFile('dtml/Issue_history_form', globals())
+    history_form_html = PageTemplateFile('zpt/Issue_history_form', globals())
 
     security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'history_user_html')
-    history_user_html = DTMLFile('dtml/Issue_history_user', globals())
+    history_user_html = PageTemplateFile('zpt/Issue_history_user', globals())
 
     security.declareProtected('View management screens', 'history_manage_html')
-    history_manage_html = DTMLFile('dtml/Issue_history_manage', globals())
+    history_manage_html = PageTemplateFile('zpt/Issue_history_manage', globals())
 
-    #Declare permission defaults
     security.setPermissionDefault(PERMISSION_MANAGE_HELPDESK_SETTINGS, [HELPDESK_ROLE_ADMINISTRATOR, HELPDESK_ROLE_CONSULTANT])
 
-#Initialize the Issue class
 InitializeClass(Issue)
