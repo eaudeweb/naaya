@@ -831,4 +831,9 @@ class CHMSite(NySite):
         """ redirect to welcome page """
         REQUEST.RESPONSE.redirect('%s' % self.absolute_url())
 
+    security.declareProtected('View', 'links_group_html')
+    def links_group_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_links_group')
+
 InitializeClass(CHMSite)
