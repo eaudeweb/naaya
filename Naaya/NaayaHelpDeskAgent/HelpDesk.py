@@ -1287,6 +1287,9 @@ class HelpDesk(Folder, EmailSender):
     security.declareProtected(view, 'style_html')
     style_html = PageTemplateFile('zpt/HelpDesk_style', globals())
 
+    security.declareProtected(view, 'style_html')
+    style_content_html = PageTemplateFile('zpt/HelpDesk_style_content', globals())
+
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/HelpDesk_index', globals())
 
