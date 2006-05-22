@@ -13,6 +13,114 @@
 	<link rel="home" tal:attributes="href python:request['BASE0']" title="Home" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 	<meta name="description" tal:attributes="content here/title_or_id" />
+	<script type="text/javascript">
+	//<![CDATA[
+
+	function getHeadingLink(p_ob){
+		//returns the link in the main navigation bar
+		var z = p_ob.id.split('_');
+		return document.getElementById(Array(z[0], 'a', z[2]).join('_'))
+	}
+	function getSecondLink(p_ob){
+		//returns a link in the dropdown, p_ob can be only the container LI element
+		var z = p_ob.id.split('_');
+		return document.getElementById(Array(z[0], 'a', z[2], z[3]).join('_'))
+	}
+	function getLiElement(p_ob){
+		//returns the LI element in the first list
+		var z = p_ob.id.split('_');
+		return document.getElementById(Array(z[0], 'li', z[2]).join('_'))
+	}
+	function getUlElement(p_ob){
+		//returns the second UL element
+		var z = p_ob.id.split('_');
+		return document.getElementById(Array(z[0], 'ul', z[2]).join('_'))
+	}
+	function getFirstLink(p_ob){
+		//returns the first link in the dropdown
+		var z = p_ob.id.split('_');
+		return document.getElementById(Array(z[0], 'a', z[2], '0').join('_'))
+	}
+
+	function makeVisib(p_ob) {
+		var ob = getLiElement(p_ob)
+		ob.visib++;
+		if(ob.visib>0) {
+			ob.className = 'over'
+		} else {
+			ob.className = ''
+		}
+	}
+
+	function takeVisib(p_ob) {
+		var ob = getLiElement(p_ob)
+		ob.visib--;
+		if(ob.visib>0) {
+			ob.className = 'over'
+		} else {
+			ob.className = ''
+		}
+	}
+
+	document.temp_over = false;
+	startList = function() {
+		if (document.getElementById) {
+			ob = document.getElementById("nav2");
+			ob.style.position = 'relative';
+			navRoot = document.getElementById("linkgroups");
+
+			for (i=0; i<navRoot.childNodes.length; i++) {
+				node = navRoot.childNodes[i];
+				if (node.nodeName=="LI") {
+					//set the mouseover for IE
+					if(document.all && !window.opera){
+						node.onmouseover=function() {
+							makeVisib(this)
+						}
+						node.onmouseout=function() {
+							takeVisib(this)
+						}
+					}
+					node.visib = 0
+
+					//make the dropdown menu accessible through TAB key
+					snode = getHeadingLink(node);
+					if (snode) {
+						snode.onfocus = function(){
+							makeVisib(this)
+						}
+						snode.onblur  = function(){
+							takeVisib(this)
+						}
+					}
+					for (j=0; j<node.childNodes.length; j++) {
+						node_ul = node.childNodes[j];
+						if (node_ul.nodeName=="UL") {
+
+							for(b=0; b<node_ul.childNodes.length; b++){
+								node_li = node_ul.childNodes[b];
+								if (node_li.nodeName=="LI") {
+									node_a = getSecondLink(node_li)
+									node_a.onfocus = function(){
+										makeVisib(this)
+									}
+									node_a.onblur = function(){
+										takeVisib(this)
+									}
+								}
+							}
+
+						}
+					}
+				}
+			}
+		}
+	}
+
+	window.onload=startList;
+
+	// ]]>
+	</script>
 </head>
 
 <body>
@@ -51,14 +159,43 @@
 		<noscript><input id="sub" type="submit" value="GO!" i18n:attributes="value" /></noscript>
 		</form>
 	</div>
-	<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
+	<ul tal:define="menu_id string:linkgroups" tal:attributes="id menu_id">
 		<li><a tal:attributes="href site_url" i18n:translate="" accesskey="1">Home</a></li>
 		<li tal:condition="python:request['AUTHENTICATED_USER'].getUserName() == 'Anonymous User'"><a tal:attributes="href string:${site_url}/login_html" i18n:translate="">Login</a></li>
 		<li tal:condition="python:request['AUTHENTICATED_USER'].getUserName() != 'Anonymous User'"><a tal:attributes="href string:${site_url}/login_html" i18n:translate="">Logout</a></li>
-		<tal:block tal:repeat="item l_list">
-		<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:translate="" i18n:attributes="title">Title</a></li>
+
+		<tal:block define="link_groups python:['menunav_links','menunav_links']">
+		<tal:block repeat="item_group link_groups">
+		<tal:block define="group_list python:here.getPortletsTool().getLinksListById(item_group);
+								 l_list group_list/get_links_list">
+		<li tal:condition="l_list" tal:attributes="id string:${menu_id}_li_${repeat/item_group/index}">
+			<tal:block condition="python:len(l_list)==1" tal:repeat="l_item l_list">
+				<a tal:condition="python:here.checkPermissionForLink(l_item.permission, here)"
+					tal:attributes="href python:test(l_item.relative, '%s%s' % (site_url, l_item.url), l_item.url);
+										 title l_item/description"
+					tal:content="l_item/title" i18n:translate="" i18n:attributes="title">
+				</a>
+			</tal:block>
+			<tal:block condition="python:len(l_list)>1">
+			<a tal:attributes="	href string:${site_url}/links_group_html?id=${group_list/id};
+										id string:${menu_id}_a_${repeat/item_group/index}" tal:content="group_list/title"></a>
+			<ul tal:attributes="id string:${menu_id}_ul_${repeat/item_group/index}">
+				<tal:block repeat="l_item l_list">
+					<li	tal:condition="python:here.checkPermissionForLink(l_item.permission, here)"
+							tal:attributes="id string:${menu_id}_li_${repeat/item_group/index}_${repeat/l_item/index}">
+						<a tal:attributes="	href python:test(l_item.relative, '%s%s' % (site_url, l_item.url), l_item.url);
+													title l_item/description;
+													id string:${menu_id}_a_${repeat/item_group/index}_${repeat/l_item/index}" tal:content="l_item/title" i18n:translate="" i18n:attributes="title">Title</a>
+					</li>
+				</tal:block>
+			</ul>
+			</tal:block>
+		</li>
+		</tal:block>
+		</tal:block>
 		</tal:block>
 	</ul>
+	<div class="clearer"></div>
 </div>
 
 <div id="log_lang">
@@ -73,6 +210,8 @@
 </div>
 
 <div id="f_header"> &nbsp;</div>
+</div>
+
 </div>
 
 <div id="content">
