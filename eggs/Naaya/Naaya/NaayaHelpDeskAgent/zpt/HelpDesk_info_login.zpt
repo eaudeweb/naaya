@@ -1,0 +1,8 @@
+<table tal:condition="python:here.isHelpDeskAdministrator() or here.isHelpDeskConsultant()" border="0" cellspacing="2" cellpadding="2" width="100%">
+	<tr>
+		<td class="infologin">
+			<span i18n:translate="" tal:omit-tag="">You are logged in as</span>
+			<strong tal:content="python:here.getUserName(request.AUTHENTICATED_USER.getUserName())" />.
+		</td>
+	</tr>
+</table>

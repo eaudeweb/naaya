@@ -103,7 +103,6 @@ class HelpDesk(Folder, EmailSender):
         Folder.manage_options
         +
         (
-            {'label' : HELPDESK_MANAGE_OPTION_VIEW, 'action' : 'index_html'},
             {'label' : HELPDESK_MANAGE_OPTION_ADMINISTRATION, 'action' : 'admin_html'},
             {'label' : HELPDESK_MANAGE_OPTION_REPORTS, 'action' : 'reports_manage_html'},
         )
