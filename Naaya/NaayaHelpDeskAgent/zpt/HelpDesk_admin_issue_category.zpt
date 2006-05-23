@@ -32,7 +32,7 @@
 							<option value=""></option>
 							<option tal:repeat="item here/getListUserConsultant"
 								tal:attributes="value item/id; selected python:item.id==record.issuesconsultant"
-								tal:content="python:here.getUserName(record.id)" />
+								tal:content="python:here.getUserName(item.id)" />
 						</select>
 					</td>
 				</tr>
@@ -68,7 +68,7 @@
 							<option value=""></option>
 							<option tal:repeat="item here/getListUserConsultant"
 								tal:attributes="value item/id"
-								tal:content="python:here.getUserName(record.id)" />
+								tal:content="python:here.getUserName(item.id)" />
 						</select>
 					</td>
 				</tr>
