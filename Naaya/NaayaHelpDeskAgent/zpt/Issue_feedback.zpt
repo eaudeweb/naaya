@@ -1,0 +1,83 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<span tal:replace="structure here/style_html" />
+
+<tal:block tal:define="hasRoleHelpDeskAdministrator here/isHelpDeskAdministrator;
+	access_issue python:(here.consultant==here.getAuthenticatedUser()) or hasRoleHelpDeskAdministrator or (here.security==here.getIssuePublic())">
+
+<span tal:replace="structure python:here.getHelpDeskAgent().menu_html(pagetab=-1)" />
+
+<tal:block tal:condition="access_issue">
+	<span tal:replace="structure python:here.menu_html(pagetab=-1)" />
+	<table border="0" cellspacing="2" cellpadding="2" width="100%">
+		<tr>
+			<td class="label" nowrap="nowrap" i18n:translate="">Ticket Number</td>
+			<td tal:content="here/id" />
+		</tr>
+		<tr>
+			<td class="label" i18n:translate="">Subject/Title</td>
+			<td><strong tal:content="here/subject" /></td>
+		</tr>
+		<tr>
+			<td class="label" width="15%" nowrap="nowrap" valign="top" i18n:translate="">Description</td>
+			<td class="celltextarea" tal:content="python:here.EncodeTextareaContent(here.description)" />
+		</tr>
+		<tr tal:condition="here/user_name">
+			<td class="label" nowrap="nowrap" i18n:translate="">Author</td>
+			<td tal:content="here/user_name" />
+		</tr>
+	</table>
+	<br />
+	<table border="0" cellspacing="2" cellpadding="2" width="100%">
+		<tr>
+			<td class="note" i18n:translate="">
+				Use this form to send an email to the issue's author. If you want to keep
+				track of it, you can select to also create a comment in this issue.
+			</td>
+		</tr>
+	</table>
+	<br />
+	<form action="manageFeedback" method="post">
+	<table border="0" cellspacing="2" cellpadding="2" width="100%">
+		<tr>
+			<td class="label" i18n:translate="">Date</td>
+			<td tal:content="here/CurrentDate" />
+		</tr>
+		<tr>
+			<td class="label" i18n:translate="">From</td>
+			<td><input type="text" name="from" size="20" tal:attributes="value python:here.getUserName(here.getAuthenticatedUser())" /></td>
+		</tr>
+		<tr>
+			<td class="label" i18n:translate="">Content type</td>
+			<td>
+				<input type="radio" name="content_type" value="1" checked="checked" />
+				<span i18n:translate="" tal:omit-tag="">Plain text</span>
+				<input type="radio" name="content_type" value="0" />
+				<span i18n:translate="" tal:omit-tag="">HTML</span>
+			</td>
+		</tr>
+		<tr>
+			<td class="label" valign="top" i18n:translate="">Content</td>
+			<td><textarea name="content" rows="10" cols="70"></textarea></td>
+		</tr>
+		<tr>
+			<td class="label" i18n:translate="">Create comment</td>
+			<td><input type="checkbox" name="comment" value="on" /></td>
+		</tr>
+		<tr><td></td><td><input type="submit" name="add" value="Send feedback" i18n:attributes="value" /></td></tr>
+	</table>
+	<input type="hidden" name="httpreferer" tal:attributes="value python:request['HTTP_REFERER']" />
+	</form>
+</tal:block>
+<tal:block tal:condition="python:not access_issue">
+	<br />
+	<center>
+		<span class="alert" i18n:translate="">You don't have access to this issue.</span>
+	</center>
+</tal:block>
+
+</tal:block>
+
+<span tal:replace="structure here/footer_html" />
+
+<span tal:replace="structure here/standard_html_footer" />
