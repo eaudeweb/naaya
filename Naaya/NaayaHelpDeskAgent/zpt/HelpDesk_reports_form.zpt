@@ -1,0 +1,76 @@
+
+<p>
+	Total number of issues <strong><tal:block replace="python: len(here.getAllIssues())" /></strong>.
+</p>
+
+
+<table border="0" cellspacing="1" cellpadding="2" width="100%">
+	<tr>
+		<th colspan="2" align="center" class="cellheader">Group by Category</th>
+	</tr>
+	<tr>
+		<th class="cellheader" width="50%" nowrap="true">Category</th>
+		<th class="cellheader" width="50%">Issues</th>
+	</tr>
+	<tal:block repeat="item here/getListIssueCategory">
+		<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
+			<td tal:condition="item/title" tal:attributes="class cellclass" tal:content="item/title"></td>
+			<td tal:condition="not:item/title" tal:attributes="class cellclass">-</td>
+			<td tal:attributes="class cellclass" tal:content="python:len(here.SearchSortIssues('', '', '', category=item.id))"></td>
+		</tr>
+	</tal:block>
+</table>
+
+<div style="margin:1.5em 0; border-bottom:1px solid gray;"></div>
+
+<table border="0" cellspacing="1" cellpadding="2" width="100%">
+	<tr>
+		<th colspan="2" align="center" class="cellheader">Group by Priority</th>
+	</tr>
+	<tr>
+		<th class="cellheader" width="50%" nowrap="true">Priority</th>
+		<th class="cellheader" width="50%">Issues</th>
+	</tr>
+	<tal:block repeat="item python:here.utSortObjsListByAttr(here.getListIssuePriority(),'title')">
+		<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
+			<td tal:attributes="class cellclass" tal:content="python: test(item.title,item.title,'-')"></td>
+			<td tal:attributes="class cellclass" tal:content="python: len(here.SearchSortIssues('', '', '', priority=item.id))"></td>
+		</tr>
+	</tal:block>
+</table>
+
+<div style="margin:1.5em 0; border-bottom:1px solid gray;"></div>
+
+<table border="0" cellspacing="1" cellpadding="2" width="100%">
+	<tr>
+		<th colspan="2" align="center" class="cellheader">Group by Status</th>
+	</tr>
+	<tr>
+		<th class="cellheader" width="50%" nowrap="true">Status</th>
+		<th class="cellheader" width="50%">Issues</th>
+	</tr>
+	<tal:block repeat="item python:here.utSortObjsListByAttr(here.getListIssueStatus(),'order')">
+		<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
+			<td tal:attributes="class cellclass" tal:content="python: test(item.title,item.title,'-')"></td>
+			<td tal:attributes="class cellclass" tal:content="python: len(here.SearchSortIssues('', '', '', status=item.id))"></td>
+		</tr>
+	</tal:block>
+</table>
+
+<div style="margin:1.5em 0; border-bottom:1px solid gray;"></div>
+
+<table border="0" cellspacing="1" cellpadding="2" width="100%">
+	<tr>
+		<th colspan="2" align="center" class="cellheader">Group by Resolver</th>
+	</tr>
+	<tr>
+		<th class="cellheader" width="50%" nowrap="true">Assigned to</th>
+		<th class="cellheader" width="50%">Issues</th>
+	</tr>
+	<tal:block repeat="item here/getListUserConsultant">
+		<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
+			<td tal:define="user_name python:here.getUserName(item.id)" tal:attributes="class cellclass" tal:content="python: test(user_name.strip(),user_name,'-')"></td>
+			<td tal:attributes="class cellclass" tal:content="python: len(here.SearchSortIssues('', '', '', consultant=item.id))"></td>
+		</tr>
+	</tal:block>
+</table>
