@@ -1,0 +1,114 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<span tal:replace="structure here/style_html" />
+
+<tal:block tal:define="hasRoleHelpDeskAdministrator here/isHelpDeskAdministrator;
+	access_issue python:(here.consultant==here.getAuthenticatedUser()) or hasRoleHelpDeskAdministrator or (here.security==here.getIssuePublic())">
+
+<span tal:replace="structure python:here.getHelpDeskAgent().menu_html(pagetab=-1)" />
+
+<tal:block tal:condition="access_issue">
+	<span tal:replace="structure python:here.menu_html(pagetab=0)" />
+	<table border="0" cellspacing="2" cellpadding="2" width="100%">
+		<tr>
+			<td nowrap="nowrap" colspan="2">
+				<span class="label" i18n:translate="">Last modified:</span>
+				<span tal:replace="python:here.FormatDate(here.date_modify)" />,
+				<span class="label" i18n:translate="">Opened:</span>
+				<span tal:replace="python:here.FormatDate(here.date_open)" />,
+				<span class="label" i18n:translate="">Ticket Number:</span>
+				<span tal:replace="here/id" />
+			</td>
+		</tr>
+		<tr>
+			<td class="label" i18n:translate="">Subject/Title</td>
+			<td><strong tal:content="here/subject" /></td>
+		</tr>
+		<tr>
+			<td class="label" width="15%" nowrap="nowrap" valign="top" i18n:translate="">Description</td>
+			<td class="celltextarea" tal:content="structure python:here.EncodeTextareaContent(here.description)" />
+		</tr>
+		<tr>
+			<td colspan="2">
+				<span class="label" i18n:translate="">Status:</span>
+				<span tal:replace="python:here.getIssueStatusTitle(here.status)" />,
+				<span class="label" i18n:translate="">Priority:</span>
+				<span tal:replace="python:here.getIssuePriorityTitle(here.priority)" />,
+				<span class="label" i18n:translate="">Category:</span>
+				<span tal:replace="python:here.getIssueCategoryTitle(here.category)" />
+			</td>
+		</tr>
+		<tr>
+			<td class="label" nowrap="nowrap" i18n:translate="">Assigned to</td>
+			<td tal:content="python:here.getUserName(here.consultant)" />
+		</tr>
+		<tr tal:condition="hasRoleHelpDeskAdministrator">
+			<td class="label" nowrap="nowrap" i18n:translate="">Security</td>
+			<td tal:content="here/security" />
+		</tr>
+		<tr tal:condition="python:here.user_name!='' or here.user_phone!=''">
+			<td class="label" nowrap="nowrap" i18n:translate="">User information</td>
+			<td>
+				<span tal:condition="python:here.user_name!=''" tal:replace="here/user_name" />
+				<span tal:condition="python:here.user_phone!=''" tal:replace="here/user_phone" />
+			</td>
+		</tr>
+		<tr>
+			<td class="label" nowrap="nowrap" i18n:translate="">Link</td>
+			<td>
+				<a tal:condition="python:here.link!=''" class="urllink" target="_blank"
+					tal:attributes="href here/link" tal:content="here/link" />
+			</td>
+		</tr>
+		<tr>
+			<td class="label" nowrap="nowrap" i18n:translate="">Attachment</td>
+			<td tal:define="res here/getAttachmentForIssue; attobj python:res[0]; attFileName python:res[1]">
+				<tal:block tal:condition="attobj">
+					<a tal:attributes="href attobj/absolute_url" target="_blank" tal:content="attFileName" />
+				</tal:block>
+			</td>
+		</tr>
+		<tr><td colspan="2"><hr noshade size="1" /></td></tr>
+		<tr><td colspan="2"></td></tr>
+		<tr><td colspan="2"><strong i18n:translate="">Comments</strong></td></tr>
+		<tr>
+			<td colspan="2">
+				<tal:block tal:repeat="comment here/getListIssueComment">
+				<table  border="0" cellspacing="0" cellpadding="2" width="100%">
+					<tr>
+						<td class="cellheader" width="15%" nowrap="nowrap"><strong i18n:translate="">Date:</strong> <span tal:replace="python:here.FormatDate(comment.date)" /></td>
+						<td class="cellheader" width="15%" nowrap="nowrap"><strong i18n:translate="">User:</strong> <span tal:replace="comment/username" /></td>
+						<td class="cellheader" width="10%" tal:define="res python:here.getAttachmentForComment(comment.id); attobj python:res[0]; attFileName python:res[1]">
+							<strong i18n:translate="">Attachment:</strong>
+							<tal:block tal:condition="attobj">
+								<a tal:attributes="href attobj/absolute_url" target="_blank" tal:content="attFileName" />
+							</tal:block>
+						</td>
+					</tr>
+					<tr>
+						<td class="celltextarea" colspan="3">
+							<span class="celltextarea">
+								<span tal:condition="comment/content_type" tal:replace="structure python:here.EncodeTextareaContent(comment.content)" />
+								<span tal:condition="python:not comment.content_type" tal:replace="comment/content" />
+							</span>
+						</td>
+					</tr>
+				</table>
+				<br /><br />
+				</tal:block>
+			</td>
+		</tr>
+	</table>
+</tal:block>
+<tal:block tal:condition="python:not access_issue">
+	<br />
+	<center>
+		<span class="alert" i18n:translate="">You don't have access to this issue.</span>
+	</center>
+</tal:block>
+
+</tal:block>
+
+<span tal:replace="structure here/footer_html" />
+
+<span tal:replace="structure here/standard_html_footer" />

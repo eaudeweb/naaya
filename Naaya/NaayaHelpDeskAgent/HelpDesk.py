@@ -213,6 +213,8 @@ class HelpDesk(Folder, EmailSender):
         self.issues_perpage = int(issues_perpage)
         self._p_changed = 1
 
+    def getHelpDeskAgent(self): return self
+
     def getUserFolderPath(self):
         """Gets user folder path"""
         return '/' + self.user_folder

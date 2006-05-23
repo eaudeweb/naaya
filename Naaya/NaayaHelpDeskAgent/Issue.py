@@ -184,7 +184,6 @@ class Issue(Folder):
         Folder.manage_options
         +
         (
-            {'label': ISSUE_MANAGE_OPTION_VIEW, 'action': 'index_html',},
             {'label': ISSUE_MANAGE_OPTION_PROPERTIES, 'action': 'edit_manage_html',},
             {'label': ISSUE_MANAGE_OPTION_COMMENTS, 'action':'comments_manage_html',},
             {'label': ISSUE_MANAGE_OPTION_HISTORY, 'action': 'history_manage_html',},
@@ -534,7 +533,7 @@ class Issue(Folder):
     security.declareProtected('View management screens', 'edit_manage_html')
     edit_manage_html = PageTemplateFile('zpt/Issue_edit_manage', globals())
 
-    security.declarePrivate('comments_form_html')
+    security.declarePublic('comments_form_html')
     comments_form_html = PageTemplateFile('zpt/Issue_comments_form', globals())
 
     security.declareProtected('View', 'comments_user_html')
