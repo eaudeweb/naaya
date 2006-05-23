@@ -12,34 +12,34 @@
 					</td>
 					<td width="100%"></td>
 					<tal:block tal:condition="python:not request.AUTHENTICATED_USER.has_role('Authenticated')">
-						<td class="taboff" align="left" valign="top"><img src="misc_/HelpDeskAgent/menu_top_left" border="0"></td>
+						<td class="taboff" align="left" valign="top"><img src="misc_/NaayaHelpDeskAgent/menu_top_left" border="0"></td>
 						<td class="taboff" nowrap="true"><a class="tablink" tal:attributes="href string:${here/absolute_url}/login_html" i18n:translate="">Login</a></td>
-						<td class="taboff" align="right" valign="top"><img src="misc_/HelpDeskAgent/menu_top_right" border="0"></td>
-						<td><img src="misc_/HelpDeskAgent/spacer" border="0" height="3" width="3"></td>
+						<td class="taboff" align="right" valign="top"><img src="misc_/NaayaHelpDeskAgent/menu_top_right" border="0"></td>
+						<td><img src="misc_/NaayaHelpDeskAgent/spacer" border="0" height="3" width="3"></td>
 					</tal:block>
-					<td tal:attributes="class python:test(options['pagetab']==0, 'tabon', 'taboff')" align="left" valign="top"><img src="misc_/HelpDeskAgent/menu_top_left" border="0"></td>
+					<td tal:attributes="class python:test(options['pagetab']==0, 'tabon', 'taboff')" align="left" valign="top"><img src="misc_/NaayaHelpDeskAgent/menu_top_left" border="0"></td>
 					<td tal:attributes="class python:test(options['pagetab']==0, 'tabon', 'taboff')" nowrap="true"><a class="tablink" tal:attributes="href string:${here/absolute_url}/list_html" i18n:translate="">List Issues</a></td>
-					<td tal:attributes="class python:test(options['pagetab']==0, 'tabon', 'taboff')" align="right" valign="top"><img src="misc_/HelpDeskAgent/menu_top_right" border="0"></td>
-					<td><img src="misc_/HelpDeskAgent/spacer" border="0" height="3" width="3"></td>
-					<td tal:attributes="class python:test(options['pagetab']==1, 'tabon', 'taboff')" align="left" valign="top"><img src="misc_/HelpDeskAgent/menu_top_left" border="0"></td>
+					<td tal:attributes="class python:test(options['pagetab']==0, 'tabon', 'taboff')" align="right" valign="top"><img src="misc_/NaayaHelpDeskAgent/menu_top_right" border="0"></td>
+					<td><img src="misc_/NaayaHelpDeskAgent/spacer" border="0" height="3" width="3"></td>
+					<td tal:attributes="class python:test(options['pagetab']==1, 'tabon', 'taboff')" align="left" valign="top"><img src="misc_/NaayaHelpDeskAgent/menu_top_left" border="0"></td>
 					<td tal:attributes="class python:test(options['pagetab']==1, 'tabon', 'taboff')" nowrap="true"><a class="tablink" tal:attributes="href string:${here/absolute_url}/add_issue_html" title="Post a new issue" i18n:translate="" i18n:attributes="title">Post Issue</a></td>
-					<td tal:attributes="class python:test(options['pagetab']==1, 'tabon', 'taboff')" align="right" valign="top"><img src="misc_/HelpDeskAgent/menu_top_right" border="0"></td>
-					<td><img src="misc_/HelpDeskAgent/spacer" border="0" height="3" width="3"></td>
-					<td tal:attributes="class python:test(options['pagetab']==2, 'tabon', 'taboff')" align="left" valign="top"><img src="misc_/HelpDeskAgent/menu_top_left" border="0"></td>
+					<td tal:attributes="class python:test(options['pagetab']==1, 'tabon', 'taboff')" align="right" valign="top"><img src="misc_/NaayaHelpDeskAgent/menu_top_right" border="0"></td>
+					<td><img src="misc_/NaayaHelpDeskAgent/spacer" border="0" height="3" width="3"></td>
+					<td tal:attributes="class python:test(options['pagetab']==2, 'tabon', 'taboff')" align="left" valign="top"><img src="misc_/NaayaHelpDeskAgent/menu_top_left" border="0"></td>
 					<td tal:attributes="class python:test(options['pagetab']==2, 'tabon', 'taboff')" nowrap="true"><a class="tablink" tal:attributes="href string:${here/absolute_url}/add_issue_quick_html" title="Quick post of a new issue" i18n:translate="" i18n:attributes="title">Post Quick Issue</a></td>
-					<td tal:attributes="class python:test(options['pagetab']==2, 'tabon', 'taboff')" align="right" valign="top"><img src="misc_/HelpDeskAgent/menu_top_right" border="0"></td>
+					<td tal:attributes="class python:test(options['pagetab']==2, 'tabon', 'taboff')" align="right" valign="top"><img src="misc_/NaayaHelpDeskAgent/menu_top_right" border="0"></td>
 					<tal:block tal:condition="python:hasRoleHelpDeskAdministrator or hasRoleHelpDeskConsultant">
-						<td><img src="misc_/HelpDeskAgent/spacer" border="0" height="3" width="3"></td>
-						<td tal:attributes="class python:test(options['pagetab']==3, 'tabon', 'taboff')" align="left" valign="top"><img src="misc_/HelpDeskAgent/menu_top_left" border="0"></td>
+						<td><img src="misc_/NaayaHelpDeskAgent/spacer" border="0" height="3" width="3"></td>
+						<td tal:attributes="class python:test(options['pagetab']==3, 'tabon', 'taboff')" align="left" valign="top"><img src="misc_/NaayaHelpDeskAgent/menu_top_left" border="0"></td>
 						<td tal:attributes="class python:test(options['pagetab']==3, 'tabon', 'taboff')" nowrap="true"><a class="tablink" tal:attributes="href string:${here/absolute_url}/reports_user_html" title="Reports section" i18n:translate="" i18n:attributes="title">Reports</a></td>
-						<td tal:attributes="class python:test(options['pagetab']==3, 'tabon', 'taboff')" align="right" valign="top"><img src="misc_/HelpDeskAgent/menu_top_right" border="0"></td>
+						<td tal:attributes="class python:test(options['pagetab']==3, 'tabon', 'taboff')" align="right" valign="top"><img src="misc_/NaayaHelpDeskAgent/menu_top_right" border="0"></td>
 					</tal:block>
 				</tr>
 			</table>
 		</td>
 	</tr>
 	<tr>
-		<td class="tabon"><img src="misc_/HelpDeskAgent/spacer" border="0" height="3" width="3"></td>
+		<td class="tabon"><img src="misc_/NaayaHelpDeskAgent/spacer" border="0" height="3" width="3"></td>
 	</tr>
 </table>
 
