@@ -1,0 +1,74 @@
+<dtml-let hasRoleHelpDeskAdministrator="isHelpDeskAdministrator()" hasRoleHelpDeskConsultant="isHelpDeskConsultant()">
+
+<form name="frm" action="manageIssueProperties" method="post" enctype="multipart/form-data">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+    <tr><td class="label" width="20%" nowrap="true">Ticket Number</td><td><dtml-var id html_quote></td></tr>
+    <tr><td class="label" nowrap="true">Opened</td><td><dtml-var "FormatDate(date_open)" html_quote></td></tr>
+    <tr><td class="label" nowrap="true">Last modified</td><td><dtml-var "FormatDate(date_modify)" html_quote></td></tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <dtml-if "hasRoleHelpDeskAdministrator or hasRoleHelpDeskConsultant">
+    <tr>
+        <td class="label" nowrap="true">Assigned to</td>
+        <td>
+            <dtml-if "hasRoleHelpDeskAdministrator or hasRoleHelpDeskConsultant">
+                <select name="consultant">
+                    <option value=""></option>
+                    <dtml-in "getListUserConsultant()">
+                    <option value="<dtml-var id html_quote>" <dtml-if "id==consultant">selected</dtml-if>><dtml-var "getUserName(id)" html_quote></option>
+                    </dtml-in>
+                </select>
+            <dtml-else>
+                    <dtml-var "getUserName(consultant)" html_quote null=->
+            </dtml-if>
+        </td>
+    </tr>
+    <tr><td class="label" nowrap="true">Confidential?</td><td><input type="checkbox" name="security" value="on" <dtml-if "isPrivate()">checked</dtml-if>></td></tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    </dtml-if>
+    <tr><td colspan="2"><b>User information<b></td></tr>
+    <tr><td class="label" nowrap="true">Name</td><td><input type="text" name="user_name" size="50" value="<dtml-var user_name html_quote>"></td></tr>
+    <tr><td class="label" nowrap="true">Email</td><td><input type="text" name="user_email" size="50" value="<dtml-var user_email html_quote>"></td></tr>
+    <tr><td class="label" nowrap="true">Phone</td><td><input type="text" name="user_phone" size="50" value="<dtml-var user_phone html_quote>"></td></tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr><td class="label" nowrap="true">Subject/Title</td><td><input type="text" name="subject" size="60" value="<dtml-var subject html_quote>"></td></tr>
+    <tr>
+        <td class="label">Category</td>
+        <td>
+        <select name="category">
+            <option value=""></option>
+            <dtml-in "getListIssueCategory()" sort=title>
+            <option value="<dtml-var id html_quote>" <dtml-if "id==category">selected</dtml-if>><dtml-var title html_quote></option>
+            </dtml-in>
+        </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Priority</td>
+        <td>
+        <select name="priority">
+            <option value=""></option>
+            <dtml-in "getListIssuePriority()" sort=value>
+            <option value="<dtml-var id html_quote>" <dtml-if "id==priority">selected</dtml-if>><dtml-var title html_quote></option>
+            </dtml-in>
+        </select>
+        </td>
+    </tr>
+    <tr>
+        <td class="label">Status</td>
+        <td>
+            <dtml-in "getListIssueStatus()" sort=order>
+            <input type="radio" name="status" value="<dtml-var id html_quote>" <dtml-if "id==status">checked</dtml-if>> <dtml-var title html_quote>
+            </dtml-in>
+        </td>
+    </tr>
+    <tr><td class="label" nowrap="true" valign="top">Description</td><td><textarea name="description" rows="10" cols="70"><dtml-var description html_quote></textarea></td></tr>
+    <tr><td class="label" nowrap="true">Link</td><td><input type="text" name="link" size="50" value="<dtml-var link html_quote>"></td></tr>
+    <tr><td class="label" nowrap="true">Attachment</td><td><input type="file" name="attachment" size="20"></td></tr>
+    <tr><td class="label" nowrap="true" valign="top">Additional comment</td><td><textarea name="comments" rows="5" cols="70"></textarea></td></tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr><td>&nbsp;</td><td><input type="submit" name="update" value="Save changes"></td></tr>
+</table>
+</form>
+<script>try{document.frm.user_name.focus();}catch(e){}</script>
+
+</dtml-let>
