@@ -941,7 +941,7 @@ class HelpDesk(Folder, EmailSender):
         self.updateHelpDeskPresentation(date_format, show_time, css_style, issues_perpage)
         REQUEST.RESPONSE.redirect('admin_html?pagetab=7')
 
-    security.declarePrivate('getAllIssues')
+    security.declareProtected(view_management_screens, 'getAllIssues')
     def getAllIssues(self):
         """Returns a list with all Issue objects"""
         return self.objectValues(ISSUE_META_TYPE_LABEL)
@@ -1346,7 +1346,7 @@ class HelpDesk(Folder, EmailSender):
     security.declareProtected(view_management_screens, 'admin_presentation_html')
     admin_presentation_html = PageTemplateFile('zpt/HelpDesk_admin_presentation', globals())
 
-    security.declarePrivate('reports_form_html')
+    security.declareProtected(view_management_screens, 'reports_form_html')
     reports_form_html = PageTemplateFile('zpt/HelpDesk_reports_form', globals())
 
     security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'reports_user_html')
