@@ -1,40 +1,49 @@
-<dtml-let hasRoleHelpDeskAdministrator="isHelpDeskAdministrator()"
-    hasRoleHelpDeskConsultant="isHelpDeskConsultant()"
-    sortby="REQUEST.get('sort', 'date')"
-    how="REQUEST.get('how', 'asc')">
+<tal:block tal:define="hasRoleHelpDeskAdministrator here/isHelpDeskAdministrator;
+	hasRoleHelpDeskConsultant here/isHelpDeskConsultant;
+	sortby python:request.get('sort', 'date'); how python:request.get('how', 'asc')">
 
-<form name="frmadd" action="manageIssueHistory" method="post">
-    <input type="submit" name="delete" value="Clear history">
-    <br><br>
-    <table border="0" cellspacing="1" cellpadding="2" width="100%">
-        <tr>
-            <td class="cellheader" width="1%">&nbsp;</td>
-            <td class="cellheader" width="10%" nowrap="true"><a class="sortlink" href="<dtml-var "absolute_url(0)">/history_user_html?<dtml-var "GetSortQueryString('date', sortby, how, '')">" title="Sort by this property">Date</a><img src="misc_/HelpDeskAgent/<dtml-var "GetSortPicture('date', sortby, how)">" border="0"></td>
-            <td class="cellheader" width="20%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/history_user_html?<dtml-var "GetSortQueryString('action', sortby, how, '')">" title="Sort by this property">Action</a><img src="misc_/HelpDeskAgent/<dtml-var "GetSortPicture('action', sortby, how)">" border="0"></td>
-            <td class="cellheader" width="10%" nowrap="true"><b>User</b><img src="misc_/HelpDeskAgent/spacer" border="0"></td>
-            <td class="cellheader" width="10%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/history_user_html?<dtml-var "GetSortQueryString('status', sortby, how, '')">" title="Sort by this property">Status</a><img src="misc_/HelpDeskAgent/<dtml-var "GetSortPicture('status', sortby, how)">" border="0"></td>
-            <td class="cellheader" width="10%"><b>Priority</b><img src="misc_/HelpDeskAgent/spacer" border="0"></td>
-            <td class="cellheader" width="15%"><b>Assigned to</b><img src="misc_/HelpDeskAgent/spacer" border="0"></td>
-            <td class="cellheader" width="30%"><b>Additional comment</b><img src="misc_/HelpDeskAgent/spacer" border="0"></td>
-        </tr>
-        <dtml-in "getListIssueHistory()" sort_expr="sortby" reverse_expr="how=='desc'">
-        <dtml-if sequence-odd>
-            <dtml-call "REQUEST.set('cellclass', 'cellodd')">
-        <dtml-else>
-            <dtml-call "REQUEST.set('cellclass', 'celleven')">
-        </dtml-if>
-        <tr>
-            <td class="<dtml-var cellclass>" align="right"><dtml-var id html_quote>.</td>
-            <td class="<dtml-var cellclass>"><dtml-var "FormatDate(date)"></td>
-            <td class="<dtml-var cellclass>"><dtml-var action html_quote null=-></td>
-            <td class="<dtml-var cellclass>"><dtml-var username html_quote null=-></td>
-            <td class="<dtml-var cellclass>"><dtml-var status html_quote null=-></td>
-            <td class="<dtml-var cellclass>"><dtml-var priority html_quote null=-></td>
-            <td class="<dtml-var cellclass>"><dtml-var consultant html_quote null=-></td>
-            <td class="<dtml-var cellclass>"><dtml-var "EncodeTextareaContent(comments)" null=-></td>
-        </tr>
-        </dtml-in>
-    </table>
+<form action="manageIssueHistory" method="post">
+<input type="submit" name="delete" value="Clear history" i18n:attributes="value" />
+<br /><br />
+<table border="0" cellspacing="1" cellpadding="2" width="100%">
+	<tr>
+		<td class="cellheader" width="1%"></td>
+		<td class="cellheader" width="10%" nowrap="nowrap"
+			tal:define="qs python:here.GetSortQueryString('date', sortby, how, '');
+						sp python:here.GetSortPicture('date', sortby, how)">
+			<a class="sortlink" tal:attributes="href string:${here/absolute_url}/history_user_html?${qs}" title="Sort by this property" i18n:attributes="title" i18n:translate="">Date</a>
+			<img tal:attributes="src string:misc_/HelpDeskAgent/${sp}" border="0" alt="" />
+		</td>
+		<td class="cellheader" width="20%"
+			tal:define="qs python:here.GetSortQueryString('action', sortby, how, '');
+						sp python:here.GetSortPicture('action', sortby, how)">
+			<a class="sortlink" tal:attributes="href string:${here/absolute_url}/history_user_html?${qs}" title="Sort by this property" i18n:attributes="title" i18n:translate="">Action</a>
+			<img tal:attributes="src string:misc_/HelpDeskAgent/${sp}" border="0" alt="" />
+		</td>
+		<td class="cellheader" width="10%" nowrap="nowrap"><strong i18n:translate="">User</strong><img src="misc_/HelpDeskAgent/spacer" border="0" alt="" /></td>
+		<td class="cellheader" width="10%"
+			tal:define="qs python:here.GetSortQueryString('status', sortby, how, '');
+						sp python:here.GetSortPicture('status', sortby, how)">
+			<a class="sortlink" tal:attributes="href string:${here/absolute_url}/history_user_html?${qs}" title="Sort by this property" i18n:attributes="title" i18n:translate="">Status</a>
+			<img tal:attributes="src string:misc_/HelpDeskAgent/${sp}" border="0" alt="" />
+		</td>
+		<td class="cellheader" width="10%"><strong i18n:translate="">Priority</strong><img src="misc_/HelpDeskAgent/spacer" border="0" alt="" /></td>
+		<td class="cellheader" width="15%"><strong i18n:translate="">Assigned to</strong><img src="misc_/HelpDeskAgent/spacer" border="0" alt="" /></td>
+		<td class="cellheader" width="30%"><strong i18n:translate="">Additional comment</strong><img src="misc_/HelpDeskAgent/spacer" border="0" alt="" /></td>
+	</tr>
+	<tal:block tal:repeat="item python:here.SortObjsListByAttr(here.getListIssueHistory(), sortby, how=='desc')">
+	<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'celloddd', 'celleven')">
+		<td tal:attributes="class cellclass" align="right" tal:content="string:${item/id}." />
+		<td tal:attributes="class cellclass" tal:content="python:here.FormatDate(item.date)" />
+		<td tal:attributes="class cellclass" tal:content="item/action" />
+		<td tal:attributes="class cellclass" tal:content="item/username" />
+		<td tal:attributes="class cellclass" tal:content="item/status" />
+		<td tal:attributes="class cellclass" tal:content="item/priority" />
+		<td tal:attributes="class cellclass" tal:content="item/consultant" />
+		<td tal:attributes="class cellclass" tal:content="structure python:here.EncodeTextareaContent(item.comments)" />
+	</tr>
+	</tal:block>
+</table>
 </form>
 
-</dtml-let>
+</tal:block>

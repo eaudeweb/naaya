@@ -25,7 +25,6 @@ from whrandom import choice
 from Products.PythonScripts.standard import url_quote, html_quote
 from DateTime import DateTime
 
-
 def GenRandonName(length=10, chars=string.letters + string.digits + ' '):
     """Generate a rondom name."""
     return ''.join([choice(chars) for i in range(length)])

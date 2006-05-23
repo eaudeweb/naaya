@@ -533,7 +533,7 @@ class Issue(Folder):
     security.declareProtected('View management screens', 'edit_manage_html')
     edit_manage_html = PageTemplateFile('zpt/Issue_edit_manage', globals())
 
-    security.declarePublic('comments_form_html')
+    security.declareProtected('View', 'comments_form_html')
     comments_form_html = PageTemplateFile('zpt/Issue_comments_form', globals())
 
     security.declareProtected('View', 'comments_user_html')
@@ -542,7 +542,7 @@ class Issue(Folder):
     security.declareProtected('View management screens', 'comments_manage_html')
     comments_manage_html = PageTemplateFile('zpt/Issue_comments_manage', globals())
 
-    security.declarePrivate('history_form_html')
+    security.declareProtected('View', 'history_form_html')
     history_form_html = PageTemplateFile('zpt/Issue_history_form', globals())
 
     security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'history_user_html')
