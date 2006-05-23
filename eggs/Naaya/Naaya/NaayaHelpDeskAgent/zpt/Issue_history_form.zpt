@@ -12,24 +12,24 @@
 			tal:define="qs python:here.GetSortQueryString('date', sortby, how, '');
 						sp python:here.GetSortPicture('date', sortby, how)">
 			<a class="sortlink" tal:attributes="href string:${here/absolute_url}/history_user_html?${qs}" title="Sort by this property" i18n:attributes="title" i18n:translate="">Date</a>
-			<img tal:attributes="src string:misc_/HelpDeskAgent/${sp}" border="0" alt="" />
+			<img tal:attributes="src string:misc_/NaayaHelpDeskAgent/${sp}" border="0" alt="" />
 		</td>
 		<td class="cellheader" width="20%"
 			tal:define="qs python:here.GetSortQueryString('action', sortby, how, '');
 						sp python:here.GetSortPicture('action', sortby, how)">
 			<a class="sortlink" tal:attributes="href string:${here/absolute_url}/history_user_html?${qs}" title="Sort by this property" i18n:attributes="title" i18n:translate="">Action</a>
-			<img tal:attributes="src string:misc_/HelpDeskAgent/${sp}" border="0" alt="" />
+			<img tal:attributes="src string:misc_/NaayaHelpDeskAgent/${sp}" border="0" alt="" />
 		</td>
-		<td class="cellheader" width="10%" nowrap="nowrap"><strong i18n:translate="">User</strong><img src="misc_/HelpDeskAgent/spacer" border="0" alt="" /></td>
+		<td class="cellheader" width="10%" nowrap="nowrap"><strong i18n:translate="">User</strong><img src="misc_/NaayaHelpDeskAgent/spacer" border="0" alt="" /></td>
 		<td class="cellheader" width="10%"
 			tal:define="qs python:here.GetSortQueryString('status', sortby, how, '');
 						sp python:here.GetSortPicture('status', sortby, how)">
 			<a class="sortlink" tal:attributes="href string:${here/absolute_url}/history_user_html?${qs}" title="Sort by this property" i18n:attributes="title" i18n:translate="">Status</a>
-			<img tal:attributes="src string:misc_/HelpDeskAgent/${sp}" border="0" alt="" />
+			<img tal:attributes="src string:misc_/NaayaHelpDeskAgent/${sp}" border="0" alt="" />
 		</td>
-		<td class="cellheader" width="10%"><strong i18n:translate="">Priority</strong><img src="misc_/HelpDeskAgent/spacer" border="0" alt="" /></td>
-		<td class="cellheader" width="15%"><strong i18n:translate="">Assigned to</strong><img src="misc_/HelpDeskAgent/spacer" border="0" alt="" /></td>
-		<td class="cellheader" width="30%"><strong i18n:translate="">Additional comment</strong><img src="misc_/HelpDeskAgent/spacer" border="0" alt="" /></td>
+		<td class="cellheader" width="10%"><strong i18n:translate="">Priority</strong><img src="misc_/NaayaHelpDeskAgent/spacer" border="0" alt="" /></td>
+		<td class="cellheader" width="15%"><strong i18n:translate="">Assigned to</strong><img src="misc_/NaayaHelpDeskAgent/spacer" border="0" alt="" /></td>
+		<td class="cellheader" width="30%"><strong i18n:translate="">Additional comment</strong><img src="misc_/NaayaHelpDeskAgent/spacer" border="0" alt="" /></td>
 	</tr>
 	<tal:block tal:repeat="item python:here.SortObjsListByAttr(here.getListIssueHistory(), sortby, how=='desc')">
 	<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'celloddd', 'celleven')">

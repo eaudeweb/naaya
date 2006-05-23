@@ -50,13 +50,13 @@
 		</td>
 	</tr>
 	<tr>
-		<td nowrap="true" class="cellheader" width="50%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('subject', sortby, how, filter_querystring)">" title="Sort by this property">Subject/Title</a><img src="misc_/HelpDeskAgent/<dtml-var "GetSortPicture('subject', sortby, how)">" border="0"></td>
-		<td nowrap="true" class="cellheader" width="1%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('date_open', sortby, how, filter_querystring)">" title="Sort by this property">Date Open</a><img src="misc_/HelpDeskAgent/<dtml-var "GetSortPicture('date_open', sortby, how)">" border="0"></td>
-		<td nowrap="true" class="cellheader" width="1%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('date_modify', sortby, how, filter_querystring)">" title="Sort by this property">Last Update</a><img src="misc_/HelpDeskAgent/<dtml-var "GetSortPicture('date_modify', sortby, how)">" border="0"></td>
-		<td nowrap="true" class="cellheader" width="20%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('consultant', sortby, how, filter_querystring)">" title="Sort by this property">Assign to</a><img src="misc_/HelpDeskAgent/<dtml-var "GetSortPicture('consultant', sortby, how)">" border="0"></td>
-		<td nowrap="true" class="cellheader" width="30%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('category', sortby, how, filter_querystring)">" title="Sort by this property">Category</a><img src="misc_/HelpDeskAgent/<dtml-var "GetSortPicture('category', sortby, how)">" border="0"></td>
-		<td nowrap="true" class="cellheader" width="1%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('priority', sortby, how, filter_querystring)">" title="Sort by this property">Priority</a><img src="misc_/HelpDeskAgent/<dtml-var "GetSortPicture('priority', sortby, how)">" border="0"></td>
-		<td nowrap="true" class="cellheader" width="1%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('status', sortby, how, filter_querystring)">" title="Sort by this property">Status</a><img src="misc_/HelpDeskAgent/<dtml-var "GetSortPicture('status', sortby, how)">" border="0"></td>
+		<td nowrap="true" class="cellheader" width="50%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('subject', sortby, how, filter_querystring)">" title="Sort by this property">Subject/Title</a><img src="misc_/NaayaHelpDeskAgent/<dtml-var "GetSortPicture('subject', sortby, how)">" border="0"></td>
+		<td nowrap="true" class="cellheader" width="1%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('date_open', sortby, how, filter_querystring)">" title="Sort by this property">Date Open</a><img src="misc_/NaayaHelpDeskAgent/<dtml-var "GetSortPicture('date_open', sortby, how)">" border="0"></td>
+		<td nowrap="true" class="cellheader" width="1%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('date_modify', sortby, how, filter_querystring)">" title="Sort by this property">Last Update</a><img src="misc_/NaayaHelpDeskAgent/<dtml-var "GetSortPicture('date_modify', sortby, how)">" border="0"></td>
+		<td nowrap="true" class="cellheader" width="20%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('consultant', sortby, how, filter_querystring)">" title="Sort by this property">Assign to</a><img src="misc_/NaayaHelpDeskAgent/<dtml-var "GetSortPicture('consultant', sortby, how)">" border="0"></td>
+		<td nowrap="true" class="cellheader" width="30%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('category', sortby, how, filter_querystring)">" title="Sort by this property">Category</a><img src="misc_/NaayaHelpDeskAgent/<dtml-var "GetSortPicture('category', sortby, how)">" border="0"></td>
+		<td nowrap="true" class="cellheader" width="1%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('priority', sortby, how, filter_querystring)">" title="Sort by this property">Priority</a><img src="misc_/NaayaHelpDeskAgent/<dtml-var "GetSortPicture('priority', sortby, how)">" border="0"></td>
+		<td nowrap="true" class="cellheader" width="1%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('status', sortby, how, filter_querystring)">" title="Sort by this property">Status</a><img src="misc_/NaayaHelpDeskAgent/<dtml-var "GetSortPicture('status', sortby, how)">" border="0"></td>
 		<td nowrap="true" class="cellheader" width="1%">&nbsp;</td>
 	</tr>
 	<dtml-in issues size=issues_perpage start=start>
@@ -79,7 +79,7 @@
 		<td class="<dtml-var cellclass>"><dtml-var "getIssueCategoryTitle(category)" html_quote null=-></td>
 		<td class="<dtml-var cellclass>"><dtml-var "getIssuePriorityTitle(priority)" html_quote null=-></td>
 		<td class="<dtml-var cellclass>"><dtml-var "getIssueStatusTitle(status)" html_quote null=-></td>
-		<td class="<dtml-var cellclass>"><dtml-if "date_open == date_modify"><img src="misc_/HelpDeskAgent/new" border="0"><dtml-else><img src="misc_/HelpDeskAgent/spacer" border="0"></dtml-if></td>
+		<td class="<dtml-var cellclass>"><dtml-if "date_open == date_modify"><img src="misc_/NaayaHelpDeskAgent/new" border="0"><dtml-else><img src="misc_/NaayaHelpDeskAgent/spacer" border="0"></dtml-if></td>
 	</tr>
 	</dtml-in>
 </table>
