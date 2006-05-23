@@ -1,0 +1,40 @@
+<dtml-let hasRoleHelpDeskAdministrator="isHelpDeskAdministrator()"
+    hasRoleHelpDeskConsultant="isHelpDeskConsultant()"
+    sortby="REQUEST.get('sort', 'date')"
+    how="REQUEST.get('how', 'asc')">
+
+<form name="frmadd" action="manageIssueHistory" method="post">
+    <input type="submit" name="delete" value="Clear history">
+    <br><br>
+    <table border="0" cellspacing="1" cellpadding="2" width="100%">
+        <tr>
+            <td class="cellheader" width="1%">&nbsp;</td>
+            <td class="cellheader" width="10%" nowrap="true"><a class="sortlink" href="<dtml-var "absolute_url(0)">/history_user_html?<dtml-var "GetSortQueryString('date', sortby, how, '')">" title="Sort by this property">Date</a><img src="misc_/HelpDeskAgent/<dtml-var "GetSortPicture('date', sortby, how)">" border="0"></td>
+            <td class="cellheader" width="20%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/history_user_html?<dtml-var "GetSortQueryString('action', sortby, how, '')">" title="Sort by this property">Action</a><img src="misc_/HelpDeskAgent/<dtml-var "GetSortPicture('action', sortby, how)">" border="0"></td>
+            <td class="cellheader" width="10%" nowrap="true"><b>User</b><img src="misc_/HelpDeskAgent/spacer" border="0"></td>
+            <td class="cellheader" width="10%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/history_user_html?<dtml-var "GetSortQueryString('status', sortby, how, '')">" title="Sort by this property">Status</a><img src="misc_/HelpDeskAgent/<dtml-var "GetSortPicture('status', sortby, how)">" border="0"></td>
+            <td class="cellheader" width="10%"><b>Priority</b><img src="misc_/HelpDeskAgent/spacer" border="0"></td>
+            <td class="cellheader" width="15%"><b>Assigned to</b><img src="misc_/HelpDeskAgent/spacer" border="0"></td>
+            <td class="cellheader" width="30%"><b>Additional comment</b><img src="misc_/HelpDeskAgent/spacer" border="0"></td>
+        </tr>
+        <dtml-in "getListIssueHistory()" sort_expr="sortby" reverse_expr="how=='desc'">
+        <dtml-if sequence-odd>
+            <dtml-call "REQUEST.set('cellclass', 'cellodd')">
+        <dtml-else>
+            <dtml-call "REQUEST.set('cellclass', 'celleven')">
+        </dtml-if>
+        <tr>
+            <td class="<dtml-var cellclass>" align="right"><dtml-var id html_quote>.</td>
+            <td class="<dtml-var cellclass>"><dtml-var "FormatDate(date)"></td>
+            <td class="<dtml-var cellclass>"><dtml-var action html_quote null=-></td>
+            <td class="<dtml-var cellclass>"><dtml-var username html_quote null=-></td>
+            <td class="<dtml-var cellclass>"><dtml-var status html_quote null=-></td>
+            <td class="<dtml-var cellclass>"><dtml-var priority html_quote null=-></td>
+            <td class="<dtml-var cellclass>"><dtml-var consultant html_quote null=-></td>
+            <td class="<dtml-var cellclass>"><dtml-var "EncodeTextareaContent(comments)" null=-></td>
+        </tr>
+        </dtml-in>
+    </table>
+</form>
+
+</dtml-let>
