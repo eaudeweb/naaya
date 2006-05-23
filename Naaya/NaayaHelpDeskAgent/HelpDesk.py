@@ -235,6 +235,33 @@ class HelpDesk(Folder, EmailSender):
         """Is helpdesk users folder a Naaya acl_users?"""
         return (self.getUserFolder().meta_type == 'Naaya User Folder')
 
+    def getUserData(self, p_user=''):
+        """returns data requierd to display the user's form"""
+        r = {}
+        l_user = self.getUser(p_user)
+        if l_user:
+            r['var_mode'] = 'update'
+            r['var_form_name'] = 'frmupdate'
+            r['var_form_submit_name'] = 'update'
+            r['var_form_submit_value'] = 'Update'
+            r['var_zope_user'] = l_user.zope_user
+            r['var_first_name'] = l_user.first_name
+            r['var_last_name'] = l_user.last_name
+            r['var_email'] = l_user.email
+            r['var_role'] = l_user.role
+        else:
+            r['var_mode'] = 'add'
+            r['var_form_name'] = 'frmadd'
+            r['var_form_submit_name'] = 'add'
+            r['var_form_submit_value'] = 'Add'
+            r['var_zope_user'] = ''
+            r['var_first_name'] = ''
+            r['var_last_name'] = ''
+            r['var_email'] = ''
+            r['var_role'] = []
+        return r
+
+
     ###########
     # CATALOG #
     ###########

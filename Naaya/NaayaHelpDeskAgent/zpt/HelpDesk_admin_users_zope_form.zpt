@@ -1,60 +1,41 @@
-<dtml-let HDUserName="REQUEST.get('user', '')" HDUser="getUser(HDUserName)">
-    <dtml-if HDUser>
-        <dtml-call "REQUEST.set('var_mode', 'update')">
-        <dtml-call "REQUEST.set('var_form_name', 'frmupdate')">
-        <dtml-call "REQUEST.set('var_form_submit_name', 'update')">
-        <dtml-call "REQUEST.set('var_form_submit_value', 'Update')">
-        <dtml-call "REQUEST.set('var_zope_user', HDUser.zope_user)">
-        <dtml-call "REQUEST.set('var_first_name', HDUser.first_name)">
-        <dtml-call "REQUEST.set('var_last_name', HDUser.last_name)">
-        <dtml-call "REQUEST.set('var_email', HDUser.email)">
-        <dtml-call "REQUEST.set('var_role', HDUser.role)">
-    <dtml-else>
-        <dtml-call "REQUEST.set('var_mode', 'add')">
-        <dtml-call "REQUEST.set('var_form_name', 'frmadd')">
-        <dtml-call "REQUEST.set('var_form_submit_name', 'add')">
-        <dtml-call "REQUEST.set('var_form_submit_value', 'Add')">
-        <dtml-call "REQUEST.set('var_zope_user', '')">
-        <dtml-call "REQUEST.set('var_first_name', '')">
-        <dtml-call "REQUEST.set('var_last_name', '')">
-        <dtml-call "REQUEST.set('var_email', '')">
-        <dtml-call "REQUEST.set('var_role', [])">
-    </dtml-if>
-</dtml-let>
+<tal:block define="	hd_users_folder here/getUserFolder;
+							hd_users_folder_type_zope here/isUserFolderZope;
+							HDUserData python:here.getUserData('q');>
 
-<form name="<dtml-var var_form_name>" method="post" action="manageUser">
+
+<form tal:attributes="name HDUserData/var_form_name" method="post" action="manageUser">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
     <tr>
         <td class="cell">User:</td>
         <td>
-            <dtml-if "var_mode == 'update'">
-                <b><dtml-var var_zope_user html_quote></b><input type="hidden" name="zope_user" value="<dtml-var var_zope_user html_quote>">
-            <dtml-else>
-                <dtml-let hd_users="hd_users_folder.getUserNames()">
-                <select name="zope_user">
+				<tal:block condition="python:HDUserData['var_mode'] == 'update'">
+                <b><tal:block content="HDUserData/var_zope_user" /></b><input type="hidden" name="zope_user" tal:attributes="value HDUserData/var_zope_user" />
+				</tal:block>
+				<tal:block condition="python:HDUserData['var_mode'] != 'update'">
+                <select name="zope_user" tal:define="hd_users hd_users_folder/getUserNames">
                     <option value=""></option>
-                    <dtml-in hd_users><option value="<dtml-var sequence-item html_quote>" <dtml-if "var_zope_user==_['sequence-item']">selected</dtml-if>><dtml-var sequence-item html_quote></option></dtml-in>
+                    <tal:block repeat="item hd_users">
+								<option tal:attributes="value item; selected python:HDUserData['var_zope_user']==item" tal:content="item"></option>
+							</tal:block>
                 </select>
-                </dtml-let>
-            </dtml-if>
+            </tal:block>
         </td>
     </tr>
-    <dtml-if hd_users_folder_type_zope>
-    <tr><td class="cell">First Name:</td><td><input type="text" name="first_name" size="30" value="<dtml-var var_first_name html_quote>"></td></tr>
-    <tr><td class="cell">Last Name:</td><td><input type="text" name="last_name" size="30" value="<dtml-var var_last_name html_quote>"></td></tr>
-    <tr><td class="cell">Email:</td><td><input type="text" name="email" size="30" value="<dtml-var var_email html_quote>"></td></tr>
-    </dtml-if>
+    <tal:block condition="hd_users_folder_type_zope">
+		 <tr><td class="cell">First Name:</td><td><input type="text" name="first_name" size="30" tal:attributes="value HDUserData/var_first_name"></td></tr>
+		 <tr><td class="cell">Last Name:</td><td><input type="text" name="last_name" size="30" tal:attributes="value HDUserData/var_last_name"></td></tr>
+		 <tr><td class="cell">Email:</td><td><input type="text" name="email" size="30" tal:attributes="value HDUserData/var_email"></td></tr>
+    </tal:block>
     <tr>
         <td class="cell">Role:</td>
         <td>
-            <dtml-let administratorRole="getHDRoleAdministrator()" consultantRole="getHDRoleConsultant()">
-            <select name="role" size="2" multiple>
-                <option value="<dtml-var administratorRole html_quote>" <dtml-if "administratorRole in var_role">selected</dtml-if>><dtml-var administratorRole html_quote></option>
-                <option value="<dtml-var consultantRole html_quote>" <dtml-if "consultantRole in var_role">selected</dtml-if>><dtml-var consultantRole html_quote></option>
+            <select name="role" size="2" multiple="multiple" tal:define="administratorRole here/getHDRoleAdministrator; consultantRole here/getHDRoleConsultant">
+                <option tal:attributes="value administratorRole; selected python:administratorRole in HDUserData['var_role']" tal:content="administratorRole"></option>
+                <option tal:attributes="value consultantRole; selected python:consultantRole in HDUserData['var_role']" tal:content="consultantRole"></option>
             </select>
-            </dtml-let>
         </td>
     </tr>
-    <tr><td class="cell">&nbsp;</td><td class="cell"><input type="submit" name="<dtml-var var_form_submit_name>" value="<dtml-var var_form_submit_value>"></td></tr>
+    <tr><td class="cell">&nbsp;</td><td class="cell"><input type="submit" tal:attributes="name HDUserData/var_form_submit_name; value HDUserData/var_form_submit_value"></td></tr>
 </table>
 </form>
+</tal:block>
