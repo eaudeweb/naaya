@@ -1,8 +1,0 @@
- <form name="frm" method="post" action="manageHelpDeskCatalog">
-    <table border="0" cellspacing="2" cellpadding="2" width="100%">
-        <tr>
-            <td>Updating the HelpDesk catalog will update all catalog records and remove invalid issue records. It does this by deleting all indexes and re-cataloging all currently indexed issues.</td>
-        </tr>
-        <tr><td align="center"><input type="submit" name="update" value="Update catalog"></td></tr>
-    </table>
-</form>
