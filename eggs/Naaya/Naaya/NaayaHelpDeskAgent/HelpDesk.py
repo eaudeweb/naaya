@@ -1057,6 +1057,15 @@ class HelpDesk(Folder, EmailSender):
     # STUFF  #
     ##########
 
+    def SortObjsListByAttr(self, p_list, p_attr, p_desc=1):
+        """Sort a list of objects by an attribute values"""
+        l_len = len(p_list)
+        l_temp = map(None, map(getattr, p_list, (p_attr,)*l_len), xrange(l_len), p_list)
+        l_temp.sort()
+        if p_desc:
+            l_temp.reverse()
+        return map(operator.getitem, l_temp, (-1,)*l_len)
+
     security.declarePrivate('getIssueObject')
     def getIssuesObject(self, oId):
         """Get an Issue object"""
@@ -1097,7 +1106,7 @@ class HelpDesk(Folder, EmailSender):
             filterquerystring = filterquerystring[0:len(filterquerystring)-1]
         return filterquerystring
 
-    security.declarePrivate('GetSortQueryString')
+    security.declarePublic('GetSortQueryString')
     def GetSortQueryString(self, property, sortby, how, filterquerystring):
         """Returns a string like : sort=property&how=(asc|desc)"""
         querystring=''
@@ -1112,7 +1121,7 @@ class HelpDesk(Folder, EmailSender):
             querystring += '&' + filterquerystring
         return querystring
 
-    security.declarePrivate('GetSortPicture')
+    security.declarePublic('GetSortPicture')
     def GetSortPicture(self, property, sortby, how):
         """Returns the name of the sort picture"""
         picture='spacer'
