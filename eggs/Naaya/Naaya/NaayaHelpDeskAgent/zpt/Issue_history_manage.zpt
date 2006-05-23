@@ -1,0 +1,9 @@
+<html>
+    <head><title>Issue History</title></head>
+    <body>
+        <dtml-var style_html>
+        <dtml-var manage_tabs>
+        <h2>Issue History</h2>
+        <dtml-var history_form_html>
+    </body>
+</html>
