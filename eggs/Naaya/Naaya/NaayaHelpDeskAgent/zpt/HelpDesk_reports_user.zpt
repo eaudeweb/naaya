@@ -1,0 +1,11 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<span tal:replace="structure here/style_html" />
+
+<span tal:replace="structure python:here.menu_html(pagetab=3)" />
+
+<span tal:replace="structure here/reports_form_html" />
+
+<span tal:replace="structure here/info_login_html" />
+
+<span tal:replace="structure here/standard_html_footer" />

@@ -524,7 +524,7 @@ class Issue(Folder):
     security.declareProtected('View', 'feedback_html')
     feedback_html = PageTemplateFile('zpt/Issue_feedback', globals())
 
-    security.declarePrivate('edit_form_html')
+    security.declareProtected('View', 'edit_form_html')
     edit_form_html = PageTemplateFile('zpt/Issue_edit_form', globals())
 
     security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'edit_user_html')
