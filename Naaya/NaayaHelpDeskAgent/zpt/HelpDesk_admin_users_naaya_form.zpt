@@ -4,18 +4,6 @@
 							HDUserName python:request.get('user', '');
 							HDUser python:here.getUser(HDUserName);">
 
-<tal:block condition="python:False">
-<!--
-							var_mode               python:test(HDUser, 'update', 'add');
-							var_form_name          python:test(HDUser, 'frmupdate', 'frmadd');
-							var_form_submit_name   python:test(HDUser, 'update', 'add');
-							var_form_submit_value  python:test(HDUser, 'Update', 'Add');
-							var_zope_user          python:test(HDUser, HDUser.zope_user, '');
-							var_role               python:test(HDUser, HDUser.role, []);">
--->
-</tal:block>
-
-
 <tal:block	tal:condition="not:HDUser">
 <tal:block	tal:define = "
 									var_mode               python:'add';
