@@ -973,7 +973,7 @@ class HelpDesk(Folder, EmailSender):
         """Returns a list with all Issue objects"""
         return self.objectValues(ISSUE_META_TYPE_LABEL)
 
-    security.declarePrivate('SearchSortIssues')
+    security.declareProtected(view_management_screens, 'SearchSortIssues')
     def SearchSortIssues(self, sortby, how, query, **args):
         """Returns a sorted list with Issue objects"""
         if (self.isHelpDeskAdministrator() != 1) and (self.isHelpDeskConsultant() != 1):
