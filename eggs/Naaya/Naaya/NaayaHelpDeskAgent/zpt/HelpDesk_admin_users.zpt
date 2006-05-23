@@ -40,13 +40,14 @@
 		<td class="cellheader">Email</td>
 		<td class="cellheader">Role(s)</td>
 	</tr>
-	<tr tal:repeat="item here/getListUser"
-		tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
+	<tr tal:repeat="item here/getListUser">
+		<tal:block tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
 		<td tal:attributes="class cellclass" width="1%"><input type="checkbox" name="ids" tal:attributes="value item/id" /></td>
 		<td tal:attributes="class cellclass"><a class="itemlink" tal:attributes="href string:admin_html?pagetab=6&amp;user=${item/zope_user}" title="Edit user infos" tal:content="item/zope_user" /></td>
 		<td tal:attributes="class cellclass" tal:content="python:here.getUserName(item.id)" />
 		<td tal:attributes="class cellclass" tal:content="python:here.getUserEmail(item.id)" />
 		<td tal:attributes="class cellclass" tal:content="item/role" />
+		</tal:block>
 	</tr>
 	<tr>
 		<td class="cell"></td>
