@@ -235,8 +235,8 @@ class HelpDesk(Folder, EmailSender):
         """Is helpdesk users folder a Naaya acl_users?"""
         return (self.getUserFolder().meta_type == 'Naaya User Folder')
 
-    def getUserData(self, p_user=''):
-        """returns data requierd to display the user's form"""
+    def getUserDataZope(self, p_user=''):
+        """returns data required to display the form for Zope users"""
         r = {}
         l_user = self.getUser(p_user)
         if l_user:

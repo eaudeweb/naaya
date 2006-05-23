@@ -1,6 +1,6 @@
 <tal:block define="hd_users_folder here/getUserFolder;
 	hd_users_folder_type_zope here/isUserFolderZope;
-	HDUserData python:here.getUserData('q');">
+	HDUserData python:here.getUserDataZope('q');">
 
 <form tal:attributes="name HDUserData/var_form_name" method="post" action="manageUser">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
