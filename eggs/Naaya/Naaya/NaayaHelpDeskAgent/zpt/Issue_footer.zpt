@@ -1,0 +1,10 @@
+<span tal:replace="structure here/info_login_html" />
+
+<tal:block tal:condition="here/user_email">
+	<hr noshade="noshade" size="1" />
+	<table border="0" cellspacing="2" cellpadding="2" width="100%">
+		<tr>
+			<td align="center"><a href="feedback_html" class="feedbacklink" i18n:translate="">Feedback to this issue's author</a></td>
+		</tr>
+	</table>
+</tal:block>
