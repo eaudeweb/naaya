@@ -395,6 +395,13 @@ class Issue(Folder):
                 self.updAttachmentForIssue(attachment)
                 #add item to history
                 self.addIssueHistory(date_modify, self.REQUEST.AUTHENTICATED_USER.getUserName(), HISTORY_ISSUE_MODIFIED, self.getIssueStatusTitle(status), self.getIssuePriorityTitle(priority), consultant, comments)
+                #create a comment
+                if comments != '':
+                    oId = GenRandomKey()
+                    oDate = DateTime()
+                    oUsername = self.getUserName(self.getAuthenticatedUser())
+                    obj = IssueComment(oId, oDate, oUsername, 1, comments)
+                    self.addIssueComment(oId, obj)
                 #send email
                 if self.notifyModifyIssue():
                     self.SendEmailNotifications(SENDEMAIL_HELPDESK_ALL, ACTION_UPDATE_ISSUE, self.id)
