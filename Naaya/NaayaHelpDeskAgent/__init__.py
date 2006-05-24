@@ -41,8 +41,9 @@ misc_ = {
         'HelpDesk':ImageFile('www/HelpDesk.gif', globals()),
         'Issue':ImageFile('www/Issue.gif', globals()),
         'spacer':ImageFile('www/spacer.gif', globals()),
-        'sort_asc':ImageFile('www/sort_asc.gif', globals()),
-        'sort_desc':ImageFile('www/sort_desc.gif', globals()),
+        'sortup.gif':ImageFile('www/sortup.gif', globals()),
+        'sortdown.gif':ImageFile('www/sortdown.gif', globals()),
+        'sortnot.gif':ImageFile('www/sortnot.gif', globals()),
         'new':ImageFile('www/new.gif', globals()),
         'menu_top_left':ImageFile('www/menu_top_left.gif', globals()),
         'menu_top_right':ImageFile('www/menu_top_right.gif', globals())
