@@ -57,7 +57,7 @@
 	<a tal:condition="python:paging_next!=-1" tal:attributes="href string:${here/absolute_url}/list_html?start=${paging_next}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${filter_querystring}" i18n:translate="">Next</a>
 </div>
 
-<table class="sortable" width="100%">
+<table class="sortable" width="100%" border="0">
 	<thead>
 		<tr>
 			<tal:block tal:repeat="item sortdata">
@@ -79,7 +79,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr tal:repeat="issue python:issues[paging_start-1:paging_stop]">
+		<tr tal:repeat="issue python:issues[paging_start-1:paging_stop]" tal:attributes="class python:test(path('repeat/issue/even'), 'roweven', 'rowodd')">
 			<td><a class="itemlink" tal:attributes="href string:${issue/absolute_url}/" tal:content="issue/subject" /></td>
 			<td tal:content="python:here.FormatDate(issue.date_open)" />
 			<td tal:content="python:here.FormatDate(issue.date_modify)" />
