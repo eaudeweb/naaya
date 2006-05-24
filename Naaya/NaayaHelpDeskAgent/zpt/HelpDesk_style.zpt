@@ -251,4 +251,143 @@ a.title2:hover
 .fieldset_div {
 	margin: 5px 0px;
 }
+
+
+
+
+
+/*tabs*/
+
+.form_slot {
+	background-color: white;
+}
+
+.form_slot a {
+	text-decoration: none;
+	font-size: 10px;
+	font-weight: bold;
+}
+.form_slot2 {
+	padding-top: 15px;
+}
+.form_title {
+	padding: 10px;
+	font-size: 20px;
+	color: #478AC0;
+}
+
+.bellow_firstlevel_tabs {
+	background-color: #E7F0F7;/*--*/ 
+	border-right: 1px solid #4E8EC2;
+	border-left: 1px solid #4E8EC2;
+}
+
+.border_tabs {
+	border-bottom: 1px solid #4E8EC2;
+	height: 22px;
+	position: relative;
+}
+.tabs_slot {
+	position: relative;
+	top: 0px;
+}
+
+.tabs_slot2 {
+	position: absolute;
+	top: 0px;
+}
+.tab {
+	border: 1px solid #4E8EC2;
+	height: 22px;	
+	float: left;
+
+	margin: 0  0 0 4px;
+	border-bottom-width: 0;
+}
+.tab a, .tab a:visited {
+	text-decoration: none;
+	color: #7CAE31;
+	padding: 0;
+	margin: 4px 5px 3px 5px;
+	display: block;
+
+}
+
+.tab_active {
+	border: 1px solid #4E8EC2;
+	float: left;
+	height: 22px;
+	margin: 0  0 0 4px;
+	background-color: #E7F0F7;/*--*/ 
+	border-bottom-width: 0;
+}
+
+.tab_active a, .tab_active a:visited {
+	text-decoration: none;
+	color: #2F618A;
+	display: block;
+	padding: 0;
+	margin: 4px 5px 3px 5px;
+}
+
+/*=====================*/
+
+
+.tab2 {
+	border: 1px solid #4E8EC2;
+	float: right;
+	height: 21px;
+	margin: 0 4px 0 0;
+	background-color: #7EADD3;
+	border-bottom-width: 0;
+}
+.tab2 a, .tab2 a:visited {
+	text-decoration: none;
+	color: white;
+	padding: 0;
+	margin: 4px 5px 3px 5px;
+	display: block;
+}
+.tab_active2 {
+	border: 1px solid #4E8EC2;
+	float: right;
+	height: 22px;
+	margin: 0 4px 0 0;
+	background-color: #ffffff;
+	border-bottom-width: 0;
+}
+
+.tab_active2 a, .tab_active2 a:visited {
+	text-decoration: none;
+	color: #4E8EC2;
+	padding: 0;
+	margin: 4px 5px 3px 5px;
+	display: block;
+}
+
+
+/* @@@@@@@@@@@@@@@@@@@@@@@@ */
+
+.tabs_slot3 ul {
+	margin: 10px 0 10px 10px;
+	padding:0;
+	font-size: 11px;
+	color: #7CAE31;
+}
+.tabs_slot3 li {
+	display: inline;
+}
+
+.tabs_slot3 a {
+	color: #4E8EC2;
+}
+
+.tab_active3 a {
+	font-size: 10px;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+
+
 </style>
