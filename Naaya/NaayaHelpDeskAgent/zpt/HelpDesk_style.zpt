@@ -10,16 +10,21 @@
     background: #C0C0C0;
 	font-weight: bold;
 }
-.celleven
+
+.celleven, .roweven td
 {
+	border: 0!important;
     color: #000000;
-    background: #FFFFFF;
+    background-color: #FFFFFF;
 }
-.cellodd
+
+.cellodd, .rowodd td
 {
+	border: 0!important;
     color: #000000;
-    background: #DCDCDC;
+    background-color: #DCDCDC;
 }
+
 .celltextarea
 {
     font-weight: normal;
