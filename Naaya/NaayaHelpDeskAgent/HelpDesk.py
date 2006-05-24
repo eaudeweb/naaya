@@ -981,6 +981,7 @@ class HelpDesk(Folder, EmailSender):
         issues = self.SearchIssues(query, args)
         if self.validParams(sortby, how):
             issues = self.SortIssues(issues, sortby, how)
+        print issues
         return issues
 
     security.declarePrivate('SearchIssues')
@@ -1095,7 +1096,6 @@ class HelpDesk(Folder, EmailSender):
         """Returns a string with date time"""
         return FormatDateTimeToString(datetime)
 
-    security.declarePrivate('GetFilterString')
     def GetFilterString(self, **args):
         """Returns a string like: property=value&property=value ... """
         filterquerystring = ''
