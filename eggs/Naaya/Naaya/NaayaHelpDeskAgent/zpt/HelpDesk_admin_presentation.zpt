@@ -17,16 +17,6 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="cell">Style/Css:</td>
-		<td>
-			<select name="css_style" nowrap="true">
-				<option tal:repeat="item here/getCssStylesList"
-					tal:attributes="value item; selected python:here.css_style==item"
-					tal:content="python:here.getCssStyle(item)" />
-			</select>
-		</td>
-	</tr>
-	<tr>
 		<td class="cell">Number of issues per page:</td>
 		<td>
 			<input type="text" name="issues_perpage" tal:attributes="value here/issues_perpage" size="3" />

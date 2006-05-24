@@ -149,7 +149,6 @@ class HelpDesk(Folder, EmailSender):
         #presentation
         self.date_format = _DEFAULT_DATE_FORMAT
         self.show_time = 0
-        self.css_style = _DEFAULT_CSS_STYLE
         self.issues_perpage = _DEFAULT_ISSUES_PERPAGE
         EmailSender.__dict__['__init__'](self)
 
@@ -205,11 +204,10 @@ class HelpDesk(Folder, EmailSender):
         self.default_security_flag = default_security_flag
         self.default_priority = int(default_priority)
 
-    def updateHelpDeskPresentation(self, date_format, show_time, css_style, issues_perpage):
+    def updateHelpDeskPresentation(self, date_format, show_time, issues_perpage):
         """Set/update presentation stuff"""
         self.date_format = date_format
         self.show_time = show_time
-        self.css_style = css_style
         self.issues_perpage = int(issues_perpage)
         self._p_changed = 1
 
@@ -586,23 +584,6 @@ class HelpDesk(Folder, EmailSender):
             model += ' ' + _TIME_MODEL
         return model
 
-    def getCssStylesList(self):
-        """Default there are some styles. The manager can choose from one of them."""
-        return _CSS_STYLES.keys()
-
-    def getCssStyle(self, id):
-        """Returns a style"""
-        return _CSS_STYLES[id]
-
-    def getCssHeaderColor(self):
-        """Returns a color code according with the current style"""
-        return _CSS_COLORS[self.css_style][0]
-
-    def getCssLineColor(self):
-        """Returns a color code according with the current style"""
-        return _CSS_COLORS[self.css_style][1]
-
-
     #############
     #   USERS   #
     #############
@@ -963,9 +944,8 @@ class HelpDesk(Folder, EmailSender):
             show_time = 1
         else:
             show_time = 0
-        css_style = REQUEST.get('css_style', _DEFAULT_CSS_STYLE)
         issues_perpage = REQUEST.get('issues_perpage', _DEFAULT_ISSUES_PERPAGE)
-        self.updateHelpDeskPresentation(date_format, show_time, css_style, issues_perpage)
+        self.updateHelpDeskPresentation(date_format, show_time, issues_perpage)
         REQUEST.RESPONSE.redirect('admin_html?pagetab=7')
 
     security.declareProtected(view_management_screens, 'getAllIssues')
@@ -1316,9 +1296,6 @@ class HelpDesk(Folder, EmailSender):
     security.declareProtected(view, 'style_html')
     style_html = PageTemplateFile('zpt/HelpDesk_style', globals())
 
-    security.declareProtected(view, 'style_html')
-    style_content_html = PageTemplateFile('zpt/HelpDesk_style_content', globals())
-
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/HelpDesk_index', globals())
 
@@ -1417,21 +1394,6 @@ _DATE_MODELS = {
 }
 _TIME_MODEL = '%H:%M:%S'
 _DEFAULT_DATE_FORMAT = '0'
-
-
-_CSS_STYLES = {
-        '0':'grey',
-        '1':'orange',
-        '2':'green',
-        '3':'blue'
-}
-_CSS_COLORS = {
-        '0':('C0C0C0', 'DCDCDC'),
-        '1':('FF9900', 'FFCC66'),
-        '2':('009900', '99FF99'),
-        '3':('6699CC', 'ABC8E4')
-}
-_DEFAULT_CSS_STYLE = '0'
 
 _DEFAULT_ISSUES_PERPAGE = 25
 _DEFAULT_ISSUE_SECURITY = ISSUE_SECURITY_PRIVATE
