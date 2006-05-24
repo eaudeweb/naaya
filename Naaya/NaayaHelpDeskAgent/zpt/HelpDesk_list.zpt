@@ -12,7 +12,7 @@
 <tal:block tal:define="hasRoleHelpDeskAdministrator here/isHelpDeskAdministrator;
 	hasRoleHelpConsultant here/isHelpDeskConsultant;
 	start python:request.get('start', 1);
-	skey python:request.get('skey', 'date_modify');
+	skey python:request.get('skey', 'subject');
 	rkey python:request.get('rkey', '');
 	filter_query python:request.get('filter_query', '');
 	filter_category python:request.get('filter_category', '');
