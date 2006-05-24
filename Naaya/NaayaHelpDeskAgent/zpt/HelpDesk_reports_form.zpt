@@ -15,7 +15,7 @@
 		<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
 			<td tal:condition="item/title" tal:attributes="class cellclass" tal:content="item/title"></td>
 			<td tal:condition="not:item/title" tal:attributes="class cellclass">-</td>
-			<td tal:attributes="class cellclass" tal:content="python:len(here.SearchSortIssues('', '', '', category=item.id))"></td>
+			<td tal:attributes="class cellclass" tal:content="python:len(here.SearchSortIssues('', '', '', '', category=item.id))"></td>
 		</tr>
 	</tal:block>
 </table>
@@ -33,7 +33,7 @@
 	<tal:block repeat="item python:here.utSortObjsListByAttr(here.getListIssuePriority(),'title')">
 		<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
 			<td tal:attributes="class cellclass" tal:content="python: test(item.title,item.title,'-')"></td>
-			<td tal:attributes="class cellclass" tal:content="python: len(here.SearchSortIssues('', '', '', priority=item.id))"></td>
+			<td tal:attributes="class cellclass" tal:content="python: len(here.SearchSortIssues('', '', '', '', priority=item.id))"></td>
 		</tr>
 	</tal:block>
 </table>
@@ -51,7 +51,7 @@
 	<tal:block repeat="item python:here.utSortObjsListByAttr(here.getListIssueStatus(),'order')">
 		<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
 			<td tal:attributes="class cellclass" tal:content="python: test(item.title,item.title,'-')"></td>
-			<td tal:attributes="class cellclass" tal:content="python: len(here.SearchSortIssues('', '', '', status=item.id))"></td>
+			<td tal:attributes="class cellclass" tal:content="python: len(here.SearchSortIssues('', '', '', '', status=item.id))"></td>
 		</tr>
 	</tal:block>
 </table>
@@ -69,7 +69,7 @@
 	<tal:block repeat="item here/getListUserConsultant">
 		<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
 			<td tal:define="user_name python:here.getUserName(item.id)" tal:attributes="class cellclass" tal:content="python: test(user_name.strip(),user_name,'-')"></td>
-			<td tal:attributes="class cellclass" tal:content="python: len(here.SearchSortIssues('', '', '', consultant=item.id))"></td>
+			<td tal:attributes="class cellclass" tal:content="python: len(here.SearchSortIssues('', '', '', '', consultant=item.id))"></td>
 		</tr>
 	</tal:block>
 </table>

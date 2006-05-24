@@ -974,15 +974,25 @@ class HelpDesk(Folder, EmailSender):
         return self.objectValues(ISSUE_META_TYPE_LABEL)
 
     security.declareProtected(view_management_screens, 'SearchSortIssues')
-    def SearchSortIssues(self, sortby, how, query, **args):
+    def SearchSortIssues(self, start, skey, rkey, query, **args):
         """Returns a sorted list with Issue objects"""
         if (self.isHelpDeskAdministrator() != 1) and (self.isHelpDeskConsultant() != 1):
             args['security'] = self.getIssuePublic()
         issues = self.SearchIssues(query, args)
-        if self.validParams(sortby, how):
-            issues = self.SortIssues(issues, sortby, how)
-        print issues
-        return issues
+        if self.validParams(skey, rkey):
+            issues = self.SortIssues(issues, skey, rkey)
+        #paging
+        total = len(issues)
+        try: start = abs(int(start))
+        except: start = 1
+        start = min(start, total)
+        stop = min(start + self.issues_perpage - 1, total)
+        prev = next = -1
+        if start != 1:
+            prev = start - self.issues_perpage
+            if prev < 0: prev = -1
+        if stop < total: next = stop + 1
+        return issues, start, stop, total, prev, next
 
     security.declarePrivate('SearchIssues')
     def SearchIssues(self, query, args):
@@ -1011,7 +1021,7 @@ class HelpDesk(Folder, EmailSender):
     def validParams(self, sortby, how):
         """Validate sort parameters"""
         res = 1
-        if (how != 'asc' and how != 'desc'):
+        if (how != '' and how != '1'):
             res = 0
         else:
             if (self.valideIssueProperty(sortby)):
@@ -1033,25 +1043,9 @@ class HelpDesk(Folder, EmailSender):
                 xrange(len(issues)),
                 issues)
         buf.sort()
-        if how == 'desc':
+        if how == '1':
             buf.reverse()
         return map(operator.getitem, buf, (-1,)*len(buf))
-
-    security.declarePrivate('getStartStopTotalValues')
-    def getStartStopTotalValues(self, issues, REQUEST):
-        """ get the start, stop , total values for paging a list of issues"""
-        #initialize
-        l_start = REQUEST.get('start', 1)
-        l_stop = 0
-        l_total = len(issues)
-        #compute
-        try:
-            l_start = int(l_start)
-        except:
-            l_start = 1
-        l_start = min(l_start, l_total)
-        l_stop = min(l_start + self.issues_perpage - 1, l_total)
-        return (l_start, l_stop, l_total)
 
 
     ##########
