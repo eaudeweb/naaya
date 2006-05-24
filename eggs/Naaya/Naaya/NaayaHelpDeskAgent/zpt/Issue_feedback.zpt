@@ -20,7 +20,7 @@
 		</tr>
 		<tr>
 			<td class="label" width="15%" nowrap="nowrap" valign="top" i18n:translate="">Description</td>
-			<td class="celltextarea" tal:content="python:here.EncodeTextareaContent(here.description)" />
+			<td class="celltextarea" tal:content="structure python:here.EncodeTextareaContent(here.description)" />
 		</tr>
 		<tr tal:condition="here/user_name">
 			<td class="label" nowrap="nowrap" i18n:translate="">Author</td>
