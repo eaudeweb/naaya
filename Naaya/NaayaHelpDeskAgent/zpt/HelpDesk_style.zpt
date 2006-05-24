@@ -1,4 +1,4 @@
-<style>
+<style type="text/css">
 .cell
 {
     color: #000000;
@@ -241,5 +241,9 @@ a.title2:hover
 }
 .sortable tbody tr.zebraeven {
 	background-color: white;
+}
+
+.fieldset_div {
+	margin: 5px 0px;
 }
 </style>
