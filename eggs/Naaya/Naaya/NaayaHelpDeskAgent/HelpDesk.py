@@ -955,6 +955,23 @@ class HelpDesk(Folder, EmailSender):
         hd = self.unrestrictedTraverse(hdpath, None)
         if hd is not None:
             #import ref tables
+            self.deleteIssuePriority(self.__issuepriority.keys())
+            for x in hd.getListIssuePriority():
+                o = IssuePriority(x.id, x.title, x.description, x.value)
+                self.addIssuePriority(x.id, o)
+            self.deleteIssueStatus(self.__issuestatus.keys())
+            for x in hd.getListIssueStatus():
+                o = IssueStatus(x.id, x.title, x.description, x.order)
+                self.addIssueStatus(x.id, o)
+            self.deleteIssueSendType(self.__issuesendtype.keys())
+            for x in hd.getListIssueSendType():
+                o = IssueSendType(x.id, x.title, x.description)
+                self.addIssueSendType(x.id, o)
+            self.deleteIssueCategory(self.__issuecategory.keys())
+            for x in hd.getListIssueCategory():
+                o = IssueCategory(x.id, x.title, x.description, x.priority,
+                    x.advice, x.advicelink, x.issuesconsultant)
+                self.addIssueCategory(x.id, o)
             #import issues
             for issue in hd.getAllIssues():
                 ob = Issue.Issue(issue.id, issue.title, issue.date_open,
