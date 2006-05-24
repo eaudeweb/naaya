@@ -120,11 +120,11 @@ def URLEncode(str):
 def TEXTAREAEncode(str):
     """Encode a string (from a textarea control):
                 - HTMLEncode str
-                - replace \n with <br>"""
+                - replace \n with <br />"""
     buf = str
     buf = HTMLEncode(buf)
     buf = ParseStringForURL(buf)
-    buf = string.replace(buf, '\n', '<br>')
+    buf = string.replace(buf, '\n', '<br />')
     return buf
 
 

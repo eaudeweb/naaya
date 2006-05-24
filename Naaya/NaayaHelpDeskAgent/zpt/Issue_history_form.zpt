@@ -20,7 +20,7 @@
 	<thead>
 		<tr>
 			<tal:block tal:repeat="item sortdata">
-				<th tal:condition="python:not item['sortable']" scope="col"><span i18n:translate="" tal:content="item/label" /></th>
+				<th tal:condition="python:not item['sortable']" scope="col"><span title="Not sortable" i18n:attributes="title" i18n:translate="" tal:content="item/label" /></th>
 				<tal:block tal:condition="item/sortable">
 					<tal:block tal:condition="python:skey==item['key']">
 						<th tal:condition="python:rkey==''" class="sorted" scope="col">
