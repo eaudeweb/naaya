@@ -16,7 +16,7 @@
 <form action="manageIssueHistory" method="post">
 <input type="submit" name="delete" value="Clear history" i18n:attributes="value" />
 <br /><br />
-<table class="sortable">
+<table class="sortable" width="100%">
 	<thead>
 		<tr>
 			<tal:block tal:repeat="item sortdata">
@@ -38,18 +38,16 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tal:block tal:repeat="item python:here.SortObjsListByAttr(here.getListIssueHistory(), skey, rkey!='')">
-		<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'celloddd', 'celleven')">
-			<td tal:attributes="class cellclass" align="right" tal:content="string:${item/id}." />
-			<td tal:attributes="class cellclass" tal:content="python:here.FormatDate(item.date)" />
-			<td tal:attributes="class cellclass" tal:content="item/action" />
-			<td tal:attributes="class cellclass" tal:content="item/username" />
-			<td tal:attributes="class cellclass" tal:content="item/status" />
-			<td tal:attributes="class cellclass" tal:content="item/priority" />
-			<td tal:attributes="class cellclass" tal:content="item/consultant" />
-			<td tal:attributes="class cellclass" tal:content="structure python:here.EncodeTextareaContent(item.comments)" />
+		<tr tal:repeat="item python:here.SortObjsListByAttr(here.getListIssueHistory(), skey, rkey!='')">
+			<td align="right" tal:content="string:${item/id}." />
+			<td tal:content="python:here.FormatDate(item.date)" />
+			<td tal:content="item/action" />
+			<td tal:content="item/username" />
+			<td tal:content="item/status" />
+			<td tal:content="item/priority" />
+			<td tal:content="item/consultant" />
+			<td tal:content="structure python:here.EncodeTextareaContent(item.comments)" />
 		</tr>
-		</tal:block>
 	</tbody>
 </table>
 </form>
