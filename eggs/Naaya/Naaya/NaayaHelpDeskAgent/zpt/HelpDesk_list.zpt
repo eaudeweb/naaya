@@ -98,60 +98,61 @@
 	</tbody>
 </table>
 </form>
-
-<form name="filter" method="get" action="list_html">
-<table border="0" cellspacing="2" cellpadding="2" width="100%">
-	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Query</td>
-		<td><input type="text" name="filter_query" size="50" tal:attributes="value filter_query" /></td>
-		<td colspan="4"></td>
-	</tr>
-	<tr>
-		<td class="label" i18n:translate="">Category</td>
-		<td>
-		<select name="filter_category" id="filter_category">
-			<option value=""></option>
-			<option tal:repeat="item here/getListIssueCategory"
-				tal:attributes="value item/id; selected python:filter_category==item.id"
-				tal:content="item/title" />
-		</select>
-		</td>
-		<td class="label" i18n:translate="">Priority</td>
-		<td>
-		<select name="filter_priority" id="filter_priority">
-			<option value=""></option>
-			<option tal:repeat="item here/getListIssuePriority"
-				tal:attributes="value item/id; selected python:filter_priority==item.id"
-				tal:content="item/title" />
-		</select>
-		</td>
-		<td class="label" i18n:translate="">Status</td>
-		<td>
-		<select name="filter_status" id="filter_status">
-			<option value=""></option>
-			<option tal:repeat="item here/getListIssueStatus"
-				tal:attributes="value item/id; selected python:filter_status==item.id"
-				tal:content="item/title" />
-		</select>
-		</td>
-	</tr>
-	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Assigned to</td>
-		<td>
-			<select name="filter_consultant" id="filter_consultant">
+<fieldset>
+	<legend i18n:translate="">Filter issues</legend>
+	<form name="filter" method="get" action="list_html" class="fieldset_div">
+	<table border="0" cellspacing="2" cellpadding="2" width="100%">
+		<tr>
+			<td class="label" nowrap="nowrap" i18n:translate="">Query</td>
+			<td colspan="5"><input type="text" name="filter_query" size="50" tal:attributes="value filter_query" /></td>
+			<td colspan="4"></td>
+		</tr>
+		<tr>
+			<td class="label" i18n:translate="">Category</td>
+			<td>
+			<select name="filter_category" id="filter_category">
 				<option value=""></option>
-				<option tal:repeat="item here/getListUserConsultant"
-					tal:attributes="value item/id; selected python:filter_consultant==item.id"
-					tal:content="python:here.getUserName(item.id)" />
+				<option tal:repeat="item here/getListIssueCategory"
+					tal:attributes="value item/id; selected python:filter_category==item.id"
+					tal:content="item/title" />
 			</select>
-		</td>
-		<td class="label" nowrap="nowrap" i18n:translate="">Only new</td>
-		<td><input type="checkbox" name="filter_new" value="on" tal:attributes="checked python:filter_new=='on'" /></td>
-		<td colspan="2" align="left"><input type="submit" name="filter" value="Filter" i18n:attributes="value" /></td>
-	</tr>
-</table>
-</form>
-
+			</td>
+			<td class="label" i18n:translate="">Priority</td>
+			<td>
+			<select name="filter_priority" id="filter_priority">
+				<option value=""></option>
+				<option tal:repeat="item here/getListIssuePriority"
+					tal:attributes="value item/id; selected python:filter_priority==item.id"
+					tal:content="item/title" />
+			</select>
+			</td>
+			<td class="label" i18n:translate="">Status</td>
+			<td>
+			<select name="filter_status" id="filter_status">
+				<option value=""></option>
+				<option tal:repeat="item here/getListIssueStatus"
+					tal:attributes="value item/id; selected python:filter_status==item.id"
+					tal:content="item/title" />
+			</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="label" nowrap="nowrap" i18n:translate="">Assigned to</td>
+			<td>
+				<select name="filter_consultant" id="filter_consultant">
+					<option value=""></option>
+					<option tal:repeat="item here/getListUserConsultant"
+						tal:attributes="value item/id; selected python:filter_consultant==item.id"
+						tal:content="python:here.getUserName(item.id)" />
+				</select>
+			</td>
+			<td class="label" nowrap="nowrap" i18n:translate="">Only new</td>
+			<td><input type="checkbox" name="filter_new" value="on" tal:attributes="checked python:filter_new=='on'" /></td>
+			<td colspan="2" align="left"><input type="submit" name="filter" value="Filter" i18n:attributes="value" /></td>
+		</tr>
+	</table>
+	</form>
+</fieldset>
 </tal:block>
 
 <span tal:replace="structure here/info_login_html" />
