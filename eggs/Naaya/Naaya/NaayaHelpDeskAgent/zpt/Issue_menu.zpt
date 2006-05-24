@@ -8,7 +8,8 @@
 		<td>
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
-					<td nowrap="nowrap"><img tal:attributes="src here/icon; alt here/meta_type" border="0" /><a class="title2" href="" tal:content="here/subject" /></td>
+					<td nowrap="nowrap">
+					</td>
 					<td width="100%"></td>
 					<td tal:attributes="class python:test(options['pagetab']==0, 'tabon', 'taboff')" align="left" valign="top"><img src="misc_/NaayaHelpDeskAgent/menu_top_left" border="0"></td>
 					<td tal:attributes="class python:test(options['pagetab']==0, 'tabon', 'taboff')" nowrap="nowrap"><a class="tablink" tal:attributes="href string:${here/absolute_url}/" i18n:translate="">View</a></td>

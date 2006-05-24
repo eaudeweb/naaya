@@ -7,8 +7,6 @@
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td nowrap="true">
-						<img tal:attributes="src here/icon;alt here/meta_type" border="0">
-						<a class="title1" tal:attributes="href string:${here/absolute_url}/index_html" tal:content="here/title_or_id" />
 					</td>
 					<td width="100%"></td>
 					<tal:block tal:condition="python:not request.AUTHENTICATED_USER.has_role('Authenticated')">
