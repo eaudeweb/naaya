@@ -32,15 +32,11 @@
 		{'sortable': 0, 'key': '', 'label': ''},
 	)">
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%">
-	<tr>
-		<td class="note" i18n:translate="">
-			This page lists the issues posted using this agent. Order the list by a field
-			by clicking on the name of that field; clicking twice will reverse the order.
-			You can filter the list by any subset of parameters bellow:
-		</td>
-	</tr>
-</table>
+<p i18n:translate="">
+	This page lists the issues posted using this agent. Order the list by a field
+	by clicking on the name of that field; clicking twice will reverse the order.
+	You can filter the list by any subset of parameters bellow:
+</p>
 
 <form name="frm">
 <div>
@@ -60,7 +56,7 @@
 	<thead>
 		<tr>
 			<tal:block tal:repeat="item sortdata">
-				<th tal:condition="python:not item['sortable']" scope="col"><span i18n:translate="" tal:content="item/label" /></th>
+				<th tal:condition="python:not item['sortable']" scope="col"><span title="Not sortable" i18n:attributes="title" i18n:translate="" tal:content="item/label" /></th>
 				<tal:block tal:condition="item/sortable">
 					<tal:block tal:condition="python:skey==item['key']">
 						<th tal:condition="python:rkey==''" class="sorted" scope="col">
