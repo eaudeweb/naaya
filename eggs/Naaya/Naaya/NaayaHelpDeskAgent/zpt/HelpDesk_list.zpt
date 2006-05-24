@@ -6,8 +6,8 @@
 
 <tal:block tal:define="hasRoleHelpDeskAdministrator here/isHelpDeskAdministrator;
 	hasRoleHelpConsultant here/isHelpDeskConsultant;
-	sortby python:request.get('sort', 'date_modify');
-	how python:request.get('how', 'desc');
+	skey python:request.get('skey', 'date_modify');
+	rkey python:request.get('rkey', '');
 	filter_query python:request.get('filter_query', '');
 	filter_category python:request.get('filter_category', '');
 	filter_priority python:request.get('filter_priority', '');
@@ -16,7 +16,17 @@
 	filter_consultant python:request.get('filter_consultant', '');
 	filter_new python:request.get('filter_new', '');
 	filter_querystring python:here.GetFilterString(filter_query=filter_query, filter_category=filter_category, filter_priority=filter_priority, filter_status=filter_status, filter_user_name=filter_user_name, filter_consultant=filter_consultant, filter_new=filter_new);
-	issues python:here.SearchSortIssues(sortby, how, filter_query, category=filter_category, priority=filter_priority, status=filter_status, user_name=filter_user_name, consultant=filter_consultant, new=filter_new)">
+	issues python:here.SearchSortIssues(skey, rkey, filter_query, category=filter_category, priority=filter_priority, status=filter_status, user_name=filter_user_name, consultant=filter_consultant, new=filter_new);
+	sortdata python:(
+		{'sortable': 1, 'key': 'subject', 'label': 'Subject/Title'},
+		{'sortable': 1, 'key': 'date_open', 'label': 'Date Open'},
+		{'sortable': 1, 'key': 'date_modify', 'label': 'Last Update'},
+		{'sortable': 1, 'key': 'consultant', 'label': 'Assign to'},
+		{'sortable': 1, 'key': 'category', 'label': 'Category'},
+		{'sortable': 1, 'key': 'priority', 'label': 'Priority'},
+		{'sortable': 1, 'key': 'status', 'label': 'Status'},
+		{'sortable': 0, 'key': '', 'label': ''},
+	)">
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<tr>
@@ -29,103 +39,106 @@
 </table>
 
 <form name="frm">
-<table border="0" cellspacing="1" cellpadding="2" width="100%">
-	<tr>
-		<td class="celleven" colspan="2">
-			<dtml-let paging_info="getStartStopTotalValues(issues, REQUEST)"
-					  paging_start="paging_info[0]"
-					  paging_stop="paging_info[1]"
-					  paging_total="paging_info[2]">
-				<dtml-var paging_start> - <dtml-var paging_stop> of <dtml-var paging_total> issues.
-			</dtml-let>
-		</td>
-		<td class="celleven" colspan="6" align="right">
-			<dtml-in issues size=issues_perpage start=start previous>
-				<a href="<dtml-var "absolute_url(0)">/list_html<dtml-var sequence-query>start=<dtml-var previous-sequence-start-number>" class="batchlink">Previous</a>
-			</dtml-in>
-			<dtml-in issues size=issues_perpage start=start next>
-				<a href="<dtml-var "absolute_url(0)">/list_html<dtml-var sequence-query>start=<dtml-var next-sequence-start-number>" class="batchlink">Next</a>
-			</dtml-in>
-			&nbsp;
-		</td>
-	</tr>
-	<tr>
-		<td nowrap="true" class="cellheader" width="50%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('subject', sortby, how, filter_querystring)">" title="Sort by this property">Subject/Title</a><img src="misc_/NaayaHelpDeskAgent/<dtml-var "GetSortPicture('subject', sortby, how)">" border="0"></td>
-		<td nowrap="true" class="cellheader" width="1%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('date_open', sortby, how, filter_querystring)">" title="Sort by this property">Date Open</a><img src="misc_/NaayaHelpDeskAgent/<dtml-var "GetSortPicture('date_open', sortby, how)">" border="0"></td>
-		<td nowrap="true" class="cellheader" width="1%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('date_modify', sortby, how, filter_querystring)">" title="Sort by this property">Last Update</a><img src="misc_/NaayaHelpDeskAgent/<dtml-var "GetSortPicture('date_modify', sortby, how)">" border="0"></td>
-		<td nowrap="true" class="cellheader" width="20%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('consultant', sortby, how, filter_querystring)">" title="Sort by this property">Assign to</a><img src="misc_/NaayaHelpDeskAgent/<dtml-var "GetSortPicture('consultant', sortby, how)">" border="0"></td>
-		<td nowrap="true" class="cellheader" width="30%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('category', sortby, how, filter_querystring)">" title="Sort by this property">Category</a><img src="misc_/NaayaHelpDeskAgent/<dtml-var "GetSortPicture('category', sortby, how)">" border="0"></td>
-		<td nowrap="true" class="cellheader" width="1%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('priority', sortby, how, filter_querystring)">" title="Sort by this property">Priority</a><img src="misc_/NaayaHelpDeskAgent/<dtml-var "GetSortPicture('priority', sortby, how)">" border="0"></td>
-		<td nowrap="true" class="cellheader" width="1%"><a class="sortlink" href="<dtml-var "absolute_url(0)">/list_html?<dtml-var "GetSortQueryString('status', sortby, how, filter_querystring)">" title="Sort by this property">Status</a><img src="misc_/NaayaHelpDeskAgent/<dtml-var "GetSortPicture('status', sortby, how)">" border="0"></td>
-		<td nowrap="true" class="cellheader" width="1%">&nbsp;</td>
-	</tr>
-	<dtml-in issues size=issues_perpage start=start>
-	<dtml-if sequence-odd>
-		<dtml-call "REQUEST.set('cellclass', 'cellodd')">
-	<dtml-else>
-		<dtml-call "REQUEST.set('cellclass', 'celleven')">
-	</dtml-if>
-	<tr>
-		<td class="<dtml-var cellclass>"><a class="itemlink" href="<dtml-var "absolute_url(0)">/index_html"><dtml-var subject html_quote size=50></a></td>
-		<td class="<dtml-var cellclass>"><dtml-var "FormatDate(date_open)" html_quote></td>
-		<td class="<dtml-var cellclass>"><dtml-var "FormatDate(date_modify)" html_quote></td>
-		<td class="<dtml-var cellclass>">
-			<dtml-if "AUTHENTICATED_USER.getUserName()==consultant">
-				<b><dtml-var "getUserName(consultant)" html_quote null=-></b>
-			<dtml-else>
-				<dtml-var "getUserName(consultant)" html_quote null=->
-			</dtml-if>
-		</td>
-		<td class="<dtml-var cellclass>"><dtml-var "getIssueCategoryTitle(category)" html_quote null=-></td>
-		<td class="<dtml-var cellclass>"><dtml-var "getIssuePriorityTitle(priority)" html_quote null=-></td>
-		<td class="<dtml-var cellclass>"><dtml-var "getIssueStatusTitle(status)" html_quote null=-></td>
-		<td class="<dtml-var cellclass>"><dtml-if "date_open == date_modify"><img src="misc_/NaayaHelpDeskAgent/new" border="0"><dtml-else><img src="misc_/NaayaHelpDeskAgent/spacer" border="0"></dtml-if></td>
-	</tr>
-	</dtml-in>
+<dtml-let paging_info="getStartStopTotalValues(issues, REQUEST)"
+		  paging_start="paging_info[0]"
+		  paging_stop="paging_info[1]"
+		  paging_total="paging_info[2]">
+	<dtml-var paging_start> - <dtml-var paging_stop> of <dtml-var paging_total> issues.
+</dtml-let>
+next
+previous
+
+<table class="sortable" width="100%">
+	<thead>
+		<tr>
+			<tal:block tal:repeat="item sortdata">
+				<th tal:condition="python:not item['sortable']" scope="col"><span i18n:translate="" tal:content="item/label" /></th>
+				<tal:block tal:condition="item/sortable">
+					<tal:block tal:condition="python:skey==item['key']">
+						<th tal:condition="python:rkey==''" class="sorted" scope="col">
+							<a title="Sorted A..Z - Click to reverse" rel="nofollow" tal:attributes="href string:${here/absolute_url}/list_html?skey=${item/key}&amp;rkey=1" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortup.gif" width="12" height="12" alt="" border="0" /></a>
+						</th>
+						<th tal:condition="python:rkey!=''" class="sorted" scope="col">
+							<a title="Sorted Z..A - Click to reverse" rel="nofollow" tal:attributes="href string:${here/absolute_url}/list_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortdown.gif" width="12" height="12" alt="" border="0" /></a>
+						</th>
+					</tal:block>
+					<th tal:condition="python:skey!=item['key']" scope="col">
+						<a title="Sortable" rel="nofollow" tal:attributes="href string:${here/absolute_url}/list_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortnot.gif" width="12" height="12" alt="" border="0" /></a>
+					</th>
+				</tal:block>
+			</tal:block>
+		</tr>
+	</thead>
+	<tbody>
+		<tr tal:repeat="issue issues">
+			<td><a class="itemlink" tal:attributes="href string:${issue/absolute_url}/" tal:content="issue/subject" /></td>
+			<td tal:content="python:here.FormatDate(issue.date_open)" />
+			<td tal:content="python:here.FormatDate(issue.date_modify)" />
+			<td tal:define="auth_user python:request.AUTHENTICATED_USER.getUserName()">
+				<strong tal:condition="python:auth_user==issue.consultant" tal:content="python:here.getUserName(issue.consultant)" />
+				<span tal:condition="python:auth_user!=issue.consultant" tal:replace="python:here.getUserName(issue.consultant)" />
+			</td>
+			<td tal:content="python:here.getIssueCategoryTitle(issue.category)" />
+			<td tal:content="python:here.getIssuePriorityTitle(issue.priority)" />
+			<td tal:content="python:here.getIssueStatusTitle(issue.status)" />
+			<td>
+				<img tal:condition="python:issue.date_open==issue.date_modify" src="misc_/NaayaHelpDeskAgent/new" border="0" alt="New" i18n:attributes="alt" />
+				<img tal:condition="python:issue.date_open!=issue.date_modify" src="misc_/NaayaHelpDeskAgent/spacer" border="0" alt="" />
+			</td>
+		</tr>
+	</tbody>
 </table>
 </form>
 
 <form name="filter" method="get" action="list_html">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
-		<td class="label" nowrap="true">Query</td>
-		<td><input type="text" name="filter_query" size="50" value="<dtml-var filter_query html_quote>"></td>
-		<td colspan="4">&nbsp;</td>
+		<td class="label" nowrap="nowrap" i18n:translate="">Query</td>
+		<td><input type="text" name="filter_query" size="50" tal:attributes="value filter_query" /></td>
+		<td colspan="4"></td>
 	</tr>
 	<tr>
-		<td class="label">Category</td>
+		<td class="label" i18n:translate="">Category</td>
 		<td>
-		<select name="filter_category">
+		<select name="filter_category" id="filter_category">
 			<option value=""></option>
-			<dtml-in "getListIssueCategory()" sort=title><option value="<dtml-var id html_quote>" <dtml-if "filter_category==id">selected</dtml-if>><dtml-var title html_quote></option></dtml-in>
+			<option tal:repeat="item here/getListIssueCategory"
+				tal:attributes="value item/id; selected python:filter_category==item.id"
+				tal:content="item/title" />
 		</select>
 		</td>
-		<td class="label">Priority</td>
+		<td class="label" i18n:translate="">Priority</td>
 		<td>
-		<select name="filter_priority">
+		<select name="filter_priority" id="filter_priority">
 			<option value=""></option>
-			<dtml-in "getListIssuePriority()" sort=value><option value="<dtml-var id html_quote>" <dtml-if "filter_priority==id">selected</dtml-if>><dtml-var title html_quote></option></dtml-in>
+			<option tal:repeat="item here/getListIssuePriority"
+				tal:attributes="value item/id; selected python:filter_priority==item.id"
+				tal:content="item/title" />
 		</select>
 		</td>
-		<td class="label">Status</td>
+		<td class="label" i18n:translate="">Status</td>
 		<td>
-		<select name="filter_status">
+		<select name="filter_status" id="filter_status">
 			<option value=""></option>
-			<dtml-in "getListIssueStatus()" sort=order><option value="<dtml-var id html_quote>" <dtml-if "filter_status==id">selected</dtml-if>><dtml-var title html_quote></option></dtml-in>
+			<option tal:repeat="item here/getListIssueStatus"
+				tal:attributes="value item/id; selected python:filter_status==item.id"
+				tal:content="item/title" />
 		</select>
 		</td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="true">Assigned to</td>
+		<td class="label" nowrap="nowrap" i18n:translate="">Assigned to</td>
 		<td>
-			<select name="filter_consultant">
+			<select name="filter_consultant" id="filter_consultant">
 				<option value=""></option>
-				<dtml-in "getListUserConsultant()"><option value="<dtml-var id html_quote>" <dtml-if "filter_consultant==id">selected</dtml-if>><dtml-var "getUserName(id)" html_quote></option></dtml-in>
+				<option tal:repeat="item here/getListUserConsultant"
+					tal:attributes="value item/id; selected python:filter_consultant==item.id"
+					tal:content="python:here.getUserName(item.id)" />
 			</select>
 		</td>
-		<td class="label" nowrap="true">Only new</td>
-		<td><input type="checkbox" name="filter_new" value="on" <dtml-if "filter_new=='on'">checked</dtml-if>></td>
-		<td colspan="2" align="left"><input type="submit" name="filter" value="Filter"></td>
+		<td class="label" nowrap="nowrap" i18n:translate="">Only new</td>
+		<td><input type="checkbox" name="filter_new" value="on" tal:attributes="checked python:filter_new=='on'" /></td>
+		<td colspan="2" align="left"><input type="submit" name="filter" value="Filter" i18n:attributes="value" /></td>
 	</tr>
 </table>
 </form>

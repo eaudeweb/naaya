@@ -35,7 +35,7 @@
 					</tr>
 					<tr>
 						<td nowrap="nowrap" valign="top" i18n:translate="">Description:</td>
-						<td class="celltextarea" align="left" tal:content="python:issue.EncodeTextareaContent(issue.description)" />
+						<td class="celltextarea" align="left" tal:content="structure python:issue.EncodeTextareaContent(issue.description)" />
 					</tr>
 					<tr>
 						<td nowrap="nowrap" colspan="2" align="left">
