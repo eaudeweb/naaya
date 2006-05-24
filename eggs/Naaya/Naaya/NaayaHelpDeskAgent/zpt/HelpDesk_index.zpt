@@ -2,93 +2,88 @@
 
 <span tal:replace="structure here/style_html" />
 
+<h1 tal:content="here/title_or_id"></h1>
+
 <span tal:replace="structure python:here.menu_html(pagetab=-1)" />
 
 <tal:block tal:define="hasRoleHelpDeskAdministrator here/isHelpDeskAdministrator; newissue python:request.get('newissue', '')">
 
-	<tal:block tal:condition="python:newissue!=''">
-	<table border="0" cellspacing="2" cellpadding="2" width="90%" align="center">
-		<tr>
-			<td style="color:#FFFFFF;background-color:#FF0000;" i18n:translate="">
-				Your submission has been received. If you entered a valid email you will
-				be notified about any changes. If you marked your issue as confidential
-				it will not appear in the listing unless released by an administrator.
-			</td>
-		</tr>
-		<tr tal:define="issue python:here.getIssuesObject(newissue)">
-			<td align="center">
-				<table border="0" cellspacing="2" cellpadding="2">
-					<tr>
-						<td nowrap="nowrap" colspan="2" align="left">
-							<span i18n:translate="" tal:omit-tag="">Last modified:</span>
-							<span tal:replace="python:issue.FormatDate(issue.date_modify)" />,
-							<span i18n:translate="" tal:omit-tag="">Opened:</span>
-							<span tal:replace="python:issue.FormatDate(issue.date_open)" />,
-							<span i18n:translate="" tal:omit-tag="">Ticket Number:</span>
-							<span tal:replace="issue/id" />
-						</td>
-					</tr>
-					<tr><td colspan="2"></td></tr>
-					<tr>
-						<td nowrap="nowrap" width="15%" i18n:translate="">Subject/Title:</td>
-						<td align="left"><strong tal:content="issue/subject" /></td>
-					</tr>
-					<tr>
-						<td nowrap="nowrap" valign="top" i18n:translate="">Description:</td>
-						<td class="celltextarea" align="left" tal:content="structure python:issue.EncodeTextareaContent(issue.description)" />
-					</tr>
-					<tr>
-						<td nowrap="nowrap" colspan="2" align="left">
-							<span i18n:translate="" tal:omit-tag="">Status:</span>
-							<span tal:replace="python:issue.getIssueStatusTitle(issue.status)" />,
-							<span i18n:translate="" tal:omit-tag="">Priority:</span>
-							<span tal:replace="python:issue.getIssuePriorityTitle(issue.priority)" />,
-							<span i18n:translate="" tal:omit-tag="">Category:</span>
-							<span tal:replace="python:issue.getIssueCategoryTitle(issue.category)" />
-						</td>
-					</tr>
-					<tr><td colspan="2"></td></tr>
-					<tr>
-						<td nowrap="nowrap" i18n:translate="">Assigned to:</td>
-						<td align="left" tal:content="python:issue.getUserName(issue.consultant)" />
-					</tr>
-					<tr tal:condition="hasRoleHelpDeskAdministrator">
-						<td nowrap="nowrap" i18n:translate="">Security:</td>
-						<td align="left" tal:content="issue/security" />
-					</tr>
-					<tr><td colspan="2"></td></tr>
-					<tr><td colspan="2"><strong i18n:translate="">User information</strong></td></tr>
-					<tr>
-						<td nowrap="nowrap" i18n:translate="">Name:</td>
-						<td align="left" tal:content="issue/user_name" />
-					</tr>
-					<tr>
-						<td nowrap="nowrap" i18n:translate="">Email:</td>
-						<td align="left" tal:content="issue/user_email" />
-					</tr>
-					<tr>
-						<td nowrap="nowrap" i18n:translate="">Phone:</td>
-						<td align="left" tal:content="issue/user_phone" />
-					</tr>
-					<tr><td colspan="2"></td></tr>
-					<tr>
-						<td nowrap="nowrap" i18n:translate="">Link:</td>
-						<td align="left"><a class="urllink" tal:condition="python:issue.link!=''" tal:attributes="href issue/link" target="_blank" tal:content="issue/link" /></td>
-					</tr>
-					<tr>
-						<td nowrap="nowrap" i18n:translate="">Attachment:</td>
-						<td align="left" tal:define="res issue/getAttachmentForIssue; attobj python:res[0]; attFileName python:res[1]">
-							<tal:block tal:condition="attobj">
-								<a tal:attributes="href attobj/absolute_url" target="_blank" tal:content="attFileName" />
-							</tal:block>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
-	<br /><hr noshade size="1" /><br />
-	</tal:block>
+	<div tal:condition="python:newissue!=''" style="border-bottom:1px solid #808080; padding: 0 0 1.5em 0; margin: 0 0 1.5em 0">
+		<p style="color:#cc0000; border:1px solid #cc0000; padding: 0.5em;" i18n:translate="">
+			Your submission has been received. If you entered a valid email you will
+			be notified about any changes. If you marked your issue as confidential
+			it will not appear in the listing unless released by an administrator.
+		</p>
+		<div style="padding-left: 2em;" tal:define="issue python:here.getIssuesObject(newissue)">
+			<p>
+				<span i18n:translate="" tal:omit-tag="">Last modified:</span>
+				<span tal:replace="python:issue.FormatDate(issue.date_modify)" />,
+				<span i18n:translate="" tal:omit-tag="">Opened:</span>
+				<span tal:replace="python:issue.FormatDate(issue.date_open)" />,
+				<span i18n:translate="" tal:omit-tag="">Ticket Number:</span>
+				<span tal:replace="issue/id" />
+			</p>
+
+			<table style="text-align:left;" border="0" cellspacing="0" cellpadding="0">
+				<colgroup>
+					<col valign="top" />
+				</colgroup>
+				<tr>
+					<th nowrap="nowrap" width="15%" i18n:translate="">Subject/Title</th>
+					<td align="left"><span style="font-weight:bold" tal:content="issue/subject" /></td>
+				</tr>
+				<tr>
+					<th nowrap="nowrap" valign="top" i18n:translate="">Description</th>
+					<td class="celltextarea" align="left" tal:content="structure python:issue.EncodeTextareaContent(issue.description)" />
+				</tr>
+				<tr>
+					<td nowrap="nowrap" colspan="2" align="left">
+						<span i18n:translate="" tal:omit-tag="">Status:</span>
+						<span tal:replace="python:issue.getIssueStatusTitle(issue.status)" />,
+						<span i18n:translate="" tal:omit-tag="">Priority:</span>
+						<span tal:replace="python:issue.getIssuePriorityTitle(issue.priority)" />,
+						<span i18n:translate="" tal:omit-tag="">Category:</span>
+						<span tal:replace="python:issue.getIssueCategoryTitle(issue.category)" />
+					</td>
+				</tr>
+				<tr>
+					<th nowrap="nowrap" i18n:translate="">Assigned to</th>
+					<td align="left" tal:content="python:issue.getUserName(issue.consultant)" />
+				</tr>
+				<tr tal:condition="hasRoleHelpDeskAdministrator">
+					<th nowrap="nowrap" i18n:translate="">Security</th>
+					<td align="left" tal:content="issue/security" />
+				</tr>
+				<tr>
+					<td align="center" colspan="2"><strong i18n:translate="">User information</strong></td>
+				</tr>
+				<tr>
+					<th nowrap="nowrap" i18n:translate="">Name</th>
+					<td align="left" tal:content="issue/user_name" />
+				</tr>
+				<tr>
+					<th nowrap="nowrap" i18n:translate="">Email</th>
+					<td align="left" tal:content="issue/user_email" />
+				</tr>
+				<tr>
+					<th nowrap="nowrap" i18n:translate="">Phone</th>
+					<td align="left" tal:content="issue/user_phone" />
+				</tr>
+				<tr>
+					<th nowrap="nowrap" i18n:translate="">Link</th>
+					<td align="left"><a class="urllink" tal:condition="python:issue.link!=''" tal:attributes="href issue/link" target="_blank" tal:content="issue/link" /></td>
+				</tr>
+				<tr>
+					<th nowrap="nowrap" i18n:translate="">Attachment</th>
+					<td align="left" tal:define="res issue/getAttachmentForIssue; attobj python:res[0]; attFileName python:res[1]">
+						<tal:block tal:condition="attobj">
+							<a tal:attributes="href attobj/absolute_url" target="_blank" tal:content="attFileName" />
+						</tal:block>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td class="note">
