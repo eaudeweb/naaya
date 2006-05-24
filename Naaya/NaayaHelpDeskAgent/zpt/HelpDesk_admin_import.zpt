@@ -1,0 +1,12 @@
+<p>
+	Import from previous version of HelpDeskAgent.
+</p>
+<form method="post" action="manageHelpDeskImport">
+<table border="0" cellspacing="2" cellpadding="2">
+	<tr>
+		<td class="cell">OLD HelpDeskAgent instant relative path:</td>
+		<td><input type="text" name="hdpath" value="" /></td>
+		<td><input type="submit" value="Import" /></td>
+	</tr>
+</table>
+</form>

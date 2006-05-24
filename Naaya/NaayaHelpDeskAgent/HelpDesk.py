@@ -21,6 +21,7 @@
 #Python imports
 import operator
 from os.path import join
+from copy import deepcopy
 
 #Zope imports
 import Products
@@ -948,6 +949,45 @@ class HelpDesk(Folder, EmailSender):
         self.updateHelpDeskPresentation(date_format, show_time, issues_perpage)
         REQUEST.RESPONSE.redirect('admin_html?pagetab=7')
 
+    security.declareProtected(view_management_screens, 'manageHelpDeskImport')
+    def manageHelpDeskImport(self, hdpath='', REQUEST=None):
+        """ Import data from an older version of HelpDeskAgent """
+        hd = self.unrestrictedTraverse(hdpath, None)
+        if hd is not None:
+            #import ref tables
+            #import issues
+            for issue in hd.getAllIssues():
+                ob = Issue.Issue(issue.id, issue.title, issue.date_open,
+                    issue.consultant, issue.user_name, issue.user_email,
+                    issue.user_phone, issue.subject, issue.category,
+                    issue.sendtype, issue.priority, issue.status,
+                    issue.description, issue.link, issue.security)
+                self._setObject(issue.id, ob)
+                ob = self._getOb(issue.id)
+                ob.date_modify = issue.date_modify
+                ob.data_close = issue.date_close
+                ob.solution_time = issue.solution_time
+                ob._Issue__issuecomment = {}
+                ob._Issue__historycounter = issue._Issue__historycounter
+                ob._Issue__issuehistory = {}
+                #comments
+                for c in issue.getListIssueComment():
+                    cob = IssueComment(c.id, c.date, c.username,
+                        c.content_type, c.content)
+                    ob._Issue__issuecomment[c.id] = cob
+                #history
+                for h in issue.getListIssueHistory():
+                    hob = IssueHistory(h.id, h.date, h.username, h.action,
+                        h.status, h.priority, h.consultant, h.comments)
+                    ob._Issue__issuehistory[h.id] = hob
+                #attachements
+                for x in issue.objectValues('File'):
+                    ob.manage_addFile(x.getId(), str(x.data), x.title, content_type=x.content_type)
+                ob._p_changed = 1
+                self.CatalogIssue(ob)
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('admin_html?pagetab=8')
+
     security.declareProtected(view_management_screens, 'getAllIssues')
     def getAllIssues(self):
         """Returns a list with all Issue objects"""
@@ -1352,6 +1392,9 @@ class HelpDesk(Folder, EmailSender):
 
     security.declareProtected(view_management_screens, 'admin_presentation_html')
     admin_presentation_html = PageTemplateFile('zpt/HelpDesk_admin_presentation', globals())
+
+    security.declareProtected(view_management_screens, 'admin_import_html')
+    admin_import_html = PageTemplateFile('zpt/HelpDesk_admin_import', globals())
 
     security.declareProtected(view_management_screens, 'reports_form_html')
     reports_form_html = PageTemplateFile('zpt/HelpDesk_reports_form', globals())

@@ -22,7 +22,9 @@
 <a tal:attributes="class python:test(pagetab=='6', 'menulinkon', 'menulinkoff')"
 	href="admin_html?pagetab=6">Users</a> | 
 <a tal:attributes="class python:test(pagetab=='7', 'menulinkon', 'menulinkoff')"
-	href="admin_html?pagetab=7">Presentation</a>
+	href="admin_html?pagetab=7">Presentation</a> | 
+<a tal:attributes="class python:test(pagetab=='8', 'menulinkon', 'menulinkoff')"
+	href="admin_html?pagetab=8">Import</a>
 <hr noshade size="1" />
 
 <tal:block tal:condition="python:pagetab=='0'"><span tal:replace="structure here/admin_settings_html" /></tal:block>
@@ -33,6 +35,7 @@
 <tal:block tal:condition="python:pagetab=='5'"><span tal:replace="structure here/admin_issue_category_html" /></tal:block>
 <tal:block tal:condition="python:pagetab=='6'"><span tal:replace="structure here/admin_users_html" /></tal:block>
 <tal:block tal:condition="python:pagetab=='7'"><span tal:replace="structure here/admin_presentation_html" /></tal:block>
+<tal:block tal:condition="python:pagetab=='8'"><span tal:replace="structure here/admin_import_html" /></tal:block>
 
 </tal:block>
 
