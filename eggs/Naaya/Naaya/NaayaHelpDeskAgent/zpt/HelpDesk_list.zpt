@@ -6,6 +6,7 @@
 
 <tal:block tal:define="hasRoleHelpDeskAdministrator here/isHelpDeskAdministrator;
 	hasRoleHelpConsultant here/isHelpDeskConsultant;
+	start python:request.get('start', 1);
 	skey python:request.get('skey', 'date_modify');
 	rkey python:request.get('rkey', '');
 	filter_query python:request.get('filter_query', '');
@@ -16,7 +17,10 @@
 	filter_consultant python:request.get('filter_consultant', '');
 	filter_new python:request.get('filter_new', '');
 	filter_querystring python:here.GetFilterString(filter_query=filter_query, filter_category=filter_category, filter_priority=filter_priority, filter_status=filter_status, filter_user_name=filter_user_name, filter_consultant=filter_consultant, filter_new=filter_new);
-	issues python:here.SearchSortIssues(skey, rkey, filter_query, category=filter_category, priority=filter_priority, status=filter_status, user_name=filter_user_name, consultant=filter_consultant, new=filter_new);
+	result python:here.SearchSortIssues(start, skey, rkey, filter_query, category=filter_category, priority=filter_priority, status=filter_status, user_name=filter_user_name, consultant=filter_consultant, new=filter_new);
+	issues python:result[0];
+	paging_start python:result[1]; paging_stop python:result[2]; paging_total python:result[3];
+	paging_prev python:result[4]; paging_next python:result[5];
 	sortdata python:(
 		{'sortable': 1, 'key': 'subject', 'label': 'Subject/Title'},
 		{'sortable': 1, 'key': 'date_open', 'label': 'Date Open'},
@@ -39,14 +43,18 @@
 </table>
 
 <form name="frm">
-<dtml-let paging_info="getStartStopTotalValues(issues, REQUEST)"
-		  paging_start="paging_info[0]"
-		  paging_stop="paging_info[1]"
-		  paging_total="paging_info[2]">
-	<dtml-var paging_start> - <dtml-var paging_stop> of <dtml-var paging_total> issues.
-</dtml-let>
-next
-previous
+<div>
+	<strong tal:content="paging_start" />
+	-
+	<strong tal:content="paging_stop" />
+	<span i18n:translate="" tal:omit-tag="">of</span>
+	<strong tal:content="paging_total" />
+	<span i18n:translate="" tal:omit-tag="">issues.</span>
+</div>
+<div>
+	<a tal:condition="python:paging_prev!=-1" tal:attributes="href string:${here/absolute_url}/list_html?start=${paging_prev}" i18n:translate="">Previous</a>
+	<a tal:condition="python:paging_next!=-1" tal:attributes="href string:${here/absolute_url}/list_html?start=${paging_next}" i18n:translate="">Next</a>
+</div>
 
 <table class="sortable" width="100%">
 	<thead>
@@ -70,7 +78,7 @@ previous
 		</tr>
 	</thead>
 	<tbody>
-		<tr tal:repeat="issue issues">
+		<tr tal:repeat="issue python:issues[paging_start-1:paging_stop]">
 			<td><a class="itemlink" tal:attributes="href string:${issue/absolute_url}/" tal:content="issue/subject" /></td>
 			<td tal:content="python:here.FormatDate(issue.date_open)" />
 			<td tal:content="python:here.FormatDate(issue.date_modify)" />
