@@ -1,28 +1,20 @@
 <tal:block define="hd_users_folder here/getUserFolder;
 	HDUserName python:request.get('user', '');
-	HDUser python:here.getUser(HDUserName);">
+	HDUserData python:here.getUserDataNaaya(HDUserName)">
 
-<tal:block tal:condition="not:HDUser">
-<tal:block tal:define = "var_mode python:'add';
-	var_form_name python:'frmadd';
-	var_form_submit_name python:'add';
-	var_form_submit_value python:'Add';
-	var_zope_user python:'';
-	var_role python:[];">
-
-<form tal:attributes="name var_form_name" method="post" action="manageUser">
+<form tal:attributes="name HDUserData/var_form_name" method="post" action="manageUser">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
 		<td class="cell">User:</td>
 		<td>
-			<tal:block condition="python: var_mode == 'update'">
-				<b><tal:block replace="var_zope_user" /></b><input type="hidden" name="zope_user" tal:attributes="value var_zope_user">
+			<tal:block condition="python: HDUserData['var_mode'] == 'update'">
+				<b><tal:block replace="HDUserData/var_zope_user" /></b><input type="hidden" name="zope_user" tal:attributes="value HDUserData/var_zope_user">
 			</tal:block>
-			<tal:block condition="python: var_mode != 'update'">
+			<tal:block condition="python: HDUserData['var_mode'] != 'update'">
 				<select name="zope_user" tal:define="hd_users python: hd_users_folder.getUserNames()">
 					<option value=""></option>
 					<tal:block repeat="item hd_users">
-								<option tal:attributes="value item; selected python:var_zope_user==item" tal:content="item"></option>
+								<option tal:attributes="value item; selected python:HDUserData['var_zope_user']==item" tal:content="item"></option>
 							</tal:block>
 				</select>
 			</tal:block>
@@ -33,57 +25,14 @@
 		<td>
 			<tal:block define="administratorRole here/getHDRoleAdministrator; consultantRole here/getHDRoleConsultant">
 			<select name="role" size="2" multiple>
-				<option tal:attributes="value administratorRole; selected python:administratorRole in var_role" tal:content="administratorRole"></option>
-				<option tal:attributes="value consultantRole;    selected python:consultantRole in var_role" tal:content="consultantRole"></option>
+				<option tal:attributes="value administratorRole; selected python:administratorRole in HDUserData['var_role']" tal:content="administratorRole"></option>
+				<option tal:attributes="value consultantRole;    selected python:consultantRole in HDUserData['var_role']" tal:content="consultantRole"></option>
 			</select>
 			</tal:block>
 		</td>
 	</tr>
-	<tr><td class="cell"></td><td class="cell"><input type="submit" tal:attributes="name var_form_submit_name; value var_form_submit_value" /></td></tr>
+	<tr><td class="cell"></td><td class="cell"><input type="submit" tal:attributes="name HDUserData/var_form_submit_name; value HDUserData/var_form_submit_value" /></td></tr>
 </table>
 </form>
-</tal:block>
-</tal:block>
 
-<tal:block tal:condition="HDUser">
-<tal:block tal:define = "var_mode python:'update';
-	var_form_name python:'frmupdate';
-	var_form_submit_name python:'update';
-	var_form_submit_value python:'Update';
-	var_zope_user python:HDUser.zope_user;
-	var_role python:HDUser.role;">
-<form tal:attributes="name var_form_name" method="post" action="manageUser">
-<table border="0" cellspacing="2" cellpadding="2" width="100%">
-	<tr>
-		<td class="cell">User:</td>
-		<td>
-			<tal:block condition="python: var_mode == 'update'">
-				<b><tal:block replace="var_zope_user" /></b><input type="hidden" name="zope_user" tal:attributes="value var_zope_user">
-			</tal:block>
-			<tal:block condition="python: var_mode != 'update'">
-				<select name="zope_user" tal:define="hd_users python: hd_users_folder.getUserNames()">
-					<option value=""></option>
-					<tal:block repeat="item hd_users">
-								<option tal:attributes="value item; selected python:var_zope_user==item" tal:content="item"></option>
-							</tal:block>
-				</select>
-			</tal:block>
-		</td>
-	</tr>
-	<tr>
-		<td class="cell">Role:</td>
-		<td>
-			<tal:block define="administratorRole here/getHDRoleAdministrator; consultantRole here/getHDRoleConsultant">
-			<select name="role" size="2" multiple>
-				<option tal:attributes="value administratorRole; selected python:administratorRole in var_role" tal:content="administratorRole"></option>
-				<option tal:attributes="value consultantRole;    selected python:consultantRole in var_role" tal:content="consultantRole"></option>
-			</select>
-			</tal:block>
-		</td>
-	</tr>
-	<tr><td class="cell"></td><td class="cell"><input type="submit" tal:attributes="name var_form_submit_name; value var_form_submit_value" /></td></tr>
-</table>
-</form>
-</tal:block>
-</tal:block>
 </tal:block>

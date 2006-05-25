@@ -259,6 +259,26 @@ class HelpDesk(Folder, EmailSender):
             r['var_role'] = []
         return r
 
+    def getUserDataNaaya(self, p_user=''):
+        """returns data required to display the form for Naaya users"""
+        r = {}
+        l_user = self.getUser(p_user)
+        if l_user:
+            r['var_mode'] = 'update'
+            r['var_form_name'] = 'frmupdate'
+            r['var_form_submit_name'] = 'update'
+            r['var_form_submit_value'] = 'Update'
+            r['var_zope_user'] = l_user.zope_user
+            r['var_role'] = l_user.role
+        else:
+            r['var_mode'] = 'add'
+            r['var_form_name'] = 'frmadd'
+            r['var_form_submit_name'] = 'add'
+            r['var_form_submit_value'] = 'Add'
+            r['var_zope_user'] = ''
+            r['var_role'] = []
+        return r
+
 
     ###########
     # CATALOG #
