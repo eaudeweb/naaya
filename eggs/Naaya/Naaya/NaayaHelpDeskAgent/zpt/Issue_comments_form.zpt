@@ -4,88 +4,96 @@
 
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Ticket Number</td>
+		<th nowrap="nowrap" i18n:translate="">Ticket Number</th>
 		<td tal:content="here/id" />
 	</tr>
 	<tr>
-		<td class="label" i18n:translate="">Subject/Title</td>
+		<th i18n:translate="">Subject/Title</th>
 		<td><strong tal:content="here/subject" /></td>
 	</tr>
 	<tr>
-		<td class="label" width="15%" nowrap="nowrap" valign="top" i18n:translate="">Description</td>
+		<th width="15%" nowrap="nowrap" valign="top" i18n:translate="">Description</th>
 		<td class="celltextarea" tal:content="structure python:here.EncodeTextareaContent(here.description)" />
 	</tr>
 	<tr tal:condition="here/user_name">
-		<td class="label" nowrap="nowrap" i18n:translate="">Author</td>
+		<th nowrap="nowrap" i18n:translate="">Author</th>
 		<td tal:content="here/user_name" />
 	</tr>
 </table>
 
-<h4 i18n:translate="">Add comment to this issue</h4>
+<h2 i18n:translate="">Add comment to this issue</h2>
 <form name="frmadd" action="manageIssueComment" method="post" enctype="multipart/form-data">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
-	<tr>
-		<td class="label" i18n:translate="">Date</td>
-		<td tal:content="here/CurrentDate" />
-	</tr>
-	<tr>
-		<td class="label" i18n:translate="">User Name</td>
-		<td><input type="text" name="username" size="20" tal:attributes="value python:here.getUserName(here.getAuthenticatedUser())" /></td>
-	</tr>
-	<tr>
-		<td class="label" i18n:translate="">Content type</td>
-		<td>
-			<input type="radio" name="content_type" value="1" checked="checked" />
-			<span i18n:translate="" tal:omit-tag="">Plain text</span>
-			<input type="radio" name="content_type" value="0" />
-			<span i18n:translate="" tal:omit-tag="">HTML</span>
-		</td>
-	</tr>
-	<tr>
-		<td class="label" valign="top" i18n:translate="">Content</td>
-		<td><textarea name="content" rows="10" cols="70"></textarea></td>
-	</tr>
-	<tr tal:condition="here/isAuthenticated">
-		<td class="label" i18n:translate="">Attachment</td>
-		<td><input type="file" name="attachment" size="20" /></td>
-	</tr>
-	<tr><td></td><td><input type="submit" name="add" value="Add" i18n:attributes="value" /></td></tr>
+	<thead>
+		<colgroup>
+			<col align="left" />
+			<col />
+		</colgroup>
+	</thead>
+	<tbody>
+		<tr>
+			<th i18n:translate="">Date</th>
+			<td tal:content="here/CurrentDate" />
+		</tr>
+		<tr>
+			<th i18n:translate="">User Name</th>
+			<td><input type="text" name="username" size="20" tal:attributes="value python:here.getUserName(here.getAuthenticatedUser())" /></td>
+		</tr>
+		<tr>
+			<th i18n:translate="">Content type</th>
+			<td>
+				<input type="radio" name="content_type" value="1" checked="checked" />
+				<span i18n:translate="" tal:omit-tag="">Plain text</span>
+				<input type="radio" name="content_type" value="0" />
+				<span i18n:translate="" tal:omit-tag="">HTML</span>
+			</td>
+		</tr>
+		<tr>
+			<th valign="top" i18n:translate="">Content</th>
+			<td><textarea name="content" rows="10" cols="70"></textarea></td>
+		</tr>
+		<tr tal:condition="here/isAuthenticated">
+			<th i18n:translate="">Attachment</th>
+			<td><input type="file" name="attachment" size="20" /></td>
+		</tr>
+		<tr><td></td><td><input type="submit" name="add" value="Add" i18n:attributes="value" /></td></tr>
+	</tbody>
 </table>
 </form>
 
-<h4 i18n:translate="">Issue comments</h4>
+<h2 i18n:translate="">Issue comments</h2>
 <form name="frmlist" action="manageIssueComment" method="post">
+
 <tal:block tal:repeat="comment here/getListIssueComment">
 <table border="0" cellspacing="0" cellpadding="2" width="100%">
 	<tr>
-		<td class="cellheader" width="1%">
+		<th width="1%">
 			<input tal:condition="python:hasRoleHelpDeskAdministrator or here.consultant==here.getAuthenticatedUser()" type="checkbox" name="ids" tal:attributes="value comment/id" />
-		</td>
-		<td class="cellheader" width="15%" nowrap="nowrap">
-			<strong i18n:translate="">Date:</strong>
+		</th>
+		<th width="15%" nowrap="nowrap">
+			<span tal:omit-tag="" i18n:translate="">Date:</span>
 			<span tal:replace="python:here.FormatDate(comment.date)" />
-		</td>
-		<td class="cellheader" width="15%" nowrap="nowrap">
-			<strong i18n:translate="">User:</strong>
+		</th>
+		<th width="15%" nowrap="nowrap">
+			<span tal:omit-tag="" i18n:translate="">User:</span>
 			<span tal:replace="comment/username" />
-		</td>
-		<td class="cellheader" width="10%" tal:define="res python:here.getAttachmentForComment(comment.id); attobj python:res[0]; attFileName python:res[1]">
-			<strong i18n:translate="">Attachment:</strong>
+		</th>
+		<th width="10%" tal:define="res python:here.getAttachmentForComment(comment.id); attobj python:res[0]; attFileName python:res[1]">
+			<span tal:omit-tag="" i18n:translate="">Attachment:</span>
 			<tal:block tal:condition="attobj">
 				<a tal:attributes="href attobj/absolute_url" target="_blank" tal:content="attFileName" />
 			</tal:block>
-		</td>
+		</th>
 	</tr>
 	<tr>
-		<td class="celltextarea" colspan="4">
-			<span class="celltextarea">
-				<span tal:condition="comment/content_type" tal:replace="structure python:here.EncodeTextareaContent(comment.content)" />
-				<span tal:condition="python:not comment.content_type" tal:replace="comment/content" />
-			</span>
+		<td colspan="4" style="padding-bottom:2em; border:0">
+			<span tal:condition="comment/content_type" tal:replace="structure python:here.EncodeTextareaContent(comment.content)" />
+			<span tal:condition="python:not comment.content_type" tal:replace="comment/content" />
 		</td>
 	</tr>
 </table>
-<br /><br />
+
+<br />
 </tal:block>
 <input tal:condition="python:hasRoleHelpDeskAdministrator or here.consultant==here.getAuthenticatedUser()"
 	type="submit" name="delete" value="Delete" i18n:attributes="value" />

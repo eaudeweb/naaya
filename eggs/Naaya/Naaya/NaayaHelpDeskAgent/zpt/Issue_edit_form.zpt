@@ -4,21 +4,20 @@
 <form action="manageIssueProperties" method="post" enctype="multipart/form-data">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
-		<td class="label" width="20%" nowrap="nowrap" i18n:translate="">Ticket Number</td>
+		<th width="20%" i18n:translate="">Ticket Number</th>
 		<td tal:content="here/id" />
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Opened</td>
+		<th i18n:translate="">Opened</th>
 		<td tal:content="python:here.FormatDate(here.date_open)" />
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Last modified</td>
+		<th i18n:translate="">Last modified</th>
 		<td tal:content="python:here.FormatDate(here.date_modify)" />
 	</tr>
-	<tr><td colspan="2"></td></tr>
 	<tal:block tal:condition="python:hasRoleHelpDeskAdministrator or hasRoleHelpDeskConsultant">
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Assigned to</td>
+		<th i18n:translate="">Assigned to</th>
 		<td>
 			<select name="consultant">
 				<option value=""></option>
@@ -29,31 +28,31 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Confidential?</td>
+		<th i18n:translate="">Confidential</th>
 		<td><input type="checkbox" name="security" value="on" tal:attributes="checked here/isPrivate" /></td>
 	</tr>
-	<tr><td colspan="2"></td></tr>
 	</tal:block>
-	<tr><td colspan="2"><strong i18n:translate="">User information</strong></td></tr>
+
+	<tr><th colspan="2" style="background-color:white; color: #333333; text-align:left;"><strong i18n:translate="">User information</strong></th></tr>
+
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Name</td>
+		<th i18n:translate="">Name</th>
 		<td><input type="text" name="user_name" size="50" tal:attributes="value here/user_name" /></td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Email</td>
+		<th i18n:translate="">Email</th>
 		<td><input type="text" name="user_email" size="50" tal:attributes="value here/user_email" /></td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Phone</td>
+		<th i18n:translate="">Phone</th>
 		<td><input type="text" name="user_phone" size="50" tal:attributes="value here/user_phone" /></td>
 	</tr>
-	<tr><td colspan="2"></td></tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Subject/Title</td>
+		<th i18n:translate="">Subject/Title</th>
 		<td><input type="text" name="subject" size="60" tal:attributes="value here/subject" /></td>
 	</tr>
 	<tr>
-		<td class="label" i18n:translate="">Category</td>
+		<th i18n:translate="">Category</th>
 		<td>
 			<select name="category">
 				<option value=""></option>
@@ -64,7 +63,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="label" i18n:translate="">Priority</td>
+		<th i18n:translate="">Priority</th>
 		<td>
 			<select name="priority">
 				<option value=""></option>
@@ -75,7 +74,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="label" i18n:translate="">Status</td>
+		<th i18n:translate="">Status</th>
 		<td>
 			<tal:block tal:repeat="item here/getListIssueStatus">
 			<input type="radio" name="status" tal:attributes="value item/id; checked python:item.id==here.status" />
@@ -84,22 +83,21 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" valign="top" i18n:translate="">Description</td>
+		<th valign="top" i18n:translate="">Description</th>
 		<td><textarea name="description" rows="10" cols="70" tal:content="here/description"></textarea></td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Link</td>
+		<th i18n:translate="">Link</th>
 		<td><input type="text" name="link" size="50" tal:attributes="value here/link" /></td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Attachment</td>
+		<th i18n:translate="">Attachment</th>
 		<td><input type="file" name="attachment" size="20" /></td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" valign="top" i18n:translate="">Additional comment</td>
+		<th valign="top" i18n:translate="">Additional comment</th>
 		<td><textarea name="comments" rows="5" cols="70"></textarea></td>
 	</tr>
-	<tr><td colspan="2"></td></tr>
 	<tr><td></td><td><input type="submit" name="update" value="Save changes"></td></tr>
 </table>
 </form>

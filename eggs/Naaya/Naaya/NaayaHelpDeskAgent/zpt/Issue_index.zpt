@@ -52,33 +52,33 @@
 		</tr>
 
 		<tr>
-			<th width="10%" nowrap="nowrap" valign="top" i18n:translate="">Description</th>
+			<th width="10%" valign="top" i18n:translate="">Description</th>
 			<td colspan="5" class="celltextarea" tal:content="structure python:here.EncodeTextareaContent(here.description)" />
 		</tr>
 		<tr>
-			<th nowrap="nowrap" i18n:translate="">Assigned to</th>
+			<th i18n:translate="">Assigned to</th>
 			<td colspan="5" tal:content="python:here.getUserName(here.consultant)" />
 		</tr>
 		<tr tal:condition="hasRoleHelpDeskAdministrator">
-			<th nowrap="nowrap" i18n:translate="">Security</th>
+			<th i18n:translate="">Security</th>
 			<td colspan="5" tal:content="here/security" />
 		</tr>
 		<tr tal:condition="python:here.user_name!='' or here.user_phone!=''">
-			<th nowrap="nowrap" i18n:translate="">User information</th>
+			<th i18n:translate="">User information</th>
 			<td colspan="5">
 				<span tal:condition="python:here.user_name!=''" tal:replace="here/user_name" />
 				<span tal:condition="python:here.user_phone!=''" tal:replace="here/user_phone" />
 			</td>
 		</tr>
 		<tr>
-			<th nowrap="nowrap" i18n:translate="">Link</th>
+			<th i18n:translate="">Link</th>
 			<td colspan="5">
 				<a tal:condition="python:here.link!=''" class="urllink" target="_blank"
 					tal:attributes="href here/link" tal:content="here/link" />
 			</td>
 		</tr>
 		<tr>
-			<th nowrap="nowrap" i18n:translate="">Attachment</th>
+			<th i18n:translate="">Attachment</th>
 			<td tal:define="res here/getAttachmentForIssue; attobj python:res[0]; attFileName python:res[1]">
 				<tal:block tal:condition="attobj">
 					<a tal:attributes="href attobj/absolute_url" target="_blank" tal:content="attFileName" />
@@ -90,19 +90,19 @@
 	<h2 i18n:translate="">Comments</h2>
 
 	<tal:block tal:repeat="comment here/getListIssueComment">
-	<table  border="0" cellspacing="0" cellpadding="2" width="100%">
+	<table  border="0" cellspacing="0" cellpadding="2" width="100%" style="margin-bottom:2em;">
 		<tr>
-			<td class="cellheader" width="15%" nowrap="nowrap"><strong i18n:translate="">Date:</strong> <span tal:replace="python:here.FormatDate(comment.date)" /></td>
-			<td class="cellheader" width="15%" nowrap="nowrap"><strong i18n:translate="">User:</strong> <span tal:replace="comment/username" /></td>
-			<td class="cellheader" width="10%" tal:define="res python:here.getAttachmentForComment(comment.id); attobj python:res[0]; attFileName python:res[1]">
-				<strong i18n:translate="">Attachment:</strong>
+			<th width="15%"><span tal:omit-tag="" i18n:translate="">Date:</span> <span tal:replace="python:here.FormatDate(comment.date)" /></th>
+			<th width="15%"><span tal:omit-tag="" i18n:translate="">User:</span> <span tal:replace="comment/username" /></th>
+			<th width="10%" tal:define="res python:here.getAttachmentForComment(comment.id); attobj python:res[0]; attFileName python:res[1]">
+				<span tal:omit-tag="" i18n:translate="">Attachment:</span>
 				<tal:block tal:condition="attobj">
 					<a tal:attributes="href attobj/absolute_url" target="_blank" tal:content="attFileName" />
 				</tal:block>
-			</td>
+			</th>
 		</tr>
 		<tr>
-			<td class="celltextarea" colspan="3">
+			<td colspan="3" style="padding-bottom:2em; border:0">
 				<span class="celltextarea">
 					<span tal:condition="comment/content_type" tal:replace="structure python:here.EncodeTextareaContent(comment.content)" />
 					<span tal:condition="python:not comment.content_type" tal:replace="comment/content" />
