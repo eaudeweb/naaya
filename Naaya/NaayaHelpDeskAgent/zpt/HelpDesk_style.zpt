@@ -22,7 +22,7 @@
 {
 	border: 0!important;
     color: #000000;
-    background-color: #DCDCDC;
+    background-color: #e8e8e8;
 }
 
 .celltextarea

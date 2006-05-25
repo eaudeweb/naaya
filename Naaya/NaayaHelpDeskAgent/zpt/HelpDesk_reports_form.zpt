@@ -5,11 +5,11 @@
 
 <table border="0" cellspacing="1" cellpadding="2" width="100%">
 	<tr>
-		<th colspan="2" align="center" class="cellheader" i18n:translate="">Group by Category</th>
+		<th colspan="2" align="center" i18n:translate="">Group by Category</th>
 	</tr>
 	<tr>
-		<th class="cellheader" width="50%" nowrap="nowrap" i18n:translate="">Category</th>
-		<th class="cellheader" width="50%" i18n:translate="">Issues</th>
+		<th width="50%" i18n:translate="">Category</th>
+		<th width="50%" i18n:translate="">Issues</th>
 	</tr>
 	<tal:block repeat="item here/getListIssueCategory">
 		<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
@@ -24,11 +24,11 @@
 
 <table border="0" cellspacing="1" cellpadding="2" width="100%">
 	<tr>
-		<th colspan="2" align="center" class="cellheader" i18n:translate="">Group by Priority</th>
+		<th colspan="2" align="center" i18n:translate="">Group by Priority</th>
 	</tr>
 	<tr>
-		<th class="cellheader" width="50%" nowrap="nowrap" i18n:translate="">Priority</th>
-		<th class="cellheader" width="50%" i18n:translate="">Issues</th>
+		<th width="50%" i18n:translate="">Priority</th>
+		<th width="50%" i18n:translate="">Issues</th>
 	</tr>
 	<tal:block repeat="item python:here.utSortObjsListByAttr(here.getListIssuePriority(),'title')">
 		<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
@@ -42,11 +42,11 @@
 
 <table border="0" cellspacing="1" cellpadding="2" width="100%">
 	<tr>
-		<th colspan="2" align="center" class="cellheader" i18n:translate="">Group by Status</th>
+		<th colspan="2" align="center" i18n:translate="">Group by Status</th>
 	</tr>
 	<tr>
-		<th class="cellheader" width="50%" nowrap="nowrap" i18n:translate="">Status</th>
-		<th class="cellheader" width="50%" i18n:translate="">Issues</th>
+		<th width="50%" i18n:translate="">Status</th>
+		<th width="50%" i18n:translate="">Issues</th>
 	</tr>
 	<tal:block repeat="item python:here.utSortObjsListByAttr(here.getListIssueStatus(),'order')">
 		<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
@@ -60,11 +60,11 @@
 
 <table border="0" cellspacing="1" cellpadding="2" width="100%">
 	<tr>
-		<th colspan="2" align="center" class="cellheader" i18n:translate="">Group by Resolver</th>
+		<th colspan="2" align="center" i18n:translate="">Group by Resolver</th>
 	</tr>
 	<tr>
-		<th class="cellheader" width="50%" nowrap="nowrap" i18n:translate="">Assigned to</th>
-		<th class="cellheader" width="50%" i18n:translate="">Issues</th>
+		<th width="50%" i18n:translate="">Assigned to</th>
+		<th width="50%" i18n:translate="">Issues</th>
 	</tr>
 	<tal:block repeat="item here/getListUserConsultant">
 		<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">

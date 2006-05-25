@@ -77,7 +77,13 @@
 		<th i18n:translate=""><label for="link">Link</label></th>
 		<td><input type="text" name="link" id="link" size="50" tal:attributes="value req_link" /></td>
 	</tr>
-	<tr><th colspan="2" style="border-top:2em solid white;"><strong i18n:translate="">User information</strong></th></tr>
+	<tal:block tal:condition="here/isAuthenticated">
+	<tr>
+		<th i18n:translate=""><label for="attachment">Attachment</label></th>
+		<td><input type="file" name="attachment" id="attachment" size="20" /></td>
+	</tr>
+	</tal:block>
+	<tr><th colspan="2" style="background-color:white; color: #333333; text-align:left;"><strong i18n:translate="">User information</strong></th></tr>
 	<tr>
 		<th i18n:translate=""><label for="user_name">Name</label></th>
 		<td><input type="text" name="user_name:utf8:ustring" id="user_name" size="50" tal:attributes="value req_user_name" /></td>
@@ -90,13 +96,6 @@
 		<th i18n:translate=""><label for="user_phone">Phone</label></th>
 		<td><input type="text" name="user_phone" id="user_phone" size="50" tal:attributes="value req_user_phone" /></td>
 	</tr>
-	<tal:block tal:condition="here/isAuthenticated">
-	<tr><td></td></tr>
-	<tr>
-		<th i18n:translate=""><label for="attachment">Attachment</label></th>
-		<td><input type="file" name="attachment" id="attachment" size="20" /></td>
-	</tr>
-	</tal:block>
 	<tr tal:condition="python:not here.isAuthenticated()"><td colspan="3" i18n:translate="">If you are logged in, you can attach a file</td></tr>
 	<tr><td></td><td><input type="submit" name="addIssue" id="addIssue" value="Post" i18n:attributes="value" /></td></tr>
 </table>
