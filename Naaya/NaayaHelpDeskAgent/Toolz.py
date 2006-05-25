@@ -148,7 +148,7 @@ def ParseStringForURL(text):
         if matchobj :
             result = matchobj.group()
             piece = string.split(text,result)[0]
-            link = string.split(text[len(piece):],'\n')[0]
+            link = string.split(text[len(piece):])[0]
             punct = re.compile(",|;|\.|!|\n")
             punctobj=punct.match(link[len(link)-1:])
             if punctobj:
