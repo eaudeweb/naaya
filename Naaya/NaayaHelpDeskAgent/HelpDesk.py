@@ -21,7 +21,6 @@
 #Python imports
 import operator
 from os.path import join
-from copy import deepcopy
 
 #Zope imports
 import Products
@@ -1013,12 +1012,12 @@ class HelpDesk(Folder, EmailSender):
         if REQUEST:
             REQUEST.RESPONSE.redirect('admin_html?pagetab=8')
 
-    security.declareProtected(view_management_screens, 'getAllIssues')
+    security.declareProtected(view, 'getAllIssues')
     def getAllIssues(self):
         """Returns a list with all Issue objects"""
         return self.objectValues(ISSUE_META_TYPE_LABEL)
 
-    security.declareProtected(view_management_screens, 'SearchSortIssues')
+    security.declareProtected(view, 'SearchSortIssues')
     def SearchSortIssues(self, start, skey, rkey, query, **args):
         """Returns a sorted list with Issue objects"""
         if (self.isHelpDeskAdministrator() != 1) and (self.isHelpDeskConsultant() != 1):
@@ -1106,13 +1105,11 @@ class HelpDesk(Folder, EmailSender):
             l_temp.reverse()
         return map(operator.getitem, l_temp, (-1,)*l_len)
 
-    security.declarePrivate('getIssueObject')
     def getIssuesObject(self, oId):
         """Get an Issue object"""
         try: return self._getOb(oId)
         except: return None
 
-    security.declarePrivate('GetRandomPassword')
     def GetRandomPassword(self):
         """Generate a random password"""
         return GenRandomId(10)
@@ -1121,7 +1118,6 @@ class HelpDesk(Folder, EmailSender):
         """Returns a string with current date"""
         return self.FormatDate(DateTime())
 
-    security.declarePrivate('CurrentDateTime')
     def CurrentDateTime(self):
         """Returns a string with current date time"""
         return self.FormatDateTime(DateTime())
@@ -1130,7 +1126,6 @@ class HelpDesk(Folder, EmailSender):
         """Returns a string with date"""
         return FormatDateByModel(datetime, self.getDateFormatModel())
 
-    security.declarePrivate('FormatDateTime')
     def FormatDateTime(self, datetime):
         """Returns a string with date time"""
         return FormatDateTimeToString(datetime)
