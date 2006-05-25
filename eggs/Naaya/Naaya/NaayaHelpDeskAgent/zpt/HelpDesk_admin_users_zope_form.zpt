@@ -1,6 +1,7 @@
-<tal:block define="hd_users_folder here/getUserFolder;
+<tal:block define="user python:request.get('user','');
+	hd_users_folder here/getUserFolder;
 	hd_users_folder_type_zope here/isUserFolderZope;
-	HDUserData python:here.getUserDataZope('q');">
+	HDUserData python:here.getUserDataZope(user);">
 
 <form tal:attributes="name HDUserData/var_form_name" method="post" action="manageUser">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
@@ -9,21 +10,21 @@
 		<td>
 			<tal:block condition="python:HDUserData['var_mode'] == 'update'">
 				<b><tal:block content="HDUserData/var_zope_user" /></b><input type="hidden" name="zope_user" tal:attributes="value HDUserData/var_zope_user" />
-				</tal:block>
-				<tal:block condition="python:HDUserData['var_mode'] != 'update'">
+			</tal:block>
+			<tal:block condition="python:HDUserData['var_mode'] != 'update'">
 				<select name="zope_user" tal:define="hd_users hd_users_folder/getUserNames">
 					<option value=""></option>
 					<tal:block repeat="item hd_users">
-								<option tal:attributes="value item; selected python:HDUserData['var_zope_user']==item" tal:content="item"></option>
-							</tal:block>
+						<option tal:attributes="value item; selected python:HDUserData['var_zope_user']==item" tal:content="item"></option>
+					</tal:block>
 				</select>
 			</tal:block>
 		</td>
 	</tr>
 	<tal:block condition="hd_users_folder_type_zope">
-		 <tr><td class="cell">First Name:</td><td><input type="text" name="first_name" size="30" tal:attributes="value HDUserData/var_first_name"></td></tr>
-		 <tr><td class="cell">Last Name:</td><td><input type="text" name="last_name" size="30" tal:attributes="value HDUserData/var_last_name"></td></tr>
-		 <tr><td class="cell">Email:</td><td><input type="text" name="email" size="30" tal:attributes="value HDUserData/var_email"></td></tr>
+		<tr><td class="cell">First Name:</td><td><input type="text" name="first_name" size="30" tal:attributes="value HDUserData/var_first_name"></td></tr>
+		<tr><td class="cell">Last Name:</td><td><input type="text" name="last_name" size="30" tal:attributes="value HDUserData/var_last_name"></td></tr>
+		<tr><td class="cell">Email:</td><td><input type="text" name="email" size="30" tal:attributes="value HDUserData/var_email"></td></tr>
 	</tal:block>
 	<tr>
 		<td class="cell">Role:</td>
