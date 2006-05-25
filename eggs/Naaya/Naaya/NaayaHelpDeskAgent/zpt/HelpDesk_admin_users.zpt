@@ -32,7 +32,7 @@
 <hr noshade size="1" />
 
 <form name="frmdelete" method="post" action="manageUser">
-<table border="1" cellspacing="2" cellpadding="2" width="100%">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
 		<td class="cellheader" width="1%"></td>
 		<td class="cellheader">User</td>
