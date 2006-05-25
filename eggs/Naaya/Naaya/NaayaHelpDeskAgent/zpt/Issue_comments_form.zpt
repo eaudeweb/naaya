@@ -1,5 +1,7 @@
 <tal:block tal:define="hasRoleHelpDeskAdministrator here/isHelpDeskAdministrator">
 
+<tal:block tal:condition="python:here.getIssueStatusFinal()!=here.status">
+
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
 		<td class="label" nowrap="nowrap" i18n:translate="">Ticket Number</td>
@@ -88,5 +90,7 @@
 <input tal:condition="python:hasRoleHelpDeskAdministrator or here.consultant==here.getAuthenticatedUser()"
 	type="submit" name="delete" value="Delete" i18n:attributes="value" />
 </form>
+
+</tal:block>
 
 </tal:block>

@@ -413,51 +413,53 @@ class Issue(Folder):
     security.declareProtected('View', 'manageIssueComment')
     def manageIssueComment(self, REQUEST=None):
         """Manage IssueComment objects"""
-        if addObjectAction(REQUEST):
-            #add a new IssueComment object
-            oId = GenRandomKey()
-            oDate = DateTime()
-            oUsername = REQUEST.get('username', ANONYMOUS_USER_NAME)
-            try:
-                oContentType = int(REQUEST.get('content_type', 1))
-            except:
-                oContentType = 1
-            oContent = REQUEST.get('content', '')
-            obj = IssueComment(oId, oDate, oUsername, oContentType, oContent)
-            # handle attachment
-            if self.isAuthenticated():
-                oAttachment = REQUEST.get('attachment', '')
-                self.addAttachmentForComment(oAttachment, oId)
-            self.addIssueComment(oId, obj)
-            #add item to history
-            self.addIssueHistory(oDate, oUsername, HISTORY_COMMENT_ADDED, self.getIssueStatusTitle(self.status), self.getIssuePriorityTitle(self.priority), self.consultant)
-            #email stuff
-            eAction = ACTION_ADD_COMMENT
-        elif updateObjectAction(REQUEST):
-            #update a IssueComment object
-            oId = REQUEST.get('id', '')
-            oDate = DateTime()
-            oUsername = REQUEST.get('username', ANONYMOUS_USER_NAME)
-            oContent = REQUEST.get('content', '')
-            self.updateIssueComment(oId, oDate, oUsername, oContent)
-            #add item to history
-            self.addIssueHistory(oDate, oUsername, HISTORY_COMMENT_MODIFIED, self.getIssueStatusTitle(self.status), self.getIssuePriorityTitle(self.priority), self.consultant)
-            #email stuff
-            eAction = ACTION_UPDATE_COMMENT
-        elif deleteObjectAction(REQUEST):
-            #delete IssueComment objects
-            oIds = REQUEST.get('ids', [])
-            oContent = ''
-            self.deleteIssueComment(oIds)
-            #add item to history
-            self.addIssueHistory(DateTime(), self.REQUEST.AUTHENTICATED_USER, HISTORY_COMMENT_DELETED, self.getIssueStatusTitle(self.status), self.getIssuePriorityTitle(self.priority), self.consultant)
-            #email stuff
-            eAction = ACTION_DELETE_COMMENT
-        #send email
-        if self.notifyModifyIssue():
-            self.SendEmailNotifications(SENDEMAIL_HELPDESK_ALL, eAction, self.id, oContent)
-        #catalog issue
-        self.aq_parent.RecatalogIssue(self)
+        if self.getIssueStatusFinal() != self.status:
+            #the issue is not in the final state
+            if addObjectAction(REQUEST):
+                #add a new IssueComment object
+                oId = GenRandomKey()
+                oDate = DateTime()
+                oUsername = REQUEST.get('username', ANONYMOUS_USER_NAME)
+                try:
+                    oContentType = int(REQUEST.get('content_type', 1))
+                except:
+                    oContentType = 1
+                oContent = REQUEST.get('content', '')
+                obj = IssueComment(oId, oDate, oUsername, oContentType, oContent)
+                # handle attachment
+                if self.isAuthenticated():
+                    oAttachment = REQUEST.get('attachment', '')
+                    self.addAttachmentForComment(oAttachment, oId)
+                self.addIssueComment(oId, obj)
+                #add item to history
+                self.addIssueHistory(oDate, oUsername, HISTORY_COMMENT_ADDED, self.getIssueStatusTitle(self.status), self.getIssuePriorityTitle(self.priority), self.consultant)
+                #email stuff
+                eAction = ACTION_ADD_COMMENT
+            elif updateObjectAction(REQUEST):
+                #update a IssueComment object
+                oId = REQUEST.get('id', '')
+                oDate = DateTime()
+                oUsername = REQUEST.get('username', ANONYMOUS_USER_NAME)
+                oContent = REQUEST.get('content', '')
+                self.updateIssueComment(oId, oDate, oUsername, oContent)
+                #add item to history
+                self.addIssueHistory(oDate, oUsername, HISTORY_COMMENT_MODIFIED, self.getIssueStatusTitle(self.status), self.getIssuePriorityTitle(self.priority), self.consultant)
+                #email stuff
+                eAction = ACTION_UPDATE_COMMENT
+            elif deleteObjectAction(REQUEST):
+                #delete IssueComment objects
+                oIds = REQUEST.get('ids', [])
+                oContent = ''
+                self.deleteIssueComment(oIds)
+                #add item to history
+                self.addIssueHistory(DateTime(), self.REQUEST.AUTHENTICATED_USER, HISTORY_COMMENT_DELETED, self.getIssueStatusTitle(self.status), self.getIssuePriorityTitle(self.priority), self.consultant)
+                #email stuff
+                eAction = ACTION_DELETE_COMMENT
+            #send email
+            if self.notifyModifyIssue():
+                self.SendEmailNotifications(SENDEMAIL_HELPDESK_ALL, eAction, self.id, oContent)
+            #catalog issue
+            self.aq_parent.RecatalogIssue(self)
         #go back to comments page
         REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
