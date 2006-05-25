@@ -510,11 +510,11 @@ class Issue(Folder):
     #############
     def isPublic(self):
         """Test if current issue is public"""
-        return self.isPublic(self)
+        return self.getHelpDeskAgent().isPublic(self)
 
     def isPrivate(self):
         """Test if current issue is private"""
-        return self.isPrivate(self)
+        return self.getHelpDeskAgent().isPrivate(self)
 
 
     ########################################
