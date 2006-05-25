@@ -418,6 +418,14 @@ class HelpDesk(Folder, EmailSender):
         except:
             return ''
 
+    def getIssueStatusFinal(self):
+        """Get the id of the final(closed) state for an issue:
+            - this iwll be the status with the higher status value"""
+        try:
+            return self.SortObjsListByAttr(self.getListIssueStatus(), 'order', 1)[0].id
+        except:
+            return None
+
     def getListIssueStatus(self):
         """Get the list of IssueStatus objects"""
         try: return self.__issuestatus.values()
