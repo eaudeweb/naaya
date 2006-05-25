@@ -155,9 +155,13 @@ def ParseStringForURL(text):
                 link = link[:len(link)-1]
                 final = punctobj.group() + ' '
             if result == 'http://' or result == 'https://' or result == 'ftp://':
-                var = var + piece + "<a href=\"" + link + "\" target=\"_blank\">" + link[0:50] + "..</a>" + final
+                var = var + piece + "<a href=\"" + link + "\" target=\"_blank\">" + link[0:50]
+                if len(link)>50: var = var + ".."
+                var = var + "</a>" + final
             elif result == 'www.':
-                var = var + piece + "<a href=\"http://" + link + "\" target=\"_blank\">" + link[0:50] + "..</a>" + final
+                var = var + piece + "<a href=\"http://" + link + "\" target=\"_blank\">" + link[0:50]
+                if len(link)>50: var = var + ".."
+                var = var + "</a>" + final
             text = text[len(piece) + len(link) + len(final):]
         if matchobj == None:
             return var + text

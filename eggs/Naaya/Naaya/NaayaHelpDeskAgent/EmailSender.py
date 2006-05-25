@@ -18,9 +18,11 @@
 # Contributor(s):
 # Dragos Chirila, Finsiel Romania
 
-
 import smtplib
 import time
+import MimeWriter
+import mimetools
+import cStringIO
 
 class EmailSender:
     """ Email Engine
@@ -54,9 +56,6 @@ class EmailSender:
 
     def CreateEmail(self, eContent, eFrom, eTo, eSubject):
         """Create a mime-message that will render as text"""
-        import MimeWriter
-        import mimetools
-        import cStringIO
         out = cStringIO.StringIO() # output buffer for our message
         writer = MimeWriter.MimeWriter(out)
         # set up some basic headers
