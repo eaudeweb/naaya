@@ -18,15 +18,12 @@
 # Contributor(s):
 # Dragos Chirila, Finsiel Romania
 
-
-from OFS.SimpleItem import SimpleItem
 from OFS.Folder import Folder
 from OFS.Image import cookId
-import OFS.ObjectManager
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens,view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.ZCatalog.CatalogPathAwareness import CatalogAware
 import types, time
 from DateTime import DateTime
 
@@ -365,7 +362,7 @@ class Issue(Folder):
         self.__historycounter = 1
         self._p_changed = 1
 
-    security.declarePublic('manageIssueProperties')
+    security.declareProtected(view, 'manageIssueProperties')
     def manageIssueProperties(self, REQUEST=None):
         """Edit current Issue object properties"""
         local_roles = REQUEST.AUTHENTICATED_USER.getRolesInContext(self)
@@ -410,7 +407,7 @@ class Issue(Folder):
         #go back to comments page
         REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
-    security.declareProtected('View', 'manageIssueComment')
+    security.declareProtected(view, 'manageIssueComment')
     def manageIssueComment(self, REQUEST=None):
         """Manage IssueComment objects"""
         if self.getIssueStatusFinal() != self.status:
@@ -463,7 +460,7 @@ class Issue(Folder):
         #go back to comments page
         REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
-    security.declarePublic('manageIssueHistory')
+    security.declareProtected(view, 'manageIssueHistory')
     def manageIssueHistory(self, REQUEST=None):
         """Manage IssueHistory"""
         local_roles = REQUEST.AUTHENTICATED_USER.getRolesInContext(self)
@@ -474,7 +471,7 @@ class Issue(Folder):
         #go back to history page
         REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
-    security.declarePublic('manageFeedback')
+    security.declareProtected(view, 'manageFeedback')
     def manageFeedback(self, REQUEST=None):
         """Send feedback and create a comment"""
         oFrom = REQUEST.get('from', ANONYMOUS_USER_NAME)
@@ -513,51 +510,51 @@ class Issue(Folder):
     #############
     def isPublic(self):
         """Test if current issue is public"""
-        return self.aq_parent.isPublic(self)
+        return self.isPublic(self)
 
     def isPrivate(self):
         """Test if current issue is private"""
-        return self.aq_parent.isPrivate(self)
+        return self.isPrivate(self)
 
 
     ########################################
-    security.declareProtected('View', 'index_html')
+    security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/Issue_index', globals())
 
-    security.declareProtected('View', 'menu_html')
+    security.declareProtected(view, 'menu_html')
     menu_html = PageTemplateFile('zpt/Issue_menu', globals())
 
-    security.declareProtected('View', 'footer_html')
+    security.declareProtected(view, 'footer_html')
     footer_html = PageTemplateFile('zpt/Issue_footer', globals())
 
-    security.declareProtected('View', 'feedback_html')
+    security.declareProtected(view, 'feedback_html')
     feedback_html = PageTemplateFile('zpt/Issue_feedback', globals())
 
-    security.declareProtected('View', 'edit_form_html')
+    security.declareProtected(view, 'edit_form_html')
     edit_form_html = PageTemplateFile('zpt/Issue_edit_form', globals())
 
     security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'edit_user_html')
     edit_user_html = PageTemplateFile('zpt/Issue_edit_user', globals())
 
-    security.declareProtected('View management screens', 'edit_manage_html')
+    security.declareProtected(view_management_screens, 'edit_manage_html')
     edit_manage_html = PageTemplateFile('zpt/Issue_edit_manage', globals())
 
-    security.declareProtected('View', 'comments_form_html')
+    security.declareProtected(view, 'comments_form_html')
     comments_form_html = PageTemplateFile('zpt/Issue_comments_form', globals())
 
-    security.declareProtected('View', 'comments_user_html')
+    security.declareProtected(view, 'comments_user_html')
     comments_user_html = PageTemplateFile('zpt/Issue_comments_user', globals())
 
-    security.declareProtected('View management screens', 'comments_manage_html')
+    security.declareProtected(view_management_screens, 'comments_manage_html')
     comments_manage_html = PageTemplateFile('zpt/Issue_comments_manage', globals())
 
-    security.declareProtected('View', 'history_form_html')
+    security.declareProtected(view, 'history_form_html')
     history_form_html = PageTemplateFile('zpt/Issue_history_form', globals())
 
     security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'history_user_html')
     history_user_html = PageTemplateFile('zpt/Issue_history_user', globals())
 
-    security.declareProtected('View management screens', 'history_manage_html')
+    security.declareProtected(view_management_screens, 'history_manage_html')
     history_manage_html = PageTemplateFile('zpt/Issue_history_manage', globals())
 
     security.setPermissionDefault(PERMISSION_MANAGE_HELPDESK_SETTINGS, [HELPDESK_ROLE_ADMINISTRATOR, HELPDESK_ROLE_CONSULTANT])
