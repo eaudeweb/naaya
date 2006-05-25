@@ -262,7 +262,7 @@ a.title2:hover
 	background-color: white;
 }
 
-.form_slot a {
+.form_slot a, .form_slot2 a {
 	text-decoration: none;
 	font-size: 10px;
 	font-weight: bold;
@@ -342,6 +342,7 @@ a.title2:hover
 	border-bottom-width: 0;
 }
 .tab2 a, .tab2 a:visited {
+	font-weight: bold;
 	text-decoration: none;
 	color: white;
 	padding: 0;
@@ -358,6 +359,7 @@ a.title2:hover
 }
 
 .tab_active2 a, .tab_active2 a:visited {
+	font-weight: bold;
 	text-decoration: none;
 	color: #4E8EC2;
 	padding: 0;
