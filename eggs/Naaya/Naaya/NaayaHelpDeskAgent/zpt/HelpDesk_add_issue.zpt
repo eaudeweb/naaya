@@ -24,23 +24,23 @@
 <form action="HDAddIssue" method="post" enctype="multipart/form-data">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
-		<td class="label" width="20%" nowrap="nowrap" i18n:translate="">Ticket Number</td>
+		<th width="20%" i18n:translate="">Ticket Number</th>
 		<td i18n:translate="">(generated after submit)</td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Opened</td>
+		<th i18n:translate="">Opened</th>
 		<td tal:content="here/CurrentDate" />
 	</tr>
 	<tr><td></td></tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Subject/Title</td>
+		<th i18n:translate=""><label for="subject">Subject/Title</label></th>
 		<td>
 			<input type="text" name="subject:utf8:ustring" id="subject" size="50" tal:attributes="value req_subject" />
 			<span style="color:#FF0000;">* <span tal:condition="python:request.has_key('FORM_ERROR_subject')" tal:content="python:request['FORM_ERROR_subject']" i18n:translate="" tal:omit-tag="" />
 		</td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Category</td>
+		<th i18n:translate=""><label for="category">Category</label></th>
 		<td>
 			<select name="category" id="category">
 				<option value=""></option>
@@ -52,7 +52,7 @@
 		</td>
 	</tr>
 	<tr tal:condition="python:not here.default_priority">
-		<td class="label" nowrap="nowrap" i18n:translate="">Priority</td>
+		<th i18n:translate=""><label for="priority">Priority</label></th>
 		<td>
 			<select name="priority" id="priority">
 				<option value=""></option>
@@ -63,38 +63,37 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Description</td>
+		<th i18n:translate="" valign="top"><label for="description">Description</label></th>
 		<td>
 			<textarea name="description:utf8:ustring" id="description" rows="10" cols="70" tal:content="req_description"></textarea>
 			<span style="color:#FF0000;">* <span tal:condition="python:request.has_key('FORM_ERROR_description')" tal:content="python:request['FORM_ERROR_description']" i18n:translate="" tal:omit-tag="" />
 		</td>
 	</tr>
 	<tr tal:condition="here/isSecurityFlagPublic">
-		<td class="label" nowrap="nowrap" i18n:translate="">Confidential?</td>
+		<th nowrap="nowrap" i18n:translate=""><label for="security">Confidential</label></th>
 		<td><input type="checkbox" name="security" id="security" value="on" tal:attributes="checked here/isSecurityFlagPrivate" /></td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Link</td>
+		<th i18n:translate=""><label for="link">Link</label></th>
 		<td><input type="text" name="link" id="link" size="50" tal:attributes="value req_link" /></td>
 	</tr>
-	<tr><td></td></tr>
-	<tr><td colspan="2"><strong i18n:translate="">User information</strong></td></tr>
+	<tr><th colspan="2" style="border-top:2em solid white;"><strong i18n:translate="">User information</strong></th></tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Name</td>
+		<th i18n:translate=""><label for="user_name">Name</label></th>
 		<td><input type="text" name="user_name:utf8:ustring" id="user_name" size="50" tal:attributes="value req_user_name" /></td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Email</td>
+		<th i18n:translate=""><label for="user_email">Email</label></th>
 		<td><input type="text" name="user_email" id="user_email" size="50" tal:attributes="value req_user_email" /></td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Phone</td>
+		<th i18n:translate=""><label for="user_phone">Phone</label></th>
 		<td><input type="text" name="user_phone" id="user_phone" size="50" tal:attributes="value req_user_phone" /></td>
 	</tr>
 	<tal:block tal:condition="here/isAuthenticated">
 	<tr><td></td></tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Attachment</td>
+		<th i18n:translate=""><label for="attachment">Attachment</label></th>
 		<td><input type="file" name="attachment" id="attachment" size="20" /></td>
 	</tr>
 	</tal:block>

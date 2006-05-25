@@ -48,11 +48,11 @@
 
 .alert
 {
-    font-weight: bold;
-    font-style: normal;
-    color: #FF0000;
-    background: #FFFFFF;
+	color:#cc0000;
+	border:1px solid #cc0000;
+	padding: 0.5em;
 }
+
 
 a.menulinkon
 {
@@ -186,6 +186,11 @@ a.tablink:hover
 {
     color: #000066;
 }
+
+.infologin span {
+	font-weight: bold;
+}
+
 
 a.title1
 {
