@@ -862,10 +862,35 @@ class CHMSite(NySite):
         """ redirect to welcome page """
         REQUEST.RESPONSE.redirect('%s' % self.absolute_url())
 
-    security.declareProtected('View', 'links_group_html')
+    security.declareProtected(view, 'links_group_html')
     def links_group_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_links_group')
+
+    security.declareProtected(view_management_screens, 'dumpFormsLayout')
+    def dumpFormsLayout(self):
+        """ """
+        import os
+        path = join(CLIENT_HOME, self.id)
+        path_forms = join(path, 'forms')
+        if not os.path.isdir(path):
+            try: os.mkdir(path)
+            except: raise OSError, 'Can\'t create directory %s' % path
+        if not os.path.isdir(path_forms):
+            try: os.mkdir(path_forms)
+            except: raise OSError, 'Can\'t create directory %s' % path_forms
+        for x in self.getFormsTool().objectValues():
+            file = open(join(path_forms, '%s.zpt' % x.id), 'w')
+            file.write(x.document_src())
+            file.close()
+        return 'DUMP OK.'
+
+    security.declareProtected(view_management_screens, 'updatetoVersion2_1')
+    def updatetoVersion2_1(self):
+        """ """
+        self.workgroups = []
+        self._p_changed = 1
+        return 'OK update to 2.1'
 
     #epoz insert relative link form
     security.declareProtected(view, 'insertrelativelink_html')
