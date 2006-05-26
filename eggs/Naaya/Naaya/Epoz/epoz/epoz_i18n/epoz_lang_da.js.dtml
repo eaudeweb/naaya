@@ -1,0 +1,53 @@
+// Epoz-Language-File: da (Danish)
+// maik.jablonski@uni-bielefeld.de, 2003
+// Translated by overby@opentobusiness.com
+
+EpozLang["Normal"]='Normal';
+EpozLang["Paragraph"]='Citat';
+EpozLang["Heading1"]='Overskift 1';
+EpozLang["Heading2"]='Overskift 2';
+EpozLang["Heading3"]='Overskift 3';
+EpozLang["Heading4"]='Overskift 4';
+EpozLang["Heading5"]='Overskift 5';
+EpozLang["Heading6"]='Overskift 6';
+EpozLang["Formatted"]='Formatteret';
+
+EpozLang["Bold"]='Fed';
+EpozLang["Italic"]='Kursiv';
+EpozLang["Underline"]='Understreg';
+EpozLang["Strikethrough"]='Gennemstreg';
+
+EpozLang["Subscript"]='Sænket skrift';
+EpozLang["Superscript"]='Hævet skrift';
+
+EpozLang["RemoveFormat"]='Fjern formattering';
+
+EpozLang["TextColor"]='Skriftfarve';
+EpozLang["BackColor"]='Baggrundsfarve';
+
+EpozLang["AlignLeft"]='Venstrejusteret';
+EpozLang["Center"]='Centreret';
+EpozLang["AlignRight"]='Højrejusteret';
+
+EpozLang["OrderedList"]='Nummereret liste';
+EpozLang["UnorderedList"]='Punktliste';
+EpozLang["Outdent"]='Formindsk indrykning';
+EpozLang["Indent"]='Forøg indrykning';
+
+EpozLang["InsertLink"]='Indsæt link';
+EpozLang["InsertImage"]='Indsæt billede';
+EpozLang["InsertRule"]='Indsæt linie';
+EpozLang["InsertTable"]='Indsæt table';
+EpozLang["Toolbox"]='Værktøjskasse';
+
+EpozLang["Undo"]='Fortryd';
+EpozLang["Redo"]='Annuller fortryd';
+
+EpozLang["EnterLinkURL"]='Indsæt link adresse';
+EpozLang["EnterImageURL"]='Indsæt bille placering';
+
+EpozLang["EnterTableRows"]='Indsæt række';
+EpozLang["EnterTableColumns"]='Indsæt kolonne';
+EpozLang["EnterTableBorder"]='Kant';
+EpozLang["TableWithHead"]='Tabel med hoved';
+EpozLang["TableWithoutHead"]='Tabel uden hoved';

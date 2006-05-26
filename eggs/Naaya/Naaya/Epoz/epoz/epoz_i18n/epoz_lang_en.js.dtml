@@ -1,0 +1,68 @@
+// Epoz-Language-File: en (English)
+// maik.jablonski@uni-bielefeld.de, 2003
+
+// Global Epoz language-strings dictionary
+// Should be present only in "default" language file
+
+var EpozLang=[];
+
+EpozLang["Normal"]='Normal';
+EpozLang["Paragraph"]='Paragraph';
+EpozLang["Heading1"]='Heading 1';
+EpozLang["Heading2"]='Heading 2';
+EpozLang["Heading3"]='Heading 3';
+EpozLang["Heading4"]='Heading 4';
+EpozLang["Heading5"]='Heading 5';
+EpozLang["Heading6"]='Heading 6';
+EpozLang["Formatted"]='Formatted';
+
+EpozLang["Bold"]='Bold';
+EpozLang["Italic"]='Italic';
+EpozLang["Underline"]='Underline';
+EpozLang["Strikethrough"]='Strikethrough';
+
+EpozLang["Subscript"]='Subscript';
+EpozLang["Superscript"]='Superscript';
+
+EpozLang["RemoveFormat"]='Remove Format';
+
+EpozLang["TextColor"]='Text Color';
+EpozLang["BackColor"]='Background Color';
+
+EpozLang["AlignLeft"]='Align Left';
+EpozLang["Center"]='Center';
+EpozLang["AlignRight"]='Align Right';
+
+EpozLang["OrderedList"]='Ordered List';
+EpozLang["UnorderedList"]='Unordered List';
+EpozLang["Outdent"]='Outdent';
+EpozLang["Indent"]='Indent';
+    
+EpozLang["InsertLink"]='Insert Link';
+EpozLang["InsertAnchor"]='Insert Anchor';
+EpozLang["InsertImage"]='Insert Image';
+EpozLang["InsertRule"]='Insert Rule';
+EpozLang["InsertTable"]='Insert Table';
+EpozLang["Toolbox"]='Toolbox';
+
+EpozLang["Undo"]='Undo';
+EpozLang["Redo"]='Redo';
+
+EpozLang["EnterLinkURL"]='Enter Link URL';
+EpozLang["EnterAnchorName"]='Enter Anchor Name';
+EpozLang["EnterImageURL"]='Enter Image URL';
+
+EpozLang["EnterTableRows"]='Enter Rows';
+EpozLang["EnterTableColumns"]='Enter Columns';
+EpozLang["EnterTableBorder"]='Enter Border';
+EpozLang["TableWithHead"]='Table with Head';
+EpozLang["TableWithoutHead"]='Table without Head';
+
+EpozLang["HTML"]='HTML';
+
+// Browser-Status-Messages
+// don't use any entities for translations
+
+EpozLang["TidyStart"]='Tidying...';
+EpozLang["TidyStop"]='Tidying complete.'
+EpozLang["TidyError"]='Detected errors in the HTML block.';
