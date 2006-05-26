@@ -1,0 +1,55 @@
+// Epoz-Language-File: no (Norwegian)
+// einar.ness.jensen@hf.ntnu.no, 2004
+
+
+EpozLang["Normal"]='Normal';
+EpozLang["Paragraph"]='Avsnitt';
+EpozLang["Heading1"]='Overskrift 1';
+EpozLang["Heading2"]='Overskrift 2';
+EpozLang["Heading3"]='Overskrift 3';
+EpozLang["Heading4"]='Overskrift 4';
+EpozLang["Heading5"]='Overskrift 5';
+EpozLang["Heading6"]='Overskrift 6';
+EpozLang["Formatted"]='Preformatert';
+
+EpozLang["Bold"]='Fet';
+EpozLang["Italic"]='Kursiv';
+EpozLang["Underline"]='Understreket';
+EpozLang["Strikethrough"]='Gjennomstreket';
+
+EpozLang["Subscript"]='Subskrift';
+EpozLang["Superscript"]='Superskrift';
+
+EpozLang["RemoveFormat"]='Fjern Formatering';
+
+EpozLang["TextColor"]='Tekstfarge';
+EpozLang["BackColor"]='Bakgrunnsfarge';
+
+EpozLang["AlignLeft"]='Venstrejustert';
+EpozLang["Center"]='Midtjustert';
+EpozLang["AlignRight"]='H&oslash;yrejustert';
+
+EpozLang["OrderedList"]='Ordnet Liste';
+EpozLang["UnorderedList"]='Uordnet Liste';
+EpozLang["Outdent"]='Minsk Innrykk';
+EpozLang["Indent"]='&Oslash;k Innrykk';
+    
+EpozLang["InsertLink"]='Sett inn Lenke';
+EpozLang["InsertAnchor"]='Sett inn Anker';
+EpozLang["InsertImage"]='Sett inn Bilde';
+EpozLang["InsertRule"]='Sett inn Horisontal Linje';
+EpozLang["InsertTable"]='Sett inn Tabell';
+EpozLang["Toolbox"]='Verkt&oslash;y';
+
+EpozLang["Undo"]='Angre';
+EpozLang["Redo"]='Gjenta';
+
+EpozLang["EnterLinkURL"]='Skriv inn Lenke-URL';
+EpozLang["EnterAnchorName"]='Skriv inn Navn på Anker';
+EpozLang["EnterImageURL"]='Skriv inn Bilde-URL';
+
+EpozLang["EnterTableRows"]='Antall Rader';
+EpozLang["EnterTableColumns"]='Antall Kolonner';
+EpozLang["EnterTableBorder"]='Bredde Kantlinje';
+EpozLang["TableWithHead"]='Tabell med Topplinje';
+EpozLang["TableWithoutHead"]='Tabell uten Topplinje';

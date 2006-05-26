@@ -1,0 +1,60 @@
+// Epoz-Language-File: de (Deutsch)
+// maik.jablonski@uni-bielefeld.de, 2003
+
+EpozLang["Normal"]='Normal';
+EpozLang["Paragraph"]='Absatz';
+EpozLang["Heading1"]='&Uuml;berschrift 1';
+EpozLang["Heading2"]='&Uuml;berschrift 2';
+EpozLang["Heading3"]='&Uuml;berschrift 3';
+EpozLang["Heading4"]='&Uuml;berschrift 4';
+EpozLang["Heading5"]='&Uuml;berschrift 5';
+EpozLang["Heading6"]='&Uuml;berschrift 6';
+EpozLang["Formatted"]='Formatiert';
+
+EpozLang["Bold"]='Fett';
+EpozLang["Italic"]='Kursiv';
+EpozLang["Underline"]='Unterstrichen';
+EpozLang["Strikethrough"]='Durchgestrichen';
+
+EpozLang["Subscript"]='Tiefstellen';
+EpozLang["Superscript"]='Hochstellen';
+
+EpozLang["RemoveFormat"]='Formatierung entfernen';
+
+EpozLang["TextColor"]='Textfarbe';
+EpozLang["BackColor"]='Hintergrundfarbe';
+
+EpozLang["AlignLeft"]='Linksb&uuml;ndig';
+EpozLang["Center"]='Zentriert';
+EpozLang["AlignRight"]='Rechtsb&uuml;ndig';
+
+EpozLang["OrderedList"]='Aufz&auml;hlung';
+EpozLang["UnorderedList"]='Liste';
+EpozLang["Outdent"]='Ausr&uuml;cken';
+EpozLang["Indent"]='Einr&uuml;cken';
+
+EpozLang["InsertLink"]='Link einf&uuml;gen';
+EpozLang["InsertAnchor"]='Anker einf&uuml;gen';
+EpozLang["InsertImage"]='Bild einf&uuml;gen';
+EpozLang["InsertRule"]='Linie einf&uuml;gen';
+EpozLang["InsertTable"]='Tabelle einf&uuml;gen';
+EpozLang["Toolbox"]='Werkzeuge';
+
+EpozLang["Undo"]='Undo';
+EpozLang["Redo"]='Redo';
+
+EpozLang["EnterLinkURL"]='URL des Links eingeben';
+EpozLang["EnterAnchorName"]='Namen des Ankers eingeben';
+EpozLang["EnterImageURL"]='URL des Bildes eingeben';
+
+EpozLang["EnterTableRows"]='Anzahl der Reihen';
+EpozLang["EnterTableColumns"]='Anzahl der Spalten';
+EpozLang["EnterTableBorder"]='Randst&auml;rke';
+EpozLang["TableWithHead"]='Tabelle mit Kopf';
+EpozLang["TableWithoutHead"]='Tabelle ohne Kopf';
+
+EpozLang["HTML"]='HTML';
+
+EpozLang["TidyStart"]='HTML-Bereinigung...';
+EpozLang["TidyStop"]='HTML-Bereinigung abgeschlossen.'
+EpozLang["TidyError"]='Fehler im HTML-Quelltext.';
