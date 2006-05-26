@@ -3,6 +3,7 @@
 	<forms>
 		<form id="epoz_toolbox" title="Epoz toolbox form"/>
 		<form id="epoz_gallerybox" title="Epoz toolbox for photos archive"/>
+		<form id="site_insertrelativelink" title="Epoz insert relative link form"/>
 		<form id="site_search" title="Portal search"/>
 		<form id="site_external_search" title="External search"/>
 		<form id="site_sitemap" title="Portal site map"/>

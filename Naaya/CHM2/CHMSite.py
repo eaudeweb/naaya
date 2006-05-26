@@ -111,6 +111,37 @@ class CHMSite(NySite):
         """ """
         return CHM2_PRODUCT_PATH
 
+    #Epoz layer
+    def get_wysiwyg_widget(self, name, data='', toolbox='', size='big', lang=None):
+        """
+        Returns an WYSIWYG widget. The Epoz is used for the moment.
+        Also the widget will have a black border.
+        @param name: name of the HTML control
+        @type name: string
+        @param data: piece of text to be displayed inside
+        @type data: string
+        @param toolbox: a link to a HTML-Page which delivers additional tools
+        @type toolbox: string
+        @param size: speciefies the size of the widget
+        @type size: string
+        @param lang: language code
+        @type lang: string
+        """
+        if lang is None: lang = self.gl_get_selected_language()
+        if size == 'big':
+            width, height = 600, 300
+        elif size == 'medium':
+            width, height = 450, 200
+        else: #small
+            width, height = 300, 200
+        sfp = self.getLayoutTool().getSkinFilesPath()
+        return self.Epoz(name=name, data=data, toolbox=toolbox, lang=lang,
+            style='width:%spx;height:%spx;border:1px solid #000000;' % (width, height),
+            textstyle='width:%spx;height:%spx;border:1px solid #000000;' % (width, height+49),
+            epoz_toolbar_style='width:%spx' % (width + 2),
+            css='%s/style' % sfp,
+            customcss='%s/style_common' % sfp)
+
     #objects getters
     def getLinkChecker(self): return self._getOb(ID_LINKCHECKER, None)
     def getLinkCheckerLastLog(self):
@@ -835,5 +866,13 @@ class CHMSite(NySite):
     def links_group_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_links_group')
+
+    #epoz insert relative link form
+    security.declareProtected(view, 'insertrelativelink_html')
+    def insertrelativelink_html(self, REQUEST=None, RESPONSE=None):
+        """
+        Opens a page with site map and insert a relative link in the wysiwyg widget editor.
+        """
+        return self.getFormsTool().getContent({'here': self}, 'site_insertrelativelink')
 
 InitializeClass(CHMSite)
