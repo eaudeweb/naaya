@@ -63,6 +63,11 @@ misc_ = {
 'epoz_redirect.js':ImageFile('epoz/epoz_core/epoz_redirect.js.dtml', globals()),
 'epoz_iframe_trigger.js':ImageFile('epoz/epoz_core/epoz_iframe_trigger.js.dtml', globals()),
 
+## CHM specific
+# Help Form
+'epoz_help.html':ImageFile('epoz/epoz_core/epoz_help.html.dtml', globals()),
+
+
  # The Epoz-Language-Files
 'epoz_lang_da.js':ImageFile('epoz/epoz_i18n/epoz_lang_da.js.dtml', globals()),
 'epoz_lang_de.js':ImageFile('epoz/epoz_i18n/epoz_lang_de.js.dtml', globals()),
@@ -106,12 +111,18 @@ misc_ = {
 'epoz_button_underline.gif':ImageFile('epoz/epoz_images/epoz_button_underline.gif', globals()),
 'epoz_button_undo.gif':ImageFile('epoz/epoz_images/epoz_button_undo.gif', globals()),
 'epoz_button_unformat.gif':ImageFile('epoz/epoz_images/epoz_button_unformat.gif', globals()),
+#CHM CUSTOM
+'epoz_button_relativelink.gif':ImageFile('epoz/epoz_images/epoz_button_hyperlink.gif', globals()),
+'epoz_button_help.gif':ImageFile('epoz/epoz_images/epoz_button_help.gif', globals()),
+#end CHM CUSTOM
 }
 
 
 def Epoz(self, name, data='', toolbox='', lang='en',
                path='', widget='',
                style='width: 600px; height: 250px; border: 1px solid #000000;',
+               textstyle='width: 600px; height: 280px; border: 1px solid #000000;',
+               epoz_toolbar_style = 'width:602px',
                button='background-color: #EFEFEF; border: 1px solid #A0A0A0; cursor: pointer; margin-right: 1px; margin-bottom: 1px;',
                css='', customcss='', charset='utf-8', pageurl=''):
     """ Create an Epoz-Wysiwyg-Editor.
@@ -183,7 +194,7 @@ def Epoz(self, name, data='', toolbox='', lang='en',
 <script language="JavaScript" type="text/javascript" src="%(path)sepoz_redirect.js"></script>
 <script language="JavaScript" type="text/javascript">
 <!--
-  InitIframe('%(name)s','%(js_data)s','%(path)s','%(toolbox)s','%(style)s','%(button)s','%(css)s','%(customcss)s','%(charset)s', '%(pageurl)s');
+  InitIframe('%(name)s','%(js_data)s','%(path)s','%(toolbox)s','%(style)s','%(textstyle)s','%(epoz_toolbar_style)s','%(button)s','%(css)s','%(customcss)s','%(charset)s', '%(pageurl)s');
 //-->
 </script>
 <noscript><textarea name="%(name)s" style="%(style)s">%(data)s</textarea></noscript>
@@ -195,6 +206,8 @@ def Epoz(self, name, data='', toolbox='', lang='en',
        'js_data': js_data,
        'toolbox': toolbox,
        'style':   style,
+       'textstyle': textstyle,
+       'epoz_toolbar_style': epoz_toolbar_style,
        'button':  button,
        'css': css,
        'customcss': customcss,
