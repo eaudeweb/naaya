@@ -164,7 +164,7 @@
 		<li tal:condition="python:request['AUTHENTICATED_USER'].getUserName() == 'Anonymous User'"><a tal:attributes="href string:${site_url}/login_html" i18n:translate="">Login</a></li>
 		<li tal:condition="python:request['AUTHENTICATED_USER'].getUserName() != 'Anonymous User'"><a tal:attributes="href string:${site_url}/login_html" i18n:translate="">Logout</a></li>
 
-		<tal:block define="link_groups python:['menunav_links','menunav_links']">
+		<tal:block define="link_groups python:['menunav_links']">
 		<tal:block repeat="item_group link_groups">
 		<tal:block define="group_list python:here.getPortletsTool().getLinksListById(item_group);
 								 l_list group_list/get_links_list">
