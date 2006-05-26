@@ -65,7 +65,7 @@
 	<tr>
 		<th i18n:translate="" valign="top"><label for="description">Description</label></th>
 		<td>
-			<textarea name="description:utf8:ustring" id="description" rows="10" cols="70" tal:content="req_description"></textarea>
+			<textarea name="description:utf8:ustring" id="description" rows="10" cols="70" tal:content="req_description" style="vertical-align:top;"></textarea>
 			<span style="color:#FF0000;">* <span tal:condition="python:request.has_key('FORM_ERROR_description')" tal:content="python:request['FORM_ERROR_description']" i18n:translate="" tal:omit-tag="" />
 		</td>
 	</tr>

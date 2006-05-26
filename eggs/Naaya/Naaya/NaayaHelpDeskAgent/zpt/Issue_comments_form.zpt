@@ -65,35 +65,31 @@
 <form name="frmlist" action="manageIssueComment" method="post">
 
 <tal:block tal:repeat="comment here/getListIssueComment">
-<table border="0" cellspacing="0" cellpadding="2" width="100%">
-	<tr>
-		<th width="1%">
-			<input tal:condition="python:hasRoleHelpDeskAdministrator or here.consultant==here.getAuthenticatedUser()" type="checkbox" name="ids" tal:attributes="value comment/id" />
-		</th>
-		<th width="15%" nowrap="nowrap">
+<div class="hd_comment">
+	<div class="hd_comment_header">
+		<div class="hd_comment_date">
 			<span tal:omit-tag="" i18n:translate="">Date:</span>
-			<span tal:replace="python:here.FormatDate(comment.date)" />
-		</th>
-		<th width="15%" nowrap="nowrap">
+			<span tal:content="python:here.FormatDate(comment.date)" />
+		</div>
+		<div>
+			<input tal:condition="python:hasRoleHelpDeskAdministrator or here.consultant==here.getAuthenticatedUser()" type="checkbox" name="ids" tal:attributes="value comment/id" />
 			<span tal:omit-tag="" i18n:translate="">User:</span>
-			<span tal:replace="comment/username" />
-		</th>
-		<th width="10%" tal:define="res python:here.getAttachmentForComment(comment.id); attobj python:res[0]; attFileName python:res[1]">
+			<span tal:content="comment/username" />
+		</div>
+	</div>
+	<div class="hd_comment_text">
+		<span tal:condition="comment/content_type" tal:replace="structure python:here.EncodeTextareaContent(comment.content)" />
+		<span tal:condition="python:not comment.content_type" tal:replace="comment/content" />
+	</div>
+	<div class="hd_comment_footer" tal:condition="attobj" tal:define="res python:here.getAttachmentForComment(comment.id); attobj python:res[0]; attFileName python:res[1]">
+		<div class="hd_comment_attach">
 			<span tal:omit-tag="" i18n:translate="">Attachment:</span>
 			<tal:block tal:condition="attobj">
 				<a tal:attributes="href attobj/absolute_url" target="_blank" tal:content="attFileName" />
 			</tal:block>
-		</th>
-	</tr>
-	<tr>
-		<td colspan="4" style="padding-bottom:2em; border:0">
-			<span tal:condition="comment/content_type" tal:replace="structure python:here.EncodeTextareaContent(comment.content)" />
-			<span tal:condition="python:not comment.content_type" tal:replace="comment/content" />
-		</td>
-	</tr>
-</table>
-
-<br />
+		</div>
+	</div>
+</div>
 </tal:block>
 <input tal:condition="python:hasRoleHelpDeskAdministrator or here.consultant==here.getAuthenticatedUser()"
 	type="submit" name="delete" value="Delete" i18n:attributes="value" />
