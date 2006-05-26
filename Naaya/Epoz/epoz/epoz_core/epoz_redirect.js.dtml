@@ -65,12 +65,14 @@ if (!formDatas) {
     var formDatas = new Array();
 }
 
-function InitIframe(name, data, path, toolbox, style, button, css, customcss, charset, pageurl) {
+function InitIframe(name, data, path, toolbox, style, textstyle, epoz_toolbar_style, button, css, customcss, charset, pageurl) {
     form_name = name;
     form_data = data;
     form_path = path;
     form_toolbox = toolbox;
     form_area_style = style;
+    form_textarea_style = textstyle;
+	 form_epoz_toolbar_style = epoz_toolbar_style;
     form_button_style = button;
     form_css = css;
     form_customcss = customcss;
@@ -138,7 +140,18 @@ function InitIframe(name, data, path, toolbox, style, button, css, customcss, ch
     }
 }
 
-
+function HandleEpozRedirectSpec(param) {
+	for(i in param.childNodes){
+		if(typeof(param.childNodes[i])=="object"){								//only objects
+			if(param.childNodes[i].nodeType==1){								//only node objects
+				if(param.childNodes[i].tagName.toUpperCase() == 'IFRAME') {		//toUpperCase just in case
+					iframe = param.childNodes[i];
+					redirectEpoz(iframe);
+				}
+			}
+		}
+	}
+}
 
 function HandleEpozRedirect() {
     if (browser.isIE55 || browser.isIE6up) {

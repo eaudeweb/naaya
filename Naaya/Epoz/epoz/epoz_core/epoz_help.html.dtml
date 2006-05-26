@@ -1,0 +1,384 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Epoz help</title>
+
+		<script type="text/javascript">
+			function processKey(event){
+				if (event.keyCode==27) {  //ESC key
+					window.close();
+				}
+			}
+			function writeImg(p_src, p_alt){
+				op= window.opener
+				document.writeln('<img src="' + op.form_path + p_src+'" alt="'+op.EpozLang[p_alt]+'" title="'+op.EpozLang[p_alt]+'" />');
+			}
+			function init(){
+				window.focus();
+				setInterval('checkOpener()',200);
+			}
+			function checkOpener() {
+				if(window.opener){
+					if (!window.opener.form_path) {
+						window.close();
+					}
+				} else {
+					window.close();
+				}
+			}
+		</script>
+		<style type="text/css">
+			body {
+				font-family: arial, verdana, sans-serif;
+			}
+			td img {
+				background-color:#efefef;
+				border: 1px solid #a0a0a0;
+			}
+			td {
+				vertical-align: top;
+				border-bottom: 1px solid #f0f0f0;
+				padding: 0.4em 0em 0.2em 0.4em;
+			}
+			.help_word {
+				font-weight: bold;
+			}
+		</style>
+	</head>
+	<body bgcolor="white" onload="init()" onkeypress="processKey(event)">
+
+		<noscript>
+			<h1>
+				Epoz editor help
+			</h1>
+			<p>
+				In order to properly see this page you must have <code>javascript</code> enabled;
+			</p>
+		</noscript>
+
+		<script language="JavaScript" type="text/javascript">
+			<!--
+				document.writeln(window.opener.EpozLang["EpozHelpHeading"]);
+				document.writeln(window.opener.EpozLang["EpozHelpGeneral"]);
+				document.writeln(window.opener.EpozLang["EpozHelpTextType"]);
+				document.writeln(window.opener.EpozLang["EpozHelpCheckBox"]);
+			//-->
+		</script>
+
+		<table border="0" cellpadding="1" cellspacing="1">
+			<colgroup>
+				<col />
+				<col />
+			</colgroup>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_bold.gif','Bold');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpBold"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_italic.gif','Italic');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpItalic"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_underline.gif','Underline');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpUnderline"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_textcolor.gif','TextColor');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpTextColor"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_bgcolor.gif','BackColor');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpBackColor"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_left_just.gif','AlignLeft');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpAlignLeft"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_centre.gif','Center');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpCenter"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_right_just.gif','AlignRight');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpAlignRight"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_numbered_list.gif','OrderedList');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpOrderedList"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_list.gif','UnorderedList');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpUnorderedList"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_outdent.gif','Outdent');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpOutdent"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_indent.gif','Indent');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpIndent"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_hyperlink.gif','InsertLink');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpInsertLink"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_image.gif','InsertImage');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpInsertImage"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_hr.gif','InsertRule');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpInsertRule"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_table.gif','InsertTable');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpInsertTable"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_tools.gif','Toolbox');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpToolbox"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_hyperlink.gif','InsertRelativeLink');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpInsertRelativeLink"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							writeImg('epoz_button_help.gif','HelpPage');
+						//-->
+					</script>
+				</td>
+				<td>
+					<script language="JavaScript" type="text/javascript">
+						<!--
+							document.writeln(window.opener.EpozLang["EpozHelpHelpPage"]);
+						//-->
+					</script>
+				</td>
+			</tr>
+		</table>
+		<form action="" method="POST">
+			<input type="submit" name="submit" value="Close window" onclick="window.close();return false" />
+		</form>
+
+
+	</body>
+</html>

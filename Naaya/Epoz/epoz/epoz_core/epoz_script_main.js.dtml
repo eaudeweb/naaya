@@ -17,7 +17,9 @@ var form_name;  // the name of the form-element
 var form_path;  // path to buttons, font-selectors, ...
 var form_toolbox; // path to optional toolbox
 var form_area_style; // css-definition for wysiwyg-area
+var form_textarea_style; // css-definition for wysiwyg-area when the source is viewed
 var form_button_style; // css-definition for buttons
+var form_epoz_toolbar_style; // css-definition for the entire toolbar
 var form_css; // css-style for iframe
 var form_customcss; // customized css-style for iframe
 var form_charset; // charset for iframe
@@ -152,6 +154,7 @@ function InsertHTML(html) {
 
 // Create an anchor - no browser supports this directly
 
+
 function CreateAnchor(name) {
   name = prompt(EpozLang["EnterAnchorName"], "");
   if (name) {
@@ -216,6 +219,19 @@ function CreateTable(rows, cols, border, head) {
   }
     EpozElement.contentWindow.focus()
 }
+
+
+/*
+	CHM2 CUSTOM
+*/
+// Opens the help popup
+
+function EpozHelp() {
+    window.open(form_path+'epoz_help.html','EpozHelp','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=550,height=425');
+}
+/*
+	end CHM2 CUSTOM
+*/
 
 
 // Sets selected formats
@@ -294,4 +310,9 @@ function HandleKeyboardEvent(event)
             case 'k': CreateLink(); event.preventDefault(); break;
         };
     }
+}
+
+function isSafe(param){
+	HandleEpozRedirectSpec(param.parentNode)
+	return true;
 }
