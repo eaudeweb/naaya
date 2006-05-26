@@ -8,14 +8,9 @@
 		<td tal:content="here/id" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Opened</th>
-		<td tal:content="python:here.FormatDate(here.date_open)" />
+		<th i18n:translate="">Subject/Title</th>
+		<td><input type="text" name="subject" size="60" tal:attributes="value here/subject" /></td>
 	</tr>
-	<tr>
-		<th i18n:translate="">Last modified</th>
-		<td tal:content="python:here.FormatDate(here.date_modify)" />
-	</tr>
-	<tal:block tal:condition="python:hasRoleHelpDeskAdministrator or hasRoleHelpDeskConsultant">
 	<tr>
 		<th i18n:translate="">Assigned to</th>
 		<td>
@@ -26,30 +21,6 @@
 					tal:content="python:here.getUserName(user.id)" />
 			</select>
 		</td>
-	</tr>
-	<tr>
-		<th i18n:translate="">Confidential</th>
-		<td><input type="checkbox" name="security" value="on" tal:attributes="checked here/isPrivate" /></td>
-	</tr>
-	</tal:block>
-
-	<tr><th colspan="2" style="background-color:white; color: #333333; text-align:left;"><strong i18n:translate="">User information</strong></th></tr>
-
-	<tr>
-		<th i18n:translate="">Name</th>
-		<td><input type="text" name="user_name" size="50" tal:attributes="value here/user_name" /></td>
-	</tr>
-	<tr>
-		<th i18n:translate="">Email</th>
-		<td><input type="text" name="user_email" size="50" tal:attributes="value here/user_email" /></td>
-	</tr>
-	<tr>
-		<th i18n:translate="">Phone</th>
-		<td><input type="text" name="user_phone" size="50" tal:attributes="value here/user_phone" /></td>
-	</tr>
-	<tr>
-		<th i18n:translate="">Subject/Title</th>
-		<td><input type="text" name="subject" size="60" tal:attributes="value here/subject" /></td>
 	</tr>
 	<tr>
 		<th i18n:translate="">Category</th>
@@ -98,6 +69,37 @@
 		<th valign="top" i18n:translate="">Additional comment</th>
 		<td><textarea name="comments" rows="5" cols="70"></textarea></td>
 	</tr>
+
+	<tr>
+		<th i18n:translate="">Opened</th>
+		<td tal:content="python:here.FormatDate(here.date_open)" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Last modified</th>
+		<td tal:content="python:here.FormatDate(here.date_modify)" />
+	</tr>
+	<tal:block tal:condition="python:hasRoleHelpDeskAdministrator or hasRoleHelpDeskConsultant">
+	<tr>
+		<th i18n:translate="">Confidential</th>
+		<td><input type="checkbox" name="security" value="on" tal:attributes="checked here/isPrivate" /></td>
+	</tr>
+	</tal:block>
+
+	<tr><th colspan="2" style="background-color:white; color: #333333; text-align:left;"><strong i18n:translate="">User information</strong></th></tr>
+
+	<tr>
+		<th i18n:translate="">Name</th>
+		<td><input type="text" name="user_name" size="50" tal:attributes="value here/user_name" /></td>
+	</tr>
+	<tr>
+		<th i18n:translate="">Email</th>
+		<td><input type="text" name="user_email" size="50" tal:attributes="value here/user_email" /></td>
+	</tr>
+	<tr>
+		<th i18n:translate="">Phone</th>
+		<td><input type="text" name="user_phone" size="50" tal:attributes="value here/user_phone" /></td>
+	</tr>
+
 	<tr><td></td><td><input type="submit" name="update" value="Save changes"></td></tr>
 </table>
 </form>

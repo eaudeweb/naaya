@@ -1,4 +1,37 @@
+
 <style type="text/css">
+<!--
+
+/*comments style*/
+.hd_comment {
+	border:1px solid #d0d0d0;
+	margin-bottom: 1.5em;
+}
+
+.hd_comment_header {
+	background-color: #f8f8f8;
+	padding: 0.3em; 0.5em;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.hd_comment_footer {
+	background-color: #f8f8f8;
+	padding: 0.3em; 0.5em;
+	border-top: 1px solid #e0e0e0;
+}
+
+.hd_comment_date {
+	float:right;
+}
+
+.hd_comment_header span {
+	font-style: italic;
+}
+
+.hd_comment_text {
+	padding: 0.5em;
+}
+
 .cell
 {
     color: #000000;
@@ -394,7 +427,5 @@ a.title2:hover
 	font-weight: bold;
 	text-decoration: none;
 }
-
-
-
+-->
 </style>

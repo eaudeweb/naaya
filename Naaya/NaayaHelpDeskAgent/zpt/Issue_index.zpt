@@ -35,6 +35,11 @@
 
 		<tr>
 			<th i18n:translate="" style="white-space:nowrap;">
+				Ticket Number
+			</th>
+			<td width="30%" tal:content="here/id">
+			</td>
+			<th i18n:translate="" style="white-space:nowrap;">
 				Last modified
 			</th>
 			<td width="30%" tal:content="python:here.FormatDate(here.date_modify)">
@@ -43,11 +48,6 @@
 				Opened
 			</th>
 			<td width="30%" tal:content="python:here.FormatDate(here.date_open)">
-			</td>
-			<th i18n:translate="" style="white-space:nowrap;">
-				Ticket Number
-			</th>
-			<td width="30%" tal:content="here/id">
 			</td>
 		</tr>
 
@@ -90,26 +90,30 @@
 	<h2 i18n:translate="">Comments</h2>
 
 	<tal:block tal:repeat="comment here/getListIssueComment">
-	<table  border="0" cellspacing="0" cellpadding="2" width="100%" style="margin-bottom:2em;">
-		<tr>
-			<th width="15%"><span tal:omit-tag="" i18n:translate="">Date:</span> <span tal:replace="python:here.FormatDate(comment.date)" /></th>
-			<th width="15%"><span tal:omit-tag="" i18n:translate="">User:</span> <span tal:replace="comment/username" /></th>
-			<th width="10%" tal:define="res python:here.getAttachmentForComment(comment.id); attobj python:res[0]; attFileName python:res[1]">
+	<div class="hd_comment">
+		<div class="hd_comment_header">
+			<div class="hd_comment_date">
+				<span tal:omit-tag="" i18n:translate="">Date:</span>
+				<span tal:content="python:here.FormatDate(comment.date)" />
+			</div>
+			<div class="hd_comment_user">
+				<span tal:omit-tag="" i18n:translate="">User:</span>
+				<span tal:content="comment/username" />
+			</div>
+		</div>
+		<div class="hd_comment_text">
+			<span tal:condition="comment/content_type" tal:replace="structure python:here.EncodeTextareaContent(comment.content)" />
+			<span tal:condition="python:not comment.content_type" tal:replace="comment/content" />
+		</div>
+		<div class="hd_comment_footer" tal:condition="attobj" tal:define="res python:here.getAttachmentForComment(comment.id); attobj python:res[0]; attFileName python:res[1]">
+			<div class="hd_comment_attach">
 				<span tal:omit-tag="" i18n:translate="">Attachment:</span>
-				<tal:block tal:condition="attobj">
-					<a tal:attributes="href attobj/absolute_url" target="_blank" tal:content="attFileName" />
-				</tal:block>
-			</th>
-		</tr>
-		<tr>
-			<td colspan="3" style="padding-bottom:2em; border:0">
-				<span class="celltextarea">
-					<span tal:condition="comment/content_type" tal:replace="structure python:here.EncodeTextareaContent(comment.content)" />
-					<span tal:condition="python:not comment.content_type" tal:replace="comment/content" />
-				</span>
-			</td>
-		</tr>
-	</table>
+				<a tal:attributes="href attobj/absolute_url" target="_blank" tal:content="attFileName" />
+			</div>
+		</div>
+
+
+	</div>
 	</tal:block>
 </tal:block>
 <tal:block tal:condition="python:not access_issue">
