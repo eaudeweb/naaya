@@ -501,14 +501,21 @@
 		display: none;
 	}
 
+	/*EPOZ widget*/
+	body.visualFontSizeCorrection { /*do not display bg-image in EPOZ*/
+		background-image: none;
+		background-color: transparent;
+		font-size: 80%;
+	}
+
 	/*	EPOZ buttons	*/
-	#epoz_button_strikethrough {display:none;}
-	#epoz_button_subscript {display:none;}
-	#epoz_button_superscript {display:none;}
-	#epoz_button_unformat {display:none;}
-	#epoz_button_anchor {display:none;}
-	#epoz_button_undo {display:none;}
-	#epoz_button_redo {display:none;}
+	.epoz_button_strikethrough {display:none;}
+	.epoz_button_subscript {display:none;}
+	.epoz_button_superscript {display:none;}
+	.epoz_button_unformat {display:none;}
+	.epoz_button_anchor {display:none;}
+	.epoz_button_undo {display:none;}
+	.epoz_button_redo {display:none;}
 
 	/*  Comment box form */
 	.comment_box {

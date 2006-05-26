@@ -3,9 +3,9 @@
 <title>Pick stuff</title>
 </head>
 <body onload="this.focus();">
-<a tal:attributes="href string:${here/absolute_url}/toolbox_html">Upload an image</a>
-<hr />
 <h1>Pick</h1>
+
+<a tal:attributes="href string:${here/absolute_url}/toolbox_html">Upload an image</a>
 
 <tal:block tal:define="photos here/getPhotoArchive;
 						filter_q python:request.get('q', '');
@@ -35,7 +35,7 @@
 <table border="0" cellspacing="2" cellpadding="2">
 <tr>
 	<td i18n:translate="">Query</td>
-	<td><input type="text" name="q" size="50" tal:attributes="value filter_q" /></td>
+	<td><input type="text" name="q" style="width:200px;" tal:attributes="value filter_q" /></td>
 	<td><input type="submit" value="Filter" i18n:attributes="value" /></td>
 </tr>
 </table>
