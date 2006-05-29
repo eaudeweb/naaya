@@ -475,11 +475,7 @@ class CHMSite(NySite):
         t = copy(self.predefined_latest_uploads)
         for url in t:
             obj = self.unrestrictedTraverse(url, None)
-            if obj is None:
-                self.predefined_latest_uploads.remove(url)
-            else:
-                ba(obj)
-        self._p_changed = 1
+            if obj: ba(obj)
         return buf
 
     def list_glossaries(self):
