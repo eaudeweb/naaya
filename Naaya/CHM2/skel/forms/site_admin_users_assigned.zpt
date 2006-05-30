@@ -78,12 +78,14 @@
 
 </div>
 
-<form action="admin_delworkgroup_html" method="post" style="display:inline; float: right; width: 10%; margin-right: 4em;">
-	<input type="submit" value="Delete workgroup" i18n:attributes="value" class="submission_button" />
-</form>
-<form action="admin_addworkgroup_html" method="post" style="display:inline; float: right; width: 10%; margin-right: 0.1em;">
+<div style="text-align:right">
+<form action="admin_addworkgroup_html" method="post" style="display:inline; margin-right: 0.1em;">
 	<input type="submit" value="Add workgroup" i18n:attributes="value" class="submission_button" />
 </form>
+<form action="admin_delworkgroup_html" method="post" style="display:inline; margin-right: 4em;">
+	<input type="submit" value="Delete workgroup" i18n:attributes="value" class="submission_button" />
+</form>
+</div>
 
 
 </tal:block>
