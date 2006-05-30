@@ -192,6 +192,23 @@
 			<link id="110" title="Glossary" description="" url="/glossary_keywords" relative="1" permission="" order="110"/>
 			<link id="112" title="Other searches" description="" url="/external_search_html" relative="1" permission="" order="130"/>
 		</linkslist>
+		<linkslist id="menunav_services" title="Services" portlet="">
+			<link id="110" title="Glossary" description="" url="/glossary_keywords" relative="1" permission="" order="110"/>
+			<link id="112" title="Other searches" description="" url="/external_search_html" relative="1" permission="" order="130"/>
+			<link id="109" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="100"/>
+		</linkslist>
+		<linkslist id="menunav_content" title="Content" portlet="">
+			<link id="102" title="News" description="News archive" url="/news/" relative="1" permission="" order="30"/>
+			<link id="103" title="Stories" description="Stories archive" url="/stories/" relative="1" permission="" order="40"/>
+			<link id="104" title="Events" description="Events archive" url="/events/" relative="1" permission="" order="50"/>
+			<link id="105" title="Photos" description="Photo archive" url="/PhotoArchive/" relative="1" permission="" order="60"/>
+		</linkslist>
+		<linkslist id="menunav_about" title="About" portlet="">
+			<link id="107" title="About" description="" url="/About/" relative="1" permission="" order="80"/>
+		</linkslist>
+		<linkslist id="menunav_sitemap" title="Sitemap" portlet="">
+			<link id="108" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="90"/>
+		</linkslist>
 	</portlets>
 	<emails>
 		<emailtemplate id="email_createaccount" title="Create account"/>
