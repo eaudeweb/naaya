@@ -2,9 +2,9 @@
 
 <h1><tal:block tal:replace="here/site_title" /> <span i18n:translate="" tal:omit-tag="">sitemap</span></h1>
 
-<div id="tabbedmenu">
+<div class="tabs_firstlevel">
 <ul>
-	<li id="currenttab"><a tal:attributes="href string:${here/getSitePath}/sitemap_html" i18n:translate="">Directory structure</a></li>
+	<li class="currenttab"><a tal:attributes="href string:${here/getSitePath}/sitemap_html" i18n:translate="">Directory structure</a></li>
 	<li><a tal:attributes="href string:${here/getSitePath}/urlmap_html" i18n:translate="">URL structure</a></li>
 </ul>
 </div>

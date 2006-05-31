@@ -4,10 +4,10 @@
 
 <tal:block tal:define="site_url here/getSitePath">
 
-<div id="tabbedmenu">
+<div class="tabs_firstlevel">
 <ul>
 	<li><a tal:attributes="href string:${site_url}/sitemap_html" i18n:translate="">Directory structure</a></li>
-	<li id="currenttab"><a tal:attributes="href string:${site_url}/urlmap_html" i18n:translate="">URL structure</a></li>
+	<li class="currenttab"><a tal:attributes="href string:${site_url}/urlmap_html" i18n:translate="">URL structure</a></li>
 </ul>
 </div>
 
