@@ -169,6 +169,21 @@ class CHMSite(NySite):
         """
         return self.workgroups
 
+    def displayWorkgroupsList(self, skey='', rkey=''):
+        """
+        Returns the list of workgroups as a sorted list
+        of tuples where a tuple identifies a workgroup.
+        """
+        r = self.workgroups
+        if skey in ['title', 'role', 'location']:
+            if skey == 'title': t = [(x[1], x) for x in r]
+            elif skey == 'location': t = [(x[2], x) for x in r]
+            elif skey == 'role': t = [(x[3], x) for x in r]
+            t.sort()
+            if rkey: t.reverse()
+            r = [x[1] for x in t]
+        return r
+
     def getWorkgroupById(self, id):
         """
         Returns the workgroup with the given id.
@@ -609,7 +624,7 @@ class CHMSite(NySite):
             self._p_changed = 1
             if REQUEST:
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-                return REQUEST.RESPONSE.redirect('%s/admin_users_workgroup?w=%s' % (self.absolute_url(), id))
+                return REQUEST.RESPONSE.redirect('%s/admin_workgroups_html?w=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_delworkgroup')
     def admin_delworkgroup(self, ids=[], REQUEST=None):
@@ -631,7 +646,7 @@ class CHMSite(NySite):
                 self._p_changed = 1
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            return REQUEST.RESPONSE.redirect('%s/admin_delworkgroup_html' % self.absolute_url())
+            return REQUEST.RESPONSE.redirect('%s/admin_workgroups_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_userworkgroups')
     def admin_userworkgroups(self, name='', ids=[], REQUEST=None):
@@ -731,7 +746,7 @@ class CHMSite(NySite):
                     if isowner: self.add_userto_workgroup(loc, x[0], ['Owner'])
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            return REQUEST.RESPONSE.redirect('%s/admin_users_workgroup?w=%s' % (self.absolute_url(), id))
+            return REQUEST.RESPONSE.redirect('%s/admin_workgroup_html?w=%s' % (self.absolute_url(), id))
 
     #administration pages
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_urls_html')
@@ -774,25 +789,30 @@ class CHMSite(NySite):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_users_unnassigned')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_users_workgroup')
-    def admin_users_workgroup(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_users_workgroup')
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addworkgroup_html')
     def admin_addworkgroup_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_addworkgroup')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_delworkgroup_html')
-    def admin_delworkgroup_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_delworkgroup')
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_userroles_html')
     def admin_userroles_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_userroles')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_workgroups_html')
+    def admin_workgroups_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_workgroups')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_workgroup_html')
+    def admin_workgroup_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_workgroup')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_role_html')
+    def admin_role_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_role')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkchecker_html')
     def admin_linkchecker_html(self, REQUEST=None, RESPONSE=None):

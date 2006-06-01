@@ -19,10 +19,10 @@
 		<form id="site_admin_addrole" title="Add new role"/>
 		<form id="site_admin_adduser" title="Add new user"/>
 		<form id="site_admin_edituser" title="Edit user form"/>
-		<form id="site_admin_roles" title="Users and roles"/>
+		<form id="site_admin_roles" title="Roles"/>
+		<form id="site_admin_role" title="Role details"/>
 		<form id="site_admin_users" title="All users view"/>
 		<form id="site_admin_addworkgroup" title="Create an workgroup"/>
-		<form id="site_admin_delworkgroup" title="Delete an workgroup"/>
 		<form id="site_admin_users_workgroup" title="View workgroups"/>
 		<form id="site_admin_users_unnassigned" title="View users with no roles"/>
 		<form id="site_admin_users_assigned" title="View users with roles"/>
