@@ -29,6 +29,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
+from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import utils
 
 class Role(RoleManager, utils):
@@ -144,6 +145,19 @@ class Role(RoleManager, utils):
         Returns a list with all roles.
         """
         return list(self.getSite().valid_roles())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'display_defined_roles')
+    def display_defined_roles(self, skey='', rkey=''):
+        """
+        Returns a list with user defined roles to be displayed
+        in the administration area.
+        """
+        roles = list(self.getSite().valid_roles())
+        filter(roles.remove, ['Anonymous', 'Manager', 'Owner'])
+        if skey == 'name':
+            roles.sort()
+            if rkey: roles.reverse()
+        return roles
 
     def list_valid_roles(self):
         """ """
