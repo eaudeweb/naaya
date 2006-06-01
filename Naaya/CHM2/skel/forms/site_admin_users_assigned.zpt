@@ -5,13 +5,25 @@
 <tal:block metal:fill-slot="section"
 	tal:define="site_url here/getSitePath;
 				user_tool here/getAuthenticationTool;
-				users python:user_tool.getUserNames()">
+				skey python:request.get('skey', 'username');
+				rkey python:request.get('rkey', '');
+				sortdata python:(
+					{'sortable': 0, 'key': '', 'label': ''},
+					{'sortable': 1, 'key': 'username', 'label': 'Username'},
+					{'sortable': 1, 'key': 'name', 'label': 'Name'},
+					{'sortable': 1, 'key': 'email', 'label': 'Email'},
+					{'sortable': 0, 'key': '', 'label': 'Roles'},
+				)">
 
-<div class="tabs_firstlevel" >
-<ul>
-	<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
-	<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Users</a></li>
-</ul>
+<div class="tabs_firstlevel">
+	<ul>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_usersassigned_html" i18n:translate="">Local users</a></li>
+		<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
+			<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
+		</li>
+		<li><a tal:attributes="href string:${site_url}/admin_workgroups_html" i18n:translate="">WorkGroups</a></li>
+		<li><a tal:attributes="href string:${site_url}/admin_roles_html" i18n:translate="">Roles</a></li>
+	</ul>
 </div>
 
 <hr class= "hr_invisible" />
@@ -20,73 +32,69 @@
 
 <div class="tabs_admin">
 	<ul>
-		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Privileged users</a></li>
-		<li><a tal:attributes="href string:${site_url}/admin_users_unnassigned" i18n:translate="">Registered users</a></li>
-		<li tal:repeat="wg python:here.getWorkgroupsList()"><a tal:define="wg_id python:wg[0]" tal:attributes="href string:${site_url}/admin_users_workgroup?w=${wg_id}" tal:content="python:wg[1]" /></li>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_usersassigned_html" i18n:translate="">Privileged users</a></li>
+		<li><a tal:attributes="href string:${site_url}/admin_usersunnassigned_html" i18n:translate="">Registered users</a></li>
+		<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Assign roles</a></li>
 	</ul>
 </div>
-
-<div class="second_tabset_content">
-	<h2 i18n:translate=""></h2>
 
 <p i18n:translate="">
 	This page lists the portal users that have at least a role granted to them either on the entire portal or just on specific location(s).
 </p>
 
-<form>
-<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list" class="sortable"
-	tal:define="skey python:request.get('skey', 'username');
-				rkey python:request.get('rkey', '0');
-				rkey_inv python:test(rkey=='0', '1', '0');
-				result python:here.getUsersWithRoles(skey, rkey);
-				usernames python:result[0];
-				data python:result[1]">
-	<tr>
-		<th width="5%">&nbsp;</th>
-		<th width="15%" align="left">
-			<a tal:attributes="href string:${site_url}/admin_users_assigned?skey=username&rkey=${rkey_inv}">
-				<span i18n:translate="" tal:omit-tag="">Username</span>
-				<img tal:condition="python:rkey=='1'" width="12" height="12" alt="" tal:attributes="src string:${skin_files_path}/sortdown.gif" />
-				<img tal:condition="python:rkey=='0'" width="12" height="12" alt="" tal:attributes="src string:${skin_files_path}/sortup.gif" />
-			</a>
-		</th>
-		<th width="*" align="left">Roles</th>
-	</tr>
-	<tr tal:repeat="username usernames" tal:attributes="class python:test(path('repeat/username/odd'), 'row-odd', 'row-even')">
-		<td><img src="misc_/NaayaCore/User.gif" alt="User" i18n:attributes="alt" /></td>
-		<td>
-			<strong><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${username}" tal:content="username" /></strong>
-		</td>
-		<td class="roles_per_folder">
-			<ul >
-				<li tal:repeat="item python:here.groupByLocation(data[username])">
-				<tal:block tal:define="location python:item[0]; roles python:item[1]">
-<div class="folder_of_roles"> 
-					<span tal:condition="python:location=='/'" i18n:translate="">Entire portal</span>
-					<span tal:condition="python:location!='/'" tal:define="obj python:here.utGetObject(location)">
-						<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"/>
-					</span>
-</div> - 
-<div class="list_of_roles"><strong tal:content="python:', '.join(roles)" />  </div>
+<form action="admin_adduser_html">
+	<input type="submit" value="Add user" i18n:attributes="value" class="submission_button" />
+</form>
+
+<form method="post" tal:attributes="action string:${site_url}/admin_deleteusers">
+<input type="hidden" name="page_url" id="page_url" value="admin_usersassigned_html" />
+<table id="folderfile_list" class="sortable" width="100%">
+	<thead>
+		<tr>
+			<tal:block tal:repeat="item sortdata">
+				<th tal:condition="python:not item['sortable']" scope="col"><span title="Not sortable" i18n:attributes="title" i18n:translate="" tal:content="item/label" /></th>
+				<tal:block tal:condition="item/sortable">
+					<tal:block tal:condition="python:skey==item['key']">
+						<th tal:condition="python:rkey==''" class="sorted" scope="col">
+							<a title="Sorted A..Z - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_usersassigned_html?skey=${item/key}&amp;rkey=1" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortup.gif" width="12" height="12" alt="" border="0" /></a>
+						</th>
+						<th tal:condition="python:rkey!=''" class="sorted" scope="col">
+							<a title="Sorted Z..A - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_usersassigned_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortdown.gif" width="12" height="12" alt="" border="0" /></a>
+						</th>
+					</tal:block>
+					<th tal:condition="python:skey!=item['key']" scope="col">
+						<a title="Sortable" rel="nofollow" tal:attributes="href string:${site_url}/admin_usersassigned_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortnot.gif" width="12" height="12" alt="" border="0" /></a>
+					</th>
 				</tal:block>
-				</li>
-			</ul>
-		</td>
-	</tr>
+			</tal:block>
+		</tr>
+	</thead>
+	<tbody>
+		<tr tal:repeat="user python:here.sortUsersList(here.getAssignedUsers(), skey, rkey)">
+			<td><input type="checkbox" name="names" tal:attributes="value user/username" /></td>
+			<td><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${user/username}" tal:content="user/username" /></td>
+			<td tal:content="user/name" />
+			<td tal:content="user/email" />
+			<td class="roles_per_folder">
+				<ul >
+					<li tal:repeat="item python:here.groupByLocation(user['roles'])">
+						<tal:block tal:define="location python:item[0]; roles python:item[1]">
+						<div class="folder_of_roles">
+							<span tal:condition="python:location=='/'" i18n:translate="">Entire portal</span>
+							<span tal:condition="python:location!='/'" tal:define="obj python:here.utGetObject(location)">
+								<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"/>
+							</span>
+						</div> - 
+						<div class="list_of_roles"><strong tal:content="python:', '.join(roles)" />  </div>
+						</tal:block>
+					</li>
+				</ul>
+			</td>
+		</tr>
+	</tbody>
 </table>
+<input type="submit" value="Delete users" i18n:attributes="value" class="submission_button" />
 </form>
-
-</div>
-
-<div style="text-align:right">
-<form action="admin_addworkgroup_html" method="post" style="display:inline; margin-right: 0.1em;">
-	<input type="submit" value="Add workgroup" i18n:attributes="value" class="submission_button" />
-</form>
-<form action="admin_delworkgroup_html" method="post" style="display:inline; margin-right: 4em;">
-	<input type="submit" value="Delete workgroup" i18n:attributes="value" class="submission_button" />
-</form>
-</div>
-
 
 </tal:block>
 </tal:block>

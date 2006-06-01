@@ -28,7 +28,7 @@
 	<a tal:attributes="href string:${site_url}/admin_addworkgroup_html" i18n:translate="">Add workgroup</a>
 </p>
 
-<form metdho="post" tal:attributes="action string:${site_url}/admin_delworkgroup">
+<form method="post" tal:attributes="action string:${site_url}/admin_delworkgroup">
 <table id="folderfile_list" class="sortable" width="70%">
 	<thead>
 		<tr>

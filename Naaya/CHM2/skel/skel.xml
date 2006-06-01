@@ -22,6 +22,7 @@
 		<form id="site_admin_roles" title="Roles"/>
 		<form id="site_admin_role" title="Role details"/>
 		<form id="site_admin_users" title="All users view"/>
+		<form id="site_admin_sources" title="Portal administration - other users sources"/>
 		<form id="site_admin_addworkgroup" title="Create an workgroup"/>
 		<form id="site_admin_users_workgroup" title="View workgroups"/>
 		<form id="site_admin_users_unnassigned" title="View users with no roles"/>
