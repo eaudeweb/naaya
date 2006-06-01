@@ -252,9 +252,9 @@ class CHMSite(NySite):
         """
         Returns a list with an user additional roles.
         """
-        l,d = self.getAssignedUsers()
-        if name in l: return d[name]
-        else: return []
+        for x in self.getAssignedUsers():
+            if x['username'] == name: return x['roles']
+        return []
 
     def getUnassignedUsers(self):
         """
@@ -608,14 +608,6 @@ class CHMSite(NySite):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), page_url))
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_users_unassigned_delete')
-    def admin_users_unassigned_delete(self, names=[], REQUEST=None):
-        """ """
-        self.getAuthenticationTool().manage_delUsers(names)
-        if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/admin_users_unnassigned' % self.absolute_url())
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addworkgroup')
     def admin_addworkgroup(self, title='', location='', role='', REQUEST=None):
         """ """
@@ -708,6 +700,24 @@ class CHMSite(NySite):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s' % (self.absolute_url(), name))
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addusersroles')
+    def admin_addusersroles(self, names='', roles=[], loc='allsite', location='', REQUEST=None):
+        """
+        Add roles for an user.
+        """
+        msg = err = ''
+        try:
+            for name in self.utConvertToList(names):
+                self.getAuthenticationTool().manage_addUsersRoles(name, roles, loc, location)
+        except Exception, error:
+            err = error
+        else:
+            msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+        if REQUEST:
+            if err != '': self.setSessionErrors([err])
+            if msg != '': self.setSessionInfo([msg])
+            return REQUEST.RESPONSE.redirect('%s/admin_users_html' % self.absolute_url())
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduserroles')
     def admin_adduserroles(self, name='', roles=[], loc='allsite', location='', REQUEST=None):
         """
@@ -736,7 +746,7 @@ class CHMSite(NySite):
             self.add_userto_workgroup(loc, name, [wg[3]])
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            return REQUEST.RESPONSE.redirect('%s/admin_users_workgroup?w=%s' % (self.absolute_url(), id))
+            return REQUEST.RESPONSE.redirect('%s/admin_workgroup_html?w=%s' % (self.absolute_url(), id))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduserstoworkgroup')
     def admin_adduserstoworkgroup(self, id='', names=[], REQUEST=None):
