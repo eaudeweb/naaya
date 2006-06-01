@@ -20,6 +20,7 @@
 
 #Python imports
 from urlparse import urlparse
+from copy import copy
 
 #Zope imports
 from Globals import InitializeClass
@@ -203,7 +204,23 @@ class CHMSite(NySite):
         """ """
         return [x[2] for x in self.workgroups]
 
-    def getUsersWithRoles(self, skey='username', rkey='0'):
+    def sortUsersList(self, l, skey='', rkey=''):
+        """
+        Given a list a tuples where a tuple contains info
+        about an user (name, fullname, email, roles)
+        returns the list sorted.
+        """
+        r = copy(l)
+        if skey in ['username', 'name', 'email']:
+            if skey == 'username': t = [(x['username'], x) for x in r]
+            elif skey == 'name': t = [(x['name'], x) for x in r]
+            elif skey == 'email': t = [(x['email'], x) for x in r]
+            t.sort()
+            if rkey: t.reverse()
+            r = [x[1] for x in t]
+        return r
+
+    def getAssignedUsers(self):
         """
         Returns the list of users that do not belong to any group, but
         they have some permissions in the portal.
@@ -216,44 +233,40 @@ class CHMSite(NySite):
             user = auth_tool.getUser(username)
             roles = auth_tool.getUserRoles(user)
             for role in roles:
-                if not users_roles.has_key(username): users_roles[username] = []
-                users_roles[username].append((role, '/'))
+                if not users_roles.has_key(username): users_roles[username] = {'username': username, 'name': '%s %s' % (user.firstname, user.lastname), 'email': user.email, 'roles': []}
+                users_roles[username]['roles'].append((role, '/'))
         #from site
-        wg_locations = self.getWorkgoupsLocations()
         for folder in self.getCatalogedObjects(meta_type=meta_types, has_local_role=1):
-            if folder.absolute_url(1) not in wg_locations:
-                for roles_tuple in folder.get_local_roles():
-                    local_roles = auth_tool.getLocalRoles(roles_tuple[1])
-                    if roles_tuple[0] in auth_tool.user_names() and len(local_roles) > 0:
-                        for role in local_roles:
-                            username = str(roles_tuple[0])
-                            if not users_roles.has_key(username): users_roles[username] = []
-                            users_roles[username].append((role, folder.absolute_url(1)))
-        l = users_roles.keys()
-        l.sort()
-        if rkey=='1': l.reverse()
-        return l, users_roles
+            for roles_tuple in folder.get_local_roles():
+                local_roles = auth_tool.getLocalRoles(roles_tuple[1])
+                if roles_tuple[0] in auth_tool.user_names() and len(local_roles) > 0:
+                    for role in local_roles:
+                        username = str(roles_tuple[0])
+                        if not users_roles.has_key(username):
+                            user = auth_tool.getUser(username)
+                            users_roles[username] = {'username': username, 'name': '%s %s' % (user.firstname, user.lastname), 'email': user.email, 'roles': []}
+                        users_roles[username]['roles'].append((role, folder.absolute_url(1)))
+        return users_roles.values()
 
     def getUserAdditionalRoles(self, name):
         """
         Returns a list with an user additional roles.
         """
-        l,d = self.getUsersWithRoles()
+        l,d = self.getAssignedUsers()
         if name in l: return d[name]
         else: return []
 
-    def getUnassignedUsers(self, skey='username', rkey='0'):
+    def getUnassignedUsers(self):
         """
         Returns the list of users that do not belong to any group and
         don't have any permissions at all in the portal.
         """
-        l = self.utListDifference(self.getAuthenticationTool().user_names(), self.getUsersWithRoles()[0])
-        for wg in self.workgroups:
-            wusers = [x[0] for x in self.getWorkgroupUsers(wg[0])]
-            l = self.utListDifference(l, wusers)
-        l.sort()
-        if rkey=='1': l.reverse()
-        return l
+        auth_tool = self.getAuthenticationTool()
+        r = []
+        for x in self.utListDifference(auth_tool.user_names(), [x['username'] for x in self.getAssignedUsers()]):
+            user = auth_tool.getUser(x)
+            r.append({'username': x, 'name': '%s %s' % (user.firstname, user.lastname), 'email': user.email, 'roles': []})
+        return r
 
     def getWorkgroupUsers(self, id, skey='username', rkey='0'):
         """ """
@@ -586,6 +599,15 @@ class CHMSite(NySite):
                     res=res+key+'='+str(self.REQUEST.form[key])+'&'
         return res
 
+    #administration pages
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteusers')
+    def admin_deleteusers(self, names=[], page_url='', REQUEST=None):
+        """ """
+        self.getAuthenticationTool().manage_delUsers(names)
+        if REQUEST and page_url:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/%s' % (self.absolute_url(), page_url))
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_users_unassigned_delete')
     def admin_users_unassigned_delete(self, names=[], REQUEST=None):
         """ """
@@ -779,13 +801,13 @@ class CHMSite(NySite):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_predefined')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_users_assigned')
-    def admin_users_assigned(self, REQUEST=None, RESPONSE=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_usersassigned_html')
+    def admin_usersassigned_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_users_assigned')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_users_unnassigned')
-    def admin_users_unnassigned(self, REQUEST=None, RESPONSE=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_usersunnassigned_html')
+    def admin_usersunnassigned_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_users_unnassigned')
 
