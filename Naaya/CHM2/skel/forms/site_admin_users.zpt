@@ -27,7 +27,7 @@
 	</ul>
 </div>
 
-<hr class= "hr_invisible" />
+<hr class="hr_invisible" />
 
 <div class="second_tab_set">
 
@@ -39,20 +39,21 @@
 	</ul>
 </div>
 
-<h2 i18n:translate=""></h2>
+<hr class="hr_invisible" />
+<h2 i18n:translate="">Assign roles to users</h2>
 
 <p i18n:translate="">
-	Search for a specific user in the form below by specifying a string that occurs
-	either in the name, email or username; on the search results check the user(s),
+	Search for specific user(s) by entering a string that occurs either in its <em>name</em>,
+	<em>email</em> or <em>username</em>; on the search results check the desired user(s),
 	select the intended role(s) and choose the specific location from the portal where
-	you want the role to be granted.
+	you want the role(s) to be granted.
 </p>
 <form method="get" tal:attributes="action string:${site_url}/admin_users_html" name="frmSearchUsers">
 	<label for="query_users">
 		<span tal:omit-tag="">Search users</span>
 	</label>
 	<input type="text" size="35" name="query:utf8:ustring" id="query_users" tal:attributes="value query" />
-	<input type="submit" value="Search" i18n:attributes="value" />
+	<input type="submit" value="Search" i18n:attributes="value" class="submission_button" />
 </form>
 
 <form tal:attributes="action string:${site_url}/admin_addusersroles" method="post" name="frmUsersRoles">
@@ -110,7 +111,7 @@
 <tal:block tal:condition="python:len(users) > 0">
 <table>
 	<tr>
-		<td align="top" width="20%">Roles:</td>
+		<td align="top" width="20%">Grant role(s):</td>
 		<td align="top" width="*" tal:define="roles user_tool/list_valid_roles">
 			<select name="roles" size="5" multiple="multiple">
 				<option tal:repeat="role roles" tal:attributes="value role" tal:content="role" />
@@ -118,18 +119,18 @@
 		</td>
 	</tr>
 	<tr>
-		<td valign="top" width="20%" i18n:translate="">Location:(folder)<br />e.g. /folderURL</td>
+		<td valign="top" width="20%" i18n:translate="">On location (folder)<br />e.g. /folderURL</td>
 		<td valign="top" width="*">
 			<input type="radio" name="loc" value="allsite" checked="checked" onclick="emptyLocation();"  i18n:translate=""/> Entire portal<br />
 			<input type=radio name="loc" value="other" i18n:translate="" /> Pick other...<br />
 			<input type=text name="location" size="40" onclick="pickLocation();" value="" />
-			<input type="button" value="Pick" tal:attributes="onclick string:setupWin('${user_tool/absolute_url}/sitemap', 300, 500);;" />
+			<input type="button" value="Pick" tal:attributes="onclick string:setupWin('${user_tool/absolute_url}/sitemap', 300, 500);;" class="submission_button" />
 		</td>
 	</tr>
 </table>
 <p>
-	<input type="hidden" name="destination" value="manage_userRoles_html">
-	<input type="submit" value="Assign role" i18n:attributes="value"/>
+	<input type="hidden" name="destination" value="manage_userRoles_html" />
+	<input type="submit" value="Assign role" i18n:attributes="value" class="submission_button" />
 </p>
 </tal:block>
 <script language="JavaScript">

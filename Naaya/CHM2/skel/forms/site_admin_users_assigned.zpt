@@ -38,12 +38,13 @@
 	</ul>
 </div>
 
+<hr class="hr_invisible" />
 <h2 i18n:translate="" style="clear: left;">
 	Privileged users listing
 </h2>
 
 <p i18n:translate="">
-	This page shown the portal users that have at least a role granted, either on the entire portal or just on specific location(s). You can change the roles' assignement for one of these users by clicking on the username. In order to assign other users 
+	This page shown the portal users that have at least a role granted, either on the entire portal or just on specific location(s). You can change the roles' assignement for one of these users by clicking on the username. In order to assign roles to users that are not listed here, use the <a href="admin_users_html">Assign roles</a> tab.
 </p>
 
 <form action="admin_adduser_html">
@@ -76,7 +77,7 @@
 	<tbody>
 		<tr tal:repeat="user python:here.sortUsersList(here.getAssignedUsers(), skey, rkey)">
 			<td><input type="checkbox" name="names" tal:attributes="value user/username" /></td>
-			<td><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${user/username}" tal:content="user/username" /></td>
+			<td><a tal:attributes="href string:${site_url}/admin_userroles_html?name=${user/username}" tal:content="user/username" /></td>
 			<td tal:content="user/name" />
 			<td tal:content="user/email" />
 			<td class="roles_per_folder">
