@@ -39,6 +39,7 @@
 			<template id="portlet_center_macro" title="Macro for center portlets"/>
 			<template id="portlet_right_macro" title="Macro for right portlets"/>
 			<template id="script_dropdownmenus_js" title="Script for dropdown menu"/>
+			<template id="script_expandableportlets_js" title="Script for expandable portlets"/>
 			<scheme id="blue" title="Blue">
 				<style id="style" title="Main CSS"/>
 				<style id="style_common" title="Common CSS"/>
@@ -67,6 +68,9 @@
 				<image id="sortdown.gif" title="Sorted downwards"/>
 				<image id="sortnot.gif" title="Not sorted"/>
 				<image id="sortup.gif" title="Sorted upwards"/>
+				<image id="ep_collapse.gif" title="Collapse icon for expandable portlets"/>
+				<image id="ep_expand.gif" title="Expand icon for expandable portlets"/>
+				<image id="ep_none.gif" title="Blank icon for expandable portlets"/>
 			</scheme>
 			<scheme id="brown" title="Brown">
 				<style id="style" title="Main CSS"/>
@@ -96,6 +100,9 @@
 				<image id="sortdown.gif" title="Sorted downwards"/>
 				<image id="sortnot.gif" title="Not sorted"/>
 				<image id="sortup.gif" title="Sorted upwards"/>
+				<image id="ep_collapse.gif" title="Collapse icon for expandable portlets"/>
+				<image id="ep_expand.gif" title="Expand icon for expandable portlets"/>
+				<image id="ep_none.gif" title="Blank icon for expandable portlets"/>
 			</scheme>
 			<scheme id="green" title="Green">
 				<style id="style" title="Main CSS"/>
@@ -125,6 +132,9 @@
 				<image id="sortdown.gif" title="Sorted downwards"/>
 				<image id="sortnot.gif" title="Not sorted"/>
 				<image id="sortup.gif" title="Sorted upwards"/>
+				<image id="ep_collapse.gif" title="Collapse icon for expandable portlets"/>
+				<image id="ep_expand.gif" title="Expand icon for expandable portlets"/>
+				<image id="ep_none.gif" title="Blank icon for expandable portlets"/>
 			</scheme>
 			<scheme id="indigo" title="Indigo">
 				<style id="style" title="Main CSS"/>
@@ -154,6 +164,9 @@
 				<image id="sortdown.gif" title="Sorted downwards"/>
 				<image id="sortnot.gif" title="Not sorted"/>
 				<image id="sortup.gif" title="Sorted upwards"/>
+				<image id="ep_collapse.gif" title="Collapse icon for expandable portlets"/>
+				<image id="ep_expand.gif" title="Expand icon for expandable portlets"/>
+				<image id="ep_none.gif" title="Blank icon for expandable portlets"/>
 			</scheme>
 		</skin>
 	</layout>
@@ -172,6 +185,7 @@
 	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_meetingsevents_rdf,portlet_whatsnew_rdf,portlet_latestrelevantuploads_rdf,portlet_latestphotos">
 		<portlet id="portlet_administration" title="Administration"/>
 		<portlet id="portlet_latestphotos" title="Photos"/>
+		<portlet id="portlet_maincategories" title="Main sections" />
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
 			<link id="100" title="Biodiversity CHM" description="Global Biodiversity Clearing-House Mechanism (CBD)" url="http://www.biodiv.org/chm" relative="0" permission="" order="10"/>
 			<link id="101" title="Europa" description="Gateway to the European Union" url="http://europa.eu.int/" relative="0" permission="" order="20"/>

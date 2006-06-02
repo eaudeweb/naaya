@@ -1,0 +1,31 @@
+<tal:block tal:repeat="fold here/getMainTopics">
+
+<tal:block replace='structure string:<script type="text/javascript">' />
+<tal:block condition="python:here.epIsPortletCollapsed(here.absolute_url(1), 'ep_left_main_'+fold.id, ignorepath=True)">
+	ep_collapsed_portlets[ep_co_portlet_count] = '<tal:block replace="string:ep_left_main_${fold/id}" />';
+	ep_co_portlet_count ++;
+</tal:block>
+<tal:block condition="python:not(here.epIsPortletCollapsed(here.absolute_url(1), 'ep_left_main_'+fold.id, ignorepath=True))">
+	ep_expanded_portlets[ep_ex_portlet_count] = '<tal:block replace="string:ep_left_main_${fold/id}" />';
+	ep_ex_portlet_count ++;
+</tal:block>
+<tal:block replace='structure string:</script>' />
+
+	<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+		<tal:block metal:fill-slot="portlet_title">
+			<img style="vertical-align:middle" tal:attributes="onclick string:ep_f_expandOrCollapse('ep_left_main_${fold/id}', 2); id string:ep_left_main_${fold/id}; src string:${skin_files_path}/ep_none.gif" alt='' title=''
+/><a tal:attributes="href fold/absolute_url" tal:content="fold/title_or_id" />
+		</tal:block>
+		<tal:block metal:fill-slot="portlet_content">
+			<ul>
+				<li tal:repeat="sub_fold fold/getPublishedFolders">
+					<a tal:attributes="href sub_fold/absolute_url" tal:content="sub_fold/title_or_id" />
+				</li>
+			</ul>
+		</tal:block>
+	</tal:block>
+	<tal:block replace='structure string:<script type="text/javascript">' />
+		var ep_path = '<tal:block replace="python:here.absolute_url(1)" />'
+	<tal:block replace='structure string:</script>' />
+
+</tal:block>
