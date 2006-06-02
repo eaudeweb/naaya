@@ -266,15 +266,13 @@ BEGIN
                     LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
     LTEXT           "The parameters below are essential for the well functioning of the portal. See Installation guide for details.",
                     IDC_STATIC,85,94,229,18
-    LTEXT           "Portal URL",IDC_STATIC,85,120,48,8
-    EDITTEXT        IDC_PORTAL_URL,160,117,154,13,ES_AUTOHSCROLL
-    LTEXT           "Mail server name",IDC_STATIC,85,141,54,8
-    EDITTEXT        IDC_PORTAL_MAILSERVERNAME,160,137,124,13,ES_AUTOHSCROLL
-    LTEXT           "Mail server port",IDC_STATIC,85,159,49,8
-    EDITTEXT        IDC_PORTAL_MAILSERVERPORT,160,155,29,13,ES_AUTOHSCROLL | 
+    LTEXT           "Mail server name",IDC_STATIC,85,123,54,8
+    EDITTEXT        IDC_PORTAL_MAILSERVERNAME,160,119,124,13,ES_AUTOHSCROLL
+    LTEXT           "Mail server port",IDC_STATIC,85,141,49,8
+    EDITTEXT        IDC_PORTAL_MAILSERVERPORT,160,137,29,13,ES_AUTOHSCROLL | 
                     ES_NUMBER
-    LTEXT           "Portal mailbox",IDC_STATIC,85,176,44,8
-    EDITTEXT        IDC_PORTAL_DEFAULTFROMADDRESS,160,173,124,13,
+    LTEXT           "Portal mailbox",IDC_STATIC,85,158,44,8
+    EDITTEXT        IDC_PORTAL_DEFAULTFROMADDRESS,160,155,124,13,
                     ES_AUTOHSCROLL
 END
 
@@ -494,7 +492,7 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    IDS_SUMMARY             "Installation parameters and ports:\r\n\r\n\tLocation: %s\r\n\r\n\tFull Host Name: %s\r\n\r\n\tHost IP Address: %s\r\n\r\n\tUsername: %s\r\n\r\n\tPassword: **********\r\n\r\n\tAdministrator's Email Address: %s\r\n\r\n\tZope HTTP port: %d\r\n\r\nPortal Metadata:\r\n\r\n\tTitle: %s\r\n\r\n\tSubtitle: %s\r\n\r\n\tPublisher: %s\r\n\r\n\tContributor: %s\r\n\r\n\tCreator: %s\r\n\r\n\tRights: %s\r\n\r\nPortal logos:\r\n\r\n\tLeft logo: %s\r\n\r\n\tRight logo: %s\r\n\r\nPortal Administrative:\r\n\r\n\tPortal URL: %s\r\n\r\n\tLanguages: %s\r\n\r\n\tMail server name: %s\r\n\r\n\tMail server port: %d\r\n\r\n\tPortal mailbox: %s\r\n\r\nStart Menu folder:\r\n\r\n\t%s\r\n\r\nCHM2 running:\r\n\r\n\t%s\r\n\r\n"
+    IDS_SUMMARY             "Installation parameters and ports:\r\n\r\n\tLocation: %s\r\n\r\n\tFull Host Name: %s\r\n\r\n\tHost IP Address: %s\r\n\r\n\tUsername: %s\r\n\r\n\tPassword: **********\r\n\r\n\tAdministrator's Email Address: %s\r\n\r\n\tZope HTTP port: %d\r\n\r\nPortal Metadata:\r\n\r\n\tTitle: %s\r\n\r\n\tSubtitle: %s\r\n\r\n\tPublisher: %s\r\n\r\n\tContributor: %s\r\n\r\n\tCreator: %s\r\n\r\n\tRights: %s\r\n\r\nPortal logos:\r\n\r\n\tLeft logo: %s\r\n\r\n\tRight logo: %s\r\n\r\nPortal Administrative:\r\n\r\n\tLanguages: %s\r\n\r\n\tMail server name: %s\r\n\r\n\tMail server port: %d\r\n\r\n\tPortal mailbox: %s\r\n\r\nStart Menu folder:\r\n\r\n\t%s\r\n\r\nCHM2 running:\r\n\r\n\t%s\r\n\r\n"
     IDS_MENU_FOLDER_NAME    "CHM2"
     IDS_INSTALLATION_START  "Installing... Please wait."
     IDS_FILE_LOG            "\\install.log"

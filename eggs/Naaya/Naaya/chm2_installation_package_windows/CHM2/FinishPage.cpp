@@ -90,7 +90,6 @@ void CFinishPage::OnSetActive()
 			pWizardData->m_strPortalRights,
 			pWizardData->m_strLogoPath,
 			pWizardData->m_strLogoBisPath,
-			pWizardData->m_strPortalURL,
 			strLanguages,
 			pWizardData->m_strMailServerName,
 			pWizardData->m_nMailServerPort,

@@ -52,7 +52,7 @@ BOOL CPortalAdministrativePage::OnInitDialog()
 
 	CWizardData* pWizardData = ((CCHM2Dlg*)GetParent())->m_pWizardData;
 
-	GetDlgItem(IDC_PORTAL_URL)->SetWindowText(pWizardData->m_strPortalURL);
+	//GetDlgItem(IDC_PORTAL_URL)->SetWindowText(pWizardData->m_strPortalURL);
 	
 	CListBox* lstLanguages = (CListBox*)GetDlgItem(IDC_PORTAL_LANGUAGES);
 
@@ -86,7 +86,7 @@ LRESULT CPortalAdministrativePage::OnWizardNext()
 	int nMailServerPort, nCount;
 
 	// load data from controls
-	GetDlgItem(IDC_PORTAL_URL)->GetWindowText(strPortalURL);
+	//GetDlgItem(IDC_PORTAL_URL)->GetWindowText(strPortalURL);
 	GetDlgItem(IDC_PORTAL_MAILSERVERNAME)->GetWindowText(strMailServerName);
 	GetDlgItem(IDC_PORTAL_MAILSERVERPORT)->GetWindowText(strMailServerPort);
 	GetDlgItem(IDC_PORTAL_DEFAULTFROMADDRESS)->GetWindowText(strDefaultFromAddress);
@@ -100,7 +100,7 @@ LRESULT CPortalAdministrativePage::OnWizardNext()
 
 	
 	// verify that all fields have been filled
-	if (strPortalURL == "" || strMailServerName == "" || strMailServerPort == "" || strDefaultFromAddress == "")
+	if (strMailServerName == "" || strMailServerPort == "" || strDefaultFromAddress == "")
 	{
 		AfxMessageBox(IDS_REQUIREDFIELDS);
 		return -1;
