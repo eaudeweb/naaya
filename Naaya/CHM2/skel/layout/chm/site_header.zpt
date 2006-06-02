@@ -23,6 +23,15 @@
 	<tal:block replace='structure string:</script>' />
 	<script type="text/javascript" tal:attributes="src python:here.getLayoutTool().getCurrentSkin().absolute_url() + '/script_expandableportlets_js'"></script>
 	<!--end expandable portlets-->
+	<!--[if IE]>
+		<style type="text/css">
+		/*<![CDATA[*/ 
+		body {
+			word-wrap: break-word;
+		}
+		/*]]>*/
+		</style>
+	<![endif]-->
 </head>
 
 <body>
