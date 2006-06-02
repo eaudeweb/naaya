@@ -81,23 +81,30 @@
 							takeVisib(this)
 						}
 					}
+					
 					for (j=0; j < node.childNodes.length; j++) {
-						node_ul = node.childNodes[j];
-						if (node_ul.nodeName=="UL") {
+						node_div = node.childNodes[j];
+						if (node_div.nodeName=="DIV") {
 
-							for(b=0; b < node_ul.childNodes.length; b++){
-								node_li = node_ul.childNodes[b];
-								if (node_li.nodeName=="LI") {
-									node_a = getSecondLink(node_li)
-									node_a.onfocus = function(){
-										makeVisib(this)
+							for (k=0; k < node_div.childNodes.length; k++) {
+								node_ul = node_div.childNodes[k];
+								if (node_ul.nodeName=="UL") {
+
+									for(b=0; b < node_ul.childNodes.length; b++){
+										node_li = node_ul.childNodes[b];
+										if (node_li.nodeName=="LI") {
+											node_a = getSecondLink(node_li)
+											node_a.onfocus = function(){
+												makeVisib(this)
+											}
+											node_a.onblur = function(){
+												takeVisib(this)
+											}
+										}
 									}
-									node_a.onblur = function(){
-										takeVisib(this)
-									}
+
 								}
 							}
-
 						}
 					}
 				}
