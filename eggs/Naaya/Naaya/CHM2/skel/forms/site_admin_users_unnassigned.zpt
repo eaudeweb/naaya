@@ -16,7 +16,7 @@
 
 <div class="tabs_firstlevel">
 	<ul>
-		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_usersassigned_html" i18n:translate="">Local users</a></li>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
 		<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
 			<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
 		</li>
@@ -31,9 +31,9 @@
 
 <div class="tabs_admin">
 	<ul>
+		<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Assign roles</a></li>
 		<li><a tal:attributes="href string:${site_url}/admin_usersassigned_html" i18n:translate="">Privileged users</a></li>
 		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_usersunnassigned_html" i18n:translate="">Registered users</a></li>
-		<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Assign roles</a></li>
 	</ul>
 </div>
 

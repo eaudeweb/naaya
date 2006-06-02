@@ -7,10 +7,14 @@
 				user_tool here/getAuthenticationTool;
 				name python:request.get('name', '')">
 
-<div class="tabs_firstlevel" >
+<div class="tabs_firstlevel">
 	<ul>
-		<li><a tal:attributes="href string:${site_url}/admin_users_assigned" i18n:translate="">Groups</a></li>
-		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Users</a></li>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
+		<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
+			<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
+		</li>
+		<li><a tal:attributes="href string:${site_url}/admin_workgroups_html" i18n:translate="">WorkGroups</a></li>
+		<li><a tal:attributes="href string:${site_url}/admin_roles_html" i18n:translate="">Roles</a></li>
 	</ul>
 </div>
 
@@ -27,10 +31,9 @@
 
 <div class="tabs_admin">
 	<ul>
-		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
-		<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
-			<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
-		</li>
+		<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Assign roles</a></li>
+		<li><a tal:attributes="href string:${site_url}/admin_usersassigned_html" i18n:translate="">Privileged users</a></li>
+		<li><a tal:attributes="href string:${site_url}/admin_usersunnassigned_html" i18n:translate="">Registered users</a></li>
 	</ul>
 </div>
 

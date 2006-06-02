@@ -17,7 +17,7 @@
 
 <div class="tabs_firstlevel">
 	<ul>
-		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_usersassigned_html" i18n:translate="">Local users</a></li>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
 		<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
 			<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
 		</li>
@@ -32,14 +32,18 @@
 
 <div class="tabs_admin">
 	<ul>
+		<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Assign roles</a></li>
 		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_usersassigned_html" i18n:translate="">Privileged users</a></li>
 		<li><a tal:attributes="href string:${site_url}/admin_usersunnassigned_html" i18n:translate="">Registered users</a></li>
-		<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Assign roles</a></li>
 	</ul>
 </div>
 
+<h2 i18n:translate="" style="clear: left;">
+	Privileged users listing
+</h2>
+
 <p i18n:translate="">
-	This page lists the portal users that have at least a role granted to them either on the entire portal or just on specific location(s).
+	This page shown the portal users that have at least a role granted, either on the entire portal or just on specific location(s). You can change the roles' assignement for one of these users by clicking on the username. In order to assign other users 
 </p>
 
 <form action="admin_adduser_html">
