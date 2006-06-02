@@ -614,7 +614,8 @@ vertical-align: top;
 		font-size:0.8em;
 		font-weight: bold;
 		padding:0.9em 1em 0.9em 1em;
-	}
+		text-indent: -1.2em;
+}
 
 	.portlet_folder a{
 		color:#ffffff; /*#ffffff*/ /*#ffffff*/ /*#d3e287*/ /*#d2e186*/
