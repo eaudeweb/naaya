@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CPortalLogosPage
+LastClass=CCHM2Dlg
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "chm2.h"
@@ -25,19 +25,19 @@ Class13=CPortsPage
 Class14=CWelcomePage
 
 ResourceCount=13
-Resource1=IDW_WELCOME
+Resource1=IDW_PORTALMETADATA
 Resource2=IDW_INSTALL
-Resource3=IDD_CHM2_DIALOG
-Resource4=IDW_FINISH
-Resource5=IDW_AGREEMENT
+Resource3=IDW_INSTALLPATH
+Resource4=IDW_PORTS
+Resource5=IDD_ABOUTBOX
 Resource6=IDW_PORTALADMINISTRATIVE
-Resource7=IDW_PORTALMETADATA
-Resource8=IDD_ABOUTBOX
-Resource9=IDW_PORTS
-Resource10=IDW_INSTALLPATH
+Resource7=IDW_FINISH
+Resource8=IDD_CHM2_DIALOG
+Resource9=IDW_AGREEMENT
+Resource10=IDW_ERROR
 Resource11=IDW_PARAMETERS
 Class15=CPortalAdministrativePage
-Resource12=IDW_ERROR
+Resource12=IDW_WELCOME
 Class16=CPortalLogosPage
 Resource13=IDW_PORTALLOGOS
 
@@ -64,6 +64,7 @@ Type=0
 BaseClass=CNewWizDialog
 HeaderFile=CHM2Dlg.h
 ImplementationFile=CHM2Dlg.cpp
+LastObject=CCHM2Dlg
 
 [CLS:CErrorPage]
 Type=0
@@ -263,7 +264,7 @@ Control5=IDC_STATIC,static,1342308352
 [DLG:IDW_PORTALADMINISTRATIVE]
 Type=1
 Class=CPortalAdministrativePage
-ControlCount=14
+ControlCount=12
 Control1=IDC_STATIC,static,1342177294
 Control2=IDC_PORTALADMINISTRATIVE_TITLE,static,1342308352
 Control3=IDC_STATIC,static,1342308352
@@ -271,13 +272,11 @@ Control4=IDC_STATIC,static,1342308352
 Control5=IDC_PORTAL_LANGUAGES,listbox,1352728841
 Control6=IDC_STATIC,static,1342308352
 Control7=IDC_STATIC,static,1342308352
-Control8=IDC_PORTAL_URL,edit,1350631552
+Control8=IDC_PORTAL_MAILSERVERNAME,edit,1350631552
 Control9=IDC_STATIC,static,1342308352
-Control10=IDC_PORTAL_MAILSERVERNAME,edit,1350631552
+Control10=IDC_PORTAL_MAILSERVERPORT,edit,1350639744
 Control11=IDC_STATIC,static,1342308352
-Control12=IDC_PORTAL_MAILSERVERPORT,edit,1350639744
-Control13=IDC_STATIC,static,1342308352
-Control14=IDC_PORTAL_DEFAULTFROMADDRESS,edit,1350631552
+Control12=IDC_PORTAL_DEFAULTFROMADDRESS,edit,1350631552
 
 [CLS:CPortalAdministrativePage]
 Type=0
