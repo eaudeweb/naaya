@@ -21,8 +21,12 @@
 	</ul>
 </div>
 
+<h2 i18n:translate="" style="clear: left;">
+	Role: <span tal:replace="role" />
+</h2>
+
 <p i18n:translate="">
-	This page ...
+	This page offers detailed information about the permission(s) given to this role.
 </p>
 
 <table id="folderfile_list" class="sortable" width="70%">

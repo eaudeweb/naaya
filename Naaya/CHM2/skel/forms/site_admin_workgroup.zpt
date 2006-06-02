@@ -21,18 +21,19 @@
 </div>
 
 <tal:block tal:condition="wg">
-	<h2 tal:content="python:wg[1]"></h2>
+	<h2 tal:content="python:wg[1]" style="clear: left;"></h2>
 
 <p tal:define="obj python:here.utGetObject(wg[2])">
 	<span i18n:translate="" tal:omit-tag="">
 		This page shows all users that are part of this working group.
-		Being part of this workgroup provides a default role of
+		Users added to this workgroup have by default the role of
 	</span>
 	<strong tal:content="python:wg[3]" />
 	<span i18n:translate="" tal:omit-tag="">
-		in
+		in folder
 	</span>
 	<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id" />.
+	<span i18n:translate="">Click on an individual user to change the role(s) in this workgroup.</span>
 </p>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_delusersfromworkgroup">
@@ -57,9 +58,9 @@
 			<input type="checkbox" name="names" tal:attributes="value python:item[0]" />
 		</td>
 		<td tal:define="username python:item[0]">
-			<strong><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${username}" tal:content="username" /></strong>
+			<strong><a tal:attributes="href string:${site_url}/admin_userroles_html?name=${username}" tal:content="username" /></strong>
 		</td>
-		<td>
+		<td class="roles_per_folder">
 			<ul>
 				<li tal:repeat="role python:item[1]">
 					<strong tal:content="role" />
@@ -86,9 +87,9 @@
 <input type="submit" value="Assign" i18n:attributes="value" class="submission_button" />
 </form>
 </tal:block>
-<tal:block tal:condition="python:not wg">
+<p tal:condition="python:not wg" style="clear: left;">
 	Invalid group or no group selected.
-</tal:block>
+</p>
 
 </tal:block>
 

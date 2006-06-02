@@ -7,7 +7,7 @@
 				user_tool here/getAuthenticationTool;
 				skey python:request.get('skey', 'title');
 				rkey python:request.get('rkey', '');
-				sortdata python:({'sortable': 0, 'key': '', 'label': ''}, {'sortable': 1, 'key': 'title', 'label': 'Title'}, {'sortable': 1, 'key': 'role', 'label': 'Role'}, {'sortable': 1, 'key': 'location', 'label': 'Location'},)">
+				sortdata python:({'sortable': 0, 'key': '', 'label': ''}, {'sortable': 1, 'key': 'title', 'label': 'Title'}, {'sortable': 1, 'key': 'role', 'label': 'Default role'}, {'sortable': 1, 'key': 'location', 'label': 'Location'},)">
 
 <div class="tabs_firstlevel">
 	<ul>
@@ -20,15 +20,17 @@
 	</ul>
 </div>
 
+<h2 i18n:translate="" style="clear: left;">Workgroups listing</h2>
+
 <p i18n:translate="">
-	This page lists the workgroups defined in this portal.
+	A <em>workgroup</em> is a collection of users that have local roles on a portal section (folder) and on its subfolders. The typical case when workgroups are needed is when more people need to collaborate in uploading and modifying content in a section; the administrator creates the folder, defines a <em>workgroup</em> for it and starts assigning users on it.
 </p>
 
-<p>
-	<a tal:attributes="href string:${site_url}/admin_addworkgroup_html" i18n:translate="">Add workgroup</a>
-</p>
+<form action="admin_addworkgroup_html">
+	<input type="submit" value="Add workgroup" i18n:attributes="value" class="submission_button" />
+</form>
 
-<form method="post" tal:attributes="action string:${site_url}/admin_delworkgroup">
+<form metdho="post" tal:attributes="action string:${site_url}/admin_delworkgroup">
 <table id="folderfile_list" class="sortable" width="70%">
 	<thead>
 		<tr>

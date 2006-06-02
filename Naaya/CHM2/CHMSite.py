@@ -248,13 +248,28 @@ class CHMSite(NySite):
                         users_roles[username]['roles'].append((role, folder.absolute_url(1)))
         return users_roles.values()
 
-    def getUserAdditionalRoles(self, name):
+    def getUserAllRoles(self, name):
         """
-        Returns a list with an user additional roles.
+        Returns a list with all user roles (including local in all portal).
         """
         for x in self.getAssignedUsers():
             if x['username'] == name: return x['roles']
         return []
+
+    def getUserAdditionalRoles(self, name):
+        """
+        Returns a list with an user additional roles.
+        """
+        r = []
+        for x in self.getAssignedUsers():
+            if x['username'] == name:
+                for y in x['roles']:
+                    wg = self.getWorkgroupByLocation(y[1])
+                    if wg:
+                        if wg[3] != y[0]: r.append(y)
+                    else:
+                        r.append(y)
+        return r
 
     def getUnassignedUsers(self):
         """
@@ -690,10 +705,8 @@ class CHMSite(NySite):
             loc = self.unrestrictedTraverse(location)
             if location != '':
                 res = self.utListDifference(loc.get_local_roles_for_userid(name), [role])
-                if len(res):
-                    loc.manage_setLocalRoles(name, res)
-                else:
-                    loc.manage_delLocalRoles(name)
+                if len(res): loc.manage_setLocalRoles(name, res)
+                else: loc.manage_delLocalRoles([name])
             else:
                 self.getAuthenticationTool()._doDelUserRoles(name)
         if REQUEST:

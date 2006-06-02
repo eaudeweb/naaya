@@ -9,6 +9,7 @@
 				rkey python:request.get('rkey', '');
 				sortdata python:(
 					{'sortable': 1, 'key': 'name', 'label': 'Name'},
+					{'sortable': 0, 'key': '', 'label': 'Permissions'},
 				)">
 
 <div class="tabs_firstlevel">
@@ -22,11 +23,15 @@
 	</ul>
 </div>
 
+<h2 i18n:translate="" style="clear: left;">
+	Roles listing
+</h2>
+
 <p i18n:translate="">
-	This page lists the roles defined in this portal.
+	Below you can find the list of roles defined in this portal. Roles are groups of permissions to execute certain operations. Click on an individual role to see details about the permissions it has. Defining other roles, deleting them or modifying the permissions they have requires deeper understanding of the security mechanism so such operations can only be done by <em>Managers</em> by accessing the <em>Zope Management Interface</em>.
 </p>
 
-<table id="folderfile_list" class="sortable" width="30%">
+<table id="folderfile_list" class="sortable" width="70%">
 	<thead>
 		<tr>
 			<tal:block tal:repeat="item sortdata">
@@ -50,6 +55,7 @@
 	<tbody>
 		<tr tal:repeat="item python:user_tool.display_defined_roles(skey, rkey)">
 			<td><a tal:attributes="href string:${site_url}/admin_role_html?role=${item}" tal:content="item" /></td>
+			<td tal:content="python:', '.join(user_tool.getRolePermissions(item))" />
 		</tr>
 	</tbody>
 </table>

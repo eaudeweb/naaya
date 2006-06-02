@@ -18,7 +18,7 @@
 
 <div class="tabs_firstlevel">
 	<ul>
-		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_usersassigned_html" i18n:translate="">Local users</a></li>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
 		<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
 			<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
 		</li>
@@ -83,10 +83,10 @@
 	<tbody>
 		<tr tal:repeat="user users">
 			<td><input type="checkbox" name="names" tal:attributes="value python:user[0]" /></td>
-			<td tal:content="python:user[0]" />
+			<td tal:define="username python:user[0]"><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${username}" tal:content="username" /></td>
 			<td tal:content="python:user[1]" />
 			<td tal:content="python:user[2]" />
-			<td class="roles_per_folder" tal:define="roles python:here.groupByLocation(here.getUserAdditionalRoles(user[0]))">
+			<td class="roles_per_folder" tal:define="roles python:here.groupByLocation(here.getUserAllRoles(user[0]))">
 				<ul tal:condition="python:roles">
 					<li tal:repeat="role roles">
 						<strong tal:content="python:','.join(role[1])" /> - 
