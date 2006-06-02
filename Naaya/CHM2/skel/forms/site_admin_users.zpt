@@ -3,28 +3,22 @@
 <h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
 
 <tal:block metal:fill-slot="section"
-	tal:define="site_url here/getSitePath;
-				user_tool here/getAuthenticationTool;
-				skey python:request.get('skey', 'username');
-				rkey python:request.get('rkey', '');
-				sortdata python:(
-					{'sortable': 0, 'key': '', 'label': ''},
-					{'sortable': 1, 'key': 'username', 'label': 'Username'},
-					{'sortable': 1, 'key': 'name', 'label': 'Name'},
-					{'sortable': 1, 'key': 'email', 'label': 'Email'},
-					{'sortable': 0, 'key': '', 'label': 'Roles'},
-				);
-				query python:request.get('query', '');">
+    tal:define="site_url here/getSitePath;
+                user_tool here/getAuthenticationTool;
+                skey python:request.get('skey', 'username');
+                rkey python:request.get('rkey', '');
+                sortdata python:({'sortable': 0, 'key': '', 'label': ''}, {'sortable': 1, 'key': 'username', 'label': 'Username'}, {'sortable': 1, 'key': 'name', 'label': 'Name'}, {'sortable': 1, 'key': 'email', 'label': 'Email'}, {'sortable': 0, 'key': '', 'label': 'Roles'});
+                query python:request.get('query', '')">
 
 <div class="tabs_firstlevel">
-	<ul>
-		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
-		<li tal:repeat="item python:here.getAuthenticationTool().getSources()">
-			<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
-		</li>
-		<li><a tal:attributes="href string:${site_url}/admin_workgroups_html" i18n:translate="">WorkGroups</a></li>
-		<li><a tal:attributes="href string:${site_url}/admin_roles_html" i18n:translate="">Roles</a></li>
-	</ul>
+    <ul>
+        <li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Local users</a></li>
+        <li tal:repeat="item python:here.getAuthenticationTool().getSources()">
+            <a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
+        </li>
+        <li><a tal:attributes="href string:${site_url}/admin_workgroups_html" i18n:translate="">WorkGroups</a></li>
+        <li><a tal:attributes="href string:${site_url}/admin_roles_html" i18n:translate="">Roles</a></li>
+    </ul>
 </div>
 
 <hr class="hr_invisible" />
@@ -32,131 +26,131 @@
 <div class="second_tab_set">
 
 <div class="tabs_admin">
-	<ul>
-		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Assign roles</a></li>
-		<li><a tal:attributes="href string:${site_url}/admin_usersassigned_html" i18n:translate="">Privileged users</a></li>
-		<li><a tal:attributes="href string:${site_url}/admin_usersunnassigned_html" i18n:translate="">Registered users</a></li>
-	</ul>
+    <ul>
+        <li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Assign roles</a></li>
+        <li><a tal:attributes="href string:${site_url}/admin_usersassigned_html" i18n:translate="">Privileged users</a></li>
+        <li><a tal:attributes="href string:${site_url}/admin_usersunnassigned_html" i18n:translate="">Registered users</a></li>
+    </ul>
 </div>
 
 <hr class="hr_invisible" />
 <h2 i18n:translate="">Assign roles to users</h2>
 
 <p i18n:translate="">
-	Search for specific user(s) by entering a string that occurs either in its <em>name</em>,
-	<em>email</em> or <em>username</em>; on the search results check the desired user(s),
-	select the intended role(s) and choose the specific location from the portal where
-	you want the role(s) to be granted.
+    Search for specific user(s) by entering a string that occurs either in its <em>name</em>,
+    <em>email</em> or <em>username</em>; on the search results check the desired user(s),
+    select the intended role(s) and choose the specific location from the portal where
+    you want the role(s) to be granted.
 </p>
 <form method="get" tal:attributes="action string:${site_url}/admin_users_html" name="frmSearchUsers">
-	<label for="query_users">
-		<span tal:omit-tag="">Search users</span>
-	</label>
-	<input type="text" size="35" name="query:utf8:ustring" id="query_users" tal:attributes="value query" />
-	<input type="submit" value="Search" i18n:attributes="value" class="submission_button" />
+    <label for="query_users">
+        <span tal:omit-tag="">Search users</span>
+    </label>
+    <input type="text" size="35" name="query:utf8:ustring" id="query_users" tal:attributes="value query" />
+    <input type="submit" value="Search" i18n:attributes="value" class="submission_button" />
 </form>
 
 <form tal:attributes="action string:${site_url}/admin_addusersroles" method="post" name="frmUsersRoles">
 <tal:block tal:define="results python:user_tool.searchUsers(query, limit=20);
-						error python:results[0];
-						users python:results[1]">
+                        error python:results[0];
+                        users python:results[1]">
 <table id="folderfile_list" class="sortable" width="100%" tal:condition="python:len(users) > 0">
-	<thead>
-		<tr>
-			<tal:block tal:repeat="item sortdata">
-				<th tal:condition="python:not item['sortable']" scope="col"><span title="Not sortable" i18n:attributes="title" i18n:translate="" tal:content="item/label" /></th>
-				<tal:block tal:condition="item/sortable">
-					<tal:block tal:condition="python:skey==item['key']">
-						<th tal:condition="python:rkey==''" class="sorted" scope="col">
-							<a title="Sorted A..Z - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_users_html?skey=${item/key}&amp;rkey=1&amp;query=${query}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortup.gif" width="12" height="12" alt="" border="0" /></a>
-						</th>
-						<th tal:condition="python:rkey!=''" class="sorted" scope="col">
-							<a title="Sorted Z..A - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_users_html?skey=${item/key}&amp;query=${query}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortdown.gif" width="12" height="12" alt="" border="0" /></a>
-						</th>
-					</tal:block>
-					<th tal:condition="python:skey!=item['key']" scope="col">
-						<a title="Sortable" rel="nofollow" tal:attributes="href string:${site_url}/admin_users_html?skey=${item/key}&amp;query=${query}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortnot.gif" width="12" height="12" alt="" border="0" /></a>
-					</th>
-				</tal:block>
-			</tal:block>
-		</tr>
-	</thead>
-	<tbody>
-		<tr tal:repeat="user users">
-			<td><input type="checkbox" name="names" tal:attributes="value python:user[0]" /></td>
-			<td tal:define="username python:user[0]"><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${username}" tal:content="username" /></td>
-			<td tal:content="python:user[1]" />
-			<td tal:content="python:user[2]" />
-			<td class="roles_per_folder" tal:define="roles python:here.groupByLocation(here.getUserAllRoles(user[0]))">
-				<ul tal:condition="python:roles">
-					<li tal:repeat="role roles">
-						<strong tal:content="python:','.join(role[1])" /> - 
-						<span tal:condition="python:role[0]=='/' or role[0]==''" i18n:translate="">Entire portal</span>
-						<span tal:condition="python:role[0]!='/' and role[0]!=''" tal:define="obj python:here.utGetObject(role[0])">
-						<a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"/>
-						</span>
-					</li>
-				</ul>
-				<tal:block condition="not:roles">&nbsp;</tal:block>
-			</td>
-		</tr>
-	</tbody>
+    <thead>
+        <tr>
+            <tal:block tal:repeat="item sortdata">
+                <th tal:condition="python:not item['sortable']" scope="col"><span title="Not sortable" i18n:attributes="title" i18n:translate="" tal:content="item/label" /></th>
+                <tal:block tal:condition="item/sortable">
+                    <tal:block tal:condition="python:skey==item['key']">
+                        <th tal:condition="python:rkey==''" class="sorted" scope="col">
+                            <a title="Sorted A..Z - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_users_html?skey=${item/key}&amp;rkey=1&amp;query=${query}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortup.gif" width="12" height="12" alt="" border="0" /></a>
+                        </th>
+                        <th tal:condition="python:rkey!=''" class="sorted" scope="col">
+                            <a title="Sorted Z..A - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_users_html?skey=${item/key}&amp;query=${query}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortdown.gif" width="12" height="12" alt="" border="0" /></a>
+                        </th>
+                    </tal:block>
+                    <th tal:condition="python:skey!=item['key']" scope="col">
+                        <a title="Sortable" rel="nofollow" tal:attributes="href string:${site_url}/admin_users_html?skey=${item/key}&amp;query=${query}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortnot.gif" width="12" height="12" alt="" border="0" /></a>
+                    </th>
+                </tal:block>
+            </tal:block>
+        </tr>
+    </thead>
+    <tbody>
+        <tr tal:repeat="user users">
+            <td><input type="checkbox" name="names" tal:attributes="value python:user[0]" /></td>
+            <td tal:define="username python:user[0]"><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${username}" tal:content="username" /></td>
+            <td tal:content="python:user[1]" />
+            <td tal:content="python:user[2]" />
+            <td class="roles_per_folder" tal:define="roles python:here.groupByLocation(here.getUserAllRoles(user[0]))">
+                <ul tal:condition="python:roles">
+                    <li tal:repeat="role roles">
+                        <strong tal:content="python:','.join(role[1])" /> -
+                        <span tal:condition="python:role[0]=='/' or role[0]==''" i18n:translate="">Entire portal</span>
+                        <span tal:condition="python:role[0]!='/' and role[0]!=''" tal:define="obj python:here.utGetObject(role[0])">
+                        <a tal:attributes="href obj/absolute_url" tal:content="obj/title_or_id"/>
+                        </span>
+                    </li>
+                </ul>
+                <tal:block condition="not:roles">&nbsp;</tal:block>
+            </td>
+        </tr>
+    </tbody>
 </table>
 <p tal:condition="python:len(users) == 0 and error == 1" style="color:red" i18n:translate="">
-	No users found for this criteria.
+    No users found for this criteria.
 </p>
 <p tal:condition="python:error == 0" style="color:red" i18n:translate="">
-	There are more than 20 users found for this criteria. Please refine your search and try again.
+    There are more than 20 users found for this criteria. Please refine your search and try again.
 </p>
 <tal:block tal:condition="python:len(users) > 0">
 <table>
-	<tr>
-		<td align="top" width="20%">Grant role(s):</td>
-		<td align="top" width="*" tal:define="roles user_tool/list_valid_roles">
-			<select name="roles" size="5" multiple="multiple">
-				<option tal:repeat="role roles" tal:attributes="value role" tal:content="role" />
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td valign="top" width="20%" i18n:translate="">On location (folder)<br />e.g. /folderURL</td>
-		<td valign="top" width="*">
-			<input type="radio" name="loc" value="allsite" checked="checked" onclick="emptyLocation();"  i18n:translate=""/> Entire portal<br />
-			<input type=radio name="loc" value="other" i18n:translate="" /> Pick other...<br />
-			<input type=text name="location" size="40" onclick="pickLocation();" value="" />
-			<input type="button" value="Pick" tal:attributes="onclick string:setupWin('${user_tool/absolute_url}/sitemap', 300, 500);;" class="submission_button" />
-		</td>
-	</tr>
+    <tr>
+        <td align="top" width="20%">Grant role(s):</td>
+        <td align="top" width="*" tal:define="roles user_tool/list_valid_roles">
+            <select name="roles" size="5" multiple="multiple">
+                <option tal:repeat="role roles" tal:attributes="value role" tal:content="role" />
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top" width="20%" i18n:translate="">On location (folder)<br />e.g. /folderURL</td>
+        <td valign="top" width="*">
+            <input type="radio" name="loc" value="allsite" checked="checked" onclick="emptyLocation();"  i18n:translate=""/> Entire portal<br />
+            <input type=radio name="loc" value="other" i18n:translate="" /> Pick other...<br />
+            <input type=text name="location" size="40" onclick="pickLocation();" value="" />
+            <input type="button" value="Pick" tal:attributes="onclick string:setupWin('${user_tool/absolute_url}/sitemap', 300, 500);;" class="submission_button" />
+        </td>
+    </tr>
 </table>
 <p>
-	<input type="hidden" name="destination" value="manage_userRoles_html" />
-	<input type="submit" value="Assign role" i18n:attributes="value" class="submission_button" />
+    <input type="hidden" name="destination" value="manage_userRoles_html" />
+    <input type="submit" value="Assign role" i18n:attributes="value" class="submission_button" />
 </p>
 </tal:block>
 <script language="JavaScript">
 <!--
 function emptyLocation()
 {
-	if (document.forms['frmUsersRoles'].loc[0].checked == true)
-		document.forms['frmUsersRoles'].location.value = '';
+    if (document.forms['frmUsersRoles'].loc[0].checked == true)
+        document.forms['frmUsersRoles'].location.value = '';
 }
 
 function pickLocation()
 {
-	document.forms['frmUsersRoles'].loc[1].checked = true;
+    document.forms['frmUsersRoles'].loc[1].checked = true;
 }
 
 function setupWin(url, theWidth, theHeight)
 {
-	pickLocation();
-	wwinn = window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
-	wwinn.focus();
-	return true;
+    pickLocation();
+    wwinn = window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
+    wwinn.focus();
+    return true;
 }
 
 function createKey(key)
 {
-	document.forms['frmUsersRoles'].location.value = key;
+    document.forms['frmUsersRoles'].location.value = key;
 }
 //-->
 </script>
