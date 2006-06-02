@@ -21,6 +21,7 @@ function fDeleteObjects()
 </script>
 
 <h1><img tal:attributes="src here/icon; title here/meta_type; alt here/meta_type" border="0" /><span i18n:translate="">Network participant</span>: <span tal:replace="here/title_or_id" /></h1>
+<h2><a tal:attributes="href here/url" tal:content="here/url" /></h2>
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <tal:block tal:define="permission here/checkPermissionPublishObjects">
 <p i18n:translate="">
