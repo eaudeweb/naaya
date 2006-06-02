@@ -37,10 +37,13 @@
 	</ul>
 </div>
 
-<h2 i18n:translate=""></h2>
+<hr class="hr_invisible" />
+<h2 i18n:translate="" style="clear: left;">
+	Registered users listing
+</h2>
 
 <p i18n:translate="">
-	This page lists the users that have accounts in this portal, but that have no role granted to them. Therefore, they only have the rights to submit news, events and stories and comment on content.
+	This page lists the users that created accounts in this portal, but have no role granted to them. Therefore, they only have the rights to submit news, events and stories, post on the forum and comment on content. In orer to assign role(s) to one of these users, click on its username.
 </p>
 
 <form action="admin_adduser_html">
@@ -57,14 +60,14 @@
 				<tal:block tal:condition="item/sortable">
 					<tal:block tal:condition="python:skey==item['key']">
 						<th tal:condition="python:rkey==''" class="sorted" scope="col">
-							<a title="Sorted A..Z - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_usersassigned_html?skey=${item/key}&amp;rkey=1" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortup.gif" width="12" height="12" alt="" border="0" /></a>
+							<a title="Sorted A..Z - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_usersunnassigned_html?skey=${item/key}&amp;rkey=1" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortup.gif" width="12" height="12" alt="" border="0" /></a>
 						</th>
 						<th tal:condition="python:rkey!=''" class="sorted" scope="col">
-							<a title="Sorted Z..A - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_usersassigned_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortdown.gif" width="12" height="12" alt="" border="0" /></a>
+							<a title="Sorted Z..A - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_usersunnassigned_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortdown.gif" width="12" height="12" alt="" border="0" /></a>
 						</th>
 					</tal:block>
 					<th tal:condition="python:skey!=item['key']" scope="col">
-						<a title="Sortable" rel="nofollow" tal:attributes="href string:${site_url}/admin_usersassigned_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortnot.gif" width="12" height="12" alt="" border="0" /></a>
+						<a title="Sortable" rel="nofollow" tal:attributes="href string:${site_url}/admin_usersunnassigned_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortnot.gif" width="12" height="12" alt="" border="0" /></a>
 					</th>
 				</tal:block>
 			</tal:block>
@@ -73,7 +76,7 @@
 	<tbody>
 		<tr tal:repeat="user python:here.sortUsersList(here.getUnassignedUsers(), skey, rkey)">
 			<td><input type="checkbox" name="names" tal:attributes="value user/username" /></td>
-			<td><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${user/username}" tal:content="user/username" /></td>
+			<td><a tal:attributes="href string:${site_url}/admin_userroles_html?name=${user/username}" tal:content="user/username" /></td>
 			<td tal:content="user/name" />
 			<td tal:content="user/email" />
 		</tr>
