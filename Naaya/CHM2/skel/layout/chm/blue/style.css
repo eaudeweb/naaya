@@ -246,12 +246,15 @@
 					position:relative;
 				}
 
-				#linkgroups li ul {
+				#linkgroups li div.dropdown {
 					display: none;
 					position: absolute;
 					z-index: 200;
 					top: 1.2em;
 					left: 0em;
+				}
+
+				#linkgroups li ul {
 					list-style: none;
 					background: none;
 					margin: 0;
@@ -259,16 +262,16 @@
 					background-color: #dcebf4; /*#637785*/ /*#637048*/ /*#343434*/ /*#d3e189*/
 					border: 1px solid white;
 				}
-				#linkgroups>li>ul {
+				#linkgroups>li>div.dropdown {
 					top: auto;
 					left: auto;
 				}
 
-				#linkgroups li:hover ul {
+				#linkgroups li:hover div.dropdown {
 					display: block!important;
 				}
 
-				#linkgroups li.over ul {
+				#linkgroups li.over div.dropdown {
 					display: block!important;
 				}
 

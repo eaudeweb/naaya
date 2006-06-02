@@ -90,6 +90,7 @@
 			<tal:block condition="python:len(l_list)>1">
 			<a tal:attributes="	href string:${site_url}/links_group_html?id=${group_list/id};
 										id string:${menu_id}_a_${repeat/item_group/index}" tal:content="group_list/title"></a>
+			<div class="dropdown">
 			<ul tal:attributes="id string:${menu_id}_ul_${repeat/item_group/index}">
 				<tal:block repeat="l_item l_list">
 					<li	tal:condition="python:here.checkPermissionForLink(l_item.permission, here)"
@@ -100,6 +101,7 @@
 					</li>
 				</tal:block>
 			</ul>
+			</div>
 			</tal:block>
 		</li>
 		</tal:block>
