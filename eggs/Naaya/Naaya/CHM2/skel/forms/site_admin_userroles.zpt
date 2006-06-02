@@ -25,34 +25,26 @@
 		user_created python:user_tool.getUserCreatedDate(user_obj); user_lastupdated python:user_tool.getUserLastUpdated(user_obj);
 		session python:user_tool.setUserSession(user_account, user_roles, '', user_firstname, user_lastname, user_email, '')">
 
-<hr class= "hr_invisible" />
+<hr class="hr_invisible" />
 
 <div class="second_tab_set">
 
 <div class="tabs_admin">
 	<ul>
-		<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Assign roles</a></li>
-		<li><a tal:attributes="href string:${site_url}/admin_usersassigned_html" i18n:translate="">Privileged users</a></li>
-		<li><a tal:attributes="href string:${site_url}/admin_usersunnassigned_html" i18n:translate="">Registered users</a></li>
-	</ul>
-</div>
-
-<div class="second_tabset_content">
-
-<h2 i18n:translate="">Edit user: <span tal:replace="python:name" /></h2>
-
-<div class="tabs_admin">
-	<ul>
 		<li><a tal:attributes="href string:${site_url}/admin_edituser_html?name=${name}" i18n:translate="">Credentials</a></li>
-		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_userroles_html?name=${name}" i18n:translate="">Roles</a></li>
+		<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_userroles_html?name=${name}" i18n:translate="">Roles and workgroups</a></li>
 	</ul>
 </div>
+
+<hr class="hr_invisible" />
+<h2 i18n:translate="">Edit user: <span tal:replace="python:name" /></h2>
 
 
 <tal:block tal:define="wgs here/getWorkgroupsList" tal:condition="wgs">
+
 <h3 i18n:translate="">Workgroups</h3>
 <p i18n:translate="">
-	The listing below shows all the workgroups defined in this portal and this user is part of the checked ones.
+	The workgroups defined in this portal are listed below and this user is part of the checked ones. Also, the role this user has inside the workgroup is specified.
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_userworkgroups">
 <ul>
@@ -70,9 +62,9 @@
 
 <tal:block tal:define="roles python:here.getUserAdditionalRoles(name)" tal:condition="roles">
 <hr />
-<h3 i18n:translate="">Extra roles</h3>
+<h3 i18n:translate="">Roles in the portal</h3>
 <p i18n:translate="">
-	explanatory text here ...
+	This is the list of roles this user has either on the entire portal or on specific locations. If you want to revoke one or more roles, just check them and click <em>Revoke</em>.
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_revokeuserroles">
 <ul>
@@ -91,10 +83,7 @@
 </tal:block>
 
 <hr />
-<h3 i18n:translate="">Assign role</h3>
-<p i18n:translate="">
-	explanatory text here ...
-</p>
+<h3 i18n:translate="">Assign new role(s)</h3>
 
 <script language="JavaScript">
 <!--
@@ -147,7 +136,6 @@ function createKey(key)
 <input type="submit" value="Assign" i18n:attributes="value" class="submission_button" />
 </form>
 
-</div>
 
 </tal:block>
 
