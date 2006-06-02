@@ -118,8 +118,11 @@ def DragDropCore(self, name):
     js_data.append('''var dragsort = ToolMan.dragsort()
         var junkdrawer = ToolMan.junkdrawer()
 
+        ddl_oldonload = window.onload
         window.onload = function() {
             dragsort.makeListSortable(document.getElementById("%s"), verticalOnly, saveOrder)
+            if(ddl_oldonload)
+                ddl_oldonload()
         }
 
         function verticalOnly(item) {
