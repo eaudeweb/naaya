@@ -281,13 +281,28 @@
 					background: none;
 					margin: 0;
 					padding: 0;
-					border: 1px solid #dcebf4; /*1px solid #637785*/ /*1px solid #637048*/ /*1px solid #343434*/ /*1px solid #d3e189*/
 				}
 
 				#linkgroups li li a {
 					display:block;
-					padding: 0 1em;
+					padding: 0 0 1px;
+					width: 13em;
+					margin: 0;
+					background-color: #dcebf4; /*#637785*/ /*#637048*/ /*#343434*/ /*#d3e189*/
 				}
+
+				#linkgroups li li a span{
+					display: block;
+					padding: 0 1em;
+					margin: 3px;
+				}
+
+				#linkgroups li li a:hover span, #linkgroups li li a:active span{
+					background-color: #EDF5FA; /* #798D9B*/ /*#788857*/ /*#585858*/ /*#E0EAAA*/
+					border: 1px solid #cccccc;
+					margin: 2px;
+				}
+
 
 		#banner_logo{
 			position:relative;
@@ -388,7 +403,7 @@
 			float:right;
 			margin-right: 0.4em;
 			margin-top:1px;
-			white-space:nowrap!important;
+			white-space:nowrap;
 		}
 		
 	
@@ -618,7 +633,7 @@ vertical-align: top;
 		font-weight: bold;
 		padding:0.9em 1em 0.9em 1em;
 		text-indent: -1.2em;
-}
+	}
 
 	.portlet_folder a{
 		color:#ffffff; /*#ffffff*/ /*#ffffff*/ /*#d3e287*/ /*#d2e186*/
@@ -769,3 +784,8 @@ vertical-align: top;
 		clear:both;
 	}
 }
+
+
+
+
+
