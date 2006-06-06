@@ -40,7 +40,7 @@
 <div id="nav1">
 	<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('topnav_links').get_links_list()">
 		<tal:block tal:repeat="item l_list">
-		<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url)"><acronym tal:attributes="title item/description" tal:content="item/title"></acronym></a></li>
+		<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url)"><acronym tal:attributes="title item/description" tal:content="item/title" i18n:translate="" i18n:attributes="title"></acronym></a></li>
 		</tal:block>
 	</ul>
 </div>
