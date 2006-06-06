@@ -33,7 +33,7 @@
 	<legend  tal:content="python:language['name']" />
 	<form method="post" tal:attributes="action string:${site_url}/admin_editmessage">
 		<div><textarea name="translation:utf8:ustring" cols="60" rows="6" wrap="off" tal:content="python:catalog.get_msg_translations(message, language['code'])" /></div>
-		<input type="hidden" name="message:utf8:ustring" tal:attributes="value msg_encoded" />
+		<input type="hidden" name="message:utf8:ustring" tal:attributes="value message" />
 		<input type="hidden" name="language" tal:attributes="value python:language['code']">
 		<input type="hidden" name="start" tal:attributes="value start" />
 		<input type="hidden" name="skey" tal:attributes="value skey" />
