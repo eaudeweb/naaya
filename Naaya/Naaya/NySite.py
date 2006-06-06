@@ -1526,8 +1526,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def admin_editmessage(self, message, language, translation, start, skey, rkey, query, REQUEST=None):
         """ """
         ob = self.getPortalTranslations()
-        message_encoded = message
-        message = ob.message_decode(message_encoded)
+        message_encoded = ob.message_encode(message)
         ob.message_edit(message, language, translation, '')
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
