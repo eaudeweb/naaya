@@ -2,10 +2,10 @@
 
 <h1 metal:fill-slot="title" i18n:translate="">Portal administration centre</h1>
 
-<tal:block metal:fill-slot="section" i18n:translate="">
-	<p>This section allows administrators to manage the content, the look &amp; feel and maintain various functions of the current portal.</p>
+<tal:block metal:fill-slot="section">
+	<p i18n:translate="">This section allows administrators to manage the content, the look &amp; feel and maintain various functions of the current portal.</p>
 
-	<p><strong>All administration functionalities are available from the right-side menu.</strong></p>
+	<p><strong i18n:translate="">All administration functionalities are available from the right-side menu.</strong></p>
 
 	<p><img src="misc_/Naaya/admin_schema" border="0" alt="Overview of the administrative functionality" i18n:attributes="alt" /></p>
 </tal:block>
