@@ -2,16 +2,7 @@
 	hasRoleHelpDeskConsultant here/isHelpDeskConsultant;
 	skey python:request.get('skey', 'date');
 	rkey python:request.get('rkey', '');
-	sortdata python:(
-		{'sortable': 0, 'key': '', 'label': ''},
-		{'sortable': 1, 'key': 'date', 'label': 'Date'},
-		{'sortable': 1, 'key': 'action', 'label': 'Action'},
-		{'sortable': 0, 'key': '', 'label': 'User'},
-		{'sortable': 1, 'key': 'status', 'label': 'Status'},
-		{'sortable': 0, 'key': '', 'label': 'Priority'},
-		{'sortable': 0, 'key': '', 'label': 'Assigned to'},
-		{'sortable': 0, 'key': '', 'label': 'Additional comment'},
-	)">
+	sortdata python:({'sortable': 0, 'key': '', 'label': ''}, {'sortable': 1, 'key': 'date', 'label': 'Date'}, {'sortable': 1, 'key': 'action', 'label': 'Action'}, {'sortable': 0, 'key': '', 'label': 'User'}, {'sortable': 1, 'key': 'status', 'label': 'Status'}, {'sortable': 0, 'key': '', 'label': 'Priority'}, {'sortable': 0, 'key': '', 'label': 'Assigned to'}, {'sortable': 0, 'key': '', 'label': 'Additional comment'},)">
 
 <form action="manageIssueHistory" method="post">
 <input type="submit" name="delete" value="Clear history" i18n:attributes="value" />
