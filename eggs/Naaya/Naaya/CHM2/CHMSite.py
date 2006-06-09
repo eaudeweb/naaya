@@ -708,7 +708,7 @@ class CHMSite(NySite):
                 if len(res): loc.manage_setLocalRoles(name, res)
                 else: loc.manage_delLocalRoles([name])
             else:
-                self.getAuthenticationTool()._doDelUserRoles(name)
+                self.getAuthenticationTool()._doDelUserRoles([name])
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s' % (self.absolute_url(), name))
