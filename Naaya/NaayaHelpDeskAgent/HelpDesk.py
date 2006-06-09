@@ -633,11 +633,11 @@ class HelpDesk(Folder, EmailSender):
             return self.__getZopeUserName(oId)
         if self.isUserFolderNaaya():
             return self.__getNaayaUserName(oId)
-        return ''
+        return oId
 
     def __getZopeUserName(self, oId):
         """Returns the full name of a 'zope user'"""
-        res = ''
+        res = oId
         oUser = self.getUser(oId)
         if oUser:
             res = oUser.first_name + ' ' + oUser.last_name
@@ -645,7 +645,7 @@ class HelpDesk(Folder, EmailSender):
 
     def __getLdapUserName(self, oId):
         """Returns the canonical name of a 'ldap user'"""
-        res = ''
+        res = oId
         oUser = self.getUserFolder().getUser(oId)
         if oUser:
             try:
@@ -656,7 +656,7 @@ class HelpDesk(Folder, EmailSender):
 
     def __getNaayaUserName(self, oId):
         """Returns the full name of a 'Naaya user'"""
-        res = ''
+        res = oId
         oUser = self.getUserFolder().getUser(oId)
         if oUser:
             res = oUser.firstname + ' ' + oUser.lastname
