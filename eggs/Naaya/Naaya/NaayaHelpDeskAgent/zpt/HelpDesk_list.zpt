@@ -26,16 +26,7 @@
 	issues python:result[0];
 	paging_start python:result[1]; paging_stop python:result[2]; paging_total python:result[3];
 	paging_prev python:result[4]; paging_next python:result[5];
-	sortdata python:(
-		{'sortable': 1, 'key': 'subject', 'label': 'Subject/Title'},
-		{'sortable': 1, 'key': 'date_open', 'label': 'Date Open'},
-		{'sortable': 1, 'key': 'date_modify', 'label': 'Last Update'},
-		{'sortable': 1, 'key': 'consultant', 'label': 'Assign to'},
-		{'sortable': 1, 'key': 'category', 'label': 'Category'},
-		{'sortable': 1, 'key': 'priority', 'label': 'Priority'},
-		{'sortable': 1, 'key': 'status', 'label': 'Status'},
-		{'sortable': 0, 'key': '', 'label': ''},
-	)">
+	sortdata python:({'sortable': 1, 'key': 'subject', 'label': 'Subject/Title'}, {'sortable': 1, 'key': 'date_open', 'label': 'Date Open'}, {'sortable': 1, 'key': 'date_modify', 'label': 'Last Update'}, {'sortable': 1, 'key': 'consultant', 'label': 'Assign to'}, {'sortable': 1, 'key': 'category', 'label': 'Category'}, {'sortable': 1, 'key': 'priority', 'label': 'Priority'}, {'sortable': 1, 'key': 'status', 'label': 'Status'}, {'sortable': 0, 'key': '', 'label': ''}, )">
 
 <p i18n:translate="">
 	This page lists the issues posted using this agent. Order the list by a field
