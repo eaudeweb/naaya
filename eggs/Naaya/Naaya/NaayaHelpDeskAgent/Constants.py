@@ -56,6 +56,8 @@ HELPDESK_ROLE_AUTHENTICATED = 'Authenticated'
 
 #define HelpDesk Permission names
 PERMISSION_MANAGE_HELPDESK_SETTINGS = 'HelpDesk Administration'
+PERMISSION_POST_ISSUES = 'HelpDesk Post Issues'
+PERMISSION_POST_COMMENTS = 'HelpDesk Post Comments to Issues'
 PERMISSION_ATTACH_FILES = 'Attach files to issues'
 
 #define security constants for issue

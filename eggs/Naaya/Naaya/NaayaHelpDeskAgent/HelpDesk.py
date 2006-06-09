@@ -27,7 +27,7 @@ import Products
 from OFS.Folder import Folder
 from Globals import InitializeClass, MessageDialog
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens,view
 from Products.ZCatalog.ZCatalog import ZCatalog
 from DateTime import DateTime
@@ -117,9 +117,9 @@ class HelpDesk(Folder, EmailSender):
     manage_addIssueForm = Issue.manage_addIssueForm
     manage_addIssue = Issue.manage_addIssue
 
-    security.declareProtected(view, 'HDAddIssue')
+    security.declareProtected(PERMISSION_POST_ISSUES, 'HDAddIssue')
     HDAddIssue = Issue.AddIssue
-    security.declareProtected(view, 'HDAddIssueQuick')
+    security.declareProtected(PERMISSION_POST_ISSUES, 'HDAddIssueQuick')
     HDAddIssueQuick = Issue.AddIssueQuick
 
     def __init__(self, id, title, user_folder,
@@ -1252,6 +1252,11 @@ class HelpDesk(Folder, EmailSender):
         """Test if current issue is private"""
         return (issue.security == self.getIssuePrivate())
 
+    def checkPermissionPostIssues(self):
+        """
+        Check the right to post issues.
+        """
+        return getSecurityManager().checkPermission(PERMISSION_POST_ISSUES, self) is not None
 
     #############
     #   EMAILS  #
@@ -1385,10 +1390,10 @@ class HelpDesk(Folder, EmailSender):
     security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'login_html')
     login_html = PageTemplateFile('zpt/HelpDesk_login', globals())
 
-    security.declareProtected(view, 'add_issue_html')
+    security.declareProtected(PERMISSION_POST_ISSUES, 'add_issue_html')
     add_issue_html = PageTemplateFile('zpt/HelpDesk_add_issue', globals())
 
-    security.declareProtected(view, 'add_issue_quick_html')
+    security.declareProtected(PERMISSION_POST_ISSUES, 'add_issue_quick_html')
     add_issue_quick_html = PageTemplateFile('zpt/HelpDesk_add_issue_quick', globals())
 
     security.declareProtected(view, 'list_html')

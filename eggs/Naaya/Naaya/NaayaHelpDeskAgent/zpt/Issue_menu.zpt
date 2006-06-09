@@ -11,7 +11,7 @@
 						<a tal:attributes="href string:${here/absolute_url}/history_user_html" i18n:translate="">History</a>
 					</div>
 					</tal:block>
-					<tal:block tal:condition="python:here.getIssueStatusFinal()!=here.status">
+					<tal:block tal:condition="python:here.checkPermissionPostComments() and here.getIssueStatusFinal()!=here.status">
 					<div tal:attributes="class python:test(options['pagetab']==2, 'tab_active2', 'tab2')">
 						<a tal:attributes="href string:${here/absolute_url}/comments_user_html" i18n:translate="">Add Comment</a>
 					</div>

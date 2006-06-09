@@ -21,7 +21,7 @@
 from OFS.Folder import Folder
 from OFS.Image import cookId
 from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens,view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import types, time
@@ -362,7 +362,7 @@ class Issue(Folder):
         self.__historycounter = 1
         self._p_changed = 1
 
-    security.declareProtected(view, 'manageIssueProperties')
+    security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'manageIssueProperties')
     def manageIssueProperties(self, REQUEST=None):
         """Edit current Issue object properties"""
         local_roles = REQUEST.AUTHENTICATED_USER.getRolesInContext(self)
@@ -407,7 +407,7 @@ class Issue(Folder):
         #go back to comments page
         REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
-    security.declareProtected(view, 'manageIssueComment')
+    security.declareProtected(PERMISSION_POST_COMMENTS, 'manageIssueComment')
     def manageIssueComment(self, REQUEST=None):
         """Manage IssueComment objects"""
         if self.getIssueStatusFinal() != self.status:
@@ -460,7 +460,7 @@ class Issue(Folder):
         #go back to comments page
         REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
-    security.declareProtected(view, 'manageIssueHistory')
+    security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'manageIssueHistory')
     def manageIssueHistory(self, REQUEST=None):
         """Manage IssueHistory"""
         local_roles = REQUEST.AUTHENTICATED_USER.getRolesInContext(self)
@@ -516,6 +516,11 @@ class Issue(Folder):
         """Test if current issue is private"""
         return self.getHelpDeskAgent().isPrivate(self)
 
+    def checkPermissionPostComments(self):
+        """
+        Check the right to post comments to issues.
+        """
+        return getSecurityManager().checkPermission(PERMISSION_POST_COMMENTS, self) is not None
 
     ########################################
     security.declareProtected(view, 'index_html')
@@ -530,7 +535,7 @@ class Issue(Folder):
     security.declareProtected(view, 'feedback_html')
     feedback_html = PageTemplateFile('zpt/Issue_feedback', globals())
 
-    security.declareProtected(view, 'edit_form_html')
+    security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'edit_form_html')
     edit_form_html = PageTemplateFile('zpt/Issue_edit_form', globals())
 
     security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'edit_user_html')
@@ -539,16 +544,16 @@ class Issue(Folder):
     security.declareProtected(view_management_screens, 'edit_manage_html')
     edit_manage_html = PageTemplateFile('zpt/Issue_edit_manage', globals())
 
-    security.declareProtected(view, 'comments_form_html')
+    security.declareProtected(PERMISSION_POST_COMMENTS, 'comments_form_html')
     comments_form_html = PageTemplateFile('zpt/Issue_comments_form', globals())
 
-    security.declareProtected(view, 'comments_user_html')
+    security.declareProtected(PERMISSION_POST_COMMENTS, 'comments_user_html')
     comments_user_html = PageTemplateFile('zpt/Issue_comments_user', globals())
 
     security.declareProtected(view_management_screens, 'comments_manage_html')
     comments_manage_html = PageTemplateFile('zpt/Issue_comments_manage', globals())
 
-    security.declareProtected(view, 'history_form_html')
+    security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'history_form_html')
     history_form_html = PageTemplateFile('zpt/Issue_history_form', globals())
 
     security.declareProtected(PERMISSION_MANAGE_HELPDESK_SETTINGS, 'history_user_html')
