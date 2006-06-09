@@ -1016,13 +1016,16 @@ class HelpDesk(Folder, EmailSender):
                 ob._Issue__issuehistory = {}
                 #comments
                 for c in issue.getListIssueComment():
-                    cob = IssueComment(c.id, c.date, c.username,
-                        c.content_type, c.content)
+                    try: content_type = c.content_type
+                    except: content_type = 1
+                    cob = IssueComment(c.id, c.date, c.username, content_type, c.content)
                     ob._Issue__issuecomment[c.id] = cob
                 #history
                 for h in issue.getListIssueHistory():
+                    try: comments = h.comments
+                    except: comments = ''
                     hob = IssueHistory(h.id, h.date, h.username, h.action,
-                        h.status, h.priority, h.consultant, h.comments)
+                        h.status, h.priority, h.consultant, comments)
                     ob._Issue__issuehistory[h.id] = hob
                 #attachements
                 for x in issue.objectValues('File'):
