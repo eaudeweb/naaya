@@ -98,8 +98,7 @@
 	<h2 i18n:translate="">Usage</h2>
 	<ul>
 		<li i18n:translate="">
-			insert your problem (issue) using one of the available forms -
-			<strong>Post issue</strong> and <strong>Post quick issue</strong>.
+			insert your problem (issue) using the <strong>Post issue</strong> form.
 			Use <em>quick issue</em> if you just want to notify the Issue 
 			Administrator about a problem and you don't need follow-ups to it;
 			in this case you will not be asked to insert your personal details.
