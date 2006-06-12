@@ -89,6 +89,12 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
 
     def getChannelItems(self):
         #returns a list of dictionaries, where a dictionary stores the link and the title of the item
+        l = map(lambda x: ({'link': x['link'], 'title': x['title']}), self.get_feed_items())
+        if self.numbershownitems > 0: return l[:self.numbershownitems]
+        else: return l
+
+    def getChannelItems_complete(self):
+        #returns a list of dictionaries, where a dictionary stores the link and the title of the item
         l = map(lambda x: ({'link': x['link'], 'title': x['title'], 'summary': x['summary'],'date': x['modified']}), self.get_feed_items())
         if self.numbershownitems > 0: return l[:self.numbershownitems]
         else: return l
