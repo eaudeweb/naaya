@@ -3,11 +3,12 @@
 
 <form action="manage_addHelpDesk" method="post">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
-	<tr><td>Id:</td><td><input type="text" name="id" size="30" value="HelpDesk" /></td></tr>
-	<tr><td>Title:</td><td><input type="text" name="title" size="30" value="HelpDesk-Agent" /></td></tr>
+<tbody>
+	<tr><th>Id</th><td><input type="text" name="id" size="30" value="HelpDesk" /></td></tr>
+	<tr><th>Title</th><td><input type="text" name="title" size="30" value="HelpDesk-Agent" /></td></tr>
 	<tr><td></td></tr>
 	<tr>
-		<td>User Folder:</td>
+		<th>User Folder</th>
 		<td>
 			<select name="user_folder">
 				<tal:block  tal:repeat="item python:here.superValues(['User Folder', 'LDAPUserFolder', 'Naaya User Folder'])">
@@ -19,21 +20,21 @@
 		</td>
 	</tr>
 	<tr><td></td></tr>
-	<tr><td>Mail server name:</td><td><input type="text" name="mail_server_name" size="50" value="localhost" /></td></tr>
-	<tr><td>Mail server port:</td><td><input type="text" name="mail_server_port" size="3" value="25" /></td></tr>
-	<tr><td>Notify users when:</td><td><input type="checkbox" name="notify_add" value="1" checked="checked" /> adding issues</td></tr>
-	<tr><td></td><td><input type="checkbox" name="notify_modify" value="1" checked="checked" /> modifying issues</td></tr>
-	<tr><td>From address:</td><td><input type="text" name="mail_from_address" size="50" value="IssueTracker@localhost" /></td></tr>
-	<tr><td>Add Issue Email Subject:</td><td><input type="text" name="add_issue_email_subject" size="50" value="HelpDesk Agent: new issue posted" /></td></tr>
-	<tr><td>Update Issue Email Subject:</td><td><input type="text" name="update_issue_email_subject" size="50" value="HelpDesk Agent: issue modification" /></td></tr>
-	<tr><td>Delete Issue Email Subject:</td><td><input type="text" name="delete_issue_email_subject" size="50" value="HelpDesk Agent: issue deleted" /></td></tr>
-	<tr><td>Add Issue Comment Email Subject:</td><td><input type="text" name="add_issue_comment_email_subject" size="50" value="HelpDesk Agent: new comment to issue posted" /></td></tr>
-	<tr><td>Update Issue Comment Email Subject:</td><td><input type="text" name="update_issue_comment_email_subject" size="50" value="HelpDesk Agent: comment modification" /></td></tr>
-	<tr><td>Delete Issue Comment Email Subject:</td><td><input type="text" name="delete_issue_comment_email_subject" size="50" value="HelpDesk Agent: comment deleted" /></td></tr>
+	<tr><th>Mail server name</th><td><input type="text" name="mail_server_name" size="50" value="localhost" /></td></tr>
+	<tr><th>Mail server port</th><td><input type="text" name="mail_server_port" size="3" value="25" /></td></tr>
+	<tr><th>Notify users when</th><td><input type="checkbox" name="notify_add" value="1" checked="checked" /> adding issues</td></tr>
+	<tr><th></th><td><input type="checkbox" name="notify_modify" value="1" checked="checked" /> modifying issues</td></tr>
+	<tr><th>From address</th><td><input type="text" name="mail_from_address" size="50" value="IssueTracker@localhost" /></td></tr>
+	<tr><th>Add Issue Email Subject</th><td><input type="text" name="add_issue_email_subject" size="50" value="HelpDesk Agent: new issue posted" /></td></tr>
+	<tr><th>Update Issue Email Subjecth</th><td><input type="text" name="update_issue_email_subject" size="50" value="HelpDesk Agent: issue modification" /></td></tr>
+	<tr><th>Delete Issue Email Subjecth</th><td><input type="text" name="delete_issue_email_subject" size="50" value="HelpDesk Agent: issue deleted" /></td></tr>
+	<tr><th>Add Issue Comment Email Subject</th><td><input type="text" name="add_issue_comment_email_subject" size="50" value="HelpDesk Agent: new comment to issue posted" /></td></tr>
+	<tr><th>Update Issue Comment Email Subject</th><td><input type="text" name="update_issue_comment_email_subject" size="50" value="HelpDesk Agent: comment modification" /></td></tr>
+	<tr><th>Delete Issue Comment Email Subject</th><td><input type="text" name="delete_issue_comment_email_subject" size="50" value="HelpDesk Agent: comment deleted" /></td></tr>
 	<tr><td></td></tr>
-	<tr><td>Issue ticket length:</td><td><input type="text" name="issue_ticket_length" size="3" value="15" /></td></tr>
+	<tr><th>Issue ticket length</th><td><input type="text" name="issue_ticket_length" size="3" value="15" /></td></tr>
 	<tr>
-		<td>Default Issue confidentiality:</td>
+		<th>Default Issue confidentiality</th>
 		<td>
 			<select name="security">
 				<option value="private">private</option>
@@ -42,11 +43,12 @@
 		</td>
 	</tr>
 	<tr>
-		<td>Priority set by</td>
+		<th>Priority set by</th>
 		<td><input type="radio" name="default_priority" value="1" checked="checked" />manager <input type="radio" name="default_priority" value="0" />user</td>
 	</tr>
 	<tr><td></td></tr>
 	<tr><td></td><td><input type="submit" name="addHelpDesk" value="Add" /></td></tr>
+</tbody>
 </table>
 </form>
 
