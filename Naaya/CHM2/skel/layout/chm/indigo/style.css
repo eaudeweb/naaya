@@ -294,13 +294,13 @@
 				#linkgroups li li a span{
 					display: block;
 					padding: 0 1em;
-					margin: 3px;
+					margin: 2px;
 				}
 
 				#linkgroups li li a:hover span, #linkgroups li li a:active span{
 					background-color: #798D9B; /*#788857*/ /*#585858*/ /*#E0EAAA*/ /* #EDF5FA*/
 					border: 1px solid #cccccc;
-					margin: 2px;
+					margin: 1px;
 				}
 
 
