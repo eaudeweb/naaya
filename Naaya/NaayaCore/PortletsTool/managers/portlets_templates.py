@@ -76,6 +76,11 @@ REMOTECHANNEL_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getL
 			<a tal:attributes="href python:item['link']" tal:content="python:item['title']" />
 		</li>
 	</ul>
+	<div style="text-align: right;">
+	<a tal:attributes="href string:${here/absolute_url}/channel_details_html?id_channel=PORTLET_REMOTECHANNEL_ID">
+		<span i18n:translate="">More...</span>
+	</a>
+	</div>
 </tal:block>
 </tal:block>'''
 
