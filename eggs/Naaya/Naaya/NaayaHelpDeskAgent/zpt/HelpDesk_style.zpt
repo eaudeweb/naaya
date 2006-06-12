@@ -270,6 +270,9 @@ a.title2:hover
 	white-space: nowrap;
 	vertical-align: top;
 }
+.sortable th a {
+	height: 100%;
+}
 .sortable th a:link, .sortable th a:visited, .sortable th span {
 	display:block;
 	text-decoration: none;
