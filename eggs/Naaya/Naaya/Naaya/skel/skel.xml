@@ -15,6 +15,7 @@
 		<form id="languages_box" title="Box for changing the language on pages"/>
 		<form id="form_languages_box" title="Box for changing the language when translating content"/>
 		<form id="comment_add" title="Add comment for content" />
+		<form id="channel_details" title="Show all items from remote channel" />		
 		<form id="comments_box" title="Box for content comments"/>
 		<form id="site_index" title="Portal home page"/>
 		<form id="standard_error_message" title="Portal standard error page"/>
