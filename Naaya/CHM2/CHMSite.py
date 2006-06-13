@@ -41,7 +41,7 @@ from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
 from Products.NaayaPhotoArchive.NyPhotoFolder import manage_addNyPhotoFolder
 from Products.NaayaPhotoArchive.constants import *
 from Products.NaayaNetRepository.constants import *
-from Products.HelpDeskAgent.HelpDesk import manage_addHelpDesk
+from Products.NaayaHelpDeskAgent.HelpDesk import manage_addHelpDesk
 from Products.NaayaGlossary.constants import *
 from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
 
