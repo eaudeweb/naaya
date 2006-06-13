@@ -15,76 +15,78 @@
 <tal:block tal:condition="access_issue">
 	<span tal:replace="structure python:here.menu_html(pagetab=0)" />
 	<table border="0" cellspacing="2" cellpadding="2" width="100%">
-		<tr>
-			<th i18n:translate="">
-				Status
-			</th>
-			<td width="30%" tal:content="python:here.getIssueStatusTitle(here.status)">
-			</td>
-			<th i18n:translate="">
-				Priority
-			</th>
-			<td width="30%" tal:content="python:here.getIssuePriorityTitle(here.priority)">
-			</td>
-			<th i18n:translate="">
-				Category
-			</th>
-			<td width="30%" tal:content="python:here.getIssueCategoryTitle(here.category)">
-			</td>
-		</tr>
+		<tbody>
+			<tr>
+				<th i18n:translate="">
+					Status
+				</th>
+				<td width="30%">
+					<strong  tal:content="python:here.getIssueStatusTitle(here.status)" />
+				</td>
+				<th i18n:translate="">
+					Priority
+				</th>
+				<td width="30%" tal:content="python:here.getIssuePriorityTitle(here.priority)">
+				</td>
+				<th i18n:translate="">
+					Category
+				</th>
+				<td width="30%" tal:content="python:here.getIssueCategoryTitle(here.category)">
+				</td>
+			</tr>
 
-		<tr>
-			<th i18n:translate="" style="white-space:nowrap;">
-				Ticket Number
-			</th>
-			<td width="30%" tal:content="here/id">
-			</td>
-			<th i18n:translate="" style="white-space:nowrap;">
-				Last modified
-			</th>
-			<td width="30%" tal:content="python:here.FormatDate(here.date_modify)">
-			</td>
-			<th i18n:translate="" style="white-space:nowrap;">
-				Opened
-			</th>
-			<td width="30%" tal:content="python:here.FormatDate(here.date_open)">
-			</td>
-		</tr>
+			<tr>
+				<th i18n:translate="" style="white-space:nowrap;">
+					Ticket Number
+				</th>
+				<td width="30%" tal:content="here/id">
+				</td>
+				<th i18n:translate="" style="white-space:nowrap;">
+					Last modified
+				</th>
+				<td width="30%" tal:content="python:here.FormatDate(here.date_modify)">
+				</td>
+				<th i18n:translate="" style="white-space:nowrap;">
+					Opened
+				</th>
+				<td width="30%" tal:content="python:here.FormatDate(here.date_open)">
+				</td>
+			</tr>
 
-		<tr>
-			<th width="10%" valign="top" i18n:translate="">Description</th>
-			<td colspan="5" class="celltextarea" tal:content="structure python:here.EncodeTextareaContent(here.description)" />
-		</tr>
-		<tr>
-			<th i18n:translate="">Assigned to</th>
-			<td colspan="5" tal:content="python:here.getUserName(here.consultant)" />
-		</tr>
-		<tr tal:condition="hasRoleHelpDeskAdministrator">
-			<th i18n:translate="">Security</th>
-			<td colspan="5" tal:content="here/security" />
-		</tr>
-		<tr tal:condition="python:here.user_name!='' or here.user_phone!=''">
-			<th i18n:translate="">User information</th>
-			<td colspan="5">
-				<span tal:condition="python:here.user_name!=''" tal:replace="here/user_name" />
-				<span tal:condition="python:here.user_phone!=''" tal:replace="here/user_phone" />
-			</td>
-		</tr>
-		<tr>
-			<th i18n:translate="">Link</th>
-			<td colspan="5">
-				<a tal:condition="python:here.link!=''" class="urllink" target="_blank"
-					tal:attributes="href here/link" tal:content="here/link" />
-			</td>
-		</tr>
-		<tr>
-			<th i18n:translate="">Attachment</th>
-			<td tal:define="res here/getAttachmentForIssue; attobj python:res[0]; attFileName python:res[1]">
-				<tal:block tal:condition="attobj">
-					<a tal:attributes="href attobj/absolute_url" target="_blank" tal:content="attFileName" />
-				</tal:block>
-			</td>
-		</tr>
+			<tr>
+				<td colspan="6" class="celltextarea" tal:content="structure python:here.EncodeTextareaContent(here.description)" />
+			</tr>
+			<tr>
+				<th i18n:translate="">Assigned to</th>
+				<td colspan="5" tal:content="python:here.getUserName(here.consultant)" />
+			</tr>
+			<tr tal:condition="hasRoleHelpDeskAdministrator">
+				<th i18n:translate="">Security</th>
+				<td colspan="5" tal:content="here/security" />
+			</tr>
+			<tr tal:condition="python:here.user_name!='' or here.user_phone!=''">
+				<th i18n:translate="">User information</th>
+				<td colspan="5">
+					<span tal:condition="python:here.user_name!=''" tal:replace="here/user_name" />
+					<span tal:condition="python:here.user_phone!=''" tal:replace="here/user_phone" />
+				</td>
+			</tr>
+			<tr>
+				<th i18n:translate="">Link</th>
+				<td colspan="5">
+					<a tal:condition="python:here.link!=''" class="urllink" target="_blank"
+						tal:attributes="href here/link" tal:content="here/link" />
+				</td>
+			</tr>
+			<tr>
+				<th i18n:translate="">Attachment</th>
+				<td tal:define="res here/getAttachmentForIssue; attobj python:res[0]; attFileName python:res[1]">
+					<tal:block tal:condition="attobj">
+						<a tal:attributes="href attobj/absolute_url" target="_blank" tal:content="attFileName" />
+					</tal:block>
+				</td>
+			</tr>
+		</tbody>
 	</table>
 
 	<h2 i18n:translate="">Comments</h2>

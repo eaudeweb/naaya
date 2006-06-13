@@ -94,12 +94,12 @@
 	<form name="filter" method="get" action="list_html" class="fieldset_div">
 	<table border="0" cellspacing="2" cellpadding="2" width="100%">
 		<tr>
-			<td class="label" nowrap="nowrap" i18n:translate="">Query</td>
+			<th i18n:translate="">Query</th>
 			<td colspan="5"><input type="text" name="filter_query" size="50" tal:attributes="value filter_query" /></td>
 			<td colspan="4"></td>
 		</tr>
 		<tr>
-			<td class="label" i18n:translate="">Category</td>
+			<th i18n:translate="">Category</th>
 			<td>
 			<select name="filter_category" id="filter_category">
 				<option value=""></option>
@@ -108,7 +108,7 @@
 					tal:content="item/title" />
 			</select>
 			</td>
-			<td class="label" i18n:translate="">Priority</td>
+			<th i18n:translate="">Priority</th>
 			<td>
 			<select name="filter_priority" id="filter_priority">
 				<option value=""></option>
@@ -117,7 +117,7 @@
 					tal:content="item/title" />
 			</select>
 			</td>
-			<td class="label" i18n:translate="">Status</td>
+			<th i18n:translate="">Status</th>
 			<td>
 			<select name="filter_status" id="filter_status">
 				<option value=""></option>
@@ -128,7 +128,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="label" nowrap="nowrap" i18n:translate="">Assigned to</td>
+			<th i18n:translate="">Assigned to</th>
 			<td>
 				<select name="filter_consultant" id="filter_consultant">
 					<option value=""></option>
@@ -137,9 +137,13 @@
 						tal:content="python:here.getUserName(item.id)" />
 				</select>
 			</td>
-			<td class="label" nowrap="nowrap" i18n:translate="">Only new</td>
-			<td><input type="checkbox" name="filter_new" value="on" tal:attributes="checked python:filter_new=='on'" /></td>
-			<td colspan="2" align="left"><input type="submit" name="filter" value="Filter" i18n:attributes="value" /></td>
+			<th i18n:translate="">
+				Only new
+			</th>
+			<td>
+				<input type="checkbox" name="filter_new" value="on" tal:attributes="checked python:filter_new=='on'" />
+			</td>
+			<td colspan="2"><input type="submit" name="filter" value="Filter" i18n:attributes="value" /></td>
 		</tr>
 	</table>
 	</form>

@@ -3,22 +3,23 @@
 <tal:block tal:condition="python:here.getIssueStatusFinal()!=here.status">
 
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
-	<tr>
-		<th nowrap="nowrap" i18n:translate="">Ticket Number</th>
-		<td tal:content="here/id" />
-	</tr>
-	<tr>
-		<th i18n:translate="">Subject/Title</th>
-		<td><strong tal:content="here/subject" /></td>
-	</tr>
-	<tr>
-		<th width="15%" nowrap="nowrap" valign="top" i18n:translate="">Description</th>
-		<td class="celltextarea" tal:content="structure python:here.EncodeTextareaContent(here.description)" />
-	</tr>
-	<tr tal:condition="here/user_name">
-		<th nowrap="nowrap" i18n:translate="">Author</th>
-		<td tal:content="here/user_name" />
-	</tr>
+	<tbody>
+		<tr>
+			<th width="10%" i18n:translate="">Ticket Number</th>
+			<td width="90%" tal:content="here/id" />
+		</tr>
+		<tr>
+			<th i18n:translate="">Subject/Title</th>
+			<td><strong tal:content="here/subject" /></td>
+		</tr>
+		<tr tal:condition="here/user_name">
+			<th i18n:translate="">Author</th>
+			<td tal:content="here/user_name" />
+		</tr>
+		<tr>
+			<td colspan="2" class="celltextarea" tal:content="structure python:here.EncodeTextareaContent(here.description)" />
+		</tr>
+	</tbody>
 </table>
 
 <h2 i18n:translate="">Add comment to this issue</h2>
