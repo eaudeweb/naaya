@@ -13,8 +13,8 @@
 	<span tal:replace="structure python:here.menu_html(pagetab=-1)" />
 	<table border="0" cellspacing="2" cellpadding="2" width="100%">
 		<tr>
-			<th i18n:translate="">Ticket Number</th>
-			<td tal:content="here/id" />
+			<th width="10%" i18n:translate="">Ticket Number</th>
+			<td width="90%" tal:content="here/id" />
 		</tr>
 		<tr>
 			<th i18n:translate="">Subject/Title</th>
@@ -41,15 +41,15 @@
 	<form action="manageFeedback" method="post">
 	<table border="0" cellspacing="2" cellpadding="2" width="100%">
 		<tr>
-			<td class="label" i18n:translate="">Date</td>
-			<td tal:content="here/CurrentDate" />
+			<th width="10%" i18n:translate="">Date</th>
+			<td width="90%" tal:content="here/CurrentDate" />
 		</tr>
 		<tr>
-			<td class="label" i18n:translate="">From</td>
+			<th i18n:translate="">From</th>
 			<td><input type="text" name="from" size="20" tal:attributes="value python:here.getUserName(here.getAuthenticatedUser())" /></td>
 		</tr>
 		<tr>
-			<td class="label" i18n:translate="">Content type</td>
+			<th i18n:translate="">Content type</th>
 			<td>
 				<input type="radio" name="content_type" value="1" checked="checked" />
 				<span i18n:translate="" tal:omit-tag="">Plain text</span>
@@ -58,11 +58,11 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="label" valign="top" i18n:translate="">Content</td>
+			<th valign="top" i18n:translate="">Content</th>
 			<td><textarea name="content" rows="10" cols="70"></textarea></td>
 		</tr>
 		<tr>
-			<td class="label" i18n:translate="">Create comment</td>
+			<th i18n:translate="">Create comment</th>
 			<td><input type="checkbox" name="comment" value="on" /></td>
 		</tr>
 		<tr><td></td><td><input type="submit" name="add" value="Send feedback" i18n:attributes="value" /></td></tr>
