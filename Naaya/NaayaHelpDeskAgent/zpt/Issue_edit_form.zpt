@@ -86,7 +86,7 @@
 		</tr>
 		</tal:block>
 
-		<tr><th colspan="2" style="background-color:white; color: #333333; text-align:left;"><strong i18n:translate="">User information</strong></th></tr>
+		<tr><th colspan="2" style="background-color:white; color: #333333; text-align:left;"><strong i18n:translate="">Submitter's credentials</strong></th></tr>
 
 		<tr>
 			<th i18n:translate="">Name</th>

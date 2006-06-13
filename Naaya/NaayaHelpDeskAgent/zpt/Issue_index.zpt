@@ -36,17 +36,17 @@
 			</tr>
 
 			<tr>
-				<th i18n:translate="" style="white-space:nowrap;">
+				<th i18n:translate="">
 					Ticket Number
 				</th>
 				<td width="30%" tal:content="here/id">
 				</td>
-				<th i18n:translate="" style="white-space:nowrap;">
+				<th i18n:translate="">
 					Last modified
 				</th>
 				<td width="30%" tal:content="python:here.FormatDate(here.date_modify)">
 				</td>
-				<th i18n:translate="" style="white-space:nowrap;">
+				<th i18n:translate="">
 					Opened
 				</th>
 				<td width="30%" tal:content="python:here.FormatDate(here.date_open)">
