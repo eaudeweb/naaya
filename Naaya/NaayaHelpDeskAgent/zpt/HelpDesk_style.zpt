@@ -2,6 +2,42 @@
 <style type="text/css">
 <!--
 
+th {
+	color: #666666;
+	text-align: left;
+	background-color: #f6f6f6;
+	border: 1px solid #cccccc;
+	padding: 2px 0.3em;
+	white-space: nowrap;
+}
+
+thead th {
+	vertical-align: middle;
+	padding: 0;
+	height: auto;
+}
+
+th.th_header {
+	border: 0;
+	background-color: white;
+	padding: 1em 0 0.2em;
+}
+
+td.celltextarea {
+	border: double #cccccc;
+	border-width: 0 0px;
+	padding: 1em 0.2em;
+	font-size: 115%;
+}
+
+hr.wide_space {
+	margin:1.5em 0;
+	color:gray;
+	background: gray;
+	height: 1px;
+	border:0;
+}
+
 /*comments style*/
 .hd_comment {
 	border:1px solid #d0d0d0;
@@ -34,49 +70,41 @@
 
 .cell
 {
-    color: #000000;
-    background: #FFFFFF;
+	color: #000000;
+	background: #FFFFFF;
 }
 .cellheader
 {
-    color: #000000;
-    background: #C0C0C0;
+	color: #000000;
+	background: #C0C0C0;
 	font-weight: bold;
 }
 
 .celleven, .roweven td
 {
 	border: 0!important;
-    color: #000000;
-    background-color: #FFFFFF;
+	color: #000000;
+	background-color: #FFFFFF;
 }
 
 .cellodd, .rowodd td
 {
 	border: 0!important;
-    color: #000000;
-    background-color: #e8e8e8;
+	color: #000000;
+	background-color: #f0f0f0;
 }
 
-.celltextarea
-{
-    font-weight: normal;
-    font-style: normal;
-    font-size: 1.2em;
-    color: #000000;
-    background: #FAFAFA;
-}
 .label
 {
-    font-weight: bold;
-    color: #505050;
-    background: #FFFFFF;
+	font-weight: bold;
+	color: #505050;
+	background: #FFFFFF;
 }
 
 .note
 {
-    font-weight: normal;
-    color: #303030;
+	font-weight: normal;
+	color: #303030;
 }
 
 .alert
@@ -89,135 +117,135 @@
 
 a.menulinkon
 {
-    font-weight: bold;
-    color: #333333;
-    text-decoration: none;
+	font-weight: bold;
+	color: #333333;
+	text-decoration: none;
 }
 a.menulinkon:hover
 {
-    font-weight: bold;
-    color: #333333;
-    text-decoration: none;
+	font-weight: bold;
+	color: #333333;
+	text-decoration: none;
 }
 
 a.menulinkoff
 {
-    font-weight: bold;
-    color: #483D8b;
-    text-decoration: none;
+	font-weight: bold;
+	color: #483D8b;
+	text-decoration: none;
 }
 a.menulinkoff:hover
 {
-    font-weight: bold;
-    color: #483D8b;
-    text-decoration: none;
+	font-weight: bold;
+	color: #483D8b;
+	text-decoration: none;
 }
 
 a.itemlink
 {
-    font-weight: normal;
-    color: #000000;
-    text-decoration: underline;
+	font-weight: normal;
+	color: #000000;
+	text-decoration: underline;
 }
 a.itemlink:hover
 {
-    font-weight: normal;
-    color: #505050;
-    text-decoration: underline;
+	font-weight: normal;
+	color: #505050;
+	text-decoration: underline;
 }
 
 a.sortlink
 {
-    font-weight: bold;
-    color: #000000;
-    text-decoration: none;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
 }
 a.sortlink:hover
 {
-    font-weight: bold;
-    color: #505050;
-    text-decoration: none;
+	font-weight: bold;
+	color: #505050;
+	text-decoration: none;
 }
 
 a.urllink
 {
-    font-weight: normal;
-    color: #0000FF;
-    text-decoration: none;
+	font-weight: normal;
+	color: #0000FF;
+	text-decoration: none;
 }
 a.urllink:hover
 {
-    font-weight: normal;
-    color: #0000FF;
-    text-decoration: underline;
+	font-weight: normal;
+	color: #0000FF;
+	text-decoration: underline;
 }
 
 a.issuelink
 {
-    font-weight: bold;
-    color: #FFFFFF;
-    background: #FF0000;
-    text-decoration: underline;
+	font-weight: bold;
+	color: #FFFFFF;
+	background: #FF0000;
+	text-decoration: underline;
 }
 a.issuelink:hover
 {
-    font-weight: bold;
-    color: FFFFFF;
-    background: #FF0000;
-    text-decoration: underline;
+	font-weight: bold;
+	color: FFFFFF;
+	background: #FF0000;
+	text-decoration: underline;
 }
 
 a.feedbacklink
 {
-    font-weight: bold;
-    color: #000066;
-    text-decoration: underline;
+	font-weight: bold;
+	color: #000066;
+	text-decoration: underline;
 }
 a.feedbacklink:hover
 {
-    font-weight: bold;
-    color: #000066;
-    text-decoration: underline;
+	font-weight: bold;
+	color: #000066;
+	text-decoration: underline;
 }
 
 a.batchlink
 {
-    font-weight: bold;
-    color: #505050;
-    text-decoration: none;
+	font-weight: bold;
+	color: #505050;
+	text-decoration: none;
 }
 a.batchlink:hover
 {
-    font-weight: bold;
-    color: #808080;
-    text-decoration: none;
+	font-weight: bold;
+	color: #808080;
+	text-decoration: none;
 }
 
 a.tablink
 {
-    font-weight: bold;
-    color: #000000;
-    text-decoration: none;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
 }
 a.tablink:hover
 {
-    font-weight: bold;
-    color: #000000;
-    text-decoration: none;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
 }
 
 .taboff
 {
-    background: #DCDCDC;
+	background: #DCDCDC;
 }
 .tabon
 {
-    background: #C0C0C0;
+	background: #C0C0C0;
 }
 
 .infologin
 {
-    color: #000066;
+	color: #000066;
 }
 
 .infologin span {
@@ -227,32 +255,32 @@ a.tablink:hover
 
 a.title1
 {
-    font-weight: bold;
-    font-size: 1.4em;
-    color: #000066;
-    text-decoration: none;
+	font-weight: bold;
+	font-size: 1.4em;
+	color: #000066;
+	text-decoration: none;
 }
 a.title1:hover
 {
-    font-weight: bold;
-    font-size: 1.4em;
-    color: #000066;
-    text-decoration: none;
+	font-weight: bold;
+	font-size: 1.4em;
+	color: #000066;
+	text-decoration: none;
 }
 
 a.title2
 {
-    font-weight: bold;
-    font-size: 1.2em;
-    color: #000066;
-    text-decoration: none;
+	font-weight: bold;
+	font-size: 1.2em;
+	color: #000066;
+	text-decoration: none;
 }
 a.title2:hover
 {
-    font-weight: bold;
-    font-size: 1.2em;
-    color: #000066;
-    text-decoration: none;
+	font-weight: bold;
+	font-size: 1.2em;
+	color: #000066;
+	text-decoration: none;
 }
 
 

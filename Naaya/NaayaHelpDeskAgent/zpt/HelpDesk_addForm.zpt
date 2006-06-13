@@ -46,8 +46,10 @@
 		<th>Priority set by</th>
 		<td><input type="radio" name="default_priority" value="1" checked="checked" />manager <input type="radio" name="default_priority" value="0" />user</td>
 	</tr>
-	<tr><td></td></tr>
-	<tr><td></td><td><input type="submit" name="addHelpDesk" value="Add" /></td></tr>
+	<tr>
+		<td></td>
+		<td style="padding-top: 2em"><input type="submit" name="addHelpDesk" value="Add" /></td>
+	</tr>
 </tbody>
 </table>
 </form>
