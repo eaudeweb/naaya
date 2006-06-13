@@ -21,11 +21,10 @@
 			<td><strong tal:content="here/subject" /></td>
 		</tr>
 		<tr>
-			<th width="15%" i18n:translate="">Description</td>
-			<td class="celltextarea" tal:content="structure python:here.EncodeTextareaContent(here.description)" />
+			<td colspan="2" class="celltextarea" tal:content="structure python:here.EncodeTextareaContent(here.description)" />
 		</tr>
 		<tr tal:condition="here/user_name">
-			<td class="label" nowrap="nowrap" i18n:translate="">Author</td>
+			<td class="label" i18n:translate="">Author</td>
 			<td tal:content="here/user_name" />
 		</tr>
 	</table>

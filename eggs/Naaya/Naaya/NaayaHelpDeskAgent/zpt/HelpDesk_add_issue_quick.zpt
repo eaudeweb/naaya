@@ -32,7 +32,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Category</td>
+		<td class="label" i18n:translate="">Category</td>
 		<td>
 			<select name="category" id="category">
 				<option value=""></option>
@@ -44,7 +44,7 @@
 		</td>
 	</tr>
 	<tr tal:condition="python:not here.default_priority">
-		<td class="label" nowrap="nowrap" i18n:translate="">Priority</td>
+		<td class="label" i18n:translate="">Priority</td>
 		<td>
 			<select name="priority" id="priority">
 				<option value=""></option>
@@ -55,24 +55,24 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Description</td>
+		<td class="label" i18n:translate="">Description</td>
 		<td>
 			<textarea name="description:utf8:ustring" id="description" rows="10" cols="70" tal:content="req_description"></textarea>
 			<span style="color:#FF0000;">* <span tal:condition="python:request.has_key('FORM_ERROR_description')" tal:content="python:request['FORM_ERROR_description']" i18n:translate="" tal:omit-tag="" />
 		</td>
 	</tr>
 	<tr tal:condition="here/isSecurityFlagPublic">
-		<td class="label" nowrap="nowrap" i18n:translate="">Confidential?</td>
+		<td class="label" i18n:translate="">Confidential?</td>
 		<td><input type="checkbox" name="security" id="security" value="on" tal:attributes="checked here/isSecurityFlagPrivate" /></td>
 	</tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Link</td>
+		<td class="label" i18n:translate="">Link</td>
 		<td><input type="text" name="link" id="link" size="50" tal:attributes="value req_link" /></td>
 	</tr>
 	<tal:block tal:condition="here/isAuthenticated">
 	<tr><td></td></tr>
 	<tr>
-		<td class="label" nowrap="nowrap" i18n:translate="">Attachment</td>
+		<td class="label" i18n:translate="">Attachment</td>
 		<td><input type="file" name="attachment" id="attachment" size="20" /></td>
 	</tr>
 	</tal:block>
