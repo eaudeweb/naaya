@@ -28,6 +28,7 @@ This module contains the class that implements permissions and rights checking.
 
 #Zope imports
 from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl.Permissions import view
 from Globals import InitializeClass
 
 #Product imports
@@ -60,6 +61,12 @@ class NyPermissions:
             - B{None} otherwise
         """
         return getSecurityManager().checkPermission(p_permission, self) is not None
+
+    def checkPermissionView(self):
+        """
+        Check the access to the current object.
+        """
+        return self.checkPermission(view)
 
     def checkPermissionAdministrate(self):
         """
