@@ -978,6 +978,24 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         #this is called to handle other types of multilanguage objects
         pass
 
+    security.declareProtected(view_management_screens, 'gl_clean_objects_translations')
+    def gl_clean_objects_translations(self, prop, lang):
+        """
+        Method that cleans all empty translations of the I{title}
+        property in the given language.
+        """
+        catalog_tool = self.getCatalogTool()
+        for b in self.getCatalogedBrains():
+            ob = catalog_tool.getobject(b.data_record_id_)
+            p = ob._local_properties.get(prop, None)
+            if p:
+                t = p.get(lang, None)
+                if t:
+                    if len(t[0])==0:
+                        del ob._local_properties[prop][lang]
+                        self.recatalogNyObject(ob)
+        return 'gl_clean_objects_translations OK.'
+
     #layer over NyEpozToolbox
     def getUploadedImages(self): return self.getImagesFolder().objectValues(['Image'])
 
