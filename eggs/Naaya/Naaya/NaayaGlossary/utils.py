@@ -309,6 +309,14 @@ class catalog_utils:
         res = self.__get_objects(results)
         return self.utEliminateDuplicates(res)[:int(size)]
 
+    def cu_search_catalog_by_id(self, id=''):
+        """ search catalog """
+        catalog = self.getGlossaryCatalog()
+        id = self.StrEscapeForSearch(id)
+        command= "catalog(meta_type=[NAAYAGLOSSARY_ELEMENT_METATYPE,], id=id)"
+        results = eval(command)
+        return self.__get_objects(results)
+
     def StrEscapeForSearch(self, p_string):
         """ escape some characters"""
         return re.sub('[(\"{})\[\]]', '', p_string)
