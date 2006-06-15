@@ -72,13 +72,16 @@ class glossary_export:
         r_append('</xliff>')
         return results
 
-    def xliff_export(self, folder='/', language='', published=0, REQUEST=None):
+    def xliff_export(self, folder='', language='', published=0, REQUEST=None):
         """ Exports the content to an XLIFF file """
         from types import UnicodeType
         results_list = []
         results = []
         terms = []
         r_append = results_list.append   #alias for append function. For optimization purposes
+
+        if not folder:
+            folder = self.absolute_url(1)
 
         if not published:
             terms.extend(self.get_published('/%s' % folder))
