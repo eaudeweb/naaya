@@ -516,7 +516,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             elem_id = ids[0].encode('utf-8')
 
             if elem_id!='':
-                l_context_name = translation['context-name'].encode('utf-8')
+                l_context_name = translation['context-name']
                 if l_context_name:
                     folder_id = ids[1].encode('utf-8')
                 else:
@@ -524,22 +524,22 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 folder = self._getOb(folder_id, None)
                 if folder is None:
                     try:
-                        self.manage_addGlossaryFolder(folder_id, translation['context'].encode('utf-8'), [], '', '', 1)
+                        self.manage_addGlossaryFolder(folder_id, translation['context'], [], '', '', 1)
                         folder = self._getOb(folder_id)
-                        folder.set_translations_list(target_language, translation['context'].encode('utf-8'))
+                        folder.set_translations_list(target_language, translation['context'])
                     except Exception, error:
                         #print error
                         pass
                 else:
-                    folder.set_translations_list(target_language, translation['context'].encode('utf-8'))
+                    folder.set_translations_list(target_language, translation['context'])
                 if target_language in self.get_english_names():
-                    obj.entry = translation['source'].encode('utf-8')
-                    obj.translations[target_language] = translation['target'].encode('utf-8')
+                    obj.entry = translation['source']
+                    obj.translations[target_language] = translation['target']
                 if obj.entry!='':
                     elem_ob = folder._getOb(obj.entry, None)
                     if elem_ob is not None:
                         for k,v in obj.translations.items():
-                            elem_ob.set_translations_list(k, v.encode('utf-8'))
+                            elem_ob.set_translations_list(k, v)
                         elem_ob.cu_recatalog_object(elem_ob)
                     else:
                         try:
@@ -555,7 +555,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                                 elem_ob.set_translations_list(k, v)
 
                             #definition translation
-                            elem_ob.set_def_trans_list(target_language, translation['note'].encode('utf-8'))
+                            elem_ob.set_def_trans_list(target_language, translation['note'])
                             elem_ob.cu_recatalog_object(elem_ob)
             obj.emptyObject()
         if REQUEST: return REQUEST.RESPONSE.redirect('import_html')
