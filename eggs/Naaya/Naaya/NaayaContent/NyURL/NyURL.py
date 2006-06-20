@@ -73,6 +73,10 @@ def addNyURL(self, id='', title='', description='', coverage='', keywords='',
     Create an URL type of object.
     """
     #process parameters
+    r =[]
+    if id is not None and REQUEST is not None and self.utValidateId(str(id)):
+        r = self.utValidateId(str(id))
+
     id = self.utCleanupId(id)
     if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
     try: sortorder = abs(int(sortorder))
@@ -81,11 +85,9 @@ def addNyURL(self, id='', title='', description='', coverage='', keywords='',
     l_referer = ''
     if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
     if not(l_referer == 'url_manage_add' or l_referer.find('url_manage_add') != -1) and REQUEST:
-        r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
+        r = r + self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion, locator=locator)
-    else:
-        r = []
     if not len(r):
         #process parameters
         if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()

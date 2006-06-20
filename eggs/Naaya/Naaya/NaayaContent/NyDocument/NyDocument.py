@@ -75,7 +75,7 @@ def addNyDocument(self, id='', title='', description='', coverage='', keywords='
     sortorder='', body='', contributor=None, releasedate='', discussion='',
     lang=None, REQUEST=None, **kwargs):
     """
-    Create a Document type og object.
+    Create a Document type of object.
     """
     #process parameters
     id = self.utCleanupId(id)
@@ -232,20 +232,21 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
 
     #site actions
     security.declareProtected(PERMISSION_ADD_OBJECT, 'process_add')
-    def process_add(self, title='', description='', coverage='', keywords='',
+    def process_add(self, id='', title='', description='', coverage='', keywords='',
         sortorder='', body='', releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         try: sortorder = abs(int(sortorder))
         except: sortorder = DEFAULT_SORTORDER
         #check mandatory fiels
+        r =[]
+        #if id is not None and REQUEST is not None and self.utValidateId(str(id)):
+        #    r = self.utValidateId(str(id))
         l_referer = ''
         if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if not(l_referer == 'document_manage_add' or l_referer.find('document_manage_add') != -1):
-            r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
+            r = r + self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
                 description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
                 releasedate=releasedate, discussion=discussion, body=body)
-        else:
-            r = []
         if not len(r):
             if not lang: lang = self.gl_get_selected_language()
             releasedate = self.process_releasedate(releasedate, self.releasedate)
@@ -260,6 +261,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
             self.approveThis(approved, approved_by)
             self.submitThis()
             if discussion: self.open_for_comments()
+            #self.getParentNode().manage_renameObject(self.id, str(id))
             self.recatalogNyObject(self)
             self.notifyFolderMaintainer(self.getParentNode(), self)
             if REQUEST:
