@@ -158,11 +158,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.__pluggable_installed_content = {}
         self.show_releasedate = 1
         self.submit_unapproved = 0
+        self.user_can_add_id = 0
         contenttypes_tool.__dict__['__init__'](self)
         CookieCrumbler.__dict__['__init__'](self)
         catalog_tool.__dict__['__init__'](self)
         search_tool.__dict__['__init__'](self)
         portlets_manager.__dict__['__init__'](self)
+
+    def __setstate__(self,state):
+        """Updates"""
+        NySite.inheritedAttribute("__setstate__") (self, state)
+        if not hasattr(self, 'user_can_add_id'):
+            self.user_can_add_id = 0
 
     security.declarePrivate('createPortalTools')
     def createPortalTools(self):
@@ -762,7 +769,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declarePublic('getMainFolders')
     def getMainFolders(self):
-        """ 
+        """
         Returns a list with all folders objects at the first level
         that are approved and sorted by 'order' property
         """
@@ -778,8 +785,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declarePublic('getMainTopicByURL')
     def getMainTopicByURL(self, url):
-        """ 
-        Returns the main topic folder object 
+        """
+        Returns the main topic folder object
         given the URL
         """
         return self.utGetObject(url)
@@ -1240,24 +1247,22 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         confirm='', REQUEST=None):
         """ """
         msg = err = ''
-	auth_user = REQUEST.AUTHENTICATED_USER.getUserName()
-	user = self.getAuthenticationTool().getUser(auth_user)
-	if password == '': password = confirm = old_pass
-	if user._getPassword() == old_pass: 
+        auth_user = REQUEST.AUTHENTICATED_USER.getUserName()
+        user = self.getAuthenticationTool().getUser(auth_user)
+        if password == '': password = confirm = old_pass
+        if user._getPassword() == old_pass:
             try:
-                self.getAuthenticationTool().manage_changeUser(name, password, confirm, [], [], firstname,
-	            lastname, email)
-                self.credentialsChanged(name, name, password)	            
-            #keep authentication
-	    except Exception, error:
-    	        err = error
+                self.getAuthenticationTool().manage_changeUser(name, password, confirm, [], [], firstname,              lastname, email)
+                self.credentialsChanged(name, name, password)
+                #keep authentication
+            except Exception, error:
+                err = error
             else:
-	        msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
-	else:
-	    err = WRONG_PASSWORD
-        
+                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+        else:
+            err = WRONG_PASSWORD
         if REQUEST:
-            if err != '':self.setSessionErrors([err]) 
+            if err != '':self.setSessionErrors([err])
             if msg != '': self.setSessionInfo([msg])
             REQUEST.RESPONSE.redirect('%s/profile_html' % self.absolute_url())
 
@@ -1343,16 +1348,19 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
-    def admin_properties(self, show_releasedate='', http_proxy='', repository_url='',
+    def admin_properties(self, show_releasedate='', user_can_add_id='', http_proxy='', repository_url='',
         keywords_glossary='', coverage_glossary='', submit_unapproved='', portal_url='', REQUEST=None):
         """ """
         if show_releasedate: show_releasedate = 1
         else: show_releasedate = 0
+        if user_can_add_id: user_can_add_id = 1
+        else: user_can_add_id = 0
         if keywords_glossary == '': keywords_glossary = None
         if coverage_glossary == '': coverage_glossary = None
         if submit_unapproved: submit_unapproved = 1
         else: submit_unapproved = 0
         self.show_releasedate = show_releasedate
+        self.user_can_add_id = user_can_add_id
         self.http_proxy = http_proxy
         self.repository_url = repository_url
         self.keywords_glossary = keywords_glossary
@@ -1374,11 +1382,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 REQUEST.RESPONSE.redirect('%s/admin_email_html?lang=%s' % (self.absolute_url(), lang))
         else:
             REQUEST.RESPONSE.redirect('%s/admin_email_html?lang=%s' % (self.absolute_url(), lang))
-            
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notifications')
     def admin_notifications(self, newsmetatypes='', uploadmetatypes='', foldermetatypes='', subject_notifications='', subject_newsletter='', from_email='', lang=None, REQUEST=None):
         """sets the email credentials (subjects of emails, sender) and the metatypes of objects the users will be notified about"""
-        if from_email=='' and self.mail_address_from=='': 
+        if from_email=='' and self.mail_address_from=='':
             if REQUEST:
                 self.setSessionInfo([MESSAGE_NOTFROMEMAIL % self.utGetTodayDate()])
                 REQUEST.RESPONSE.redirect('%s/admin_notifications_html?lang=%s' % (self.absolute_url(), lang))
@@ -1389,7 +1397,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             if REQUEST:
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
                 REQUEST.RESPONSE.redirect('%s/admin_notifications_html?lang=%s' % (self.absolute_url(), lang))
-    
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notif_delete_folders')
     def admin_notif_delete_folders(self, absolute_urls_to_be_deleted =[], lang=None, REQUEST=None):
         """sends a list of folders(absolute_urls) to be deleted from notifications list"""
@@ -1400,12 +1408,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notif_add_folder')
     def admin_notif_add_folders(self, absolute_urls_to_be_added=[], lang=None, REQUEST=None):
-        """sends a list of folders(absolute_urls) to be added to notifications list"""        
+        """sends a list of folders(absolute_urls) to be added to notifications list"""
         self.getNotificationTool().add_folders_to_notification_list(self.utConvertToList(absolute_urls_to_be_added))
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_notif_sitemap_html?lang=%s' % (self.absolute_url(), lang))
-    
+
     #security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'get_maintopics_children')
     def get_maintopics_children(self, first_level='0', foldermetatypes=[METATYPE_FOLDER]):
         """returns a list of tuples, with maintopics and their children, used in notification sitemap form
@@ -1413,7 +1421,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         first_level can be one of:
         0 --> only the maintopics will be parsed
         1 --> all firstlevel NaayaFolders will be parsed (approved & not approved)
-        2 --> all firstlevel Folders & NaayaFolders will be parsed 
+        2 --> all firstlevel Folders & NaayaFolders will be parsed
         2 --> approved firstlevel Naaya Folders will be parsed
         """
         first_folders_children=[]
@@ -1421,10 +1429,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if first_level == '0': first_level_folders = self.getMainTopics()
         elif first_level == '1': first_level_folders = self.objectValues(METATYPE_FOLDER)
         elif first_level == '2': first_level_folders = self.objectValues(self.get_containers_metatypes())
-        else: 
+        else:
             for x in self.objectValues(foldermetatypes):
                 if x.approved: first_level_folders.append(x)
-        for x in first_level_folders:            
+        for x in first_level_folders:
             children = x.objectValues(foldermetatypes)
             first_folders_children.append((x,children))
         return first_folders_children
@@ -1996,7 +2004,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def admin_email_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_email')
-    
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_logos_html')
     def admin_logos_html(self, REQUEST=None, RESPONSE=None):
         """ """
