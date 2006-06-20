@@ -38,6 +38,7 @@ import os
 #Zope imports
 from Products.PythonScripts.standard import url_quote, html_quote
 from DateTime import DateTime
+from OFS.ObjectManager import checkValidId
 
 #constants
 bad_chars = ' ,+&;\'()[]{}\xC4\xC5\xC1\xC0\xC2\xC3' \
@@ -212,6 +213,14 @@ class utils:
         else: x = str(p_id)
         x = x.strip()
         return x.translate(TRANSMAP)
+
+    def utValidateId(self, p_id=''):
+        """."""
+        try: checkValidId(self, p_id)
+        except Exception, error:
+            if str(error) != "('Empty or invalid id specified', '')":
+                return [str(error)]
+        return None
 
     def utConvertToList(self, something):
         """Convert to list"""
