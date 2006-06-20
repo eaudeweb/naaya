@@ -536,7 +536,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     obj.entry = translation['source']
                     obj.translations[target_language] = translation['target']
                 if obj.entry!='':
-                    elem_ob = folder._getOb(obj.entry, None)
+                    elem_ob = folder._getOb(obj.entry.encode('utf-8'), None)
                     if elem_ob is not None:
                         for k,v in obj.translations.items():
                             elem_ob.set_translations_list(k, v)
