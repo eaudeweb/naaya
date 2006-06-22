@@ -158,7 +158,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.__pluggable_installed_content = {}
         self.show_releasedate = 1
         self.submit_unapproved = 0
-        self.user_can_add_id = 0
+        self.rename_id = 0
         contenttypes_tool.__dict__['__init__'](self)
         CookieCrumbler.__dict__['__init__'](self)
         catalog_tool.__dict__['__init__'](self)
@@ -168,8 +168,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def __setstate__(self,state):
         """Updates"""
         NySite.inheritedAttribute("__setstate__") (self, state)
-        if not hasattr(self, 'user_can_add_id'):
-            self.user_can_add_id = 0
+        if not hasattr(self, 'rename_id'):
+            self.rename_id = 0
 
     security.declarePrivate('createPortalTools')
     def createPortalTools(self):
@@ -1348,19 +1348,19 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
-    def admin_properties(self, show_releasedate='', user_can_add_id='', http_proxy='', repository_url='',
+    def admin_properties(self, show_releasedate='', rename_id='', http_proxy='', repository_url='',
         keywords_glossary='', coverage_glossary='', submit_unapproved='', portal_url='', REQUEST=None):
         """ """
         if show_releasedate: show_releasedate = 1
         else: show_releasedate = 0
-        if user_can_add_id: user_can_add_id = 1
-        else: user_can_add_id = 0
+        if rename_id: rename_id = 1
+        else: rename_id = 0
         if keywords_glossary == '': keywords_glossary = None
         if coverage_glossary == '': coverage_glossary = None
         if submit_unapproved: submit_unapproved = 1
         else: submit_unapproved = 0
         self.show_releasedate = show_releasedate
-        self.user_can_add_id = user_can_add_id
+        self.rename_id = rename_id
         self.http_proxy = http_proxy
         self.repository_url = repository_url
         self.keywords_glossary = keywords_glossary
