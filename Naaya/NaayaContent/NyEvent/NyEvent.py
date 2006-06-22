@@ -89,10 +89,6 @@ def addNyEvent(self, id='', title='', description='', coverage='',
     Create an Event type of object.
     """
     #process parameters
-    r =[]
-    if id is not None and REQUEST is not None and self.utValidateId(str(id)):
-        r = self.utValidateId(str(id))
-
     id = self.utCleanupId(id)
     if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
     try: sortorder = abs(int(sortorder))
@@ -103,13 +99,15 @@ def addNyEvent(self, id='', title='', description='', coverage='',
     l_referer = ''
     if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
     if not(l_referer == 'event_manage_add' or l_referer.find('event_manage_add') != -1) and REQUEST:
-        r = r + self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
+        r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion, location=location, location_address=location_address, \
             location_url=location_url, start_date=start_date, end_date=end_date, \
             host=host, agenda_url=agenda_url, event_url=event_url, details=details, \
             topitem=topitem, contact_person=contact_person, contact_email=contact_email, \
             contact_phone=contact_phone, contact_fax=contact_fax, event_type=event_type)
+    else:
+        r = []
     if not len(r):
         #process parameters
         if lang is None: lang = self.gl_get_selected_language()
