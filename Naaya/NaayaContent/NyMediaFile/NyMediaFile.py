@@ -75,9 +75,6 @@ def addNyMediaFile(self, id='', title='', description='', coverage='', keywords=
     Create a File type of object.
     """
     #process parameters
-    r =[]
-    if id is not None and REQUEST is not None and self.utValidateId(str(id)):
-        r = self.utValidateId(str(id))
     id = self.utCleanupId(id)
     if id == '': id = PREFIX_OBJECT + self.utGenRandomId(6)
     try: sortorder = abs(int(sortorder))
@@ -86,9 +83,11 @@ def addNyMediaFile(self, id='', title='', description='', coverage='', keywords=
     l_referer = ''
     if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
     if not(l_referer == 'mediafile_manage_add' or l_referer.find('mediafile_manage_add') != -1) and REQUEST:
-        r = r + self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
+        r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion, file=file)
+    else:
+        r = []
     if not len(r):
         #process parameters
         if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
