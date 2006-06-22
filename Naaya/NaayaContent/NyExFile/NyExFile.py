@@ -82,9 +82,6 @@ def addNyExFile(self, id='', title='', description='', coverage='', keywords='',
     """
     Create a File type of object.
     """
-    r =[]
-    if id is not None and REQUEST is not None and self.utValidateId(str(id)):
-        r = self.utValidateId(str(id))
     if source=='file': id = cookId(id, title, file)[0] #upload from a file
     id = self.utCleanupId(id)
     if id == '': id = PREFIX_OBJECT + self.utGenRandomId(6)
@@ -95,10 +92,12 @@ def addNyExFile(self, id='', title='', description='', coverage='', keywords='',
     l_referer = ''
     if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
     if not(l_referer == 'exfile_manage_add' or l_referer.find('exfile_manage_add') != -1) and REQUEST:
-        r = r + self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
+        r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion, file=file, url=url, \
             downloadfilename=downloadfilename)
+    else:
+        r = []
     if not len(r):
         #process parameters
         if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
