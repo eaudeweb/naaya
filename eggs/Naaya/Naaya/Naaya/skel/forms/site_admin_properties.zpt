@@ -24,12 +24,12 @@
     <td><input type="checkbox" name="show_releasedate" id="show_releasedate" tal:attributes="checked here/show_releasedate" /></td>
 </tr>
 <tr>
-    <td colspan="2" i18n:translate="">All the items in the CHM portal have pregenerated ids, as you can see them in the URLs. If you want to insert your own ids, you should check the "Add ids on objects" checkbox. But, please remember that ids names must not contain any special characters or spaces.
+    <td colspan="2" i18n:translate="">All the items in the CHM portal have pregenerated ids, as you can see them in the URLs. If you want to insert your own ids, you should check the "Rename ids on objects" checkbox. But, please remember that ids names must not contain any special characters or spaces.
     </td>
 </tr>
 <tr>
-    <td><strong><label for="user_can_add_id" i18n:translate="">Add ids on objects</label></strong></td>
-    <td><input type="checkbox" name="user_can_add_id" id="user_can_add_id" tal:attributes="checked here/user_can_add_id" /></td>
+    <td><strong><label for="rename_id" i18n:translate="">Rename objects' ids </label></strong></td>
+    <td><input type="checkbox" name="rename_id" id="rename_id" tal:attributes="checked here/rename_id" /></td>
 </tr>
 <tr>
     <td colspan="2" i18n:translate="">If you are using a network registry to automatically find the network participants, specify its URL address in the field below.
