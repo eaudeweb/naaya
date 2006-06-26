@@ -724,6 +724,25 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
             if msg != '': self.setSessionInfo([msg])
             REQUEST.RESPONSE.redirect('%s/restrict_html' % self.absolute_url())
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'renameObjectsIds')
+    def renameObjectsIds(self, old_ids, new_ids, REQUEST):
+        """renames objects ids for this folder's selected items."""
+        r = []
+        for i in range(len(old_ids)):
+            print old_ids[i], new_ids[i]
+            if self.getObjectById(old_ids[i]).meta_type not in ['Naaya File', 'Naaya ExFile', 'Naaya MediaFile']:
+                try:
+                    self.manage_renameObject(old_ids[i], new_ids[i])
+                    if self.getObjectById(new_ids[i]).meta_type in ['Naaya Document', 'Naaya Story']:
+                        new_body = self.getObjectById(new_ids[i]).body.replace(old_ids[i], new_ids[i])
+                        self.getObjectById(new_ids[i]).body = new_body
+                        self.getObjectById(new_ids[i])._p_changed = 1
+                    r.append(MESSAGE_SAVEDCHANGES % self.utGetTodayDate())
+                except: r.append("The %s object could not be renamed." % old_ids[i])
+            else: r.append("Files can not be renamed.")
+        self.setSessionInfo(r)
+        return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/folder_manage_edit', globals())
@@ -809,5 +828,11 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
     def menuactions(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'folder_menuactions')
+
+    security.declareProtected(view, 'renameobject_html')
+    def renameobject_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'folder_renameobject')
+
 
 InitializeClass(NyFolder)
