@@ -44,7 +44,7 @@ class ProfileMeta:
         """
         Returns a value that identifies this instance.
         """
-        return self.absolute_url(1)
+        return '/'.join(self.getPhysicalPath())
 
     def getInstanceSheetId(self):
         """
