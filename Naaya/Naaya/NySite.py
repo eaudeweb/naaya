@@ -1372,16 +1372,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             REQUEST.RESPONSE.redirect('%s/admin_properties_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_email')
-    def admin_email(self, mail_server_name, mail_server_port='', administrator_email='', mail_address_from='', notify_on_errors='', lang=None, REQUEST=None):
+    def admin_email(self, mail_server_name='', mail_server_port='', administrator_email='', mail_address_from='', notify_on_errors='', REQUEST=None):
         """ """
-        if lang is None: lang = self.gl_get_selected_language()
-        if mail_server_name is not None:
-            self.getEmailTool().manageSettings(mail_server_name, mail_server_port, administrator_email, mail_address_from, notify_on_errors)
-            if REQUEST:
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-                REQUEST.RESPONSE.redirect('%s/admin_email_html?lang=%s' % (self.absolute_url(), lang))
-        else:
-            REQUEST.RESPONSE.redirect('%s/admin_email_html?lang=%s' % (self.absolute_url(), lang))
+        self.getEmailTool().manageSettings(mail_server_name, mail_server_port, administrator_email, mail_address_from, notify_on_errors)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_email_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notifications')
     def admin_notifications(self, newsmetatypes='', uploadmetatypes='', foldermetatypes='', subject_notifications='', subject_newsletter='', from_email='', lang=None, REQUEST=None):
