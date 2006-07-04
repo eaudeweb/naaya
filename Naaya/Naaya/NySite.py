@@ -1376,7 +1376,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         if lang is None: lang = self.gl_get_selected_language()
         if mail_server_name is not None:
-            self.getEmailTool().manageSettings(mail_server_name, mail_server_port, administrator_email, mail_address_from, notify_on_errors='')
+            self.getEmailTool().manageSettings(mail_server_name, mail_server_port, administrator_email, mail_address_from, notify_on_errors)
             if REQUEST:
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
                 REQUEST.RESPONSE.redirect('%s/admin_email_html?lang=%s' % (self.absolute_url(), lang))
