@@ -26,7 +26,7 @@ from OFS.Image import Image, cookId
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view
+from AccessControl.Permissions import view_management_screens, view, ftp_access
 
 #Product imports
 from constants import *
@@ -140,6 +140,31 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
             self.getLocalProperty('author', lang),
             self.getLocalProperty('source', lang),
             self.getLocalProperty('description', lang)])
+
+    #FTP/WebDAV support
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'PUT')
+    def PUT(self, REQUEST, RESPONSE):
+        """ Handle HTTP PUT requests. """
+        self.dav__init(REQUEST, RESPONSE)
+        if hasattr(self, 'dav__simpleifhandler'):
+            self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
+        file = REQUEST['BODYFILE']
+
+        self.manage_upload(file)
+        self.managePurgeDisplays()
+
+        RESPONSE.setStatus(204)
+        return RESPONSE
+
+    security.declareProtected(ftp_access, 'manage_FTPget')
+    def manage_FTPget(self):
+        """ Handle GET requests. """
+        return NyPhoto.inheritedAttribute('manage_FTPget')(self)
+
+    security.declareProtected(ftp_access, 'manage_FTPstat')
+    def manage_FTPstat(self, REQUEST):
+        """ Handle STAT requests. """
+        return NyPhoto.inheritedAttribute('manage_FTPstat')(self, REQUEST)
 
     #core
     def __get_aspect_ratio_size(self, width, height):

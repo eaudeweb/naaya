@@ -30,6 +30,7 @@ from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyContainer import NyContainer
+from Products.Naaya.constants import *
 from Products.NaayaCore.managers.utils import batch_utils
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 import NyPhoto
@@ -111,6 +112,22 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
         return u' '.join([self.getLocalProperty('title', lang)])
+
+    #FTP/WebDAV support
+    def PUT_factory(self, name, typ, body):
+        """ Create Photo objects by default for image types. """
+        if typ[:6] == 'image/':
+            if self.glCheckPermissionPublishObjects():
+                approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
+            else:
+                approved, approved_by = 0, None
+            ob = NyPhoto.NyPhoto(name, '', '', '', '', DEFAULT_SORTORDER, 0,
+                None, None, '', typ, DEFAULT_QUALITY,
+                self.displays.copy(), approved, approved_by,
+                self.process_releasedate(),
+                self.gl_get_selected_language())
+            return ob
+        return None
 
     #api
     def get_photofolder_object(self): return self
