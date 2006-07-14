@@ -119,4 +119,16 @@ class NyVersions:
                 self.recatalogNyObject(x)
         return "Contributor changed."
 
+    security.declareProtected(view_management_screens, 'set_networkportals_manager')
+    def set_networkportals_manager(self):
+        """
+        set the network portals managers.
+        """
+        from managers.networkportals_manager import networkportals_manager
+        networkportals_manager.__dict__['__init__'](self)
+        for k, v in self.getNetworkPortals().items():
+            self.add_networkportal_item(k, v, k, [])
+        delattr(self, '_NySite__network_portals')
+        return "Network portals managers set."
+
 InitializeClass(NyVersions)

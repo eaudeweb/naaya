@@ -67,11 +67,13 @@ from Products.NaayaCore.managers.catalog_tool import catalog_tool
 from Products.NaayaCore.managers.urlgrab_tool import urlgrab_tool
 from Products.NaayaCore.managers.search_tool import search_tool
 from Products.NaayaCore.managers.session_manager import session_manager
+from Products.NaayaCore.managers.xmlrpc_tool import XMLRPCConnector
 from Products.NaayaCore.PropertiesTool.managers.contenttypes_tool import contenttypes_tool
 from Products.Localizer.Localizer import manage_addLocalizer
 from Products.Localizer.MessageCatalog import manage_addMessageCatalog
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from managers.skel_parser import skel_parser
+from managers.networkportals_manager import networkportals_manager
 from Products.NaayaBase.managers.import_parser import import_parser
 from NyVersions import NyVersions
 from NyFolder import NyFolder, addNyFolder, importNyFolder
@@ -98,7 +100,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     search_tool,
     contenttypes_tool,
     session_manager,
-    portlets_manager):
+    portlets_manager,
+    networkportals_manager):
     """ """
 
     meta_type = METATYPE_NYSITE
@@ -152,7 +155,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.administrator_email = ''
         self.portal_url = ''
         self.maintopics = []
-        self.__network_portals = {}
         self.keywords_glossary = None
         self.coverage_glossary = None
         self.__pluggable_installed_content = {}
@@ -164,6 +166,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         catalog_tool.__dict__['__init__'](self)
         search_tool.__dict__['__init__'](self)
         portlets_manager.__dict__['__init__'](self)
+        networkportals_manager.__dict__['__init__'](self)
 
     def __setstate__(self,state):
         """Updates"""
@@ -1154,6 +1157,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             else: mail_from = 'error@%s' % REQUEST.SERVER_NAME
             self.notifyOnErrorsEmail(self.administrator_email, mail_from, error_url, error_ip, error_type, error_value, error_user, error_time)
 
+    security.declarePublic('external_search_capabilities')
+    def external_search_capabilities(self):
+        """
+        Returns info about the searches that can be performed.
+        """
+        return [x['id'] for x in self.gl_get_languages_map()]
+
     security.declareProtected(view, 'externalSearch')
     def externalSearch(self, servers=[], query='', sort_expr='', order='', page_search_start=''):
         """ """
@@ -1697,18 +1707,43 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addnetworkportal')
     def admin_addnetworkportal(self, title='', url='', REQUEST=None):
         """ """
-        self.__network_portals[url] = title
-        self._p_changed = 1
+        msg, err, res = '', '', None
+        xconn = XMLRPCConnector(self.http_proxy)
+        res = xconn(url, 'external_search_capabilities')
+        if res is None:
+            err = 'Cannot connect to the given URL.'
+        else:
+            self.add_networkportal_item(url, title, url, res)
+            msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            if err != '': self.setSessionErrors([err])
+            if msg != '': self.setSessionInfo([msg])
+            REQUEST.RESPONSE.redirect('%s/admin_network_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updatenetworkportal')
+    def admin_updatenetworkportal(self, id='', REQUEST=None):
+        """ """
+        msg, err, res = '', '', None
+        networkportal = self.get_networkportal_item(id)
+        if networkportal:
+            xconn = XMLRPCConnector(self.http_proxy)
+            res = xconn(networkportal.url, 'external_search_capabilities')
+            if res is None:
+                err = 'Cannot connect to the given URL.'
+            else:
+                self.edit_networkportal_item(id, networkportal.title, networkportal.url, res)
+                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+        else:
+            err = 'Invalid network portal.'
+        if REQUEST:
+            if err != '': self.setSessionErrors([err])
+            if msg != '': self.setSessionInfo([msg])
             REQUEST.RESPONSE.redirect('%s/admin_network_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletenetworkportal')
     def admin_deletenetworkportal(self, ids=[], REQUEST=None):
         """ """
-        for url in self.utConvertToList(ids):
-            del(self.__network_portals[url])
-        self._p_changed = 1
+        self.delete_networkportal_item(self.utConvertToList(ids))
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_network_html' % self.absolute_url())
@@ -2193,10 +2228,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     def get_linkslists_noportlet(self):
         return [x for x in self.getPortletsTool().getLinksLists() if not x.exists_portlet_for_object(x)]
-
-    def getNetworkPortals(self):
-        #returns the list of user defined network portals
-        return self.__network_portals
 
     def getRemoteServers(self):
         #get remote servers
