@@ -4,7 +4,7 @@
 
 <tal:block metal:fill-slot="section"
 	tal:define="site_url here/getSitePath;
-				portals here/getNetworkPortals">
+				portals here/get_networkportals_list">
 <p i18n:translate="">
 	This page presents the list of portals that participate in your network.
 	This list will be used in the external search form where users can choose
@@ -19,12 +19,18 @@
 	<tr>
 		<th width="1%"></th>
 		<th i18n:translate="">Title</th>
+		<th i18n:translate="">URL</th>
+		<th i18n:translate="">Languages</th>
+		<th></th>
 	</tr>
-	<tr tal:repeat="url python:portals.keys()">
-		<td><input type="checkbox" name="ids" tal:attributes="value url" /></td>
-		<td><a tal:attributes="href url" tal:content="python:portals[url]" /></td>
+	<tr tal:repeat="portal portals">
+		<td><input type="checkbox" name="ids" tal:attributes="value portal/url" /></td>
+		<td tal:content="portal/title" />
+		<td><a tal:attributes="href portal/url" tal:content="portal/url" /></td>
+		<td tal:content="python:here.get_networkportal_langs(portal.id)" />
+		<td><a tal:attributes="href string:${site_url}/admin_updatenetworkportal?id=${portal/id}" i18n:translate="">Update</a></td>
 	</tr>
-	<tr><td></td><td><input type="submit" value="Delete" i18n:attributes="value" /></td></tr>
+	<tr><td></td><td colspan="3"><input type="submit" value="Delete" i18n:attributes="value" /></td></tr>
 </table>
 </form>
 <fieldset>
