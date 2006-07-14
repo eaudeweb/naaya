@@ -126,6 +126,8 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
                 self.displays.copy(), approved, approved_by,
                 self.process_releasedate(),
                 self.gl_get_selected_language())
+            self.gl_add_languages(ob)
+            ob.submitThis()
             return ob
         return None
 
