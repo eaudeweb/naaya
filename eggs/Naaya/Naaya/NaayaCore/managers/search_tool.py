@@ -22,6 +22,9 @@
 import xmlrpclib
 from DateTime import DateTime
 
+#Product imports
+from xmlrpc_tool import ProxiedTransport
+
 class search_tool:
     """ """
 
@@ -100,19 +103,3 @@ class search_tool:
         if difference >= age*30:
             return 1
         return 0
-
-class ProxiedTransport(xmlrpclib.Transport):
-
-    def set_proxy(self, proxy=None):
-        self.proxy = proxy
-
-    def make_connection(self, host):
-        self.realhost = host
-        import httplib
-        return httplib.HTTP(self.proxy)
-
-    def send_request(self, connection, handler, request_body):
-        connection.putrequest("POST", 'http://%s%s' % (self.realhost, handler))
-
-    def send_host(self, connection, host):
-        connection.putheader('Host', self.realhost)
