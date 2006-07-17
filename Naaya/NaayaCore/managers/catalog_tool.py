@@ -97,9 +97,9 @@ class catalog_tool:
     def searchCatalog(self, p_query, p_path, lang):
         """ """
         if type(p_query) == type(''):
-            l_results = self.__getObjects(self.findCatalogedObjects(p_query, p_path, lang))
+            l_results = self.__getObjects(self.__eliminateDuplicates(self.findCatalogedObjects(p_query, p_path, lang)))
         else:
-            l_results = self.__getObjects(self.findCatalogedObjectsByGenericQuery(p_query))
+            l_results = self.__getObjects(self.__eliminateDuplicates(self.findCatalogedObjectsByGenericQuery(p_query)))
         return l_results
 
     def findCatalogedObjectsByGenericQuery(self, p_query):
