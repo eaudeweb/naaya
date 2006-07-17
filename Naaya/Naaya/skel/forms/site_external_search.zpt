@@ -116,10 +116,10 @@
 		<tr tal:repeat="record list_result">
 			<td>
 				<img tal:attributes="src record/icon; alt record/meta_type" align="absmiddle" />
+				[<span tal:replace="record/lang" />]
 				<a tal:attributes="href record/url" tal:content="record/title" />
 				-
 				<span tal:replace="record/time" />
-				[<span tal:replace="record/lang" />]
 				<span tal:condition="python:here.external_get_item_age(record['time'], age)==1"><strong style="color: #FF9966;">Old</strong></span>
 				<span tal:condition="python:record['description'] is not None">
 					<br />
