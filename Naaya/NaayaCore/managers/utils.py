@@ -254,6 +254,10 @@ class utils:
         #return a list with elements from p_l1 that are not in p_l2
         return [l_e1 for l_e1 in p_l1 if l_e1 not in p_l2]
 
+    def utListIntersection(self, p_l1, p_l2):
+        #return the intersection of two lists
+        return [l_e1 for l_e1 in p_l1 if l_e1 in p_l2]
+
     def utJoinToString(self, something, separator='/'):
         """Get a list [value1, values...], and returns a string like value1<separator>value2..."""
         return separator.join(self.utConvertToList(something))
