@@ -88,10 +88,17 @@ class networkportals_manager:
         try: return self.__networkportals_collection[id].title
         except: return ''
 
+    def get_networkportal_langs_map(self):
+        #returns a list of tuples (lang id, lalg label) from
+        #all network portals
+        d = {}
+        for x in self.__networkportals_collection.values():
+            for l in x.langs:
+                d[l] = ''
+        return zip(d.keys(), map(self.gl_get_language_name, d.keys()))
+
     def get_networkportal_langs(self, id):
-        """
-        Returns a comma separated string with languages labels
-        """
+        #eeturns a comma separated string with languages labels
         try: return ', '.join(map(self.gl_get_language_name, self.__networkportals_collection[id].langs))
         except: return ''
 
