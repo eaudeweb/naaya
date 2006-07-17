@@ -116,10 +116,11 @@ class NyNetRepository(LocalPropertyManager, Folder):
     def get_netsites(self): return self.objectValues(METATYPE_NYNETSITE)
     def get_sites(self):
         """ """
-        res = {}
+        r = []
+        ra = r.append
         for netsite in self.objectValues(METATYPE_NYNETSITE):
-            res[netsite.url] = netsite.title
-        return res
+            ra({'url': netsite.url, 'title': netsite.title, 'langs': netsite.langs})
+        return r
 
     def search_channels(self, q='', l='', t=''):
         #search channels
