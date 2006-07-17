@@ -1178,15 +1178,19 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def getServersForExternalSearch(self):
         """
         Returns a list of tuples: (url, title) from two lists:
-        portals in your network and remote servers
+        portals in your network and remote servers. Duplicates
+        portal/server urls are removed.
         """
-        r = []
-        ra = r.append
+        d = {}
         for x in self.get_networkportals_list():
-            ra({'url': x.url, 'title': x.title})
+            url = x.url
+            if url.endswith('/'): url = url[:-1]
+            d[url] = {'url': url, 'title': x.title}
         for x in self.get_remote_servers():
-            ra({'url': x['url'], 'title': x['title']})
-        return r
+            url = x['url']
+            if url.endswith('/'): url = url[:-1]
+            d[url] = {'url': url, 'title': x['title']}
+        return d.values()
 
     security.declarePublic('handle_external_search')
     def handle_external_search(self, query, langs):
