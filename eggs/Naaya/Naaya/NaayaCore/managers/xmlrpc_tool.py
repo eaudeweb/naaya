@@ -48,18 +48,18 @@ class XMLRPCConnector:
         """ """
         self.http_proxy = http_proxy
 
-    def __call__(self, url, method, **kwargs):
+    def __call__(self, url, method, *args):
         """ """
         transport = ProxiedTransport()
         transport.set_proxy(self.http_proxy)
         #try to connect without proxy
         try:
             server = xmlrpclib.Server('%s/' % url)
-            return getattr(server, method)(**kwargs)
+            return getattr(server, method)(*args)
         except:
             #try to connect with proxy
             try:
                 server = xmlrpclib.Server('%s/' % url, transport=transport)
-                return getattr(server, method)(**kwargs)
+                return getattr(server, method)(*args)
             except:
                 return None
