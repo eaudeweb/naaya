@@ -1197,6 +1197,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """
         Handle an external call: performs the search in the given languages.
         """
+        print 'handle_external_search', query, langs
         if isinstance(query, unicode): query = query.encode('utf-8')
         r = []
         ra = r.append
@@ -1760,6 +1761,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         msg, err, res = '', '', None
         xconn = XMLRPCConnector(self.http_proxy)
+        if url.endswith('/'): url = url[:-1]
         res = xconn(url, 'external_search_capabilities')
         if res is None:
             err = 'Cannot connect to the given URL.'
