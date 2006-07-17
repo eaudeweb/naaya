@@ -98,7 +98,7 @@ class networkportals_manager:
         return zip(d.keys(), map(self.gl_get_language_name, d.keys()))
 
     def get_networkportal_langs(self, id):
-        #eeturns a comma separated string with languages labels
+        #returns a comma separated string with languages labels
         try: return ', '.join(map(self.gl_get_language_name, self.__networkportals_collection[id].langs))
         except: return ''
 

@@ -23,6 +23,7 @@
 #Python imports
 from os.path import join, isfile
 from urllib import quote
+from copy import copy
 
 #Zope imports
 from OFS.Folder import Folder, manage_addFolder
@@ -1165,6 +1166,28 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """
         return [x['id'] for x in self.gl_get_languages_map()]
 
+    security.declareProtected(view, 'get_remote_servers')
+    def get_remote_servers(self):
+        #get remote servers
+        xconn = XMLRPCConnector(self.http_proxy)
+        res = xconn(self.repository_url, 'get_sites')
+        if res is None: return {}
+        else: return res
+
+    security.declareProtected(view, 'getServersForExternalSearch')
+    def getServersForExternalSearch(self):
+        """
+        Returns a list of tuples: (url, title) from two lists:
+        portals in your network and remote servers
+        """
+        r = []
+        ra = r.append
+        for x in self.get_networkportals_list():
+            ra({'url': x.url, 'title': x.title})
+        for x in self.get_remote_servers():
+            ra({'url': x['url'], 'title': x['title']})
+        return r
+
     security.declarePublic('handle_external_search')
     def handle_external_search(self, query, langs):
         """
@@ -1218,11 +1241,21 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         except: start = 0
         if len(query.strip()):
             query = self.utStrEscapeForSearch(query)
-            print servers
+            temp = self.utRemoveDuplicates(servers)
+            #search in portals in your network
             for portal in self.get_networkportals_list():
-                if portal.url in servers:
+                if portal.url in temp:
                     m = self.utListIntersection(portal.langs, langs)
-                    if len(m): rex(self.external_search(portal.url, query, m))
+                    if len(m):
+                        rex(self.external_search(portal.url, query, m))
+                        temp.remove(portal.url)
+            #search in repository's portals
+            for portal in self.get_remote_servers():
+                if portal['url'] in temp:
+                    m = self.utListIntersection(portal['langs'], langs)
+                    if len(m):
+                        rex(self.external_search(portal['url'], query, m))
+                        temp.remove(portal['url'])
         batch_obj = batch_utils(self.numberresultsperpage, len(r), start)
         if sort_expr!='' and order=='ascending':    # sort ascending
             self.utSortListOfDictionariesByKey(r, sort_expr, 0)
@@ -1233,14 +1266,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         else:
             paging_informations = (-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0])
         return (paging_informations, r[paging_informations[0]:paging_informations[1]])
-
-    security.declareProtected(view, 'getRemoteServers')
-    def getRemoteServers(self):
-        #get remote servers
-        xconn = XMLRPCConnector(self.http_proxy)
-        res = xconn(self.repository_url, 'get_sites')
-        if res is None: return []
-        else: return res
 
     security.declareProtected(view, 'internalSearch')
     def internalSearch(self, query='', sort_expr='', order='', page_search_start='', where='all'):

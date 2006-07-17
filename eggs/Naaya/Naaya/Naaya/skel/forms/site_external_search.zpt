@@ -50,13 +50,9 @@
 <div style="float:left; width: 40%; margin-right: 10px;">
 <fieldset><legend>Server(s)</legend>
 	<dl>
-		<dt tal:repeat="item here/get_networkportals_list">
-			<input type="checkbox" name="servers" tal:attributes="value item/url; checked python:item.url in servers" />
+		<dt tal:repeat="item here/getServersForExternalSearch">
+			<input type="checkbox" name="servers" tal:attributes="value item/url; checked python:item['url'] in servers" />
 			<span tal:content="item/title" />
-		</dt>
-		<dt tal:repeat="item python:here.getRemoteServers().items()">
-			<input type="checkbox" name="servers" tal:attributes="value python:item[0]; checked python:item[0] in servers" />
-			<span tal:content="python:item[1]" />
 		</dt>
 	</dl>
 </fieldset>
