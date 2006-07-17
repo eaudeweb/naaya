@@ -1,16 +1,7 @@
 <span tal:replace="structure here/standard_html_header"/>
 
-<h1>Free text search across multiple sites</h1>
-
-<p i18n:translate="">
-	This search is performed on this and other collaborating websites: all titles and descriptive texts (folders, URLs, news, events, stories, etc.). Note: it does NOT search in uploaded files.
-</p>
-
-<p i18n:translate="">
-	You can use the <a href="http://www.google.com/custom?q=&amp;as=Google+Search&amp;domains=eea.eu.int%3Beionet.eu.int&amp;sitesearch=eea.eu.int&amp;cof=GIMP%3A%23FF9900%3BT%3A%23000000%3BALC%3A%23006666%3BL%3Ahttp%3A%2F%2Ftemplate.eea.eu.int%2Fimages%2Feeabanner%3BGFNT%3A%23808080%3BLC%3A%23003366%3BBGC%3A%23FFFFFF%3BAH%3Aleft%3BVLC%3A%23993300%3BGL%3A0%3BS%3Ahttp%3A%2F%2Fwww.eea.eu.int%3BGALT%3A%23FF9900%3BAWFID%3A109f704edff0cc7d%3B&amp;config=&amp;restrict=&amp;exclude=&amp;page=" title="EEA Google Search"><strong>the wider EEA Google search</strong></a> for more results.
-</p>
-
-<fieldset style="background-color: #eeeeee;"><legend i18n:translate="">Search tips:</legend>
+<fieldset style="width: 30%; float: right; background-color: #eeeeee;">
+<legend i18n:translate="">Search tips:</legend>
 <table cellpadding="3" width="100%" >
 <tr>
 	<td valign="top"><strong>and</strong></td>
@@ -41,38 +32,44 @@
 </table>
 </fieldset>
 
+<h1>Free text search across multiple sites</h1>
+
+<tal:block tal:define="query python:request.get('query', '');
+	langs python:here.utConvertToList(request.get('langs', []));
+	servers python:here.utConvertToList(request.get('servers', []));">
+
+<p i18n:translate="">
+	This search is performed on this and other collaborating websites: all titles and descriptive texts (folders, URLs, news, events, stories, etc.). Note: it does NOT search in uploaded files.
+</p>
+
+<p i18n:translate="">
+	You can use the <a href="http://www.google.com/custom?q=&amp;as=Google+Search&amp;domains=eea.eu.int%3Beionet.eu.int&amp;sitesearch=eea.eu.int&amp;cof=GIMP%3A%23FF9900%3BT%3A%23000000%3BALC%3A%23006666%3BL%3Ahttp%3A%2F%2Ftemplate.eea.eu.int%2Fimages%2Feeabanner%3BGFNT%3A%23808080%3BLC%3A%23003366%3BBGC%3A%23FFFFFF%3BAH%3Aleft%3BVLC%3A%23993300%3BGL%3A0%3BS%3Ahttp%3A%2F%2Fwww.eea.eu.int%3BGALT%3A%23FF9900%3BAWFID%3A109f704edff0cc7d%3B&amp;config=&amp;restrict=&amp;exclude=&amp;page=" title="EEA Google Search"><strong>the wider EEA Google search</strong></a> for more results.
+</p>
 
 <form method="get" name="frmSearch" action="external_search_html">
-<strong i18n:translate="">Query string</strong>
-<input type="text" name="search_param" id="search_param" tal:attributes="value python:request.get('search_param', '')" size="40" maxLength="100" />
-<br />
+
+<strong>Query string</strong>
+<input type="text" name="query" id="query" tal:attributes="value query" size="40" maxLength="100" />
+
+<div>
+<fieldset><legend>Language(s)</legend>
+	<tal:block tal:repeat="item here/get_networkportal_langs_map">
+		<input type="checkbox" name="langs" tal:attributes="value python:item[0]; checked python:item[0] in langs" /><span tal:content="python:item[1]" />
+	</tal:block>
+</fieldset>
+</div>
 
 <div style="float:left; width: 40%; margin-right: 10px;">
-<fieldset><legend i18n:translate="">Portals</legend>
-	<dl tal:define="servers here/getRemoteServers;
-					servers_urls python:here.utConvertToList(request.get('servers', []));
-					portals here/getNetworkPortals">
-		<dt tal:repeat="url python:servers.keys()">
-			<tal:block tal:condition="python:request.has_key('servers')">
-			<input type="checkbox" name="servers" tal:attributes="value url; checked python:url in servers_urls" />
-			</tal:block>
-			<tal:block tal:condition="python:not request.has_key('servers')">
-			<input type="checkbox" name="servers" tal:attributes="value url" checked="checked" />
-			</tal:block>
-			<span tal:content="python:servers[url]" />
-		</dt>
-		<dt tal:repeat="url python:portals.keys()">
-			<tal:block tal:condition="python:request.has_key('servers')">
-				<input type="checkbox" name="servers" tal:attributes="value url; checked python:url in servers_urls" />
-			</tal:block>
-			<tal:block tal:condition="python:not request.has_key('servers')">
-				<input type="checkbox" name="servers" tal:attributes="value url" checked="checked" />
-			</tal:block>
-			<span tal:replace="python:portals[url]" />
+<fieldset><legend>Server(s)</legend>
+	<dl>
+		<dt tal:repeat="item here/getServersForExternalSearch">
+			<input type="checkbox" name="servers" tal:attributes="value item/url; checked python:item['url'] in servers" />
+			<span tal:content="item/title" />
 		</dt>
 	</dl>
 </fieldset>
 </div>
+
 <div style="float: left; width: 25%; margin-right: 10px;">
 <fieldset><legend i18n:translate="">Sort by</legend>
 	<dl>
@@ -108,81 +105,92 @@
 	</dl>
 </fieldset>
 </div>
-<br /><br /><br /><br /><br /><br /><br /><br /><br />
+<br style="clear:both;" />
 <input type="submit" value="Search" />
 </form>
 
-<span tal:condition="python:request.has_key('search_param')">
-<tal:block define="servers python:here.utConvertToList(request.get('servers', [])); search_param python:request.get('search_param', '');
-                    sort_expr python:request.get('sort_by', ''); order python:request.get('sort_order', '');
-                    page_search_start python:request.get('start', 0); results python:here.externalSearch(servers, search_param, sort_expr, order, page_search_start);
-                    age here/getItemsAge; number_of_results here/getNumberOfResults;
-                    servers_query python:'servers=%s' % '&servers='.join(servers);
-                    page_search_querystring string:${servers_query}&search_param=${search_param}&sort_by=${sort_expr}&order=${order};
-                    list_paging python:results[0];
-                    paging_start python:list_paging[0]+1;
-                    paging_upper python:list_paging[1]; 
-                    paging_total python:list_paging[2]; 
-                    paging_prev python:list_paging[3];
-                    paging_next python:list_paging[4]; 
-                    paging_current_page python:list_paging[5]; 
-                    paging_records_page python:list_paging[6];
-                    paging_pages python:list_paging[7]; 
-                    list_result python:results[1]">
+<span tal:condition="python:request.has_key('query')">
 
-    <span tal:condition="python:paging_total != 0">
-    <table cellspacing="4" cellpadding="4" border="0" width="99%">
-        <tr>
-            <td><strong>Search Results</strong><br>
-                Age: <span tal:replace="python:here.external_get_items_age(list_result, age)"/>% are more then <span tal:replace="age"/> month(s) old -
-                <a href="" onClick="document.frmSearch.sort_by[1].checked='true'; 
-                    document.frmSearch.sort_order[1].checked='true'; 
-                    document.frmSearch.submit(); return false;">show newer pages first</a>
-            </td>
-        </tr>
-        <tr tal:repeat="record python:list_result">
-            <td><img tal:attributes="src python:record['icon']; alt python:record['meta_type']" align="absmiddle" /><a tal:attributes="href python:record['url']">
-                <span tal:replace="python:record['title']"/></a> - <span tal:replace="python:record['time']"/>
-                <span tal:condition="python:here.external_get_item_age(record['time'], age)==1"><b style="color: #FF9966;">Old</b></span>
-                <span tal:condition="python:record.has_key('description') and record['description'] != 'No description available'">
-                    <br><span tal:replace="python:here.utStrEscapeHTMLTags(record['description'])"/>
-                </span><br>[<em tal:content="python:record['url']">url</em>]
-            </td>
-        </tr>
-    </table>
-    <table border="0" cellspacing="0" cellpadding="2" width="99%">
-	<tr>
-		<td width="1%">Results</td>
-		<td width="100%" nowrap><b tal:content="paging_start"/>&nbsp;-&nbsp;<b tal:content="paging_upper"/>&nbsp;of&nbsp;
-			<b tal:content="paging_total"/></td>
-	</tr>
-	<tr>
-		<td>Page</td>
-		<td nowrap="nowrap">
-			   <span tal:condition="python:paging_prev!=-1">&nbsp;&nbsp;
-				   <a tal:define="url python:here.absolute_url; start_batch python:(paging_current_page-1)*paging_records_page"
-					   tal:attributes="href string:${url}/external_search_html?start=${start_batch}&${page_search_querystring}">&lt;&lt;Previous</a>
-			   </span>
-			   <span tal:repeat="page paging_pages">
-					<a class="paging-link-off" tal:condition="python:paging_current_page==page" tal:content="python:page+1"></a>
-					<a tal:condition="python:paging_current_page!=page" tal:define="url here/absolute_url; start_batch python:paging_records_page*page"
-						tal:attributes="href string:${url}/external_search_html?start=${start_batch}&${page_search_querystring}"
-						tal:content="python:page+1">
-					</a>
-			   </span>
-			   <span tal:condition="python:paging_next!=-1">&nbsp;&nbsp;
-				   <a tal:define="url here/absolute_url; start_batch python:(paging_current_page+1)*paging_records_page"
-						tal:attributes="href string:${url}/external_search_html?start=${start_batch}&${page_search_querystring}">Next&gt;&gt;</a>
-			   </span>
-		</td>
-	</tr>
-    </table>
-    </span>
-    <span tal:condition="python:paging_total == 0">
-        No results were found for this query.
-    </span>
+<tal:block define="sort_expr python:request.get('sort_by', '');
+	order python:request.get('sort_order', '');
+	page_search_start python:request.get('start', 0);
+	results python:here.externalSearch(servers, langs, query, sort_expr, order, page_search_start);
+	age here/getItemsAge; number_of_results here/getNumberOfResults;
+	langs_query python:'langs=%s' % '&langs='.join(langs);
+	servers_query python:'&servers=%s' % '&servers='.join(servers);
+	page_search_querystring string:${langs_query}${servers_query}&query=${query}&sort_by=${sort_expr}&order=${order};
+	list_paging python:results[0];
+	paging_start python:list_paging[0]+1;
+	paging_upper python:list_paging[1]; 
+	paging_total python:list_paging[2]; 
+	paging_prev python:list_paging[3];
+	paging_next python:list_paging[4]; 
+	paging_current_page python:list_paging[5]; 
+	paging_records_page python:list_paging[6];
+	paging_pages python:list_paging[7]; 
+	list_result python:results[1]">
+
+	<span tal:condition="python:paging_total != 0">
+	<table cellspacing="4" cellpadding="4" border="0" width="95%">
+		<tr>
+			<td><strong>Search Results</strong><br>
+				Age: <span tal:replace="python:here.external_get_items_age(list_result, age)"/>% are more then <span tal:replace="age"/> month(s) old -
+				<a href="" onClick="document.frmSearch.sort_by[1].checked='true'; 
+					document.frmSearch.sort_order[1].checked='true'; 
+					document.frmSearch.submit(); return false;">show newer pages first</a>
+			</td>
+		</tr>
+		<tr tal:repeat="record list_result">
+			<td>
+				<img tal:attributes="src record/icon; alt record/meta_type" align="absmiddle" />
+				[<span tal:replace="record/lang" />]
+				<a tal:attributes="href record/url" tal:content="record/title" />
+				-
+				<span tal:replace="record/time" />
+				<span tal:condition="python:here.external_get_item_age(record['time'], age)==1"><strong style="color: #FF9966;">Old</strong></span>
+				<span tal:condition="python:record['description'] is not None">
+					<br />
+					<span tal:replace="python:here.utStrEscapeHTMLTags(record['description'])" />
+				</span>
+				<br />[<em tal:content="record/url" />]
+			</td>
+		</tr>
+	</table>
+	<table border="0" cellspacing="0" cellpadding="2" width="95%">
+		<tr>
+			<td width="1%">Results</td>
+			<td width="100%" nowrap><b tal:content="paging_start"/>&nbsp;-&nbsp;<b tal:content="paging_upper"/>&nbsp;of&nbsp;
+				<b tal:content="paging_total"/></td>
+		</tr>
+		<tr>
+			<td>Page</td>
+			<td nowrap="nowrap">
+				   <span tal:condition="python:paging_prev!=-1">&nbsp;&nbsp;
+					   <a tal:define="url python:here.absolute_url; start_batch python:(paging_current_page-1)*paging_records_page"
+						   tal:attributes="href string:${url}/external_search_html?start=${start_batch}&${page_search_querystring}">&lt;&lt;Previous</a>
+				   </span>
+				   <span tal:repeat="page paging_pages">
+						<a class="paging-link-off" tal:condition="python:paging_current_page==page" tal:content="python:page+1"></a>
+						<a tal:condition="python:paging_current_page!=page" tal:define="url here/absolute_url; start_batch python:paging_records_page*page"
+							tal:attributes="href string:${url}/external_search_html?start=${start_batch}&${page_search_querystring}"
+							tal:content="python:page+1">
+						</a>
+				   </span>
+				   <span tal:condition="python:paging_next!=-1">&nbsp;&nbsp;
+					   <a tal:define="url here/absolute_url; start_batch python:(paging_current_page+1)*paging_records_page"
+							tal:attributes="href string:${url}/external_search_html?start=${start_batch}&${page_search_querystring}">Next&gt;&gt;</a>
+				   </span>
+			</td>
+		</tr>
+	</table>
+	</span>
+	<span tal:condition="python:paging_total == 0">
+		No results were found for this query.
+	</span>
 
 </tal:block>
 </span>
+
+</tal:block>
 
 <span tal:replace="structure here/standard_html_footer"/>
