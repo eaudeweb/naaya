@@ -1157,12 +1157,76 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             else: mail_from = 'error@%s' % REQUEST.SERVER_NAME
             self.notifyOnErrorsEmail(self.administrator_email, mail_from, error_url, error_ip, error_type, error_value, error_user, error_time)
 
+    #external search
     security.declarePublic('external_search_capabilities')
     def external_search_capabilities(self):
         """
         Returns info about the searches that can be performed.
         """
         return [x['id'] for x in self.gl_get_languages_map()]
+
+    security.declarePublic('handle_external_search')
+    def handle_external_search(self, query, lang):
+        """
+        Handle an external call: performs the search in the given language.
+        """
+        if isinstance(query, unicode): query = query.encode('utf-8')
+        r = []
+        ra = r.append
+        for ob in self.searchCatalog(query, '', lang):
+            item = {
+                'url': ob.absolute_url(),
+                'icon': '%s/%s' % (self.REQUEST.SERVER_URL, ob.icon),
+                'meta_type': ob.meta_type,
+                'lang': lang
+            }
+            description = ob.getLocalProperty('description', lang)
+            if description: item['description'] = description.encode('utf-8')[:100]
+            else: item['description'] = None
+            title = ob.getLocalProperty('title', lang)
+            if title: item['title'] = title.encode('utf-8')
+            else: item['title'] = None
+            try:
+                t = unicode(str(ob.bobobase_modification_time()), 'latin-1').encode('utf-8')
+                item['time'] = t
+            except:
+                pass
+            ra(item)
+        return r
+
+    security.declarePublic('external_search_ex')
+    def external_search_ex(self, portal_url, query, lang):
+        """
+        Perform an XMLRPC call to handle this external search call
+        for the specified portal.
+        """
+        xconn = XMLRPCConnector(self.http_proxy)
+        res = xconn(portal_url, 'handle_external_search', query, lang)
+        if res is None: return []
+        else: return res
+
+    security.declareProtected(view, 'externalSearchEx')
+    def externalSearchEx(self, langs=[], query='', sort_expr='', order='', start=0):
+        """ """
+        r = []
+        rex = r.extend
+        try: start = abs(int(start))
+        except: start = 0
+        if len(query.strip()):
+            query = self.utStrEscapeForSearch(query)
+            for portal in self.get_networkportals_list():
+                for lang in self.utListIntersection(portal.langs, langs):
+                    rex(self.external_search_ex(portal.url, query, lang))
+        batch_obj = batch_utils(self.numberresultsperpage, len(r), start)
+        if sort_expr!='' and order=='ascending':    # sort ascending
+            self.utSortListOfDictionariesByKey(r, sort_expr, 0)
+        elif sort_expr!='' and order=='descending': #sort descending
+            self.utSortListOfDictionariesByKey(r, sort_expr, 1)
+        if len(r):
+            paging_informations = batch_obj.butGetPagingInformations()
+        else:
+            paging_informations = (-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0])
+        return (paging_informations, r[paging_informations[0]:paging_informations[1]])
 
     security.declareProtected(view, 'externalSearch')
     def externalSearch(self, servers=[], query='', sort_expr='', order='', page_search_start=''):
