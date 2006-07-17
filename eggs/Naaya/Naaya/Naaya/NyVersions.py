@@ -127,6 +127,7 @@ class NyVersions:
         from managers.networkportals_manager import networkportals_manager
         networkportals_manager.__dict__['__init__'](self)
         for k, v in self.getNetworkPortals().items():
+            if k.endswith('/'): k = k[:-1]
             self.add_networkportal_item(k, v, k, [])
         delattr(self, '_NySite__network_portals')
         return "Network portals managers set."
