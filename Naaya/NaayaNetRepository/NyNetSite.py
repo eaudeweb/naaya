@@ -41,7 +41,7 @@ def addNyNetSite(self, id='', title='', description='', url='', lang=None, REQUE
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_NYNETSITE + self.utGenRandomId(6)
-    if url[-1] == '/': url = url[:-1]
+    if url.endswith('/'): url = url[:-1]
     if lang is None: lang = self.gl_get_selected_language()
     ob = NyNetSite(id, title, description, url, lang)
     self.gl_add_languages(ob)
@@ -126,6 +126,7 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', url='', REQUEST=None):
         """ """
+        if url.endswith('/'): url = url[:-1]
         lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
@@ -138,6 +139,7 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', url='', lang=None, REQUEST=None):
         """ """
+        if url.endswith('/'): url = url[:-1]
         if lang is None: lang = self.gl_get_selected_language()
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
