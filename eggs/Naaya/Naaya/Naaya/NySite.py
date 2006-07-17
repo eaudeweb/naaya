@@ -1179,24 +1179,27 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     'url': ob.absolute_url(),
                     'icon': '%s/%s' % (self.REQUEST.SERVER_URL, ob.icon),
                     'meta_type': ob.meta_type,
-                    'lang': lang
+                    'lang': lang,
+                    'title': None,
+                    'description': None
                 }
-                description = ob.getLocalProperty('description', lang)
-                if description: item['description'] = description.encode('utf-8')[:100]
-                else: item['description'] = None
-                title = ob.getLocalProperty('title', lang)
-                if title: item['title'] = title.encode('utf-8')
-                else: item['title'] = None
                 try:
-                    t = unicode(str(ob.bobobase_modification_time()), 'latin-1').encode('utf-8')
-                    item['time'] = t
+                    description = ob.getLocalProperty('description', lang)
+                    if description: item['description'] = description.encode('utf-8')[:100]
                 except:
                     pass
+                try:
+                    title = ob.getLocalProperty('title', lang)
+                    if title: item['title'] = title.encode('utf-8')
+                except:
+                    pass
+                t = unicode(str(ob.bobobase_modification_time()), 'latin-1').encode('utf-8')
+                item['time'] = t
                 ra(item)
         return r
 
-    security.declarePublic('external_search_ex')
-    def external_search_ex(self, portal_url, query, langs):
+    security.declarePublic('external_search')
+    def external_search(self, portal_url, query, langs):
         """
         Perform an XMLRPC call to handle this external search
         for the specified portal.
@@ -1206,8 +1209,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if res is None: return []
         else: return res
 
-    security.declareProtected(view, 'externalSearchEx')
-    def externalSearchEx(self, langs=[], query='', sort_expr='', order='', start=0):
+    security.declareProtected(view, 'externalSearch')
+    def externalSearch(self, servers=[], langs=[], query='', sort_expr='', order='', start=0):
         """ """
         r = []
         rex = r.extend
@@ -1215,9 +1218,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         except: start = 0
         if len(query.strip()):
             query = self.utStrEscapeForSearch(query)
+            print servers
             for portal in self.get_networkportals_list():
-                m = self.utListIntersection(portal.langs, langs)
-                if len(m): rex(self.external_search_ex(portal.url, query, m))
+                if portal.url in servers:
+                    m = self.utListIntersection(portal.langs, langs)
+                    if len(m): rex(self.external_search(portal.url, query, m))
         batch_obj = batch_utils(self.numberresultsperpage, len(r), start)
         if sort_expr!='' and order=='ascending':    # sort ascending
             self.utSortListOfDictionariesByKey(r, sort_expr, 0)
@@ -1229,61 +1234,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             paging_informations = (-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0])
         return (paging_informations, r[paging_informations[0]:paging_informations[1]])
 
-    security.declareProtected(view, 'externalSearch')
-    def externalSearch(self, servers=[], query='', sort_expr='', order='', page_search_start=''):
-        """ """
-        list_results = []
-        try: page_search_start = int(page_search_start)
-        except: page_search_start = 0
-        if query.strip() != '':
-            query = self.utStrEscapeForSearch(query)
-            servers = self.utConvertToList(servers)
-            results = self.external_ew_search(servers, query)
-            if len(results) > 1:
-                filter(list_results.extend, results)
-            else:
-                list_results = results[0]
-        else:
-            list_results = []
-        batch_obj = batch_utils(self.numberresultsperpage, len(list_results), page_search_start)
-        if sort_expr!='' and order=='ascending':
-            self.utSortListOfDictionariesByKey(list_results, sort_expr, 0)   # sort ascending
-        elif sort_expr!='' and order=='descending':
-            self.utSortListOfDictionariesByKey(list_results, sort_expr, 1)    #sort descending
-        if len(list_results) > 0:
-            paging_informations = batch_obj.butGetPagingInformations()
-        else:
-            paging_informations = (-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0])
-        return (paging_informations, list_results[paging_informations[0]:paging_informations[1]])
-
-    security.declarePublic('external_search')
-    def external_search(self, search_param=''):
-        """ """
-        if isinstance(search_param, unicode):
-            search_param = search_param.encode('utf-8')
-        curr_lang = self.gl_get_selected_language()
-        #transtab = string.maketrans('/','_')
-        #unused='\x7f\x80\x81\x82\x83\x84\x85\x86\x87\x88\x89\x8a\x8b\x8c\x8d\x8e\x8f\x90\x91\x92\x93\x94\x95\x96\x97\x98\x99\x9a\x9b\x9c\x9d\x9e\x9f\xc0\xc1\xc2\xc3\xc4\xc5\xc6\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd0\xd1\xd2\xd3\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf'
-        list_res=[]
-        results = self.searchCatalog(search_param, '', curr_lang)
-        for result in results:
-            if hasattr(result,'description') and result.description!='':
-                #result_desc=unicode(string.translate(result.getDescription(curr_lang),transtab,unused), 'latin-1').encode('utf-8')
-                result_desc=result.description.encode('utf-8')
-            else:
-                result_desc='No description available'
-            if hasattr(result,'title') and result.title!='':
-                #result_title=unicode(string.translate(result.getTitle(curr_lang),transtab,unused), 'latin-1').encode('utf-8')
-                result_title=result.title.encode('utf-8')
-            else:
-                result_title='Untitled'
-            try:
-                time=unicode(str(result.bobobase_modification_time()), 'latin-1').encode('utf-8')
-                if result.absolute_url(0) not in list_res:
-                    list_res.append({'url':result.absolute_url(0), 'description':result_desc[:100], 'title':result_title,'icon':self.REQUEST.SERVER_URL+'/'+result.icon,'meta_type':result.meta_type, 'time':time})
-            except:
-                pass
-        return list_res
+    security.declareProtected(view, 'getRemoteServers')
+    def getRemoteServers(self):
+        #get remote servers
+        xconn = XMLRPCConnector(self.http_proxy)
+        res = xconn(self.repository_url, 'get_sites')
+        if res is None: return []
+        else: return res
 
     security.declareProtected(view, 'internalSearch')
     def internalSearch(self, query='', sort_expr='', order='', page_search_start='', where='all'):
@@ -2293,10 +2250,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     def get_linkslists_noportlet(self):
         return [x for x in self.getPortletsTool().getLinksLists() if not x.exists_portlet_for_object(x)]
-
-    def getRemoteServers(self):
-        #get remote servers
-        return self.get_repository_sites(self.repository_url)
 
     def checkPermissionForLink(self, name, context):
         #checks the given group of permissions in the given context
