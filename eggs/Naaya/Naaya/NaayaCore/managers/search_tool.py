@@ -32,42 +32,6 @@ class search_tool:
         """ """
         pass
 
-    def get_repository_sites(self, repo_server_url):
-        transport = ProxiedTransport()
-        transport.set_proxy(self.http_proxy)
-        sites = {}
-        #try to connect without proxy
-        try:
-            site = xmlrpclib.Server('%s/' % repo_server_url)
-            sites = site.get_sites()
-        except:
-            #try to connect with proxy
-            try:
-                site = xmlrpclib.Server('%s/' % repo_server_url, transport=transport)
-                sites = site.get_sites()
-            except:
-                pass
-        return sites
-
-    def external_ew_search(self, servers, query):
-        results = []
-        transport = ProxiedTransport()
-        transport.set_proxy(self.http_proxy)
-        for server in servers:
-            #try to connect without proxy
-            try:
-                site = xmlrpclib.Server('%s/' % server)
-                results.append(site.external_search(query))
-            except:
-                #try to connect with proxy
-                try:
-                    site = xmlrpclib.Server('%s/' % server, transport=transport)
-                    results.append(site.external_search(query))
-                except:
-                    pass
-        if results == []: results = [[]]
-        return results
-
     def external_get_items_age(self, search_list, age):
         """ """
         if len(search_list)==0:
