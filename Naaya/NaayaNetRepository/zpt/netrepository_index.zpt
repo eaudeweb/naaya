@@ -42,12 +42,14 @@ function fDeleteObjects()
 		<th class="checkbox" tal:condition="permission" width="1%"></th>
 		<th class="title-column" i18n:translate="">Network participant</th>
 		<th class="title-column" i18n:translate="">URL</th>
+		<th class="title-column" i18n:translate="">Languages</th>
 		<th class="edit" tal:condition="permission" i18n:translate="">Edit</th>
 	</tr>
 	<tr tal:repeat="item here/get_netsites">
 		<td tal:condition="permission"><input type="checkbox" name="ids" tal:attributes="value item/id" /></td>
 		<td><a tal:attributes="href string:${item/absolute_url}/index_html" tal:content="item/title_or_id" /></td>
 		<td><a tal:attributes="href item/url" tal:content="python:here.utTruncateString(item.url, 30)" /></td>
+		<td tal:content="item/get_netsite_langs" />
 		<td tal:condition="permission"><a tal:attributes="href string:${item/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a></td>
 	</tr>
 </table>

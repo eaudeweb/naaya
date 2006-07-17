@@ -32,6 +32,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyFeed import NyFeed
 from Products.Naaya.constants import *
+from Products.NaayaCore.managers.xmlrpc_tool import XMLRPCConnector
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 import NyNetChannel
 
@@ -47,6 +48,8 @@ def addNyNetSite(self, id='', title='', description='', url='', lang=None, REQUE
     self._setObject(id, ob)
     ob = self._getOb(id)
     ob.submitThis()
+    #update search capabilities
+    ob.update_search_capabilities()
     if REQUEST is not None:
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'manage_addNyNetSite_html' or l_referer.find('manage_addNyNetSite_html') != -1:
@@ -93,6 +96,7 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
         self.url = url
+        self.langs = []
         NyFeed.__dict__['__init__'](self)
 
     security.declarePrivate('objectkeywords')
@@ -104,6 +108,11 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
     def get_netsite_object(self): return self
     def get_netsite_path(self, p=0): return self.absolute_url(p)
     def get_netchannels(self): return self.objectValues(METATYPE_NYNETCHANNEL)
+
+    def get_netsite_langs(self):
+        #returns a comma separated string with languages labels
+        try: return ', '.join(map(self.gl_get_language_name, self.langs))
+        except: return ''
 
     def get_feed_url(self):
         #method from NyFeed
@@ -135,6 +144,8 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
         self.url = url
         self._p_changed = 1
         self.recatalogNyObject(self)
+        #update search capabilities
+        self.update_search_capabilities()
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
@@ -183,8 +194,31 @@ class NyNetSite(NyAttributes, LocalPropertyManager, NyContainer, NyFeed):
                     language, type, 0, lang)
                 #harvest channel
                 self._getOb(id).update_netchannel()
+                #update search capabilities
+                self.update_search_capabilities()
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'update_search_capabilities')
+    def update_search_capabilities(self, REQUEST=None):
+        """ """
+        msg, err, res = '', '', None
+        xconn = XMLRPCConnector(self.http_proxy)
+        res = xconn(self.url, 'external_search_capabilities')
+        if res is None:
+            err = 'Cannot connect to the given URL.'
+            if not hasattr(self, 'langs'):
+                #update script for sites that don't have yet the 'langs' property set
+                self.langs = []
+                self._p_changed = 1
+        else:
+            self.langs = res
+            self._p_changed = 1
+            msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+        if REQUEST:
+            if err != '': self.setSessionErrors([err])
+            if msg != '': self.setSessionInfo([msg])
+            REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
