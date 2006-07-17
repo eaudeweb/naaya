@@ -110,6 +110,27 @@ class list_utils:
             l = [l]
         return l
 
+    def utRemoveDuplicates(self, seq):
+        #given a list of something it removes duplicates
+        #special case of an empty sequence
+        if len(seq) == 0:
+            return []
+        #try using a dict first, because it's the fastest
+        u = {}
+        try:
+            for x in seq:
+                u[x] = 1
+        except TypeError:
+            del u
+        else:
+            return u.keys()
+        #brute force
+        u = []
+        for x in s:
+            if x not in u:
+                u.append(x)
+        return u
+
     def utEliminateDuplicatesByURL(self, p_objects):
         """ eliminate duplicates from a list of objects """
         dict = {}
