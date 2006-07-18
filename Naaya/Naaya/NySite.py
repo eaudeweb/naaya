@@ -1197,7 +1197,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """
         Handle an external call: performs the search in the given languages.
         """
-        print 'handle_external_search', query, langs
         if isinstance(query, unicode): query = query.encode('utf-8')
         r = []
         ra = r.append
@@ -1238,7 +1237,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         else: return res
 
     security.declareProtected(view, 'externalSearch')
-    def externalSearch(self, servers=[], langs=[], query='', sort_expr='', order='', start=0):
+    def externalSearch(self, servers=[], langs=[], query='', skey='', rkey='', start=0):
         """ """
         r = []
         rex = r.extend
@@ -1262,10 +1261,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                         rex(self.external_search(portal['url'], query, m))
                         temp.remove(portal['url'])
         batch_obj = batch_utils(self.numberresultsperpage, len(r), start)
-        if sort_expr!='' and order=='ascending':    # sort ascending
-            self.utSortListOfDictionariesByKey(r, sort_expr, 0)
-        elif sort_expr!='' and order=='descending': #sort descending
-            self.utSortListOfDictionariesByKey(r, sort_expr, 1)
+        if skey in ['meta_type', 'title', 'lang', 'time']:
+            self.utSortListOfDictionariesByKey(r, skey, rkey)
         if len(r):
             paging_informations = batch_obj.butGetPagingInformations()
         else:
