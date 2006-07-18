@@ -31,7 +31,10 @@
 	servers python:here.utConvertToList(request.get('servers', []));
 	start python:request.get('start', 0);
 	skey python:request.get('skey', 'title');
-	rkey python:request.get('rkey', '');">
+	rkey python:request.get('rkey', '');
+	form_data here/getDataForExternalSearch;
+	form_langs python:form_data[0];
+	form_servers python:form_data[1];">
 
 <p i18n:translate="">
 	This search is performed on this and other collaborating websites: all titles and descriptive texts (folders, URLs, news, events, stories, etc.). Note: it does NOT search in uploaded files.
@@ -48,7 +51,7 @@
 
 <div>
 <fieldset><legend>Language(s)</legend>
-	<tal:block tal:repeat="item here/get_networkportal_langs_map">
+	<tal:block tal:repeat="item form_langs">
 		<input type="checkbox" name="langs" tal:attributes="value python:item[0]; checked python:item[0] in langs" /><span tal:content="python:item[1]" />
 	</tal:block>
 </fieldset>
@@ -57,7 +60,7 @@
 <div>
 <fieldset><legend>Server(s)</legend>
 	<dl>
-		<dt tal:repeat="item here/getServersForExternalSearch">
+		<dt tal:repeat="item form_servers">
 			<input type="checkbox" name="servers" tal:attributes="value item/url; checked python:item['url'] in servers" />
 			<span tal:content="item/title" />
 		</dt>
@@ -118,7 +121,7 @@
 			<tr tal:repeat="record records">
 				<td><img tal:attributes="src record/icon; alt record/meta_type" align="absmiddle" /></td>
 				<td>
-					<a tal:attributes="href record/url" tal:content="record/title" />
+					<a tal:attributes="href record/url" tal:content="python:test(record['title'], record['title'], record['url'])" />
 					<span tal:condition="python:record['description'] is not None">
 						<br />
 						<span tal:replace="python:here.utStrEscapeHTMLTags(record['description'])" />
@@ -144,17 +147,17 @@
 		<span i18n:translate="" tal:omit-tag="">Page:</span>
 		<span tal:condition="python:paging_prev!=-1">
 			<a tal:define="url python:here.absolute_url; start_batch python:(paging_current_page-1)*paging_records_page"
-				tal:attributes="href string:${url}/external_search_html?start=${start_batch}&${page_search_querystring}" i18n:translate="">&lt;&lt;Previous</a>
+				tal:attributes="href string:${url}/external_search_html?start=${start_batch}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${page_search_querystring}" i18n:translate="">&lt;&lt;Previous</a>
 		</span>
 		<span tal:repeat="page paging_pages">
 			<a class="paging-link-off" tal:condition="python:paging_current_page==page" tal:content="python:page+1"></a>
 			<a tal:condition="python:paging_current_page!=page" tal:define="url here/absolute_url; start_batch python:paging_records_page*page"
-				tal:attributes="href string:${url}/external_search_html?start=${start_batch}&${page_search_querystring}" tal:content="python:page+1">
+				tal:attributes="href string:${url}/external_search_html?start=${start_batch}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${page_search_querystring}" tal:content="python:page+1">
 			</a>
 		</span>
 		<span tal:condition="python:paging_next!=-1">
 			<a tal:define="url here/absolute_url; start_batch python:(paging_current_page+1)*paging_records_page"
-				tal:attributes="href string:${url}/external_search_html?start=${start_batch}&${page_search_querystring}" i18n:translate="">Next&gt;&gt;</a>
+				tal:attributes="href string:${url}/external_search_html?start=${start_batch}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${page_search_querystring}" i18n:translate="">Next&gt;&gt;</a>
 		</span>
 	</div>
 </tal:block>
