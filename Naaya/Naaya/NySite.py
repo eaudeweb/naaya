@@ -1174,6 +1174,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if res is None: return {}
         else: return res
 
+    def getNetworkPortals(self):
+        #returns the list of user defined network portals
+        return self.__network_portals
+
     security.declareProtected(view, 'getServersForExternalSearch')
     def getServersForExternalSearch(self):
         """
