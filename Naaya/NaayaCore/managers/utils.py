@@ -308,12 +308,12 @@ class utils:
         l_temp = filter(lambda x: x[0]==x[1], l_temp)
         return map(operator.getitem, l_temp, (-1,)*len(l_temp))
 
-    def utSortListOfDictionariesByKey(self, p_list, p_key, p_order=0):
+    def utSortListOfDictionariesByKey(self, p_list, p_key, p_order):
         """ Sort a list of dictionary by key """
-        if p_order==0:   #ascending
-            p_list.sort(lambda x, y, param=p_key: cmp(x[param], y[param]))
-        else:           #desceding
+        if p_order:
             p_list.sort(lambda x, y, param=p_key: cmp(y[param], x[param]))
+        else:
+            p_list.sort(lambda x, y, param=p_key: cmp(x[param], y[param]))
 
     def utGetRefererIp(self, REQUEST=None):
         l_request_ip = 'unknown'
