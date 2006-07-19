@@ -24,7 +24,7 @@
         </td>
         <td><span tal:content="item/id" />
         <input type="hidden" name="old_ids" tal:attributes="value item/id" /></td>
-        <td class="edit"><input type="text" size="8" name="new_ids" tal:attributes="value item/id" /></td>
+        <td class="edit"><input type="text" size="40" name="new_ids" tal:attributes="value item/id" /></td>
         </tal:block>
     </tr>
 </table>
