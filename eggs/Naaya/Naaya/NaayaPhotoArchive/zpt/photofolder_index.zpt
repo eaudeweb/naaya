@@ -13,43 +13,8 @@
 						paging_current_page python:paging[5];
 						paging_records_page python:paging[6];
 						paging_pages python:paging[7];
-						objects_info python:result[1];
-						objects_list python:objects_info[2];
-						objects_delete_all python:objects_info[1];
-						objects_select_all python:objects_info[0];
+						objects_list python:result[1];
 						query_string python:here.process_querystring(request.QUERY_STRING)">
-
-<script language="javascript" type="text/javascript" tal:condition="objects_select_all">
-<!--
-function fCheckSelection()
-{	var frm = document.objectItems;
-	var i;
-	check = false;
-	for(i=0; i<frm.elements.length; i++)
-		if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "ids" && frm.elements[i].checked)
-		{	check = true; break;}
-	return check;}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="objects_delete_all">
-<!--
-function fDeleteObjects()
-{	if (fCheckSelection())
-	{	document.objectItems.action="deleteObjects";
-			document.objectItems.submit();}
-	else
-		alert('Please select one or more items to delete.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="objects_select_all">
-<!--
-function fSetTopPhotoObjects()
-{	document.objectItems.action="setTopPhotoObjects";
-	document.objectItems.submit();}
-//-->
-</script>
 
 <span style="float: right; width: 20%; word-wrap: break-word;">
 	<tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
@@ -69,17 +34,13 @@ function fSetTopPhotoObjects()
 </div>
 </tal:block>
 
-<p i18n:translate="">
-	This document lists all the photos published in the Photos Archive of the portal.
-	Use the form below to filter them.
-</p>
 <form method="get" action="">
 <table border="0" cellspacing="2" cellpadding="2">
 <tr>
-	<td i18n:translate="">Query</td>
+	<td i18n:translate="">Search</td>
 	<td><input type="text" name="q" id="q" size="50" tal:attributes="value filter_q" /></td>
 	<td i18n:translate="">photos</td>
-	<td><select name="f"><option value="" i18n:translate="">All</option><option value="1" tal:attributes="selected python:filter_f=='1'" i18n:translate="">On front</option></select></td>
+	<td><select name="f"><option value="" i18n:translate="">All</option><option value="1" tal:attributes="selected python:filter_f=='1'" i18n:translate="">Displayed on front</option></select></td>
 	<td><input type="submit" value="Filter" i18n:attributes="value" /></td>
 </tr>
 </table>
@@ -99,43 +60,28 @@ function fSetTopPhotoObjects()
 	<span tal:condition="python:paging_next!=-1"><a tal:define="start python:(paging_current_page+1)*paging_records_page" tal:attributes="href string:${here/absolute_url}/index_html?start=${start}&amp;${query_string}">Next</a></span>
 </div><br />
 
-<div tal:condition="python:objects_select_all or objects_delete_all">
-	<div id="toolbar">
-		<tal:block tal:condition="objects_delete_all"><a href="javascript:fDeleteObjects();"><span><img src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
-		<tal:block tal:condition="objects_select_all"><a href="javascript:fSetTopPhotoObjects();"><span><input src="/misc_/Naaya/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="" tal:omit-tag="">Save on front</span></span></a></tal:block>
-	</div>
-</div>
-
 <form name="objectItems" method="post" action="">
-<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
-<tal:block tal:condition="objects_select_all">
+<table border="0" cellpadding="0" cellspacing="0">
+<tal:block tal:repeat="obtuple objects_list">
 <tr>
-	<th class="checkbox" i18n:translate="" tal:condition="objects_delete_all"></th>
-	<th class="title-column" i18n:translate="">Photo</th>
-	<th class="edit" i18n:translate="">Released</th>
-	<th class="edit" i18n:translate="">On front</th>
-	<th class="edit" i18n:translate="">On front from/to</th>
-	<th class="edit" i18n:translate="">Edit</th>
+	<td tal:repeat="object obtuple"
+style="border-right: 10px solid white;border-top: 20px solid white;border-left: 10px solid white; background-color: #eeeeee;padding:15px 10px 0px 10px;text-align:center;border-bottom:0px solid #eaeaea!important;">
+		<a tal:attributes="href string:${object/absolute_url}/"><img style="border: 1px solid #999999;" tal:attributes="src string:${object/absolute_url}/view?display=Thumbnail; alt object/title_or_id" border="0" /></a>
+	</td>
 </tr>
-</tal:block>
-<tr tal:repeat="obtuple objects_list">
-	<tal:block define="del_permission python:obtuple[0]; edit_permission python:obtuple[1]; object python:obtuple[2]">
-	<td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="ids" tal:attributes="value object/id" /></td>
-	<td>
-		<a tal:attributes="href string:${object/absolute_url}/index_html"><img tal:attributes="src string:${object/absolute_url}/view?display=Thumbnail; alt object/title_or_id" border="0" /></a>
-		<tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
-			[<span tal:replace="object/count_comments" />
-			<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+<tr>
+	<td tal:repeat="object obtuple"
+style="border-right: 10px solid white; border-left: 10px solid white; background-color: #eeeeee;padding:5px 10px 10px 10px;text-align:center;font-size:90%;border-bottom:0px solid #eaeaea!important;">
+		<input type="checkbox" style="vertical-align:middle;" />
+		<a tal:attributes="href string:${object/absolute_url}/" tal:content="object/title_or_id" />
+		<tal:block tal:condition="object/author">
+			<br />
+			<span i18n:translate="" tal:omit-tag="">Author:</span>
+			<span tal:replace="object/author" />
 		</tal:block>
 	</td>
-	<td tal:content="python:here.utShowDateTime(object.releasedate)" />
-	<td tal:condition="edit_permission"><input type="checkbox" tal:attributes="name python:'topitem_' + object.id; value object/id; checked python:object.topitem==1" /></td>
-	<td><span tal:replace="python:here.utShowDateTime(object.onfrontfrom)" /> - <span tal:replace="python:here.utShowDateTime(object.onfrontto)" /></td>
-	<td class="edit" tal:condition="edit_permission">
-		<a tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
-	</td>
-	</tal:block>
 </tr>
+</tal:block>
 </table>
 </form>
 

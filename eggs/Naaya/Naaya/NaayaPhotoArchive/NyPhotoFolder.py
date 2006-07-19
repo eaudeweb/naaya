@@ -178,9 +178,9 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
             l_paging_information = batch_utils(NUMBER_OF_RESULTS_PER_PAGE, len(p_result), p_start).butGetPagingInformations()
         if len(p_result) > 0:
             return (l_paging_information,
-                self.get_archive_listing(p_result[l_paging_information[0]:l_paging_information[1]]))
+                self.utSplitSequence(p_result[l_paging_information[0]:l_paging_information[1]], NUMBER_OF_RESULTS_PER_LINE))
         else:
-            return (l_paging_information, self.get_archive_listing([]))
+            return (l_paging_information, self.utSplitSequence([], NUMBER_OF_RESULTS_PER_LINE))
 
     def query_photos(self, q='', f='', p_start=0):
         #query/filter photos
