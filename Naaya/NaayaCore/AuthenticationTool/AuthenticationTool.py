@@ -287,6 +287,29 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
         """Return the named user object or None"""
         return self.data.get(name, None)
 
+    def getAuthenticatedUserRoles(self, p_meta_types=None):
+        """
+        Returns a list with all roles of the authenticated user.
+        """
+        if p_meta_types is None: p_meta_types = self.get_containers_metatypes()
+        r = []
+        ra = r.append
+        user = self.REQUEST.AUTHENTICATED_USER
+        username = user.getUserName()
+        userroles = self.getUserRoles(user)
+        for x in ['Anonymous', 'Authenticated', 'Owner']:
+            if x in userroles:
+                userroles.remove(x)
+        if len(userroles): ra((userroles, ''))
+        folders = self.getCatalogedObjects(meta_type=p_meta_types, has_local_role=1)
+        folders.insert(0, self.getSite())
+        for folder in folders:
+            for roles_tuple in folder.get_local_roles():
+                local_roles = self.getLocalRoles(roles_tuple[1])
+                if roles_tuple[0] == username and len(local_roles) > 0:
+                    ra((local_roles, folder.absolute_url(1)))
+        return r
+
     def getUsersRoles(self, p_meta_types=None):
         """ """
         if p_meta_types is None: p_meta_types = self.get_containers_metatypes()
