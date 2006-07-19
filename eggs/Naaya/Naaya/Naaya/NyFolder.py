@@ -832,7 +832,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
     security.declareProtected(view, 'renameobject_html')
     def renameobject_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'folder_renameobject')
+        return self.getFormsTool().getContent({'here': self}, 'folder_renameid')
 
 
 InitializeClass(NyFolder)
