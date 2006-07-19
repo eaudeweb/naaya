@@ -918,11 +918,6 @@ class CHMSite(NySite):
         self._p_changed = 1
         return 'OK'
 
-    security.declareProtected(view, 'admin_welcome_page')
-    def admin_welcome_page(self, REQUEST=None):
-        """ redirect to welcome page """
-        REQUEST.RESPONSE.redirect('%s' % self.absolute_url())
-
     security.declareProtected(view, 'links_group_html')
     def links_group_html(self, REQUEST=None, RESPONSE=None):
         """ """
