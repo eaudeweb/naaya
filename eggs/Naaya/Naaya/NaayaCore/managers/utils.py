@@ -265,6 +265,12 @@ class utils:
                 if v != '': values.append(v)
         return values
 
+    def utSplitSequence(self, seq, size):
+        """
+        Split up seq in pieces of size.
+        """
+        return [seq[i:i+size] for i in range(0, len(seq), size)]
+
     def utNewlinetoBr(self, p_string):
         #convert new lines to <br /> for html display
         if p_string.find('\r') >= 0: p_string = ''.join(p_string.split('\r'))
