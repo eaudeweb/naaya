@@ -1610,8 +1610,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(view, 'admin_welcome_page')
     def admin_welcome_page(self, REQUEST=None):
-        """ redirect to welcome page """
-        REQUEST.RESPONSE.redirect('%s' % self.absolute_url())
+        """
+        Redirect to welcome page, in this case is the login_html page
+        where user's roles in the portal are displayed.
+        """
+        REQUEST.RESPONSE.redirect('%s/login_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_editmessage')
     def admin_editmessage(self, message, language, translation, start, skey, rkey, query, REQUEST=None):
