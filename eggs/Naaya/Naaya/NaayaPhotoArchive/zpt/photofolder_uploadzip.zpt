@@ -1,0 +1,21 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 i18n:translate="">Upload zip</h1>
+
+<div class="floated-buttons"><span class="buttons"><a tal:attributes="href string:${here/absolute_url}/admin_html" i18n:translate="">Back to index</a></span></div>
+
+<p i18n:translate="">
+	You can upload multiple photos as zip file.
+</p>
+
+<form method="post" tal:attributes="action string:${here/absolute_url}/uploadZip" enctype="multipart/form-data">
+<div class="field">
+	<label for="file" i18n:translate="">Zip file</label>
+	<input type="file" name="file" id="file" size="50" />
+</div>
+<div class="field">
+	<input type="submit" value="Upload" id="submit-button" i18n:attributes="value" />
+</div>
+</form>
+
+<span tal:replace="structure here/standard_html_footer" />

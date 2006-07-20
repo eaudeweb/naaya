@@ -60,6 +60,11 @@ function fDownloadObjects()
 </form>
 
 <tal:block tal:condition="python:paging_total>0">
+	<div id="admin_this_folder">
+		<a tal:condition="python:here.checkPermissionAddPhotos() or here.checkPermissionEditObject() or here.checkPermissionPublishObjects()" tal:attributes="href string:${here/absolute_url}/admin_html" i18n:translate=""><span class="buttons" i18n:translate="">Content management</span></a>
+		<a tal:attributes="href string:${here/absolute_url}/downloadAllObjects"><span class="buttons" i18n:translate="">Download all photos as zip</span></a>
+		<a href="" onclick="fDownloadObjects();return false"><span class="buttons" i18n:translate="">Download selected photos as zip</span></a>
+	</div><br />
 	<div>
 		<span i18n:translate="" tal:omit-tag="">Results</span>
 		<strong tal:content="paging_start">start</strong> - 
@@ -71,11 +76,6 @@ function fDownloadObjects()
 			<a tal:define="start python:paging_records_page*page" tal:attributes="href string:${here/absolute_url}/index_html?start=${start}&amp;${query_string}" tal:condition="python:page!=paging_current_page" tal:content="python:page+1">page number</a>
 		</span>
 		<span tal:condition="python:paging_next!=-1"><a tal:define="start python:(paging_current_page+1)*paging_records_page" tal:attributes="href string:${here/absolute_url}/index_html?start=${start}&amp;${query_string}">Next</a></span>
-	</div><br />
-	<div id="admin_this_folder">
-		<a tal:condition="python:here.checkPermissionAddPhotos() or here.checkPermissionEditObject() or here.checkPermissionPublishObjects()" tal:attributes="href string:${here/absolute_url}/admin_html" i18n:translate=""><span class="buttons" i18n:translate="">Content management</span></a>
-		<a tal:attributes="href string:${here/absolute_url}/downloadAllObjects"><span class="buttons" i18n:translate="">Download all photos as zip</span></a>
-		<a href="" onclick="fDownloadObjects();return false"><span class="buttons" i18n:translate="">Download selected photos as zip</span></a>
 	</div>
 	<form name="objectItems" method="post" action="">
 	<table border="0" cellpadding="0" cellspacing="0">

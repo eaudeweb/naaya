@@ -18,6 +18,9 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+from string import rfind
+from PIL import Image
+from cStringIO import StringIO
 
 #Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -31,7 +34,7 @@ from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.Naaya.constants import *
-from Products.NaayaCore.managers.utils import batch_utils
+from Products.NaayaCore.managers.utils import batch_utils, ZZipFile
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 import NyPhoto
 
@@ -190,6 +193,26 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         else: f = 1
         return self._page_result(self.query_objects_ex(meta_type=METATYPE_NYPHOTO, q=q, lang=lang, path='/'.join(self.getPhysicalPath()), topitem=f, approved=1, sort_on='releasedate', sort_order='reverse'), p_start)
 
+    def _page_result_admin(self, p_result, p_start):
+        #Returns results with paging information
+        l_paging_information = (0, 0, 0, -1, -1, 0, NUMBER_OF_RESULTS_PER_PAGE, [0])
+        try: p_start = abs(int(p_start))
+        except: p_start = 0
+        if len(p_result) > 0:
+            l_paging_information = batch_utils(NUMBER_OF_RESULTS_PER_PAGE, len(p_result), p_start).butGetPagingInformations()
+        if len(p_result) > 0:
+            return (l_paging_information, self.get_archive_listing(p_result[l_paging_information[0]:l_paging_information[1]]))
+        else:
+            return (l_paging_information, self.get_archive_listing([]))
+
+    def query_photos_admin(self, q='', f='', p_start=0):
+        #query/filter photos
+        lang = self.getLocalizer().get_selected_language()
+        if q == '': q = None
+        if f == '': f = None
+        else: f = 1
+        return self._page_result_admin(self.query_objects_ex(meta_type=METATYPE_NYPHOTO, q=q, lang=lang, path='/'.join(self.getPhysicalPath()), topitem=f, approved=1, sort_on='releasedate', sort_order='reverse'), p_start)
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', quality='', approved='', releasedate='',
@@ -277,6 +300,47 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
             RESPONSE=REQUEST.RESPONSE
         )
 
+    security.declareProtected(PERMISSION_ADD_PHOTO, 'uploadZip')
+    def uploadZip(self, file='', REQUEST=None):
+        """
+        Expand a zipfile into a number of Photos.
+        Go through the zipfile and for each file create a I{Naaya Photo} object.
+        """
+        err = ''
+        try:
+            if type(file) is not type('') and hasattr(file,'filename'):
+                # According to the zipfile.py ZipFile just needs a file-like object
+                zf = ZZipFile(file)
+                for name in zf.namelist():
+                    zf.setcurrentfile(name)
+                    content = zf.read()
+                    if self.isValidImage(content):
+                        id = name[max(rfind(name,'/'), rfind(name,'\\'), rfind(name,':'))+1:]
+                        ob = self._getOb(id, None)
+                        if ob: id = '%s_%s' % (PREFIX_NYPHOTO + self.utGenRandomId(6), id)
+                        self.addNyPhoto(id=id, title=name, file=content, lang=self.gl_get_selected_language())
+            else:
+                err = 'Invalid zip file.'
+        except Exception, error:
+            err = str(error)
+        if REQUEST:
+            if err != '':
+                self.setSessionErrors([err])
+                return REQUEST.RESPONSE.redirect('%s/uploadzip_html' % self.absolute_url())
+            else:
+                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                return REQUEST.RESPONSE.redirect('%s/admin_html' % self.absolute_url())
+
+    def isValidImage(self, file):
+        """
+        Test if the specified uploaded B{file} is a valid image.
+        """
+        try:
+            Image.open(StringIO(file))
+            return 1
+        except IOError: # Python Imaging Library doesn't recognize it as an image
+            return 0
+
     security.declareProtected(PERMISSION_DELETE_OBJECTS, 'deleteObjects')
     def deleteObjects(self, ids=None, REQUEST=None):
         """ """
@@ -288,7 +352,7 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         if REQUEST:
             if error: self.setSessionErrors(['Error while delete data.'])
             else: self.setSessionInfo(['Item(s) deleted.'])
-            REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+            REQUEST.RESPONSE.redirect('%s/admin_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'setTopPhotoObjects')
     def setTopPhotoObjects(self, REQUEST=None):
@@ -302,7 +366,7 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
                 self.recatalogNyObject(item)
         except: self.setSessionErrors(['Error while updating data.'])
         else: self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-        if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+        if REQUEST: REQUEST.RESPONSE.redirect('%s/admin_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPendingContent')
     def processPendingContent(self, appids=[], delids=[], REQUEST=None):
@@ -374,5 +438,8 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
 
     security.declareProtected(PERMISSION_ADD_PHOTO, 'photo_add_html')
     photo_add_html = PageTemplateFile('zpt/photo_add', globals())
+
+    security.declareProtected(PERMISSION_ADD_PHOTO, 'uploadzip_html')
+    uploadzip_html = PageTemplateFile('zpt/photofolder_uploadzip', globals())
 
 InitializeClass(NyPhotoFolder)
