@@ -1307,7 +1307,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             r = self.utEliminateDuplicatesByURL(r)
             batch_obj = batch_utils(self.numberresultsperpage, len(r), start)
             if skey in ['meta_type', 'title', 'bobobase_modification_time']:
-                r = self.utSortObjsListByAttr(r, skey, rkey)
+                if skey == 'bobobase_modification_time':
+                    r = self.utSortObjsListByMethod(r, skey, rkey)
+                else:
+                    r = self.utSortObjsListByAttr(r, skey, rkey)
             if len(r):
                 paging_informations = batch_obj.butGetPagingInformations()
             else:
