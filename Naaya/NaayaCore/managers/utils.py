@@ -30,6 +30,7 @@ import base64
 import urllib
 import time
 import codecs
+from zipfile import *
 
 import csv
 import tempfile
@@ -558,6 +559,40 @@ class utils:
                 return 0
         return 1
 
+    def utGenerateZip(self, name, objects, RESPONSE):
+        """
+        Zip all the requested objects. Each object must implement
+        the B{getZipData} method, otherwise empty content will be provided.
+        @param name: the name of the archive (wihtout .zip extension!!!)
+        @type name: string
+        @param objects: a list of objects
+        @type objects: list
+        """
+        path = CLIENT_HOME
+        if not os.path.isdir(path):
+            try: os.mkdir(path)
+            except: raise OSError, 'Can\'t create directory %s' % path
+        tempfile.tempdir = path
+        tmpfile = tempfile.mktemp(".temp")
+        zf = ZipFile(tmpfile,"w")
+        sz = 0
+        for o in objects:
+            sz = sz + float(o.get_size())
+            timetuple = time.localtime()[:6]
+            filename = name + '/' + self.utToUtf8(o.id)
+            zfi = ZipInfo(filename)
+            zfi.date_time = timetuple
+            zfi.compress_type = ZIP_DEFLATED
+            try: zf.writestr(zfi, o.getZipData())
+            except: zf.writestr(zfi, '')
+        zf.close()
+        stat = os.stat(tmpfile)
+        content = open(tmpfile, 'rb').read()
+        os.unlink(tmpfile)
+        RESPONSE.setHeader('Content-Type', 'application/x-zip-compressed')
+        RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s' % name)
+        RESPONSE.setHeader('Content-Length', stat[6])
+        return content
 
 class tmpfile:
 
