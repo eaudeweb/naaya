@@ -607,3 +607,27 @@ class tmpfile:
 
     def __del__(self):
         os.unlink(self.fname)
+
+class ZZipFile(ZipFile):
+
+    def read(self,size=-1):
+        """ """
+        if(self.hasbeenread == 0):
+            self.hasbeenread = 1
+            return ZipFile.read(self,self.filename)
+        else:
+            return ""
+
+    def seek(self):
+        """ Ignore since it is only used to figure out size """
+        self.hasbeenread = 0
+        return 0
+
+    def tell(self):
+        """ """
+        return self.getinfo(filename).file_size
+
+    def setcurrentfile(self,filename):
+        """ """
+        self.hasbeenread = 0
+        self.filename=filename
