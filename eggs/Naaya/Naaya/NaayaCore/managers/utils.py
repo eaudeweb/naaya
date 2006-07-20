@@ -308,6 +308,15 @@ class utils:
             l_temp.reverse()
         return map(operator.getitem, l_temp, (-1,)*l_len)
 
+    def utSortObjsListByMethod(self, p_list, p_method, p_desc=1):
+        """Sort a list of objects by an attribute values"""
+        l_len = len(p_list)
+        l_temp = map(None, map(lambda x, y: eval('x.%s()' % y), p_list, (p_method,)*l_len), xrange(l_len), p_list)
+        l_temp.sort()
+        if p_desc:
+            l_temp.reverse()
+        return map(operator.getitem, l_temp, (-1,)*l_len)
+
     def utFilterObjsListByAttr(self, p_list, p_attr, p_value):
         """Filter a list of objects by an attribute value"""
         l_len = len(p_list)
