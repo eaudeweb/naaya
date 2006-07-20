@@ -525,6 +525,16 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if folder==1: return [METATYPE_FOLDER] + self.get_pluggable_installed_meta_types()
         else: return self.get_pluggable_installed_meta_types()
 
+    security.declarePublic('get_label_for_meta_type')
+    def get_label_for_meta_type(self, meta_type):
+        #returns the label associated with the given meta_type
+        #it can be a Naaya Folder or a pluggable content type
+        if meta_type == METATYPE_FOLDER:
+            return LABEL_NYFOLDER
+        else:
+            try: return self.get_pluggable_item(meta_type)['label']
+            except: return meta_type
+
     security.declarePublic('getProductsMetaTypes')
     def getProductsMetaTypes(self):
         #returns a list with all meta types
@@ -1280,36 +1290,29 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         return (paging_informations, r[paging_informations[0]:paging_informations[1]])
 
     security.declareProtected(view, 'internalSearch')
-    def internalSearch(self, query='', sort_expr='', order='', page_search_start='', where='all'):
+    def internalSearch(self, query='', langs=None, releasedate=None, releasedate_range=None, meta_types=[], skey='', rkey='', start='', path=''):
         """ """
-        lang = self.gl_get_selected_language()
-        try: page_search_start = int(page_search_start)
-        except: page_search_start = 0
-        if query:
-            if where == 'all':
-                path = ''
-            else:
-                path = where
-            #if type(query) == type(''):
-            #    query = self.utStrEscapeForSearch(query)
-            #don't elimintate any characters anymore!
-            try:
-                results = self.searchCatalog(query, path, lang)
-            except:
-                results = []
-            batch_obj = batch_utils(self.numberresultsperpage, len(results), page_search_start)
-            if sort_expr!='' and order=='ascending':
-                results = self.utSortObjsListByAttr(results, sort_expr, 0)   # sort ascending
-            elif sort_expr!='' and order=='descending':
-                results = self.utSortObjsListByAttr(results, sort_expr, 1)    #sort descending
-
-            if len(results) > 0:
+        r = []
+        rex = r.extend
+        if langs is None: langs = [self.gl_get_selected_language()]
+        try: start = int(start)
+        except: start = 0
+        releasedate = self.utConvertStringToDateTimeObj(releasedate)
+        if releasedate_range not in ['min', 'max']: releasedate_range = None
+        if releasedate is None: releasedate_range = None
+        if len(query.strip()):
+            #search in each language
+            for lang in langs:
+                rex(self.query_objects_ex(meta_types, query, lang, path, releasedate=releasedate, releasedate_range=releasedate_range))
+            r = self.utEliminateDuplicatesByURL(r)
+            batch_obj = batch_utils(self.numberresultsperpage, len(r), start)
+            if skey in ['meta_type', 'title', 'bobobase_modification_time']:
+                r = self.utSortObjsListByAttr(r, skey, rkey)
+            if len(r):
                 paging_informations = batch_obj.butGetPagingInformations()
             else:
                 paging_informations = (-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0])
-            return (paging_informations, results[paging_informations[0]:paging_informations[1]])
-        else:
-            return []
+        return (paging_informations, r[paging_informations[0]:paging_informations[1]])
 
     security.declareProtected(view, 'process_profile')
     def process_profile(self, firstname='', lastname='', email='', name='', old_pass='', password='',
