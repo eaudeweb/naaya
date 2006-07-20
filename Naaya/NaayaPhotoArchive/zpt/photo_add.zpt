@@ -2,6 +2,8 @@
 
 <h1 i18n:translate="">Photo submission</h1>
 
+<div class="floated-buttons"><span class="buttons"><a tal:attributes="href string:${here/absolute_url}/admin_html" i18n:translate="">Back to index</a></span></div>
+
 <p i18n:translate="">
 	Fill the properties in the form below and click <strong>Add</strong>.
 </p>

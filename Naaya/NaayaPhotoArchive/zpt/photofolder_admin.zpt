@@ -3,7 +3,7 @@
 <tal:block tal:define="filter_q python:request.get('q', '');
 						filter_f python:request.get('f', '');
 						filter_start python:request.get('start', 0);
-						result python:here.query_photos(filter_q, filter_f, filter_start);
+						result python:here.query_photos_admin(filter_q, filter_f, filter_start);
 						paging python:result[0];
 						paging_start python:paging[0]+1;
 						paging_upper python:paging[1];
@@ -59,11 +59,14 @@ function fSetTopPhotoObjects()
 
 <h1><img tal:attributes="src here/icon; title here/meta_type; alt here/meta_type" border="0" /> <span tal:replace="here/title_or_id" /></h1>
 
+<div class="floated-buttons"><span class="buttons"><a tal:attributes="href string:${here/absolute_url}/" i18n:translate="">Back to listing</a></span></div>
+
 <tal:block tal:define="perm_add_something here/checkPermissionAddPhotos;
 	perm_edit_object here/checkPermissionEditObject;
 	perm_publish_objects here/checkPermissionPublishObjects">
 <div id="admin_this_folder" tal:condition="python:perm_add_something or perm_edit_object and perm_publish_objects">
-	<a tal:attributes="href string:${here/absolute_url}/photo_add_html"><span class="buttons" i18n:translate="">Submit photos</span></a>
+	<a tal:condition="perm_add_something" tal:attributes="href string:${here/absolute_url}/photo_add_html"><span class="buttons" i18n:translate="">Submit photo</span></a>
+	<a tal:condition="perm_add_something" tal:attributes="href string:${here/absolute_url}/uploadzip_html" title="Upload multiple photos as a zip file" i18n:attributes="title"><span class="buttons" i18n:translate="">Upload zip</span></a>
 	<a tal:condition="perm_edit_object" tal:attributes="href string:${here/absolute_url}/edit_html"><span class="buttons" i18n:translate="">Edit Folder</span></a>
 	<a tal:condition="perm_publish_objects" tal:attributes="href string:${here/absolute_url}/basketofapprovals_html"><span class="buttons" i18n:translate="">Approvals</span></a>
 </div>
@@ -76,10 +79,10 @@ function fSetTopPhotoObjects()
 <form method="get" action="">
 <table border="0" cellspacing="2" cellpadding="2">
 <tr>
-	<td i18n:translate="">Query</td>
+	<td i18n:translate="">Search</td>
 	<td><input type="text" name="q" id="q" size="50" tal:attributes="value filter_q" /></td>
 	<td i18n:translate="">photos</td>
-	<td><select name="f"><option value="" i18n:translate="">All</option><option value="1" tal:attributes="selected python:filter_f=='1'" i18n:translate="">On front</option></select></td>
+	<td><select name="f"><option value="" i18n:translate="">All</option><option value="1" tal:attributes="selected python:filter_f=='1'" i18n:translate="">Displayed on front</option></select></td>
 	<td><input type="submit" value="Filter" i18n:attributes="value" /></td>
 </tr>
 </table>
@@ -91,12 +94,12 @@ function fSetTopPhotoObjects()
 	<strong tal:content="paging_start">start</strong> - 
 	<strong tal:content="paging_upper">upper</strong> <span i18n:translate="" tal:omit-tag="">of</span> <strong tal:content="paging_total">total</strong>.<br />
 	<span i18n:translate="" tal:omit-tag="">Pages</span>
-	<span tal:condition="python:paging_prev!=-1"><a tal:define="start python:(paging_current_page-1)*paging_records_page" tal:attributes="href string:${here/absolute_url}/index_html?start=${start}&amp;${query_string}">Previous</a></span>
+	<span tal:condition="python:paging_prev!=-1"><a tal:define="start python:(paging_current_page-1)*paging_records_page" tal:attributes="href string:${here/absolute_url}/admin_html?start=${start}&amp;${query_string}">Previous</a></span>
 	<span tal:repeat="page paging_pages">
 		<span tal:condition="python:page==paging_current_page" tal:content="python:page+1">page number</span>
-		<a tal:define="start python:paging_records_page*page" tal:attributes="href string:${here/absolute_url}/index_html?start=${start}&amp;${query_string}" tal:condition="python:page!=paging_current_page" tal:content="python:page+1">page number</a>
+		<a tal:define="start python:paging_records_page*page" tal:attributes="href string:${here/absolute_url}/admin_html?start=${start}&amp;${query_string}" tal:condition="python:page!=paging_current_page" tal:content="python:page+1">page number</a>
 	</span>
-	<span tal:condition="python:paging_next!=-1"><a tal:define="start python:(paging_current_page+1)*paging_records_page" tal:attributes="href string:${here/absolute_url}/index_html?start=${start}&amp;${query_string}">Next</a></span>
+	<span tal:condition="python:paging_next!=-1"><a tal:define="start python:(paging_current_page+1)*paging_records_page" tal:attributes="href string:${here/absolute_url}/admin_html?start=${start}&amp;${query_string}">Next</a></span>
 </div><br />
 
 <div tal:condition="python:objects_select_all or objects_delete_all">
