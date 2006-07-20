@@ -255,6 +255,28 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
+    security.declareProtected(view, 'downloadAllObjects')
+    def downloadAllObjects(self, REQUEST=None):
+        """
+        Download all pictures in a zip file.
+        """
+        return self.utGenerateZip(
+            name=self.id,
+            objects=self.getPublishedObjects(),
+            RESPONSE=REQUEST.RESPONSE
+        )
+
+    security.declareProtected(view, 'downloadObjects')
+    def downloadObjects(self, ids=None, REQUEST=None):
+        """
+        Download selected pictures in a zip file.
+        """
+        return self.utGenerateZip(
+            name=self.id,
+            objects=map(self._getOb, self.utConvertToList(ids)),
+            RESPONSE=REQUEST.RESPONSE
+        )
+
     security.declareProtected(PERMISSION_DELETE_OBJECTS, 'deleteObjects')
     def deleteObjects(self, ids=None, REQUEST=None):
         """ """
@@ -340,6 +362,9 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
     #site pages
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/photofolder_index', globals())
+
+    security.declareProtected(view, 'admin_html')
+    admin_html = PageTemplateFile('zpt/photofolder_admin', globals())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     edit_html = PageTemplateFile('zpt/photofolder_edit', globals())

@@ -195,6 +195,8 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
         self._p_changed = 1
 
     #api
+    def getZipData(self): return str(self.data)
+
     def get_displays(self):
         #returns a list with all dispays minus 'Thumbnail'
         l = self.displays.keys()
