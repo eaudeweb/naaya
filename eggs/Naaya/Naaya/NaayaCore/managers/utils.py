@@ -311,7 +311,7 @@ class utils:
     def utSortObjsListByMethod(self, p_list, p_method, p_desc=1):
         """Sort a list of objects by an attribute values"""
         l_len = len(p_list)
-        l_temp = map(None, map(lambda x, y: eval('x.%s()' % y), p_list, (p_method,)*l_len), xrange(l_len), p_list)
+        l_temp = map(None, map(lambda x, y: getattr(x, y)(), p_list, (p_method,)*l_len), xrange(l_len), p_list)
         l_temp.sort()
         if p_desc:
             l_temp.reverse()
