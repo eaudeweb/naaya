@@ -122,7 +122,7 @@
 			<tr tal:repeat="record records">
 				<td><img tal:attributes="src record/icon; alt record/meta_type" align="absmiddle" /></td>
 				<td>
-					<a tal:attributes="href record/absolute_url" tal:content="record/title" />
+					<a tal:attributes="href record/absolute_url" tal:content="record/title_or_id" />
 					<span tal:condition="record/description">
 						<br />
 						<span tal:replace="python:here.utStrEscapeHTMLTags(record.description)" />
