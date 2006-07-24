@@ -1,0 +1,85 @@
+<h2 i18n:translate="">Remote links checking result</h2>
+
+<tal:block define="start python:int(request.get('start', 0));
+                    result python:here.page_something(here.manualCheck(), start);
+                    paging python:result[0];
+                    paging_start python:paging[0]+1;
+                    paging_upper python:paging[1];
+                    paging_total python:paging[2];
+                    paging_prev python:paging[3];
+                    paging_next python:paging[4];
+                    paging_current_page python:paging[5];
+                    paging_records_page python:paging[6];
+                    paging_pages python:paging[7];
+                    links_list python:result[1]">
+
+<tal:block tal:condition="python:paging_total>0">
+<div>
+    <div>
+        <span i18n:translate="" tal:omit-tag="">Results</span>
+        <strong tal:content="paging_start" /> - <strong tal:content="paging_upper" />
+        <span i18n:translate="" tal:omit-tag="">of</span>
+        <strong tal:content="paging_total" />.
+    </div>
+    <div>
+        <span i18n:translate="" tal:omit-tag="">Pages</span>
+        <span tal:condition="python:paging_prev!=-1">
+            <a tal:define="start python:(paging_current_page-1)*paging_records_page"
+                tal:attributes="href string:index_html?start=${start}" i18n:translate="">Previous</a></span>
+        <span tal:repeat="page paging_pages">
+            <span tal:condition="python:page==paging_current_page" tal:content="python:page+1" />
+            <a tal:define="start python:paging_records_page*page"
+                tal:attributes="href string:index_html?start=${start}"
+                tal:condition="python:page!=paging_current_page"
+                tal:content="python:page+1" />
+        </span>
+        <span tal:condition="python:paging_next!=-1">
+            <a tal:define="start python:(paging_current_page+1)*paging_records_page"
+                tal:attributes="href string:index_html?start=${start}" i18n:translate="">Next</a>
+        </span>
+    </div>
+</div>
+
+<table border="0" width="100%" cellpadding="0" cellspacing="2">
+<thead>
+    <tr>
+        <th>&nbsp;</th>
+        <th i18n:translate="">Location</th>
+        <th i18n:translate="">URL</th>
+        <th i18n:translate="">Test result</th>
+    </tr>
+</thead>
+<tbody>
+    <tr tal:repeat="link links_list">
+        <tal:block define="id python:link[0];
+                            meta_type python:link[1];
+                            relative_url python:link[2];
+                            icon python:link[3];
+                            property python:link[4];
+                            itemlink python:link[5];
+                            error python:link[6];
+                            message python:link[7];
+                            location python:here.getLocation(relative_url)">
+
+        <td tal:content="repeat/link/number" />
+        <td>
+            <img tal:attributes="src string:/${relative_url}/${icon}; alt meta_type" border="0" />
+            <a tal:attributes="href string:/${relative_url}"
+                tal:content="python:here.restrictedTraverse(relative_url).title_or_id()[:20]" />
+        </td>
+        <td>
+            <a tal:attributes="href itemlink" target="_blank"><font color="red" tal:content="python:itemlink[:50]" /></a>
+        </td>
+        <td>
+            <font color="red">
+                <span i18n:translate="">Possibly broken </span>
+                (<span tal:replace="message" />)
+            </font>
+        </td>
+        </tal:block>
+    </tr>
+</tbody>
+</table>
+
+</tal:block>
+</tal:block>
