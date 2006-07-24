@@ -96,7 +96,7 @@ class PropertiesTool(SimpleItem, utils, search_tool):
         """
         self.setItemsAge(search_age)
         self.setNumberOfResults(results_number)
-        self.setSearchableContent(content)
+        self.setSearchableContent(self.utRemoveDuplicates(self.utConvertToList(content)))
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect('manage_search_html?save=ok')
 
