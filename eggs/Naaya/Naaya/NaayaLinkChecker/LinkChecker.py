@@ -165,16 +165,15 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         return
 
     security.declareProtected('Run Manual Check', 'manualCheck')
-    def manualCheck(self, start, stop):
+    def manualCheck(self):
         """ """
         #build a list with all links
         links_dict = self.processObjects()
-        l_temp_list = []
+        links_list = []
         for link_value in links_dict.values():
             for link_item in link_value:
-                if not link_item in l_temp_list:
-                    l_temp_list.append(link_item)
-        links_list = l_temp_list[start-1:stop-1]
+                if not link_item in links_list:
+                    links_list.append(link_item)
         #start threads
         links_ListLock = threading.Lock()
         checker_ThreadList = []
@@ -201,7 +200,6 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
 
     def getProperties(self, metatype):
         """Get all added meta types"""
-        print self.objectMetaType[metatype]
         return self.objectMetaType[metatype]
 
     def hasMetaType(self, meta_type):
