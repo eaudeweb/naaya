@@ -43,7 +43,6 @@
 <table border="0" width="100%" cellpadding="0" cellspacing="2">
 <thead>
     <tr>
-        <th>&nbsp;</th>
         <th i18n:translate="">Location</th>
         <th i18n:translate="">URL</th>
         <th i18n:translate="">Test result</th>
@@ -61,7 +60,6 @@
                             message python:link[7];
                             location python:here.getLocation(relative_url)">
 
-        <td tal:content="repeat/link/number" />
         <td>
             <img tal:attributes="src string:/${relative_url}/${icon}; alt meta_type" border="0" />
             <a tal:attributes="href string:/${relative_url}"

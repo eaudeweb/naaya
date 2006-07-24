@@ -130,13 +130,22 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         results = {}
         objects_founded = self.findObjects()
         for obj in objects_founded:
-            properties = self.getProperties(obj.meta_type)
-            for property in properties:
-                try:
-                    value = getattr(obj, property)
-                except:
-                    pass #Invalid property
+            properties = self.getPropertiesMeta(obj.meta_type)
+            for property, multilingual in properties:
+                values = []
+                #check if the property is multiligual
+                if multilingual:
+                    try:
+                        for lang in self.gl_get_languages():
+                            values.append(obj.getLocalProperty(property, lang))
+                    except:
+                        pass #Invalid property
                 else:
+                    try:
+                        values.append(getattr(obj, property))
+                    except:
+                        pass #Invalid property
+                for value in values:
                     links = self.parseUrls(value)
                     results_entry = results.get(obj.absolute_url(1), [])
                     results_entry.extend(self.umConvertToList(links))
@@ -200,6 +209,10 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
 
     def getProperties(self, metatype):
         """Get all added meta types"""
+        return [p[0] for p in self.objectMetaType[metatype]]
+
+    def getPropertiesMeta(self, metatype):
+        """Get all added meta types"""
         return self.objectMetaType[metatype]
 
     def hasMetaType(self, meta_type):
@@ -238,7 +251,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             REQUEST.RESPONSE.redirect('manage_properties')
 
     security.declareProtected(view_management_screens, 'manage_addProperty')
-    def manage_addProperty(self, MetaType=None, Property=None, REQUEST=None):
+    def manage_addProperty(self, MetaType=None, Property=None, multilingual=0, REQUEST=None):
         """Add a new property for a meta type"""
         if MetaType is None:
             editmetatype = REQUEST.get('editmetatype', '')
@@ -250,8 +263,8 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             # valid meta type - add property
             listproperties = self.objectMetaType[editmetatype]
             if addobjectproperty != '':
-                if addobjectproperty not in listproperties:
-                    listproperties.append(addobjectproperty)
+                if addobjectproperty not in [p[0] for p in listproperties]:
+                    listproperties.append((addobjectproperty, multilingual))
                     self.objectMetaType[editmetatype] = listproperties
                     self._p_changed = 1
             if REQUEST is not None:
@@ -266,7 +279,10 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             # valid meta type - add property
             listproperties = self.objectMetaType[editmetatype]
             for property in self.umConvertToList(delobjectproperty):
-                listproperties.remove(property)
+                for prop_meta in listproperties:
+                    if property == prop_meta[0]:
+                        listproperties.remove(prop_meta)
+                        break
             self.objectMetaType[editmetatype] = listproperties
             self._p_changed = 1
             if REQUEST is not None:

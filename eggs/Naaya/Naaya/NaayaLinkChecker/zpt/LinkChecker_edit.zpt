@@ -110,11 +110,13 @@
                 <td nowrap="nowrap" class="strong_note" tal:content="editmetatype" />
             </tr>
             <tr>
-                <td nowrap="nowrap" class="note">Object property</td>
+                <td nowrap="nowrap" class="note" valign="top">Object property</td>
                 <td width="100%">
                     <input type="text" name="objectProperty" size="30" class="input_small" />
+                    <input type="submit" name="addProperty" value=" Add " class="input_small" /><br />
+                    <input type="checkbox" name="multilingual"> Multilingual property 
                     <input type="hidden" name="editmetatype" tal:attributes="value editmetatype" />
-                    <input type="submit" name="addProperty" value=" Add " class="input_small" />
+                    
                 </td>
             </tr>
         </form>
@@ -127,12 +129,15 @@
                             <td width="1%">&nbsp;</td>
                             <td class="strong_note">Property</td>
                         </tr>
-                        <tal:block repeat="prop python:here.getProperties(editmetatype)">
+                        <tal:block repeat="prop python:here.getPropertiesMeta(editmetatype)">
                         <tr>
                             <td>
-                                <input type="checkbox" name="objectProperty" tal:attributes="value prop" class="input_small" />
+                                <input type="checkbox" name="objectProperty" tal:attributes="value python:prop[0]" class="input_small" />
                             </td>
-                            <td class="note" tal:content="prop" />
+                            <td class="note">
+                                <span tal:content="python:prop[0]"/>
+                                <span tal:condition="python:prop[1]">(multilingual)</span>
+                            </td>
                         </tr>
                         </tal:block>
                         <tr>
