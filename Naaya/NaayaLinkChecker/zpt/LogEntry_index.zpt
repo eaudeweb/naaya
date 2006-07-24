@@ -1,4 +1,4 @@
-<h2>Log of broken links found by the automatic checking</h2>
+<h2 i18n:translate="">Log of broken links found by the automatic checking</h2>
 
 <p>
     <span i18n:translate="" tal:omit-tag="">
@@ -53,10 +53,10 @@
 <table cellspacing="2" cellpadding="0" width="100%">
 <thead>
     <tr>
-        <th width="5%">&nbsp;</th>
-        <th width="20%">Edit item</th>
-        <th width="50%">URL</th>
-        <th width="25%">Test result</th>
+        <th width="5%" i18n:translate="">&nbsp;</th>
+        <th width="20%" i18n:translate="">Edit item</th>
+        <th width="50%" i18n:translate="">URL</th>
+        <th width="25%" i18n:translate="">Test result</th>
     </tr>
 </thead>
 <tbody>
