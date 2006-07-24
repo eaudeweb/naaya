@@ -18,67 +18,54 @@
 # $Id: LinkChecker.py 3219 2005-03-15 10:23:28Z cupceant $
 #
 
+#Python imports
 import string
 import threading
 import time
 
+#Zope imports
 from OFS.ObjectManager import ObjectManager
 from OFS.SimpleItem import SimpleItem
-import Globals
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Globals import InitializeClass
 from OFS.FindSupport import FindSupport
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
-#try:
-#    from Products.Xron import *
-#    XRONinstalled=1
-#except:
-#    XRONinstalled=0
-XRONinstalled=0
+
+#Product's related imports
 from Utils import UtilsManager
 from CheckerThread import CheckerThread, logresults
 import LogEntry
 
 THREAD_COUNT = 4
+
+manage_addLinkCheckerForm = PageTemplateFile('zpt/LinkCheckerForm', globals())
 def manage_addLinkChecker(self, id, title, REQUEST=None):
     "Add a LinkChecker"
     ob = LinkChecker(id, title)
     self._setObject(id,ob)
 
     # set proxy_roles for Xron methods
-    checker_ob = getattr(self, id)
-    if XRONinstalled:
-        XronDTMLMethod.manage_addXronDTMLMethod(checker_ob,'runChecker','Run the LinkChecker',
-            file = 'Content-Type: text/plain\n\n<dtml-with '+ checker_ob.id +'>\n<dtml-call automaticCheck>\n</dtml-with>',
-            executeAt = checker_ob.umGetTodayDate() + 0.0021,
-            periodDays = 0.0021)
-    else: 
-        checker_ob.manage_addDTMLMethod('runChecker','Run the URL checker',file = 'Content-Type: text/plain\n\n<dtml-with '+ checker_ob.id +'>\n<dtml-call automaticCheck>\n</dtml-with>')
-    checker_ob.manage_addDTMLMethod('automatic_log','Logs of the automatic URL checkings',file = '<dtml-var standard_html_header>\n\n<h1>Automatic URL checker logs</h1>\n\n<dtml-var view_log>\n\n<dtml-var standard_html_footer>')
+    obj = getattr(self, id)
+    obj.manage_addDTMLMethod('runChecker','Run the URL checker',file = 'Content-Type: text/plain\n\n<dtml-with '+ checker_ob.id +'>\n<dtml-call automaticCheck>\n</dtml-with>')
+    obj.manage_addDTMLMethod('automatic_log','Logs of the automatic URL checkings',file = '<dtml-var standard_html_header>\n\n<h1>Automatic URL checker logs</h1>\n\n<dtml-var view_log>\n\n<dtml-var standard_html_footer>')
 
     getattr(checker_ob,'runChecker').manage_proxy(['Manager'])
 
     if REQUEST:
         return self.manage_main(self,REQUEST)
 
-manage_addLinkCheckerForm = Globals.DTMLFile('dtml/LinkCheckerForm', globals())
-
 class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     """ Link checker is meant to check the links to remote websites """
+
     meta_type="LinkChecker"
-    #catalog_name = "Catalog"
+
     security = ClassSecurityInfo()
+
     manage_options = (ObjectManager.manage_options[0],) + \
           ({'label' : 'Properties', 'action' : 'manage_properties'},
           {'label' : 'View', 'action' : 'index_html'},
           {'label' : 'Logs', 'action' : 'log_html'},) + SimpleItem.manage_options
-
-    manage_addLogEntry = LogEntry.manage_addLogEntry
-
-    index_html = Globals.DTMLFile("dtml/LinkChecker_index", globals())
-    manage_properties = Globals.DTMLFile("dtml/LinkChecker_edit", globals())
-    style_html = Globals.DTMLFile("dtml/LinkChecker_style", globals())
-    log_html = Globals.DTMLFile("dtml/LinkChecker_log", globals())
-    view_log = Globals.DTMLFile("dtml/LinkChecker_logForm",globals())
 
     def __init__(self, id, title='',objectMetaType={}, proxy='', batch_size=10):
         "initialize a new instance of LinkChecker"
@@ -214,6 +201,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
 
     def getProperties(self, metatype):
         """Get all added meta types"""
+        print self.objectMetaType[metatype]
         return self.objectMetaType[metatype]
 
     def hasMetaType(self, meta_type):
@@ -297,4 +285,24 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         except:
             return None
 
-Globals.default__class_init__(LinkChecker)
+
+    manage_addLogEntry = LogEntry.manage_addLogEntry
+
+    #zmi pages
+    security.declareProtected(view_management_screens, 'manage_properties')
+    manage_properties = PageTemplateFile("zpt/LinkChecker_edit", globals())
+
+    #site pages
+    security.declareProtected(view, 'index_html')
+    index_html = PageTemplateFile("zpt/LinkChecker_index", globals())
+
+    security.declareProtected(view, 'style_html')
+    style_html = PageTemplateFile("zpt/LinkChecker_style", globals())
+
+    security.declareProtected(view, 'log_html')
+    log_html = PageTemplateFile("zpt/LinkChecker_log", globals())
+
+    security.declareProtected(view, 'view_log')
+    view_log = PageTemplateFile("zpt/LinkChecker_logForm",globals())
+
+InitializeClass(LinkChecker)

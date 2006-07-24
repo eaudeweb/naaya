@@ -19,7 +19,7 @@
 #
 
 from types import *
-import timeoutsocket
+import socket
 import threading
 import time
 
@@ -27,15 +27,14 @@ from MyURLopener import MyURLopener
 import LinkChecker
 logresults = {}
 
-timeoutsocket.setDefaultSocketTimeout(30)
-
-
 class CheckerThread(threading.Thread):
+
     def __init__(self, URLList, URLListLock, proxy):
         threading.Thread.__init__(self)
         self.URLList = URLList
         self.URLListLock = URLListLock
         self.proxy = proxy
+
     def grabNextURL(self):
         self.URLListLock.acquire(1)
         if (len(self.URLList) < 1):
@@ -45,6 +44,7 @@ class CheckerThread(threading.Thread):
             del self.URLList[0]
         self.URLListLock.release()
         return NextURL
+
     def run(self):
         while 1:
             NextURL = self.grabNextURL()
@@ -52,19 +52,22 @@ class CheckerThread(threading.Thread):
                 break;
             result = self.readhtml(NextURL)
             logresults[NextURL] = str(result)
+
     def readhtml(self, url):
         file = MyURLopener()
         if self.proxy != '':
             file.proxies['http'] = self.proxy
         try:
+            socket.setdefaulttimeout(5)
             file.open(url)
             file.close()
             return 'OK'
         except IOError, msg:
             msg = self.sanitize(msg)
             return msg
-        except:
+        except socket.timeout:
             return "Attempted connect timed out."
+
     def sanitize(self, msg):
         if isinstance(IOError, ClassType) and isinstance(msg, IOError):
             # Do the other branch recursively
