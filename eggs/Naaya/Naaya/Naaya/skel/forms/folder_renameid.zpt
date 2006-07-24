@@ -8,7 +8,7 @@
 
 <form method="post" tal:attributes="action string:${here/absolute_url}/renameObjectsIds">
 
-<tal:block define="selected_items python:request.get('id')">
+<tal:block define="selected_items python:here.utConvertToList(request.get('id'))">
 <table>
     <tr>
         <th class="type" i18n:translate="">Type</th>
