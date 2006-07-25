@@ -138,31 +138,30 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                 if multilingual:
                     try:
                         for lang in self.gl_get_languages():
-                            values.append(obj.getLocalProperty(property, lang))
+                            values.append((obj.getLocalProperty(property, lang), property, lang))
                     except:
                         pass #Invalid property
                 else:
                     try:
-                        values.append(getattr(obj, property))
+                        values.append((getattr(obj, property), property, None))
                     except:
                         pass #Invalid property
                 for value in values:
-                    links = self.umConvertToList(self.parseUrls(value))
+                    links = [ (f, value[1], value[2]) for f in self.umConvertToList(self.parseUrls(value[0])) ]
                     results_entry = results.get(obj.absolute_url(1), [])
                     results_entry.extend(links)
-                    results[obj.absolute_url(1)] = (results_entry, property, 
+                    results[obj.absolute_url(1)] = results_entry
                     all_urls += len(links)
         return results, all_urls
 
     security.declareProtected('Run Automatic Check', 'automaticCheck')
     def automaticCheck(self):
         """ """
-        links_dict = {}
         links_list = []
         links_dict, all_urls = self.processObjects()
-        print links_dict
         for link_value in links_dict.values():
-            links_list.extend(link_value)
+            links_list.extend([l[0] for l in link_value])
+        #start threads
         links_ListLock = threading.Lock()
         checker_ThreadList = []
         for thread in range(0,THREAD_COUNT):
@@ -179,12 +178,13 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     def manualCheck(self):
         """ """
         #build a list with all links
-        links_dict, all_urls = self.processObjects()
         links_list = []
+        links_dict, all_urls = self.processObjects()
         for link_value in links_dict.values():
-            for link_item in link_value:
-                if not link_item in links_list:
-                    links_list.append(link_item)
+            #for link_item in link_value:
+            #    if not link_item in links_list:
+            #        links_list.append(link_item)
+            links_list.extend([l[0] for l in link_value])
         #start threads
         links_ListLock = threading.Lock()
         checker_ThreadList = []
@@ -205,11 +205,11 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             object = self.unrestrictedTraverse(key)
             buf = []
             for link in links_dict[key]:
-                errorcode = logresults.get(link, None)
+                errorcode = logresults.get(link[0], None)
                 if errorcode != 'OK' or manual == 1:
-                    buf.append((link, errorcode))
+                    buf.append((link[0], errorcode, link[1], link[2]))
             if buf:
-                saveinlog.append((object.getId(), object.meta_type, object.absolute_url(1), object.icon, '', buf))
+                saveinlog.append((object.getId(), object.meta_type, object.absolute_url(1), object.icon, buf))
         return saveinlog, all_urls
 
     def getProperties(self, metatype):
