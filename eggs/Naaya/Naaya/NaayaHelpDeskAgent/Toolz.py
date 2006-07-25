@@ -139,29 +139,21 @@ def BuildEmailList(emaillist):
         return ''
 
 def ParseStringForURL(text):
-    """Parses a string and if any url are found then <a > ..</a> is created"""
-    var = ''
-    while 1:
-        final = ''
-        pattobj = re.compile("http://|www.|ftp://|https://")
-        matchobj = pattobj.search(text)
-        if matchobj :
-            result = matchobj.group()
-            piece = string.split(text,result)[0]
-            link = string.split(text[len(piece):])[0]
-            punct = re.compile(",|;|\.|!|\n")
-            punctobj=punct.match(link[len(link)-1:])
-            if punctobj:
-                link = link[:len(link)-1]
-                final = punctobj.group() + ' '
-            if result == 'http://' or result == 'https://' or result == 'ftp://':
-                var = var + piece + "<a href=\"" + link + "\" target=\"_blank\">" + link[0:50]
-                if len(link)>50: var = var + ".."
-                var = var + "</a>" + final
-            elif result == 'www.':
-                var = var + piece + "<a href=\"http://" + link + "\" target=\"_blank\">" + link[0:50]
-                if len(link)>50: var = var + ".."
-                var = var + "</a>" + final
-            text = text[len(piece) + len(link) + len(final):]
-        if matchobj == None:
-            return var + text
+    """ Parses a string and if any url are found then <a > ..</a> is created """
+    urls = parseUrls(text)
+    for url in urls:
+        if len(url)>50: buf = '%s..' % url[:50]
+        else: buf = url
+        text = text.replace(url, '<a href="%s" target="_blank">%s</a>' % (url, buf))
+    return text
+
+def parseUrls(text):
+    """ Given a text string, returns all the urls we can find in it. """
+    urls = '(?: %s)' % '|'.join("http https telnet gopher file wais ftp".split())
+    ltrs = r'\w'
+    gunk = r'/#~:.?+=&%@!\-'
+    punc = r'.:?\-'
+    any = "%(ltrs)s%(gunk)s%(punc)s" % { 'ltrs':ltrs, 'gunk':gunk, 'punc':punc}
+    url = r'\b%(urls)s:[%(any)s]+?(?=[%(punc)s]*(?:   [^%(any)s]|$))' % {'urls':urls, 'any':any, 'punc':punc}
+    url_re = re.compile(url, re.VERBOSE | re.MULTILINE)
+    return url_re.findall(text)
