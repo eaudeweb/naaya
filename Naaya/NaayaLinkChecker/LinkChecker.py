@@ -150,7 +150,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                     links = self.umConvertToList(self.parseUrls(value))
                     results_entry = results.get(obj.absolute_url(1), [])
                     results_entry.extend(links)
-                    results[obj.absolute_url(1)] = results_entry
+                    results[obj.absolute_url(1)] = (results_entry, property, 
                     all_urls += len(links)
         return results, all_urls
 
@@ -160,6 +160,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         links_dict = {}
         links_list = []
         links_dict, all_urls = self.processObjects()
+        print links_dict
         for link_value in links_dict.values():
             links_list.extend(link_value)
         links_ListLock = threading.Lock()
@@ -202,10 +203,13 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         saveinlog = []
         for key in links_dict.keys():
             object = self.unrestrictedTraverse(key)
+            buf = []
             for link in links_dict[key]:
                 errorcode = logresults.get(link, None)
                 if errorcode != 'OK' or manual == 1:
-                    saveinlog.append((object.getId(), object.meta_type, object.absolute_url(1), object.icon, '', link, 1, errorcode))
+                    buf.append((link, errorcode))
+            if buf:
+                saveinlog.append((object.getId(), object.meta_type, object.absolute_url(1), object.icon, '', buf))
         return saveinlog, all_urls
 
     def getProperties(self, metatype):
