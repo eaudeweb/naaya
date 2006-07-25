@@ -41,7 +41,7 @@
         <span tal:repeat="page paging_pages">
             <span tal:condition="python:page==paging_current_page" tal:content="python:page+1" />
             <a tal:define="start python:paging_records_page*page"
-                tal:attributes="href string:${request/URL}?start=${start}"
+                tal:attributes="href string:${request/URL}?start=${start}#log"
                 tal:condition="python:page!=paging_current_page"
                 tal:content="python:page+1" />
         </span>
@@ -59,9 +59,9 @@
                         itemmetatype python:url[1];
                         itemabsoluteurl python:url[2];
                         itemicon python:url[3];
-                        itemproperty python:url[4];
-                        itemlinks python:url[5];
+                        itemlinks python:url[4];
                         itemtitle python:here.getItemTitle(itemabsoluteurl, size=0)">
+
             <div class="lck_item_name">
                 <img tal:attributes="src string:/${itemicon}; alt itemmetatype" border="0" />
                 <a tal:attributes="href string:${itemabsoluteurl}/edit_html"
@@ -69,11 +69,12 @@
                     tal:condition="python:itemtitle" />
                 <span tal:condition="python:not itemtitle">item deleted</span>
             </div>
-            <!-- de aici vin urlurile -->
 
             <tal:block repeat="link itemlinks">
             <div class="lck_box" tal:define="linkhref python:link[0];
-                                            linkerr python:link[1]">
+                                            linkerr python:link[1];
+                                            property python:link[2];
+                                            lang python:link[3]">
                 <div class="lck_url">
                     <a tal:attributes="href linkhref"
                         tal:content="linkhref" tal:condition="linkhref" />
@@ -84,20 +85,21 @@
                     </div>
                     <div class="row_field" tal:content="linkerr" />
                 </div>
-                <div class="form_row">
+                <div class="form_row" tal:condition="python:lang">
                     <div class="row_label">
                         <div i18n:translate="">Language</div>
                     </div>
-                    <div class="row_field">Italian</div>
+                    <div class="row_field" tal:content="lang" />
                 </div>
                 <div class="form_row">
                     <div class="row_label">
                         <div i18n:translate="">Property</div>
                     </div>
-                    <div class="row_field">Locator</div>
+                    <div class="row_field" tal:content="property" />
                 </div>
             </div>
             </tal:block>
+
         </td>
     </tr>
 </table>
