@@ -41,6 +41,9 @@ from Products.PythonScripts.standard import url_quote, html_quote
 from DateTime import DateTime
 from OFS.ObjectManager import checkValidId
 
+#Product imports
+from stripping_tool import stripping_tool
+
 #constants
 bad_chars = ' ,+&;\'()[]{}\xC4\xC5\xC1\xC0\xC2\xC3' \
     '\xE4\xE5\xE1\xE0\xE2\xE3\xC7\xE7\xC9\xC8\xCA\xCB' \
@@ -342,6 +345,27 @@ class utils:
     def utStrEscapeForSearch(self, p_string):
         """ escape some characters"""
         return re.sub('[(\"{})\[\]]', '', p_string)
+
+    def utStripAllHtmlTags(self, s):
+        #removes all html tags from an html string
+        p = stripping_tool((), ())
+        p.feed(s)
+        p.close()
+        p.cleanup()
+        return ''.join([x.strip() for x in p.result]).replace('&nbsp', '')
+
+    def utStripHtmlTags(self, s, all_tags, single_tags):
+        #removes the html tags that are not allowe from a string
+        p = striping_tool(all_tags, single_tags)
+        try:
+            p.feed(s)
+            p.close()
+        except:
+            r = []
+        else:
+            r = p.result
+        p.cleanup()
+        return ''.join(r)
 
     def utStrEscapeHTMLTags(self, p_string):
         """ escape HTML tags from string """
