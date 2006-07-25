@@ -128,6 +128,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             - save results into a dictionary like {'obj_url':[list_of_links]}
         """
         results = {}
+        all_urls = 0
         objects_founded = self.findObjects()
         for obj in objects_founded:
             properties = self.getPropertiesMeta(obj.meta_type)
@@ -146,18 +147,19 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                     except:
                         pass #Invalid property
                 for value in values:
-                    links = self.parseUrls(value)
+                    links = self.umConvertToList(self.parseUrls(value))
                     results_entry = results.get(obj.absolute_url(1), [])
-                    results_entry.extend(self.umConvertToList(links))
+                    results_entry.extend(links)
                     results[obj.absolute_url(1)] = results_entry
-        return results
+                    all_urls += len(links)
+        return results, all_urls
 
     security.declareProtected('Run Automatic Check', 'automaticCheck')
     def automaticCheck(self):
         """ """
         links_dict = {}
         links_list = []
-        links_dict = self.processObjects()
+        links_dict, all_urls = self.processObjects()
         for link_value in links_dict.values():
             links_list.extend(link_value)
         links_ListLock = threading.Lock()
@@ -169,15 +171,14 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             results = NewThread.start()
         for thread in range(0,THREAD_COUNT):
             checker_ThreadList[thread].join()
-        log_entries = self.prepareLog(links_dict, logresults)
+        log_entries, all_urls = self.prepareLog(links_dict, logresults, all_urls)
         self.manage_addLogEntry(self.REQUEST.AUTHENTICATED_USER.getUserName(), time.localtime(), log_entries)
-        return
 
     security.declareProtected('Run Manual Check', 'manualCheck')
     def manualCheck(self):
         """ """
         #build a list with all links
-        links_dict = self.processObjects()
+        links_dict, all_urls = self.processObjects()
         links_list = []
         for link_value in links_dict.values():
             for link_item in link_value:
@@ -193,10 +194,10 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             results = NewThread.start()
         for thread in range(0,THREAD_COUNT):
             checker_ThreadList[thread].join()
-        return self.prepareLog(links_dict, logresults, 0)
+        return self.prepareLog(links_dict, logresults, all_urls, 0)
 
     security.declarePrivate('prepareLog')
-    def prepareLog(self, links_dict, logresults, manual=0):
+    def prepareLog(self, links_dict, logresults, all_urls, manual=0):
         """ """
         saveinlog = []
         for key in links_dict.keys():
@@ -205,7 +206,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                 errorcode = logresults.get(link, None)
                 if errorcode != 'OK' or manual == 1:
                     saveinlog.append((object.getId(), object.meta_type, object.absolute_url(1), object.icon, '', link, 1, errorcode))
-        return saveinlog
+        return saveinlog, all_urls
 
     def getProperties(self, metatype):
         """Get all added meta types"""

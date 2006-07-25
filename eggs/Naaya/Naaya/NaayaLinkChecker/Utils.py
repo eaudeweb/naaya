@@ -69,3 +69,12 @@ class UtilsManager:
         url = r'\b%(urls)s:[%(any)s]+?(?=[%(punc)s]*(?:   [^%(any)s]|$))' % {'urls':urls, 'any':any, 'punc':punc}
         url_re = re.compile(url, re.VERBOSE | re.MULTILINE)
         return url_re.findall(text)
+
+    def getItemTitle(self, url, size=20):
+        """ return the object by url """
+        try:
+            obj_title = self.unrestrictedTraverse(url).title_or_id()
+            if len(obj_title) > size:
+                return '%s...' % obj_title[:size]
+        except KeyError:
+            return None

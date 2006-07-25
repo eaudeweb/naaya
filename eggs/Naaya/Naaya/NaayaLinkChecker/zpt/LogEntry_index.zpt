@@ -4,7 +4,7 @@
     <span i18n:translate="" tal:omit-tag="">
         This page presents the most recent broken links log, obtained at
     </span>
-    <span tal:replace="python:here.umFormatDateTimeToString(here.date_create)" />
+    <strong tal:content="python:here.umFormatDateTimeToString(here.date_create)" />
     <span i18n:translate="" tal:omit-tag="">
         by the automatic URLs checker. The links below appear in <em>URL</em>, <em>news</em> and <em>events</em> items from this portal.
     </span>
@@ -35,17 +35,17 @@
         <span i18n:translate="" tal:omit-tag="">Pages</span>
         <span tal:condition="python:paging_prev!=-1">
             <a tal:define="start python:(paging_current_page-1)*paging_records_page"
-                tal:attributes="href string:${here/absolute_url}/index_html?start=${start}" i18n:translate="">Previous</a></span>
+                tal:attributes="href string:${request/URL}?start=${start}" i18n:translate="">Previous</a></span>
         <span tal:repeat="page paging_pages">
             <span tal:condition="python:page==paging_current_page" tal:content="python:page+1" />
             <a tal:define="start python:paging_records_page*page"
-                tal:attributes="href string:${here/absolute_url}/index_html?start=${start}"
+                tal:attributes="href string:${request/URL}?start=${start}"
                 tal:condition="python:page!=paging_current_page"
                 tal:content="python:page+1" />
         </span>
         <span tal:condition="python:paging_next!=-1">
             <a tal:define="start python:(paging_current_page+1)*paging_records_page"
-                tal:attributes="href string:${here/absolute_url}/index_html?start=${start}" i18n:translate="">Next</a>
+                tal:attributes="href string:${request/URL}?start=${start}" i18n:translate="">Next</a>
         </span>
     </div>
 </div>
@@ -53,10 +53,10 @@
 <table cellspacing="2" cellpadding="0" width="100%">
 <thead>
     <tr>
-        <th width="5%" i18n:translate="">&nbsp;</th>
-        <th width="20%" i18n:translate="">Edit item</th>
-        <th width="50%" i18n:translate="">URL</th>
-        <th width="25%" i18n:translate="">Test result</th>
+        <th i18n:translate="">&nbsp;</th>
+        <th i18n:translate="">Edit item</th>
+        <th i18n:translate="">URL</th>
+        <th i18n:translate="">Test result</th>
     </tr>
 </thead>
 <tbody>
@@ -68,14 +68,16 @@
                         itemproperty python:url[4];
                         itemlink python:url[5];
                         itemerror python:url[6];
-                        itemmessage python:url[7]">
+                        itemmessage python:url[7];
+                        itemtitle python:here.getItemTitle(itemabsoluteurl)">
         <td>
-            <img tal:attributes="src string:${itemabsoluteurl}/${itemicon}; alt itemmetatype" border="0" />
+            <img tal:attributes="src string:/${itemicon}; alt itemmetatype" border="0" />
         </td>
         <td>
             <div class="list-item">
                 <a tal:attributes="href string:${itemabsoluteurl}/edit_html"
-                    tal:content="python:here.restrictedTraverse(itemabsoluteurl).title_or_id()[:25]" />
+                    tal:content="itemtitle" tal:condition="python:itemtitle" />
+                <span tal:condition="python:not itemtitle">deleted</span>
             </div>
         </td>
         <td>
