@@ -352,7 +352,7 @@ class utils:
         p.feed(s)
         p.close()
         p.cleanup()
-        return ''.join([x.strip() for x in p.result]).replace('&nbsp', '')
+        return ''.join([x.strip() for x in p.result]).replace('&nbsp;', ' ')
 
     def utStripHtmlTags(self, s, all_tags, single_tags):
         #removes the html tags that are not allowe from a string
