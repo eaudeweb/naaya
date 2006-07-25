@@ -74,6 +74,8 @@ class UtilsManager:
         """ return the object by url """
         try:
             obj_title = self.unrestrictedTraverse(url).title_or_id()
+            if size == 0:
+                return obj_title
             if len(obj_title) > size:
                 return '%s...' % obj_title[:size]
         except KeyError:

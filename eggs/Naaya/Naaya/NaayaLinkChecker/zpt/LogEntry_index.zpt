@@ -1,5 +1,7 @@
 <h2 i18n:translate="">Log of broken links found by the automatic checking</h2>
 
+<span tal:replace="structure here/style_html" tal:omit-tag="" />
+
 <p>
     <span i18n:translate="" tal:omit-tag="">
         This page presents the most recent broken links log, obtained at
@@ -11,7 +13,7 @@
 </p>
 
 <tal:block define="start python:int(request.get('start', 0));
-                    result python:here.page_something(here.url_list, start);
+                    result python:here.page_something(here.url_list, start, p_perpage=5);
                     paging python:result[0];
                     paging_start python:paging[0]+1;
                     paging_upper python:paging[1];
@@ -35,7 +37,7 @@
         <span i18n:translate="" tal:omit-tag="">Pages</span>
         <span tal:condition="python:paging_prev!=-1">
             <a tal:define="start python:(paging_current_page-1)*paging_records_page"
-                tal:attributes="href string:${request/URL}?start=${start}" i18n:translate="">Previous</a></span>
+                tal:attributes="href string:${request/URL}?start=${start}#log" i18n:translate="" name="log">Previous</a></span>
         <span tal:repeat="page paging_pages">
             <span tal:condition="python:page==paging_current_page" tal:content="python:page+1" />
             <a tal:define="start python:paging_records_page*page"
@@ -45,52 +47,59 @@
         </span>
         <span tal:condition="python:paging_next!=-1">
             <a tal:define="start python:(paging_current_page+1)*paging_records_page"
-                tal:attributes="href string:${request/URL}?start=${start}" i18n:translate="">Next</a>
+                tal:attributes="href string:${request/URL}?start=${start}#log" i18n:translate="">Next</a>
         </span>
     </div>
 </div>
 
-<table cellspacing="2" cellpadding="0" width="100%">
-<thead>
-    <tr>
-        <th i18n:translate="">&nbsp;</th>
-        <th i18n:translate="">Edit item</th>
-        <th i18n:translate="">URL</th>
-        <th i18n:translate="">Test result</th>
-    </tr>
-</thead>
-<tbody>
+<table width="100%" border="0" cellspacing="2" cellpadding="0">
     <tr tal:repeat="url urls">
-    <tal:block define="itemid python:url[0];
+        <td class="lck_item_info"
+            tal:define="itemid python:url[0];
                         itemmetatype python:url[1];
                         itemabsoluteurl python:url[2];
                         itemicon python:url[3];
                         itemproperty python:url[4];
-                        itemlink python:url[5];
-                        itemerror python:url[6];
-                        itemmessage python:url[7];
-                        itemtitle python:here.getItemTitle(itemabsoluteurl)">
-        <td>
-            <img tal:attributes="src string:/${itemicon}; alt itemmetatype" border="0" />
-        </td>
-        <td>
-            <div class="list-item">
+                        itemlinks python:url[5];
+                        itemtitle python:here.getItemTitle(itemabsoluteurl, size=0)">
+            <div class="lck_item_name">
+                <img tal:attributes="src string:/${itemicon}; alt itemmetatype" border="0" />
                 <a tal:attributes="href string:${itemabsoluteurl}/edit_html"
-                    tal:content="itemtitle" tal:condition="python:itemtitle" />
-                <span tal:condition="python:not itemtitle">deleted</span>
+                    tal:content="itemtitle"
+                    tal:condition="python:itemtitle" />
+                <span tal:condition="python:not itemtitle">item deleted</span>
             </div>
-        </td>
-        <td>
-            <div class="list-item">
-                <a tal:attributes="href itemlink" tal:content="python:itemlink[:50]" tal:condition="itemlink" />
+            <!-- de aici vin urlurile -->
+
+            <tal:block repeat="link itemlinks">
+            <div class="lck_box" tal:define="linkhref python:link[0];
+                                            linkerr python:link[1]">
+                <div class="lck_url">
+                    <a tal:attributes="href linkhref"
+                        tal:content="linkhref" tal:condition="linkhref" />
+                </div>
+                <div class="form_row">
+                    <div class="row_label">
+                      <div i18n:translate="">Error</div>
+                    </div>
+                    <div class="row_field" tal:content="linkerr" />
+                </div>
+                <div class="form_row">
+                    <div class="row_label">
+                        <div i18n:translate="">Language</div>
+                    </div>
+                    <div class="row_field">Italian</div>
+                </div>
+                <div class="form_row">
+                    <div class="row_label">
+                        <div i18n:translate="">Property</div>
+                    </div>
+                    <div class="row_field">Locator</div>
+                </div>
             </div>
+            </tal:block>
         </td>
-        <td>
-            <div class="list-item" tal:content="itemmessage" />
-        </td>
-    </tal:block>
     </tr>
-</tbody>
 </table>
 
 </tal:block>
