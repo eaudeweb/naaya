@@ -61,7 +61,6 @@
                         itemicon python:url[3];
                         itemlinks python:url[4];
                         itemtitle python:here.getItemTitle(itemabsoluteurl, size=0)">
-
             <div class="lck_item_name">
                 <img tal:attributes="src string:/${itemicon}; alt itemmetatype" border="0" />
                 <a tal:attributes="href string:${itemabsoluteurl}/edit_html"
@@ -85,21 +84,17 @@
                     </div>
                     <div class="row_field" tal:content="linkerr" />
                 </div>
-                <div class="form_row" tal:condition="python:lang">
-                    <div class="row_label">
-                        <div i18n:translate="">Language</div>
-                    </div>
-                    <div class="row_field" tal:content="lang" />
-                </div>
                 <div class="form_row">
                     <div class="row_label">
                         <div i18n:translate="">Property</div>
                     </div>
                     <div class="row_field" tal:content="property" />
+                    <div class="row_field" tal:condition="python:lang">
+                        (<span tal:replace="python:here.gl_get_language_name(lang)" />)
+                    </div>
                 </div>
             </div>
             </tal:block>
-
         </td>
     </tr>
 </table>
