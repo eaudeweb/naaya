@@ -1,22 +1,22 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
+#The contents of this file are subject to the Mozilla Public
+#License Version 1.1 (the "License"); you may not use this file
+#except in compliance with the License. You may obtain a copy of
+#the License at http://www.mozilla.org/MPL/
 #
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
+#Software distributed under the License is distributed on an "AS
+#IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+#implied. See the License for the specific language governing
+#rights and limitations under the License.
 #
-# Portions created by EEA are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
+#The Original Code is "LinkChecker"
 #
-# Contributor:
-# Cornel Nitu, Finsiel Romania
+#The Initial Owner of the Original Code is European Environment
+#Agency (EEA).  Portions created by Finsiel Romania are
+#Copyright (C) 2006 by European Environment Agency.  All
+#Rights Reserved.
 #
-# $Id: LinkChecker.py 3219 2005-03-15 10:23:28Z cupceant $
-#
+#Contributor(s):
+#  Original Code: Cornel Nitu (Finsiel Romania)
 
 #Python imports
 import string
@@ -44,14 +44,6 @@ def manage_addLinkChecker(self, id, title, REQUEST=None):
     "Add a LinkChecker"
     ob = LinkChecker(id, title)
     self._setObject(id,ob)
-
-    # set proxy_roles for Xron methods
-    obj = getattr(self, id)
-    obj.manage_addDTMLMethod('runChecker','Run the URL checker',file = 'Content-Type: text/plain\n\n<dtml-with '+ checker_ob.id +'>\n<dtml-call automaticCheck>\n</dtml-with>')
-    obj.manage_addDTMLMethod('automatic_log','Logs of the automatic URL checkings',file = '<dtml-var standard_html_header>\n\n<h1>Automatic URL checker logs</h1>\n\n<dtml-var view_log>\n\n<dtml-var standard_html_footer>')
-
-    getattr(checker_ob,'runChecker').manage_proxy(['Manager'])
-
     if REQUEST:
         return self.manage_main(self,REQUEST)
 
