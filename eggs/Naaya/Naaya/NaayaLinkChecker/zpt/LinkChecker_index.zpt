@@ -8,7 +8,7 @@
 
 <tal:block define="start python:int(request.get('start', 0));
                     links_info python:here.manualCheck();
-                    result python:here.page_something(links_info[0], start);
+                    result python:here.page_something(links_info[0], start, p_perpage=here.batch_size);
                     all_urls python:links_info[1];
                     paging python:result[0];
                     paging_start python:paging[0]+1;

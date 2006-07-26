@@ -13,7 +13,7 @@
 </p>
 
 <tal:block define="start python:int(request.get('start', 0));
-                    result python:here.page_something(here.url_list, start, p_perpage=5);
+                    result python:here.page_something(here.url_list, start, p_perpage=here.batch_size);
                     paging python:result[0];
                     paging_start python:paging[0]+1;
                     paging_upper python:paging[1];

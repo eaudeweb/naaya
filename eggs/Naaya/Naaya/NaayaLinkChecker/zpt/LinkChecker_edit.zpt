@@ -33,7 +33,16 @@
     
         <span class="strong_note">Number of results</span>
         <input type="text" name="batch_size" size="2" class="input_small" tal:attributes="value here/batch_size" />
+
+        <p class="note">
+            If you run the automaticCheck using a cron job fill this property with the IP address of the server
+            that make the call. <br />
+            <strong>Example: </strong>127.0.0.1
+        </p>
     
+        <span class="strong_note">IP Address</span>
+        <input type="text" name="ip_address" size="20" class="input_small" tal:attributes="value here/ip_address" />
+
         <p class="note">
             You can choose to search using an existing ZCatalog(faster).
             You must create a ZCatalog in the root folder and specify its id below.
@@ -111,7 +120,7 @@
             </tr>
             <tr>
                 <td nowrap="nowrap" class="note" valign="top">Object property</td>
-                <td width="100%">
+                <td width="100%" class="note">
                     <input type="text" name="objectProperty" size="30" class="input_small" />
                     <input type="submit" name="addProperty" value=" Add " class="input_small" /><br />
                     <input type="checkbox" name="multilingual"> Multilingual property 

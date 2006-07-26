@@ -29,7 +29,7 @@ from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
 from OFS.FindSupport import FindSupport
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view
 
 #Product's related imports
@@ -50,7 +50,7 @@ def manage_addLinkChecker(self, id, title, REQUEST=None):
 class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     """ Link checker is meant to check the links to remote websites """
 
-    meta_type="LinkChecker"
+    meta_type="Naaya LinkChecker"
 
     security = ClassSecurityInfo()
 
@@ -68,13 +68,15 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         self.batch_size = int(batch_size)
         self.use_catalog = 0
         self.catalog_name = ''
+        self.ip_address = ''
         UtilsManager.__dict__['__init__'](self)
 
     security.declareProtected(view_management_screens, 'manage_edit')
-    def manage_edit(self, proxy, batch_size, catalog_name='', REQUEST=None):
+    def manage_edit(self, proxy, batch_size, catalog_name='', ip_address='', REQUEST=None):
         """Edits the summary's characteristics"""
         self.proxy = proxy
         self.batch_size = int(batch_size)
+        self.ip_address = ip_address
         if REQUEST is not None:
             if REQUEST.has_key('use_catalog'):
                 self.use_catalog = 1
@@ -93,24 +95,25 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
 
     security.declarePrivate('findObjects')
     def findObjects(self):
-        """ """
-        results = []
-        meta_types = self.getObjectMetaTypes()
-        if meta_types == []:
+        """ find all the objects according with the LinkChecker criterias
+        """
+        res = []
+        mt = self.getObjectMetaTypes()
+        if len(mt) == 0:
             return []
         if self.use_catalog == 1:
-            catalog_obj = self.unrestrictedTraverse(self.catalog_name)
-            objects_founded = catalog_obj({'meta_type':meta_types})
-            for obj in objects_founded:
-                obj = catalog_obj.getobject(obj.data_record_id_)
-                if string.find(obj.absolute_url(),'Control_Panel') == -1:
-                    results.append(obj)
+            cat_obj = self.unrestrictedTraverse(self.catalog_name)
+            objs = cat_obj({'meta_type':mt})
+            for obj in objs:
+                obj = cat_obj.getobject(obj.data_record_id_)
+                if obj.absolute_url().find('Control_Panel') == -1:
+                    res.append(obj)
         else:
-            objects_founded = FindSupport().ZopeFind(self.umGetROOT(), obj_metatypes=meta_types, search_sub=1)
-            for obj in objects_founded:
-                if string.find(obj[1].absolute_url(),'Control_Panel') == -1:
-                    results.append(obj[1])
-        return results
+            objs = FindSupport().ZopeFind(self.umGetROOT(), obj_metatypes=mt, search_sub=1)
+            for obj in objs:
+                if obj[1].absolute_url().find('Control_Panel') == -1:
+                    res.append(obj[1])
+        return res
 
     security.declarePrivate('processObjects')
     def processObjects(self):
@@ -146,76 +149,102 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                     all_urls += len(links)
         return results, all_urls
 
-    security.declareProtected('Run Automatic Check', 'automaticCheck')
-    def automaticCheck(self):
-        """ """
-        links_list = []
-        links_dict, all_urls = self.processObjects()
-        for link_value in links_dict.values():
-            links_list.extend([l[0] for l in link_value])
+    security.declarePrivate('verifyIP')
+    def verifyIP(self, REQUEST=None):
+        """ verify IP """
+        if not REQUEST or not REQUEST.has_key('REMOTE_ADDR'):
+            raise AttributeError, "No REQUEST"
+        if REQUEST['REMOTE_ADDR'] != self.ip_address.strip():
+            raise Unauthorized
+
+    security.declareProtected(view, 'automaticCheck')
+    def automaticCheck(self, REQUEST=None):
+        """ extract the urls from the objects,
+            verify them and save the results for the broken links found in a log file
+        """
+        #verify request
+        self.verifyIP(REQUEST)
+
+        #extract all the urls
+        urls = []
+        urlsinfo, total = self.processObjects()
+        for val in urlsinfo.values():
+            urls.extend([v[0] for v in val])
+
         #start threads
-        links_ListLock = threading.Lock()
-        checker_ThreadList = []
-        for thread in range(0,THREAD_COUNT):
-            NewThread = CheckerThread(links_list, links_ListLock, proxy=self.proxy)
-            NewThread.setName(thread)
-            checker_ThreadList.append(NewThread)
-            results = NewThread.start()
-        for thread in range(0,THREAD_COUNT):
-            checker_ThreadList[thread].join()
-        log_entries, all_urls = self.prepareLog(links_dict, logresults, all_urls)
+        lock = threading.Lock()
+        threads = []
+        for thread in range(0, THREAD_COUNT):
+            th = CheckerThread(urls, lock, proxy=self.proxy)
+            th.setName(thread)
+            threads.append(th)
+            results = th.start()
+        for thread in range(0, THREAD_COUNT):
+            threads[thread].join()
+
+        #save results in log
+        log_entries, all_urls = self.prepareLog(urlsinfo, logresults, total)
         self.manage_addLogEntry(self.REQUEST.AUTHENTICATED_USER.getUserName(), time.localtime(), log_entries)
 
     security.declareProtected('Run Manual Check', 'manualCheck')
     def manualCheck(self):
-        """ """
+        """ extract the urls from the objects,
+            verify them and return the results for the broken links found
+        """
         #build a list with all links
-        links_list = []
-        links_dict, all_urls = self.processObjects()
-        for link_value in links_dict.values():
+        urls = []
+        urlsinfo, total = self.processObjects()
+        for val in urlsinfo.values():
             #for link_item in link_value:
             #    if not link_item in links_list:
             #        links_list.append(link_item)
-            links_list.extend([l[0] for l in link_value])
+            urls.extend([v[0] for v in val])
+
         #start threads
-        links_ListLock = threading.Lock()
-        checker_ThreadList = []
+        lock = threading.Lock()
+        threads = []
         for thread in range(0,THREAD_COUNT):
-            NewThread = CheckerThread(links_list, links_ListLock, proxy=self.proxy)
-            NewThread.setName(thread)
-            checker_ThreadList.append(NewThread)
-            results = NewThread.start()
+            th = CheckerThread(urls, lock, proxy=self.proxy)
+            th.setName(thread)
+            threads.append(th)
+            results = th.start()
         for thread in range(0,THREAD_COUNT):
-            checker_ThreadList[thread].join()
-        return self.prepareLog(links_dict, logresults, all_urls, 0)
+            threads[thread].join()
+
+        #return the results
+        return self.prepareLog(urlsinfo, logresults, total, 0)
 
     security.declarePrivate('prepareLog')
     def prepareLog(self, links_dict, logresults, all_urls, manual=0):
         """ """
-        saveinlog = []
+        log = []
         for key in links_dict.keys():
             object = self.unrestrictedTraverse(key)
             buf = []
             for link in links_dict[key]:
-                errorcode = logresults.get(link[0], None)
-                if errorcode != 'OK' or manual == 1:
-                    buf.append((link[0], errorcode, link[1], link[2]))
+                err = logresults.get(link[0], None)
+                if err != 'OK' or manual == 1:
+                    buf.append((link[0], err, link[1], link[2]))
             if buf:
-                saveinlog.append((object.getId(), object.meta_type, object.absolute_url(1), object.icon, buf))
-        return saveinlog, all_urls
+                log.append((object.getId(), object.meta_type, object.absolute_url(1), object.icon, buf))
+        return log, all_urls
 
+    security.declareProtected(view_management_screens, 'getProperties')
     def getProperties(self, metatype):
         """Get all added meta types"""
         return [p[0] for p in self.objectMetaType[metatype]]
 
+    security.declareProtected(view_management_screens, 'getPropertiesMeta')
     def getPropertiesMeta(self, metatype):
         """Get all added meta types"""
         return self.objectMetaType[metatype]
 
+    security.declareProtected(view_management_screens, 'hasMetaType')
     def hasMetaType(self, meta_type):
         """Is this meta_type in our list"""
         return self.objectMetaType.has_key(meta_type)
 
+    security.declareProtected(view_management_screens, 'getObjectMetaTypes')
     def getObjectMetaTypes(self):
         """Get all added meta types"""
         return self.objectMetaType.keys()
@@ -285,17 +314,10 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             if REQUEST is not None:
                 REQUEST.RESPONSE.redirect('manage_properties?editmetatype=' + self.umURLEncode(editmetatype) + '#property')
 
+    security.declareProtected(view, 'getLogEntries')
     def getLogEntries(self):
         """Returns a list with all 'LogEntry' objects"""
         return self.objectValues('LogEntry')
-
-    def getLocation(self, p_url):
-        """get the parent object related to the object with given url"""
-        try:
-            return self.unrestrictedTraverse(p_url, None).aq_parent
-        except:
-            return None
-
 
     manage_addLogEntry = LogEntry.manage_addLogEntry
 
