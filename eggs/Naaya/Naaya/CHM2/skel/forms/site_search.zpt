@@ -129,7 +129,7 @@
 					<a tal:attributes="href record/absolute_url" tal:content="record/title_or_id" />
 					<span tal:condition="record/description">
 						<br />
-						<span tal:replace="python:here.utStrEscapeHTMLTags(record.description)" />
+						<span tal:replace="python:here.utTruncateString(here.utStripAllHtmlTags(record.description), 200)" />
 					</span>
 				</td>
 				<td>
