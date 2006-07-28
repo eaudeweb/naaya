@@ -116,7 +116,7 @@
 					<a tal:attributes="href record/url" tal:content="record/title" />
 					<span tal:condition="python:record['description'] is not None">
 						<br />
-						<span tal:replace="python:here.utStrEscapeHTMLTags(record['description'])" />
+						<span tal:replace="python:here.utTruncateString(here.utStripAllHtmlTags(record['description']), 200)" />
 					</span>
 				</td>
 				<td tal:content="python:here.gl_get_language_name(record['lang'])" />
