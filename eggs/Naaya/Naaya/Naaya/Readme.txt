@@ -26,11 +26,11 @@ Installation steps
 3. Copy the "Localizer" and "iHotfix" folders from "Localizer-1.1.0-metapackage.tar.gz" archive inside the Products folder of your Zope instance. Rename the "Localizer-1.1.0" folder as "Localizer"
 
 4. Download the following into the Products folder of your Zope instance:
-	http://svn.eionet.eu.int/repositories/Zope/trunk/ChangeNotification/,
-	http://svn.eionet.eu.int/repositories/Zope/trunk/MessageBoard/,
-	http://svn.eionet.eu.int/repositories/Zope/branches/chm_related/CHMGlossary/,
-	http://svn.eionet.eu.int/repositories/Zope/trunk/HelpDeskAgent/,
-	and all products from http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/
+	http://svn.eionet.europa.eu/repositories/Zope/trunk/ChangeNotification/,
+	http://svn.eionet.europa.eu/repositories/Zope/trunk/MessageBoard/,
+	http://svn.eionet.europa.eu/repositories/Zope/branches/chm_related/CHMGlossary/,
+	http://svn.eionet.europa.eu/repositories/Zope/trunk/HelpDeskAgent/,
+	and all products from http://svn.eionet.europa.eu/repositories/Zope/trunk/Naaya/
 
 	Note: the products from the SVN server should be downloaded using a SVN client
 
