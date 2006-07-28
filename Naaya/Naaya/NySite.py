@@ -1188,7 +1188,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         #returns the list of user defined network portals
         return self.__network_portals
 
-    security.declareProtected(view, 'getServersForExternalSearch')
+    security.declareProtected(view, 'getDataForExternalSearch')
     def getDataForExternalSearch(self):
         """
         Returns two lists:
