@@ -1232,14 +1232,22 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 }
                 try:
                     description = ob.getLocalProperty('description', lang)
-                    if description: item['description'] = description.encode('utf-8')[:100]
+                    if description:
+                        #strip all HTML tags from the description and take just
+                        #the first 200 characters
+                        item['description'] = self.utStripAllHtmlTags(description.encode('utf-8'))[:200]
                 except:
                     pass
                 try:
                     title = ob.getLocalProperty('title', lang)
-                    if title: item['title'] = title.encode('utf-8')
+                    if not title:
+                        #get title; if it is empty return the id instead
+                        title = title.encode('utf-8')
+                        if len(title) == 0: title = ob.id
+                    item['title'] = title
                 except:
-                    pass
+                    #save id as title
+                    item['title'] = ob.id
                 t = unicode(str(ob.bobobase_modification_time()), 'latin-1').encode('utf-8')
                 item['time'] = t
                 ra(item)
