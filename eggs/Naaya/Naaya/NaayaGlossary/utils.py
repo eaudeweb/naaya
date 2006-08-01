@@ -287,6 +287,7 @@ class catalog_utils:
                 filter['sort_order'] = sort_order
         if meta_type:
             filter['meta_type'] = self.utConvertToList(meta_type)
+
         results = self.__searchCatalog(filter)
         if howmany != -1:
             results = results[:howmany]

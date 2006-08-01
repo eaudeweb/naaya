@@ -73,8 +73,8 @@
 				<tr	tal:condition="check_node"
 					tal:repeat="record python:item[1]">
 					<td></td>
-					<td>
-						<a	tal:attributes="href string:javascript:window.opener.fSet('${ctrl}', '${record}');"
+					<td tal:define="record_java python:record.replace('\'', '\\\'')">
+						<a	tal:attributes="href string:javascript:window.opener.fSet('${ctrl}', '${record_java}');"
 							tal:content="record" />
 					</td>
 				</tr>
