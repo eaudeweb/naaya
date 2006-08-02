@@ -169,7 +169,7 @@ class NyForumTopic(NyForumBase, Folder):
         """
         return self.__get_messages_thread(self.objectValues(METATYPE_NYFORUMMESSAGE), None, 1)
 
-    security.declareProtected(view, 'get_last_message')
+    security.declarePublic('get_last_message')
     def get_last_message(self):
         """
         Returns the last posted message. If the topic has no messages then
