@@ -296,7 +296,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
         ra = r.append
         user = self.REQUEST.AUTHENTICATED_USER
         username = user.getUserName()
-        userroles = self.getUserRoles(user)
+        userroles = self.utConvertToList(self.getUserRoles(user))
         for x in ['Anonymous', 'Authenticated', 'Owner']:
             if x in userroles:
                 userroles.remove(x)
