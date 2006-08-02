@@ -94,6 +94,6 @@
 </table>
 <input type="submit" value="Delete users" i18n:attributes="value" class="submission_button" />
 </form>
-
+<span tal:replace="here/delUserSession" />
 </tal:block>
 </tal:block>
