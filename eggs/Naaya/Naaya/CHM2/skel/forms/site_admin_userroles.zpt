@@ -119,7 +119,7 @@ function createKey(key)
 			<option tal:condition="python:role=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')" tal:attributes="value role" tal:content="role" />
 			<option tal:condition="python:role!='Manager'" tal:attributes="value role" tal:content="role" />
 			</tal:block>
-		<select>
+		</select>
 	</td>
 </tr>
 <tr>
