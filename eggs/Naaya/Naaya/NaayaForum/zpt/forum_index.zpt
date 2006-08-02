@@ -25,6 +25,7 @@
 		<th class="checkbox" tal:condition="btn_select" width="1%"></th>
 		<th width="1%"></th>
 		<th class="title-column" i18n:translate="">Subject</th>
+		<th class="title-column" i18n:translate="">Access</th>
 		<th class="title-column" i18n:translate="">Category</th>
 		<th class="title-column" i18n:translate="">Author</th>
 		<th class="title-column" i18n:translate="">Replies</th>
@@ -39,6 +40,13 @@
 			<td tal:condition="btn_select"><input tal:condition="python:del_permission or edit_permission" type="checkbox" name="ids" tal:attributes="value item/id" /></td>
 			<td><img src="/misc_/NaayaForum/NyForumTopic.gif" tal:attributes="alt item/meta_label; title item/meta_label" /></td>
 			<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id" /></td>
+			<td>
+				<tal:block tal:condition="item/can_be_seen">
+					<tal:block tal:condition="item/has_restrictions" i18n:translate="">Limited</tal:block>
+					<tal:block tal:condition="python:not item.has_restrictions()" i18n:translate="">Public</tal:block>
+				</tal:block>
+				<tal:block tal:condition="python:not item.can_be_seen()" i18n:translate="">Restricted</tal:block>
+			</td>
 			<td tal:content="item/category" />
 			<td tal:content="item/author" />
 			<td tal:content="item/count_messages" />
