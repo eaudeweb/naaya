@@ -247,12 +247,13 @@ class utils:
                 return [str(error)]
         return None
 
-    def utConvertToList(self, something):
+    def utConvertToList(self, s):
         """Convert to list"""
-        ret = something
-        if not isinstance(something, list):
-            ret = [something]
-        return ret
+        if isinstance(s, list):
+            s = [s]
+        elif isinstance(s, tuple):
+            s = list(s)
+        return s
 
     def utConvertListToLines(self, values):
         """Takes a list of values and returns a value for a textarea control"""
