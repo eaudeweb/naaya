@@ -20,6 +20,7 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+from os.path import join
 
 #Zope imports
 from Globals import InitializeClass
@@ -36,6 +37,56 @@ class NyVersions:
 
     security = ClassSecurityInfo()
 
+    #generic update methods
+    security.declareProtected(view_management_screens, 'reload_form')
+    def reload_form(self, form_id):
+        """
+        Update the given form the HDD.
+        """
+        formstool_ob = self.getFormsTool()
+        form_ob = formstool_ob._getOb(form_id, None)
+        if form_ob:
+            try:
+                skel_path = join(self.get_data_path(), 'skel')
+                content = self.futRead(join(skel_path, 'forms', '%s.zpt' % form_id), 'r')
+            except:
+                #the method is not overwritten - read it from Naaya
+                skel_path = join(NAAYA_PRODUCT_PATH, 'skel')
+                content = self.futRead(join(skel_path, 'forms', '%s.zpt' % form_id), 'r')
+            form_ob.pt_edit(text=content, content_type='')
+            return 'Update form %s for website %s OK.' % (form_id, self.absolute_url())
+        else:
+            return 'Invalid form %s for website %s.' % (form_id, self.absolute_url())
+
+    security.declareProtected(view_management_screens, 'reload_form')
+    def reload_skin_style(self, skin_id, scheme_id, style_id):
+        """
+        Update the given skin's style form the HDD.
+        """
+        layouttool_ob = self.getLayoutTool()
+        skin_ob = layouttool_ob._getOb(skin_id, None)
+        if skin_ob:
+            scheme_ob = skin_ob._getOb(scheme_id, None)
+            if scheme_ob:
+                style_ob = scheme_ob._getOb(style_id, None)
+                if style_ob:
+                    try:
+                        skel_path = join(self.get_data_path(), 'skel')
+                        content = self.futRead(join(skel_path, 'layout', skin_id, scheme_id, '%s.css' % style_id), 'r')
+                    except:
+                        #the method is not overwritten - read it from Naaya
+                        skel_path = join(NAAYA_PRODUCT_PATH, 'skel')
+                        content = self.futRead(join(skel_path, 'layout', skin_id, scheme_id, '%s.css' % style_id), 'r')
+                    style_ob.pt_edit(text=content, content_type='')
+                    return 'Update style %s/%s/%s for website %s OK.' % (skin_id, scheme_id, style_id, self.absolute_url())
+                else:
+                    return 'Invalid style %s/%s/%s for website %s.' % (skin_id, scheme_id, style_id, self.absolute_url())
+            else:
+                return 'Invalid scheme %s/%s for website %s.' % (skin_id, scheme_id, self.absolute_url())
+        else:
+            return 'Invalid skin %s for website %s.' % (skin_id, self.absolute_url())
+
+    #specific update methods
     security.declareProtected(view_management_screens, 'upgrade_submitted')
     def upgrade_submitted(self):
         """
