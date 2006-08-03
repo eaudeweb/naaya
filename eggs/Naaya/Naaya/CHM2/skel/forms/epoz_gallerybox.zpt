@@ -1,8 +1,10 @@
 <html>
 <head>
 <title>Pick stuff</title>
+<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${skin_files_path}/style_common" />
 </head>
 <body onload="this.focus();">
+<div class="pick_pop_up">
 <h1>Pick</h1>
 
 <a tal:attributes="href string:${here/absolute_url}/toolbox_html">Upload an image</a>
@@ -21,10 +23,7 @@
 						paging_current_page python:paging[5];
 						paging_records_page python:paging[6];
 						paging_pages python:paging[7];
-						objects_info python:result[1];
-						objects_list python:objects_info[2];
-						objects_delete_all python:objects_info[1];
-						objects_select_all python:objects_info[0];
+						objects_list python:result[1];
 						query_string python:here.process_querystring(request.QUERY_STRING)">
 
 <p i18n:translate="">
@@ -55,7 +54,7 @@
 	<span tal:condition="python:paging_next!=-1"><a tal:define="start python:(paging_current_page+1)*paging_records_page" tal:attributes="href string:${here/absolute_url}/gallerybox_html?start=${start}&amp;${query_string}">Next</a></span>
 </div><br />
 <form>
-<table border="0" cellspacing="2" cellpadding="2" width="100%">
+<table border="0" cellspacing="2" cellpadding="2">
 	<tr>
 		<th i18n:translate="">Photo</th>
 		<th i18n:translate="">Released</th>
@@ -77,6 +76,6 @@
 <form>
 <input type="button" value="Close window" onclick="javascript:window.close();" />
 </form>
-
+</div>
 </body>
 </html>
