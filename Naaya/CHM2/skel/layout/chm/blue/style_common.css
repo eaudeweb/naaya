@@ -875,3 +875,52 @@
 /* +++++++++ END modified on february 21 USERS-ROLES listing #############*/
 
 /* END STYLE */
+
+/* Pop-ups epoz*/
+
+.pick_pop_up {
+	font-family: Verdana, Arial;
+	font-size: 70%;
+	color: #333333;
+}
+
+.pick_pop_up	a {
+	color: #286185;
+}
+
+.pick_pop_up h1 {
+
+	margin-top: 0.8em;
+	position: relative;
+	color:#8da559; /*#ff8800*/ /*#7e8c37*/ /*#7e8c37*/ /* #ff9900*/	
+	color: #666666;	
+	font-family: arial, sans-serif;
+	font-size: 1.9em;
+	font-weight: bold;
+}
+
+.pick_pop_up input {
+	font-size: 100%;
+	/*height: 1.8em;*/
+	vertical-align: middle;
+}
+
+.pick_pop_up table {
+	font-size: 100%;
+	
+}
+.pick_pop_up table img {
+	border: 3px solid #eaeaea;
+}
+.pick_pop_up th {
+	text-align: left;
+	color: #333333;
+	font-weight: normal;
+	background-color: #eaeaea;
+	padding-right: 20px;
+	border-bottom: 5px solid white;
+}
+.pick_pop_up td {
+	padding-right: 20px;
+}
+/* END Pop-ups epoz*/
