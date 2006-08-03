@@ -59,12 +59,12 @@
 		<th i18n:translate="">Photo</th>
 		<th i18n:translate="">Released</th>
 	</tr>
-	<tr tal:repeat="obtuple objects_list">
-		<tal:block define="del_permission python:obtuple[0]; edit_permission python:obtuple[1]; item python:obtuple[2]">
+	<tal:block tal:repeat="obtuple objects_list">
+	<tr tal:repeat="item obtuple">
 		<td><img tal:attributes="src string:${item/absolute_url}/view?display=Thumbnail; alt item/title_or_id; onclick string:window.opener.CreateImage('${item/absolute_url}/view');; window.close();;" border="0" /></td>
 		<td tal:content="python:here.utShowDateTime(item.releasedate)" />
-		</tal:block>
 	</tr>
+	</tal:block>
 </table>
 </form>
 </tal:block>
