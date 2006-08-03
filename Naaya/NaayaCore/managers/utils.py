@@ -249,7 +249,7 @@ class utils:
 
     def utConvertToList(self, s):
         """Convert to list"""
-        if isinstance(s, list):
+        if not isinstance(s, list):
             s = [s]
         elif isinstance(s, tuple):
             s = list(s)
