@@ -29,6 +29,7 @@
 
 <div class="floated-buttons"><span class="buttons"><a tal:attributes="href string:${here/get_topic_path}#${here/id}" i18n:translate="">Back to list</a></span></div>
 
+<tal:block tal:condition="here/is_topic_opened">
 <form tal:attributes="action string:${here/absolute_url}/replyMessage" method="post" enctype="multipart/form-data">
 <div class="field">
 	<label for="title" i18n:translate="">Subject</label>
@@ -51,5 +52,12 @@
 	<input type="submit" value="Submit" i18n:attributes="value" />
 </div>
 </form>
+</tal:block>
+
+<tal:block tal:condition="here/is_topic_closed">
+<p i18n:translate="">
+	This topic is closed. No new messages or replies can be added anymore.
+</p>
+</tal:block>
 
 <span tal:replace="structure here/standard_html_footer" />

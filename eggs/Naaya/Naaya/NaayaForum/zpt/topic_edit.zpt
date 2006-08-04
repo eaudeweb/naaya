@@ -22,6 +22,13 @@
 	</select>
 </div>
 <div class="field">
+	<label for="status" i18n:translate="">Status</label>
+	<select name="status" id="status">
+		<option value="0" tal:attributes="selected here/is_topic_opened" i18n:translate="">Opened</option>
+		<option value="1" tal:attributes="selected here/is_topic_closed" i18n:translate="">Closed</option>
+	</select>
+</div>
+<div class="field">
 	<label for="description" i18n:translate="">Text</label>
 	<span tal:replace="structure python:here.get_wysiwyg_widget('description:utf8:ustring', here.description)" />
 </div>

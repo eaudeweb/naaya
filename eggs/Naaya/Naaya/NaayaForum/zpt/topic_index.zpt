@@ -4,7 +4,7 @@
 
 <div class="forum_topic">
 	<div class="forum_message_top"
-		tal:define="add_permission here/checkPermissionAddForumMessage;
+		tal:define="add_permission python:here.checkPermissionAddForumMessage() and here.is_topic_opened();
 					edit_permission here/checkPermissionModifyForumTopic"
 		tal:condition="python:add_permission or edit_permission">
 		<div class="message_top_buttons2">
@@ -39,7 +39,7 @@
 <div class="forum_messages_slot">
 	<tal:block tal:repeat="tuple messages">
 	<div tal:define="depth python:tuple[0]*20; item python:tuple[1];
-					add_permission item/checkPermissionAddForumMessage;
+					add_permission python:item.checkPermissionAddForumMessage() and item.is_topic_opened();
 					edit_permission item/checkPermissionModifyForumMessage"
 		tal:attributes="style string:margin-left:${depth}px;;" class="forum_message">
 		<a tal:attributes="name item/id"></a>

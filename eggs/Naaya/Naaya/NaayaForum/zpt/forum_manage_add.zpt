@@ -23,6 +23,10 @@
 		<td class="form-label" valign="top">Categories</td>
 		<td><textarea name="categories:utf8:ustring" id="categories" rows="10" cols="50"></textarea></td>
 	</tr>
+	<tr>
+		<td class="form-label" valign="top">Max allowed uploaded files size</td>
+		<td><input type="text" name="file_max_size" value="1048576" /> (bytes)</td>
+	</tr>
 	<tr><td></td><td><input type="submit" value="Add" /></td></tr>
 </table>
 </form>
