@@ -47,7 +47,7 @@
 </tal:block>
 <tal:block tal:condition="here/is_topic_closed">
 <p i18n:translate="">
-	This topic is closed. No new messages can be added anymore.
+	This topic is closed. No more operations are allowed.
 </p>
 </tal:block>
 

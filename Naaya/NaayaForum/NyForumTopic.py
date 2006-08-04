@@ -80,11 +80,12 @@ class NyForumTopic(NyForumBase, Folder):
     def all_meta_types(self, interfaces=None):
         """ """
         y = []
-        additional_meta_types = ['File']
-        for x in Products.meta_types:
-            if x['name'] in additional_meta_types:
-                y.append(x)
-        y.extend(self.meta_types)
+        if self.is_topic_opened():
+            additional_meta_types = ['File']
+            for x in Products.meta_types:
+                if x['name'] in additional_meta_types:
+                    y.append(x)
+            y.extend(self.meta_types)
         return y
 
     security = ClassSecurityInfo()
