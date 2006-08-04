@@ -40,7 +40,7 @@
 	<tal:block tal:repeat="tuple messages">
 	<div tal:define="depth python:tuple[0]*20; item python:tuple[1];
 					add_permission python:item.checkPermissionAddForumMessage() and item.is_topic_opened();
-					edit_permission item/checkPermissionModifyForumMessage"
+					edit_permission python:item.checkPermissionModifyForumMessage() and item.is_topic_opened();"
 		tal:attributes="style string:margin-left:${depth}px;;" class="forum_message">
 		<a tal:attributes="name item/id"></a>
 		<div class="forum_message_top">

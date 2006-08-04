@@ -58,7 +58,7 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
             elif referer == 'message_add_html':
                 REQUEST.RESPONSE.redirect(self.absolute_url())
     else:
-        raise Exception, 'This topic is closed.'
+        raise Exception, 'This topic is closed. No more operations are allowed.'
 
 class NyForumMessage(NyForumBase, Folder):
     """ """
@@ -80,10 +80,11 @@ class NyForumMessage(NyForumBase, Folder):
     def all_meta_types(self, interfaces=None):
         """ """
         y = []
-        additional_meta_types = ['File']
-        for x in Products.meta_types:
-            if x['name'] in additional_meta_types:
-                y.append(x)
+        if self.is_topic_opened():
+            additional_meta_types = ['File']
+            for x in Products.meta_types:
+                if x['name'] in additional_meta_types:
+                    y.append(x)
         return y
 
     security = ClassSecurityInfo()
@@ -115,6 +116,8 @@ class NyForumMessage(NyForumBase, Folder):
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'saveProperties')
     def saveProperties(self, title='', description='', notify='', REQUEST=None):
         """ """
+        if self.is_topic_closed():
+            raise Exception, 'This topic is closed. No more operations are allowed.'
         if notify: notify = 1
         else: notify = 0
         self.title = title
@@ -128,6 +131,8 @@ class NyForumMessage(NyForumBase, Folder):
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'deleteAttachments')
     def deleteAttachments(self, ids='', REQUEST=None):
         """ """
+        if self.is_topic_closed():
+            raise Exception, 'This topic is closed. No more operations are allowed.'
         try: self.manage_delObjects(self.utConvertToList(ids))
         except: self.setSessionErrors(['Error while delete data.'])
         else: self.setSessionInfo(['Attachment(s) deleted.'])
@@ -136,6 +141,8 @@ class NyForumMessage(NyForumBase, Folder):
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'addAttachment')
     def addAttachment(self, attachment='', REQUEST=None):
         """ """
+        if self.is_topic_closed():
+            raise Exception, 'This topic is closed. No more operations are allowed.'
         self.handleAttachmentUpload(self, attachment)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
@@ -145,6 +152,8 @@ class NyForumMessage(NyForumBase, Folder):
     def replyMessage(self, title='', description='', attachment='', notify='',
         REQUEST=None):
         """ """
+        if self.is_topic_closed():
+            raise Exception, 'This topic is closed. No more operations are allowed.'
         id = PREFIX_NYFORUMMESSAGE + self.utGenRandomId(10)
         addNyForumMessage(self.get_topic_object(), id, self.id,
             title, description, attachment, notify)
@@ -155,6 +164,8 @@ class NyForumMessage(NyForumBase, Folder):
     security.declareProtected(PERMISSION_MODIFY_FORUMMESSAGE, 'deleteMessage')
     def deleteMessage(self, nodes='', REQUEST=None):
         """ """
+        if self.is_topic_closed():
+            raise Exception, 'This topic is closed. No more operations are allowed.'
         topic = self.get_topic_object()
         parent_msg = self.get_message_parent(self)
         child_msgs = self.get_message_childs(self)
@@ -177,6 +188,8 @@ class NyForumMessage(NyForumBase, Folder):
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', notify='', REQUEST=None):
         """ """
+        if self.is_topic_closed():
+            raise Exception, 'This topic is closed. No more operations are allowed.'
         if notify: notify = 1
         else: notify = 0
         self.title = title
