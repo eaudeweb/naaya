@@ -44,7 +44,9 @@ def addNyForumTopic(self, id='', title='', category='', description='',
     if notify: notify = 1
     else: notify = 0
     author, postdate = self.processIdentity()
-    ob = NyForumTopic(id, title, category, description, notify, author, postdate)
+    #by default a topic is opened, status = 0; when closed status = 1
+    status = 0
+    ob = NyForumTopic(id, title, category, description, notify, author, postdate, status)
     self._setObject(id, ob)
     self.handleAttachmentUpload(self._getOb(id), attachment)
     if REQUEST is not None:
@@ -96,7 +98,7 @@ class NyForumTopic(NyForumBase, Folder):
     security.declareProtected(PERMISSION_ADD_FORUMMESSAGE, 'addNyForumMessage')
     addNyForumMessage = addNyForumMessage
 
-    def __init__(self, id, title, category, description, notify, author, postdate):
+    def __init__(self, id, title, category, description, notify, author, postdate, status):
         """ """
         self.id = id
         self.title = title
@@ -105,11 +107,20 @@ class NyForumTopic(NyForumBase, Folder):
         self.notify = notify
         self.author = author
         self.postdate = postdate
+        self.status = status
         NyForumBase.__dict__['__init__'](self)
         #make this object available for portal search engine
         self.submitted = 1
         self.approved = 1
         self.releasedate = postdate
+
+    def __setstate__(self,state):
+        """
+        For backwards compatibility.
+        """
+        NyForumTopic.inheritedAttribute("__setstate__") (self, state)
+        if not hasattr(self, 'status'):
+            self.status = 0
 
     #api
     def get_topic_object(self): return self
@@ -117,6 +128,9 @@ class NyForumTopic(NyForumBase, Folder):
     def get_messages(self): return self.objectValues(METATYPE_NYFORUMMESSAGE)
     def count_messages(self): return len(self.objectIds(METATYPE_NYFORUMMESSAGE))
     def get_attachments(self): return self.objectValues('File')
+
+    def is_topic_opened(self): return self.status==0
+    def is_topic_closed(self): return self.status==1
 
     security.declarePrivate('get_message_parent')
     def get_message_parent(self, msg):
@@ -211,13 +225,16 @@ class NyForumTopic(NyForumBase, Folder):
 
     #site actions
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'saveProperties')
-    def saveProperties(self, title='', category='', description='', notify='',
-        REQUEST=None):
+    def saveProperties(self, title='', category='', status='', description='',
+        notify='', REQUEST=None):
         """ """
+        try: status = abs(int(status))
+        except: status = 0
         if notify: notify = 1
         else: notify = 0
         self.title = title
         self.category = category
+        self.status = status
         self.description = description
         self.notify = notify
         self._p_changed = 1
@@ -272,13 +289,16 @@ class NyForumTopic(NyForumBase, Folder):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', category='', description='', notify='',
+    def manageProperties(self, title='', category='', status='', description='', notify='',
         REQUEST=None):
         """ """
+        try: status = abs(int(status))
+        except: status = 0
         if notify: notify = 1
         else: notify = 0
         self.title = title
         self.category = category
+        self.status = status
         self.description = description
         self.notify = notify
         self._p_changed = 1

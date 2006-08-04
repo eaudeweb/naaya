@@ -26,6 +26,15 @@
 		</td>
 	</tr>
 	<tr>
+		<td class="form-label" valign="top">Status</td>
+		<td>
+			<select name="status" id="status">
+				<option value="0" tal:attributes="selected here/is_topic_opened" i18n:translate="">Opened</option>
+				<option value="1" tal:attributes="selected here/is_topic_closed" i18n:translate="">Closed</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
 		<td class="form-label" valign="top">Text</td>
 		<td><textarea name="description:utf8:ustring" id="description" rows="10" cols="50" tal:content="here/description"></textarea></td>
 	</tr>

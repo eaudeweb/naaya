@@ -38,24 +38,27 @@ message_add_html = PageTemplateFile('zpt/message_add', globals())
 def addNyForumMessage(self, id='', inreplyto='', title='', description='', attachment='',
     notify='', REQUEST=None):
     """ """
-    id = self.utCleanupId(id)
-    if not id: id = PREFIX_NYFORUMMESSAGE + self.utGenRandomId(10)
-    if inreplyto == '': inreplyto = None
-    if notify: notify = 1
-    else: notify = 0
-    author, postdate = self.processIdentity()
-    ob = NyForumMessage(id, inreplyto, title, description, notify, author, postdate)
-    self._setObject(id, ob)
-    ob = self._getOb(id)
-    self.handleAttachmentUpload(ob, attachment)
-    self.notifyOnMessage(ob)
-    if REQUEST is not None:
-        referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if referer == 'manage_addNyForumMessage_html' or \
-            referer.find('manage_addNyForumMessage_html') != -1:
-            return self.manage_main(self, REQUEST, update_menu=1)
-        elif referer == 'message_add_html':
-            REQUEST.RESPONSE.redirect(self.absolute_url())
+    if self.is_topic_opened():
+        id = self.utCleanupId(id)
+        if not id: id = PREFIX_NYFORUMMESSAGE + self.utGenRandomId(10)
+        if inreplyto == '': inreplyto = None
+        if notify: notify = 1
+        else: notify = 0
+        author, postdate = self.processIdentity()
+        ob = NyForumMessage(id, inreplyto, title, description, notify, author, postdate)
+        self._setObject(id, ob)
+        ob = self._getOb(id)
+        self.handleAttachmentUpload(ob, attachment)
+        self.notifyOnMessage(ob)
+        if REQUEST is not None:
+            referer = REQUEST['HTTP_REFERER'].split('/')[-1]
+            if referer == 'manage_addNyForumMessage_html' or \
+                referer.find('manage_addNyForumMessage_html') != -1:
+                return self.manage_main(self, REQUEST, update_menu=1)
+            elif referer == 'message_add_html':
+                REQUEST.RESPONSE.redirect(self.absolute_url())
+    else:
+        raise Exception, 'This topic is closed.'
 
 class NyForumMessage(NyForumBase, Folder):
     """ """

@@ -26,6 +26,7 @@
 		<th width="1%"></th>
 		<th class="title-column" i18n:translate="">Subject</th>
 		<th class="title-column" i18n:translate="">Access</th>
+		<th class="title-column" i18n:translate="">Status</th>
 		<th class="title-column" i18n:translate="">Category</th>
 		<th class="title-column" i18n:translate="">Author</th>
 		<th class="title-column" i18n:translate="">Replies</th>
@@ -47,6 +48,7 @@
 				</tal:block>
 				<tal:block tal:condition="python:not item.can_be_seen()" i18n:translate="">Restricted</tal:block>
 			</td>
+			<td tal:content="python:test(item.is_topic_opened(), 'Opened', 'Closed')" i18n:translate="" />
 			<td tal:content="item/category" />
 			<td tal:content="item/author" />
 			<td tal:content="item/count_messages" />
