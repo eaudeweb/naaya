@@ -25,7 +25,10 @@
 	</tr>
 	<tr>
 		<td class="form-label" valign="top">Max allowed uploaded files size</td>
-		<td><input type="text" name="file_max_size" tal:attributes="value here/file_max_size" /> (bytes)</td>
+		<td>
+                    <input type="text" name="file_max_size" tal:attributes="value here/file_max_size" /> (bytes) <br />
+                    (Value 0 is for no limit uploads)
+                </td>
 	</tr>
 	<tr><td></td><td><input type="submit" value="Save changes"></td></tr>
 </table>
