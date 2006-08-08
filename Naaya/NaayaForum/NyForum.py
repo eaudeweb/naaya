@@ -35,14 +35,12 @@ from Products.NaayaCore.managers.utils import utils
 from NyForumTopic import manage_addNyForumTopic_html, topic_add_html, addNyForumTopic
 
 manage_addNyForum_html = PageTemplateFile('zpt/forum_manage_add', globals())
-def manage_addNyForum(self, id='', title='', description='', categories='',
-    file_max_size='', REQUEST=None):
+def manage_addNyForum(self, id='', title='', description='', categories='', file_max_size=0, REQUEST=None):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_NYFORUM + self.utGenRandomId(6)
     categories = self.utConvertLinesToList(categories)
     file_max_size = abs(int(file_max_size))
-    #except: file_max_size = DEFAULT_MAX_FILE_SIZE
     ob = NyForum(id, title, description, categories, file_max_size)
     self._setObject(id, ob)
     self._getOb(id).loadDefaultData()
@@ -101,7 +99,7 @@ class NyForum(NyForumBase, Folder, utils):
         """
         NyForum.inheritedAttribute("__setstate__") (self, state)
         if not hasattr(self, 'file_max_size'):
-            self.file_max_size = DEFAULT_MAX_FILE_SIZE
+            self.file_max_size = 0
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
@@ -140,7 +138,7 @@ class NyForum(NyForumBase, Folder, utils):
             if hasattr(file, 'filename'):
                 if file.filename != '':
                     #check file size
-                    if len(file.read()) <= self.file_max_size:
+                    if len(file.read()) <= self.file_max_size or self.file_max_size == 0:
                         ob.manage_addFile(id='', file=file)
 
     security.declarePrivate('notifyOnMessage')
