@@ -502,8 +502,8 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
         """ """
-        self.REQUEST.RESPONSE.setHeader('Content-Type', self.content_type)
-        self.REQUEST.RESPONSE.setHeader('Content-Length', self.size)
+        self.REQUEST.RESPONSE.setHeader('Content-Type', self.content_type())
+        self.REQUEST.RESPONSE.setHeader('Content-Length', self.size())
         self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
         data = self.getFileItem(self.gl_get_selected_language()).data
         if type(data) is type(''):
