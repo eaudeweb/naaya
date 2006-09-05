@@ -5,7 +5,7 @@
 	Please fill the form below and click <strong>Add</strong>.
 </p>
 
-<form action="manage_addREPORTSite" method="post">
+<form action="manage_addReportSite" method="post">
 <table border="0" cellspacing="0" cellpadding="2" width="100%">
 	<tr><td width="25%" class="form-label">Id</td><td width="75%"><input type="text" name="id" size="30" value="" /></td></tr>
 	<tr><td class="form-label">Title</td><td><input type="text" name="title:utf8:ustring" size="50" value="" /></td></tr>

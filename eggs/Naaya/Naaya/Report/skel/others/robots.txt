@@ -16,4 +16,4 @@ Disallow: /portal_translations/
 Disallow: /Localizer/
 Disallow: error_log
 
-#Disallow REPORT specific products
+#Disallow Report specific products

@@ -69,7 +69,12 @@ class ReportSite(NySite, ProfileMeta):
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
-            """ """
-            NySite.__dict__['createPortalTools'](self)
+        """ """
+        NySite.__dict__['createPortalTools'](self)
+        NySite.__dict__['loadDefaultData'](self)
+        #install new objects
+
+        #load site skeleton - configuration
+        self.loadSkeleton(join(REPORT_PRODUCT_PATH, 'skel'))
 
 InitializeClass(ReportSite)
