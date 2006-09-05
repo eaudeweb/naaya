@@ -1,9 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
 	<forms>
+		<form id="folder_index" title="NyFolder index"/>
+		<form id="site_index" title="NySite index"/>
+		<form id="site_admin_metadata" title="Site admin metadata"/>
+		<form id="site_admin_template" title="Site admin template"/>
+		<form id="document_index" title="Document index"/>
 	</forms>
-	<layout default_skin_id="report" default_scheme_id="blue">
-		<skin id="report" title="REPORT">
+	<layout default_skin_id="metal" default_scheme_id="orange">
+		<skin id="metal" title="Metal">
+			<template id="site_header" title="Portal standard HTML header"/>
+			<template id="site_footer" title="Portal standard HTML footer"/>
+			<template id="portlet_left_macro" title="Macro for left portlets"/>
+			<template id="portlet_center_macro" title="Macro for center portlets"/>
+			<template id="portlet_right_macro" title="Macro for right portlets"/>
+			<scheme id="orange" title="Orange">
+				<style id="style" title="Main CSS"/>
+				<style id="style_print" title="CSS for print media"/>
+				<image id="addcomment.gif" title=""/>
+				<image id="bck_header.gif" title=""/>
+				<image id="bck_header.jpg" title=""/>
+				<image id="bck_nav.jpg" title=""/>
+				<image id="bg_box00.gif" title=""/>
+				<image id="bottom_b.gif" title=""/>
+				<image id="cat_bull.jpg" title=""/>
+				<image id="comment.gif" title=""/>
+				<image id="footer_b.jpg" title=""/>
+				<image id="logintoadd.gif" title=""/>
+				<image id="nav_drag.jpg" title=""/>
+				<image id="screenshot.gif" title=""/>
+				<image id="sort_asc.gif" title=""/>
+				<image id="sort_desc.gif" title=""/>
+				<image id="tableft.gif" title=""/>
+				<image id="tableft_on.gif" title=""/>
+				<image id="tabright.gif" title=""/>
+				<image id="tabright_on.gif" title=""/>
+				<image id="top_box0.gif" title=""/>
+				<image id="translate.gif" title=""/>
+				<image id="trash.gif" title=""/>
+			</scheme>
 		</skin>
 	</layout>
 	<pluggablecontenttypes>

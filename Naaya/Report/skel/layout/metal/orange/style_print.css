@@ -1,0 +1,1 @@
+<span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')"/>
