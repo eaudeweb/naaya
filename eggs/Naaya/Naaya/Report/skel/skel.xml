@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<skel>
+	<forms>
+	</forms>
+	<layout default_skin_id="report" default_scheme_id="blue">
+		<skin id="report" title="REPORT">
+		</skin>
+	</layout>
+	<pluggablecontenttypes>
+		<pluggablecontenttype meta_type="Naaya Media File" action="1"/>
+		<pluggablecontenttype meta_type="Naaya File" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Story" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Event" action="1"/>
+		<pluggablecontenttype meta_type="Naaya News" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Extended File" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Document" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Pointer" action="1"/>
+		<pluggablecontenttype meta_type="Naaya URL" action="1"/>
+	</pluggablecontenttypes>
+	<properties>
+		<language code="ru" />
+	</properties>
+	<others>
+		<favicon />
+		<robots />
+	</others>
+</skel>
