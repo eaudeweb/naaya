@@ -46,12 +46,19 @@
 		</div>
 		-->
 
+		<ul>
+			<li tal:repeat="main_categ here/getMainTopics">
+				<a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/title" tal:content="main_categ/title" />
+			</li>
+		</ul>
+
+<!--
 		<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
 		<tal:block tal:repeat="item l_list">
 			<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
 		</tal:block>
 		</ul>
-
+-->
 
 
 	</div>
