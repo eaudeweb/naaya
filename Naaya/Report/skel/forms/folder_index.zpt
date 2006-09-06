@@ -30,16 +30,13 @@ prevs python:here.utSortObjsListByAttr([y for y in ob_list if y.sortorder < here
 </div>
 </div>
 -->
-<div class="nav_art" tal:condition="python:here.id != 'report'"> 
-<div class="nav_art_links">
-<span tal:condition="python:len(prevs) > 0">&laquo; <a tal:attributes="href python:prevs[-1].absolute_url()">Previous</a> </span> | 
-<a href="/report">Table
-    of contents</a> | 
-<span tal:condition="python:len(nexts) > 0"><a tal:attributes="href python:nexts[0].absolute_url()">Next</a> &raquo;</span>
-
-
-
-</div>
+<div class="nav_art" tal:condition="python:here.id != 'report'">
+	<div class="nav_art_links">
+		<span tal:condition="python:len(prevs) > 0">&laquo; <a tal:attributes="href python:prevs[-1].absolute_url()">Previous</a> </span> | 
+		<a href="/report">Table
+			of contents</a> | 
+		<span tal:condition="python:len(nexts) > 0"><a tal:attributes="href python:nexts[0].absolute_url()">Next</a> &raquo;</span>
+	</div>
 </div>
 
 <div class="comm_art">
@@ -129,7 +126,6 @@ function fRenameObjects()
 //-->
 </script>
 
-
 <div id="page_content">
 <div id="right_port">
     <tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
@@ -157,6 +153,7 @@ function fRenameObjects()
     perm_edit_object here/checkPermissionEditObject;
     perm_publish_objects here/checkPermissionPublishObjects;
     perm_validate_objects here/checkPermissionValidateObjects">
+
 <div id="admin_this_folder" tal:condition="can_operate">
     <span id="submission">
         <span i18n:translate="" tal:omit-tag="">Add</span>:
@@ -250,8 +247,6 @@ function fRenameObjects()
 
 </div>
 </tal:block>
-
-
 
 <span tal:replace="structure here/comments_box" />
 

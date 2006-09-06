@@ -37,7 +37,6 @@ from Products.NaayaCore.managers.utils              import utils
 from Products.NaayaCore.managers.utils              import file_utils, batch_utils
 from Products.NaayaCore.managers.search_tool        import ProxiedTransport
 from Products.NaayaCalendar.EventCalendar           import manage_addEventCalendar
-from Products.NaayaHelpDeskAgent.HelpDesk           import manage_addHelpDesk
 
 manage_addReportSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addReportSite(self, id='', title='', lang=None, REQUEST=None):
@@ -76,5 +75,9 @@ class ReportSite(NySite, ProfileMeta):
 
         #load site skeleton - configuration
         self.loadSkeleton(join(REPORT_PRODUCT_PATH, 'skel'))
+
+        #set default main topics
+        try:    self.getPropertiesTool().manageMainTopics(['info', 'reports'])
+        except: pass
 
 InitializeClass(ReportSite)
