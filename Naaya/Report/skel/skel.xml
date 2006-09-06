@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
 	<forms>
-		<form id="folder_index" title="NyFolder index"/>
 		<form id="site_index" title="NySite index"/>
-		<form id="site_admin_metadata" title="Site admin metadata"/>
 		<form id="site_admin_template" title="Site admin template"/>
-		<form id="document_index" title="Document index"/>
 	</forms>
 	<layout default_skin_id="metal" default_scheme_id="orange">
 		<skin id="metal" title="Metal">
