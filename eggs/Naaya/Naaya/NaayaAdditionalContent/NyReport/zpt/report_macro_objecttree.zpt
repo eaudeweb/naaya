@@ -1,8 +1,15 @@
 <tal:block metal:define-macro="obslist">
-<ul>
+<ul style="list-style-type:none;margin:0px 0 0 0; padding:0;">
 	<tal:block repeat="object objects">
-		<li>
-			<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
+		<li style="margin:0 0 0 0; padding:0 0 0 20px;">
+			<div style="float:right; margin-right: 20px;">
+				<a tal:attributes="href string:${object/absolute_url}/edit_html">
+					<img src="misc_/Naaya/edit" style="border:0;" />
+				</a>
+			</div>
+			<div style="border-bottom: 1px solid #eeeeee; padding: 3px 0px;">
+				<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
+			</div>
 			<tal:block define="objects object/getSections">
 				<tal:block condition="objects">
 					<tal:block metal:use-macro="python:here.report_macro_objecttree_html(objects).macros['obslist']"/>

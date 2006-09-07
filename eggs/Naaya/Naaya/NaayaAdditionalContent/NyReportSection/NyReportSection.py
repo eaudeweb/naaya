@@ -44,7 +44,7 @@ OBJECT_FORMS = ['reportsection_add', 'reportsection_edit', 'reportsection_index'
 OBJECT_CONSTRUCTORS = ['manage_addNyReportSection_html', 'reportsection_add_html', 'addNyReportSection', 'importNyReportSection']
 OBJECT_ADD_FORM = 'reportsection_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Report Section type.'
-PREFIX_OBJECT = 'rep'
+PREFIX_OBJECT = 'sec'
 PROPERTIES_OBJECT = {
     'id':                           (0, '', ''),
     'title':                        (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
