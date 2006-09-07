@@ -1,0 +1,30 @@
+<span tal:replace="structure here/standard_html_header" />
+<tal:block define="permission_edit here/checkPermissionEditObject">
+
+<h1><span tal:omit-tag="" i18n:translate="">Comments posted for the chapter</span> <em><a tal:content="here/title_or_id" tal:attributes="href here/absolute_url"/></em></h1>
+	<tal:block define="questions here/getQuestions; qnrs here/getQuestionnaires">
+		<tal:block repeat="q qnrs">
+			<tal:block  condition="python:q.lang == here.gl_get_selected_language()">
+				<div class="comment_box">
+					<div class="commentbox_title">
+						<span tal:omit-tag="" i18n:translate="">Comment posted for the chapter</span> <em><a tal:content="here/title_or_id" tal:attributes="href here/absolute_url"/></em>
+					</div>
+					<div>
+						<tal:block repeat="a q/answers/keys">
+							<p>
+								<strong><span tal:replace="python:here.getQuestionById(a).title_or_id()"/></strong><br />
+								<span tal:replace="python:q.answers[a]" />
+							</p>
+						</tal:block>
+					</div>
+					<hr class="hr_inside_comment" />
+					<div class="commentbox_content">
+						Submitted by: <strong><span tal:replace="q/qauthor" /></strong>
+					</div>
+				</div>
+			</tal:block>
+		</tal:block>
+	</tal:block>
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />

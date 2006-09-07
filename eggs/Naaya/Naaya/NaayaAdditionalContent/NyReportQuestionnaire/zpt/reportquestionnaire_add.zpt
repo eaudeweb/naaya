@@ -1,0 +1,43 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1><span tal:omit-tag="" i18n:translate="">Post comment on the chapter</span> <em><a tal:content="here/title_or_id" tal:attributes="href here/absolute_url"/></em></h1>
+
+<script language="javascript" type="text/javascript">
+
+</script>
+
+<form name="frmAdd" method="post" tal:attributes="action action" enctype="multipart/form-data">
+
+<div class="field-inline" tal:define="selected_language python:here.getSession('lang', here.gl_get_selected_language())">
+    <label i18n:translate="" for="lang">Posting language</label>
+    <select name="lang" id="lang">
+        <option tal:repeat="item here/gl_get_languages_mapping"
+            tal:attributes="value python:item['code']; selected python:item['code']==selected_language"
+            tal:content="python:item['name']" />
+    </select>
+</div>
+<tal:block define="questions here/getQuestions">
+<tal:block repeat="q questions">
+<div class="field">
+	<label tal:content="q/title_or_id" tal:attributes="for q/id"/>
+	<textarea tal:attributes="id q/id; name q/id" style="width:400px; height: 100px;"></textarea>
+</div>
+</tal:block>
+</tal:block>
+
+<div class="field">
+	<label for="attach" i18n:translate="">If you want to submit additional data, please insert a file:</label>
+	<input type="file" name="attach" id="attach" />
+</div>
+
+<input type="hidden" name="releasedate" id="releasedate" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" />
+
+<div class="field">
+    <input type="submit" value="Submit" i18n:attributes="value" />
+</div>
+
+</form>
+
+<span tal:replace="python:here.del_pluggable_item_session(kind)" />
+
+<tal:block tal:replace="structure here/standard_html_footer"/>
