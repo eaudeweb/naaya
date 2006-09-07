@@ -1,6 +1,43 @@
 <span tal:replace="structure here/standard_html_header" />
 <tal:block define="permission_edit here/checkPermissionEditObject">
 
+<div class="nav_art" tal:define="navig here/getNavigationInfo; prev python:navig[0]; up python:navig[1]; next python:navig[2]">
+	<div class="nav_art_links">
+		<tal:block condition="prev">
+			<span>&laquo; <a tal:attributes="href prev/absolute_url" i18n:translate="">Previous</a> | 
+		</tal:block>
+		<tal:block condition="not:prev">
+			<span>&laquo; <span style="font-weight:bold;" i18n:translate="">Previous</span> | 
+		</tal:block>
+
+		<tal:block condition="up">
+			<a tal:attributes="href up/absolute_url" i18n:translate="">One level up</a>
+		</tal:block>
+		<tal:block condition="not:up">
+			<span style="font-weight:bold;" i18n:translate="">One level up</span>
+		</tal:block>
+
+		<tal:block condition="next">
+			| <span><a tal:attributes="href next/absolute_url" i18n:translate="">Next</a> &raquo;</span>
+		</tal:block>
+		<tal:block condition="not:next">
+			| <span><span style="font-weight:bold;" i18n:translate="">Next</span> &raquo;</span>
+		</tal:block>
+
+	</div>
+</div>
+
+
+<div class="comm_art">
+	<span align="right">
+		<a href="#" onclick="alert('This functionality is not available yet'); return false;">View comments</a>
+	</span> | 
+	<span>
+		<a href="#" style="background-color: #F7F78A;" onclick="alert('This functionality is not available yet'); return false;">Comment on this section</a>
+	</span>
+</div>
+
+
 	<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" border="0" /> <span tal:replace="here/title_or_id" /></h1>
 	<tal:block tal:condition="permission_edit">
 	<div id="admin_this_folder">
@@ -16,18 +53,6 @@
 	<p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
 </tal:block>
-
-<div style="border:1px solid red" tal:define="navig here/getNavigationInfo; prev python:navig[0]; up python:navig[1]; next python:navig[2]">
-	<tal:block condition="prev">
-		<a tal:attributes="href prev/absolute_url" tal:content="prev/title_or_id"/> | 
-	</tal:block>
-	<tal:block condition="up">
-		<a tal:attributes="href up/absolute_url" tal:content="up/title_or_id"/>
-	</tal:block>
-	<tal:block condition="next">
-		| <a tal:attributes="href next/absolute_url" tal:content="next/title_or_id"/>
-	</tal:block>
-</div>
 
 
 <tal:block define="objects here/getSections">

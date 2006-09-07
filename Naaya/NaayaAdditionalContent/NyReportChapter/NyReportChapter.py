@@ -40,6 +40,12 @@ from reportchapter_item                        import reportchapter_item
 from Products.NaayaContent.NyReportSection.NyReportSection       import addNyReportSection, reportsection_add_html, manage_addNyReportSection_html
 from Products.NaayaContent.NyReportSection.NyReportSection       import METATYPE_OBJECT as METATYPE_NYREPORTSECTION
 
+from Products.NaayaContent.NyReportQuestion.NyReportQuestion       import addNyReportQuestion, reportquestion_add_html, manage_addNyReportQuestion_html
+from Products.NaayaContent.NyReportQuestion.NyReportQuestion       import METATYPE_OBJECT as METATYPE_NYREPORTQUESTION
+
+from Products.NaayaContent.NyReportQuestionnaire.NyReportQuestionnaire       import addNyReportQuestionnaire, reportquestionnaire_add_html, manage_addNyReportQuestionnaire_html
+from Products.NaayaContent.NyReportQuestionnaire.NyReportQuestionnaire       import METATYPE_OBJECT as METATYPE_NYREPORTQUESTIONNAIRE
+
 #module constants
 METATYPE_OBJECT = 'Naaya Report Chapter'
 LABEL_OBJECT = 'Report Chapter'
@@ -48,7 +54,7 @@ OBJECT_FORMS = ['reportchapter_add', 'reportchapter_edit', 'reportchapter_index'
 OBJECT_CONSTRUCTORS = ['manage_addNyReportChapter_html', 'reportchapter_add_html', 'addNyReportChapter', 'importNyReportChapter']
 OBJECT_ADD_FORM = 'reportchapter_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Report Chapter type.'
-PREFIX_OBJECT = 'rep'
+PREFIX_OBJECT = 'chp'
 PROPERTIES_OBJECT = {
     'id':                           (0, '', ''),
     'title':                        (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -178,6 +184,8 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
 
     meta_types = (
         {'name': METATYPE_NYREPORTSECTION, 'action': 'manage_addNyReportSection_html'},
+        {'name': METATYPE_NYREPORTQUESTION, 'action': 'manage_addNyReportQuestion_html'},
+        {'name': METATYPE_NYREPORTQUESTIONNAIRE, 'action': 'manage_addNyReportQuestionnaire_html'}
     )
     all_meta_types = meta_types
 
@@ -188,6 +196,17 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
     addNyReportSection = addNyReportSection
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportsection_add_html')
     reportsection_add_html = reportsection_add_html
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'addNyReportQuestion')
+    addNyReportQuestion = addNyReportQuestion
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportquestion_add_html')
+    reportquestion_add_html = reportquestion_add_html
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'addNyReportQuestionnaire')
+    addNyReportQuestionnaire = addNyReportQuestionnaire
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportquestionnaire_add_html')
+    reportquestionnaire_add_html = reportquestionnaire_add_html
+
 
     def __init__(self, id, title, description, coverage, keywords, sortorder, contributor, releasedate, lang):
         """ """
@@ -221,7 +240,16 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
     def syndicateThis(self, lang=None):
         pass
 
+    def getChapter(self): return self
     def getSections(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_NYREPORTSECTION),'sortorder',0)
+    def getQuestions(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_NYREPORTQUESTION),'sortorder',0)
+    def getQuestionnaires(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_NYREPORTQUESTIONNAIRE),'sortorder',0)
+    def getQuestionIds(self):
+        obs = self.objectValues(METATYPE_NYREPORTQUESTION)
+        obs = self.utSortObjsListByAttr(obs,'sortorder',0)
+        return [ob.id for ob in obs]
+    def getQuestionById(self,p_id):
+        return self._getOb(p_id)
 
     def getNavigationInfo(self):
         l_up = self.getParentNode()
@@ -378,5 +406,16 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
     def report_macro_objecttree_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().report_macro_objecttree
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportquestions_html')
+    def reportquestions_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'reportquestions_index')
+
+
+    security.declareProtected(view, 'reportquestionnaires_html')
+    def reportquestionnaires_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'reportquestionnaires_index')
 
 InitializeClass(NyReportChapter)

@@ -1,7 +1,7 @@
 <span tal:replace="structure here/standard_html_header" />
 <tal:block define="permission_edit here/checkPermissionEditObject">
 
-	<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" border="0" /> <span tal:replace="here/title_or_id" /></h1>
+	<h1><span tal:replace="here/title_or_id" /></h1>
 	<tal:block tal:condition="permission_edit">
 	<div id="admin_this_folder">
 		<tal:block tal:condition="python: not here.hasVersion()">
@@ -17,8 +17,10 @@
 
 </tal:block>
 
-<tal:block define="objects here/getChapters">
-	<tal:block metal:use-macro="python:here.report_macro_objecttree_html(objects).macros['obslist']"/>
-</tal:block>
+<div style="margin-top:15px;">
+	<tal:block define="objects here/getChapters">
+		<tal:block metal:use-macro="python:here.report_macro_objecttree_html(objects).macros['obslist']"/>
+	</tal:block>
+</div>
 
 <span tal:replace="structure here/standard_html_footer" />
