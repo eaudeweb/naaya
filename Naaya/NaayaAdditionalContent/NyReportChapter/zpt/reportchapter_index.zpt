@@ -27,11 +27,11 @@
 	</div>
 </div>
 <div class="comm_art">
-	<tal:block define="questions here/getQuestions" condition="python:questions">
+	<tal:block define="questionnaires here/getQuestionnaires" condition="python:questionnaires">
 		<a href="reportquestionnaires_html">View comments</a> |
 	</tal:block>
 
-	<tal:block define="questionnaires here/getQuestionnaires" condition="python:questionnaires">
+	<tal:block define="questions here/getQuestions" condition="python:questions">
 		<a href="reportquestionnaire_add_html">Comment on this chapter</a>
 	</tal:block>
 </div>
