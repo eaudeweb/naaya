@@ -1,0 +1,14 @@
+<tal:block metal:define-macro="obslist">
+<ul>
+	<tal:block repeat="object objects">
+		<li>
+			<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
+			<tal:block define="objects object/getSections">
+				<tal:block condition="objects">
+					<tal:block metal:use-macro="python:here.report_macro_objecttree_html(objects).macros['obslist']"/>
+				</tal:block>
+			</tal:block>
+		</li>
+	</tal:block>
+</ul>
+</tal:block>
