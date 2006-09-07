@@ -1,0 +1,24 @@
+<span tal:replace="structure here/standard_html_header" />
+<tal:block define="permission_edit here/checkPermissionEditObject">
+
+	<h1>Manage questions</h1>
+
+<tal:block define="permission_edit here/checkPermissionEditObject">
+	<tal:block tal:condition="permission_edit">
+	<div id="admin_this_folder">
+		<tal:block tal:condition="python: not here.hasVersion()">
+			<a tal:attributes="href string:${here/absolute_url}/reportquestion_add_html"><span i18n:translate="">Add question</span></a>
+		</tal:block>
+	</div>
+	</tal:block>
+</tal:block>
+
+<ul>
+	<li tal:repeat="q here/getQuestions">
+			<a tal:content="q/title_or_id" tal:attributes="href string:${q/absolute_url}/edit_html"/>
+	</li>
+</ul>
+
+	</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />
