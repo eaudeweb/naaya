@@ -17,6 +17,20 @@
 
 </tal:block>
 
+
+<div style="border:1px solid red" tal:define="navig here/getNavigationInfo; prev python:navig[0]; up python:navig[1]; next python:navig[2]">
+	<tal:block condition="prev">
+		<a tal:attributes="href prev/absolute_url" tal:content="prev/title_or_id"/> | 
+	</tal:block>
+	<tal:block condition="up">
+		<a tal:attributes="href up/absolute_url" tal:content="up/title_or_id"/>
+	</tal:block>
+	<tal:block condition="next">
+		| <a tal:attributes="href next/absolute_url" tal:content="next/title_or_id"/>
+	</tal:block>
+</div>
+
+
 <tal:block define="objects here/getSections">
 	<tal:block metal:use-macro="python:here.report_macro_objecttree_html(objects).macros['obslist']"/>
 </tal:block>
