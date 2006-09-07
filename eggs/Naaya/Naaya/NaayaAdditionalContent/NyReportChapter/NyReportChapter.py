@@ -221,7 +221,19 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
     def syndicateThis(self, lang=None):
         pass
 
-    def getSections(self): return self.objectValues(METATYPE_NYREPORTSECTION)
+    def getSections(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_NYREPORTSECTION),'sortorder',0)
+
+    def getNavigationInfo(self):
+        l_up = self.getParentNode()
+        siblings = l_up.getChapters()
+        l_prev = None
+        l_next = None
+        l_temp = None
+        for obj in siblings:
+            if(obj==self): l_prev = l_temp
+            if(l_temp==self): l_next = obj
+            l_temp = obj;
+        return [l_prev, l_up, l_next]
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')

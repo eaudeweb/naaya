@@ -221,7 +221,7 @@ class NyReport(NyAttributes, report_item, NyContainer, NyEpozToolbox, NyCheckCon
     def syndicateThis(self, lang=None):
         pass
 
-    def getChapters(self): return self.objectValues(METATYPE_NYREPORTCHAPTER)
+    def getChapters(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_NYREPORTCHAPTER),'sortorder',0)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
