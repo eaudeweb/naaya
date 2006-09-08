@@ -47,6 +47,12 @@
 		</div>
 		-->
 
+		<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
+		<tal:block tal:repeat="item l_list">
+			<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
+		</tal:block>
+		</ul>
+
 		<ul>
 			<li tal:repeat="main_categ here/getMainTopics">
 <!-- <img tal:attributes="src string:${here/getLayoutToolPath}/home.jpg" alt="" i18n:attributes="alt" border="0" style=""/> jj -->
@@ -68,7 +74,14 @@
 <!-- xxx -->
 <div id="breadcrumbtrail">
 	<tal:block repeat="crumb python:here.getBreadCrumbTrail(request)">
-		<a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" />
+		<a tal:condition="python:crumb.meta_type!='Report Site'"
+		   tal:attributes="href string:${crumb/absolute_url}/;
+						   title crumb/title_or_id;"
+		   tal:content="crumb/title_or_id" />
+		<a tal:condition="python:crumb.meta_type=='Report Site'" tal:attributes="href site_url"
+		   i18n:translate="">
+			Home
+		</a>
 		<span tal:condition="not:repeat/crumb/end"> &raquo; </span>
 	</tal:block>
 </div>
