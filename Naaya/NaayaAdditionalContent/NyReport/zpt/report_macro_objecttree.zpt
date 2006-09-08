@@ -1,8 +1,9 @@
 <tal:block metal:define-macro="obslist">
+<tal:block define="permission_edit here/checkPermissionEditObject">
 <ul style="list-style-type:none;margin:0px 0 0 0; padding:0;">
 	<tal:block repeat="object objects">
 		<li style="margin:0 0 0 0; padding:0 0 0 20px;">
-			<div style="float:right; margin-right: 20px;">
+			<div style="float:right; margin-right: 20px;" tal:condition="permission_edit">
 				<a tal:attributes="href string:${object/absolute_url}/edit_html">
 					<img src="misc_/Naaya/edit" style="border:0;" />
 				</a>
@@ -18,4 +19,5 @@
 		</li>
 	</tal:block>
 </ul>
+</tal:block>
 </tal:block>

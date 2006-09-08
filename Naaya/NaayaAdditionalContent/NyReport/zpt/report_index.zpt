@@ -17,7 +17,7 @@
 
 </tal:block>
 
-<div style="margin-top:15px;">
+<div class="toc">
 	<tal:block define="objects here/getChapters">
 		<tal:block metal:use-macro="python:here.report_macro_objecttree_html(objects).macros['obslist']"/>
 	</tal:block>
