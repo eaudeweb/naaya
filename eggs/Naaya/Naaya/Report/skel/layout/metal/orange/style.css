@@ -19,7 +19,9 @@ body {
 
 #toptitle {
 	padding-top: 20px;
-	height: 80px;
+	height: 75px;
+	margin-left: 15%;
+	margin-top: 0; /*0.5em;*/
 }
 
 .page_title {
@@ -390,11 +392,6 @@ h1 {
 
 /* ##################### END RIGHT PORTLETS STYLE #################### */
 
-#toptitle {
-	margin-left: 15%;
-	margin-top: 0; /*0.5em;*/
-}
-	
 #last_modified {
 	margin: 1% 0% 1% 20%;
 }
