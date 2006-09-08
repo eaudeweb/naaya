@@ -342,7 +342,7 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
     manage_edit_html = PageTemplateFile('zpt/reportquestionnaire_manage_edit', globals())
 
     #site pages
-    security.declareProtected(PERMISSION_ADD_OBJECT, 'add_html')
+    security.declareProtected(view, 'add_html')
     def add_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'reportquestionnaire_add')

@@ -19,7 +19,7 @@
 					</div>
 					<hr class="hr_inside_comment" />
 					<div class="commentbox_content">
-						Submitted by: <strong><span tal:replace="q/qauthor" /></strong>
+						Submitted by: <strong><span tal:replace="q/contributor" /></strong>
 					</div>
 				</div>
 			</tal:block>
