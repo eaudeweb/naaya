@@ -13,7 +13,7 @@
 <body>
 
 <div id="header">
-
+<!--
 	<div id="topnav">
 		<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('topnav_links').get_links_list()">
 		<tal:block tal:repeat="item l_list">
@@ -21,6 +21,7 @@
 		</tal:block>
 		</ul>
 	</div>
+-->
 	<div style="border: 1px solid #FEE3B8;">
 		<img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" align="left" alt="Logo" i18n:attributes="alt" />
 		<div id="toptitle">
@@ -48,6 +49,7 @@
 
 		<ul>
 			<li tal:repeat="main_categ here/getMainTopics">
+<!-- <img tal:attributes="src string:${here/getLayoutToolPath}/home.jpg" alt="" i18n:attributes="alt" border="0" style=""/> jj -->
 				<a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/title" tal:content="main_categ/title" />
 			</li>
 		</ul>
