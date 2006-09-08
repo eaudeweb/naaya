@@ -74,7 +74,7 @@
 <!-- xxx -->
 <div id="breadcrumbtrail">
 	<tal:block repeat="crumb python:here.getBreadCrumbTrail(request)">
-		<a tal:condition="python:crumb.meta_type!='Report Site'"
+		<a tal:condition="python:crumb.meta_type!='Report Site' and crumb.id!='reports'"
 		   tal:attributes="href string:${crumb/absolute_url}/;
 						   title crumb/title_or_id;"
 		   tal:content="crumb/title_or_id" />
@@ -82,7 +82,9 @@
 		   i18n:translate="">
 			Home
 		</a>
-		<span tal:condition="not:repeat/crumb/end"> &raquo; </span>
+		<tal:block condition="python:crumb.id!='reports'">
+			<span tal:condition="not:repeat/crumb/end"> &raquo; </span>
+		</tal:block>
 	</tal:block>
 </div>
 
