@@ -42,7 +42,16 @@ h1 {
 	margin: 0px 0px 20px 0px;
 }
 
+.h1_parent {
+	font-weight: normal;
+	background-color: #f0f0f0;
+	font-size: 70%;
+	padding: 5px 10px ;
+}
 
+.h1_parent a {
+	color: #0061A2;
+}
 	/*  Comment box form */
 	.comment_box {
 		background-color:#FAFAFA; 
@@ -182,7 +191,7 @@ h1 {
 
 #header {
 	position: relative;
-	background-image: url(bck_header.jpg);
+	background-image: url(bck_header.jpg); 
 	background-repeat: repeat-x;
 	background-position: left top;
 
@@ -193,14 +202,18 @@ h1 {
 	margin-left: 1em;
 	position: relative;
 	margin-top: 5px;
+/* */
 }
 
 #breadcrumbtrail {
 	clear: both;
 	margin: 10px 5px 13px 12px; 
 	font-size: 80%;
+/*	border: 1px solid red;*/
+}
 
-	border: 1px solid red;
+#breadcrumbtrail a {
+	color: #0061A2;
 }
 
 #middle_port {
@@ -243,7 +256,6 @@ h1 {
 	width: 20%; 
 */
 	float: right; 
-	
 	word-wrap: break-word;
 	margin-top: 10px;
 }
@@ -285,7 +297,8 @@ h1 {
 
 .left_portlet_content {
 	background: url('bg_box00.gif');
-
+	border-top: 1px solid black; /* added */
+	margin-top: 2px; /* added */
 }
 
 .left_portlet {
@@ -332,6 +345,8 @@ h1 {
 /* ##################### RIGHT PORTLETS STYLE #################### */
 .right_portlet_content {
 	background: url('bg_box00.gif');
+	border-top: 1px solid black; /* added */
+	margin-top: 2px; /* added */
 }
 
 .right_portlet {
@@ -377,7 +392,7 @@ h1 {
 
 #toptitle {
 	margin-left: 15%;
-	margin-top: 0.5em;
+	margin-top: 0; /*0.5em;*/
 }
 	
 #last_modified {
@@ -416,18 +431,25 @@ h1 {
 #menunav li {
 	margin-right:0.2em;
 	padding:0;
-
 	display:inline;
+	
+	background-image: url(nav_drag.jpg);
+	background-repeat: no-repeat;
+	background-position: left 1px;
+	height: 26px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 	
 }
 #menunav li a {
-	line-height: 24px;
+	line-height: 26px;
 	text-decoration: none;
 	color: black;
 	font-weight: bold;
 	font-size: 90%;
-	border-left: 1px solid white;
-	padding-left:0.4em;
+/*	border-left: 1px solid white;*/
+	padding-left:0.8em;
+
 }
 
 #search {
