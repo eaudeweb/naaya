@@ -202,9 +202,9 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportquestion_add_html')
     reportquestion_add_html = reportquestion_add_html
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'addNyReportQuestionnaire')
+    security.declareProtected(view, 'addNyReportQuestionnaire')
     addNyReportQuestionnaire = addNyReportQuestionnaire
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportquestionnaire_add_html')
+    security.declareProtected(view, 'reportquestionnaire_add_html')
     reportquestionnaire_add_html = reportquestionnaire_add_html
 
 
