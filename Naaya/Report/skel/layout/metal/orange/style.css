@@ -686,6 +686,7 @@ body.visualFontSizeCorrection {
 /* ######################## */
 
 /* ########## ARTICLE NAVIGATION BARS ############## */
+
 .nav_art {
 	margin-top: 0;
 	text-align: center;
@@ -696,6 +697,11 @@ body.visualFontSizeCorrection {
 	font-size: 90%;
 	line-height: 1.8em;
 }
+
+.nav_art_down {
+	margin-top: 15px;
+}
+
 .nav_art_links {
 	margin: 0px 0px;
 }
@@ -705,12 +711,17 @@ body.visualFontSizeCorrection {
 	padding: 3px 10px;
 	text-decoration: none;
 	font-weight: bold;
+}
 
+.nav_art span span {
+	padding: 3px 10px;
+	font-weight: bold;
 }
 
 .comm_art {
 	text-align: right;
 	margin-top: 4px;
+	height: 1.2em;
 }
 .comm_art a {
 /*	border: 1px dashed #bbbbbb;
@@ -1491,6 +1502,16 @@ body.visualFontSizeCorrection {
 	background-color: white;
 }
 
+/* Table of contents */
+
+.toc {
+	margin-top:15px;
+}
+
+.toc li {
+	border: 1px solid white;
+}
+
 /* +++++++++ modified on february 21 USERS-ROLES listing #############*/
 .roles_per_folder {
 	
@@ -1520,6 +1541,8 @@ body.visualFontSizeCorrection {
 	display: inline; 
 
 }
+
+
 /* @@@@@@@@@@@@@@@@@@@@---------END COMMON STYLE-------@@@@@@@@@@@@@@@@@@@@@@@@@ */
 
 
