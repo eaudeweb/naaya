@@ -41,7 +41,7 @@
 		<input type="checkbox" name="ids" tal:attributes="value item/id" />
 		<img tal:attributes="src item/absolute_url;
 				alt item/title_or_id;
-				onclick string:window.opener.CreateImage('${item/absolute_url}');; window.close();;"
+				onclick string:window.opener.CreateImage('${item/id}');; window.close();;"
 			border="0" width="32" style="cursor: pointer;" />
 	</li>
 </ul>
