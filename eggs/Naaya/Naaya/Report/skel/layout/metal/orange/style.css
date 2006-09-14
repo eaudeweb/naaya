@@ -54,6 +54,23 @@ h1 {
 .h1_parent a {
 	color: #0061A2;
 }
+
+.draft {
+	vertical-align: 15%;
+	padding:0;
+	margin:0;
+}
+.draft span {
+	vertical-align: 20%;
+	font-size: 60%;
+	font-weight: normal;
+	color: red;
+	padding:0 2px;
+	margin:0;
+}
+
+
+
 	/*  Comment box form */
 	.comment_box {
 		background-color:#FAFAFA; 
@@ -691,7 +708,7 @@ body.visualFontSizeCorrection {
 	color: #000;
 	border-top: 2px solid white;
 	border-bottom: 1px solid #f0f0f0;
-	font-size: 90%;
+	font-size: 85%;
 	line-height: 1.8em;
 }
 
@@ -713,12 +730,19 @@ body.visualFontSizeCorrection {
 .nav_art span span {
 	padding: 3px 10px;
 	font-weight: bold;
+	color: #999;
+}
+
+.report_h1 {
+	margin: 5px 0 0 0;
+	padding:0;
 }
 
 .comm_art {
 	text-align: right;
-	margin-top: 4px;
-	height: 1.2em;
+	margin-top: 0px;
+	margin-bottom: 5px;
+/*	height: 1.2em;*/
 }
 .comm_art a {
 /*	border: 1px dashed #bbbbbb;
@@ -727,6 +751,15 @@ body.visualFontSizeCorrection {
 	text-decoration: underline;
 	font-size: 85%;
 	color: #444;
+}
+.comments_counter {
+	font-size: 75%;
+}
+.comments_counter a {
+	text-decoration: none;
+	font-size: 105%;
+	background-color: #f0f0f0;
+	color: #008B99;
 }
 
 /* ########## END ARTICLE NAVIGATION BARS ############## */
@@ -1507,6 +1540,7 @@ body.visualFontSizeCorrection {
 
 .toc li {
 	border: 1px solid white;
+	border-right: 0px solid white;
 }
 
 /* +++++++++ modified on february 21 USERS-ROLES listing #############*/
