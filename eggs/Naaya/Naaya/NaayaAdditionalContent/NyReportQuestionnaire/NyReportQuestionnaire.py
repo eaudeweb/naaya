@@ -70,7 +70,7 @@ def reportquestionnaire_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyReportQuestionnaire'}, 'reportquestionnaire_add')
 
 def addNyReportQuestionnaire(self, id='', title='', description='', coverage='', keywords='',
-    sortorder='', contributor=None, releasedate='', discussion='', qauthor='Anonymous', answers={}, lang=None, REQUEST=None, **kwargs):
+    sortorder='', contributor=None, releasedate='', discussion='', qauthor='Anonymous', answers={}, files=[], lang=None, REQUEST=None, **kwargs):
     """
     Create a Report Questionnaire type of object.
     """
@@ -107,6 +107,8 @@ def addNyReportQuestionnaire(self, id='', title='', description='', coverage='',
         self._setObject(id, ob)
         #extra settings
         ob = self._getOb(id)
+        for f in files:
+            ob.process_file_upload(f)
         ob.updatePropertiesFromGlossary(lang)
         ob.approveThis(approved, approved_by)
         ob.submitThis()
