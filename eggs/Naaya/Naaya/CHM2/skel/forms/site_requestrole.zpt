@@ -7,7 +7,7 @@
 	An account will be created for you and you will receive a confirmation mail with these credentials.
 </p>
 
-<form method="post" tal:attributes="action string:${here/getSitePath}/processCreateAccountForm">
+<form method="post" tal:attributes="action string:${here/getSitePath}/processRequestRoleForm">
 <table border="0" cellspacing="2" cellpadding="2">
 	<tr>
 		<td valign="top" i18n:translate="">Username<br /></td>
