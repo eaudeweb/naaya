@@ -368,5 +368,10 @@ class NyReport(NyAttributes, report_item, NyContainer, NyEpozToolbox, NyCheckCon
         """ """
         return self.getFormsTool().report_macro_objecttree
 
+    security.declareProtected(view, 'report_macro_sec_objecttree_html')
+    def report_macro_sec_objecttree_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().report_macro_sec_objecttree
+
 
 InitializeClass(NyReport)
