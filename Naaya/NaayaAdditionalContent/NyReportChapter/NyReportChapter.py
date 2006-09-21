@@ -241,9 +241,17 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
         pass
 
     def getChapter(self): return self
+    def getChapterPath(self): return self.absolute_url()
+
     def getSections(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_NYREPORTSECTION),'sortorder',0)
     def getQuestions(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_NYREPORTQUESTION),'sortorder',0)
+    def hasQuestions(self):
+        return len(self.getQuestions()) > 0
+
     def getQuestionnaires(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_NYREPORTQUESTIONNAIRE),'sortorder',0)
+    def hasQuestionnaires(self):
+        return len(self.getQuestionnaires()) > 0
+
     def getQuestionIds(self):
         obs = self.objectValues(METATYPE_NYREPORTQUESTION)
         obs = self.utSortObjsListByAttr(obs,'sortorder',0)
