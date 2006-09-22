@@ -108,8 +108,7 @@ def addNyReportQuestionnaire(self, id='', title='', description='', coverage='',
         self._setObject(id, ob)
         #extra settings
         ob = self._getOb(id)
-        for f in files:
-            ob.process_file_upload(f)
+        ob.process_file_upload(files)
         ob.updatePropertiesFromGlossary(lang)
         #set automatic translation
         for portal_lang in self.gl_get_languages_map():
