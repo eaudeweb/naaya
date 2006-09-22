@@ -2,7 +2,23 @@
 <tal:block define="permission_edit here/checkPermissionEditObject">
 
 <h1><span tal:omit-tag="" i18n:translate="">Comments posted for the chapter</span> <em><a tal:content="here/title_or_id" tal:attributes="href here/absolute_url"/></em></h1>
-	<tal:block define="questions here/getQuestions; qnrs here/getQuestionnaires">
+	<tal:block define="	questions here/getQuestions;
+						qnrs here/getQuestionnaires;
+						filter_qst python:request.get('question', '')">
+
+	<fieldset><legend i18n:translate="">Filter comments</legend>
+	<form action="reportquestionnaires_html" method="get">
+		<label for="question" i18n:translate="">by question</label>
+		<select name="question">
+			<option />
+			<tal:block repeat="qst questions">
+				<option tal:attributes="value qst/id" tal:content="qst/title" />
+			</tal:block>
+		</select>
+		<input type="submit" value="Filter" i18n:attributes="value"/>
+	</form>
+	</fieldset>
+
 		<tal:block repeat="q qnrs">
 			<div class="comment_box">
 				<div class="commentbox_title">
@@ -10,21 +26,23 @@
 				</div>
 
 				<div>
-					<tal:block repeat="a q/answers/keys">
-						<p>
-							<strong>
-								<span tal:omit-tag="" i18n:translate="">Q</span><tal:block content="repeat/a/number" />: <span tal:replace="python:here.getQuestionById(a).title_or_id()"/>
-							</strong><br />
+					<tal:block define="a_list python:test(filter_qst, [filter_qst], q.answers.keys())">
+						<tal:block repeat="a a_list">
+							<p>
+								<strong>
+									<span tal:omit-tag="" i18n:translate="">Q</span><tal:block content="repeat/a/number" />: <span tal:replace="python:here.getQuestionById(a).title_or_id()"/>
+								</strong><br />
 
-							<tal:block condition="python:q.lang==here.gl_get_selected_language()">
-								<span tal:content="python:q.answers[a]" />
-							</tal:block>
+								<tal:block condition="python:q.lang==here.gl_get_selected_language()">
+									<span tal:content="python:q.answers[a]" />
+								</tal:block>
 
-							<tal:block condition="python:q.lang!=here.gl_get_selected_language()">
-								<span style="background-color: yellow" tal:content="python:q.answers[a]" /><br />
-								<small>Message auto-translated</small>
-							</tal:block>
-						</p>
+								<tal:block condition="python:q.lang!=here.gl_get_selected_language()">
+									<span style="background-color: yellow" tal:content="python:q.answers[a]" /><br />
+									<small>Message auto-translated</small>
+								</tal:block>
+							</p>
+						</tal:block>
 					</tal:block>
 				</div>
 
