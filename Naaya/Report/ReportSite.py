@@ -80,6 +80,20 @@ class ReportSite(NySite, ProfileMeta):
         try:    self.getPropertiesTool().manageMainTopics(['info', 'reports'])
         except: pass
 
+    def daysLeft(self, REQUEST=None):
+        """ """
+        today = self.utGetTodayDate()
+        finish = self.utGetDate('30/11/2006')
+        days_left = int(finish -today)
+        if days_left <= 0:
+            return None
+        return days_left
+
+    def test_translation(self, phrase, REQUEST=None):
+        """ """
+        import babelizer
+        return unicode(babelizer.translate(phrase, 'English', 'Russian'), 'utf-8')
+
     security.declarePublic('update_images_path')
     def update_images_path(self):
         """ update images path according to the new Epoz update """
