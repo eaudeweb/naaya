@@ -80,4 +80,33 @@ class ReportSite(NySite, ProfileMeta):
         try:    self.getPropertiesTool().manageMainTopics(['info', 'reports'])
         except: pass
 
+    security.declarePublic('update_images_path')
+    def update_images_path(self):
+        """ update images path according to the new Epoz update """
+        catalog = self.getCatalogTool()
+
+        for sec in catalog.query_objects_ex(meta_type=['Naaya Report Section']):
+            for img in sec.objectValues('Image'):
+                #image path
+                old_path = img.absolute_url(1).replace("/cap", "/rep").replace("/sec", "/rep")
+                old_path = old_path.replace("belgrade3", "http://belgrade1.finsiel.ro")
+                #new_path = img.absolute_url(1)
+                new_path = img.getId()
+
+                #description
+                old_descr = sec.getLocalProperty('description', 'en')
+                new_descr = old_descr.replace(old_path, new_path)
+
+                #test bad values
+                if old_descr.find('src="http://') != -1:
+                    #print sec.absolute_url()
+                    pass
+
+                #update objects
+                sec.save_properties(sec.getLocalProperty('title', 'en'), new_descr, sec.getLocalProperty('coverage', 'en'), 
+                    sec.getLocalProperty('keywords', 'en'), sec.sortorder, sec.releasedate, 'en')
+                sec._p_changed = 1
+
+        return True
+
 InitializeClass(ReportSite)
