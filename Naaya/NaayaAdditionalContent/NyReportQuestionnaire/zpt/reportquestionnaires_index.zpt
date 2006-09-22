@@ -29,7 +29,13 @@
 				</div>
 
 				<div i18n:translate="">Additional comment</div>
-				<div tal:content="q/adt_comment" />
+				<tal:block condition="python:q.lang==here.gl_get_selected_language()">
+					<span tal:content="q/adt_comment" />
+				</tal:block>
+				<tal:block condition="python:q.lang!=here.gl_get_selected_language()">
+					<span style="background-color: yellow" tal:content="q/adt_comment" /><br />
+					<small>Message auto-translated</small>
+				</tal:block>
 
 				<tal:block define="attachments python:q.objectValues('File')" condition="attachments">
 					<div>
