@@ -4,33 +4,47 @@
 <h1><span tal:omit-tag="" i18n:translate="">Comments posted for the chapter</span> <em><a tal:content="here/title_or_id" tal:attributes="href here/absolute_url"/></em></h1>
 	<tal:block define="questions here/getQuestions; qnrs here/getQuestionnaires">
 		<tal:block repeat="q qnrs">
-			<tal:block  condition="python:q.lang == here.gl_get_selected_language()">
-				<div class="comment_box">
-					<div class="commentbox_title">
-						<span tal:omit-tag="" i18n:translate="">Comment posted on </span> <em tal:content="q/releasedate" />
-					</div>
+			<div class="comment_box">
+				<div class="commentbox_title">
+					<span tal:omit-tag="" i18n:translate="">Comment posted on </span> <em tal:content="q/releasedate" />
+				</div>
+
+				<div>
+					<tal:block repeat="a q/answers/keys">
+						<p>
+							<strong>
+								<span tal:omit-tag="" i18n:translate="">Q</span><tal:block content="repeat/a/number" />: <span tal:replace="python:here.getQuestionById(a).title_or_id()"/>
+							</strong><br />
+
+							<tal:block condition="python:q.lang==here.gl_get_selected_language()">
+								<span tal:content="python:q.answers[a]" />
+							</tal:block>
+
+							<tal:block condition="python:q.lang!=here.gl_get_selected_language()">
+								<span style="background-color: yellow" tal:content="python:q.answers[a]" /><br />
+								<small>Message auto-translated</small>
+							</tal:block>
+						</p>
+					</tal:block>
+				</div>
+
+				<div i18n:translate="">Additional comment</div>
+				<div tal:content="q/adt_comment" />
+
+				<tal:block define="attachments python:q.objectValues('File')" condition="attachments">
 					<div>
-						<tal:block repeat="a q/answers/keys">
-							<p>
-								<strong><span tal:omit-tag="" i18n:translate="">Q</span><tal:block content="repeat/a/number" />: <span tal:replace="python:here.getQuestionById(a).title_or_id()"/></strong><br />
-								<span tal:replace="python:q.answers[a]" />
-							</p>
+						<strong>Download attachment(s): </strong>
+						<tal:block repeat="file attachments">
+							<a tal:content="file/title_or_id" tal:attributes="href file/absolute_url" /><tal:block condition="not:repeat/file/end">, </tal:block>
 						</tal:block>
 					</div>
-					<tal:block define="attachments python:q.objectValues('File')" condition="attachments">
-						<div>
-							<strong>Download attachment(s): </strong>
-							<tal:block repeat="file attachments">
-								<a tal:content="file/title_or_id" tal:attributes="href file/absolute_url" /><tal:block condition="not:repeat/file/end">, </tal:block>
-							</tal:block>
-						</div>
-					</tal:block>
-					<hr class="hr_inside_comment" />
-					<div class="commentbox_content">
-						Submitted by: <strong><span tal:replace="q/contributor" /></strong>
-					</div>
+				</tal:block>
+
+				<hr class="hr_inside_comment" />
+				<div class="commentbox_content">
+					Submitted by: <strong><span tal:replace="q/contributor" /></strong>
 				</div>
-			</tal:block>
+			</div>
 		</tal:block>
 	</tal:block>
 </tal:block>

@@ -34,7 +34,7 @@ from Products.NaayaBase.NyContainer     import NyContainer
 from Products.NaayaBase.NyAttributes    import NyAttributes
 from Products.NaayaBase.NyEpozToolbox   import NyEpozToolbox
 from Products.NaayaBase.NyCheckControl  import NyCheckControl
-from reportquestionnaire_item                        import reportquestionnaire_item
+from reportquestionnaire_item           import reportquestionnaire_item
 
 
 #module constants
@@ -57,7 +57,8 @@ PROPERTIES_OBJECT = {
     'discussion':                   (0, '', ''),
     'qauthor':                      (0, '', ''),
     'answers':                      (0, '', ''),
-    'lang':                         (0, '', '')
+    'lang':                         (0, '', ''),
+    'adt_comment':                  (0, '', '')
 }
 
 
@@ -70,7 +71,7 @@ def reportquestionnaire_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyReportQuestionnaire'}, 'reportquestionnaire_add')
 
 def addNyReportQuestionnaire(self, id='', title='', description='', coverage='', keywords='',
-    sortorder='', contributor=None, releasedate='', discussion='', qauthor='Anonymous', answers={}, files=[], lang=None, REQUEST=None, **kwargs):
+    sortorder='', contributor=None, releasedate='', discussion='', qauthor='', answers={}, files=[], adt_comment='', REQUEST=None, **kwargs):
     """
     Create a Report Questionnaire type of object.
     """
@@ -88,7 +89,7 @@ def addNyReportQuestionnaire(self, id='', title='', description='', coverage='',
     if not(l_referer == 'reportquestionnaire_manage_add' or l_referer.find('reportquestionnaire_manage_add') != -1) and REQUEST:
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
-            releasedate=releasedate, discussion=discussion, qauthor=qauthor, answers=answers)
+            releasedate=releasedate, discussion=discussion, qauthor=qauthor, answers=answers, adt_comment=adt_comment)
     else:
         r = []
     if not len(r):
@@ -99,9 +100,9 @@ def addNyReportQuestionnaire(self, id='', title='', description='', coverage='',
         else:
             approved, approved_by = 0, None
         releasedate = self.process_releasedate(releasedate)
-        if lang is None: lang = self.gl_get_selected_language()
+        lang = self.gl_get_selected_language()
         #create object
-        ob = NyReportQuestionnaire(id, title, description, coverage, keywords, sortorder, contributor, releasedate, qauthor, answers, lang)
+        ob = NyReportQuestionnaire(id, title, description, coverage, keywords, sortorder, contributor, releasedate, qauthor, answers, lang, adt_comment)
         self.gl_add_languages(ob)
         ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._setObject(id, ob)
@@ -110,6 +111,11 @@ def addNyReportQuestionnaire(self, id='', title='', description='', coverage='',
         for f in files:
             ob.process_file_upload(f)
         ob.updatePropertiesFromGlossary(lang)
+        #set automatic translation
+        for portal_lang in self.gl_get_languages_map():
+            #TODO: implement automatic translation API
+            if portal_lang['id'] != lang:
+                ob._setLocalPropValue('answers', portal_lang['id'], answers)
         ob.approveThis(approved, approved_by)
         ob.submitThis()
         if discussion: ob.open_for_comments()
@@ -127,7 +133,7 @@ def addNyReportQuestionnaire(self, id='', title='', description='', coverage='',
             self.setSessionErrors(r)
             self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                 description=description, coverage=coverage, keywords=keywords, \
-                sortorder=sortorder, releasedate=releasedate, discussion=discussion, qauthor=qauthor, answers=answers, lang=lang)
+                sortorder=sortorder, releasedate=releasedate, discussion=discussion, qauthor=qauthor, answers=answers, lang=lang, adt_comment=adt_comment)
             REQUEST.RESPONSE.redirect('%s/reportquestionnaire_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)
@@ -181,23 +187,15 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
         return l_options
 
-    meta_types = (
-#        {'name': METATYPE_NYREPORTSECTION, 'action': 'manage_addNyReportSection_html'},
-    )
+    meta_types = ()
     all_meta_types = meta_types
 
     security = ClassSecurityInfo()
 
-    #constructors
-#    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'addNyReportSection')
-#    addNyReportSection = addNyReportSection
-#    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportsection_add_html')
-#    reportsection_add_html = reportsection_add_html
-
-    def __init__(self, id, title, description, coverage, keywords, sortorder, contributor, releasedate, qauthor, answers, lang):
+    def __init__(self, id, title, description, coverage, keywords, sortorder, contributor, releasedate, qauthor, answers, lang, adt_comment):
         """ """
         self.id = id
-        reportquestionnaire_item.__dict__['__init__'](self,title, description, coverage, keywords, sortorder, releasedate, qauthor, answers, lang)
+        reportquestionnaire_item.__dict__['__init__'](self,title, description, coverage, keywords, sortorder, releasedate, qauthor, answers, lang, adt_comment)
         NyCheckControl.__dict__['__init__'](self)
         NyContainer.__dict__['__init__'](self)
         self.contributor = contributor
@@ -229,7 +227,7 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='', keywords='',
-        sortorder='', approved='', releasedate='', discussion='', qauthor='Anonymous', answers={}, lang='', REQUEST=None, **kwargs):
+        sortorder='', approved='', releasedate='', discussion='', qauthor='', answers={}, lang='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
