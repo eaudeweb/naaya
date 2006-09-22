@@ -173,18 +173,10 @@ class NyReportQuestion(NyAttributes, reportquestion_item, NyContainer, NyEpozToo
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
         return l_options
 
-    meta_types = (
-#        {'name': METATYPE_NYREPORTSECTION, 'action': 'manage_addNyReportSection_html'},
-    )
+    meta_types = ()
     all_meta_types = meta_types
 
     security = ClassSecurityInfo()
-
-    #constructors
-#    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'addNyReportSection')
-#    addNyReportSection = addNyReportSection
-#    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportsection_add_html')
-#    reportsection_add_html = reportsection_add_html
 
     def __init__(self, id, title, description, coverage, keywords, sortorder, contributor, releasedate, lang):
         """ """
