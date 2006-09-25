@@ -93,7 +93,6 @@ class ReportSite(NySite, ProfileMeta):
     def translate_comment(self, phrase, from_lang='', to_lang='', REQUEST=None):
         """ """
         try:
-            print babelizer.translate(phrase, from_lang, to_lang)
             return babelizer.translate(phrase, from_lang, to_lang)
         except:
             return ''
