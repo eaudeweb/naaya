@@ -114,8 +114,8 @@ def addNyReportQuestionnaire(self, id='', title='', description='', coverage='',
         for portal_lang in self.gl_get_languages_map():
             #TODO: implement automatic translation API
             if portal_lang['id'] != lang:
-                ob._setLocalPropValue('answers', portal_lang['id'], answers)
-                ob._setLocalPropValue('adt_comment', portal_lang['id'], adt_comment)
+                ob._setLocalPropValue('answers', portal_lang['id'], self.translate_comment(answers, portal_lang['id'], lang))
+                ob._setLocalPropValue('adt_comment', portal_lang['id'], self.translate_comment(adt_comment, portal_lang['id'], lang))
         ob.approveThis(approved, approved_by)
         ob.submitThis()
         if discussion: ob.open_for_comments()
