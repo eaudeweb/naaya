@@ -26,6 +26,7 @@ from AccessControl                              import ClassSecurityInfo, getSec
 from AccessControl.Permissions                  import view_management_screens, view
 
 #Product imports
+import babelizer
 from constants                                      import *
 from Products.NaayaBase.constants                   import *
 from Products.NaayaContent                          import *
@@ -89,10 +90,13 @@ class ReportSite(NySite, ProfileMeta):
             return None
         return days_left
 
-    def test_translation(self, phrase, REQUEST=None):
+    def translate_comment(self, phrase, from_lang='', to_lang='', REQUEST=None):
         """ """
-        import babelizer
-        return unicode(babelizer.translate(phrase, 'English', 'Russian'), 'utf-8')
+        try:
+            print babelizer.translate(phrase, from_lang, to_lang)
+            return babelizer.translate(phrase, from_lang, to_lang)
+        except:
+            return ''
 
     security.declarePublic('update_images_path')
     def update_images_path(self):
