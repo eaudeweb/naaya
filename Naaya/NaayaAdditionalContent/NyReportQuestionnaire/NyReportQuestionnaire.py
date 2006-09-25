@@ -35,7 +35,8 @@ from Products.NaayaBase.NyAttributes    import NyAttributes
 from Products.NaayaBase.NyEpozToolbox   import NyEpozToolbox
 from Products.NaayaBase.NyCheckControl  import NyCheckControl
 from reportquestionnaire_item           import reportquestionnaire_item
-
+from Products.NaayaContent.NyReportAnswer.NyReportAnswer       import addNyReportAnswer, reportanswer_add_html, manage_addNyReportAnswer_html
+from Products.NaayaContent.NyReportAnswer.NyReportAnswer       import METATYPE_OBJECT as METATYPE_NYREPORTANSWER
 
 #module constants
 METATYPE_OBJECT = 'Naaya Report Questionnaire'
@@ -112,10 +113,13 @@ def addNyReportQuestionnaire(self, id='', title='', description='', coverage='',
         ob.updatePropertiesFromGlossary(lang)
         #set automatic translation
         for portal_lang in self.gl_get_languages_map():
-            #TODO: implement automatic translation API
             if portal_lang['id'] != lang:
-                ob._setLocalPropValue('answers', portal_lang['id'], self.translate_comment(answers, portal_lang['id'], lang))
-                ob._setLocalPropValue('adt_comment', portal_lang['id'], self.translate_comment(adt_comment, portal_lang['id'], lang))
+                res_answers = {}
+                for k, v in answers.items():
+                    ob.addNyReportAnswer(answer=v, assoc_question=k)
+                    answer_ob = ob.getAnswerByQuestion(k)
+                    answer_ob._setLocalPropValue('answer', portal_lang['id'], self.translate_comment(v, lang, portal_lang['id']))
+
         ob.approveThis(approved, approved_by)
         ob.submitThis()
         if discussion: ob.open_for_comments()
@@ -187,7 +191,7 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
         return l_options
 
-    meta_types = ()
+    meta_types = ({'name': METATYPE_NYREPORTANSWER, 'action': 'manage_addNyReportAnswer_html'},)
     all_meta_types = meta_types
 
     security = ClassSecurityInfo()
@@ -223,6 +227,12 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
     security.declarePrivate('syndicateThis')
     def syndicateThis(self, lang=None):
         pass
+
+    #constructors
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'addNyReportAnswer')
+    addNyReportAnswer = addNyReportAnswer
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportanswer_add_html')
+    reportanswer_add_html = reportanswer_add_html
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
@@ -336,6 +346,17 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
             else:
                 raise Exception, '%s' % ', '.join(r)
+
+    #Answers related API
+    security.declareProtected(view, 'getAllAnswers')
+    def getAllAnswers(self):    return self.objectValues(METATYPE_NYREPORTANSWER)
+
+    security.declareProtected(view, 'getAnswerByQuestion')
+    def getAnswerByQuestion(self, question_id):
+        """ """
+        for k in self.getAllAnswers():
+            if str(k.assoc_question) == str(question_id):
+                return k
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
