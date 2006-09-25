@@ -37,6 +37,8 @@ from Products.NaayaBase.NyCheckControl  import NyCheckControl
 from reportquestionnaire_item           import reportquestionnaire_item
 from Products.NaayaContent.NyReportAnswer.NyReportAnswer       import addNyReportAnswer, reportanswer_add_html, manage_addNyReportAnswer_html
 from Products.NaayaContent.NyReportAnswer.NyReportAnswer       import METATYPE_OBJECT as METATYPE_NYREPORTANSWER
+from Products.NaayaContent.NyReportComment.NyReportComment     import addNyReportComment, reportcomment_add_html, manage_addNyReportComment_html
+from Products.NaayaContent.NyReportComment.NyReportComment     import METATYPE_OBJECT as METATYPE_NYREPORTCOMMENT
 
 #module constants
 METATYPE_OBJECT = 'Naaya Report Questionnaire'
@@ -59,7 +61,6 @@ PROPERTIES_OBJECT = {
     'qauthor':                      (0, '', ''),
     'answers':                      (0, '', ''),
     'lang':                         (0, '', ''),
-    'adt_comment':                  (0, '', '')
 }
 
 
@@ -72,7 +73,7 @@ def reportquestionnaire_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyReportQuestionnaire'}, 'reportquestionnaire_add')
 
 def addNyReportQuestionnaire(self, id='', title='', description='', coverage='', keywords='',
-    sortorder='', contributor=None, releasedate='', discussion='', qauthor='', answers={}, files=[], adt_comment='', REQUEST=None, **kwargs):
+    sortorder='', contributor=None, releasedate='', discussion='', qauthor='', answers={}, files=[], adt_comment=[], REQUEST=None, **kwargs):
     """
     Create a Report Questionnaire type of object.
     """
@@ -103,7 +104,7 @@ def addNyReportQuestionnaire(self, id='', title='', description='', coverage='',
         releasedate = self.process_releasedate(releasedate)
         lang = self.gl_get_selected_language()
         #create object
-        ob = NyReportQuestionnaire(id, title, description, coverage, keywords, sortorder, contributor, releasedate, qauthor, answers, lang, adt_comment)
+        ob = NyReportQuestionnaire(id, title, description, coverage, keywords, sortorder, contributor, releasedate, qauthor, answers, lang)
         self.gl_add_languages(ob)
         ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._setObject(id, ob)
@@ -119,7 +120,11 @@ def addNyReportQuestionnaire(self, id='', title='', description='', coverage='',
                     ob.addNyReportAnswer(answer=v, assoc_question=k)
                     answer_ob = ob.getAnswerByQuestion(k)
                     answer_ob._setLocalPropValue('answer', portal_lang['id'], self.translate_comment(v, lang, portal_lang['id']))
-
+                for com in adt_comment:
+                    com_id = self.generateItemId('com')
+                    ob.addNyReportComment(id=com_id, page=com['page'], line=com['line'], comment=com['comment'])
+                    com_ob = ob.getCommentById(com_id)
+                    com_ob._setLocalPropValue('comment', portal_lang['id'], self.translate_comment(com['comment'], lang, portal_lang['id']))
         ob.approveThis(approved, approved_by)
         ob.submitThis()
         if discussion: ob.open_for_comments()
@@ -191,15 +196,16 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
         return l_options
 
-    meta_types = ({'name': METATYPE_NYREPORTANSWER, 'action': 'manage_addNyReportAnswer_html'},)
+    meta_types = ({'name': METATYPE_NYREPORTANSWER, 'action': 'manage_addNyReportAnswer_html'},
+                  {'name': METATYPE_NYREPORTCOMMENT, 'action': 'manage_addNyReportComment_html'})
     all_meta_types = meta_types
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, description, coverage, keywords, sortorder, contributor, releasedate, qauthor, answers, lang, adt_comment):
+    def __init__(self, id, title, description, coverage, keywords, sortorder, contributor, releasedate, qauthor, answers, lang):
         """ """
         self.id = id
-        reportquestionnaire_item.__dict__['__init__'](self,title, description, coverage, keywords, sortorder, releasedate, qauthor, answers, lang, adt_comment)
+        reportquestionnaire_item.__dict__['__init__'](self,title, description, coverage, keywords, sortorder, releasedate, qauthor, answers, lang)
         NyCheckControl.__dict__['__init__'](self)
         NyContainer.__dict__['__init__'](self)
         self.contributor = contributor
@@ -233,6 +239,10 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
     addNyReportAnswer = addNyReportAnswer
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportanswer_add_html')
     reportanswer_add_html = reportanswer_add_html
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'addNyReportComment')
+    addNyReportComment = addNyReportComment
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportcomment_add_html')
+    reportcomment_add_html = reportcomment_add_html
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
@@ -357,6 +367,15 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
         for k in self.getAllAnswers():
             if str(k.assoc_question) == str(question_id):
                 return k
+
+    #Comments related API
+    security.declareProtected(view, 'getCommentById')
+    def getCommentById(self, id):
+        """ """
+        return getattr(self, id, None)
+
+    security.declareProtected(view, 'getAllComments')
+    def getAllComments(self):    return self.objectValues(METATYPE_NYREPORTCOMMENT)
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')

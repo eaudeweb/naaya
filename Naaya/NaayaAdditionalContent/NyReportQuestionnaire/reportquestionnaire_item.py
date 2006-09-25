@@ -34,18 +34,17 @@ class reportquestionnaire_item(Implicit, NyProperties):
     coverage =      LocalProperty('coverage')
     keywords =      LocalProperty('keywords')
     answers =       LocalProperty('answers')
-    adt_comment =   LocalProperty('adt_comment')
 
     def __init__(self, title, description, coverage, keywords, sortorder,
-        releasedate, qauthor, answers, lang, adt_comment):
+        releasedate, qauthor, answers, lang):
         """
         Constructor.
         """
-        self.save_properties(title, description, coverage, keywords, sortorder, releasedate, qauthor, answers, lang, adt_comment)
+        self.save_properties(title, description, coverage, keywords, sortorder, releasedate, qauthor, answers, lang)
         NyProperties.__dict__['__init__'](self)
 
     def save_properties(self, title, description, coverage, keywords, sortorder,
-        releasedate, qauthor, answers, lang, adt_comment):
+        releasedate, qauthor, answers, lang):
         """
         Save item properties.
         """
@@ -54,7 +53,6 @@ class reportquestionnaire_item(Implicit, NyProperties):
         self._setLocalPropValue('coverage',     lang, coverage)
         self._setLocalPropValue('keywords',     lang, keywords)
         self._setLocalPropValue('answers',      lang, answers)
-        self._setLocalPropValue('adt_comment',  lang, adt_comment)
         self.lang =         lang
         self.qauthor =      qauthor
         self.sortorder =    sortorder
