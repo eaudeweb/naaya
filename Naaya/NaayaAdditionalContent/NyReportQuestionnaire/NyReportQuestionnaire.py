@@ -377,6 +377,10 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
     security.declareProtected(view, 'getAllComments')
     def getAllComments(self):    return self.objectValues(METATYPE_NYREPORTCOMMENT)
 
+    security.declareProtected(view, 'hasComments')
+    def hasComments(self):
+        return len(self.getAllComments()) > 0
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/reportquestionnaire_manage_edit', globals())
