@@ -21,6 +21,7 @@
 from copy import deepcopy
 
 #Zope imports
+from OFS.Image                                  import manage_addFile, manage_addFileForm
 from Globals                                    import InitializeClass
 from AccessControl                              import ClassSecurityInfo
 from AccessControl.Permissions                  import view_management_screens, view
@@ -186,7 +187,7 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
         {'name': METATYPE_NYREPORTSECTION, 'action': 'manage_addNyReportSection_html'},
         {'name': METATYPE_NYREPORTQUESTION, 'action': 'manage_addNyReportQuestion_html'},
         {'name': METATYPE_NYREPORTQUESTIONNAIRE, 'action': 'manage_addNyReportQuestionnaire_html'},
-        {'name': 'File', 'action': 'manage_addFile', 'permission'  : 'Add images and files'},
+        {'name': 'File', 'action': 'manage_addFileForm', 'permission'  : 'Add images and files'},
     )
     all_meta_types = meta_types
 

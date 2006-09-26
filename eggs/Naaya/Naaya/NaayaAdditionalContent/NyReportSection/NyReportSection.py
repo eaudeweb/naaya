@@ -21,6 +21,7 @@
 from copy import deepcopy
 
 #Zope imports
+from OFS.Image                                  import manage_addFile, manage_addFileForm
 from Globals                                    import InitializeClass
 from AccessControl                              import ClassSecurityInfo
 from AccessControl.Permissions                  import view_management_screens, view
@@ -174,7 +175,7 @@ class NyReportSection(NyAttributes, reportsection_item, NyContainer, NyEpozToolb
 
     meta_types = (
         {'name': METATYPE_OBJECT, 'action': 'manage_addNyReportSection_html'},
-        {'name': 'File', 'action': 'manage_addFile', 'permission'  : 'Add images and files'},
+        {'name': 'File', 'action': 'manage_addFileForm', 'permission'  : 'Add images and files'},
     )
     all_meta_types = meta_types
 
