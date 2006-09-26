@@ -217,11 +217,6 @@ class NyReportSection(NyAttributes, reportsection_item, NyContainer, NyEpozToolb
     def syndicateThis(self, lang=None):
         pass
 
-    def setDescription(self, descr):
-        """ """
-        self._setLocalPropValue('description', 'en', descr)
-        self._p_changed = 1
-
     def getSections(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_OBJECT),'sortorder',0)
 
     def getNavigationInfo(self):
@@ -345,6 +340,11 @@ class NyReportSection(NyAttributes, reportsection_item, NyContainer, NyEpozToolb
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
             else:
                 raise Exception, '%s' % ', '.join(r)
+
+    security.declareProtected(view, 'toc')
+    def toc(self):
+        """ return the table of contents """
+        return self.getParentNode().absolute_url()
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')

@@ -271,6 +271,11 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
             l_temp = obj;
         return [l_prev, l_up, l_next]
 
+    security.declareProtected(view, 'toc')
+    def toc(self):
+        """ return the table of contents """
+        return self.getParentNode().absolute_url()
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='', keywords='',
