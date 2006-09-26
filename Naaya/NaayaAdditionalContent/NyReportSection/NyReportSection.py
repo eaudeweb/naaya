@@ -174,6 +174,7 @@ class NyReportSection(NyAttributes, reportsection_item, NyContainer, NyEpozToolb
 
     meta_types = (
         {'name': METATYPE_OBJECT, 'action': 'manage_addNyReportSection_html'},
+        {'name': 'File', 'action': 'manage_addFile', 'permission'  : 'Add images and files'},
     )
     all_meta_types = meta_types
 
