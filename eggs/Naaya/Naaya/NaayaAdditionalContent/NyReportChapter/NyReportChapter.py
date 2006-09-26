@@ -418,7 +418,7 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
         try: self.manage_delObjects(id_list)
         except: self.setSessionErrors(['Error while delete data.'])
         else: self.setSessionInfo(['Item(s) deleted.'])
-        #if REQUEST: REQUEST.RESPONSE.redirect('index_html')
+        if REQUEST: REQUEST.RESPONSE.redirect('reportquestions_html')
 
     security.declareProtected(view, 'report_macro_objecttree_html')
     def report_macro_objecttree_html(self, REQUEST=None, RESPONSE=None):
