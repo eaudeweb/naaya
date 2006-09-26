@@ -21,7 +21,6 @@
 from copy import deepcopy
 
 #Zope imports
-from OFS.Image                                  import manage_addFile, manage_addFileForm
 from Globals                                    import InitializeClass
 from AccessControl                              import ClassSecurityInfo
 from AccessControl.Permissions                  import view_management_screens, view
@@ -177,11 +176,14 @@ class NyReport(NyAttributes, report_item, NyContainer, NyEpozToolbox, NyCheckCon
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
         return l_options
 
-    meta_types = (
-        {'name': METATYPE_NYREPORTCHAPTER, 'action': 'manage_addNyReportChapter_html'},
-        {'name': 'File', 'action': 'manage_addFileForm', 'permission'  : 'Add images and files'},
-    )
-    all_meta_types = meta_types
+    def all_meta_types(self, interfaces=None):
+        """ """
+        y = [{'name': METATYPE_NYREPORTCHAPTER, 'action': 'manage_addNyReportChapter_html'},]
+        additional_meta_types = ['File']
+        for x in Products.meta_types:
+            if x['name'] in additional_meta_types:
+                y.append(x)
+        return y
 
     security = ClassSecurityInfo()
 
