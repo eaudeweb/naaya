@@ -178,6 +178,7 @@ class NyReport(NyAttributes, report_item, NyContainer, NyEpozToolbox, NyCheckCon
 
     meta_types = (
         {'name': METATYPE_NYREPORTCHAPTER, 'action': 'manage_addNyReportChapter_html'},
+        {'name': 'File', 'action': 'manage_addFile', 'permission'  : 'Add images and files'},
     )
     all_meta_types = meta_types
 
