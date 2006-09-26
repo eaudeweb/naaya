@@ -344,7 +344,7 @@ class NyReportSection(NyAttributes, reportsection_item, NyContainer, NyEpozToolb
     security.declareProtected(view, 'toc')
     def toc(self):
         """ return the table of contents """
-        return self.getParentNode().absolute_url()
+        return self.getChapterPath()
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
