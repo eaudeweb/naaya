@@ -97,6 +97,14 @@ class ReportSite(NySite, ProfileMeta):
         except:
             return ''
 
+    security.declarePublic('getReport')
+    def getReport(self):
+        """ """
+        reports = self.reports.objectValues(METATYPE_NYREPORT)
+        if reports:
+            return reports[0]
+        return []
+
     security.declarePublic('update_images_path')
     def update_images_path(self):
         """ update images path according to the new Epoz update """
