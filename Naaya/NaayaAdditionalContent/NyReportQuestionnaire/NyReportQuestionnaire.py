@@ -36,6 +36,8 @@ from Products.NaayaBase.NyEpozToolbox   import NyEpozToolbox
 from Products.NaayaBase.NyCheckControl  import NyCheckControl
 from reportquestionnaire_item           import reportquestionnaire_item
 from Products.NaayaContent.NyReportAnswer.NyReportAnswer       import addNyReportAnswer, reportanswer_add_html, manage_addNyReportAnswer_html
+from Products.NaayaContent.NyFile.NyFile       import addNyFile, manage_addNyFile_html
+from Products.NaayaContent.NyFile.NyFile import METATYPE_OBJECT as METATYPE_NYFILE
 from Products.NaayaContent.NyReportAnswer.NyReportAnswer       import METATYPE_OBJECT as METATYPE_NYREPORTANSWER
 from Products.NaayaContent.NyReportComment.NyReportComment     import addNyReportComment, reportcomment_add_html, manage_addNyReportComment_html
 from Products.NaayaContent.NyReportComment.NyReportComment     import METATYPE_OBJECT as METATYPE_NYREPORTCOMMENT
@@ -73,7 +75,7 @@ def reportquestionnaire_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyReportQuestionnaire'}, 'reportquestionnaire_add')
 
 def addNyReportQuestionnaire(self, id='', title='', description='', coverage='', keywords='',
-    sortorder='', contributor=None, releasedate='', discussion='', qauthor='', answers={}, files=[], adt_comment=[], REQUEST=None, **kwargs):
+    sortorder='', contributor=None, releasedate='', discussion='', qauthor='', answers={}, files=None, file_title='', adt_comment=[], REQUEST=None, **kwargs):
     """
     Create a Report Questionnaire type of object.
     """
@@ -110,7 +112,11 @@ def addNyReportQuestionnaire(self, id='', title='', description='', coverage='',
         self._setObject(id, ob)
         #extra settings
         ob = self._getOb(id)
-        ob.process_file_upload(files)
+        file_ob = ob.process_nyfile_upload(files, file_title, lang)
+        if file_ob:
+            for portal_lang in self.gl_get_languages_map():
+                if portal_lang['id'] != lang:
+                    file_ob._setLocalPropValue('title', portal_lang['id'], self.translate_comment(file_title, lang, portal_lang['id']))
         ob.updatePropertiesFromGlossary(lang)
         #set automatic translation
         for portal_lang in self.gl_get_languages_map():
@@ -197,7 +203,8 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
         return l_options
 
-    meta_types = ({'name': METATYPE_NYREPORTANSWER, 'action': 'manage_addNyReportAnswer_html'},
+    meta_types = ({'name': METATYPE_NYFILE, 'action': 'manage_addNyFile_html'},
+                  {'name': METATYPE_NYREPORTANSWER, 'action': 'manage_addNyReportAnswer_html'},
                   {'name': METATYPE_NYREPORTCOMMENT, 'action': 'manage_addNyReportComment_html'})
     all_meta_types = meta_types
 
@@ -357,6 +364,16 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
             else:
                 raise Exception, '%s' % ', '.join(r)
+
+    security.declareProtected(view, 'process_nyfile_upload')
+    def process_nyfile_upload(self, file='', file_title='', lang='', REQUEST=None):
+        """ """
+        if file:
+            id = 'file' + self.utGenRandomId(6)
+            if not file_title: 
+                file_title = ' '
+            addNyFile(self, id=id, title=file_title, file=file, lang=lang)
+            return self._getOb(id)
 
     #Answers related API
     security.declareProtected(view, 'getAllAnswers')
