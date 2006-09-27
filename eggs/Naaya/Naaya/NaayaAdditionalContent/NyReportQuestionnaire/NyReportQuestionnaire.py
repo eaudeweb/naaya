@@ -136,6 +136,7 @@ def addNyReportQuestionnaire(self, id='', title='', description='', coverage='',
                 return self.manage_main(self, REQUEST, update_menu=1)
             elif l_referer == 'reportquestionnaire_add_html':
                 self.setSession('referer', self.absolute_url())
+                self.setSession('answers', 1)
                 REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
     else:
         if REQUEST is not None:
