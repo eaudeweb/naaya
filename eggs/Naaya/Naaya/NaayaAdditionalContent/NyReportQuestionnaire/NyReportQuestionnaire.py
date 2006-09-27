@@ -386,6 +386,11 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
             if str(k.assoc_question) == str(question_id):
                 return k
 
+    security.declareProtected(view, 'getFiles')
+    def getFiles(self):
+        """ """
+        return self.objectValues(METATYPE_NYFILE)
+
     #Comments related API
     security.declareProtected(view, 'getCommentById')
     def getCommentById(self, id):
