@@ -3,6 +3,7 @@
 	<forms>
 		<form id="site_index" title="NySite index"/>
 		<form id="site_admin_template" title="Site admin template"/>
+		<form id="site_messages" title="Portal messages page"/>
 	</forms>
 	<layout default_skin_id="metal" default_scheme_id="orange">
 		<skin id="metal" title="Metal">
