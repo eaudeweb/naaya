@@ -238,6 +238,49 @@ class ReportSite(NySite, ProfileMeta):
                 or may not grant your account with the approriate role.')
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addroles')
+    def admin_addroles(self, names=[], roles=[], loc='allsite', location='', REQUEST=None):
+        """ """
+        msg = err = ''
+        names = self.utConvertToList(names)
+        if len(names)<=0:
+            err = 'An username must be specified'
+        else:
+            err = None
+            try:
+                for name in names:
+                    self.getAuthenticationTool().manage_addUsersRoles(name, roles, loc, location)
+            except Exception, error:
+                err = error
+            else:
+                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+            if not err:
+                auth_tool = self.getAuthenticationTool()
+                for name in names:
+                    user_ob = auth_tool.getUser(name)
+                    self.sendCreateAccountEmail('%s %s' % (user_ob.firstname, user_ob.lastname), user_ob.email, user_ob.name, REQUEST)
+        if REQUEST:
+            if err: self.setSessionErrors([err])
+            if msg: self.setSessionInfo([msg])
+            REQUEST.RESPONSE.redirect('%s/admin_roles_html' % self.absolute_url())
+
+#####################################################################################
+# Email templates #
+###################
+
+    def sendCreateAccountEmail(self, p_name, p_email, p_username, REQUEST):
+        #sends a confirmation email to the newlly created account's owner
+        email_template = self.getEmailTool()._getOb('email_createaccount')
+        l_subject = email_template.title
+        l_content = email_template.body
+        l_content = l_content.replace('@@PORTAL_URL@@', self.portal_url)
+        l_content = l_content.replace('@@PORTAL_TITLE@@', self.site_title)
+        l_content = l_content.replace('@@NAME@@', p_name)
+        l_content = l_content.replace('@@USERNAME@@', p_username)
+        l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
+        mail_from = self.mail_address_from
+        self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
+
     def sendRequestRoleEmail(self, p_to, p_username, p_name, p_email, p_nationality, p_affiliation):
         #sends a request role email
         email_template = self.getEmailTool()._getOb('email_requestrole')
