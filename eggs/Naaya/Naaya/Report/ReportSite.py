@@ -96,15 +96,14 @@ class ReportSite(NySite, ProfileMeta):
         finish = self.utGetDate('30/11/2006')
         days_left = int(finish -today)
         if days_left <= 0:
-            return None
+            return 0
         return days_left
 
     def translate_comment(self, phrase, from_lang='', to_lang='', REQUEST=None):
         """ """
-        try:
-            return babelizer.translate(phrase, from_lang, to_lang)
-        except:
-            return ''
+        if not phrase.strip():  return ''
+        try:                    return babelizer.translate(phrase, from_lang, to_lang)
+        except:                 return ''
 
     security.declarePublic('getReport')
     def getReport(self):
@@ -126,6 +125,29 @@ class ReportSite(NySite, ProfileMeta):
     def searchAffiliationList(self, affiliation):
         """ search in the affiliations list"""
         return [aff for aff in self.getAffiliationList() if aff.id == affiliation]
+
+#####################################################################################
+# Cross-references #
+####################
+
+    security.declarePublic('getReferenceData')
+    def getReferenceData(self, str):
+        """ """
+        try:
+            search_string = u'"%s"' % str
+            expr = 'self.getCatalogedObjects(meta_type=[METATYPE_NYREPORTCHAPTER, METATYPE_NYREPORTSECTION], objectkeywords_en=search_string)'
+            return [k.absolute_url() for k in eval(expr)]
+        except:
+            return []
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'indexCrossReferences')
+    def indexCrossReferences(self):
+        """ """
+        for ref_ob in self.getReport().getCrossReferences():
+            ref_links = {}
+            ref_links['en'] = self.getReferenceData(ref_ob.getLocalProperty('reference', 'en'))
+            ref_ob.ref_links = ref_links
+            ref_ob._p_changed = 1
 
 #####################################################################################
 # Profiles #
