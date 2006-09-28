@@ -161,6 +161,11 @@ class ReportSite(NySite, ProfileMeta):
         try:    return self.unrestrictedTraverse(p_url, None)
         except: return None
 
+    security.declareProtected(view, 'admin_references_html')
+    def admin_references_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_references')
+
 #####################################################################################
 # Profiles #
 ############
