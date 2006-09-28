@@ -1,0 +1,8 @@
+Dear @@NAME@@,
+
+This is an automatically generated message to inform you that an account has been created
+for you on the portal @@PORTAL_TITLE@@ (@@PORTAL_URL@@) 
+
+Your username is @@USERNAME@@
+
+Time of post - @@TIMEOFPOST@@
