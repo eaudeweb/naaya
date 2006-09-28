@@ -36,15 +36,16 @@ from Products.NaayaBase.NyEpozToolbox   import NyEpozToolbox
 from Products.NaayaBase.NyCheckControl  import NyCheckControl
 from report_item                        import report_item
 
-
 from Products.NaayaContent.NyReportChapter.NyReportChapter       import addNyReportChapter, reportchapter_add_html, manage_addNyReportChapter_html
 from Products.NaayaContent.NyReportChapter.NyReportChapter       import METATYPE_OBJECT as METATYPE_NYREPORTCHAPTER
+from Products.NaayaContent.NyReportReference.NyReportReference       import addNyReportReference, reportreference_add_html, manage_addNyReportReference_html
+from Products.NaayaContent.NyReportReference.NyReportReference       import METATYPE_OBJECT as METATYPE_NYREPORTREFERENCE
 
 #module constants
 METATYPE_OBJECT = 'Naaya Report'
 LABEL_OBJECT = 'Report'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Report objects'
-OBJECT_FORMS = ['report_add', 'report_edit', 'report_index', 'report_macro_objecttree']
+OBJECT_FORMS = ['report_add', 'report_edit', 'report_index', 'report_macro_objecttree', 'report_references']
 OBJECT_CONSTRUCTORS = ['manage_addNyReport_html', 'report_add_html', 'addNyReport', 'importNyReport']
 OBJECT_ADD_FORM = 'report_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Report type.'
@@ -178,7 +179,8 @@ class NyReport(NyAttributes, report_item, NyContainer, NyEpozToolbox, NyCheckCon
 
     def all_meta_types(self, interfaces=None):
         """ """
-        y = [{'name': METATYPE_NYREPORTCHAPTER, 'action': 'manage_addNyReportChapter_html'},]
+        y = [{'name': METATYPE_NYREPORTCHAPTER, 'action': 'manage_addNyReportChapter_html'},
+             {'name': METATYPE_NYREPORTREFERENCE, 'action': 'manage_addNyReportReference_html'}]
         additional_meta_types = ['File']
         for x in Products.meta_types:
             if x['name'] in additional_meta_types:
@@ -192,6 +194,10 @@ class NyReport(NyAttributes, report_item, NyContainer, NyEpozToolbox, NyCheckCon
     addNyReportChapter = addNyReportChapter
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportchapter_add_html')
     reportchapter_add_html = reportchapter_add_html
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'addNyReportReference')
+    addNyReportReference = addNyReportReference
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportreference_add_html')
+    reportreference_add_html = reportreference_add_html
 
     def __init__(self, id, title, description, coverage, keywords, sortorder, contributor, releasedate, lang):
         """ """
@@ -225,7 +231,9 @@ class NyReport(NyAttributes, report_item, NyContainer, NyEpozToolbox, NyCheckCon
     def syndicateThis(self, lang=None):
         pass
 
-    def getChapters(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_NYREPORTCHAPTER),'sortorder',0)
+    #Related API
+    def getChapters(self):          return self.utSortObjsListByAttr(self.objectValues(METATYPE_NYREPORTCHAPTER),'sortorder',0)
+    def getCrossReferences(self):   return self.objectValues(METATYPE_NYREPORTREFERENCE)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
@@ -357,6 +365,11 @@ class NyReport(NyAttributes, report_item, NyContainer, NyEpozToolbox, NyCheckCon
         """ """
         return self.getFormsTool().getContent({'here': self}, 'report_edit')
 
+    security.declareProtected(view, 'reportreferences_html')
+    def reportreferences_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'report_references')
+
     security.declareProtected(PERMISSION_DELETE_OBJECTS, 'deleteObjects')
     def deleteObjects(self, REQUEST=None):
         """ """
@@ -365,7 +378,6 @@ class NyReport(NyAttributes, report_item, NyContainer, NyEpozToolbox, NyCheckCon
         except: self.setSessionErrors(['Error while delete data.'])
         else: self.setSessionInfo(['Item(s) deleted.'])
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
-
 
     security.declareProtected(view, 'report_macro_objecttree_html')
     def report_macro_objecttree_html(self, REQUEST=None, RESPONSE=None):

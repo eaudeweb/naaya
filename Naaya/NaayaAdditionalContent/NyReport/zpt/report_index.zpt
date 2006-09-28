@@ -11,8 +11,12 @@
 		<a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
 		<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()" i18n:translate="">This item has been checked out by another user</strong>
 		<a tal:attributes="href string:${here/absolute_url}/reportchapter_add_html"><span i18n:translate="">Add Chapter</span></a>
+		<a tal:attributes="href string:${here/absolute_url}/reportreference_add_html"><span i18n:translate="">Add Cross-reference</span></a>
 	</div>
 	</tal:block>
+	<div>
+		<a tal:attributes="href string:${here/absolute_url}/reportreferences_html"><span i18n:translate="">View Cross-references</span></a>
+	</div>
 	<p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
 </tal:block>
