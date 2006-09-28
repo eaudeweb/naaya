@@ -4,6 +4,7 @@
 		<form id="site_index" title="NySite index"/>
 		<form id="site_admin_template" title="Site admin template"/>
 		<form id="site_messages" title="Portal messages page"/>
+		<form id="site_requestrole" title="Request role form"/>
 	</forms>
 	<emails>
 		<emailtemplate id="email_requestrole" title="Request role"/>
@@ -53,6 +54,15 @@
 		<pluggablecontenttype meta_type="Naaya Pointer" action="1"/>
 		<pluggablecontenttype meta_type="Naaya URL" action="1"/>
 	</pluggablecontenttypes>
+	<portlets left="portlet_maincategories" center="">
+		<reflist id="affiliation" title="Affiliation" description="">
+			<item id="ngo" title="NGO"/>
+			<item id="academia" title="Academia"/>
+			<item id="government" title="Government"/>
+			<item id="intorganisation" title="Int'l Organisation"/>
+			<item id="bussiness" title="Bussiness"/>
+		</reflist>
+	</portlets>
 	<properties>
 		<language code="ru" />
 	</properties>

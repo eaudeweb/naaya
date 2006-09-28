@@ -86,6 +86,10 @@ class ReportSite(NySite, ProfileMeta):
         except: pass
 
 
+#####################################################################################
+# Utils  #
+##########
+
     def daysLeft(self, REQUEST=None):
         """ """
         today = self.utGetTodayDate()
@@ -109,6 +113,19 @@ class ReportSite(NySite, ProfileMeta):
         if reports:
             return reports[0]
         return []
+
+    #layer over selection lists
+    security.declarePublic('getAffiliationList')
+    def getAffiliationList(self):
+        """
+        Return the selection list for affiliations.
+        """
+        return self.getPortletsTool().getRefListById('affiliation').get_list()
+
+    security.declarePublic('searchAffiliationList')
+    def searchAffiliationList(self, affiliation):
+        """ search in the affiliations list"""
+        return [aff for aff in self.getAffiliationList() if aff.id == affiliation]
 
 #####################################################################################
 # Profiles #
@@ -169,8 +186,10 @@ class ReportSite(NySite, ProfileMeta):
         return self.getSession('user_affiliation', default)
 
     security.declareProtected(view, 'processRequestRoleForm')
-    def processRequestRoleForm(self, username='', password='', confirm='', firstname='', lastname='', email='', nationality='', affiliation='', REQUEST=None):
+    def processRequestRoleForm(self, username='', password='', confirm='', firstname='', lastname='', email='', nationality='', affiliation='', affiliation_other='', REQUEST=None):
         """ """
+        if affiliation_other:
+            affiliation = affiliation_other
         #create an account without role
         try:
             self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname,
@@ -213,7 +232,8 @@ class ReportSite(NySite, ProfileMeta):
         self.getEmailTool().sendEmail(l_content, p_to, p_email, l_subject)
 
 #####################################################################################
-
+# Update scripts #
+##################
 
     security.declarePublic('update_images_path')
     def update_images_path(self):
