@@ -17,7 +17,16 @@
 	<table border="0" cellspacing="2" celpadding="2">
 		<tr>
 			<td i18n:translate="">Affiliation</td>
-			<td><input type="text" name="affiliation" id="affiliation" size="50" tal:attributes="value sheet/affiliation" /></td>
+			<td tal:define="aff_value sheet/affiliation;
+							aff_list here/getAffiliationList">
+			<select name="affiliation" id="affiliation">
+				<option value=""></option>
+				<option tal:repeat="item aff_list"
+					tal:attributes="value item/id; selected python:item.id==aff_value" tal:content="item/title" i18n:translate="" />
+			</select> <br />
+			Other: <input type="text" name="affiliation_other" size="40" 
+					tal:attributes="value python:test(here.searchAffiliationList(aff_value), '', aff_value)" />
+			</td>
 		</tr>
 		<tr>
 			<td i18n:translate="">Nationality</td>
