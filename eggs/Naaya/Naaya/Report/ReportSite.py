@@ -315,6 +315,114 @@ class ReportSite(NySite, ProfileMeta):
         self.getEmailTool().sendEmail(l_content, p_to, p_email, l_subject)
 
 #####################################################################################
+# Site map generation #
+#######################
+
+    # Generic sitemap functions
+    def getSiteMap(self, expand=[], root=None, showitems=0):
+        #returns a list of objects with additional information
+        #in order to draw the site map
+        if root is None: root = self
+        return self.__getSiteMap(root, showitems, expand, 0)
+
+    def getSiteMapTrail(self, expand, tree):
+        #given a list with all tree nodes, returns a string with all relatives urls
+        if expand == 'all': return ','.join([node[0].absolute_url(1) for node in tree])
+        else: return expand
+
+    def __getSiteMap(self, root, showitems, expand, depth):
+        #site map core
+        l_tree = []
+        l_folders = [x for x in root.objectValues(self.get_belgrade_containers_metatypes()) if x.approved == 1 and x.submitted==1]
+        l_folders = self.utSortObjsListByAttr(l_folders, 'sortorder', 0)
+        for l_folder in l_folders:
+            if len(l_folder.objectValues(self.get_belgrade_containers_metatypes())) > 0 or (len(l_folder.getObjects()) > 0 and showitems==1):
+                if l_folder.absolute_url(1) in expand or 'all' in expand:
+                    l_tree.append((l_folder, 0, depth))
+                    if showitems:
+                        buf = [x for x in l_folder.getPublishedObjects()]
+                        for l_item in buf:
+                            l_tree.append((l_item, -1, depth+1))
+                    l_tree.extend(self.__getSiteMap(l_folder, showitems, expand, depth+1))
+                else:
+                    l_tree.append((l_folder, 1, depth))
+            else:
+                l_tree.append((l_folder, -1, depth))
+        return l_tree
+
+    # Remotechannels-specific sitemap functions
+    def getSiteMapRemCh(self, expand=[], root=None, showitems=0):
+        #returns a list of objects with additional information
+        #in order to draw the site map
+        if root is None: root = self
+        return self.__getSiteMapRemCh(root, showitems, expand, 0)
+
+    def __getSiteMapRemCh(self, root, showitems, expand, depth):
+        #site map for Remotechannels
+        l_tree = []
+        l_folders = [x for x in root.objectValues(self.get_belgrade_containers_metatypes()) if x.approved == 1 and x.submitted==1]
+        l_folders = self.utSortObjsListByAttr(l_folders, 'sortorder', 0)
+        for l_folder in l_folders:
+            if len(l_folder.objectValues(self.get_belgrade_containers_metatypes())) > 0 or (len(l_folder.getObjects()) > 0 and showitems==1):
+                if l_folder.absolute_url(1) in expand or 'all' in expand:
+                    l_tree.append((l_folder, 0, depth))
+                    if showitems:
+                        buf = [x for x in l_folder.getPublishedObjects()]
+                        for l_item in buf:
+                            l_tree.append((l_item, -1, depth+1))
+                    l_tree.extend(self.__getSiteMap(l_folder, showitems, expand, depth+1))
+                else:
+                    l_tree.append((l_folder, 1, depth))
+            else:
+                l_tree.append((l_folder, -1, depth))
+        return l_tree
+
+    # Belgrade-specific sitemap functions
+    def get_belgrade_containers_metatypes(self):
+        #Belgrade specific meta_types
+        return [METATYPE_FOLDER, METATYPE_NYREPORTCHAPTER, METATYPE_NYREPORTSECTION, METATYPE_NYREPORT]
+
+    def getSiteMapBelgrade(self, expand=[], root=None, showitems=0):
+        #returns a list of objects with additional information
+        #in order to draw the site map
+        print root
+        if root is None: root = self
+        return self.__getSiteMapBelgrade(root, showitems, expand, 0, 4)
+
+    def _get_non_folderish_objects(self, container):
+        return [ obj for obj in container.objectValues() if obj.meta_type not in self.get_containers_metatypes() ]
+
+    def __getSiteMapBelgrade(self, root, showitems, expand, depth, maxdepth):
+        #custom function for the Belgrade websites
+        #has specific expanded nodes
+        l_maintopics = self.getMainTopics()
+        l_tree = []
+        if root is self:
+            l_folders = [x for x in root.objectValues(self.get_belgrade_containers_metatypes()) if x.approved == 1 and x.submitted==1 and x in l_maintopics]
+        else: 
+            l_folders = root.getPublishedFolders()
+            l_folders.extend(root.objectValues(METATYPE_NYREPORTCHAPTER))
+            l_folders.extend(root.objectValues(METATYPE_NYREPORTSECTION))
+            l_folders.extend(root.objectValues(METATYPE_NYREPORT))
+        l_folders = self.utSortObjsListByAttr(l_folders, 'sortorder', 0)
+        for l_folder in l_folders:
+            if ((len(l_folder.objectValues(self.get_belgrade_containers_metatypes())) > 0) or ((len(l_folder.getObjects()) > 0) and showitems==1) or (l_folder.id=='about' and self is root)):
+                if l_folder.absolute_url(1) in expand or 'all' in expand:
+                    l_tree.append((l_folder, 0, depth))
+                    if showitems:
+                        for l_item in l_folder.getPublishedObjects():
+                            l_tree.append((l_item, -1, depth+1))
+                    l_tree.extend(self.__getSiteMapBelgrade(l_folder, showitems, expand, depth+1, maxdepth))
+                else:
+                    l_tree.append((l_folder, 1, depth))
+            else:
+                l_tree.append((l_folder, -1, depth))
+            if ((root is self) and (l_folder.id=='about') and (l_folder.absolute_url(1) in expand or 'all' in expand)):
+                for element in self.utSortObjsListByAttr(self._get_non_folderish_objects(l_folder),'sortorder',0):
+                    l_tree.append((element, -1, 1))
+        return l_tree
+
+#####################################################################################
 # Update scripts #
 ##################
 
