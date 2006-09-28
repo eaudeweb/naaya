@@ -3,7 +3,9 @@
 
 <h1 metal:fill-slot="title" i18n:translate="">Report profile</h1>
 
-<tal:block metal:fill-slot="section">
+<tal:block metal:fill-slot="section"
+	tal:define="user python:here.getAuthenticationTool().getUser(username)">
+<tal:block tal:condition="user">
 
 <p i18n:translate="">
 	Additional information
@@ -40,5 +42,12 @@
 
 </tal:block>
 
+<tal:block tal:condition="python:not user">
+	<p i18n:translate="">
+		You are not logged in with a local user, therefore you cannot edit your user profile from here.
+	</p>
+</tal:block>
+
+</tal:block>
 </tal:block>
 </tal:block>
