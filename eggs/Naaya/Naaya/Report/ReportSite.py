@@ -77,9 +77,14 @@ class ReportSite(NySite, ProfileMeta):
         #load site skeleton - configuration
         self.loadSkeleton(join(REPORT_PRODUCT_PATH, 'skel'))
 
+        #load pluggable profiles
+        profilestool_ob = self.getProfilesTool()
+        profilestool_ob.manageAddProfileMeta('')
+
         #set default main topics
         try:    self.getPropertiesTool().manageMainTopics(['info', 'reports'])
         except: pass
+
 
     def daysLeft(self, REQUEST=None):
         """ """
@@ -104,6 +109,111 @@ class ReportSite(NySite, ProfileMeta):
         if reports:
             return reports[0]
         return []
+
+#####################################################################################
+# Profiles #
+############
+
+    def update_profiles(self):
+        """ """
+        #load pluggable profiles
+        profilestool_ob = self.getProfilesTool()
+        profilestool_ob.manageAddProfileMeta('')
+
+    security.declarePrivate('loadProfileMeta')
+    def loadProfileMeta(self):
+        """
+        Load profile metadata and updates existing profiles.
+        """
+        self._loadProfileMeta(join(REPORT_PRODUCT_PATH, 'skel', 'others'))
+
+    security.declareProtected(view, 'profilesheet')
+    def profilesheet(self, name=None, affiliation='', nationality='', REQUEST=None):
+        """
+        Updates the profile of the given user. Must be implemented.
+        """
+        if name is None: name = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        self._profilesheet(name, {'affiliation': affiliation, 'nationality':nationality})
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/profilesheet_html' % self.absolute_url())
+
+    security.declareProtected(view, 'profilesheet_html')
+    def profilesheet_html(self, REQUEST=None, RESPONSE=None):
+        """
+        View for instance associated sheet. Must be implemented.
+        """
+        return self.getFormsTool().getContent({'here': self}, 'site_profilesheet')
+
+#####################################################################################
+# Request role #
+################
+
+    def setRequestRoleSession(self, name, firstname, lastname, email, password,
+        nationality, affiliation):
+        """ """
+        self.setUserSession(name, '', '', firstname, lastname, email, password)
+        self.setSession('user_nationality', nationality)
+        self.setSession('user_affiliation', affiliation)
+
+    def delRequestRoleSession(self):
+        """ """
+        self.delUserSession()
+        self.delSession('user_nationality')
+        self.delSession('user_affiliation')
+
+    def getSessionUserNationality(self, default=''):
+        return self.getSession('user_nationality', default)
+
+    def getSessionUserAffiliation(self, default=''):
+        return self.getSession('user_affiliation', default)
+
+    security.declareProtected(view, 'processRequestRoleForm')
+    def processRequestRoleForm(self, username='', password='', confirm='', firstname='', lastname='', email='', nationality='', affiliation='', REQUEST=None):
+        """ """
+        #create an account without role
+        try:
+            self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname,
+                lastname, email)
+            profile = self.getProfilesTool().getProfile(username)
+            sheet = profile.getSheetById(self.getInstanceSheetId())
+            sheet.nationality = nationality
+            sheet.affiliation = affiliation
+        except Exception, error:
+            err = error
+        else:
+            err = ''
+        if err:
+            if REQUEST:
+                self.setSessionErrors(err)
+                self.setRequestRoleSession(username, firstname, lastname, email, password, nationality, affiliation)
+                return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        if not err:
+            self.sendRequestRoleEmail(self.administrator_email, username, '%s %s' % (firstname, lastname), email, nationality, affiliation)
+        if REQUEST:
+            self.setSession('title', 'Thank you for registering')
+            self.setSession('body', 'An account has been created for you. \
+                The administrator will be informed of your request and may \
+                or may not grant your account with the approriate role.')
+            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+
+    def sendRequestRoleEmail(self, p_to, p_username, p_name, p_email, p_nationality, p_affiliation):
+        #sends a request role email
+        email_template = self.getEmailTool()._getOb('email_requestrole')
+        l_subject = email_template.title
+        l_content = email_template.body
+        l_content = l_content.replace('@@NAME@@', p_name)
+        l_content = l_content.replace('@@EMAIL@@', p_email)
+        l_content = l_content.replace('@@NATIONALITY@@', p_nationality)
+        l_content = l_content.replace('@@AFFILIATION@@', p_affiliation)
+        l_content = l_content.replace('@@USERNAME@@', p_username)
+        l_content = l_content.replace('@@PORTAL_URL@@', self.portal_url)
+        l_content = l_content.replace('@@PORTAL_TITLE@@', self.site_title)
+        l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
+        self.getEmailTool().sendEmail(l_content, p_to, p_email, l_subject)
+
+#####################################################################################
+
 
     security.declarePublic('update_images_path')
     def update_images_path(self):

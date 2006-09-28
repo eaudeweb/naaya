@@ -5,6 +5,9 @@
 		<form id="site_admin_template" title="Site admin template"/>
 		<form id="site_messages" title="Portal messages page"/>
 	</forms>
+	<emails>
+		<emailtemplate id="email_requestrole" title="Request role"/>
+	</emails>
 	<layout default_skin_id="metal" default_scheme_id="orange">
 		<skin id="metal" title="Metal">
 			<template id="site_header" title="Portal standard HTML header"/>
