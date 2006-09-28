@@ -126,6 +126,13 @@ class ReportSite(NySite, ProfileMeta):
         """ search in the affiliations list"""
         return [aff for aff in self.getAffiliationList() if aff.id == affiliation]
 
+    security.declarePublic('getAffiliationById')
+    def getAffiliationById(self, id):
+        """ return affiliation by id """
+        for aff in self.getAffiliationList():
+            if aff.id == id:
+                return aff.title
+
 #####################################################################################
 # Cross-references #
 ####################
@@ -209,8 +216,9 @@ class ReportSite(NySite, ProfileMeta):
     security.declareProtected(view, 'processRequestRoleForm')
     def processRequestRoleForm(self, username='', password='', confirm='', firstname='', lastname='', email='', nationality='', affiliation='', affiliation_other='', REQUEST=None):
         """ """
+        affiliation_title = self.getAffiliationById(affiliation)
         if affiliation_other:
-            affiliation = affiliation_other
+            affiliation = affiliation_title = affiliation_other
         #create an account without role
         try:
             self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname,
@@ -229,7 +237,7 @@ class ReportSite(NySite, ProfileMeta):
                 self.setRequestRoleSession(username, firstname, lastname, email, password, nationality, affiliation)
                 return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         if not err:
-            self.sendRequestRoleEmail(self.administrator_email, username, '%s %s' % (firstname, lastname), email, nationality, affiliation)
+            self.sendRequestRoleEmail(self.administrator_email, username, '%s %s' % (firstname, lastname), email, nationality, affiliation_title)
         if REQUEST:
             self.setSession('title', 'Thank you for registering')
             self.setSession('body', 'An account has been created for you. \
