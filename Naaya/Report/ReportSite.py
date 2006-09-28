@@ -142,7 +142,7 @@ class ReportSite(NySite, ProfileMeta):
         """ """
         try:
             search_string = u'"%s"' % str
-            return [k.absolute_url() for k in self.getCatalogedObjects(meta_type=[METATYPE_NYREPORTCHAPTER, METATYPE_NYREPORTSECTION], objectkeywords_en=search_string)]
+            return [k.absolute_url(1) for k in self.getCatalogedObjects(meta_type=[METATYPE_NYREPORTCHAPTER, METATYPE_NYREPORTSECTION], objectkeywords_en=search_string)]
         except:
             return []
 
@@ -154,6 +154,12 @@ class ReportSite(NySite, ProfileMeta):
             ref_links['en'] = self.getReferenceData(ref_ob.getLocalProperty('reference', 'en'))
             ref_ob.ref_links = ref_links
             ref_ob._p_changed = 1
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'indexCrossReferences')
+    def getTitleByURL(self, p_url):
+        """ """
+        try:    return self.unrestrictedTraverse(p_url, None)
+        except: return None
 
 #####################################################################################
 # Profiles #
