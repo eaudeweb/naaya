@@ -135,8 +135,7 @@ class ReportSite(NySite, ProfileMeta):
         """ """
         try:
             search_string = u'"%s"' % str
-            expr = 'self.getCatalogedObjects(meta_type=[METATYPE_NYREPORTCHAPTER, METATYPE_NYREPORTSECTION], objectkeywords_en=search_string)'
-            return [k.absolute_url() for k in eval(expr)]
+            return [k.absolute_url() for k in self.getCatalogedObjects(meta_type=[METATYPE_NYREPORTCHAPTER, METATYPE_NYREPORTSECTION], objectkeywords_en=search_string)]
         except:
             return []
 
