@@ -206,9 +206,9 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportquestion_add_html')
     reportquestion_add_html = reportquestion_add_html
 
-    security.declareProtected('Naaya - Add Naaya Report Question objects', 'addNyReportQuestionnaire')
+    security.declareProtected('Naaya - Add comments for content', 'addNyReportQuestionnaire')
     addNyReportQuestionnaire = addNyReportQuestionnaire
-    security.declareProtected('Naaya - Add Naaya Report Question objects', 'reportquestionnaire_add_html')
+    security.declareProtected('Naaya - Add comments for content', 'reportquestionnaire_add_html')
     reportquestionnaire_add_html = reportquestionnaire_add_html
 
     def __init__(self, id, title, description, coverage, keywords, sortorder, contributor, releasedate, lang):
