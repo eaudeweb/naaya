@@ -173,7 +173,7 @@ class NyReportReference(NyAttributes, reportreference_item, NyContainer, NyEpozT
 
     def manage_options(self):
         """ """
-        l_options = (NyContainer.manage_options[0],)
+        l_options = ()
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
@@ -250,7 +250,7 @@ class NyReportReference(NyAttributes, reportreference_item, NyContainer, NyEpozT
         if discussion: self.open_for_comments()
         else: self.close_for_comments()
         self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
+        if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok&lang=%s' % lang)
 
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
