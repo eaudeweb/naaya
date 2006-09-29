@@ -399,6 +399,12 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
         """
         return context.checkPermission(PERMISSION_ADD_ANSWER)
 
+    def checkPermissionAddSections(self, context):
+        """
+        Check for adding sections permission in the given context.
+        """
+        return context.checkPermission(PERMISSION_EDIT_OBJECTS)
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/reportchapter_manage_edit', globals())
