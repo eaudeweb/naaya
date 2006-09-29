@@ -1,14 +1,22 @@
-<tal:block metal:use-macro="here/macro_manage_edit/macros/page">
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
 
-<tal:block metal:fill-slot="description">
+<p>
 	Change the properties in the form below and click <strong>Save changes</strong>.
-</tal:block>
+</p>
 
-<tal:block metal:fill-slot="custom_properties">
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+	Saved changes. (<span tal:replace="here/ZopeTime" />)<br />
+</div>
+
+<form name="frmEdit" method="post" action="manageProperties" enctype="multipart/form-data">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
 		<td class="form-label">Cross-reference</td>
 		<td><input type="text" name="reference:utf8:ustring" id="reference" size="50" tal:attributes="value here/reference" /></td>
 	</tr>
-</tal:block>
+	<tr><td></td><td><input type="submit" value="Save changes"></td></tr>
+</table>
+</form>
 
-</tal:block>
+<span tal:replace="structure here/manage_page_footer" />

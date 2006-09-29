@@ -100,9 +100,8 @@ def addNyReportReference(self, id='', title='', description='', coverage='', key
         if lang == 'en':
             ref_links['en'].extend(self.getReferenceData(reference))
 
-        print 'aici2'
         #create object
-        ob = NyReportReference(id, title, description, coverage, keywords, sortorder, contributor, releasedate, lang, reference, ref_links)
+        ob = NyReportReference(id, reference, description, coverage, keywords, sortorder, contributor, releasedate, lang, reference, ref_links)
         self.gl_add_languages(ob)
         ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._setObject(id, ob)
@@ -174,7 +173,7 @@ class NyReportReference(NyAttributes, reportreference_item, NyContainer, NyEpozT
 
     def manage_options(self):
         """ """
-        l_options = (NyContainer.manage_options[0],) + reportreference_item.manage_options
+        l_options = (NyContainer.manage_options[0],)
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
@@ -230,6 +229,12 @@ class NyReportReference(NyAttributes, reportreference_item, NyContainer, NyEpozT
         else: approved = 0
         releasedate = self.process_releasedate(releasedate)
         if not lang: lang = self.gl_get_selected_language()
+
+        if self.getLocalProperty('reference', 'en'):
+            title = self.getLocalProperty('reference', 'en')
+        else:
+            title = reference
+
         self.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang, reference)
         ref_links = {'en':[]}
         if lang == 'en':
