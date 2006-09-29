@@ -251,6 +251,10 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
     def hasQuestions(self):
         return len(self.getQuestions()) > 0
 
+    def getQuestionsLocation(self):
+        if self.hasQuestions(): return self
+        else:                   return None
+
     def getQuestionnaires(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_NYREPORTQUESTIONNAIRE),'sortorder',0)
     def hasQuestionnaires(self):
         return len(self.getQuestionnaires()) > 0

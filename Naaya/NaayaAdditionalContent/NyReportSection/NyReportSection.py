@@ -241,6 +241,9 @@ class NyReportSection(NyAttributes, reportsection_item, NyContainer, NyEpozToolb
 
     def getSections(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_OBJECT),'sortorder',0)
     def getQuestions(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_NYREPORTQUESTION),'sortorder',0)
+    def getQuestionsLocation(self):
+        if self.hasQuestions(): return self
+        else:                   return self.getParentNode().getQuestionsLocation()
     def hasQuestions(self):
         return len(self.getQuestions()) > 0
 
