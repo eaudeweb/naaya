@@ -403,7 +403,7 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
         """
         Check for adding sections permission in the given context.
         """
-        return context.checkPermission(PERMISSION_EDIT_OBJECTS)
+        return context.checkPermission('Naaya - Add Naaya Report Section objects')
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
