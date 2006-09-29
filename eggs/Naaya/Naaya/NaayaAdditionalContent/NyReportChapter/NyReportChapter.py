@@ -402,7 +402,7 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'security_decoy')
     def security_decoy(self):
         """ """
-       pass
+        pass
 
     def checkPermissionAddSections(self, context):
         """
