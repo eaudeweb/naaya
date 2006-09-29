@@ -399,11 +399,21 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
         """
         return context.checkPermission(PERMISSION_ADD_ANSWER)
 
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'security_decoy')
+    def security_decoy(self):
+        """ """
+       pass
+
     def checkPermissionAddSections(self, context):
         """
         Check for adding sections permission in the given context.
         """
-        return context.checkPermission('Naaya - Add Naaya Report Section objects')
+        #return context.checkPermission('Naaya - Add Naaya Report Section objects')
+        try:
+            self.security_decoy()
+            return True
+        except:
+            return False
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
