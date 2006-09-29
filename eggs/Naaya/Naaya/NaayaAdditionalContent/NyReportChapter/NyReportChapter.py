@@ -47,6 +47,7 @@ from Products.NaayaContent.NyReportQuestionnaire.NyReportQuestionnaire       imp
 from Products.NaayaContent.NyReportQuestionnaire.NyReportQuestionnaire       import METATYPE_OBJECT as METATYPE_NYREPORTQUESTIONNAIRE
 
 #module constants
+PERMISSION_ADD_ANSWER = 'Naaya - Add Naaya Report Comment objects'
 METATYPE_OBJECT = 'Naaya Report Chapter'
 LABEL_OBJECT = 'Report Chapter'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Report Chapter objects'
@@ -390,6 +391,12 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
             else:
                 raise Exception, '%s' % ', '.join(r)
+
+    def checkPermissionAddAnswers(self, context):
+        """
+        Check for adding answers permission in the given context.
+        """
+        return context.checkPermission(PERMISSION_ADD_ANSWER)
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
