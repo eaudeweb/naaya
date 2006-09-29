@@ -34,7 +34,13 @@ from Products.NaayaBase.NyContainer     import NyContainer
 from Products.NaayaBase.NyAttributes    import NyAttributes
 from Products.NaayaBase.NyEpozToolbox   import NyEpozToolbox
 from Products.NaayaBase.NyCheckControl  import NyCheckControl
-from reportsection_item                        import reportsection_item
+from reportsection_item                 import reportsection_item
+
+from Products.NaayaContent.NyReportQuestion.NyReportQuestion       import addNyReportQuestion, reportquestion_add_html, manage_addNyReportQuestion_html
+from Products.NaayaContent.NyReportQuestion.NyReportQuestion       import METATYPE_OBJECT as METATYPE_NYREPORTQUESTION
+
+from Products.NaayaContent.NyReportQuestionnaire.NyReportQuestionnaire       import addNyReportQuestionnaire, reportquestionnaire_add_html, manage_addNyReportQuestionnaire_html
+from Products.NaayaContent.NyReportQuestionnaire.NyReportQuestionnaire       import METATYPE_OBJECT as METATYPE_NYREPORTQUESTIONNAIRE
 
 #module constants
 METATYPE_OBJECT = 'Naaya Report Section'
@@ -174,7 +180,9 @@ class NyReportSection(NyAttributes, reportsection_item, NyContainer, NyEpozToolb
 
     def all_meta_types(self, interfaces=None):
         """ """
-        y = [{'name': METATYPE_OBJECT, 'action': 'manage_addNyReportSection_html'}]
+        y = [{'name': METATYPE_OBJECT, 'action': 'manage_addNyReportSection_html'},
+            {'name': METATYPE_NYREPORTQUESTION, 'action': 'manage_addNyReportQuestion_html'},
+            {'name': METATYPE_NYREPORTQUESTIONNAIRE, 'action': 'manage_addNyReportQuestionnaire_html'}]
         additional_meta_types = ['File']
         for x in Products.meta_types:
             if x['name'] in additional_meta_types:
@@ -188,6 +196,16 @@ class NyReportSection(NyAttributes, reportsection_item, NyContainer, NyEpozToolb
     addNyReportSection = addNyReportSection
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportsection_add_html')
     reportsection_add_html = reportsection_add_html
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'addNyReportQuestion')
+    addNyReportQuestion = addNyReportQuestion
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportquestion_add_html')
+    reportquestion_add_html = reportquestion_add_html
+
+    security.declareProtected(view, 'addNyReportQuestionnaire')
+    addNyReportQuestionnaire = addNyReportQuestionnaire
+    security.declareProtected(view, 'reportquestionnaire_add_html')
+    reportquestionnaire_add_html = reportquestionnaire_add_html
 
     def __init__(self, id, title, description, coverage, keywords, sortorder, contributor, releasedate, lang):
         """ """
@@ -222,6 +240,20 @@ class NyReportSection(NyAttributes, reportsection_item, NyContainer, NyEpozToolb
         pass
 
     def getSections(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_OBJECT),'sortorder',0)
+    def getQuestions(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_NYREPORTQUESTION),'sortorder',0)
+    def hasQuestions(self):
+        return len(self.getQuestions()) > 0
+
+    def getQuestionnaires(self): return self.utSortObjsListByAttr(self.objectValues(METATYPE_NYREPORTQUESTIONNAIRE),'sortorder',0)
+    def hasQuestionnaires(self):
+        return len(self.getQuestionnaires()) > 0
+
+    def getQuestionIds(self):
+        obs = self.objectValues(METATYPE_NYREPORTQUESTION)
+        obs = self.utSortObjsListByAttr(obs,'sortorder',0)
+        return [ob.id for ob in obs]
+    def getQuestionById(self,p_id):
+        return self._getOb(p_id)
 
     def getNavigationInfo(self):
         l_up = self.getParentNode()
@@ -378,6 +410,16 @@ class NyReportSection(NyAttributes, reportsection_item, NyContainer, NyEpozToolb
         except: self.setSessionErrors(['Error while delete data.'])
         else: self.setSessionInfo(['Item(s) deleted.'])
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'reportquestions_html')
+    def reportquestions_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'reportquestions_index')
+
+    security.declareProtected(view, 'reportquestionnaires_html')
+    def reportquestionnaires_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'reportquestionnaires_index')
 
     security.declareProtected(view, 'report_macro_objecttree_html')
     def report_macro_objecttree_html(self, REQUEST=None, RESPONSE=None):
