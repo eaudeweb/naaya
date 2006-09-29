@@ -34,8 +34,7 @@ from Products.NaayaBase.NyContainer     import NyContainer
 from Products.NaayaBase.NyAttributes    import NyAttributes
 from Products.NaayaBase.NyEpozToolbox   import NyEpozToolbox
 from Products.NaayaBase.NyCheckControl  import NyCheckControl
-from reportchapter_item                        import reportchapter_item
-
+from reportchapter_item                 import reportchapter_item
 
 from Products.NaayaContent.NyReportSection.NyReportSection       import addNyReportSection, reportsection_add_html, manage_addNyReportSection_html
 from Products.NaayaContent.NyReportSection.NyReportSection       import METATYPE_OBJECT as METATYPE_NYREPORTSECTION
@@ -187,8 +186,7 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
         """ """
         y = [{'name': METATYPE_NYREPORTSECTION, 'action': 'manage_addNyReportSection_html'},
             {'name': METATYPE_NYREPORTQUESTION, 'action': 'manage_addNyReportQuestion_html'},
-            {'name': METATYPE_NYREPORTQUESTIONNAIRE, 'action': 'manage_addNyReportQuestionnaire_html'},
-            ]
+            {'name': METATYPE_NYREPORTQUESTIONNAIRE, 'action': 'manage_addNyReportQuestionnaire_html'}]
         additional_meta_types = ['File']
         for x in Products.meta_types:
             if x['name'] in additional_meta_types:
@@ -212,7 +210,6 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
     addNyReportQuestionnaire = addNyReportQuestionnaire
     security.declareProtected(view, 'reportquestionnaire_add_html')
     reportquestionnaire_add_html = reportquestionnaire_add_html
-
 
     def __init__(self, id, title, description, coverage, keywords, sortorder, contributor, releasedate, lang):
         """ """
@@ -436,7 +433,6 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
     def reportquestions_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'reportquestions_index')
-
 
     security.declareProtected(view, 'reportquestionnaires_html')
     def reportquestionnaires_html(self, REQUEST=None, RESPONSE=None):
