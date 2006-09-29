@@ -88,7 +88,7 @@ def addNyReportChapter(self, id='', title='', description='', coverage='', keywo
     #check mandatory fiels
     l_referer = ''
     if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-    if not(l_referer == 'reportchapter_manage_add' or l_referer.find('reportchapter_manage_add') != -1) and REQUEST:
+    if not(l_referer == 'manage_addNyReportChapter_html' or l_referer.find('manage_addNyReportChapter_html') != -1) and REQUEST:
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion)
@@ -118,7 +118,7 @@ def addNyReportChapter(self, id='', title='', description='', coverage='', keywo
         self.notifyFolderMaintainer(self, ob)
         #redirect if case
         if REQUEST is not None:
-            if l_referer == 'reportchapter_manage_add' or l_referer.find('reportchapter_manage_add') != -1:
+            if l_referer == 'manage_addNyReportChapter_html' or l_referer.find('manage_addNyReportChapter_html') != -1:
                 return self.manage_main(self, REQUEST, update_menu=1)
             elif l_referer == 'reportchapter_add_html':
                 self.setSession('referer', self.absolute_url())
