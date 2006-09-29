@@ -80,7 +80,7 @@ def addNyReportAnswer(self, id='', title='', description='', coverage='', keywor
     #check mandatory fiels
     l_referer = ''
     if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-    if not(l_referer == 'reportanswer_manage_add' or l_referer.find('reportanswer_manage_add') != -1) and REQUEST:
+    if not(l_referer == 'manage_addNyReportAnswer_html' or l_referer.find('manage_addNyReportAnswer_html') != -1) and REQUEST:
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion, answer=answer, assoc_question=assoc_question)
@@ -110,7 +110,7 @@ def addNyReportAnswer(self, id='', title='', description='', coverage='', keywor
         self.notifyFolderMaintainer(self, ob)
         #redirect if case
         if REQUEST is not None:
-            if l_referer == 'reportanswer_manage_add' or l_referer.find('reportanswer_manage_add') != -1:
+            if l_referer == 'manage_addNyReportAnswer_html' or l_referer.find('manage_addNyReportAnswer_html') != -1:
                 return self.manage_main(self, REQUEST, update_menu=1)
             elif l_referer == 'reportanswer_add_html':
                 self.setSession('referer', self.absolute_url())
