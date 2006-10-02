@@ -67,7 +67,6 @@ class Role(RoleManager, utils):
             del self._roles[role]
             del self._roles_permissions[role]
             self._p_changed = 1
-            data.remove(role)
             try: data.remove(role)
             except: pass
         site.__ac_roles__ = tuple(data)
