@@ -385,7 +385,6 @@ class ReportSite(NySite, ProfileMeta):
     def getSiteMapBelgrade(self, expand=[], root=None, showitems=0):
         #returns a list of objects with additional information
         #in order to draw the site map
-        print root
         if root is None: root = self
         return self.__getSiteMapBelgrade(root, showitems, expand, 0, 4)
 
@@ -423,6 +422,48 @@ class ReportSite(NySite, ProfileMeta):
         return l_tree
 
 #####################################################################################
+# Breadcrumb trail #
+####################
+
+    security.declarePublic('getBreadCrumbTrail')
+    def getBreadCrumbTrail(self, REQUEST):
+        """ generates the breadcrumb trail """
+        root = self.utGetROOT()
+        breadcrumbs = []
+        vRoot = REQUEST.has_key('VirtualRootPhysicalPath')
+        PARENTS = REQUEST.PARENTS[:]
+        PARENTS.reverse()
+        if vRoot:
+             root = REQUEST.VirtualRootPhysicalPath
+             PARENTS = PARENTS[len(root)-1:]
+        PARENTS.reverse()
+        for crumb in PARENTS:
+            breadcrumbs.append(crumb)
+            if crumb.meta_type == self.meta_type:
+                break
+        breadcrumbs.reverse()
+
+        path_info = REQUEST.PATH_INFO.split('/')
+        if 'reportquestionnaires_html' in path_info:
+            crumb_url = breadcrumbs[-1].absolute_url() + '/reportquestionnaires_html'
+            crumb_title = 'Questions'
+            crumb_ob = dummy_crumb(crumb_url, crumb_title)
+            breadcrumbs.append(crumb_ob)
+        if 'reportquestionnaire_add_html' in path_info:
+            crumb_url = breadcrumbs[-1].absolute_url() + '/reportquestionnaire_add_html'
+            crumb_title = 'View answers'
+            crumb_ob = dummy_crumb(crumb_url, crumb_title)
+            breadcrumbs.append(crumb_ob)
+
+        return breadcrumbs
+
+    security.declarePublic('testCustomCrumb')
+    def testCustomCrumb(self, p_crumb):
+        """ """
+        try:    return p_crumb.crumb_custom
+        except: return 0
+
+#####################################################################################
 # Update scripts #
 ##################
 
@@ -456,3 +497,19 @@ class ReportSite(NySite, ProfileMeta):
         return True
 
 InitializeClass(ReportSite)
+
+
+class dummy_crumb:
+    """ """
+    def __init__(self, absolute_url, title_or_id):
+        """ """
+        self.id = 'dummy_id'
+        self.absolute_url = absolute_url
+        self.title_or_id = title_or_id
+        self.meta_type = 'dummy crumb'
+        self.crumb_custom = 1
+
+    security = ClassSecurityInfo()
+    security.setDefaultAccess("allow")
+
+InitializeClass(dummy_crumb)
