@@ -446,12 +446,12 @@ class ReportSite(NySite, ProfileMeta):
         path_info = REQUEST.PATH_INFO.split('/')
         if 'reportquestionnaires_html' in path_info:
             crumb_url = breadcrumbs[-1].absolute_url() + '/reportquestionnaires_html'
-            crumb_title = 'Questions'
+            crumb_title = 'View answers'
             crumb_ob = dummy_crumb(crumb_url, crumb_title)
             breadcrumbs.append(crumb_ob)
         if 'reportquestionnaire_add_html' in path_info:
             crumb_url = breadcrumbs[-1].absolute_url() + '/reportquestionnaire_add_html'
-            crumb_title = 'View answers'
+            crumb_title = 'Questions'
             crumb_ob = dummy_crumb(crumb_url, crumb_title)
             breadcrumbs.append(crumb_ob)
 
