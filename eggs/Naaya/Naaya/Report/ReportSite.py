@@ -295,7 +295,7 @@ class ReportSite(NySite, ProfileMeta):
         l_content = l_content.replace('@@PORTAL_TITLE@@', self.site_title)
         l_content = l_content.replace('@@NAME@@', p_name)
         l_content = l_content.replace('@@USERNAME@@', p_username)
-        l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
+        #l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
         mail_from = self.mail_address_from
         self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
 
