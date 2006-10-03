@@ -65,6 +65,7 @@ class ReportSite(NySite, ProfileMeta):
 
     def __init__(self, id, portal_uid, title, lang):
         """ """
+        self.consultation_end = self.utConvertStringToDateTimeObj('1/12/2006')
         NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
 
     security.declarePrivate('loadDefaultData')
@@ -85,6 +86,34 @@ class ReportSite(NySite, ProfileMeta):
         try:    self.getPropertiesTool().manageMainTopics(['info', 'reports'])
         except: pass
 
+#####################################################################################
+# Admin properties #
+####################
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
+    def admin_properties(self, show_releasedate='', rename_id='', http_proxy='', repository_url='',
+        keywords_glossary='', coverage_glossary='', submit_unapproved='', portal_url='', consultation_end='', REQUEST=None):
+        """ """
+        if show_releasedate: show_releasedate = 1
+        else: show_releasedate = 0
+        if rename_id: rename_id = 1
+        else: rename_id = 0
+        if keywords_glossary == '': keywords_glossary = None
+        if coverage_glossary == '': coverage_glossary = None
+        if submit_unapproved: submit_unapproved = 1
+        else: submit_unapproved = 0
+        self.show_releasedate = show_releasedate
+        self.rename_id = rename_id
+        self.http_proxy = http_proxy
+        self.repository_url = repository_url
+        self.keywords_glossary = keywords_glossary
+        self.coverage_glossary = coverage_glossary
+        self.submit_unapproved = submit_unapproved
+        self.portal_url = portal_url
+        self.consultation_end = self.utConvertStringToDateTimeObj(consultation_end)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_properties_html' % self.absolute_url())
 
 #####################################################################################
 # Utils  #
@@ -93,7 +122,8 @@ class ReportSite(NySite, ProfileMeta):
     def daysLeft(self, REQUEST=None):
         """ """
         today = self.utGetTodayDate()
-        finish = self.utGetDate('30/11/2006')
+        finish = self.consultation_end
+        print finish
         days_left = int(finish -today)
         if days_left <= 0:
             return 0
@@ -422,6 +452,23 @@ class ReportSite(NySite, ProfileMeta):
         return l_tree
 
 #####################################################################################
+# LDAPUserFolder search #
+#########################
+
+    security.declarePublic('findUsersInLDAP')
+    def findUsersInLDAP(self, query=''):
+        """ """
+        if query:
+            auth_tool = self.getAuthenticationTool()
+            ldap_sources = [ source for source in auth_tool.getSources() ]
+            if ldap_sources > 0:
+                ldap_source = ldap_sources[0]    #take the first one
+                ldap_object = ldap_source.getUserFolder()
+                users = ldap_source.findLDAPUsers(ldap_object, 'cn', query)
+                if users:
+                    return [(user['cn'], ldap_object.getUserByDN(user['dn'])) for user in users]
+
+#####################################################################################
 # Breadcrumb trail #
 ####################
 
@@ -467,7 +514,13 @@ class ReportSite(NySite, ProfileMeta):
 # Update scripts #
 ##################
 
-    security.declarePublic('update_images_path')
+    security.declareProtected(view_management_screens, 'update_consultation')
+    def update_consultation(self):
+        """ """
+        self.consultation_end = self.utConvertStringToDateTimeObj('1/12/2006')
+        self._p_changed = 1
+
+    security.declareProtected(view_management_screens, 'update_images_path')
     def update_images_path(self):
         """ update images path according to the new Epoz update """
         catalog = self.getCatalogTool()

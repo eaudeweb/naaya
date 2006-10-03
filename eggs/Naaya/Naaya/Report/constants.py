@@ -50,3 +50,6 @@ ID_CALENDAR_CSS =       'calendar_style'
 ID_RIGHT_ARROW =        'right_arrow'
 ID_LEFT_ARROW =         'left_arrow'
 CALENDAR_STARTING_DAY = 'Monday'
+
+#LDAP plugin name
+LDAP_PLUGIN = 'LDAPUserFolder'
