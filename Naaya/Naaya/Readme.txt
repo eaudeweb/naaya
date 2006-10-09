@@ -1,5 +1,26 @@
 Naaya
 
+License
+-------
+
+This package is subject to the Mozilla Public License Version 1.1
+(the "License"); you may not use these sources except in compliance
+with the License. You may obtain a copy of the License at
+http://www.mozilla.org/MPL/.
+
+Software distributed under the License is distributed on an "AS
+IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+implied. See the License for the specific language governing
+rights and limitations under the License.
+
+The Initial Owner of the Original Code is European Environment
+Agency (EEA).  Portions created by Finsiel Romania are
+Copyright (C) European Environment Agency.  All
+Rights Reserved.
+
+Authors: Finsiel Romania
+
+
 
 Installation instructions for Naaya
 
@@ -20,8 +41,8 @@ Installation steps
 	- Extract in a new directory the content of each archive
 	- Change the current directory to the new created folder (for the Localizer package change directory to "../Localizer-1.1.0-metapackage/itools-0.7.4.")
 	- Build and install the python modules:
-		<Zope-path>/bin/python ./setup.py build
-		<Zope-path>/bin/python ./setup.py install
+		<Zope's-python>/python ./setup.py build
+		<Zope's-python>/python ./setup.py install
 
 3. Copy the "Localizer" and "iHotfix" folders from "Localizer-1.1.0-metapackage.tar.gz" archive inside the Products folder of your Zope instance. Rename the "Localizer-1.1.0" folder as "Localizer"
 
@@ -30,25 +51,41 @@ Installation steps
 	- NaayaBase: https://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaBase
 	- NaayaContent: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaContent
 	- NaayaCore: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaCore
+        - Epoz: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/Epoz
+        - naayaHotfix: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/naayaHotfix
 
-
-	http://svn.eionet.europa.eu/repositories/Zope/trunk/ChangeNotification/,
-	http://svn.eionet.europa.eu/repositories/Zope/trunk/MessageBoard/,
-	http://svn.eionet.europa.eu/repositories/Zope/branches/chm_related/CHMGlossary/,
-	http://svn.eionet.europa.eu/repositories/Zope/trunk/HelpDeskAgent/,
-	and all products from http://svn.eionet.europa.eu/repositories/Zope/trunk/Naaya/
+        Also, additional features can be installed:
+        - NaayaCalendar: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaCalendar
+        - NaayaForum: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaForum
+        - NaayaGlossary: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaGlossary
+        - NaayaLinkChecker: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaLinkChecker
+        - NaayaPhotoArchive: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaPhotoArchive
 
 	Note: the products from the SVN server should be downloaded using a SVN client
 
-5. Download and unpack the archive http://mjablonski.zope.de/Epoz/releases/Epoz-2.0.0.tar.gz 
-into the Products folder of your Zope installation.
-Move the content of the folder "Products/Epoz_18n" inside the "Products/Epoz/epoz/epoz_i18n" folder.
-Delete the folder Epoz_18n from Products.
-
-6. Download and unpack http://prdownloads.sourceforge.net/textindexng/TextIndexNG-2.2.0.tar.gz?download. 
+5. Download and unpack http://prdownloads.sourceforge.net/textindexng/TextIndexNG-2.2.0.tar.gz?download. 
 Rename the folder "TextIndexNG-2.2.0" as "TextIndexNG". Using Zope's Python:
 	cd <Zope-path>Products/TextIndexNG
-	<Zope-path>/bin/python ./setup.py build
-	<Zope-path>/bin/python ./setup.py install
+	<Zope's-python>/python ./setup.py build
+	<Zope's-python>/python ./setup.py install
 
-7. Restart the Zope server and go to the Zope Management Console. Create a "CHM site". Start working.
+6. Converters:
+    The converter is selected based on the mime-type and the extension of the object. The following formats are converted:
+          - PDF (requires xpdf)
+          - Postscript (requires ghostscript)
+          - WinWord (requires wvWare)
+          - PowerPoint (requires pphtml from xlhtml package)
+          - Excel (requires xls2csv from the catdoc package)
+
+7. Cron jobs:
+    * update RDF channels - the following URL must be accessed:http://server_name:HTTP_port_number/naaya_site/updateRemoteChannels?uid=<portal UID>
+
+    * clean up portal - the following URL must be accessed:http://server_name:HTTP_port_number/naaya_site/cleanupUnsubmittedObjects?uid=<portal UID>
+
+    * check broken links (if NaayaLinkChecker is installed) - the following URL must be accessed:http://server_name:HTTP_port_number/naaya_site/LinkChecker/runChecker
+
+8. Restart the Zope server and go to the Zope Management Console. Create a "Naaya Site". Start working.
+
+
+
+
