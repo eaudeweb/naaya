@@ -9,10 +9,10 @@ Requirements
 Installation steps
 
 1. Download the following Python modules:
-	feedparser: http://prdownloads.sourceforge.net/feedparser/feedparser-3.3.zip?download
-	itools & Localizer: http://www.ikaaro.org/download/localizer/Localizer-1.1.0-metapackage.tar.gz
-	PIL: http://effbot.org/downloads/Imaging-1.1.5.tar.gz
-	MX: 
+	- feedparser: http://prdownloads.sourceforge.net/feedparser/feedparser-3.3.zip?download
+	- itools & Localizer: http://www.ikaaro.org/download/localizer/Localizer-1.1.0-metapackage.tar.gz
+	- PIL: http://effbot.org/downloads/Imaging-1.1.5.tar.gz
+	- Egenix MX base and experimental: 
 		http://www.egenix.com/files/python/egenix-mx-base-2.0.6.tar.gz
 		http://www.egenix.com/files/python/egenix-mx-experimental-0.9.0.tar.gz
 
@@ -26,6 +26,12 @@ Installation steps
 3. Copy the "Localizer" and "iHotfix" folders from "Localizer-1.1.0-metapackage.tar.gz" archive inside the Products folder of your Zope instance. Rename the "Localizer-1.1.0" folder as "Localizer"
 
 4. Download the following into the Products folder of your Zope instance:
+	- Naaya: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/Naaya
+	- NaayaBase: https://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaBase
+	- NaayaContent: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaContent
+	- NaayaCore: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaCore
+
+
 	http://svn.eionet.europa.eu/repositories/Zope/trunk/ChangeNotification/,
 	http://svn.eionet.europa.eu/repositories/Zope/trunk/MessageBoard/,
 	http://svn.eionet.europa.eu/repositories/Zope/branches/chm_related/CHMGlossary/,
