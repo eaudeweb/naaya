@@ -246,7 +246,6 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
         self._local_properties_metadata = deepcopy(self.version._local_properties_metadata)
         self._local_properties = deepcopy(self.version._local_properties)
         self.sortorder = self.version.sortorder
-        self.locator = self.version.locator
         self.releasedate = self.version.releasedate
         self.setProperties(deepcopy(self.version.getProperties()))
         self.checkout = 0
