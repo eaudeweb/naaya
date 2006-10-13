@@ -183,7 +183,7 @@ class NyReportSection(NyAttributes, reportsection_item, NyContainer, NyEpozToolb
         y = [{'name': METATYPE_OBJECT, 'action': 'manage_addNyReportSection_html'},
             {'name': METATYPE_NYREPORTQUESTION, 'action': 'manage_addNyReportQuestion_html'},
             {'name': METATYPE_NYREPORTQUESTIONNAIRE, 'action': 'manage_addNyReportQuestionnaire_html'}]
-        additional_meta_types = ['File']
+        additional_meta_types = ['File', 'Image']
         for x in Products.meta_types:
             if x['name'] in additional_meta_types:
                 y.append(x)
