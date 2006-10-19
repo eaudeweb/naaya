@@ -76,7 +76,10 @@ class RemoteChannelFacade(RemoteChannel):
             if self.get_feed_bozo_exception() is not None: error = self.get_feed_bozo_exception()
             else:
                 error = ''
-                self.generateContent()
+                try:
+                    self.generateContent()
+                except Exception, l_error:
+                    error = l_error
             return str(error)
 
     security.declarePrivate('generateContent')
