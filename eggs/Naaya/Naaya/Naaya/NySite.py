@@ -1221,7 +1221,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         r = []
         ra = r.append
         for lang in langs:
-            for ob in self.searchCatalog(query, '', lang):
+            for ob in self.query_objects_ex(q=query, lang=lang):
                 item = {
                     'url': ob.absolute_url(),
                     'icon': '%s/%s' % (self.REQUEST.SERVER_URL, ob.icon),
