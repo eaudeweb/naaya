@@ -214,6 +214,30 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         #return the results
         return self.prepareLog(urlsinfo, logresults, total, 0)
 
+    security.declarePrivate('check_links')
+    def check_links(self, urlsinfo, urlsnumber):
+        #build a list with all links
+        urls = []
+        for val in urlsinfo.values():
+            #for link_item in link_value:
+            #    if not link_item in links_list:
+            #        links_list.append(link_item)
+            urls.extend([v[0] for v in val])
+
+        #start threads
+        lock = threading.Lock()
+        threads = []
+        for thread in range(0,THREAD_COUNT):
+            th = CheckerThread(urls, lock, proxy=self.proxy)
+            th.setName(thread)
+            threads.append(th)
+            results = th.start()
+        for thread in range(0,THREAD_COUNT):
+            threads[thread].join()
+
+        #return the results
+        return self.prepareLog(urlsinfo, logresults, urlsnumber, 0)
+
     security.declarePrivate('prepareLog')
     def prepareLog(self, links_dict, logresults, all_urls, manual=0):
         """ """

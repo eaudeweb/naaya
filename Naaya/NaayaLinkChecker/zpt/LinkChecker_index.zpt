@@ -1,7 +1,8 @@
 <h2 i18n:translate="">Remote links checking results</h2>
 
 <p i18n:translate="">
-    Aici scrie ceva miruna
+    This page lists the content items published in this portal that contain broken links.
+    For every object, the broken link(s) are listed together with the error description.
 </p>
 
 <span tal:replace="structure here/style_html" tal:omit-tag="" />
