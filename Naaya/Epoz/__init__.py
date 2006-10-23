@@ -31,6 +31,13 @@ try:
 except ImportError:
     uTidyIsAvailable = 0
 
+# try to import word_unmunger
+try:
+    from plugins.word_unmunger import unmungeString
+    uWordUnmunger = 1
+except:
+    uWordUnmunger = 0
+
 import Globals
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from ImageFile import ImageFile
@@ -231,6 +238,9 @@ def EpozTidy(self, html, pageurl):
     input = html.encode("utf-8")
     input = EPOZ_SCRIPT.sub('<script ', input)
     input = input.replace('</epoz:script>', '</script>')
+
+    if uWordUnmunger:
+        input = unmungeString(input)
 
     if mxTidyIsAvailable:
         (errors, warnings, output, errordata) = Tidy.tidy(
