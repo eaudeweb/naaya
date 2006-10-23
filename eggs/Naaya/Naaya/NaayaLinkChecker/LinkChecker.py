@@ -149,6 +149,39 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                     all_urls += len(links)
         return results, all_urls
 
+    security.declarePrivate('processObject')
+    def processObject(self, properties=[], context=''):
+        """Get a list of 'findObjects' results and for each result:
+            - gets all specified properties
+            - parse the content of each property and extract links
+            - save results into a dictionary like {'obj_url':[list_of_links]}
+        """
+        results = {}
+        all_urls = 0
+        object_checked = self.unrestrictedTraverse(context, None)
+        if object_checked != None:
+            for property, multilingual in properties:
+                values = []
+                #check if the property is multiligual
+                if multilingual:
+                    try:
+                        for lang in self.gl_get_languages():
+                            values.append((object_checked.getLocalProperty(property, lang), property, lang))
+                    except:
+                        pass #Invalid property
+                else:
+                    try:
+                        values.append((getattr(object_checked, property), property, None))
+                    except:
+                        pass #Invalid property
+                for value in values:
+                    links = [ (f, value[1], value[2]) for f in self.umConvertToList(self.parseUrls(value[0])) ]
+                    results_entry = results.get(object_checked.absolute_url(1), [])
+                    results_entry.extend(links)
+                    results[object_checked.absolute_url(1)] = results_entry
+                    all_urls += len(links)
+        return results, all_urls
+
     security.declarePrivate('verifyIP')
     def verifyIP(self, REQUEST=None):
         """ verify IP """
@@ -194,6 +227,34 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         #build a list with all links
         urls = []
         urlsinfo, total = self.processObjects()
+        for val in urlsinfo.values():
+            #for link_item in link_value:
+            #    if not link_item in links_list:
+            #        links_list.append(link_item)
+            urls.extend([v[0] for v in val])
+
+        #start threads
+        lock = threading.Lock()
+        threads = []
+        for thread in range(0,THREAD_COUNT):
+            th = CheckerThread(urls, lock, proxy=self.proxy)
+            th.setName(thread)
+            threads.append(th)
+            results = th.start()
+        for thread in range(0,THREAD_COUNT):
+            threads[thread].join()
+
+        #return the results
+        return self.prepareLog(urlsinfo, logresults, total, 0)
+
+    security.declareProtected('Run Manual Check', 'manualCheck')
+    def objectCheck(self, properties=[], context=''):
+        """ extract the urls from the given object,
+            verify it and return the results for the broken links found
+        """
+        #build a list with all links
+        urls = []
+        urlsinfo, total = self.processObject(properties, context)
         for val in urlsinfo.values():
             #for link_item in link_value:
             #    if not link_item in links_list:
