@@ -234,8 +234,12 @@ def EpozTidy(self, html, pageurl):
 
     if mxTidyIsAvailable:
         (errors, warnings, output, errordata) = Tidy.tidy(
-            input, drop_empty_paras=1, indent_spaces=1, indent="auto",
-            output_xhtml=1, word_2000=1, wrap=79, char_encoding="utf8")
+            input, drop_empty_paras=1, logical_emphasis=1, indent_spaces=1,
+            indent="no", output_xhtml=1, word_2000=1, wrap=0, alt_text='',
+            char_encoding="utf8")
+#        (errors, warnings, output, errordata) = Tidy.tidy(
+#            input, drop_empty_paras=1, indent_spaces=1, indent="auto",
+#            output_xhtml=1, word_2000=1, wrap=79, char_encoding="utf8")
         if errors:
             output = html
     elif uTidyIsAvailable:
