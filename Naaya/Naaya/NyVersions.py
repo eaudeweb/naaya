@@ -97,6 +97,12 @@ class NyVersions:
             x = catalog_tool.getobject(b.data_record_id_)
             x.submitThis()
             self.recatalogNyObject(x)
+
+#        catalog_tool = self.getCatalogTool()
+#        for b in self.getCatalogedBrains():
+#            x = catalog_tool.getobject(b.data_record_id_)
+#            x.submitThis()
+#            self.recatalogNyObject(x)
         return "Upgrading OK: 'submitted' property added for all objects."
 
     security.declareProtected(view_management_screens, 'upgrade_mailfrom')
