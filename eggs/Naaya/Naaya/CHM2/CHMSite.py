@@ -21,6 +21,7 @@
 #Python imports
 from urlparse import urlparse
 from copy import copy
+from cStringIO import StringIO
 
 #Zope imports
 from Globals import InitializeClass
@@ -44,6 +45,7 @@ from Products.NaayaNetRepository.constants import *
 from Products.NaayaHelpDeskAgent.HelpDesk import manage_addHelpDesk
 from Products.NaayaGlossary.constants import *
 from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
+from Products.CHM2.managers.captcha_tool import captcha_tool
 
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addCHMSite(self, id='', title='', lang=None, REQUEST=None):
@@ -792,6 +794,44 @@ class CHMSite(NySite):
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             return REQUEST.RESPONSE.redirect('%s/admin_workgroup_html?w=%s' % (self.absolute_url(), id))
+
+    security.declareProtected(view, 'getCaptcha')
+    def getCaptcha(self):
+        """ generate a Captcha image """
+        g = captcha_tool()
+        g.defaultSize = (100, 20)
+        i = g.render()
+        newimg = StringIO()
+        i.save(newimg, "JPEG")
+        newimg.seek(0)
+        #set the word on session
+        self.setSession('captcha', g.solutions[0])
+        return newimg.getvalue()
+
+    #overwrite the Naaaya processFeedbackForm function. CAPTCHA added
+    security.declareProtected(view, 'processFeedbackForm')
+    def processFeedbackForm(self, username='', email='', comments='', REQUEST=None):
+        """ """
+        err = []
+        if contact_word=='' or contact_word!=self.getSession('captcha', None):
+            err.append('The word you typed does not match with the one shown in the image. Please try again.')
+        if username.strip() == '':
+            err.append('The full name is required')
+        if email.strip() == '':
+            err.append('The email is required')
+        if comments.strip() == '':
+            err.append('The comments are required')
+        if err:
+            if REQUEST:
+                self.setSessionErrors(err)
+                self.setFeedbackSession(username, email, comments)
+                return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        else:
+            self.sendFeedbackEmail(self.administrator_email, username, email, comments)
+            if REQUEST:
+                self.setSession('title', 'Thank you for your feedback')
+                self.setSession('body', 'The administrator will process your comments and get back to you.')
+                REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
     #administration pages
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_urls_html')
