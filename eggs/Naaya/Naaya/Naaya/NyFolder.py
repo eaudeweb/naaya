@@ -728,8 +728,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
     def renameObjectsIds(self, old_ids, new_ids, REQUEST):
         """renames objects ids for this folder's selected items."""
         r = []
-	old_ids = self.utConvertToList(old_ids)
-	new_ids = self.utConvertToList(new_ids)	
+        old_ids = self.utConvertToList(old_ids)
+        new_ids = self.utConvertToList(new_ids)
         for i in range(len(old_ids)):
             if self.getObjectById(old_ids[i]).meta_type not in ['Naaya File', 'Naaya ExFile', 'Naaya MediaFile']:
                 try:
