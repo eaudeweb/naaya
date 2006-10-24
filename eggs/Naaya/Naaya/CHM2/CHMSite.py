@@ -810,7 +810,7 @@ class CHMSite(NySite):
 
     #overwrite the Naaaya processFeedbackForm function. CAPTCHA added
     security.declareProtected(view, 'processFeedbackForm')
-    def processFeedbackForm(self, username='', email='', comments='', REQUEST=None):
+    def processFeedbackForm(self, username='', email='', comments='', contact_word='', REQUEST=None):
         """ """
         err = []
         if contact_word=='' or contact_word!=self.getSession('captcha', None):
