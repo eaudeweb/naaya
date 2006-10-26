@@ -1,0 +1,43 @@
+<span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')"/>
+/* CSS Document */
+
+.page_margins{
+	margin: 20px 1% 5px 1%
+}
+
+/* concept page */
+.term_name{
+	clear:both;
+}
+
+.list_items{
+	padding-left: 5px;
+}
+
+.list_sources{
+	padding-left: 5px;
+	font-size: 80%;
+}
+
+.normal_label{
+	font-weight: bold;
+}
+
+.sources_label{
+	font-weight: bold;
+	font-size: 80%;
+}
+
+.translation_container{
+	border-left: 1px solid #f0f0f0;
+	padding-left: 5px;
+	vertical-align: top;
+}
+
+.translation_label{
+	background-color:#a0a0a0;
+	color: white;
+	line-height: 2em;
+	font-weight: bold;
+	padding-left: 0.5em;
+}
