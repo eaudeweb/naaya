@@ -1,0 +1,129 @@
+<tal:block metal:use-macro="here/macro_manage_edit/macros/page">
+
+<tal:block metal:fill-slot="description">
+	Change the properties in the form below and click <strong>Save changes</strong>.
+</tal:block>
+
+<tal:block metal:fill-slot="custom_properties">
+<tr>
+	<td class="form-label">
+		<label for="type_multimedia" i18n:translate="">Type</label>
+	</td>
+	<td>
+		<select name="type_multimedia" id="type_multimedia">
+			<option value=""></option>
+			<option tal:repeat="item here/getMultimediaTypesList"
+				tal:attributes="value item/id;selected python:item.id==here.type_multimedia"
+				tal:content="item/title" i18n:translate="" />
+		</select>
+	</td>
+</tr>
+<tr>
+	<td class="form-label">
+		<label for="file_link" i18n:translate="">File link</label>
+	</td>
+	<td>
+		<input type="text" name="file_link:utf8:ustring" id="file_link" size="50" tal:attributes="value here/file_link" />
+	</td>
+</tr>
+<tr>
+	<td class="form-label">
+		<label for="file_link_local" i18n:translate="">File link local</label>
+	</td>
+	<td>
+		<input type="text" name="file_link_local:utf8:ustring" id="file_link_local" size="50" tal:attributes="value here/file_link_local" />
+	</td>
+</tr>
+<tr>
+	<td class="form-label">
+		<label for="source" i18n:translate="">Source</label>
+	</td>
+	<td>
+		<input type="text" name="source:utf8:ustring" id="source" size="50" tal:attributes="value here/source" />
+	</td>
+</tr>
+<tr>
+	<td class="form-label">
+		<label for="source_link" i18n:translate="">Source link</label>
+	</td>
+	<td>
+		<input type="text" name="source_link" id="source_link" size="50" tal:attributes="value here/source_link" />
+	</td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Subject</td>
+	<td>
+		<select name="subject" id="subject" multiple="multiple" size="6">
+			<tal:block repeat="item python:here.getPortalThesaurus().getThemesList(here.gl_get_selected_language())">
+				<option tal:condition="item/theme_name"
+						tal:attributes="value item/theme_id;
+										selected python:item.theme_id in here.subject"
+						tal:content="item/theme_name" />
+				<option tal:condition="not:item/theme_name"
+						tal:attributes="value item/theme_id;
+										selected python:item.theme_id in here.subject"
+						i18n:translate="">no translation available</option>
+			</tal:block>
+		</select>
+	</td>
+</tr>
+<tr>
+	<script language="JavaScript">
+	<!--
+	function setupWin(url, theWidth, theHeight)
+	{
+		wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
+		wwinn.focus();
+		return true;
+	}
+
+	function createKey(key)
+	{
+		document.forms['frmEdit'].relation.value = key;
+	}
+	// -->
+	</script>
+	<td class="form-label">
+		<label for="relation" i18n:translate="">Relation</label>
+	</td>
+	<td>
+		<p i18n:translate=""><strong>Tip:</strong> you can type free text in the field below or pick from the site map</p>
+		<input type="text" name="relation" id="relation" size="50" tal:attributes="value here/relation" />
+		<input type="button" value="Pick" i18n:translate="" tal:define="acl_users_path here/getAuthenticationToolPath" tal:attributes="onclick string:setupWin('${acl_users_path}/sitemap', 300, 500);;" />
+	</td>
+</tr>
+<tr>
+	<td class="form-label">
+		<label for="creator" i18n:translate="">Creator</label>
+	</td>
+	<td>
+		<input type="text" name="creator:utf8:ustring" id="creator" size="50" tal:attributes="value here/creator" />
+	</td>
+</tr>
+<tr>
+	<td class="form-label">
+		<label for="creator_email" i18n:translate="">Creator email</label>
+	</td>
+	<td>
+		<input type="text" name="creator_email:utf8:ustring" id="creator_email" size="50" tal:attributes="value here/creator_email" />
+	</td>
+</tr>
+<tr>
+	<td class="form-label">
+		<label for="format" i18n:translate="">Format</label>
+	</td>
+	<td>
+		<input type="text" name="format:utf8:ustring" id="format" size="50" tal:attributes="value here/format" />
+	</td>
+</tr>
+<tr>
+	<td class="form-label">
+		<label for="rights" i18n:translate="">Rights</label>
+	</td>
+	<td>
+		<input type="text" name="rights:utf8:ustring" id="rights" size="50" tal:attributes="value here/rights" />
+	</td>
+</tr>
+</tal:block>
+
+</tal:block>
