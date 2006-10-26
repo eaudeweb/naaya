@@ -1,0 +1,132 @@
+Welcome to xlHtml.
+
+
+I. INTRODUCTION
+The xlHtml program will take an Excel 95, or 97 file as input and convert 
+it to highly optimized  html. The output is via standard out so it can be 
+re-directed to files or piped to filters or used as a gateway on the internet.
+
+II. INSTALLATION
+If you are upgrading, run the 'make uninstall' target from the original directory
+before following these steps.
+
+To build this application, from the top directory type:
+ 
+ ./configure --prefix=/<target installation directory e.g. /usr/local or /opt>
+ make
+ make install
+
+Note: The actual executable is hiding in the xlHtml/.libs directory.
+
+Then to finish it up, you will need to go into netscape and tell the navigator 
+to use the nsxlview script to handle Microsoft Excel files. 
+
+	e.g. <path to executable>/nsxlview %s 
+
+You should be able to then browse to a file and open it. There is a file 
+included in the xlHtml directory you can test with: Test.xls.
+
+NOTE: This release has been piggy-backed onto the cole library mostly for 
+(my) convenience. I have been trying to create a Makefile.am & configure.in 
+script so that the two can be separated...but I still haven't gotten it 
+correct...but if you get one working, please send it to me. 
+
+The shell scripts: nsxlview & nsopen may need modification to correct the 
+paths to fit your system. Also, depending on where you install it, you 
+may have to modify your PATH environmental variable.
+
+
+III. UNINSTALLING
+You may want to keep this directory around since you can do a make uninstall
+later. In the meantime, I suggest doing a make clean after installation to 
+minimize disk space useage.
+
+
+IV. COMMANDLINE OPTIONS
+xlHtml now has several command line options that let you tailor its output. The
+command is now:  xlHtml [-nc -a -fw -bc -tc -bi -c] file.xls
+
+Where   -nc  tells it not to colorize the output.
+        -a   aggressively optimize html by removing </TR> </TD> or VALIGN="bottom"
+             Some older browsers may not display properly in this mode.
+        -fw  suppress formula warnings about accuracy
+        -bc  Override the background color. e.g. -bg808080     for gray
+        -tc  Override the text color.       e.g. -tcFF0000     for red
+        -bi  Use background image           e.g. -bi/home/httpd/icon/tar.gif
+        -c   Centers the tables horizontally
+        -te  Trims empty rows & columns at the edges of a worksheet
+        -v   Prints program version
+	-m   No encoding for multibyte
+	-asc Ascii out of -dp and extraction data (-x?)
+	-dp  Dump page count and max columns and rows per page
+	-xp  Page for extraction (zero based)
+	-xc  Columns (separated by a dash) for extraction (zero based)
+	-xr  Rows (separated by a dash) to be extracted (zero based)
+
+An example of the extraction command line is:
+xlHtml -fw -asc -xp:0 -xr:2-6 -xc:0-1 Test.xls
+
+The extraction output is: 
+ Formatted output of cells by column left to right, columns separated 
+   by a tab, end of row is: 0x0A, end of file: \n\n
+   
+   *NOTE: Run the gpdemo file for a demonstration plot in Netscape. Also,
+   you MUST specify all 3 -x commands or the results may not be as desired.
+
+
+V. PERFORMANCE TUNING
+There are some user "tunable" parameters in the beginning of the xlHtml.c file.
+The program allocates resources in chunks so that it scales efficiently without
+wasting memory. The smaller the chunks, the less wasted memory. The trade off,
+though, is that it has to allocate memory more often - which slows things down.
+Odds are, you should never need to change them from the default.
+
+
+VI. INTERNATIONAL CHARACTERS
+xlHtml uses three different character sets. It tries to use ascii until it
+finds a character greater than 127. At this point, it switches to the 
+windows-1252 characterset. If the excel file specifies any 2 byte characters,
+it switches to utf-8. This handles most situations correctly. If however,
+you find yourself with a system that does not support utf-8 (text mode 
+browsers & some versions of unix) and you need multi-byte support, 
+try using the program lv.It can be downloaded from:
+
+  http://www.ff.iij4u.or.jp/~nrt/lv/
+
+The text only browser, w3m, could be used as follows for Japanese:
+
+  xlHtml file.xls | lv -Iu8 -Oej | w3m -T text/html
+  
+ (Thanks to Hironori Sakamoto for this suggestion.)
+
+
+VII. TROUBLESHOOTING
+Using Netscape, you may occassionally see a file not found error. This usually 
+comes when printing or going back to a previously converted file. This is
+the default behavior and it can be changed by commenting out the rm $tmp* 
+in nsxlview. I do this so you don't have files hanging around in your tmp
+directory where other people might be able to see them.
+
+In general, if you can type xlHtml and get a usage error message, the PATH
+is working. If you don't, your PATH environmental variable needs adjusting.
+Next try passing the full path to xlHtml of the file you want converted. If it
+has problems with it, you may have a file the system can't interpret. To check
+your installation, try passing the full path of xlHtml/Test.xls and see what
+it does with that.
+
+If you get an error message saying "get another compiler"...this comes from the
+cole library. It needs a recent copy of automake, autoconf, or libtool. You
+can manually adjust the header files if you know you machine data sizes.
+
+
+VIII.  CONTRIBUTED SCRIPTS
+xlHtml now has a contributed scripts directory. If you look in the xlHtml/contrib
+directory you will find what people are giving me. I cannot offer support for
+files I didn't create, but there is contact information with the files. If you 
+have something to share...send it to me. If you've contributed...THANKS!
+
+
+Share and enjoy!	(The Hitchhiker's Guide to the Galaxy, Douglas Adams)
+
+Steve Grubb
+linux_4ever@yahoo.com
