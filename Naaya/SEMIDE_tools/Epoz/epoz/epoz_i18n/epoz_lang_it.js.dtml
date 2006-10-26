@@ -1,0 +1,48 @@
+// Epoz-Language-File: it (Italiano)
+// maik.jablonski@uni-bielefeld.de, 2003
+// nbe@libero.it, 2003 traduzione
+
+EpozLang["Normal"]='Normale';
+EpozLang["Paragraph"]='Paragrafo';
+EpozLang["Heading1"]='Titolo 1';
+EpozLang["Heading2"]='Titolo 2';
+EpozLang["Heading3"]='Titolo 3';
+EpozLang["Heading4"]='Titolo 4';
+EpozLang["Heading5"]='Titolo 5';
+EpozLang["Heading6"]='Titolo 6';
+EpozLang["Formatted"]='Formattato';
+
+EpozLang["Bold"]='Grassetto';
+EpozLang["Italic"]='Italico';
+EpozLang["Underline"]='Sottolineato';
+
+EpozLang["Subscript"]='Pedice';
+EpozLang["Superscript"]='Apice';
+
+EpozLang["TextColor"]='Colore testo';
+EpozLang["BackColor"]='Colore sfondo';
+
+EpozLang["AlignLeft"]='Allinea sinistra';
+EpozLang["Center"]='Centra';
+EpozLang["AlignRight"]='Allinea destra';
+
+EpozLang["OrderedList"]='Lista numerata';
+EpozLang["UnorderedList"]='Lista puntata';
+EpozLang["Outdent"]='Riduci rientro';
+EpozLang["Indent"]='Aumenta rientro';
+    
+EpozLang["InsertLink"]='Inserisci link';
+EpozLang["InsertImage"]='Inserisci immagine';
+EpozLang["InsertRule"]='Inserisci separatore';
+EpozLang["InsertTable"]='Inserisci tabella';
+EpozLang["Toolbox"]='Toolbox';
+
+EpozLang["Undo"]='Annulla';
+EpozLang["Redo"]='Ripeti';
+
+EpozLang["EnterLinkURL"]='Inserisci URL link';
+EpozLang["EnterImageURL"]='Inserisci immagine link';
+
+EpozLang["EnterTableRows"]='Inserisci righe';
+EpozLang["EnterTableColumns"]='Inserisci colonne';
+EpozLang["EnterTableBorder"]='Inserisci bordo';

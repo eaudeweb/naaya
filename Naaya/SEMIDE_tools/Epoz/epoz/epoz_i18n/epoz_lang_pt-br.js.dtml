@@ -1,0 +1,54 @@
+// Epoz-Language-File: pt_br (Portuguese Brazil)
+// "Luiz Fernando Pasqual S. Souza" <pasquall@amcham.com.br>, 2004
+
+EpozLang["Normal"]='Normal';
+EpozLang["Paragraph"]='Par&aacute;grafo';
+EpozLang["Heading1"]='Cabe&ccedil;alho 1';
+EpozLang["Heading2"]='Cabe&ccedil;alho 2';
+EpozLang["Heading3"]='Cabe&ccedil;alho 3';
+EpozLang["Heading4"]='Cabe&ccedil;alho 4';
+EpozLang["Heading5"]='Cabe&ccedil;alho 5';
+EpozLang["Heading6"]='Cabe&ccedil;alho 6';
+EpozLang["Formatted"]='Formatado';
+
+EpozLang["Bold"]='Negrito';
+EpozLang["Italic"]='It&aacute;lico';
+EpozLang["Underline"]='Sublinhado';
+EpozLang["Strikethrough"]='Riscado';
+
+EpozLang["Subscript"]='Subescrito';
+EpozLang["Superscript"]='Sobrescrito';
+
+EpozLang["RemoveFormat"]='Remover formata&ccedil;&atilde;o';
+
+EpozLang["TextColor"]='Cor do texto';
+EpozLang["BackColor"]='Cor do fundo';
+
+EpozLang["AlignLeft"]='Alinhar &agrave; esquerda';
+EpozLang["Center"]='Centralizar';
+EpozLang["AlignRight"]='Alinhar &agrave; direita';
+
+EpozLang["OrderedList"]='Lista numerada';
+EpozLang["UnorderedList"]='Lista ordenada';
+EpozLang["Outdent"]='Diminuir par&aacute;grafo';
+EpozLang["Indent"]='Aumentar par&aacute;grafo';
+    
+EpozLang["InsertLink"]='Inserir Link';
+EpozLang["InsertAnchor"]='Inserir &acirc;ncora';
+EpozLang["InsertImage"]='Inserir Imagem';
+EpozLang["InsertRule"]='Inserir Linha';
+EpozLang["InsertTable"]='Inserir Tabela';
+EpozLang["Toolbox"]='Caixa de ferramentas';
+
+EpozLang["Undo"]='Voltar';
+EpozLang["Redo"]='Refazer';
+
+EpozLang["EnterLinkURL"]='URL do link';
+EpozLang["EnterAnchorName"]='Nome da &acirc;ncora';
+EpozLang["EnterImageURL"]='URL da imagem';
+
+EpozLang["EnterTableRows"]='Linhas';
+EpozLang["EnterTableColumns"]='Colunas';
+EpozLang["EnterTableBorder"]='Bordas';
+EpozLang["TableWithHead"]='Tabela com cabe&ccedil;alho';
+EpozLang["TableWithoutHead"]='Tabela sem cabe&ccedil;alho';

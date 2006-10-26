@@ -1,0 +1,47 @@
+// Epoz-Language-File: nl (Dutch)
+// ad.schellevis@imasgroep.nl, 2003
+
+EpozLang["Normal"]='Normaal';
+EpozLang["Paragraph"]='Paragraaf';
+EpozLang["Heading1"]='Kop 1';
+EpozLang["Heading2"]='Kop 2';
+EpozLang["Heading3"]='Kop 3';
+EpozLang["Heading4"]='Kop 4';
+EpozLang["Heading5"]='Kop 5';
+EpozLang["Heading6"]='Kop 6';
+EpozLang["Formatted"]='Opgemaakt';
+
+EpozLang["Bold"]='Vet';
+EpozLang["Italic"]='Cursief';
+EpozLang["Underline"]='Onderstreept';
+
+EpozLang["Subscript"]='Subscript';
+EpozLang["Superscript"]='Superscript';
+
+EpozLang["TextColor"]='Tekst kleur';
+EpozLang["BackColor"]='Achtergrond kleur';
+
+EpozLang["AlignLeft"]='Links uitlijnen';
+EpozLang["Center"]='Centreren';
+EpozLang["AlignRight"]='Rechts uitlijnen';
+
+EpozLang["OrderedList"]='Nummering';
+EpozLang["UnorderedList"]='Opsommingstekens';
+EpozLang["Outdent"]='Inspringen verkleinen';
+EpozLang["Indent"]='Inspringen vergroten';
+    
+EpozLang["InsertLink"]='Hyperlink invoegen';
+EpozLang["InsertImage"]='Plaatje invoegen';
+EpozLang["InsertRule"]='Rand invoegen';
+EpozLang["InsertTable"]='Tabel invoegen';
+EpozLang["Toolbox"]='Toolbox';
+
+EpozLang["Undo"]='Ongedaan maken';
+EpozLang["Redo"]='Herhalen';
+
+EpozLang["EnterLinkURL"]='Ingeven hyperlink URL';
+EpozLang["EnterImageURL"]='Ingeven locatie plaatje';
+
+EpozLang["EnterTableRows"]='Invoeren Rijen';
+EpozLang["EnterTableColumns"]='Invoegen Kolommen';
+EpozLang["EnterTableBorder"]='Invoegen Kader';
