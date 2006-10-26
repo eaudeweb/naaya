@@ -1,0 +1,71 @@
+Epoz - Changes
+
+ 2.0.2
+
+     - fixed bug: drag&dropping images in Mozilla/Firefox broke image-url.
+       Thanks to Stefan Seifert from atikon.com for bug-fix! If you use
+       a customized version of epoz_script_widget.js, please have a look
+       at the new definition for the iframe.
+
+     - fixed bug in EpozPostTidy: HTML-Comments were eaten by parser.
+       Thanks to Stefan Palme for bug-fix!!!
+
+
+ 2.0.1
+
+     - Disabling buttons with CSS-Ids was not a good idea when using
+       multiple Epoz-Widgets. Switched to CSS-Classes. Thanks to
+       Tonico Strasser for pointing me to the problem. If you use
+       a customized epoz_script_widget.js, please use the following
+       CSS (compare to 2.0.0 to see the difference) to disable single buttons:
+
+               <style type="text/css">
+               <!--
+                .epoz_button_bold {display:none;}
+                .epoz_button_indent {display:none;}
+               //-->
+              </style>
+
+ 2.0.0
+
+       ** PLEASE NOTE **: I needed to change the epoz_script_widget.js,
+       so if you use a customized version of it, please update your
+       template accordingly to the new one.
+
+     - Epoz can now handle several wysiwyg-areas at once. Many thanks
+       to Benoit Pin for his great work making this often requested feature
+       real!!!!! Benoit, this release is dedicated to you!
+
+     - It is much easier now to disable single buttons without customizing
+       the epoz_script_widget.js. Just use some CSS like
+
+               <style type="text/css">
+               <!--
+                #epoz_button_bold {display:none;}
+                #epoz_button_indent {display:none;}
+               //-->
+              </style>
+
+       and "bold" and "indent" are gone. Thanks to Mathias Grund!
+       See epoz/epoz_core/epoz_script_widget.js for the CSS-IDs for all
+       buttons.
+
+     - Fixed security-problem in __init__.py. Thanks to Benoit Pin for working
+       and patching this out!
+
+     - Epoz used properties from stylesheet_properties.props in deciding the
+       background and font of the buttons. stylesheet_properties.props is
+       deprecated in Plone 2.0.5. Thanks to Lucas Hofman for patch.
+
+     - added AT-Image as additional image-type for Plone-Toolbox. Thanks
+       to Jan Murre.
+
+     - fixed bug in epoz_toolbox/breadcrumb: truncate parents to
+       get only objects from plone site. Thanks to Cyrille Lebeaupin from
+       Ingeniweb for patch!
+
+     - some fixes for "JavaScript in content-area-fixes" (upper-case tags,
+       missing whitespace after script-tag, etc.pp); Thanks to
+       Johannes Gijsbers for patch!
+
+     - added slovak translation for Epoz; Thanks to Rastislav "Rasto" Mucha!
