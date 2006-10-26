@@ -1,0 +1,13 @@
+	<div class="top_nav" >
+		<div id="top_tabs">
+			<span class="top_tab_nonactive">
+				<a href="#">Help</a>
+			</span>
+			<span class="top_tab_nonactive">
+				<a href="#">Site Map</a>
+			</span>
+			<span class="top_tab_active">
+				<a accesskey="F" tal:attributes="href string:${here/absolute_url}/search_html">Search</a>
+			</span>
+		</div>
+	</div>

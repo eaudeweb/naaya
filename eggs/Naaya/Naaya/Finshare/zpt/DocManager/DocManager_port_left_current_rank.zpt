@@ -1,0 +1,15 @@
+<tal:block tal:define=" texts python:['Poor', 'Could be better', 'Medium', 'Good', 'Excelent'];">
+<tal:block tal:define="note here/getRanking" tal:condition="python: note!='NaN'">
+			<span>
+				Page status
+			</span>
+			<div class="left_bodies">
+				<div>
+					Ranking: <strong tal:content="python:texts[int(path('here/ranking'))-1]">Good</strong>
+				</div>
+				<div>
+					Total votes: <strong tal:content="here/numberOfVotes">12</strong>
+				</div>
+			</div>
+</tal:block>
+</tal:block>

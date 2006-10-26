@@ -1,0 +1,40 @@
+<span metal:use-macro="python:here.getDocManager_template().macros['doc_manager_page']">
+
+    <tal:block metal:fill-slot="doc_manager_title">
+        <tal:block content="here/title_or_id" />
+    </tal:block>
+
+    <span metal:fill-slot="doc_manager_content" tal:omit-tag="">
+
+    <h3><em tal:content="here/title_or_id" />'s multiple upload page</h3>
+
+    <p><em>Please upload a non-hierarchical structure of files.</em></p>
+    <fieldset tal:condition="python:request.has_key('dm_save')">
+        <legend tal:attributes='class python:test(request["dm_save"]=="ok", "msg-info", "msg-err")'>
+            <tal:block content="python:test(request['dm_save']=='ok', 'Information', 'Error')" />
+        </legend>
+        <p tal:content="python:request.get('dm_msg','')" />
+    </fieldset>
+
+    <form action="uploadMultiple" name="frmUploadMultiple" method="post" enctype="multipart/form-data">
+        <table cellspacing="4" cellpadding="0" border="0" width="60%">
+            <tr>
+                <th valign="middle" width="60%">
+                    <div>File to upload</div>
+                    <div>(ZIP format)</div>
+                </th>
+                <td align="right" width="*">
+                    <input type="file" name="file" size="30" />
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <br /><input type="submit" value="Add file" />
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    </span>
+
+</span>

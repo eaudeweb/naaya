@@ -1,0 +1,31 @@
+<tal:block metal:use-macro="python:here.getDocManager_template().macros['doc_manager_page']">
+
+<tal:block metal:fill-slot="doc_manager_title">
+	<tal:block content="here/title_or_id" />
+</tal:block>
+
+<tal:block metal:fill-slot="doc_manager_content">
+
+	<tal:block define="user python:here.is_logged(request)">
+
+		<h1>
+			Logout successful
+		</h1>
+
+		<span tal:condition="python:user==0">
+		<p>
+			You have been logged out successfully.<br />
+			To return to Finshare <a href="login_html">return to the login page</a>.
+		</p>
+		</span>
+
+		<span tal:condition="python:user==1">
+			 You are logged in using HTTP authentication.  You may need to
+			 <a href="/manage_zmi_logout">log out of the Zope management interface</a>.
+		</span>
+
+	</tal:block>
+
+</tal:block>
+
+</tal:block>

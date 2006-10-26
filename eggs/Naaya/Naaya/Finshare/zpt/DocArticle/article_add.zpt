@@ -1,0 +1,95 @@
+<tal:block metal:use-macro="python:here.getDocManager_template().macros['doc_manager_page']">
+
+	<tal:block metal:fill-slot="doc_manager_title">
+		Edit object
+	</tal:block>
+
+	<tal:block metal:fill-slot="doc_manager_content">
+
+		<h1>
+			Add new article
+		</h1>
+
+		<fieldset tal:condition="python:request.has_key('dm_err')"
+				  tal:define="err python:request.get('dm_err', '')">
+			<legend class="system-msg">Error</legend>
+			<tal:block define="message python:test(err=='1', 'Source type property was', test(err=='2', 'Thematic area property was', 'Thematic area and Source type properties were'))">
+				The <tal:block replace="message" /> not completed!&nbsp;&nbsp;&nbsp;&nbsp;<small tal:content="python:here.utGetTodayDate()" />
+			</tal:block>
+		</fieldset>
+
+		<p>
+			Fill the properties in the form below and click <strong>Add Article</strong>.
+		</p>
+
+
+			<form name="frmAdd" id="frmAdd" method="post" action="addDocArticle" enctype="multipart/form-data">
+
+				<table width="100%" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<th class="td_label"><label for="title" >Title</label></th>
+						<td class="td_input">
+							<input type="text" name="title" id="title" size="63" value="" />
+						</td>
+					</tr>
+					<tr>
+						<th class="td_label">
+							<label for="thematic_area">Thematic area</label>
+						</th>
+						<td class="td_input">
+							<select name="thematic_area" id="thematic_area">
+								<option tal:repeat="thematic_area here/getThematicAreas"
+										tal:content="thematic_area"
+										tal:attributes="value repeat/thematic_area/index;
+														selected python:thematic_area=='Altro'" />
+							</select>
+						</td>
+					</tr>
+					<tr>
+					<th class="td_label">
+						<label for="source_type">Source type</label>
+					</th>
+					<td class="td_input">
+						<select name="source_type" id="source_type">
+							<option value="1">Internet</option>
+							<option value="3">Materiale altra azienda</option>
+							<option value="4">Materiale convegno</option>
+							<option value="0">Personale</option>
+							<option value="2">Stampa</option>
+						</select>
+					</td>
+					</tr>
+					<tr>
+						<th class="td_label"><label for="source" >Source name</label></th>
+						<td class="td_input"><input type="text" name="source" id="source" size="63" value="" /></td>
+					</tr>
+					<tr>
+						<th class="td_label"><label for="author" >Author of documents</label></th>
+						<td class="td_input"><input type="text" name="author" id="author" size="63" value="" /></td>
+					</tr>
+					<tr>
+						<th class="td_label"><label for="abstract" >Abstract</label></th>
+						<td class="td_input">
+							<textarea name="abstract" id="abstract" rows="10" cols="62"></textarea>
+						</td>
+					</tr>
+					<tr>
+						<th class="td_label">
+							<label for="links" >Link to external documents</label>
+							<a class="helplink" href="#" title="You can insert multiple links. One link on a row.">?</a>
+						</th>
+						<td class="td_input"><textarea name="links" rows="3" cols="62" id="links" ></textarea></td>
+					</tr>
+					<tr>
+						<th class="td_label">
+							<label for="submit" style="display:none">Submit button</label>&nbsp;
+						</th>
+						<td class="td_input">
+							<input type="submit" name="submit" id="submit" value="Add Article" />
+						</td>
+					</tr>
+				</table>
+			</form>
+
+	</tal:block>
+</tal:block>

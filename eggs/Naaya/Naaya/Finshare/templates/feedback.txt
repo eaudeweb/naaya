@@ -1,0 +1,10 @@
+Hi
+you are receiving this mail because %(fullname)s <%(from_address)s> is sending feedback about the finShare portal administrated by you at %(url)s 
+
+The message sent was:
+
+%(message)s 
+
+--------------------------------------------------
+Do not reply. 
+This message was generated and sent automaticaly to you. 

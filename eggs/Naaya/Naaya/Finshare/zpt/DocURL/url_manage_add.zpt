@@ -1,0 +1,17 @@
+<tal:block metal:use-macro="template/DocBase_manage_add/macros/page">
+
+    <tal:block metal:fill-slot="title"> Add Document Manager URL
+    </tal:block>
+
+    <tal:block metal:fill-slot="description">
+        Fill the properties in the form below and click <b>Add</b>.<br>
+    </tal:block>
+
+    <tal:block metal:fill-slot="custom_properties">
+        <tr>
+            <th class="add-header">URL</th>
+            <td><input type="text" name="locator" size="50" value="http://"></td>
+        </tr>
+    </tal:block>
+
+</tal:block>
