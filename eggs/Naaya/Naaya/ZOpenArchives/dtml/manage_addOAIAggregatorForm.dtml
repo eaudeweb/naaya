@@ -1,0 +1,32 @@
+<dtml-var manage_page_header>
+
+<strong>Add an OAI Aggregator</strong><br><br>
+
+<form action="manage_addOAIAggregator">
+
+<table >
+<tr><td width=50>Id:</td> <td><input name="id" value="oai"></td></tr>
+<tr><td>Title:</td> <td><input name="title" size=30 value="Open Archive Aggregator"></td></tr>
+
+<tr>
+<td>Default update:</td>
+<td><select name="minutes:int">
+
+<dtml-in "[['daily', 1000], ['weekly', 7000], ['monthly', 30000]]">
+
+<dtml-let d_name="_['sequence-item'][0]"
+d_num="_['sequence-item'][1]">
+
+<option value="&dtml-d_num;" <dtml-if "d_num==7000">SELECTED</dtml-if> ><dtml-var d_name></option>
+
+</dtml-let>
+</dtml-in>
+
+</select></td></tr>
+
+<tr><td colspan=2 align="right"><input type="submit" value="Submit"></td></tr>
+
+</table>
+</form>
+
+<dtml-var manage_page_footer>
