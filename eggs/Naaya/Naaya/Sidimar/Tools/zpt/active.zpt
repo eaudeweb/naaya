@@ -1,0 +1,155 @@
+<span tal:replace="structure here/standard_html_header"/>
+
+
+<style type="text/css">
+/*table with information on columns*/
+.vertical_table{
+}
+
+	.vertical_table th {
+		background-color:#f0f0f0;
+		border-right:2px solid white;
+		text-align:left;
+		padding:2px 3px 2px 5px;
+		vertical-align:top;
+	}
+
+	.vertical_table td {
+		border-bottom: 1px solid #f0f0f0;
+		border-right:  1px dotted #f0f0f0;
+		text-align:left;
+		padding-left:5px;
+		vertical-align:top;
+		padding:2px 3px 2px 5px;
+	}
+
+	.vertical_table .short {
+		width: 10px;
+	}
+
+/*tabbed divs*/
+.sidimar_tabbed {
+	margin: 3px 0px;
+}
+	.sidimar_tabbed .header {
+	}
+
+		.sidimar_tabbed .header a {
+			color:black;
+			text-decoration:none;
+		}
+
+		.sidimar_tabbed .header a:visited {
+			color:black;
+		}
+
+
+		.sidimar_tabbed .active {
+			background-color: #f0f0f0;
+			margin: 0px 5px;
+			padding: 1px 5px;
+			border-bottom:1px solid #f0f0f0;
+
+			font-weight: bold;
+			border-top: 1px solid #989898;
+			border-left: 1px solid #989898;
+			border-right: 1px solid #989898;
+		}
+
+		.sidimar_tabbed .inactive {
+			background-color: #f0f0f0;
+			margin: 0px 5px;
+			padding: 0px 5px;
+
+			border-top: 1px solid #989898;
+			border-left: 1px solid #989898;
+			border-right: 1px solid #989898;
+
+		}
+
+	.sidimar_tabbed .content {
+		padding: 10px 5px;
+		border:1px solid #989898;
+	}
+
+	.sidimar_tabbed .ie_table_fixer {
+		width:100%;
+	}
+
+</style>
+
+<p class="page-title">User list</p>
+<p class="page-description">
+    This page lists the users defined in this portal.
+</p>
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+    Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+</div>
+
+<table width="80%" tal:condition="here/isSessionErrors">
+    <tr tal:repeat="error_value here/getSessionErrors" >
+        <td tal:content="error_value">&nbsp;</td>
+    </tr>
+</table>
+
+<tal:block tal:define="users here/user_names">
+<form method="post" name="frmUsers">
+
+<div class="sidimar_tabbed">
+	<span class="header">
+		<a href="users_html" class="active">
+			Active
+		</a>
+		<a href="#" class="inactive">
+			Inactive
+		</a>
+		<a href="pending_html" class="inactive">
+			Pending
+		</a>
+	</span>
+	<div class="content">
+		<div class="ie_table_fixer">
+			<table cellspacing="0" cellpadding="0" class="vertical_table" width="100%">
+
+				<tr>
+					<th class="short">Delete</th>
+					<th>Username</th>
+					<th>Full name</th>
+					<th>Email</th>
+				</tr>
+
+				<tr tal:repeat="user users">
+				<tal:block tal:define="user_obj python:here.getUser(user)">
+					<td>
+						<input type="checkbox" name="names" tal:attributes="value python:here.getUserAccount(user_obj)" />
+						<img src="misc_/NaayaCore/User.gif" alt="user">
+					</td>
+					<td><strong>
+						<a tal:define="user python:here.getUserAccount(user_obj)"
+									tal:attributes="href string:viewuser_html?name=${user}" 
+									tal:content="user">username</a>
+						</strong>
+					</td>
+					<td tal:content="python:here.getUserFirstName(user_obj) + ' ' + here.getUserLastName(user_obj)">firstname + lastname</td>
+					<td tal:content="python:here.getUserEmail(user_obj)">Email</td>
+				</tal:block>
+				</tr>
+				<tr tal:condition="python:len(users) == 0">
+					<td colspan="4"> Users list empty </td>
+				</tr>
+
+			</table>
+			<input type="submit" value="Add user" onclick="document.location.href='manage_addUser_html';" />
+			<input type="hidden" name="destination" value="users_html">
+			<input type="submit" name="delete" value="Delete user" onclick="document.frmUsers.action='delActiveUsers';">
+		</div>
+	</div>
+
+</form>
+</tal:block>
+
+<span tal:replace="python:here.delSessionErrors()" />
+<span tal:replace="python:here.delUserSession()" />
+
+<span tal:replace="structure here/standard_html_footer"/>

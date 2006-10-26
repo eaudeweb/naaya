@@ -1,0 +1,62 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				user_tool here/getUsersTool;
+				users python:user_tool.getUserNames()">
+
+<div id="tabbedmenu">
+<ul>
+	<li id="currenttab">
+		<a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Active users</a>
+	</li>
+	<li>
+		<a tal:attributes="href string:${site_url}/admin_pending_html" i18n:translate="">Pending users</a>
+	</li>
+	<li tal:repeat="item python:user_tool.getSources()">
+		<a tal:attributes="href string:${site_url}/admin_sources_html?id=${item/id}" tal:content="item/title_or_id">source</a>
+	</li>
+</ul>
+</div>
+
+<p i18n:translate="">
+	This page lists the users defined in this portal along with their credentials.
+	Click on a username to modify the corresponding information.
+	In order to assign roles to users in various parts of the portal, click on the <strong>Users
+	&amp; Roles</strong> button.
+</p>
+
+<form method="post" tal:attributes="action string:${site_url}/admin_deleteusers">
+<table border="0" cellspacing="0" cellpadding="0" class="vertical_table">
+	<tr>
+		<th width="5%" align="left" i18n:translate="">Delete</th>
+		<th width="15%" align="left" i18n:translate="">Username</th>
+		<th width="30%" align="left" i18n:translate="">Full Name</th>
+		<th width="*" align="left" i18n:translate="">Email address</th>
+	</tr>
+	<tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
+		<tal:block tal:define="user_obj python:user_tool.getUser(user)">
+		<td nowrap="nowrap">
+			<input type="checkbox" name="names" tal:attributes="value python:user_tool.getUserAccount(user_obj)" />
+			<img src="misc_/NaayaCore/User.gif" alt="User" i18n:attributes="alt" />
+		</td>
+		<td><strong><a tal:define="user python:user_tool.getUserAccount(user_obj)" tal:attributes="href string:${site_url}/admin_user_html?name=${user}" tal:content="user">username</a></strong></td>
+		<td tal:content="python:user_tool.getUserFirstName(user_obj) + ' ' + user_tool.getUserLastName(user_obj)" />
+		<td tal:content="python:user_tool.getUserEmail(user_obj)" />
+		</tal:block>
+	</tr>
+	<tr tal:condition="python:len(users) == 0">
+		<td colspan="4" i18n:translate=""> Users' list empty </td>
+	</tr>
+</table>
+<p>
+<input type="button" value="Add user" name="AddButton" id="AddButton" onclick="document.location.href='admin_adduser_html';" i18n:attributes="value" />
+<input type="submit" value="Deactivate" i18n:attributes="value" name="DeactivateButton" id="DeactivateButton" />
+<input type="submit" value="Delete user" i18n:attributes="value" name="DeleteButton" id="DeleteButton" />
+</p>
+</form>
+
+</tal:block>
+</tal:block>
