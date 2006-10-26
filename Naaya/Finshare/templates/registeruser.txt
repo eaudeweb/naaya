@@ -1,0 +1,14 @@
+Hi ,
+You are receiving this mail because %(lastname)s %(firstname)s requested an account on finShare with the following credentials:
+
+Firstname: %(firstname)s
+Lastname: %(lastname)s
+Email: %(email)s
+Username: %(username)s
+Password: %(password)s
+
+Regards %(sender)s 
+
+--------------------------------------------------
+Do not reply. 
+This message was generated and sent automaticaly to you. 

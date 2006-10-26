@@ -1,0 +1,53 @@
+<tal:block metal:define-macro="page">
+<link rel="stylesheet" type="text/css" href="manage_options_style"/>
+
+<div style="background-color: #f0f0f0;">
+    <h1 style="display: inline;"><tal:block metal:define-slot="title">ADD OBJECT</tal:block></h1>
+</div>
+
+<p><tal:block metal:define-slot="description">DESCRIPTION</tal:block></p>
+
+<form name="frmAdd" method="post" tal:attributes="action template/FormAction" enctype="multipart/form-data">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+    <tr>
+        <th width="20%" class="add-header">Id</th>
+        <td width="80%"><input type="text" id="id" name="id" size="30" tal:attributes="value python:request.get('id', '')" /></td>
+    </tr>
+    <tr>
+        <th class="add-header">Title</th>
+        <td><input name="title" id="title" size="50" tal:attributes="value python:request.get('title', '')" /></td>
+    </tr>
+    <tr>
+        <th valign="top" class="add-header">Description</th>
+        <td><textarea name="description" rows="5" cols="50" tal:content="python:request.get('description', '')"></textarea></td>
+    </tr>
+<!--
+    <tr>
+        <th class="add-header">Language</th>
+        <td>
+            <select name="language">
+                <option tal:repeat="language here/getLanguages"
+                    tal:attributes="value language; selected python:language == here.getPreselectedLanguage()"
+                    tal:content="language">language</option>
+            </select>
+        </td>
+    </tr>
+-->
+    <tr>
+        <th class="add-header">Coverage</th>
+        <td><input type="text" id="coverage" name="coverage" size="50" tal:attributes="value python:request.get('coverage', '')" /></td>
+    </tr>
+    <tr>
+        <th class="add-header">Keywords</th>
+        <td><input type="text" id="keywords" name="keywords" size="50" tal:attributes="value python:request.get('keywords', '')" /></td>
+    </tr>
+    <tr>
+        <th class="add-header">Sort order</th>
+        <td><input type="text" id="sortorder" name="sortorder" size="2" tal:attributes="value python:request.get('sortorder', 100)" /></td>
+    </tr>
+    <tal:block metal:define-slot="custom_properties">Custom Properties</tal:block>
+    <tr><td>&nbsp;</td><td><input type="submit" value="Add" /></td></tr>
+</table>
+</form>
+
+</tal:block>

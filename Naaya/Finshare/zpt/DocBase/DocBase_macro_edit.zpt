@@ -1,0 +1,70 @@
+<tal:block metal:define-macro="page">
+
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+<link rel="stylesheet" type="text/css" href="manage_options_style"/>
+
+<p>
+    <tal:block metal:define-slot="description">DESCRIPTION</tal:block>
+</p>
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+    Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+</div>
+
+<form name="frmEdit" method="post" action="manageProperties" enctype="multipart/form-data">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+    <tr><th colspan="2" class="edit-title">Base properties</th></tr>
+    <tr>
+        <th width="20%" class="edit-header">Title</th>
+        <td width="80%"><input type="text" name="title" size="50" tal:attributes="value python:request.get('title', here.title)"></td>
+    </tr>
+    <tr>
+        <th valign="top" class="edit-header">Description</th>
+        <td><textarea name="description" rows="5" cols="50" tal:content="python:request.get('description', here.description)"></textarea></td>
+    </tr>
+<!--
+	<tr>
+        <th class="edit-header">Language</th>
+        <td>
+            <select name="language">
+                <option tal:repeat="language here/getLanguages"
+                    tal:attributes="value language; selected python:language==request.get('language', here.language)"
+                    tal:content="language">language</option>
+            </select>
+        </td>
+    </tr>
+-->
+    <tr>
+        <th class="edit-header">Coverage</th>
+        <td><input type="text" name="coverage" size="50" tal:attributes="value python:request.get('coverage', here.coverage)"></td>
+    </tr>
+<!--
+    <tr>
+        <th class="edit-header">Keywords</th>
+        <td><input type="text" name="keywords" size="50" tal:attributes="value python:request.get('keywords', here.keywords)"></td>
+    </tr>
+-->
+    <tr>
+        <th class="edit-header">Sort order</th>
+        <td><input type="text" name="sortorder" size="2" tal:attributes="value python:request.get('sortorder', here.sortorder)"></td>
+    </tr>
+    <tr>
+        <th class="edit-header">Approved</th>
+        <td><input type="checkbox" name="approved" tal:attributes="checked python:request.get('approved', here.approved)==1"></td>
+    </tr>
+    <tr>
+        <th class="edit-header">Release date</th>
+        <td tal:content="python:request.get('releasedate', here.releasedate)"/>
+    </tr>
+    <tr><td class="form-label" colspan="2">&nbsp;</td></tr>
+    <tr><th colspan="2" class="edit-title">Custom properties</th></tr>
+    <tal:block metal:define-slot="custom_properties"/>
+    <tr><td class="form-label" colspan="2">&nbsp;</td></tr>
+    <tr><td class="form-label">&nbsp;</td><td><input type="submit" value="Save changes"></td></tr>
+</table>
+</form>
+
+<span tal:replace="structure here/manage_page_footer"/>
+
+</tal:block>

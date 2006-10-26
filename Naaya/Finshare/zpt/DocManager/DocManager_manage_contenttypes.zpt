@@ -1,0 +1,74 @@
+<span tal:replace="structure here/manage_page_header"/>
+<span tal:replace="structure here/manage_tabs"/>
+<link rel="stylesheet" type="text/css" href="manage_options_style"/>
+
+    <p>DMFiles icons are listed next to the dowload link in order to understand the content of that file.</p>
+
+    <div class="system-msg" tal:condition="python:request.has_key('save')">
+        Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+    </div>
+
+    <tal:block tal:define="record_id python:request.get('id', None); record_data python:here.getContentTypeData(record_id)">
+        <form method="post" tal:attributes="action python:test(record_data[0]=='add', 'manageAddContentType', 'manageUpdateContentType')" enctype="multipart/form-data">
+            <div style="width: 70%;">
+                <fieldset><legend>Add/Edit file types</legend>
+                <table border="0" cellspacing="2" cellpadding="2" width="100%">
+                    <tr>
+                        <th width="20%">Content type</th>
+                        <td width="80%">
+                            <tal:block tal:condition="python:record_data[0]=='update'">
+                                <b tal:content="python:record_data[1]">id</b>
+                                <input type="hidden" name="id" tal:attributes="value python:record_data[1]">
+                            </tal:block>
+                            <tal:block tal:condition="python:record_data[0]=='add'">
+                                <input type="text" name="id" size="35" tal:attributes="value python:record_data[1]">
+                            </tal:block>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Title</th>
+                        <td><input type="text" name="title" size="35" tal:attributes="value python:record_data[2]"></td>
+                    </tr>
+                    <tr>
+                        <th>Picture</th>
+                        <td><input type="file" name="picture" size="35" /></td>
+                    </tr>
+                    <tr tal:condition="python:record_data[3] is not None">
+                        <td class="form-label">&nbsp;</td>
+                        <td><img tal:define="record_id python:record_data[1]" tal:attributes="src string:getContentTypePicture?id=${record_id}" border="0" alt="Image ico" title="Image ico" /></td>
+                    </tr>
+                     <tr>
+                        <td class="form-label">&nbsp;</td>
+                        <td><input type="submit" tal:attributes="value python:test(record_data[0]=='add', 'Add', 'Update')"></td>
+                     </tr>
+                </table>
+                </fieldset>
+            </div>
+        </form>
+    </tal:block>
+
+    <form method="post" action="manageDeleteContentTypes">
+    <div style="border: 1px solid #cccccc;">
+    <table class="cont_types_container" cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr>
+            <th class="row-header" width="1%">&nbsp;</th>
+            <th class="row-header" width="40%">Content type</th>
+            <th class="row-header" width="40%">Title</th>
+            <th class="row-header" width="10%">Picture</th>
+        </tr>
+        <tr tal:repeat="record here/getContentTypesList" 
+            tal:attributes="class python:test(path('repeat/record/odd'), 'row-odd', 'row-even')">
+            <td><input type="checkbox" name="id" tal:attributes="value record/id"></td>
+            <td><a tal:attributes="href string:manage_contenttypes_html?id=${record/id}"><span tal:content="record/id">-</span></a></td>
+            <td tal:content="record/title">TITLE</td>
+            <td><img tal:condition="python:record.picture is not None" tal:attributes="src string:getContentTypePicture?id=${record/id}" border="0" alt="Image ico" /></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="3"><input type="submit" name="delete" value="Delete"/></td>
+        </tr>
+    </table>
+    </div>
+    </form>
+
+<span tal:replace="structure here/manage_page_footer"/>

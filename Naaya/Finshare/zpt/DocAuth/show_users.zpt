@@ -1,0 +1,87 @@
+<tal:block metal:use-macro="python:here.getDocManager_template().macros['doc_manager_page']">
+
+	<tal:block metal:fill-slot="doc_manager_title">
+		<tal:block content="here/title_or_id" />
+	</tal:block>
+
+	<tal:block metal:fill-slot="doc_manager_content" tal:omit-tag="">
+
+		<link rel="stylesheet" type="text/css" href="new.css" />
+
+		<h1>
+			Users management
+		</h1>
+
+
+		<p>
+			This page lists the users defined in this CMS. 
+		</p>
+
+		<div class="msg-info" tal:condition="python:request.has_key('save')">
+			Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+		</div>
+
+		<div class="msg-err" tal:condition="here/isSessionErrors">
+			<ul>
+				<li tal:repeat="error_value here/getSessionErrors" >
+					<span tal:replace="error_value" />
+				</li>
+			</ul>
+		</div>
+
+		<form name="frmUsers" id="frmUsers" method="post" action="manage_delUsers">
+			<tal:block define="users here/getUsersNames">
+			<table border="0" cellspacing="0" cellpadding="0" class="items_table" width="100%" tal:condition="python:len(users)>0">
+				<tr>
+					<th width="10">Delete</th>
+					<th>Username</th>
+					<th>First Name and Last Name</th>
+					<th>Email</th>
+					<th>Role</th>
+				</tr>
+				<tal:block tal:repeat="user users">
+				<tr tal:define="user_obj python:here.getUser(user)">
+					<td>
+						<input type="checkbox" name="users" tal:attributes="value python:here.getUserAccount(user_obj)" />
+					</td>
+					<td>
+						<a tal:define="user python:here.getUserAccount(user_obj)"
+							tal:attributes="href string:manage_editUser_html?name=${user}" 
+							tal:content="user">username</a>
+					</td>
+					<td tal:content="python:here.getUserFirstName(user_obj) + ' ' + here.getUserLastName(user_obj)" />
+					<td tal:content="python:here.getUserEmail(user_obj)" />
+					<td tal:content="python:here.getUserRoles(user_obj)[0][3:]" />
+				</tr>
+				</tal:block>
+			</table>
+			<div tal:condition="python:len(users)==0" class="no-items"> No users defined</div>
+
+			</tal:block>
+
+
+			<div class="navigation">
+				<div style="text-align:left;">
+					<input type="button" value="Add user" onclick="document.location.href='manage_addUser_html';" />
+					<input type="submit" value="Delete selected user(s)" />
+				</div>
+			</div>
+
+		</form>
+
+		<p style="margin-top:3em;">
+			<span class="orangetop"><strong>List of user roles</strong>. Click on a role to edit it's properties.</span>
+		</p>
+		<ul>
+			<li>
+				<a href="#">Contributor</a>
+			</li>
+			<li>
+				<a href="#">Administrator</a>
+			</li>
+		</ul>
+
+		<span tal:content="python:here.delSessionErrors()" tal:omit-tag=""></span>
+		<span tal:content="python:here.delUserSession()" tal:omit-tag=""></span>
+	</tal:block>
+</tal:block>

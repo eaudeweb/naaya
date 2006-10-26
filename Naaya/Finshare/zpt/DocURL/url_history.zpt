@@ -1,0 +1,34 @@
+<span metal:use-macro="python:here.getDocManager_template().macros['doc_manager_page']">
+
+    <tal:block metal:fill-slot="doc_manager_title">
+        <tal:block content="here/title_or_id" />
+    </tal:block>
+
+    <span metal:fill-slot="doc_manager_content" tal:omit-tag="">
+
+        <h3 id="doc_title">
+            <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked)" alt="Icon for URL item" title="Icon for URL item" />
+            History for <em tal:content="python:here.title_or_id()" />
+        </h3>
+
+        <tal:block define="doc_tabindex python:request.set('doc_tabindex', '2')" />
+        <tal:block replace="structure here/menu_html" />
+        <br clear="left" /><br />
+
+        <table border="1" cellspacing="0" cellpadding="0" width="100%">
+            <tr>
+                <th>Date</th>
+                <th>User</th>
+                <th>Action</th>
+            </tr>
+            <tr tal:repeat="doc_history here/getHistories" tal:attributes="class python:test(path('repeat/doc_history/even'), 'row-even', 'row-odd')">
+                <td tal:content="python:here.utShowFullDateTime(here.getHistory(doc_history['id'])[0])"></td>
+                <td tal:content="python:here.getHistory(doc_history['id'])[1]"></td>
+                <td tal:content="python:here.getHistory(doc_history['id'])[2]"></td>
+            </tr>
+        </table>
+
+        <br /><br />
+    </span>
+
+</span>
