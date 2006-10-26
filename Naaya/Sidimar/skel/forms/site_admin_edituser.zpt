@@ -1,0 +1,167 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				user_tool here/getUsersTool;
+				user python:user_tool.getUser(request.get('name', ''));
+				user_firstname python:user_tool.getUserFirstName(user); 
+				user_roles python:user_tool.getUserRoles(user); 
+				user_lastname python:user_tool.getUserLastName(user);
+				user_email python:user_tool.getUserEmail(user); 
+				user_account python:user_tool.getUserAccount(user);
+				user_password python:user_tool.getUserPassword(user); 
+				user_roles python:user_tool.getUserRoles(user); 
+				user_job python:user_tool.getUserJob(user);
+				user_organisation python:user_tool.getUserOrganisation(user);
+				user_country python:user_tool.getUserCountry(user);
+				user_street python:user_tool.getUserStreet(user);
+				user_street_number python:user_tool.getUserStreetNumber(user);
+				user_zip python:user_tool.getUserZip(user);
+				user_city python:user_tool.getUserCity(user);
+				user_region python:user_tool.getUserRegion(user);
+				user_phone python:user_tool.getUserPhone(user);
+				session python:here.setUserSession(user_account, '', user_roles, user_firstname, user_lastname, 
+					user_job, user_organisation, user_country, user_street, user_street_number, 
+					user_zip, user_city, user_region, user_phone, user_email, '')">
+
+<div id="tabbedmenu">
+<ul tal:define="name python:request.get('name', '')">
+	<li>
+		<a tal:attributes="href string:${site_url}/admin_user_html?name=${name}" i18n:translate="">Overview</a>
+	</li>
+	<li id="currenttab">
+		<a tal:attributes="href string:${site_url}/admin_edituser_html?name=${name}" i18n:translate="">Edit credentials</a>
+	</li>
+	<li>
+		<a tal:attributes="href string:${site_url}/admin_user_history_html?name=${name}" i18n:translate="">History</a>
+	</li>
+	<li>
+		<a tal:attributes="href string:${site_url}/admin_user_downloads_html?name=${name}" i18n:translate="">Downloads</a>
+	</li>
+</ul>
+</div>
+
+<p i18n:translate="">
+	Change the form below with user's credentials and account and click <em>Save changes</em>:
+</p>
+
+<div class="message_info" tal:condition="here/isSessionInfo">
+	<ul>
+		<li tal:repeat="info_value here/getSessionInfo" tal:content="info_value" />
+	</ul>
+</div>
+
+<div class="message_error" tal:condition="here/isSessionErrors">
+	<ul>
+		<li tal:repeat="error_value here/getSessionErrors" tal:content="error_value" />
+	</ul>
+</div>
+
+<form method="post" tal:attributes="action string:${site_url}/admin_edituser">
+
+<table class="horizontal_table" cellspacing="0" cellpadding="0" border="0" width="90%">
+	<tr>
+		<th>Username</th>
+		<td><strong tal:content="here/getSessionUserAccount" /></td>
+	</tr>
+	<tr>
+		<th>First name</th>
+		<td><input type="text" name="firstname" tal:attributes="value here/getSessionUserFirstName" /></td>
+	</tr>
+	<tr>
+		<th>Last name</th>
+		<td><input type="text" name="lastname" tal:attributes="value here/getSessionUserLastName" /></td>
+	</tr>
+	<tr>
+		<th>Job</th>
+		<td><input type="text" name="job" tal:attributes="value here/getSessionJob" /></td>
+	</tr>
+	<tr>
+		<th>Organisation</th>
+		<td><input type="text" name="organisation" tal:attributes="value here/getSessionOrganisation" /></td>
+	</tr>
+	<tr>
+		<th>Country</th>
+		<td>
+			<select name="country" id="country">
+			<option value="" i18n:translate="">Seleziona una nazione</option>
+			<tal:block repeat="country here/getCountries">
+				<option tal:attributes="value country/id" 
+						tal:content="country/title"
+						tal:condition="python:country.id==here.getSessionCountry()" selected />
+				<option tal:attributes="value country/id" 
+						tal:content="country/title"
+						tal:condition="python:country.id!=here.getSessionCountry()" />
+			</tal:block>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th>Street</th>
+		<td><input type="text" name="street" tal:attributes="value here/getSessionStreet" /></td>
+	</tr>
+	<tr>
+		<th>Street number</th>
+		<td><input type="text" name="street_number" tal:attributes="value here/getSessionStreetNumber" /></td>
+	</tr>
+	<tr>
+		<th>Zip</th>
+		<td><input type="text" name="zip" tal:attributes="value here/getSessionZIP" /></td>
+	</tr>
+	<tr>
+		<th>City</th>
+		<td><input type="text" name="city" tal:attributes="value here/getSessionCity" /></td>
+	</tr>
+	<tr>
+		<th>Region</th>
+		<td>
+			<select name="region" id="region">
+			<option i18n:translate="">Seleziona una provincia</option>
+			<tal:block repeat="region here/getRegions">
+				<option tal:attributes="value region/id" 
+						tal:content="region/title"
+						tal:condition="python:region.id==here.getSessionRegion()" selected />
+				<option tal:attributes="value region/id" 
+						tal:content="region/title"
+						tal:condition="python:region.id!=here.getSessionRegion()" />
+			</tal:block>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th>Phone</th>
+		<td><input type="text" name="phone" tal:attributes="value here/getSessionPhone" /></td>
+	</tr>
+	<tr>
+		<th>Email</th>
+		<td><input type="text" name="mail" tal:attributes="value here/getSessionEmail" /></td>
+	</tr>
+	<tr>
+		<th>Roles</th>
+		<td>
+			<tal:block define="roles user_tool/list_valid_roles" repeat="role roles">
+				<input type="checkbox" name="roles" 
+					tal:attributes="value role" 
+					tal:condition="python:role in here.getSessionUserRoles()" checked />
+				<input type="checkbox" name="roles" 
+					tal:attributes="value role" 
+					tal:condition="python:role not in here.getSessionUserRoles()"/>
+				<span tal:replace="role" /><br />
+			</tal:block>
+		</td>
+	</tr>
+</table>
+<input type="hidden" name="name" tal:attributes="value user_account" />
+<br />
+<input type="submit" value="Save changes" i18n:attributes="value" />&nbsp;
+<input class="button" type="reset" value=" Reset " />
+</form>
+
+<span tal:replace="here/delUserSession" />
+<span tal:content="python:here.delSessionErrors()" tal:omit-tag="" />
+<span tal:content="python:here.delSessionInfo()" tal:omit-tag="" />
+
+</tal:block>
+</tal:block>

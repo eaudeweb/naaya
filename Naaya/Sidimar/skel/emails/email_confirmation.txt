@@ -1,0 +1,13 @@
+Hi,
+
+You got this mail as confimation of the creation of your account on @@PORTAL_TITLE@@ portal located at @@PORTAL_URL@@
+
+
+You can log in using the following information:
+Username: @@USERNAME@@
+Password: @@PASSWORD@@
+
+You have the following roles:
+@@ROLES@@
+
+Since this mail was sent to you in plain text format it is recomended that you log in and change your password.
