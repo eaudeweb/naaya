@@ -1,0 +1,36 @@
+<dtml-var manage_page_header>
+
+<dtml-var manage_tabs>
+
+
+<p class="form-help">This is a metadata namespace for the OAI Server.</p>
+
+<form action="manage_OAINamespaceUpdate">
+
+<table>
+<tr><th align="left" valign="top">Namespace URL:</th>
+<td><input name="ns_namespace" size=50 value="&dtml-get_nsNamespace;"></td>
+</tr>
+
+<tr><th align="left" valign="top">Shortname:</th>
+<td><input name="ns_shortname" size=50 value="&dtml-get_nsShortname;"></td>
+</tr>
+
+<tr><th align="left" valign="top">Prefix:</th>
+<td><input name="ns_prefix" size=50 value="&dtml-get_nsPrefix;"></td>
+</tr>
+
+<tr><th align="left" valign="top">Schema URL:</th>
+<td><input name="ns_schema" size=50 value="&dtml-get_nsSchema;"></td>
+</tr>
+
+<tr><th align="left" valign="top">Description:</th>
+<td><textarea  name="ns_description" cols=35 rows=5><dtml-var get_nsDescription></textarea></td>
+</tr>
+
+<tr><td colspan=2 align="right"><input type="submit" value="submit"></td></tr>
+</table>
+
+</form>
+
+<dtml-var manage_page_footer>

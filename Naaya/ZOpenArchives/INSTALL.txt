@@ -1,0 +1,43 @@
+** Requiered products :
+
+	  BTreeFolder2
+	  Xron - deprecated - Prefer use a crontab call to update Aggregator
+	  PyXML 0.8.x or higher (0.8.3 recommended and tested)
+
+          eXist DB features:
+	  exist_zope DB adapter to use eXsitDB repository features
+
+** Compatibility:
+
+	Tested on Zope 2.6.2, and Zope 2.7.x
+
+** Installation:
+
+	Just untar archive into your zope product directory
+
+	and restart zope
+
+	Then add a Open Archive Aggregator in which you will be able to add Harvesters
+
+	Or
+
+	Add an Zope OAI server in which you will be able to add ZCatalog Harvesters
+
+	Enjoy !
+
+        ** Exist database repository
+
+        If you want to use an eXist database as repository just install
+
+	- add an Exist Open Archive Repository
+
+	- add an Exist Open Archive Aggregator
+
+
+
+
+** OAI registry :
+
+       http://gita.grainger.uiuc.edu/registry/ListAllRepos.asp
+       
+       http://www.openarchives.org/Register/BrowseSites
