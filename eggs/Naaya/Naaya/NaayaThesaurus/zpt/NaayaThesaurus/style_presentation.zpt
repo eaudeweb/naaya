@@ -41,3 +41,45 @@
 	font-weight: bold;
 	padding-left: 0.5em;
 }
+
+.h2term {
+	font-family: Arial, Verdana;
+	/*color: #FF9900;*/
+	margin-bottom: 20px;  
+}
+
+.bar {
+	background-color: #EFF6FA;
+	color: #006CAE;
+	text-align: center;
+	font-weight: bold;
+	padding: 3px 0px;
+	margin: 10px 0px;
+font-size: 85%;
+}
+.item_term {
+	margin-bottom: 10px;
+font-size: 80%;
+}
+.item_term a {
+	font-weight: bold;
+	color: #005A91;
+}
+.tab_term {
+	font-size: 90%;
+	color: #333333;
+	mergin-bottom: 10px;
+}
+.tab_term td {
+	vertical-align: middle!important;
+border-bottom: 1px solid white!important;
+
+}
+.th_cat {
+	vertical-align: middle!important;
+	width: 100px;
+	text-align: left;
+	font-weight: normal;
+background-color: white;
+color: #333333;
+}

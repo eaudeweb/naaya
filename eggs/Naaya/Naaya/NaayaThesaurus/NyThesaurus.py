@@ -562,6 +562,9 @@ class NyThesaurus(Folder):
     security.declarePublic('index_html')
     index_html =            PageTemplateFile('zpt/NaayaThesaurus/thematic', globals())
 
+    security.declarePublic('view_html')
+    view_html =            PageTemplateFile('zpt/NaayaThesaurus/view', globals())
+
     security.declarePublic('alphabetic_html')
     alphabetic_html =       PageTemplateFile('zpt/NaayaThesaurus/alphabetic', globals())
 
