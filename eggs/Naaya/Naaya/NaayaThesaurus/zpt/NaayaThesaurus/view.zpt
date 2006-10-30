@@ -76,10 +76,10 @@
 		<tal:block repeat="item broader_list">
 			<div class="item_term" tal:define="broader_ob python:here.getTermByID(item.relation_id, lang)">
 				<a	tal:condition="broader_ob"
-					tal:attributes="href string:${here/getThesaurusPath}/view?concept_id=${item/relation_id}"
+					tal:attributes="href string:${here/getThesaurusPath}/view_html?concept_id=${item/relation_id}"
 					tal:content="broader_ob/concept_name" />
 				<a	tal:condition="not:broader_ob"
-					tal:attributes="href string:${here/getThesaurusPath}/view?concept_id=${item/relation_id}"
+					tal:attributes="href string:${here/getThesaurusPath}/view_html?concept_id=${item/relation_id}"
 					i18n:translate="">no translation available</a>
 			</div>
 		</tal:block>
@@ -90,10 +90,10 @@
 	<tal:block repeat="item narrower_list">
 		<div class="item_term" tal:define="narrower_ob python:here.getTermByID(item.relation_id, lang)">
 			<a	tal:condition="narrower_ob"
-				tal:attributes="href string:${here/getThesaurusPath}/view?concept_id=${item/relation_id}"
+				tal:attributes="href string:${here/getThesaurusPath}/view_html?concept_id=${item/relation_id}"
 				tal:content="narrower_ob/concept_name"/>
 			<a	tal:condition="not:narrower_ob"
-				tal:attributes="href string:${here/getThesaurusPath}/view?concept_id=${item/relation_id}"
+				tal:attributes="href string:${here/getThesaurusPath}/view_html?concept_id=${item/relation_id}"
 				i18n:translate="">no translation available</a>
 		</div>
 	</tal:block>
@@ -104,10 +104,10 @@
 	<tal:block repeat="item related_list">
 		<div class="item_term" tal:define="related_ob python:here.getTermByID(item.relation_id, lang)">
 			<a	tal:condition="related_ob"
-				tal:attributes="href string:${here/getThesaurusPath}/view?concept_id=${item/relation_id}"
+				tal:attributes="href string:${here/getThesaurusPath}/view_html?concept_id=${item/relation_id}"
 				tal:content="related_ob/concept_name"/>
 			<a	tal:condition="not:related_ob"
-				tal:attributes="href string:${here/getThesaurusPath}/view?concept_id=${item/relation_id}"
+				tal:attributes="href string:${here/getThesaurusPath}/view_html?concept_id=${item/relation_id}"
 				i18n:translate="">no translation available</a>
 		</div>
 	</tal:block>
