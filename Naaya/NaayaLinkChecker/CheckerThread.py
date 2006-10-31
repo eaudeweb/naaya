@@ -60,14 +60,13 @@ class CheckerThread(threading.Thread):
         if self.proxy != '':
             file.proxies['http'] = self.proxy
         try:
-            socket.setdefaulttimeout(5)
             file.open(url)
             file.close()
             return 'OK'
         except IOError, msg:
             msg = self.sanitize(msg)
             return msg
-        except socket.timeout:
+        except:
             return "Attempted connect timed out."
 
     def sanitize(self, msg):
