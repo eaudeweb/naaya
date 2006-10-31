@@ -23,7 +23,7 @@
                     links_list python:result[1]">
 
 <p>
-    <span i18n:translate="">URLs found: </span> <span tal:replace="all_urls" /> <br />
+    <span i18n:translate="">URLs founded: </span> <span tal:replace="all_urls" /> <br />
     <span i18n:translate="">URLs broken: </span> <span tal:replace="paging_total" />
 </p>
 
