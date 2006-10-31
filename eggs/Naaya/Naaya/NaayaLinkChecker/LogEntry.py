@@ -27,7 +27,7 @@ from AccessControl.Permissions import view
 from AccessControl import ClassSecurityInfo
 
 #Product's related imports
-from Utils import UtilsManager
+from Products.NaayaLinkChecker.Utils import UtilsManager
 
 def manage_addLogEntry(self, user, date_create, url_list):
     """Add a Language"""

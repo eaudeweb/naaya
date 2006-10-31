@@ -23,9 +23,11 @@ import socket
 import threading
 import time
 
-from MyURLopener import MyURLopener
-import LinkChecker
+from Products.NaayaLinkChecker.MyURLopener import MyURLopener
+from Products.NaayaLinkChecker import timeoutsocket
 logresults = {}
+
+timeoutsocket.setDefaultSocketTimeout(30)
 
 class CheckerThread(threading.Thread):
 
