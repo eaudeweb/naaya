@@ -71,6 +71,12 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         self.ip_address = ''
         UtilsManager.__dict__['__init__'](self)
 
+    def __setstate__(self,state):
+        """ """
+        if not hasattr(self, 'ip_address'):
+            self.ip_address = ''
+        LinkChecker.inheritedAttribute('__setstate__')(self, state)
+
     security.declareProtected(view_management_screens, 'manage_edit')
     def manage_edit(self, proxy, batch_size, catalog_name='', ip_address='', REQUEST=None):
         """Edits the summary's characteristics"""
