@@ -33,9 +33,9 @@ from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view
 
 #Product's related imports
-from Utils import UtilsManager
-from CheckerThread import CheckerThread, logresults
-import LogEntry
+from Products.NaayaLinkChecker.Utils import UtilsManager
+from Products.NaayaLinkChecker.CheckerThread import CheckerThread, logresults
+from Products.NaayaLinkChecker import LogEntry
 
 THREAD_COUNT = 4
 

@@ -1,4 +1,4 @@
-<h2 i18n:translate="">Log of broken links founded by the automatic checking</h2>
+<h2 i18n:translate="">Log of broken links found by the automatic checking</h2>
 
 <span tal:replace="structure here/style_html" tal:omit-tag="" />
 
