@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<skel>
+	<pluggablecontenttypes>
+		<pluggablecontenttype meta_type="Naaya Media File" action="1"/>
+		<pluggablecontenttype meta_type="Naaya File" action="0"/>
+		<pluggablecontenttype meta_type="Naaya Extended File" action="1"/>
+	</pluggablecontenttypes>
+	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
+	</portlets>
+	<properties>
+		<language code="ar" />
+		<language code="fr" />
+	</properties>
+</skel>
