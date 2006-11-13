@@ -73,12 +73,19 @@ class SMAPSite(NySite, ProfileMeta):
 
         #load site skeleton - configuration
         self.loadSkeleton(join(SMAP_PRODUCT_PATH, 'skel'))
-        #TODO: to be decommented after the SMAP skin is created/added,
-        #      this will remove the default Naaya skin
-#        self.getLayoutTool().manage_delObjects('skin')
+        self.getLayoutTool().manage_delObjects('skin')
 
         #set default 'Main topics'
         try:    self.getPropertiesTool().manageMainTopics(['smap', 'contact'])
         except: pass
+
+    #Naaya wrapper
+    security.declarePublic('isRTL')
+    def isRTL(self, lang=None):
+        """ test if lang is a RTL language """
+        return self.isArabicLanguage(lang)
+
+    #objects getters
+    def getSkinFilesPath(self): return self.getLayoutTool().getSkinFilesPath()
 
 InitializeClass(SMAPSite)
