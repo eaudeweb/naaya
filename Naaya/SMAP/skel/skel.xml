@@ -19,6 +19,7 @@
 		<pluggablecontenttype meta_type="Naaya Media File" action="1"/>
 		<pluggablecontenttype meta_type="Naaya File" action="0"/>
 		<pluggablecontenttype meta_type="Naaya Extended File" action="1"/>
+		<pluggablecontenttype meta_type="Naaya SMAP Project" action="1"/>
 	</pluggablecontenttypes>
 	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
 		<reflist id="countries" title="Countries" description="List of countries used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
