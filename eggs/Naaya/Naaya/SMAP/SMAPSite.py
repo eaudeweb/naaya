@@ -73,7 +73,10 @@ class SMAPSite(NySite, ProfileMeta):
 
         #load site skeleton - configuration
         self.loadSkeleton(join(SMAP_PRODUCT_PATH, 'skel'))
+
+        #remove Naaya default content
         self.getLayoutTool().manage_delObjects('skin')
+        self.manage_delObjects('info')
 
         #set default 'Main topics'
         try:    self.getPropertiesTool().manageMainTopics(['smap', 'contact'])
