@@ -21,6 +21,50 @@
 		<pluggablecontenttype meta_type="Naaya Extended File" action="1"/>
 	</pluggablecontenttypes>
 	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
+		<reflist id="countries" title="Countries" description="List of countries used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Albania" title="Albania"/>
+			<item id="Algeria" title="Algeria"/>
+			<item id="Bosnia&amp;Herzegovina" title="Bosnia&amp;Herzegovina"/>
+			<item id="Croatia" title="Croatia"/>
+			<item id="Cyprus" title="Cyprus"/>
+			<item id="Egypt" title="Egypt"/>
+			<item id="France" title="France"/>
+			<item id="Greece" title="Greece"/>
+			<item id="Israel" title="Israel"/>
+			<item id="Italy" title="Italy"/>
+			<item id="Jordan" title="Jordan"/>
+			<item id="Lebanon" title="Lebanon"/>
+			<item id="Lybia" title="Lybia"/>
+			<item id="Malta" title="Malta"/>
+			<item id="Morocco" title="Morocco"/>
+			<item id="Palestinian Authority" title="Palestinian Authority"/>
+			<item id="Serbia&amp;Montenegro" title="Serbia&amp;Montenegro"/>
+			<item id="Slovenia" title="Slovenia"/>
+			<item id="Spain" title="Spain"/>
+			<item id="Syria" title="Syria"/>
+			<item id="Tunisia" title="Tunisia"/>
+			<item id="Turkey" title="Turkey"/>
+		</reflist>
+		<reflist id="priorities_types" title="Priorities" description="Types of priorities used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Integrated Coastal Zone Management" title="Integrated Coastal Zone Management"/>
+			<item id="Water Management" title="Water Management"/>
+			<item id="Waste Management" title="Waste Management"/>
+			<item id="Polluted Areas" title="Polluted Areas"/>
+			<item id="Biodiversity" title="Biodiversity"/>
+			<item id="Desertification" title="Desertification"/>
+			<item id="Legislation, regulatory and planning measures" title="Legislation, regulatory and planning measures"/>
+		</reflist>
+		<reflist id="focuses_types" title="Focuses" description="Types of focuses used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Legislation and regulatory measures" title="Legislation and regulatory measures"/>
+			<item id="Integrated management of highly polluted urban areas" title="Integrated management of highly polluted urban areas"/>
+			<item id="Management of energy and transport systems" title="Management of energy and transport systems"/>
+			<item id="Reduce air pollution" title="Reduce air pollution"/>
+			<item id="Protection of green areas" title="Protection of green areas"/>
+			<item id="Integrated approach to reduce highly polluting emissions in industrial areas" title="Integrated approach to reduce highly polluting emissions in industrial areas"/>
+			<item id="Data collection, analysis, monitoring" title="Data collection, analysis, monitoring"/>
+			<item id="Capacity building" title="Capacity building"/>
+			<item id="Networking, participation and partnership building" title="Networking, participation and partnership building"/>
+		</reflist>
 	</portlets>
 	<properties>
 		<language code="ar" />

@@ -79,6 +79,58 @@ class SMAPSite(NySite, ProfileMeta):
         try:    self.getPropertiesTool().manageMainTopics(['smap', 'contact'])
         except: pass
 
+    #layer over selection lists
+    security.declarePublic('getCountriesList')
+    def getCountriesList(self):
+        """
+        Return the selection list for countries.
+        """
+        return self.getPortletsTool().getRefListById('countries').get_list()
+
+    security.declarePublic('getCountryName')
+    def getCountryName(self, id):
+        """
+        Return the title of an item for the selection list for countries.
+        """
+        try:
+            return self.getPortletsTool().getRefListById('countries').get_item(id).title
+        except:
+            return ''
+        
+    security.declarePublic('getPrioritiesTypesList')
+    def getPrioritiesTypesList(self):
+        """
+        Return the selection list for priorities types.
+        """
+        return self.getPortletsTool().getRefListById('priorities_types').get_list()
+
+    security.declarePublic('getPriorityTitle')
+    def getPriorityTitle(self, id):
+        """
+        Return the title of an item for the selection list for priorities types.
+        """
+        try:
+            return self.getPortletsTool().getRefListById('priorities_types').get_item(id).title
+        except:
+            return ''
+        
+    security.declarePublic('getFocusesTypesList')
+    def getFocusesTypesList(self):
+        """
+        Return the selection list for focuses types.
+        """
+        return self.getPortletsTool().getRefListById('focuses_types').get_list()
+
+    security.declarePublic('getFocusTitle')
+    def getFocusTitle(self, id):
+        """
+        Return the title of an item for the selection list for focuses types.
+        """
+        try:
+            return self.getPortletsTool().getRefListById('focuses_types').get_item(id).title
+        except:
+            return ''
+
     #Naaya wrapper
     security.declarePublic('isRTL')
     def isRTL(self, lang=None):
