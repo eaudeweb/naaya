@@ -1,0 +1,66 @@
+<tal:block metal:use-macro="here/macro_manage_edit/macros/page">
+
+<tal:block metal:fill-slot="description">
+	Change the properties in the form below and click <strong>Save changes</strong>.
+</tal:block>
+
+<tal:block metal:fill-slot="custom_properties"
+	define="countries here/getCountriesList;
+			priorities here/getPrioritiesTypesList;
+			focuses here/getFocusesTypesList">
+<tr>
+	<td class="form-label" valign="top">Project area</td>
+	<td><select name="priority_area:utf8:ustring" id="priority_area">
+		<option tal:repeat="priority priorities"
+			tal:attributes="value priority/id; selected python:priority.id in here.priority_area" tal:content="priority/title"  i18n:translate="">priority_area</option>
+		</select>
+	</td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Focus(es) of the project</td>
+	<td>
+		<select name="focus:utf8:ustring" id="focus" multiple="multiple">
+		<option tal:repeat="fc focuses"
+			tal:attributes="value fc/id; selected python:fc.id in here.focus" tal:content="fc/title" i18n:translate="">focus</option>
+		</select>
+	</td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Project Scale</td>
+	<td><input type="text" name="main_issues" id="main_issues" size="50" tal:attributes="value here/main_issues" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Tools</td>
+	<td><textarea name="tools" id="tools" rows="5" cols="40" tal:content="here/tools" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Locations</td>
+	<td><input type="text" name="location" id="location" size="50" tal:attributes="value here/location" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Budget</td>
+	<td><input type="text" name="budget" id="budget" size="50" tal:attributes="value here/budget" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Timeframe</td>
+	<td><input type="text" name="timeframe" id="timeframe" size="50" tal:attributes="value here/timeframe" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Implementing Organisation/s</td>
+	<td><textarea name="organisation" id="organisation" rows="5" cols="40" tal:content="here/organisation" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Contact</td>
+	<td><textarea name="contact" id="contact" rows="5" cols="40" tal:content="here/contact" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Donor(s)</td>
+	<td><textarea name="donor" id="donor" rows="5" cols="40" tal:content="here/donor" /></td>
+</tr>
+<tr>
+	<td class="form-label" valign="top">Links</td>
+	<td><textarea name="links" id="links" rows="5" cols="40" tal:content="here/links" /></td>
+</tr>
+</tal:block>
+
+</tal:block>

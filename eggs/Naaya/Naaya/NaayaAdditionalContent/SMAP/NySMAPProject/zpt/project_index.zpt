@@ -1,0 +1,74 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" border="0" /> <span tal:replace="here/title_or_id" /></h1>
+<tal:block tal:condition="python:here.checkPermissionEditObject()">
+<div id="admin_this_folder">
+	<tal:block tal:condition="python: not here.hasVersion()">
+		<a tal:attributes="href string:${here/absolute_url}/startVersion"><span i18n:translate="">Checkout</span></a>
+		<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
+	</tal:block>
+	<a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
+	<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()" i18n:translate="">This item has been checked out by another user</strong>
+</div>
+</tal:block>
+<p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+<table border="0" cellspacing="2" cellpadding="2">
+<tr tal:condition="here/priority_area">
+	<th i18n:translate="">Project area</th>
+	<td tal:content="here/priority_area" />
+</tr>
+<tr tal:condition="here/focus">
+	<th i18n:translate="">Focus(es) of the project</th>
+	<td><tal:block 
+		repeat="l_item python:here.convertToList(here.focus)" 
+		content="structure string:${l_item}<br />" />
+	</td>
+</tr>
+<tr tal:condition="here/main_issues">
+	<th i18n:translate="">Project Scale</th>
+	<td tal:content="here/main_issues" />
+</tr>
+<tr tal:condition="here/tools">
+	<th i18n:translate="">Tools</th>
+	<td tal:content="structure python:here.utNewlinetoBr(here.tools)" />
+</tr>
+<tr tal:condition="here/coverage">
+	<th i18n:translate="">Geographical coverage</th>
+	<td tal:content="here/coverage" />
+</tr>
+<tr tal:condition="here/location">
+	<th i18n:translate="">Locations</th>
+	<td tal:content="here/location" />
+</tr>
+<tr tal:condition="here/budget">
+	<th i18n:translate="">Budget</th>
+	<td tal:content="here/budget" />
+</tr>
+<tr tal:condition="here/timeframe">
+	<th i18n:translate="">Timeframe</th>
+	<td tal:content="here/timeframe" />
+</tr>
+<tr tal:condition="here/organisation">
+	<th i18n:translate="">Implementing Organisation/s</th>
+	<td tal:content="structure python:here.utNewlinetoBr(here.organisation)" />
+</tr>
+<tr tal:condition="here/contact">
+	<th i18n:translate="">Contact</th>
+	<td tal:content="structure python:here.utNewlinetoBr(here.contact)" />
+</tr>
+<tr tal:condition="here/donor">
+	<th i18n:translate="">Donor(s)</th>
+	<td tal:content="structure python:here.utNewlinetoBr(here.donor)" />
+</tr>
+<tr tal:condition="here/links">
+	<th i18n:translate="">Links</th>
+	<td tal:content="structure python:here.utNewlinetoBr(here.links)" />
+</tr>
+<tr>
+	<th i18n:translate="">Contributor</th>
+	<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)" />
+</tr>
+</table>
+<span tal:replace="structure here/comments_box" />
+
+<span tal:replace="structure here/standard_html_footer" />
