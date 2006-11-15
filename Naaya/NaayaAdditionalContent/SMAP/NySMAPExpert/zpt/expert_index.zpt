@@ -1,0 +1,70 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" border="0" /> <span tal:replace="here/title_or_id" /></h1>
+<tal:block tal:condition="python:here.checkPermissionEditObject()">
+<div id="admin_this_folder">
+	<tal:block tal:condition="python: not here.hasVersion()">
+		<a tal:attributes="href string:${here/absolute_url}/startVersion"><span i18n:translate="">Checkout</span></a>
+		<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
+	</tal:block>
+	<a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
+	<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()" i18n:translate="">This item has been checked out by another user</strong>
+</div>
+</tal:block>
+<table border="0" cellspacing="2" cellpadding="2">
+<!--
+<tr>
+	<th i18n:translate="">Release date</th>
+	<td tal:content="python:here.utShowDateTime(here.releasedate)" />
+</tr> 
+<tr>
+	<th i18n:translate="">Contributor</th>
+	<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
+</tr>
+<tr tal:condition="here/coverage">
+	<th i18n:translate="">Geographical coverage</th>
+	<td tal:content="here/coverage" />
+</tr>
+-->
+<tr>
+	<th i18n:translate="">Surname</th>
+	<td tal:content="here/surname" />
+</tr>
+<tr>
+	<th i18n:translate="">Name</th>
+	<td tal:content="here/name" />
+</tr>
+<tr>
+	<th i18n:translate="">Reference language</th>
+	<td tal:content="here/ref_lang" />
+</tr>
+<tr>
+	<th i18n:translate="">Country</th>
+	<td tal:content="here/country" />
+</tr>
+<tr>
+	<th i18n:translate="">Main topics of expertise</th>
+	<td tal:content="here/maintopics" />
+</tr>
+<tr>
+	<th i18n:translate="">Sub topics of expertise</th>
+	<td><tal:block 
+		repeat="l_item python:here.convertToList(here.subtopics)" 
+		content="structure string:${l_item}<br />" />
+	</td>
+</tr>
+<tr>
+	<th i18n:translate="">Email</th>
+	<td tal:content="here/email" />
+</tr>
+<tr tal:condition="python:here.size>0">
+	<th i18n:translate="">Download CV</th>
+	<td>
+		<a tal:attributes="href string:${here/absolute_url}/download"><span tal:replace="string:${here/downloadfilename}"/></a>
+	</td>
+</tr>
+</table>
+
+<span tal:replace="structure here/comments_box" />
+
+<span tal:replace="structure here/standard_html_footer" />

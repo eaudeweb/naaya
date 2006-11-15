@@ -1,0 +1,124 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+
+<p>
+	Change the properties in the form below and click <strong>Save changes</strong>.
+</p>
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+</div>
+
+<form name="frmEdit" method="post" action="manageProperties">
+<table border="0" cellspacing="2" cellpadding="2" width="100%"
+			tal:define="countries here/getCountriesList;
+					maintopics here/getPrioritiesTypesList;
+					subtopics here/getFocusesTypesList">
+	<tr>
+		<td class="form-label">Surname</td>
+		<td><input type="text" name="surname" size="40" tal:attributes="value python:request.get('surname', here.surname)" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Name</td>
+		<td><input type="text" name="name" size="40" tal:attributes="value python:request.get('name', here.name)" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Reference language</td>
+		<td><input type="text" name="ref_lang" size="40" tal:attributes="value python:request.get('ref_lang', here.ref_lang)" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Country</td>
+		<td>
+			<select name="country:utf8:ustring" id="country">
+				<option tal:repeat="country countries"
+					tal:attributes="value country/id; selected python:country.id in request.get('country', here.country)" tal:content="country/title"  i18n:translate="">countries</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form-label">Main topics of expertise</td>
+		<td>
+			<select name="maintopics:utf8:ustring" id="maintopics">
+				<option tal:repeat="maintopic maintopics"
+					tal:attributes="value maintopic/id; selected python:maintopic.id in request.get('maintopics', here.maintopics)" tal:content="maintopic/title"  i18n:translate="">maintopics</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form-label">Subtopics of expertise</td>
+		<td>
+			<select name="subtopics:utf8:ustring" id="subtopics" multiple="multiple">
+				<option tal:repeat="subtopic subtopics"
+					tal:attributes="value subtopic/id; selected python:subtopic.id in request.get('subtopics', here.subtopics)" tal:content="subtopic/title"  i18n:translate="">subtopics</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td class="form-label">Email address</td>
+		<td><input type="text" name="email" size="40" tal:attributes="value python:request.get('email', here.email)" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Sort order</td>
+		<td><input type="text" name="sortorder" size="2" tal:attributes="value python:request.get('sortorder', here.sortorder)" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Approved</td>
+		<td><input type="checkbox" name="approved" tal:attributes="checked python:test(request['REQUEST_METHOD']=='POST', request.get('approved', ''), here.approved)" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Release date (<em>dd/mm/yyyy</em>)</td>
+		<td><input type="text" name="releasedate" size="20" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getVersionProperty('releasedate'))" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Open for comments</td>
+		<td><input type="checkbox" name="discussion" tal:attributes="checked here/is_open_for_comments" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Download CV</td>
+		<td><a tal:attributes="href string:${here/absolute_url}/download"><span tal:replace="string:${here/downloadfilename}"/></a></td>
+	</tr>
+<!--
+	<tr>
+		<td class="form-label">Content Type</td>
+		<td><input type="text" name="content_type" size="40" tal:attributes="value here/content_type" /></td>
+	</tr>
+	<tr>
+		<td class="form-optional">Precondition</td>
+		<td><input type="text" name="precondition" size="40" tal:attributes="value here/precondition" /></td>
+	</tr>
+	<tr>
+		<td class="form-optional">File Size</td>
+		<td><span tal:replace="here/size" /> bytes</td>
+	</tr>
+	<tr>
+		<td class="form-label">Filename to download</td>
+		<td><input type="text" name="downloadfilename" size="40" tal:attributes="value here/downloadfilename" /></td>
+	</tr>
+-->
+	<tr><td class="form-label" colspan="2"></td></tr>
+	<tr><td class="form-label" colspan="2">Dynamic properties</td></tr>
+	<tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
+		<td class="form-label"><span tal:replace="record/name"/></td>
+		<td tal:content="structure python:record.render(here.getPropertyValue(record.id))">dynamic html control</td>
+	</tr>
+	<tr>
+		<td>
+			<input type="hidden" name="content_type" size="40" tal:attributes="value here/content_type" />
+			<input type="hidden" name="precondition" size="40" tal:attributes="value here/precondition" />
+			<input type="hidden" name="downloadfilename" size="40" tal:attributes="value here/downloadfilename" />
+		</td>
+		<td><input type="submit" value="Save changes" /></td></tr>
+</table>
+</form>
+<br />
+<form action="manageUpload" method="post" enctype="multipart/form-data">
+<table border="0" cellspacing="0" cellpadding="2" width="100%">
+	<tr>
+		<td class="form-label">Upload CV</td>
+		<td><input type="file" name="file" size="40" value="" /></td>
+	</tr>
+	<tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+</table>
+</form>
+
+<span tal:replace="structure here/manage_page_footer" />
