@@ -20,6 +20,7 @@
 		<pluggablecontenttype meta_type="Naaya File" action="0"/>
 		<pluggablecontenttype meta_type="Naaya Extended File" action="1"/>
 		<pluggablecontenttype meta_type="Naaya SMAP Project" action="1"/>
+		<pluggablecontenttype meta_type="Naaya SMAP Expert" action="1"/>
 	</pluggablecontenttypes>
 	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
 		<portlet id="portlet_rdfcalendar" title="RDF Calendar"/>

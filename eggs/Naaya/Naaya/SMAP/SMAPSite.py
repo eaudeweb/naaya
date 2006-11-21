@@ -160,4 +160,11 @@ class SMAPSite(NySite, ProfileMeta):
     #objects getters
     def getSkinFilesPath(self): return self.getLayoutTool().getSkinFilesPath()
 
+    #projects search
+    security.declarePublic('search_projects')
+    def search_projects(self, REQUEST=None):
+        """ """
+        #TODO: to be implemented
+        return REQUEST.RESPONSE.redirect('%s/fol120392/index_html' % self.absolute_url())
+
 InitializeClass(SMAPSite)
