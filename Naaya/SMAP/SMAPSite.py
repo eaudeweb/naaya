@@ -34,6 +34,8 @@ from Products.NaayaCore.constants                   import *
 from Products.NaayaCore.ProfilesTool.ProfileMeta    import ProfileMeta
 from Products.Naaya.NySite                          import NySite
 from Products.NaayaCore.managers.utils              import utils, file_utils, batch_utils
+from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
+from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
 
 
 manage_addSMAPSite_html = PageTemplateFile('zpt/site_manage_add', globals())
@@ -77,10 +79,25 @@ class SMAPSite(NySite, ProfileMeta):
         #remove Naaya default content
         self.getLayoutTool().manage_delObjects('skin')
         self.manage_delObjects('info')
+        #TODO: maybe has to be deleted later on
+        #self.getPortletsTool().manage_delObjects('topnav_links')
 
         #set default 'Main topics'
-        try:    self.getPropertiesTool().manageMainTopics(['smap', 'contact'])
+        try:    self.getPropertiesTool().manageMainTopics(['fol120392', 'fol112686',
+                                                           'fol034934', 'test1'])
         except: pass
+
+        #set portal index's right portlets
+        self.getPortletsTool().set_right_portlets_locations('', ['portlet_rdfcalendar'])
+
+        #default RDF Calendar settings
+        manage_addRDFCalendar(self, id=ID_RDFCALENDAR, title=TITLE_RDFCALENDAR, week_day_len=1)
+        rdfcalendar_ob = self._getOb(ID_RDFCALENDAR)
+        #TODO: to change the RDF Summary url maybe
+        manage_addRDFSummary(rdfcalendar_ob, 'example', 'Example',
+                             'http://smap.ewindows.eu.org/portal_syndication/events_rdf', '', 'no')
+        rdfcal_ob = self._getOb(ID_RDFCALENDAR)
+        rdfcal_ob._getOb('example').update()
 
     #layer over selection lists
     security.declarePublic('getCountriesList')

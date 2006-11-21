@@ -24,6 +24,8 @@ Zope instance (Products):
     - naayaHotfix
     - SMAP
     - Localizer
+    - RDFCalendar
+    - RDFSummary
 
     *Zope products*
     - TextIndexNG2
