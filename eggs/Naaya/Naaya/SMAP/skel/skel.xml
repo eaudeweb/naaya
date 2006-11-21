@@ -22,6 +22,7 @@
 		<pluggablecontenttype meta_type="Naaya SMAP Project" action="1"/>
 	</pluggablecontenttypes>
 	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
+		<portlet id="portlet_rdfcalendar" title="RDF Calendar"/>
 		<reflist id="countries" title="Countries" description="List of countries used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
 			<item id="Albania" title="Albania"/>
 			<item id="Algeria" title="Algeria"/>

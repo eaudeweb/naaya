@@ -32,3 +32,7 @@ SMAP_PRODUCT_PATH =       Globals.package_home(globals())
 PERMISSION_ADD_SMAPSITE = 'SMAP - Add SMAP Site objects'
 
 METATYPE_SMAPSITE =       'SMAP Site'
+
+#deafault content related
+ID_RDFCALENDAR =        'portal_rdfcalendar'
+TITLE_RDFCALENDAR =     'RDF Calendar'
