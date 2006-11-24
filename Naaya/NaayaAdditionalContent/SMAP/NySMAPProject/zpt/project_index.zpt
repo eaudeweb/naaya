@@ -17,6 +17,13 @@
 	<th i18n:translate="">Project area</th>
 	<td tal:content="here/priority_area" />
 </tr>
+<tr tal:condition="here/country">
+	<th i18n:translate="">Country(ies)</th>
+	<td><tal:block 
+		repeat="l_item python:here.convertToList(here.country)" 
+		content="structure string:${l_item}<br />" />
+	</td>
+</tr>
 <tr tal:condition="here/focus">
 	<th i18n:translate="">Focus(es) of the project</th>
 	<td><tal:block 

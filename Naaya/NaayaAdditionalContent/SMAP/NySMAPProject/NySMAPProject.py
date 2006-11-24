@@ -52,6 +52,7 @@ PROPERTIES_OBJECT = {
     'sortorder':    (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positive integer.'),
     'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':   (0, '', ''),
+    'country':      (0, '', ''),
     'contact':      (0, '', ''),
     'donor':        (0, '', ''),
     'links':        (0, '', ''),
@@ -74,8 +75,8 @@ def project_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNySMAPProject'}, 'project_add')
 
-def addNySMAPProject(self, id='', title='', description='', coverage='', keywords='',  sortorder='', contact='',
-                     donor='', links='', organisation='', location='', main_issues='', tools='', budget='',
+def addNySMAPProject(self, id='', title='', description='', coverage='', keywords='', country='', sortorder='', 
+                    contact='', donor='', links='', organisation='', location='', main_issues='', tools='', budget='',
                     timeframe='', priority_area='', focus='', contributor=None, releasedate='', discussion='',
                     lang=None, REQUEST=None, **kwargs):
     """
@@ -91,7 +92,7 @@ def addNySMAPProject(self, id='', title='', description='', coverage='', keyword
     if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
     if not(l_referer == 'project_manage_add' or l_referer.find('project_manage_add') != -1) and REQUEST:
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title,
-            description=description, coverage=coverage, keywords=keywords, sortorder=sortorder,
+            description=description, coverage=coverage, keywords=keywords, country=country, sortorder=sortorder,
             releasedate=releasedate, discussion=discussion, contact=contact, donor=donor, links=links,
             organisation=organisation, location=location, main_issues=main_issues, tools=tools, budget=budget,
             timeframe=timeframe, priority_area=priority_area, focus=focus)
@@ -107,7 +108,7 @@ def addNySMAPProject(self, id='', title='', description='', coverage='', keyword
         if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         releasedate = self.process_releasedate(releasedate)
         #create object
-        ob = NySMAPProject(id, title, description, coverage, keywords, contact, donor, links, organisation,
+        ob = NySMAPProject(id, title, description, coverage, keywords, country, contact, donor, links, organisation,
                     location, main_issues, tools, budget, timeframe, priority_area, focus, sortorder, 
                     contributor, releasedate, lang)
         self.gl_add_languages(ob)
@@ -132,7 +133,7 @@ def addNySMAPProject(self, id='', title='', description='', coverage='', keyword
         if REQUEST is not None:
             self.setSessionErrors(r)
             self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, description=description,
-                    coverage=coverage, keywords=keywords, sortorder=sortorder, releasedate=releasedate,
+                    coverage=coverage, keywords=keywords, country=country, sortorder=sortorder, releasedate=releasedate,
                     discussion=discussion, contact=contact, donor=donor, links=links, organisation=organisation,
                     location=location, main_issues=main_issues, tools=tools, budget=budget, timeframe=timeframe,
                     priority_area=priority_area, focus=focus, lang=lang)
@@ -158,6 +159,7 @@ def importNySMAPProject(self, param, id, attrs, content, properties, discussion,
             addNySMAPProject(self, id=id,
                 sortorder=attrs['sortorder'].encode('utf-8'),
                 main_issues=attrs['main_issues'].encode('utf-8'),
+                country=attrs['country'].encode('utf-8'),
                 tools=attrs['tools'].encode('utf-8'),
                 budget=attrs['budget'].encode('utf-8'),
                 timeframe=attrs['timeframe'].encode('utf-8'),
@@ -195,12 +197,12 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, description, coverage, keywords, contact,
+    def __init__(self, id, title, description, coverage, keywords, country, contact,
         donor, links, organisation, location, main_issues, tools, budget,
         timeframe, priority_area, focus, sortorder, contributor, releasedate, lang):
         """ """
         self.id = id
-        project_item.__dict__['__init__'](self, title, description, coverage, keywords, contact,
+        project_item.__dict__['__init__'](self, title, description, coverage, keywords, country, contact,
                                             donor, links, organisation, location, main_issues, tools, budget,
                                             timeframe, priority_area, focus, sortorder, releasedate, lang)
         NyCheckControl.__dict__['__init__'](self)
@@ -213,13 +215,14 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
-        return 'priority_area="%s" budget="%s" timeframe="%s" focus="%s" main_issues="%s" tools="%s"'% \
+        return 'priority_area="%s" budget="%s" timeframe="%s" focus="%s" main_issues="%s" tools="%s" country="%s"'% \
             (self.utXmlEncode(self.priority_area),
                 self.utXmlEncode(self.budget),
                 self.utXmlEncode(self.utNoneToEmpty(self.timeframe)),
                 self.utXmlEncode(self.focus),
                 self.utXmlEncode(self.main_issues),
-                self.utXmlEncode(self.tools))
+                self.utXmlEncode(self.tools),
+                self.utXmlEncode(self.country))
 
     security.declarePrivate('export_this_body_custom')
     def export_this_body_custom(self):
@@ -250,7 +253,7 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
         return ''.join(r)
 
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', coverage='', keywords='', contact='', donor='', links='',
+    def manageProperties(self, title='', description='', coverage='', keywords='', country='', contact='', donor='', links='',
                         organisation='', location='', main_issues='', tools='', budget='', timeframe='', priority_area='', 
                         focus='', sortorder='', approved='', releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
         """ """
@@ -262,7 +265,7 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
         else: approved = 0
         if not lang: lang = self.gl_get_selected_language()
         releasedate = self.process_releasedate(releasedate, self.releasedate)
-        self.save_properties(title, description, coverage, keywords, contact, donor, links, organisation,
+        self.save_properties(title, description, coverage, keywords, country, contact, donor, links, organisation,
                             location, main_issues, tools, budget, timeframe, priority_area, focus,
                             sortorder, releasedate, lang)
         self.updatePropertiesFromGlossary(lang)
@@ -287,6 +290,7 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
             raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
         self._local_properties_metadata = deepcopy(self.version._local_properties_metadata)
         self._local_properties = deepcopy(self.version._local_properties)
+        self.country = self.version.country
         self.contact = self.version.contact
         self.donor = self.version.donor
         self.links = self.version.links
@@ -317,7 +321,7 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
             raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        self.version = project_item(self.title, self.description, self.coverage, self.keywords, self.contact,
+        self.version = project_item(self.title, self.description, self.coverage, self.keywords, self.country, self.contact,
                         self.donor, self.links, self.organisation, self.location, self.main_issues, self.tools,
                         self.budget, self.timeframe, self.priority_area, self.focus, self.sortorder, self.releasedate,
                         self.gl_get_selected_language())
@@ -329,7 +333,7 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
-    def saveProperties(self, title='', description='', coverage='', keywords='', contact='', donor='',
+    def saveProperties(self, title='', description='', coverage='', keywords='', country='', contact='', donor='',
                 links='', organisation='', location='', main_issues='', tools='', budget='', timeframe='',
                 priority_area='', focus='', sortorder='', releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
         """ """
@@ -339,7 +343,7 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
         if lang is None: lang = self.gl_get_selected_language()
         #check mandatory fiels
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
-            description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
+            description=description, coverage=coverage, keywords=keywords, country=country, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion, contact=contact, donor=donor, links=links,
             organisation=organisation, location=location, main_issues=main_issues, tools=tools, budget=budget,
             timeframe=timeframe, priority_area=priority_area, focus=focus)
@@ -348,7 +352,7 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
             if not self.hasVersion():
                 #this object has not been checked out; save changes directly into the object
                 releasedate = self.process_releasedate(releasedate, self.releasedate)
-                self.save_properties(title, description, coverage, keywords, contact, donor, links, organisation,
+                self.save_properties(title, description, coverage, keywords, country, contact, donor, links, organisation,
                                      location, main_issues, tools, budget, timeframe, priority_area, focus,
                                      sortorder, releasedate, lang)
                 self.updatePropertiesFromGlossary(lang)
@@ -358,9 +362,9 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
                 if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                     raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
                 releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-                self.version.save_properties(title, description, coverage, keywords, contact, donor, links, organisation,
-                                     location, main_issues, tools, budget, timeframe, priority_area, focus,
-                                     sortorder, releasedate, lang)
+                self.version.save_properties(title, description, coverage, keywords, country, contact, donor, 
+                                    links, organisation, location, main_issues, tools, budget, timeframe, 
+                                    priority_area, focus, sortorder, releasedate, lang)
                 self.version.updatePropertiesFromGlossary(lang)
                 self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             if discussion: self.open_for_comments()
@@ -374,7 +378,7 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
             if REQUEST is not None:
                 self.setSessionErrors(r)
                 self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, description=description,
-                    coverage=coverage, keywords=keywords, sortorder=sortorder, releasedate=releasedate,
+                    coverage=coverage, keywords=keywords, country=country, sortorder=sortorder, releasedate=releasedate,
                     discussion=discussion, contact=contact, donor=donor, links=links, organisation=organisation,
                     location=location, main_issues=main_issues, tools=tools, budget=budget, timeframe=timeframe,
                     priority_area=priority_area, focus=focus)
