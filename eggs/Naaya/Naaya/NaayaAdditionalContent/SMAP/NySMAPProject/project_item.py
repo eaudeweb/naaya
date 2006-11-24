@@ -39,18 +39,18 @@ class project_item(Implicit, NyProperties):
     organisation = LocalProperty('organisation')
     location = LocalProperty('location')
 
-    def __init__(self, title, description, coverage, keywords, contact,
+    def __init__(self, title, description, coverage, keywords, country, contact,
         donor, links, organisation, location, main_issues, tools, budget,
         timeframe, priority_area, focus, sortorder ,releasedate, lang):
         """
         Constructor.
         """
-        self.save_properties(title, description, coverage, keywords, contact,
+        self.save_properties(title, description, coverage, keywords, country, contact,
                         donor, links, organisation, location, main_issues, tools, budget,
                         timeframe, priority_area, focus, sortorder ,releasedate, lang)
         NyProperties.__dict__['__init__'](self)
 
-    def save_properties(self, title, description, coverage, keywords, contact,
+    def save_properties(self, title, description, coverage, keywords, country, contact,
         donor, links, organisation, location, main_issues, tools, budget,
         timeframe, priority_area, focus, sortorder ,releasedate, lang):
         """
@@ -65,6 +65,7 @@ class project_item(Implicit, NyProperties):
         self._setLocalPropValue('links', lang, links)
         self._setLocalPropValue('organisation', lang, organisation)
         self._setLocalPropValue('location', lang, location)
+        self.country = country
         self.main_issues = main_issues
         self.tools = tools
         self.budget = budget

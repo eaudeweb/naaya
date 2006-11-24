@@ -17,6 +17,14 @@
 	</td>
 </tr>
 <tr>
+	<td class="form-label" valign="top">Country(ies)</td>
+	<td><select name="country:utf8:ustring" id="country" multiple="multiple">
+		<option tal:repeat="c countries"
+			tal:attributes="value c/id" tal:content="c/title" i18n:translate="" >country</option>
+		</select>
+	</td>
+</tr>
+<tr>
 	<td class="form-label" valign="top">Focus(es) of the project</td>
 	<td><select name="focus:utf8:ustring" id="focus" multiple="multiple">
 		<option tal:repeat="fc focuses"
