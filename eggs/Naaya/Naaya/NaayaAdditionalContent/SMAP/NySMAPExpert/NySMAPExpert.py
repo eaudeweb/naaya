@@ -177,8 +177,7 @@ def importNySMAPExpert(self, param, id, attrs, content, properties, discussion, 
             ob.precondition = attrs['precondition'].encode('utf-8')
             ob._p_changed = 1
             for property, langs in properties.items():
-                for lang in langs:
-                    ob._setLocalPropValue(property, lang, langs[lang])
+                [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
             ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
                 approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
             if attrs['releasedate'].encode('utf-8') != '':
