@@ -10,8 +10,8 @@
 
 
 <h1 i18n:translate="">Log out</h1>
-<div tal:attributes="style string:float: ${test(isArabic, 'left', 'right')}; width: 30%; background-color: #FFFFE1;">
-	<div style="background-color: #a0a0a0; font-weight: bold; color: white; line-height: 2em; text-align: center;" i18n:translate="">Tips</div>
+<div class="float_me">
+	<div i18n:translate="">Tips</div>
 	<ul>
 		<li i18n:translate="">Having trouble logging out? Make sure that cookies are allowed in your browser</li>
 		<li i18n:translate="">If you opened child browser windows from this one, those will maintain your authentication</li>
@@ -47,8 +47,8 @@
 <tal:block define="user python:request.AUTHENTICATED_USER.getUserName()" condition="python:user=='Anonymous User'">
 <h1 i18n:translate="">Log in</h1>
 
-<div tal:attributes="style string:float: ${test(isArabic, 'left', 'right')}; width: 30%; background-color: #FFFFE1;">
-    <div style="background-color: #a0a0a0; font-weight: bold; color: white; line-height: 2em; text-align: center;" i18n:translate="">Tips</div>
+<div class="float_me">
+    <div i18n:translate="">Tips</div>
     <ul>
         <li i18n:translate="">Having trouble logging in? Make sure that cookies are allowed in your browser</li>
         <li i18n:translate="">Don't forget to logout or exit your browser when you're done</li>
