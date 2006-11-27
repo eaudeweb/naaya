@@ -1,22 +1,21 @@
 <span tal:replace="structure here/standard_html_header"/>
 
 <tal:block define="came_from python:request.get('came_from', '');
-                action_url python:came_from or 'logged_in'">
+			action_url python:came_from or 'logged_in'">
 
 <tal:block define="user python:request.AUTHENTICATED_USER.getUserName();
-                                auth_tool python:here.getAuthenticationTool();
-                                user_obj python:auth_tool.getUser(request.AUTHENTICATED_USER.getUserName());"
-        condition="python:user!='Anonymous User'">
-
+							auth_tool python:here.getAuthenticationTool();
+							user_obj python:auth_tool.getUser(request.AUTHENTICATED_USER.getUserName());"
+							condition="python:user!='Anonymous User'">
 
 
 <h1 i18n:translate="">Log out</h1>
-<div style="float: right; width: 30%; background-color: #FFFFE1;">
-    <div style="background-color: #a0a0a0; font-weight: bold; color: white; line-height: 2em; text-align: center;" i18n:translate="">Tips</div>
-    <ul>
-        <li i18n:translate="">Having trouble logging out? Make sure that cookies are allowed in your browser</li>
-        <li i18n:translate="">If you opened child browser windows from this one, those will maintain your authentication</li>
-    </ul>
+<div tal:attributes="style string:float: ${test(isArabic, 'left', 'right')}; width: 30%; background-color: #FFFFE1;">
+	<div style="background-color: #a0a0a0; font-weight: bold; color: white; line-height: 2em; text-align: center;" i18n:translate="">Tips</div>
+	<ul>
+		<li i18n:translate="">Having trouble logging out? Make sure that cookies are allowed in your browser</li>
+		<li i18n:translate="">If you opened child browser windows from this one, those will maintain your authentication</li>
+	</ul>
 </div>
 
 <div id="log1"><tal:block  i18n:translate="">You are logged in as:</tal:block> <em><span tal:replace="user" /></em>.</div>
@@ -48,7 +47,7 @@
 <tal:block define="user python:request.AUTHENTICATED_USER.getUserName()" condition="python:user=='Anonymous User'">
 <h1 i18n:translate="">Log in</h1>
 
-<div style="float: right; width: 30%; background-color: #FFFFE1;">
+<div tal:attributes="style string:float: ${test(isArabic, 'left', 'right')}; width: 30%; background-color: #FFFFE1;">
     <div style="background-color: #a0a0a0; font-weight: bold; color: white; line-height: 2em; text-align: center;" i18n:translate="">Tips</div>
     <ul>
         <li i18n:translate="">Having trouble logging in? Make sure that cookies are allowed in your browser</li>
