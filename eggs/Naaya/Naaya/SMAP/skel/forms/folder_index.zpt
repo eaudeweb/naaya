@@ -90,7 +90,6 @@ function fRenameObjects()
 //-->
 </script>
 
-
 <div>
 <span style="float: right; width: 20%; word-wrap: break-word;">
     <tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
