@@ -43,7 +43,6 @@
 			<link id="109" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="9"/>
 			<link id="110" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="10"/>
 		</linkslist>
-		<portlet id="portlet_folder_administration" title="Folder Administration"/>
 		<linkslist id="places" title="Places" portlet="1">
 			<link id="11" title="Europa" description="European Union on-line" url="http://europa.eu/" relative="0" permission="" order="10"/>
 			<link id="12" title="EEA Home" description="European Environment Agency" url="http://www.eea.europa.eu" relative="0" permission="" order="20"/>
