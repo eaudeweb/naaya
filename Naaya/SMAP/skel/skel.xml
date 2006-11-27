@@ -12,6 +12,7 @@
 			<template id="portlet_left_macro" title="Macro for left portlets"/>
 			<template id="portlet_center_macro" title="Macro for center portlets"/>
 			<template id="portlet_right_macro" title="Macro for right portlets"/>
+			<template id="folder_administration_macro" title="Folder administration macro page"/>
 			<scheme id="blue" title="Blue">
 				<image id="bck_li.gif" title=""/>
 				<image id="bck_top.jpg" title=""/>
@@ -37,6 +38,7 @@
 	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
 		<portlet id="portlet_rdfcalendar" title="RDF Calendar"/>
 		<portlet id="portlet_administration" title="Administration" />
+		<portlet id="portlet_folder_administration" title="Folder Administration"/>
 		<linkslist id="places" title="Places" portlet="1">
 			<link id="11" title="Europa" description="European Union on-line" url="http://europa.eu/" relative="0" permission="" order="10"/>
 			<link id="12" title="EEA Home" description="European Environment Agency" url="http://www.eea.europa.eu" relative="0" permission="" order="20"/>
