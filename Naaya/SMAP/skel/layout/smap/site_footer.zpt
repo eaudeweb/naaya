@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
 	tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language"
-	tal:define="site_url here/getSitePath; isRTL here/isRTL">
+	tal:define="site_url here/getSitePath; isArabic here/isArabicLanguage; noArabic not:isArabic">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 	</head>
@@ -20,15 +20,28 @@
 							<span i18n:translate="">Page last updated: </span>
 							<span tal:replace="python:here.utShowDateTime(here.bobobase_modification_time())" />
 						</div>
-						[<a tal:attributes="href string:${site_url}/info/contact" i18n:translate="">Contact us</a>]
-						[<a tal:attributes="href string:${site_url}/info/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>]
+						<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('footer_links').get_links_list()">
+							<script type="text/javascript">
+							<!--
+								//Display the print image only in case jscript is active since it's functionality is based on jscript.
+								document.write('<li>');
+								document.write('<a href="javascript:print()" title="Print">');
+								document.write('<img style="vertical-align:middle;" src="misc_/SEMIDE/print.gif" alt="Print" />');
+								document.write("<" + "/a> | ");
+								document.write("<" + "/li>");
+							//-->
+							</script>
+							<tal:block tal:repeat="item l_list">
+							<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:translate="" i18n:attributes="title">Title</a> | </li>
+							</tal:block>
+						</ul>
 						<br />
 						<div class="right_forcer">&nbsp;</div>
 					</div>
 				</div>
 			</div>
 
-<tal:block condition="isRTL" replace="structure string:</td></tr></table>" />
+<tal:block condition="isArabic" replace="structure string:</td></tr></table>" />
 
 		</div>
 	</div>
