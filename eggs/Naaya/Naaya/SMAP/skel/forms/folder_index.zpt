@@ -129,6 +129,11 @@ function fRenameObjects()
 	</div>
 </div>
 
+<span style="float: right; width: 20%; word-wrap: break-word;"
+	tal:define="logo here/getFolderLogo" tal:condition="logo">
+	<img tal:attributes="src logo/absolute_url" alt="Folder logo" />
+</span>
+
 <form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
