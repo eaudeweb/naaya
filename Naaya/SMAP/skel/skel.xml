@@ -4,6 +4,7 @@
 		<form id="folder_index" title="NyFolder default view" />
 		<form id="site_index" title="Portal home page" />
 		<form id="site_login" title="Portal login" />
+		<form id="site_search" title="Search page" />
 	</forms>
 	<layout default_skin_id="smap" default_scheme_id="blue">
 		<skin id="smap" title="SMAP">
@@ -37,6 +38,11 @@
 	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
 		<portlet id="portlet_rdfcalendar" title="RDF Calendar"/>
 		<portlet id="portlet_administration" title="Administration" />
+		<linkslist id="menunav_links" title="Menu navigation links" portlet="">
+			<link id="109" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="9"/>
+			<link id="110" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="10"/>
+		</linkslist>
+		<portlet id="portlet_folder_administration" title="Folder Administration"/>
 		<linkslist id="places" title="Places" portlet="1">
 			<link id="11" title="Europa" description="European Union on-line" url="http://europa.eu/" relative="0" permission="" order="10"/>
 			<link id="12" title="EEA Home" description="European Environment Agency" url="http://www.eea.europa.eu" relative="0" permission="" order="20"/>
