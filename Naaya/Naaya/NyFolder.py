@@ -426,6 +426,12 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         r.extend(self.getPendingObjects())
         return r
 
+    def countPendingContent(self):  return len(self.getPendingContent())
+    def hasPendingContent(self):    return len(self.getPendingContent()) > 0
+    def getSubfoldersWithPendingItems(self):
+        #returns a list with all subfolders that contains pending(draft) objects
+        return filter(lambda x: x.hasPendingContent(), self.getCatalogedObjects([METATYPE_FOLDER], 0, path='/'.join(self.getPhysicalPath())))
+
     def getObjectsForValidation(self): return [x for x in self.objectValues(self.get_pluggable_metatypes_validation()) if x.submitted==1]
     def count_notok_objects(self): return len([x for x in self.getObjectsForValidation() if x.validation_status==-1 and x.submitted==1])
     def count_notchecked_objects(self): return len([x for x in self.getObjectsForValidation() if x.validation_status==0 and x.submitted==1])
@@ -835,5 +841,40 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         """ """
         return self.getFormsTool().getContent({'here': self}, 'folder_renameid')
 
+    #administration pages
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'administration_basket_html')
+    def administration_basket_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'folder_administration_basket')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'administration_logo_html')
+    def administration_logo_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'folder_administration_logo')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'administration_sitemap_html')
+    def administration_sitemap_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'folder_administration_sitemap')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'administration_users_html')
+    def administration_users_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'folder_administration_users')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'administration_source_html')
+    def administration_source_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'folder_administration_source')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'administration_portlets_html')
+    def administration_portlets_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'folder_administration_portlets')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'administration_feedback_html')
+    def administration_feedback_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'folder_administration_feedback')
 
 InitializeClass(NyFolder)
