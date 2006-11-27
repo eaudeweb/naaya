@@ -4,7 +4,6 @@
 		<form id="folder_index" title="NyFolder default view"/>
 		<form id="site_index" title="Portal home page"/>
 		<form id="site_login" title="Portal login"/>
-		<form id="site_logout" title="Portal logout"/>
 	</forms>
 	<layout default_skin_id="smap" default_scheme_id="blue">
 		<skin id="smap" title="SMAP">
