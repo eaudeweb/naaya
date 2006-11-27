@@ -8,15 +8,16 @@
 		<form id="folder_editlogo" title="NyFolder edit logo"/>
 		<form id="folder_index" title="NyFolder default view"/>
 		<form id="folder_sortorder" title="NyFolder sort order"/>
-		<form id="folder_renameid" title="NyFolder rename subitems ids"/>		
+		<form id="folder_renameid" title="NyFolder rename subitems ids"/>
 		<form id="folder_restrict" title="NyFolder restrictions"/>
 		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
+		<form id="folder_administration_basket" title="Folder administration - centralized basket form"/>
 		<form id="epoz_toolbox" title="Epoz toolbox"/>
 		<form id="messages_box" title="Box for info or error messages"/>
 		<form id="languages_box" title="Box for changing the language on pages"/>
 		<form id="form_languages_box" title="Box for changing the language when translating content"/>
 		<form id="comment_add" title="Add comment for content" />
-		<form id="channel_details" title="Show all items from remote channel" />		
+		<form id="channel_details" title="Show all items from remote channel" />
 		<form id="comments_box" title="Box for content comments"/>
 		<form id="site_index" title="Portal home page"/>
 		<form id="standard_error_message" title="Portal standard error page"/>
@@ -83,6 +84,7 @@
 			<template id="portlet_left_macro" title="Macro for left portlets"/>
 			<template id="portlet_center_macro" title="Macro for center portlets"/>
 			<template id="portlet_right_macro" title="Macro for right portlets"/>
+			<template id="folder_administration_macro" title="Folder administration macro page"/>
 			<scheme id="scheme" title="Scheme">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for print media"/>
@@ -129,6 +131,7 @@
 		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="portlet_maincategories" title="Main sections" />
 		<portlet id="portlet_localchannels" title="Local channels" />
+		<portlet id="portlet_folder_administration" title="Folder Administration"/>
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
 			<link id="102" title="Finsiel" description="Finsiel Romania" url="http://www.finsiel.ro" relative="0" permission="" order="2"/>
 			<link id="103" title="Naaya" description="EnviroWindows Publisher" url="http://publisher.finsiel.ro/" relative="0" permission="" order="3"/>
