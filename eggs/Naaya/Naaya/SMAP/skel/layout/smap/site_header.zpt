@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language; dir python:test(isArabic, 'rtl', 'ltr')"
 	tal:define="site_url here/getSitePath; isArabic here/isArabicLanguage; noArabic not:isArabic">
-	<head	tal:define="css_screen python:test(isArabic, 'style_rtl', 'style');
+<head	tal:define="css_screen python:test(isArabic, 'style_rtl', 'style');
 						css_common python:test(isArabic, 'style_common_rtl', 'style_common');
 						css_handheld python:test(isArabic, 'style_handheld_rtl', 'style_handheld');">
 		<title tal:content="here/title_or_id" />
@@ -32,102 +32,57 @@
 			/*]]>*/
 			</style>
 		<![endif]-->
-	</head>
-	<body>
-		<a class="skiplink" href="#contentstart" accesskey="2" i18n:translate="">Skip navigation</a>
+</head>
+<body>
+	<a class="skiplink" href="#contentstart" accesskey="2" i18n:translate="">Skip navigation</a>
 
-
-<div id="nav_upper" tal:define="authenticated_user python:request.AUTHENTICATED_USER.getUserName()">
-
-					<div id="nav_upper_log">
-						
-						<img tal:attributes="src string:${here/getSkinFilesPath}/ico_login.gif;" align="middle" alt="" />
-						<tal:block tal:condition="python: authenticated_user != 'Anonymous User'">
-							<span i18n:translate="" tal:omit-tag="">you are logged in as</span>
-							<strong tal:content="authenticated_user" />
-							<a tal:attributes="href string:${site_url}/login_html" i18n:translate="">logout</a>
-						</tal:block>
-
-						<tal:block tal:condition="python: authenticated_user == 'Anonymous User'">
-							<span i18n:translate="" tal:omit-tag="">you are not logged in</span>
-							<a tal:attributes="href string:${site_url}/login_html" i18n:translate="">login</a>
-							<a tal:attributes="href string:${site_url}/requestrole_html" i18n:translate="">create account</a>
-						</tal:block>
-						
-					</div>
-
-<!-- start -->
-
-<div class="navuplinks" tal:define="l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
-					<span><a tal:attributes="href site_url" i18n:translate="" accesskey="1">Home</a> </span>
-					<span tal:condition="python:authenticated_user!='Anonymous User'"><a tal:attributes="href string:${site_url}/profilesheet_html" i18n:translate="">My portal</a> </span>
-
-					<tal:block tal:repeat="item l_list">
-					<span tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:translate="" i18n:attributes="title">Title</a> </span>
-					</tal:block>
-					</div> 
-<!-- end -->
-<div class="clearing_div_top" >&nbsp;</div>
-</div>
-
-<div class="topban">
-  <div class="topleft">
-<img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" alt="" />
-</div>
-  <div class="topright">
-    <div class="toptitle">
-
-<div class="sitetitle"><span tal:content="here/site_title" /></div>
-<div class="sitesubtitle" tal:content="here/site_subtitle" />
+	<div id="nav_upper" tal:define="authenticated_user python:request.AUTHENTICATED_USER.getUserName()">
+		<div id="nav_upper_log">
+			<img tal:attributes="src string:${here/getSkinFilesPath}/ico_login.gif;" align="middle" alt="" />
+			<tal:block tal:condition="python: authenticated_user != 'Anonymous User'">
+				<span i18n:translate="" tal:omit-tag="">you are logged in as</span>
+				<strong tal:content="authenticated_user" />
+				<a tal:attributes="href string:${site_url}/login_html" i18n:translate="">logout</a>
+			</tal:block>
+			<tal:block tal:condition="python: authenticated_user == 'Anonymous User'">
+				<span i18n:translate="" tal:omit-tag="">you are not logged in</span>
+				<a tal:attributes="href string:${site_url}/login_html" i18n:translate="">login</a>
+				<a tal:attributes="href string:${site_url}/requestrole_html" i18n:translate="">create account</a>
+			</tal:block>
+		</div>
+		<div class="navuplinks" tal:define="l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
+			<span><a tal:attributes="href site_url" i18n:translate="" accesskey="1">Home</a> </span>
+			<tal:block tal:repeat="item l_list">
+			<span tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:translate="" i18n:attributes="title">Title</a> </span>
+			</tal:block>
+		</div>
+		<div class="clearing_div_top" >&nbsp;</div>
 	</div>
-    <div style="" class="topmenu">
-      <div class="toplanguage" >
-	  <tal:block replace="structure here/languages_box" />
 
-      </div>
+	<div class="topban">
+		<div class="topleft"> <img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" alt="" /> </div>
+		<div class="topright">
+			<div class="toptitle">
+				<div class="sitetitle"><span tal:content="here/site_title" /></div>
+				<div class="sitesubtitle" tal:content="here/site_subtitle" />
+			</div>
+			<div style="" class="topmenu">
+				<div class="toplanguage" > <tal:block replace="structure here/languages_box" /> </div>
 
-	  						<div tal:repeat="main_categ here/getMainTopics" class="menuitem">
-							<a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/description" tal:content="main_categ/title" />
-							</div>
+				<div tal:repeat="main_categ here/getMainTopics" class="menuitem">
+				<a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/description" tal:content="main_categ/title" />
+				</div>
+			</div>
+		</div>
+	</div>
 
-	  
-		  <!-- ssss --><!--  
-      <div class="menuitem"><a href="#">Home</a></div>
-      <div class="menuitem"><a href="#">Projects</a></div>
-      <div class="menuitem"><a href="#">COUNTRIES
-          ENV INFORMATION </a></div>
-      <div class="menuitem"><a href="#">REGIONAL
-          INFORMATION</a></div>
-      <div class="menuitem"><a href="#">kahdksahdak</a></div>
-								  -->
-	  <!-- eeee -->  
-	
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-
-
-<!-- top menu -->
-
-<!--END top menu -->
-<!-- acces-bread-search -->
-			
-
-<!--END acces-bread-search -->
-<div class="clearing_div"> &nbsp; </div>
+	<div class="clearing_div"> &nbsp; </div>
 
 	<div id="main_structure_ie_fixer">
 		<div id="main_structure">
 
 <!-- LEFT SIDE PORTLETS -->
 			<div id="left_port">
-			
 			<div id="search_area">
 					<form method="get" tal:attributes="action string:${site_url}/search_html">
 						<label accesskey="4" for="query" i18n:translate="">Site search: </label>
@@ -135,39 +90,31 @@
 						<input tal:attributes="src string:${here/getSkinFilesPath}/ico_sitesearch.gif" id="sub" type="image" name="submit" i18n:attributes="alt;title" alt="Search" title="Search" />
 					</form>
 				</div>
-				
-				
 				<br/>
-
 				<tal:block tal:repeat="item here/get_left_portlets_objects">
 					<tal:block tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_left_macro'})" />
 				</tal:block>
-
-
 			</div>
 <!-- END OF LEFT SIDE PORTLETS -->
 <tal:block condition="isArabic" replace="structure string:<table width='100%'><tr><td>" />
-
-
 
 			<div id="middle_right_port">
 			<!-- ******************* -->
 			<div id="bread_crumb_trail">
 					<tal:block repeat="crumb python:here.getBreadCrumbTrail(request)">
-					<a tal:condition="python:crumb.meta_type!='SEMIDE Site'"
-					   tal:attributes="href string:${crumb/absolute_url}/;
-									   title crumb/title_or_id;"
-					   tal:content="crumb/title_or_id" />
-					<a tal:condition="python:crumb.meta_type=='SEMIDE Site'" tal:attributes="href site_url"
-					   i18n:translate="">
+					<a tal:condition="python:crumb.meta_type!='SMAP Site'"
+						tal:attributes="href string:${crumb/absolute_url}/;
+									title crumb/title_or_id;" tal:content="crumb/title_or_id" />
+					<a tal:condition="python:crumb.meta_type=='SEMIDE Site'" tal:attributes="href site_url" i18n:translate="">
 						Home
 					</a>
 					<span tal:condition="not:repeat/crumb/end"> &raquo; </span>
 					</tal:block>
 			</div>
-<!-- ******************* -->
+			<!-- ******************* -->
+			<a name="contentstart" id="contentstart"></a>
 			<span tal:replace="structure here/messages_box"/>
-				<a name="contentstart" id="contentstart"></a>
+
 				<!--SITE_HEADERFOOTER_MARKER-->
 
 			</div>
