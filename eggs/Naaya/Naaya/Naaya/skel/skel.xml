@@ -12,6 +12,7 @@
 		<form id="folder_restrict" title="NyFolder restrictions"/>
 		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
 		<form id="folder_administration_basket" title="Folder administration - centralized basket form"/>
+		<form id="folder_administration_logo" title="Folder administration - change logo"/>
 		<form id="epoz_toolbox" title="Epoz toolbox"/>
 		<form id="messages_box" title="Box for info or error messages"/>
 		<form id="languages_box" title="Box for changing the language on pages"/>
