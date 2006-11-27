@@ -432,12 +432,49 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         #returns a list with all subfolders that contains pending(draft) objects
         return filter(lambda x: x.hasPendingContent(), self.getCatalogedObjects([METATYPE_FOLDER], 0, path='/'.join(self.getPhysicalPath())))
 
+    def getUsersRoles(self):
+        """
+        Returns information about the user's roles inside this folder
+        and its subfolders.
+        """
+        return self.getAuthenticationTool().getUsersRolesRestricted('/'.join(self.getPhysicalPath()))
+
     def getObjectsForValidation(self): return [x for x in self.objectValues(self.get_pluggable_metatypes_validation()) if x.submitted==1]
     def count_notok_objects(self): return len([x for x in self.getObjectsForValidation() if x.validation_status==-1 and x.submitted==1])
     def count_notchecked_objects(self): return len([x for x in self.getObjectsForValidation() if x.validation_status==0 and x.submitted==1])
 
     def getSortedFolders(self): return self.utSortObjsListByAttr(self.getFolders(), 'sortorder', 0)
     def getSortedObjects(self): return self.utSortObjsListByAttr(self.getObjects(), 'sortorder', 0)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_revokeroles')
+    def admin_folder_revokeroles(self, roles=[], REQUEST=None):
+        """ """
+        self.getAuthenticationTool().manage_revokeUsersRoles(roles)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/administration_users_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_addroles')
+    def admin_folder_addroles(self, name='', roles=[], location='', REQUEST=None):
+        """ """
+        if location == '':
+                #this is the current folder actually
+                location = self.absolute_url(1)
+        msg = err = ''
+        #test that the location is under the current folder
+        if location.startswith(self.absolute_url(1)):
+            try:
+                self.getAuthenticationTool().manage_addUsersRoles(name, roles, 'other', location)
+            except Exception, error:
+                err = str(error)
+            else:
+                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+        else:
+            err = 'Invalid location specified.'
+        if REQUEST:
+            if err != '': self.setSessionErrors([err])
+            if msg != '': self.setSessionInfo([msg])
+            REQUEST.RESPONSE.redirect('%s/administration_users_html' % self.absolute_url())
 
     def getFolderLogo(self):
         """
