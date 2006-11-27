@@ -13,6 +13,7 @@
 			<template id="portlet_left_macro" title="Macro for left portlets"/>
 			<template id="portlet_center_macro" title="Macro for center portlets"/>
 			<template id="portlet_right_macro" title="Macro for right portlets"/>
+			<template id="folder_administration_macro" title="Folder administration macro page"/>
 			<scheme id="blue" title="Blue">
 				<image id="bck_li.gif" title=""/>
 				<image id="bck_top.jpg" title=""/>
