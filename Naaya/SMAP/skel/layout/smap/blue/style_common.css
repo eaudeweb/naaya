@@ -20,7 +20,7 @@
 		font-size: 90%;
 		font-family: Verdana, arial;
 		border: 1px solid #4E8EC2;
-		color: #7CAE31;
+		color: #7CAE31!important;
 		background-color: white;
 		margin: 1px;
 		padding: 2px 4px;
@@ -633,4 +633,5 @@ tr.not-duplicate {
 	color: #666666;
 	font-size: 90%;
 }
+
 
