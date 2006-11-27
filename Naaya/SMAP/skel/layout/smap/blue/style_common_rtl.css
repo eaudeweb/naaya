@@ -516,7 +516,23 @@ tr.duplicate a {
 tr.not-duplicate {
 }
 
-/*	FORUM STYLE	*/
+
+/* FLOATED BOXES */
+.float_me {
+	float: left;
+	width: 30%;
+	background-color: #FFFFE1;
+}
+
+.float_me div {
+	background-color: #a0a0a0;
+	font-weight: bold;
+	color: white;
+	line-height: 2em;
+	text-align: center;
+}
+
+/* FORUM STYLE */
 .forum_message_top a {
 	margin-right: 0px;
 	padding: 0px 2px 0px 3px;
