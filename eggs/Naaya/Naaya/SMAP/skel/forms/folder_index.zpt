@@ -100,7 +100,6 @@ function fRenameObjects()
 <tal:block tal:define=" isArabic here/isArabicLanguage;
 						noArabic not:isArabic">
 <div class="middle_port" tal:define="margin_string python:test(isArabic,'margin-left:0;;','margin-right:0;;')" tal:attributes="style python:test(here.getPortletsTool().get_right_portlets_locations_objects(here), '', margin_string)">
-</tal:block>
 
 <h1>
 	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" border="0" />
@@ -195,6 +194,9 @@ function fRenameObjects()
 </tr>
 </table>
 </form>
+
+</div>
+</tal:block>
 
 </div>
 </tal:block>
