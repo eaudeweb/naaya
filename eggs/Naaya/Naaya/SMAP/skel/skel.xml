@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
+	<forms>
+		<form id="folder_index" title="NyFolder default view"/>
+		<form id="site_index" title="Portal home page"/>
+		<form id="site_login" title="Portal login"/>
+		<form id="site_logout" title="Portal logout"/>
+	</forms>
 	<layout default_skin_id="smap" default_scheme_id="blue">
 		<skin id="smap" title="SMAP">
 			<template id="site_header" title="Portal standard HTML header"/>
@@ -24,6 +30,7 @@
 	</pluggablecontenttypes>
 	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
 		<portlet id="portlet_rdfcalendar" title="RDF Calendar"/>
+		<portlet id="portlet_administration" title="Administration" />
 		<reflist id="countries" title="Countries" description="List of countries used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
 			<item id="Albania" title="Albania"/>
 			<item id="Algeria" title="Algeria"/>
