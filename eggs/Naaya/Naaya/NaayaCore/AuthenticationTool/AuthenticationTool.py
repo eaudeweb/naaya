@@ -33,6 +33,7 @@ from Globals import InitializeClass, PersistentMapping
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #product imports
+from Products.Naaya.constants import METATYPE_FOLDER
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import file_utils,utils
 from Products.NaayaCore.managers.session_manager import session_manager
@@ -246,6 +247,21 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
         for user_obj in users_obj:
             res.append(user_obj.name)
         return res
+
+    security.declareProtected(manage_users, 'getUsersRolesRestricted')
+    def getUsersRolesRestricted(self, path):
+        """
+        Returns information about the user's roles inside the given path.
+        """
+        users_roles = {}
+        for folder in self.getCatalogedObjects(meta_type=[METATYPE_FOLDER,'Folder'], has_local_role=1, path=path):
+            for roles_tuple in folder.get_local_roles():
+                local_roles = self.getLocalRoles(roles_tuple[1])
+                if roles_tuple[0] in self.user_names() and len(local_roles) > 0:
+                    if not users_roles.has_key(str(roles_tuple[0])):
+                        users_roles[str(roles_tuple[0])] = []
+                    users_roles[str(roles_tuple[0])].append((local_roles, folder.absolute_url(1)))
+        return users_roles
 
     security.declareProtected(manage_users, 'searchUsers')
     def searchUsers(self, query, limit=0):
