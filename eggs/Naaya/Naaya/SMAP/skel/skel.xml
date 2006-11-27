@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
 	<forms>
-		<form id="folder_index" title="NyFolder default view"/>
-		<form id="site_index" title="Portal home page"/>
-		<form id="site_login" title="Portal login"/>
+		<form id="folder_index" title="NyFolder default view" />
+		<form id="site_index" title="Portal home page" />
+		<form id="site_login" title="Portal login" />
 	</forms>
 	<layout default_skin_id="smap" default_scheme_id="blue">
 		<skin id="smap" title="SMAP">
@@ -37,6 +37,19 @@
 	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
 		<portlet id="portlet_rdfcalendar" title="RDF Calendar"/>
 		<portlet id="portlet_administration" title="Administration" />
+		<linkslist id="places" title="Places" portlet="1">
+			<link id="11" title="Europa" description="European Union on-line" url="http://europa.eu/" relative="0" permission="" order="10"/>
+			<link id="12" title="EEA Home" description="European Environment Agency" url="http://www.eea.europa.eu" relative="0" permission="" order="20"/>
+			<link id="13" title="EIONET" description="EIONET" url="http://www.eionet.europa.eu/" relative="0" permission="" order="30"/>
+			<link id="14" title="CIRCA Forum" description="CIRCA Forum" url="http://forum.europa.eu.int/" relative="0" permission="" order="40"/>
+		</linkslist>
+		<linkslist id="footer_links" title="Footer links" portlet="">
+			<link id="20" title="Disclaimer" description="" url="/about/copyright_html" relative="1" permission="" order="10"/>
+			<link id="21" title="Contact us" description="" url="/about/contact_html" relative="1" permission="" order="20"/>
+			<link id="22" title="Webmaster" description="" url="/feedback_html" relative="1" permission="" order="30"/>
+			<link id="23" title="Helpdesk" description="" url="/HelpDesk/add_issue_html" relative="1" permission="" order="40"/>
+			<link id="24" title="Accessibility statement" description="" url="/about/accessibility" relative="1" permission="" order="50"/>
+		</linkslist>
 		<reflist id="countries" title="Countries" description="List of countries used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
 			<item id="Albania" title="Albania"/>
 			<item id="Algeria" title="Algeria"/>
