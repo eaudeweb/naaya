@@ -126,9 +126,10 @@ li {
 #nav_upper {
 	text-align: left;
 	background-color: #7CAE31;
+	color: white;
 }
 
-#nav_upper div{
+#nav_upper div {
 	margin: 0;
 	margin-left:4px;	
 	padding:0;
@@ -146,18 +147,24 @@ li {
 				height: 1px;
 				font-size: 1px;
 				line-height: 1px;
-				background-color: white; /*ERROR*/
+				background-color: #7CAE31; /*ERROR*/
 }
+
+#nav_upper a {
+	color: white;
+}
+
 #nav_upper span a {
 
 	display: block;
 	padding: 0px 6px;
 	border-right: 1px solid #cccccc;
 	float: left;
+	text-decoration: none;
 }
 
 #nav_upper a:visited {
-	color: white;
+	color: white!important;
 }
 #nav_upper_log {
 	float: right;
@@ -488,40 +495,81 @@ div#bread_crumb_trail a:visited{
 #left_port ul a.active_link:visited {
 }
 
+/* @@@@@@@@@@@@@@@@@@@@@@ RIGHT PORTLETS @@@@@@@@@@@@@@@@@@@@@@@ */
+/* RIGHT PORTLET VERSION 1 */
+
+
 
 .right_portlet {
-	background-color: pink;
-	border: 1px solid pink;
+	background-color:#EAF1F7;
+	border: 0px solid white;
 	margin-bottom: 10px;
-	padding: 10px;
 }
 
 .right_portlet_tile {
-	position:relative;
+	position: relative;
+	background-color: #9BC0DD;
+	color: white;
+	font-weight: bold;
+	font-size: 90%;
+	padding: 2px 0px 3px 0px;
+/*	text-indent: 14px; */ /* must not! */
+	background-repeat: no-repeat;	
+	background-position: left top;
+	/* var */
+	background-image: url(rtitle_bullet_ar.gif);	
+	border-bottom: 2px solid white;
+	
 	}
 
 .right_portlet_body {
+		background-color: #EAF1F7;
+
+		/*position: relative;*/ /* MUST NOT APPEAR!! */
 	}
 
 .right_portlet ul {
 	list-style:none;
 	margin:0;
 	padding:0;
-}
+	border: 10px solid #EAF1F7;
+	}
+
+
 .right_portlet li {
 	text-indent:0;
 	display: block;
 	margin:0;
-	padding:0px;
-	color: red;
+	padding:3px 0px;
+	color: #227AAB;
+	font-family:'Arabic Transparent', Verdana, Arial, Helvetica, sans-serif;
+	font-size: 100%;
+}
+
+.right_portlet li img {
+		display: none;
+}
+	
+	
+.right_portlet a {
+	text-decoration: none;
+	color: #227AAB;
+}
+
+	.right_portlet a:visited {
 	}
 
-.right_portlet a {
-	color: green;
+.right_portlet .icoxml {
+/* var */
+	padding: 2px 12px 4px 12px;
+	text-align: left;
+
 }
 
-.right_portlet a:visited {
-}
+/* end RIGHT PORTLET VERSION 1 */
+
+/* @@@@@@@@@@@@@@@@@@@@@@ RIGHT PORTLETS @@@@@@@@@@@@@@@@@@@@@@@ */
+
 /*
 #right_calendar {
 }
@@ -810,4 +858,73 @@ div>ul.proj_projects {
 
 /* END STYLE */
 
+
+/* --------- THE FANCY NEW BLUE BANNER------------ */
+
+
+.topban {
+	background-color: #3978AC;
+	background-image: url(bck_top.jpg);
+	background-repeat: repeat-x;
+	background-position: left bottom;
+	clear: both;
+}
+.topleft {
+	float: right; 
+	width: 165px; 
+	height: 95px;
+}
+.topright {
+	margin-right: 172px;
+	height: 95px; 
+	position: relative;
+}
+.topmenu {
+	position: absolute; 
+	top: 59px; 
+	right:0; 
+	width: 99%;
+}
+.topleft img {
+	margin: 13px 21px 0 0px;
+}
+.topmenu .menuitem {
+	float: right;
+	height: 31px;
+	border-right: 1px solid #DFF0C6;
+}
+.topmenu .menuitem a {
+	display: block; /* added for RTL */
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #FFFFFF;
+	text-decoration: none;
+	text-transform: uppercase;
+	padding: 0px 6px 0px 9px;
+	
+}
+.toptitle {
+	border: 1px solid #3978AC; /* FIXEX Firefox BUG */
+}
+.sitetitle {
+	margin-top: 20px;
+	font-size: 20px;
+	font-family: "Times New Roman", Times, serif;
+	color: #DFF0C6;
+	
+}
+.sitesubtitle {
+	display: none;
+	color: #DFF0C6;
+}
+.toplanguage {
+	float: left;
+	margin: 0 0px 0 5px;
+	
+}
+.toplanguage select {
+	font-size: 11px;
+	color: #478AC0;
+}
+/* --------- END THE FANCY NEW BLUE BANNER------------ */
 

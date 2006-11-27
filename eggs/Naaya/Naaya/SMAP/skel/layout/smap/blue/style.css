@@ -1,5 +1,6 @@
 <span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')"/>
 /* COMMENT VAR  indicates that the following style attributes are to be changed for the ARABIC version */
+
 body {
 	margin:0;
 	padding:0;
@@ -120,6 +121,7 @@ li {
 #nav_upper {
 	text-align: right;
 	background-color: #7CAE31;
+	color: white;
 }
 
 #nav_upper div{
@@ -136,8 +138,16 @@ li {
 }
 */
 .clearing_div_top {
-	display: none;
+				clear: both;
+				height: 1px;
+				font-size: 1px;
+				line-height: 1px;
+				background-color: #7CAE31; /*ERROR*/
 }
+#nav_upper a {
+	color: white;
+}
+
 #nav_upper span a {
 	padding: 0 4px;
 	color: white;
@@ -335,42 +345,7 @@ div#bread_crumb_trail a:visited{
 	margin-right: 165px; /* to be changed */
 	background-color: white;
 }
-/*
-.country_folder .country_flag {
-	float:right;
-	padding-right: 160px;
-	}
-	.country_folder .right_port {
-	position:relative;
-	top:-7px;
-	left:7px;
-	float: right;
-	background-color:white;
-	width: 157px;
-	}
-	.country_folder .middle_port_head {
-	float:left;
-	width:100%;
-	margin-right:-165px;
-	}
-	.country_folder .middle_port_head2 {
-	margin-right: 210px; 
-	}
-	.country_folder #right_port {
-	width:157px;
-	float:right;
-	clear:right;
-	}
-	.country_folder .middle_port {
-	clear:left;
-	margin-right: 165px;
-	height:1px; 
-	}
 
-	.country_folder>.middle_port { 
-	height:auto;
-	}
-*/
 #right_port {
 	position:relative;
 	top: 0px;
@@ -471,40 +446,75 @@ div#bread_crumb_trail a:visited{
 #left_port ul a.active_link:visited {
 }
 
+/* @@@@@@@@@@@@@@@@@@@@@@ RIGHT PORTLETS @@@@@@@@@@@@@@@@@@@@@@@ */
+/* RIGHT PORTLET VERSION 1 */
 
 .right_portlet {
-	background-color: pink;
-	border: 1px solid pink;
 	margin-bottom: 10px;
-	padding: 10px;
+	border: 1px solid white;
 }
 
 .right_portlet_tile {
-	position:relative;
-	}
+	position: relative;
+	background-color: #9BC0DD;
+	color: white;
+	font-weight: bold;
+	font-size: 90%;
+	padding: 2px 0px 3px 0px;
+	text-indent: 14px;
+	background-repeat: no-repeat;	
+	background-position: left top;
+	/* var */
+	background-image: url(rtitle_bullet.gif);	
+}
+.right_portlet_tile img { /* TEMPORARY!!!! - to be removed*/
+	display: none;
+}
 
 .right_portlet_body {
-	}
+	position:relative;
+	background-color: #EAF1F7;
+	border-top: 2px solid white;
+	padding: 5px 0px;
+}
 
 .right_portlet ul {
-	list-style:none;
-	margin:0;
-	padding:0;
+	list-style: none;
+	padding: 0;
+	color: #227AAB;
+/* var */
+	margin:0px 13px 5px 7px;
 }
 .right_portlet li {
-	text-indent:0;
-	display: block;
-	margin:0;
-	padding:0px;
-	color: red;
-	}
+	background-repeat: no-repeat;
+	background-image: url(bck_li.gif);
+	border-bottom: 1px solid white;
+/* var */
+	margin:0px 0 5px 0;	
+	padding: 0 0 5px 21px;
+	background-position: -4px 2px;
+}
+.right_portlet li img {
+	display: none;
+}
 
 .right_portlet a {
-	color: green;
+	text-decoration: none;
+	color: #227AAB;
 }
 
 .right_portlet a:visited {
 }
+
+.right_portlet .icoxml {
+/* var */
+	margin: 6px 12px 4px 12px;
+	text-align: right;
+}
+/* end RIGHT PORTLET VERSION 1 */
+
+
+/* @@@@@@@@@@@@@@@@@@@@@@ RIGHT PORTLETS @@@@@@@@@@@@@@@@@@@@@@@ */
 /*
 #right_calendar {
 }
@@ -548,62 +558,8 @@ div#bread_crumb_trail a:visited{
 #footer a {
 	color: #3978AC;
 }
-/*
-.flash_register {
-	text-align: center;
-}
-.flash_register a {
-	text-decoration:none;
-}
 
-*/
 
-/* ?????????????????  What's that part??????????????????? */
-/*
-.right_news{
-}
-
-.right_news li{
-	margin-bottom: 5px;
-	border-bottom: 1px solid #dddddd;
-	padding-bottom: 6px;
-}
-
-.right_date_title {
-	margin-bottom:3px;
-}
-
-.right_date {
-}
-
-.right_title_or_id {
-	font-weight: bold;
-}
-
-.right_by {
-	color: #666666;
-}
-
-.right_contributor {
-	color:#343434;
-}
-
-.right_more {
-	text-align:right;
-}
-
-.right_location {
-	font-weight:bold;
-}
-
-	#calendar-container a:visited {
-	color: white;
-	text-decoration: none;
-	}
-*/
-/* ????????????????? end What's that part??????????????????? */
-
-/* ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ */
 .middle-portlet {
 	border:1px solid white;
 	/*margin-top: 10px;*/
@@ -746,6 +702,7 @@ ul.nostyle li {
 }
 
 /*page break for EPOZ*/
+
 .pbreak {
 	display: none;
 }
@@ -771,3 +728,72 @@ div>ul.proj_projects {
 	height: auto;
 	max-height: 16.2em;
 }
+
+
+/* --------- THE FANCY NEW BLUE BANNER------------ */
+
+
+.topban {
+	background-color: #3978AC;
+	background-image: url(bck_top.jpg);
+	background-repeat: repeat-x;
+	background-position: left bottom;
+	
+}
+.topleft {
+	float: left; 
+	width: 165px; 
+	height: 95px;
+}
+.topright {
+	margin-left: 172px;
+	height: 95px; 
+	position: relative;
+}
+.topmenu {
+	position: absolute; 
+	top: 59px; 
+	left:0; 
+	width: 100%;
+}
+.topleft img {
+	margin: 13px 0 0 21px;
+}
+.topmenu .menuitem {
+	float: left;
+	height: 31px;
+	border-left: 1px solid #DFF0C6;
+}
+.topmenu .menuitem a {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #FFFFFF;
+	text-decoration: none;
+	text-transform: uppercase;
+	padding: 0px 9px 0px 6px;
+	
+}
+.toptitle {
+	border: 1px solid #3978AC; /* FIXEX Firefox BUG */
+}
+.sitetitle {
+	margin-top: 20px;
+	font-size: 20px;
+	font-family: "Times New Roman", Times, serif;
+	color: #DFF0C6;
+	
+}
+.sitesubtitle {
+	display: none;
+	color: #DFF0C6;
+}
+.toplanguage {
+	float: right;
+	margin: 0 5px 0 0;
+	
+}
+.toplanguage select {
+	font-size: 11px;
+	color: #478AC0;
+}
+/* --------- END THE FANCY NEW BLUE BANNER------------ */
