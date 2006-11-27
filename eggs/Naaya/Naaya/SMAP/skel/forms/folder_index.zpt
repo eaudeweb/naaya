@@ -202,9 +202,6 @@ function fRenameObjects()
 </div>
 </tal:block>
 
-</div>
-</tal:block>
-
 <p><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a></p>
 
 <span tal:replace="structure here/comments_box" />
