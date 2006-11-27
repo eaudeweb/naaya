@@ -26,7 +26,7 @@
 								//Display the print image only in case jscript is active since it's functionality is based on jscript.
 								document.write('<li>');
 								document.write('<a href="javascript:print()" title="Print">');
-								document.write('<img style="vertical-align:middle;" src="misc_/SEMIDE/print.gif" alt="Print" />');
+								document.write('<img style="vertical-align:middle;" src="misc_/SMAP/print.gif" alt="Print this page" i19n:attributes="alt" />');
 								document.write("<" + "/a> | ");
 								document.write("<" + "/li>");
 							//-->
