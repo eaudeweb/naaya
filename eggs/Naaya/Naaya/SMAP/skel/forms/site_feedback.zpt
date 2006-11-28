@@ -20,29 +20,29 @@
 <form method="post" tal:attributes="action string:${path}/admin_folder_feedback_form">
 <table border="0" cellspacing="2" cellpadding="2">
 	<tr tal:condition="folder">
-		<td valign="top">Send feedback to</td>
+		<td valign="top" i18n:translate="">Send feedback to</td>
 		<td>
-			<input type="radio" name="who" value="0" checked="checked" /> entire site's administrator
+			<input type="radio" name="who" value="0" checked="checked" /> <span i18n:translate="">entire site's administrator</span>
 			<br />
-			<input type="radio" name="who" value="1" /> the administrator of <strong tal:content="folder/title_or_id" /> section
+			<input type="radio" name="who" value="1" /> <span i18n:translate="">the administrator of </span><strong tal:content="folder/title_or_id" /> section
 			<br />
 			<div tal:condition="here/getFeedbackCustomizedPostal">
-				Postal address of the <strong tal:content="folder/title_or_id" /> section administrator
+				<span i18n:translate="">Postal address of the</span> <strong tal:content="folder/title_or_id" /> <span i18n:translate="">section administrator</span>
 				<div tal:content="structure python:here.utTextareaEncode(here.getFeedbackCustomizedPostal())" />
 			</div>
 		</td>
 	</tr>
-	<tr><td>Full name</td><td><input type="text" name="username" size="40" tal:attributes="value here/getSessionFeedbackName" /></td></tr>
-	<tr><td>Email address</td><td><input type="text" name="email" size="40" tal:attributes="value here/getSessionFeedbackEmail" /></td></tr>
-	<tr><td valign="top">Comments<br/>(if any)</td><td><textarea name="comments" rows="10" cols="50" tal:content="here/getSessionFeedbackComments" /></td></tr>
+	<tr><td i18n:translate="">Full name</td><td><input type="text" name="username" size="40" tal:attributes="value here/getSessionFeedbackName" /></td></tr>
+	<tr><td i18n:translate="">Email address</td><td><input type="text" name="email" size="40" tal:attributes="value here/getSessionFeedbackEmail" /></td></tr>
+	<tr><td valign="top" i18n:translate="">Comments<br/>(if any)</td><td><textarea name="comments" rows="10" cols="50" tal:content="here/getSessionFeedbackComments" /></td></tr>
     <tr><td>&nbsp;</td>
         <td valign="top"><img tal:attributes="src string:${here/getSitePath}/getCaptcha" border="0" alt="" /></td>
     </tr>
-    <tr><td valign="top">Word verification</td>
-        <td><input class="input" type="text" name="contact_word" id="contact_word" value="" />(required)<br />
-        <em>please type the word you see in the above picture.</em></td>
+    <tr><td valign="top" i18n:translate="">Word verification</td>
+        <td><input class="input" type="text" name="contact_word" id="contact_word" value="" /><span i18n:translate="">(required)</span><br />
+        <em i18n:translate="">please type the word you see in the above picture.</em></td>
     </tr>
-    <tr><td>&nbsp;</td><td><input type="submit" value="Send" /></td></tr>
+    <tr><td>&nbsp;</td><td><input type="submit" value="Send" i18n:attributes="value" /></td></tr>
 </table>
 </form>
 </tal:block>
