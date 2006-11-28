@@ -38,7 +38,17 @@ class portlets_manager:
     #api
     def get_left_portlets_ids(self): return self.__left_portlets_ids
     def get_center_portlets_ids(self): return self.__center_portlets_ids
-    def get_right_portlets_locations(self): return self.__right_portlets_locations
+    def get_right_portlets_locations(self, p_filter=None):
+        #get the collection appling the filter if present
+        #it is a path filter
+        if p_filter:
+            r = {}
+            for k, v in self.__right_portlets_locations.items():
+                if k.startswith(p_filter):
+                    r[k] = v
+            return r
+        else:
+            return self.__right_portlets_locations
 
     def set_left_portlets_ids(self, p_ids):
         self.__left_portlets_ids = p_ids
