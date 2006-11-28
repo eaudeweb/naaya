@@ -34,39 +34,39 @@
 </tr>
 <tr>
 	<td class="form-label" valign="top">Project Scale</td>
-	<td><input type="text" name="main_issues" id="main_issues" size="20" value="" /></td>
+	<td><input type="text" name="main_issues:utf8:ustring" id="main_issues" size="20" value="" /></td>
 </tr>
 <tr>
 	<td class="form-label" valign="top">Tools</td>
-	<td><textarea name="tools" id="tools" rows="5" cols="40"></textarea></td>
+	<td><textarea name="tools:utf8:ustring" id="tools" rows="5" cols="40"></textarea></td>
 </tr>
 <tr>
 	<td class="form-label" valign="top">Locations</td>
-	<td><input type="text" name="location" id="location" size="20" /></td>
+	<td><input type="text" name="location:utf8:ustring" id="location" size="20" /></td>
 </tr>
 <tr>
 	<td class="form-label" valign="top">Budget</td>
-	<td><input type="text" name="budget" id="budget" size="20" /></td>
+	<td><input type="text" name="budget:utf8:ustring" id="budget" size="20" /></td>
 </tr>
 <tr>
 	<td class="form-label" valign="top">Timeframe</td>
-	<td><input type="text" name="timeframe" id="timeframe" size="20" /></td>
+	<td><input type="text" name="timeframe:utf8:ustring" id="timeframe" size="20" /></td>
 </tr>
 <tr>
 	<td class="form-label" valign="top">Implementing Organisation/s</td>
-	<td><textarea name="organisation" id="organisation" rows="5" cols="40"></textarea></td>
+	<td><textarea name="organisation:utf8:ustring" id="organisation" rows="5" cols="40"></textarea></td>
 </tr>
 <tr>
 	<td class="form-label" valign="top">Contact</td>
-	<td><textarea name="contact" id="contact" rows="5" cols="40"></textarea></td>
+	<td><textarea name="contact:utf8:ustring" id="contact" rows="5" cols="40"></textarea></td>
 </tr>
 <tr>
 	<td class="form-label" valign="top">Donor(s)</td>
-	<td><textarea name="donor" id="donor" rows="5" cols="40"></textarea></td>
+	<td><textarea name="donor:utf8:ustring" id="donor" rows="5" cols="40"></textarea></td>
 </tr>
 <tr>
 	<td class="form-label" valign="top">Links</td>
-	<td><textarea name="links" id="links" rows="5" cols="40"></textarea></td>
+	<td><textarea name="links:utf8:ustring" id="links" rows="5" cols="40"></textarea></td>
 </tr>
 </tal:block>
 </tal:block>
