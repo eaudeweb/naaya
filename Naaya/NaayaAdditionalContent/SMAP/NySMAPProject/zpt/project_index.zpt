@@ -15,20 +15,22 @@
 <table border="0" cellspacing="2" cellpadding="2">
 <tr tal:condition="here/priority_area">
 	<th i18n:translate="">Project area</th>
-	<td tal:content="here/priority_area" />
+	<td tal:content="python:here.getPriorityTitle(here.priority_area)" i18n:translate="" />
 </tr>
 <tr tal:condition="here/country">
 	<th i18n:translate="">Country(ies)</th>
-	<td><tal:block 
-		repeat="l_item python:here.convertToList(here.country)" 
-		content="structure string:${l_item}<br />" />
+	<td>
+		<tal:block repeat="country_id here/country">
+			<div tal:content="python:here.getCountryName(country_id)" i18n:translate="" />
+		</tal:block>
 	</td>
 </tr>
 <tr tal:condition="here/focus">
 	<th i18n:translate="">Focus(es) of the project</th>
-	<td><tal:block 
-		repeat="l_item python:here.convertToList(here.focus)" 
-		content="structure string:${l_item}<br />" />
+	<td>
+		<tal:block repeat="focus_id here/focus">
+			<div tal:content="python:here.getFocusTitle(focus_id)" i18n:translate="" />
+		</tal:block>
 	</td>
 </tr>
 <tr tal:condition="here/main_issues">

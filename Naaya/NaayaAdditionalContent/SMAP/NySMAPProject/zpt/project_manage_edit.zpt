@@ -10,7 +10,7 @@
 			focuses here/getFocusesTypesList">
 <tr>
 	<td class="form-label" valign="top">Project area</td>
-	<td><select name="priority_area:utf8:ustring" id="priority_area">
+	<td><select name="priority_area" id="priority_area">
 		<option tal:repeat="priority priorities"
 			tal:attributes="value priority/id; selected python:priority.id in here.priority_area" tal:content="priority/title"  i18n:translate="">priority_area</option>
 		</select>
@@ -19,7 +19,7 @@
 <tr>
 	<td class="form-label" valign="top">Country(ies)</td>
 	<td>
-		<select name="country:utf8:ustring" id="country" multiple="multiple">
+		<select name="country" id="country" multiple="multiple">
 		<option tal:repeat="c countries"
 			tal:attributes="value c/id; selected python:c.id in here.country" tal:content="c/title" i18n:translate="">country</option>
 		</select>
@@ -28,7 +28,7 @@
 <tr>
 	<td class="form-label" valign="top">Focus(es) of the project</td>
 	<td>
-		<select name="focus:utf8:ustring" id="focus" multiple="multiple">
+		<select name="focus" id="focus" multiple="multiple">
 		<option tal:repeat="fc focuses"
 			tal:attributes="value fc/id; selected python:fc.id in here.focus" tal:content="fc/title" i18n:translate="">focus</option>
 		</select>

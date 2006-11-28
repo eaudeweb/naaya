@@ -10,7 +10,7 @@
 					focuses here/getFocusesTypesList">
 <tr>
 	<td class="form-label" valign="top">Project area</td>
-	<td><select name="priority_area:utf8:ustring" id="priority_area">
+	<td><select name="priority_area" id="priority_area">
 		<option tal:repeat="priority priorities"
 			tal:attributes="value priority/id" tal:content="priority/title" i18n:translate="" >priority</option>
 		</select>
@@ -18,7 +18,7 @@
 </tr>
 <tr>
 	<td class="form-label" valign="top">Country(ies)</td>
-	<td><select name="country:utf8:ustring" id="country" multiple="multiple">
+	<td><select name="country" id="country" multiple="multiple">
 		<option tal:repeat="c countries"
 			tal:attributes="value c/id" tal:content="c/title" i18n:translate="" >country</option>
 		</select>
@@ -26,7 +26,7 @@
 </tr>
 <tr>
 	<td class="form-label" valign="top">Focus(es) of the project</td>
-	<td><select name="focus:utf8:ustring" id="focus" multiple="multiple">
+	<td><select name="focus" id="focus" multiple="multiple">
 		<option tal:repeat="fc focuses"
 			tal:attributes="value fc/id" tal:content="fc/title" i18n:translate="" >focus</option>
 		</select>
