@@ -107,6 +107,8 @@ def addNySMAPProject(self, id='', title='', description='', coverage='', keyword
             approved, approved_by = 0, None
         if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         releasedate = self.process_releasedate(releasedate)
+        country = self.utConvertToList(country)
+        focus = self.utConvertToList(focus)
         #create object
         ob = NySMAPProject(id, title, description, coverage, keywords, country, contact, donor, links, organisation,
                     location, main_issues, tools, budget, timeframe, priority_area, focus, sortorder, 
@@ -159,12 +161,12 @@ def importNySMAPProject(self, param, id, attrs, content, properties, discussion,
             addNySMAPProject(self, id=id,
                 sortorder=attrs['sortorder'].encode('utf-8'),
                 main_issues=attrs['main_issues'].encode('utf-8'),
-                country=attrs['country'].encode('utf-8'),
+                country=eval(attrs['country'].encode('utf-8')),
                 tools=attrs['tools'].encode('utf-8'),
                 budget=attrs['budget'].encode('utf-8'),
                 timeframe=attrs['timeframe'].encode('utf-8'),
                 priority_area=attrs['priority_area'].encode('utf-8'),
-                focus=attrs['focus'].encode('utf-8'),
+                focus=eval(attrs['focus'].encode('utf-8')),
                 contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
                 discussion=abs(int(attrs['discussion'].encode('utf-8'))))
             ob = self._getOb(id)
@@ -211,6 +213,14 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
         return u' '.join([self._objectkeywords(lang), self.getLocalProperty('donor', lang), self.getLocalProperty('organisation', lang), self.getLocalProperty('location', lang)])
+
+    security.declareProtected(view, 'resource_area')
+    def resource_area(self):
+        return self.priority_area
+
+    security.declareProtected(view, 'resource_focus')
+    def resource_focus(self):
+        return ' '.join(self.convertToList(self.focus))
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
@@ -264,6 +274,8 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
         else: approved = 0
         if not lang: lang = self.gl_get_selected_language()
         releasedate = self.process_releasedate(releasedate, self.releasedate)
+        country = self.utConvertToList(country)
+        focus = self.utConvertToList(focus)
         self.save_properties(title, description, coverage, keywords, country, contact, donor, links, organisation,
                             location, main_issues, tools, budget, timeframe, priority_area, focus,
                             sortorder, releasedate, lang)
@@ -340,6 +352,8 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if not sortorder: sortorder = DEFAULT_SORTORDER
         if lang is None: lang = self.gl_get_selected_language()
+        country = self.utConvertToList(country)
+        focus = self.utConvertToList(focus)
         #check mandatory fiels
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
             description=description, coverage=coverage, keywords=keywords, country=country, sortorder=sortorder, \
