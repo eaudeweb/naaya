@@ -36,6 +36,7 @@ from Products.Naaya.NySite                          import NySite
 from Products.NaayaCore.managers.utils              import utils, file_utils, batch_utils
 from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
 from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
+from managers.utils                                 import *
 
 
 manage_addSMAPSite_html = PageTemplateFile('zpt/site_manage_add', globals())
@@ -75,6 +76,12 @@ class SMAPSite(NySite, ProfileMeta):
 
         #load site skeleton - configuration
         self.loadSkeleton(join(SMAP_PRODUCT_PATH, 'skel'))
+
+        #custom indexes
+        try:    self.getCatalogTool().addIndex('resource_area', 'FieldIndex')
+        except: pass
+        try:    self.getCatalogTool().addIndex('resource_focus', 'FieldIndex')
+        except: pass
 
         #remove Naaya default content
         self.getLayoutTool().manage_delObjects('skin')
@@ -116,7 +123,7 @@ class SMAPSite(NySite, ProfileMeta):
             return self.getPortletsTool().getRefListById('countries').get_item(id).title
         except:
             return ''
-        
+
     security.declarePublic('getPrioritiesTypesList')
     def getPrioritiesTypesList(self):
         """
@@ -151,20 +158,100 @@ class SMAPSite(NySite, ProfileMeta):
         except:
             return ''
 
-    #Naaya wrapper
-    security.declarePublic('isRTL')
-    def isRTL(self, lang=None):
-        """ test if lang is a RTL language """
-        return self.isArabicLanguage(lang)
-
     #objects getters
     def getSkinFilesPath(self): return self.getLayoutTool().getSkinFilesPath()
 
     #projects search
     security.declarePublic('search_projects')
-    def search_projects(self, REQUEST=None):
+    def searchProjects(self, priority_area='', focus=[], free_text='', skey='',
+                       rkey=0, archive=[], start='', REQUEST=None):
         """ """
-        #TODO: to be implemented
-        return REQUEST.RESPONSE.redirect('%s/fol120392/index_html' % self.absolute_url())
+        res_per_page = 10
+        query = ''
+        res = []
+        results = []
+        lang = self.gl_get_selected_language()
+
+        try:    start = int(start)
+        except: start = 0
+
+        if priority_area == '' and focus == [] and free_text == '':
+            #no criteria then returns the 10 more recent
+            res.extend(archive)
+        elif free_text:
+            free_text = self.utStrEscapeForSearch(free_text)
+            query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSMAPPROJECT], \
+                     objectkeywords_%s=free_text)' % lang
+            res.extend(eval(query))
+        else:
+            query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSMAPPROJECT], approved=1'
+            if priority_area:
+                query += ', resource_area=priority_area'
+            if focus:
+                query += ', resource_focus=focus'
+            query += ')'
+            res.extend(eval(query))
+
+        results = self.get_archive_listing(self.sorted_projects(res, skey, rkey))
+
+        #batch related
+        batch_obj = batch_utils(res_per_page, len(results[2]), start)
+        if len(results[2]) > 0:
+            paging_informations = batch_obj.butGetPagingInformations()
+        else:
+            paging_informations = (-1, 0, 0, -1, -1, 0, res_per_page, [0])
+        return (paging_informations, (results[0], results[1], results[2][paging_informations[0]:paging_informations[1]]))
+
+    def sorted_projects(self, p_objects=[], skey='', rkey=0):
+        """Return sorted projects"""
+        results = []
+        if not skey or skey == 'releasedate':
+            p_objects.sort(lambda x,y: cmp(y.releasedate, x.releasedate) \
+                or cmp(x.sortorder, y.sortorder))
+            if not rkey: p_objects.reverse()
+            results.extend(p_objects)
+        else:
+            if rkey: rkey=1
+            l_objects = utSortObjsByLocaleAttr(p_objects, skey, rkey, self.gl_get_selected_language())
+            results.extend(l_objects)
+        return results
+
+    def get_archive_listing(self, p_objects):
+        """ """
+        results = []
+        select_all, delete_all, flag = 0, 0, 0
+        for x in p_objects:
+            del_permission = x.checkPermissionDeleteObject()
+            edit_permission = x.checkPermissionEditObject()
+            if del_permission and flag == 0:
+                select_all, delete_all, flag = 1, 1, 1
+            if edit_permission and flag == 0:
+                flag, select_all = 1, 1
+            if ((del_permission or edit_permission) and not x.approved) or x.approved:
+                results.append((del_permission, edit_permission, x))
+        return (select_all, delete_all, results)
+
+    security.declareProtected(view, 'getRequestParams')
+    def getRequestParams(self, REQUEST=None):
+        """returns a REQUEST.QUERY_STRING (using REQUEST.form,
+            REQUEST.form=REQUEST.QUERY_STRING as a dictionary)"""
+        ignore_list = ['skey', 'rkey']
+        res=''
+        if REQUEST:
+            for key in self.REQUEST.form.keys():
+                if key not in ignore_list:
+                    p_value = self.REQUEST.form[key]
+                    if type(p_value) == type([]):
+                        l_name = '&%s:list=' % key
+                        p_all = l_name.join(p_value)
+                        res = res + key + ':list=' + str(p_all) + '&'
+                    else:
+                        res = res + key + '=' + str(p_value) + '&'
+        return res
+
+    security.declarePublic('stripAllHtmlTags')
+    def stripAllHtmlTags(self, p_text):
+        """ """
+        return utils().utStripAllHtmlTags(p_text)
 
 InitializeClass(SMAPSite)
