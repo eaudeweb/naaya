@@ -16,15 +16,15 @@
 					subtopics here/getFocusesTypesList">
 	<tr>
 		<td class="form-label">Surname</td>
-		<td><input type="text" name="surname" size="40" tal:attributes="value python:request.get('surname', here.surname)" /></td>
+		<td><input type="text" name="surname:utf8:ustring" size="40" tal:attributes="value python:request.get('surname', here.surname)" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Name</td>
-		<td><input type="text" name="name" size="40" tal:attributes="value python:request.get('name', here.name)" /></td>
+		<td><input type="text" name="name:utf8:ustring" size="40" tal:attributes="value python:request.get('name', here.name)" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Reference language</td>
-		<td><input type="text" name="ref_lang" size="40" tal:attributes="value python:request.get('ref_lang', here.ref_lang)" /></td>
+		<td><input type="text" name="ref_lang:utf8:ustring" size="40" tal:attributes="value python:request.get('ref_lang', here.ref_lang)" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Country</td>
@@ -55,23 +55,23 @@
 	</tr>
 	<tr>
 		<td class="form-label">Email address</td>
-		<td><input type="text" name="email" size="40" tal:attributes="value python:request.get('email', here.email)" /></td>
+		<td><input type="text" name="email:utf8:ustring" size="40" tal:attributes="value python:request.get('email', here.email)" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Sort order</td>
-		<td><input type="text" name="sortorder" size="2" tal:attributes="value python:request.get('sortorder', here.sortorder)" /></td>
+		<td><input type="text" name="sortorder:utf8:ustring" size="2" tal:attributes="value python:request.get('sortorder', here.sortorder)" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Approved</td>
-		<td><input type="checkbox" name="approved" tal:attributes="checked python:test(request['REQUEST_METHOD']=='POST', request.get('approved', ''), here.approved)" /></td>
+		<td><input type="checkbox" name="approved:utf8:ustring" tal:attributes="checked python:test(request['REQUEST_METHOD']=='POST', request.get('approved', ''), here.approved)" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Release date (<em>dd/mm/yyyy</em>)</td>
-		<td><input type="text" name="releasedate" size="20" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getVersionProperty('releasedate'))" /></td>
+		<td><input type="text" name="releasedate:utf8:ustring" size="20" tal:attributes="value python:here.utConvertDateTimeObjToString(here.getVersionProperty('releasedate'))" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Open for comments</td>
-		<td><input type="checkbox" name="discussion" tal:attributes="checked here/is_open_for_comments" /></td>
+		<td><input type="checkbox" name="discussion:utf8:ustring" tal:attributes="checked here/is_open_for_comments" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Download CV</td>
