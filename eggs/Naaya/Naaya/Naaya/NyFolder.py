@@ -509,7 +509,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
                 l_to = self.administrator_email
         elif who==0:
             l_to = self.administrator_email
-        #self.getEmailTool().sendFeedbackEmail(l_to, username, email, comments)
+        self.getEmailTool().sendFeedbackEmail(l_to, username, email, comments)
         if REQUEST: 
             self.setSession('title', 'Thank you for your feedback')
             self.setSession('body', 'The administrator will process your comments and get back to you.')
