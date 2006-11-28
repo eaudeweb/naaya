@@ -7,6 +7,7 @@ Property of the SMAP Clearing House
 Requirements
 -----------------------------------------------
 Zope server version 2.7.5 (recommended)
+Arabic locale installed (default: ar_DZ)
 
 Zope server (DLLs):
 - TextIndexNG related PYD files

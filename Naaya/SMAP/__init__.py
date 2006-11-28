@@ -44,4 +44,7 @@ def initialize(context):
 misc_ = {
     'Site.gif':ImageFile('www/Site.gif', globals()),
     'print.gif':ImageFile('www/print.gif', globals()),
+    'sortdown.gif':ImageFile('www/sortdown.gif', globals()),
+    'sortnot.gif':ImageFile('www/sortnot.gif', globals()),
+    'sortup.gif':ImageFile('www/sortup.gif', globals()),
 }
