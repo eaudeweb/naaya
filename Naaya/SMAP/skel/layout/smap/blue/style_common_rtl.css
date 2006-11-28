@@ -198,55 +198,64 @@
 	vertical-align: middle;
 	}
 	
-	/* Tabbed menus  */
+/* @@@@@@@@@@@@@@@@ Tabbed menus @@@@@@@@@@@@@@ */
 
-	#tabbedmenu {
+/*  +++++++++++++++++++ #tabbedmenu +++++++++++++++++++++++ */
+
+#tabbedmenu {
 	float: left;
 	width:100%;
-	border-bottom: thin solid #E3E2D3;
-	font-size: 1.1em;
-	line-height:normal;
-	margin-bottom: 1em;
+		border-bottom: 1px solid #4E8EC2;
+		line-height: normal;
+		font-size: 100%;
+		margin-bottom: 20px;
 	}
 
-	#tabbedmenu ul {
+#tabbedmenu ul {
 	overflow:hidden;
-	margin:0;
-	padding:10px 10px 0;
-	list-style:none;
+		margin:0;
+		padding:10px 10px 0 0;
+		list-style:none;
 	}
-	#tabbedmenu li {
-	float: left;
-	background:url("tableft.gif") no-repeat left top;
-	margin:0;
 
-	padding:0 0 0 9px;
-	white-space: nowrap;
+#tabbedmenu li {
+	float: left;
+		margin: 0 0 0 5px;
+		padding: 0 0 0 9px;
+		white-space: nowrap;
+		border-top: 1px solid #4E8EC2;
+		border-left: 1px solid #4E8EC2;
+		border-right: 1px solid #4E8EC2;
 	}
-	#tabbedmenu a {
+#tabbedmenu a {
 	display:block;
 	text-decoration: none;
 	font-weight: bold;
-	color: black;
-	background:url("tabright.gif") no-repeat right top;
-	padding:5px 15px 4px 6px;
+		color: #2F618A; 
+		padding: 5px 15px 4px 6px;
+		color: #7CAE31;
 	}
-	#tabbedmenu #currenttab {
-	background-image:url("tableft_on.gif");
+#tabbedmenu #currenttab {
+		background-color: #E7F0F7; 
 	}
-	#tabbedmenu #currenttab a {
+#tabbedmenu #currenttab a {
 	text-decoration: none;
 	font-weight: bold;
-	background-image:url("tabright_on.gif");
-	padding-bottom: 5px;
+		color: #227AAB;
 	}
-	#tabbedmenu #currenttab span {
+#tabbedmenu #currenttab span {
 	display:block;
 	text-decoration: none;
 	font-weight: bold;
-	background:url("tabright_on.gif") no-repeat right top;
-	padding:5px 15px 4px 6px;
-	}
+}
+
+	#tabbedmenu a:visited {}
+
+	#tabbedmenu #currenttab a:visited {}
+/*  END  +++++++++++++++++++ #tabbedmenu +++++++++++++++++++++++ */
+
+	/* @@@@@@@@@@@@@@ END Tabbed menus @@@@@@@@@@@@@@ */
+
 
 	/* warning box for active versions of items */
 	.version_box {
@@ -516,7 +525,6 @@ tr.duplicate a {
 tr.not-duplicate {
 }
 
-
 /* FLOATED BOXES */
 .float_me {
 	float: left;
@@ -532,7 +540,7 @@ tr.not-duplicate {
 	text-align: center;
 }
 
-/* FORUM STYLE */
+/*	FORUM STYLE	*/
 .forum_message_top a {
 	margin-right: 0px;
 	padding: 0px 2px 0px 3px;
