@@ -1,5 +1,5 @@
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
-<tal:block metal:fill-slot="portlet_title">Folder Administration</tal:block>
+<tal:block metal:fill-slot="portlet_title">Folder administration</tal:block>
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
 		<li><a tal:attributes="href string:${here/absolute_url}/administration_basket_html" title="Folder basket of approvals">Basket of approvals</a></li>
