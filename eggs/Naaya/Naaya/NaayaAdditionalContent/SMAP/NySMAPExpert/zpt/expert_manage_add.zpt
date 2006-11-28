@@ -63,15 +63,15 @@
 	</tr>
 	<tr>
 		<td class="form-label">Sort order</td>
-		<td><input type="text" name="sortorder" size="2" value="100" /></td>
+		<td><input type="text" name="sortorder:utf8:ustring" size="2" value="100" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Release date (<em>dd/mm/yyyy</em>)</td>
-		<td><input type="text" name="releasedate" size="20" value="" /></td>
+		<td><input type="text" name="releasedate:utf8:ustring" size="20" value="" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Open for comments</td>
-		<td><input type="checkbox" name="discussion" id="discussion" /></td>
+		<td><input type="checkbox" name="discussion:utf8:ustring" id="discussion" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">Upload CV</td>
