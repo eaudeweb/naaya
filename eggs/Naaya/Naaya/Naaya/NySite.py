@@ -552,8 +552,14 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """
         return NAAYA_PRODUCT_PATH
 
+    #not used anymore
     security.declarePublic('isArabicLanguage')
     def isArabicLanguage(self, lang=None):
+        """ test if lang is a RTL language """
+        return self.isRTL(lang)
+
+    security.declarePublic('isRTL')
+    def isRTL(self, lang=None):
         """ test if lang is a RTL language """
         #Arabic          [AR]
         #Azerbaijani     [AZ]
