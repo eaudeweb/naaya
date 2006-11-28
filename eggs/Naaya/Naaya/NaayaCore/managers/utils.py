@@ -419,6 +419,14 @@ class utils:
         uni = unicode(p_string, 'latin-1')
         return uni.encode('utf-8')
 
+    def utTextareaEncode(self, p_string):
+        """Encode a string (from a textarea control):
+          - HTMLEncode str
+          - replace \n with <br>"""
+        l_tmp = self.utHtmlEncode(p_string)
+        l_tmp = l_tmp.replace('\n', '<br>')
+        return l_tmp
+
     def utXmlEncode(self, p_string):
         """Encode some special chars"""
         if isinstance(p_string, unicode): l_tmp = p_string.encode('utf-8')
