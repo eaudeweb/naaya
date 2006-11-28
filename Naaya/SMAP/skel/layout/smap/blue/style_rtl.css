@@ -122,7 +122,7 @@ li {
 	display: none;
 }
 
-
+/* ------------ NAV_UPPER ---------- */
 #nav_upper {
 	text-align: left;
 	background-color: #7CAE31;
@@ -173,6 +173,8 @@ li {
 	margin-top: 1px;
 	display: none; /* to be changed */
 }
+
+/* ------------ END NAV_UPPER ---------- */
 
 #top_banner {
 	height: 75px;/* to be changed */
