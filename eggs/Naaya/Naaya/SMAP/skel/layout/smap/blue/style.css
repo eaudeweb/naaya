@@ -1,6 +1,5 @@
 <span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')"/>
 /* COMMENT VAR  indicates that the following style attributes are to be changed for the ARABIC version */
-
 body {
 	margin:0;
 	padding:0;
@@ -117,37 +116,23 @@ li {
 	display: none;
 }
 
-
+/* ------------ NAV_UPPER ---------- */
 #nav_upper {
 	text-align: right;
 	background-color: #7CAE31;
+	border-top: 1px solid #7CAE31;
+	border-bottom: 2px solid #7CAE31;
 	color: white;
-}
-
-#nav_upper div{
-	margin: 0;
-	margin-right:4px;	
-	padding:0;
-	list-style:none;
-	display:block;
-	position:relative;
-}
-/*
-#nav_upper li{
-	display:inline;
-}
-*/
-.clearing_div_top {
-				clear: both;
-				height: 1px;
-				font-size: 1px;
-				line-height: 1px;
-				background-color: #7CAE31; /*ERROR*/
 }
 #nav_upper a {
 	color: white;
 }
+.navuplinks {
+}
 
+.clearing_div_top {
+	display: none; /* define only for RTL */
+}
 #nav_upper span a {
 	padding: 0 4px;
 	color: white;
@@ -164,6 +149,7 @@ li {
 	margin-top: 1px;
 	display: none; /* to be changed */
 }
+/* ------------ END NAV_UPPER ---------- */
 
 #top_banner {
 	height: 75px;/* to be changed */
@@ -559,7 +545,7 @@ div#bread_crumb_trail a:visited{
 	color: #3978AC;
 }
 
-
+/* ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ */
 .middle-portlet {
 	border:1px solid white;
 	/*margin-top: 10px;*/
@@ -702,7 +688,6 @@ ul.nostyle li {
 }
 
 /*page break for EPOZ*/
-
 .pbreak {
 	display: none;
 }
