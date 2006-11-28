@@ -23,6 +23,7 @@
 #python imports
 import time
 import string
+from copy import copy
 
 #zope imports
 from OFS.ObjectManager import ObjectManager
@@ -349,6 +350,37 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
             if (len(v) > 1 and len(v[1][0]) > 0) or (len(v) == 1 and len(v[0][0]) > 0):
                 users[k] = v
         return users
+
+    security.declareProtected(manage_users, 'getUsersEmails')
+    def getUsersEmails(self, users):
+        """
+        Given a list of users ids it returns the list with their emails.
+        A lookup will be made against the portal users folder and also
+        in against all the sources.
+        """
+        r = []
+        ra = r.append
+        buf = copy(users)
+        #first check local users
+        local_users = self.user_names()
+        for user in users:
+            if user in local_users:
+                email = self.getUserEmail(self.getUser(user))
+                if email is not None: ra(email)
+                buf.remove(user)
+        if len(buf):
+            buf1 = copy(buf)
+            #check sources
+            for source in self.getSources():
+                source_acl = source.getUserFolder()
+                source_users = source_acl.user_names()
+                for user in buf:
+                    if user in source_users:
+                        email = source.getUserEmail(source_acl.getUser(user))
+                        if email is not None: ra(email)
+                        buf1.remove(user)
+                    if len(buf1)==0: break
+        return r
 
     def getUserAccount(self, user_obj):
         """ Return the username"""
