@@ -11,7 +11,6 @@
 		<link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/${css_screen}" />
 		<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${skin_files_path}/${css_common}" />
 		<link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${skin_files_path}/style_print" />
-		<link rel="stylesheet" type="text/css" media="handheld" tal:attributes="href string:${skin_files_path}/${css_handheld}" />
 		<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${site_url}/glossary_coverage/style_presentation_css" />
 		<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${site_url}/portal_thesaurus/thesaurus_css" />
 	<tal:block repeat="channel python:here.getSite().getSyndicationTool().get_script_channels()">
