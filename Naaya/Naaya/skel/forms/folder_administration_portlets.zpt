@@ -1,6 +1,6 @@
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().folder_administration_macro.macros['page']">
 
-<tal:block metal:fill-slot="title">Right-side portlets</tal:block>
+<tal:block metal:fill-slot="title" i18n:translate="">Right-side portlets</tal:block>
 
 <tal:block metal:fill-slot="section">
 	<script language="javascript" type="text/javascript">
@@ -103,17 +103,17 @@
 		location python:request.get('location', '');
 		location_obj python:test(location=='', None, here.getFolderByPath(location));
 		records python:here.get_right_portlets_locations(here.absolute_url(1))">
-		<p>This page allows you to establish the list of portlets displayed in the right side of this folder and its sub-folders.
-		<p>You are presented with the hierarchical structure of this folder: click on a (sub)folder link to select it (skip the selection if you are choosing portlets for the entire folder) then choose the corresponding portlets.</p>
+		<p i18n:translate="">This page allows you to establish the list of portlets displayed in the right side of this folder and its sub-folders.
+		You are presented with the hierarchical structure of this folder: click on a (sub)folder link to select it (skip the selection if you are choosing portlets for the entire folder) then choose the corresponding portlets.</p>
 		<form name="frmportlets" method="post" tal:attributes="action string:${here/absolute_url}/admin_folder_portlets">
 		<input type="hidden" name="mode" tal:attributes="value mode" />
 		<input type="hidden" name="location" tal:attributes="value location" />
 		<table border="0" cellspacing="4" cellpadding="4">
 		<tr>
-			<td class="form-label" width="20%" valign="top">Location</td>
+			<td class="form-label" width="20%" valign="top" i18n:translate="">Location</td>
 			<td colspan="4">
 				<tal:block tal:condition="python:mode=='edit'">
-					<strong tal:condition="python:location_obj is None">Portal front page</strong>
+					<strong tal:condition="python:location_obj is None" i18n:translate="">Portal front page</strong>
 					<strong tal:condition="python:location_obj is not None" tal:content="location_obj/title_or_id">location</strong>
 					<input type="hidden" name="folder" tal:attributes="value location" />
 				</tal:block>
@@ -177,7 +177,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="form-label" valign="top">Available portlets</td>
+			<td class="form-label" valign="top" i18n:translate="">Available portlets</td>
 			<td>
 				<select name="available" size="10" multiple="multiple"
 					tal:define="available_portlets python:test(mode=='edit', here.get_available_right_locations_objects(location), here.getPortletsTool().getPortlets())">
@@ -207,20 +207,20 @@
 		</tr>
 		<tr>
 			<td></td>
-			<td colspan="4"><input type="submit" value="Save changes" onclick="javascript:dosubmit();" /></td>
+			<td colspan="4"><input type="submit" value="Save changes" i18n:attributes="value" onclick="javascript:dosubmit();" /></td>
 		</tr>
 		</table>
 		</form>
 
-		<h2>Right-side portlets defined in this folder</h2>
-		You are presented with the list of locations (subfolders or folder's front page) from this folder
-		where right-side portlets have been defined. Click on a location to edit its list of right side portlets.
+		<h2 i18n:translate="">Right-side portlets defined in this folder</h2>
+		<p i18n:translate="">You are presented with the list of locations (subfolders or folder's front page) from this folder
+		where right-side portlets have been defined. Click on a location to edit its list of right side portlets.</p>
 		<form method="post" tal:attributes="action string:${here/absolute_url}/admin_folder_portlets">
 		<table border="0" cellspacing="2" cellpadding="4" width="100%">
 			<tr>
 				<th width="1%"></th>
-				<th width="60%">Location</th>
-				<th width="40%">Portlets</th>
+				<th width="60%" i18n:translate="">Location</th>
+				<th width="40%" i18n:translate="">Portlets</th>
 			</tr>
 			<tr tal:repeat="record python:records.keys()">
 				<td></td>
@@ -242,7 +242,7 @@
 				<td colspan="2"><input type="submit" name="delete" value="Delete"/></td>
 			</tr>
 		</table>
-		<input type="hidden" name="mode" value="delete" />
+		<input type="hidden" name="mode" value="delete" i18n:attributes="value" />
 		</form>
 	</tal:block>
 </tal:block>

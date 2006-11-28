@@ -446,6 +446,95 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
     def getSortedFolders(self): return self.utSortObjsListByAttr(self.getFolders(), 'sortorder', 0)
     def getSortedObjects(self): return self.utSortObjsListByAttr(self.getObjects(), 'sortorder', 0)
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'isFeedbackCustomized')
+    def isFeedbackCustomized(self):
+        """
+        Test if the feedback form for the current folder is customized.
+        """
+        return self.getSite().folder_customized_feedback.has_key('/'.join(self.getPhysicalPath()))
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getAdministratorsEmails')
+    def getAdministratorsEmails(self, roles=['Administrator']):
+        """
+        Returns a list with administrator emails. Administrator is the user
+        that has at least one o the given roles on this folder.
+        """
+        r = []
+        ra = r.append
+        for k, v in self.get_local_roles():
+            if len(self.utListIntersection(roles, v)): ra(k)
+        return self.getAuthenticationTool().getUsersEmails(r)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getFeedbackCustomizedEmail')
+    def getFeedbackCustomizedEmail(self):
+        """
+        Returns the email addresses.
+        """
+        buf = self.getSite().folder_customized_feedback.get('/'.join(self.getPhysicalPath()), None)
+        if isinstance(buf, tuple):
+            return buf[0]
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getFeedbackCustomizedPostal')
+    def getFeedbackCustomizedPostal(self):
+        """
+        Returns the postal addresses.
+        """
+        buf = self.getSite().folder_customized_feedback.get('/'.join(self.getPhysicalPath()), None)
+        if isinstance(buf, tuple):
+            return buf[1]
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getParentFeedbackCustomized')
+    def getParentFeedbackCustomized(self):
+        """
+        Test if the feedback form has been customized for this
+        folder or for one of his parents. It returns the folder
+        with feedback customized.
+        """
+        node = self
+        while node.meta_type == METATYPE_FOLDER:
+            if node.isFeedbackCustomized():
+                return node, node.absolute_url()
+            else:
+                node = node.getParentNode()
+        return None, self.absolute_url()
+
+    security.declareProtected(view, 'admin_folder_feedback_form')
+    def admin_folder_feedback_form(self, who=0, username='', email='', comments='', REQUEST=None):
+        """ """
+        try: who = abs(int(who))
+        except: who = 0
+        if who == 1:
+            l_to = self.getFeedbackCustomizedEmail()
+            if l_to is None:
+                l_to = self.administrator_email
+        elif who==0:
+            l_to = self.administrator_email
+        #self.getEmailTool().sendFeedbackEmail(l_to, username, email, comments)
+        if REQUEST: 
+            self.setSession('title', 'Thank you for your feedback')
+            self.setSession('body', 'The administrator will process your comments and get back to you.')
+            return REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_feedback')
+    def admin_folder_feedback(self, status='0', emails='', postal='', REQUEST=None):
+        """ """
+        #process data
+        try: status = abs(int(status))
+        except: status = 0
+        site = self.getSite()
+        if status == 1:
+            #customized
+            site.folder_customized_feedback['/'.join(self.getPhysicalPath())] = (self.utConvertLinesToList(emails), postal)
+        elif status == 0:
+            #not customized
+            try: del site.folder_customized_feedback['/'.join(self.getPhysicalPath())]
+            except: pass
+        site._p_changed = 1
+        #save data
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/administration_feedback_html' % self.absolute_url())
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_revokeroles')
     def admin_folder_revokeroles(self, roles=[], REQUEST=None):
         """ """
@@ -930,5 +1019,10 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
     def administration_feedback_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'folder_administration_feedback')
+
+    security.declareProtected(view, 'feedback_html')
+    def feedback_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_feedback')
 
 InitializeClass(NyFolder)

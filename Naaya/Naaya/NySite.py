@@ -154,6 +154,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         # The email address (must exist) from which the email tool sends mails 
         self.mail_address_from = ''
         self.administrator_email = ''
+        #holds info about customized folder's contact us page
+        self.folder_customized_feedback = {}
         self.portal_url = ''
         self.maintopics = []
         self.keywords_glossary = None
@@ -172,6 +174,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def __setstate__(self,state):
         """Updates"""
         NySite.inheritedAttribute("__setstate__") (self, state)
+        if not hasattr(self, 'folder_customized_feedback'):
+            self.folder_customized_feedback = {}
         if not hasattr(self, 'rename_id'):
             self.rename_id = 0
 
@@ -682,6 +686,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declarePublic('getProfilesToolPath')
     def getProfilesToolPath(self, p=0): return self._getOb(ID_PROFILESTOOL).absolute_url(p)
 
+    def getFolderMetaType(self):    return METATYPE_FOLDER
     security.declarePublic('getFolderMainParent')
     def getFolderMainParent(self, p_folder):
         """

@@ -1,6 +1,6 @@
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().folder_administration_macro.macros['page']">
 
-<tal:block metal:fill-slot="title">Users' management</tal:block>
+<tal:block metal:fill-slot="title" i18n:translate="">Users' management</tal:block>
 
 <tal:block metal:fill-slot="section" tal:define="user_tool here/getAuthenticationTool">
 	<div id="tabbedmenu">
@@ -36,7 +36,7 @@
 	   document.forms['frmUsersRoles'].location.value = key;
 	}
 	</script>
-	<p class="page-description">
+	<p class="page-description" i18n:translate="">
 		This page displays the existing users in the folder and their corresponding roles.
 		You can revoke a role prior assigned to a user <br>by ticking in the appropiate check box 
 		and clicking on the Revoke selected roles button.
@@ -44,8 +44,8 @@
 	<form name="frmRevokeEmail" method="post" tal:attributes="action string:${here/absolute_url}/admin_folder_revokeroles">
 	<table border="1" cellspacing="2" cellpadding="2">
 	<tr class="row-header">
-		<th width="20%">User</th>
-		<th width="35%">Roles/Location</th>
+		<th width="20%" i18n:translate="">User</th>
+		<th width="35%" i18n:translate="">Roles/Location</th>
 		<!-- <th width="5%"></th> -->
 	</tr>
 	<tr tal:define="users_roles here/getUsersRoles" tal:repeat="user users_roles/keys" 
@@ -75,20 +75,20 @@
 	</tr>
 	</table>
 	<br />
-	<input type="submit" name="del" value="Revoke selected roles" />
+	<input type="submit" name="del" value="Revoke selected roles" i18n:attributes="value" />
 	</form>
 	<br />
 
 	<form method="post" name="frmUsersRoles" tal:attributes="action string:${here/absolute_url}/admin_folder_addroles">
-	<fieldset><legend>Assign role to existing user</legend>
-	<p>Select the username from the drop-down list, select the intended role(s) and choose the specific 
+	<fieldset><legend i18n:translate="">Assign role to existing user</legend>
+	<p i18n:translate="">Select the username from the drop-down list, select the intended role(s) and choose the specific 
 	location from the folder you want to grant this permissions.</p>
 	<table width="100%" border="0" cellspacing="2" cellpadding="6"
 		tal:define="name python:request.get('name', '');
 					roles python:here.utConvertToList(request.get('roles', []));
 					location python:request.get('location', '')">
 	<tr>
-		<td align="top" width="20%" class="form-label">Username:</td>
+		<td align="top" width="20%" class="form-label" i18n:translate="">Username:</td>
 		<td align="top" width="*" tal:define="users user_tool/getUserNames">
 			<select name="name">
 				<option tal:repeat="user users"
@@ -97,7 +97,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td align="top" width="20%" class="form-label">Roles:</td>
+		<td align="top" width="20%" class="form-label" i18n:translate="">Roles:</td>
 		<td align="top" width="*">
 			<select name="roles" size="5" multiple="multiple">
 				<tal:block repeat="role user_tool/list_valid_roles">
@@ -108,7 +108,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td valign="top" width="20%" class="form-label">Location:(folder)<br>e.g. /folderURL</td>
+		<td valign="top" width="20%" class="form-label" i18n:translate="">Location:(folder)<br>e.g. /folderURL</td>
 		<td valign="top" width="*">
 			<script language="javascript" type="text/javascript">
 			<!--
@@ -167,7 +167,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="cell-header"><input type="submit" name="add" value="Assign role" /></td>
+		<td class="cell-header"><input type="submit" name="add" i18n:attributes="value" value="Assign role" /></td>
 		<td></td>
 	</tr>
 	</table>
