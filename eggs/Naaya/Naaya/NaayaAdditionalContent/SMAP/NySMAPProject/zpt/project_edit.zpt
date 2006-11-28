@@ -48,63 +48,63 @@
 		<span i18n:translate="" tal:omit-tag="">Project Scale</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'main_issues')" class="mandatory_field"> *</span>
 	</label>
-	<input type="text" name="main_issues" id="main_issues" size="50" tal:attributes="value python:here.getSession('main_issues', here.getVersionProperty('main_issues'))" />
+	<input type="text" name="main_issues:utf8:ustring" id="main_issues" size="50" tal:attributes="value python:here.getSession('main_issues', here.getVersionProperty('main_issues'))" />
 </div>
 <div class="field">
 	<label for="tools">
 		<span i18n:translate="" tal:omit-tag="">Tools</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'tools')" class="mandatory_field"> *</span>
 	</label>
-		<textarea name="tools" id="tools" rows="5" cols="40" tal:content="python:here.getSession('tools', here.getVersionProperty('tools'))" />
+		<textarea name="tools:utf8:ustring" id="tools" rows="5" cols="40" tal:content="python:here.getSession('tools', here.getVersionProperty('tools'))" />
 </div>
 <div class="field">
 	<label for="location">
 		<span i18n:translate="" tal:omit-tag="">Locations</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'location')" class="mandatory_field"> *</span>
 	</label>
-	<input type="text" name="location" id="location" size="50" tal:attributes="value python:here.getSession('location', here.getVersionLocalProperty('location', curr_lang))" />
+	<input type="text" name="location:utf8:ustring" id="location" size="50" tal:attributes="value python:here.getSession('location', here.getVersionLocalProperty('location', curr_lang))" />
 </div>
 <div class="field">
 	<label for="budget">
 		<span i18n:translate="" tal:omit-tag="">Budget</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'budget')" class="mandatory_field"> *</span>
 	</label>
-	<input type="text" name="budget" id="budget" size="50" tal:attributes="value python:here.getSession('budget', here.getVersionProperty('budget'))" />
+	<input type="text" name="budget:utf8:ustring" id="budget" size="50" tal:attributes="value python:here.getSession('budget', here.getVersionProperty('budget'))" />
 </div>
 <div class="field">
 	<label for="timeframe">
 		<span i18n:translate="" tal:omit-tag="">Timeframe</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'timeframe')" class="mandatory_field"> *</span>
 	</label>
-	<input type="text" name="timeframe" id="timeframe" size="50" tal:attributes="value python:here.getSession('timeframe', here.getVersionProperty('timeframe'))" />
+	<input type="text" name="timeframe:utf8:ustring" id="timeframe" size="50" tal:attributes="value python:here.getSession('timeframe', here.getVersionProperty('timeframe'))" />
 </div>
 <div class="field">
 	<label for="organisation">
 		<span i18n:translate="" tal:omit-tag="">Implementing Organisation/s</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'organisation')" class="mandatory_field"> *</span>
 	</label>
-	<textarea name="organisation" id="organisation" rows="5" cols="40" tal:content="python:here.getSession('organisation', here.getVersionLocalProperty('organisation', curr_lang))" />
+	<textarea name="organisation:utf8:ustring" id="organisation" rows="5" cols="40" tal:content="python:here.getSession('organisation', here.getVersionLocalProperty('organisation', curr_lang))" />
 </div>
 <div class="field">
 	<label for="contact">
 		<span i18n:translate="" tal:omit-tag="">Contact</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'contact')" class="mandatory_field"> *</span>
 	</label>
-	<textarea name="contact" id="contact" rows="5" cols="40" tal:content="python:here.getSession('contact', here.getVersionLocalProperty('contact', curr_lang))" />
+	<textarea name="contact:utf8:ustring" id="contact" rows="5" cols="40" tal:content="python:here.getSession('contact', here.getVersionLocalProperty('contact', curr_lang))" />
 </div>
 <div class="field">
 	<label for="donor">
 		<span i18n:translate="" tal:omit-tag="">Donor(s)</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'donor')" class="mandatory_field"> *</span>
 	</label>
-	<textarea name="donor" id="donor" rows="5" cols="40" tal:content="python:here.getSession('donor', here.getVersionLocalProperty('donor', curr_lang))" />
+	<textarea name="donor:utf8:ustring" id="donor" rows="5" cols="40" tal:content="python:here.getSession('donor', here.getVersionLocalProperty('donor', curr_lang))" />
 </div>
 <div class="field">
 	<label for="links">
 		<span i18n:translate="" tal:omit-tag="">Links</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'links')" class="mandatory_field"> *</span>
 	</label>
-	<textarea name="links" id="links" rows="5" cols="40" tal:content="python:here.getSession('links', here.getVersionLocalProperty('links', curr_lang))" />
+	<textarea name="links:utf8:ustring" id="links" rows="5" cols="40" tal:content="python:here.getSession('links', here.getVersionLocalProperty('links', curr_lang))" />
 </div>
 </tal:block>
 </tal:block>
