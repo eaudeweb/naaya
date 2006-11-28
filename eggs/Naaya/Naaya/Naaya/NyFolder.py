@@ -454,6 +454,23 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/administration_users_html' % self.absolute_url())
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_portlets')
+    def admin_folder_portlets(self, portlets=[], folder='', mode='', REQUEST=None):
+        """ """
+        #right portlets
+        if mode == 'delete':
+            for pair in self.utConvertToList(portlets):
+                location, id = pair.split('||')
+                self.delete_right_portlets_locations(location, id)
+        else:
+            if folder == '':
+                #this is the current folder actually
+                folder = self.absolute_url(1)
+            self.set_right_portlets_locations(folder, self.utConvertToList(portlets))
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/administration_portlets_html' % self.absolute_url())
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_addroles')
     def admin_folder_addroles(self, name='', roles=[], location='', REQUEST=None):
         """ """
