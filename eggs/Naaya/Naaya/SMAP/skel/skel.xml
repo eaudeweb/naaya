@@ -5,6 +5,7 @@
 		<form id="site_index" title="Portal home page" />
 		<form id="site_login" title="Portal login" />
 		<form id="site_search" title="Search page" />
+		<form id="folder_menusubmissions" title="Menu submissions for folder" />
 	</forms>
 	<layout default_skin_id="smap" default_scheme_id="blue">
 		<skin id="smap" title="SMAP">
