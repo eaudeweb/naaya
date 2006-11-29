@@ -80,7 +80,7 @@ class SMAPSite(NySite, ProfileMeta):
         #custom indexes
         try:    self.getCatalogTool().addIndex('resource_area', 'FieldIndex')
         except: pass
-        try:    self.getCatalogTool().addIndex('resource_focus', 'FieldIndex')
+        try:    self.getCatalogTool().manage_addIndex('resource_focus', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 0})
         except: pass
 
         #remove Naaya default content
