@@ -333,7 +333,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         # btn_paste - if there is the add permission and there's some copyed data
         btn_paste = self.cb_dataValid() and self.checkPermissionPasteObjects()
         # Naaya folders
-        for x in self.utSortObjsListByAttr(self.getFolders(), 'sortorder', 0):
+        sorted_folders = self.utSortObjsListByAttr(self.getFolders(), 'title', 0)
+        for x in self.utSortObjsListByAttr(sorted_folders, 'sortorder', 0):
             del_permission = x.checkPermissionDeleteObject()
             copy_permission = x.checkPermissionCopyObject()
             edit_permission = x.checkPermissionEditObject()
@@ -346,7 +347,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
             if ((del_permission or edit_permission) and not x.approved) or x.approved:
                 results_folders.append((del_permission, edit_permission, version_status, copy_permission, x))
         # Naaya objects
-        for x in self.utSortObjsListByAttr(self.getObjects(), 'sortorder', 0):
+        sorted_objects = self.utSortObjsListByAttr(self.getObjects(), 'title', 0)
+        for x in self.utSortObjsListByAttr(sorted_objects, 'sortorder', 0):
             del_permission = x.checkPermissionDeleteObject()
             copy_permission = x.checkPermissionCopyObject()
             edit_permission = x.checkPermissionEditObject()
