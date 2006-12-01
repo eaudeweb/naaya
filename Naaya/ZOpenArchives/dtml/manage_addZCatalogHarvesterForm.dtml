@@ -6,13 +6,8 @@
 
 <table >
 
-<tr><td width=50>Select catalog:</td>
-	<td><select name="id">
-	<dtml-in "get_myContainer().objectIds(['PortalCatalog','ZCatalog', 'Plone Catalog Tool', 'Naaya Catalog Tool'])">
-		<dtml-let c_name="_['sequence-item']">
-		<option value="&dtml-c_name;"><dtml-var c_name></option>
-		</dtml-let>
-	</dtml-in></select></td>
+<tr><td width="50">Id:</td>
+	<td><input type="text" name="id" id="id" /></td>
 </tr>
 
 <tr><td>Title:</td> <td><input name="title" size=30 value="ZCatalog Harvester"></td></tr>
