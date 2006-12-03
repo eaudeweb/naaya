@@ -131,7 +131,10 @@ class LocalChannel(SimpleItem, utils):
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        s, lang = self.getSite(), self.language
+        s = self.getSite()
+        lang = self.language
+        if lang == 'auto':
+            lang = self.gl_get_selected_language()
         l_items = self.get_objects_for_rdf()
         r = []
         ra = r.append
