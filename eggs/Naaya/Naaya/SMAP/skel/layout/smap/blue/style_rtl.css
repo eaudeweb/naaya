@@ -294,7 +294,7 @@ li {
 	color: #7CAE31;
 	font-size: 90%;
 /* var */
-	background-image: url(titl_bullet_ar.gif);
+	//background-image: url(titl_bullet_ar.gif);
 	margin: 37px 6px 12px 7px;
 	padding: 2px 12px 2px 0px;
 	background-position: left top;
@@ -428,7 +428,7 @@ div#bread_crumb_trail a:visited{
 /* var */
 	margin: 0px 6px 12px 7px;
 	padding: 2px 12px 2px 0px;	
-	background-image: url(titl_bullet_ar.gif);
+	//background-image: url(titl_bullet_ar.gif);
 	background-repeat: no-repeat;
 	background-position: left top;
 }
@@ -519,7 +519,7 @@ div#bread_crumb_trail a:visited{
 	background-repeat: no-repeat;	
 	background-position: left top;
 	/* var */
-	background-image: url(rtitle_bullet_ar.gif);	
+	//background-image: url(rtitle_bullet_ar.gif);	
 	border-bottom: 2px solid white;
 	
 	}
