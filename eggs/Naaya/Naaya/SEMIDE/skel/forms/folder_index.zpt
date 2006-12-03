@@ -79,17 +79,6 @@ function fDeleteObjects()
 //-->
 </script>
 
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-{   document.objectItems.action="copyObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to copy.');}
-//-->
-</script>
-
 <script language="javascript" type="text/javascript" tal:condition="python:here.testNFPContext(here.absolute_url())">
 <!--
 function fDownloadObjects()
