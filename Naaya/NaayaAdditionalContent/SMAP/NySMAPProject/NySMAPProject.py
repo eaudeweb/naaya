@@ -212,7 +212,9 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
-        return u' '.join([self._objectkeywords(lang), self.getLocalProperty('donor', lang), self.getLocalProperty('organisation', lang), self.getLocalProperty('location', lang)])
+        return u' '.join([self._objectkeywords(lang), self.getLocalProperty('donor', lang),
+                        self.getLocalProperty('organisation', lang), self.getLocalProperty('contact', lang),
+                        self.getLocalProperty('location', lang)])
 
     security.declareProtected(view, 'resource_area')
     def resource_area(self):
