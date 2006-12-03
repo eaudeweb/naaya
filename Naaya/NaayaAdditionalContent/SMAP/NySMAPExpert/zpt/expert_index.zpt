@@ -40,17 +40,18 @@
 </tr>
 <tr>
 	<th i18n:translate="">Country</th>
-	<td tal:content="here/country" />
+	<td tal:content="python:here.getCountryName(here.country)" i18n:translate="" />
 </tr>
 <tr>
 	<th i18n:translate="">Main topics of expertise</th>
-	<td tal:content="here/maintopics" />
+	<td tal:content="python:here.getPriorityTitle(here.maintopics)" i18n:translate="" />
 </tr>
 <tr>
 	<th i18n:translate="">Sub topics of expertise</th>
-	<td><tal:block 
-		repeat="l_item python:here.convertToList(here.subtopics)" 
-		content="structure string:${l_item}<br />" />
+	<td>
+		<tal:block repeat="topic_id here/subtopics">
+			<div tal:content="python:here.getFocusTitle(topic_id)" i18n:translate="" />
+		</tal:block>
 	</td>
 </tr>
 <tr>

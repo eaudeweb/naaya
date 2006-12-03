@@ -106,6 +106,7 @@ def addNySMAPExpert(self, id='', title='', description='', coverage='', keywords
         else:
             approved, approved_by = 0, None
         releasedate = self.process_releasedate(releasedate)
+        subtopics = self.utConvertToList(subtopics)
         if lang is None: lang = self.gl_get_selected_language()
         #create object
         ob = NySMAPExpert(id, title, description, coverage, keywords, surname, name, ref_lang, country, 
@@ -164,7 +165,7 @@ def importNySMAPExpert(self, param, id, attrs, content, properties, discussion, 
                 ref_lang=attrs['ref_lang'].encode('utf-8'),
                 country=attrs['country'].encode('utf-8'),
                 maintopics=attrs['maintopics'].encode('utf-8'),
-                subtopics=attrs['subtopics'].encode('utf-8'),
+                subtopics=eval(attrs['subtopics'].encode('utf-8')),
                 email=attrs['email'].encode('utf-8'),
                 sortorder=attrs['sortorder'].encode('utf-8'),
                 source='file', file=self.utBase64Decode(attrs['file'].encode('utf-8')),
@@ -217,6 +218,10 @@ class NySMAPExpert(NyAttributes, expert_item, NyItem, NyCheckControl):
         #NyVersioning.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
+
+    security.declareProtected(view, 'resource_focus')
+    def resource_focus(self):
+        return ' '.join(self.subtopics)
 
     #override handlers
     def manage_afterAdd(self, item, container):
@@ -280,6 +285,7 @@ class NySMAPExpert(NyAttributes, expert_item, NyItem, NyCheckControl):
         if approved: approved = 1
         else: approved = 0
         releasedate = self.process_releasedate(releasedate, self.releasedate)
+        subtopics = self.utConvertToList(subtopics)
         if not lang: lang = self.gl_get_selected_language()
         self.save_properties(title, description, coverage, keywords, surname, name, ref_lang, country, 
             maintopics, subtopics, sortorder, downloadfilename, email, releasedate, lang)
@@ -375,6 +381,7 @@ class NySMAPExpert(NyAttributes, expert_item, NyItem, NyCheckControl):
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if not sortorder: sortorder = DEFAULT_SORTORDER
         if lang is None: lang = self.gl_get_selected_language()
+        subtopics = self.utConvertToList(subtopics)
         #check mandatory fiels
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, 
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, 
