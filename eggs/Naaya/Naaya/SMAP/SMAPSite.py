@@ -80,7 +80,9 @@ class SMAPSite(NySite, ProfileMeta):
         #custom indexes
         try:    self.getCatalogTool().addIndex('resource_area', 'FieldIndex')
         except: pass
-        try:    self.getCatalogTool().manage_addIndex('resource_focus', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 0})
+        try:    self.getCatalogTool().manage_addIndex('resource_focus', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
+        except: pass
+        try:    self.getCatalogTool().manage_addIndex('resource_country', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
         except: pass
 
         #remove Naaya default content
@@ -163,8 +165,8 @@ class SMAPSite(NySite, ProfileMeta):
 
     #projects search
     security.declarePublic('search_projects')
-    def searchProjects(self, priority_area='', focus=[], free_text='', skey='',
-                       rkey=0, archive=[], start='', REQUEST=None):
+    def searchProjects(self, priority_area='', focus=[], country='', free_text='', skey='',
+                       rkey=0, start='', REQUEST=None):
         """ """
         res_per_page = 10
         query = ''
@@ -175,20 +177,17 @@ class SMAPSite(NySite, ProfileMeta):
         try:    start = int(start)
         except: start = 0
 
-        if priority_area == '' and focus == [] and free_text == '':
-            #no criteria then returns the 10 more recent
-            res.extend(archive)
-        elif free_text:
-            free_text = self.utStrEscapeForSearch(free_text)
-            query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSMAPPROJECT], \
-                     objectkeywords_%s=free_text)' % lang
-            res.extend(eval(query))
-        else:
+        if len(priority_area) > 0:
             query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSMAPPROJECT], approved=1'
-            if priority_area:
+            if len(priority_area) > 0 and priority_area != 'all':
                 query += ', resource_area=priority_area'
-            if focus:
+            if len(focus) > 0:
                 query += ', resource_focus=focus'
+            if len(country) > 0:
+                query += ', resource_country=country'
+            if free_text:
+                free_text = self.utStrEscapeForSearch(free_text)
+                query += ', objectkeywords_%s=free_text' % lang
             query += ')'
             res.extend(eval(query))
 

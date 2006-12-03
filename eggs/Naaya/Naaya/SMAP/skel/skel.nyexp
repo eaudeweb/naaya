@@ -10,6 +10,7 @@
 
 <tal:block	define="priority_area python:request.get('priority_area', '');
 					focus python:here.utConvertToList(request.get('focus', []));
+					country python:here.utConvertToList(request.get('country', []));
 					free_text python:request.get('free_text', '');
 
 					start python:request.get('start', 0);
@@ -18,8 +19,9 @@
 					rkey_param python:test(rkey, '', '&amp;rkey=1');
 					archive python:here.getObjects();
 					focus_querystring python:'&focus:list='.join(focus);
-					page_search_querystring string:priority_area=${priority_area}&focus:list=${focus}&free_text=${free_text}&skey=${skey}&rkey=${rkey};
-					results python:here.searchProjects(priority_area, focus, free_text, skey, rkey, archive, start);
+					country_querystring python:'&country:list='.join(country);
+					page_search_querystring string:priority_area=${priority_area}&focus:list=${focus}&country:list=${country}&free_text=${free_text}&skey=${skey}&rkey=${rkey};
+					results python:here.searchProjects(priority_area, focus, country, free_text, skey, rkey, start);
 
 					list_paging python:results[0];
 					paging_start python:list_paging[0]+1;
@@ -140,13 +142,16 @@ alert('Please select one or more items to rename.');}
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <span tal:replace="structure here/menusubmissions" />
 
-<form name="search_projects" method="GET">
+<form	name="search_projects" method="GET"
+		tal:condition="python:priority_area=='' and focus==[] and country==[] and free_text==''">
 	<fieldset	tal:define="priorities here/getPrioritiesTypesList;
-							focuses here/getFocusesTypesList">
+							focuses here/getFocusesTypesList;
+							countries here/getCountriesList">
 		<legend i18n:translate="">Regional Environmental Project Search</legend>
 		<div class="field">
 			<label for="priority_area" i18n:translate="">Project Area</label>
 			<select name="priority_area" id="priority_area">
+				<option value="all" i18n:translate="">All</option>
 				<option tal:repeat="priority priorities"
 					tal:attributes="value priority/id;
 									selected python:priority.id in priority_area"
@@ -163,6 +168,15 @@ alert('Please select one or more items to rename.');}
 			</select>
 		</div>
 		<div class="field">
+			<label for="country" i18n:translate="">Country(ies)</label>
+			<select name="country" id="country" multiple="multiple" size="5">
+				<option tal:repeat="co countries"
+					tal:attributes="value co/id;
+									selected python:co.id in country"
+					tal:content="co/title" i18n:translate="" >country</option>
+			</select>
+		</div>
+		<div class="field">
 			<label for="free_text" i18n:translate="">Free text</label>
 			<input type="text" name="free_text" tal:attributes="value free_text" />
 		</div>
@@ -174,9 +188,47 @@ alert('Please select one or more items to rename.');}
 	</fieldset>
 </form>
 
+<tal:block tal:condition="python:not(priority_area=='' and focus==[] and country==[] and free_text=='')">
+	<a	tal:attributes="href here/absolute_url"
+		title="Search again"
+		i18n:translate="" i18n:attributes="title">Search again</a>
+	<fieldset>
+		<legend i18n:translate="">Search criteria</legend>
+		<table>
+			<tr tal:condition="python:priority_area=='all' and focus==[] and country==[] and free_text==''">
+				<td><span i18n:translate="">No search criterias</span></td>
+			</tr>
+			<tr tal:condition="python:priority_area!='all'">
+				<td><strong i18n:translate="">Project area</strong></td>
+				<td><span tal:content="python:here.getPriorityTitle(priority_area)" i18n:translate="" /></td>
+			</tr>
+			<tr tal:condition="focus">
+				<td><strong i18n:translate="">Focus(es) of the project</strong></td>
+				<td>
+				<tal:block repeat="focus_id focus">
+					<div tal:content="python:here.getFocusTitle(focus_id)" i18n:translate="" />
+				</tal:block>
+				</td>
+			</tr>
+			<tr tal:condition="country">
+				<td><strong i18n:translate="">Country(ies)</strong></td>
+				<td>
+				<tal:block repeat="country_id focus">
+					<div tal:content="python:here.getCountryName(country_id)" i18n:translate="" />
+				</tal:block>
+				</td>
+			</tr>
+			<tr tal:condition="free_text">
+				<td><strong i18n:translate="">Free text</strong></td>
+				<td><span tal:content="free_text" /></td>
+			</tr>
+		</table>
+	</fieldset>
+</tal:block>
+
 <h2>
-	<span tal:condition="python:priority_area=='' and focus==[] and free_text==''" i18n:translate="">Regional Environmental Projects</span>
-	<span tal:condition="python:not(priority_area=='' and focus==[] and free_text=='')" i18n:translate="">Search results</span>
+	<span tal:condition="python:priority_area=='' and focus==[] and country==[] and free_text==''" i18n:translate="">Regional Environmental Projects</span>
+	<span tal:condition="python:not(priority_area=='' and focus==[] and country==[] and free_text=='')" i18n:translate="">Search results</span>
 </h2>
 
 <div tal:condition="python:objects_select_all or objects_delete_all">
@@ -191,50 +243,76 @@ alert('Please select one or more items to rename.');}
 </div>
 
 <p i18n:translate="" tal:condition="python:len(objects_list) == 0">No projects available</p>
+
 <form name="objectItems" method="post" action="" tal:condition="python:len(objects_list) > 0">
-<table	border="0" cellpadding="0" cellspacing="0" id="folderfile_list" class="sortable"
+<table	border="0" cellpadding="0" cellspacing="0" id="folderfile_list"
 		tal:define="req_params python:here.getRequestParams(request);
 					sortup_gif string:/misc_/SMAP/sortup.gif;
 					sortdown_gif string:/misc_/SMAP/sortdown.gif;
 					sortnot_gif string:/misc_/SMAP/sortnot.gif">
+
 	<tr>
-		<th class="checkbox" style="width: 5%;" tal:condition="objects_delete_all"><span i18n:translate="" title="not sortable">Delete</span></th>
-		<th style="width: 10%;">
-			<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=releasedate${rkey_param};
-								title python:test(skey=='releasedate', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Releasedate
-			<img tal:attributes="src python:test(skey=='releasedate', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
-				 width="12" height="12" alt=""/>
-			</a>
-		</th>
-		<th>
-			<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=title${rkey_param};
-								title python:test(skey=='title', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Title
-			<img tal:attributes="src python:test(skey=='title', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
-				 width="12" height="12" alt=""/>
-			</a>
-		</th>
-		<th class="edit" tal:condition="objects_select_all"><span i18n:translate="" title="not sortable" i18n:attributes="title">Edit</span></th>
+		<td colspan="2"><center>
+				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=priority_area${rkey_param};
+									title python:test(skey=='priority_area', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by Project Area
+				<img tal:attributes="src python:test(skey=='priority_area', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
+					 width="12" height="12" alt=""/>
+				</a>
+				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=title${rkey_param};
+									title python:test(skey=='title', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by title
+				<img tal:attributes="src python:test(skey=='title', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
+					 width="12" height="12" alt=""/>
+				</a>
+				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=releasedate${rkey_param};
+									title python:test(skey=='releasedate', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by date
+				<img tal:attributes="src python:test(skey=='releasedate', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
+					 width="12" height="12" alt=""/>
+				</a></center>
+		</td>
 	</tr>
+
 	<tr tal:repeat="objects objects_list">
 		<tal:block define="del_permission python:objects[0]; edit_permission python:objects[1]; object python:objects[2]">
 			<td class="checkbox" tal:condition="del_permission" width="4%" valign="top">
 				<input tal:condition="python:object in archive" type="checkbox" name="id" tal:attributes="value object/id" />
 				<span tal:condition="python:not object in archive">-</span>
 			</td>
-			<td class="releasedate" tal:content="python:object.utShowDateTime(object.releasedate)" />
-			<td class="title-column"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type); title python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type)" border="0" />
-			<a tal:attributes="href object/absolute_url;title python:here.stripAllHtmlTags(object.description)" tal:content="object/title_or_id" />
-				<tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
-					[<span tal:replace="object/count_comments" />
-					<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
-				</tal:block>
-			</td>
-			<td class="edit" tal:condition="edit_permission">
-				<a tal:condition="python:not object.hasVersion() and object in archive" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
-				<span tal:condition="python:not(not object.hasVersion() and object in archive)">-</span>
+			<td>
+				<div>
+					<span style="float: right" class="edit" tal:condition="edit_permission">
+						<a tal:condition="python:not object.hasVersion() and object in archive" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
+						<span tal:condition="python:not(not object.hasVersion() and object in archive)">-</span>
+					</span>
+					<img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type); title python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type)" border="0" />
+					<a tal:attributes="href object/absolute_url;title python:here.stripAllHtmlTags(object.description)" tal:content="object/title_or_id" />
+						<tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
+							[<span tal:replace="object/count_comments" />
+							<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+						</tal:block>
+				</div>
+
+				<ul>
+					<li>
+						<strong i18n:translate="">Project area:</strong>
+						<span tal:content="python:here.getPriorityTitle(object.priority_area)" i18n:translate="" />
+					</li>
+
+					<li tal:condition="object/country">
+						<strong i18n:translate="">Country(ies):</strong>
+						<tal:block repeat="country_id object/country">
+							<div tal:content="python:here.getCountryName(country_id)" i18n:translate="" />
+						</tal:block>
+					</li>
+
+					<li>
+						<strong i18n:translate="">Release date:</strong>
+						<span class="releasedate" tal:content="python:object.utShowDateTime(object.releasedate)" />
+					</li>
+				</ul>
 			</td>
 		</tal:block>
 	</tr>
+
 </table>
 </form>
 
