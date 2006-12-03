@@ -19,6 +19,7 @@
 		<td class="form-label">Language</td>
 		<td>
 			<select name="language">
+				<option value="auto" tal:attributes="selected python:here.language=='auto'">Auto-detect</option>
 				<option tal:repeat="item python:here.gl_get_languages_map()"
 					tal:attributes="value python:item['id']; selected python:here.language==item['id']"
 					tal:content="python:item['title']" />
