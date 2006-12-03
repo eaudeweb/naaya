@@ -220,7 +220,11 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
 
     security.declareProtected(view, 'resource_focus')
     def resource_focus(self):
-        return ' '.join(self.convertToList(self.focus))
+        return ' '.join(self.focus)
+
+    security.declareProtected(view, 'resource_country')
+    def resource_country(self):
+        return ' '.join(self.country)
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
