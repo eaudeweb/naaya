@@ -265,7 +265,7 @@ li {
 	color: #7CAE31;
 	font-size: 90%;
 /* var */
-	background-image: url(titl_bullet.gif);
+	//background-image: url(titl_bullet.gif);
 	margin: 37px 7px 12px 6px;
 	padding: 2px 0px 2px 12px;
 	background-position: right top;
@@ -362,7 +362,7 @@ div#bread_crumb_trail a:visited{
 	color: #7CAE31;
 	font-size: 90%;
 /* var */
-	background-image: url(titl_bullet.gif);
+	//background-image: url(titl_bullet.gif);
 	margin: 0px 7px 12px 6px;
 	padding: 1px 0px 2px 12px;
 	background-position: right top;
@@ -451,7 +451,7 @@ div#bread_crumb_trail a:visited{
 	background-repeat: no-repeat;	
 	background-position: left top;
 	/* var */
-	background-image: url(rtitle_bullet.gif);	
+	//background-image: url(rtitle_bullet.gif);	
 }
 .right_portlet_tile img { /* TEMPORARY!!!! - to be removed*/
 	display: none;
