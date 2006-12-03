@@ -33,7 +33,7 @@
 	<tr>
 		<td class="form-label" width="20%">Country</td>
 		<td width="80%">
-			<select name="country:utf8:ustring" id="country">
+			<select name="country" id="country">
 				<option tal:repeat="country countries"
 					tal:attributes="value country/id" tal:content="country/title" i18n:translate="" >country</option>
 			</select>
@@ -42,7 +42,7 @@
 	<tr>
 		<td class="form-label" width="20%">Main topics of expertise</td>
 		<td width="80%">
-			<select name="maintopics:utf8:ustring" id="maintopics">
+			<select name="maintopics" id="maintopics">
 				<option tal:repeat="maintopic maintopics"
 					tal:attributes="value maintopic/id" tal:content="maintopic/title" i18n:translate="" >maintopic</option>
 			</select>
@@ -51,7 +51,7 @@
 	<tr>
 		<td class="form-label" width="20%">Sub topics of expertise</td>
 		<td width="80%">
-			<select name="subtopics:utf8:ustring" id="subtopics" multiple="multiple">
+			<select name="subtopics" id="subtopics" multiple="multiple">
 				<option tal:repeat="subtopic subtopics"
 					tal:attributes="value subtopic/id; selected python:subtopic.id in here.getSession('subtopics', '')" tal:content="subtopic/title" i18n:translate="" >subtopic</option>
 			</select>

@@ -36,7 +36,7 @@
 		<span i18n:translate="" tal:omit-tag="">Country</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'country')" class="mandatory_field"> *</span>
 	</label>
-	<select name="country:utf8:ustring" id="country">
+	<select name="country" id="country">
 		<option tal:repeat="country countries"
 			tal:attributes="value country/id; selected python:country.id in here.getSession('countries', '')" tal:content="country/title" i18n:translate="" >country</option>
 	</select>
@@ -46,7 +46,7 @@
 		<span i18n:translate="" tal:omit-tag="">Main topics of expertise</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'maintopics')" class="mandatory_field"> *</span>
 	</label>
-	<select name="maintopics:utf8:ustring" id="maintopics">
+	<select name="maintopics" id="maintopics">
 		<option tal:repeat="maintopic maintopics"
 			tal:attributes="value maintopic/id; selected python:maintopic.id in here.getSession('maintopics', '')" tal:content="maintopic/title" i18n:translate="" >maintopic</option>
 	</select>
@@ -56,7 +56,7 @@
 		<span i18n:translate="" tal:omit-tag="">Sub topics of expertise</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'subtopics')" class="mandatory_field"> *</span>
 	</label>
-	<select name="subtopics:utf8:ustring" id="subtopics" multiple="multiple">
+	<select name="subtopics" id="subtopics" multiple="multiple">
 		<option tal:repeat="subtopic subtopics"
 			tal:attributes="value subtopic/id; selected python:subtopic.id in here.getSession('subtopics', '')" tal:content="subtopic/title" i18n:translate="" >subtopic</option>
 	</select>
