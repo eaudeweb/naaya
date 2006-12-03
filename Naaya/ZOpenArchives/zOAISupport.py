@@ -23,8 +23,8 @@
 
 import string
 
-bad_chars =  "£/'∞ ,;?!:()[]{}ƒ≈Ѕј¬√дебавг«з…» Ћ∆йиклжЌћќѕнмоп—с÷”“‘’ЎцутфхшКЪя№ЏўџьъщыЁЯэ€ОЮ="
-good_chars = "________________AAAAAAaaaaaaCcEEEEEeeeeeIIIIiiiiNnOOOOOOooooooSssUUUUuuuuYYyyZz_"
+bad_chars =  ".£/'∞ ,;?!:()[]{}ƒ≈Ѕј¬√дебавг«з…» Ћ∆йиклжЌћќѕнмоп—с÷”“‘’ЎцутфхшКЪя№ЏўџьъщыЁЯэ€ОЮ="
+good_chars = "_________________AAAAAAaaaaaaCcEEEEEeeeeeIIIIiiiiNnOOOOOOooooooSssUUUUuuuuYYyyZz_"
 TRANSMAP = string.maketrans(bad_chars, good_chars)
 
 def processId(id):
