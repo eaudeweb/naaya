@@ -57,6 +57,15 @@ class plugLDAPUserFolder(PlugBase):
         try: return acl_folder.findUser(search_param=params, search_term=term)
         except: return ()
 
+    def getLDAPUserFirstName(self, dn):
+        return unicode(dn['sn'], 'iso-8859-1').encode('utf-8')
+
+    def getLDAPUserLastName(self, dn):
+        return unicode(dn['givenName'], 'iso-8859-1').encode('utf-8')
+
+    def getLDAPUserEmail(self, dn):
+        return unicode(dn['mail'], 'iso-8859-1').encode('utf-8')
+
     security.declarePublic('interface_html')
     interface_html = PageTemplateFile('plugLDAPUserFolder', globals())
 
