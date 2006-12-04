@@ -45,7 +45,7 @@ from Products.NaayaContent.NyReportReference.NyReportReference       import META
 METATYPE_OBJECT = 'Naaya Report'
 LABEL_OBJECT = 'Report'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Report objects'
-OBJECT_FORMS = ['report_add', 'report_edit', 'report_index', 'report_macro_objecttree', 'report_references']
+OBJECT_FORMS = ['report_add', 'report_edit', 'report_index', 'report_macro_objecttree', 'report_macro_sec_objecttree', 'report_references']
 OBJECT_CONSTRUCTORS = ['manage_addNyReport_html', 'report_add_html', 'addNyReport', 'importNyReport']
 OBJECT_ADD_FORM = 'report_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Report type.'
