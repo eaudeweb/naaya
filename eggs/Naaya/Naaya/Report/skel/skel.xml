@@ -5,9 +5,12 @@
 		<form id="site_admin_template" title="Site admin template"/>
 		<form id="site_messages" title="Portal messages page"/>
 		<form id="site_requestrole" title="Request role form"/>
+		<form id="languages_box" title="Box for changing the language on pages"/>
+		<form id="site_userprofile" title="Default user profile sheet"/>
 	</forms>
 	<emails>
 		<emailtemplate id="email_requestrole" title="Request role"/>
+		<emailtemplate id="email_createaccount" title="Create account"/>
 	</emails>
 	<layout default_skin_id="metal" default_scheme_id="orange">
 		<skin id="metal" title="Metal">
@@ -40,6 +43,12 @@
 				<image id="top_box0.gif" title=""/>
 				<image id="translate.gif" title=""/>
 				<image id="trash.gif" title=""/>
+				<image id="draft_review.gif" title=""/>
+				<image id="nav_TOC.jpg" title=""/>
+				<image id="nav_arrow1.gif" title=""/>
+				<image id="nav_arrow2.gif" title=""/>
+				<image id="nav_arrow3.gif" title=""/>
+				<image id="nav_pdf.jpg" title=""/>
 			</scheme>
 		</skin>
 	</layout>
@@ -53,6 +62,14 @@
 		<pluggablecontenttype meta_type="Naaya Document" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Pointer" action="1"/>
 		<pluggablecontenttype meta_type="Naaya URL" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Report Chapter" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Report Comment" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Report Questionnaire" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Report" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Report Answer" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Report Question" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Report Reference" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Report Section" action="1"/>
 	</pluggablecontenttypes>
 	<portlets left="portlet_maincategories" center="">
 		<reflist id="affiliation" title="Affiliation" description="">
