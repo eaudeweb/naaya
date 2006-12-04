@@ -44,7 +44,7 @@
 
 			<span class="commentbox_content">
 			<span tal:omit-tag="" i18n:translate="">Questions and answers posted on:</span> <strong tal:content="q/releasedate" />
-			<span i18n:translate="">by:</span> <strong><span tal:replace="q/contributor" /></strong>
+			<span i18n:translate="">by:</span> <strong tal:define="contrib q/getContributor"><span tal:replace="contrib/ln" /> <span tal:replace="contrib/fn" /> <span tal:condition="contrib/mail"><a tal:attributes="href string:mailto:${contrib/mail}" tal:content="contrib/mail" /></span></strong>
 			</span>
 
 		</div>

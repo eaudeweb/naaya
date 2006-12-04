@@ -375,6 +375,23 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
             addNyFile(self, id=id, title=file_title, file=file, lang=lang)
             return self._getOb(id)
 
+    def getContributor(self):
+        """ get contributor """
+        auth_tool = self.getAuthenticationTool()
+        if self.checkPermission(PERMISSION_PUBLISH_OBJECTS):
+            user = auth_tool.getUser(self.contributor)
+            if user is not None:
+                return {'fn': auth_tool.getUserFirstName(user), 'ln':auth_tool.getUserLastName(user), 'mail':auth_tool.getUserEmail(user)}
+            else:
+                ldap_sources = [ source for source in auth_tool.getSources() ]
+                if ldap_sources > 0:
+                    ldap_source = ldap_sources[0]    #take the first one
+                    ldap_object = ldap_source.getUserFolder()
+                    users = ldap_source.findLDAPUsers(ldap_object, 'uid', self.contributor)
+                    if users > 0:
+                        return {'fn':ldap_source.getLDAPUserFirstName(users[0]), 'ln':ldap_source.getLDAPUserLastName(users[0]), 'mail':ldap_source.getLDAPUserEmail(users[0])}
+        return {'fn':self.contributor, 'ln':'', 'mail':''}
+
     #Answers related API
     security.declareProtected(view, 'getAllAnswers')
     def getAllAnswers(self):    return self.objectValues(METATYPE_NYREPORTANSWER)
