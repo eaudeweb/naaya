@@ -191,9 +191,13 @@ class SMAPSite(NySite, ProfileMeta):
             if len(priority_area) > 0 and priority_area != 'all':
                 query += ', resource_area=priority_area'
             if len(focus) > 0:
-                query += ', resource_focus=focus'
+                focuses = " or ".join(focus)
+                focuses = self.utStrEscapeForSearch(focuses)
+                query += ', resource_focus=focuses'
             if len(country) > 0:
-                query += ', resource_country=country'
+                countries = " or ".join(country)
+                countries = self.utStrEscapeForSearch(countries)
+                query += ', resource_country=countries'
             if free_text:
                 free_text = self.utStrEscapeForSearch(free_text)
                 query += ', objectkeywords_%s=free_text' % lang

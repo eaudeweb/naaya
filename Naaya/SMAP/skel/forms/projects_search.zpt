@@ -10,9 +10,12 @@
 					rkey python:request.get('rkey', test(request.has_key('skey'),'','1'));
 					rkey_param python:test(rkey, '', '&amp;rkey=1');
 					archive python:here.getObjects();
-					focus_querystring python:'&focus:list='.join(focus);
-					country_querystring python:'&country:list='.join(country);
-					page_search_querystring string:priority_area=${priority_area}&focus:list=${focus}&country:list=${country}&free_text=${free_text}&skey=${skey}&rkey=${rkey};
+
+					focus_querystring python:test(focus, '&focus='+'&focus='.join(focus), '');
+					country_querystring python:test(country, '&country='+'&country='.join(country), '');
+					free_text_querystring python:test(free_text, '&free_text='+free_text, '');
+					priority_area_querystring python:test(priority_area, '&priority_area='+priority_area, '');
+					page_search_querystring string:skey=${skey}&rkey=${rkey}${priority_area_querystring}${focus_querystring}${country_querystring}${free_text_querystring};
 					results python:here.searchProjects(priority_area, focus, country, free_text, skey, rkey, start);
 
 					list_paging python:results[0];
