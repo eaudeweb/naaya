@@ -152,16 +152,17 @@ class catalog_tool:
             return [obj for obj in l_objects if getSecurityManager().checkPermission(view, obj)]
         else:
             l_temp = l_results[:howmany]
+            l_all = len(l_results)
             l_objects = self.__getObjects(l_temp)
             l_output = []
             l_counter = howmany
-            while 1:
+            while len(l_temp) > 0:
                 l_output.extend([obj for obj in l_objects if getSecurityManager().checkPermission(view, obj)])
-                if (len(l_output) >= howmany):
+                if len(l_output) >= howmany:
                     return l_output[:howmany]
                 else:
                     l_temp = l_results[l_counter:l_counter+howmany]
-                    l_counter = l_counter+howmany
+                    l_counter = l_counter + howmany
                     l_objects = self.__getObjects(l_temp)
 
     def getCatalogedUnsubmittedObjects(self, meta_type=None):
