@@ -7,7 +7,7 @@
 	<table border="0" cellspacing="2" cellpadding="2">
 		<tr>
 			<th i18n:translate="">Question</th>
-			<td tal:content="here/title" />
+			<td tal:content="structure here/title" />
 		</tr>
 	</table>
 

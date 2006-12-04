@@ -22,7 +22,7 @@
 </div>
 <div class="field">
     <label for="title"><span i18n:translate="" tal:omit-tag="">Question</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'title')" class="mandatory_field"> *</span></label>
-    <input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', '')" />
+    <textarea name="title:utf8:ustring" id="title" rows="5" cols="60" tal:content="python:here.getSession('title', '')" />
 </div>
 
 <input type="hidden" name="releasedate" id="releasedate" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" />
