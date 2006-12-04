@@ -213,7 +213,7 @@ alert('Please select one or more items to rename.');}
 			<tr tal:condition="country">
 				<td><strong i18n:translate="">Country(ies)</strong></td>
 				<td>
-				<tal:block repeat="country_id focus">
+				<tal:block repeat="country_id country">
 					<div tal:content="python:here.getCountryName(country_id)" i18n:translate="" />
 				</tal:block>
 				</td>

@@ -1,10 +1,13 @@
 TODOs:
 ------------------------------------------------------------
-[ ] RDF Calendar CSS (RTL and LTR)
-[ ] maybe add a Naaya Glossary for the 'Geographical coverage'/'Country' property of the
+[X] RDF Calendar CSS (RTL and LTR)
+[X] maybe add a Naaya Glossary for the 'Geographical coverage'/'Country' property of the
     SMAP Project objects instead of the countries reflist
-[ ] SMAP Project object: the 'Focus of the project' values changes accordingly
-                         to the selected 'Project Area' value
-[ ] Project search: 1) to implement indexing of the 'SMAP Project' fields
+[X] Project search: 1) to implement indexing of the 'SMAP Project' fields
                     2) search functionality (ZPT and SMAPSite.py)
                     3) sort by colomn on the result page
+[ ] The 'Focus of the project' values must change accordingly to the selected 'Project Area' value
+        - on project and expert objects
+        - on search form
+[ ] HTML/CSS of projects search form
+[ ] From the old SMAP product: search engine problems/issues

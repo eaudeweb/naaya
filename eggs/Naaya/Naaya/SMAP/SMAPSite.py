@@ -67,6 +67,9 @@ class SMAPSite(NySite, ProfileMeta):
         """ """
         NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
 
+###
+# Default 'Naaya' configuration
+###############################
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
         """ """
@@ -108,7 +111,9 @@ class SMAPSite(NySite, ProfileMeta):
         rdfcal_ob = self._getOb(ID_RDFCALENDAR)
         rdfcal_ob._getOb('example').update()
 
-    #layer over selection lists
+###
+# Layer over selection lists
+############################
     security.declarePublic('getCountriesList')
     def getCountriesList(self):
         """
@@ -160,10 +165,14 @@ class SMAPSite(NySite, ProfileMeta):
         except:
             return ''
 
-    #objects getters
+###
+# Objects getters
+#################
     def getSkinFilesPath(self): return self.getLayoutTool().getSkinFilesPath()
 
-    #projects search
+###
+# Projects search
+#################
     security.declarePublic('search_projects')
     def searchProjects(self, priority_area='', focus=[], country='', free_text='', skey='',
                        rkey=0, start='', REQUEST=None):
@@ -252,5 +261,10 @@ class SMAPSite(NySite, ProfileMeta):
     def stripAllHtmlTags(self, p_text):
         """ """
         return utils().utStripAllHtmlTags(p_text)
+
+    security.declareProtected(view, 'country_search')
+    def country_search(self, context='', country_code='', REQUEST=None, RESPONSE=None):
+        """ Search projects by country search form """
+        return self.getFormsTool().getContent({'here': context, 'country_code': [country_code]}, 'projects_search')
 
 InitializeClass(SMAPSite)
