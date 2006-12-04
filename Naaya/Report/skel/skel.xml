@@ -8,6 +8,7 @@
 		<form id="languages_box" title="Box for changing the language on pages"/>
 		<form id="site_userprofile" title="Default user profile sheet"/>
 		<form id="site_login" title="Portal login"/>
+		<form id="site_pickuser" title="Pick user form"/>
 	</forms>
 	<emails>
 		<emailtemplate id="email_requestrole" title="Request role"/>

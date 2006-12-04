@@ -230,6 +230,13 @@ class ReportSite(NySite, ProfileMeta):
         """
         return self.getFormsTool().getContent({'here': self}, 'site_profilesheet')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'pickuser_html')
+    def pickuser_html(self, REQUEST=None, RESPONSE=None):
+        """
+        Pick user form.
+        """
+        return self.getFormsTool().getContent({'here': self}, 'site_pickuser')
+
 #####################################################################################
 # Request role #
 ################
@@ -465,7 +472,7 @@ class ReportSite(NySite, ProfileMeta):
                 ldap_object = ldap_source.getUserFolder()
                 users = ldap_source.findLDAPUsers(ldap_object, 'cn', query)
                 if users:
-                    return [(user['cn'], ldap_object.getUserByDN(user['dn'])) for user in users]
+                    return [(user['cn'], user['uid'], user['mail']) for user in users]
 
 #####################################################################################
 # Breadcrumb trail #
