@@ -7,6 +7,7 @@
 		<form id="site_search" title="Search page" />
 		<form id="site_feedback" title="Portal feedback"/>
 		<form id="folder_menusubmissions" title="Menu submissions for folder" />
+		<form id="projects_search" title="Search projects by country"/>
 	</forms>
 	<layout default_skin_id="smap" default_scheme_id="blue">
 		<skin id="smap" title="SMAP">
