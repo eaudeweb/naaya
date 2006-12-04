@@ -1,6 +1,6 @@
 <span tal:replace="structure here/standard_html_header" />
 
-<h1 i18n:translate="">Submit Report (sub)section <span class="h1_parent" >in <a tal:attributes="href here/absolute_url" tal:content="here/title_or_id" /></span></h1>
+<h1><span tal:omit-tag="" i18n:translate="">Submit Report (sub)section </span><span class="h1_parent" ><span tal:omit-tag="" i18n:translate="">in</span> <a tal:attributes="href here/absolute_url" tal:content="here/title_or_id" /></span></h1>
 
 <p i18n:translate="">
 	Fill the properties in the form below and click <strong>Submit</strong>. Fields marked with <span class="mandatory_field">*</span> are mandatory.
