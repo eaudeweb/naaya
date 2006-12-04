@@ -123,7 +123,6 @@ class ReportSite(NySite, ProfileMeta):
         """ """
         today = self.utGetTodayDate()
         finish = self.consultation_end
-        print finish
         days_left = int(finish -today)
         if days_left <= 0:
             return 0
