@@ -26,7 +26,7 @@
 <form name="frmEdit" method="post" action="saveProperties" enctype="multipart/form-data">
 <div class="field">
 	<label for="title"><span i18n:translate="" tal:omit-tag="">Question</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'title')" class="mandatory_field"> *</span></label>
-	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', here.getVersionLocalProperty('title', curr_lang))" />
+	<textarea name="title:utf8:ustring" id="title" rows="5" cols="60" tal:content="python:here.getSession('title', here.getVersionLocalProperty('title', curr_lang))" />
 </div>
 
 <div class="field">
