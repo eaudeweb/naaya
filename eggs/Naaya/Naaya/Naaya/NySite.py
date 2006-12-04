@@ -366,7 +366,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             if skel_handler.root.emails is not None:
                 for emailtemplate in skel_handler.root.emails.emailtemplates:
                     content = self.futRead(join(skel_path, 'emails', '%s.txt' % emailtemplate.id), 'r')
-                    emailtool_ob.manage_addEmailTemplate(emailtemplate.id, emailtemplate.title, content)
+                    email_ob = emailtool_ob._getOb(emailtemplate.id, None)
+                    if email_ob is None:
+                        emailtool_ob.manage_addEmailTemplate(emailtemplate.id, emailtemplate.title, content)
+                    else:
+                        email_ob.manageProperties(title=email_ob.title, body=content)
             #set subobjects for folders
             self.getPropertiesTool().manageSubobjects(subobjects=None, ny_subobjects=[x for x in self.get_meta_types(1) if x not in exclude_meta_types])
             #load notification related stuff
