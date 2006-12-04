@@ -296,7 +296,9 @@ alert('Please select one or more items to rename.');}
 					<li tal:condition="object/country">
 						<strong i18n:translate="">Country(ies):</strong>
 						<tal:block repeat="country_id object/country">
-							<div tal:content="python:here.getCountryName(country_id)" i18n:translate="" />
+							<tal:block define="country_name python:here.getCountryName(country_id)">
+								<span tal:content="country_name" i18n:translate="" /><span tal:condition="not:repeat/country_id/end" tal:replace="string:," />
+							</tal:block>
 						</tal:block>
 					</li>
 
