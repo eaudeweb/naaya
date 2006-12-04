@@ -15,9 +15,8 @@
 </div>
 <div id="last_modified"> </div>
 <div id="footer">
-Last modified: 31-08-2006 |
+<span i18n:translate="">Last modified:</span> 31-08-2006 |
 	<a tal:attributes="href string:${site_url}/info/contact" i18n:translate="">Contact us</a> |
-	<a tal:attributes="href string:${site_url}/info/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a> |
 </div>
 
 
