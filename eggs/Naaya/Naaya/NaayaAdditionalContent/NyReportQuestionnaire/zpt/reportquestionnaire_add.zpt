@@ -4,6 +4,22 @@
 
 <script language="javascript" type="text/javascript">
 
+function fPick(url)
+{
+	var wnd = window.open(url, "pickuser", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
+	wnd.focus();
+}
+
+function fSet(ctrl, value)
+{
+	var frm = document.frmAdd;
+	var items = frm[ctrl + ':utf8:ustring'];
+	if (value != '')
+	{
+		items.value = value;
+	}
+}
+
 function addRowInnerHTML(tblId)
 {
 	var tblBody = document.getElementById(tblId).tBodies[0];
@@ -21,7 +37,15 @@ function CommButt(p_index)
 
 </script>
 
-<form name="frmAdd" method="post" tal:attributes="action action" enctype="multipart/form-data">
+<form name="frmAdd" method="post" tal:define="perm_publish_objects here/checkPermissionPublishObjects;"
+	tal:attributes="action action" enctype="multipart/form-data">
+	<tal:block condition="perm_publish_objects">
+	<span i18n:translate="">Contributor username:</span>
+	<input type="text" size="25" name="contributor:utf8:ustring" value="" />
+	<input type="button" value="Pick" id="pick-coverage" 
+		tal:define="site_url here/getSitePath"
+		tal:attributes="onclick string:javascript:fPick('${site_url}/pickuser_html');" />
+	</tal:block>
 	<tal:block define="questions here/getQuestions">
 		<tal:block repeat="q questions">
 			<div class="field">
