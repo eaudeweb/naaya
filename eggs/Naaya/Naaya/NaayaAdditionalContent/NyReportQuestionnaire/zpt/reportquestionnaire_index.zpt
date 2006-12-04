@@ -1,20 +1,30 @@
 <span tal:replace="structure here/standard_html_header" />
 <tal:block define="permission_edit here/checkPermissionEditObject">
 
-	<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" border="0" /> <span tal:replace="here/title_or_id" /></h1>
-	<tal:block tal:condition="permission_edit">
-	<div id="admin_this_folder">
-		<tal:block tal:condition="python: not here.hasVersion()">
-			<a tal:attributes="href string:${here/absolute_url}/startVersion"><span i18n:translate="">Checkout</span></a>
-			<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
+<h1><span tal:omit-tag="" i18n:translate="">Comments posted for </span> <em><a tal:content="here/title_or_id" tal:attributes="href here/absolute_url"/></em></h1>
+	<tal:block define="questions here/getQuestions; qnrs here/getQuestionnaires">
+		<tal:block repeat="q qnrs">
+			<tal:block  condition="python:q.lang == here.gl_get_selected_language()">
+				<div class="comment_box">
+					<div class="commentbox_title">
+						<span tal:omit-tag="" i18n:translate="">Comment posted for </span> <em><a tal:content="here/title_or_id" tal:attributes="href here/absolute_url"/></em>
+					</div>
+					<div>
+						<tal:block repeat="a q/answers/keys">
+							<p>
+								<strong><span tal:replace="python:here.getQuestionById(a).title_or_id()"/></strong><br />
+								<span tal:replace="python:q.answers[a]" />
+							</p>
+						</tal:block>
+					</div>
+					<hr class="hr_inside_comment" />
+					<div class="commentbox_content">
+						<span i18n:translate="" tal:omit-tag="">Submitted by: </span><strong><span tal:replace="q/contributor" /></strong>
+					</div>
+				</div>
+			</tal:block>
 		</tal:block>
-		<a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
-		<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()" i18n:translate="">This item has been checked out by another user</strong>
-		<a tal:attributes="href string:${here/absolute_url}/reportsection_add_html"><span i18n:translate="">Add Section</span></a>
-	</div>
 	</tal:block>
-	<p tal:condition="python:here.description!=''" tal:content="structure here/description" />
-
 </tal:block>
 
 <span tal:replace="structure here/standard_html_footer" />

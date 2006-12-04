@@ -1,11 +1,16 @@
 <span tal:replace="structure here/standard_html_header" />
 <tal:block define="permission_edit here/checkPermissionEditObject">
 
-<h1><span tal:omit-tag="" i18n:translate="">Comments posted for the chapter</span> <em><a tal:content="here/title_or_id" tal:attributes="href here/absolute_url"/></em></h1>
-	<tal:block define="	questions here/getQuestions;
+<h1><span tal:omit-tag="" i18n:translate="">Questions and answers for </span> <em><a tal:content="here/title_or_id" tal:attributes="href here/absolute_url"/></em></h1>
+	<tal:block define="questions here/getQuestions;
 						qnrs here/getQuestionnaires;
 						filter_qst python:request.get('question', '')">
 
+	<small class="auto_trans_legend" >
+	<div style="float: left; padding: 2px 8px 0px 8px; line-height: 30px; background-color: #0061A2; color: white; font-size: 320%; font-weight: bold; margin: 2px 7px 0px 0px; "> ! </div>
+	<span  i18n:translate="">Notice: on this page, the text in yellow has been translated automatically using a translation engine. Please note that the translation might be inaccurate or the meaning of the phrases might be changed. Change the language of the page to see the original text.</span></small>
+
+<!--
 	<fieldset><legend i18n:translate="">Filter comments</legend>
 	<form action="reportquestionnaires_html" method="get">
 		<label for="question" i18n:translate="">by question</label>
@@ -18,58 +23,108 @@
 		<input type="submit" value="Filter" i18n:attributes="value"/>
 	</form>
 	</fieldset>
+-->
 
-		<tal:block repeat="q qnrs">
-			<div class="comment_box">
-				<div class="commentbox_title">
-					<span tal:omit-tag="" i18n:translate="">Comment posted on </span> <em tal:content="q/releasedate" />
-				</div>
+	<tal:block condition="filter_qst">
+		<h3 class="filter_qst"><span i18n:translate="">Answers for:</span>
+			<span class="filter_question"><tal:block content="python:here.getQuestionById(filter_qst).title_or_id()" /></span>
+		</h3>
+	</tal:block>
 
-				<div>
-					<tal:block define="a_list python:test(filter_qst, [filter_qst], q.answers.keys())">
-						<tal:block repeat="a a_list">
-							<p>
-								<strong>
-									<span tal:omit-tag="" i18n:translate="">Q</span><tal:block content="repeat/a/number" />: <span tal:replace="python:here.getQuestionById(a).title_or_id()"/>
-								</strong><br />
+	<tal:block repeat="q qnrs">
+		<div class="comment_box">
+			<div class="commentbox_title">
+			<!--
+				<tal:block tal:condition="permission_edit">
+					<a tal:attributes="href string:${here/absolute_url}/${q/id}/delete_comment" style="float: right; margin-left: 5px"><small i18n:translate="">Delete</small></a>
+					<a tal:attributes="href string:${here/absolute_url}/${q/id}/edit_html" style="float: right">
+					<small i18n:translate="">Edit</small></a>
+				</tal:block>
+			-->
 
-								<tal:block condition="python:q.lang==here.gl_get_selected_language()">
-									<span tal:content="python:q.answers[a]" />
-								</tal:block>
+			<span class="commentbox_content">
+			<span tal:omit-tag="" i18n:translate="">Questions and answers posted on:</span> <strong tal:content="q/releasedate" />
+			<span i18n:translate="">by:</span> <strong><span tal:replace="q/contributor" /></strong>
+			</span>
 
-								<tal:block condition="python:q.lang!=here.gl_get_selected_language()">
-									<span style="background-color: yellow" tal:content="python:q.answers[a]" /><br />
-									<small>Message auto-translated</small>
-								</tal:block>
-							</p>
-						</tal:block>
-					</tal:block>
-				</div>
+		</div>
+		<hr class="hr_inside_comment" />
 
-				<div i18n:translate="">Additional comment</div>
+		<div tal:condition="filter_qst">
+			<span tal:define="answer python:q.getAnswerByQuestion(filter_qst).answer" tal:condition="answer">
 				<tal:block condition="python:q.lang==here.gl_get_selected_language()">
-					<span tal:content="q/adt_comment" />
-				</tal:block>
-				<tal:block condition="python:q.lang!=here.gl_get_selected_language()">
-					<span style="background-color: yellow" tal:content="q/adt_comment" /><br />
-					<small>Message auto-translated</small>
+					<span tal:content="answer" />
 				</tal:block>
 
-				<tal:block define="attachments python:q.objectValues('File')" condition="attachments">
-					<div>
-						<strong>Download attachment(s): </strong>
-						<tal:block repeat="file attachments">
-							<a tal:content="file/title_or_id" tal:attributes="href file/absolute_url" /><tal:block condition="not:repeat/file/end">, </tal:block>
+				<tal:block condition="python:q.lang!=here.gl_get_selected_language()">
+				<div class="auto_transl" >
+					<div tal:content="answer" /><br />
+				</div>
+				</tal:block>
+			</span>
+		</div>
+
+		<div tal:condition="not:filter_qst">
+			<tal:block define="a_list q/getQuestionIds">
+				<tal:block repeat="a a_list">
+					<span tal:define="answer python:q.getAnswerByQuestion(a).answer" tal:condition="answer">
+						<div class="question_in_comm">
+						<span class="q_number">
+							<span tal:omit-tag="" i18n:translate="">Q</span><tal:block content="repeat/a/number" />
+						</span>
+							<span tal:replace="python:here.getQuestionById(a).title_or_id()"/>
+						</div>
+
+						<tal:block condition="python:q.lang==here.gl_get_selected_language()">
+							<span tal:content="answer" />
 						</tal:block>
+
+						<tal:block condition="python:q.lang!=here.gl_get_selected_language()">
+						<div class="auto_transl">
+							<div tal:content="answer" />
+						</div>
+						</tal:block>
+					</span>
+				</tal:block>
+			</tal:block>
+		</div>
+
+		<span class="comm_to_text" i18n:translate="" tal:condition="q/hasComments">Comment(s) to text</span>
+
+		<tal:block repeat="comment q/getAllComments">
+			<div>
+			<span class="comment_for" >
+				<span i18n:translate="">Comment for</span>
+				<span class="page_line">
+					<span class="pg_ln" i18n:translate="">page</span>: <span class="style_number" tal:content="comment/page" />, 
+					<span class="pg_ln" i18n:translate="">line</span>: <span class="style_number" tal:content="comment/line" />
+				</span>
+			</span>
+				<tal:block condition="python:q.lang==here.gl_get_selected_language()">
+					<div>
+					<span tal:content="comment/comment" />
 					</div>
 				</tal:block>
-
-				<hr class="hr_inside_comment" />
-				<div class="commentbox_content">
-					Submitted by: <strong><span tal:replace="q/contributor" /></strong>
-				</div>
+				<tal:block condition="python:q.lang!=here.gl_get_selected_language()">
+					<div class="auto_transl" title="Text automatically translated" i18n:attributes="title">
+						<tal:block tal:replace="comment/comment" />
+					</div>
+				</tal:block>
 			</div>
 		</tal:block>
+
+		<tal:block define="attachments q/getFiles" condition="attachments">
+			<div>
+				<strong i18n:translate="">Download attachment: </strong>
+				<tal:block repeat="file attachments">
+					<a tal:content="file/title_or_id" tal:attributes="href string:${file/absolute_url}/download" />
+				</tal:block>
+			</div>
+		</tal:block>
+
+			</div>
+		</tal:block>
+
 	</tal:block>
 </tal:block>
 
