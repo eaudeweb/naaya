@@ -34,7 +34,6 @@ from Globals import InitializeClass, PersistentMapping
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #product imports
-from Products.Naaya.constants import METATYPE_FOLDER
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import file_utils,utils
 from Products.NaayaCore.managers.session_manager import session_manager
