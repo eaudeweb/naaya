@@ -95,8 +95,7 @@ class SMAPSite(NySite, ProfileMeta):
         #self.getPortletsTool().manage_delObjects('topnav_links')
 
         #set default 'Main topics'
-        try:    self.getPropertiesTool().manageMainTopics(['fol120392', 'fol112686',
-                                                           'fol034934', 'test1'])
+        try:    self.getPropertiesTool().manageMainTopics(['fol120392', 'fol112686', 'fol034934', 'test1'])
         except: pass
 
         #set portal index's right portlets
@@ -116,16 +115,12 @@ class SMAPSite(NySite, ProfileMeta):
 ############################
     security.declarePublic('getCountriesList')
     def getCountriesList(self):
-        """
-        Return the selection list for countries.
-        """
+        """ Return the selection list for countries """
         return self.getPortletsTool().getRefListById('countries').get_list()
 
     security.declarePublic('getCountryName')
     def getCountryName(self, id):
-        """
-        Return the title of an item for the selection list for countries.
-        """
+        """ Return the title of an item for the selection list for countries """
         try:
             return self.getPortletsTool().getRefListById('countries').get_item(id).title
         except:
@@ -133,35 +128,32 @@ class SMAPSite(NySite, ProfileMeta):
 
     security.declarePublic('getPrioritiesTypesList')
     def getPrioritiesTypesList(self):
-        """
-        Return the selection list for priorities types.
-        """
+        """ Return the selection list for priorities types """
         return self.getPortletsTool().getRefListById('priorities_types').get_list()
 
     security.declarePublic('getPriorityTitle')
     def getPriorityTitle(self, id):
-        """
-        Return the title of an item for the selection list for priorities types.
-        """
+        """ Return the title of an item for the selection list for priorities types """
         try:
             return self.getPortletsTool().getRefListById('priorities_types').get_item(id).title
         except:
             return ''
-        
+
     security.declarePublic('getFocusesTypesList')
-    def getFocusesTypesList(self):
-        """
-        Return the selection list for focuses types.
-        """
-        return self.getPortletsTool().getRefListById('focuses_types').get_list()
+    def getFocusesTypesList(self, project_id):
+        """ Return the selection list for focuses types for a given project """
+        focus_list_id = "focuses_%s" % project_id[:3]
+        try:
+            return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_list()
+        except:
+            return []
 
     security.declarePublic('getFocusTitle')
-    def getFocusTitle(self, id):
-        """
-        Return the title of an item for the selection list for focuses types.
-        """
+    def getFocusTitle(self, focus_id, project_id):
+        """ Return the title of an item for the selection list for focuses types """
+        focus_list_id = "focuses_%s" % project_id[:3]
         try:
-            return self.getPortletsTool().getRefListById('focuses_types').get_item(id).title
+            return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_item(focus_id).title
         except:
             return ''
 
@@ -215,7 +207,7 @@ class SMAPSite(NySite, ProfileMeta):
         return (paging_informations, (results[0], results[1], results[2][paging_informations[0]:paging_informations[1]]))
 
     def sorted_projects(self, p_objects=[], skey='', rkey=0):
-        """Return sorted projects"""
+        """ Return sorted projects """
         results = []
         if not skey or skey == 'releasedate':
             p_objects.sort(lambda x,y: cmp(y.releasedate, x.releasedate) \
@@ -245,8 +237,8 @@ class SMAPSite(NySite, ProfileMeta):
 
     security.declareProtected(view, 'getRequestParams')
     def getRequestParams(self, REQUEST=None):
-        """returns a REQUEST.QUERY_STRING (using REQUEST.form,
-            REQUEST.form=REQUEST.QUERY_STRING as a dictionary)"""
+        """ Returns a REQUEST.QUERY_STRING (using REQUEST.form,
+            REQUEST.form=REQUEST.QUERY_STRING as a dictionary) """
         ignore_list = ['skey', 'rkey']
         res=''
         if REQUEST:

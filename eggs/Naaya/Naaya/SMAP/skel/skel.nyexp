@@ -12,6 +12,10 @@
 					focus python:here.utConvertToList(request.get('focus', []));
 					country python:here.utConvertToList(request.get('country', []));
 					free_text python:request.get('free_text', '');
+					prj_changed python:request.get('prj_changed', 0);
+
+					search_test python:test(priority_area=='' and focus==[] and country==[] and free_text=='', 0, 1);
+					search_performed python:test(prj_changed, 0, search_test);
 
 					start python:request.get('start', 0);
 					skey python:request.get('skey', 'releasedate');
@@ -120,6 +124,21 @@ alert('Please select one or more items to rename.');}
 //-->
 </script>
 
+<script language="javascript" type="text/javascript">
+<!--
+function changeProject()
+{   document.frmSearchProjects.action='';
+    document.frmSearchProjects.prj_changed.value=1;
+    focusObj = document.frmSearchProjects.focus;
+    for (i=0; i<focusObj.options.length; i++) {
+        if (focusObj.options[i].selected) {
+            focusObj.options[i].selected=''
+        }
+    }
+    document.frmSearchProjects.method='post';
+    document.frmSearchProjects.submit();}
+//-->
+</script>
 
 <div>
 
@@ -145,15 +164,15 @@ alert('Please select one or more items to rename.');}
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <span tal:replace="structure here/menusubmissions" />
 
-<form	name="search_projects" method="GET"
-		tal:condition="python:priority_area=='' and focus==[] and country==[] and free_text==''">
+<form	name="frmSearchProjects" id="frmSearchProjects" method="GET"
+		tal:condition="not:search_performed">
 	<fieldset	tal:define="priorities here/getPrioritiesTypesList;
-							focuses here/getFocusesTypesList;
+							focuses python:here.getFocusesTypesList(priority_area);
 							countries here/getCountriesList">
 		<legend i18n:translate="">Regional Environmental Project Search</legend>
 		<div class="field">
 			<label for="priority_area" i18n:translate="">Project Area</label>
-			<select name="priority_area" id="priority_area">
+			<select name="priority_area" id="priority_area" onchange="changeProject()">
 				<option value="all" i18n:translate="">All</option>
 				<option tal:repeat="priority priorities"
 					tal:attributes="value priority/id;
@@ -163,7 +182,7 @@ alert('Please select one or more items to rename.');}
 		</div>
 		<div class="field">
 			<label for="focus" i18n:translate="">Focus(es) of the project</label>
-			<select name="focus" id="focus" multiple="multiple">
+			<select name="focus" id="focus" multiple="multiple" size="5">
 				<option tal:repeat="fc focuses"
 					tal:attributes="value fc/id;
 									selected python:fc.id in focus"
@@ -185,13 +204,14 @@ alert('Please select one or more items to rename.');}
 		</div>
 		<input type="hidden" name="skey" id="skey" tal:attributes="value skey" />
 		<input type="hidden" name="rkey" id="rkey" tal:attributes="value rkey" />
+		<input type="hidden" name="prj_changed:int" id="prj_changed" value="0" />
 		<div class="field">
 			<input type="submit" value="Search" i18n:attributes="value" />
 		</div>
 	</fieldset>
 </form>
 
-<tal:block tal:condition="python:not(priority_area=='' and focus==[] and country==[] and free_text=='')">
+<tal:block tal:condition="search_performed">
 	<a	tal:attributes="href here/absolute_url"
 		title="Search again"
 		i18n:translate="" i18n:attributes="title">Search again</a>
@@ -209,7 +229,7 @@ alert('Please select one or more items to rename.');}
 				<td><strong i18n:translate="">Focus(es) of the project</strong></td>
 				<td>
 				<tal:block repeat="focus_id focus">
-					<div tal:content="python:here.getFocusTitle(focus_id)" i18n:translate="" />
+					<div tal:content="python:here.getFocusTitle(focus_id, priority_area)" i18n:translate="" />
 				</tal:block>
 				</td>
 			</tr>
@@ -230,8 +250,8 @@ alert('Please select one or more items to rename.');}
 </tal:block>
 
 <h2>
-	<span tal:condition="python:priority_area=='' and focus==[] and country==[] and free_text==''" i18n:translate="">Regional Environmental Projects</span>
-	<span tal:condition="python:not(priority_area=='' and focus==[] and country==[] and free_text=='')" i18n:translate="">Search results</span>
+	<span tal:condition="not:search_performed" i18n:translate="">Regional Environmental Projects</span>
+	<span tal:condition="search_performed" i18n:translate="">Search results</span>
 </h2>
 
 <div tal:condition="python:objects_select_all or objects_delete_all">
