@@ -32,6 +32,10 @@ import Globals
 NAAYACORE_PRODUCT_NAME = 'NaayaCore'
 NAAYACORE_PRODUCT_PATH = Globals.package_home(globals())
 
+
+METATYPE_FOLDER = 'Naaya Folder'
+
+
 PERMISSION_ADD_NAAYACORE_TOOL = 'Add NaayaCore Tool'
 
 METATYPE_CATALOGTOOL = 'Naaya Catalog Tool'
