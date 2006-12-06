@@ -1,5 +1,14 @@
 <span tal:replace="structure here/standard_html_header" />
-<tal:block define="permission_edit here/checkPermissionEditObject">
+<tal:block define="permission_edit here/checkPermissionEditObject;">
+
+<script language="JavaScript">
+function setupWin(url, theWidth, theHeight)
+{
+   wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
+   wwinn.focus();
+   return true;
+}
+</script>
 
 <h1><span tal:omit-tag="" i18n:translate="">Questions and answers for </span> <em><a tal:content="here/title_or_id" tal:attributes="href here/absolute_url"/></em></h1>
 	<tal:block define="questions here/getQuestions;
@@ -44,7 +53,9 @@
 
 			<span class="commentbox_content">
 			<span tal:omit-tag="" i18n:translate="">Questions and answers posted on:</span> <strong tal:content="q/releasedate" />
-			<span i18n:translate="">by:</span> <strong tal:define="contrib q/getContributor"><span tal:replace="contrib/ln" /> <span tal:replace="contrib/fn" /> <span tal:condition="contrib/mail"><a tal:attributes="href string:mailto:${contrib/mail}" tal:content="contrib/mail" /></span></strong>
+			<span i18n:translate="">by:</span> 
+				<a href="#" tal:condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'" tal:attributes="onclick string:setupWin('userinfo_html?uid=${q/contributor}', 350, 300);"><strong tal:content="q/contributor" /></a>
+				<strong tal:content="q/contributor" tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'" />
 			</span>
 
 		</div>
