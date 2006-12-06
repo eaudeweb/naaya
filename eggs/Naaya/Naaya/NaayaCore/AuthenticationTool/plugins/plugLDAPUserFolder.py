@@ -58,13 +58,22 @@ class plugLDAPUserFolder(PlugBase):
         except: return ()
 
     def getLDAPUserFirstName(self, dn):
-        return unicode(dn['sn'], 'iso-8859-1').encode('utf-8')
+        return unicode(dn.get('sn', ''), 'iso-8859-1').encode('utf-8')
 
     def getLDAPUserLastName(self, dn):
-        return unicode(dn['givenName'], 'iso-8859-1').encode('utf-8')
+        return unicode(dn.get('givenName', ''), 'iso-8859-1').encode('utf-8')
 
     def getLDAPUserEmail(self, dn):
-        return unicode(dn['mail'], 'iso-8859-1').encode('utf-8')
+        return unicode(dn.get('mail', ''), 'iso-8859-1').encode('utf-8')
+
+    def getLDAPUserPhone(self, dn):
+        return unicode(dn.get('telephoneNumber', ''), 'iso-8859-1').encode('utf-8')
+
+    def getLDAPUserAddress(self, dn):
+        return unicode(dn.get('postalAddress', ''), 'iso-8859-1').encode('utf-8')
+
+    def getLDAPUserDescription(self, dn):
+        return unicode(dn.get('description', ''), 'iso-8859-1').encode('utf-8')
 
     security.declarePublic('interface_html')
     interface_html = PageTemplateFile('plugLDAPUserFolder', globals())
