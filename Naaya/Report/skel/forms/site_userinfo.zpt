@@ -1,0 +1,39 @@
+<span tal:replace="python:request.RESPONSE.setHeader('content-type','text/html;charset=utf-8')" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language"
+	tal:define="site_url here/getSitePath;">
+	<head>
+		<title i18n:translate="">Show user information</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+		<link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/style" />
+		<link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${skin_files_path}/style_print" />
+	</head>
+	<body>
+
+	<h4>User information for <em>user name</em></h4>
+
+	<table>
+	<tr>
+		<th>Name</th>
+		<td></td>
+	</tr>
+	<tr>
+		<th>Email</th>
+		<td></td>
+	</tr>
+	<tr>
+		<th>Phone</th>
+		<td></td>
+	</tr>
+	<tr>
+		<th>Postal address</th>
+		<td></td>
+	</tr>
+	<tr>
+		<th>Description</th>
+		<td></td>
+	</tr>
+	</table>
+	</body>
+</html>
