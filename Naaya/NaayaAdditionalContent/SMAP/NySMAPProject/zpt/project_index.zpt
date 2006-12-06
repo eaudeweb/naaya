@@ -29,7 +29,7 @@
 	<th i18n:translate="">Focus(es) of the project</th>
 	<td>
 		<tal:block repeat="focus_id here/focus">
-			<div tal:content="python:here.getFocusTitle(focus_id)" i18n:translate="" />
+			<div tal:content="python:here.getFocusTitle(focus_id, here.priority_area)" i18n:translate="" />
 		</tal:block>
 	</td>
 </tr>
@@ -40,10 +40,6 @@
 <tr tal:condition="here/tools">
 	<th i18n:translate="">Tools</th>
 	<td tal:content="structure python:here.utNewlinetoBr(here.tools)" />
-</tr>
-<tr tal:condition="here/coverage">
-	<th i18n:translate="">Geographical coverage</th>
-	<td tal:content="here/coverage" />
 </tr>
 <tr tal:condition="here/location">
 	<th i18n:translate="">Locations</th>
