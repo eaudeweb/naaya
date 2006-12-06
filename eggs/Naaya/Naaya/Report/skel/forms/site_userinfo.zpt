@@ -11,29 +11,35 @@
 	</head>
 	<body>
 
-	<h4>User information for <em>user name</em></h4>
-
+	<tal:block define="uid python:request.get('uid', '');
+						contrib python:here.getContributor(uid);"
+				condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anounymous User'">
+	<h3><span i18n:translate="">User information for </span>  <em tal:content="contrib/uid" /></h3>
+	<h4><span tal:condition="contrib/type" i18n:translate="">EIONET CIRCA user</span>
+		<span tal:condition="python: not contrib['type']" i18n:translate="">Local user</span>
+	</h4>
 	<table>
 	<tr>
-		<th>Name</th>
-		<td></td>
+		<th i18n:translate="">Name</th>
+		<td tal:content="python:'%s %s' % (contrib['fn'], contrib['ln'])" />
 	</tr>
-	<tr>
-		<th>Email</th>
-		<td></td>
+	<tr tal:condition="contrib/mail">
+		<th i18n:translate="">Email</th>
+		<td tal:content="contrib/mail" />
 	</tr>
-	<tr>
-		<th>Phone</th>
-		<td></td>
+	<tr tal:condition="contrib/telephone">
+		<th i18n:translate="">Phone</th>
+		<td tal:content="contrib/telephone" />
 	</tr>
-	<tr>
-		<th>Postal address</th>
-		<td></td>
+	<tr tal:condition="contrib/affiliation">
+		<th i18n:translate="">Affiliation</th>
+		<td tal:content="python:here.getAffiliationById(contrib['affiliation'])" />
 	</tr>
-	<tr>
-		<th>Description</th>
-		<td></td>
+	<tr tal:condition="contrib/nationality">
+		<th i18n:translate="">Nationality</th>
+		<td tal:content="contrib/nationality" />
 	</tr>
 	</table>
+	</tal:block>
 	</body>
 </html>

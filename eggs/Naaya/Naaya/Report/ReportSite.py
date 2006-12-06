@@ -490,7 +490,8 @@ class ReportSite(NySite, ProfileMeta):
             user_profile = self.getProfilesTool().getProfile(uid)
             sheet = user_profile.getSheetById(self.getInstanceSheetId())
             if user is not None:
-                return {'uid':uid,
+                return {'type': 0,
+                        'uid':uid,
                         'fn': auth_tool.getUserFirstName(user), 
                         'ln':auth_tool.getUserLastName(user), 
                         'mail':auth_tool.getUserEmail(user), 
@@ -506,7 +507,8 @@ class ReportSite(NySite, ProfileMeta):
                     ldap_object = ldap_source.getUserFolder()
                     users = ldap_source.findLDAPUsers(ldap_object, 'uid', uid)
                     if len(users) > 0:
-                        return {'uid':uid,
+                        return {'type': 1,
+                                'uid':uid,
                                 'fn':ldap_source.getLDAPUserFirstName(users[0]), 
                                 'ln':ldap_source.getLDAPUserLastName(users[0]), 
                                 'mail':ldap_source.getLDAPUserEmail(users[0]),
@@ -515,7 +517,8 @@ class ReportSite(NySite, ProfileMeta):
                                 'description':ldap_source.getLDAPUserDescription(users[0]),
                                 'affiliation':'',
                                 'nationality':''}
-        return {'uid':uid,
+        return {'type':0,
+                'uid':uid,
                 'fn':'', 
                 'ln':'', 
                 'mail':'',
