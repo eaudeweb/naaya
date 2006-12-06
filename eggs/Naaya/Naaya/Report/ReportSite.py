@@ -237,6 +237,13 @@ class ReportSite(NySite, ProfileMeta):
         """
         return self.getFormsTool().getContent({'here': self}, 'site_pickuser')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'userinfo_html')
+    def userinfo_html(self, REQUEST=None, RESPONSE=None):
+        """
+        Show user info
+        """
+        return self.getFormsTool().getContent({'here': self}, 'site_userinfo')
+
 #####################################################################################
 # Request role #
 ################
@@ -473,6 +480,50 @@ class ReportSite(NySite, ProfileMeta):
                 users = ldap_source.findLDAPUsers(ldap_object, 'cn', query)
                 if users:
                     return [(user['cn'], user['uid'], user['mail']) for user in users]
+
+    security.declarePublic('getContributor')
+    def getContributor(self, uid):
+        """ get contributor """
+        auth_tool = self.getAuthenticationTool()
+        if self.REQUEST.AUTHENTICATED_USER.getUserName() != 'Anonymous User':
+            user = auth_tool.getUser(uid)
+            user_profile = self.getProfilesTool().getProfile(uid)
+            sheet = user_profile.getSheetById(self.getInstanceSheetId())
+            if user is not None:
+                return {'uid':uid,
+                        'fn': auth_tool.getUserFirstName(user), 
+                        'ln':auth_tool.getUserLastName(user), 
+                        'mail':auth_tool.getUserEmail(user), 
+                        'telephone':'',
+                        'address':'', 
+                        'description':'',
+                        'affiliation':sheet.affiliation,
+                        'nationality':sheet.nationality}
+            else:
+                ldap_sources = [ source for source in auth_tool.getSources() ]
+                if ldap_sources > 0:
+                    ldap_source = ldap_sources[0]    #take the first one
+                    ldap_object = ldap_source.getUserFolder()
+                    users = ldap_source.findLDAPUsers(ldap_object, 'uid', uid)
+                    if len(users) > 0:
+                        return {'uid':uid,
+                                'fn':ldap_source.getLDAPUserFirstName(users[0]), 
+                                'ln':ldap_source.getLDAPUserLastName(users[0]), 
+                                'mail':ldap_source.getLDAPUserEmail(users[0]),
+                                'telephone':ldap_source.getLDAPUserPhone(users[0]),
+                                'address':ldap_source.getLDAPUserAddress(users[0]), 
+                                'description':ldap_source.getLDAPUserDescription(users[0]),
+                                'affiliation':'',
+                                'nationality':''}
+        return {'uid':uid,
+                'fn':'', 
+                'ln':'', 
+                'mail':'',
+                'telephone':'',
+                'address':'', 
+                'description':'',
+                'affiliation':'',
+                'nationality':''}
 
 #####################################################################################
 # Breadcrumb trail #
