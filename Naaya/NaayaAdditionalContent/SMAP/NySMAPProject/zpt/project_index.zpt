@@ -13,10 +13,6 @@
 </tal:block>
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <table border="0" cellspacing="2" cellpadding="2">
-<tr tal:condition="here/priority_area">
-	<th i18n:translate="">Project area</th>
-	<td tal:content="python:here.getPriorityTitle(here.priority_area)" i18n:translate="" />
-</tr>
 <tr tal:condition="here/country">
 	<th i18n:translate="">Country(ies)</th>
 	<td>
@@ -24,6 +20,10 @@
 			<div tal:content="python:here.getCountryName(country_id)" i18n:translate="" />
 		</tal:block>
 	</td>
+</tr>
+<tr tal:condition="here/priority_area">
+	<th i18n:translate="">Project area</th>
+	<td tal:content="python:here.getPriorityTitle(here.priority_area)" i18n:translate="" />
 </tr>
 <tr tal:condition="here/focus">
 	<th i18n:translate="">Focus(es) of the project</th>
@@ -34,7 +34,7 @@
 	</td>
 </tr>
 <tr tal:condition="here/main_issues">
-	<th i18n:translate="">Project Scale</th>
+	<th i18n:translate="">Project scale</th>
 	<td tal:content="here/main_issues" />
 </tr>
 <tr tal:condition="here/tools">
@@ -58,7 +58,7 @@
 	<td tal:content="here/timeframe" />
 </tr>
 <tr tal:condition="here/organisation">
-	<th i18n:translate="">Implementing Organisation/s</th>
+	<th i18n:translate="">Implementing organisation(s)</th>
 	<td tal:content="structure python:here.utNewlinetoBr(here.organisation)" />
 </tr>
 <tr tal:condition="here/contact">
