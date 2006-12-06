@@ -57,3 +57,66 @@ def utSortObjsByLocaleAttr(p_list, p_attr, p_desc=1, p_locale=''):
             #in case of failure make a normal sorting
             locale.setlocale(locale.LC_ALL, default_locale)
             return utSortObjsByLocaleAttr(p_list, p_attr, p_desc)
+
+def sync_two_selects():
+    return """ 
+        function dynamicSelect()
+        {
+            this.selects = new Array();
+            
+            this.addSelect = function(name)
+            {
+                this.selects[name] = new selectObj();
+            }
+
+            this.updateOptions = function(source, target)
+            {
+                var form = source.form;
+                var target = form.elements[target];
+                var value = source.options[source.selectedIndex].value;
+                
+                while(target.options.length) target.remove(0);
+                
+                if(!this.selects[source.name].options[value])
+                {
+                    //alert('Invalid selection.'); //For debugging while you set it up
+                    return;
+                }
+
+                var data = this.selects[source.name].options[value].options;
+
+                for(var x=0; x<data.length; x++)
+                {
+                    try
+                    {
+                        target.add(data[x]);
+                    }
+                    catch(e)
+                    {
+                        target.add(data[x], null);
+                    }
+                }
+                target.selectedIndex = 0;
+            }
+        }
+
+        function selectObj()
+        {
+            this.options = new Array();
+            
+            this.addOption = function(value)
+            {
+                this.options[value] = new optionObj();
+            }
+        }
+
+        function optionObj()
+        {
+            this.options = new Array();
+            
+            this.createOption = function(name, value)
+            {
+                this.options[this.options.length] = new Option(name, value);
+            }
+        }
+"""
