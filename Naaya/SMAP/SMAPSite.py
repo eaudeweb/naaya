@@ -110,9 +110,10 @@ class SMAPSite(NySite, ProfileMeta):
         rdfcal_ob = self._getOb(ID_RDFCALENDAR)
         rdfcal_ob._getOb('example').update()
 
-###
-# Layer over selection lists
-############################
+    ############################
+    # Layer over selection lists
+    ############################
+
     security.declarePublic('getCountriesList')
     def getCountriesList(self):
         """ Return the selection list for countries """
@@ -140,13 +141,30 @@ class SMAPSite(NySite, ProfileMeta):
             return ''
 
     security.declarePublic('getFocusesTypesList')
-    def getFocusesTypesList(self, project_id):
+    def getFocusesTypesList(self, priority_id):
         """ Return the selection list for focuses types for a given project """
-        focus_list_id = "focuses_%s" % project_id[:3]
+        focus_list_id = "focuses_%s" % priority_id[:3]
         try:
             return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_list()
         except:
             return []
+
+    security.declarePublic('getAllFocuses')
+    def getAllFocuses(self):
+        """ Returns a dictionary with priority areas as keys and 
+            corresponding list of focuses as values 
+        """
+        output = []
+        l_res = {}
+        output.append("")
+        output.append("var d = new dynamicSelect();")
+        output.append("d.addSelect('priority_area');")
+        for prio in self.getPrioritiesTypesList():
+            output.append("d.selects['priority_area'].addOption('%s');" % prio.id)
+            for focus in self.getFocusesTypesList(prio.id):
+                output.append("d.selects['priority_area'].options['%s'].createOption('%s', '%s');" % (prio.id, focus.id, focus.title))
+        output.append(sync_two_selects())
+        return '\n'.join(output)
 
     security.declarePublic('getFocusTitle')
     def getFocusTitle(self, focus_id, project_id):
