@@ -24,9 +24,10 @@
 	<span tal:replace="structure python:here.get_wysiwyg_widget('description:utf8:ustring', here.getSession('description', ''))" />
 </div>
 
-<tal:block tal:define="priority_area python:here.getSession('priority_area', '');
+<tal:block tal:define="priorities here/getPrioritiesTypesList;
+					first_priority_id python:test(len(priorities), priorities[0].id, '');
+					priority_area python:here.getSession('priority_area', first_priority_id);
 					countries here/getCountriesList;
-					priorities here/getPrioritiesTypesList;
 					focuses python:here.getFocusesTypesList(priority_area)">
 
 <script language="javascript" type="text/javascript" tal:content="structure here/getAllFocuses"></script>
@@ -50,7 +51,7 @@
 	<p i18n:translate=""><strong>Tip:</strong> upon change of the project area, the list of focuses will also change.</p>
 	<select name="priority_area" id="priority_area" onchange="d.updateOptions(this, 'focus');">
 		<option tal:repeat="priority priorities"
-			tal:attributes="value priority/id; selected python:priority.id in here.getSession('priority_area', '')" tal:content="priority/title" i18n:translate="" >priority</option>
+			tal:attributes="value priority/id; selected python:priority.id in here.getSession('priority_area', first_priority_id)" tal:content="priority/title" i18n:translate="" >priority</option>
 	</select>
 </div>
 <div class="field">
