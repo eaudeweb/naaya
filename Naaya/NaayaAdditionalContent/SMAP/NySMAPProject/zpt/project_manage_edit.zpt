@@ -4,13 +4,17 @@
 	Change the properties in the form below and click <strong>Save changes</strong>.
 </tal:block>
 
+<script language="javascript" type="text/javascript" tal:content="structure here/getAllFocuses"></script>
+
 <tal:block metal:fill-slot="custom_properties"
-	define="countries here/getCountriesList;
+	define="priority_area python:here.getSession('priority_area', '');
+			countries here/getCountriesList;
 			priorities here/getPrioritiesTypesList;
-			focuses here/getFocusesTypesList">
+			focuses python:here.getFocusesTypesList(priority_area)">
+
 <tr>
 	<td class="form-label" valign="top">Project area</td>
-	<td><select name="priority_area" id="priority_area">
+	<td><select name="priority_area" id="priority_area" onchange="d.updateOptions(this, 'focus');">
 		<option tal:repeat="priority priorities"
 			tal:attributes="value priority/id; selected python:priority.id in here.priority_area" tal:content="priority/title"  i18n:translate="">priority_area</option>
 		</select>
@@ -35,7 +39,7 @@
 	</td>
 </tr>
 <tr>
-	<td class="form-label" valign="top">Project Scale</td>
+	<td class="form-label" valign="top">Project scale</td>
 	<td><input type="text" name="main_issues:utf8:ustring" id="main_issues" size="50" tal:attributes="value here/main_issues" /></td>
 </tr>
 <tr>
@@ -55,7 +59,7 @@
 	<td><input type="text" name="timeframe:utf8:ustring" id="timeframe" size="50" tal:attributes="value here/timeframe" /></td>
 </tr>
 <tr>
-	<td class="form-label" valign="top">Implementing Organisation/s</td>
+	<td class="form-label" valign="top">Implementing organisation(s)</td>
 	<td><textarea name="organisation:utf8:ustring" id="organisation" rows="5" cols="40" tal:content="here/organisation" /></td>
 </tr>
 <tr>
