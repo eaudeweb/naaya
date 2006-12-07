@@ -151,8 +151,8 @@ class SMAPSite(NySite, ProfileMeta):
 
     security.declarePublic('getAllFocuses')
     def getAllFocuses(self):
-        """ Returns a dictionary with priority areas as keys and 
-            corresponding list of focuses as values 
+        """ Returns a Javascript code to include in add/edit pages.
+            It sets the focus field according to the priority area
         """
         output = []
         l_res = {}
@@ -167,9 +167,9 @@ class SMAPSite(NySite, ProfileMeta):
         return '\n'.join(output)
 
     security.declarePublic('getFocusTitle')
-    def getFocusTitle(self, focus_id, project_id):
+    def getFocusTitle(self, focus_id, priority_area_id):
         """ Return the title of an item for the selection list for focuses types """
-        focus_list_id = "focuses_%s" % project_id[:3]
+        focus_list_id = "focuses_%s" % priority_area_id[:3]
         try:
             return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_item(focus_id).title
         except:
