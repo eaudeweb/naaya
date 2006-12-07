@@ -4,13 +4,13 @@
 	Change the properties in the form below and click <strong>Save changes</strong>.
 </tal:block>
 
-<script language="javascript" type="text/javascript" tal:content="structure here/getAllFocuses" />
-
 <tal:block metal:fill-slot="custom_properties"
 	define="priority_area python:here.getSession('priority_area', here.getVersionProperty('priority_area'));
 			countries here/getCountriesList;
 			priorities here/getPrioritiesTypesList;
 			focuses python:here.getFocusesTypesList(priority_area)">
+
+<script language="javascript" type="text/javascript" tal:content="structure here/getAllFocuses" />
 
 <tr>
 	<td class="form-label" valign="top">Country(ies)</td>
