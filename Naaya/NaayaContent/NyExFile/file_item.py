@@ -56,7 +56,7 @@ class file_item(File, NyVersioning):
         self.update_data(p_version_data[0], p_version_data[1], len(p_version_data[0]))
         self._p_changed = 1
 
-    def handleUpload(self, source, file, url):
+    def handleUpload(self, source, file, url, parent):
         """
         Upload a file from disk or from a given URL.
         """
@@ -71,7 +71,7 @@ class file_item(File, NyVersioning):
                     self.update_data(file)
         elif source=='url':
             if url != '':
-                l_data, l_ctype = self.grabFromUrl(url)
+                l_data, l_ctype = parent.grabFromUrl(url)
                 if l_data is not None:
                     self.update_data(l_data, l_ctype)
                     self.content_type = l_ctype

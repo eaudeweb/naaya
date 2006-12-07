@@ -126,7 +126,7 @@ class exfile_item(Implicit, NyProperties):
         Upload a file from disk or from a given URL.
         """
         if lang is None: lang = self.gl_get_selected_language()
-        self.getFileItem(lang).handleUpload(source, file, url)
+        self.getFileItem(lang).handleUpload(source, file, url, self)
 
     def createversion(self, username, lang=None):
         """
