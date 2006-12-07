@@ -24,8 +24,8 @@
 <tr>
 	<td class="form-label" valign="top">Project area</td>
 	<td><select name="priority_area" id="priority_area" onchange="d.updateOptions(this, 'focus');">
-		<option tal:repeat="priority priorities; selected python:priority.id == first_priority_id"
-			tal:attributes="value priority/id" tal:content="priority/title" i18n:translate="" >priority</option>
+		<option tal:repeat="priority priorities"
+			tal:attributes="value priority/id; selected python:priority.id == first_priority_id" tal:content="priority/title" i18n:translate="" >priority</option>
 		</select>
 	</td>
 </tr>
