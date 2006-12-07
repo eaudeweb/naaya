@@ -4,14 +4,23 @@
 	Change the properties in the form below and click <strong>Save changes</strong>.
 </tal:block>
 
-<script language="javascript" type="text/javascript" tal:content="structure here/getAllFocuses"></script>
+<script language="javascript" type="text/javascript" tal:content="structure here/getAllFocuses" />
 
 <tal:block metal:fill-slot="custom_properties"
-	define="priority_area python:here.getSession('priority_area', '');
+	define="priority_area python:here.getSession('priority_area', here.getVersionProperty('priority_area'));
 			countries here/getCountriesList;
 			priorities here/getPrioritiesTypesList;
 			focuses python:here.getFocusesTypesList(priority_area)">
 
+<tr>
+	<td class="form-label" valign="top">Country(ies)</td>
+	<td>
+		<select name="country" id="country" multiple="multiple" size="5">
+		<option tal:repeat="c countries"
+			tal:attributes="value c/id; selected python:c.id in here.country" tal:content="c/title" i18n:translate="">country</option>
+		</select>
+	</td>
+</tr>
 <tr>
 	<td class="form-label" valign="top">Project area</td>
 	<td><select name="priority_area" id="priority_area" onchange="d.updateOptions(this, 'focus');">
@@ -21,18 +30,9 @@
 	</td>
 </tr>
 <tr>
-	<td class="form-label" valign="top">Country(ies)</td>
-	<td>
-		<select name="country" id="country" multiple="multiple">
-		<option tal:repeat="c countries"
-			tal:attributes="value c/id; selected python:c.id in here.country" tal:content="c/title" i18n:translate="">country</option>
-		</select>
-	</td>
-</tr>
-<tr>
 	<td class="form-label" valign="top">Focus(es) of the project</td>
 	<td>
-		<select name="focus" id="focus" multiple="multiple">
+		<select name="focus" id="focus" multiple="multiple" size="5">
 		<option tal:repeat="fc focuses"
 			tal:attributes="value fc/id; selected python:fc.id in here.focus" tal:content="fc/title" i18n:translate="">focus</option>
 		</select>

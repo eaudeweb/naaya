@@ -57,9 +57,9 @@ function fSet(ctrl, value)
 	<span tal:replace="structure python:here.get_wysiwyg_widget('description:utf8:ustring', here.getSession('description', here.getVersionLocalProperty('description', curr_lang)))" />
 </div>
 
-<tal:block define="priority_area python:here.getSession('priority_area', '');
+<tal:block define="priorities here/getPrioritiesTypesList;
+			priority_area python:here.getSession('priority_area', here.getVersionProperty('priority_area'));
 			countries here/getCountriesList;
-			priorities here/getPrioritiesTypesList;
 			focuses python:here.getFocusesTypesList(priority_area)">
 
 <div class="field-inline">
