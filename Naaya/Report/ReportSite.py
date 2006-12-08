@@ -237,7 +237,7 @@ class ReportSite(NySite, ProfileMeta):
         """
         return self.getFormsTool().getContent({'here': self}, 'site_pickuser')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'userinfo_html')
+    security.declareProtected(view, 'userinfo_html')
     def userinfo_html(self, REQUEST=None, RESPONSE=None):
         """
         Show user info
