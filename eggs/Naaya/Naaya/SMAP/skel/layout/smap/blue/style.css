@@ -90,6 +90,7 @@ div.fieldset_div {
 }
 
 legend {
+    font-weight: bold;
 }
 
 ul, dl, ol {
@@ -723,7 +724,7 @@ div>ul.proj_projects {
 	background-image: url(bck_top.jpg);
 	background-repeat: repeat-x;
 	background-position: left bottom;
-	
+	color: #ffffff;
 }
 .topleft {
 	float: left; 
