@@ -96,7 +96,7 @@ def sync_two_selects():
                         target.add(data[x], null);
                     }
                 }
-                target.selectedIndex = 0;
+                //target.selectedIndex = 0;
             }
         }
 
