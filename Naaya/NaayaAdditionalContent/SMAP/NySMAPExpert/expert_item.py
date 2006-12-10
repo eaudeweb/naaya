@@ -20,8 +20,7 @@
 #Python imports
 
 #Zope imports
-from OFS.Image import File
-
+from OFS.Image import File, cookId
 #Product imports
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
@@ -80,3 +79,4 @@ class expert_item(NyProperties, File):
             else:
                 self.update_data(file)
         self._p_changed = 1
+        return cookId('', '', file)[0]
