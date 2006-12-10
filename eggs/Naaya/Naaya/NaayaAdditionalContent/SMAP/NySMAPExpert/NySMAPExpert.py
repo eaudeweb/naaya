@@ -310,7 +310,7 @@ class NySMAPExpert(NyAttributes, expert_item, NyItem, NyCheckControl):
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if self.wl_isLocked():
             raise ResourceLockedError, "File is locked via WebDAV"
-        self.handleUpload(file)
+        self.downloadfilename = self.handleUpload(file)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manage_upload')
@@ -437,13 +437,13 @@ class NySMAPExpert(NyAttributes, expert_item, NyItem, NyCheckControl):
         if lang is None: lang = self.gl_get_selected_language()
         if not self.hasVersion():
             #this object has not been checked out; save changes directly into the object
-            self.handleUpload(file)
+            self.downloadfilename = self.handleUpload(file)
             #if version: self.createVersion(self.REQUEST.AUTHENTICATED_USER.getUserName())
         else:
             #this object has been checked out; save changes into the version object
             if self. checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-            self.version.handleUpload(file)
+            self.version.downloadfilename = self.version.handleUpload(file)
         self.recatalogNyObject(self)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
