@@ -13,12 +13,8 @@
 </tal:block>
 <table border="0" cellspacing="2" cellpadding="2">
 <tr>
-	<th i18n:translate="">Surname</th>
-	<td tal:content="here/surname" />
-</tr>
-<tr>
 	<th i18n:translate="">Name</th>
-	<td tal:content="here/name" />
+	<td><span tal:content="here/name" /> <span tal:content="here/surname" /></td>
 </tr>
 <tr>
 	<th i18n:translate="">Reference language</th>
@@ -29,14 +25,14 @@
 	<td tal:content="python:here.getCountryName(here.country)" i18n:translate="" />
 </tr>
 <tr>
-	<th i18n:translate="">Main topics of expertise</th>
+	<th i18n:translate="">Main topic of expertise</th>
 	<td tal:content="python:here.getPriorityTitle(here.maintopics)" i18n:translate="" />
 </tr>
 <tr>
-	<th i18n:translate="">Sub topics of expertise</th>
+	<th i18n:translate="">Sub-topics of expertise</th>
 	<td>
 		<tal:block repeat="topic_id here/subtopics">
-			<div tal:content="python:here.getFocusTitle(topic_id)" i18n:translate="" />
+			<div tal:content="python:here.getFocusTitle(topic_id, here.maintopics)" i18n:translate="" />
 		</tal:block>
 	</td>
 </tr>
