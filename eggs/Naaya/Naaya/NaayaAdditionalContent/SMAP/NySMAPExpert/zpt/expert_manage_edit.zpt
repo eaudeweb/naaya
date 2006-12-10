@@ -89,7 +89,6 @@
 		<td><input type="text" name="downloadfilename" size="40" tal:attributes="value here/downloadfilename" /></td>
 	</tr>
 	-->
-	<tr><td class="form-label" colspan="2"><input type="hidden" name="downloadfilename:utf8:ustring" id="downloadfilename" tal:attributes="value python:here.getVersionProperty('downloadfilename')" /></td></tr>
 	<tr><td class="form-label" colspan="2">Dynamic properties</td></tr>
 	<tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
 		<td class="form-label"><span tal:replace="record/name"/></td>

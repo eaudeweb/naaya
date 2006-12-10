@@ -469,7 +469,7 @@ class NySMAPExpert(NyAttributes, expert_item, NyItem, NyCheckControl):
         """ """
         self.REQUEST.RESPONSE.setHeader('Content-Type', self.content_type)
         self.REQUEST.RESPONSE.setHeader('Content-Length', self.size)
-        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
+        self.REQUEST.RESPONSE.setHeader('Content-Disposition', self.ut_content_disposition(self.downloadfilename))
         return expert_item.inheritedAttribute('index_html')(self, REQUEST, RESPONSE)
 
     security.declareProtected(view, 'view')
