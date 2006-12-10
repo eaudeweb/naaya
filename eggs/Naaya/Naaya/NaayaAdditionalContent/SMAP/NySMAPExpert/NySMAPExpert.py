@@ -430,7 +430,6 @@ class NySMAPExpert(NyAttributes, expert_item, NyItem, NyCheckControl):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveUpload')
     def saveUpload(self, file='', lang=None, REQUEST=None):
         """ """
-        print "intra"
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if self.wl_isLocked():
