@@ -20,7 +20,7 @@
 					free_text_querystring python:test(free_text, '&free_text='+free_text, '');
 					priority_area_querystring python:test(priority_area, '&priority_area='+priority_area, '');
 					page_search_querystring string:skey=${skey}&rkey=${rkey}${priority_area_querystring}${focus_querystring}${country_querystring}${free_text_querystring};
-					results python:here.searchProjects(priority_area, focus, country, free_text, skey, rkey, start);
+					results python:here.searchProjects(priority_area, focus, country, free_text, skey, rkey, start, search_performed);
 
 					list_paging python:results[0];
 					paging_start python:list_paging[0]+1;
@@ -174,7 +174,7 @@ function changeProject()
 		</div>
 		<div class="field">
 			<label for="focus" i18n:translate="">Focus(es) of the project</label>
-			<select name="focus" id="focus" multiple="multiple">
+			<select name="focus" id="focus" multiple="multiple" size="5">
 				<option tal:repeat="fc focuses"
 					tal:attributes="value fc/id;
 									selected python:fc.id in focus"

@@ -185,7 +185,7 @@ class SMAPSite(NySite, ProfileMeta):
 #################
     security.declarePublic('search_projects')
     def searchProjects(self, priority_area='', focus=[], country='', free_text='', skey='',
-                       rkey=0, start='', REQUEST=None):
+                       rkey=0, start='', perform_search='',REQUEST=None):
         """ """
         res_per_page = 10
         query = ''
@@ -196,7 +196,7 @@ class SMAPSite(NySite, ProfileMeta):
         try:    start = int(start)
         except: start = 0
 
-        if len(priority_area) > 0:
+        if perform_search:
             query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSMAPPROJECT], approved=1'
             if len(priority_area) > 0 and priority_area != 'all':
                 query += ', resource_area=priority_area'
@@ -257,7 +257,7 @@ class SMAPSite(NySite, ProfileMeta):
     def getRequestParams(self, REQUEST=None):
         """ Returns a REQUEST.QUERY_STRING (using REQUEST.form,
             REQUEST.form=REQUEST.QUERY_STRING as a dictionary) """
-        ignore_list = ['skey', 'rkey']
+        ignore_list = ['skey', 'rkey', 'prj_changed']
         res=''
         if REQUEST:
             for key in self.REQUEST.form.keys():
