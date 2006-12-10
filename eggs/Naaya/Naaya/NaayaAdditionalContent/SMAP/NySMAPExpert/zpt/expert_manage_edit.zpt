@@ -9,11 +9,17 @@
 	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
 </div>
 
+<p class="form-help">
+	Selected language: <strong tal:content="python:here.gl_get_language_name(here.gl_get_selected_language())" />
+</p>
+
+<script language="javascript" type="text/javascript" tal:content="structure here/getAllSubtopics"></script>
+
 <form name="frmEdit" method="post" action="manageProperties">
 <table border="0" cellspacing="2" cellpadding="2" width="100%"
 			tal:define="countries here/getCountriesList;
 					maintopics here/getPrioritiesTypesList;
-					subtopics here/getFocusesTypesList">
+					subtopics python:here.getFocusesTypesList(here.getVersionProperty('maintopics'))">
 	<tr>
 		<td class="form-label">Surname</td>
 		<td><input type="text" name="surname:utf8:ustring" size="40" tal:attributes="value python:request.get('surname', here.surname)" /></td>
@@ -38,7 +44,7 @@
 	<tr>
 		<td class="form-label">Main topics of expertise</td>
 		<td>
-			<select name="maintopics" id="maintopics">
+			<select name="maintopics" id="maintopics" onchange="d.updateOptions(this, 'subtopics');">
 				<option tal:repeat="maintopic maintopics"
 					tal:attributes="value maintopic/id; selected python:maintopic.id in request.get('maintopics', here.maintopics)" tal:content="maintopic/title"  i18n:translate="">maintopics</option>
 			</select>
@@ -47,7 +53,7 @@
 	<tr>
 		<td class="form-label">Subtopics of expertise</td>
 		<td>
-			<select name="subtopics" id="subtopics" multiple="multiple">
+			<select name="subtopics" id="subtopics" multiple="multiple" size="5">
 				<option tal:repeat="subtopic subtopics"
 					tal:attributes="value subtopic/id; selected python:subtopic.id in request.get('subtopics', here.subtopics)" tal:content="subtopic/title"  i18n:translate="">subtopics</option>
 			</select>
@@ -77,24 +83,10 @@
 		<td class="form-label">Download CV</td>
 		<td><a tal:attributes="href string:${here/absolute_url}/download"><span tal:replace="string:${here/downloadfilename}"/></a></td>
 	</tr>
-<!--
-	<tr>
-		<td class="form-label">Content Type</td>
-		<td><input type="text" name="content_type" size="40" tal:attributes="value here/content_type" /></td>
-	</tr>
-	<tr>
-		<td class="form-optional">Precondition</td>
-		<td><input type="text" name="precondition" size="40" tal:attributes="value here/precondition" /></td>
-	</tr>
-	<tr>
-		<td class="form-optional">File Size</td>
-		<td><span tal:replace="here/size" /> bytes</td>
-	</tr>
 	<tr>
 		<td class="form-label">Filename to download</td>
 		<td><input type="text" name="downloadfilename" size="40" tal:attributes="value here/downloadfilename" /></td>
 	</tr>
--->
 	<tr><td class="form-label" colspan="2"></td></tr>
 	<tr><td class="form-label" colspan="2">Dynamic properties</td></tr>
 	<tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
