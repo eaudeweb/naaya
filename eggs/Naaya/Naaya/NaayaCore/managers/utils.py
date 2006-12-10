@@ -35,6 +35,7 @@ from zipfile import *
 import csv
 import tempfile
 import os
+from email.Utils import encode_rfc2231
 
 #Zope imports
 from Products.PythonScripts.standard import url_quote, html_quote
@@ -437,6 +438,11 @@ class utils:
         l_tmp = l_tmp.replace('\'', '&apos;')
         l_tmp = l_tmp.replace('>', '&gt;')
         return l_tmp
+
+    def ut_content_disposition(self, filename=None): 
+        """Generate a properly escaped Content-Disposition header""" 
+        filename = self.utToUtf8(filename)
+        return 'attachment; filename*=%s'% encode_rfc2231(filename, 'utf-8')
 
     def utBase64Encode(self, p_string):
         """ """
