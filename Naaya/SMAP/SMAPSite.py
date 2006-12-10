@@ -152,7 +152,7 @@ class SMAPSite(NySite, ProfileMeta):
     security.declarePublic('getAllFocuses')
     def getAllFocuses(self):
         """ Returns a Javascript code to include in add/edit pages.
-            It sets the focus field according to the priority area
+            It sets the focus field according to the priority area (Projects)
         """
         output = []
         l_res = {}
@@ -163,6 +163,23 @@ class SMAPSite(NySite, ProfileMeta):
             output.append("d.selects['priority_area'].addOption('%s');" % prio.id)
             for focus in self.getFocusesTypesList(prio.id):
                 output.append("d.selects['priority_area'].options['%s'].createOption('%s', '%s');" % (prio.id, focus.id, focus.title))
+        output.append(sync_two_selects())
+        return '\n'.join(output)
+
+    security.declarePublic('getAllSubtopics')
+    def getAllSubtopics(self):
+        """ Returns a Javascript code to include in add/edit pages.
+            It sets the subtopics field according to the main topic (Experts)
+        """
+        output = []
+        l_res = {}
+        output.append("")
+        output.append("var d = new dynamicSelect();")
+        output.append("d.addSelect('maintopics');")
+        for topic in self.getPrioritiesTypesList():
+            output.append("d.selects['maintopics'].addOption('%s');" % topic.id)
+            for focus in self.getFocusesTypesList(topic.id):
+                output.append("d.selects['maintopics'].options['%s'].createOption('%s', '%s');" % (topic.id, focus.id, focus.title))
         output.append(sync_two_selects())
         return '\n'.join(output)
 
@@ -178,6 +195,7 @@ class SMAPSite(NySite, ProfileMeta):
 ###
 # Objects getters
 #################
+
     def getSkinFilesPath(self): return self.getLayoutTool().getSkinFilesPath()
 
 ###
