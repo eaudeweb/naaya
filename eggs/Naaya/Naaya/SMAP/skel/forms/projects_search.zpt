@@ -205,11 +205,11 @@ function changeProject()
 </form>
 
 <tal:block tal:condition="search_performed">
-	<a	tal:attributes="href here/absolute_url"
-		title="Search again"
-		i18n:translate="" i18n:attributes="title">Search again</a>
 	<fieldset>
 		<legend i18n:translate="">Search criteria</legend>
+		<div class="floated-buttons"><span class="buttons"><a	tal:attributes="href here/absolute_url"
+		title="Search again"
+		i18n:translate="" i18n:attributes="title">Search again</a></span></div>
 		<table>
 			<tr tal:condition="python:priority_area=='all' and focus==[] and country==[] and free_text==''">
 				<td><span i18n:translate="">No search criterias</span></td>
@@ -268,7 +268,7 @@ function changeProject()
 					sortnot_gif string:/misc_/SMAP/sortnot.gif">
 
 	<tr>
-		<td colspan="2"><center>
+		<td colspan="2"><center><span class="buttons">
 				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=priority_area${rkey_param};
 									title python:test(skey=='priority_area', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by Project Area
 				<img tal:attributes="src python:test(skey=='priority_area', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
@@ -283,7 +283,7 @@ function changeProject()
 									title python:test(skey=='releasedate', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by date
 				<img tal:attributes="src python:test(skey=='releasedate', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
 					 width="12" height="12" alt=""/>
-				</a></center>
+				</a></span></center>
 		</td>
 	</tr>
 
