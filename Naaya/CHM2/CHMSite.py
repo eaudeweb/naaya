@@ -827,7 +827,7 @@ class CHMSite(NySite):
                 self.setFeedbackSession(username, email, comments)
                 return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         else:
-            self.sendFeedbackEmail(self.administrator_email.split(', '), username, email, comments)
+            self.sendFeedbackEmail(self.administrator_email, username, email, comments)
             if REQUEST:
                 self.setSession('title', 'Thank you for your feedback')
                 self.setSession('body', 'The administrator will process your comments and get back to you.')
