@@ -1050,5 +1050,12 @@ class CHMSite(NySite):
             except:
                 return False
 
+    security.declareProtected(view_management_screens, 'updateCHM')
+    def updateCHM(self):
+        """ update script """
+        self._networkportals_manager__networkportals_collection = {}
+        self.workgroups = []
+        self._p_changed = 1
+        return 'Done'
 
 InitializeClass(CHMSite)
