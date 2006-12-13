@@ -211,15 +211,22 @@ class HelpDesk(Folder, EmailSender):
         self.issues_perpage = int(issues_perpage)
         self._p_changed = 1
 
+    def getUserFoldersList(self):
+        """ Returns all the acl_users objects """
+        output = []
+        for ob in self.superValues(['User Folder', 'LDAPUserFolder', 'Naaya User Folder']):
+            output.append(('/'.join(ob.getPhysicalPath()), ob.meta_type))
+        return output
+
     def getHelpDeskAgent(self): return self
 
     def getUserFolderPath(self):
         """Gets user folder path"""
-        return '/' + self.user_folder
+        return self.user_folder
 
     def getUserFolder(self):
         """Gets user folder if there is one, None otherwise"""
-        return self.unrestrictedTraverse('/' + self.user_folder)
+        return self.unrestrictedTraverse(self.user_folder)
 
     def isUserFolderZope(self):
         """Is helpdesk users folder a zope acl_users?"""
