@@ -1113,7 +1113,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(view, 'processFeedbackForm')
     def processFeedbackForm(self, username='', email='', comments='', REQUEST=None):
         """ """
-        self.sendFeedbackEmail(self.administrator_email.split(', '), username, email, comments)
+        self.sendFeedbackEmail(self.administrator_email, username, email, comments)
         if REQUEST:
             self.setSession('title', 'Thank you for your feedback')
             self.setSession('body', 'The administrator will process your comments and get back to you.')
@@ -1141,7 +1141,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if location == '':
             location_path = ''
             location_title = self.site_title
-            location_maintainer_email = self.administrator_email.split(', ')
+            location_maintainer_email = self.administrator_email
         else:
             obj = self.getFolderByPath(location)
             if obj is not None:
