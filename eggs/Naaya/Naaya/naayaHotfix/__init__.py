@@ -31,6 +31,33 @@ from Products.PageTemplates.GlobalTranslationService import setGlobalTranslation
 from Products.NaayaCore.TranslationsTool.TranslationsTool import TranslationsTool
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 
+from Products.Localizer.MessageCatalog import MessageCatalog
+from itools.resources import memory
+from itools.handlers import PO
+from Globals import PersistentMapping
+
+#patch for MessageCatalog
+def po_import(self, lang, data):
+    """ """
+    messages = self._messages
+
+    resource = memory.File(data)
+    po = PO.PO(resource)
+
+    # Load the data
+    for msgid in po.get_msgids():
+        if isinstance(msgid, unicode):  msgid = msgid.encode('utf-8')
+        if msgid:
+            msgstr = po.get_msgstr(msgid) or ''
+            if not messages.has_key(msgid):
+                messages[msgid] = PersistentMapping()
+            messages[msgid][lang] = msgstr
+
+        # Set the encoding (the full header should be loaded XXX)
+        self.update_po_header(lang, charset=po.get_encoding())
+
+MessageCatalog.po_import = po_import
+
 #patch for Localizer
 def _setLocalPropValue(self, id, lang, value):
     # Get previous value
