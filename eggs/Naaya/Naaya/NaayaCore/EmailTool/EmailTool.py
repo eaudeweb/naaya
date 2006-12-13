@@ -116,8 +116,9 @@ class EmailTool(Folder):
     security.declareProtected(view, 'sendEmail')
     def sendEmail(self, p_content, p_to, p_from, p_subject):
         #sends a generic email
-        if not isintance(p_to, list):
+        if not isinstance(p_to, list):
             p_to = p_to.split(', ')
+        print p_to
         try:
             if self.mail_server_name and self.mail_server_port and p_to:
                 l_message = self.__create_email(p_content, self.__build_addresses(p_to), p_from, p_subject)
