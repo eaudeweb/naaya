@@ -321,12 +321,18 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', coverage='', keywords='',
-        sortorder='', releasedate='', discussion='', qauthor='Anonymous', answers={}, lang=None, REQUEST=None, **kwargs):
+        sortorder='', contributor=None, releasedate='', discussion='', qauthor='',
+        answers={}, lang=None, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if not sortorder: sortorder = DEFAULT_SORTORDER
         if lang is None: lang = self.gl_get_selected_language()
+        if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        self.contributor = contributor
+        answers = {}
+        for q in self.getQuestionIds():
+            answers[q] = REQUEST[q]
         #check mandatory fiels
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
@@ -350,18 +356,39 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
                 self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             if discussion: self.open_for_comments()
             else: self.close_for_comments()
+            #set answer
+            for portal_lang in self.gl_get_languages_map():
+                res_answers = {}
+                for k, v in answers.items():
+                    try:
+                        answer_ob = self.getAnswerByQuestion(k)
+                    except:
+                        self.addNyReportAnswer(answer=v, assoc_question=k)
+                        answer_ob = self.getAnswerByQuestion(k)
+                    if portal_lang['id'] == lang:
+                        answer_ob._setLocalPropValue('answer', portal_lang['id'], v)
+                    else:
+                        answer_ob._setLocalPropValue('answer', portal_lang['id'], self.translate_comment(v, lang, portal_lang['id']))
+#                for com in adt_comment:
+#                    com_id = self.generateItemId('com')
+#                    ob.addNyReportComment(id=com_id, page=com['page'], line=com['line'], comment=com['comment'])
+#                    com_ob = ob.getCommentById(com_id)
+#                    com_ob._setLocalPropValue('comment', portal_lang['id'], self.translate_comment(com['comment'], lang, portal_lang['id']))
+
             self._p_changed = 1
             self.recatalogNyObject(self)
             if REQUEST:
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+                #REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+                REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         else:
             if REQUEST is not None:
                 self.setSessionErrors(r)
                 self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                     description=description, coverage=coverage, keywords=keywords, \
                     sortorder=sortorder, releasedate=releasedate, discussion=discussion, qauthor=qauthor, answers=answers)
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+                #REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+                REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
             else:
                 raise Exception, '%s' % ', '.join(r)
 
