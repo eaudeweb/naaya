@@ -424,6 +424,26 @@ class NyReportSection(NyAttributes, reportsection_item, NyContainer, NyEpozToolb
         """ """
         return self.getFormsTool().getContent({'here': self}, 'reportquestionnaires_index')
 
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'questionnaire_edit_html')
+    def questionnaire_edit_html(self, qnr='', REQUEST=None, RESPONSE=None):
+        """ """
+        qnr_ob = self.unrestrictedTraverse(qnr, '')
+        if qnr_ob:
+            return self.getFormsTool().getContent({'here': self, 'qnr': qnr_ob}, 'reportquestionnaire_edit')
+        else:
+            self.setSessionErrors(['Bad questionnaire ID.'])
+            REQUEST.RESPONSE.redirect('reportquestionnaires_html')
+
+    security.declareProtected(PERMISSION_DELETE_OBJECTS, 'delete_questionnaire')
+    def delete_questionnaire(self, qnr, REQUEST=None, RESPONSE=None):
+        """ """
+        try:
+            self.manage_delObjects(qnr)
+            self.setSessionInfo(['Questionnaire deleted.'])
+        except:
+            self.setSessionErrors(['Error while delete data.'])
+        if REQUEST: REQUEST.RESPONSE.redirect('reportquestionnaires_html')
+
     security.declareProtected(view, 'report_macro_objecttree_html')
     def report_macro_objecttree_html(self, REQUEST=None, RESPONSE=None):
         """ """

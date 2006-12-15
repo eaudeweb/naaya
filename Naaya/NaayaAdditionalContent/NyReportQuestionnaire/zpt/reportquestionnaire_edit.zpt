@@ -2,85 +2,173 @@
 
 <tal:block tal:condition="python:(not here.hasVersion()) or (here.hasVersion() and here.isVersionAuthor())">
 
+<script language="javascript" type="text/javascript">
+
+function fPick(url)
+{
+	var wnd = window.open(url, "pickuser", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
+	wnd.focus();
+}
+
+function fSet(ctrl, value)
+{
+	var frm = document.frmAdd;
+	var items = frm[ctrl + ':utf8:ustring'];
+	if (value != '')
+	{
+		items.value = value;
+	}
+}
+
+function addRowInnerHTML(tblId)
+{
+	var tblBody = document.getElementById(tblId).tBodies[0];
+	var newRow = tblBody.insertRow(-1);
+	var newCell0 = newRow.insertCell(0);
+
+	newCell0.innerHTML = '<div style="padding: 0.6em; background-color: #E5EFF6;"><label for="adt_comment.page:records" style="vertical-align: top;" i18n:translate="">page #<' + '/' + 'label> <input style="vertical-align: top;" type="text" name="adt_comment.page:records" size="3" value="" id="adt_comment.page:records" /> <label for="adt_comment.line:records" style="vertical-align: top;" i18n:translate="">line #<' + '/' + 'label> <input style="vertical-align: top;" type="text" name="adt_comment.line:records" id="adt_comment.line:records" size="3" value="" /> <label for="adt_comment.comment:records" style="vertical-align: top;" i18n:translate="">comment<' + '/' + 'label> <textarea style="vertical-align: bottom;" name="adt_comment.comment:records" id="adt_comment.comment:records" rows="4" cols="50"><' + '/' + 'textarea><' + '/' + 'div>';
+}
+
+function CommButt(p_index)
+{
+	document.getElementById('button_' + p_index).style.display = 'none';
+	document.getElementById(p_index).style.display = 'block';
+}
+
+</script>
+
 <div class="floated-buttons"><span class="buttons"><a tal:attributes="href string:${here/absolute_url}/reportquestions_html" i18n:translate="">Back to questions management</a></span></div>
 
 <h1 i18n:translate="">Edit Questionaire</h1>
 
-<tal:block define="languages here/get_languages_mapping;
-	curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
+<!-- Questionnaire preview -->
+<tal:block	define="filter_qst python:request.get('question', '')">
+	<div class="comment_box">
+		<div class="commentbox_title">
 
-<div class="version_box" tal:condition="here/hasVersion">
-	<span i18n:translate="" tal:omit-tag="">
-		<strong>You are working on a version of this item.</strong> In order to save the work done in the version and make it accessible to all end users, click on the <strong>Commit</strong> button. To permanently discard the work done in the version, click on the <strong>Discard</strong> button.
-	</span>
-	<br /><br />
-	<form style="display: inline;" action="commitVersion"><input type="submit" value="Commit" i18n:attributes="value" /></form>
-	<form style="display: inline;" action="discardVersion"><input type="submit" value="Discard" i18n:attributes="value" /></form>
-</div>
+		<span class="commentbox_content">
+		<span tal:omit-tag="" i18n:translate="">Questions and answers posted on:</span> <strong tal:content="qnr/releasedate" />
+		<span i18n:translate="">by:</span>
+			<a href="#" tal:condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'" tal:attributes="onclick string:setupWin('userinfo_html?uid=${qnr/contributor}', 350, 300);"><strong tal:content="qnr/contributor" /></a>
+			<strong tal:content="qnr/contributor" tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'" />
+		</span>
 
-<p i18n:translate="">
-	Change the properties in the form below and click <strong>Save changes</strong>. Fields marked with <span class="mandatory_field">*</span> are mandatory.
-</p>
+	</div>
+	<hr class="hr_inside_comment" />
 
+	<div tal:condition="filter_qst">
+		<span tal:define="answer python:qnr.getAnswerByQuestion(filter_qst).answer" tal:condition="answer">
+			<tal:block condition="python:qnr.lang==here.gl_get_selected_language()">
+				<span tal:content="answer" />
+			</tal:block>
 
-	<div id="admin_this_folder">
-		<a tal:attributes="href string:${here/absolute_url}/reportquestionnaires_html"><span i18n:translate="">Back to questionaires list</span></a>
+			<tal:block condition="python:qnr.lang!=here.gl_get_selected_language()">
+			<div class="auto_transl" >
+				<div tal:content="answer" /><br />
+			</div>
+			</tal:block>
+		</span>
 	</div>
 
-	<form name="frmAdd" method="post" action="saveProperties" enctype="multipart/form-data">
+	<div tal:condition="not:filter_qst">
+		<tal:block define="a_list qnr/getQuestionIds">
+			<tal:block repeat="a a_list">
+				<span tal:define="answer python:qnr.getAnswerByQuestion(a).answer" tal:condition="answer">
+					<div class="question_in_comm">
+					<span class="q_number">
+						<span tal:omit-tag="" i18n:translate="">Q</span><tal:block content="repeat/a/number" />
+					</span>
+						<span tal:replace="python:here.getQuestionById(a).title_or_id()"/>
+					</div>
 
-		<div>
-			<tal:block repeat="a python:here.answers.keys()">
-				<p>
-					<strong>
-						<span tal:omit-tag="" i18n:translate="">Q</span><tal:block content="repeat/a/number" />: <span tal:replace="python:here.getQuestionById(a).title_or_id()"/>
-					</strong><br />
-
-					<textarea tal:attributes="id here/id; name here/id" style="width:400px; height: 100px;" tal:content="python:here.answers[a]"></textarea>
-
-
-					<tal:block condition="python:here.lang!=curr_lang">
-						<small>Message auto-translated</small>
+					<tal:block condition="python:qnr.lang==here.gl_get_selected_language()">
+						<span tal:content="answer" />
 					</tal:block>
-				</p>
+
+					<tal:block condition="python:qnr.lang!=here.gl_get_selected_language()">
+					<div class="auto_transl">
+						<div tal:content="answer" />
+					</div>
+					</tal:block>
+				</span>
 			</tal:block>
-		</div>
-
-
-		<div class="field">
-			<label for="adt_comment" i18n:translate="">Add additional comments for this chapter refering to the part of text (page numaber, line number) you are commenting on</label>
-			<textarea name="adt_comment:utf8:ustring" style="width:500px; height: 200px;" tal:content="here/adt_comment"></textarea>
-			<tal:block condition="python:here.lang!=curr_lang">
-				<small>Message auto-translated</small>
-			</tal:block>
-		</div>
-
-		<input type="hidden" name="releasedate" id="releasedate" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" />
-
-		<div class="field">
-			<input type="hidden" name="lang" tal:attributes="value curr_lang" />
-			<input type="submit" value="Save changes" i18n:attributes="value" />
-		</div>
-
-		<div class="translate"><span  i18n:translate="" tal:omit-tag="">Translate in</span>
-		<tal:block tal:repeat="language languages">
-		<strong tal:condition="python:language['code'] == curr_lang">
-		<a class="current" tal:attributes="href string:?lang=${language/code}; title python:language['name']"
-			tal:content="python:language['name']" /></strong>
-		<a tal:condition="python:language['code'] != curr_lang"
-			tal:attributes="href string:?lang=${language/code}; title python:language['name']"
-			tal:content="python:language['name']" />
 		</tal:block>
-		</div>
-	</form>
+	</div>
 
+	<span class="comm_to_text" i18n:translate="" tal:condition="qnr/hasComments">Comment(s) to text</span>
+
+	<tal:block repeat="comment qnr/getAllComments">
+		<div>
+		<span class="comment_for" >
+			<span i18n:translate="">Comment for</span>
+			<span class="page_line">
+				<span class="pg_ln" i18n:translate="">page</span>: <span class="style_number" tal:content="comment/page" />, 
+				<span class="pg_ln" i18n:translate="">line</span>: <span class="style_number" tal:content="comment/line" />
+			</span>
+		</span>
+			<tal:block condition="python:qnr.lang==here.gl_get_selected_language()">
+				<div>
+				<span tal:content="comment/comment" />
+				</div>
+			</tal:block>
+			<tal:block condition="python:qnr.lang!=here.gl_get_selected_language()">
+				<div class="auto_transl" title="Text automatically translated" i18n:attributes="title">
+					<tal:block tal:replace="comment/comment" />
+				</div>
+			</tal:block>
+		</div>
+	</tal:block>
+
+	<tal:block define="attachments qnr/getFiles" condition="attachments">
+		<div>
+			<strong i18n:translate="">Download attachment: </strong>
+			<tal:block repeat="file attachments">
+				<a tal:content="file/title_or_id" tal:attributes="href string:${file/absolute_url}/download" />
+			</tal:block>
+		</div>
+	</tal:block>
+
+		</div>
 </tal:block>
 
+<!-- Questionnaire edit -->
+<form name="frmEdit" method="post"
+	tal:attributes="action string:${qnr/absolute_url}/saveProperties" enctype="multipart/form-data">
+
+	<span i18n:translate="">Contributor username:</span>
+	<input type="text" size="25" name="contributor:utf8:ustring"
+			tal:attributes="value qnr/contributor"/>
+	<input type="button" value="Pick" id="pick-coverage" 
+		tal:define="site_url here/getSitePath"
+		tal:attributes="onclick string:javascript:fPick('${site_url}/pickuser_html');" />
+
+	<tal:block define="questions here/getQuestions">
+		<tal:block repeat="q questions">
+			<div class="field">
+				<label tal:content="structure q/title_or_id" tal:attributes="for q/id"/>
+		<div tal:attributes="id string:answ_div${q/id}">
+
+		<textarea tal:attributes="name q/id; id q/id" cols="70" rows="4" style="display: none;"
+				tal:content="python:qnr.getAnswerByQuestion(q.id).answer"></textarea>
+
+		<input type="button" tal:attributes="name string:button_${q/id}; id string:button_${q/id}; onclick string:CommButt('${q/id}')" value="Answer" style="background-color: #E5EFF6;" i18n:attributes="value" />
+		</div>
+			</div>
+		</tal:block>
+	</tal:block>
+
+	<div class="field">
+		<input type="submit" value="Submit" i18n:attributes="value" />
+	</div>
+
+</form>
 </tal:block>
 
 <tal:block tal:condition="python:here.hasVersion() and (not here.isVersionAuthor())">
 	<p><strong>This object is checked out for editing by another user.</strong></p>
 </tal:block>
+
+
 
 <span tal:content="python:here.del_pluggable_item_session(here.meta_type)" tal:omit-tag="" />
 
