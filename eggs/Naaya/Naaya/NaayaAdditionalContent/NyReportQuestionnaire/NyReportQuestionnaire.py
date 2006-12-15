@@ -322,7 +322,7 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', coverage='', keywords='',
         sortorder='', contributor=None, releasedate='', discussion='', qauthor='',
-        answers={}, lang=None, REQUEST=None, **kwargs):
+        answers={}, lang=None, adt_comment='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -369,11 +369,12 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
                         answer_ob._setLocalPropValue('answer', portal_lang['id'], v)
                     else:
                         answer_ob._setLocalPropValue('answer', portal_lang['id'], self.translate_comment(v, lang, portal_lang['id']))
-#                for com in adt_comment:
-#                    com_id = self.generateItemId('com')
-#                    ob.addNyReportComment(id=com_id, page=com['page'], line=com['line'], comment=com['comment'])
-#                    com_ob = ob.getCommentById(com_id)
-#                    com_ob._setLocalPropValue('comment', portal_lang['id'], self.translate_comment(com['comment'], lang, portal_lang['id']))
+                for com in adt_comment:
+                    com_ob = self.getCommentById(com['id'])
+                    if portal_lang['id'] == lang:
+                        com_ob._setLocalPropValue('comment', portal_lang['id'], com['comment'])
+                    else:
+                        com_ob._setLocalPropValue('comment', portal_lang['id'], self.translate_comment(com['comment'], lang, portal_lang['id']))
 
             self._p_changed = 1
             self.recatalogNyObject(self)
