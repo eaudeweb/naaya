@@ -25,6 +25,7 @@ function fSet(ctrl, value)
 <div class="floated-buttons"><span class="buttons"><a tal:attributes="href string:${here/absolute_url}/reportquestionnaires_html" i18n:translate="">View answers</a></span></div>
 
 <h1 i18n:translate="">Edit Questionaire</h1>
+<p><span tal:omit-tag="" i18n:translate="">You are now editing in</span> <strong tal:content="python:here.gl_get_language_name(here.gl_get_selected_language())" />, <span tal:omit-tag="" i18n:translate="">by changing the portal language you will edit this questionnaire in the selected language</span>.</p>
 
 <!-- Questionnaire edit -->
 <form name="frmEdit" method="post"
