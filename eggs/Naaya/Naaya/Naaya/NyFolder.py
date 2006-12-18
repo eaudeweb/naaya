@@ -542,8 +542,60 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         """ """
         self.getAuthenticationTool().manage_revokeUsersRoles(roles)
         if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfo([MESSAGE_ROLEREVOKED])
             REQUEST.RESPONSE.redirect('%s/administration_users_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduser')
+    def admin_adduser(self, firstname='', lastname='', email='', name='', password='', confirm='', REQUEST=None, RESPONSE=None):
+        """ """
+        self.setUserSession(name, '', '', firstname, lastname, email, '')
+        _err = []
+        try:
+            self.getAuthenticationTool().manage_addUser(name, password, confirm, [], [],
+                                                            firstname, lastname, email)
+        except Exception, error:
+            _err = [error]
+        if _err:
+            self.setSessionErrors(_err)
+            return RESPONSE.redirect("%s/administration_users_html?mode=add" % self.absolute_url())
+        else:
+            self.delUserSession()
+            self.setSessionInfo([MESSAGE_USERADDED])
+            return RESPONSE.redirect("%s/administration_users_html" % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_getuser')
+    def admin_getuser(self, username):
+        """ """
+        auth_tool = self.getAuthenticationTool()
+        user_obj = auth_tool.getUser(username)
+        if user_obj:
+            fn = auth_tool.getUserFirstName(user_obj)
+            ln = auth_tool.getUserLastName(user_obj)
+            em = auth_tool.getUserEmail(user_obj)
+            acc = auth_tool.getUserAccount(user_obj)
+            pwd = auth_tool.getUserPassword(user_obj)
+            roles = auth_tool.getUserRoles(user_obj)
+            created = auth_tool.getUserCreatedDate(user_obj)
+            updated = auth_tool.getUserLastUpdated(user_obj)
+            return fn, ln, em, acc, pwd, roles, created, updated
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_saveuser_credentials')
+    def admin_saveuser_credentials(self, name='', password='', confirm='', roles=[], domains=[], firstname='', 
+        lastname='', email='', lastupdated='', REQUEST=None, RESPONSE=None):
+        """ """
+        self.setUserSession(name, '', '', firstname, lastname, email, '')
+        _err = []
+        try:
+            self.getAuthenticationTool().manage_changeUser(name, password, confirm, roles, domains, firstname, lastname, email, lastupdated)
+        except Exception, error:
+            _err = [error]
+        if _err:
+            self.setSessionErrors(_err)
+            return RESPONSE.redirect("%s/administration_users_html?mode=edit&name=%s" % (self.absolute_url(), name))
+        else:
+            self.delUserSession()
+            self.setSessionInfo([MESSAGE_USERMODIFIED])
+            return RESPONSE.redirect("%s/administration_users_html" % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_portlets')
     def admin_folder_portlets(self, portlets=[], folder='', mode='', REQUEST=None):
@@ -576,7 +628,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
             except Exception, error:
                 err = str(error)
             else:
-                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+                msg = MESSAGE_ROLEADDED % name
         else:
             err = 'Invalid location specified.'
         if REQUEST:
