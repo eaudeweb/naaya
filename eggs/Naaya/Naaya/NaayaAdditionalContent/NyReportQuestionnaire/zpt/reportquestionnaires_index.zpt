@@ -1,5 +1,5 @@
 <span tal:replace="structure here/standard_html_header" />
-<tal:block define="permission_edit here/checkPermissionEditObject;">
+<tal:block define="perm_edit_object here/checkPermissionEditObject">
 
 <script language="JavaScript">
 function setupWin(url, theWidth, theHeight)
@@ -43,17 +43,13 @@ function setupWin(url, theWidth, theHeight)
 	<tal:block repeat="q qnrs">
 		<div class="comment_box">
 			<div class="commentbox_title">
-			<!--
-				<tal:block tal:condition="permission_edit">
-					<a tal:attributes="href string:${here/absolute_url}/${q/id}/delete_comment" style="float: right; margin-left: 5px"><small i18n:translate="">Delete</small></a>
-					<a tal:attributes="href string:${here/absolute_url}/${q/id}/edit_html" style="float: right">
-					<small i18n:translate="">Edit</small></a>
-				</tal:block>
-			-->
-
 			<span class="commentbox_content">
-			<span><a tal:attributes="href string:${here/absolute_url}/questionnaire_edit_html?qnr=${q/id}" title="Edit questionnaire">[edit]</a></span>
-			<span><a tal:attributes="href string:${here/absolute_url}/delete_questionnaire?qnr=${q/id}" title="Delete questionnaire">[delete]</a></span>
+			<tal:block tal:condition="perm_edit_object">
+			<span class="buttons"><a tal:attributes="href string:${here/absolute_url}/questionnaire_edit_html?qnr=${q/id}" title="Edit questionnaire"> Edit </a></span>
+			<!--
+			<span class="buttons"><a tal:attributes="href string:${here/absolute_url}/delete_questionnaire?qnr=${q/id}" title="Delete questionnaire"> Delete </a></span>
+			-->
+			</tal:block>
 			<span tal:omit-tag="" i18n:translate="">Questions and answers posted on:</span> <strong tal:content="q/releasedate" />
 			<span i18n:translate="">by:</span>
 				<a href="#" tal:condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'" tal:attributes="onclick string:setupWin('userinfo_html?uid=${q/contributor}', 350, 300);"><strong tal:content="q/contributor" /></a>
