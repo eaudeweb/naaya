@@ -32,6 +32,8 @@
 				<style id="style_common" title="CSS for common elements" />
 				<style id="style_print" title="CSS for media print" />
 				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="sort_asc.gif" title=""/>
+				<image id="sort_desc.gif" title=""/>
 			</scheme>
 		</skin>
 	</layout>
