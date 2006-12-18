@@ -85,7 +85,7 @@
 			<div id="search_area">
 					<form method="get" tal:attributes="action string:${site_url}/search_html">
 						<label accesskey="4" for="query" i18n:translate="">Site search: </label>
-						<input id="query" type="text" name="query" i18n:attributes="value" value="Search" style="color:#999999" onclick="this.value='';this.style.color='#000000'" />
+						<input id="query" type="text" name="query" i18n:attributes="value" value="Type text to search" style="color:#999999" onclick="this.value='';this.style.color='#000000'" />
 						<input tal:attributes="src string:${here/getSkinFilesPath}/ico_sitesearch.gif" id="sub" type="image" name="submit" i18n:attributes="alt;title" alt="Search" title="Search" />
 					</form>
 				</div>
