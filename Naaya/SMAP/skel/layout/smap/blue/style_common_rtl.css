@@ -665,4 +665,97 @@ tr.not-duplicate {
 }
 /*	END FORUM STYLE	*/
 
+	/*______- sortables columns -_____ */
+
+
+	/* -------ASC SORT--------- */
+	.sort_asc_th {
+		padding: 0em;
+		background-color: #DEECF4;
+		border-top: 2px solid white;
+		border-right: 1px solid white;
+		border-left: 1px solid white;
+		border-bottom: 2px solid white;
+		vertical-align: middle;
+		color: #6d6d6d;
+		text-align: left;
+		text-indent: 1em;
+	}
+
+		.sort_asc_th img {
+			display: none;
+		}
+
+	.sort_asc_th a {
+		background-color: #DEECF4;
+		display: block;
+		width: 100%;
+		padding: 0.6em 0em;
+		vertical-align: middle;
+		text-decoration: none;
+		font-weight: bold;
+		color: #1578B0;
+		background-image: url('sort_asc.gif');
+		background-repeat: no-repeat;
+		background-position: right center;
+	}
+
+	/* ----------DESC SORT---------- */
+	.sort_desc_th {
+		padding: 0em;
+		background-color: #DEECF4;
+		vertical-align: middle;
+		color: #6d6d6d;
+		text-align: left;
+		text-indent: 1em;
+		border-top: 2px solid white;
+		border-right: 1px solid white;
+		border-left: 1px solid white;
+		border-bottom: 2px solid white;
+		font-weight: normal;
+	}
+
+		.sort_desc_th img {
+			display: none;
+		}
+
+	.sort_desc_th a {
+		background-color: #DEECF4;
+		display: block;
+		width: 100%;
+		padding: 0.6em 0em;
+		vertical-align: middle;
+		text-decoration: none;
+		font-weight: bold;
+		color: #1578B0;	
+		background-image: url('sort_desc.gif');
+		background-repeat: no-repeat;
+		background-position: right center;
+	}
+
+	/* -----------SORTABLE------------- */
+	.sort_th {
+		padding: 0em;
+		background-color: #DEECF4;
+		vertical-align: middle;
+		color: #6d6d6d;
+		text-align: left;
+		text-indent: 1em;
+		border-top: 2px solid white;
+		border-right: 1px solid white;
+		border-left: 1px solid white;
+		border-bottom: 2px solid white;
+	}
+
+	.sort_th a {
+		background-color: #DEECF4;
+		display: block;
+		width: 100%;
+		padding: 0.6em 0em;
+		vertical-align: middle;
+		text-decoration: none;
+		font-weight: bold;
+		color: #1578B0;
+	}
+
 /* END STYLE */
