@@ -14,7 +14,7 @@
 	<tal:block define="uid python:request.get('uid', '');
 						contrib python:here.getContributor(uid);"
 				condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anounymous User'">
-	<h3><span i18n:translate="">User information for </span>  <em tal:content="contrib/uid" /></h3>
+	<h3><span i18n:translate="">User information for </span>  <em tal:content="python:test(contrib['uid'].lower()=='Liivkat'.lower(),'official comments Estonia',contrib['uid'])" /></h3>
 	<h4><span tal:condition="contrib/type" i18n:translate="">EIONET CIRCA user</span>
 		<span tal:condition="python: not contrib['type']" i18n:translate="">Local user</span>
 	</h4>
