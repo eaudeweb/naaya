@@ -52,7 +52,7 @@ function setupWin(url, theWidth, theHeight)
 			</tal:block>
 			<span tal:omit-tag="" i18n:translate="">Questions and answers posted on:</span> <strong tal:content="q/releasedate" />
 			<span i18n:translate="">by:</span>
-				<a href="#" tal:condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'" tal:attributes="onclick string:setupWin('userinfo_html?uid=${q/contributor}', 350, 300);"><strong tal:content="q/contributor" /></a>
+				<a href="#" tal:condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'" tal:attributes="onclick string:setupWin('userinfo_html?uid=${q/contributor}', 350, 300);"><strong tal:content="python:test(q.contributor.lower()=='Liivkat'.lower(),'official comments Estonia',q.contributor)" /></a>
 				<strong tal:content="q/contributor" tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'" />
 			</span>
 
