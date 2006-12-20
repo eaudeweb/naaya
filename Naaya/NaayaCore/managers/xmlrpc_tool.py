@@ -105,26 +105,19 @@ class XMLRPCConnector:
         transport = ProxiedTransport()
         transport.set_proxy(self.http_proxy)
         #try to connect without proxy
-        if self.uid and self.pwd:
-            server = xmlrpclib.Server('%s/' % url, BasicAuthTransport(self.uid, self.pwd))
-        else:
-            server = xmlrpclib.Server('%s/' % url)
-        return getattr(server, method)(*args)
-
-#        try:
-#            if self.uid and self.pwd:
-#                server = xmlrpclib.Server('%s/' % url, BasicAuthTransport(self.uid, self.pwd))
-#                print server
-#            else:
-#                server = xmlrpclib.Server('%s/' % url)
-#            return getattr(server, method)(*args)
-#        except:
-#            #try to connect with proxy
-#            try:
-#                if self.uid and self.pwd:
-#                    server = xmlrpclib.Server('%s/' % url, BasicAuthTransport(self.uid, self.pwd), transport=transport)
-#                else:
-#                    server = xmlrpclib.Server('%s/' % url, transport=transport)
-#                return getattr(server, method)(*args)
-#            except:
-#                return None
+        try:
+            if self.uid and self.pwd:
+                server = xmlrpclib.Server('%s/' % url, BasicAuthTransport(self.uid, self.pwd))
+            else:
+                server = xmlrpclib.Server('%s/' % url)
+            return getattr(server, method)(*args)
+        except:
+            #try to connect with proxy
+            try:
+                if self.uid and self.pwd:
+                    server = xmlrpclib.Server('%s/' % url, BasicAuthTransport(self.uid, self.pwd), transport=transport)
+                else:
+                    server = xmlrpclib.Server('%s/' % url, transport=transport)
+                return getattr(server, method)(*args)
+            except:
+                return None
