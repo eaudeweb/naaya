@@ -138,6 +138,11 @@ class SMAPSite(NySite, ProfileMeta):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_updates_html' % self.absolute_url())
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updates')
+    def getPassword(self):
+        """ """
+        return utils().utBase64Decode(self.password)
+
 ###
 # Layer over selection lists
 ############################
@@ -346,8 +351,6 @@ class SMAPSite(NySite, ProfileMeta):
         """ """
         folder_ob = self.unrestrictedTraverse(url, None)
         if folder_ob:
-            #return folder_ob.exportdata()
-            #TODO: XML/RPC problem on sending this data
             ztext, crc = utZipText(folder_ob.exportdata())
             return self.utBase64Encode(ztext), crc
         else:
@@ -365,8 +368,6 @@ class SMAPSite(NySite, ProfileMeta):
             else:
                 parent_ob = folder_ob.getParentNode()
                 parent_ob.manage_delObjects(folder_ob.id)
-                #parent_ob.manage_import('file', res)
-                #TODO: XML/RPC problem on sending this data
                 crc_server = res[1]
                 text, crc_local = utUnZipText(self.utBase64Decode(res[0]))
                 if crc_server == crc_local:
