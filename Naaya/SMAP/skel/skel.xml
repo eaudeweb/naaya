@@ -18,6 +18,7 @@
 			<template id="portlet_center_macro" title="Macro for center portlets"/>
 			<template id="portlet_right_macro" title="Macro for right portlets"/>
 			<template id="folder_administration_macro" title="Folder administration macro page"/>
+			<template id="folder_impex_macro" title="Folder Import/Export macro page"/>
 			<scheme id="blue" title="Blue">
 				<image id="bck_li.gif" title=""/>
 				<image id="bck_top.jpg" title=""/>
@@ -47,6 +48,7 @@
 	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
 		<portlet id="portlet_rdfcalendar" title="RDF Calendar"/>
 		<portlet id="portlet_administration" title="Administration" />
+		<portlet id="portlet_folder_impex" title="Export/Import"/>
 		<linkslist id="menunav_links" title="Menu navigation links" portlet="">
 			<link id="109" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="9"/>
 			<link id="110" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="10"/>

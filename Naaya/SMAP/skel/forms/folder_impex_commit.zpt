@@ -1,0 +1,10 @@
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().folder_administration_macro.macros['page']">
+
+<tal:block metal:fill-slot="title" i18n:translate="">Commit</tal:block>
+
+<tal:block metal:fill-slot="section">
+	<p i18n:translate="">Commit explanation</p>
+
+</tal:block>
+
+</tal:block>
