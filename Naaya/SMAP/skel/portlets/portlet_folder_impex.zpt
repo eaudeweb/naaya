@@ -2,7 +2,7 @@
 <tal:block metal:fill-slot="portlet_title">Import/Export</tal:block>
 <tal:block metal:fill-slot="portlet_content">
 	<ul tal:define="folder_url python:here.absolute_url(1)">
-		<li><a tal:attributes="href string:${here/absolute_url}/import_html"
+		<li><a tal:attributes="href string:${here/absolute_url}/import_html?url=${folder_url}"
 			i18n:attributes="title" title="Import data" i18n:translate="">Import data</a></li>
 		<li><a tal:attributes="href string:${here/absolute_url}/export_html?url=${folder_url}"
 			i18n:attributes="title" title="Export data" i18n:translate="">Export data</a></li>

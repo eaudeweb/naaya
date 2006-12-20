@@ -4,7 +4,38 @@
 
 <tal:block metal:fill-slot="section">
 	<p i18n:translate="">Import explanation</p>
-
+	<form method="post" tal:attributes="action string:${here/absolute_url}/folder_import" enctype="multipart/form-data">
+	<table border="0" cellspacing="2" cellpadding="2" width="100%">
+		<tr>
+			<td class="form-label" i18n:translate="">Import from</td>
+			<td>
+				<table border="0" cellspacing="1" cellpadding="0" width="100%">
+					<tr>
+						<td width="1%"><input type="radio" name="source" value="file" checked></td>
+						<td width="5%" i18n:translate="">File</td>
+						<td width="95%"><input type="file" name="file" size="40" value=""></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+				<table border="0" cellspacing="1" cellpadding="0" width="100%">
+					<tr>
+						<td width="1%"><input type="radio" name="source" value="url"></td>
+						<td width="5%" i18n:translate="">Url</td>
+						<td width="95%"><input type="text" name="url" size="40" value=""></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td><input type="hidden" tal:attributes="value python:request.get('url', here.absolute_url(1))" name="folder" /></td>
+			<td><input type="submit" value="Import" i18n:attributes="value" /></td>
+		</tr>
+	</table>
+	</form>
 </tal:block>
 
 </tal:block>
