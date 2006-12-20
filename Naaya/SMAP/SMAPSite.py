@@ -361,7 +361,7 @@ class SMAPSite(NySite, ProfileMeta):
         """ """
         folder_ob = self.unrestrictedTraverse(url, None)
         if folder_ob:
-            xconn = XMLRPCConnector(self.server_proxy, self.username, self.password)
+            xconn = XMLRPCConnector(self.server_proxy, self.username, utils().utBase64Decode(self.password))
             res = xconn(self.server_url, 'getFolderContent', url)
             if res is None:
                 self.setSessionErrors(['No data retrieved from remote server!'])
