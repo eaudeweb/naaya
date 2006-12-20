@@ -299,4 +299,14 @@ class SMAPSite(NySite, ProfileMeta):
         """ Search projects by country search form """
         return self.getFormsTool().getContent({'here': context, 'country_code': [country_code]}, 'projects_search')
 
+###
+# Folder export/import
+######################
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export_html')
+    def export_html(self, url='', REQUEST=None, RESPONSE=None):
+        """ """
+        try:    context = self.unrestrictedTraverse(url, '')
+        except: ''
+        if context: return self.getFormsTool().getContent({'here': context}, 'folder_impex_export')
+
 InitializeClass(SMAPSite)

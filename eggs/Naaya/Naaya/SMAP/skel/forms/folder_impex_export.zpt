@@ -3,8 +3,11 @@
 <tal:block metal:fill-slot="title" i18n:translate="">Export</tal:block>
 
 <tal:block metal:fill-slot="section">
+
+	<h2 tal:content="here/title_or_id" />
 	<p i18n:translate="">Export explanation</p>
 
+	<div><span i18n:translate="">Export:</span>&nbsp;<a tal:attributes="href string:${here/absolute_url}/exportdata" title="Export data" i18n:attributes="title">export</a></div>
 </tal:block>
 
 </tal:block>
