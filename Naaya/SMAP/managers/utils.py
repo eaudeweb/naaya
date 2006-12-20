@@ -20,6 +20,34 @@
 #Python imports
 import locale
 import operator
+import zlib
+
+def utZipText(text, level=6):
+    """ 
+        Zip string.
+        Returns a tuple (zipstring, CRC).
+        Level is an integer from 1 to 9 controlling the level of compression; 
+            1 is fastest and produces the least compression, 
+            9 is slowest and produces the most.
+    """
+    zobj = zlib.compressobj(level)
+    zstr = zobj.compress(text)
+    zstr += zobj.flush(zlib.Z_FINISH)
+
+    #make CRC
+    crc_check = zlib.crc32(text)
+    return zstr, crc_check
+
+def utUnZipText(zstr):
+    """ 
+        Unzip to string.
+        Return a tuple (text, CRC).
+    """
+    #decompress
+    text = zlib.decompress(zstr)
+    #make CRC
+    crc_check = zlib.crc32(text)
+    return text, crc_check
 
 
 def utSortObjsByLocaleAttr(p_list, p_attr, p_desc=1, p_locale=''):
