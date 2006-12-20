@@ -1,14 +1,14 @@
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
 <tal:block metal:fill-slot="portlet_title">Import/Export</tal:block>
 <tal:block metal:fill-slot="portlet_content">
-	<ul>
-		<li><a tal:attributes="href string:${here/absolute_url}/import_html" 
+	<ul tal:define="folder_url python:here.absolute_url(1)">
+		<li><a tal:attributes="href string:${here/absolute_url}/import_html"
 			i18n:attributes="title" title="Import data" i18n:translate="">Import data</a></li>
-		<li><a tal:attributes="href string:${here/absolute_url}/export_html" 
+		<li><a tal:attributes="href string:${here/absolute_url}/export_html?url=${folder_url}"
 			i18n:attributes="title" title="Export data" i18n:translate="">Export data</a></li>
-		<li><a tal:attributes="href string:${here/absolute_url}/update_html" 
+		<li><a tal:attributes="href string:${here/absolute_url}/update_html"
 			i18n:attributes="title" title="Update on local" i18n:translate="">Update on local</a></li>
-		<li><a tal:attributes="href string:${here/absolute_url}/commit_html" 
+		<li><a tal:attributes="href string:${here/absolute_url}/commit_html"
 			i18n:attributes="title" title="Commit on server" i18n:translate="">Commit on server</a></li>
 	</ul>
 </tal:block>

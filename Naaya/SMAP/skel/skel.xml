@@ -9,6 +9,10 @@
 		<form id="folder_menusubmissions" title="Menu submissions for folder" />
 		<form id="projects_search" title="Search projects by country"/>
 		<form id="languages_box" title="Box for changing the language on pages"/>
+		<form id="folder_impex_commit" title="Folder commit content"/>
+		<form id="folder_impex_export" title="Folder export content"/>
+		<form id="folder_impex_import" title="Folder import content"/>
+		<form id="folder_impex_update" title="Folder update content"/>
 	</forms>
 	<layout default_skin_id="smap" default_scheme_id="blue">
 		<skin id="smap" title="SMAP">
