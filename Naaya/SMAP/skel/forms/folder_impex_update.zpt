@@ -1,4 +1,4 @@
-<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().folder_administration_macro.macros['page']">
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().folder_impex_macro.macros['page']">
 
 <tal:block metal:fill-slot="title" i18n:translate="">Update</tal:block>
 
