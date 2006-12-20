@@ -305,8 +305,21 @@ class SMAPSite(NySite, ProfileMeta):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export_html')
     def export_html(self, url='', REQUEST=None, RESPONSE=None):
         """ """
-        try:    context = self.unrestrictedTraverse(url, '')
-        except: ''
+        context = self.unrestrictedTraverse(url, None)
         if context: return self.getFormsTool().getContent({'here': context}, 'folder_impex_export')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'folder_import')
+    def folder_import(self, folder='', source='file', file='', url='', REQUEST=None):
+        """ """
+        context = self.unrestrictedTraverse(folder, None)
+        if context:
+            context.manage_import(source, file, url)
+            if REQUEST: return REQUEST.RESPONSE.redirect('import_html?url=%s' % folder)
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'import_html')
+    def import_html(self, url='', REQUEST=None, RESPONSE=None):
+        """ """
+        context = self.unrestrictedTraverse(url, None)
+        if context: return self.getFormsTool().getContent({'here': context}, 'folder_impex_import')
 
 InitializeClass(SMAPSite)
