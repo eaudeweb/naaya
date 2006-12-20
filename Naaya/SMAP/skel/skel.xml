@@ -6,6 +6,7 @@
 		<form id="site_login" title="Portal login" />
 		<form id="site_search" title="Search page" />
 		<form id="site_feedback" title="Portal feedback"/>
+		<form id="site_admin_updates" title="Portal administration - update/commit"/>
 		<form id="folder_menusubmissions" title="Menu submissions for folder" />
 		<form id="projects_search" title="Search projects by country"/>
 		<form id="languages_box" title="Box for changing the language on pages"/>

@@ -1,9 +1,19 @@
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().folder_impex_macro.macros['page']">
 
-<tal:block metal:fill-slot="title" i18n:translate="">Update</tal:block>
+<tal:block metal:fill-slot="title"><tal:block content="here/title_or_id" /></tal:block>
 
 <tal:block metal:fill-slot="section">
-	<p i18n:translate="">Update explanation</p>
+	<tal:block define="url python:request.get('url', here.absolute_url(1))">
+		<h2 i18n:translate="">Update on local</h2>
+		<p i18n:translate="">Update content on local explanation.</p>
+
+		<span tal:replace="structure here/messages_box"/>
+		<form name="frmUpdate" method="POST" enctype="multipart/form-data"
+				tal:attributes="action string:${here/absolute_url}/folder_update">
+			<input type="hidden" name="url" tal:attributes="value url" />
+			<input type="submit" value="Update" i18n:attributes="value" />
+		</form>
+	</tal:block>
 
 </tal:block>
 

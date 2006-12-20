@@ -37,6 +37,7 @@ from Products.NaayaCore.managers.utils              import utils, file_utils, ba
 from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
 from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
 from managers.utils                                 import *
+from Products.NaayaCore.managers.xmlrpc_tool        import XMLRPCConnector
 
 
 manage_addSMAPSite_html = PageTemplateFile('zpt/site_manage_add', globals())
@@ -65,6 +66,10 @@ class SMAPSite(NySite, ProfileMeta):
 
     def __init__(self, id, portal_uid, title, lang):
         """ """
+        self.server_url = ''
+        self.server_proxy = ''
+        self.username = ''
+        self.password = ''
         NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
 
 ###
@@ -110,10 +115,32 @@ class SMAPSite(NySite, ProfileMeta):
         rdfcal_ob = self._getOb(ID_RDFCALENDAR)
         rdfcal_ob._getOb('example').update()
 
-    ############################
-    # Layer over selection lists
-    ############################
+###
+# Administration pages
+######################
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updates_html')
+    def admin_updates_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_updates')
 
+###
+# Administration actions
+############################
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updates')
+    def admin_updates(self, server_url='', server_proxy='', username='', password='', REQUEST=None):
+        """ """
+        self.server_url = server_url
+        self.server_proxy = server_proxy
+        self.username = username
+        self.password = utils().utBase64Encode(password)
+        self._p_changed = 1
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_updates_html' % self.absolute_url())
+
+###
+# Layer over selection lists
+############################
     security.declarePublic('getCountriesList')
     def getCountriesList(self):
         """ Return the selection list for countries """
@@ -307,6 +334,43 @@ class SMAPSite(NySite, ProfileMeta):
         """ """
         context = self.unrestrictedTraverse(url, None)
         if context: return self.getFormsTool().getContent({'here': context}, 'folder_impex_export')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'update_html')
+    def update_html(self, url='', REQUEST=None, RESPONSE=None):
+        """ """
+        context = self.unrestrictedTraverse(url, None)
+        if context: return self.getFormsTool().getContent({'here': context}, 'folder_impex_update')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getFolderContent')
+    def getFolderContent(self, url=''):
+        """ """
+        folder_ob = self.unrestrictedTraverse(url, None)
+        if folder_ob:
+            return folder_ob.exportdata()
+            #TODO: XML/RPC problem on sending this data
+            #return utZipText(folder_ob.exportdata())[0]
+        else:
+            return None
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'folder_update')
+    def folder_update(self, url='', REQUEST=None):
+        """ """
+        folder_ob = self.unrestrictedTraverse(url, None)
+        if folder_ob:
+            xconn = XMLRPCConnector(self.server_proxy)
+            res = xconn('http://%s:%s@%s' % (self.username, utils().utBase64Decode(self.password), self.server_url), 'getFolderContent', url)
+            if res is None:
+                self.setSessionErrors(['No data retrieved from remote server!'])
+            else:
+                parent_ob = folder_ob.getParentNode()
+                parent_ob.manage_delObjects(folder_ob.id)
+                parent_ob.manage_import('file', res)
+                #TODO: XML/RPC problem on sending this data
+                #parent_ob.manage_import('file', utUnZipText(res)[0])
+                self.setSessionInfo(['Content updated'])
+        else:
+            self.setSessionErrors('Wrong URL parameter!')
+        if REQUEST: return REQUEST.RESPONSE.redirect('update_html?url=%s' % url)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'folder_import')
     def folder_import(self, folder='', source='file', file='', url='', REQUEST=None):

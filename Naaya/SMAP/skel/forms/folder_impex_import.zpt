@@ -1,9 +1,10 @@
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().folder_impex_macro.macros['page']">
 
-<tal:block metal:fill-slot="title" i18n:translate="">Import</tal:block>
+<tal:block metal:fill-slot="title"><tal:block content="here/title_or_id" /></tal:block>
 
 <tal:block metal:fill-slot="section">
-	<p i18n:translate="">Import explanation</p>
+	<h2 i18n:translate="">Import content</h2>
+	<p i18n:translate="">Import content explanation.</p>
 	<form method="post" tal:attributes="action string:${here/absolute_url}/folder_import" enctype="multipart/form-data">
 	<table border="0" cellspacing="2" cellpadding="2" width="100%">
 		<tr>
