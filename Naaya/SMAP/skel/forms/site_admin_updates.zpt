@@ -29,7 +29,7 @@
 <tr>
 	<td i18n:translate="">Password</td>
 	<td><input type="password" name="password:utf8:ustring"
-			tal:attributes="value here/password" size="10" /></td>
+			tal:attributes="value here/getPassword" size="10" /></td>
 </tr>
 <tr>
 	<td>&nbsp;</td>
