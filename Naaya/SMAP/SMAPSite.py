@@ -348,7 +348,8 @@ class SMAPSite(NySite, ProfileMeta):
         if folder_ob:
             #return folder_ob.exportdata()
             #TODO: XML/RPC problem on sending this data
-            return self.utBase64Encode(utZipText(folder_ob.exportdata())[0])
+            ztext, crc = utZipText(folder_ob.exportdata())
+            return self.utBase64Encode(ztext), crc
         else:
             return None
 
@@ -366,7 +367,12 @@ class SMAPSite(NySite, ProfileMeta):
                 parent_ob.manage_delObjects(folder_ob.id)
                 #parent_ob.manage_import('file', res)
                 #TODO: XML/RPC problem on sending this data
-                parent_ob.manage_import('file', utUnZipText(self.utBase64Decode(res))[0])
+                crc_server = res[1]
+                text, crc_local = utUnZipText(self.utBase64Decode(res[0]))
+                if crc_server == crc_local:
+                    parent_ob.manage_import('file', text)
+                else:
+                    self.setSessionInfo(['Something is wrong'])
                 self.setSessionInfo(['Content updated'])
         else:
             self.setSessionErrors('Wrong URL parameter!')
@@ -379,29 +385,6 @@ class SMAPSite(NySite, ProfileMeta):
         if context:
             context.manage_import(source, file, url)
             if REQUEST: return REQUEST.RESPONSE.redirect('import_html?url=%s' % folder)
-
-    def testme(self, REQUEST=None):
-        """ """
-        text = \
-        """Dallas Cowboys football practice at Valley Ranch was delayed on Wednesday 
-            for nearly two hours.  One of the players, while on his way to the locker
-            room happened to look down and notice a suspicious looking, unknown white
-            powdery substance on the practice field.
-             
-            The coaching staff immediately suspended practice while the FBI was
-            called in to investigate.  After a complete field analysis, the FBI
-            determined that the white substance unknown to the players was the goal
-            line.
-             
-            Practice was resumed when FBI Special Agents decided that the team would not
-            be likely to encounter the substance again.
-        """
-        ztext, crc_check1 = self.utZipText(text)
-        text2, crc_check2 = self.utUnZipText(ztext)
-        print crc_check1
-        print crc_check2
-        print text2
-
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'import_html')
     def import_html(self, url='', REQUEST=None, RESPONSE=None):
