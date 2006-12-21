@@ -17,7 +17,7 @@
 	<td><span tal:content="here/name" /> <span tal:content="here/surname" /></td>
 </tr>
 <tr>
-	<th i18n:translate="">Reference language</th>
+	<th i18n:translate="">Reference language(s)</th>
 	<td tal:content="here/ref_lang" />
 </tr>
 <tr>

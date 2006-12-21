@@ -38,7 +38,7 @@
 </div>
 <div class="field">
 	<label for="ref_lang">
-		<span i18n:translate="" tal:omit-tag="">Reference language</span>
+		<span i18n:translate="" tal:omit-tag="">Reference language(s)</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'ref_lang')" class="mandatory_field"> *</span>
 	</label>
 	<input type="text" name="ref_lang:utf8:ustring" id="ref_lang" size="40" tal:attributes="value python:here.getSession('ref_lang', '')" />
