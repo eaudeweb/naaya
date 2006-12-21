@@ -20,3 +20,6 @@
 METATYPE_SYNCERTOOL = 'Naaya Syncer Tool'
 ID_SYNCERTOOL = 'portal_syncronizer'
 TITLE_SYNCERTOOL = 'Portal Syncronizer'
+
+MSG_SYNCER_SUCCESS = 'Folder syncronized succesfully with the SMAP server'
+MSG_SYNCER_FAILED = 'Unable to syncronize this folder with the SMAP server'
