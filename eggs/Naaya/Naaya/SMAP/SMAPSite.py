@@ -334,9 +334,8 @@ class SMAPSite(NySite, ProfileMeta):
             else:
                 l_res = context.id
             parent_ob = context.getParentNode()
-            self.generatePath(parent_ob, l_res)
-        else:
-            return res
+            res = self.generatePath(parent_ob, l_res)
+        return res
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export_html')
     def export_html(self, url='', REQUEST=None, RESPONSE=None):
