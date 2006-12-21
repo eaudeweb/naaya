@@ -2,9 +2,13 @@
 
 <tal:block metal:fill-slot="title" i18n:translate="">Commit</tal:block>
 
-<tal:block metal:fill-slot="section">
+<tal:block metal:fill-slot="section" define="syncer_tool here/getSyncerTool">
 	<p i18n:translate="">Commit explanation</p>
 
+	<form method="post" tal:attributes="action string:${syncer_tool/absolute_url}/pushToRemote" name="frmPush">
+		<input type="hidden" name="folder" tal:attributes="value python:request.get('url', '')" />
+		<input type="submit" name="Push" value="Push" />
+	</form>
 </tal:block>
 
 </tal:block>

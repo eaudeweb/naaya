@@ -25,6 +25,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ZSyncer.ZSyncer import ZSyncer
 
 #Product imports
+from Products.NaayaBase.constants import *
 from Products.SMAP.tools.constants import *
 from Products.NaayaCore.managers.utils import utils
 
@@ -81,11 +82,17 @@ class SyncerTool(ZSyncer, utils):
         if self.dest_server and self.username and self.password:
             dest_server = self.dest_server.replace('http://', '')
             full_domain = 'http://%s:%s@%s' % (self.username, self.password, dest_server)
-        self.manage_editProperties({'dest_servers':full_domain, 'connection_type':'ConnectionMgr', 'use_relative_paths':1, \
+        self.manage_editProperties({'title':self.title, 'dest_servers':full_domain, 'connection_type':'ConnectionMgr', 'use_relative_paths':1, \
                                     'filterObjects':1, 'syncable':self.zope_syncable, 'add_syncable':self.ny_syncable})
         self._p_changed = 1
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_properties_html?save=ok')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'pushToRemote')
+    def pushToRemote(self, folder='', REQUEST=None):
+        """ Push each folder to destination server. """
+        object_paths = self.utConvertToList(folder)
+        print self.manage_pushToRemote(object_paths, msgs=None)
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_properties_html')
