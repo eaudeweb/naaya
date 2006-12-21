@@ -105,6 +105,12 @@ class SyncerTool(ZSyncer, utils, session_manager):
         if REQUEST:
             REQUEST.RESPONSE.redirect('commit_html?url=%s' % folder)
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'pushToRemote')
+    def getFromRemote(self, folder='', REQUEST=None):
+        """ Push each folder to destination server. """
+        object_paths = self.utConvertToList(folder)
+        print self.manage_pullFromRemote(object_paths, msgs=None)
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_properties_html')
     manage_properties_html = PageTemplateFile('zpt/syncer_properties', globals())

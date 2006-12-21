@@ -1,12 +1,14 @@
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().folder_impex_macro.macros['page']">
 
-<tal:block metal:fill-slot="title" i18n:translate="">Commit</tal:block>
+<tal:block metal:fill-slot="title"><tal:block content="here/title_or_id" /></tal:block>
 
-<tal:block metal:fill-slot="section" define="syncer_tool here/getSyncerTool">
+<tal:block metal:fill-slot="section" define="syncer_tool here/getSyncerTool;
+											generate_path python:here.generatePath(here)">
+	<h2 i18n:translate="">Commit to server</h2>
 	<p i18n:translate="">Commit explanation</p>
 
 	<form method="post" tal:attributes="action string:${syncer_tool/absolute_url}/pushToRemote" name="frmPush">
-		<input type="hidden" name="folder" tal:attributes="value python:request.get('url', '')" />
+		<input type="hidden" name="folder" tal:attributes="value generate_path" />
 		<input type="submit" name="Push" value="Push" />
 	</form>
 </tal:block>
