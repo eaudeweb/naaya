@@ -50,9 +50,10 @@
 		<pluggablecontenttype meta_type="Naaya SMAP Project" action="1"/>
 		<pluggablecontenttype meta_type="Naaya SMAP Expert" action="1"/>
 	</pluggablecontenttypes>
-	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
+	<portlets left="portlet_left_side" center="portlet_latestuploads_rdf">
 		<portlet id="portlet_rdfcalendar" title="RDF Calendar"/>
 		<portlet id="portlet_administration" title="Administration" />
+		<portlet id="portlet_left_side" title="Left-side navigation" />
 		<portlet id="portlet_folder_impex" title="Export/Import"/>
 		<linkslist id="menunav_links" title="Menu navigation links" portlet="">
 			<link id="109" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="9"/>
