@@ -28,6 +28,7 @@ from Products.ZSyncer.ZSyncer import ZSyncer
 from Products.NaayaBase.constants import *
 from Products.SMAP.tools.constants import *
 from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.session_manager import session_manager
 
 def manage_addSyncerTool(self, dest_server='', username='', password='', zope_syncable=[], ny_syncable=[], REQUEST=None):
     """
@@ -39,7 +40,7 @@ def manage_addSyncerTool(self, dest_server='', username='', password='', zope_sy
         return self.manage_main(self, REQUEST, update_menu=1)
 
 
-class SyncerTool(ZSyncer, utils):
+class SyncerTool(ZSyncer, utils, session_manager):
     """
     Class that implements the tool.
     """
@@ -91,8 +92,18 @@ class SyncerTool(ZSyncer, utils):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'pushToRemote')
     def pushToRemote(self, folder='', REQUEST=None):
         """ Push each folder to destination server. """
-        object_paths = self.utConvertToList(folder)
-        print self.manage_pushToRemote(object_paths, msgs=None)
+        if folder:
+            object_paths = self.utConvertToList(folder)
+            msgs = self.manage_pushToRemote(object_paths, msgs=None)
+            msg = msgs[0] #take the first message, because only one folder is syncronize
+            if msg.status == 200:
+                self.setSessionInfo([MSG_SYNCER_SUCCESS])
+            else:
+                self.setSessionErrors([MSG_SYNCER_FAILED])
+        else:
+            self.setSessionErrors([MSG_SYNCER_FAILED])
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('commit_html?url=%s' % folder)
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_properties_html')
