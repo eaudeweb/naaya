@@ -69,10 +69,6 @@ class SMAPSite(NySite, ProfileMeta):
 
     def __init__(self, id, portal_uid, title, lang):
         """ """
-        self.server_url = ''
-        self.server_proxy = ''
-        self.username = ''
-        self.password = ''
         NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
 
 ###
@@ -134,22 +130,6 @@ class SMAPSite(NySite, ProfileMeta):
 ###
 # Administration actions
 ############################
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updates')
-    def admin_updates(self, server_url='', server_proxy='', username='', password='', REQUEST=None):
-        """ """
-        self.server_url = server_url
-        self.server_proxy = server_proxy
-        self.username = username
-        self.password = utils().utBase64Encode(password)
-        self._p_changed = 1
-        if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/admin_updates_html' % self.absolute_url())
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updates')
-    def getPassword(self):
-        """ """
-        return utils().utBase64Decode(self.password)
 
 ###
 # Layer over selection lists
@@ -351,44 +331,11 @@ class SMAPSite(NySite, ProfileMeta):
         context = self.unrestrictedTraverse(url, None)
         if context: return self.getFormsTool().getContent({'here': context}, 'folder_impex_export')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'update_html')
-    def update_html(self, url='', REQUEST=None, RESPONSE=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'import_html')
+    def import_html(self, url='', REQUEST=None, RESPONSE=None):
         """ """
         context = self.unrestrictedTraverse(url, None)
-        if context: return self.getFormsTool().getContent({'here': context}, 'folder_impex_update')
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getFolderContent')
-    def getFolderContent(self, url=''):
-        """ """
-        folder_ob = self.unrestrictedTraverse(url, None)
-        if folder_ob:
-            ztext, crc = utZipText(folder_ob.exportdata())
-            return self.utBase64Encode(ztext), crc
-        else:
-            return None
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'folder_update')
-    def folder_update(self, url='', REQUEST=None):
-        """ """
-        folder_ob = self.unrestrictedTraverse(url, None)
-        if folder_ob:
-            xconn = XMLRPCConnector(self.server_proxy, self.username, utils().utBase64Decode(self.password))
-            res = xconn(self.server_url, 'getFolderContent', url)
-            if res is None:
-                self.setSessionErrors(['No data retrieved from remote server!'])
-            else:
-                parent_ob = folder_ob.getParentNode()
-                parent_ob.manage_delObjects(folder_ob.id)
-                crc_server = res[1]
-                text, crc_local = utUnZipText(self.utBase64Decode(res[0]))
-                if crc_server == crc_local:
-                    parent_ob.manage_import('file', text)
-                else:
-                    self.setSessionInfo(['Something is wrong'])
-                self.setSessionInfo(['Content updated'])
-        else:
-            self.setSessionErrors('Wrong URL parameter!')
-        if REQUEST: return REQUEST.RESPONSE.redirect('update_html?url=%s' % url)
+        if context: return self.getFormsTool().getContent({'here': context}, 'folder_impex_import')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'folder_import')
     def folder_import(self, folder='', source='file', file='', url='', REQUEST=None):
@@ -398,10 +345,10 @@ class SMAPSite(NySite, ProfileMeta):
             context.manage_import(source, file, url)
             if REQUEST: return REQUEST.RESPONSE.redirect('import_html?url=%s' % folder)
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'import_html')
-    def import_html(self, url='', REQUEST=None, RESPONSE=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'update_html')
+    def update_html(self, url='', REQUEST=None, RESPONSE=None):
         """ """
         context = self.unrestrictedTraverse(url, None)
-        if context: return self.getFormsTool().getContent({'here': context}, 'folder_impex_import')
+        if context: return self.getFormsTool().getContent({'here': context}, 'folder_impex_update')
 
 InitializeClass(SMAPSite)
