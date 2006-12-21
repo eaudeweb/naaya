@@ -2,12 +2,15 @@
 
 <tal:block metal:fill-slot="title"><tal:block content="here/title_or_id" /></tal:block>
 
-<tal:block metal:fill-slot="section">
-	<tal:block define="url python:request.get('url', here.absolute_url(1))">
-		<h2 i18n:translate="">Update on local</h2>
-		<p i18n:translate="">Update content on local explanation.</p>
+<tal:block metal:fill-slot="section" define="syncer_tool here/getSyncerTool;
+											generate_path python:here.generatePath(here)">
+	<h2 i18n:translate="">Update on local</h2>
+	<p i18n:translate="">Update content on local explanation.</p>
 
-
+	<form method="post" tal:attributes="action string:${syncer_tool/absolute_url}/getFromRemote" name="frmGet">
+		<input type="hidden" name="folder" tal:attributes="value generate_path" />
+		<input type="submit" name="Get" value="Get" />
+	</form>
 </tal:block>
 
 </tal:block>

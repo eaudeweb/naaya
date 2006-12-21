@@ -37,8 +37,8 @@ from Products.NaayaCore.managers.utils              import utils, file_utils, ba
 from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
 from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
 from managers.utils                                 import *
-from tools.SyncerTool.SyncerTool import manage_addSyncerTool
-from tools.constants import *
+from tools.SyncerTool.SyncerTool                    import manage_addSyncerTool
+from tools.constants                                import *
 
 from Products.NaayaCore.managers.xmlrpc_tool        import XMLRPCConnector
 
@@ -325,6 +325,19 @@ class SMAPSite(NySite, ProfileMeta):
 ###
 # Folder export/import
 ######################
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'generatePath')
+    def generatePath(self, context='', res=''):
+        """ """
+        if context.meta_type != METATYPE_SMAPSITE:
+            if res:
+                l_res = '%s/%s' % (context.id, res)
+            else:
+                l_res = context.id
+            parent_ob = context.getParentNode()
+            self.generatePath(parent_ob, l_res)
+        else:
+            return res
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export_html')
     def export_html(self, url='', REQUEST=None, RESPONSE=None):
         """ """
