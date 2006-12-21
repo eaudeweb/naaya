@@ -37,8 +37,10 @@ from Products.NaayaCore.managers.utils              import utils, file_utils, ba
 from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
 from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
 from managers.utils                                 import *
-from Products.NaayaCore.managers.xmlrpc_tool        import XMLRPCConnector
+from tools.SyncerTool.SyncerTool import manage_addSyncerTool
+from tools.constants import *
 
+from Products.NaayaCore.managers.xmlrpc_tool        import XMLRPCConnector
 
 manage_addSMAPSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addSMAPSite(self, id='', title='', lang=None, REQUEST=None):
@@ -49,6 +51,7 @@ def manage_addSMAPSite(self, id='', title='', lang=None, REQUEST=None):
     portal_uid = '%s_%s' % (PREFIX_SITE, ut.utGenerateUID())
     self._setObject(id, SMAPSite(id, portal_uid, title, lang))
     self._getOb(id).loadDefaultData()
+    self._getOb(id).createSMAPPortalTools()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -114,6 +117,11 @@ class SMAPSite(NySite, ProfileMeta):
                              'http://smap.ewindows.eu.org/portal_syndication/events_rdf', '', 'no')
         rdfcal_ob = self._getOb(ID_RDFCALENDAR)
         rdfcal_ob._getOb('example').update()
+
+    security.declarePrivate('createSMAPPortalTools')
+    def createSMAPPortalTools(self):
+        """ """
+        manage_addSyncerTool(self)
 
 ###
 # Administration pages
@@ -229,6 +237,9 @@ class SMAPSite(NySite, ProfileMeta):
 #################
 
     def getSkinFilesPath(self): return self.getLayoutTool().getSkinFilesPath()
+
+    security.declarePublic('getSyncerTool')
+    def getSyncerTool(self): return self._getOb(ID_SYNCERTOOL)
 
 ###
 # Projects search
