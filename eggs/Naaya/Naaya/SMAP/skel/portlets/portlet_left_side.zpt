@@ -1,0 +1,12 @@
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+	<tal:block metal:fill-slot="portlet_title">
+		<span i18n:translate="">Shortcuts to Countries Environmental Information</span>
+	</tal:block>
+	<tal:block metal:fill-slot="portlet_content">
+		<ul>
+			<li tal:repeat="sub_fold python:here.fol112686.objectValues('Naaya Folder')">
+				<a tal:attributes="href sub_fold/absolute_url" tal:content="sub_fold/title_or_id" />
+			</li>
+		</ul>
+	</tal:block>
+</tal:block>
