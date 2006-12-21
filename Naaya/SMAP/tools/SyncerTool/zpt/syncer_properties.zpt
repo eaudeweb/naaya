@@ -13,10 +13,6 @@
 <fieldset>
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 <tr>
-	<td class="form-label">Title</td>
-	<td><input type="text" name="title" size="50" tal:attributes="value here/title" /></td>
-</tr>
-<tr>
 	<td class="form-label">Remote server</td>
 	<td><input type="text" name="dest_server" size="60" tal:attributes="value here/dest_server" /></td>
 </tr>

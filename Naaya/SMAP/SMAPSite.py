@@ -351,4 +351,10 @@ class SMAPSite(NySite, ProfileMeta):
         context = self.unrestrictedTraverse(url, None)
         if context: return self.getFormsTool().getContent({'here': context}, 'folder_impex_update')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'commit_html')
+    def commit_html(self, url='', REQUEST=None, RESPONSE=None):
+        """ """
+        context = self.unrestrictedTraverse(url, None)
+        if context: return self.getFormsTool().getContent({'here': context}, 'folder_impex_commit')
+
 InitializeClass(SMAPSite)
