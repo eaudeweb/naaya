@@ -266,7 +266,7 @@ li {
 	color: #7CAE31;
 	font-size: 90%;
 /* var */
-	//background-image: url(titl_bullet.gif);
+	/*background-image: url(titl_bullet.gif);*/
 	margin: 37px 7px 12px 6px;
 	padding: 2px 0px 2px 12px;
 	background-position: right top;
@@ -275,13 +275,22 @@ li {
 #search_area #query {
 	font-size: 100%;
 	position:relative;
-	width: 140px;
+	width: 12em;
 	border: 1px solid #CEE1EE;
 	color: #227AAB;
 	font-size: 95%;
 /* var */
 	font-family: Verdana, Arial;
-	margin: 0px 5px 0px 13px;
+	margin: 0px 5px 0px 5px;
+}
+
+#search_area #go_search {
+	width: 2.5em;
+	border: 1px solid #CEE1EE;
+	color: #227AAB;
+	background-color: white;
+/* var */
+	font-family: Verdana, Arial;
 }
 
 #search_area #sub {
