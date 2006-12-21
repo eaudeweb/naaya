@@ -7,13 +7,6 @@
 		<h2 i18n:translate="">Update on local</h2>
 		<p i18n:translate="">Update content on local explanation.</p>
 
-		<span tal:replace="structure here/messages_box"/>
-		<form name="frmUpdate" method="POST" enctype="multipart/form-data"
-				tal:attributes="action string:${here/absolute_url}/folder_update">
-			<input type="hidden" name="url" tal:attributes="value url" />
-			<input type="submit" value="Update" i18n:attributes="value" />
-		</form>
-	</tal:block>
 
 </tal:block>
 

@@ -9,34 +9,48 @@
 	Update/commit settings description.
 </p>
 
-<form method="post" tal:attributes="action string:${site_url}/admin_updates">
-<table border="0" cellspacing="2" cellpadding="2" width="90%">
-<tr>
-	<td i18n:translate="">Server url</td>
-	<td><input type="text" name="server_url:utf8:ustring"
-			tal:attributes="value here/server_url" size="50" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">HTTP proxy</td>
-	<td><input type="text" name="server_proxy:utf8:ustring"
-			tal:attributes="value here/server_proxy" size="50" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">Username</td>
-	<td><input type="text" name="username:utf8:ustring"
-			tal:attributes="value here/username" size="10" /></td>
-</tr>
-<tr>
-	<td i18n:translate="">Password</td>
-	<td><input type="password" name="password:utf8:ustring"
-			tal:attributes="value here/getPassword" size="10" /></td>
-</tr>
-<tr>
-	<td>&nbsp;</td>
-	<td><input type="submit" value="Save changes" i18n:attributes="value" /></td>
-</tr>
-</table>
-</form>
+<fieldset>
+	<legend i18n:translate="">Connection status</legend>
+	<p i18n:translate="">
+	Connection status description.
+	</p>
+
+	<div tal:define="conn here/testConnection">
+		<span i18n:translate="">Connection status</span>&nbsp;
+		<strong tal:condition="not:conn" i18n:translate="">not working</strong>
+		<strong tal:condition="conn" i18n:translate="">good</strong>
+	</div>
+</fieldset>
+
+<fieldset>
+	<legend i18n:translate="">Update/commit settings</legend>
+	<form method="post" tal:attributes="action string:${site_url}/admin_updates" name="frmUpdCom">
+	<p i18n:translate="">
+	Update/commit settings description.
+	</p>
+
+	<div class="field">
+		<label for="server_url" i18n:translate="">Server url</label>
+		<input type="text" name="server_url:utf8:ustring" tal:attributes="value here/server_url" size="50" />
+	</div>
+	<div class="field">
+		<label for="server_proxy" i18n:translate="">HTTP proxy</label>
+		<input type="text" name="server_proxy:utf8:ustring" tal:attributes="value here/server_proxy" size="50" />
+	</div>
+	<div class="field">
+		<label for="username" i18n:translate="">Username</label>
+		<input type="text" name="username:utf8:ustring" tal:attributes="value here/username" size="10" />
+	</div>
+	<div class="field">
+		<label for="password" i18n:translate="">Password</label>
+		<input type="password" name="password:utf8:ustring" tal:attributes="value here/getPassword" size="10" />
+	</div>
+	<div class="field">
+		<label for="submit-button" class="invisible">Submit button</label>
+		<input type="submit" value="Save changes" id="submit-button" i18n:attributes="value" />
+	</div>
+	</form>
+</fieldset>
 
 </tal:block>
 </tal:block>
