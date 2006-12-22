@@ -392,7 +392,7 @@ function changeProject()
 		<description lang="en"><![CDATA[]]></description>
 		<coverage lang="en"><![CDATA[]]></coverage>
 		<keywords lang="en"><![CDATA[]]></keywords>
-	<ob meta_type="Naaya Document" param="0" id="copyright" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
+	<ob meta_type="Naaya Document" param="0" id="copyright" sortorder="100" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
 		<title lang="en"><![CDATA[Copyright]]></title>
 		<description lang="en"><![CDATA[]]></description>
 		<coverage lang="en"><![CDATA[]]></coverage>
@@ -401,7 +401,7 @@ function changeProject()
 			<span class="font-weight: bold;">&copy; SMAP, 2006</span></p>]]>
 		</body>
 	</ob>
-		<ob meta_type="Naaya Document" param="0" id="contact_html" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
+		<ob meta_type="Naaya Document" param="0" id="contact_html" sortorder="100" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
 			<title lang="en"><![CDATA[Contact us]]></title>
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
@@ -409,7 +409,15 @@ function changeProject()
 			<body lang="en"><![CDATA[]]>
 			</body>
 		</ob>
-		<ob meta_type="Naaya Document" param="0" id="accessibility" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
+		<ob meta_type="Naaya Document" param="0" id="aboutus_html" sortorder="100" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
+			<title lang="en"><![CDATA[About us]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+			<body lang="en"><![CDATA[]]>
+			</body>
+		</ob>
+		<ob meta_type="Naaya Document" param="0" id="accessibility" sortorder="100" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
 			<title lang="en"><![CDATA[Accessibility statement]]></title>
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
