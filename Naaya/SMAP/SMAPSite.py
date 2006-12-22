@@ -322,6 +322,11 @@ class SMAPSite(NySite, ProfileMeta):
         """ Search projects by country search form """
         return self.getFormsTool().getContent({'here': context, 'country_code': [country_code]}, 'projects_search')
 
+    security.declareProtected(view, 'country_search_experts')
+    def country_search_experts(self, context='', country_code='', REQUEST=None, RESPONSE=None):
+        """ Search projects by country search form """
+        return self.getFormsTool().getContent({'here': context, 'country_code': [country_code]}, 'experts_search')
+
 ###
 # Folder export/import
 ######################
