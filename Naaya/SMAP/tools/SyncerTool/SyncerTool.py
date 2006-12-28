@@ -115,10 +115,12 @@ class SyncerTool(ZSyncer, utils, session_manager):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'pushToRemote')
     def pushToRemote(self, folder='', REQUEST=None):
         """ Push each folder to destination server. """
+        folder_path = '%s/%s' % (self.getSitePath(1), folder)
+        folder_obj = self.unrestrictedTraverse(folder_path, None)
         if folder:
             object_paths = self.utConvertToList(folder)
             msgs = self.manage_pushToRemote(object_paths, msgs=None)
-            msg = msgs[0] #take the first message, because only one folder is syncronize
+            msg = msgs[0] #take the first message, because only one folder is syncronized
             if msg.status == 200:
                 self.setSessionInfo([MSG_SYNCER_SUCCESS])
             else:
@@ -126,15 +128,17 @@ class SyncerTool(ZSyncer, utils, session_manager):
         else:
             self.setSessionErrors([MSG_SYNCER_FAILED])
         if REQUEST:
-            REQUEST.RESPONSE.redirect('commit_html?url=%s' % folder)
+            REQUEST.RESPONSE.redirect('%s/commit_html?url=%s' % (folder_path, folder))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'pushToRemote')
     def getFromRemote(self, folder='', REQUEST=None):
         """ Push each folder to destination server. """
+        folder_path = '%s/%s' % (self.getSitePath(1), folder)
+        folder_obj = self.unrestrictedTraverse(folder_path, None)
         if folder:
             object_paths = self.utConvertToList(folder)
             msgs = self.manage_pullFromRemote(object_paths, msgs=None)
-            msg = msgs[0] #take the first message, because only one folder is syncronize
+            msg = msgs[0] #take the first message, because only one folder is syncronized
             if msg.status == 200:
                 self.setSessionInfo([MSG_SYNCER_SUCCESS])
             else:
@@ -142,7 +146,7 @@ class SyncerTool(ZSyncer, utils, session_manager):
         else:
             self.setSessionErrors([MSG_SYNCER_FAILED])
         if REQUEST:
-            REQUEST.RESPONSE.redirect('update_html?url=%s' % folder)
+            REQUEST.RESPONSE.redirect('%s/update_html?url=%s' % (folder_path, folder))
 
 
         object_paths = self.utConvertToList(folder)
