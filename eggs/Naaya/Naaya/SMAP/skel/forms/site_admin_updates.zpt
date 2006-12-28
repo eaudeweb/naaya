@@ -19,7 +19,7 @@
 
 	<div class="field">
 		<label for="dest_server" i18n:translate="">Remote server</label>
-		<input type="text" name="dest_server:utf8:ustring"
+		<input type="text" name="dest_server"
 			tal:attributes="value syncer_tool/dest_server" size="50" />
 	</div>
 	<div class="field">
