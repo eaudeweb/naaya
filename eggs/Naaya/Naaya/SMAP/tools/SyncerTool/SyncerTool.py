@@ -82,7 +82,7 @@ class SyncerTool(ZSyncer, utils, session_manager):
         full_domain = ''
         if self.dest_server and self.username and self.password:
             dest_server = self.dest_server.replace('http://', '')
-            full_domain = 'http://%s:%s@%s' % (self.username, self.password, dest_server)
+            full_domain = ['http://%s:%s@%s' % (self.username, self.password, dest_server)]
         self.manage_editProperties({'title':self.title, 'dest_servers':full_domain, 'connection_type':'ConnectionMgr', 'use_relative_paths':1, \
                                     'filterObjects':1, 'syncable':self.zope_syncable, 'add_syncable':self.ny_syncable})
         self._p_changed = 1
@@ -105,7 +105,7 @@ class SyncerTool(ZSyncer, utils, session_manager):
         full_domain = ''
         if self.dest_server and self.username and self.password:
             dest_server = self.dest_server.replace('http://', '')
-            full_domain = 'http://%s:%s@%s' % (self.username, self.password, dest_server)
+            full_domain = ['http://%s:%s@%s' % (self.username, self.password, dest_server)]
         self.manage_editProperties({'title':self.title, 'dest_servers':full_domain, 'connection_type':'ConnectionMgr', 'use_relative_paths':1, \
                                     'filterObjects':1, 'syncable':self.zope_syncable, 'add_syncable':self.ny_syncable})
         self._p_changed = 1
