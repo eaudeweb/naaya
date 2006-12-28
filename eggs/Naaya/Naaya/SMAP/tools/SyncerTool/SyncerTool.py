@@ -130,7 +130,7 @@ class SyncerTool(ZSyncer, utils, session_manager):
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/commit_html?url=%s' % (folder_path, folder))
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'pushToRemote')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getFromRemote')
     def getFromRemote(self, folder='', REQUEST=None):
         """ Push each folder to destination server. """
         folder_path = '%s/%s' % (self.getSitePath(1), folder)
