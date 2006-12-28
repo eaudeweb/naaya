@@ -148,10 +148,6 @@ class SyncerTool(ZSyncer, utils, session_manager):
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/update_html?url=%s' % (folder_path, folder))
 
-
-        object_paths = self.utConvertToList(folder)
-        print self.manage_pullFromRemote(object_paths, msgs=None)
-
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_properties_html')
     manage_properties_html = PageTemplateFile('zpt/syncer_properties', globals())
