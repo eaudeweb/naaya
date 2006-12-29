@@ -18,22 +18,3 @@
 # Miruna Badescu
 
 #Zope imports
-from ImageFile import ImageFile
-
-from constants import *
-from SyncerTool import SyncerTool
-
-def initialize(context):
-    """ """
-    context.registerClass(
-        SyncerTool.SyncerTool,
-        permission = PERMISSION_ADD_NAAYACORE_TOOL,
-        constructors = (
-                SyncerTool.manage_addSyncerTool,
-                ),
-        icon = 'SyncerTool/www/SyncerTool.gif'
-        )
-
-misc_ = {
-    'SyncerTool.gif':ImageFile('SyncerTool/www/SyncerTool.gif', globals()),
-    }

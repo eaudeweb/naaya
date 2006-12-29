@@ -117,7 +117,10 @@ class SMAPSite(NySite, ProfileMeta):
     security.declarePrivate('createSMAPPortalTools')
     def createSMAPPortalTools(self):
         """ """
-        manage_addSyncerTool(self)
+        manage_addSyncerTool(self, dest_server='http://22.bogota.highspeedrails.com/smap_syncron/portal_syncronizer', \
+                                    username='', password='', zope_syncable=[METATYPE_FOLDER, 'Folder', 'Image', 'File'], \
+                                    ny_syncable=[METATYPE_FOLDER, METATYPE_NYSMAPPROJECT, METATYPE_NYNEWS, \
+                                    METATYPE_NYSTORY, METATYPE_NYURL, METATYPE_NYEXFILE, METATYPE_NYDOCUMENT, METATYPE_NYPOINTER, METATYPE_NYMEDIAFILE, METATYPE_NYEVENT, METATYPE_NYSMAPEXPERT])
 
 ###
 # Administration pages
