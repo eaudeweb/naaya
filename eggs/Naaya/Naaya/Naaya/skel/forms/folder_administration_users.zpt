@@ -95,7 +95,7 @@
 					location python:request.get('location', '')">
 	<tr>
 		<td align="top" width="20%" class="form-label" i18n:translate="">Username:</td>
-		<td align="top" width="*" tal:define="users user_tool/getUserNames">
+		<td align="top" width="*" tal:define="users here/admin_getusers">
 			<select name="name">
 				<option tal:repeat="user users"
 					tal:attributes="value user; selected python:user==name" tal:content="user" />
