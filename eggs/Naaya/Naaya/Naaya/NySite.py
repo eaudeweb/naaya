@@ -885,7 +885,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if node is self: return l_emails
         else:
             while 1:
-                if node == self: break
+                if node == self:
+                    if len(l_emails) == 0:
+                        l_emails.append(node.administrator_email)
+                    break
                 if hasattr(node, 'maintainer_email'):
                     if node.maintainer_email != '' and node.maintainer_email not in l_emails:
                         l_emails.append(node.maintainer_email)
@@ -900,7 +903,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if p_object.submitted==1:
             l_emails = self.getMaintainersEmails(p_folder)
             if len(l_emails) > 0:
-		mail_from = self.mail_address_from
+                mail_from = self.mail_address_from
                 self.notifyMaintainerEmail(l_emails, mail_from, p_object, p_folder.absolute_url(), '%s/basketofapprovals_html' % p_folder.absolute_url())
 
     def processDynamicProperties(self, meta_type, REQUEST=None, keywords={}):
@@ -1148,6 +1151,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 location_path = obj.absolute_url(1)
                 location_title = obj.title
                 location_maintainer_email = self.getMaintainersEmails(obj)
+        print location_maintainer_email
         #create an account without role
         try:
             self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname,
