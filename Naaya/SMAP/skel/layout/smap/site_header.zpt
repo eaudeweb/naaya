@@ -46,7 +46,7 @@
 			<tal:block tal:condition="python: authenticated_user == 'Anonymous User'">
 				<span i18n:translate="" tal:omit-tag="">you are not logged in</span>
 				<a tal:attributes="href string:${site_url}/login_html" i18n:translate="">login</a>
-				<a tal:attributes="href string:${site_url}/requestrole_html" i18n:translate="">create account</a>
+				<a tal:attributes="href string:${here/absolute_url}/requestrole_html" i18n:translate="">create account</a>
 			</tal:block>
 		</div>
 		<div class="navuplinks" tal:define="l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
