@@ -1541,6 +1541,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_layout_html' % self.absolute_url())
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_getusers')
+    def admin_getusers(self):
+        """ """
+        return self.getAuthenticationTool().getUserNames()
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteusers')
     def admin_deleteusers(self, names=[], REQUEST=None):
         """ """
