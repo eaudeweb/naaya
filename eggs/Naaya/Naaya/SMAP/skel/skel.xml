@@ -59,7 +59,7 @@
 		<linkslist id="menunav_links" title="Menu navigation links" portlet="">
 			<link id="108" title="About us" description="" url="/aboutus_html" relative="1" permission="" order="9"/>
 			<link id="109" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="9"/>
-			<link id="110" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="10"/>
+			<link id="110" title="Administration" description="" url="/admin_centre_html" relative="1" permission="Publish content" order="10"/>
 		</linkslist>
 		<linkslist id="places" title="Places" portlet="1">
 			<link id="11" title="Europa" description="European Union on-line" url="http://europa.eu/" relative="0" permission="" order="10"/>
