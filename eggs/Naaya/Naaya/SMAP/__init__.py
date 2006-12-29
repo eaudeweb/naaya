@@ -24,8 +24,10 @@ from ImageFile import ImageFile
 
 #Product imports
 from constants import *
+from tools.constants import *
 from Products.NaayaCore.constants import *
 import SMAPSite
+from tools.SyncerTool import SyncerTool
 
 def initialize(context):
     """ """
@@ -41,7 +43,17 @@ def initialize(context):
         icon = 'www/Site.gif'
         )
 
+    context.registerClass(
+        SyncerTool.SyncerTool,
+        permission = PERMISSION_ADD_NAAYACORE_TOOL,
+        constructors = (
+                SyncerTool.manage_addSyncerTool,
+                ),
+        icon = 'tools/SyncerTool/www/SyncerTool.gif'
+        )
+
 misc_ = {
+    'SyncerTool.gif':ImageFile('tools/SyncerTool/www/SyncerTool.gif', globals()),
     'Site.gif':ImageFile('www/Site.gif', globals()),
     'print.gif':ImageFile('www/print.gif', globals()),
     'sortdown.gif':ImageFile('www/sortdown.gif', globals()),
