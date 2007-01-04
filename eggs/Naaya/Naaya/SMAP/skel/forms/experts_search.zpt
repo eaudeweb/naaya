@@ -20,7 +20,7 @@
 					free_text_querystring python:test(free_text, '&free_text='+free_text, '');
 					priority_area_querystring python:test(priority_area, '&priority_area='+priority_area, '');
 					page_search_querystring string:skey=${skey}&rkey=${rkey}${priority_area_querystring}${focus_querystring}${country_querystring}${free_text_querystring};
-					results python:here.searchProjects(priority_area, focus, country, free_text, skey, rkey, start, search_performed);
+					results python:here.searchSMAP(priority_area, focus, country, free_text, skey, rkey, start, search_performed, meta='exp');
 
 					list_paging python:results[0];
 					paging_start python:list_paging[0]+1;
@@ -269,14 +269,14 @@ function changeProject()
 
 	<tr>
 		<td colspan="2"><center><span class="buttons">
-				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=priority_area${rkey_param};
-									title python:test(skey=='priority_area', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by Project Area
-				<img tal:attributes="src python:test(skey=='priority_area', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
+				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=maintopics${rkey_param};
+									title python:test(skey=='maintopics', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by Project Area
+				<img tal:attributes="src python:test(skey=='maintopics', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
 					 width="12" height="12" alt=""/>
 				</a>
-				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=title${rkey_param};
-									title python:test(skey=='title', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by title
-				<img tal:attributes="src python:test(skey=='title', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
+				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=surname${rkey_param};
+									title python:test(skey=='surname', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by surname
+				<img tal:attributes="src python:test(skey=='surname', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
 					 width="12" height="12" alt=""/>
 				</a>
 				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=releasedate${rkey_param};
@@ -310,16 +310,12 @@ function changeProject()
 				<ul>
 					<li>
 						<strong i18n:translate="">Project area:</strong>
-						<span tal:content="python:here.getPriorityTitle(object.priority_area)" i18n:translate="" />
+						<span tal:content="python:here.getPriorityTitle(object.maintopics)" i18n:translate="" />
 					</li>
 
 					<li tal:condition="object/country">
-						<strong i18n:translate="">Country(ies):</strong>
-						<tal:block repeat="country_id object/country">
-							<tal:block define="country_name python:here.getCountryName(country_id)">
-								<span tal:content="country_name" i18n:translate="" /><span tal:condition="not:repeat/country_id/end" tal:replace="string:," />
-							</tal:block>
-						</tal:block>
+						<strong i18n:translate="">Country:</strong>
+						<span tal:content="python:here.getCountryName(object.country)" i18n:translate="" />
 					</li>
 
 					<li>
