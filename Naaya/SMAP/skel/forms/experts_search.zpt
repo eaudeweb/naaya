@@ -270,18 +270,13 @@ function changeProject()
 	<tr>
 		<td colspan="2"><center><span class="buttons">
 				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=maintopics${rkey_param};
-									title python:test(skey=='maintopics', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by Project Area
+									title python:test(skey=='maintopics', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by Main Topic
 				<img tal:attributes="src python:test(skey=='maintopics', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
 					 width="12" height="12" alt=""/>
 				</a>
 				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=surname${rkey_param};
-									title python:test(skey=='surname', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by surname
+									title python:test(skey=='surname', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by Surname
 				<img tal:attributes="src python:test(skey=='surname', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
-					 width="12" height="12" alt=""/>
-				</a>
-				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=releasedate${rkey_param};
-									title python:test(skey=='releasedate', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by date
-				<img tal:attributes="src python:test(skey=='releasedate', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
 					 width="12" height="12" alt=""/>
 				</a></span></center>
 		</td>
@@ -309,18 +304,13 @@ function changeProject()
 
 				<ul>
 					<li>
-						<strong i18n:translate="">Project area:</strong>
+						<strong i18n:translate="">Main topic:</strong>
 						<span tal:content="python:here.getPriorityTitle(object.maintopics)" i18n:translate="" />
 					</li>
 
 					<li tal:condition="object/country">
 						<strong i18n:translate="">Country:</strong>
 						<span tal:content="python:here.getCountryName(object.country)" i18n:translate="" />
-					</li>
-
-					<li>
-						<strong i18n:translate="">Release date:</strong>
-						<span class="releasedate" tal:content="python:object.utShowDateTime(object.releasedate)" />
 					</li>
 				</ul>
 			</td>
