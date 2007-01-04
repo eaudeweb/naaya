@@ -225,23 +225,26 @@ class SMAPSite(NySite, ProfileMeta):
     def getSyncerTool(self): return self._getOb(ID_SYNCERTOOL)
 
 ###
-# Projects search
-#################
-    security.declarePublic('search_projects')
-    def searchProjects(self, priority_area='', focus=[], country='', free_text='', skey='',
-                       rkey=0, start='', perform_search='',REQUEST=None):
+# Projects/Experts search
+#########################
+    security.declarePublic('searchSMAP')
+    def searchSMAP(self, priority_area='', focus=[], country='', free_text='', skey='',
+                       rkey=0, start='', perform_search='', meta='', REQUEST=None):
         """ """
         res_per_page = 10
         query = ''
         res = []
         results = []
         lang = self.gl_get_selected_language()
+        if meta == 'prj':   meta = '[METATYPE_NYSMAPPROJECT]'
+        elif meta == 'exp': meta = '[METATYPE_NYSMAPEXPERT]'
+        else:               meta = '[]'
 
         try:    start = int(start)
         except: start = 0
 
         if perform_search:
-            query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSMAPPROJECT], approved=1'
+            query = 'self.getCatalogedObjects(meta_type=%s, approved=1' % meta
             if len(priority_area) > 0 and priority_area != 'all':
                 query += ', resource_area=priority_area'
             if len(focus) > 0:
@@ -258,7 +261,7 @@ class SMAPSite(NySite, ProfileMeta):
             query += ')'
             res.extend(eval(query))
 
-        results = self.get_archive_listing(self.sorted_projects(res, skey, rkey))
+        results = self.get_archive_listing(self.sorted_archive(res, skey, rkey))
 
         #batch related
         batch_obj = batch_utils(res_per_page, len(results[2]), start)
@@ -268,7 +271,7 @@ class SMAPSite(NySite, ProfileMeta):
             paging_informations = (-1, 0, 0, -1, -1, 0, res_per_page, [0])
         return (paging_informations, (results[0], results[1], results[2][paging_informations[0]:paging_informations[1]]))
 
-    def sorted_projects(self, p_objects=[], skey='', rkey=0):
+    def sorted_archive(self, p_objects=[], skey='', rkey=0):
         """ Return sorted projects """
         results = []
         if not skey or skey == 'releasedate':
@@ -301,7 +304,7 @@ class SMAPSite(NySite, ProfileMeta):
     def getRequestParams(self, REQUEST=None):
         """ Returns a REQUEST.QUERY_STRING (using REQUEST.form,
             REQUEST.form=REQUEST.QUERY_STRING as a dictionary) """
-        ignore_list = ['skey', 'rkey', 'prj_changed']
+        ignore_list = ['skey', 'rkey', 'prj_changed', 'exp_changed']
         res=''
         if REQUEST:
             for key in self.REQUEST.form.keys():
