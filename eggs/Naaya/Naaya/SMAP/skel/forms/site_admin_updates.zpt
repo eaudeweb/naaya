@@ -7,20 +7,23 @@
 <tal:block define="syncer_tool here/getSyncerTool;
 				syncer_tool_url syncer_tool/absolute_url">
 <p i18n:translate="">
-	Syncronize settings description.
+	After working locally upon the content, you will connect to the central server and transfer your data.
+	This page allows you to change the parameter needed to connect to the central server and the types of data
+	to be syncronized.
+</p>
+<p i18n:translate="">
+	<strong>Note:</strong> the username and password you provide must exist on the server and must have the 
+	<em>Administrator</em> or <em>Manager</em> role on the folder you need to update from the remote server.
 </p>
 
 <fieldset>
 	<legend i18n:translate="">Syncronize settings</legend>
 	<form method="post" tal:attributes="action string:${syncer_tool_url}/saveProperties" name="frmSync">
-	<p i18n:translate="">
-	Syncronize settings description.
-	</p>
 
 	<div class="field">
 		<label for="dest_server" i18n:translate="">Remote server</label>
 		<input type="text" name="dest_server"
-			tal:attributes="value syncer_tool/dest_server" size="50" />
+			tal:attributes="value syncer_tool/getServerPath" size="50" />
 	</div>
 	<div class="field">
 		<label for="username" i18n:translate="">Username</label>
@@ -33,7 +36,7 @@
 			tal:attributes="value syncer_tool/password" size="10" />
 	</div>
 	<div class="field">
-		<label for="zope_syncable" i18n:translate="">Zope objects</label>
+		<label for="zope_syncable" i18n:translate="">Zope objects to be syncronized</label>
 		<select name="zope_syncable" size="10" multiple="true">
 			<option tal:repeat="item here/getProductsMetaTypes"
 					tal:attributes="value item; selected python:item in syncer_tool.zope_syncable" 
@@ -41,7 +44,7 @@
 		</select>
 	</div>
 	<div class="field">
-		<label for="ny_syncable" i18n:translate="">Naaya objects</label>
+		<label for="ny_syncable" i18n:translate="">Naaya objects to be syncronized</label>
 		<select name="ny_syncable" size="10" multiple="true">
 			<option tal:repeat="item python:here.get_meta_types(1)"
 					tal:attributes="value item; selected python:item in syncer_tool.ny_syncable" 
