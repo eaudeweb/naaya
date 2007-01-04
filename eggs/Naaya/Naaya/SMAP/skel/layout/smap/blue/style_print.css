@@ -144,6 +144,8 @@ td#right_cell2{
 	padding: 0;
 }
 
+.message-information {display: none;}
+
 /*page break for EPOZ*/
 .pbreak {
 	visibility: false;
