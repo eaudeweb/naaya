@@ -215,13 +215,24 @@ class NySMAPExpert(NyAttributes, expert_item, NyItem, NyCheckControl):
             ref_lang, country, maintopics, subtopics, sortorder, file, precondition, content_type, 
             downloadfilename, email, releasedate, lang)
         NyCheckControl.__dict__['__init__'](self)
-        #NyVersioning.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
+
+    security.declarePrivate('objectkeywords')
+    def objectkeywords(self, lang):
+        return u' '.join([self._objectkeywords(lang), self.surname, self.name])
+
+    security.declareProtected(view, 'resource_area')
+    def resource_area(self):
+        return self.maintopics
 
     security.declareProtected(view, 'resource_focus')
     def resource_focus(self):
         return ' '.join(self.subtopics)
+
+    security.declareProtected(view, 'resource_country')
+    def resource_country(self):
+        return self.country
 
     #override handlers
     def manage_afterAdd(self, item, container):
