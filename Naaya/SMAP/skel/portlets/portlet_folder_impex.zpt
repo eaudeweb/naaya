@@ -7,9 +7,9 @@
 		<li><a tal:attributes="href string:${here/absolute_url}/export_html?url=${folder_url}"
 			i18n:attributes="title" title="Export data" i18n:translate="">Export content</a></li>
 		<li><a tal:attributes="href string:${here/absolute_url}/update_html?url=${folder_url}"
-			i18n:attributes="title" title="Update on local" i18n:translate="">Update on local</a></li>
+			i18n:attributes="title" title="Update on local" i18n:translate="">Update from remote server</a></li>
 		<li><a tal:attributes="href string:${here/absolute_url}/commit_html?url=${folder_url}"
-			i18n:attributes="title" title="Commit on server" i18n:translate="">Commit on server</a></li>
+			i18n:attributes="title" title="Commit on server" i18n:translate="">Commit to remote server</a></li>
 	</ul>
 </tal:block>
 </tal:block>

@@ -5,9 +5,13 @@
 <tal:block metal:fill-slot="section">
 
 	<h2 i18n:translate="">Export content</h2>
-	<p i18n:translate="">Export content explanation.</p>
+	<p i18n:translate="">
+		Clicking on the <em>Export</em> button below will generate an <em>Naaya export</em> file with this folder's content
+		(subfolders included if present). Get further details by reading the <a tal:attributes="href string:${here/getSitePath}/about/nyexp">Naaya export
+		schema description</a> document.
+	</p>
 
-	<div><span i18n:translate="">Export content:</span>&nbsp;<a tal:attributes="href string:${here/absolute_url}/exportdata" title="Export data" i18n:attributes="title">export</a></div>
+	<div class="buttons"><a tal:attributes="href string:${here/absolute_url}/exportdata" title="Export folder's content" i18n:attributes="title">Export</a></div>
 </tal:block>
 
 </tal:block>

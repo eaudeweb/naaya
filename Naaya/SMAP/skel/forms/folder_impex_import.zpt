@@ -4,7 +4,16 @@
 
 <tal:block metal:fill-slot="section">
 	<h2 i18n:translate="">Import content</h2>
-	<p i18n:translate="">Import content explanation.</p>
+	<p i18n:translate="">
+		Following the <a tal:attributes="href string:${here/getSitePath}/about/nyexp">Naaya export schema description</a>, it is possible to generate an XML file
+		from your database, which you can then import into this portal.
+		The Naaya export files are XMLs with the <em>.nyexp</em> extension, built according to the schema
+		<a href="http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/Naaya/doc/nyexp.xsd">nyexp.xsd</a>.
+	</p>
+	<p i18n:translate="">
+		This file should contain a hierarchical structure of folders, files, HTML documents, projects, etc.
+		which you can add to this folder by using the import function below.
+	</p>
 	<form method="post" tal:attributes="action string:${here/absolute_url}/folder_import" enctype="multipart/form-data">
 	<table border="0" cellspacing="2" cellpadding="2" width="100%">
 		<tr>
@@ -25,7 +34,7 @@
 				<table border="0" cellspacing="1" cellpadding="0" width="100%">
 					<tr>
 						<td width="1%"><input type="radio" name="source" value="url"></td>
-						<td width="5%" i18n:translate="">Url</td>
+						<td width="5%" i18n:translate="">URL</td>
 						<td width="95%"><input type="text" name="url" size="40" value=""></td>
 					</tr>
 				</table>

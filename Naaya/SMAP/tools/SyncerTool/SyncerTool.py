@@ -68,6 +68,11 @@ class SyncerTool(ZSyncer, utils, session_manager):
         ZSyncer.__dict__['__init__'](self, id, title)
 
     #site actions
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getServerPath')
+    def getServerPath(self):
+        """ """
+        return self.dest_server.replace('/portal_syncronizer', '')
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'saveProperties')
     def saveProperties(self, dest_server='', username='', password='', zope_syncable=None, ny_syncable=None, REQUEST=None):
         """ """
@@ -81,7 +86,8 @@ class SyncerTool(ZSyncer, utils, session_manager):
         #save the properties in ZSyncer instance
         full_domain = ''
         if self.dest_server and self.username and self.password:
-            dest_server = self.dest_server.replace('http://', '')
+            dest_server = '%s/portal_syncronizer' % self.dest_server
+            dest_server = dest_server.replace('http://', '')
             full_domain = ['http://%s:%s@%s' % (self.username, self.password, dest_server)]
         self.manage_editProperties({'title':self.title, 'dest_servers':full_domain, 'connection_type':'ConnectionMgr', 'use_relative_paths':1, \
                                     'filterObjects':1, 'syncable':self.zope_syncable, 'add_syncable':self.ny_syncable})
@@ -104,7 +110,8 @@ class SyncerTool(ZSyncer, utils, session_manager):
         #save the properties in ZSyncer instance
         full_domain = ''
         if self.dest_server and self.username and self.password:
-            dest_server = self.dest_server.replace('http://', '')
+            dest_server = '%s/portal_syncronizer' % self.dest_server
+            dest_server = dest_server.replace('http://', '')
             full_domain = ['http://%s:%s@%s' % (self.username, self.password, dest_server)]
         self.manage_editProperties({'title':self.title, 'dest_servers':full_domain, 'connection_type':'ConnectionMgr', 'use_relative_paths':1, \
                                     'filterObjects':1, 'syncable':self.zope_syncable, 'add_syncable':self.ny_syncable})
@@ -115,38 +122,46 @@ class SyncerTool(ZSyncer, utils, session_manager):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'pushToRemote')
     def pushToRemote(self, folder='', REQUEST=None):
         """ Push each folder to destination server. """
-        folder_path = '%s/%s' % (self.getSitePath(1), folder)
+        folder_path = '%s/%s' % (self.getSitePath(), folder)
+        folder_rel_path = '%s/%s' % (self.getSitePath(1), folder)
         folder_obj = self.unrestrictedTraverse(folder_path, None)
         if folder:
             object_paths = self.utConvertToList(folder)
-            msgs = self.manage_pushToRemote(object_paths, msgs=None)
-            msg = msgs[0] #take the first message, because only one folder is syncronized
-            if msg.status == 200:
-                self.setSessionInfo([MSG_SYNCER_SUCCESS])
-            else:
+            try:
+                msgs = self.manage_pushToRemote(object_paths, msgs=None)
+                msg = msgs[0] #take the first message, because only one folder is syncronized
+                if msg.status == 200:
+                    self.setSessionInfo([MSG_SYNCER_SUCCESS])
+                else:
+                    self.setSessionErrors([MSG_SYNCER_FAILED])
+            except:
                 self.setSessionErrors([MSG_SYNCER_FAILED])
         else:
             self.setSessionErrors([MSG_SYNCER_FAILED])
         if REQUEST:
-            REQUEST.RESPONSE.redirect('%s/commit_html?url=%s' % (folder_path, folder))
+            REQUEST.RESPONSE.redirect('%s/commit_html?url=%s' % (folder_path, folder_rel_path))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getFromRemote')
     def getFromRemote(self, folder='', REQUEST=None):
         """ Push each folder to destination server. """
-        folder_path = '%s/%s' % (self.getSitePath(1), folder)
+        folder_path = '%s/%s' % (self.getSitePath(), folder)
+        folder_rel_path = '%s/%s' % (self.getSitePath(1), folder)
         folder_obj = self.unrestrictedTraverse(folder_path, None)
         if folder:
             object_paths = self.utConvertToList(folder)
-            msgs = self.manage_pullFromRemote(object_paths, msgs=None)
-            msg = msgs[0] #take the first message, because only one folder is syncronized
-            if msg.status == 200:
-                self.setSessionInfo([MSG_SYNCER_SUCCESS])
-            else:
+            try:
+                msgs = self.manage_pullFromRemote(object_paths, msgs=None)
+                msg = msgs[0] #take the first message, because only one folder is syncronized
+                if msg.status == 200:
+                    self.setSessionInfo([MSG_SYNCER_SUCCESS])
+                else:
+                    self.setSessionErrors([MSG_SYNCER_FAILED])
+            except:
                 self.setSessionErrors([MSG_SYNCER_FAILED])
         else:
             self.setSessionErrors([MSG_SYNCER_FAILED])
         if REQUEST:
-            REQUEST.RESPONSE.redirect('%s/update_html?url=%s' % (folder_path, folder))
+            REQUEST.RESPONSE.redirect('%s/update_html?url=%s' % (folder_path, folder_rel_path))
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_properties_html')
