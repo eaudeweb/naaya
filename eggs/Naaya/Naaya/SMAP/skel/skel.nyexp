@@ -280,12 +280,12 @@ function changeProject()
 					 width="12" height="12" alt=""/>
 				</a>
 				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=title${rkey_param};
-									title python:test(skey=='title', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by title
+									title python:test(skey=='title', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by Title
 				<img tal:attributes="src python:test(skey=='title', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
 					 width="12" height="12" alt=""/>
 				</a>
 				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=releasedate${rkey_param};
-									title python:test(skey=='releasedate', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by date
+									title python:test(skey=='releasedate', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by Date
 				<img tal:attributes="src python:test(skey=='releasedate', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
 					 width="12" height="12" alt=""/>
 				</a></span></center>
