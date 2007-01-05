@@ -38,9 +38,9 @@
 	/* folder index styles */
 	#admin_this_folder{
 		background-color: #E7F0F7; 
-		height: 18px; /*1.375em;*/
+		height: 2em;
 		padding: 5px 2px 7px 5px;
-		border-bottom: 4px solid #E7F0F7;
+		border-bottom: 2px solid #E7F0F7;
 		margin-bottom: 0;
 		color: #01669E;
 		font-size: 100%;  /*"11px;"*/
@@ -88,10 +88,10 @@
 
 #toolbar{
 	padding: 7px 0px 10px 0px;
-	padding-left: 0.6em;
-	margin-top:5px;
-/*	background-color: #E7F0F7;*/
+	padding-left: 8px;
+	margin-top: 0.4em;
 	background-color: #E7F0F7;
+	height: 1.2em;
 	}
 
 	#toolbar a{
