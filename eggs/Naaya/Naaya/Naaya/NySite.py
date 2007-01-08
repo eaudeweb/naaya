@@ -747,12 +747,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declarePublic('get_containers_metatypes')
     def get_containers_metatypes(self):
         #this method is used to display local roles, called from getUserRoles methods
-        return [METATYPE_FOLDER, 'Folder']
+        return [METATYPE_FOLDER, 'Folder', 'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic']
 
     security.declarePublic('get_naaya_containers_metatypes')
     def get_naaya_containers_metatypes(self):
         """ this method is used to display local roles, called from getUserRoles methods """
-        return [METATYPE_FOLDER]
+        return [METATYPE_FOLDER, 'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic']
 
     #layer over selection lists
     security.declarePublic('getEventTypesList')
