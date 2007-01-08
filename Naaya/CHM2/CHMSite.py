@@ -156,14 +156,6 @@ class CHMSite(NySite):
     def getNewsArchive(self): return self._getOb('news', None)
     def getEventsArchive(self): return self._getOb('events', None)
 
-    def get_containers_metatypes(self):
-        #this method is used to display local roles, called from getUserRoles methods
-        return [METATYPE_FOLDER, 'Folder', METATYPE_NYPHOTOFOLDER]
-
-    def get_naaya_containers_metatypes(self):
-        #this method is used to display local roles, called from getUserRoles methods
-        return [METATYPE_FOLDER, METATYPE_NYPHOTOFOLDER]
-
     #workgroups API
     def getWorkgroupsList(self):
         """
