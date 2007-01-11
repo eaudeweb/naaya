@@ -227,7 +227,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         return self.export_this()
 
     security.declarePublic('export_this')
-    def export_this(self):
+    def export_this(self, folderish=0):
         r = []
         ra = r.append
         ra(self.export_this_tag())
@@ -236,10 +236,11 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
             l_index = self._getOb('index', None)
             if l_index is not None:
                 ra('<![CDATA[%s]]>' % l_index.document_src())
-        for x in self.getObjects():
-            ra(x.export_this())
+        if not folderish:
+            for x in self.getObjects():
+                ra(x.export_this())
         for x in self.getFolders():
-            ra(x.export_this())
+            ra(x.export_this(folderish))
         ra('</ob>')
         return ''.join(r)
 
