@@ -305,7 +305,7 @@ class catalog_utils:
         """ search catalog """
         catalog = self.getGlossaryCatalog()
         query = self.StrEscapeForSearch(query)
-        command= "catalog(meta_type=meta_type, %s=query, definition=definition)" % language
+        command= "catalog(meta_type=meta_type, %s=query, definition=definition)" % self.cookCatalogIndex(language)
         results = eval(command)
         res = self.__get_objects(results)
         return self.utEliminateDuplicates(res)[:int(size)]
@@ -321,3 +321,7 @@ class catalog_utils:
     def StrEscapeForSearch(self, p_string):
         """ escape some characters"""
         return re.sub('[(\"{})\[\]]', '', p_string)
+
+    def cookCatalogIndex(self, index_name):
+        """ cook catalog index name """
+        return index_name.replace('/', '_').replace('-', '_').replace(' ', '_')
