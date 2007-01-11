@@ -39,8 +39,8 @@ from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
 from managers.utils                                 import *
 from tools.SyncerTool.SyncerTool                    import manage_addSyncerTool
 from tools.constants                                import *
-
 from Products.NaayaCore.managers.xmlrpc_tool        import XMLRPCConnector
+
 
 manage_addSMAPSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addSMAPSite(self, id='', title='', lang=None, REQUEST=None):
@@ -117,10 +117,7 @@ class SMAPSite(NySite, ProfileMeta):
     security.declarePrivate('createSMAPPortalTools')
     def createSMAPPortalTools(self):
         """ """
-        manage_addSyncerTool(self, dest_server='', \
-                                    username='', password='', zope_syncable=[METATYPE_FOLDER, 'Folder', 'Image', 'File'], \
-                                    ny_syncable=[METATYPE_FOLDER, METATYPE_NYSMAPPROJECT, METATYPE_NYNEWS, \
-                                    METATYPE_NYSTORY, METATYPE_NYURL, METATYPE_NYEXFILE, METATYPE_NYDOCUMENT, METATYPE_NYPOINTER, METATYPE_NYMEDIAFILE, METATYPE_NYEVENT, METATYPE_NYSMAPEXPERT])
+        manage_addSyncerTool(self, dest_server='', username='', password='')
 
 ###
 # Administration pages
@@ -379,5 +376,19 @@ class SMAPSite(NySite, ProfileMeta):
         """ """
         context = self.unrestrictedTraverse(url, None)
         if context: return self.getFormsTool().getContent({'here': context}, 'folder_impex_commit')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getFolderishExportedData')
+    def getFolderishExportedData(self):
+        """ """
+        r = []
+        ra = r.append
+        ra('<?xml version="1.0" encoding="utf-8"?>')
+        ra('<export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/Naaya/doc/nyexp.xsd">')
+        for x in self.getSite().get_containers():
+            ra(x.export_this(folderish=1))
+        ra('</export>')
+        self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/xml')
+        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=%s.nyexp' % self.id)
+        return ''.join(r)
 
 InitializeClass(SMAPSite)

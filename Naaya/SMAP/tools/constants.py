@@ -23,3 +23,8 @@ TITLE_SYNCERTOOL = 'Portal Syncronizer'
 
 MSG_SYNCER_SUCCESS = 'Folder syncronized succesfully with the SMAP server'
 MSG_SYNCER_FAILED = 'Unable to syncronize this folder with the SMAP server'
+
+SYNC_ZOPE = ['Naaya Folder', 'Folder', 'Image', 'File', 'Page Template']
+SYNC_NY = ['Naaya Folder', 'Naaya SMAP Project', 'Naaya News', 'Naaya Story', 'Naaya URL', \
+           'Naaya Extended File', 'Naaya Document', 'Naaya Pointer', 'Naaya Media File', \
+           'Naaya Event', 'Naaya SMAP Expert']
