@@ -2341,8 +2341,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         return context.checkPermission(PERMISSION_ADD_FOLDER)
 
     def list_glossaries(self):
-        #this method *must* be overwritten
-        return []
+        #this method can be overwritten
+        return self.objectValues(['Naaya Glossary', 'Naaya Thesaurus'])
 
     def get_keywords_glossary(self):
         try: return self._getOb(self.keywords_glossary)
