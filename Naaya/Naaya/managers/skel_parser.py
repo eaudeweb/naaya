@@ -274,6 +274,11 @@ class others_struct:
         self.robots = None
         self.images = None
         self.submit_unapproved = None
+        self.nyexp_schema = None
+
+class nyexp_schema_struct:
+    def __init__(self, url):
+        self.url = url
 
 class saxstack_struct:
     def __init__(self, name='', obj=None):
@@ -453,6 +458,10 @@ class skel_handler(ContentHandler):
             pass
         elif name == 'submit_unapproved':
             pass
+        elif name == 'nyexp_schema':
+            obj = nyexp_schema_struct(attrs['url'].encode('utf-8'))
+            stackObj = saxstack_struct('nyexp_schema', obj)
+            self.stack.append(stackObj)
         elif attrs.has_key('lang'):
             #multilingual property
             name = name.encode('utf-8')
@@ -584,6 +593,9 @@ class skel_handler(ContentHandler):
             self.stack[-1].obj.images = 1
         elif name == 'submit_unapproved':
             self.stack[-1].obj.submit_unapproved = 1
+        elif name == 'nyexp_schema':
+            self.stack[-2].obj.nyexp_schema = self.stack[-1].obj
+            self.stack.pop()
         elif isinstance(self.stack[-1].obj, property_struct):
             #multilingual property
             name, lang = self.stack[-1].obj.name, self.stack[-1].obj.lang

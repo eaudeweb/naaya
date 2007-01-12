@@ -57,3 +57,5 @@ MESSAGE_ROLEADDED = 'Role(s) successfully granted to user %s'
 MESSAGE_ROLEREVOKED = 'Role(s) successfully revoked to selected user(s)'
 MESSAGE_USERADDED = 'User successfully added. Now you can assign a role to this account.'
 MESSAGE_USERMODIFIED = 'User\'s credentials saved'
+
+NYEXP_SCHEMA_LOCATION = 'http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaDocuments/schemas/naaya/naaya-nyexp-1.0.0.xsd'

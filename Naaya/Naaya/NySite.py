@@ -164,6 +164,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.show_releasedate = 1
         self.submit_unapproved = 0
         self.rename_id = 0
+        self.nyexp_schema = ''
         contenttypes_tool.__dict__['__init__'](self)
         CookieCrumbler.__dict__['__init__'](self)
         catalog_tool.__dict__['__init__'](self)
@@ -178,6 +179,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.folder_customized_feedback = {}
         if not hasattr(self, 'rename_id'):
             self.rename_id = 0
+        if not hasattr(self, 'nyexp_schema'):
+            self.nyexp_schema = NYEXP_SCHEMA_LOCATION
 
     security.declarePrivate('createPortalTools')
     def createPortalTools(self):
@@ -414,6 +417,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                         image_ob = self._getOb('favicon.ico')
                     image_ob.update_data(data=content)
                     image_ob._p_changed=1
+                if skel_handler.root.others.nyexp_schema is not None:
+                    print skel_handler.root.others.nyexp_schema.url
                 if skel_handler.root.others.images is not None:
                     self.manage_addFolder(ID_IMAGESFOLDER, 'Images')
                 if skel_handler.root.others.submit_unapproved is not None:
