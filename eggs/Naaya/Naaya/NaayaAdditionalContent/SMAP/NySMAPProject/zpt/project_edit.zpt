@@ -67,7 +67,7 @@ function fSet(ctrl, value)
 		<span i18n:translate="" tal:omit-tag="">Country(ies)</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'country')" class="mandatory_field"> *</span>
 	</label>
-	<p i18n:translate=""><strong>Tip:</strong> press the <em>Clrt</em> key to select more than one.</p>
+	<p i18n:translate=""><strong>Tip:</strong> press the <em>Ctrl</em> key to select more than one.</p>
 	<select name="country" id="country" multiple="multiple" size="5">
 		<option tal:repeat="c countries"
 			tal:attributes="value c/id; selected python:c.id in here.getSession('country', here.getVersionProperty('country'))" tal:content="c/title"  i18n:translate="">country</option>
@@ -89,7 +89,7 @@ function fSet(ctrl, value)
 		<span i18n:translate="" tal:omit-tag="">Focus(es) of the project</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'focus')" class="mandatory_field"> *</span>
 	</label>
-	<p i18n:translate=""><strong>Tip:</strong> press the <em>Clrt</em> key to select more than one.</p>
+	<p i18n:translate=""><strong>Tip:</strong> press the <em>Ctrl</em> key to select more than one.</p>
 	<select name="focus" id="focus" multiple="multiple" size="5">
 		<option tal:repeat="fc focuses"
 			tal:attributes="value fc/id; selected python:fc.id in here.getSession('focus', here.getVersionProperty('focus'))" tal:content="fc/title"  i18n:translate="">focus</option>
