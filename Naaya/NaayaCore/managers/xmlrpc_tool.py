@@ -36,7 +36,7 @@ class BasicAuthTransport(xmlrpclib.Transport):
         if self.has_ssl:
             if host.startswith("https:"): h = httplib.HTTPSConnection(host)
             else: h = httplib.HTTPConnection(host)
-        else: h = httplib.HTTP(host)        
+        else: h = httplib.HTTP(host)
 
         h.putrequest("POST", handler)
 
@@ -62,7 +62,7 @@ class BasicAuthTransport(xmlrpclib.Transport):
             response = h.getresponse()
             if response.status != 200:
                 raise xmlrpclib.ProtocolError(host + handler,
-                                              response.status, 
+                                              response.status,
                                               response.reason,
                                               response.msg)
             file = response.fp
@@ -73,7 +73,7 @@ class BasicAuthTransport(xmlrpclib.Transport):
 
             file = h.getfile()
 
-        return self.parse_response(file) 
+        return self.parse_response(file)
 
 class ProxiedTransport(xmlrpclib.Transport):
 
