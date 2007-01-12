@@ -68,7 +68,7 @@
 		<span i18n:translate="" tal:omit-tag="">Sub-topics of expertise</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'subtopics')" class="mandatory_field"> *</span>
 	</label>
-	<p i18n:translate=""><strong>Tip:</strong> press the <em>Clrt</em> key to select more than one.</p>
+	<p i18n:translate=""><strong>Tip:</strong> press the <em>Ctrl</em> key to select more than one.</p>
 	<select name="subtopics" id="subtopics" multiple="multiple" size="5">
 		<option tal:repeat="subtopic subtopics"
 			tal:attributes="value subtopic/id; selected python:subtopic.id in here.getSession('subtopics', '')" tal:content="subtopic/title" i18n:translate="" >subtopic</option>
