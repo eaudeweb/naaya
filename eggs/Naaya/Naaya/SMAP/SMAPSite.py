@@ -383,7 +383,7 @@ class SMAPSite(NySite, ProfileMeta):
         r = []
         ra = r.append
         ra('<?xml version="1.0" encoding="utf-8"?>')
-        ra('<export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/Naaya/doc/nyexp.xsd">')
+        ra('<export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="%s">' % self.nyexp_schema)
         for x in self.getSite().get_containers():
             ra(x.export_this(folderish=1))
         ra('</export>')
