@@ -218,5 +218,6 @@
 		<favicon />
 		<robots />
 		<images />
+		<nyexp_schema url="http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaDocuments/schemas/naaya/naaya-nyexp-1.0.0.xsd"/>
 	</others>
 </skel>
