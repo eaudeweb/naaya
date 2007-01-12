@@ -5,10 +5,10 @@
 <tal:block metal:fill-slot="section">
 	<h2 i18n:translate="">Import content</h2>
 	<p i18n:translate="">
-		Following the <a tal:attributes="href string:${here/getSitePath}/about/nyexp">Naaya export schema description</a>, it is possible to generate an XML file
+		Following the <a href="http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaDocuments/schemas/smap/smap-nyexp.doc">Naaya export schema description</a>, it is possible to generate an XML file
 		from your database, which you can then import into this portal.
 		The Naaya export files are XMLs with the <em>.nyexp</em> extension, built according to the schema
-		<a href="http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/Naaya/doc/nyexp.xsd">nyexp.xsd</a>.
+		<a tal:attributes="href string:${here/nyexp_schema}">nyexp.xsd</a>.
 	</p>
 	<p i18n:translate="">
 		This file should contain a hierarchical structure of folders, files, HTML documents, projects, etc.

@@ -198,5 +198,8 @@
 	<security>
 		<grouppermissions name="Add content" description="Create Naaya objects. Editing, publishing and deleting them are not granted as a part of thisprivilege."
 			permissions="Naaya - Access administrative area,Naaya - Add Naaya Folder objects,Naaya - Add Naaya Document objects,Naaya - Add Naaya Event objects,Naaya - Add Naaya File objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Pointer objects,Naaya - Add Naaya Story objects,Naaya - Add Naaya URL objects,Naaya - Add Naaya SMAP Expert objects,Naaya - Add Naaya SMAP Project objects,Naaya - Add Naaya Photo,Naaya - Add Naaya Media File objects,Take ownership"/>
-S	</security>
+	</security>
+	<others>
+		<nyexp_schema url="http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaDocuments/schemas/smap/naaya-smap-nyexp-1.0.0.xsd"/>
+	</others>
 </skel>
