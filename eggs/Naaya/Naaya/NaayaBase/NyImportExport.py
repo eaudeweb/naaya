@@ -86,7 +86,7 @@ class NyImportExport:
         r = []
         ra = r.append
         ra('<?xml version="1.0" encoding="utf-8"?>')
-        ra('<export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/Naaya/doc/nyexp.xsd">')
+        ra('<export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="%s">' % self.nyexp_schema)
         ra(self.exportdata_custom())
         ra('</export>')
         self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/xml')
