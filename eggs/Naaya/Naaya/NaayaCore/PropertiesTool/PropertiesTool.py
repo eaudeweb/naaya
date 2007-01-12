@@ -162,6 +162,16 @@ class PropertiesTool(SimpleItem, utils, search_tool):
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_contenttypes_html?save=ok')
 
+    security.declareProtected(view_management_screens, 'manageNyexpSchema')
+    def manageNyexpSchema(self, nyexp_schema, REQUEST=None):
+        """
+        Set new NYEXP schema location.
+        """
+        site = self.getSite()
+        site.nyexp_schema = nyexp_schema
+        site._p_changed = 1
+        if REQUEST: REQUEST.RESPONSE.redirect('manage_settings_html?save=ok')
+
     security.declareProtected(view_management_screens, 'manageSubobjects')
     def manageSubobjects(self, subobjects=None, ny_subobjects=None, REQUEST=None):
         """
