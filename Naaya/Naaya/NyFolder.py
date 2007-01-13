@@ -953,6 +953,20 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         self.setSessionInfo(r)
         return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
+    security.declareProtected(view_management_screens, 'set_subobject')
+    def set_subobject(self, subobject, operation):
+        """
+        adds or substracts a subobject metatype in a folder
+        """
+        if subobject in self.getProductsMetaTypes() or subobject in self.get_meta_types(1):
+            if operation in ['a', 'add']:
+                self.folder_meta_types.append(subobject)
+                self._p_changed=1
+            elif operation in ['d', 'del', 'delete']:
+                self.folder_meta_types.remove(subobject)
+                self.p_changed=1
+
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/folder_manage_edit', globals())
