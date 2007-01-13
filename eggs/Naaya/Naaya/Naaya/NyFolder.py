@@ -27,7 +27,7 @@ from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from AccessControl import ClassSecurityInfo, Unauthorized
-from AccessControl.Permissions import view_management_screens, view
+from AccessControl.Permissions import view_management_screens, view, manage_users
 import Products
 
 #Product imports
@@ -434,6 +434,11 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
     def getSubfoldersWithPendingItems(self):
         #returns a list with all subfolders that contains pending(draft) objects
         return filter(lambda x: x.hasPendingContent(), self.getCatalogedObjects([METATYPE_FOLDER], 0, path='/'.join(self.getPhysicalPath())))
+
+    security.declareProtected(manage_users, 'admin_getusers')
+    def admin_getusers(self):
+        """ """
+        return self.getAuthenticationTool().getUserNames()
 
     def getUsersRoles(self):
         """
