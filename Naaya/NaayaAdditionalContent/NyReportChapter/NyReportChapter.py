@@ -259,6 +259,13 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
     def hasQuestionnaires(self):
         return len(self.getQuestionnaires()) > 0
 
+    def getRateValue(self, qnr, rate):
+        """ """
+        try:
+            return qnr.ratings[rate.title]
+        except:
+            return None
+
     def getQuestionIds(self):
         obs = self.objectValues(METATYPE_NYREPORTQUESTION)
         obs = self.utSortObjsListByAttr(obs,'sortorder',0)
@@ -449,6 +456,16 @@ class NyReportChapter(NyAttributes, reportchapter_item, NyContainer, NyEpozToolb
         qnr_ob = self.unrestrictedTraverse(qnr, '')
         if qnr_ob:
             return self.getFormsTool().getContent({'here': self, 'qnr': qnr_ob}, 'reportquestionnaire_edit')
+        else:
+            self.setSessionErrors(['Bad questionnaire ID.'])
+            REQUEST.RESPONSE.redirect('reportquestionnaires_html')
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'questionnaire_rate_html')
+    def questionnaire_rate_html(self, qnr='', REQUEST=None, RESPONSE=None):
+        """ """
+        qnr_ob = self.unrestrictedTraverse(qnr, '')
+        if qnr_ob:
+            return self.getFormsTool().getContent({'here': self, 'qnr': qnr_ob}, 'reportquestionnaire_rate')
         else:
             self.setSessionErrors(['Bad questionnaire ID.'])
             REQUEST.RESPONSE.redirect('reportquestionnaires_html')
