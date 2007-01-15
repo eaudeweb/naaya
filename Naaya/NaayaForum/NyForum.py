@@ -147,6 +147,23 @@ class NyForum(NyForumBase, Folder, utils):
         """
         return self.checkPermission(view)
 
+    def has_restrictions(self):
+        """
+        Indicates if this folder has restrictions for the current user.
+        """
+        return not self.acquiredRolesAreUsedBy(view)
+
+    def get_roles_with_access(self):
+        """
+        Returns a list of roles that have access to this forum.
+        """
+        r = []
+        ra = r.append
+        for x in self.rolesOfPermission(view):
+            if x['selected'] and x['name'] not in ['Administrator', 'Anonymous', 'Manager', 'Owner']:
+                ra(x['name'])
+        return r
+
     security.declarePrivate('notifyOnMessage')
     def notifyOnMessage(self, msg):
         """
