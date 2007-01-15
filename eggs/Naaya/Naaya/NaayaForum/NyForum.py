@@ -168,6 +168,12 @@ class NyForum(NyForumBase, Folder, utils):
     def getPublishedFolders(self):
         return self.objectValues(METATYPE_NYFORUMTOPIC)
 
+    def getPublishedObjects(self): return []
+    def getObjects(self): return self.getPublishedFolders()
+    def getPendingFolders(self): return []
+    def getFolders(self): return self.getPublishedFolders()
+    def hasContent(self): return (len(self.getObjects()) > 0)
+
     security.declarePrivate('notifyOnMessage')
     def notifyOnMessage(self, msg):
         """
