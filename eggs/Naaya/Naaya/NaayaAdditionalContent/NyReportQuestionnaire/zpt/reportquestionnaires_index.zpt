@@ -10,14 +10,15 @@ function setupWin(url, theWidth, theHeight)
 }
 </script>
 
+<small class="auto_trans_legend" >
+	<div style="float: left; padding: 2px 8px 0px 8px; line-height: 30px; background-color: #0061A2; color: white; font-size: 320%; font-weight: bold; margin: 2px 7px 0px 0px; "> ! </div>
+	<span  i18n:translate="">Notice: on this page, the text in yellow has been translated automatically using a translation engine. Please note that the translation might be inaccurate or the meaning of the phrases might be changed. Change the language of the page to see the original text.</span>
+</small>
+	
 <h1><span tal:omit-tag="" i18n:translate="">Questions and answers for </span> <em><a tal:content="here/title_or_id" tal:attributes="href here/absolute_url"/></em></h1>
 	<tal:block	define="questions here/getQuestions;
 						qnrs here/getQuestionnaires;
 						filter_qst python:request.get('question', '')">
-
-	<small class="auto_trans_legend" >
-	<div style="float: left; padding: 2px 8px 0px 8px; line-height: 30px; background-color: #0061A2; color: white; font-size: 320%; font-weight: bold; margin: 2px 7px 0px 0px; "> ! </div>
-	<span  i18n:translate="">Notice: on this page, the text in yellow has been translated automatically using a translation engine. Please note that the translation might be inaccurate or the meaning of the phrases might be changed. Change the language of the page to see the original text.</span></small>
 
 <!--
 	<fieldset><legend i18n:translate="">Filter comments</legend>
@@ -32,30 +33,50 @@ function setupWin(url, theWidth, theHeight)
 		<input type="submit" value="Filter" i18n:attributes="value"/>
 	</form>
 	</fieldset>
--->
 
 	<tal:block condition="filter_qst">
 		<h3 class="filter_qst"><span i18n:translate="">Answers for:</span>
 			<span class="filter_question"><tal:block content="python:here.getQuestionById(filter_qst).title_or_id()" /></span>
 		</h3>
 	</tal:block>
+-->
 
 	<tal:block repeat="q qnrs">
-		<div class="comment_box">
+		<!-- Answer begin -->
+		<div class="comment_box" tal:define="ratings q/getRatings">
+			<!-- Answer title -->
 			<div class="commentbox_title">
-			<span class="commentbox_content">
-			<tal:block tal:condition="perm_edit_object">
-			<span class="buttons"><a tal:attributes="href string:${here/absolute_url}/questionnaire_edit_html?qnr=${q/id}" title="Edit questionnaire"> Edit </a></span>
-			<!--
-			<span class="buttons"><a tal:attributes="href string:${here/absolute_url}/delete_questionnaire?qnr=${q/id}" title="Delete questionnaire"> Delete </a></span>
-			-->
-			</tal:block>
-			<span tal:omit-tag="" i18n:translate="">Questions and answers posted on:</span> <strong tal:content="q/releasedate" />
-			<span i18n:translate="">by:</span>
-				<a href="#" tal:condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'" tal:attributes="onclick string:setupWin('userinfo_html?uid=${q/contributor}', 350, 300);"><strong tal:content="python:test(q.contributor.lower()=='Liivkat'.lower(),'official comments Estonia',q.contributor)" /></a>
-				<strong tal:content="q/contributor" tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'" />
-			</span>
 
+					<!-- rating of answers -->
+					<fieldset style="color: #0061a2; width: 250px; float: right; background: white; padding-bottom: 7px; padding-left: 7px;"><legend>Rating</legend>
+						<div tal:repeat="rating python:ratings.keys()" tal:condition="python:ratings is not None">
+							<div class="progress-container">
+								<div tal:define="val python:ratings[rating]" tal:attributes="style string:width: ${val}%"></div>
+							</div>
+							<span tal:content="rating" />
+						</div>
+					<tal:block condition="python:ratings is None">
+						<span i18n:translate="">Answer not yet rated</span>
+					</tal:block>
+					<div style="margin-top: 12px;" tal:condition="python:perm_edit_object and ratings is not None" class="buttons-rate"><a tal:attributes="href string:${here/absolute_url}/questionnaire_rate_html?qnr=${q/id}" title="Rate questionnaire" i18n:translate=""> Change rating </a></div>
+					<span tal:condition="python:perm_edit_object and ratings is None" class="buttons-rate"><a tal:attributes="href string:${here/absolute_url}/questionnaire_rate_html?qnr=${q/id}" title="Rate questionnaire" i18n:translate=""> Rate answer </a></span>
+					</fieldset>
+					<!-- end rating of answers -->
+
+				<span class="commentbox_content">
+					<tal:block tal:condition="perm_edit_object">
+						<span class="buttons"><a tal:attributes="href string:${here/absolute_url}/questionnaire_edit_html?qnr=${q/id}" title="Edit questionnaire"> Edit </a></span>
+						<!--
+						<span class="buttons"><a tal:attributes="href string:${here/absolute_url}/delete_questionnaire?qnr=${q/id}" title="Delete questionnaire"> Delete </a></span>
+						-->
+					</tal:block>
+					<span tal:omit-tag="" i18n:translate="">Questions and answers posted on:</span> <strong tal:content="q/releasedate" />
+					<span i18n:translate="">by:</span>
+					<a href="#" tal:condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'" tal:attributes="onclick string:setupWin('userinfo_html?uid=${q/contributor}', 350, 300);"><strong tal:content="python:test(q.contributor.lower()=='Liivkat'.lower(),'official comments Estonia',q.contributor)" /></a>
+					<strong tal:content="q/contributor" tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'" />
+
+
+				</span>
 		</div>
 		<hr class="hr_inside_comment" />
 
