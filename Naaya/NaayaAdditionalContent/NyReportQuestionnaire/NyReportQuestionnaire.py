@@ -46,7 +46,7 @@ from Products.NaayaContent.NyReportComment.NyReportComment     import METATYPE_O
 METATYPE_OBJECT = 'Naaya Report Questionnaire'
 LABEL_OBJECT = 'Report Questionnaire'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Report Questionnaire objects'
-OBJECT_FORMS = ['reportquestionnaire_add', 'reportquestionnaire_edit', 'reportquestionnaire_index', 'reportquestionnaires_index']
+OBJECT_FORMS = ['reportquestionnaire_add', 'reportquestionnaire_edit', 'reportquestionnaire_index', 'reportquestionnaires_index', 'reportquestionnaire_rate']
 OBJECT_CONSTRUCTORS = ['manage_addNyReportQuestionnaire_html', 'reportquestionnaire_add_html', 'addNyReportQuestionnaire', 'importNyReportQuestionnaire']
 OBJECT_ADD_FORM = 'reportquestionnaire_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Report Questionnaire type.'
@@ -217,6 +217,16 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
         NyCheckControl.__dict__['__init__'](self)
         NyContainer.__dict__['__init__'](self)
         self.contributor = contributor
+        self.ratings = {}
+        self.votes = 0
+
+    def __setstate__(self,state):
+        """Updates"""
+        NyReportQuestionnaire.inheritedAttribute("__setstate__") (self, state)
+        if not hasattr(self, 'ratings'):
+            self.ratings = {}
+        if not hasattr(self, 'votes'):
+            self.votes = 0
 
     def __getattr__(self, name):
         """
@@ -392,6 +402,36 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
                 REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
             else:
                 raise Exception, '%s' % ', '.join(r)
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveRate')
+    def saveRate(self, REQUEST=None):
+        """ """
+        stat_tool = self.getStatisticsTool()
+        rate_lists = stat_tool.getRateLists()
+        for r in rate_lists:
+            if REQUEST.has_key(r.id):
+                self.ratings[r.title] = REQUEST[r.id]
+                self.votes += 1
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/reportquestionnaires_html' % self.aq_parent.absolute_url())
+
+    security.declareProtected(view, 'getRatings')
+    def getRatings(self):
+        output = {}
+        stat_tool = self.getStatisticsTool()
+        rate_lists = stat_tool.getRateLists()
+        if self.votes == 0:
+            return None
+        else:
+            for r in rate_lists:
+                procent = 0
+                if r.title in self.ratings.keys():
+                    buf = [o.id for o in r.get_list()]
+                    val = buf.index(self.ratings[r.title]) + 1
+                    procent = val*100/len(r.get_list())
+                output[r.title] = procent
+            return output
 
     security.declareProtected(view, 'process_nyfile_upload')
     def process_nyfile_upload(self, file='', file_title='', lang='', REQUEST=None):
