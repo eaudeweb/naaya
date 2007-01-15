@@ -258,6 +258,13 @@ class NyReportSection(NyAttributes, reportsection_item, NyContainer, NyEpozToolb
     def getQuestionById(self,p_id):
         return self._getOb(p_id)
 
+    def getRateValue(self, qnr, rate):
+        """ """
+        try:
+            return qnr.ratings[rate.title]
+        except:
+            return None
+
     def getNavigationInfo(self):
         l_up = self.getParentNode()
         siblings = l_up.getSections()
@@ -430,6 +437,16 @@ class NyReportSection(NyAttributes, reportsection_item, NyContainer, NyEpozToolb
         qnr_ob = self.unrestrictedTraverse(qnr, '')
         if qnr_ob:
             return self.getFormsTool().getContent({'here': self, 'qnr': qnr_ob}, 'reportquestionnaire_edit')
+        else:
+            self.setSessionErrors(['Bad questionnaire ID.'])
+            REQUEST.RESPONSE.redirect('reportquestionnaires_html')
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'questionnaire_rate_html')
+    def questionnaire_rate_html(self, qnr='', REQUEST=None, RESPONSE=None):
+        """ """
+        qnr_ob = self.unrestrictedTraverse(qnr, '')
+        if qnr_ob:
+            return self.getFormsTool().getContent({'here': self, 'qnr': qnr_ob}, 'reportquestionnaire_rate')
         else:
             self.setSessionErrors(['Bad questionnaire ID.'])
             REQUEST.RESPONSE.redirect('reportquestionnaires_html')
