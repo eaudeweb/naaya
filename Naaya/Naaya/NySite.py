@@ -887,18 +887,35 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def getMaintainersEmails(self, node):
         #returns a list of emails for given folder until the site object
         l_emails = []
+        auth_tool = self.getAuthenticationTool()
         if node is self: return l_emails
         else:
             while 1:
                 if node == self:
-                    if len(l_emails) == 0:
-                        l_emails.append(node.administrator_email)
+                    l_emails.append(node.administrator_email)
                     break
                 if hasattr(node, 'maintainer_email'):
                     if node.maintainer_email != '' and node.maintainer_email not in l_emails:
                         l_emails.append(node.maintainer_email)
+                admins = self.get_administrator(node)
+
+                l_emails.extend(auth_tool.getUsersEmails(admins))
                 node = node.getParentNode()
         return l_emails
+
+    security.declarePrivate('get_administrators')
+    def get_administrator(self, node):
+        l_users = []
+        for roles_tuple in node.get_local_roles():
+            roles = roles_tuple[1]
+            user = roles_tuple[0]
+            if 'Administrator' in list(roles) and user not in l_users:
+                l_users.append(user)
+#        if node == self:
+#            for user in self.getAuthenticationTool().getUsers():
+#                if user.allowed(node, ['Administrator']):
+#                    l_users.append(user)
+        return l_users
 
     def notifyFolderMaintainer(self, p_folder, p_object):
         """
