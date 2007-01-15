@@ -38,6 +38,8 @@ from Products.NaayaCore.managers.utils              import utils
 from Products.NaayaCore.managers.utils              import file_utils, batch_utils
 from Products.NaayaCore.managers.search_tool        import ProxiedTransport
 from Products.NaayaCalendar.EventCalendar           import manage_addEventCalendar
+from tools.StatisticsTool.StatisticsTool            import manage_addStatisticsTool
+from tools.constants import * 
 
 manage_addReportSite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addReportSite(self, id='', title='', lang=None, REQUEST=None):
@@ -48,6 +50,7 @@ def manage_addReportSite(self, id='', title='', lang=None, REQUEST=None):
     portal_uid = '%s_%s' % (PREFIX_SITE, ut.utGenerateUID())
     self._setObject(id, ReportSite(id, portal_uid, title, lang))
     self._getOb(id).loadDefaultData()
+    self._getOb(id).createPortalTools()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -68,6 +71,11 @@ class ReportSite(NySite, ProfileMeta):
         self.consultation_end = self.utConvertStringToDateTimeObj('1/12/2006')
         NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
 
+    security.declarePrivate('createPortalTools')
+    def createPortalTools(self):
+        """ """
+        manage_addStatisticsTool(self)
+
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
         """ """
@@ -85,6 +93,9 @@ class ReportSite(NySite, ProfileMeta):
         #set default main topics
         try:    self.getPropertiesTool().manageMainTopics(['info', 'reports'])
         except: pass
+
+    security.declarePublic('getStatisticsTool')
+    def getStatisticsTool(self): return self._getOb(ID_STATISTICSTOOL)
 
 #####################################################################################
 # Admin properties #
@@ -194,6 +205,77 @@ class ReportSite(NySite, ProfileMeta):
     def admin_references_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_references')
+
+
+#####################################################################################
+# Statistical area #
+####################
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteratelist')
+    def admin_deleteratelist(self, ids=[], REQUEST=None):
+        """ """
+        self.getStatisticsTool().manage_delObjects(self.utConvertToList(ids))
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_reflists_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addratelist')
+    def admin_addratelist(self, id='', title='', description='', REQUEST=None):
+        """ """
+        self.getStatisticsTool().manage_addRateList(id, title, description)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_ratelists_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editratelist')
+    def admin_editratelist(self, id='', title='', description='', REQUEST=None):
+        """ """
+        ob = self.getStatisticsTool().getRateListById(id)
+        if ob is not None:
+            ob.manageProperties(title, description)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_ratelist_html?id=%s' % (self.absolute_url(), id))
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteitems')
+    def admin_deleteitems(self, id='', ids=[], REQUEST=None):
+        """ """
+        ob = self.getStatisticsTool().getRateListById(id)
+        if ob is not None:
+            ob.manage_delete_items(self.utConvertToList(ids))
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_ratelist_html?id=%s' % (self.absolute_url(), id))
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_additem')
+    def admin_additem(self, id='', item='', title='', REQUEST=None):
+        """ """
+        ob = self.getStatisticsTool().getRateListById(id)
+        if ob is not None:
+            ob.manage_add_item(item, title)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_ratelist_html?id=%s' % (self.absolute_url(), id))
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edititem')
+    def admin_edititem(self, id='', item='', title='', REQUEST=None):
+        """ """
+        ob = self.getStatisticsTool().getRateListById(id)
+        if ob is not None:
+            ob.manage_update_item(item, title)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_ratelist_html?id=%s' % (self.absolute_url(), id))
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_ratelists_html')
+    def admin_ratelists_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_ratelists')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_ratelist_html')
+    def admin_ratelist_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_ratelist')
 
 #####################################################################################
 # Profiles #

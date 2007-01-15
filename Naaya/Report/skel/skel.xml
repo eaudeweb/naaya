@@ -10,6 +10,8 @@
 		<form id="site_login" title="Portal login"/>
 		<form id="site_pickuser" title="Pick user form"/>
 		<form id="site_userinfo" title="Show user info"/>
+		<form id="site_admin_ratelists" title="Portal administration - lists of rates"/>
+		<form id="site_admin_ratelist" title="Portal administration - list of rates"/>
 	</forms>
 	<emails>
 		<emailtemplate id="email_requestrole" title="Request role"/>
@@ -75,6 +77,7 @@
 		<pluggablecontenttype meta_type="Naaya Report Section" action="1"/>
 	</pluggablecontenttypes>
 	<portlets left="portlet_maincategories" center="">
+		<portlet id="portlet_administration" title="Administration" />
 		<reflist id="affiliation" title="Affiliation" description="">
 			<item id="ngo" title="NGO"/>
 			<item id="academia" title="Academia"/>

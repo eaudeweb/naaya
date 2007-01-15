@@ -25,6 +25,7 @@ from ImageFile import ImageFile
 #Product imports
 from constants import *
 from Products.NaayaCore.constants import *
+from tools.StatisticsTool import StatisticsTool
 import ReportSite
 
 def initialize(context):
@@ -41,6 +42,17 @@ def initialize(context):
         icon = 'www/Site.gif'
         )
 
+    context.registerClass(
+        StatisticsTool.StatisticsTool,
+        permission = PERMISSION_ADD_NAAYACORE_TOOL,
+        constructors = (
+                StatisticsTool.manage_addStatisticsTool,
+                ),
+        icon = 'tools/StatisticsTool/www/StatisticsTool.gif'
+        )
+
 misc_ = {
     'Site.gif':ImageFile('www/Site.gif', globals()),
+    'StatisticsTool.gif':ImageFile('tools/StatisticsTool/www/StatisticsTool.gif', globals()),
+    'RateList.gif':ImageFile('tools/StatisticsTool/www/RateList.gif', globals()),
 }
