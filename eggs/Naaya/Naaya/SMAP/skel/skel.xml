@@ -16,6 +16,9 @@
 		<form id="folder_impex_import" title="Folder import content"/>
 		<form id="folder_impex_update" title="Folder update content"/>
 	</forms>
+	<emails>
+		<emailtemplate id="email_createaccount" title="Create account"/>
+	</emails>
 	<layout default_skin_id="smap" default_scheme_id="blue">
 		<skin id="smap" title="SMAP">
 			<template id="site_header" title="Portal standard HTML header"/>
