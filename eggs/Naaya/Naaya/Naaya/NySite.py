@@ -418,7 +418,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     image_ob.update_data(data=content)
                     image_ob._p_changed=1
                 if skel_handler.root.others.nyexp_schema is not None:
-                    print skel_handler.root.others.nyexp_schema.url
+                    self.nyexp_schema = skel_handler.root.others.nyexp_schema.url
                 if skel_handler.root.others.images is not None:
                     self.manage_addFolder(ID_IMAGESFOLDER, 'Images')
                 if skel_handler.root.others.submit_unapproved is not None:
@@ -1173,7 +1173,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 location_path = obj.absolute_url(1)
                 location_title = obj.title
                 location_maintainer_email = self.getMaintainersEmails(obj)
-        print location_maintainer_email
         #create an account without role
         try:
             self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname,
@@ -1657,6 +1656,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 err = error
             else:
                 msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+            if not err:
+                auth_tool = self.getAuthenticationTool()
+                for name in names:
+                    user_ob = auth_tool.getUser(name)
+                    self.sendCreateAccountEmail('%s %s' % (user_ob.firstname, user_ob.lastname), user_ob.email, user_ob.name, REQUEST)
         if REQUEST:
             if err != '': self.setSessionErrors([err])
             if msg != '': self.setSessionInfo([msg])
@@ -2370,6 +2374,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         except: return None
 
     #sending emails
+    def sendCreateAccountEmail(self, p_name, p_email, p_username, REQUEST):
+        #sends a confirmation email to the newlly created account's owner
+        email_template = self.getEmailTool()._getOb('email_createaccount')
+        l_subject = email_template.title
+        l_content = email_template.body
+        l_content = l_content.replace('@@PORTAL_URL@@', self.portal_url)
+        l_content = l_content.replace('@@PORTAL_TITLE@@', self.site_title)
+        l_content = l_content.replace('@@NAME@@', p_name)
+        l_content = l_content.replace('@@USERNAME@@', p_username)
+        mail_from = self.mail_address_from
+        self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
+
     def sendFeedbackEmail(self, p_to, p_username, p_email, p_comments):
         #sends a feedback email
         email_template = self.getEmailTool()._getOb('email_feedback')
