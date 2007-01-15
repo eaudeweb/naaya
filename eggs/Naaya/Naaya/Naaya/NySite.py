@@ -903,6 +903,25 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 node = node.getParentNode()
         return l_emails
 
+    def getFolderMaintainersEmails(self, node):
+        #returns a list of emails for given folder until the site object
+        l_emails = []
+        auth_tool = self.getAuthenticationTool()
+        if node is self: return l_emails
+        else:
+            while 1:
+                if node == self:
+                    if len(l_emails) == 0:
+                        l_emails.append(node.administrator_email)
+                    break
+                if hasattr(node, 'maintainer_email'):
+                    if node.maintainer_email != '' and node.maintainer_email not in l_emails:
+                        l_emails.append(node.maintainer_email)
+                admins = self.get_administrator(node)
+                l_emails.extend(auth_tool.getUsersEmails(admins))
+                node = node.getParentNode()
+        return l_emails
+
     security.declarePrivate('get_administrators')
     def get_administrator(self, node):
         l_users = []
@@ -923,7 +942,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         uploaded into the B{p_folder}.
         """
         if p_object.submitted==1:
-            l_emails = self.getMaintainersEmails(p_folder)
+            l_emails = self.getFolderMaintainersEmails(p_folder)
             if len(l_emails) > 0:
                 mail_from = self.mail_address_from
                 self.notifyMaintainerEmail(l_emails, mail_from, p_object, p_folder.absolute_url(), '%s/basketofapprovals_html' % p_folder.absolute_url())
