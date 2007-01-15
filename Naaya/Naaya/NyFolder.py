@@ -641,9 +641,12 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
             if err != '': self.setSessionErrors([err])
             if msg != '': self.setSessionInfo([msg])
             if not err:
-                auth_tool = self.getAuthenticationTool()
-                user_ob = auth_tool.getUser(name)
-                self.sendCreateAccountEmail('%s %s' % (user_ob.firstname, user_ob.lastname), user_ob.email, user_ob.name, REQUEST)
+                try: #backwards compatibility
+                    auth_tool = self.getAuthenticationTool()
+                    user_ob = auth_tool.getUser(name)
+                    self.sendCreateAccountEmail('%s %s' % (user_ob.firstname, user_ob.lastname), user_ob.email, user_ob.name, REQUEST)
+                except:
+                    pass
             REQUEST.RESPONSE.redirect('%s/administration_users_html' % self.absolute_url())
 
     def getFolderLogo(self):

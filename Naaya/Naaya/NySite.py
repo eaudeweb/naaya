@@ -1657,10 +1657,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             else:
                 msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
             if not err:
-                auth_tool = self.getAuthenticationTool()
-                for name in names:
-                    user_ob = auth_tool.getUser(name)
-                    self.sendCreateAccountEmail('%s %s' % (user_ob.firstname, user_ob.lastname), user_ob.email, user_ob.name, REQUEST)
+                try:    #backwards compatibility
+                    auth_tool = self.getAuthenticationTool()
+                    for name in names:
+                        user_ob = auth_tool.getUser(name)
+                        self.sendCreateAccountEmail('%s %s' % (user_ob.firstname, user_ob.lastname), user_ob.email, user_ob.name, REQUEST)
+                except:
+                    pass
         if REQUEST:
             if err != '': self.setSessionErrors([err])
             if msg != '': self.setSessionInfo([msg])
