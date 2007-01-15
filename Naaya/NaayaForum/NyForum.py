@@ -164,6 +164,10 @@ class NyForum(NyForumBase, Folder, utils):
                 ra(x['name'])
         return r
 
+    security.declareProtected(view, 'getPublishedFolders')
+    def getPublishedFolders(self):
+        return self.objectValues(METATYPE_NYFORUMTOPIC)
+
     security.declarePrivate('notifyOnMessage')
     def notifyOnMessage(self, msg):
         """
