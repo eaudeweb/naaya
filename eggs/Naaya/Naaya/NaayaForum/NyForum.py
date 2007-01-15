@@ -141,6 +141,12 @@ class NyForum(NyForumBase, Folder, utils):
                     if len(file.read()) <= self.file_max_size or self.file_max_size == 0:
                         ob.manage_addFile(id='', file=file)
 
+    def can_be_seen(self):
+        """
+        Indicates if the current user has access to the current forum.
+        """
+        return self.checkPermission(view)
+
     security.declarePrivate('notifyOnMessage')
     def notifyOnMessage(self, msg):
         """
