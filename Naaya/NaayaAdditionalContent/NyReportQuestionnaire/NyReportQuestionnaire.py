@@ -427,9 +427,12 @@ class NyReportQuestionnaire(NyAttributes, reportquestionnaire_item, NyContainer,
             for r in rate_lists:
                 procent = 0
                 if r.title in self.ratings.keys():
-                    buf = [o.id for o in r.get_list()]
-                    val = buf.index(self.ratings[r.title]) + 1
-                    procent = val*100/len(r.get_list())
+                    try:
+                        buf = [o.id for o in r.get_list()]
+                        val = buf.index(self.ratings[r.title]) + 1
+                        procent = val*100/len(r.get_list())
+                    except:
+                        return None
                 output[r.title] = procent
             return output
 
