@@ -10,8 +10,8 @@
 		<form id="site_login" title="Portal login"/>
 		<form id="site_pickuser" title="Pick user form"/>
 		<form id="site_userinfo" title="Show user info"/>
-		<form id="site_admin_ratelists" title="Portal administration - lists of rates"/>
-		<form id="site_admin_ratelist" title="Portal administration - list of rates"/>
+		<form id="site_admin_ratelists" title="Portal administration - rating categories"/>
+		<form id="site_admin_ratelist" title="Portal administration - ratings category"/>
 	</forms>
 	<emails>
 		<emailtemplate id="email_requestrole" title="Request role"/>

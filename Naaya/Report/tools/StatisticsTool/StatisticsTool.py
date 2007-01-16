@@ -47,18 +47,6 @@ class StatisticsTool(Folder, utils):
 
     meta_type = METATYPE_STATISTICSTOOL
 
-    manage_options = (
-        Folder.manage_options[:1]
-        +
-        (
-            {'label': 'Properties', 'action': 'manage_properties_html'},
-            {'label': 'Center portlets', 'action': 'manage_center_portlets_html'},
-            {'label': 'Right portlets', 'action': 'manage_right_portlets_html'},
-        )
-        +
-        Folder.manage_options[2:]
-    )
-
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, rate_list):
