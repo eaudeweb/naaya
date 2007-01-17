@@ -7,7 +7,7 @@
 	<h2 i18n:translate="">Export content</h2>
 	<p i18n:translate="">
 		Clicking on the <em>Export</em> button below will generate an <em>Naaya export</em> file with this folder's content
-		(subfolders included if present). Get further details by reading the <a tal:attributes="href string:${here/getSitePath}/about/nyexp">Naaya export
+		(subfolders included if present). Get further details by reading the <a href="http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaDocuments/schemas/smap/smap-nyexp.doc">Naaya export
 		schema description</a> document.
 	</p>
 
