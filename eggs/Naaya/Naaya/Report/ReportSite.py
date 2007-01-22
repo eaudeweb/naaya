@@ -691,6 +691,22 @@ class ReportSite(NySite, ProfileMeta):
 
         return True
 
+    security.declareProtected(view_management_screens, 'getUserProfileDetails')
+    def getUserProfileDetails(self):
+        """ """
+        output = []
+        auth_tool = self.getAuthenticationTool()
+        profiles_tool = self.getProfilesTool()
+        users = auth_tool.getUserNames()
+        for u in users:
+            try:
+                profile = profiles_tool.getProfile(u)
+                for she in profile.getSheets():
+                    output.append((u, she.affiliation, she.nationality))
+            except:
+                pass
+        return output
+
 InitializeClass(ReportSite)
 
 
