@@ -270,8 +270,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
             users = []
             users_a = users.append
             for user in self.getUsers():
-                if self.utToUnicode(user.name).find(query)!=-1 or user.email.find(query)!=-1 or \
-                        self.utToUnicode(user.firstname).find(query)!=-1 or self.utToUnicode(user.lastname).find(query)!=-1:
+                if user.name.find(self.utToUtf8(query))!=-1 or user.email.find(self.utToUtf8(query))!=-1 or \
+                        user.firstname.find(self.utToUtf8(query))!=-1 or user.lastname.find(self.utToUtf8(query))!=-1:
                     users_a((user.name, '%s %s' % (user.firstname, user.lastname), user.email))
             if limit and len(users) > int(limit):
                 return 0, []
