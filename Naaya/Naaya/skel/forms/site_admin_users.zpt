@@ -37,7 +37,9 @@
 			<input type="checkbox" name="names" tal:attributes="value python:user_tool.getUserAccount(user_obj)" />
 			<img src="misc_/NaayaCore/User.gif" alt="User" i18n:attributes="alt" />
 		</td>
-		<td><strong><a tal:define="user python:user_tool.getUserAccount(user_obj)" tal:attributes="href string:${site_url}/admin_edituser_html?name=${user}" tal:content="user">username</a></strong></td>
+		<td><strong><a tal:define="user python:user_tool.getUserAccount(user_obj);
+									user_quoted python:here.utUrlEncode(user)"
+						tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}" tal:content="user">username</a></strong></td>
 		<td tal:content="python:user_tool.getUserFirstName(user_obj) + ' ' + user_tool.getUserLastName(user_obj)" />
 		<td tal:content="python:user_tool.getUserEmail(user_obj)" />
 		</tal:block>
