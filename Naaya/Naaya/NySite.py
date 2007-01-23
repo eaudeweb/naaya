@@ -2719,4 +2719,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_userprofile')
 
+    security.declareProtected(view, 'channel_details_html')
+    def channel_details_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'channel_details')
 InitializeClass(NySite)
