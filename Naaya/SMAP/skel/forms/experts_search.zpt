@@ -133,6 +133,17 @@ function changeProject()
 </script>
 
 <div>
+<div id="right_port" tal:define="items python:here.get_right_portlets_locations_objects(here)">
+	<tal:block tal:condition="python:request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator'], here)">
+		<span tal:replace="structure python:here.get_portlet_object('portlet_folder_impex')({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+	</tal:block>
+	<tal:block tal:condition="python:request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator'], here)">
+		<span tal:replace="structure python:here.get_portlet_object('portlet_folder_administration')({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+	</tal:block>
+	<tal:block tal:repeat="item items">
+		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+	</tal:block>
+</div>
 
 <span style="float: right; width: 20%; word-wrap: break-word;">
 <tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
