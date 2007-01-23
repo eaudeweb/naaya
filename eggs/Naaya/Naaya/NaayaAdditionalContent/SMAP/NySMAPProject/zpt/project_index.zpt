@@ -67,7 +67,11 @@
 </tr>
 <tr tal:condition="here/links">
 	<th i18n:translate="">Links</th>
-	<td tal:content="structure python:here.utNewlinetoBr(here.links)" />
+	<td>
+		<tal:block repeat="link python:here.utConvertLinesToList(here.links)">
+			<a tal:attributes="href string:${link}; title string:${link}" tal:content="python:link[:40]" /> <span tal:condition="python:len(link)>40">...</span><br />
+		</tal:block>
+	</td>
 </tr>
 <tr>
 	<th i18n:translate="">Contributor</th>
