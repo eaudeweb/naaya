@@ -95,11 +95,10 @@ class SMAPSite(NySite, ProfileMeta):
         #remove Naaya default content
         self.getLayoutTool().manage_delObjects('skin')
         self.manage_delObjects('info')
-        #TODO: maybe has to be deleted later on
-        #self.getPortletsTool().manage_delObjects('topnav_links')
+        self.getPortletsTool().manage_delObjects('topnav_links')
 
         #set default 'Main topics'
-        try:    self.getPropertiesTool().manageMainTopics(['fol120392', 'fol112686', 'fol034934', 'test1'])
+        try:    self.getPropertiesTool().manageMainTopics(['fol120392', 'fol657555', 'fol112686', 'fol034934', 'test1'])
         except: pass
 
         #set portal index's right portlets
