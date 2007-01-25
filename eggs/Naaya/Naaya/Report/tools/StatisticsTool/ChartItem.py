@@ -379,9 +379,9 @@ class ChartItem(PythonScript):
         """ render XML footer """
         return "</graph>"
 
-    def getData(self):
+    def getData(self, *args):
         """ """
-        return self._exec({'context': self, 'container': self}, {}, {})
+        return self._exec({'context': self, 'container': self}, args, {})
 
 #####################################################################################
 # ZMI actions #
