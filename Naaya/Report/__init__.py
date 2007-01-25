@@ -55,4 +55,11 @@ misc_ = {
     'Site.gif':ImageFile('www/Site.gif', globals()),
     'StatisticsTool.gif':ImageFile('tools/StatisticsTool/www/StatisticsTool.gif', globals()),
     'RateList.gif':ImageFile('tools/StatisticsTool/www/RateList.gif', globals()),
+    'ChartItem.gif':ImageFile('tools/StatisticsTool/www/ChartItem.gif', globals()),
+    'FC2Area3D.swf':ImageFile('tools/StatisticsTool/www/FC2Area3D.swf', globals()),
+    'FC2Bar.swf':ImageFile('tools/StatisticsTool/www/FC2Bar.swf', globals()),
+    'FC2Column.swf':ImageFile('tools/StatisticsTool/www/FC2Column.swf', globals()),
+    'FC2Line.swf':ImageFile('tools/StatisticsTool/www/FC2Line.swf', globals()),
+    'FC2Pie3D.swf':ImageFile('tools/StatisticsTool/www/FC2Pie3D.swf', globals()),
+    'FC2Pipe.swf':ImageFile('tools/StatisticsTool/www/FC2Pipe.swf', globals()),
 }
