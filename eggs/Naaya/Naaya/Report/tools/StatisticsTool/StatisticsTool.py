@@ -29,6 +29,7 @@ from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import utils
 from Products.Report.tools.constants import *
 from RateList import manage_addRateListForm, manage_addRateList
+from ChartItem import manage_addChartItemForm, manage_addChartItem
 
 def manage_addStatisticsTool(self, rate_list=[], REQUEST=None):
     """
@@ -55,15 +56,24 @@ class StatisticsTool(Folder, utils):
         """
         self.id = id
         self.title = title
+        self.colors = CHART_COLORS
 
     meta_types = (
         {'name': METATYPE_RATELIST, 'action': 'manage_addRateListForm'},
+        {'name': METATYPE_CHARTITEM, 'action': 'manage_addChartItemForm'},
         )
     all_meta_types = meta_types
 
     #constructors
     manage_addRateListForm = manage_addRateListForm
     manage_addRateList = manage_addRateList
+
+    manage_addChartItemForm = manage_addChartItemForm
+    manage_addChartItem = manage_addChartItem
+
+    def getChartColors(self):
+        """ return the chart colors list """
+        return self.colors
 
     def getRateLists(self): return self.objectValues(METATYPE_RATELIST)
 

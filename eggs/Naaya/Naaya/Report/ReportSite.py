@@ -130,6 +130,10 @@ class ReportSite(NySite, ProfileMeta):
 # Utils  #
 ##########
 
+    def getFlashTypes(self):
+        """ return all posible FlashChart types """
+        return FLASH_TYPES
+
     def daysLeft(self, REQUEST=None):
         """ """
         today = self.utGetTodayDate()
