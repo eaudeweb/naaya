@@ -350,6 +350,20 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
                 users[k] = v
         return users
 
+    def getUserSource(self, user):
+        """ given a user returns the source """
+        user_ob = self.getUser(user)
+        if user_ob:
+            return 'acl_users'
+        else:
+            #check sources
+            for source in self.getSources():
+                source_acl = source.getUserFolder()
+                user_ob = source_acl.getUser(user)
+                if user_ob:
+                    return source.title
+            return 'n/a'
+
     security.declareProtected(manage_users, 'getUsersEmails')
     def getUsersEmails(self, users):
         """
