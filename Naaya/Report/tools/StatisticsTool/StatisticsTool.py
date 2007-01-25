@@ -23,6 +23,7 @@ from AccessControl import ClassSecurityInfo
 from OFS.Folder import Folder
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplateForm, manage_addPageTemplate
 
 #Product imports
 from Products.NaayaBase.constants import *
@@ -61,6 +62,7 @@ class StatisticsTool(Folder, utils):
     meta_types = (
         {'name': METATYPE_RATELIST, 'action': 'manage_addRateListForm'},
         {'name': METATYPE_CHARTITEM, 'action': 'manage_addChartItemForm'},
+        {'name': 'Page Template', 'action': 'manage_addPageTemplateForm'},
         )
     all_meta_types = meta_types
 
@@ -70,6 +72,9 @@ class StatisticsTool(Folder, utils):
 
     manage_addChartItemForm = manage_addChartItemForm
     manage_addChartItem = manage_addChartItem
+
+    manage_addPageTemplateForm = manage_addPageTemplateForm
+    manage_addPageTemplate = manage_addPageTemplate
 
     def getChartColors(self):
         """ return the chart colors list """
