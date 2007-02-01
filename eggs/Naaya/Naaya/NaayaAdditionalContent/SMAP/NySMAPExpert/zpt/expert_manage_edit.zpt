@@ -29,7 +29,7 @@
 		<td><input type="text" name="name:utf8:ustring" size="40" tal:attributes="value python:request.get('name', here.name)" /></td>
 	</tr>
 	<tr>
-		<td class="form-label">Reference language(s)</td>
+		<td class="form-label">Working language(s)</td>
 		<td><input type="text" name="ref_lang:utf8:ustring" size="40" tal:attributes="value python:request.get('ref_lang', here.ref_lang)" /></td>
 	</tr>
 	<tr>

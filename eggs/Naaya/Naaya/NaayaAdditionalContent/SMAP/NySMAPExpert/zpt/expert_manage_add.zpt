@@ -30,7 +30,7 @@
 		<td width="80%"><input type="text" name="name:utf8:ustring" id="name" size="40" /></td>
 	</tr>
 	<tr>
-		<td class="form-label" width="20%">Reference language(s)</td>
+		<td class="form-label" width="20%">Working language(s)</td>
 		<td width="80%"><input type="text" name="ref_lang:utf8:ustring" id="ref_lang" size="40" /></td>
 	</tr>
 	<tr>
