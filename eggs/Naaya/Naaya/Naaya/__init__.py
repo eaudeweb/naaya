@@ -62,6 +62,8 @@ misc_ = {
     'square.gif':ImageFile('www/square.gif', globals()),
     'plus.gif':ImageFile('www/plus.gif', globals()),
     'minus.gif':ImageFile('www/minus.gif', globals()),
+    'sort_asc.gif':ImageFile('www/sort_asc.gif', globals()),
+    'sort_desc.gif':ImageFile('www/sort_desc.gif', globals()),
 
     'select_all.gif':ImageFile('www/select_all.gif', globals()),
     'copy.gif':ImageFile('www/copy.gif', globals()),
