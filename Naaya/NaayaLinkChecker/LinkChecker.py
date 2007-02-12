@@ -78,8 +78,9 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         LinkChecker.inheritedAttribute('__setstate__')(self, state)
 
     security.declareProtected(view_management_screens, 'manage_edit')
-    def manage_edit(self, proxy, batch_size, catalog_name='', ip_address='', REQUEST=None):
+    def manage_edit(self, proxy, batch_size, title='', catalog_name='', ip_address='', REQUEST=None):
         """Edits the summary's characteristics"""
+	self.title = title
         self.proxy = proxy
         self.batch_size = int(batch_size)
         self.ip_address = ip_address
