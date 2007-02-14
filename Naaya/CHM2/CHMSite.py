@@ -115,7 +115,7 @@ class CHMSite(NySite):
         return CHM2_PRODUCT_PATH
 
     #Epoz layer
-    def get_wysiwyg_widget(self, name, data='', toolbox='', size='big', lang=None):
+    def get_wysiwyg_widget(self, name, data='', toolbox='', size='medium', lang=None):
         """
         Returns an WYSIWYG widget. The Epoz is used for the moment.
         Also the widget will have a black border.
@@ -132,11 +132,11 @@ class CHMSite(NySite):
         """
         if lang is None: lang = self.gl_get_selected_language()
         if size == 'big':
-            width, height = 600, 300
+            width, height = 800, 400
         elif size == 'medium':
-            width, height = 450, 200
+            width, height = 600, 300
         else: #small
-            width, height = 300, 200
+            width, height = 400, 200
         sfp = self.getLayoutTool().getSkinFilesPath()
         return self.Epoz(name=name, data=data, toolbox=toolbox, lang=lang,
             style='width:%spx;height:%spx;border:1px solid #000000;' % (width, height),
