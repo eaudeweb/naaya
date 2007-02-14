@@ -609,7 +609,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """
         if lang is None: lang = self.gl_get_selected_language()
         if size == 'big':
-            width, height = 900, 400
+            width, height = 800, 400
         elif size == 'medium':
             width, height = 600, 300
         else: #small
