@@ -35,6 +35,7 @@ class stripping_tool(HTMLParser.HTMLParser):
         self.valid_tags = valid_tags
         self.tolerate_missing_closing_tags = tolerate_missing_closing_tags
         HTMLParser.HTMLParser.__init__(self)
+        HTMLParser.attrfind = re.compile(r'\s*([a-zA-Z_][-.:a-zA-Z_0-9]*)(\s*=\s*'r'(\'[^\']*\'|"[^"]*"|[-a-zA-Z0-9./,:;+*%?!&$\(\)_#=~@]*))?')
         self.result = []
         self.endTagList = []
 
