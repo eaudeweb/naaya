@@ -133,7 +133,7 @@ function fSelectUser(userid)
 						tal:attributes="value item" tal:content="item" />
 				<option tal:condition="python:item!='Manager'" tal:attributes="value item" tal:content="item" />
 				</tal:block>
-				<select>
+				</select>
 			</td>
 		</tr>
 		<tr>

@@ -68,7 +68,8 @@ class PlugBase(SimpleItem):
         for l_item in l_folders:
             for l_roles_tuple in l_item.get_local_roles():
                 l_local_roles = self.getLocalRoles(l_roles_tuple[1])
-                if l_roles_tuple[0] in p_user_folder.user_names() and len(l_local_roles)>0:
+                #if l_roles_tuple[0] in p_user_folder.user_names() and len(l_local_roles)>0:
+                if len(l_local_roles)>0:
                     if l_users_roles.has_key(str(l_roles_tuple[0])):
                         l_users_roles[str(l_roles_tuple[0])].append((l_local_roles, l_item.absolute_url(1)))
                     else:
@@ -88,14 +89,16 @@ class PlugBase(SimpleItem):
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
-    def addUserRoles(self, name='', roles='', loc='all', location='', REQUEST=None):
+    def addUserRoles(self, name='', roles='', loc='allsite', location='', REQUEST=None):
         """ """
         #process form values
-        if loc == 'all': location = self.getSite()
+        if loc == 'allsite': location = self.getSite()
         else: location = self.utGetObject(location)
         if roles == '': roles = []
         else: roles = self.utConvertToList(roles)
         #assing roles
+        print loc
+        print location
         location.manage_setLocalRoles(name, roles)
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
