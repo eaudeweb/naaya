@@ -38,6 +38,11 @@ from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
 from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
 from managers.utils                                 import *
 from tools.SyncerTool.SyncerTool                    import manage_addSyncerTool
+try:
+    from Products.NaayaCore.GeoMapTool.GeoMapTool       import manage_addGeoMapTool
+    GM_INSTALLED = 1
+except ImportError:
+    GM_INSTALLED = 0
 from tools.constants                                import *
 from Products.NaayaCore.managers.xmlrpc_tool        import XMLRPCConnector
 
@@ -117,6 +122,8 @@ class SMAPSite(NySite, ProfileMeta):
     def createSMAPPortalTools(self):
         """ """
         manage_addSyncerTool(self, dest_server='', username='', password='')
+        if GM_INSTALLED:
+            manage_addGeoMapTool(self)
 
 ###
 # Administration pages
