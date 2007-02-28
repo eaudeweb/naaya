@@ -14,9 +14,9 @@
 <form name="frmAdd" method="post" tal:attributes="action template/action" enctype="multipart/form-data">
 <table border="0" cellspacing="2" cellpadding="2" width="100%" 
 			tal:define="countries here/getCountriesList;
-						maintopics here/getPrioritiesTypesList;
+						maintopics here/getExpPrioritiesTypesList;
 						first_topic_id python:test(len(maintopics), maintopics[0].id, '');
-						subtopics python:here.getFocusesTypesList(here.getSession('maintopics', first_topic_id))">
+						subtopics python:here.getExpFocusesTypesList(here.getSession('maintopics', first_topic_id))">
 	<tr>
 		<td class="form-label" width="20%">Id</td>
 		<td width="80%"><input type="text" name="id" size="30" value="" /></td>

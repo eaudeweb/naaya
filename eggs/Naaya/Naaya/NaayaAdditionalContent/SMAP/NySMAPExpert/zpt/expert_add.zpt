@@ -8,9 +8,9 @@
 
 <form name="frmAdd" method="post" enctype="multipart/form-data" tal:attributes="action action"
 				tal:define="countries here/getCountriesList;
-						maintopics here/getPrioritiesTypesList;
+						maintopics here/getExpPrioritiesTypesList;
 						first_topic_id python:test(len(maintopics), maintopics[0].id, '');
-						subtopics python:here.getFocusesTypesList(here.getSession('maintopics', first_topic_id))">
+						subtopics python:here.getExpFocusesTypesList(here.getSession('maintopics', first_topic_id))">
 
 <script language="javascript" type="text/javascript" tal:content="structure here/getAllSubtopics"></script>
 

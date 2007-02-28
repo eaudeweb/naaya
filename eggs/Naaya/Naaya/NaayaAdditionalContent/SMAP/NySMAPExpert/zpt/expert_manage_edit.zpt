@@ -18,8 +18,8 @@
 <form name="frmEdit" method="post" action="manageProperties">
 <table border="0" cellspacing="2" cellpadding="2" width="100%"
 			tal:define="countries here/getCountriesList;
-					maintopics here/getPrioritiesTypesList;
-					subtopics python:here.getFocusesTypesList(here.getVersionProperty('maintopics'))">
+					maintopics here/getExpPrioritiesTypesList;
+					subtopics python:here.getExpFocusesTypesList(here.getVersionProperty('maintopics'))">
 	<tr>
 		<td class="form-label">Surname</td>
 		<td><input type="text" name="surname:utf8:ustring" size="40" tal:attributes="value python:request.get('surname', here.surname)" /></td>
