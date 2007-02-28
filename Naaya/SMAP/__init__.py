@@ -73,4 +73,7 @@ misc_ = {
     'sortdown.gif':ImageFile('www/sortdown.gif', globals()),
     'sortnot.gif':ImageFile('www/sortnot.gif', globals()),
     'sortup.gif':ImageFile('www/sortup.gif', globals()),
+    'simpletreemenu.js':ImageFile('www/simpletreemenu.js', globals()),
+    'closed.gif':ImageFile('www/closed.gif', globals()),
+    'open.gif':ImageFile('www/open.gif', globals()),
 }
