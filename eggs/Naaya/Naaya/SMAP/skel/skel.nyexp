@@ -312,12 +312,7 @@ function changeProject()
 
 	<tr>
 		<td colspan="2"><center>
-				<span class="buttons"><a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=priority_area${rkey_param};
-									title python:test(skey=='priority_area', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by Project Area
-				<img tal:attributes="src python:test(skey=='priority_area', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
-					 width="12" height="12" alt=""/>
-				</a>
-				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=title${rkey_param};
+				<span class="buttons"><a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=title${rkey_param};
 									title python:test(skey=='title', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by Title
 				<img tal:attributes="src python:test(skey=='title', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
 					 width="12" height="12" alt=""/>
@@ -353,7 +348,11 @@ function changeProject()
 				<ul>
 					<li>
 						<strong i18n:translate="">Project area:</strong>
-						<span tal:content="python:here.getPriorityTitle(object.priority_area)" i18n:translate="" />
+						<tal:block repeat="priority_id object/priority_area">
+							<tal:block define="priority_name python:here.getPriorityTitle(priority_id)">
+								<span tal:content="priority_name" i18n:translate="" /><span tal:condition="not:repeat/priority_id/end" tal:replace="string:," />
+							</tal:block>
+						</tal:block>
 					</li>
 
 					<li tal:condition="object/country">
