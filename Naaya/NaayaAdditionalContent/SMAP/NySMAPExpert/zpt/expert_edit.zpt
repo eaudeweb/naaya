@@ -49,8 +49,8 @@ function fSet(ctrl, value)
 
 <form method="post" action="saveProperties" name="frmEdit"  enctype="multipart/form-data"
 		tal:define="countries here/getCountriesList;
-			maintopics here/getPrioritiesTypesList;
-			subtopics python:here.getFocusesTypesList(here.getVersionProperty('maintopics'))">
+			maintopics here/getExpPrioritiesTypesList;
+			subtopics python:here.getExpFocusesTypesList(here.getVersionProperty('maintopics'))">
 <div class="field">
 	<label for="surname">
 		<span i18n:translate="" tal:omit-tag="">Surname</span>

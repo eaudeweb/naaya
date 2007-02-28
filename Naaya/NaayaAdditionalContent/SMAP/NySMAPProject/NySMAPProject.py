@@ -216,11 +216,11 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
                         self.getLocalProperty('organisation', lang), self.getLocalProperty('contact', lang),
                         self.getLocalProperty('location', lang)])
 
-    security.declareProtected(view, 'resource_area')
+    security.declareProtected(view, 'resource_area_exp')
     def resource_area(self):
         return self.priority_area
 
-    security.declareProtected(view, 'resource_focus')
+    security.declareProtected(view, 'resource_focus_exp')
     def resource_focus(self):
         return ' '.join(self.focus)
 
