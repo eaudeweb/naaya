@@ -1,4 +1,11 @@
 <span tal:replace="structure here/standard_html_header" />
+<script type="text/javascript" src="misc_/SMAP/simpletreemenu.js">
+/***********************************************
+* Simple Tree Menu- © Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* This notice MUST stay intact for legal use
+* Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
+***********************************************/
+</script>
 
 <h1 i18n:translate="">Edit Project</h1>
 
@@ -73,6 +80,31 @@ function fSet(ctrl, value)
 			tal:attributes="value c/id; selected python:c.id in here.getSession('country', here.getVersionProperty('country'))" tal:content="c/title"  i18n:translate="">country</option>
 	</select>
 </div>
+<div class="field">
+	<!-- <a href="javascript:ddtreemenu.flatten('tree', 'expand')">Expand All</a> | <a href="javascript:ddtreemenu.flatten('tree', 'contact')">Contract All</a> -->
+	<label for="priority_area">
+		<span i18n:translate="" tal:omit-tag="">Project(s) area</span>
+		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'priority_area')" class="mandatory_field"> *</span>
+	</label>
+	<p style="padding-top: 0px; margin-top: 0px; font-size: 0.9em; padding-bottom: 0px; margin-bottom: 0px" i18n:translate="">
+		<em><strong>Tip:</strong> Select focus(es) of the project by expanding each project</em>
+	</p>
+	<ul id="tree" class="treeview">
+	<tal:block repeat="priority priorities">
+	<li><span tal:content="priority/title" tal:attributes="style python:test(priority.id in here.priority_area, 'font-weight: bold', '')" />
+		<ul tal:define="focuses python:here.getFocusesTypesList(priority.id)">
+			<tal:block repeat="fc focuses">
+			<li><input type="checkbox" name="focus:list" tal:attributes="value string:${priority/id}|@|${fc/id}; checked python:test(here.checkFocus(priority.id, fc.id), 'checked', '')" /><span tal:content="fc/title" /></li>
+			</tal:block>
+		</ul>
+	</li>
+	</tal:block>
+	</ul>
+	<script type="text/javascript">
+		ddtreemenu.createTree("tree", false)
+	</script>
+</div>
+<!--
 <div class="field-inline">
 	<label for="priority_area">
 		<span i18n:translate="" tal:omit-tag="">Project area</span>
@@ -94,7 +126,7 @@ function fSet(ctrl, value)
 		<option tal:repeat="fc focuses"
 			tal:attributes="value fc/id; selected python:fc.id in here.getSession('focus', here.getVersionProperty('focus'))" tal:content="fc/title"  i18n:translate="">focus</option>
 	</select>
-</div>
+</div> -->
 <div class="field">
 	<label for="main_issues">
 		<span i18n:translate="" tal:omit-tag="">Project scale</span>
