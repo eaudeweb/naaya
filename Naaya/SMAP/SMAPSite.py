@@ -277,7 +277,6 @@ class SMAPSite(NySite, ProfileMeta):
         try:    start = int(start)
         except: start = 0
 
-        print priority_area
         _focus = ["%s|@|%s" % (priority_area, f) for f in self.utConvertToList(focus)]
         if perform_search:
             query = 'self.getCatalogedObjects(meta_type=%s, approved=1' % meta
