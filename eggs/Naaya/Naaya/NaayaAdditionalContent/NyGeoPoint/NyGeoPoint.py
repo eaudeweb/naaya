@@ -43,7 +43,7 @@ OBJECT_FORMS = ['geopoint_add', 'geopoint_edit', 'geopoint_index']
 OBJECT_CONSTRUCTORS = ['manage_addNyGeoPoint_html', 'geopoint_add_html', 'addNyGeoPoint', 'importNyGeoPoint']
 OBJECT_ADD_FORM = 'geopoint_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya GeoPoint type.'
-PREFIX_OBJECT = 'contact'
+PREFIX_OBJECT = 'geo'
 PROPERTIES_OBJECT = {
     'id':           (0, '', ''),
     'title':        (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
