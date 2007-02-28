@@ -277,12 +277,14 @@ class SMAPSite(NySite, ProfileMeta):
         try:    start = int(start)
         except: start = 0
 
+        print priority_area
+        _focus = ["%s|@|%s" % (priority_area, f) for f in self.utConvertToList(focus)]
         if perform_search:
             query = 'self.getCatalogedObjects(meta_type=%s, approved=1' % meta
             if len(priority_area) > 0 and priority_area != 'all':
                 query += ', resource_area=priority_area'
-            if len(focus) > 0:
-                focuses = " or ".join(focus)
+            if len(_focus) > 0:
+                focuses = " or ".join(_focus)
                 focuses = self.utStrEscapeForSearch(focuses)
                 query += ', resource_focus=focuses'
             if len(country) > 0:
