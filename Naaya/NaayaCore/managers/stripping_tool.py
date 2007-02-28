@@ -20,6 +20,7 @@
 
 #Python imports
 import HTMLParser
+import re
 
 #Zope imports
 
