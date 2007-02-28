@@ -21,16 +21,21 @@
 		</tal:block>
 	</td>
 </tr>
-<tr tal:condition="here/priority_area">
-	<th i18n:translate="">Project area</th>
-	<td tal:content="python:here.getPriorityTitle(here.priority_area)" i18n:translate="" />
-</tr>
 <tr tal:condition="here/focus">
-	<th i18n:translate="">Focus(es) of the project</th>
+	<th i18n:translate="">Focus(es) of the project(s)</th>
 	<td>
-		<tal:block repeat="focus_id here/focus">
-			<div tal:content="python:here.getFocusTitle(focus_id, here.priority_area)" i18n:translate="" />
+		<ul>
+		<tal:block repeat="priority_id here/priority_area">
+			<li tal:content="python:here.getPriorityTitle(priority_id)" />
+			<ul>
+				<tal:block repeat="focus_id here/focus">
+					<tal:block define="data python:focus_id.split('|@|')">
+					<li tal:condition="python:data[0]==priority_id" tal:content="python:here.getFocusTitle(data[1], data[0])" i18n:translate="" />
+					</tal:block>
+				</tal:block>
+			</ul>
 		</tal:block>
+		</ul>
 	</td>
 </tr>
 <tr tal:condition="here/main_issues">

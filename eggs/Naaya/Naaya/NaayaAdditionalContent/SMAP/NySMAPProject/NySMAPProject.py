@@ -77,7 +77,7 @@ def project_add_html(self, REQUEST=None, RESPONSE=None):
 
 def addNySMAPProject(self, id='', title='', description='', coverage='', keywords='', country='', sortorder='', 
                     contact='', donor='', links='', organisation='', location='', main_issues='', tools='', budget='',
-                    timeframe='', priority_area='', focus='', contributor=None, releasedate='', discussion='',
+                    timeframe='', focus='', contributor=None, releasedate='', discussion='',
                     lang=None, REQUEST=None, **kwargs):
     """
     Create a Project type of object.
@@ -95,7 +95,7 @@ def addNySMAPProject(self, id='', title='', description='', coverage='', keyword
             description=description, coverage=coverage, keywords=keywords, country=country, sortorder=sortorder,
             releasedate=releasedate, discussion=discussion, contact=contact, donor=donor, links=links,
             organisation=organisation, location=location, main_issues=main_issues, tools=tools, budget=budget,
-            timeframe=timeframe, priority_area=priority_area, focus=focus)
+            timeframe=timeframe, focus=focus)
     else:
         r = []
     if not len(r):
@@ -109,6 +109,10 @@ def addNySMAPProject(self, id='', title='', description='', coverage='', keyword
         releasedate = self.process_releasedate(releasedate)
         country = self.utConvertToList(country)
         focus = self.utConvertToList(focus)
+        res = {}
+        for x in focus:
+            res[x.split('|@|')[0]] = ''
+        priority_area = res.keys()
         #create object
         ob = NySMAPProject(id, title, description, coverage, keywords, country, contact, donor, links, organisation,
                     location, main_issues, tools, budget, timeframe, priority_area, focus, sortorder, 
@@ -269,8 +273,8 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
 
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='', keywords='', country='', contact='', donor='', links='',
-                        organisation='', location='', main_issues='', tools='', budget='', timeframe='', priority_area='', 
-                        focus='', sortorder='', approved='', releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
+                        organisation='', location='', main_issues='', tools='', budget='', timeframe='', focus='', sortorder='', 
+                        approved='', releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -282,6 +286,10 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
         releasedate = self.process_releasedate(releasedate, self.releasedate)
         country = self.utConvertToList(country)
         focus = self.utConvertToList(focus)
+        res = {}
+        for x in focus:
+            res[x.split('|@|')[0]] = ''
+        priority_area = res.keys()
         self.save_properties(title, description, coverage, keywords, country, contact, donor, links, organisation,
                             location, main_issues, tools, budget, timeframe, priority_area, focus,
                             sortorder, releasedate, lang)
@@ -352,7 +360,7 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', coverage='', keywords='', country='', contact='', donor='',
                 links='', organisation='', location='', main_issues='', tools='', budget='', timeframe='',
-                priority_area='', focus='', sortorder='', releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
+                focus='', sortorder='', releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -360,12 +368,16 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
         if lang is None: lang = self.gl_get_selected_language()
         country = self.utConvertToList(country)
         focus = self.utConvertToList(focus)
+        res = {}
+        for x in focus:
+            res[x.split('|@|')[0]] = ''
+        priority_area = res.keys()
         #check mandatory fiels
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
             description=description, coverage=coverage, keywords=keywords, country=country, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion, contact=contact, donor=donor, links=links,
             organisation=organisation, location=location, main_issues=main_issues, tools=tools, budget=budget,
-            timeframe=timeframe, priority_area=priority_area, focus=focus)
+            timeframe=timeframe, focus=focus)
         if not len(r):
             sortorder = int(sortorder)
             if not self.hasVersion():
@@ -404,6 +416,14 @@ class NySMAPProject(NyAttributes, project_item, NyItem, NyCheckControl):
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
             else:
                 raise Exception, '%s' % ', '.join(r)
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'checkFocus')
+    def checkFocus(self, priority_area, focus_id):
+        """ """
+        for f in self.focus:
+            if f == '%s|@|%s' % (priority_area, focus_id):
+                return True
+        return False
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
