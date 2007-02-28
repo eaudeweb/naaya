@@ -104,29 +104,6 @@ function fSet(ctrl, value)
 		ddtreemenu.createTree("tree", false)
 	</script>
 </div>
-<!--
-<div class="field-inline">
-	<label for="priority_area">
-		<span i18n:translate="" tal:omit-tag="">Project area</span>
-		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'priority_area')" class="mandatory_field"> *</span>
-	</label>
-	<p style="padding-top: 0px; margin-top: 0px; font-size: 0.9em; padding-bottom: 0px; margin-bottom: 0px" i18n:translate=""><em><strong>Tip:</strong> upon change of the project area, the list of focuses will also change.</em></p>
-	<select name="priority_area" id="priority_area" onchange="d.updateOptions(this, 'focus');">
-		<option tal:repeat="priority priorities"
-			tal:attributes="value priority/id; selected python:priority.id in here.getSession('priority_area', here.getVersionProperty('priority_area'))" tal:content="priority/title"  i18n:translate="">priority_area</option>
-	</select>
-</div>
-<div class="field-inline">
-	<label for="focus">
-		<span i18n:translate="" tal:omit-tag="">Focus(es) of the project</span>
-		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'focus')" class="mandatory_field"> *</span>
-	</label>
-	<p style="padding-top: 0px; margin-top: 0px; font-size: 0.9em; padding-bottom: 0px; margin-bottom: 0px" i18n:translate=""><em><strong>Tip:</strong> press the Ctrl key to select more than one.</em></p>
-	<select name="focus" id="focus" multiple="multiple" size="5">
-		<option tal:repeat="fc focuses"
-			tal:attributes="value fc/id; selected python:fc.id in here.getSession('focus', here.getVersionProperty('focus'))" tal:content="fc/title"  i18n:translate="">focus</option>
-	</select>
-</div> -->
 <div class="field">
 	<label for="main_issues">
 		<span i18n:translate="" tal:omit-tag="">Project scale</span>
