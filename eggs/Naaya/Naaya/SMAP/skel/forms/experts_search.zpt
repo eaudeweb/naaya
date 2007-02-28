@@ -169,8 +169,8 @@ function changeProject()
 
 <form	name="frmSearchExperts" id="frmSearchExperts" method="GET"
 		tal:condition="not:search_performed">
-	<fieldset	tal:define="priorities here/getPrioritiesTypesList;
-							focuses python:here.getFocusesTypesList(priority_area);
+	<fieldset	tal:define="priorities here/getExpPrioritiesTypesList;
+							focuses python:here.getExpFocusesTypesList(priority_area);
 							countries here/getCountriesList">
 		<legend i18n:translate="">Experts search</legend>
 		<div class="field">
@@ -227,7 +227,7 @@ function changeProject()
 			</tr>
 			<tr tal:condition="python:priority_area!='all'">
 				<td><strong i18n:translate="">Project area</strong></td>
-				<td><span tal:content="python:here.getPriorityTitle(priority_area)" i18n:translate="" /></td>
+				<td><span tal:content="python:here.getExpPriorityTitle(priority_area)" i18n:translate="" /></td>
 			</tr>
 			<tr tal:condition="focus">
 				<td><strong i18n:translate="">Focus(es) of the project</strong></td>
@@ -316,7 +316,7 @@ function changeProject()
 				<ul>
 					<li>
 						<strong i18n:translate="">Main topic:</strong>
-						<span tal:content="python:here.getPriorityTitle(object.maintopics)" i18n:translate="" />
+						<span tal:content="python:here.getExpPriorityTitle(object.maintopics)" i18n:translate="" />
 					</li>
 
 					<li tal:condition="object/country">

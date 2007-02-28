@@ -90,9 +90,13 @@ class SMAPSite(NySite, ProfileMeta):
         self.loadSkeleton(join(SMAP_PRODUCT_PATH, 'skel'))
 
         #custom indexes
-        try:    self.getCatalogTool().addIndex('resource_area', 'FieldIndex')
+        try:    self.getCatalogTool().manage_addIndex('resource_area', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
         except: pass
         try:    self.getCatalogTool().manage_addIndex('resource_focus', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
+        except: pass
+        try:    self.getCatalogTool().manage_addIndex('resource_area_exp', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
+        except: pass
+        try:    self.getCatalogTool().manage_addIndex('resource_focus_exp', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
         except: pass
         try:    self.getCatalogTool().manage_addIndex('resource_country', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
         except: pass
@@ -134,10 +138,6 @@ class SMAPSite(NySite, ProfileMeta):
         return self.getFormsTool().getContent({'here': self}, 'site_admin_updates')
 
 ###
-# Administration actions
-############################
-
-###
 # Layer over selection lists
 ############################
     security.declarePublic('getCountriesList')
@@ -155,7 +155,7 @@ class SMAPSite(NySite, ProfileMeta):
 
     security.declarePublic('getPrioritiesTypesList')
     def getPrioritiesTypesList(self):
-        """ Return the selection list for priorities types """
+        """ Return Projects selection list for priorities types """
         return self.getPortletsTool().getRefListById('priorities_types').get_list()
 
     security.declarePublic('getPriorityTitle')
@@ -170,6 +170,28 @@ class SMAPSite(NySite, ProfileMeta):
     def getFocusesTypesList(self, priority_id):
         """ Return the selection list for focuses types for a given project """
         focus_list_id = "focuses_%s" % priority_id[:3]
+        try:
+            return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_list()
+        except:
+            return []
+
+    security.declarePublic('getExpPrioritiesTypesList')
+    def getExpPrioritiesTypesList(self):
+        """ Return Experts selection list for priorities types"""
+        return self.getPortletsTool().getRefListById('priorities_types_exp').get_list()
+
+    security.declarePublic('getExpPriorityTitle')
+    def getExpPriorityTitle(self, id):
+        """ Return the title of an item for the selection list for priorities types """
+        try:
+            return self.getPortletsTool().getRefListById('priorities_types_exp').get_item(id).title
+        except:
+            return ''
+
+    security.declarePublic('getExpFocusesTypesList')
+    def getExpFocusesTypesList(self, priority_id):
+        """ Return the selection list for focuses types for a given project """
+        focus_list_id = "focuses_%s_exp" % priority_id[:3]
         try:
             return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_list()
         except:
@@ -213,6 +235,15 @@ class SMAPSite(NySite, ProfileMeta):
     def getFocusTitle(self, focus_id, priority_area_id):
         """ Return the title of an item for the selection list for focuses types """
         focus_list_id = "focuses_%s" % priority_area_id[:3]
+        try:
+            return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_item(focus_id).title
+        except:
+            return ''
+
+    security.declarePublic('getExpFocusTitle')
+    def getExpFocusTitle(self, focus_id, priority_area_id):
+        """ Return the title of an item for the selection list for focuses types """
+        focus_list_id = "focuses_%s_exp" % priority_area_id[:3]
         try:
             return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_item(focus_id).title
         except:
