@@ -37,8 +37,6 @@
 					countries here/getCountriesList;
 					focuses python:here.getFocusesTypesList(priority_area)">
 
-<script language="javascript" type="text/javascript" tal:content="structure here/getAllFocuses"></script>
-
 <div class="field">
 	<label for="country">
 		<span i18n:translate="" tal:omit-tag="">Country(ies)</span>

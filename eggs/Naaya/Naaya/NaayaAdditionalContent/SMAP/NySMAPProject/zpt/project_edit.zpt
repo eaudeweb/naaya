@@ -52,8 +52,6 @@ function fSet(ctrl, value)
 // -->
 </script>
 
-<script language="javascript" type="text/javascript" tal:content="structure here/getAllFocuses"></script>
-
 <form name="frmEdit" method="post" action="saveProperties" enctype="multipart/form-data">
 <div class="field">
 	<label for="title"><span i18n:translate="" tal:omit-tag="">Title</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'title')" class="mandatory_field"> *</span></label>

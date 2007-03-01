@@ -45,8 +45,6 @@ function fSet(ctrl, value)
 // -->
 </script>
 
-<script language="javascript" type="text/javascript" tal:content="structure here/getAllSubtopics"></script>
-
 <form method="post" action="saveProperties" name="frmEdit"  enctype="multipart/form-data"
 		tal:define="countries here/getCountriesList;
 			maintopics here/getExpPrioritiesTypesList;
