@@ -1,6 +1,45 @@
 <span tal:replace="structure here/manage_page_header" />
 <span tal:replace="structure here/manage_tabs" />
 
+<style>
+.treeview ul{ /*CSS for Simple Tree Menu*/
+margin: 0;
+padding: 0;
+}
+
+.treeview li{ /*Style for LI elements in general (excludes an LI that contains sub lists)*/
+background: white left center;
+list-style-type: none;
+padding-left: 22px;
+margin-bottom: 3px;
+font-size: 1.1em;
+}
+
+.treeview li.submenu{ /* Style for LI that contains sub lists (other ULs). */
+background: white url(misc_/SMAP/closed.gif) no-repeat left 1px;
+cursor: hand !important;
+cursor: pointer !important;
+}
+
+
+.treeview li.submenu ul{ /*Style for ULs that are children of LIs (submenu) */
+display: none; /*Hide them by default. Don't delete. */
+}
+
+.treeview .submenu ul li{ /*Style for LIs of ULs that are children of LIs (submenu) */
+padding-left: 5px;
+font-size: 1em;
+cursor: default;
+}
+</style>
+<script type="text/javascript" src="misc_/SMAP/simpletreemenu.js">
+/***********************************************
+* Simple Tree Menu- © Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* This notice MUST stay intact for legal use
+* Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
+***********************************************/
+</script>
+
 <p>
 	Change the properties in the form below and click <strong>Save changes</strong>.
 </p>
@@ -40,21 +79,28 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="form-label">Main topics of expertise</td>
+		<td class="form-label">Topics of expertise</td>
 		<td>
-			<select name="maintopics" id="maintopics" onchange="d.updateOptions(this, 'subtopics');">
-				<option tal:repeat="maintopic maintopics"
-					tal:attributes="value maintopic/id; selected python:maintopic.id in request.get('maintopics', here.maintopics)" tal:content="maintopic/title"  i18n:translate="">maintopics</option>
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td class="form-label">Subtopics of expertise</td>
-		<td>
-			<select name="subtopics" id="subtopics" multiple="multiple" size="5">
-				<option tal:repeat="subtopic subtopics"
-					tal:attributes="value subtopic/id; selected python:subtopic.id in request.get('subtopics', here.subtopics)" tal:content="subtopic/title"  i18n:translate="">subtopics</option>
-			</select>
+			<p style="padding-top: 0px; margin-top: 0px; font-size: 0.9em; padding-bottom: 0px; margin-bottom: 0px" i18n:translate="">
+				<em><strong>Tip:</strong> Select sub-topics of expertise by expanding each main node</em>
+			</p>
+			<ul id="tree" class="treeview">
+			<tal:block repeat="maintopic maintopics">
+			<li><span tal:content="maintopic/title" tal:attributes="style python:test(maintopic.id in here.maintopics, 'font-weight: bold', '')" />
+				<ul tal:define="subtopics python:here.getExpFocusesTypesList(maintopic.id)">
+					<tal:block repeat="subtopic subtopics">
+					<li><input type="checkbox" name="subtopics:list" 
+							tal:attributes="value string:${maintopic/id}|@|${subtopic/id}; 
+							checked python:test(here.checkSessionSubTopics(maintopic.id, subtopic.id, here.subtopics), 'checked', '')" />
+							<span tal:content="subtopic/title" /></li>
+					</tal:block>
+				</ul>
+			</li>
+			</tal:block>
+			</ul>
+			<script type="text/javascript">
+				ddtreemenu.createTree("tree", false)
+			</script>
 		</td>
 	</tr>
 	<tr>
