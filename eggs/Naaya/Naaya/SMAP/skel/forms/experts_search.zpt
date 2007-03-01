@@ -280,11 +280,6 @@ function changeProject()
 
 	<tr>
 		<td colspan="2"><center><span class="buttons">
-				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=maintopics${rkey_param};
-									title python:test(skey=='maintopics', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by Main Topic
-				<img tal:attributes="src python:test(skey=='maintopics', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
-					 width="12" height="12" alt=""/>
-				</a>
 				<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=surname${rkey_param};
 									title python:test(skey=='surname', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Sort by Surname
 				<img tal:attributes="src python:test(skey=='surname', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
@@ -317,6 +312,14 @@ function changeProject()
 					<li>
 						<strong i18n:translate="">Main topic:</strong>
 						<span tal:content="python:here.getExpPriorityTitle(object.maintopics)" i18n:translate="" />
+					</li>
+					<li>
+						<strong i18n:translate="">Topic(s) of expertise:</strong>
+						<tal:block repeat="topic_id object/maintopics">
+							<tal:block define="topic_name python:here.getExpPriorityTitle(topic_id)">
+								<span tal:content="topic_name" i18n:translate="" /><span tal:condition="not:repeat/topic_id/end" tal:replace="string:," />
+							</tal:block>
+						</tal:block>
 					</li>
 
 					<li tal:condition="object/country">

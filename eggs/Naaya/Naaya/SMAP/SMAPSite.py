@@ -270,8 +270,14 @@ class SMAPSite(NySite, ProfileMeta):
         res = []
         results = []
         lang = self.gl_get_selected_language()
-        if meta == 'prj':   meta = '[METATYPE_NYSMAPPROJECT]'
-        elif meta == 'exp': meta = '[METATYPE_NYSMAPEXPERT]'
+        if meta == 'prj':
+            meta = '[METATYPE_NYSMAPPROJECT]'
+            area_indexname = 'resource_area'
+            focus_indexname = 'resource_focus'
+        elif meta == 'exp':
+            meta = '[METATYPE_NYSMAPEXPERT]'
+            area_indexname = 'resource_area_exp'
+            focus_indexname = 'resource_focus_exp'
         else:               meta = '[]'
 
         try:    start = int(start)
@@ -281,11 +287,11 @@ class SMAPSite(NySite, ProfileMeta):
         if perform_search:
             query = 'self.getCatalogedObjects(meta_type=%s, approved=1' % meta
             if len(priority_area) > 0 and priority_area != 'all':
-                query += ', resource_area=priority_area'
+                query += ', %s=priority_area' % area_indexname
             if len(_focus) > 0:
                 focuses = " or ".join(_focus)
                 focuses = self.utStrEscapeForSearch(focuses)
-                query += ', resource_focus=focuses'
+                query += ', %s=focuses' % focus_indexname
             if len(country) > 0:
                 countries = " or ".join(country)
                 countries = self.utStrEscapeForSearch(countries)
