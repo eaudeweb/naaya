@@ -76,7 +76,7 @@ def expert_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNySMAPExpert'}, 'expert_add')
 
 def addNySMAPExpert(self, id='', title='', description='', coverage='', keywords='', surname='', 
-        name='', ref_lang='', country='', maintopics='', subtopics='', sortorder='',
+        name='', ref_lang='', country='', subtopics='', sortorder='',
         file='', precondition='', content_type='', downloadfilename='', email='',
         contributor=None, releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
     """
@@ -93,7 +93,7 @@ def addNySMAPExpert(self, id='', title='', description='', coverage='', keywords
     if not(l_referer == 'expert_manage_add' or l_referer.find('expert_manage_add') != -1) and REQUEST:
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, 
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, 
-            surname=surname, name=name, ref_lang=ref_lang, country=country, maintopics=maintopics, 
+            surname=surname, name=name, ref_lang=ref_lang, country=country, 
             subtopics=subtopics, releasedate=releasedate, discussion=discussion, file=file, 
             downloadfilename=downloadfilename, email=email)
     else:
@@ -107,6 +107,10 @@ def addNySMAPExpert(self, id='', title='', description='', coverage='', keywords
             approved, approved_by = 0, None
         releasedate = self.process_releasedate(releasedate)
         subtopics = self.utConvertToList(subtopics)
+        res = {}
+        for x in subtopics:
+            res[x.split('|@|')[0]] = ''
+        maintopics = res.keys()
         if lang is None: lang = self.gl_get_selected_language()
         #create object
         ob = NySMAPExpert(id, title, description, coverage, keywords, surname, name, ref_lang, country, 
@@ -137,9 +141,8 @@ def addNySMAPExpert(self, id='', title='', description='', coverage='', keywords
             self.setSessionErrors(r)
             self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, description=description, 
                         coverage=coverage, keywords=keywords, sortorder=sortorder, surname=surname, 
-                        name=name, ref_lang=ref_lang, country=country, maintopics=maintopics, 
-                        subtopics=subtopics, releasedate=releasedate, discussion=discussion, file=file, 
-                        downloadfilename=downloadfilename, email=email)
+                        name=name, ref_lang=ref_lang, country=country, subtopics=subtopics, releasedate=releasedate, 
+                        discussion=discussion, downloadfilename=downloadfilename, email=email)
             REQUEST.RESPONSE.redirect('%s/expert_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)
@@ -222,12 +225,12 @@ class NySMAPExpert(NyAttributes, expert_item, NyItem, NyCheckControl):
     def objectkeywords(self, lang):
         return u' '.join([self._objectkeywords(lang), self.surname, self.name])
 
-    security.declareProtected(view, 'resource_area')
-    def resource_area(self):
+    security.declareProtected(view, 'resource_area_exp')
+    def resource_area_exp(self):
         return self.maintopics
 
-    security.declareProtected(view, 'resource_focus')
-    def resource_focus(self):
+    security.declareProtected(view, 'resource_focus_exp')
+    def resource_focus_exp(self):
         return ' '.join(self.subtopics)
 
     security.declareProtected(view, 'resource_country')
@@ -283,7 +286,7 @@ class NySMAPExpert(NyAttributes, expert_item, NyItem, NyCheckControl):
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='', keywords='', surname='', 
-        name='', ref_lang='', country='', maintopics='', subtopics='', sortorder='',
+        name='', ref_lang='', country='', subtopics='', sortorder='',
         file='', precondition='', content_type='', downloadfilename='', email='', approved=None,
         contributor=None, releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
         """ """
@@ -297,6 +300,10 @@ class NySMAPExpert(NyAttributes, expert_item, NyItem, NyCheckControl):
         else: approved = 0
         releasedate = self.process_releasedate(releasedate, self.releasedate)
         subtopics = self.utConvertToList(subtopics)
+        res = {}
+        for x in subtopics:
+            res[x.split('|@|')[0]] = ''
+        maintopics = res.keys()
         if not lang: lang = self.gl_get_selected_language()
         self.save_properties(title, description, coverage, keywords, surname, name, ref_lang, country, 
             maintopics, subtopics, sortorder, downloadfilename, email, releasedate, lang)
@@ -384,7 +391,7 @@ class NySMAPExpert(NyAttributes, expert_item, NyItem, NyCheckControl):
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', coverage='', keywords='', surname='', 
-        name='', ref_lang='', country='', maintopics='', subtopics='', sortorder='',
+        name='', ref_lang='', country='', subtopics='', sortorder='',
         precondition='', content_type='', downloadfilename='', email='',
         releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
         """ """
@@ -393,6 +400,10 @@ class NySMAPExpert(NyAttributes, expert_item, NyItem, NyCheckControl):
         if not sortorder: sortorder = DEFAULT_SORTORDER
         if lang is None: lang = self.gl_get_selected_language()
         subtopics = self.utConvertToList(subtopics)
+        res = {}
+        for x in subtopics:
+            res[x.split('|@|')[0]] = ''
+        maintopics = res.keys()
         #check mandatory fiels
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, 
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, 

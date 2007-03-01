@@ -1,4 +1,11 @@
 <tal:block tal:replace="structure here/standard_html_header" />
+<script type="text/javascript" src="misc_/SMAP/simpletreemenu.js">
+/***********************************************
+* Simple Tree Menu- © Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* This notice MUST stay intact for legal use
+* Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
+***********************************************/
+</script>
 
 <h1 i18n:translate="">Submit Expert</h1>
 
@@ -52,25 +59,30 @@
 	</select>
 </div>
 <div class="field">
+	<!-- <a href="javascript:ddtreemenu.flatten('tree', 'expand')">Expand All</a> | <a href="javascript:ddtreemenu.flatten('tree', 'contact')">Contract All</a> -->
 	<label for="maintopics">
-		<span i18n:translate="" tal:omit-tag="">Main topic of expertise</span>
-		<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'maintopics')" class="mandatory_field"> *</span>
+		<span i18n:translate="" tal:omit-tag="">Topics of expertise</span>
+		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'maintopics')" class="mandatory_field"> *</span>
 	</label>
-	<select name="maintopics" id="maintopics" onchange="d.updateOptions(this, 'subtopics');">
-		<option tal:repeat="maintopic maintopics"
-			tal:attributes="value maintopic/id; selected python:maintopic.id in here.getSession('maintopics', '')" tal:content="maintopic/title" i18n:translate="" >maintopic</option>
-	</select>
-</div>
-<div class="field">
-	<label for="subtopics">
-		<span i18n:translate="" tal:omit-tag="">Sub-topics of expertise</span>
-		<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'subtopics')" class="mandatory_field"> *</span>
-	</label>
-	<p style="padding-top: 0px; margin-top: 0px; font-size: 0.9em; padding-bottom: 0px; margin-bottom: 0px" i18n:translate=""><em><strong>Tip:</strong> press the Ctrl key to select more than one.</em></p>
-	<select name="subtopics" id="subtopics" multiple="multiple" size="5">
-		<option tal:repeat="subtopic subtopics"
-			tal:attributes="value subtopic/id; selected python:subtopic.id in here.getSession('subtopics', '')" tal:content="subtopic/title" i18n:translate="" >subtopic</option>
-	</select>
+	<p style="padding-top: 0px; margin-top: 0px; font-size: 0.9em; padding-bottom: 0px; margin-bottom: 0px" i18n:translate="">
+		<em><strong>Tip:</strong> Select sub-topics of expertise by expanding each main node</em>
+	</p>
+	<ul id="tree" class="treeview">
+	<tal:block repeat="maintopic maintopics">
+	<li><span tal:content="maintopic/title"  tal:attributes="style python:test(maintopic.id in here.getSessionMainTopics(here.getSession('subtopics', '')), 'font-weight: bold', '')" />
+		<ul tal:define="subtopics python:here.getExpFocusesTypesList(maintopic.id)">
+			<tal:block repeat="subtopic subtopics">
+			<li><input type="checkbox" name="subtopics:list" 
+					tal:attributes="value string:${maintopic/id}|@|${subtopic/id};
+					checked python:test(here.checkSessionSubTopics(maintopic.id, subtopic.id, here.getSession('subtopics', '')), 'checked', '')" /><span tal:content="subtopic/title" /></li>
+			</tal:block>
+		</ul>
+	</li>
+	</tal:block>
+	</ul>
+	<script type="text/javascript">
+		ddtreemenu.createTree("tree", false)
+	</script>
 </div>
 <div class="field">
 	<label for="email">
