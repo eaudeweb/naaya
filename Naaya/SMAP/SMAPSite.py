@@ -197,40 +197,6 @@ class SMAPSite(NySite, ProfileMeta):
         except:
             return []
 
-    security.declarePublic('getAllFocuses')
-    def getAllFocuses(self):
-        """ Returns a Javascript code to include in add/edit pages.
-            It sets the focus field according to the priority area (Projects)
-        """
-        output = []
-        l_res = {}
-        output.append("")
-        output.append("var d = new dynamicSelect();")
-        output.append("d.addSelect('priority_area');")
-        for prio in self.getPrioritiesTypesList():
-            output.append("d.selects['priority_area'].addOption('%s');" % prio.id)
-            for focus in self.getFocusesTypesList(prio.id):
-                output.append("d.selects['priority_area'].options['%s'].createOption('%s', '%s');" % (prio.id, focus.id, focus.title))
-        output.append(sync_two_selects())
-        return '\n'.join(output)
-
-    security.declarePublic('getAllSubtopics')
-    def getAllSubtopics(self):
-        """ Returns a Javascript code to include in add/edit pages.
-            It sets the subtopics field according to the main topic (Experts)
-        """
-        output = []
-        l_res = {}
-        output.append("")
-        output.append("var d = new dynamicSelect();")
-        output.append("d.addSelect('maintopics');")
-        for topic in self.getPrioritiesTypesList():
-            output.append("d.selects['maintopics'].addOption('%s');" % topic.id)
-            for focus in self.getFocusesTypesList(topic.id):
-                output.append("d.selects['maintopics'].options['%s'].createOption('%s', '%s');" % (topic.id, focus.id, focus.title))
-        output.append(sync_two_selects())
-        return '\n'.join(output)
-
     security.declarePublic('getFocusTitle')
     def getFocusTitle(self, focus_id, priority_area_id):
         """ Return the title of an item for the selection list for focuses types """
