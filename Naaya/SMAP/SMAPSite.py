@@ -197,6 +197,17 @@ class SMAPSite(NySite, ProfileMeta):
         except:
             return []
 
+    def getSessionMainTopics(self, topic):
+        """ """
+        return [x.split('|@|')[0] for x in self.utConvertToList(topic)]
+
+    def checkSessionSubTopics(self, maintopic, subtopic, session):
+        """ """
+        for sb in self.utConvertToList(session):
+            if sb == '%s|@|%s' % (maintopic, subtopic):
+                return True
+        return False
+
     security.declarePublic('getFocusTitle')
     def getFocusTitle(self, focus_id, priority_area_id):
         """ Return the title of an item for the selection list for focuses types """

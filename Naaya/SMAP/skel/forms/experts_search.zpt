@@ -310,10 +310,6 @@ function changeProject()
 
 				<ul>
 					<li>
-						<strong i18n:translate="">Main topic:</strong>
-						<span tal:content="python:here.getExpPriorityTitle(object.maintopics)" i18n:translate="" />
-					</li>
-					<li>
 						<strong i18n:translate="">Topic(s) of expertise:</strong>
 						<tal:block repeat="topic_id object/maintopics">
 							<tal:block define="topic_name python:here.getExpPriorityTitle(topic_id)">
