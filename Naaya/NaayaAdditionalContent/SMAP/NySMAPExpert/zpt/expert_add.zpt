@@ -12,8 +12,6 @@
 						first_topic_id python:test(len(maintopics), maintopics[0].id, '');
 						subtopics python:here.getExpFocusesTypesList(here.getSession('maintopics', first_topic_id))">
 
-<script language="javascript" type="text/javascript" tal:content="structure here/getAllSubtopics"></script>
-
 <div class="field-inline" tal:define="selected_language python:here.getSession('lang', here.gl_get_selected_language())">
 	<label i18n:translate="" for="lang">Posting language</label>
 	<select name="lang" id="lang">

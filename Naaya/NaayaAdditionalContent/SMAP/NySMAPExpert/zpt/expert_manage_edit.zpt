@@ -13,8 +13,6 @@
 	Selected language: <strong tal:content="python:here.gl_get_language_name(here.gl_get_selected_language())" />
 </p>
 
-<script language="javascript" type="text/javascript" tal:content="structure here/getAllSubtopics"></script>
-
 <form name="frmEdit" method="post" action="manageProperties">
 <table border="0" cellspacing="2" cellpadding="2" width="100%"
 			tal:define="countries here/getCountriesList;

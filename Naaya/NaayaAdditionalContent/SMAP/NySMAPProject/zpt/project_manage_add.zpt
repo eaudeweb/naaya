@@ -49,7 +49,6 @@ cursor: default;
 * Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
 ***********************************************/
 </script>
-<script language="javascript" type="text/javascript" tal:content="structure here/getAllFocuses" />
 
 <tr>
 	<td class="form-label" valign="top">Country(ies)</td>
