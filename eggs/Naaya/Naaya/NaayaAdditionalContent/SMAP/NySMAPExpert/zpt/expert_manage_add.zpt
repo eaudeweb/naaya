@@ -80,7 +80,7 @@ cursor: default;
 		</td>
 	</tr>
 	<tr>
-		<td class="form-label" width="20%">Topics of expertise</td>
+		<td class="form-label" width="20%">Topic(s) of expertise</td>
 		<td width="80%">
 			<p style="padding-top: 0px; margin-top: 0px; font-size: 0.9em; padding-bottom: 0px; margin-bottom: 0px" i18n:translate="">
 				<em><strong>Tip:</strong> Select sub-topics of expertise by expanding each main node</em>
