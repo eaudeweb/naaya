@@ -56,7 +56,10 @@
 </tr>
 <tr tal:condition="here/email">
 	<th i18n:translate="">Email</th>
-	<td tal:content="here/email">email</td>
+	<td>
+		<a tal:attributes="href string:mailto:${here/email}"
+			tal:content="here/email" />
+	</td>
 </tr>
 <tr tal:condition="here/webpage">
 	<th i18n:translate="">Webpage</th>
