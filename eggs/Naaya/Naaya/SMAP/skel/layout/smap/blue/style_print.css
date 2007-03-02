@@ -13,7 +13,7 @@ body {
 .logobis {
 	float: right;
 }
-.logobis, .logobis_ar img { 
+.logobis img { 
 	margin: 5px;
 	width: 165px; 
 	height: 50px;
