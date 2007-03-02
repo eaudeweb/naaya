@@ -77,6 +77,8 @@ class RefList(SimpleItem, ref_manager):
     security.declareProtected(view_management_screens, 'manage_add_item')
     def manage_add_item(self, id='', title='', REQUEST=None):
         """ """
+        id = self.utCleanupId(id)
+        if not id: id = PREFIX_SUFIX_REFLISTITEM % self.utGenRandomId(6)
         self.add_item(id, title)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_items_html?save=ok')
 
