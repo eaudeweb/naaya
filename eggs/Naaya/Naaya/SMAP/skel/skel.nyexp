@@ -347,7 +347,7 @@ function changeProject()
 
 				<ul>
 					<li>
-						<strong i18n:translate="">Project area:</strong>
+						<strong i18n:translate="">Project(s) area:</strong>
 						<tal:block repeat="priority_id object/priority_area">
 							<tal:block define="priority_name python:here.getPriorityTitle(priority_id)">
 								<span tal:content="priority_name" i18n:translate="" /><span tal:condition="not:repeat/priority_id/end" tal:replace="string:," />

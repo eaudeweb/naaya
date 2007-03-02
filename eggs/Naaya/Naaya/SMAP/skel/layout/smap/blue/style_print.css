@@ -10,6 +10,14 @@ body {
 .topleft img {
 	margin-right: 20px;
 }
+.logobis {
+	float: right;
+}
+.logobis, .logobis_ar img { 
+	margin: 5px;
+	width: 165px; 
+	height: 50px;
+}
 .sitetitle {
 	font-size: 1.3em;
 	color:#4b7db2;

@@ -140,6 +140,15 @@ class SMAPSite(NySite, ProfileMeta):
 ###
 # Layer over selection lists
 ############################
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addreflist')
+    def admin_addreflist(self, id='', title='', description='', assoc_list='', REQUEST=None):
+        """ """
+        if assoc_list: id = assoc_list
+        self.getPortletsTool().manage_addRefList(id, title, description)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_reflists_html' % self.absolute_url())
+
     security.declarePublic('getCountriesList')
     def getCountriesList(self):
         """ Return the selection list for countries """

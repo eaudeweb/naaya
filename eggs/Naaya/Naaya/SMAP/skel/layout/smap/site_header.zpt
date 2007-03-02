@@ -59,8 +59,9 @@
 	</div>
 
 	<div class="topban">
-		<div class="topleft"> <img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" alt="" /> </div>
+		<div class="topleft"> <img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" alt="" /></div>
 		<div class="topright">
+			<div class="logobis"> <img tal:attributes="src string:${here/getLayoutToolPath}/logobis" alt="" /></div>
 			<div class="toptitle">
 				<div class="sitetitle"><span tal:content="here/site_title" /></div>
 				<div class="sitesubtitle" tal:content="here/site_subtitle" />
@@ -69,7 +70,7 @@
 				<div class="toplanguage" > <tal:block replace="structure here/languages_box" /> </div>
 
 				<div tal:repeat="main_categ here/getMainTopics" class="menuitem">
-				<a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/description" tal:content="main_categ/title" />
+				<a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/title" tal:content="main_categ/title" />
 				</div>
 			</div>
 		</div>
