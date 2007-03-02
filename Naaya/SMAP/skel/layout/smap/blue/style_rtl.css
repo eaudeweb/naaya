@@ -193,7 +193,14 @@ li {
 #site_logo img {
 	margin-right: 21px;
 }
-
+.logobis img { 
+	margin: 5px;
+	width: 165px; 
+	height: 50px;
+}
+.logobis {
+	float: left;
+}
 #site_title {
 	font-family: "Times New Roman", Times, serif;
 	border: 1px solid white;

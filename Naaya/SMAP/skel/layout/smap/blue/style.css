@@ -738,6 +738,14 @@ div>ul.proj_projects {
 	height: 95px; 
 	position: relative;
 }
+.logobis {
+	float: right;
+}
+.logobis img { 
+	margin: 5px;
+	width: 165px; 
+	height: 50px;
+}
 .topmenu {
 	position: absolute; 
 	top: 59px; 
