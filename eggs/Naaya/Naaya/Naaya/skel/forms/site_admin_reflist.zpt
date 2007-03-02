@@ -40,7 +40,7 @@
 	</tr>
 	<tr tal:repeat="record reflist/get_list">
 		<td><input type="checkbox" name="ids" tal:attributes="value record/id"></td>
-		<td tal:define="quoted_id python:here.utUrlEncode(record.id)"><a tal:attributes="href string:${site_url}/admin_reflist_html?id=${reflist/id}&item=${quoted_id}#edititem" tal:content="record/title">title</a></td>
+		<td tal:define="quoted_id python:here.utUrlEncode(record.id)"><a tal:attributes="href string:${site_url}/admin_reflist_html?id=${reflist/id}&item=${quoted_id}#edititem" tal:content="python:test(record.title.strip(), record.title, record.id)">title</a></td>
 	</tr>
 	<tr>
 		<td></td>
