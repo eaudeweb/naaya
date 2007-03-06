@@ -38,6 +38,7 @@ from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
 from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
 from managers.utils                                 import *
 from tools.SyncerTool.SyncerTool                    import manage_addSyncerTool
+from Products.NaayaForum.NyForum                    import manage_addNyForum
 try:
     from Products.NaayaCore.GeoMapTool.GeoMapTool       import manage_addGeoMapTool
     GM_INSTALLED = 1
@@ -113,14 +114,16 @@ class SMAPSite(NySite, ProfileMeta):
         #set portal index's right portlets
         self.getPortletsTool().set_right_portlets_locations('', ['portlet_rdfcalendar'])
 
+        #default Forum instance
+        manage_addNyForum(self, id=ID_FORUM, title=TITLE_FORUM)
+
         #default RDF Calendar settings
         manage_addRDFCalendar(self, id=ID_RDFCALENDAR, title=TITLE_RDFCALENDAR, week_day_len=1)
         rdfcalendar_ob = self._getOb(ID_RDFCALENDAR)
-        #TODO: to change the RDF Summary url maybe
-        manage_addRDFSummary(rdfcalendar_ob, 'example', 'Example',
-                             'http://smap.ewindows.eu.org/portal_syndication/events_rdf', '', 'no')
+        manage_addRDFSummary(rdfcalendar_ob, 'events', 'Events',
+                             'http://smap2.ewindows.eu.org/events/index_rdf', '', 'no')
         rdfcal_ob = self._getOb(ID_RDFCALENDAR)
-        rdfcal_ob._getOb('example').update()
+        rdfcal_ob._getOb('events').update()
 
     security.declarePrivate('createSMAPPortalTools')
     def createSMAPPortalTools(self):
