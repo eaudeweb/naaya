@@ -85,7 +85,7 @@
 			<div id="left_port">
 			<div id="search_area">
 					<form method="get" tal:attributes="action string:${site_url}/search_html">
-						<label accesskey="4" for="query" i18n:translate="">Global search: </label>
+						<label accesskey="4" for="query" i18n:translate="">Global search</label>
 						<input id="query" type="text" name="query" i18n:attributes="value" value="Type text to search" style="color:#999999" onclick="this.value='';this.style.color='#000000'" size="10" />
 						<input type="submit" id="go_search" name="go_search" value="Go" i18n:attributes="value" />
 					</form>

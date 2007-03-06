@@ -36,3 +36,5 @@ METATYPE_SMAPSITE =       'SMAP Site'
 #deafault content related
 ID_RDFCALENDAR =        'portal_rdfcalendar'
 TITLE_RDFCALENDAR =     'RDF Calendar'
+ID_FORUM =              'portal_forum'
+TITLE_FORUM =           'Forum'

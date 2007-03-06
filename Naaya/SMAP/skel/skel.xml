@@ -57,10 +57,11 @@
 		<pluggablecontenttype meta_type="Naaya GeoPoint" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Contact" action="1"/>
 	</pluggablecontenttypes>
-	<portlets left="portlet_left_side" center="portlet_latestuploads_rdf">
+	<portlets left="portlet_quick_links,portlet_left_side" center="portlet_latestuploads_rdf">
 		<portlet id="portlet_rdfcalendar" title="RDF Calendar"/>
 		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="portlet_left_side" title="Left-side navigation" />
+		<portlet id="portlet_quick_links" title="Left-side quick links" />
 		<portlet id="portlet_folder_impex" title="Export/Import"/>
 		<linkslist id="menunav_links" title="Menu navigation links" portlet="">
 			<link id="108" title="About us" description="" url="/about" relative="1" permission="" order="9"/>
@@ -297,7 +298,7 @@
 	</properties>
 	<security>
 		<grouppermissions name="Add content" description="Create Naaya objects. Editing, publishing and deleting them are not granted as a part of thisprivilege."
-			permissions="Naaya - Access administrative area,Naaya - Add Naaya Folder objects,Naaya - Add Naaya Document objects,Naaya - Add Naaya Event objects,Naaya - Add Naaya File objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Pointer objects,Naaya - Add Naaya Story objects,Naaya - Add Naaya URL objects,Naaya - Add Naaya SMAP Expert objects,Naaya - Add Naaya SMAP Project objects,Naaya - Add Naaya Photo,Naaya - Add Naaya Media File objects,Naaya - Add Naaya GeoPoint objects,Naaya - Add Naaya Contact objects,Take ownership"/>
+			permissions="Naaya - Access administrative area,Naaya - Add Naaya Folder objects,Naaya - Add Naaya Document objects,Naaya - Add Naaya Event objects,Naaya - Add Naaya File objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Pointer objects,Naaya - Add Naaya Story objects,Naaya - Add Naaya URL objects,Naaya - Add Naaya SMAP Expert objects,Naaya - Add Naaya SMAP Project objects,Naaya - Add Naaya Photo,Naaya - Add Naaya Media File objects,Naaya - Add Naaya GeoPoint objects,Naaya - Add Naaya Contact objects,Naaya Forum Topic,Naaya Forum Message,Take ownership"/>
 	</security>
 	<others>
 		<nyexp_schema url="http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaDocuments/schemas/smap/naaya-smap-nyexp-1.0.0.xsd"/>
