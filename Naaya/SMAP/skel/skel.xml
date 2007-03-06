@@ -298,7 +298,9 @@
 	</properties>
 	<security>
 		<grouppermissions name="Add content" description="Create Naaya objects. Editing, publishing and deleting them are not granted as a part of thisprivilege."
-			permissions="Naaya - Access administrative area,Naaya - Add Naaya Folder objects,Naaya - Add Naaya Document objects,Naaya - Add Naaya Event objects,Naaya - Add Naaya File objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Pointer objects,Naaya - Add Naaya Story objects,Naaya - Add Naaya URL objects,Naaya - Add Naaya SMAP Expert objects,Naaya - Add Naaya SMAP Project objects,Naaya - Add Naaya Photo,Naaya - Add Naaya Media File objects,Naaya - Add Naaya GeoPoint objects,Naaya - Add Naaya Contact objects,Naaya Forum Topic,Naaya Forum Message,Take ownership"/>
+			permissions="Naaya - Access administrative area,Naaya - Add Naaya Folder objects,Naaya - Add Naaya Document objects,Naaya - Add Naaya Event objects,Naaya - Add Naaya File objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Pointer objects,Naaya - Add Naaya Story objects,Naaya - Add Naaya URL objects,Naaya - Add Naaya SMAP Expert objects,Naaya - Add Naaya SMAP Project objects,Naaya - Add Naaya Photo,Naaya - Add Naaya Media File objects,Naaya - Add Naaya GeoPoint objects,Naaya - Add Naaya Contact objects,Naaya Forum Message,Take ownership"/>
+		<grouppermissions name="Edit content" description="Adding, publishing and deleting are not granted as a part of this privilege. Edit content is only allowed for owners if users do not have the 'Naaya - Publish content' permission."
+			permissions="Naaya - Access administrative area,Naaya - Edit content,Add Naaya Forum,Add Naaya Forum Message,Add/Edit/Delete Naaya Forum Topic,Edit/Delete Forum Message,Take ownership"/>
 	</security>
 	<others>
 		<nyexp_schema url="http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaDocuments/schemas/smap/naaya-smap-nyexp-1.0.0.xsd"/>
