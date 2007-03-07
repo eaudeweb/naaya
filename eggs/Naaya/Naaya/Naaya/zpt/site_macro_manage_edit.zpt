@@ -14,6 +14,14 @@
 	Selected language: <strong tal:content="python:here.gl_get_language_name(here.gl_get_selected_language())" />
 </p>
 
+<fieldset tal:condition="not:here/submitted">
+	<legend>Warrning</legend>
+	<form name="frmEdit" method="post" action="submit_this" enctype="multipart/form-data">
+		<p>This object can be only viewed from the ZMI and not from portal pages. Click on the 'Release' button below to change its status.</p>
+		<input type="submit" value="Release" />
+	</form>
+</fieldset>
+
 <form name="frmEdit" method="post" action="manageProperties" enctype="multipart/form-data">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr><td class="form-label" colspan="2">Base properties</td></tr>
