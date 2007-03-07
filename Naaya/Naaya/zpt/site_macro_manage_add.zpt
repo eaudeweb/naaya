@@ -54,7 +54,13 @@
 		<td class="form-label"><span tal:replace="record/name"/></td>
 		<td tal:content="structure python:record.render(record.defaultvalue)">dynamic html control</td>
 	</tr>
-	<tr><td></td><td><input type="submit" value="Add" /></td></tr>
+	<tr>
+		<td></td>
+		<td>
+			<input type="hidden" name="submitted" value="1" />
+			<input type="submit" value="Add" />
+		</td>
+	</tr>
 </table>
 </form>
 
