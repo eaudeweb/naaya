@@ -98,10 +98,12 @@ def addNyStory(self, id='', title='', description='', coverage='', keywords='',
     #extra settings
     ob = self._getOb(id)
     ob.updatePropertiesFromGlossary(lang)
+    if kwargs.has_key('submitted'): ob.submitThis()
     if discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     #redirect if case
     if REQUEST is not None:
+        if REQUEST.has_key('submitted'): ob.submitThis()
         l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if l_referer == 'story_manage_add' or l_referer.find('story_manage_add') != -1:
             return self.manage_main(self, REQUEST, update_menu=1)
@@ -245,6 +247,12 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         if discussion: self.open_for_comments()
         else: self.close_for_comments()
         self.recatalogNyObject(self)
+        if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
+
+    security.declareProtected(view_management_screens, 'submitThis')
+    def submit_this(self, REQUEST=None):
+        """ """
+        self.submitThis()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #site actions
