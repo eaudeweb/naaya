@@ -48,6 +48,7 @@ function shLegend()
 <tal:block condition="here/checkPermissionPublishObjects">
 	<div><span i18n:translate="">Management: </span><a tal:attributes="href string:${here/absolute_url}/admin_symbols_html"><img src="/misc_/Naaya/edit" border="0" alt="Administration" /></a></div>
 </tal:block>
+<div i18n:translate="">The backgrounds from this map are offered by the <a href="http://www.eea.europa.eu" title="">European Environment Agency</a>.</div>
 <div i18n:translate="">The map below was created using Macromedia Flash 8. If you do not see it properly install the latest plugin from the <a href="http://www.macromedia.com/go/getflashplayer">Macromedia site</a>.</div>
 <br />
 <div class="view_legend">
