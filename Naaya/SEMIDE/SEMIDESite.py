@@ -400,6 +400,11 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         except:
             return ''
 
+    def getLinkCheckerLastLog(self):
+        entries = self.utSortObjsListByAttr(self._getOb(ID_LINKCHECKER).objectValues('LogEntry'), 'date_create', p_desc=1)
+        if len(entries) > 0: return entries[0]
+        else: return None
+
     security.declarePublic('get_containers_metatypes')
     def get_containers_metatypes(self):
         #this method is used to display Naaya & Semide container types
