@@ -4,7 +4,14 @@
 
 <tal:block metal:fill-slot="section">
 
-<tal:block content="structure python:here.getLinkChecker().index_html()" />
+<p i18n:translate="">
+	The URL checker runs at regular basis on your system an creates logs with the links found broken at that time. 
+        You can consult the last broken links log below.
+</p>
+
+<tal:block tal:define="lastlog here/getLinkCheckerLastLog" tal:condition="python:lastlog is not None">
+	<span tal:replace="structure lastlog/index_html" />
+</tal:block>
 
 </tal:block>
 </tal:block>
