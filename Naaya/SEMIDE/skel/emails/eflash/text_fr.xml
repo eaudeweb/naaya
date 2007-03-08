@@ -20,11 +20,9 @@
 
 <xsl:template name="trans_toc">Table of content</xsl:template>
 <xsl:template name="trans_publisher">Publisher</xsl:template>
-<xsl:template name="trans_source">Source</xsl:template>
 <xsl:template name="trans_link">Link</xsl:template>
-<xsl:template name="trans_further_info">Further infromation on </xsl:template>
+<xsl:template name="trans_further_info">Further information on </xsl:template>
 <xsl:template name="trans_further_site">EMWIS website</xsl:template>
-<xsl:template name="trans_more_info">More information</xsl:template>
 <!--End of page translations-->
 
 <xsl:template name="headings"><!--template used for section headings (in TOC and in the listing of documents)-->
@@ -97,16 +95,8 @@
 </xsl:text>
 </xsl:if>
 </xsl:if>
-<!--display the source and link it if source_link was provided-->
-<xsl:if test="@source!='' or @source_link!=''"
->- <xsl:call-template name="trans_source"/>: <xsl:if test="@source!=''"><xsl:value-of select="@source"/></xsl:if>
-<xsl:if test="@source_link!=''"> (<xsl:value-of select="@source_link"/>)</xsl:if>
-</xsl:if>
 <xsl:if test="@url!=''">
 - <xsl:call-template name="trans_further_info"/> <xsl:call-template name="trans_further_site"/>: <xsl:value-of select="@url"/>
-</xsl:if>
-<xsl:if test="@file_link!=''">
-- <xsl:call-template name="trans_more_info"/>: <xsl:value-of select="@file_link"/>
 </xsl:if>
 <xsl:text>
 
