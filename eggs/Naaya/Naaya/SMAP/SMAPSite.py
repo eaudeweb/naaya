@@ -152,6 +152,13 @@ class SMAPSite(NySite, ProfileMeta):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_reflists_html' % self.absolute_url())
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'testRefListExist')
+    def testRefListExist(self, id):
+        """ """
+        for item in self.getPortletsTool().getRefLists():
+            if item.id == id: return 1
+        return 0
+
     security.declarePublic('getCountriesList')
     def getCountriesList(self):
         """ Return the selection list for countries """

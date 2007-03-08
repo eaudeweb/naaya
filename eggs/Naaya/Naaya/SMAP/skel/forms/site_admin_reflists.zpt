@@ -49,8 +49,9 @@
 			<em>Projects area</em><br /><br />
 			<tal:block define="prj_list here/getPrioritiesTypesList">
 				<tal:block repeat="item prj_list">
-					<div>
-						<input type="radio" name="assoc_list" tal:attributes="value python:'focuses_'+item.id[:3]" />
+					<div tal:define="item_id python:'focuses_'+item.id[:3].lower()">
+						<input type="radio" name="assoc_list" tal:attributes="value item_id;
+																			  disabled python:test(here.testRefListExist(item_id), 'disabled', '')" />
 						<span tal:content="python:test(item.title.strip(), item.title, item.id)" />
 					</div>
 				</tal:block>
@@ -60,8 +61,9 @@
 			<em>Topics of expertise</em><br /><br />
 			<tal:block define="exp_list here/getExpPrioritiesTypesList">
 				<tal:block repeat="item exp_list">
-					<div>
-						<input type="radio" name="assoc_list" tal:attributes="value python:'focuses_'+item.id[:3]+'_exp'" />
+					<div tal:define="item_id python:'focuses_'+item.id[:3].lower()+'_exp'">
+						<input type="radio" name="assoc_list" tal:attributes="value item_id;
+																			  disabled python:test(here.testRefListExist(item_id), 'disabled', '')" />
 						<span tal:content="python:test(item.title.strip(), item.title, item.id)" />
 					</div>
 				</tal:block>
