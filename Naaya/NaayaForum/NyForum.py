@@ -137,9 +137,13 @@ class NyForum(NyForumBase, Folder, utils):
         if file != '':
             if hasattr(file, 'filename'):
                 if file.filename != '':
+                    if file.filename.find('\\') != -1:
+                        id = file.filename.split('\\')[-1]
+                    else:
+                        id = file.filename
                     #check file size
                     if len(file.read()) <= self.file_max_size or self.file_max_size == 0:
-                        ob.manage_addFile(id='', file=file)
+                        ob.manage_addFile(id=id, file=file)
 
     def can_be_seen(self):
         """
