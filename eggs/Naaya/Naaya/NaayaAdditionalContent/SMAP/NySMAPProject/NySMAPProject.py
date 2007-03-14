@@ -142,7 +142,7 @@ def addNySMAPProject(self, id='', title='', description='', coverage='', keyword
                     coverage=coverage, keywords=keywords, country=country, sortorder=sortorder, releasedate=releasedate,
                     discussion=discussion, contact=contact, donor=donor, links=links, organisation=organisation,
                     location=location, main_issues=main_issues, tools=tools, budget=budget, timeframe=timeframe,
-                    priority_area=priority_area, focus=focus, lang=lang)
+                    focus=focus, lang=lang)
             REQUEST.RESPONSE.redirect('%s/project_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)
