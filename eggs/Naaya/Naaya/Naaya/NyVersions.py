@@ -189,4 +189,16 @@ class NyVersions:
         delattr(self, '_NySite__network_portals')
         return "Network portals managers set."
 
+    def update_to_urls_multilingual(self, REQUEST=None):
+        """ """
+        catalog_tool = self.getCatalogTool()
+        for url_ob in catalog_tool.query_objects_ex(meta_type="Naaya URL"):
+            try:
+                buf = url_ob.locator
+                del url_ob.locator
+                url_ob._setLocalPropValue('locator', 'en', buf)
+                url_ob._p_changed = 1
+            except:
+                pass
+
 InitializeClass(NyVersions)
