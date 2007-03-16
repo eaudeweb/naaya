@@ -23,6 +23,7 @@
 #python imports
 import time
 import string
+from copy import copy
 
 #zope imports
 from OFS.ObjectManager import ObjectManager
@@ -247,6 +248,21 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
             res.append(user_obj.name)
         return res
 
+    security.declareProtected(manage_users, 'getUsersRolesRestricted')
+    def getUsersRolesRestricted(self, path):
+        """
+        Returns information about the user's roles inside the given path.
+        """
+        users_roles = {}
+        for folder in self.getCatalogedObjects(meta_type=[METATYPE_FOLDER,'Folder'], has_local_role=1, path=path):
+            for roles_tuple in folder.get_local_roles():
+                local_roles = self.getLocalRoles(roles_tuple[1])
+                if roles_tuple[0] in self.user_names() and len(local_roles) > 0:
+                    if not users_roles.has_key(str(roles_tuple[0])):
+                        users_roles[str(roles_tuple[0])] = []
+                    users_roles[str(roles_tuple[0])].append((local_roles, folder.absolute_url(1)))
+        return users_roles
+
     security.declareProtected(manage_users, 'searchUsers')
     def searchUsers(self, query, limit=0):
         """ search users """
@@ -333,6 +349,51 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
             if (len(v) > 1 and len(v[1][0]) > 0) or (len(v) == 1 and len(v[0][0]) > 0):
                 users[k] = v
         return users
+
+    def getUserSource(self, user):
+        """ given a user returns the source """
+        user_ob = self.getUser(user)
+        if user_ob:
+            return 'acl_users'
+        else:
+            #check sources
+            for source in self.getSources():
+                source_acl = source.getUserFolder()
+                user_ob = source_acl.getUser(user)
+                if user_ob:
+                    return source.title
+            return 'n/a'
+
+    security.declareProtected(manage_users, 'getUsersEmails')
+    def getUsersEmails(self, users):
+        """
+        Given a list of users ids it returns the list with their emails.
+        A lookup will be made against the portal users folder and also
+        in against all the sources.
+        """
+        r = []
+        ra = r.append
+        buf = copy(users)
+        #first check local users
+        local_users = self.user_names()
+        for user in users:
+            if user in local_users:
+                email = self.getUserEmail(self.getUser(user))
+                if email is not None: ra(email)
+                buf.remove(user)
+        if len(buf):
+            buf1 = copy(buf)
+            #check sources
+            for source in self.getSources():
+                source_acl = source.getUserFolder()
+                source_users = source_acl.user_names()
+                for user in buf:
+                    if user in source_users:
+                        email = source.getUserEmail(source_acl.getUser(user))
+                        if email is not None: ra(email)
+                        buf1.remove(user)
+                    if len(buf1)==0: break
+        return r
 
     def getUserAccount(self, user_obj):
         """ Return the username"""
