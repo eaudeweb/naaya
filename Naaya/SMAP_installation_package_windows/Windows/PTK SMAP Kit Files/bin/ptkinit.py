@@ -124,7 +124,7 @@ class PortalInit:
                     for l in [@@PORTAL_LANGUAGES@@]:
                         portal.gl_add_site_language(l)
                     #main topics
-                    portal.getPropertiesTool().manageMainTopics(maintopics=['fol120392', 'fol112686', 'fol034934', 'test1'])
+                    portal.getPropertiesTool().manageMainTopics(maintopics=['fol120392', 'fol657555', 'fol112686', 'fol034934', 'test1'])
                 except Exception, error:
                     #failed to setup the portal
                     self.exit_script('\tFailed to setup the portal in ZODB: %s.\n' % str(error))
