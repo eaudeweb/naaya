@@ -21,6 +21,8 @@
 #Python imports
 
 #Zope imports
+from AccessControl import getSecurityManager
+from AccessControl.Permissions import view
 
 #Product imports
 class catalog_tool:
@@ -128,6 +130,40 @@ class catalog_tool:
             l_results = l_results[:howmany]
         l_results = self.__getObjects(l_results)
         return l_results
+
+    # This function is similar to getCatalogedObjects, but also checks for view permission on objects
+    def getCatalogedObjectsCheckView(self, meta_type=None, approved=0, howmany=-1, sort_on='releasedate', sort_order='reverse', has_local_role=0, **kwargs):
+        l_results = []
+        l_filter = {'submitted': 1} #only submitted items
+        if approved == 1: l_filter['approved'] = 1
+        if has_local_role == 1: l_filter['has_local_role'] = 1
+        if sort_on != '':
+            l_filter['sort_on'] = sort_on
+            if sort_order != '':
+                l_filter['sort_order'] = sort_order
+        if meta_type: l_filter['meta_type'] = self.utConvertToList(meta_type)
+        else: l_filter['meta_type'] = self.searchable_content
+        #extra filters
+        l_filter.update(kwargs)
+        #perform the search
+        l_results = self.__searchCatalog(l_filter)
+        if howmany == -1:
+            l_objects = self.__getObjects(l_results)
+            return [obj for obj in l_objects if getSecurityManager().checkPermission(view, obj)]
+        else:
+            l_temp = l_results[:howmany]
+            l_all = len(l_results)
+            l_objects = self.__getObjects(l_temp)
+            l_output = []
+            l_counter = howmany
+            while len(l_temp) > 0:
+                l_output.extend([obj for obj in l_objects if getSecurityManager().checkPermission(view, obj)])
+                if len(l_output) >= howmany:
+                    return l_output[:howmany]
+                else:
+                    l_temp = l_results[l_counter:l_counter+howmany]
+                    l_counter = l_counter + howmany
+                    l_objects = self.__getObjects(l_temp)
 
     def getCatalogedUnsubmittedObjects(self, meta_type=None):
         """
