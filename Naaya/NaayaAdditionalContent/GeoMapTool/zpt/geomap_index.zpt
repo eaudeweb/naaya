@@ -66,10 +66,10 @@ href="#map-legend" onclick="shLegend()" name="lnklegend" id="lnklegend" i18n:tra
 			<param name="movie" value="misc_/SMAP/dnt_rgis.swf" />
 			<param name="quality" value="high" />
 			<param name="bgcolor" value="#cccccc" />
-			<param name="flashvars" tal:attributes="value string:vars=${here/absolute_url}/geomap_gml;;${here/absolute_url}/misc_/SMAP/bounding.xml;;${here/absolute_url}/symbols_xml;;destinet_v1;;geonode.eea.eu.int;;EU;;" />
+			<param name="flashvars" tal:attributes="value string:vars=${here/absolute_url}/geomap_gml;;${here/absolute_url}/misc_/SMAP/bounding.xml;;${here/absolute_url}/symbols_xml;;destinet_v1;;geonode.eea.europa.eu;;EU;;" />
 			<embed src="misc_/SMAP/dnt_rgis.swf" 
 				quality="high" 
-				tal:attributes="flashvars string:vars=${here/absolute_url}/geomap_gml;;${here/absolute_url}/misc_/SMAP/bounding.xml;;${here/absolute_url}/symbols_xml;;destinet_v1;;geonode.eea.eu.int;;EU;;"
+				tal:attributes="flashvars string:vars=${here/absolute_url}/geomap_gml;;${here/absolute_url}/misc_/SMAP/bounding.xml;;${here/absolute_url}/symbols_xml;;destinet_v1;;geonode.eea.europa.eu;;EU;;"
 				bgcolor="#cccccc" 
 				width="800" height="600" 
 				name="dnt_rgis" align="middle" 
