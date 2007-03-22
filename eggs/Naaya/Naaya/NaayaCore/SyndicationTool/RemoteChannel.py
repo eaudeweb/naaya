@@ -107,7 +107,7 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
     def updateChannel(self, uid):
         """ """
         if uid==self.get_site_uid():
-            self.harvest_feed()
+            self.harvest_feed(self.http_proxy)
             if self.get_feed_bozo_exception() is not None: error = self.get_feed_bozo_exception()
             else: error = ''
             return str(error)
