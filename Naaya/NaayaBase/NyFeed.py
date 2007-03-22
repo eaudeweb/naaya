@@ -28,6 +28,7 @@ U{http://feedparser.org/}.
 #Python imports
 import feedparser
 from copy import deepcopy
+import urllib2
 
 #Zope imports
 
@@ -172,11 +173,15 @@ class NyFeed:
         if type(value) == type(u''): value = value
         return value
 
-    def harvest_feed(self):
+    def harvest_feed(self, http_proxy):
         """
         Handles the feed grabbing and parsing.
         """
-        p = feedparser.parse(self.get_feed_url(), etag=self.__feed_etag, modified=self.__feed_modified)
+        if http_proxy:
+            proxy = urllib2.ProxyHandler({"http":http_proxy})
+            p = feedparser.parse(self.get_feed_url(), etag=self.__feed_etag, modified=self.__feed_modified, handlers = [proxy])
+        else:
+            p = feedparser.parse(self.get_feed_url(), etag=self.__feed_etag, modified=self.__feed_modified)
         if p.get('bozo', 0) == 1:
             #some error occurred
             if p.has_key('status'):
