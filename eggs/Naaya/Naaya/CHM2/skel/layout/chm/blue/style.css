@@ -202,6 +202,8 @@
 			padding-bottom:0.2em;
 			background-color:#b8d6e8; /*#637785*/ /*#637048*/ /*#343434*/ /*#d3e189*/
 			margin-top:1px;
+			position: relative;
+			height: 1em;
 		}
 
 			#nav2 ul {
