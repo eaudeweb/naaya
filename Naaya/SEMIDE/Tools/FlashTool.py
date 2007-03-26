@@ -219,6 +219,7 @@ class FlashTool(Folder, ProfileMeta, utils):
         elif skey == 'ln':  skey = 2
         elif skey == 'email':   skey = 3
         elif skey == 'instant':  skey = 4
+        elif skey == 'lang':    skey = 5
         else:   skey = 0
         users = []
         results= []
@@ -226,12 +227,13 @@ class FlashTool(Folder, ProfileMeta, utils):
         for user in site.getAuthenticationTool().getUsers():
             profile = profiles_tool.getProfile(user.name)
             sheet_ob = profile.getSheetById(self.getInstanceSheetId())
-            if query:
-                if self.utToUnicode(user.name).find(query)!=-1 or user.email.find(query)!=-1 or \
-                        self.utToUnicode(user.firstname).find(query)!=-1 or self.utToUnicode(user.lastname).find(query)!=-1:
+            if sheet_ob.notify or sheet_ob.flash:
+                if query:
+                    if self.utToUnicode(user.name).find(query)!=-1 or user.email.find(query)!=-1 or \
+                            self.utToUnicode(user.firstname).find(query)!=-1 or self.utToUnicode(user.lastname).find(query)!=-1:
+                        users_a((user.name, user.firstname, user.lastname, user.email, sheet_ob.notify, sheet_ob.language))
+                else:
                     users_a((user.name, user.firstname, user.lastname, user.email, sheet_ob.notify, sheet_ob.language))
-            else:
-                users_a((user.name, user.firstname, user.lastname, user.email, sheet_ob.notify, sheet_ob.language))
         results = [(x[skey], x) for x in users]
         results.sort()
         if rkey: results.reverse()
@@ -287,7 +289,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                                             resource_date_range='min',
                                             path=path)
 
-        documents = self.getCatalogedObjects(meta_type=[METATYPE_NYDOCUMENT], 
+        documents = self.getCatalogedObjects(meta_type=[METATYPE_NYSEMDOCUMENT], 
                                             approved=1, 
                                             resource_date=self.doc_start_date, 
                                             resource_date_range='min',
@@ -319,7 +321,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                     training.append(obj)
                 else:
                     events.append(obj)
-            if obj.meta_type == METATYPE_NYDOCUMENT:
+            if obj.meta_type == METATYPE_NYSEMDOCUMENT:
                 publication.append(obj)
         inbrief = self.utSortObjsListByAttr(inbrief, 'news_date')
         nomination = self.utSortObjsListByAttr(nomination, 'news_date')
@@ -331,9 +333,8 @@ class FlashTool(Folder, ProfileMeta, utils):
         publication = self.utSortObjsListByAttr(publication, 'resource_date')
         return inbrief, nomination, awards, publication, tender, papers, training, events
 
-    security.declarePrivate('generate_flash')
     def generate_flash(self):
-        """ """
+        #generate and save the flash message
         notifications = self.collect_objects(self.path)
         inbrief, nomination, awards, publication, tender, papers, training, events = self.filter_objects(notifications)
         if inbrief or nomination or awards or publication or tender or papers or training or events:
@@ -400,7 +401,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                         if mesg_type == 'html':
                             xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
                         else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.stripAllHtmlTags(obj.getLocalProperty('description', lang))))
+                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
                         xml_append('</news>')
                 xml_append('</section>')
 
@@ -416,7 +417,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                         if mesg_type == 'html':
                             xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
                         else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.stripAllHtmlTags(obj.getLocalProperty('description', lang))))
+                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
                         xml_append('</news>')
                 xml_append('</section>')
 
@@ -432,7 +433,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                         if mesg_type == 'html':
                             xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
                         else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.stripAllHtmlTags(obj.getLocalProperty('description', lang))))
+                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
                         xml_append('</news>')
                 xml_append('</section>')
 
@@ -448,7 +449,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                         if mesg_type == 'html':
                             xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
                         else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.stripAllHtmlTags(obj.getLocalProperty('description', lang))))
+                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
                         xml_append('</document>')
                 xml_append('</section>')
 
@@ -464,7 +465,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                         if mesg_type == 'html':
                             xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
                         else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.stripAllHtmlTags(obj.getLocalProperty('description', lang))))
+                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
                         xml_append('</news>')
                 xml_append('</section>')
 
@@ -480,7 +481,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                         if mesg_type == 'html':
                             xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
                         else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.stripAllHtmlTags(obj.getLocalProperty('description', lang))))
+                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
                         xml_append('</news>')
                 xml_append('</section>')
 
@@ -496,7 +497,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                         if mesg_type == 'html':
                             xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
                         else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.stripAllHtmlTags(obj.getLocalProperty('description', lang))))
+                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
                         xml_append('</event>')
                 xml_append('</section>')
 
@@ -512,7 +513,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                         if mesg_type == 'html':
                             xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
                         else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.stripAllHtmlTags(obj.getLocalProperty('description', lang))))
+                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
                         xml_append('</event>')
                 xml_append('</section>')
 
@@ -554,7 +555,12 @@ class FlashTool(Folder, ProfileMeta, utils):
             #grab all the items
             self.notif_cache = self.clean_duplicates(self.notif_cache)
             #get the objects
-            items_obj = [ self.unrestrictedTraverse(x) for x in self.notif_cache ]
+            items_obj = []
+            for item in self.notif_cache:
+                try:
+                    items_obj.append(self.unrestrictedTraverse(item))
+                except KeyError:
+                    pass
             xmls_html = self.instant_xml(items_obj, 'html')
             xmls_text = self.instant_xml(items_obj, 'text')
             htmls = {}
@@ -709,7 +715,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                         if p_type == 'html':
                             xml_append('<description>%s</description>' % self.utXmlEncode(item.getLocalProperty('description', lang)))
                         else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.stripAllHtmlTags(item.getLocalProperty('description', lang))))
+                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(item.getLocalProperty('description', lang))))
                     xml_append('</object>')
             xml_append('</objects>')
             xml_append('</inotif>')
