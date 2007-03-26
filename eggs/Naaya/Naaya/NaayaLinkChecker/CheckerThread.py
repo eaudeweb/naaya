@@ -23,11 +23,9 @@ import socket
 import threading
 import time
 
-from Products.NaayaLinkChecker.MyURLopener import MyURLopener
-from Products.NaayaLinkChecker import timeoutsocket
+from MyURLopener import MyURLopener
+import LinkChecker
 logresults = {}
-
-timeoutsocket.setDefaultSocketTimeout(30)
 
 class CheckerThread(threading.Thread):
 
@@ -60,13 +58,14 @@ class CheckerThread(threading.Thread):
         if self.proxy != '':
             file.proxies['http'] = self.proxy
         try:
+            socket.setdefaulttimeout(5)
             file.open(url)
             file.close()
             return 'OK'
         except IOError, msg:
             msg = self.sanitize(msg)
             return msg
-        except:
+        except socket.timeout:
             return "Attempted connect timed out."
 
     def sanitize(self, msg):
