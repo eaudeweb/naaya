@@ -190,7 +190,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[ar].xml')))
 
         #set the default thesaurus on picklists
-        self.admin_properties(1, '', '', ID_THESAURUS, ID_GLOSSARY_COVERAGE, '', '')
+        self.admin_properties(1, '', '', '', ID_THESAURUS, ID_GLOSSARY_COVERAGE, '', '')
 
         #set default calendar object
         manage_addEventCalendar(self, ID_CALENDAR, '', '', '1',
@@ -697,6 +697,15 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
 
         query = self.utStrEscapeForSearch(query)
         l_query = 'approved=1%s' % query_th
+
+        sd = self.utConvertStringToDateTimeObj(start_date)
+        ed = self.utConvertStringToDateTimeObj(end_date)
+        if sd and ed:
+            l_query += ', resource_date=[start_date, end_date], resource_date_range=\'minmax\''
+        elif sd:
+            l_query += ', resource_date=start_date, resource_date_range=\'min\''
+        elif ed:
+            l_query += ', resource_date=end_date, resource_date_range=\'max\''
 
         for lang in langs:
             if query: l_query += ', objectkeywords_%s=query' % lang
