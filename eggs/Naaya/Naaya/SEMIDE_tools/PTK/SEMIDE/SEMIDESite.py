@@ -107,11 +107,11 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         self.getPortletsTool().manage_delObjects('topnav_links')
 
         manage_addHelpDesk(self, ID_HELPDESKAGENT, TITLE_HELPDESKAGENT, self.getAuthenticationToolPath(1))
-        #manage_addNyPhotoFolder(self.documents, ID_PHOTOARCHIVE, TITLE_PHOTOARCHIVE, self.getAuthenticationToolPath(1))
+        #manage_addNyPhotoFolder(self.documents, ID_PHOTOARCHIVE, TITLE_PHOTOARCHIVE, self.getAuthenticationToolPath(1))
 
         manage_addRDFCalendar(self, id=ID_RDFCALENDAR, title=TITLE_RDFCALENDAR, week_day_len=1)
         rdfcalendar_ob = self._getOb(ID_RDFCALENDAR)
-        manage_addRDFSummary(rdfcalendar_ob, 'example', 'Example', 'http://vague.eurecom.fr/portal_syndication/upcomingevents_rdf', '', 'no')
+        #manage_addRDFSummary(rdfcalendar_ob, 'example', 'Example', 'http://vague.eurecom.fr/portal_syndication/upcomingevents_rdf', '', 'no')
 
         manage_addLinkChecker(self, ID_LINKCHECKER, TITLE_LINKCHECKER)
         linkchecker_ob = self._getOb(ID_LINKCHECKER)
@@ -190,7 +190,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[ar].xml')))
 
         #set the default thesaurus on picklists
-        self.admin_properties(1, '', '', ID_THESAURUS, ID_GLOSSARY_COVERAGE, '', '')
+        self.admin_properties(1, '', '', '', ID_THESAURUS, ID_GLOSSARY_COVERAGE, '', '')
 
         #set default calendar object
         manage_addEventCalendar(self, ID_CALENDAR, '', '', '1',
@@ -328,7 +328,6 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         except:
             pass
 
-
     def get_data_path(self):
         """ """
         return SEMIDE_PRODUCT_PATH
@@ -401,6 +400,11 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
             return gloss_elem[0].get_translation_by_language(lang_name)
         except:
             return ''
+
+    def getLinkCheckerLastLog(self):
+        entries = self.utSortObjsListByAttr(self._getOb(ID_LINKCHECKER).objectValues('LogEntry'), 'date_create', p_desc=1)
+        if len(entries) > 0: return entries[0]
+        else: return None
 
     security.declarePublic('get_containers_metatypes')
     def get_containers_metatypes(self):
@@ -694,6 +698,15 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
 
         query = self.utStrEscapeForSearch(query)
         l_query = 'approved=1%s' % query_th
+
+        sd = self.utConvertStringToDateTimeObj(start_date)
+        ed = self.utConvertStringToDateTimeObj(end_date)
+        if sd and ed:
+            l_query += ', resource_date=[start_date, end_date], resource_date_range=\'minmax\''
+        elif sd:
+            l_query += ', resource_date=start_date, resource_date_range=\'min\''
+        elif ed:
+            l_query += ', resource_date=end_date, resource_date_range=\'max\''
 
         for lang in langs:
             if query: l_query += ', objectkeywords_%s=query' % lang

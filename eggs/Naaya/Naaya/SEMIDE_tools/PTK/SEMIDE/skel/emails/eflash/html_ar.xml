@@ -19,11 +19,9 @@
 
 <xsl:template name="trans_toc">Table of content</xsl:template>
 <xsl:template name="trans_publisher">Publisher</xsl:template>
-<xsl:template name="trans_source">Source</xsl:template>
 <xsl:template name="trans_link">Link</xsl:template>
-<xsl:template name="trans_further_info">Further infromation on </xsl:template>
+<xsl:template name="trans_further_info">Further information on </xsl:template>
 <xsl:template name="trans_further_site">EMWIS website</xsl:template>
-<xsl:template name="trans_more_info">More information</xsl:template>
 <!--End of page translations-->
 
 <xsl:template name="headings"><!--template used for section headings (in TOC and in the listing of documents)-->
@@ -116,41 +114,12 @@
 		    <a href="{@url}"><xsl:call-template name="trans_further_site" /></a>
 		</p>
 
-                
-		<xsl:if test="@file_link!=''"><!--if 'More information' text if file_link was provided-->
-		    <p style="margin:0;">
-			<a href="{@file_link}">
-			    <xsl:call-template name="trans_more_info"/>
-			</a>
-		    </p>
-		</xsl:if>
-
-
                 <xsl:if test="name()='document'"><!--if document display the publisher-->
                     <xsl:if test="@publisher!=''">
                         <p style="margin:0;"><xsl:call-template name="trans_publisher"/>: <xsl:value-of select="@publisher"/></p>
                     </xsl:if>
                 </xsl:if>
                 
-                <xsl:if test="@source!=''"><!--display the source and link it if source_link was provided-->
-                    <xsl:call-template name="trans_source"/>:
-		    <xsl:if test="@source_link!=''">
-			<a href="{@source_link}">
-			    <xsl:value-of select="@source"/>
-			</a>
-		    </xsl:if>
-		    <xsl:if test="@source_link=''">
-			<xsl:value-of select="@source"/>
-		    </xsl:if>
-                </xsl:if>
-                <xsl:if test="@source=''"><!--display the source_link if it was provided without the source description-->
-		    <xsl:if test="@source_link!=''">
-                        <xsl:call-template name="trans_source"/>:
-			<a href="{@source_link}">
-			    <xsl:value-of select="@source_link"/>
-			</a>
-		    </xsl:if>
-                </xsl:if>
             </div>
             </xsl:for-each>
         </div>
