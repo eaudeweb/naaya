@@ -95,14 +95,20 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
 
     def getChannelItems_complete(self):
         #returns a list of dictionaries, where a dictionary stores the link and the title of the item
-        try: l = map(lambda x: ({'link': x['link'], 'title': x['title'], 'summary': x['summary'], 'date': x['modified']}), self.get_feed_items())
-        except: l = map(lambda x: ({'link': x['link'], 'title': x['title'], 'date': x['modified']}), self.get_feed_items())
+        try:
+            try: l = map(lambda x: ({'link': x['link'], 'title': x['title'], 'summary': x['summary'], 'date': x['modified']}), self.get_feed_items())
+            except: l = map(lambda x: ({'link': x['link'], 'title': x['title'], 'date': x['modified']}), self.get_feed_items())
+        except:
+            l = map(lambda x: ({'link': x['link'], 'title': x['title']}), self.get_feed_items())
         if self.numbershownitems > 0: return l[:self.numbershownitems]
         else: return l
     def getAllChannelItems(self):
         #returns a list of dictionaries, where a dictionary stores the link and the title of the item
-        try: l = map(lambda x: ({'link': x['link'], 'title': x['title'], 'date': x['modified'], 'summary': x['summary']}), self.get_feed_items())
-        except: l = map(lambda x: ({'link': x['link'], 'title': x['title'], 'date': x['modified']}), self.get_feed_items())
+        try:
+            try: l = map(lambda x: ({'link': x['link'], 'title': x['title'], 'date': x['modified'], 'summary': x['summary']}), self.get_feed_items())
+            except: l = map(lambda x: ({'link': x['link'], 'title': x['title'], 'date': x['modified']}), self.get_feed_items())
+        except:
+            l = map(lambda x: ({'link': x['link'], 'title': x['title']}), self.get_feed_items())
         return l
     def updateChannel(self, uid):
         """ """
