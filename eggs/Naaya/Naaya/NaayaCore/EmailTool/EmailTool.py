@@ -81,8 +81,8 @@ class EmailTool(Folder):
 
     #core
     def __create_email(self, p_content, p_to, p_from, p_subject):
-	if isinstance(p_content, unicode): p_content = p_content.encode('utf-8')        
-	if isinstance(p_subject, unicode): p_subject = p_subject.encode('utf-8')
+        if isinstance(p_content, unicode): p_content = p_content.encode('utf-8')        
+        if isinstance(p_subject, unicode): p_subject = p_subject.encode('utf-8')
         #creates a mime-message that will render as text
         l_out = cStringIO.StringIO()
         l_writer = MimeWriter.MimeWriter(l_out)
