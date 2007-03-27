@@ -257,7 +257,6 @@
 		</linkslist>
 		<linkslist id="quick_access" title="Quick access" portlet="">
 			<link id="1" title="Quick access about" description="" url="/about" relative="1" permission="" order="1"/>
-			<link id="2" title="Quick access countries" description="" url="/countries" relative="1" permission="" order="2"/>
 		</linkslist>
 		<reflist id="event_types" title="Event types" description="Types of events used by Naaya Event objects. When adding or editing events, the end users will be able to choose from list below.">
 			<item id="Seminar" title="Seminar"/>

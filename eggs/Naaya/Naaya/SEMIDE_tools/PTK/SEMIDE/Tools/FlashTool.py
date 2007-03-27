@@ -86,7 +86,7 @@ class FlashTool(Folder, ProfileMeta, utils):
         self.id = id
         self.title = title
         self.langs = []
-        self.archive_path = 'publications/eflash'
+        self.archive_path = 'thematicdirs/eflash'
         self.path = ''
 
         self.df_template = 'monthly'
