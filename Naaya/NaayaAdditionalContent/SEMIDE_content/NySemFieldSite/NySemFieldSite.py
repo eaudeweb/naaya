@@ -148,8 +148,7 @@ def importNySemFieldSite(self, param, id, attrs, content, properties, discussion
                 discussion=abs(int(attrs['discussion'].encode('utf-8'))))
             ob = self._getOb(id)
             for property, langs in properties.items():
-                for lang in langs:
-                    ob._setLocalPropValue(property, lang, langs[lang])
+                [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
             ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
                 approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
             if attrs['releasedate'].encode('utf-8') != '':
