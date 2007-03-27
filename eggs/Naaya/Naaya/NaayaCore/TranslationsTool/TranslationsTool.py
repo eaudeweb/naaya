@@ -113,27 +113,21 @@ class TranslationsTool(MessageCatalog):
         @param rkey: indicates if the list must be reversed
         @type rkey: string
         """
-        msgs, brokenmsgs = [], []
-        msgs_append, brokenmsgs_append = msgs.append, brokenmsgs.append
+        msgs = []
+        msgs_append = msgs.append
         langs = self.tt_get_languages_mapping()
         if skey == 'msg': skey = 0
         try: regex = re.compile(query.strip().lower())
         except: regex = re.compile('')
         for m, t in self._messages.items():
-            if isinstance(m, str):
-                if regex.search(m.lower()):
-                    e = [m]
-                    i = 1
-                    for lang in langs:
-                        if skey == lang['code']: skey = i
-                        e.append(len(t.get(lang['code'], '').strip())>0)
-                        i = i + 1
-                    msgs_append(tuple(e))
-            else:
-                brokenmsgs_append(m)
-        #clear broken messages
-        for x in brokenmsgs:
-            self.message_del(x)
+            if regex.search(m.lower()):
+                e = [m]
+                i = 1
+                for lang in langs:
+                    if skey == lang['code']: skey = i
+                    e.append(len(t.get(lang['code'], '').strip())>0)
+                    i = i + 1
+                msgs_append(tuple(e))
         #sort messages
         t = [(x[skey], x) for x in msgs]
         if skey == 0:
@@ -149,18 +143,6 @@ class TranslationsTool(MessageCatalog):
         if rkey: t.reverse()
         msgs = [val for (key, val) in t]
         return msgs
-
-    def tt_get_brokenmessages(self):
-        """
-        Returns a list with *broken* messages: a broken message
-        is a message that has a non string id (e.g. unicode)
-        """
-        r = []
-        ra = r.append
-        for m in self._messages.keys():
-            if not isinstance(m, str):
-                ra(m)
-        return r
 
     def tt_get_languages_mapping(self):
         """
