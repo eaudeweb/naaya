@@ -133,23 +133,23 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
 
         #set the flash tool
         manage_addFlashTool(self)
-#        flash_tool = self.getFlashTool()
-#
-#        flash_tool.notif_date = self.utGetTodayDate() + 30
-#        flash_tool.lastflashdate = self.utStringDate(flash_tool.notif_date)
-#        flash_tool.news_start_date = self.utGetTodayDate()
-#        flash_tool.news_end_date = flash_tool.news_start_date + 30
-#
-#        flash_tool.event_start_date = self.utGetTodayDate()
-#        flash_tool.event_end_date = flash_tool.event_start_date + 30
-#
-#        flash_tool.doc_start_date = self.utGetTodayDate()
-#        flash_tool.doc_end_date = flash_tool.doc_start_date + 30
-#
-#        flash_tool.uploadmetatypes = [METATYPE_NYFILE, METATYPE_NYSEMTEXTLAWS]
-#
-#        flash_tool.path = self.getSitePath(1)
-#        flash_tool.df_template = 'monthly'
+        flash_tool = self.getFlashTool()
+
+        flash_tool.notif_date = self.utGetTodayDate() + 30
+        flash_tool.lastflashdate = self.utStringDate(flash_tool.notif_date)
+        flash_tool.news_start_date = self.utGetTodayDate()
+        flash_tool.news_end_date = flash_tool.news_start_date + 30
+
+        flash_tool.event_start_date = self.utGetTodayDate()
+        flash_tool.event_end_date = flash_tool.event_start_date + 30
+
+        flash_tool.doc_start_date = self.utGetTodayDate()
+        flash_tool.doc_end_date = flash_tool.doc_start_date + 30
+
+        flash_tool.uploadmetatypes = [METATYPE_NYFILE, METATYPE_NYSEMTEXTLAWS]
+
+        flash_tool.path = self.getSitePath(1)
+        flash_tool.df_template = 'monthly'
 
         #load default SKOS data on thesaurus
         p_skos = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'thesaurus-themes-relations.xml'), 'r')
@@ -268,7 +268,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
 
         try:
             #set default main topics
-            self.getPropertiesTool().manageMainTopics(['about', 'introduction', 'institutions', 'documentation', 'training', 'R_D', 'data_adm', 'legislation', 'initiatives', 'thematicdirs'])
+            self.getPropertiesTool().manageMainTopics(['about', 'sponsors', 'Context', 'Institutions', 'documents', 'Training', 'RD', 'Data', 'Legislation', 'topics', 'Links', 'Who'])
         except:
             pass
 
