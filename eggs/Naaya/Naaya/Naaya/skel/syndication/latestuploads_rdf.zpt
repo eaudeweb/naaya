@@ -7,7 +7,7 @@
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
 		<li tal:repeat="item channel/get_objects_for_rdf"><img tal:attributes="src item/icon; alt python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type); title python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type)" style="vertical-align: -5px;" />
-			<a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id" />
+			<a tal:attributes="href item/absolute_url; title python:here.stripAllHtmlTags(item.description)" tal:content="item/title_or_id" />
 			[<span i18n:translate="" tal:omit-tag="">posted on:</span> <tal:block tal:content="python:here.utShowDateTime(item.releasedate)"/>]
 		</li>
 	</ul>
