@@ -80,10 +80,21 @@ class Portlet(Folder, ZopePageTemplate):
 
     def __call__(self, context={}, *args):
         """ """
+        keyset = None
+        if self.ZCacheable_isCachingEnabled():
+            keyset = {'here': context['here']}
+            result = self.ZCacheable_get(keywords=keyset)
+            if result is not None:
+                #return from cache
+                return result
         if not context.has_key('args'):
             context['args'] = args
         context['skin_files_path'] = self.getLayoutTool().getSkinFilesPath()
-        return self.pt_render(extra_context=context)
+        result = self.pt_render(extra_context=context)
+        if keyset is not None:
+            # Store the result in the cache.
+            self.ZCacheable_set(result, keywords=keyset)
+        return result
 
     def om_icons(self):
         """ """
