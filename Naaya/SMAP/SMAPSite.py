@@ -119,11 +119,12 @@ class SMAPSite(NySite, ProfileMeta):
 
         #default RDF Calendar settings
         manage_addRDFCalendar(self, id=ID_RDFCALENDAR, title=TITLE_RDFCALENDAR, week_day_len=1)
-        rdfcalendar_ob = self._getOb(ID_RDFCALENDAR)
-        manage_addRDFSummary(rdfcalendar_ob, 'events', 'Events',
-                             'http://smap.ewindows.eu.org/events/index_rdf', '', 'no')
-        rdfcal_ob = self._getOb(ID_RDFCALENDAR)
-        rdfcal_ob._getOb('events').update()
+        #to be done after add
+        #rdfcalendar_ob = self._getOb(ID_RDFCALENDAR)
+        #manage_addRDFSummary(rdfcalendar_ob, 'events', 'Events',
+        #                     'http://smap.ewindows.eu.org/events/index_rdf', '', 'no')
+        #rdfcal_ob = self._getOb(ID_RDFCALENDAR)
+        #rdfcal_ob._getOb('events').update()
 
     security.declarePrivate('createSMAPPortalTools')
     def createSMAPPortalTools(self):
