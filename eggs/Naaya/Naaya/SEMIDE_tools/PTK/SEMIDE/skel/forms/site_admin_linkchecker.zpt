@@ -9,8 +9,13 @@
         You can consult the last broken links log below.
 </p>
 
-<tal:block tal:define="lastlog here/getLinkCheckerLastLog" tal:condition="python:lastlog is not None">
-	<span tal:replace="structure lastlog/index_html" />
+<tal:block tal:define="lastlog here/getLinkCheckerLastLog">
+	<tal:block tal:condition="python:lastlog is not None">
+		<span tal:replace="structure lastlog/index_html" />
+	</tal:block>
+	<tal:block tal:condition="python:lastlog is None">
+		<p i18n:translate="">No log available</p>
+	</tal:block>
 </tal:block>
 
 </tal:block>
