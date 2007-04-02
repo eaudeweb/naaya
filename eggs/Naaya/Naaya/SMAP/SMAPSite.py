@@ -431,6 +431,9 @@ class SMAPSite(NySite, ProfileMeta):
         self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=%s.nyexp' % self.id)
         return ''.join(r)
 
+###
+# Updates
+######################
     security.declareProtected(view_management_screens, 'updateExperts')
     def updateExperts(self):
         """ expert object is associated to more than one category (priority areas/main topics of expertise) """
@@ -447,14 +450,17 @@ class SMAPSite(NySite, ProfileMeta):
     security.declareProtected(view_management_screens, 'updateProjects')
     def updateProjects(self):
         """ project object is associated to more than one category (priority areas/main topics of expertise) """
+        info = 0
         projects = self.getCatalogedObjects(meta_type=[METATYPE_NYSMAPPROJECT])
         for project in projects:
             buf = []
-            for k in project.focus:
-                buf.append('%s|@|%s' % (project.priority_area, k))
-            project.focus = buf
-            project.priority_area = self.utConvertToList(project.priority_area)
-            project._p_changed = 1
-        print 'done'
+            if type(project.priority_area) != type([]):
+                info += 1
+                for k in project.focus:
+                    buf.append('%s|@|%s' % (project.priority_area, k))
+                project.focus = buf
+                project.priority_area = self.utConvertToList(project.priority_area)
+                project._p_changed = 1
+        print 'Done. %s objects updated.' % info
 
 InitializeClass(SMAPSite)
