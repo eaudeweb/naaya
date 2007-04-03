@@ -6,18 +6,15 @@
 	<ul>
 		<li tal:repeat="item python:ob_channel.getAllChannelItems()">
 			<a tal:attributes="href python:item['link']" tal:content="python:item['title']" />
-            <br />
-            <tal:block tal:condition="python:item.has_key('date')">
-                [<span i18n:translate="">released on: </span> <span tal:content="python:here.utShowDateTime(here.utGetDate(item['date']))" />]
-            </tal:block>
-            <tal:block tal:condition="python:item.has_key('summary')">
-                <br />
-                <span tal:content="python:item['summary']" />
-            </tal:block>
+			<br />
+			<tal:block tal:condition="python:item.has_key('date')">
+				[<span i18n:translate="">released on: </span> <span tal:content="python:here.utShowDateTime(here.utGetDate(item['date']))" />]
+			</tal:block>
+			<tal:block tal:condition="python:item.has_key('summary')">
+				<br />
+				<span tal:content="python:item['summary']" />
+			</tal:block>
 		</li>
 	</ul>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer" />
-
-
-
