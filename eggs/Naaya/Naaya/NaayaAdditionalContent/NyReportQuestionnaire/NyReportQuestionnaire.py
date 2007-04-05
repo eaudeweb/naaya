@@ -85,7 +85,7 @@ def addNyReportQuestionnaire(self, id='', title='', description='', coverage='',
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
     answers = {}
-    if self.getQuestionIds():
+    if len(self.getQuestionIds()) > 0:
         for q in self.getQuestionIds():
             answers[q] = REQUEST[q]
     #check mandatory fiels
