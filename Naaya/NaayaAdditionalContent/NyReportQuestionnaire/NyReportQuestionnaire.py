@@ -85,8 +85,9 @@ def addNyReportQuestionnaire(self, id='', title='', description='', coverage='',
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
     answers = {}
-    for q in self.getQuestionIds():
-        answers[q] = REQUEST[q]
+    if self.getQuestionIds():
+        for q in self.getQuestionIds():
+            answers[q] = REQUEST[q]
     #check mandatory fiels
     l_referer = ''
     if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
