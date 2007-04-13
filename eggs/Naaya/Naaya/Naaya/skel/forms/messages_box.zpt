@@ -1,4 +1,4 @@
-<div class="message error">
+<div class="message-error">
 <fieldset tal:condition="here/isSessionErrors"><legend i18:translate="">Errors</legend>
 	<div class="fieldset_div">
 		<ul>
