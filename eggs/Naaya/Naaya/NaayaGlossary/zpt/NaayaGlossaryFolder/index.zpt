@@ -29,10 +29,10 @@
 			<tal:block repeat="item obj_list">
 			<tr tal:condition="item/approved">
 				<td width="15" align="left" valign="top"><img src="misc_/NaayaGlossary/element.gif" alt="Glossary element" title="Glossary element" i18nattributes="title alt"></td>
-				<td width="707" tal:define="elem_trans python:item.get_translation_by_language(language)">
+				<td width="707" tal:define="elem_trans python:item.get_translation_by_language(language);
+							    def_trans python:item.get_def_trans_by_language(language)">
 					<a	tal:condition="elem_trans"
-						tal:attributes="href item/absolute_url;
-										title elem_trans"
+						tal:attributes="href item/absolute_url;	title  def_trans"
 						tal:content="elem_trans" />
 					<a	tal:condition="python:not elem_trans"
 						tal:attributes="href item/absolute_url;
