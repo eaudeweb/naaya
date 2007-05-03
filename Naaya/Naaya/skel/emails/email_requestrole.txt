@@ -11,7 +11,7 @@ Comments: @@COMMENTS@@
 As a portal admnistrator, you are requested to grant this account with content
 contibution rights for @@LOCATION@@.
 
-Enter the "Users' management" section at @@PORTAL_URL@@/administration_users_html?mode=role
+Enter the "Users' management" section at @@PORTAL_URL@@/admin_users_html?mode=role
 to assign this user the necessary role.
 
 
