@@ -40,7 +40,7 @@
 
 <form method="get" name="frmSearch" action="search_html">
 	<strong i18n:translate="">Query</strong>
-	<input type="text" name="query" tal:attributes="value python:request.get('query', '')" size="40" maxLength="100" />
+	<input type="text" name="query" id="query:utf8:ustring" tal:attributes="value python:request.get('query', '')" size="40" maxLength="100" />
 	<div style="margin-top:10px;">
 		<strong><label i18n:translate="">Search items translated in the following language(s)</label></strong><br />
 		<tal:block repeat="item here/gl_get_languages_mapping">

@@ -39,7 +39,7 @@
 <form method="get" name="frmSearch" action="external_search_html">
 
 <strong>Query string</strong>
-<input type="text" name="query" id="query" tal:attributes="value query" size="40" maxLength="100" />
+<input type="text" name="query" id="query:utf8:ustring" tal:attributes="value query" size="40" maxLength="100" />
 
 <div>
 <fieldset><legend>Language(s)</legend>
