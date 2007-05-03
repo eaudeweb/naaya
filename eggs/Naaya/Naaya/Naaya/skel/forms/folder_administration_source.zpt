@@ -1,6 +1,6 @@
-<tal:block metal:use-macro="python:here.getTemplateTool().getCurrentSkin().folder_administration_macro.macros['page']">
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().folder_administration_macro.macros['page']">
 
-<tal:block metal:fill-slot="title">Users' management</tal:block>
+<tal:block metal:fill-slot="title">Local users' management</tal:block>
 
 <tal:block metal:fill-slot="section" tal:define="mode python:request.get('mode', '')">
 
@@ -22,11 +22,12 @@
 	</div>
 
 	<tal:block tal:condition="python:source_obj is not None">
-		<span tal:replace="structure python:source_obj.context_interface_html(ewfolder=here)" />
+		<span tal:replace="structure source_obj/interface_html" />
 	</tal:block>
 	<tal:block tal:condition="python:source_obj is None">
 		Invalid source id.
 	</tal:block>
+
 </tal:block>
 
 </tal:block>
