@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<skel>
+	<forms>
+		<form id="folder_index" title="NyFolder default view" />
+		<form id="site_index" title="Portal home page" />
+	</forms>
+	<layout default_skin_id="envirowindows" default_scheme_id="blue">
+		<skin id="envirowindows" title="EnviroWindows">
+			<template id="site_header" title="Portal standard HTML header"/>
+			<template id="site_footer" title="Portal standard HTML footer"/>
+			<template id="portlet_left_macro" title="Macro for left portlets"/>
+			<template id="portlet_center_macro" title="Macro for center portlets"/>
+			<template id="portlet_right_macro" title="Macro for right portlets"/>
+			<template id="folder_administration_macro" title="Folder administration macro page"/>
+			<scheme id="blue" title="Blue">
+				<style id="style" title="Main CSS"/>
+				<style id="print" title="CSS for media print" />
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="mainnav-bg.jpg" title=""/>
+				<image id="header-bg-img.jpg" title=""/>
+			</scheme>
+		</skin>
+	</layout>
+	<properties>
+		<language code="de" />
+	</properties>
+</skel>
