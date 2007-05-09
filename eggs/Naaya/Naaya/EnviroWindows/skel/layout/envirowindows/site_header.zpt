@@ -1,7 +1,7 @@
 <span tal:replace="python:request.RESPONSE.setHeader('content-type','text/html;charset=utf-8')" />
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language"
+	tal:attributes="xml:lang here/gl_get_selected_language"
 	tal:define="site_url here/getSitePath">
 <head>
 	<title tal:content="here/title_or_id" />
@@ -11,43 +11,48 @@
 	<link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${skin_files_path}/print" />
 </head>
 <body>
-<div id="topnav">
-	<div id="search">
-		<form method="get" tal:attributes="action string:${site_url}/search_html">
-			<label accesskey="4" for="query">Search:</label>
-			<input id="query" type="text" name="query" />
-			<input type="submit" value="go" class="go" />
-		</form>
-	</div>
-	<!--
-	<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('topnav_links').get_links_list()">
-	<tal:block tal:repeat="item l_list">
-		<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
-	</tal:block>
-	</ul>
-	-->
-</div>
 <div id="header">
-	<div>
-		<!-- <img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" align="left" alt="Logo" i18n:attributes="alt" /> -->
+	<div id="topnav">
+		<!-- <div id="language">
+			<span tal:replace="structure here/languages_box"/>
+			<label for="language">select language:</label>
+		</div>-->
+		<div id="search">
+			<form method="get" tal:attributes="action string:${site_url}/search_html">
+				<label for="query"><span>site search</span></label>
+				<input id="query" type="text" name="query" />
+				<input type="submit" value="GO" />
+			</form>
+		</div>
+		<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('topnav_links').get_links_list()">
+		<tal:block tal:repeat="item l_list">
+			<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
+		</tal:block>
+		</ul>
+	</div>
+	<div class="cleaner"></div>
+	<div class="SiteTitles">
+		<img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" align="left" alt="Logo" i18n:attributes="alt" />
 		<div id="toptitle">
 			<span class="page_title" tal:content="here/site_title" /><br />
 			<span class="page_subtitle" tal:content="here/site_subtitle" />
 		</div>
 	</div>
+	<div class="cleaner"></div>
 	<div id="menunav">
+		
 		<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
 		<tal:block tal:repeat="item l_list">
 			<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
 		</tal:block>
 		</ul>
 	</div>
-</div>
 <div id="breadcrumbtrail">
 	<tal:block repeat="crumb python:here.getBreadCrumbTrail(request)">
 		<a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" />
 		<span tal:condition="not:repeat/crumb/end"> &raquo; </span>
 	</tal:block>
+</div>
 </div>
 <div id="left_port">
 	<tal:block tal:repeat="item here/get_left_portlets_objects">

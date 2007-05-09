@@ -1,7 +1,7 @@
 <span tal:replace="python:request.RESPONSE.setHeader('content-type','text/html;charset=utf-8')" />
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language"
+	tal:attributes="xml:lang here/gl_get_selected_language;
 	tal:define="site_url here/getSitePath">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -14,7 +14,10 @@
 </div>
 <div id="last_modified">Page last modified: dd-mm-yyyy </div>
 <div id="footer">
-	<a tal:attributes="href string:${site_url}/info/contact" i18n:translate="">Contact us</a>|
+	<p class="righted">EMAS registered environmental management at EEA </p>
+	<p>European Environment Agency, Kongens Nytorv 6, 1050 Copenhagen K, Denmark - Phone: +45 3336 7100 <br />
+Comments to EEA Web Team, &copy; Copyright 1993-2006, Disclaimer and Privacy policy</p>
+	<a tal:attributes="href string:${site_url}/info/contact" i18n:translate="">Contact us</a>
 	<a tal:attributes="href string:${site_url}/info/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>
 </div>
 </body>
