@@ -17,9 +17,10 @@
 		return true;
 	}
 
-	function createKey(key)
+	function createKey(key, title)
 	{
 		document.forms['frmEdit'].pointer.value = key;
+		document.forms['frmEdit'].title.value = title;
 	}
 	// -->
 	</script>
