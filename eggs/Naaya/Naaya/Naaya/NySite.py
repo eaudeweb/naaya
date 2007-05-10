@@ -1179,7 +1179,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(view, 'processRequestRoleForm')
     def processRequestRoleForm(self, username='', password='', confirm='', firstname='', lastname='', email='', organisation='', location='', comments='', REQUEST=None):
-        """ """
+        """ Sends notification email(s) to the administrators when people apply for a role 
+            If the role is requested at portal level, the addresses from the 'administrator_email' property get it
+            If the role is requested at folder level, all 'maintainer_email' of the parent folders get it 
+            and eventually the portal 'administrator_email' gets it if there is no 'maintainer_email'
+        """
         location_path = 'unspecified'
         location_title = 'unspecified'
         if location == '':

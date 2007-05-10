@@ -15,11 +15,11 @@
 		<td><input type="text" name="username" size="40" tal:attributes="value here/getSessionUserName" />*</td>
 	</tr>
 	<tr>
-		<td i18n:translate="">First Name</td>
+		<td i18n:translate="">First name</td>
 		<td><input type="text" name="firstname" size="40" tal:attributes="value here/getSessionUserFirstname" />*</td>
 	</tr>
 	<tr>
-		<td i18n:translate="">Last Name</td>
+		<td i18n:translate="">Last name</td>
 		<td><input type="text" name="lastname" size="40" tal:attributes="value here/getSessionUserLastname" />*</td>
 	</tr>
 	<tr>
@@ -31,7 +31,7 @@
 		<td><input type="password" name="password" size="30" value="" maxlength="255">*</td>
 	</tr>
 	<tr>
-		<td i18n:translate="">Password Verification:</td>
+		<td i18n:translate="">Password verification:</td>
 		<td><input type="password" name="confirm" value="" size="30" maxlength="255">*</td>
 	</tr>
 	<tr>
