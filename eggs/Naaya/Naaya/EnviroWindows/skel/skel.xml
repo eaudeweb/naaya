@@ -17,24 +17,24 @@
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />
 				<image id="screenshot.gif" title="Skin screenshot"/>
-				<image id="mainnav-bg.jpg" title=""/>
-				<image id="header-bg-img.jpg" title=""/>
+				<image id="menunav-bg.jpg" title=""/>
+				<image id="ew-header.jpg" title=""/>
 			</scheme>
 			<scheme id="EW-skin-01" title="Light blue leaves">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />
 				<image id="screenshot.gif" title="Skin screenshot"/>
-				<image id="mainnav-bg.jpg" title=""/>
-				<image id="header-bg-img.jpg" title=""/>
+				<image id="menunav-bg.jpg" title=""/>
+				<image id="ew-header.jpg" title=""/>
 			</scheme>
 			<scheme id="EW-skin-02" title="Pink leaves">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />
 				<image id="screenshot.gif" title="Skin screenshot"/>
-				<image id="mainnav-bg.jpg" title=""/>
-				<image id="header-bg-img.jpg" title=""/>
+				<image id="menunav-bg.jpg" title=""/>
+				<image id="ew-header.jpg" title=""/>
 			</scheme>
 		</skin>
 	</layout>
