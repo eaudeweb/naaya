@@ -12,9 +12,26 @@
 			<template id="portlet_center_macro" title="Macro for center portlets"/>
 			<template id="portlet_right_macro" title="Macro for right portlets"/>
 			<template id="folder_administration_macro" title="Folder administration macro page"/>
-			<scheme id="blue" title="Blue">
+			<scheme id="EW-skin-00" title="Yellow leaves">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
+				<style id="common" title="common style" />
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="mainnav-bg.jpg" title=""/>
+				<image id="header-bg-img.jpg" title=""/>
+			</scheme>
+			<scheme id="EW-skin-01" title="Light blue leaves">
+				<style id="style" title="Main CSS"/>
+				<style id="print" title="CSS for media print" />
+				<style id="common" title="common style" />
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="mainnav-bg.jpg" title=""/>
+				<image id="header-bg-img.jpg" title=""/>
+			</scheme>
+			<scheme id="EW-skin-02" title="Pink leaves">
+				<style id="style" title="Main CSS"/>
+				<style id="print" title="CSS for media print" />
+				<style id="common" title="common style" />
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="mainnav-bg.jpg" title=""/>
 				<image id="header-bg-img.jpg" title=""/>
