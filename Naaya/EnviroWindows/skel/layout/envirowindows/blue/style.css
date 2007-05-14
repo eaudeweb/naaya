@@ -410,7 +410,7 @@ a img {
 }
 
 .page_title {
-	color: white;
+	color: #feffff;
 	padding-left: 90px;
 	padding-top: 20px;
 	font-size: 200%;
@@ -418,7 +418,7 @@ a img {
 	font-variant: small-caps;
 }
 .page_subtitle {
-	color: white;
+	color: #feffff;
 	padding-left: 90px;
 	font-weight: bold;
 	font-size: 120%;
@@ -446,14 +446,14 @@ a img {
 	text-transform: uppercase;
 	width: 12em;
 	border-right: 1px dotted #ffffff;
-	color: #fff;
+	color: #feffff;
 	z-index: 11; /* Bug in IE6, IE7 */
 }
 #menunav li a, #menunav li a:link, #menunav li a:visited {
 	display: block;
 	text-decoration: none;
 	padding: 0.1em 0.5em;
-	color: #fff;
+	color: #feffff;
 	height: 2.3em;
 	line-height: 2.3em;
 	font-weight: bold;
@@ -631,7 +631,7 @@ q {
 code {
 	font-family: Monaco, "Courier New", Courier, monospace;
 	font-size: 120%;
-	color: Black;
+	color: black;
 	background-color: white;
 	padding: 0 0.1em;
 }
@@ -725,7 +725,6 @@ table .center {
 */
 table.datatable {
 	border: 1px solid #b6b6b6;
-	border-collapse: xcollapse;
 	color: #666666;
 	margin: 1em 0em;
 }
