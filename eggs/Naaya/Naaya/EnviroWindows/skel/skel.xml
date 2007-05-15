@@ -36,7 +36,7 @@
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
 			</scheme>
-			<scheme id="EW-skin-03" title="Pink leaves">
+			<scheme id="EW-skin-03" title="Dark green leaves">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />
@@ -44,7 +44,7 @@
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
 			</scheme>
-			<scheme id="EW-skin-04" title="Pink leaves">
+			<scheme id="EW-skin-04" title="Light yellow leaves">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />
@@ -52,7 +52,7 @@
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
 			</scheme>
-			<scheme id="EW-skin-05" title="Pink leaves">
+			<scheme id="EW-skin-05" title="Orange leaves">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />
@@ -60,7 +60,7 @@
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
 			</scheme>
-			<scheme id="EW-skin-06" title="Pink leaves">
+			<scheme id="EW-skin-06" title="Purple leaves">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />
@@ -68,7 +68,7 @@
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
 			</scheme>
-			<scheme id="EW-skin-07" title="Pink leaves">
+			<scheme id="EW-skin-07" title="Large purple leaves">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />
@@ -76,7 +76,7 @@
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
 			</scheme>
-			<scheme id="EW-skin-08" title="Pink leaves">
+			<scheme id="EW-skin-08" title="Blue leaves">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />
@@ -84,7 +84,7 @@
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
 			</scheme>
-			<scheme id="EW-skin-09" title="Pink leaves">
+			<scheme id="EW-skin-09" title="More blue leaves">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />
@@ -92,7 +92,7 @@
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
 			</scheme>
-			<scheme id="EW-skin-10" title="Pink leaves">
+			<scheme id="EW-skin-10" title="Plain green leaves">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />
@@ -100,7 +100,7 @@
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
 			</scheme>
-			<scheme id="EW-skin-11" title="Pink leaves">
+			<scheme id="EW-skin-11" title="Many green leaves">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />
@@ -108,7 +108,7 @@
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
 			</scheme>
-			<scheme id="EW-skin-12" title="Pink leaves">
+			<scheme id="EW-skin-12" title="Orange-red branch">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />
@@ -116,7 +116,7 @@
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
 			</scheme>
-			<scheme id="EW-skin-13" title="Pink leaves">
+			<scheme id="EW-skin-13" title="Orange-red branches">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />
@@ -124,7 +124,7 @@
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
 			</scheme>
-			<scheme id="EW-skin-14" title="Pink leaves">
+			<scheme id="EW-skin-14" title="Orange-red tree">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />
@@ -132,7 +132,15 @@
 				<image id="menunav-bg.jpg" title=""/>
 				<image id="ew-header.jpg" title=""/>
 			</scheme>
-			<scheme id="EW-skin-15" title="Pink leaves">
+			<scheme id="EW-skin-15" title="Green flower">
+				<style id="style" title="Main CSS"/>
+				<style id="print" title="CSS for media print" />
+				<style id="common" title="common style" />
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="menunav-bg.jpg" title=""/>
+				<image id="ew-header.jpg" title=""/>
+			</scheme>
+			<scheme id="EW-skin-16" title="Yellow flower">
 				<style id="style" title="Main CSS"/>
 				<style id="print" title="CSS for media print" />
 				<style id="common" title="common style" />

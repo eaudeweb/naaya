@@ -77,7 +77,7 @@ class EnviroWindowsSite(NySite):
         #remove Naaya default content
         self.getLayoutTool().manage_delObjects('skin')
         self.manage_delObjects('info')
-        self.getPortletsTool().manage_delObjects('topnav_links')
+        #self.getPortletsTool().manage_delObjects('topnav_links')
 
 #        #set default 'Main topics'
 #        try:    self.getPropertiesTool().manageMainTopics(['fol120392', 'fol657555', 'fol112686', 'fol034934', 'test1'])
