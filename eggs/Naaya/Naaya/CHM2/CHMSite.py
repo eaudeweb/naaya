@@ -565,6 +565,7 @@ class CHMSite(NySite):
         if REQUEST:
             self.setSession('title', 'Thank you for registering')
             self.setSession('body', 'You will receive a confirmation email.')
+	    self.setSession('referer', REQUEST.referer)
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
     def sendCreateAccountEmail(self, p_name, p_email, p_username, REQUEST):
