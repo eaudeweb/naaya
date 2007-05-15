@@ -4,7 +4,7 @@
 		<form id="folder_index" title="NyFolder default view" />
 		<form id="site_index" title="Portal home page" />
 	</forms>
-	<layout default_skin_id="envirowindows" default_scheme_id="blue">
+	<layout default_skin_id="envirowindows" default_scheme_id="EW-skin-00">
 		<skin id="envirowindows" title="EnviroWindows">
 			<template id="site_header" title="Portal standard HTML header"/>
 			<template id="site_footer" title="Portal standard HTML footer"/>
