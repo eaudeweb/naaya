@@ -137,8 +137,8 @@
 		<portlet id="portlet_localchannels" title="Local channels" />
 		<portlet id="portlet_folder_administration" title="Folder Administration"/>
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
-			<link id="102" title="Finsiel" description="Finsiel Romania" url="http://www.finsiel.ro" relative="0" permission="" order="2"/>
-			<link id="103" title="Naaya" description="EnviroWindows Publisher" url="http://publisher.finsiel.ro/" relative="0" permission="" order="3"/>
+			<link id="102" title="EauDeWeb" description="Eaudeweb Romania" url="http://www.eaudeweb.ro" relative="0" permission="" order="2"/>
+			<link id="103" title="Naaya" description="Naaya" url="http://naaya.eaudeweb.ro/" relative="0" permission="" order="3"/>
 		</linkslist>
 		<linkslist id="menunav_links" title="Menu navigation links" portlet="">
 			<link id="102" title="Login" description="Login page" url="login_html" relative="0" permission="" order="2"/>
