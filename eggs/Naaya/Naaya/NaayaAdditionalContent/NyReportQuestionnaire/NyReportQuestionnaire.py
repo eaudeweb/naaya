@@ -136,7 +136,7 @@ def addNyReportQuestionnaire(self, id='', title='', description='', coverage='',
         ob.submitThis()
         if discussion: ob.open_for_comments()
         self.recatalogNyObject(ob)
-        self.notifyFolderMaintainer(self, ob)
+        #self.notifyFolderMaintainer(self, ob)
         #redirect if case
         if REQUEST is not None:
             if l_referer == 'manage_addNyReportQuestionnaire_html' or l_referer.find('manage_addNyReportQuestionnaire_html') != -1:
