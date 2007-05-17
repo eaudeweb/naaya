@@ -9,6 +9,7 @@
 }
 .buttons a {
 	text-decoration: none;
+	background-color:
 	color: #ffffff; 
 	line-height: 2em;
 	border-left:2px solid #EEEEEE;
@@ -26,8 +27,8 @@
 /* folder index styles */
 #admin_this_folder{
 	padding: 0.5em;
-	border: 1px solid #ddebf3;
-	background-color: #ddebf4;
+	border: 1px solid #eee;
+	background-color: #fafafa;
 	text-align: left;
 	text-indent: 0.3em;
 }
@@ -36,14 +37,13 @@
 }
 #admin_this_folder a {
 	text-decoration: none;
-	background-color: #6dabd0;
-	color: #ffffff;
-	font-weight: bold;
+	background-color: #fff;
+	color: #000;
 	line-height: 2em;
-	border-left:2px solid #EEEEEE;
-	border-top:2px solid #EEEEEE;
-	border-bottom:2px solid #2F6C91;
-	border-right:2px solid #2F6C91;
+	border-left:1px solid #bbb;
+	border-top:1px solid #bbb;
+	border-bottom:1px solid #666;
+	border-right:1px solid #666;
 	padding:2px 2px; 
 	font-size: 90%;
 }
@@ -62,7 +62,7 @@
 	padding: 0.6em;
 	padding-left: 0.6em;
 	margin-top: 0.9em;
-	background-color: #c2dceb;
+	background-color: #eee;
 }
 #toolbar a{
 	text-decoration: none;
@@ -251,46 +251,54 @@ td.title-column a:hover{
 #tabbedmenu {
 	float:left;
 	width:100%;
-	border-bottom: thin solid #E3E2D3;
-	font-size: 1em;
-	line-height:normal;
-	margin-bottom: 1em;
+	border-bottom: 1px solid #346d9f;
+	font-size: 0.8em;
+	line-height: 1.5em;
 }
 #tabbedmenu ul {
 	margin:0;
-	padding:10px 10px 0;
+	padding: 1em 1em 0;
 	list-style:none;
 }
 #tabbedmenu li {
 	float:left;
-	background:url("tableft.gif") no-repeat left top;
-	margin:0;
-	padding:0 0 0 9px;
+	margin: 0;
+	padding:0;
 	white-space: nowrap;
 }
 #tabbedmenu a {
 	display:block;
 	text-decoration: none;
-	font-weight: bold;
+	font-weight: normal;
 	color: black;
-	background:url("tabright.gif") no-repeat right top;
-	padding:5px 15px 4px 6px;
+	background: url('tabbg.gif') repeat-x top left #F0F5FB;
+	padding: 0.3em 1em 0.3em 1em;
+	margin: 0.3em 0.1em 0 0.1em;
+	border: 1px solid #346d9f;
+	border-bottom: none;
+	text-transform: uppercase;
+}
+#tabbedmenu a:hover {
+	background: #A8C7EC;
+	color: #000;
 }
 #tabbedmenu #currenttab {
-	background-image:url("tableft_on.gif");
+	/*background: #F0F5FB;*/
 }
 #tabbedmenu #currenttab a {
 	text-decoration: none;
 	font-weight: bold;
-	background-image:url("tabright_on.gif");
-	padding-bottom: 5px;
+	background: url('tabbg_on.gif') repeat-x top left #454545;
+	margin: 0em 0.1em 0 0.1em;
+	padding: 0.5em 1em 0.4em 1em;
+	color: #fafafa;
+	border: 1px solid #fff;
+	border-bottom: none;
 }
 #tabbedmenu #currenttab span {
 	display:block;
 	text-decoration: none;
-	font-weight: bold;
-	background:url("tabright_on.gif") no-repeat right top;
-	padding:5px 15px 4px 6px;
+	
 }
 /* warning box for active versions of items */
 .version_box {
@@ -317,7 +325,7 @@ td.title-column a:hover{
 	background-position: left top;
 }
 .translate a {
-	background-color: #888889;
+	background-color: #888888;
 	border: 2px solid #888888;
 	color: white;
 	text-decoration: none;
@@ -332,7 +340,7 @@ td.title-column a:hover{
 	border-bottom: 2px solid #888888;
 	border-left: 2px solid #888888;
 	border-right: 2px solid #888888;
-	border-top: 2px solid #fafafa;
+	border-top: 2px solid white;
 }
 .translate a:hover {
 	background-color: #CCCCCC;
@@ -374,7 +382,6 @@ body.visualFontSizeCorrection { /*do not display bg-image in EPOZ*/
 .epoz_button_anchor {display:none;}
 .epoz_button_undo {display:none;}
 .epoz_button_redo {display:none;}
-
 /*  Comment box form */
 .comment_box {
 	background-color:#FAFAFA; 
@@ -500,7 +507,7 @@ body.visualFontSizeCorrection { /*do not display bg-image in EPOZ*/
 .tabs_admin .currenttab a {
 	text-decoration: none;
 	font-weight: bold;
-	color: #feffff;
+	color: white;
 }
 .tabs_admin .currenttab span {
 	display: block;
@@ -511,7 +518,7 @@ body.visualFontSizeCorrection { /*do not display bg-image in EPOZ*/
 	color: #637785; /* custom-color-a.font */
 }
 .tabs_admin .currenttab a:visited {
-	color: #feffff;
+	color: white;
 }
 /*  ++++++++++++++++++++++++++++++++++++++++++ */
 .tabs_firstlevel {
@@ -550,7 +557,7 @@ body.visualFontSizeCorrection { /*do not display bg-image in EPOZ*/
 .tabs_firstlevel .currenttab a {
 	text-decoration: none;
 	font-weight: bold;
-	color: #feffff;
+	color: white;
 }
 .tabs_firstlevel .currenttab span {
 	display: block;
@@ -561,7 +568,7 @@ body.visualFontSizeCorrection { /*do not display bg-image in EPOZ*/
 	color: #637785; /* custom-color-a.font */
 }
 .tabs_firstlevel .currenttab a:visited {
-	color: #feffff;
+	color: white;
 }
 /*  ++++++++++++++++++++++++++++++++++++++++++ */
 .hr_invisible {
