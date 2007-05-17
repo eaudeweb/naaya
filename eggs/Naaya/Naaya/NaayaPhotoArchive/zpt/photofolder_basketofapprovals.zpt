@@ -54,7 +54,7 @@ function checkApp(frm, control)
 		<th i18n:translate="">Delete</th>
 	</tr>
 	<tr tal:repeat="item pendings">
-		<td width="1%"><img tal:attributes="src item/icon" border="0" /></td>
+		<td width="1%"><img tal:attributes="src item/icon" /></td>
 		<td tal:content="python:here.utShowDateTime(item.releasedate)" />
 		<td><a tal:attributes="href string:${item/absolute_url}/index_html"><img tal:attributes="src string:${item/absolute_url}/view?display=Thumbnail; alt item/title_or_id; title item/title_or_id" /></a></td>
 		<td><a tal:attributes="href string:${item/absolute_url}/edit_html"><img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" /></a></td>
