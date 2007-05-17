@@ -4,12 +4,12 @@
 <p class="page-title">Content types</p>
 
 <div class="system-msg" tal:condition="python:request.has_key('save')">
-    Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
 </div>
 
 <p class="page-description">
-    <code>Files</code> icons can be listed in a folder according to the content type of the file. 
-    Complete the list of recognised file types here along with the corresponding icons.
+	<code>Files</code> icons can be listed in a folder according to the content type of the file. 
+	Complete the list of recognised file types here along with the corresponding icons.
 </p>
 
 <tal:block tal:define="record_id python:request.get('id', None); record_data python:here.getContentTypeData(record_id)">

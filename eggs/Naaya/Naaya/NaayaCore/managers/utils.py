@@ -423,9 +423,9 @@ class utils:
     def utTextareaEncode(self, p_string):
         """Encode a string (from a textarea control):
           - HTMLEncode str
-          - replace \n with <br>"""
+          - replace \n with <br />"""
         l_tmp = self.utHtmlEncode(p_string)
-        l_tmp = l_tmp.replace('\n', '<br>')
+        l_tmp = l_tmp.replace('\n', '<br />')
         return l_tmp
 
     def utXmlEncode(self, p_string):

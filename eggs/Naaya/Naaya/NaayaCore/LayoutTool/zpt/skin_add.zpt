@@ -16,12 +16,12 @@
         <td>
             <input type="radio" name="content" value="" checked="checked"> Create empty skeleton
             <tal:block tal:repeat="skin here/getSkinsList">
-            <br>
+            <br />
             <input type="radio" name="content" tal:attributes="value skin/id"> <span tal:replace="skin/title_or_id">Skin</span>
             </tal:block>
         </td>
     </tr>
-    <tr><td>&nbsp;</td><td><input type="submit" value="Add"></td></tr>
+    <tr><td> </td><td><input type="submit" value="Add" /></td></tr>
 </table>
 </form>
 

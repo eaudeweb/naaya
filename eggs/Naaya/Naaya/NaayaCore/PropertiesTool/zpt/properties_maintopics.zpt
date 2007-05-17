@@ -4,14 +4,14 @@
 <p class="page-title">Main sections</p>
 
 <div class="system-msg" tal:condition="python:request.has_key('save')">
-    Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
 </div>
 
 <p class="page-description">
-    The list below presents the top-level approved Naaya Folders from this site. The main sections
-    are a subset of those that will appear listed on all pages as tabs, in menus, etc.
-    depending of the layout.
-    Select the main sections relevant for your site and press <strong>Save changes</strong>.
+	The list below presents the top-level approved Naaya Folders from this site. The main sections
+	are a subset of those that will appear listed on all pages as tabs, in menus, etc.
+	depending of the layout.
+	Select the main sections relevant for your site and press <strong>Save changes</strong>.
 </p>
 
 <form method="post" action="manageMainTopics">

@@ -4,12 +4,11 @@
 <p class="page-title">Links</p>
 
 <div class="system-msg" tal:condition="python:request.has_key('save')">
-    Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
 </div>
 
 <p class="page-description">
-    This page presents the list of links.
-    Add/Modify/Delete this list using the forms below.
+	This page presents the list of links. Add/Modify/Delete this list using the forms below.
 </p>
 
 <tal:block tal:define="record_id python:request.get('id', None); record_data python:here.get_link_item_data(record_id)">
