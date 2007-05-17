@@ -21,7 +21,7 @@
 					<tal:block define="transl python:here.get_translation_by_language(language)">
 					<tr tal:condition="transl">
 						<td class="header-element" width="10%"><span tal:content="language" />:</td>
-						<td width="*" nowrap><span tal:content="transl" /></td>
+						<td width="*" nowrap="nowrap"><span tal:content="transl" /></td>
 					</tr>
 					</tal:block>
 				</tal:block>
@@ -43,7 +43,7 @@
 					<tal:block define="transl python:here.get_def_trans_by_language(language)">
 					<tr tal:condition="transl">
 						<td class="header-element" width="10%"><span tal:content="language" />:</td>
-						<td width="*" nowrap><span tal:content="transl" /></td>
+						<td width="*" nowrap="nowrap"><span tal:content="transl" /></td>
 					</tr>
 					</tal:block>
 				</tal:block>
@@ -64,7 +64,7 @@
 				<tal:block	repeat="record here/get_subjects">
 					<tr>
 						<td class="header-element" width="10%"><span tal:content="python:record['code']" /></td>
-						<td width="*" nowrap><span tal:content="python:record['name']" /></td>
+						<td width="*" nowrap="nowrap"><span tal:content="python:record['name']" /></td>
 					</tr>
 				</tal:block>
 			</tal:block>

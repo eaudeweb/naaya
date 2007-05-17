@@ -100,9 +100,9 @@
 					<td width="85%" align="left" class="search_bottom_tr">
 						<img src="misc_/NaayaGlossary/s_leftbottom.gif" width="1" height="23" />
 					</td>
-					<td width="7%" align="right" nowrap><img src="misc_/NaayaGlossary/s_bottomlines.gif" width="41" height="23" /></td>
-					<td width="8%" align="right" nowrap><input type="submit" class="search_button" name="SUBMIT" value="Find in Glossary" i18n:attributes="value" /></td>
-					<td width="1%" align="right" nowrap><img src="misc_/NaayaGlossary/s_rightbottom.gif" width="24" height="23"></td>
+					<td width="7%" align="right"><img src="misc_/NaayaGlossary/s_bottomlines.gif" width="41" height="23" /></td>
+					<td width="8%" align="right"><input type="submit" class="search_button" name="SUBMIT" value="Find in Glossary" i18n:attributes="value" /></td>
+					<td width="1%" align="right"><img src="misc_/NaayaGlossary/s_rightbottom.gif" width="24" height="23" /></td>
 				</tr>
 			</table>
 			</td>
