@@ -104,8 +104,8 @@ function fSetTopPhotoObjects()
 
 <div tal:condition="python:objects_select_all or objects_delete_all">
 	<div id="toolbar">
-		<tal:block tal:condition="objects_delete_all"><a href="javascript:fDeleteObjects();"><span><img src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
-		<tal:block tal:condition="objects_select_all"><a href="javascript:fSetTopPhotoObjects();"><span><input src="/misc_/Naaya/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="" tal:omit-tag="">Save on front</span></span></a></tal:block>
+		<tal:block tal:condition="objects_delete_all"><a href="javascript:fDeleteObjects();"><span i18n:translate="" tal:omit-tag="">Delete</span></a></tal:block>
+		<tal:block tal:condition="objects_select_all"><a href="javascript:fSetTopPhotoObjects();"><span i18n:translate="" tal:omit-tag="">Save on front</span></a></tal:block>
 	</div>
 </div>
 
@@ -125,7 +125,7 @@ function fSetTopPhotoObjects()
 	<tal:block define="del_permission python:obtuple[0]; edit_permission python:obtuple[1]; object python:obtuple[2]">
 	<td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="ids" tal:attributes="value object/id" /></td>
 	<td>
-		<a tal:attributes="href string:${object/absolute_url}/index_html"><img tal:attributes="src string:${object/absolute_url}/view?display=Thumbnail; alt object/title_or_id" border="0" /></a>
+		<a tal:attributes="href string:${object/absolute_url}/index_html"><img tal:attributes="src string:${object/absolute_url}/view?display=Thumbnail; alt object/title_or_id" /></a>
 		<tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
 			[<span tal:replace="object/count_comments" />
 			<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
@@ -135,7 +135,7 @@ function fSetTopPhotoObjects()
 	<td tal:condition="edit_permission"><input type="checkbox" tal:attributes="name python:'topitem_' + object.id; value object/id; checked python:object.topitem==1" /></td>
 	<td><span tal:replace="python:here.utShowDateTime(object.onfrontfrom)" /> - <span tal:replace="python:here.utShowDateTime(object.onfrontto)" /></td>
 	<td class="edit" tal:condition="edit_permission">
-		<a tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
+		<a tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" /></a>
 	</td>
 	</tal:block>
 </tr>
