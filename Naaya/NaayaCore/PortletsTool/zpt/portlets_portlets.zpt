@@ -4,12 +4,12 @@
 <p class="page-title">Portlets</p>
 
 <div class="system-msg" tal:condition="python:request.has_key('save')">
-    Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
 </div>
 
 <p class="page-description">
-    This page presents the list of portlets that will be shown in portal's header or footer
-    by columns.
+	This page presents the list of portlets that will be shown in portal's header or footer
+	by columns.
 </p>
 
 <form method="post" action="managePortlets">

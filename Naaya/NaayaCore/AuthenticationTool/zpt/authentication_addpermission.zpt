@@ -6,25 +6,25 @@
 <form name="frmAddPermission" method="post" action="addPermission">
 
 <fieldset><legend>
-    <table border=0>
+    <table>
         <tr>
-            <td valign="top"><img src="misc_/NaayaCore/Permission.gif" valign="top"></td>
-            <td><strong>Permission&nbsp;name</strong></td>
+            <td valign="top"><img src="misc_/NaayaCore/Permission.gif" valign="top" /></td>
+            <td><strong>Permission name</strong></td>
         </tr>
     </table>
     </legend>
 <table border=0>
     <tr>
         <td>Permission name</td>
-        <td><input type="text" name="name" size="45" maxLength="255"></td>
+        <td><input type="text" name="name" size="45" maxLength="255" /></td>
     </tr>
     <tr>
         <td>Permission description</td>
         <td><textarea name="description" cols="45" rows="5"></textarea></td>
     </tr>
 </table>
-<br>
-<table border=0 cellspacing=1 cellpadding=0 width="100%">
+<br />
+<table width="100%">
     <tr class="row-header">
         <td class="cell-header" width="2%">&nbsp;</td>
         <td class="cell-header">Permission name</td>

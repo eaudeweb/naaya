@@ -37,7 +37,7 @@ function createKey(key)
 
 
 <div class="system-msg" tal:condition="python:request.has_key('save')">
-	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
 </div>
 
 <tal:block define="users_roles here/getUsersWithRoles;">

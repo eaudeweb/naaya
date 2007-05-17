@@ -9,7 +9,7 @@
 </p>
 
 <div class="system-msg" tal:condition="python:request.has_key('save')">
-    Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
 </div>
 
 <tal:block tal:define="users here/user_names;
@@ -126,12 +126,12 @@
 	</tr>
 	<tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
 		<tal:block tal:define="user_obj python:here.getUser(user)">
-		<td width="3%" nowrap>
-			<table border=0>
+		<td width="3%" nowrap="nowrap">
+			<table>
 				<tr>
-					<td><input type="checkbox" name="names" tal:attributes="value python:here.getUserAccount(user_obj)">
+					<td><input type="checkbox" name="names" tal:attributes="value python:here.getUserAccount(user_obj)" />
 					</td>
-					<td><img src="misc_/NaayaCore/User.gif" alt="user"></td>
+					<td><img src="misc_/NaayaCore/User.gif" alt="user" /></td>
 				</tr>
 			</table>
 		</td>

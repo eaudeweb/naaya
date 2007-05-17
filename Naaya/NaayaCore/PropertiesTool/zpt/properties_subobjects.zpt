@@ -4,13 +4,13 @@
 <p class="page-title">Subobjects</p>
 
 <div class="system-msg" tal:condition="python:request.has_key('save')">
-    Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
 </div>
 
 <p class="page-description">
-    The list below presents the types of objects installed on this server.
-    Every time you install a new product and want to add instances of its objects inside Naaya Folders,
-    select them from the list below and press <strong>Save changes</strong>.
+	The list below presents the types of objects installed on this server.
+	Every time you install a new product and want to add instances of its objects inside Naaya Folders,
+	select them from the list below and press <strong>Save changes</strong>.
 </p>
 
 <form method="post" action="manageSubobjects">
@@ -37,7 +37,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td colspan="2" align="center"><input type="submit" name="submit" value="Save changes"></td>
+		<td colspan="2" align="center"><input type="submit" value="Save changes" /></td>
 	</tr>
 </table>
 </fieldset>

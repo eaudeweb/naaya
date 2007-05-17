@@ -4,18 +4,18 @@
 <h2>Add role</h2>
 
 <form method="post" name="frmAddRole">
-<table border=0 width="80%" cellspacing="3">
+<table width="80%" cellspacing="3">
 <tr>
 	<td>
-		<fieldset><legend><img src="misc_/NaayaCore/Role.gif" valign="top" align="top">Role name</legend>
-		<table border=0 width="80%">
+		<fieldset><legend><img src="misc_/NaayaCore/Role.gif" valign="top" align="top" />Role name</legend>
+		<table width="80%">
 			<tr>
 				<td>Role name</td>
 				<td><input type="text" name="role" size="45" maxLength="255" /></td>
 			</tr>
 		</table>
 		</fieldset>
-		<br>
+		<br />
 		<tal:block define="permissions here/listPermissions">
 		<fieldset><legend>Permissions</legend>
 		<table border="0" cellspacing="0" cellpadding="4">
@@ -23,7 +23,7 @@
 				<td width="2%" valign="top"><input type="checkbox" name="permissions" tal:attributes="value permission"></td>
 				<td width="2%" valign="top"><img src="misc_/NaayaCore/Permission.gif"></td>
 				<td>
-					<table border=0 cellspacing="0" cellpadding="0">
+					<table cellspacing="0" cellpadding="0">
 						<tr>
 							<td><strong><a tal:attributes="href string:manage_editPermission_html?name=${permission}"
 								tal:content="permission">permission name</a></strong></td>
