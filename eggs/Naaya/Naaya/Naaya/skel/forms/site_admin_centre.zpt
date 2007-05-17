@@ -7,7 +7,7 @@
 
 	<p><strong i18n:translate="">All administration functionalities are available from the right-side menu.</strong></p>
 
-	<p><img src="misc_/Naaya/admin_schema" border="0" alt="Overview of the administrative functionality" i18n:attributes="alt" /></p>
+	<p><img src="misc_/Naaya/admin_schema" alt="Overview of the administrative functionality" i18n:attributes="alt" /></p>
 </tal:block>
 
 </tal:block>

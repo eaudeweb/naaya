@@ -39,23 +39,22 @@ function fTreeClick(expand)
 		<table border="0" cellspacing="1" cellpadding="1">
 		<tr>
 			<td>
-				<img tal:repeat="i python:range(0, tree_node[2])"
-					 src="misc_/Naaya/square.gif" border="0" />
+				<img tal:repeat="i python:range(0, tree_node[2])" src="misc_/Naaya/square.gif" />
 				<tal:block tal:condition="python:tree_node[1]==-1">
-					<img src="misc_/Naaya/square.gif" border="0" />
+					<img src="misc_/Naaya/square.gif" />
 				</tal:block>
 				<tal:block
 					tal:define="node_expand python:here.processCollapse(expand_list, tree_node[0].absolute_url(1))"
 					tal:condition="python:tree_node[1]==0">
-					<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/minus.gif" alt="Collapse" border="0" /></a>
+					<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/minus.gif" alt="Collapse" /></a>
 				</tal:block>
 				<tal:block
 					tal:define="node_expand python:here.processExpand(expand_list, tree_node[0].absolute_url(1))"
 					tal:condition="python:tree_node[1]==1">
-					<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/plus.gif" alt="Expand" border="0" /></a>
+					<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/plus.gif" alt="Expand" /></a>
 				</tal:block>
 			</td>
-			<td><img border="0" tal:attributes="src python:tree_node[0].icon" /></td>
+			<td><img tal:attributes="src python:tree_node[0].icon" /></td>
 			<td><a tal:define="node_path python:tree_node[0].absolute_url(1); node_title python:tree_node[0].title" 
 				tal:attributes="href node_path; onclick string:window.opener.createKey('${node_path}', '${node_title}');; window.close();;" 
 				tal:content="python:tree_node[0].title_or_id()">folder</a></td>

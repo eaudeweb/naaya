@@ -42,7 +42,7 @@
 		<img tal:attributes="src item/absolute_url;
 				alt item/title_or_id;
 				onclick string:window.opener.CreateImage('${item/id}');; window.close();;"
-			border="0" width="32" style="cursor: pointer;" />
+			width="32" style="cursor: pointer;" />
 	</li>
 </ul>
 <input type="submit" value="Delete selected images" i18n:attributes="value" />
