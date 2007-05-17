@@ -31,13 +31,13 @@
         <fieldset><legend><strong>Personal&nbsp;settings</strong></legend>
         <table border="0" cellspacing="2" cellpadding="3" width="80%">
             <tr>
-                <td nowrap>First Name:</td>
+                <td nowrap>First name:</td>
                 <td >
                     <input type="text" name="firstname" size="35" maxLength="255"
                         tal:attributes="value here/getSessionUserFirstname">
                 </td>
 
-                <td align="right" nowrap>Last Name:</td>
+                <td align="right" nowrap>Last name:</td>
                 <td>
                     <input type="text" name="lastname" size="35" maxLength="255"
                         tal:attributes="value here/getSessionUserLastname">
@@ -52,11 +52,11 @@
             </tr>
         </table>
         </fieldset>
-        <br>
-        <fieldset><legend><strong>User&nbsp;settings</strong></legend>
+        <br />
+        <fieldset><legend><strong>User settings</strong></legend>
         <table border="0" cellspacing="0" cellpadding="3">
             <tr>
-                <td nowrap>Username:</td>
+                <td nowrap="nowrap">Username:</td>
                 <td tal:content="user_account">username</td>
             </tr>
             <tr>
@@ -75,7 +75,7 @@
             </tr>
         </table>
         </fieldset>
-        <br><input type="hidden" name="name" maxLength="255" tal:attributes="value user_account">
+        <br /><input type="hidden" name="name" maxLength="255" tal:attributes="value user_account" />
         <table width="100%" border="0" cellspacing="0" cellpadding="3">
             <tr>
                 <td><input type="hidden" name="destination" value="manage_users_html">
@@ -85,8 +85,8 @@
                 </td>
             </tr>
         </table>
-        <br>
-        <fieldset><legend><strong>Record&nbsp;information</strong></legend>
+        <br />
+        <fieldset><legend><strong>Record information</strong></legend>
         <table cellpadding="3" cellspacing="0" border="0">
             <tr>
                 <td width="20%">Created:</td>

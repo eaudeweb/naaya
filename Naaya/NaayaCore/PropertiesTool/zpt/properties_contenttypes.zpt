@@ -41,7 +41,7 @@
             </tr>
             <tr tal:condition="python:record_data[3] is not None">
                 <td class="form-label">&nbsp;</td>
-                <td><img tal:define="record_id python:record_data[1]" tal:attributes="src string:getContentTypePicture?id=${record_id}" border="0"></td>
+                <td><img tal:define="record_id python:record_data[1]" tal:attributes="src string:getContentTypePicture?id=${record_id}" /></td>
             </tr>
              <tr>
                 <td class="form-label">&nbsp;</td>
@@ -68,7 +68,7 @@
         <td><input type="checkbox" name="id" tal:attributes="value record/id"></td>
         <td><a tal:attributes="href string:manage_contenttypes_html?id=${record/id}"><span tal:content="record/id">-</span></a></td>
         <td tal:content="record/title">Title</td>
-        <td><img tal:condition="python:record.picture is not None" tal:attributes="src string:getContentTypePicture?id=${record/id}" border="0"></td>
+        <td><img tal:condition="python:record.picture is not None" tal:attributes="src string:getContentTypePicture?id=${record/id}" /></td>
     </tr>
     <tr>
         <td>&nbsp;</td>

@@ -91,7 +91,7 @@ LOCALCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.ge
 	<ul>
 		<li tal:repeat="item channel/get_objects_for_rdf"><a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id" /></li>
 	</ul>
-	<a tal:attributes="href channel/absolute_url"><img src="misc_/NaayaCore/xml.png" width="36" height="14" border="0" alt="Syndication (XML)" i18n:attributes="alt" /></a>
+	<a tal:attributes="href channel/absolute_url"><img src="misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" /></a>
 </tal:block>
 </tal:block>
 </tal:block>'''
@@ -110,7 +110,7 @@ SCRIPTCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.g
 	<ul>
 		<li tal:repeat="item channel/get_objects_for_rdf"><a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id" /></li>
 	</ul>
-	<a tal:attributes="href channel/absolute_url"><img src="misc_/NaayaCore/xml.png" width="36" height="14" border="0" alt="Syndication (XML)" i18n:attributes="alt" /></a>
+	<a tal:attributes="href channel/absolute_url"><img src="misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" /></a>
 </tal:block>
 </tal:block>
 </tal:block>'''
