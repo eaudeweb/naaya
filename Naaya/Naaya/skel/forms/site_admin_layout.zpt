@@ -224,7 +224,7 @@ function LoadScreenshot()
 	<tr>
 		<td valign="top" i18n:translate="">Preview</td>
 		<td>
-			<img src="" name="theScreenshot" border="0" width="300" height="200" alt="Preview" i18n:attributes="alt" />
+			<img src="" name="theScreenshot" width="300" height="200" alt="Preview" i18n:attributes="alt" />
 		</td>
 	</tr>
 	<tr><td></td><td><input type="submit" value="Save changes" i18n:attributes="value" /></td></tr>

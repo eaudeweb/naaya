@@ -33,7 +33,7 @@
 						<a tal:define="item_folder python:item.getParentNode()"
 							tal:attributes="href string:${item_folder/absolute_url}/basketofvalidation_html"
 							tal:content="item/title_or_id"></a>
-						<a tal:condition="python:(not item.hasVersion()) and item.checkPermissionEditObject()" tal:attributes="href string:${item/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
+						<a tal:condition="python:(not item.hasVersion()) and item.checkPermissionEditObject()" tal:attributes="href string:${item/absolute_url}/edit_html"><img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" /></a>
 						<br /><strong i18n:translate="">Comment:</strong> <span tal:replace="item/validation_comment" />
 					</li>
 				</ul>

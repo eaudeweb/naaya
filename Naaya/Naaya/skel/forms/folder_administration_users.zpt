@@ -138,25 +138,24 @@
 					<table border="0" cellspacing="1" cellpadding="1">
 						<tr>
 							<td>
-								<img tal:repeat="i python:range(0, tree_node[2])"
-										src="misc_/Naaya/square.gif" border="0">
+								<img tal:repeat="i python:range(0, tree_node[2])" src="misc_/Naaya/square.gif" />
 								<tal:block tal:condition="python:tree_node[1]==-1">
-									<img src="misc_/Naaya/square.gif" border="0">
+									<img src="misc_/Naaya/square.gif" />
 								</tal:block>
 								<tal:block
 									tal:define="node_expand python:here.processCollapse(expand_list, tree_node[0].absolute_url(1))"
 									tal:condition="python:tree_node[1]==0">
 									<input type="image" tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')" 
-									src="misc_/Naaya/minus.gif" alt="Collapse node" border="0">
+									src="misc_/Naaya/minus.gif" alt="Collapse node" />
 								</tal:block>
 								<tal:block
 									tal:define="node_expand python:here.processExpand(expand_list, tree_node[0].absolute_url(1))"
 									tal:condition="python:tree_node[1]==1">
 									<input type="image" tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')" 
-									src="misc_/Naaya/plus.gif" alt="Expand node" border="0">
+									src="misc_/Naaya/plus.gif" alt="Expand node" />
 								</tal:block>
 							</td>
-							<td><img border="0" tal:attributes="src python:tree_node[0].icon"></td>
+							<td><img tal:attributes="src python:tree_node[0].icon" /></td>
 							<td><a tal:define="node_path python:tree_node[0].absolute_url(1)" tal:attributes="href string:javascript:fTreeNodeClick('${node_path}')" tal:content="python:tree_node[0].title_or_id()">folder</a></td>
 						</tr>
 					</table>

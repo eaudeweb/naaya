@@ -1,7 +1,7 @@
 <span tal:replace="structure here/standard_html_header" />
 
 <h1>
-	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" border="0" />
+	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" />
 	<tal:block tal:replace="here/title_or_id" /> - <span i18n:translate="">restrictions</span>
 </h1>
 
