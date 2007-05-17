@@ -59,12 +59,12 @@
 					<td>
 						<a	tal:attributes="onclick string:javascript:fTreeClick('${collapse}')"
 							tal:condition="check_node">
-							<img src="misc_/NaayaGlossary/minus.gif" alt="Collapse" title="Collapse" border="0" />
+							<img src="misc_/NaayaGlossary/minus.gif" alt="Collapse" title="Collapse" />
 						</a>
 
 						<a	tal:attributes="onclick string:javascript:fTreeClick('${expande}')"
 							tal:condition="python:not check_node">
-							<img src="misc_/NaayaGlossary/plus.gif" alt="Expand" title="Expand" border="0" />
+							<img src="misc_/NaayaGlossary/plus.gif" alt="Expand" title="Expand" />
 						</a>
 					</td>
 					<td tal:content="python:item[0]" />

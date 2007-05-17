@@ -37,28 +37,28 @@ function fTreeClick(expand)
 				<tr>
 					<td>
 						<img tal:repeat="i python:range(0, tree_node[2])"
-							 src="misc_/NaayaGlossary/square.gif" border="0" alt="Square" title="Square" />
+							 src="misc_/NaayaGlossary/square.gif" alt="Square" title="Square" />
 						<tal:block tal:condition="python:tree_node[1]==-1">
-							<img src="misc_/NaayaGlossary/square.gif" border="0" alt="Square" title="Square" />
+							<img src="misc_/NaayaGlossary/square.gif" alt="Square" title="Square" />
 						</tal:block>
 						<tal:block
 							tal:define="node_expand python:here.structCollapse(expand_list, item.absolute_url(1))"
 							tal:condition="python:tree_node[1]==0">
 							<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')">
-								<img src="misc_/NaayaGlossary/minus.gif" alt="Collapse" title="Collapse" border="0" />
+								<img src="misc_/NaayaGlossary/minus.gif" alt="Collapse" title="Collapse" />
 							</a>
 						</tal:block>
 						<tal:block
 							tal:define="node_expand python:here.structExpand(expand_list, item.absolute_url(1))"
 							tal:condition="python:tree_node[1]==1">
 							<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')">
-								<img src="misc_/NaayaGlossary/plus.gif" alt="Expand" title="Expand" border="0" />
+								<img src="misc_/NaayaGlossary/plus.gif" alt="Expand" title="Expand" />
 							</a>
 						</tal:block>
 					</td>
 
 					<td>
-						<img border="0" tal:attributes="src python:item.icon;
+						<img tal:attributes="src python:item.icon;
 															alt python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type);
 															title python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type)" />
 					</td>
