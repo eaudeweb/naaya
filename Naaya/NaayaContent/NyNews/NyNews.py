@@ -438,7 +438,7 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
     def picture_html(self, REQUEST=None, RESPONSE=None):
         """ """
         REQUEST.RESPONSE.setHeader('content-type', 'text/html')
-        return '<img src="getBigPicture" border="0" alt="" />'
+        return '<img src="getBigPicture" alt="" />'
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
