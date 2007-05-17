@@ -12,11 +12,11 @@
 						back_month python:prev_date[0];
 						back_year python:prev_date[1];">
 <div id="middle_port" style='margin-right:0;'>
-		<a tal:attributes="href string:${here/getArrowURL}cmonth=${back_month}&cyear=${back_year};" title="Previous month" i18n:attributes="title"><img tal:attributes="src string:${here/getEventCalendarURL}/left_arrow" title="Previous month" alt="Previous month" border="0" i18n:attributes="title alt" /></a>
+		<a tal:attributes="href string:${here/getArrowURL}cmonth=${back_month}&cyear=${back_year};" title="Previous month" i18n:attributes="title"><img tal:attributes="src string:${here/getEventCalendarURL}/left_arrow" title="Previous month" alt="Previous month" i18n:attributes="title alt" /></a>
 		<h3 id="Event-Title">
 			<span tal:omit-tag="" i18n:translate="">Month Events for</span>&nbsp;<span tal:replace="python:here.getMonthName(cmonth)+' '+cyear" />
 		</h3>
-		<a tal:attributes="href string:${here/getArrowURL}cmonth=${forw_month}&cyear=${forw_year};" title="Next month" i18n:attributes="title"><img tal:attributes="src string:${here/getEventCalendarURL}/right_arrow" title="Next month" alt="Next month" border="0" i18n:attributes="title alt" /></a>
+		<a tal:attributes="href string:${here/getArrowURL}cmonth=${forw_month}&cyear=${forw_year};" title="Next month" i18n:attributes="title"><img tal:attributes="src string:${here/getEventCalendarURL}/right_arrow" title="Next month" alt="Next month" i18n:attributes="title alt" /></a>
 
 		<table id="Event-Container" cellspacing="0" tal:define="obj_list python:here.getMonthEvents(cmonth, cyear)">
 			<tr tal:condition="python:len(obj_list)!=0">
