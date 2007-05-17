@@ -6,21 +6,21 @@
 
 <form action="manage_addThemes">
 
-<table width="60%" cellpadding=0 cellspacing=3>
+<table width="60%" cellpadding="0" cellspacing="3">
 	<tr>
 		<td>
 			<table cellspacing="0" cellpadding="2" border="0" width="100%">
 			<tr>
 				<td><strong>Id<strong></td>
-				<td><input type="text" name="id"></td>
+				<td><input type="text" name="id" /></td>
 			</tr>
 			<tr>
 				<td align="left" valign="top"><label for="cb-name"><strong>Title</strong></label></td>
-				<td align="left" valign="top"><input type="text" id="cb-name" name="title:utf8:ustring" size="35" value=""></td>
+				<td align="left" valign="top"><input type="text" id="cb-name" name="title:utf8:ustring" size="35" value="" /></td>
 			</tr>
 			</table><br />
 
-			<div align="left"><input type="submit" value="Add Themes Folder"></div>
+			<div align="left"><input type="submit" value="Add Themes Folder" /></div>
 		</td>
 	</tr>
 </table>
