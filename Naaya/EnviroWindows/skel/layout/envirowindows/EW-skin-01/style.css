@@ -1,17 +1,26 @@
 body {
 	padding: 0 1em;
 	margin: 0;
-	font-size: 80%;
+	font-size: 75%;
 	font-family: Verdana, Arial, Helvetica,sans-serif, "MS sans serif";
 }
 .skiplink {
 	display: none;
 }
-/*#language {
+select, input {
+	font-size: 90%;
+}
+fieldset legend {
+	font-weight: bold;
+	font-size: 0.9em;
+	padding: 0 10px;
+	color: #444;
+}
+#language {
 	float: right;
-	margin-right: 0.5em;
-	background: url("langsel-bg.gif") no-repeat top right;
-	width: 17.5em;
+	margin-right: 5px;
+	/*background: url("langsel-bg.gif") no-repeat top right;*/
+	width: 20em;
 	display: inline;
 	z-index: 100;
 	position: relative;
@@ -19,22 +28,23 @@ body {
 	left: 0;
 }
 #language label {
-	background: url("langsel-left.gif") no-repeat top left;
-	font-size: 0.75em;
+	/*background: url("langsel-left.gif") no-repeat top left;*/
+	/*font-size: 0.75em;*/
 	text-transform: uppercase;
 	font-family: Arial, Helvetica, sans-serif;
 	float: left;
-	padding: 1.7em 0.5em 2.3em 2.2em;
+	padding: 5px 0 0 0;
 	display: inline;
 }
 #language select {
 	float: right;
-	margin-top: 0.7em;
+	margin-top: 2px;
 	margin-right: 1.4em;
+	_font-size: 110% !important;
 }
 #language form {
 	margin:0;
-}*/
+}
 
 /* Remove the border around images */
 a img {
@@ -90,8 +100,11 @@ a img {
 #container {
 	width: 100%;
 	position: relative;
+	height: auto !important;
 	margin: 0px auto;
 	max-width: 80em;
+	min-height: 55em;
+	_height: 55em;
 	background-color: #fff;
 	color: #333;
 	border-left: 1px solid #666666;
@@ -101,7 +114,8 @@ a img {
 #middle_port {
 	margin-left: 200px;
 	padding: 0 1em 0.5em 1em;
-	border-left: 1px dotted #555;
+	/*border-left: 1px dotted #ccc;*/
+	height: auto;
 }
 
 #middle_port h1 {
@@ -148,6 +162,7 @@ a img {
 	line-height: 1.5em;
 	margin-top: 0.5em;
 	position: relative;
+	font-size: 0.9em;
 }
 .center_portlet .center_portlet_content {
 	border: 1px solid #dddddd;
@@ -160,30 +175,38 @@ a img {
 	left: 0px;
 	width: 180px;
 	margin: 0;
-	padding: 10px;
+	padding: 10px 10px 10px 10px;
+	border-bottom: 1px dotted #ccc;
+	border-right: 1px dotted #ccc;
 }
 
 .left_portlet {
 	background: #fff;
-	padding: 0;
+	padding: 0 0 0 0;
 }
 .left_portlet .left_portlet_title {
 	height: 2em;
-	border-bottom: 1px solid #353535;
+	border: 1px solid #ddd;
+	background: #f3f3f3;
 	padding: 0.8em 0.5em 0 0.5em;
 	text-transform: uppercase;
 	font-size: 0.9em;
 	font-family: Verdana, Arial, sans-serif;
 }
+.left_portlet .left_portlet_title a {
+	text-decoration: none;
+	font-weight: bold;
+	color: #222;
+}
 .left_portlet .left_portlet_content {
 }
+
 .left_portlet ul {
 	background: #fff;
 	list-style-type: none;
 	list-style-image: none;
 	padding-left: 0;
-	margin: 0;
-	border-bottom: 1px dotted #ccc;
+	margin: 0 0 5px 0;
 }
 .left_portlet ul li{
 	padding: 0.3em;
@@ -196,14 +219,14 @@ a img {
 	vertical-align: bottom;
 	margin: 0px;
 	border-top: 1px solid #fefefe;
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid #ddd;
 }
 .left_portlet ul li:hover { 
 	background: #f2f2f2;
 }
 .left_portlet ul li a {
 	display:block;
-	font-weight: bold;
+	font-weight: normal;
 	text-decoration: none;
 	color: #44464B;
 	padding: 3px 6px 3px 0;
@@ -220,7 +243,7 @@ a img {
 	width: 190px;
 	float: right;
 	height: auto;
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
 
 .right_portlet {
@@ -233,7 +256,7 @@ a img {
 }
 .right_portlet .right_portlet_title {
 	height: 2em;
-	border-bottom: 1px solid #353535;
+	border-bottom: 1px solid #ccc;
 	padding: 0.8em 0.5em 0 0.5em;
 	text-transform: uppercase;
 	font-size: 0.9em;
@@ -261,7 +284,7 @@ a img {
 	vertical-align: bottom;
 	margin: 0px;
 	border-top: 1px solid #fefefe;
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid #ddd;
 }
 .right_portlet ul li:hover { 
 	background: #f2f2f2;
@@ -282,21 +305,22 @@ a img {
 #footer {
 	clear: both;
 	width: 100%;
-	position: relative;
+	/*position: relative;*/
 	margin: 0px auto;
 	max-width: 80em;
 	color: black;
 	border-left: 1px solid #666666;
 	border-right: 1px solid #666666;
+	border-bottom: 1px solid #666666;
 	text-align: left;
 	vertical-align: middle;
 	padding:0 0 0.5em 0;
-	background: #d8d700;
+	background: #eee;
 }
 #footer p {
 	padding: 0.5em;
 	margin: 0;
-	font-size: 0.9em;
+	font-size: 0.8em;
 }
 #footer p.righted {
 	float: right;
@@ -357,7 +381,7 @@ a img {
 }
 #topnav {
 	float:right;
-	width:70%;
+	width:60%;
 	height: 20px;
 	padding: 4px 0.5em;
 	text-align:right;
@@ -375,15 +399,30 @@ a img {
 	display: inline;
 	/*font-family: Arial, Helvetica, sans-serif;*/
 }
-/*#topnav li a {
-	color: #333;
-	text-decoration: none;
-	line-height: 1.5em;
+#left_topnav {
+	float:left;
+	width:35%;
+	height: 20px;
+	padding: 4px 0.5em;
+	text-align:left;
 }
-#topnav li a:hover {
-	color: #000;
-	text-decoration: underline;
-}*/
+#left_topnav ul {
+	margin:0;
+	padding: 0.3em 0 0 0;
+	display: inline; 
+	list-style-type: none;
+	float: left;
+}
+#left_topnav li {
+	padding: 0 0 0 0;
+	margin: 0;
+	display: inline;
+	/*font-family: Arial, Helvetica, sans-serif;*/
+}
+a#eealink {
+	background: url("eeaicon.gif") no-repeat left center;
+	padding-left: 18px;
+}
 
 #search {
 	float: right;
@@ -394,15 +433,19 @@ a img {
 }
 #search label {
 	padding-left: 1.2em;
+	color: #333;
+}
+#search input {
+	_font-size: 100% !important;
 }
 #search input[type="text"] {
-	width: 6em;
+	width: 12em !important;
 	height: 14px;
 }
 #search input[type="submit"] {
-	background: #d8d700;
-	border: 1px solid #1a171b;
-	color: #333;
+	background: #d8d700 !important;
+	border: 1px solid #1a171b !important;
+	color: #333 !important;
 	margin-right: 0.5em;
 }
 #search form {
@@ -411,7 +454,7 @@ a img {
 
 .page_title {
 	color: #feffff;
-	padding-left: 90px;
+	padding-left: 25px;
 	padding-top: 20px;
 	font-size: 200%;
 	font-weight: bold;
@@ -419,9 +462,11 @@ a img {
 }
 .page_subtitle {
 	color: #feffff;
-	padding-left: 90px;
+	padding-left: 25px;
 	font-weight: bold;
 	font-size: 120%;
+	margin: 0;
+	padding-top: 0;
 }
 
 
@@ -444,7 +489,8 @@ a img {
 	float: left;
 	position: relative;
 	text-transform: uppercase;
-	width: 12em;
+	padding: 0 0.5em;
+	_width: 1.5em;
 	border-right: 1px dotted #ffffff;
 	color: #feffff;
 	z-index: 11; /* Bug in IE6, IE7 */
@@ -530,12 +576,12 @@ a img {
 
 
 /* style for inputs submit&button */
-input[type="submit"] {
+/*input[type="submit"] {
 	border: 1px solid #6f6f6f;
 	height: 2em;
 	font-size: 0.8em;
 	background: url('input_bg.gif') repeat-x top left;
-}
+}*/
 
 .page_title {
 	font-size: 2em;
@@ -985,3 +1031,4 @@ img.scaled {
 #operations li.help a:active {
 	background: url('button_right.gif') no-repeat;
 }
+
