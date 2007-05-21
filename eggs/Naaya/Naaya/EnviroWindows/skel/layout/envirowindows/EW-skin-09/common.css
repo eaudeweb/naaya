@@ -1,5 +1,8 @@
 <span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')"/>
 /* Operations buttons */
+a img {
+	border: none;
+}
 .floated-buttons {
 	float: right;
 	margin-right: 0.5em;
