@@ -1,5 +1,5 @@
 body {
-	padding: 0 1em;
+	padding: 0 5%;
 	margin: 0;
 	font-size: 75%;
 	font-family: Verdana, Arial, Helvetica,sans-serif, "MS sans serif";
@@ -28,7 +28,7 @@ fieldset legend {
 	left: 0;
 }
 #language label {
-	/*background: url("langsel-left.gif") no-repeat top left;*/
+	/*background: purl("langsel-left.gif") no-repeat top left;*/
 	/*font-size: 0.75em;*/
 	text-transform: uppercase;
 	font-family: Arial, Helvetica, sans-serif;
@@ -49,6 +49,12 @@ fieldset legend {
 /* Remove the border around images */
 a img {
 	border: none;
+}
+#outer_wrapper {
+	background: url(border.jpg) repeat-y 79%;
+}
+#wrapper {
+	margin: 0; padding: 0;
 }
 
 #header {
@@ -99,23 +105,23 @@ a img {
 
 #container {
 	width: 100%;
-	position: relative;
-	height: auto !important;
+	height: auto;
+	background: url(border.jpg) repeat-y 20%;
 	margin: 0px auto;
-	max-width: 80em;
-	min-height: 55em;
-	_height: 55em;
-	background-color: #fff;
 	color: #333;
 	border-left: 1px solid #666666;
 	border-right: 1px solid #666666;
 }
 /* center part and content */
 #middle_port {
-	margin-left: 200px;
-	padding: 0 1em 0.5em 1em;
-	/*border-left: 1px dotted #ccc;*/
-	height: auto;
+	margin: 0 0  0 0.8%;
+	padding: 0;
+	width: 78%;
+	float: left;
+}
+#content {
+	width: 58%;
+	overflow-x: scroll; 
 }
 
 #middle_port h1 {
@@ -154,7 +160,7 @@ a img {
 
 .center_portlet {
 	/*margin-bottom: 10px;*/
-	margin-right: 200px;
+	/*margin-right: 200px;*/
 }
 .center_portlet .center_portlet_title {
 	background-color: #dddddd;
@@ -171,17 +177,14 @@ a img {
 
 /* left side and left menu */
 #left_port {
-	position:absolute;
-	left: 0px;
-	width: 180px;
 	margin: 0;
-	padding: 10px 10px 10px 10px;
-	border-bottom: 1px dotted #ccc;
-	border-right: 1px dotted #ccc;
+	padding: 0;
+	width: 20%;
+	float: left;
 }
 
 .left_portlet {
-	background: #fff;
+	/*background: #fff;*/
 	padding: 0 0 0 0;
 }
 .left_portlet .left_portlet_title {
@@ -210,7 +213,7 @@ a img {
 }
 .left_portlet ul li{
 	padding: 0.3em;
-	background: #fff;
+	/*background: #fff;*/
 	color: #084173;
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	font-size: 90%;
@@ -220,6 +223,7 @@ a img {
 	margin: 0px;
 	border-top: 1px solid #fefefe;
 	border-bottom: 1px solid #ddd;
+	display: inline-block; /* fix for IE peek-a-boo bug */
 }
 .left_portlet ul li:hover { 
 	background: #f2f2f2;
@@ -240,10 +244,10 @@ a img {
 
 /*right side - menu and content*/
 #right_port {
-	width: 190px;
-	float: right;
-	height: auto;
-	/*overflow: hidden;*/
+	margin: 0;
+	padding: 0;
+	width: 20%;
+	float: left;
 }
 
 .right_portlet {
@@ -285,6 +289,7 @@ a img {
 	margin: 0px;
 	border-top: 1px solid #fefefe;
 	border-bottom: 1px solid #ddd;
+	display: inline-block; /* fix for IE peek-a-boo bug */
 }
 .right_portlet ul li:hover { 
 	background: #f2f2f2;
@@ -305,9 +310,7 @@ a img {
 #footer {
 	clear: both;
 	width: 100%;
-	/*position: relative;*/
 	margin: 0px auto;
-	max-width: 80em;
 	color: black;
 	border-left: 1px solid #666666;
 	border-right: 1px solid #666666;

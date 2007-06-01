@@ -7,6 +7,7 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
+<div id="wrapper">
 <div id="container">
 <div id="middle_port">
 
@@ -15,6 +16,7 @@
 </div>
 <div class="cleaner"></div>
 </div>
+</div> 
 <div id="footer">
 	<p class="righted">EMAS registered environmental management at EEA </p>
 	<p>European Environment Agency, Kongens Nytorv 6, 1050 Copenhagen K, Denmark - Phone: +45 3336 7100 <br />
