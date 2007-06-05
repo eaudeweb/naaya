@@ -406,13 +406,14 @@
 			margin-right: 0.4em;
 			margin-top:1px;
 			white-space:nowrap;
-			width: 14em;
+			width: 15em;
+			text-align: right;
 		}
 		*:first-child+html #language {
-			max-width: 14em;
+			max-width: 15em;
 		}
 		* html #language {
-			width: 14em;
+			width: 15em;
 		}
 			#language label{
 				position:relative;
@@ -544,13 +545,14 @@ vertical-align: top;
 	#search{
 		position:relative;
 		float: right !important;
-		max-width: 12em;
+		max-width: 15em;
+		text-align: right;
 	}
 	* html #search {
-		width: 12em;
+		width: 15em;
 	}
 	*:first-child+html #search {
-		max-width: 12em;
+		max-width: 15em;
 	}
 
 		#search form{
