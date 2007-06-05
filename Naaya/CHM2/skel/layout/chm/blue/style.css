@@ -402,13 +402,18 @@
 				color:#333333; /*#333333*/ /*#333333*/ /*#333333*/ /*#333333*/
 			}
 		#language{
-			float:right;
+			float:right !important;
 			margin-right: 0.4em;
 			margin-top:1px;
 			white-space:nowrap;
+			width: 14em;
 		}
-		
-	
+		*:first-child+html #language {
+			max-width: 14em;
+		}
+		* html #language {
+			width: 14em;
+		}
 			#language label{
 				position:relative;
 				top:-0.2em;
@@ -538,7 +543,14 @@ vertical-align: top;
 
 	#search{
 		position:relative;
-		float: right;
+		float: right !important;
+		max-width: 12em;
+	}
+	* html #search {
+		width: 12em;
+	}
+	*:first-child+html #search {
+		max-width: 12em;
 	}
 
 		#search form{
