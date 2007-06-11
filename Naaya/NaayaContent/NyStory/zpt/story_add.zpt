@@ -87,7 +87,7 @@ function fSet(ctrl, value)
 	<input type="checkbox" name="topitem" id="topitem" tal:attributes="checked python:test(here.getSession('topitem', ''), 'checked', '')" />
 </div>
 <div class="field">
-	<label for="frontpicture"><span i18n:translate="" tal:omit-tag="">Front page picture</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'frontpicture')" class="mandatory_field"> *</span></label>
+	<label for="frontpicture"><span i18n:translate="" tal:omit-tag="">Front page picture</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'frontpicture')" class="mandatory_field"> *</span></label>
 	<input type="file" id="frontpicture" name="frontpicture" />
 	<span tal:condition="python:test(here.getSession('frontpicture', ''))" tal:content="python:here.getSession('frontpicture', '')" />
 </div>
