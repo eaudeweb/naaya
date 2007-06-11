@@ -301,7 +301,8 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
             else:
                 approved, approved_by = 0, None
             self.save_properties(title, description, coverage, keywords, sortorder, body,
-                topitem, resourceurl, source, releasedate, frontpicture, lang)
+                topitem, resourceurl, source, releasedate, None, lang)
+            self.setFrontPicture(frontpicture)
             self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             self._p_changed = 1
             self.approveThis(approved, approved_by)
