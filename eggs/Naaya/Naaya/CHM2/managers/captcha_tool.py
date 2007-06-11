@@ -9,17 +9,15 @@
 # rights and limitations under the License.
 #
 # The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania are
+# Agency (EEA).  Portions created by Finsiel Romania and Eau de Web are
 # Copyright (C) European Environment Agency.  All
 # Rights Reserved.
 #
 # Authors:
 #
-# Cornel Nitu, Finsiel Romania
-# Dragos Chirila, Finsiel Romania
+# Cornel Nitu, Eau de Web
+# Dragos Chirila
 #
-#
-#$Id: session_tool.py,v 1.13 2004/11/30 09:32:50 finrocvs Exp $
 
 #Python imports
 from cStringIO import StringIO
