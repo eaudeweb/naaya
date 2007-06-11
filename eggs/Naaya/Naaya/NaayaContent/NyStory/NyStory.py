@@ -60,6 +60,7 @@ PROPERTIES_OBJECT = {
     'topitem':      (0, '', ''),
     'resourceurl':  (0, '', ''),
     'source':       (0, '', ''),
+    'frontpicture': (0, '', ''),
     'lang':         (0, '', '')
 }
 
@@ -74,7 +75,7 @@ def story_add(self, REQUEST=None, RESPONSE=None):
     if REQUEST: REQUEST.RESPONSE.redirect('%s/add_html' % self._getOb(id).absolute_url())
 
 def addNyStory(self, id='', title='', description='', coverage='', keywords='',
-    sortorder='', body='', topitem='', resourceurl='', source='', contributor=None,
+    sortorder='', body='', topitem='', resourceurl='', source='', frontpicture='', contributor=None,
     releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
     """
     Create a Story type of object.
@@ -91,9 +92,10 @@ def addNyStory(self, id='', title='', description='', coverage='', keywords='',
     if lang is None: lang = self.gl_get_selected_language()
     #create object
     ob = NyStory(id, title, description, coverage, keywords, sortorder, body, topitem,
-        resourceurl, source, contributor, releasedate, lang)
+        resourceurl, source, contributor, releasedate, frontpicture, lang)
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+    ob.setFrontPicture(frontpicture)
     self._setObject(id, ob)
     #extra settings
     ob = self._getOb(id)
@@ -130,6 +132,7 @@ def importNyStory(self, param, id, attrs, content, properties, discussion, objec
                 sortorder=attrs['sortorder'].encode('utf-8'),
                 topitem=abs(int(attrs['topitem'].encode('utf-8'))),
                 resourceurl=attrs['resourceurl'].encode('utf-8'),
+                frontpicture=self.utBase64Decode(attrs['frontpicture'].encode('utf-8')),
                 contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
                 discussion=abs(int(attrs['discussion'].encode('utf-8'))))
             ob = self._getOb(id)
@@ -173,11 +176,11 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, description, coverage, keywords, sortorder, body,
-        topitem, resourceurl, source, contributor, releasedate, lang):
+        topitem, resourceurl, source, contributor, releasedate, frontpicture, lang):
         """ """
         self.id = id
         story_item.__dict__['__init__'](self, title, description, coverage, keywords,
-            sortorder, body, topitem, resourceurl, source, releasedate, lang)
+            sortorder, body, topitem, resourceurl, source, releasedate, frontpicture, lang)
         NyCheckControl.__dict__['__init__'](self)
         NyContainer.__dict__['__init__'](self)
         self.contributor = contributor
@@ -188,8 +191,8 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
-        return 'topitem="%s" resourceurl="%s"' % \
-            (self.utXmlEncode(self.topitem), self.utXmlEncode(self.resourceurl))
+        return 'topitem="%s" resourceurl="%s" frontpicture="%s"' % \
+            (self.utXmlEncode(self.topitem), self.utXmlEncode(self.resourceurl), self.utBase64Encode(self.utNoneToEmpty(self.frontpicture)))
 
     security.declarePrivate('export_this_body_custom')
     def export_this_body_custom(self):
@@ -219,11 +222,24 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         ra(self.syndicateThisFooter())
         return ''.join(r)
 
+    def getFrontPicture(self, version=None, REQUEST=None):
+        """ """
+        if version is None: return self.frontpicture
+        else:
+            if self.checkout: return self.version.frontpicture
+            else: return self.frontpicture
+
+    def hasFrontPicture(self, version=None):
+        if version is None: return self.frontpicture is not None
+        else:
+            if self.checkout: return self.version.frontpicture is not None
+            else: return self.frontpicture is not None
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='',
         keywords='', sortorder='', approved='', body='', topitem='', resourceurl='',
-        source='', releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
+        source='', releasedate='', frontpicture='', del_frontpicture='', discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -236,13 +252,15 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         releasedate = self.process_releasedate(releasedate, self.releasedate)
         if not lang: lang = self.gl_get_selected_language()
         self.save_properties(title, description, coverage, keywords, sortorder, body, topitem,
-            resourceurl, source, releasedate, lang)
+            resourceurl, source, releasedate, self.frontpicture, lang)
         self.updatePropertiesFromGlossary(lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
             if approved == 0: approved_by = None
             else: approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
             self.approveThis(approved, approved_by)
+        if del_frontpicture != '': self.delFrontPicture()
+        else: self.setFrontPicture(frontpicture)
         self._p_changed = 1
         if discussion: self.open_for_comments()
         else: self.close_for_comments()
@@ -259,7 +277,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
     security.declareProtected(PERMISSION_ADD_OBJECT, 'process_add')
     def process_add(self, title='', description='', coverage='', keywords='',
         sortorder='', body='', topitem='', resourceurl='', source='', releasedate='',
-        discussion='', lang='', REQUEST=None, **kwargs):
+        frontpicture='', discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         try: sortorder = abs(int(sortorder))
         except: sortorder = DEFAULT_SORTORDER
@@ -272,7 +290,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
             r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
                 description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
                 releasedate=releasedate, discussion=discussion, body=body, topitem=topitem, \
-                resourceurl=resourceurl, source=source)
+                resourceurl=resourceurl, source=source, frontpicture=frontpicture)
         else:
             r = []
         if not len(r):
@@ -283,7 +301,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
             else:
                 approved, approved_by = 0, None
             self.save_properties(title, description, coverage, keywords, sortorder, body,
-                topitem, resourceurl, source, releasedate, lang)
+                topitem, resourceurl, source, releasedate, frontpicture, lang)
             self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             self._p_changed = 1
             self.approveThis(approved, approved_by)
@@ -302,7 +320,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
                 self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                     description=description, coverage=coverage, keywords=keywords, \
                     sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
-                    body=body, topitem=topitem, resourceurl=resourceurl, source=source, lang=lang)
+                    body=body, topitem=topitem, resourceurl=resourceurl, source=source, frontpicture=frontpicture, lang=lang)
                 REQUEST.RESPONSE.redirect('%s/add_html' % self.absolute_url())
             else:
                 raise Exception, '%s' % ', '.join(r)
@@ -320,6 +338,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         self.topitem = self.version.topitem
         self.resourceurl = self.version.resourceurl
         self.releasedate = self.version.releasedate
+        self.frontpicture = self.version.frontpicture
         self.setProperties(deepcopy(self.version.getProperties()))
         self.checkout = 0
         self.checkout_user = None
@@ -339,7 +358,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = story_item(self.title, self.description, self.coverage,
             self.keywords, self.sortorder, self.body, self.topitem, self.resourceurl,
-            self.source, self.releasedate, self.gl_get_selected_language())
+            self.source, self.releasedate, self.frontpicture, self.gl_get_selected_language())
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
@@ -350,7 +369,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', coverage='', keywords='',
         sortorder='', body='', topitem='', resourceurl='', source='', releasedate='',
-        discussion='', lang=None, REQUEST=None, **kwargs):
+        frontpicture='', del_frontpicture='', discussion='', lang=None, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -362,14 +381,16 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion, body=body, topitem=topitem, \
-            resourceurl=resourceurl, source=source)
+            resourceurl=resourceurl, source=source, frontpicture=frontpicture)
         if not len(r):
             sortorder = int(sortorder)
             if not self.hasVersion():
                 #this object has not been checked out; save changes directly into the object
                 releasedate = self.process_releasedate(releasedate, self.releasedate)
                 self.save_properties(title, description, coverage, keywords, sortorder, body,
-                    topitem, resourceurl, source, releasedate, lang)
+                    topitem, resourceurl, source, releasedate, self.frontpicture, lang)
+                if del_frontpicture != '': self.delFrontPicture()
+                else: self.setFrontPicture(frontpicture)
                 self.updatePropertiesFromGlossary(lang)
                 self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             else:
@@ -378,7 +399,9 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
                     raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
                 releasedate = self.process_releasedate(releasedate, self.version.releasedate)
                 self.version.save_properties(title, description, coverage, keywords, sortorder,
-                    body, topitem, resourceurl, source, releasedate, lang)
+                    body, topitem, resourceurl, source, releasedate, self.version.frontpicture, lang)
+                if del_frontpicture != '': self.version.delFrontPicture()
+                else: self.version.setFrontPicture(frontpicture)
                 self.version.updatePropertiesFromGlossary(lang)
                 self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             if discussion: self.open_for_comments()
@@ -394,7 +417,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
                 self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                     description=description, coverage=coverage, keywords=keywords, \
                     sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
-                    body=body, topitem=topitem, resourceurl=resourceurl, source=source)
+                    body=body, topitem=topitem, resourceurl=resourceurl, source=source, del_frontpicture=del_frontpicture)
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
             else:
                 raise Exception, '%s' % ', '.join(r)

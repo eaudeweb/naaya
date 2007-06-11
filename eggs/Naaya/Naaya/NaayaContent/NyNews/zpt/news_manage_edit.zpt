@@ -38,7 +38,7 @@
 <tal:block tal:condition="here/hasBigPicture">
 <tr>
 	<td></td>
-	<td><img src="getBigPicture"></td>
+	<td><img src="getBigPicture" /></td>
 </tr>
 <tr>
 	<td></td>
