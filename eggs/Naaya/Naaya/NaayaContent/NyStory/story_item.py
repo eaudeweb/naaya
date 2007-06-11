@@ -15,8 +15,8 @@
 #
 # Authors:
 #
-# Cornel Nitu, Finsiel Romania
-# Dragos Chirila, Finsiel Romania
+# Cornel Nitu, Eau de Web
+# Dragos Chirila
 
 #Python imports
 

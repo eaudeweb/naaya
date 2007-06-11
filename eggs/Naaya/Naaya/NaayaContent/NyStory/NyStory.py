@@ -15,9 +15,10 @@
 #
 # Authors:
 #
-# Anton Cupcea, Finsiel Romania
-# Cornel Nitu, Finsiel Romania
-# Dragos Chirila, Finsiel Romania
+# Anton Cupcea, Eau de Web
+# Cornel Nitu, Eau de Web
+# Miruna Badescu, Eau de Web
+# Dragos Chirila
 
 #Python imports
 from copy import deepcopy
@@ -92,7 +93,7 @@ def addNyStory(self, id='', title='', description='', coverage='', keywords='',
     if lang is None: lang = self.gl_get_selected_language()
     #create object
     ob = NyStory(id, title, description, coverage, keywords, sortorder, body, topitem,
-        resourceurl, source, contributor, releasedate, frontpicture, lang)
+        resourceurl, source, contributor, releasedate, None, lang)
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
     ob.setFrontPicture(frontpicture)
