@@ -9,14 +9,14 @@
 # rights and limitations under the License.
 #
 # The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania are
+# Agency (EEA).  Portions created by Finsiel Romania and Eau de Web are
 # Copyright (C) European Environment Agency.  All
 # Rights Reserved.
 #
 # Authors:
 #
-# Cornel Nitu, Finsiel Romania
-# Dragos Chirila, Finsiel Romania
+# Cornel Nitu, Eau de Web
+# Dragos Chirila
 
 #Python imports
 from os import listdir

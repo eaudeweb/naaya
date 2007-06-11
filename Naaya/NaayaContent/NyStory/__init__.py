@@ -9,12 +9,12 @@
 # rights and limitations under the License.
 #
 # The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania are
+# Agency (EEA).  Portions created by Finsiel Romania and Eau de Web are
 # Copyright   European Environment Agency.  All
 # Rights Reserved.
 #
 # Authors:
 #
-# Anton Cupcea, Finsiel Romania
-# Cornel Nitu, Finsiel Romania
-# Dragos Chirila, Finsiel Romania
+# Anton Cupcea, Eau de Web
+# Cornel Nitu, Eau de Web
+# Dragos Chirila
