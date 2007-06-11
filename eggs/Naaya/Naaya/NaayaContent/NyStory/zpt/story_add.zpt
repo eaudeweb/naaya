@@ -30,7 +30,7 @@ function fSet(ctrl, value)
 // -->
 </script>
 
-<form name="frmAdd" method="post" tal:attributes="action string:${here/absolute_url}/process_add">
+<form name="frmAdd" method="post" tal:attributes="action string:${here/absolute_url}/process_add" enctype="multipart/form-data">
 <div class="field-inline" tal:define="selected_language python:here.getSession('lang', here.gl_get_selected_language())">
 	<label i18n:translate="" for="lang">Posting language</label>
 	<select name="lang" id="lang">

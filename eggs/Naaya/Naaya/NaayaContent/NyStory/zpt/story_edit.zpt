@@ -25,7 +25,7 @@
 </div>
 <div class="field">
 	<label for="frontpicture"><span i18n:translate="" tal:omit-tag="">Front page picture</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'frontpicture')" class="mandatory_field"> *</span></label>
-	<input type="file" name="frontpicture" id="frontpicture" tal:attributes="values python:here.getSession('frontpicture', '')" />
+	<input type="file" name="frontpicture" id="frontpicture" tal:attributes="value python:here.getSession('frontpicture', '')" />
 </div>
 <tal:block tal:condition="python:here.hasFrontPicture(1)">
 <div class="field">
