@@ -21,6 +21,20 @@
 	<td class="form-label" valign="top">Source</td>
 	<td><input type="text" name="source" size="50" tal:attributes="value here/source" /></td>
 </tr>
+<tr>
+	<td class="form-label">Front page picture</td>
+	<td><input type="file" name="frontpicture" value="" /></td>
+</tr>
+<tal:block tal:condition="here/hasFrontPicture">
+<tr>
+	<td></td>
+	<td><img src="getFrontPicture" /></td>
+</tr>
+<tr>
+	<td></td>
+	<td><input type="checkbox" name="del_frontpicture" /> check this if you want do delete current picture</td>
+</tr>
+</tal:block>
 </tal:block>
 
 </tal:block>

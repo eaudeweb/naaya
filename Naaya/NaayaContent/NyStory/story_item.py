@@ -38,16 +38,16 @@ class story_item(Implicit, NyProperties):
     source = LocalProperty('source')
 
     def __init__(self, title, description, coverage, keywords, sortorder, body,
-        topitem, resourceurl, source, releasedate, lang):
+        topitem, resourceurl, source, releasedate, frontpicture, lang):
         """
         Constructor.
         """
         self.save_properties(title, description, coverage, keywords, sortorder,
-            body, topitem, resourceurl, source, releasedate, lang)
+            body, topitem, resourceurl, source, releasedate, frontpicture, lang)
         NyProperties.__dict__['__init__'](self)
 
     def save_properties(self, title, description, coverage, keywords, sortorder,
-        body, topitem, resourceurl, source, releasedate, lang):
+        body, topitem, resourceurl, source, releasedate, frontpicture, lang):
         """
         Save item properties.
         """
@@ -61,3 +61,26 @@ class story_item(Implicit, NyProperties):
         self.resourceurl = resourceurl
         self._setLocalPropValue('source', lang, source)
         self.releasedate = releasedate
+        self.frontpicture = frontpicture
+
+    def setFrontPicture(self, p_picture):
+        """
+        Upload the front page picture.
+        """
+        if p_picture != '':
+            if hasattr(p_picture, 'filename'):
+                if p_picture.filename != '':
+                    l_read = p_picture.read()
+                    if l_read != '':
+                        self.frontpicture = l_read
+                        self._p_changed = 1
+            else:
+                self.frontpicture = p_picture
+                self._p_changed = 1
+
+    def delFrontPicture(self):
+        """
+        Delete the front page picture.
+        """
+        self.frontpicture = None
+        self._p_changed = 1
