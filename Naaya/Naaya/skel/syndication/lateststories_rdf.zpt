@@ -13,6 +13,7 @@
 		</div>
 	</tal:block>
 	<div class="content_story" >
+		<img tal:condition="here/hasFrontPicture" src="getFrontPicture" />
 		<div class="text_story" tal:content="structure item/description" />
 		<div class="bottom_border"> </div>
 	</div>
