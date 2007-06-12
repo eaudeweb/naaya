@@ -1,5 +1,7 @@
 <span tal:replace="structure here/standard_html_header" />
+<tal:block define="right_portlets python:here.get_right_portlets_locations_objects(here)">
 
+<div id="center_content" tal:attributes="style python:test(len(right_portlets)>0, 'width: 78%;; overflow-x: auto;;', '')">
 <tal:block define="objects_info here/checkPermissionManageObjects;
     folders_list python:objects_info[6];
     objects_list python:objects_info[7];
@@ -92,12 +94,6 @@ function fRenameObjects()
 
 
 <div>
-<span style="float: right; width: 20%; word-wrap: break-word;">
-    <tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
-        <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
-    </tal:block>
-</span>
-
 <h1>
     <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" />
     <tal:block tal:replace="here/title_or_id" />
@@ -193,10 +189,19 @@ function fRenameObjects()
 </form>
 
 </div>
+
 </tal:block>
 
 <p><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" /></a></p>
 
 <span tal:replace="structure here/comments_box" />
+</div>
 
+<span>
+    <tal:block tal:repeat="item right_portlets">
+        <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+    </tal:block>
+</span>
+
+</tal:block>
 <span tal:replace="structure here/standard_html_footer"/>

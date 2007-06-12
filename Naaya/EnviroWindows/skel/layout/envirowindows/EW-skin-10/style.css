@@ -19,7 +19,6 @@ fieldset legend {
 #language {
 	float: right;
 	margin-right: 5px;
-	/*background: url("langsel-bg.gif") no-repeat top right;*/
 	width: 20em;
 	display: inline;
 	z-index: 100;
@@ -28,8 +27,6 @@ fieldset legend {
 	left: 0;
 }
 #language label {
-	/*background: purl("langsel-left.gif") no-repeat top left;*/
-	/*font-size: 0.75em;*/
 	text-transform: uppercase;
 	font-family: Arial, Helvetica, sans-serif;
 	float: left;
@@ -45,18 +42,16 @@ fieldset legend {
 #language form {
 	margin:0;
 }
-
 /* Remove the border around images */
 a img {
 	border: none;
 }
 #outer_wrapper {
-	background: url(border.jpg) repeat-y 79%;
+	background: url(dot-bg.gif) repeat-y 20.5%;
 }
 #wrapper {
 	margin: 0; padding: 0;
 }
-
 #header {
 	clear: both;
 	height: 102px;
@@ -64,10 +59,6 @@ a img {
 	border-top: 1px solid #4b5257;
 }
 
-/*#header img {
-	margin-left: 1%;
-	margin-top: 0;
-}*/
 #header a {
 	position: absolute;
 	left: 10px;
@@ -80,8 +71,6 @@ a img {
 #logo {
 	display:none;
 }
-
-
 #breadcrumbtrail {
 	clear:left;
 	padding: 1px 0px 1px 1em;
@@ -90,23 +79,22 @@ a img {
 	color: #7d7d7d;
 	border-bottom: 1px dotted rgb(143,167,113);
 	line-height: 2.3em;
+	background: #fff;
 }
 #breadcrumbtrail a {
 	font-weight: bold;
 	color: #888;
 	text-decoration: none;
 }
-
 #breadcrumbtrail a:hover {
 	font-weight: bold;
 	color: black;
 	text-decoration: underline;
 }
-
 #container {
 	width: 100%;
 	height: auto;
-	background: url(border.jpg) repeat-y 20%;
+	background: url(dot-bg.gif) repeat-y 82%;
 	margin: 0px auto;
 	color: #333;
 	border-left: 1px solid #666666;
@@ -119,9 +107,10 @@ a img {
 	width: 78%;
 	float: left;
 }
-#content {
-	width: 58%;
-	overflow-x: scroll; 
+#center_content {
+	float: left;
+	width: 100%;
+	background: #fff;
 }
 
 #middle_port h1 {
@@ -143,7 +132,6 @@ a img {
 }
 
 #middle_port h2, #middle_port h3, #middle_port h4 {
-/*	position: relative; */
 	padding: 0.2em 0.4em;
 }
 
@@ -159,8 +147,7 @@ a img {
 }
 
 .center_portlet {
-	/*margin-bottom: 10px;*/
-	/*margin-right: 200px;*/
+	background: #fff;
 }
 .center_portlet .center_portlet_title {
 	background-color: #dddddd;
@@ -251,12 +238,10 @@ a img {
 }
 
 .right_portlet {
-	background: #fff;
-	float: right;
-	width: 180px;
+	float: left;
+	width: 20%;
 	margin: 0;
 	padding: 0 0 10px 10px;
-	border-left: 1px dotted #ccc;
 }
 .right_portlet .right_portlet_title {
 	height: 2em;
@@ -429,27 +414,37 @@ a#eealink {
 
 #search {
 	float: right;
-	padding: 0;
+	padding:  0.2em 0 0 0;
 	margin: 0;
-	padding-top: 0.2em;
 	display: inline;
 }
 #search label {
 	padding-left: 1.2em;
 	color: #333;
 }
-#search input {
-	_font-size: 100% !important;
+* html #search label {
+	margin-top: -1em;
 }
-#search input[type="text"] {
-	width: 12em !important;
+* html #search input {
+	font-size: 100% !important;
+}
+#search input {
+	width: 19em;
 	height: 14px;
 }
-#search input[type="submit"] {
+/*#search input[type="submit"] {
 	background: #d8d700 !important;
 	border: 1px solid #1a171b !important;
 	color: #333 !important;
 	margin-right: 0.5em;
+}*/
+.search_btn {
+	width: 3em !important;
+	height: 16px !important;
+	margin-right: 0.5em;
+	text-align: center;
+	border: 1px solid #333;
+	background:#fff;
 }
 #search form {
 	margin:0;
