@@ -467,18 +467,9 @@
 				width:11em;
 			}
 
-	.header_story {
-		background-image: url(sign_story.gif);
-		background-repeat: no-repeat;
-		background-position: left center;
-		margin-top: 2em;
-		margin-right: 2%;
-	}
-
 	.title_story {
-		left: 2em;
+		left: 0px;
 		top: 0px;
-		margin-left: 40px;
 		padding-left: 7px;
 			padding-top:3px;
 			padding-bottom:8px;
@@ -506,10 +497,11 @@
 	}
 
 	.text_story {
-		padding: 10px 10px 10px 0px;
+		padding: 0.2em 0.2em 0.2em 0;
 		text-align: justify;
 		color: #333333;
 	}
+	*:first-child+html .text_story p {margin: 0 0 0.5em 0; }
 
 	.bottom_border {
 		margin-left: 2em;
