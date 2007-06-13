@@ -233,15 +233,18 @@ a img {
 #right_port {
 	margin: 0;
 	padding: 0;
-	width: 20%;
+	width: 21%;
 	float: left;
 }
 
 .right_portlet {
 	float: left;
-	width: 20%;
 	margin: 0;
 	padding: 0 0 10px 10px;
+	width: 100%;
+}
+* html .right_portlet {
+	width: auto;
 }
 .right_portlet .right_portlet_title {
 	height: 2em;
@@ -262,7 +265,7 @@ a img {
 	margin: 0;
 	border-bottom: 1px dotted #ccc;
 }
-.right_portlet ul li{
+.right_portlet li{
 	padding: 0.3em;
 	background: #fff;
 	color: #084173;
@@ -274,6 +277,9 @@ a img {
 	margin: 0px;
 	border-top: 1px solid #fefefe;
 	border-bottom: 1px solid #ddd;
+	display: block;
+}
+* html .right_portlet li{
 	display: inline-block; /* fix for IE peek-a-boo bug */
 }
 .right_portlet ul li:hover { 
@@ -414,7 +420,7 @@ a#eealink {
 
 #search {
 	float: right;
-	padding:  0.2em 0 0 0;
+	padding:  0.1em 0 0 0;
 	margin: 0;
 	display: inline;
 }
@@ -430,7 +436,7 @@ a#eealink {
 }
 #search input {
 	width: 19em;
-	height: 14px;
+	height: 13px;
 }
 /*#search input[type="submit"] {
 	background: #d8d700 !important;
