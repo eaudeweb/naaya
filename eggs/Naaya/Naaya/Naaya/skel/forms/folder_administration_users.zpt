@@ -46,7 +46,7 @@
 		and clicking on the Revoke selected roles button.
 	</p>
 	<form name="frmRevokeEmail" method="post" tal:attributes="action string:${here/absolute_url}/admin_folder_revokeroles">
-	<table border="1" cellspacing="2" cellpadding="2">
+	<table border="0" cellspacing="0" cellpadding="2" class="admin_table">
 	<tr class="row-header">
 		<th width="20%" i18n:translate="">User</th>
 		<th width="35%" i18n:translate="">Roles/Location</th>

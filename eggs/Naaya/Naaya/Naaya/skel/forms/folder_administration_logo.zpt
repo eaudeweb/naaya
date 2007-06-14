@@ -6,7 +6,7 @@
 	<p i18n:translate="">This page allows to upload a new logo for this folder.</p>
 	<form method="post" tal:attributes="action string:${here/absolute_url}/saveLogo" enctype="multipart/form-data"
 		tal:define="logo here/getFolderLogo">
-	<table border="0" cellspacing="2" cellpadding="2" width="100%">
+	<table border="0" cellspacing="2" cellpadding="2" width="95%">
 		<tr>
 			<td><label for="source-file" i18n:translate="">File</label></td>
 			<td>
