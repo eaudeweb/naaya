@@ -197,14 +197,14 @@ function fRenameObjects()
 <span tal:replace="structure here/comments_box" />
 </div>
 
-<span>
+<div id="right_port">
 	<tal:block tal:condition="python:request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator'], here)">
 		<span tal:replace="structure python:here.get_portlet_object('portlet_folder_administration')({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
 	</tal:block>
-    <tal:block tal:repeat="item right_portlets">
-        <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
-    </tal:block>
-</span>
+	<tal:block tal:repeat="item right_portlets">
+		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+	</tal:block>
+</div>
 
 </tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
