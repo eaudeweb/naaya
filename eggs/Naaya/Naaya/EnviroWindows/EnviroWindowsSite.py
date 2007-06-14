@@ -83,4 +83,28 @@ class EnviroWindowsSite(NySite):
 #        try:    self.getPropertiesTool().manageMainTopics(['fol120392', 'fol657555', 'fol112686', 'fol034934', 'test1'])
 #        except: pass
 
+    security.declarePublic('getBreadCrumbTrail')
+    def getBreadCrumbTrail(self, REQUEST):
+        """ generates the breadcrumb trail """
+        root = self.utGetROOT()
+        breadcrumbs = []
+        vRoot = REQUEST.has_key('VirtualRootPhysicalPath')
+        PARENTS = REQUEST.PARENTS[:]
+        PARENTS.reverse()
+        if vRoot:
+             root = REQUEST.VirtualRootPhysicalPath
+             PARENTS = PARENTS[len(root)-1:]
+        PARENTS.reverse()
+        for crumb in PARENTS:
+            if crumb.meta_type == self.meta_type:
+                break
+            breadcrumbs.append(crumb)
+        breadcrumbs.reverse()
+        return breadcrumbs
+
+    security.declarePublic('stripAllHtmlTags')
+    def stripAllHtmlTags(self, p_text):
+        """ """
+        return utils().utStripAllHtmlTags(p_text)
+
 InitializeClass(EnviroWindowsSite)
