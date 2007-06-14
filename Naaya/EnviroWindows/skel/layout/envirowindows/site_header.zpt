@@ -23,6 +23,15 @@
 					<span tal:replace="structure here/languages_box"/>
 					<label for="language">select language:</label>
 				</div>
+				<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('top').get_links_list()">
+					<tal:block tal:repeat="item l_list">
+						<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
+					</tal:block>
+				</ul>
+				<ul class="site_actions">
+					<li><a href="javascript:this.print();" title="Print this page"><img src="misc_/EnviroWindows/printer.gif" alt="print this page" /></a></li>
+					<li><a href="feedback_html" title="Feedback">Feedback</a>
+				</ul>
 			</div>
 			<div id="left_topnav">
 				<ul>

@@ -381,17 +381,23 @@ a img {
 	text-align:right;
 }
 #topnav ul {
-	margin:0;
-	padding: 0.3em 0 0 0;
+	padding:0;
+	margin: 0.3em 10px 0 0;
 	display: inline; 
 	list-style-type: none;
 	float: right;
 }
 #topnav li {
-	padding: 0 0 0 0;
+	padding: 0;
 	margin: 0;
 	display: inline;
 	/*font-family: Arial, Helvetica, sans-serif;*/
+}
+#topnav li a {
+	margin: 0; padding: 0 6px 0 4px;
+}
+#topnav ul.site_actions {
+	margin-right: 3px;
 }
 #left_topnav {
 	float:left;
