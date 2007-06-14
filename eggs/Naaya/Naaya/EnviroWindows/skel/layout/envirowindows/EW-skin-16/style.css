@@ -1,4 +1,158 @@
-ne-height: 1.5em;
+body {
+	padding: 0 5%;
+	margin: 0;
+	font-size: 75%;
+	font-family: Verdana, Arial, Helvetica,sans-serif, "MS sans serif";
+}
+.skiplink {
+	display: none;
+}
+select, input {
+	font-size: 90%;
+}
+fieldset legend {
+	font-weight: bold;
+	font-size: 0.9em;
+	padding: 0 10px;
+	color: #444;
+}
+#language {
+	float: right;
+	margin-right: 5px;
+	width: 20em;
+	display: inline;
+	z-index: 100;
+	position: relative;
+	top: 0;
+	left: 0;
+}
+#language label {
+	text-transform: uppercase;
+	font-family: Arial, Helvetica, sans-serif;
+	float: left;
+	padding: 5px 0 0 0;
+	display: inline;
+}
+#language select {
+	float: right;
+	margin-top: 2px;
+	margin-right: 1.4em;
+	_font-size: 110% !important;
+}
+#language form {
+	margin:0;
+}
+/* Remove the border around images */
+a img {
+	border: none;
+}
+#outer_wrapper {
+	background: url(dot-bg.gif) repeat-y 20.5%;
+}
+#wrapper {
+	margin: 0; padding: 0;
+}
+#header {
+	clear: both;
+	height: 102px;
+	background: #5f7f7e url('ew-header.jpg') repeat-y top right;
+	border-top: 1px solid #4b5257;
+}
+
+#header a {
+	position: absolute;
+	left: 10px;
+	top: 45px;
+	border: none;
+}
+#header a img {
+	border: none;
+}
+#logo {
+	display:none;
+}
+#breadcrumbtrail {
+	clear:left;
+	padding: 1px 0px 1px 1em;
+	font-size: 0.8em;
+	font-family: verdana, arial, helvetica, sans-serif;
+	color: #7d7d7d;
+	border-bottom: 1px dotted rgb(143,167,113);
+	line-height: 2.3em;
+	background: #fff;
+}
+#breadcrumbtrail a {
+	font-weight: bold;
+	color: #888;
+	text-decoration: none;
+}
+#breadcrumbtrail a:hover {
+	font-weight: bold;
+	color: black;
+	text-decoration: underline;
+}
+#container {
+	width: 100%;
+	height: auto;
+	background: url(dot-bg.gif) repeat-y 82%;
+	margin: 0px auto;
+	color: #333;
+	border-left: 1px solid #666666;
+	border-right: 1px solid #666666;
+}
+/* center part and content */
+#middle_port {
+	margin: 0 0  0 0.8%;
+	padding: 0;
+	width: 78%;
+	float: left;
+}
+#center_content {
+	float: left;
+	width: 100%;
+	background: #fff;
+}
+
+#middle_port h1 {
+	background: #f2f2f2;
+	color: #444;
+	padding: 5px 0 0 5px;
+	border-bottom: 4px solid #ccc;
+	font-size: 1.5em;
+	font-weight: normal;
+}
+#middle_port a {
+	color: #44464B;
+}
+
+#middle_port h2 {
+	font-size: 110%;
+	text-transform: uppercase;
+	font-weight: normal;
+}
+
+#middle_port h2, #middle_port h3, #middle_port h4 {
+	padding: 0.2em 0.4em;
+}
+
+#middle_port h2 a, #middle_port h3 a, #middle_port h4 a {
+	color: white;
+	background-color: #767676;
+}
+
+.center_portlet_content ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0 0 0 1em;
+}
+
+.center_portlet {
+	background: #fff;
+}
+.center_portlet .center_portlet_title {
+	background-color: #dddddd;
+	padding-left: 1em;
+	line-height: 1.5em;
 	margin-top: 0.5em;
 	position: relative;
 	font-size: 0.9em;
@@ -227,17 +381,23 @@ ne-height: 1.5em;
 	text-align:right;
 }
 #topnav ul {
-	margin:0;
-	padding: 0.3em 0 0 0;
+	padding:0;
+	margin: 0.3em 10px 0 0;
 	display: inline; 
 	list-style-type: none;
 	float: right;
 }
 #topnav li {
-	padding: 0 0 0 0;
+	padding: 0;
 	margin: 0;
 	display: inline;
 	/*font-family: Arial, Helvetica, sans-serif;*/
+}
+#topnav li a {
+	margin: 0; padding: 0 6px 0 4px;
+}
+#topnav ul.site_actions {
+	margin-right: 3px;
 }
 #left_topnav {
 	float:left;
@@ -317,161 +477,7 @@ a#eealink {
 	font-size: 120%;
 	margin: 0;
 	padding-top: 0;
-}body {
-	padding: 0 5%;
-	margin: 0;
-	font-size: 75%;
-	font-family: Verdana, Arial, Helvetica,sans-serif, "MS sans serif";
 }
-.skiplink {
-	display: none;
-}
-select, input {
-	font-size: 90%;
-}
-fieldset legend {
-	font-weight: bold;
-	font-size: 0.9em;
-	padding: 0 10px;
-	color: #444;
-}
-#language {
-	float: right;
-	margin-right: 5px;
-	width: 20em;
-	display: inline;
-	z-index: 100;
-	position: relative;
-	top: 0;
-	left: 0;
-}
-#language label {
-	text-transform: uppercase;
-	font-family: Arial, Helvetica, sans-serif;
-	float: left;
-	padding: 5px 0 0 0;
-	display: inline;
-}
-#language select {
-	float: right;
-	margin-top: 2px;
-	margin-right: 1.4em;
-	_font-size: 110% !important;
-}
-#language form {
-	margin:0;
-}
-/* Remove the border around images */
-a img {
-	border: none;
-}
-#outer_wrapper {
-	background: url(dot-bg.gif) repeat-y 20.5%;
-}
-#wrapper {
-	margin: 0; padding: 0;
-}
-#header {
-	clear: both;
-	height: 102px;
-	background: #5f7f7e url('ew-header.jpg') repeat-y top right;
-	border-top: 1px solid #4b5257;
-}
-
-#header a {
-	position: absolute;
-	left: 10px;
-	top: 45px;
-	border: none;
-}
-#header a img {
-	border: none;
-}
-#logo {
-	display:none;
-}
-#breadcrumbtrail {
-	clear:left;
-	padding: 1px 0px 1px 1em;
-	font-size: 0.8em;
-	font-family: verdana, arial, helvetica, sans-serif;
-	color: #7d7d7d;
-	border-bottom: 1px dotted rgb(143,167,113);
-	line-height: 2.3em;
-	background: #fff;
-}
-#breadcrumbtrail a {
-	font-weight: bold;
-	color: #888;
-	text-decoration: none;
-}
-#breadcrumbtrail a:hover {
-	font-weight: bold;
-	color: black;
-	text-decoration: underline;
-}
-#container {
-	width: 100%;
-	height: auto;
-	background: url(dot-bg.gif) repeat-y 82%;
-	margin: 0px auto;
-	color: #333;
-	border-left: 1px solid #666666;
-	border-right: 1px solid #666666;
-}
-/* center part and content */
-#middle_port {
-	margin: 0 0  0 0.8%;
-	padding: 0;
-	width: 78%;
-	float: left;
-}
-#center_content {
-	float: left;
-	width: 100%;
-	background: #fff;
-}
-
-#middle_port h1 {
-	background: #f2f2f2;
-	color: #444;
-	padding: 5px 0 0 5px;
-	border-bottom: 4px solid #ccc;
-	font-size: 1.5em;
-	font-weight: normal;
-}
-#middle_port a {
-	color: #44464B;
-}
-
-#middle_port h2 {
-	font-size: 110%;
-	text-transform: uppercase;
-	font-weight: normal;
-}
-
-#middle_port h2, #middle_port h3, #middle_port h4 {
-	padding: 0.2em 0.4em;
-}
-
-#middle_port h2 a, #middle_port h3 a, #middle_port h4 a {
-	color: white;
-	background-color: #767676;
-}
-
-.center_portlet_content ul {
-	list-style-type: none;
-	margin: 0;
-	padding: 0 0 0 1em;
-}
-
-.center_portlet {
-	background: #fff;
-}
-.center_portlet .center_portlet_title {
-	background-color: #dddddd;
-	padding-left: 1em;
-	li
 
 
 #menunav {
