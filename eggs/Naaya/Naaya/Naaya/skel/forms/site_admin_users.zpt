@@ -15,6 +15,7 @@
 	</li>
 </ul>
 </div>
+<div class="cleaner"> </div>
 
 <p i18n:translate="">
 	This page lists the users defined in this portal along with their credentials.
@@ -24,7 +25,7 @@
 </p>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteusers">
-<table border="0" cellspacing="4" cellpadding="4">
+<table border="0" cellspacing="4" cellpadding="4" width="95%">
 	<tr>
 		<th width="5%" align="left" i18n:translate="">Delete</th>
 		<th width="15%" align="left" i18n:translate="">Username</th>

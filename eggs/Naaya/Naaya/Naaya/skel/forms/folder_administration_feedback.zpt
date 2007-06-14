@@ -13,7 +13,7 @@
 		entire site administrator or just to the local administrator(s) specified below.</span>
 	</p>
 	<form method="post" tal:attributes="action string:${here/absolute_url}/admin_folder_feedback">
-	<table border="0" cellspacing="4" cellpadding="4">
+	<table border="0" cellspacing="0" cellpadding="0" width="95%">
 		<tr>
 			<td width="20%" valign="top" i18n:translate="">The feedback form is:</td>
 			<td>

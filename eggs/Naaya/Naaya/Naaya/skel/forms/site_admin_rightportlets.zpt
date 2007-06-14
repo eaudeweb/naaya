@@ -227,7 +227,7 @@ function dosubmit()
 	where right-side portlets have been defined. Click on a location to edit its list of right side portlets.
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_deleterightportlets">
-<table border="0" cellspacing="2" cellpadding="4" width="90%">
+<table border="0" cellspacing="0" cellpadding="4" width="90%" class="admin_table">
 	<tr>
 		<th width="1%"></th>
 		<th width="60%" i18n:translate="">Location</th>

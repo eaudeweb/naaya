@@ -18,7 +18,7 @@
 	that so they will be offered the list you define below in XML format.
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_deletelocalchannel">
-<table border="0" cellspacing="1" cellpadding="1">
+<table border="0" cellspacing="0" cellpadding="1" class="admin_table">
 	<tr>
 		<th width="1%"></th>
 		<th i18n:translate="">Title</th>

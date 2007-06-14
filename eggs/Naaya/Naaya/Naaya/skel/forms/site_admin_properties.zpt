@@ -12,6 +12,7 @@
     <li id="currenttab"><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
 </ul>
 </div>
+<div class="cleaner"> </div>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_properties">
 <table border="0" cellspacing="2" cellpadding="2" width="90%">

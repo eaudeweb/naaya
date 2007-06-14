@@ -20,7 +20,7 @@
 	which displays the a certain number of items from that channel.
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_deletelocalchportlet">
-<table border="0" cellspacing="4" cellpadding="4">
+<table border="0" cellspacing="0" cellpadding="4" width="95%" class="admin_table">
 	<tr>
 		<th width="1%"></th>
 		<th i18n:translate="">Title</th>
