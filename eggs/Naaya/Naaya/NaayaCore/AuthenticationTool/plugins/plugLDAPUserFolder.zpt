@@ -34,7 +34,7 @@ function fSelectUser(userid)
 	</p>
 	<fieldset><legend>Users with roles in this portal</legend>
 	<form method="post" tal:attributes="action string:${here/absolute_url}/revokeUserRoles">
-	<table border="0" cellspacing="2" cellpadding="2" width="100%">
+	<table border="0" cellspacing="0" cellpadding="2" width="95%" class="admin_table">
 		<tr>
 			<th width="1%"></th>
 			<th width="20%">User</th>
@@ -98,7 +98,7 @@ function fSelectUser(userid)
 			   tal:define="search_param python:request.get('params', '');
 						   search_term python:request.get('term', '')">
 	<form>
-	<table border="0" cellspacing="2" cellpadding="2" width="100%">
+	<table border="0" cellspacing="0" cellpadding="2" width="95%" class="admin_table">
 		<tr>
 			<th>User ID</th>
 			<th>Canonical name</th>
