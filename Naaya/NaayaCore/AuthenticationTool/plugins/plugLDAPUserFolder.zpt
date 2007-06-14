@@ -75,7 +75,7 @@ function fSelectUser(userid)
 		roles in the current portal.
 	</p>
 	<form method="post" action="">
-	<table border="0" cellspacing="0" cellpadding="2" width="100%">
+	<table border="0" cellspacing="0" cellpadding="2" width="95%">
 		<tr>
 			<td><select name="params">
 					<option tal:repeat="item python:here.getLDAPSchema(user_folder)"
