@@ -120,7 +120,7 @@ function fSelectUser(userid)
 		the specific location you want to grant them to.
 	</p>
 	<form name="userRoles" method="post" tal:attributes="action string:${here/absolute_url}/addUserRoles">
-	<table border="0" cellspacing="2" cellpadding="2" width="100%">
+	<table border="0" cellspacing="2" cellpadding="2" width="95%">
 		<tr>
 			<td width="20%">User name</td>
 			<td width="80%"><input type="text" name="name" value="" /></td>
