@@ -39,4 +39,5 @@ def initialize(context):
 
 misc_ = {
     'Site.gif':ImageFile('www/Site.gif', globals()),
+    'printer.gif':ImageFile('www/printer.gif', globals()),
 }
