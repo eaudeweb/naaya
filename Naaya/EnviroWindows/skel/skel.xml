@@ -185,6 +185,22 @@
 			</scheme>
 		</skin>
 	</layout>
+	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
+		<linkslist id="topnav_links" title="Places" portlet="1">
+			<link id="103" title="EWindows" description="EnviroWindows" url="http://ewindows.eu.org/" relative="0" permission="" order="1"/>
+			<link id="103" title="EEA home" description="Naaya" url="http://www.eea.europa.eu/" relative="0" permission="" order="2"/>
+			<link id="103" title="Europa" description="EU website" url="http://www.europa.eu" relative="0" permission="" order="3"/>
+			<link id="103" title="EIONET" description="Naaya" url="http://eionet.europa.eu/" relative="0" permission="" order="4"/>
+		</linkslist>
+		<linkslist id="top" title="Top navigation links" portlet="">
+			<link id="103" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="1"/>
+		</linkslist>
+		<linkslist id="menunav_links" title="Menu navigation links" portlet="">
+			<link id="102" title="Login" description="Login page" url="login_html" relative="0" permission="" order="1"/>
+			<link id="109" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="2"/>
+			<link id="110" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="3"/>
+		</linkslist>
+	</portlets>
 	<properties>
 		<language code="de" />
 	</properties>
