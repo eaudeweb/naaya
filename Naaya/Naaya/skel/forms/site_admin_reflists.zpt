@@ -8,7 +8,7 @@
 	fill selection boxes accross the portal.
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_deletereflist">
-<table border="0" cellspacing="1" cellpadding="1">
+<table border="0" cellspacing="0" cellpadding="0"  width="95%" class="admin_table">
 	<tr>
 		<th width="1%"></th>
 		<th i18n:translate="" width="30%">Title</th>

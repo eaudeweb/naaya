@@ -54,7 +54,7 @@
 <form method="post" tal:attributes="action python:test(record_data[0]=='add', '%s/admin_additem' % site_url, '%s/admin_edititem' % site_url)">
 <fieldset><legend tal:condition="python:item==''" i18n:translate="">Add new item</legend>
 <legend tal:condition="python:item!=''" i18n:translate="">Edit item</legend>
-<table border="0" cellspacing="2" cellpadding="2" width="100%">
+<table border="0" cellspacing="2" cellpadding="2" width="95%" class="admin_table">
 	<tr>
 		<td class="form-label" i18n:translate="">Id</td>
 		<td>

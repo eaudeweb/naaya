@@ -23,7 +23,7 @@
 	each of them can be modified using an WYSIWYG editor.
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_deletehtmlportlet">
-<table border="0" cellspacing="4" cellpadding="4">
+<table border="0" cellspacing="0" cellpadding="4" width="95%" class="admin_table">
 	<tr>
 		<th width="1%"></th>
 		<th i18n:translate="">Title</th>

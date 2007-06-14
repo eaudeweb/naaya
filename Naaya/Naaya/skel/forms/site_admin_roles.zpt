@@ -14,6 +14,7 @@
 	</li>
 </ul>
 </div>
+<div class="cleaner"> </div>
 
 <script language="JavaScript">
 <!--
@@ -50,7 +51,7 @@ function createKey(key)
 </p>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_revokeroles">
-<table border="0" cellspacing="4" cellpadding="4" width="90%">
+<table border="0" cellspacing="0" cellpadding="0" width="90%" class="admin_table">
 <tr>
 	<th width="20%" i18n:translate="">User</th>
 	<th width="35%" i18n:translate="">Roles/Location</th>

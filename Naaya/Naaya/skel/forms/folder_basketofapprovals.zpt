@@ -45,7 +45,7 @@ function checkApp(frm, control)
 <tal:block tal:condition="python:len(pendings)>0">
 <form method="post" name="pndForm" id="pndForm"
 	tal:attributes="action string:${here/absolute_url}/processPendingContent">
-<table border="0" cellspacing="2" cellpadding="2" align="center">
+<table border="0" cellspacing="1" cellpadding="1" align="center" class="admin_table">
 	<tr>
 		<th></th>
 		<th i18n:translate="" style="width: 10%;">Submitted at</th>
@@ -84,7 +84,7 @@ function checkApp(frm, control)
 <tal:block tal:condition="python:len(published)>0">
 <form method="post" name="pblForm" id="pblForm"
 	tal:attributes="action string:${here/absolute_url}/processPublishedContent">
-<table border="0" cellspacing="2" cellpadding="2" align="center">
+<table border="0" cellspacing="1" cellpadding="1" align="center" class="admin_table">
 	<tr>
 		<th></th>
 		<th i18n:translate="" style="width: 10%;">Submitted at</th>

@@ -17,7 +17,7 @@
 	This page displays the list of available special portlets. These portlets cannot be erased or modified
 	using this page.
 </p>
-<table border="0" cellspacing="4" cellpadding="4">
+<table border="0" cellspacing="0" cellpadding="4" width="95%" class="admin_table">
 <tr>
 	<th i18n:translate="">Title</th>
 </tr>

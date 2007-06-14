@@ -10,7 +10,7 @@
 <div tal:condition="python:len(folders)>0" >
 <h2 i18n:translate="">Folders</h2>
 <form method="post" tal:attributes="action string:${here/absolute_url}/setSortOrder">
-<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
+<table border="0" cellpadding="0" cellspacing="0" class="admin_table">
 <tr>
 	<th class="type" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
@@ -32,7 +32,7 @@
 <div tal:condition="python:len(items)>0" >
 <h2 i18n:translate="">Items</h2>
 <form method="post" tal:attributes="action string:${here/absolute_url}/setSortOrder">
-<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
+<table border="0" cellpadding="0" cellspacing="0" class="admin_table">
 <tr>
 	<th class="type" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
