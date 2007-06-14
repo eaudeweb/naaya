@@ -7,7 +7,7 @@
 	This page allows you to define, customise and delete lists (groups) of links to internal or external pages. When these links are displayed in the portal, their titles and descriptions will be translatable from the <em>Translate messages</em> area. If you choose to automatically create a portlet, you can then choose to display it on this portal in the desired location.
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_deletelinkslist">
-<table border="0" cellspacing="1" cellpadding="1">
+<table border="0" cellspacing="1" cellpadding="1" width="90%" class="admin_table">
 	<tr>
 		<th width="1%"></th>
 		<th i18n:translate="">Title</th>
