@@ -742,3 +742,34 @@ tr.duplicate a {
 }
 tr.not-duplicate {
 }
+
+
+/* administration table */
+.admin_table {
+	border: none;
+	margin: 0; padding: 0;
+}
+.admin_table th {
+	border: 1px solid #fff;
+	background: #5f7f7e;
+	color: #fff;
+	font-weight: normal;
+	line-height: 1.8em;
+}
+.admin_table th a {
+	color: #fff;
+	text-decoration: underline;
+}
+.admin_table th a:hover {
+	text-decoration: none;
+}
+.admin_table td {
+	border-bottom: 1px solid #eee;
+	padding-left: 3px;
+}
+.admin_table tr.odd {
+	background: #fff;
+}
+.admin_table tr.even {
+	background: #fafafa;
+}
