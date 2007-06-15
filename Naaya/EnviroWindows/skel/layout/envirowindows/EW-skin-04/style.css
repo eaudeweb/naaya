@@ -59,15 +59,7 @@ a img {
 	border-top: 1px solid #4b5257;
 }
 
-#header a {
-	position: absolute;
-	left: 10px;
-	top: 45px;
-	border: none;
-}
-#header a img {
-	border: none;
-}
+#header a {	border: none;} #header a img {	border: none;	float: left;}
 #logo {
 	display:none;
 }
