@@ -279,10 +279,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 image_ob.update_data(data=content)
                 image_ob._p_changed=1
                 content = self.futRead(join(skel_path, 'layout', 'logobis.gif'), 'rb')
-                image_ob = layouttool_ob._getOb('logobis', None)
+                image_ob = layouttool_ob._getOb('logobis.gif', None)
                 if image_ob is None:
-                    layouttool_ob.manage_addImage(id='logobis', file='', title='Site secondary logo')
-                    image_ob = layouttool_ob._getOb('logobis')
+                    layouttool_ob.manage_addImage(id='logobis.gif', file='', title='Site secondary logo')
+                    image_ob = layouttool_ob._getOb('logobis.gif')
                 image_ob.update_data(data=content)
                 image_ob._p_changed=1
             #load syndication
@@ -1485,9 +1485,39 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_metadata_html?lang=%s' % (self.absolute_url(), lang))
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_logos')
-    def admin_logos(self, logo='', logobis='', REQUEST=None):
+    security.declarePublic('hasLeftLogo')
+    def hasLeftLogo(self):
         """ """
+        layout_tool = self.getLayoutTool()
+        logo = layout_tool._getOb('logo.gif', None)
+        if logo and logo.size:
+            return True
+        return False
+
+    security.declarePublic('hasRightLogo')
+    def hasRightLogo(self):
+        """ """
+        layout_tool = self.getLayoutTool()
+        logo = layout_tool._getOb('logobis.gif', None)
+        if logo and logo.size:
+            return True
+        return False
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_logos')
+    def admin_logos(self, logo='', logobis='', del_leftlogo='', del_rightlogo='', REQUEST=None):
+        """ """
+        if del_leftlogo:
+            skel_path = join(NAAYA_PRODUCT_PATH, 'skel')
+            content = self.futRead(join(skel_path, 'layout', 'logo.gif'), 'rb')
+            image_ob = self.getLayoutTool()._getOb('logo.gif')
+            image_ob.update_data(data=content)
+            image_ob._p_changed=1
+        if del_rightlogo:
+            skel_path = join(NAAYA_PRODUCT_PATH, 'skel')
+            content = self.futRead(join(skel_path, 'layout', 'logobis.gif'), 'rb')
+            image_ob = self.getLayoutTool()._getOb('logobis.gif')
+            image_ob.update_data(data=content)
+            image_ob._p_changed=1
         if logo != '':
             if hasattr(logo, 'filename'):
                 if logo.filename != '':
@@ -1501,7 +1531,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 if logobis.filename != '':
                     content = logobis.read()
                     if content != '':
-                        image_ob = self.getLayoutTool()._getOb('logobis')
+                        image_ob = self.getLayoutTool()._getOb('logobis.gif')
                         image_ob.update_data(data=content)
                         image_ob._p_changed=1
         if REQUEST:
