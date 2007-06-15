@@ -185,6 +185,21 @@
 			</scheme>
 		</skin>
 	</layout>
+	<pluggablecontenttypes>
+		<pluggablecontenttype meta_type="Naaya Media File" action="1"/>
+		<pluggablecontenttype meta_type="Naaya File" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Extended File" action="1"/>
+		<pluggablecontenttype meta_type="Naaya SMAP Project" action="1"/>
+		<pluggablecontenttype meta_type="Naaya SMAP Expert" action="1"/>
+		<pluggablecontenttype meta_type="Naaya GeoPoint" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Contact" action="1"/>
+		<pluggablecontenttype meta_type="Naaya News" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Story" action="1"/>
+		<pluggablecontenttype meta_type="Naaya URL" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Document" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Pointer" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Event" action="1"/>
+	</pluggablecontenttypes>
 	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
 		<linkslist id="topnav_links" title="Places" portlet="1">
 			<link id="103" title="EWindows" description="EnviroWindows" url="http://ewindows.eu.org/" relative="0" permission="" order="1"/>
