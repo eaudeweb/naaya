@@ -60,7 +60,7 @@
 				</ul>
 				<form method="get" tal:attributes="action string:${site_url}/search_html">
 					<div id="search"><label for="query"><span>site search</span></label>
-					<input id="query" type="text" name="query" />
+					<input id="query" type="text" name="query:utf8:ustring" />
 					<input type="submit" value="GO" class="search_btn"/></div>
 				</form>
 			</div>
