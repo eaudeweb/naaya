@@ -49,9 +49,7 @@ PREFIX_SITE = 'portal'
 PREFIX_FOLDER = 'fol'
 
 ID_IMAGESFOLDER = 'images'
-
 WRONG_PASSWORD = 'Current password is not correct. Changes NOT saved.'
-
 
 MESSAGE_ROLEADDED = 'Role(s) successfully granted to user %s'
 MESSAGE_ROLEREVOKED = 'Role(s) successfully revoked to selected user(s)'
