@@ -24,6 +24,7 @@
 from os.path import join, isfile
 from urllib import quote
 from copy import copy
+from cStringIO import StringIO
 
 #Zope imports
 from OFS.Folder import Folder, manage_addFolder
@@ -65,6 +66,7 @@ from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyPermissions import NyPermissions
 from Products.NaayaCore.managers.utils import utils, list_utils, batch_utils, file_utils
 from Products.NaayaCore.managers.catalog_tool import catalog_tool
+from Products.NaayaCore.managers.captcha_tool import captcha_tool
 from Products.NaayaCore.managers.urlgrab_tool import urlgrab_tool
 from Products.NaayaCore.managers.search_tool import search_tool
 from Products.NaayaCore.managers.session_manager import session_manager
@@ -1155,9 +1157,24 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     #site actions
     security.declareProtected(view, 'processFeedbackForm')
-    def processFeedbackForm(self, username='', email='', comments='', REQUEST=None):
+    def processFeedbackForm(self, username='', email='', comments='', contact_word='', REQUEST=None):
         """ """
-        self.sendFeedbackEmail(self.administrator_email, username, email, comments)
+        err = []
+        if contact_word=='' or contact_word!=self.getSession('captcha', None):
+            err.append('The word you typed does not match with the one shown in the image. Please try again.')
+        if username.strip() == '':
+            err.append('The full name is required')
+        if email.strip() == '':
+            err.append('The email is required')
+        if comments.strip() == '':
+            err.append('The comments are required')
+        if err:
+            if REQUEST:
+                self.setSessionErrors(err)
+                self.setFeedbackSession(username, email, comments)
+                return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        else:
+            self.sendFeedbackEmail(self.administrator_email, username, email, comments)
         if REQUEST:
             self.setSession('title', 'Thank you for your feedback')
             self.setSession('body', 'The administrator will process your comments and get back to you.')
@@ -2399,6 +2416,19 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         try: return self._getOb(self.coverage_glossary)
         except: return None
 
+    security.declareProtected(view, 'getCaptcha')
+    def getCaptcha(self):
+        """ generate a Captcha image """
+        g = captcha_tool()
+        g.defaultSize = (100, 20)
+        i = g.render()
+        newimg = StringIO()
+        i.save(newimg, "JPEG")
+        newimg.seek(0)
+        #set the word on session
+        self.setSession('captcha', g.solutions[0])
+        return newimg.getvalue()
+
     #sending emails
     def sendCreateAccountEmail(self, p_name, p_email, p_username, REQUEST):
         #sends a confirmation email to the newlly created account's owner
@@ -2520,6 +2550,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                         if not self.utIsAbsInteger(value): la(translate('', v[2]))
                     elif v[1] == MUST_BE_POSITIV_FLOAT:
                         if not self.utIsFloat(value): la(translate('', v[2]))
+                    elif v[1] == MUST_BE_CAPTCHA:
+                        if value=='' or value!=self.getSession('captcha', None) : la(translate('', v[2]))
         return l
 
     def set_pluggable_item_session(self, meta_type, **args):

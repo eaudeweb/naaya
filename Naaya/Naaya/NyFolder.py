@@ -507,17 +507,34 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         return None, self.absolute_url()
 
     security.declareProtected(view, 'admin_folder_feedback_form')
-    def admin_folder_feedback_form(self, who=0, username='', email='', comments='', REQUEST=None):
+    def admin_folder_feedback_form(self, who=0, username='', email='', comments='', contact_word='', REQUEST=None):
         """ """
+        err = []
+
         try: who = abs(int(who))
         except: who = 0
+        if contact_word=='' or contact_word!=self.getSession('captcha', None):
+            err.append('The word you typed does not match with the one shown in the image. Please try again.')
+        if username.strip() == '':
+            err.append('The full name is required')
+        if email.strip() == '':
+            err.append('The email is required')
+        if comments.strip() == '':
+            err.append('The comments are required')
+
         if who == 1:
             l_to = self.getFeedbackCustomizedEmail()
             if l_to is None:
                 l_to = self.administrator_email
         elif who==0:
             l_to = self.administrator_email
-        self.getEmailTool().sendFeedbackEmail(l_to, username, email, comments)
+        if err:
+            if REQUEST:
+                self.setSessionErrors(err)
+                self.setFeedbackSession(username, email, comments, who)
+                return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        else:
+            self.getEmailTool().sendFeedbackEmail(l_to, username, email, comments)
         if REQUEST: 
             self.setSession('title', 'Thank you for your feedback')
             self.setSession('body', 'The administrator will process your comments and get back to you.')
