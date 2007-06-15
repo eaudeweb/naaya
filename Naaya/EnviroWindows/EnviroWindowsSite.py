@@ -23,6 +23,10 @@ from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
 from AccessControl                              import ClassSecurityInfo
 from AccessControl.Permissions                  import view_management_screens, view
 
+#Zope imports
+from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
+from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
+
 #Product imports
 from constants                                      import *
 from Products.NaayaBase.constants                   import *
@@ -74,14 +78,32 @@ class EnviroWindowsSite(NySite):
         #load site skeleton - configuration
         self.loadSkeleton(join(ENVIROWINDOWS_PRODUCT_PATH, 'skel'))
 
+        #custom indexes
+        try:    self.getCatalogTool().manage_addIndex('resource_area', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
+        except: pass
+        try:    self.getCatalogTool().manage_addIndex('resource_focus', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
+        except: pass
+        try:    self.getCatalogTool().manage_addIndex('resource_area_exp', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
+        except: pass
+        try:    self.getCatalogTool().manage_addIndex('resource_focus_exp', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
+        except: pass
+        try:    self.getCatalogTool().manage_addIndex('resource_country', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
+        except: pass
+
         #remove Naaya default content
         self.getLayoutTool().manage_delObjects('skin')
         self.manage_delObjects('info')
         #self.getPortletsTool().manage_delObjects('topnav_links')
 
-#        #set default 'Main topics'
-#        try:    self.getPropertiesTool().manageMainTopics(['fol120392', 'fol657555', 'fol112686', 'fol034934', 'test1'])
-#        except: pass
+        #default RDF Calendar settings
+        manage_addRDFCalendar(self, id=ID_RDFCALENDAR, title=TITLE_RDFCALENDAR, week_day_len=1)
+        rdfcalendar_ob = self._getOb(ID_RDFCALENDAR)
+        #TODO: to change the RDF Summary url maybe
+        manage_addRDFSummary(rdfcalendar_ob, 'example', 'Example',
+                             'http://smap.ewindows.eu.org/portal_syndication/events_rdf', '', 'no')
+        rdfcal_ob = self._getOb(ID_RDFCALENDAR)
+        #rdfcal_ob._getOb('example').update()
+
 
     security.declarePublic('getBreadCrumbTrail')
     def getBreadCrumbTrail(self, REQUEST):
@@ -106,5 +128,125 @@ class EnviroWindowsSite(NySite):
     def stripAllHtmlTags(self, p_text):
         """ """
         return utils().utStripAllHtmlTags(p_text)
+
+##############################
+# Layer over selection lists #
+##############################
+#TODO: Review and make more generic: this part was built for SMAP
+
+    security.declarePublic('getCountriesList')
+    def getCountriesList(self):
+        """ Return the selection list for countries """
+        return self.getPortletsTool().getRefListById('countries').get_list()
+
+    security.declarePublic('getCountryName')
+    def getCountryName(self, id):
+        """ Return the title of an item for the selection list for countries """
+        try:
+            return self.getPortletsTool().getRefListById('countries').get_item(id).title
+        except:
+            return ''
+
+    security.declarePublic('getPrioritiesTypesList')
+    def getPrioritiesTypesList(self):
+        """ Return Projects selection list for priorities types """
+        return self.getPortletsTool().getRefListById('priorities_types').get_list()
+
+    security.declarePublic('getPriorityTitle')
+    def getPriorityTitle(self, id):
+        """ Return the title of an item for the selection list for priorities types """
+        try:
+            return self.getPortletsTool().getRefListById('priorities_types').get_item(id).title
+        except:
+            return ''
+
+    security.declarePublic('getFocusesTypesList')
+    def getFocusesTypesList(self, priority_id):
+        """ Return the selection list for focuses types for a given project """
+        focus_list_id = "focuses_%s" % priority_id[:3]
+        try:
+            return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_list()
+        except:
+            return []
+
+    security.declarePublic('getExpPrioritiesTypesList')
+    def getExpPrioritiesTypesList(self):
+        """ Return Experts selection list for priorities types"""
+        return self.getPortletsTool().getRefListById('priorities_types_exp').get_list()
+
+    security.declarePublic('getExpPriorityTitle')
+    def getExpPriorityTitle(self, id):
+        """ Return the title of an item for the selection list for priorities types """
+        try:
+            return self.getPortletsTool().getRefListById('priorities_types_exp').get_item(id).title
+        except:
+            return ''
+
+    security.declarePublic('getExpFocusesTypesList')
+    def getExpFocusesTypesList(self, priority_id):
+        """ Return the selection list for focuses types for a given project """
+        focus_list_id = "focuses_%s_exp" % priority_id[:3]
+        try:
+            return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_list()
+        except:
+            return []
+
+    def getSessionMainTopics(self, topic):
+        """ """
+        return [x.split('|@|')[0] for x in self.utConvertToList(topic)]
+
+    def checkSessionSubTopics(self, maintopic, subtopic, session):
+        """ """
+        for sb in self.utConvertToList(session):
+            if sb == '%s|@|%s' % (maintopic, subtopic):
+                return True
+        return False
+
+    security.declarePublic('getFocusTitle')
+    def getFocusTitle(self, focus_id, priority_area_id):
+        """ Return the title of an item for the selection list for focuses types """
+        focus_list_id = "focuses_%s" % priority_area_id[:3]
+        try:
+            return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_item(focus_id).title
+        except:
+            return ''
+
+    security.declarePublic('getExpFocusTitle')
+    def getExpFocusTitle(self, focus_id, priority_area_id):
+        """ Return the title of an item for the selection list for focuses types """
+        focus_list_id = "focuses_%s_exp" % priority_area_id[:3]
+        try:
+            return self.getPortletsTool().getRefListById(focus_list_id.lower()).get_item(focus_id).title
+        except:
+            return ''
+
+#####################################################
+# SMAP functions loaded for backwards compatibility #
+#####################################################
+    security.declareProtected(view_management_screens, 'updateExperts')
+    def updateExperts(self):
+        """ expert object is associated to more than one category (priority areas/main topics of expertise) """
+        experts = self.getCatalogedObjects(meta_type=[METATYPE_NYSMAPEXPERT])
+        for expert in experts:
+            buf = []
+            for k in expert.subtopics:
+                buf.append('%s|@|%s' % (expert.maintopics, k))
+            expert.subtopics = buf
+            expert.maintopics = self.utConvertToList(expert.maintopics)
+            expert._p_changed = 1
+        print 'done'
+
+    security.declareProtected(view_management_screens, 'updateProjects')
+    def updateProjects(self):
+        """ project object is associated to more than one category (priority areas/main topics of expertise) """
+        projects = self.getCatalogedObjects(meta_type=[METATYPE_NYSMAPPROJECT])
+        for project in projects:
+            buf = []
+            for k in project.focus:
+                buf.append('%s|@|%s' % (project.priority_area, k))
+            project.focus = buf
+            project.priority_area = self.utConvertToList(project.priority_area)
+            project._p_changed = 1
+        print 'done'
 
 InitializeClass(EnviroWindowsSite)

@@ -6,7 +6,7 @@
 </p>
 
 <form action="manage_addEnviroWindowsSite" method="post">
-<label for="id">Id</label> <input type="text" name="id" id="id" size="30" value="" />
+<label for="id">Id</label> <input type="text" name="id:utf8:ustring" id="id" size="30" value="" />
 <input type="submit" value="Add" />
 </form>
 

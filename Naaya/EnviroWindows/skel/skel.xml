@@ -200,6 +200,217 @@
 			<link id="109" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="2"/>
 			<link id="110" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="3"/>
 		</linkslist>
+		<reflist id="countries" title="Countries" description="List of countries used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Albania" title="Albania"/>
+			<item id="Algeria" title="Algeria"/>
+			<item id="Bosnia&amp;Herzegovina" title="Bosnia&amp;Herzegovina"/>
+			<item id="Croatia" title="Croatia"/>
+			<item id="Cyprus" title="Cyprus"/>
+			<item id="Egypt" title="Egypt"/>
+			<item id="France" title="France"/>
+			<item id="Greece" title="Greece"/>
+			<item id="Israel" title="Israel"/>
+			<item id="Italy" title="Italy"/>
+			<item id="Jordan" title="Jordan"/>
+			<item id="Lebanon" title="Lebanon"/>
+			<item id="Lybia" title="Lybia"/>
+			<item id="Malta" title="Malta"/>
+			<item id="Morocco" title="Morocco"/>
+			<item id="Palestinian Authority" title="Palestinian Authority"/>
+			<item id="Serbia&amp;Montenegro" title="Serbia&amp;Montenegro"/>
+			<item id="Slovenia" title="Slovenia"/>
+			<item id="Spain" title="Spain"/>
+			<item id="Syria" title="Syria"/>
+			<item id="Tunisia" title="Tunisia"/>
+			<item id="Turkey" title="Turkey"/>
+		</reflist>
+		<reflist id="priorities_types" title="Priorities" description="Types of priorities used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Biodiversity" title="Biodiversity"/>
+			<item id="Desertification" title="Desertification"/>
+			<item id="Integrated Coastal Zone Management" title="Integrated Coastal Zone Management"/>
+			<item id="Legislation, regulatory and planning measures" title="Legislation, regulatory and planning measures"/>
+			<item id="Polluted Areas" title="Polluted Areas"/>
+			<item id="Waste Management" title="Waste Management"/>
+			<item id="Water Management" title="Water Management"/>
+		</reflist>
+		<reflist id="focuses_bio" title="Focuses of Biodiversity" description="Types of focuses used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Legislation and regulatory measures" title="Legislation and regulatory measures"/>
+			<item id="Management plans and demonstration actions" title="Management plans and demonstration actions"/>
+			<item id="Institutional, organisational and economic arrangements" title="Institutional, organisational and economic arrangements"/>
+			<item id="Sustainable use and management of biodiversity and of natural resources" title="Sustainable use and management of biodiversity and of natural resources"/>
+			<item id="Data collection, analysis, monitoring" title="Data collection, analysis, monitoring"/>
+			<item id="Capacity building" title="Capacity building"/>
+			<item id="Networking, participation and partnership building" title="Networking, participation and partnership building"/>
+		</reflist>
+		<reflist id="focuses_des" title="Focuses of Desertification" description="Types of focuses used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Legislation and regulatory measures" title="Legislation and regulatory measures"/>
+			<item id="Sustainable agriculture practices" title="Sustainable agriculture practices"/>
+			<item id="Increasing water availability" title="Increasing water availability"/>
+			<item id="Water harvesting techniques " title="Water harvesting techniques"/>
+			<item id="Preventing salinisation of soils" title="Preventing salinisation of soils"/>
+			<item id="Protecting the existing forest ecosystems" title="Protecting the existing forest ecosystems"/>
+			<item id="Combating erosion and sand dunes deposit" title="Combating erosion and sand dunes deposit"/>
+			<item id="Combating abandoning of the agricultural land" title="Combating abandoning of the agricultural land"/>
+			<item id="Data collection, analysis, monitoring" title="Data collection, analysis, monitoring"/>
+			<item id="Capacity building" title="Capacity building"/>
+			<item id="Networking, participatory processes and partnership building" title="Networking, participatory processes and partnership building"/>
+		</reflist>
+		<reflist id="focuses_int" title="Focuses of Integrated Coastal Zone Management" description="Types of focuses used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Legislation and regulatory measures" title="Legislation and regulatory measures"/>
+			<item id="Sustainable development of tourism areas" title="Sustainable development of tourism areas"/>
+			<item id="Conservation and management of biodiversity" title="Conservation and management of biodiversity"/>
+			<item id="Environmentally sound initiatives for Fisheries" title="Environmentally sound initiatives for Fisheries"/>
+			<item id="Port Reception Facilities for treatment of waste" title="Port Reception Facilities for treatment of waste"/>
+			<item id="Combat against accidental oil spills" title="Combat against accidental oil spills"/>
+			<item id="Protection from erosion and degradation" title="Protection from erosion and degradation"/>
+			<item id="Sustainable agricultural and silvicultural practices" title="Sustainable agricultural and silvicultural practices"/>
+			<item id="Restoration of damaged soils and plant cover" title="Restoration of damaged soils and plant cover"/>
+			<item id="Prevention and combat of forest fires" title="Prevention and combat of forest fires"/>
+			<item id="Sustainable development for Mediterranean islands" title="Sustainable development for Mediterranean islands"/>
+			<item id="Combat pollution from marine and land-based sources" title="Combat pollution from marine and land-based sources"/>
+			<item id="Prevention, reduction and control of marine and coastal litter" title="Prevention, reduction and control of marine and coastal litter"/>
+			<item id="Solid Waste Management" title="Solid Waste Management"/>
+			<item id="Waste Water Management" title="Waste Water Management"/>
+			<item id="Data collection, analysis, monitoring" title="Data collection, analysis, monitoring"/>
+			<item id="Capacity building" title="Capacity building"/>
+			<item id="Networking, participation and partnership building" title="Networking, participation and partnership building"/>
+		</reflist>
+		<reflist id="focuses_leg" title="Focuses of Legislation, regulatory and planning measures" description="Types of focuses used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
+		</reflist>
+		<reflist id="focuses_pol" title="Focuses of Polluted Areas" description="Types of focuses used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Legislation and regulatory measures" title="Legislation and regulatory measures"/>
+			<item id="Integrated management of highly polluted urban areas" title="Integrated management of highly polluted urban areas"/>
+			<item id="Management of energy and transport systems" title="Management of energy and transport systems"/>
+			<item id="Reduce air pollution" title="Reduce air pollution"/>
+			<item id="Protection of green areas" title="Protection of green areas"/>
+			<item id="Integrated approach to reduce highly polluting emissions in industrial areas" title="Integrated approach to reduce highly polluting emissions in industrial areas"/>
+			<item id="Data collection, analysis, monitoring" title="Data collection, analysis, monitoring"/>
+			<item id="Capacity building" title="Capacity building"/>
+			<item id="Networking, participation and partnership building" title="Networking, participation and partnership building"/>
+		</reflist>
+		<reflist id="focuses_was" title="Focuses of Waste Management" description="Types of focuses used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Legislation and regulatory measures" title="Legislation and regulatory measures"/>
+			<item id="Collection, treatment and safe disposal of municipal, industrial and hazardous waste" title="Collection, treatment and safe disposal of municipal, industrial and hazardous waste"/>
+			<item id="Guidelines for effective waste management" title="Guidelines for effective waste management"/>
+			<item id="Waste disposal methods and sites presenting a risk for the environment" title="Waste disposal methods and sites presenting a risk for the environment"/>
+			<item id="Statistical methodologies and national waste inventories" title="Statistical methodologies and national waste inventories"/>
+			<item id="Waste reduction, re-use and recycling" title="Waste reduction, re-use and recycling"/>
+			<item id="Tackle systematically waste from tourism-related activities" title="Tackle systematically waste from tourism-related activities"/>
+			<item id="Disposal of dredging spoils and used oils" title="Disposal of dredging spoils and used oils"/>
+			<item id="Capacity building" title="Capacity building"/>
+			<item id="Networking, participation and partnership building" title="Networking, participation and partnership building"/>
+		</reflist>
+		<reflist id="focuses_wat" title="Focuses of Water Management" description="Types of focuses used by Naaya SMAP Project objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Legislation and regulatory measures" title="Legislation and regulatory measures"/>
+			<item id="Evaluation and monitoring of water quality and quantity" title="Evaluation and monitoring of water quality and quantity"/>
+			<item id="Provision of safe drinking water" title="Provision of safe drinking water"/>
+			<item id="Waste water treatment systems" title="Waste water treatment systems"/>
+			<item id="Water conservation " title="Water conservation "/>
+			<item id="Protection of water reservoirs and wetlands" title="Protection of water reservoirs and wetlands"/>
+			<item id="River basin and catchment area management plans" title="River basin and catchment area management plans"/>
+			<item id="Collection, treatment, disposal and re-use of waste water" title="Collection, treatment, disposal and re-use of waste water"/>
+			<item id="Prevention of salinisation and treatment of brackish water" title="Prevention of salinisation and treatment of brackish water"/>
+			<item id="Programmes to tackle water losses" title="Programmes to tackle water losses"/>
+			<item id="Reduction of irrigation inputs" title="Reduction of irrigation inputs"/>
+			<item id="Administrative management of water resources" title="Administrative management of water resources"/>
+			<item id="Data collection, analysis, monitoring" title="Data collection, analysis, monitoring"/>
+			<item id="Capacity building" title="Capacity building"/>
+			<item id="Networking, participation and partnership building" title="Networking, participation and partnership building"/>
+		</reflist>
+
+		<reflist id="priorities_types_exp" title="Priorities" description="Types of priorities used by Naaya SMAP Expert objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Biodiversity" title="Biodiversity"/>
+			<item id="Desertification" title="Desertification"/>
+			<item id="Integrated Coastal Zone Management" title="Integrated Coastal Zone Management"/>
+			<item id="Legislation, regulatory and planning measures" title="Legislation, regulatory and planning measures"/>
+			<item id="Polluted Areas" title="Polluted Areas"/>
+			<item id="Waste Management" title="Waste Management"/>
+			<item id="Water Management" title="Water Management"/>
+		</reflist>
+		<reflist id="focuses_bio_exp" title="Focuses of Biodiversity" description="Types of focuses used by Naaya SMAP Expert objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Legislation and regulatory measures" title="Legislation and regulatory measures"/>
+			<item id="Management plans and demonstration actions" title="Management plans and demonstration actions"/>
+			<item id="Institutional, organisational and economic arrangements" title="Institutional, organisational and economic arrangements"/>
+			<item id="Sustainable use and management of biodiversity and of natural resources" title="Sustainable use and management of biodiversity and of natural resources"/>
+			<item id="Data collection, analysis, monitoring" title="Data collection, analysis, monitoring"/>
+			<item id="Capacity building" title="Capacity building"/>
+			<item id="Networking, participation and partnership building" title="Networking, participation and partnership building"/>
+		</reflist>
+		<reflist id="focuses_des_exp" title="Focuses of Desertification" description="Types of focuses used by Naaya SMAP Expert objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Legislation and regulatory measures" title="Legislation and regulatory measures"/>
+			<item id="Sustainable agriculture practices" title="Sustainable agriculture practices"/>
+			<item id="Increasing water availability" title="Increasing water availability"/>
+			<item id="Water harvesting techniques " title="Water harvesting techniques"/>
+			<item id="Preventing salinisation of soils" title="Preventing salinisation of soils"/>
+			<item id="Protecting the existing forest ecosystems" title="Protecting the existing forest ecosystems"/>
+			<item id="Combating erosion and sand dunes deposit" title="Combating erosion and sand dunes deposit"/>
+			<item id="Combating abandoning of the agricultural land" title="Combating abandoning of the agricultural land"/>
+			<item id="Data collection, analysis, monitoring" title="Data collection, analysis, monitoring"/>
+			<item id="Capacity building" title="Capacity building"/>
+			<item id="Networking, participatory processes and partnership building" title="Networking, participatory processes and partnership building"/>
+		</reflist>
+		<reflist id="focuses_int_exp" title="Focuses of Integrated Coastal Zone Management" description="Types of focuses used by Naaya SMAP Expert objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Legislation and regulatory measures" title="Legislation and regulatory measures"/>
+			<item id="Sustainable development of tourism areas" title="Sustainable development of tourism areas"/>
+			<item id="Conservation and management of biodiversity" title="Conservation and management of biodiversity"/>
+			<item id="Environmentally sound initiatives for Fisheries" title="Environmentally sound initiatives for Fisheries"/>
+			<item id="Port Reception Facilities for treatment of waste" title="Port Reception Facilities for treatment of waste"/>
+			<item id="Combat against accidental oil spills" title="Combat against accidental oil spills"/>
+			<item id="Protection from erosion and degradation" title="Protection from erosion and degradation"/>
+			<item id="Sustainable agricultural and silvicultural practices" title="Sustainable agricultural and silvicultural practices"/>
+			<item id="Restoration of damaged soils and plant cover" title="Restoration of damaged soils and plant cover"/>
+			<item id="Prevention and combat of forest fires" title="Prevention and combat of forest fires"/>
+			<item id="Sustainable development for Mediterranean islands" title="Sustainable development for Mediterranean islands"/>
+			<item id="Combat pollution from marine and land-based sources" title="Combat pollution from marine and land-based sources"/>
+			<item id="Prevention, reduction and control of marine and coastal litter" title="Prevention, reduction and control of marine and coastal litter"/>
+			<item id="Solid Waste Management" title="Solid Waste Management"/>
+			<item id="Waste Water Management" title="Waste Water Management"/>
+			<item id="Data collection, analysis, monitoring" title="Data collection, analysis, monitoring"/>
+			<item id="Capacity building" title="Capacity building"/>
+			<item id="Networking, participation and partnership building" title="Networking, participation and partnership building"/>
+		</reflist>
+		<reflist id="focuses_leg_exp" title="Focuses of Legislation, regulatory and planning measures" description="Types of focuses used by Naaya SMAP Expert objects. When adding or editing projects, the end users will be able to choose from list below.">
+		</reflist>
+		<reflist id="focuses_pol_exp" title="Focuses of Polluted Areas" description="Types of focuses used by Naaya SMAP Expert objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Legislation and regulatory measures" title="Legislation and regulatory measures"/>
+			<item id="Integrated management of highly polluted urban areas" title="Integrated management of highly polluted urban areas"/>
+			<item id="Management of energy and transport systems" title="Management of energy and transport systems"/>
+			<item id="Reduce air pollution" title="Reduce air pollution"/>
+			<item id="Protection of green areas" title="Protection of green areas"/>
+			<item id="Integrated approach to reduce highly polluting emissions in industrial areas" title="Integrated approach to reduce highly polluting emissions in industrial areas"/>
+			<item id="Data collection, analysis, monitoring" title="Data collection, analysis, monitoring"/>
+			<item id="Capacity building" title="Capacity building"/>
+			<item id="Networking, participation and partnership building" title="Networking, participation and partnership building"/>
+		</reflist>
+		<reflist id="focuses_was_exp" title="Focuses of Waste Management" description="Types of focuses used by Naaya SMAP Expert objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Legislation and regulatory measures" title="Legislation and regulatory measures"/>
+			<item id="Collection, treatment and safe disposal of municipal, industrial and hazardous waste" title="Collection, treatment and safe disposal of municipal, industrial and hazardous waste"/>
+			<item id="Guidelines for effective waste management" title="Guidelines for effective waste management"/>
+			<item id="Waste disposal methods and sites presenting a risk for the environment" title="Waste disposal methods and sites presenting a risk for the environment"/>
+			<item id="Statistical methodologies and national waste inventories" title="Statistical methodologies and national waste inventories"/>
+			<item id="Waste reduction, re-use and recycling" title="Waste reduction, re-use and recycling"/>
+			<item id="Tackle systematically waste from tourism-related activities" title="Tackle systematically waste from tourism-related activities"/>
+			<item id="Disposal of dredging spoils and used oils" title="Disposal of dredging spoils and used oils"/>
+			<item id="Capacity building" title="Capacity building"/>
+			<item id="Networking, participation and partnership building" title="Networking, participation and partnership building"/>
+		</reflist>
+		<reflist id="focuses_wat_exp" title="Focuses of Water Management" description="Types of focuses used by Naaya SMAP Expert objects. When adding or editing projects, the end users will be able to choose from list below.">
+			<item id="Legislation and regulatory measures" title="Legislation and regulatory measures"/>
+			<item id="Evaluation and monitoring of water quality and quantity" title="Evaluation and monitoring of water quality and quantity"/>
+			<item id="Provision of safe drinking water" title="Provision of safe drinking water"/>
+			<item id="Waste water treatment systems" title="Waste water treatment systems"/>
+			<item id="Water conservation " title="Water conservation "/>
+			<item id="Protection of water reservoirs and wetlands" title="Protection of water reservoirs and wetlands"/>
+			<item id="River basin and catchment area management plans" title="River basin and catchment area management plans"/>
+			<item id="Collection, treatment, disposal and re-use of waste water" title="Collection, treatment, disposal and re-use of waste water"/>
+			<item id="Prevention of salinisation and treatment of brackish water" title="Prevention of salinisation and treatment of brackish water"/>
+			<item id="Programmes to tackle water losses" title="Programmes to tackle water losses"/>
+			<item id="Reduction of irrigation inputs" title="Reduction of irrigation inputs"/>
+			<item id="Administrative management of water resources" title="Administrative management of water resources"/>
+			<item id="Data collection, analysis, monitoring" title="Data collection, analysis, monitoring"/>
+			<item id="Capacity building" title="Capacity building"/>
+			<item id="Networking, participation and partnership building" title="Networking, participation and partnership building"/>
+		</reflist>
 	</portlets>
 	<properties>
 		<language code="de" />
