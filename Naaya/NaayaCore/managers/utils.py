@@ -267,8 +267,8 @@ class utils:
         elif value == '': return []
         else:
             values = []
-            for v in value.split('\r\n'):
-                if v != '': values.append(v)
+            for v in value.split('\n'):
+                if v != '': values.append(v.replace('\r', ''))
         return values
 
     def utSplitSequence(self, seq, size):

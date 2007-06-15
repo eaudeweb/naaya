@@ -168,17 +168,19 @@ class session_manager:
         return self.__getSession('user_location', default)
 
     #feedback session
-    def setFeedbackSession(self, name='', email='', comments=''):
+    def setFeedbackSession(self, name='', email='', comments='', who=0):
         """ put the feedback information on session """
         self.__setSession('user_name', name)
         self.__setSession('user_email', email)
         self.__setSession('user_comments', comments)
+        self.__setSession('user_who', who)
 
     def delFeedbackSession(self):
         """delete feedback information from session """
         self.__delSession('user_name')
         self.__delSession('user_email')
         self.__delSession('user_comments')
+        self.__delSession('user_who')
 
     def getSessionFeedbackName(self, default=''):
         return self.__getSession('user_name', default)
@@ -188,3 +190,6 @@ class session_manager:
 
     def getSessionFeedbackComments(self, default=''):
         return self.__getSession('user_comments', default)
+
+    def getSessionFeedbackWho(self, default=''):
+        return self.__getSession('user_who', default)
