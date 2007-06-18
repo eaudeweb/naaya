@@ -26,6 +26,11 @@ from AccessControl.Permissions                  import view_management_screens, 
 #Zope imports
 from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
 from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
+try:
+    from Products.NaayaCore.GeoMapTool.GeoMapTool       import manage_addGeoMapTool
+    GM_INSTALLED = 1
+except ImportError:
+    GM_INSTALLED = 0
 
 #Product imports
 from constants                                      import *
@@ -103,6 +108,8 @@ class EnviroWindowsSite(NySite):
                              'http://smap.ewindows.eu.org/portal_syndication/events_rdf', '', 'no')
         rdfcal_ob = self._getOb(ID_RDFCALENDAR)
         #rdfcal_ob._getOb('example').update()
+        if GM_INSTALLED:
+            manage_addGeoMapTool(self)
 
 
     security.declarePublic('getBreadCrumbTrail')
