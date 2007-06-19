@@ -91,5 +91,19 @@
 				</p>]]>
 			</body>
 		</ob>
+		<ob meta_type="Naaya Document" param="0" id="disclaimer_html" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="1" validation_status="0" validation_date="" validation_by="" validation_comment="">
+			<title lang="en"><![CDATA[Contact us]]></title>
+			<description lang="en"><![CDATA[]]></description>
+			<coverage lang="en"><![CDATA[]]></coverage>
+			<keywords lang="en"><![CDATA[]]></keywords>
+			<body lang="en"><![CDATA[
+<p>The European Environment Agency (EEA) supplies the web platform for this site. <a href="http://www.ewindows.eu.org/About/terms/Leaders/" target="_blank">IP leaders</a> provide the material on this site. The European Environment Agency accepts no responsibility or liability whatsoever with regard to the material on this site.</p>
+
+<p>The material on this site is not necessarily comprehensive, complete, accurate or up to date and may contain links to external sites over which the EEA services have no control and for which the EEA assumes no responsibility. Neither the European Environment Agency nor any person or company acting on behalf of the Agency is responsible for the contents of this website and the use that may be made of it.</p>
+
+<p>Our goal is to keep this information timely and accurate. If errors are brought to our attention, we will try to correct them.</p>
+]]>
+			</body>
+		</ob>
 	</ob>
 </export>
