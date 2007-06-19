@@ -498,6 +498,11 @@ class utils:
         try: return p_date.strftime('%d %b %Y')
         except: return ''
 
+    def utShowCustom(self, p_date):
+        """ """
+        try: return p_date.strftime('%Y-%m-%d')
+        except: return ''
+
     def utStringDate(self, p_date):
         """ """
         try: return p_date.strftime('%d%m%Y')

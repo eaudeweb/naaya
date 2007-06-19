@@ -89,17 +89,23 @@ class PlugBase(SimpleItem):
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
-    def addUserRoles(self, name='', roles='', loc='allsite', location='', REQUEST=None):
+    def addUserRoles(self, name='', roles='', loc='allsite', location='', user_location='', REQUEST=None):
         """ """
         #process form values
+        if name == '':  name = []
+        else: name = self.utConvertToList(name)
         if loc == 'allsite': location = self.getSite()
         else: location = self.utGetObject(location)
         if roles == '': roles = []
         else: roles = self.utConvertToList(roles)
         #assing roles
-        print loc
-        print location
-        location.manage_setLocalRoles(name, roles)
+        for n in name:
+            location.manage_setLocalRoles(n, roles)
+            try:
+                self.setUserLocation(n, user_location)
+                self.setUserCanonicalName(n, self.buffer[n])
+            except:
+                pass
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
