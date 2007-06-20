@@ -144,23 +144,30 @@ a img {
 .center_portlet_content ul {
 	list-style-type: none;
 	margin: 0;
-	padding: 0 0 0 1em;
+	padding: 0.2em 0 0.5em 2.4em;
 }
 
 .center_portlet {
 	background: #fff;
 }
 .center_portlet .center_portlet_title {
-	background-color: #dddddd;
+	/*background-color: #dddddd;*/
 	padding-left: 1em;
 	line-height: 1.5em;
 	margin-top: 0.5em;
 	position: relative;
-	font-size: 0.9em;
+	font-size: 1.1em;
+	font-weight: bold;
+	color: #000;
+	border-bottom: 1px dashed #A0A0A0;
 }
 .center_portlet .center_portlet_content {
-	border: 1px solid #dddddd;
+	/*border: 1px solid #dddddd;*/
 	position: relative;
+	line-height: 1.5em;
+}
+.center_portlet .center_portlet_content a {
+	color: blue;
 }
 
 /* left side and left menu */
@@ -376,7 +383,7 @@ a img {
 }
 #topnav {
 	float:right;
-	width:60%;
+	width:80%;
 	height: 20px;
 	padding: 4px 0.5em;
 	text-align:right;
@@ -402,7 +409,7 @@ a img {
 }
 #left_topnav {
 	float:left;
-	width:35%;
+	width:18%;
 	height: 20px;
 	padding: 4px 0.5em;
 	text-align:left;
