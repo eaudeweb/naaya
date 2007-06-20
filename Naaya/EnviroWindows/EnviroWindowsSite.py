@@ -228,6 +228,29 @@ class EnviroWindowsSite(NySite):
             return ''
 
 #####################################################
+# ENVIROWINDOWS functions loaded for compatibility  #
+#####################################################
+
+    def getAnnouncementsFrontPage(self, howmany=None):
+        #returns a list with latest approved NYNews objects from the specified folder(container)
+        #the number of objects can be set by modifing the property 'number_announcements'
+        if howmany is None: howmany = -1
+        return self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, approved=1, howmany=howmany, topstory=1)
+
+    def getAnnouncements(self, container=None, howmany=None):
+        #returns a list with latest approved EWNews objects from the specified folder(container)
+        #the number of objects can be set by modifing the property 'number_announcements'
+        if howmany is None: howmany = -1
+        if container is None: sector = None
+        elif container == self: sector = None
+        else:
+            l_top_container = container
+            while l_top_container.getParentNode() != self:
+                l_top_container = l_top_container.getParentNode()
+            sector = l_top_container.id
+        return self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, approved=1, howmany=howmany, sector=sector)
+
+#####################################################
 # SMAP functions loaded for backwards compatibility #
 #####################################################
     security.declareProtected(view_management_screens, 'updateExperts')
