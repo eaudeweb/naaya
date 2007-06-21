@@ -272,6 +272,7 @@ class others_struct:
     def __init__(self):
         self.favicon = None
         self.robots = None
+        self.sitemap_xml = None
         self.images = None
         self.submit_unapproved = None
         self.nyexp_schema = None
@@ -456,6 +457,8 @@ class skel_handler(ContentHandler):
             pass
         elif name == 'images':
             pass
+        elif name == 'sitemap_xml':
+            pass
         elif name == 'submit_unapproved':
             pass
         elif name == 'nyexp_schema':
@@ -591,6 +594,8 @@ class skel_handler(ContentHandler):
             self.stack[-1].obj.robots = 1
         elif name == 'images':
             self.stack[-1].obj.images = 1
+        elif name == 'sitemap_xml':
+            self.stack[-1].obj.sitemap_xml = 1
         elif name == 'submit_unapproved':
             self.stack[-1].obj.submit_unapproved = 1
         elif name == 'nyexp_schema':

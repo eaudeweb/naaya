@@ -411,6 +411,14 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                         file_ob = self._getOb('robots.txt')
                     file_ob.update_data(data=content)
                     file_ob._p_changed=1
+                if skel_handler.root.others.sitemap_xml is not None:
+                    content = self.futRead(join(skel_path, 'others', 'sitemap_xml'), 'r')
+                    file_ob = self._getOb('sitemap_xml', None)
+                    if file_ob is None:
+                        self.manage_addProduct['PythonScripts'].manage_addPythonScript(id='sitemap_xml')
+                        file_ob = self._getOb('sitemap_xml')
+                    file_ob.ZPythonScript_edit(params='', body=content)
+                    file_ob._p_changed=1
                 if skel_handler.root.others.favicon is not None:
                     content = self.futRead(join(skel_path, 'others', 'favicon.ico'), 'rb')
                     image_ob = self._getOb('favicon.ico', None)
