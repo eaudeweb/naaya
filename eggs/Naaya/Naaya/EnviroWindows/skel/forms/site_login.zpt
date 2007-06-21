@@ -11,11 +11,11 @@
 
 
 <h1 i18n:translate="">Log out</h1>
-<div style="float: right; width: 30%; background-color: #FFFFE1;">
+<div style="float: right; width: 25%; background-color: #fafafa; border: 1px solid #eee">
     <div style="background-color: #a0a0a0; font-weight: bold; color: white; line-height: 2em; text-align: center;" i18n:translate="">Tips</div>
-    <ul>
-        <li i18n:translate="">Having trouble logging out? Make sure that cookies are allowed in your browser</li>
-        <li i18n:translate="">If you opened child browser windows from this one, those will maintain your authentication</li>
+    <ul style="list-style-type: none; padding: 0.5em; margin: 0">
+        <li i18n:translate="" style="margin-bottom: 0.5em"><strong>&raquo;</strong> Having trouble logging out? Make sure that cookies are allowed in your browser</li>
+        <li i18n:translate="" style="margin-bottom: 0.5em"><strong>&raquo;</strong> If you opened child browser windows from this one, those will maintain your authentication</li>
     </ul>
 </div>
 
@@ -48,13 +48,13 @@
 <tal:block define="user python:request.AUTHENTICATED_USER.getUserName()" condition="python:user=='Anonymous User'">
 <h1 i18n:translate="">Log in</h1>
 
-<div style="float: right; width: 30%; background-color: #FFFFE1;">
+<div style="float: right; width: 25%; background-color: #fafafa; border: 1px solid #eee">
     <div style="background-color: #a0a0a0; font-weight: bold; color: white; line-height: 2em; text-align: center;" i18n:translate="">Tips</div>
-    <ul>
-        <li i18n:translate="">Having trouble logging in? Make sure that cookies are allowed in your browser</li>
-        <li i18n:translate="">Don't forget to logout or exit your browser when you're done</li>
-        <li i18n:translate="">Letting your browser to remember your username or password on this machine can be dangerous since other people might use this account to log in</li>
-        <li i18n:translate="">Forgot your password? <a href="feedback_html">Contact the Webmaster</a> and explain the problem</li>
+    <ul style="list-style-type: none; padding: 0.5em; margin: 0">
+        <li i18n:translate="" style="margin-bottom: 0.5em"><strong>&raquo;</strong> Having trouble logging in? Make sure that cookies are allowed in your browser</li>
+        <li i18n:translate="" style="margin-bottom: 0.5em"><strong>&raquo;</strong> Don't forget to logout or exit your browser when you're done</li>
+        <li i18n:translate="" style="margin-bottom: 0.5em"><strong>&raquo;</strong> Letting your browser to remember your username or password on this machine can be dangerous since other people might use this account to log in</li>
+        <li i18n:translate="" style="margin-bottom: 0.5em"><strong>&raquo;</strong> Forgot your password? <a href="feedback_html">Contact the Webmaster</a> and explain the problem</li>
     </ul>
 </div>
 
