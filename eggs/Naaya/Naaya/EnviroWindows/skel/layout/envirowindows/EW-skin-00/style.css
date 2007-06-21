@@ -105,7 +105,7 @@ a img {
 #middle_port {
 	margin: 0 0  0 0.8%;
 	padding: 0;
-	width: 78%;
+	width: 81%;
 	float: left;
 }
 #center_content {
@@ -174,7 +174,7 @@ a img {
 #left_port {
 	margin: 0;
 	padding: 0;
-	width: 20%;
+	width: 17%;
 	float: left;
 }
 
@@ -183,10 +183,9 @@ a img {
 	padding: 0 0 0 0;
 }
 .left_portlet .left_portlet_title {
-	height: 2em;
 	border: 1px solid #ddd;
 	background: #f3f3f3;
-	padding: 0.8em 0.5em 0 0.5em;
+	padding: 0.8em 0.5em 0.8em 0.5em;
 	text-transform: uppercase;
 	font-size: 0.9em;
 	font-family: Verdana, Arial, sans-serif;
@@ -208,7 +207,6 @@ a img {
 }
 .left_portlet ul li{
 	padding: 0.3em;
-	/*background: #fff;*/
 	color: #084173;
 	font-family: Verdana, Arial, Helvetica, sans-serif; 
 	font-size: 90%;
@@ -255,9 +253,9 @@ a img {
 	width: auto;
 }
 .right_portlet .right_portlet_title {
-	height: 2em;
 	border-bottom: 1px solid #ccc;
-	padding: 0.8em 0.5em 0 0.5em;
+	background: #f3f3f3;
+	padding: 0.8em 0.5em 0.8em 0.5em;
 	text-transform: uppercase;
 	font-size: 0.9em;
 	font-family: Verdana, Arial, sans-serif;
@@ -295,7 +293,7 @@ a img {
 }
 .right_portlet ul li a {
 	display:block;
-	font-weight: bold;
+	font-weight: normal;
 	text-decoration: none;
 	color: #44464B;
 	padding: 3px 6px 3px 0;
@@ -318,11 +316,11 @@ a img {
 	vertical-align: middle;
 	padding:0 0 0.5em 0;
 	background: #eee;
+	font-size: 0.8em;
 }
 #footer p {
 	padding: 0.5em;
 	margin: 0;
-	font-size: 0.8em;
 }
 #footer p.righted {
 	float: right;
@@ -330,7 +328,6 @@ a img {
 #footer a {
 	color: #333;
 	padding: 0.3em;
-	font-size: 0.8em;
 }
 
 #last_modified {
