@@ -16,7 +16,7 @@
 <![endif]-->
 <body>
 <div id="outer_wrapper">
-	<div id="container" tal:attributes="style python:test(len(here.get_right_portlets_locations_objects(here)), '', 'background: none')">
+	<div id="container" tal:attributes="style python:test(len(here.get_right_portlets_locations_objects(here)) or here.meta_type == here.get_constant('METATYPE_FOLDER'), '', 'background: none')">
 		<div id="toolribbon">
 			<div id="topnav">
 				<div id="language">
