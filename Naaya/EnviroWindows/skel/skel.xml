@@ -429,4 +429,9 @@
 	<properties>
 		<language code="en" />
 	</properties>
+	<others>
+		<favicon />
+		<robots />
+		<sitemap_xml />
+	</others>
 </skel>

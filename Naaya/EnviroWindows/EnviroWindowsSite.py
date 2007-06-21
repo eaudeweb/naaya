@@ -231,6 +231,13 @@ class EnviroWindowsSite(NySite):
 # ENVIROWINDOWS functions loaded for compatibility  #
 #####################################################
 
+    def getPendingAnnouncements(self, container=None):
+        #returns a list with the draft NYNews objects from the specified folder(container)
+        if container is None: sector = None
+        elif container == self: sector = None
+        else: sector = container.id
+        return self.utFilterObjsListByAttr(self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, sector=sector), 'approved', 0)
+
     def getAnnouncementsFrontPage(self, howmany=None):
         #returns a list with latest approved NYNews objects from the specified folder(container)
         #the number of objects can be set by modifing the property 'number_announcements'
