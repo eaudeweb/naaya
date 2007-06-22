@@ -30,12 +30,12 @@
 				</ul>
 				<ul class="site_actions">
 					<li><a href="javascript:this.print();" title="Print this page"><img src="misc_/EnviroWindows/printer.gif" alt="print this page" /></a></li>
-					<li><a href="feedback_html" title="Feedback">Feedback</a>
+					<li><a href="feedback_html" title="Feedback"  accesskey="9">Feedback</a>
 				</ul>
 			</div>
 			<div id="left_topnav">
 				<ul>
-					<li><a tal:attributes="href site_url; title string:Home" i18n:attributes="title" i18n:translate="">Home</a></li>
+					<li><a tal:attributes="href site_url; title string:Home" i18n:attributes="title" i18n:translate="" accesskey="1">Home</a></li>
 					<li><a href="http://www.eea.europa.eu" id="eealink">EEA</a></li>
 					<li><a href="http://www.eionet.europa.eu">EIONET</a></li>
 				</ul>
@@ -61,7 +61,7 @@
 				</ul>
 				<form method="get" tal:attributes="action string:${site_url}/search_html">
 					<div id="search"><label for="query"><span i18n:translate="">site search</span></label>
-					<input id="query" type="text" name="query:utf8:ustring" />
+					<input id="query" type="text" name="query:utf8:ustring"  accesskey="4" />
 					<input type="submit" value="GO" class="search_btn"/></div>
 				</form>
 			</div>
@@ -80,7 +80,7 @@
 			</tal:block>
 		</div>
 		<div id="middle_port">
-			<a id="startcontent"></a>
+			<a id="startcontent" accesskey="2"></a>
 			<span tal:replace="structure here/messages_box"/>
 
 	<!--SITE_HEADERFOOTER_MARKER-->
