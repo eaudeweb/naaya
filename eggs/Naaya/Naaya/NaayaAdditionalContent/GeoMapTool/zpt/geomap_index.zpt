@@ -1,6 +1,6 @@
 <span tal:replace="structure here/standard_html_header"/>
 
-<script language="JavaScript" type="text/JavaScript">
+<script type="text/JavaScript">
 <!--
 
 function shLegend()
