@@ -3,7 +3,7 @@
 <tal:block metal:fill-slot="title" i18n:translate="">Right-side portlets</tal:block>
 
 <tal:block metal:fill-slot="section">
-	<script language="javascript" type="text/javascript">
+	<script type="text/javascript">
 	<!--
 	
 	function add()
@@ -118,7 +118,7 @@
 					<input type="hidden" name="folder" tal:attributes="value location" />
 				</tal:block>
 				<tal:block tal:condition="python:mode!='edit'">
-				<script language="javascript" type="text/javascript">
+				<script type="text/javascript">
 				<!--
 				function fTreeClick(expand)
 				{

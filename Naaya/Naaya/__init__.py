@@ -115,7 +115,7 @@ def DragDropCore(self, name):
     js_data.append('<script src="misc_/Naaya/drag.js" type="text/javascript"></script>')
     js_data.append('<script src="misc_/Naaya/dragsort.js" type="text/javascript"></script>')
     js_data.append('<script src="misc_/Naaya/cookies.js" type="text/javascript"></script>')
-    js_data.append('<script language="javascript" type="text/javascript">')
+    js_data.append('<script type="text/javascript">')
     js_data.append('<!--')
     js_data.append('''var dragsort = ToolMan.dragsort()
         var junkdrawer = ToolMan.junkdrawer()

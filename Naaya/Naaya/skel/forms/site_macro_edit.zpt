@@ -22,7 +22,7 @@
 
 <p metal:define-slot="description" i18n:translate="">Description</p>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 <!--
 function fPick(glossary_url)
 {

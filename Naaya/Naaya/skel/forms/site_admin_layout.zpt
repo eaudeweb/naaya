@@ -10,7 +10,7 @@
 	with those settings.
 </p>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 <!--
 var isNav = null;
 var isIE = null;
@@ -231,7 +231,7 @@ function LoadScreenshot()
 </table>
 </form>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 	InitializeSyncroFinder();
 </script>
 

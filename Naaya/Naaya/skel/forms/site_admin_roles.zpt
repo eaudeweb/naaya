@@ -16,7 +16,7 @@
 </div>
 <div class="cleaner"> </div>
 
-<script language="JavaScript">
+<script type="text/javascript">
 <!--
 function emptyLocation()
 {
