@@ -6,7 +6,7 @@
 
 <p i18n:translate="">This page presents the hierarchical structure of the glossary.</p>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 <!--
 function fTreeClick(expand)
 {
