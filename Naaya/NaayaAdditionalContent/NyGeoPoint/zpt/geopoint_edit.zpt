@@ -38,7 +38,7 @@
 <div class="field">
 	<strong>Tip:</strong>
 	You can pick the latitude and the longitude directly from the map.
-	<script language="javascript" type="text/javascript">
+	<script type="text/javascript">
 	<!--
 		function setupWin(url, theWidth, theHeight)
 		{
@@ -101,7 +101,7 @@
 </div>
 
 <div class="field">
-	<script language="javascript" type="text/javascript">
+	<script type="text/javascript">
 	<!--
 	function fTreeClick(expand)
 	{

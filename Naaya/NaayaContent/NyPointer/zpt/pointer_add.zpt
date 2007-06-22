@@ -8,7 +8,7 @@
 
 <tal:block metal:fill-slot="custom_properties">
 <div class="field">
-	<script language="JavaScript">
+	<script type="text/javascript">
 	<!--
 	function setupWin(url, theWidth, theHeight)
 	{

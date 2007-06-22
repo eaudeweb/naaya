@@ -43,7 +43,7 @@
 	<td class="form-label">Url</td>
 	<td><input type="text" name="url" id="url" size="50" tal:attributes="value python:request.get('url', 'http://')" /></td>
 </tr>
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 <!--
 function fTreeClick(expand)
 {
