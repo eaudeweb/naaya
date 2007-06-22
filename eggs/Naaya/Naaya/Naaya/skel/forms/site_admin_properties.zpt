@@ -89,7 +89,7 @@
 </tr>
 </table>
 
-<input type="submit" value="Save changes" i18n:attributes="value" />
+<div><input type="submit" value="Save changes" i18n:attributes="value" /></div>
 </form>
 
 </tal:block>
