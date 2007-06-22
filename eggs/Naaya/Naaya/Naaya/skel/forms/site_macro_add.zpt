@@ -6,7 +6,7 @@
 
 <p metal:define-slot="description">description</p>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 <!--
 function fPick(glossary_url)
 {

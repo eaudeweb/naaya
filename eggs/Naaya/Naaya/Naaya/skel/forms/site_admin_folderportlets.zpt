@@ -39,7 +39,7 @@
 		its name and push <em>Create</em>.
 	</p>
 	<form name="frmportlets" method="post" tal:attributes="action string:${site_url}/admin_addfolderportlet">
-	<script language="javascript" type="text/javascript">
+	<script type="text/javascript">
 	<!--
 	function fTreeClick(expand)
 	{

@@ -15,7 +15,7 @@
 		</li>
 	</ul>
 	</div>
-	<script language="JavaScript">
+	<script type="text/javascript">
 	function emptyLocation()
 	{
 	   if (document.forms['frmUsersRoles'].loc[0].checked == true)
@@ -116,7 +116,7 @@
 	<tr>
 		<td valign="top" width="20%" class="form-label" i18n:translate="">Location:(folder)<br>e.g. /folderURL</td>
 		<td valign="top" width="*">
-			<script language="javascript" type="text/javascript">
+			<script type="text/javascript">
 			<!--
 			function fTreeClick(expand)
 			{
