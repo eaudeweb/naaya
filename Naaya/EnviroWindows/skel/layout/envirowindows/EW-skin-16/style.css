@@ -46,6 +46,12 @@ fieldset legend {
 a img {
 	border: none;
 }
+a:link {
+	color: #0061a2;
+}
+a:visited {
+	color: #8e004d;
+}
 #outer_wrapper {
 	background: url(dot-bg.gif) repeat-y 20.5%;
 }
@@ -122,8 +128,11 @@ a img {
 	font-size: 1.5em;
 	font-weight: normal;
 }
-#middle_port a {
-	color: #44464B;
+#middle_port a:link {
+	color: #0061a2;
+}
+#middle_port a:hover {
+	color: #000;
 }
 
 #middle_port h2 {
