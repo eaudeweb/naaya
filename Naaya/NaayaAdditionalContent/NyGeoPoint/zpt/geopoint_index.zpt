@@ -44,7 +44,7 @@
 	</tr>
 	<tr>
 		<th i18n:translate="">URL</th>
-		<td><a tal:attributes="href here/url" target="_blank" tal:content="here/url"/></td>
+		<td><a tal:attributes="href here/url" rel="external" tal:content="here/url"/></td>
 	</tr>
 	<tr>
 		<th i18n:translate="">Pointer</th>
