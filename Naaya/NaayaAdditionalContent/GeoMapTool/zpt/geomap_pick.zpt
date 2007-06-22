@@ -12,7 +12,7 @@
 	will be filled automatically.
 </p>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 <!--
 function pickpoint(point) {
 	window.opener.fillCoordinates(point);
