@@ -225,7 +225,7 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
     def get_display_js(self):
         #get code for picture displays
         js_data = []
-        js_data.append('<script language="javascript" type="text/javascript"><!--')
+        js_data.append('<script type="text/javascript"><!--')
         js_data.append('function img_display(display) { document.frmDisplay.imgDisplay.src = "%s" + "/view?display=" + display }' % self.absolute_url())
         js_data.append('// --></script>')
         return '\n'.join(js_data)
