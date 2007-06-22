@@ -10,6 +10,20 @@
 	<link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/style" />
 	<link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/common" />
 	<link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${skin_files_path}/print" />
+	<script type="text/javascript">
+	// required for the replacement of target="_blank"
+	function externalLinks() {
+	 if (!document.getElementsByTagName) return;
+	 var anchors = document.getElementsByTagName("a");
+	 for (var i=0; i<anchors.length; i++) {
+	   var anchor = anchors[i];
+	   if (anchor.getAttribute("href") &&
+	       anchor.getAttribute("rel") == "external")
+	     anchor.target = "_blank";
+	 }
+	}
+	window.onload = externalLinks;
+	</script>
 </head>
 <!--[if lt IE 7]>
 	</base>
