@@ -52,7 +52,7 @@ class combosync_tool:
         l_master_default, l_slave_default, l_data = p_data
         l_master_index = l_slave_index = 0
         l_master_found = 0
-        l_syncroobject = '<script language="javascript" type="text/javascript">\n'
+        l_syncroobject = '<script type="text/javascript">\n'
         l_syncroobject += '<!--\n\n'
         l_syncroobject += 'var theLayoutToolPath = "%s";\n\n' % self.getLayoutToolPath();
         l_syncroobject += 'var SyncroObject = new SyncroView();\n\n'

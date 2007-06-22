@@ -1,7 +1,7 @@
 <span tal:replace="structure here/manage_page_header"/>
 <span tal:replace="structure here/manage_tabs"/>
 
-<script language="JavaScript">
+<script type="text/javascript">
 function emptyLocation()
 {
    if (document.forms['frmUsersRoles'].loc[0].checked == true)

@@ -5,7 +5,7 @@
 	Here you can customize the right side.
 </p>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 <!--
 
 function add()
@@ -120,7 +120,7 @@ tal:define="mode python:request.get('mode', '');
 				<input type="hidden" name="folder" tal:attributes="value location" />
 			</tal:block>
 			<tal:block tal:condition="python:mode!='edit'">
-			<script language="javascript" type="text/javascript">
+			<script type="text/javascript">
 			<!--
 			function fTreeClick(expand)
 			{
