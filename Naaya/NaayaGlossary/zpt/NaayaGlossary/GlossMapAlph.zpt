@@ -19,7 +19,7 @@
 	<h1 tal:content="python:here.getCenterOb().title_or_id()" i18n:translate="" />
 	<p i18n:translate="">Click on a term to insert it into the corresponding field.</p>
 
-	<script language="javascript" type="text/javascript">
+	<script type="text/javascript">
 	<!--
 	function fTreeClick(expand)
 	{
