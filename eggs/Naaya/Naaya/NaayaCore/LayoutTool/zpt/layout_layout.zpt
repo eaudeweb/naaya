@@ -5,7 +5,7 @@
     This page lists the layouts defined in this portal and you can choose one of those for the presentation. After choosing a layout, select the appropriate color scheme for it.
 </p>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 <!--
 var isNav = null;
 var isIE = null;
@@ -226,7 +226,7 @@ function LoadScreenshot()
 </table>
 </form>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 	InitializeSyncroFinder();
 </script>
 

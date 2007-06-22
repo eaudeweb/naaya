@@ -40,7 +40,7 @@
 </table>
 </form>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 <!--
 function emptyLocation()
 {	if (document.userRoles.loc[0].checked == true) document.userRoles.location.value = '';}
