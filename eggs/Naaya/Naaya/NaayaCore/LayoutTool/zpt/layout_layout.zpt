@@ -207,7 +207,7 @@ function LoadScreenshot()
 <span tal:replace="structure python:here.getSyncroObject(here.getDataForLayoutSettings())"/>
 
 <form name="frmSyncro" method="post" action="manageLayout">
-<table border="0" cellspacing="2" celpadding="2">
+<table border="0" cellspacing="2" cellpadding="2">
 	<tr>
 		<td class="form-label">Layout</td>
 		<td><span tal:replace="structure python:here.getMasterCombo()"/></td>
