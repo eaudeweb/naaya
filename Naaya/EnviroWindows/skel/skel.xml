@@ -202,6 +202,7 @@
 		<pluggablecontenttype meta_type="Naaya Event" action="1"/>
 	</pluggablecontenttypes>
 	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
+		<portlet id="portlet_administration" title="Administration" />
 		<linkslist id="topnav_links" title="Places" portlet="1">
 			<link id="103" title="EWindows" description="EnviroWindows" url="http://ewindows.eu.org/" relative="0" permission="" order="1"/>
 			<link id="104" title="EEA home" description="" url="http://www.eea.europa.eu/" relative="0" permission="" order="2"/>
