@@ -212,7 +212,7 @@ function LoadScreenshot()
 <span tal:replace="structure python:layout_tool.getSyncroObject(layout_tool.getDataForLayoutSettings())" />
 
 <form name="frmSyncro" method="post" tal:attributes="action string:${here/getSitePath}/admin_layout">
-<table border="0" cellspacing="2" celpadding="2">
+<table border="0" cellspacing="2" cellpadding="2">
 	<tr>
 		<td i18n:translate="">Layout</td>
 		<td><span tal:replace="structure python:layout_tool.getMasterCombo()"/></td>
