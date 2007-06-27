@@ -68,9 +68,12 @@ class geo_utils:
     """
 
     def geoDMSToDd(self, D, M, S, C):
-        D, M, S, sign = float(D), float(M), float(S), 1
-        if C in ['W', 'S']: sign = -1
-        return sign*((S/60 + M)/60 + D)
+        try:
+            D, M, S, sign = float(D), float(M), float(S), 1
+            if C in ['W', 'S']: sign = -1
+            return sign*((S/60 + M)/60 + D)
+        except ValueError:
+            return 0
 
 
     # Curent parameters
