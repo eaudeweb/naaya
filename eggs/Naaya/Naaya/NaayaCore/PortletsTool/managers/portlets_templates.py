@@ -69,7 +69,7 @@ LINKSLIST_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayou
 </tal:block>'''
 
 REMOTECHANNEL_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
-<tal:block metal:fill-slot="portlet_title"><span tal:replace="python:here.getSyndicationTool().PORTLET_REMOTECHANNEL_ID.title_or_id()" /></tal:block>
+<tal:block metal:fill-slot="portlet_title"><span i18n:translate="" tal:content="python:here.getSyndicationTool().PORTLET_REMOTECHANNEL_ID.title_or_id()" /></tal:block>
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
 		<li tal:repeat="item python:here.getSyndicationTool().PORTLET_REMOTECHANNEL_ID.getChannelItems()">
@@ -86,7 +86,7 @@ REMOTECHANNEL_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getL
 
 LOCALCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.getSyndicationTool().PORTLET_LOCALCHANNEL_ID">
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
-<tal:block metal:fill-slot="portlet_title"><span tal:replace="channel/title_or_id" /></tal:block>
+<tal:block metal:fill-slot="portlet_title"><span i18n:translate="" tal:content="channel/title_or_id" /></tal:block>
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
 		<li tal:repeat="item channel/get_objects_for_rdf"><a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id" /></li>
