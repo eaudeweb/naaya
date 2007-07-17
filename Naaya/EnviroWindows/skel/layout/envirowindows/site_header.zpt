@@ -11,6 +11,7 @@
 	<link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/common" />
 	<link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${skin_files_path}/print" />
 	<script type="text/javascript">
+	//<![CDATA[
 	// required for the replacement of target="_blank"
 	function externalLinks() {
 	 if (!document.getElementsByTagName) return;
@@ -23,6 +24,7 @@
 	 }
 	}
 	window.onload = externalLinks;
+	//]]>
 	</script>
 </head>
 <!--[if lt IE 7]>
