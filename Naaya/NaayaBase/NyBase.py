@@ -173,7 +173,7 @@ class NyBase:
         ra('<dc:title>%s</dc:title>' % self.utXmlEncode(self.getLocalProperty('title', lang)))
         ra('<dc:identifier>%s</dc:identifier>' % self.identifier())
         ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.releasedate))
-        ra('<dc:description><![CDATA[%s]]></dc:description>' % self.utXmlEncode(self.getLocalProperty('description', lang)))
+        ra('<dc:description><![CDATA[%s]]></dc:description>' % self.utToUtf8(self.getLocalProperty('description', lang)))
         ra('<dc:contributor>%s</dc:contributor>' % self.utXmlEncode(self.contributor))
         ra('<dc:language>%s</dc:language>' % self.utXmlEncode(lang))
         for k in self.getLocalProperty('coverage', lang).split(','):
