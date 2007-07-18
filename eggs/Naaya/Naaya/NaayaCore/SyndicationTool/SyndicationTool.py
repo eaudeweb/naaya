@@ -142,6 +142,7 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
         ra('<title>%s</title>' % s.utXmlEncode(s.title))
         ra('<link>%s</link>' % p_url)
         ra('<description><![CDATA[%s]]></description>' % self.utToUtf8(s.description))
+        ra('<dc:description><![CDATA[%s]]></dc:description>' % self.utToUtf8(s.description))
         ra('<dc:identifier>%s</dc:identifier>' % p_url)
         ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.utGetTodayDate()))
         ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(s.publisher))
