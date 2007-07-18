@@ -141,7 +141,7 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
         ra('<channel rdf:about="%s">' % s.absolute_url())
         ra('<title>%s</title>' % s.utXmlEncode(s.title))
         ra('<link>%s</link>' % p_url)
-        ra('<description>%s</description>' % self.utXmlEncode(s.description))
+        ra('<description><![CDATA[%s]]></description>' % self.utToUtf8(s.description))
         ra('<dc:identifier>%s</dc:identifier>' % p_url)
         ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.utGetTodayDate()))
         ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(s.publisher))
@@ -163,7 +163,7 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
             ra('<title>%s</title>' % self.utXmlEncode(s.title))
             ra('<url>%s</url>' % self.getImagePath())
             ra('<link>%s</link>' % s.absolute_url())
-            ra('<description>%s</description>' % self.utXmlEncode(s.description))
+            ra('<description><![CDATA[%s]]></description>' % self.utToUtf8(s.description))
             ra('</image>')
         for i in p_items:
             ra(i.syndicateThis(lang))
