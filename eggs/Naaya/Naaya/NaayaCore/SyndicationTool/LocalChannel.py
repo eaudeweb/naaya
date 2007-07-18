@@ -88,6 +88,7 @@ class LocalChannel(SimpleItem, utils):
         ra = r.append
         ra('<item rdf:about="%s">' % self.absolute_url())
         ra('<link>%s</link>' % self.absolute_url())
+        ra('<title>%s</title>' % self.utXmlEncode(self.title_or_id()))
         ra('<dc:title>%s</dc:title>' % self.utXmlEncode(self.title_or_id()))
         ra('<dc:identifier>%s</dc:identifier>' % self.absolute_url())
         ra('<dc:description>%s</dc:description>' % self.utXmlEncode(self.description))
