@@ -170,6 +170,7 @@ class NyBase:
         ra = r.append
         ra('<link>%s</link>' % self.absolute_url())
         ra('<title>%s</title>' % self.utXmlEncode(self.getLocalProperty('title', lang)))
+        ra('<description><![CDATA[%s]]></description>' % self.utToUtf8(self.getLocalProperty('description', lang)))
         ra('<dc:title>%s</dc:title>' % self.utXmlEncode(self.getLocalProperty('title', lang)))
         ra('<dc:identifier>%s</dc:identifier>' % self.identifier())
         ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.releasedate))
