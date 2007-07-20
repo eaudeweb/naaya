@@ -20,7 +20,7 @@
 	<p tal:content="structure here/description" class="forum_topic_content" />
 	<div tal:define="attachments here/get_attachments" tal:condition="python:len(attachments)>0"
 		class="forum_topic_bottom">
-		<img src="/misc_/NaayaForum/attachment.gif" alt="Attachments" i18n:attributes="alt" align="absmiddle" />
+		<img src="/misc_/NaayaForum/attachment.gif" alt="Attachments" i18n:attributes="alt"  style="text-align: middle" />
 		<span i18n:translate="" tal:omit-tag="">Attachments:</span>
 		<tal:block repeat="file attachments">
 			<a tal:attributes="href file/absolute_url; title file/title_or_id">
@@ -49,7 +49,7 @@
 				<a tal:condition="edit_permission" tal:attributes="href string:${item/absolute_url}/delete_html" i18n:translate="">Delete</a>
 				<a tal:condition="add_permission" tal:attributes="href string:${item/absolute_url}/reply_html" i18n:translate="">Reply</a>
 			</div>
-			<img src="/misc_/NaayaForum/NyForumMessage.gif" tal:attributes="alt item/meta_label; title item/meta_label" align="absmiddle" />
+			<img src="/misc_/NaayaForum/NyForumMessage.gif" tal:attributes="alt item/meta_label; title item/meta_label"  style="text-align: middle" />
 			<strong tal:content="item/title_or_id" />
 		</div>
 		<div class="forum_message_author">
@@ -59,7 +59,7 @@
 		<div class="forum_message_description" tal:content="structure item/description" />
 		<div tal:define="attachments item/get_attachments" tal:condition="python:len(attachments)>0"
 			class="forum_message_bottom">
-			<img src="/misc_/NaayaForum/attachment.gif" alt="Attachments" i18n:attributes="alt" align="absmiddle" />
+			<img src="/misc_/NaayaForum/attachment.gif" alt="Attachments" i18n:attributes="alt"  style="text-align: middle" />
 			<span i18n:translate="" tal:omit-tag="">Attachments:</span>
 			<tal:block repeat="file attachments">
 				<a tal:attributes="href file/absolute_url; title file/title_or_id">
