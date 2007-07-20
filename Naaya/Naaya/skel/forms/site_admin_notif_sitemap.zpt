@@ -60,7 +60,7 @@ This is the list with monitorised folders. The notifications and newsletters are
     <tal:block tal:repeat="second_level_folder python:first_level_folder[1]">
     <tr>
         <td></td>
-        <td><img src="misc_/Naaya/square.gif" /><input type="checkbox" name="absolute_urls_to_be_added" tal:attributes="value python: second_level_folder.absolute_url(1)" /><a tal:attributes="href second_level_folder/title_or_id"><span tal:content="second_level_folder/title_or_id" /></a>
+        <td><img src="misc_/Naaya/square.gif" alt="" /><input type="checkbox" name="absolute_urls_to_be_added" tal:attributes="value python: second_level_folder.absolute_url(1)" /><a tal:attributes="href second_level_folder/title_or_id"><span tal:content="second_level_folder/title_or_id" /></a>
         </td>
     </tr>
     </tal:block>

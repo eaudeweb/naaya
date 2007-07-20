@@ -111,7 +111,7 @@
 		</thead>
 		<tbody>
 			<tr tal:repeat="record records">
-				<td><img tal:attributes="src record/icon; alt record/meta_type" align="absmiddle" /></td>
+				<td><img tal:attributes="src record/icon; alt record/meta_type" style="text-align: middle" /></td>
 				<td>
 					<a tal:attributes="href record/url" tal:content="record/title" />
 					<span tal:condition="python:record['description'] is not None">

@@ -70,7 +70,7 @@
 				<th class="sort_asc_th">
 					<a tal:attributes="href string:${site_url}/admin_translations_html?skey=msg&amp;rkey=1&amp;query=${query}">
 						<span i18n:translate="" tal:omit-tag="">Message</span>
-						<img src="misc_/Naaya/sort_asc.gif" align="absmiddle" alt="" />
+						<img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
 					</a>
 				</th>
 			</tal:block>
@@ -78,7 +78,7 @@
 				<th class="sort_desc_th">
 					<a tal:attributes="href string:${site_url}/admin_translations_html?skey=msg&amp;query=${query}">
 						<span i18n:translate="" tal:omit-tag="">Message</span>
-						<img src="misc_/Naaya/sort_desc.gif" align="absmiddle" alt="" />
+						<img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
 					</a>
 				</th>
 			</tal:block>
@@ -94,7 +94,7 @@
 					<th class="sort_asc_th">
 						<a tal:attributes="href string:${site_url}/admin_translations_html?skey=${skey}&amp;rkey=1&amp;query=${query}">
 							<span i18n:translate="" tal:omit-tag="" tal:content="python:language['name']" />
-							<img src="misc_/Naaya/sort_asc.gif" align="absmiddle" alt="" />
+							<img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
 						</a>
 					</th>
 				</tal:block>
@@ -102,7 +102,7 @@
 					<th class="sort_desc_th">
 						<a tal:attributes="href string:${site_url}/admin_translations_html?skey=${skey}&amp;query=${query}">
 							<span i18n:translate="" tal:omit-tag="" tal:content="python:language['name']" />
-							<img src="misc_/Naaya/sort_desc.gif" align="absmiddle" alt="" />
+							<img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
 						</a>
 					</th>
 				</tal:block>

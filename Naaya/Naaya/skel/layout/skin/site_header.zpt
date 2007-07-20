@@ -37,7 +37,7 @@
 		</ul>
 	</div>
 	<div>
-		<img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" align="left" alt="Logo" i18n:attributes="alt" tal:condition="here/hasLeftLogo" />
+		<img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" alt="Logo" i18n:attributes="alt" tal:condition="here/hasLeftLogo" />
 		<div id="toptitle">
 			<span class="page_title" tal:content="here/site_title" /><br />
 			<span class="page_subtitle" tal:content="here/site_subtitle" />

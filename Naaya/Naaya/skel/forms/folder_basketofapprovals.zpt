@@ -56,7 +56,7 @@ function checkApp(frm, control)
 		<th i18n:translate="" style="width: 5%;">Delete</th>
 	</tr>
 	<tr tal:repeat="item pendings">
-		<td width="1%"><img tal:attributes="src item/icon" /></td>
+		<td width="1%"><img tal:attributes="src item/icon" alt="" /></td>
 		<td tal:content="python:here.utShowDateTime(item.releasedate)" />
 		<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id"/></td>
 		<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(item.contributor)" />
@@ -95,7 +95,7 @@ function checkApp(frm, control)
 		<th i18n:translate="" style="width: 5%;">Delete</th>
 	</tr>
 	<tr tal:repeat="item published">
-		<td width="1%"><img tal:attributes="src item/icon" /></td>
+		<td width="1%"><img tal:attributes="src item/icon" alt="" /></td>
 		<td tal:content="python:here.utShowDateTime(item.releasedate)" />
 		<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id"/></td>
 		<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(item.contributor)" />
