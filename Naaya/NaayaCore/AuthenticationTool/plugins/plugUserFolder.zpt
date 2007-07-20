@@ -73,19 +73,19 @@ function createKey(key)
 			<select name="name">
 				<option tal:repeat="item uf_obj/getUserNames"
 						tal:attributes="value item" tal:content="item">User</option>
-			<select>
+			</select>
 		</td>
 	</tr>
 	<tr>
 		<td style="vertical-align: top">Roles:</td>
 		<td>
-			<select name="roles" size="5" multiple>
+			<select name="roles" size="5" multiple="multiple">
 				<tal:block repeat="item here/list_valid_roles">
 				<option tal:condition="python:item=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')"
 						tal:attributes="value item" tal:content="item" />
 				<option tal:condition="python:item!='Manager'" tal:attributes="value item" tal:content="item" />
 				</tal:block>
-			<select>
+			</select>
 		</td>
 	</tr>
 	<tr>
