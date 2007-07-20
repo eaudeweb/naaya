@@ -14,7 +14,7 @@
 	</li>
 </ul>
 </div>
-&nbsp;
+
 <form method="post" tal:attributes="action string:${site_url}/admin_addrole">
 <table border="0">
 <tr>
@@ -23,7 +23,7 @@
 </tr>
 <tr tal:repeat="permission python:authentication_tool.listPermissions().keys()">
 	<td valign="top"><input type="checkbox" name="permissions" tal:attributes="value permission"></td>
-	<td valign="top"><img src="misc_/NaayaCore/Permission.gif"></td>
+	<td valign="top"><img src="misc_/NaayaCore/Permission.gif" alt="Permission icon" /></td>
 	<td>
 		<strong tal:content="permission" /><br />
 		<span tal:replace="python:authentication_tool.getPermissionDescription(permission)" />

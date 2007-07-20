@@ -12,7 +12,7 @@
 	</tal:block>
 	<div class="content_story" style="height: auto; display: block;">
 		<div style="vertical-align: top;" class="text_story">
-			<img style="float: left; vertical-align: top; margin-right: 0.5em" tal:condition="here/hasFrontPicture" tal:attributes="src string:${item/absolute_url}/getFrontPicture" />
+			<img style="float: left; vertical-align: top; margin-right: 0.5em" tal:condition="here/hasFrontPicture" tal:attributes="src string:${item/absolute_url}/getFrontPicture" alt="" />
 			<p class="text_story" tal:content="structure item/description" />
 		</div>
 		<div class="bottom_border"> </div>
