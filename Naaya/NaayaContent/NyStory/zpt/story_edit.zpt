@@ -29,7 +29,7 @@
 </div>
 <tal:block tal:condition="python:here.hasFrontPicture(1)">
 <div class="field">
-	<img src="getFrontPicture?version=1" />
+	<img src="getFrontPicture?version=1" alt="Front page picture" />
 </div>
 <div class="field">
 	<input type="checkbox" name="del_frontpicture" id="del_frontpicture" tal:attributes="checked python:test(here.getSession('del_frontpicture', ''), 'checked', '')" /> <label for="del_frontpicture" i18n:translate="">check this if you want do delete the picture</label>

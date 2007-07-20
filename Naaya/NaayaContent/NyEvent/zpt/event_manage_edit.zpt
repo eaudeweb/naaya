@@ -42,7 +42,7 @@
 	<td><input type="checkbox" name="topitem" tal:attributes="checked python:here.topitem==1" /></td>
 </tr>
 <tr>
-	<td class="form-label" valign="top">Details (HTML)</td>
+	<td class="form-label" style="vertical-align: top">Details (HTML)</td>
 	<td><textarea name="details" rows="5" cols="50" tal:content="here/details"></textarea></td>
 </tr>
 <tr>

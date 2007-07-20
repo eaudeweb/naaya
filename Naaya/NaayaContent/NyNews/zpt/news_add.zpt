@@ -37,7 +37,7 @@
 	<input type="text" name="source:utf8:ustring" id="source" size="50" tal:attributes="value python:here.getSession('source', '')" />
 </div>
 <div class="field">
-	<img tal:attributes="src string:${here/getSitePath}/getCaptcha" border="0" alt="" />
+	<img tal:attributes="src string:${here/getSitePath}/getCaptcha" alt="" />
 </div>
 <div class="field">
 	<label for="contact_word"><span i18n:translate="" tal:omit-tag="">Word verification</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'contact_word')" class="mandatory_field"> *</span></label>

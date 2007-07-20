@@ -6,11 +6,11 @@
 
 <tal:block metal:fill-slot="custom_properties">
 <tr>
-	<td class="form-label" valign="top">Details (HTML)</td>
+	<td class="form-label" style="vertical-align: top">Details (HTML)</td>
 	<td><textarea name="details" rows="5" cols="50"></textarea></td>
 </tr>
 <tr>
-	<td class="form-label" valign="top">Expires (<em>dd/mm/yyyy</em>)</td>
+	<td class="form-label" style="vertical-align: top">Expires (<em>dd/mm/yyyy</em>)</td>
 	<td><input type="text" name="expirationdate" size="10" 
 		tal:attributes="value python:here.utConvertDateTimeObjToString(here.ZopeTime()+30)" />
 	</td>
@@ -28,11 +28,11 @@
 	<td><input type="file" name="bigpicture" value="" /></td>
 </tr>
 <tr>
-	<td class="form-label" valign="top">Concerned URL</td>
+	<td class="form-label" style="vertical-align: top">Concerned URL</td>
 	<td><input type="text" name="resourceurl" size="50" value="http://" /></td>
 </tr>
 <tr>
-	<td class="form-label" valign="top">Source</td>
+	<td class="form-label" style="vertical-align: top">Source</td>
 	<td><input type="text" name="source" size="50" value="" /></td>
 </tr>
 </tal:block>

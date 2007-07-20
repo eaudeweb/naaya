@@ -2,7 +2,7 @@
 
 <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" /> <span tal:replace="here/title_or_id" /></h1>
 
-<p><img tal:condition="here/hasFrontPicture" src="getFrontPicture" alt="" /></p>
+<p><img tal:condition="here/hasFrontPicture" src="getFrontPicture" tal:attributes="alt here/title_or_id" /></p>
 
 <tal:block tal:condition="python:here.checkPermissionEditObject()">
 <div id="admin_this_folder">

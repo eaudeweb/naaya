@@ -38,7 +38,7 @@
 	<td><input type="text" name="event_url" value="http://" size="50" /></td>
 </tr>
 <tr>
-	<td class="form-label" valign="top">Details (HTML)</td>
+	<td class="form-label" style="vertical-align: top">Details (HTML)</td>
 	<td><textarea name="details" rows="5" cols="50"></textarea></td>
 </tr>
 <tr>
