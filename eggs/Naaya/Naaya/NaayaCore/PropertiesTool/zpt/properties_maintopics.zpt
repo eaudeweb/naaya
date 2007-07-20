@@ -17,7 +17,7 @@
 <form method="post" action="manageMainTopics">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
     <tr>
-        <td class="form-label" width="30%" valign="top">Select main sections</td>
+        <td class="form-label" width="30%" style="vertical-align: top">Select main sections</td>
         <td width="80%" tal:define="item_list here/getMainFolders">
             <select name="maintopics" size="10" multiple="true">
                 <option tal:repeat="item item_list"

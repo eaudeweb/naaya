@@ -24,22 +24,22 @@
 		<td><input type="text" name="results_number" size="3" tal:attributes="value here/getNumberOfResults" /></td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Searchable meta types</td>
+		<td class="form-label" style="vertical-align: top">Searchable meta types</td>
 		<td>
 			<table border="0" cellspacing="2" cellpadding="2" width="100%">
 				<tr>
-					<td align="center"><strong>Zope objects</strong></td>
-					<td align="center"><strong>Naaya objects</strong></td>
+					<th style="text-align: center"><strong>Zope objects</strong></th>
+					<th style="text-align: center"><strong>Naaya objects</strong></th>
 				</tr>
 				<tr>
-					<td width="50%" align="center">
+					<td width="50%" style="text-align: center">
 						<select name="content" size="10" multiple="true">
 							<option tal:repeat="item here/getProductsMetaTypes"
 									tal:attributes="value item; selected python:item in here.searchable_content" 
 									tal:content="item">Meta type</option>
 						</select>
 					</td>
-					<td width="50%" align="center">
+					<td width="50%" style="text-align: center">
 						<select name="content" size="10" multiple="true">
 							<option tal:repeat="item python:here.get_meta_types(1)"
 									tal:attributes="value item; selected python:item in here.searchable_content" 

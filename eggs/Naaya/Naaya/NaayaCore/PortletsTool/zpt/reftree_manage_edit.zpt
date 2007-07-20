@@ -8,14 +8,14 @@
 <form method="post" action="manageProperties">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
-		<td class="form-label">Title</td>
+		<th class="form-label">Title</th>
 		<td><input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value here/title" /></td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Description</td>
+		<th class="form-label" style="vertical-align: top">Description</th>
 		<td><textarea name="description:utf8:ustring" id="description" rows="5" cols="50" tal:content="here/description" /></td>
 	</tr>
-	<tr><td></td><td><input type="submit" value="Save changes"></td></tr>
+	<tr><td></td><td><input type="submit" value="Save changes" /></td></tr>
 </table>
 </form>
 

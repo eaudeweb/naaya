@@ -23,7 +23,7 @@
 				<td >
 					<input type="text" name="firstname" tal:attributes="value here/getSessionUserFirstname" size="35" maxLength="255" />
 				</td>
-				<td align="right">Last name:</td>
+				<td style="text-align: right">Last name:</td>
 				<td>
 					<input type="text" name="lastname" tal:attributes="value here/getSessionUserLastname" size="35" maxLength="255" />
 				</td>

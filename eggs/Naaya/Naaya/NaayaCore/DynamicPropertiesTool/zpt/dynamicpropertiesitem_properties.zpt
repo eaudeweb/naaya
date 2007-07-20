@@ -49,7 +49,7 @@
         <td><input type="text" name="defaultvalue" size="20" tal:attributes="value python:dp_data[6]" /></td>
      </tr>
     <tr>
-        <td class="form-label" valign="top">Values</td>
+        <td class="form-label" style="vertical-align: top">Values</td>
         <td><textarea name="values" rows="5" cols="70" tal:content="python:dp_data[7]">values</textarea></td>
      </tr>
     <tr>

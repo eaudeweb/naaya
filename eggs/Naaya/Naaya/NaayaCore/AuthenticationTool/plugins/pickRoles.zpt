@@ -27,16 +27,16 @@
             <table border="0" cellspacing="2" cellpadding="2">
         		<tr>
         			<td tal:attributes="class python:test(path('repeat/role/odd'), 'cellodd', 'celleven')" nowrap="nowrap">
-                        <img src="misc_/Naaya/spacer.gif" border="0" alt="" tal:repeat="i python:range(role_depth)"/>
+                        <img src="misc_/Naaya/spacer.gif" alt="" tal:repeat="i python:range(role_depth)" />
                         <a tal:condition="python:here.isInList(expand, role_id)"
                             tal:define="param python:here.joinToList(here.removeFromList(expand, str(role_id)))"
                             tal:attributes="href string:${here/getPluginPath}/pickroles_html?expand=${param}">
-                            <img src="misc_/Naaya/minus.gif" tal:attributes="alt role_description" border="0" />
+                            <img src="misc_/Naaya/minus.gif" tal:attributes="alt role_description" />
                         </a>                        
                         <a tal:condition="python: not here.isInList(expand, role_id)"
                             tal:define="param python:here.joinToList(here.addToList(expand, str(role_id)))"
                             tal:attributes="href string:${here/getPluginPath}/pickroles_html?expand=${param}">
-                            <img src="misc_/Naaya/plus.gif" tal:attributes="alt role_description" border="0" />
+                            <img src="misc_/Naaya/plus.gif" tal:attributes="alt role_description" />
                         </a>
         			</td>
                     <td tal:attributes="class python:test(path('repeat/role/odd'), 'cellodd', 'celleven')" nowrap="nowrap">

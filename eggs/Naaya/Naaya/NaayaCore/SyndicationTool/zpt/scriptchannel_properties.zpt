@@ -12,7 +12,7 @@
 		<td><input type="text" name="title" size="50" tal:attributes="value here/title" /></td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Description</td>
+		<td class="form-label" style="vertical-align: top">Description</td>
 		<td><textarea name="description" rows="5" cols="50" tal:content="here/description"></textarea></td>
 	</tr>
 	<tr>

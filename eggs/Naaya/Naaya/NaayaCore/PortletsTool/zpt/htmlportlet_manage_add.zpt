@@ -12,7 +12,7 @@
 		<td><input type="text" name="title:utf8:ustring" size="50" value="" /></td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Body</td>
+		<td class="form-label" style="vertical-align: top">Body</td>
 		<td><textarea name="body:utf8:ustring" rows="10" cols="40"></textarea></td>
 	</tr>
 	<tr><td></td><td><input type="submit" value="Add" /></td></tr>

@@ -133,13 +133,13 @@ function toggleSelect()
 	<tr tal:define="users_roles python:here.getSortedUserRoles(skey, rkey)"
 		tal:repeat="user python:users_roles" 
 		tal:attributes="class python:test(path('repeat/user/odd'), 'odd', 'even')">
-		<td valign="top" tal:content="python:user[0]" />
-		<td valign="top" tal:content="python:user[1]" />
-		<td valign="top" tal:content="python:user[2]" />
-		<td colspan="2" valign="top">
+		<td style="vertical-align: top" tal:content="python:user[0]" />
+		<td style="vertical-align: top" tal:content="python:user[1]" />
+		<td style="vertical-align: top" tal:content="python:user[2]" />
+		<td colspan="2" style="vertical-align: top">
 		    <table border="0" cellspacing="0" cellpadding="0" tal:define="roles python:user[3]">
 			<tr tal:repeat="role roles">
-			    <td valign="top" width="2%" tal:condition="python:role[0] != []">
+			    <td style="vertical-align: top" width="2%" tal:condition="python:role[0] != []">
 				<input type="checkbox" name="roles" tal:attributes="value python:'%s||%s' % (user[0],role[1])" />
 			    </td>
 			    <td width="75%" tal:condition="python:role[0] != []">
@@ -233,7 +233,7 @@ function toggleSelect()
 
 <table border="0" cellspacing="2" cellpadding="2" class="admin_table">
 	<tr>
-		<td valign="top">Roles</td>
+		<td style="vertical-align: top">Roles</td>
 		<td><select name="roles" size="5" multiple="multiple">
 			<tal:block repeat="item here/list_valid_roles">
 			<option tal:condition="python:item=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')"
@@ -244,7 +244,7 @@ function toggleSelect()
 		</td>
 	</tr>
 	<tr>
-		<td valign="top">Location(folder)<br />e.g. /folderURL</td>
+		<td style="vertical-align: top">Location(folder)<br />e.g. /folderURL</td>
 		<td>
 			<input type="radio" name="loc" value="allsite" checked="checked" onclick="emptyLocation();" /> Entire portal<br />
 			<input type=radio name="loc" value="other" /> Pick other...<br />

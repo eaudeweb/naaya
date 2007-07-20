@@ -12,21 +12,21 @@
 <form method="post" action="manageSettings">
 <table border="1" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
-		<td class="form-label" valign="top">Title</td>
+		<td class="form-label" style="vertical-align: top">Title</td>
 		<td>
 			<textarea name="newsmetatypes" rows="6" cols="30"
 				tal:content="python:here.utConvertListToLines(here.newsmetatypes)"></textarea>
 		</td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Upload meta types</td>
+		<td class="form-label" style="vertical-align: top">Upload meta types</td>
 		<td>
 			<textarea name="uploadmetatypes" rows="6" cols="30"
 				tal:content="python:here.utConvertListToLines(here.uploadmetatypes)"></textarea>
 		</td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Folder meta types</td>
+		<td class="form-label" style="vertical-align: top">Folder meta types</td>
 		<td>
 			<textarea name="foldermetatypes" rows="6" cols="30"
 				tal:content="python:here.utConvertListToLines(here.foldermetatypes)"></textarea>

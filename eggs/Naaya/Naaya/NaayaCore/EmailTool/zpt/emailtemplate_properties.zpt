@@ -17,7 +17,7 @@
 		<td><input type="text" name="title" size="50" tal:attributes="value here/title" /></td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Body</td>
+		<td class="form-label" style="vertical-align: top">Body</td>
 		<td><textarea name="body" rows="10" cols="70" tal:content="here/body"></textarea></td>
 	</tr>
 	<tr>

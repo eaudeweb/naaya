@@ -15,12 +15,12 @@
 		<legend><strong>Roles</strong></legend>
 		<table border="0" cellspacing="0" cellpadding="4">
 		<tr tal:repeat="role here/list_all_roles">
-			<td width="2%" valign="top">
+			<td width="2%" style="vertical-align: top">
 				<input type="checkbox" name="roles"
 					tal:condition="python: role!='Manager'"
 					tal:attributes="value python:role" />
 			</td>
-			<td width="2%" valign="top"><img src="misc_/NaayaCore/Role.gif" alt="Role" /></td>
+			<td width="2%" style="vertical-align: top"><img src="misc_/NaayaCore/Role.gif" alt="Role" /></td>
 			<td width="*">
 				<strong>
 					<a tal:condition="python:role!='Manager'"
