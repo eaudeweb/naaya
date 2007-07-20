@@ -12,7 +12,7 @@
 		<td><input type="text" name="title" size="30" value="" /></td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Type</td>
+		<td class="form-label" style="vertical-align: top">Type</td>
 		<td tal:define="portlets_types here/getPortletsTypes">
 			<tal:block tal:repeat="item python:portlets_types.keys()">
 				<input type="radio" name="portlettype" tal:attributes="value item" /> <span tal:replace="python:portlets_types[item]" />

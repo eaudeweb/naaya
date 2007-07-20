@@ -1,13 +1,13 @@
 <span tal:replace="structure here/manage_page_header"/>
 <span tal:replace="structure here/manage_tabs"/>
 
-<h2>Add role</h2>
+<h1>Add role</h1>
 
 <form method="post" name="frmAddRole">
 <table width="80%" cellspacing="3">
 <tr>
 	<td>
-		<fieldset><legend><img src="misc_/NaayaCore/Role.gif" valign="top" align="top" />Role name</legend>
+		<fieldset><legend><img src="misc_/NaayaCore/Role.gif" style="vertical-align: top" alt="Role icon" />Role name</legend>
 		<table width="80%">
 			<tr>
 				<td>Role name</td>
@@ -20,8 +20,8 @@
 		<fieldset><legend>Permissions</legend>
 		<table border="0" cellspacing="0" cellpadding="4">
 			<tr tal:repeat="permission python:permissions.keys()">
-				<td width="2%" valign="top"><input type="checkbox" name="permissions" tal:attributes="value permission"></td>
-				<td width="2%" valign="top"><img src="misc_/NaayaCore/Permission.gif"></td>
+				<td width="2%" style="vertical-align: top"><input type="checkbox" name="permissions" tal:attributes="value permission"></td>
+				<td width="2%" style="vertical-align: top"><img src="misc_/NaayaCore/Permission.gif" alt="Permission icon" /></td>
 				<td>
 					<table cellspacing="0" cellpadding="0">
 						<tr>

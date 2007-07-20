@@ -15,11 +15,11 @@
 	<tr tal:define="users_roles python:here.getUsersRoles(uf_obj)"
 		tal:repeat="user python:users_roles.keys()">
 		<td></td>
-		<td valign="top" tal:content="user">user</td>
-		<td colspan="2" valign="top">
+		<td style="vertical-align: top" tal:content="user">user</td>
+		<td colspan="2" style="vertical-align: top">
 			<table border="0" cellspacing="0" cellpadding="0" width="100%" tal:define="roles python:users_roles[user]">
 				<tr tal:repeat="role roles">
-					<td valign="top" width="2%" tal:condition="python:role[0] != []">
+					<td style="vertical-align: top" width="2%" tal:condition="python:role[0] != []">
 						<input type="checkbox" name="roles" tal:attributes="value python:'%s||%s' % (user,role[1])">
 					</td>
 					<td width="55%" tal:condition="python:role[0] != []">
@@ -77,7 +77,7 @@ function createKey(key)
 		</td>
 	</tr>
 	<tr>
-		<td valign="top">Roles:</td>
+		<td style="vertical-align: top">Roles:</td>
 		<td>
 			<select name="roles" size="5" multiple>
 				<tal:block repeat="item here/list_valid_roles">
@@ -89,7 +89,7 @@ function createKey(key)
 		</td>
 	</tr>
 	<tr>
-		<td valign="top">Location:(folder)<br />e.g. /folderURL</td>
+		<td style="vertical-align: top">Location:(folder)<br />e.g. /folderURL</td>
 		<td>
 			<input type="radio" name="loc" value="all" onclick="emptyLocation();" checked="checked" />Entire portal<br />
 			<input type=radio name="loc" value="other" /> Pick other... (relative URL)<br />

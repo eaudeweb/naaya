@@ -2,7 +2,7 @@
 <span tal:replace="structure here/manage_tabs" />
 
 <p class="form-help">
-	Here you can customize the right side.
+	Use this page to customize the right side portlets for the front page and Naaya folders.
 </p>
 
 <script type="text/javascript">
@@ -112,11 +112,11 @@ tal:define="mode python:request.get('mode', '');
 <input type="hidden" name="location" tal:attributes="value location" />
 <table border="0" cellspacing="4" cellpadding="4">
 	<tr>
-		<td class="form-label" width="20%" valign="top">Location</td>
+		<th class="form-label" width="20%" style="vertical-align: top">Location</td>
 		<td colspan="4">
 			<tal:block tal:condition="python:mode=='edit'">
-				<b tal:condition="python:location_obj is None">Portal main page</b>
-				<b tal:condition="python:location_obj is not None" tal:content="location_obj/title_or_id">location</b>
+				<strong tal:condition="python:location_obj is None">Portal main page</strong>
+				<strong tal:condition="python:location_obj is not None" tal:content="location_obj/title_or_id">location</strong>
 				<input type="hidden" name="folder" tal:attributes="value location" />
 			</tal:block>
 			<tal:block tal:condition="python:mode!='edit'">
@@ -151,9 +151,9 @@ tal:define="mode python:request.get('mode', '');
 						<table border="0" cellspacing="1" cellpadding="1">
 							<tr>
 								<td>
-									<img tal:repeat="i python:range(0, tree_node[2])" src="misc_/Naaya/square.gif" />
+									<img tal:repeat="i python:range(0, tree_node[2])" src="misc_/Naaya/square.gif" alt="" />
 									<tal:block tal:condition="python:tree_node[1]==-1">
-										<img src="misc_/Naaya/square.gif" />
+										<img src="misc_/Naaya/square.gif" alt="" />
 									</tal:block>
 									<tal:block
 										tal:define="node_expand python:here.processCollapse(expand_list, tree_node[0].absolute_url(1))"
@@ -166,7 +166,7 @@ tal:define="mode python:request.get('mode', '');
 										<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/plus.gif" alt="Expand" /></a>
 									</tal:block>
 								</td>
-								<td><img tal:attributes="src python:tree_node[0].icon" /></td>
+								<td><img tal:attributes="src python:tree_node[0].icon" alt="" /></td>
 								<td><a tal:define="node_path python:tree_node[0].absolute_url(1)" tal:attributes="href string:javascript:fTreeNodeClick('${node_path}')" tal:content="python:tree_node[0].title_or_id()">folder</a></td>
 							</tr>
 						</table>
@@ -178,13 +178,13 @@ tal:define="mode python:request.get('mode', '');
 					</td>
 				</tr>
 			</table>
-			<input type="hidden" name="expand" tal:attributes="value expand">
+			<input type="hidden" name="expand" tal:attributes="value expand" />
 			</tal:block>
 			</tal:block>
 		</td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Available portlets</td>
+		<td class="form-label" style="vertical-align: top">Available portlets</td>
 		<td>
 			<select name="available" size="10" multiple="multiple"
 				tal:define="available_portlets python:test(mode=='edit', here.get_available_right_locations_objects(location), here.getPortlets())">
@@ -194,7 +194,7 @@ tal:define="mode python:request.get('mode', '');
 				</option>
 			</select>
 		</td>
-		<td valign="middle">
+		<td style="vertical-align: middle">
 			<input type="button" value="Add ->" onclick="javascript:add();"/>
 			<br /><br />
 			<input type="button" value="<- Remove" onclick="javascript:remove();" />
@@ -208,7 +208,7 @@ tal:define="mode python:request.get('mode', '');
 				</option>
 			</select>
 		</td>
-		<td valign="middle">
+		<td style="vertical-align: middle">
 			<input type="button" value="Move Up" onclick="javascript:moveup();" />
 			<br /><br />
 			<input type="button" value="Move Down" onclick="javascript:movedown();" />
@@ -231,7 +231,7 @@ tal:define="mode python:request.get('mode', '');
 	<tr tal:repeat="record python:records.keys()"
 		tal:attributes="class python:test(path('repeat/record/odd'), 'row-odd', 'row-even')">
 		<td></td>
-		<td valign="top">
+		<td style="vertical-align: top">
 			<a tal:attributes="href string:?mode=edit&location=${record}" tal:content="python:here.getFolderByPath(record).title_or_id()">location</a>
 		</td>
 		<td>

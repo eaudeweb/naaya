@@ -37,7 +37,7 @@
                         tal:attributes="value here/getSessionUserFirstname">
                 </td>
 
-                <td align="right" nowrap="nowrap">Last name:</td>
+                <td style="text-align: right" nowrap="nowrap">Last name:</td>
                 <td>
                     <input type="text" name="lastname" size="35" maxLength="255"
                         tal:attributes="value here/getSessionUserLastname">

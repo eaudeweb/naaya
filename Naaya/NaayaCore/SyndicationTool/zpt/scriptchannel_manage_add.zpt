@@ -12,7 +12,7 @@
 		<td><input type="text" name="title" size="50" value="" /></td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Description</td>
+		<td class="form-label" style="vertical-align: top">Description</td>
 		<td><textarea name="description" rows="5" cols="38"></textarea></td>
 	</tr>
 	<tr>
@@ -37,7 +37,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Body (python code)</td>
+		<td class="form-label" style="vertical-align: top">Body (python code)</td>
 		<td>
 			<textarea name="body" cols="70" rows="10"></textarea>
 		</td>

@@ -12,7 +12,7 @@
 		<td><input type="text" name="title" size="50" value="" /></td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Body</td>
+		<td class="form-label" style="vertical-align: top">Body</td>
 		<td><textarea name="body" rows="10" cols="70"></textarea></td>
 	</tr>
 	<tr><td></td><td><input type="submit" value="Add" /></td></tr>

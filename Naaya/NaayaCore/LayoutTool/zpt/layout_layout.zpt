@@ -217,7 +217,7 @@ function LoadScreenshot()
 		<td><span tal:replace="structure python:here.getSlaveCombo()"/></td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Preview</td>
+		<td class="form-label" style="vertical-align: top">Preview</td>
 		<td>
 			<img src="" name="theScreenshot" width="300" height="200" alt="Preview" />
 		</td>

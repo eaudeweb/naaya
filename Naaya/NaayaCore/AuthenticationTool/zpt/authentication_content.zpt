@@ -140,7 +140,7 @@
 			tal:attributes="href string:manage_editUser_html?name=${user_quoted}" 
 			tal:content="user">username</a></strong></td>
 		<td tal:content="python:here.getUserFirstName(user_obj) + ' ' + here.getUserLastName(user_obj)">firstname + lastname</td>
-		<td align="left" tal:content="python:here.getUserEmail(user_obj)">email</td>
+		<td style="text-align: left" tal:content="python:here.getUserEmail(user_obj)">email</td>
 		</tal:block>
 	</tr>
 	<tr tal:condition="python:len(users) == 0">

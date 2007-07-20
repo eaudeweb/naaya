@@ -24,7 +24,7 @@
 <tal:block tal:condition="here/hasImage">
 <tr>
 	<td class="form-label"></td>
-	<td><img src="getImage" /></td>
+	<td><img src="getImage" alt="Image" /></td>
 </tr>
 <tr>
 	<td class="form-label"></td>

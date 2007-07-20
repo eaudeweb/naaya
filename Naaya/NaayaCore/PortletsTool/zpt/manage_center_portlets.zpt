@@ -118,7 +118,7 @@ function dosubmit()
 				</option>
 			</select>
 		</td>
-		<td valign="middle">
+		<td style="vertical-align: middle">
 			<input type="button" value="Add ->" onclick="javascript:add();"/>
 			<br /><br />
 			<input type="button" value="<- Remove" onclick="javascript:remove();" />
@@ -131,14 +131,14 @@ function dosubmit()
 				</option>
 			</select>
 		</td>
-		<td valign="middle">
+		<td style="vertical-align: middle">
 			<input type="button" value="Move Up" onclick="javascript:moveup();" />
 			<br /><br />
 			<input type="button" value="Move Down" onclick="javascript:movedown();" />
 		</td>
 	</tr>
 	<tr>
-		<td colspan="4" align="center">
+		<td colspan="4" style="text-align: center">
 			<input type="button" value="Save changes" onclick="javascript:dosubmit();" />
 		</td>
 	</tr>
