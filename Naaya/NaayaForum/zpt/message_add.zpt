@@ -15,7 +15,7 @@
 	<p tal:content="structure here/description" class="forum_topic_content" />
 	<div tal:define="attachments here/get_attachments" tal:condition="python:len(attachments)>0"
 		class="forum_topic_bottom">
-		<img src="/misc_/NaayaForum/attachment.gif" alt="Attachments" i18n:attributes="alt" align="absmiddle" />
+		<img src="/misc_/NaayaForum/attachment.gif" alt="Attachments" i18n:attributes="alt" style="text-align: middle" />
 		<span i18n:translate="" tal:omit-tag="">Attachments:</span>
 		<tal:block repeat="file attachments">
 			<a tal:attributes="href file/absolute_url; title file/title_or_id">
