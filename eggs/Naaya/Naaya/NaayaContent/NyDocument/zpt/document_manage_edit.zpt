@@ -6,7 +6,7 @@
 
 <tal:block metal:fill-slot="custom_properties">
 <tr>
-	<td class="form-label" valign="top">Body</td>
+	<td class="form-label" style="vertical-align: top">Body</td>
 	<td><textarea name="body" rows="10" cols="70" tal:content="here/body"></textarea></td>
 </tr>
 </tal:block>

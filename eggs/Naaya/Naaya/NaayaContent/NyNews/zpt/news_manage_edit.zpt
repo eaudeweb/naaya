@@ -6,11 +6,11 @@
 
 <tal:block metal:fill-slot="custom_properties">
 <tr>
-	<td class="form-label" valign="top">Details (HTML)</td>
+	<td class="form-label" style="vertical-align: top">Details (HTML)</td>
 	<td><textarea name="details" rows="5" cols="50" tal:content="here/details"></textarea></td>
 </tr>
 <tr>
-	<td class="form-label" valign="top">Expires (<em>dd/mm/yyyy</em>)</td>
+	<td class="form-label" style="vertical-align: top">Expires (<em>dd/mm/yyyy</em>)</td>
 	<td><input type="text" name="expirationdate" size="10" tal:attributes="value python:here.utConvertDateTimeObjToString(here.expirationdate)" /></td>
 </tr>
 <tr>
@@ -24,7 +24,7 @@
 <tal:block tal:condition="here/hasSmallPicture">
 <tr>
 	<td></td>
-	<td><img src="getSmallPicture"></td>
+	<td><img src="getSmallPicture" alt="Small picture" i18n:attributes="alt" /></td>
 </tr>
 <tr>
 	<td></td>
@@ -38,7 +38,7 @@
 <tal:block tal:condition="here/hasBigPicture">
 <tr>
 	<td></td>
-	<td><img src="getBigPicture" /></td>
+	<td><img src="getBigPicture" alt="Big picture" i18n:attributes="alt" /></td>
 </tr>
 <tr>
 	<td></td>
@@ -46,11 +46,11 @@
 </tr>
 </tal:block>
 <tr>
-	<td class="form-label" valign="top">Concerned url</td>
+	<td class="form-label" style="vertical-align: top">Concerned URL</td>
 	<td><input type="text" name="resourceurl" size="50" tal:attributes="value here/resourceurl" /></td>
 </tr>
 <tr>
-	<td class="form-label" valign="top">Source</td>
+	<td class="form-label" style="vertical-align: top">Source</td>
 	<td><input type="text" name="source" size="50" tal:attributes="value here/source" /></td>
 </tr>
 </tal:block>

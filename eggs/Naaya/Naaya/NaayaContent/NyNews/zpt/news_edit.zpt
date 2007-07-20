@@ -28,7 +28,7 @@
 </div>
 <tal:block tal:condition="python:here.hasSmallPicture(1)">
 <div class="field">
-	<img src="getSmallPicture?version=1" />
+	<img src="getSmallPicture?version=1" alt="" />
 </div>
 <div class="field">
 	<input type="checkbox" name="del_smallpicture" id="del_smallpicture" tal:attributes="checked python:test(here.getSession('del_smallpicture', ''), 'checked', '')" /> <label for="del_smallpicture" i18n:translate="">check this if you want do delete this picture</label>
@@ -40,7 +40,7 @@
 </div>
 <tal:block tal:condition="python:here.hasBigPicture(1)">
 <div class="field">
-	<img src="getBigPicture?version=1" />
+	<img src="getBigPicture?version=1" alt="" />
 </div>
 <div class="field">
 	<input type="checkbox" name="del_bigpicture" id="del_bigpicture" tal:attributes="checked python:test(here.getSession('del_bigpicture', ''), 'checked', '')" /> <label for="del_bigpicture" i18n:translate="">check this if you want do delete this picture</label>

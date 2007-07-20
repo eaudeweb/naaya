@@ -55,7 +55,7 @@
 	</td>
 </tr>
 <tr tal:condition="python:here.contact_person or here.contact_email or here.contact_phone or  here.contact_fax">
-	<th valign="top" i18n:translate="">Contact</th>
+	<th style="vertical-align: top" i18n:translate="">Contact</th>
 	<td><span tal:replace="here/contact_person"/>
 		<tal:block condition="here/contact_email">
 			<br /><span i18n:translate="Email address: " /> <span tal:replace="here/contact_email"/>

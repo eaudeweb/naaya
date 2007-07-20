@@ -6,7 +6,7 @@
 </p>
 
 <div class="system-msg" tal:condition="python:request.has_key('save')">
-	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br>
+	Saved changes. (<span tal:replace="here/ZopeTime"/>)<br />
 </div>
 
 <form name="frmEdit" method="post" action="manageProperties">
@@ -17,7 +17,7 @@
 		<td><input type="text" name="title" size="50" tal:attributes="value python:request.get('title', here.title)"></td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Description</td>
+		<td class="form-label" style="vertical-align: top">Description</td>
 		<td><textarea name="description" rows="5" cols="50" tal:content="python:request.get('description', here.description)"/></td>
 	</tr>
 	<tr>
