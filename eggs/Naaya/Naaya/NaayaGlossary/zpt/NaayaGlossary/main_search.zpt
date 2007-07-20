@@ -38,17 +38,17 @@
 		<table width="90%" border="0" align="center" cellpadding="0" cellspacing="0">
 		<tr>
 			<td height="1" align="right" valign="middle" class="search_help">
-				<img src="misc_/NaayaGlossary/ico_searchhelp.gif" alt="" align="absmiddle" ><a href="search_help_html" target="_new" title="Glossary search help" i18n:attributes="title" i18n:translate="">Search Help Page</a>
+				<img src="misc_/NaayaGlossary/ico_searchhelp.gif" alt="" align="absmiddle" /><a href="search_help_html" target="_new" title="Glossary search help" i18n:attributes="title" i18n:translate="">Search Help Page</a>
 			</td>
 		</tr>
 		<tr>
 			<td height="20" valign="bottom">
 			<table width="100%" height="20" border="0" cellpadding="0" cellspacing="0">
 				<tr valign="bottom">
-					<td width="1" height="20" valign="bottom"><img src="misc_/NaayaGlossary/s_lefttop.gif" width="46" height="20"></td>
+					<td width="1" height="20" valign="bottom"><img src="misc_/NaayaGlossary/s_lefttop.gif" alt="" width="46" height="20" /></td>
 					<td align="center" valign="middle" nowrap class="search_title" i18n:translate="">Search for terms</td>
-					<td width="1" valign="bottom"><img src="misc_/NaayaGlossary/s_toplines.gif" width="100" height="20" ></td>
-					<td width="90%" height="20" align="right" class="search_top_tr"><img src="misc_/NaayaGlossary/s_righttop.gif" width="1" height="20"></td>
+					<td width="1" valign="bottom"><img src="misc_/NaayaGlossary/s_toplines.gif" width="100" height="20" alt="" /></td>
+					<td width="90%" height="20" align="right" class="search_top_tr"><img src="misc_/NaayaGlossary/s_righttop.gif" alt="" width="1" height="20" /></td>
 				</tr>
 			</table>
 			</td>
@@ -98,11 +98,11 @@
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr valign="top">
 					<td width="85%" align="left" class="search_bottom_tr">
-						<img src="misc_/NaayaGlossary/s_leftbottom.gif" width="1" height="23" />
+						<img src="misc_/NaayaGlossary/s_leftbottom.gif" alt="" width="1" height="23" />
 					</td>
-					<td width="7%" align="right"><img src="misc_/NaayaGlossary/s_bottomlines.gif" width="41" height="23" /></td>
+					<td width="7%" align="right"><img src="misc_/NaayaGlossary/s_bottomlines.gif" alt="" width="41" height="23" /></td>
 					<td width="8%" align="right"><input type="submit" class="search_button" name="SUBMIT" value="Find in Glossary" i18n:attributes="value" /></td>
-					<td width="1%" align="right"><img src="misc_/NaayaGlossary/s_rightbottom.gif" width="24" height="23" /></td>
+					<td width="1%" align="right"><img src="misc_/NaayaGlossary/s_rightbottom.gif" alt="" width="24" height="23" /></td>
 				</tr>
 			</table>
 			</td>
