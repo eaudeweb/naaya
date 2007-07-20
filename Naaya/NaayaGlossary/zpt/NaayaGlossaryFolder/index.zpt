@@ -6,7 +6,7 @@
 	<div style="margin: 20px 1% 5px 1%" />
 
 	<h1>
-		<img src="misc_/NaayaGlossary/folder.gif" alt="Glossary Folder" title="Glossary Folder" align="middle" i18n:attributes="title alt" />&nbsp;
+		<img src="misc_/NaayaGlossary/folder.gif" alt="Glossary Folder" title="Glossary Folder" align="middle" i18n:attributes="title alt" />
 		<span tal:condition="translation" tal:content="translation" />
 		<span><em tal:condition="python:not translation" i18n:translate="">no translation available</em></span>
 	</h1>
@@ -17,7 +17,7 @@
 
 		<!-- Note -->
 		<div class="note">
-			<img src="/misc_/NaayaGlossary/spacer.gif" width="1" height="20" align="right">
+			<img src="/misc_/NaayaGlossary/spacer.gif" alt="" width="1" height="20" align="right" />
 			<p><span tal:omit-tag="" i18n:translate="">Here you see the list of terms found in the folder</span> <strong tal:content="translation" />.<br />
 			<span tal:omit-tag="" i18n:translate="">Click on the term to see the details like definition, translations etc...</span></p>
 		</div>
