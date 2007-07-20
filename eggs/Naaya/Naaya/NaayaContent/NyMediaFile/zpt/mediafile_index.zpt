@@ -29,6 +29,7 @@
 
 <tal:block tal:define="mediafile here/getSingleMediaObject" condition="mediafile">
 <h2 i18n:translate="">Play media file</h2>
+<!--
 <object id="MediaPlayer"
 	classid="CLSID:22D6f312-B0F6-11D0-94AB-0080C74C7E95"
 	standby="Loading Windows Player"
@@ -49,6 +50,20 @@
 	<param name="AutoRewind" value="False">
 	<param name="AutoStart" value="False">
 </object>
+-->
+
+<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="180" height="120" id="FLVPlayer">
+  <param name="movie" tal:attributes="value string:${here/getSitePath}/media_player/FLVPlayer_Progressive.swf" />
+  <param name="salign" value="lt" />
+  <param name="allowScriptAccess" value="always" />
+  <param name="quality" value="high" />
+  <param name="scale" value="noscale" />
+  <param name="FlashVars" tal:attributes="value string:&MM_ComponentVersion=1&skinName=${here/getSitePath}/media_player/Corona_Skin_2&streamName=${mediafile/absolute_url}&autoPlay=false&autoRewind=false" />
+  <embed tal:attributes="src string:${here/getSitePath}/media_player/FLVPlayer_Progressive.swf; flashvars string:&MM_ComponentVersion=1&skinName=${here/getSitePath}/media_player/Corona_Skin_2&streamName=${mediafile/absolute_url}&autoPlay=false&autoRewind=false" quality="high" scale="noscale" width="180" height="120" name="FLVPlayer" salign="LT" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+</object>
+
+
+
 </tal:block>
 
 <span tal:replace="structure here/comments_box" />
