@@ -48,7 +48,7 @@ from Products.Naaya.NyFolder import NyFolder
 # SPECIFIC FUNCTIONS FOR "EEA Integrated Assessment Portal" PORTAL #
 ####################################################################
 
-def getCaseStudies(self, keywords='', topic='', scope='', location=''):
+def getCaseStudies(self, keywords='', topic='', scope='', coverage=''):
     """ return the list of case studies """
     results_folders = []
     results_objects = []
@@ -56,10 +56,10 @@ def getCaseStudies(self, keywords='', topic='', scope='', location=''):
     btn_paste = self.cb_dataValid() and self.checkPermissionPasteObjects()
     print '/%s' % self.absolute_url(1)
 
-    if keywords == '' and topic == '' and scope == '' and location == '':
+    if keywords == '' and topic == '' and scope == '' and coverage == '':
         objects = self.getObjects()
     else:
-        objects = self.getCatalogedObjects(meta_type=['Naaya Study'], approved=1, howmany=-1, keywords=keywords, topic=topic, scope=scope, location=location, path='/%s' % self.absolute_url(1))
+        objects = self.getCatalogedObjects(meta_type=['Naaya Study'], approved=1, howmany=-1, objectkeywords_en=keywords, topic=topic, scope=scope, coverage=coverage, path='/%s' % self.absolute_url(1))
     # Naaya objects
     sorted_objects = self.utSortObjsListByAttr(objects, 'title', 0)
     for x in self.utSortObjsListByAttr(sorted_objects, 'sortorder', 0):
