@@ -114,7 +114,20 @@ def getTopicTitle(self, id):
     except:
         return ''
 
+def getLocationList(self):
+    """ Return the selection list for locations. """
+    return self.getPortletsTool().getRefListById('location_list').get_list()
+
+def getLocationTitle(self, id):
+    """ Return the title of an item for the selection list for location """
+    try:
+        return self.getPortletsTool().getRefListById('location_list').get_item(id).title
+    except:
+        return ''
+
 NySite.getScopeList = getScopeList
 NySite.getScopeTitle = getScopeTitle
 NySite.getTopicList = getTopicList
 NySite.getTopicTitle = getTopicTitle
+NySite.getLocationList = getLocationList
+NySite.getLocationTitle = getLocationTitle
