@@ -546,6 +546,8 @@ int CWizardToolz::InternalCopyFile(CString srcFile, CString destFile)
     int err = ::CopyFile(srcFile, destFile, TRUE);		
     if(err == 0)
         return ::GetLastError();
+	else
+		::SetFileAttributes(destFile,FILE_ATTRIBUTE_NORMAL);
     return 0;
 }
 
