@@ -98,7 +98,6 @@ class EnviroWindowsSite(NySite):
         #remove Naaya default content
         self.getLayoutTool().manage_delObjects('skin')
         self.manage_delObjects('info')
-        #self.getPortletsTool().manage_delObjects('topnav_links')
 
         #default RDF Calendar settings
         manage_addRDFCalendar(self, id=ID_RDFCALENDAR, title=TITLE_RDFCALENDAR, week_day_len=1)
@@ -108,6 +107,12 @@ class EnviroWindowsSite(NySite):
                              'http://smap.ewindows.eu.org/portal_syndication/events_rdf', '', 'no')
         rdfcal_ob = self._getOb(ID_RDFCALENDAR)
         #rdfcal_ob._getOb('example').update()
+
+        #dynamic property for folder: tooltip
+        dynprop_tool = self.getDynamicPropertiesTool()
+        dynprop_tool.manage_addDynamicPropertiesItem(id=METATYPE_FOLDER, title=METATYPE_FOLDER)
+        dynprop_tool._getOb(METATYPE_FOLDER).manageAddDynamicProperty(id='show_contributor_request_role', name='Allow users enrolment here?', type='boolean')
+
         if GM_INSTALLED:
             manage_addGeoMapTool(self)
 
