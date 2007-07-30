@@ -241,7 +241,7 @@ class EnviroWindowsSite(NySite):
         if container is None: sector = None
         elif container == self: sector = None
         else: sector = container.id
-        return self.utFilterObjsListByAttr(self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, sector=sector), 'approved', 0)
+        return self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, approved=0, sector=sector)
 
     def getAnnouncementsFrontPage(self, howmany=None):
         #returns a list with latest approved NYNews objects from the specified folder(container)
