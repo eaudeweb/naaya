@@ -240,7 +240,8 @@ class EnviroWindowsSite(NySite):
         #returns a list with the draft NYNews objects from the specified folder(container)
         if container is None or container == self:
             return self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, approved=0)
-        else: sector = container.id
+        else:
+            sector = container.id
             return self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, approved=0, sector=sector)
 
     def getAnnouncementsFrontPage(self, howmany=None):
