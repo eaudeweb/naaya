@@ -115,7 +115,7 @@ class CHMSite(NySite):
         return CHM2_PRODUCT_PATH
 
     #Epoz layer
-    def get_wysiwyg_widget(self, name, data='', toolbox='', size='medium', lang=None):
+    def get_wysiwyg_widget(self, name, data='', toolbox='', size='big', lang=None):
         """
         Returns an WYSIWYG widget. The Epoz is used for the moment.
         Also the widget will have a black border.
@@ -559,13 +559,13 @@ class CHMSite(NySite):
             if REQUEST:
                 self.setSessionErrors(err)
                 self.setCreateAccountSession(username, firstname, lastname, email, password)
-                return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+                REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
         if not err:
             self.sendCreateAccountEmail(firstname + ' ' + lastname, email, username, REQUEST)
         if REQUEST:
             self.setSession('title', 'Thank you for registering')
             self.setSession('body', 'You will receive a confirmation email.')
-	    self.setSession('referer', REQUEST.referer)
+            self.setSession('referer', REQUEST['HTTP_REFERER'])
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
     def sendCreateAccountEmail(self, p_name, p_email, p_username, REQUEST):
