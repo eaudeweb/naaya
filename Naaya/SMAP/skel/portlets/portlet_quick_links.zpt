@@ -1,6 +1,6 @@
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
 	<tal:block metal:fill-slot="portlet_title">
-		<span i18n:translate="">Quick links</span>
+		<span i18n:translate="">Other portal facilities</span>
 	</tal:block>
 	<tal:block metal:fill-slot="portlet_content">
 		<ul>
