@@ -261,7 +261,10 @@ class EnviroWindowsSite(NySite):
             while l_top_container.getParentNode() != self:
                 l_top_container = l_top_container.getParentNode()
             sector = l_top_container.id
-        return self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, approved=1, howmany=howmany, sector=sector)
+        if sector:
+            return self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, approved=1, howmany=howmany, sector=sector)
+        else:
+            return self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, approved=1, howmany=howmany)
 
 #####################################################
 # SMAP functions loaded for backwards compatibility #
