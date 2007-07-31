@@ -12,9 +12,9 @@
 #
 # Authors:
 #
-# Cornel Nitu, Finsiel Romania
+# Cornel Nitu, Eau de Web
 # Dragos Chirila, Finsiel Romania
-#
+# Miruna Badescu, Eau de Web
 #
 #$Id: catalog_tool.py 3641 2005-05-17 09:16:10Z chiridra $
 
@@ -115,6 +115,31 @@ class catalog_tool:
         l_results = []
         l_filter = {'submitted': 1} #only submitted items
         if approved == 1: l_filter['approved'] = 1
+        if has_local_role == 1: l_filter['has_local_role'] = 1
+        if sort_on != '':
+            l_filter['sort_on'] = sort_on
+            if sort_order != '':
+                l_filter['sort_order'] = sort_order
+        if meta_type: l_filter['meta_type'] = self.utConvertToList(meta_type)
+        else: l_filter['meta_type'] = self.searchable_content
+        #extra filters
+        l_filter.update(kwargs)
+        #perform the search
+        l_results = self.__searchCatalog(l_filter)
+        if howmany != -1:
+            l_results = l_results[:howmany]
+        l_results = self.__getObjects(l_results)
+        return l_results
+
+    # The function getCatalogedObjects did not allow searching for not-approved objects
+    # It needs to be replaced with the one below once we'll make sure it doesn't change any behavior
+    def getCatalogedObjectsA(self, meta_type=None, approved=None, howmany=-1, sort_on='releasedate', sort_order='reverse', has_local_role=0, **kwargs):
+        l_results = []
+        l_filter = {'submitted': 1} #only submitted items
+        if approved == 1:
+            l_filter['approved'] = 1
+        elif approved == 0:
+            l_filter['approved'] = 0
         if has_local_role == 1: l_filter['has_local_role'] = 1
         if sort_on != '':
             l_filter['sort_on'] = sort_on
