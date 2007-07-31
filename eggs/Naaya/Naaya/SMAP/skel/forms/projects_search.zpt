@@ -172,7 +172,7 @@ function changeProject()
 	<fieldset	tal:define="priorities here/getPrioritiesTypesList;
 							focuses python:here.getFocusesTypesList(priority_area);
 							countries here/getCountriesList">
-		<legend i18n:translate="">Regional Environmental Project Search</legend>
+		<legend i18n:translate="">Environmental Project Search</legend>
 		<div class="field">
 			<label for="priority_area" i18n:translate="">Project Area</label>
 			<select name="priority_area" id="priority_area" onchange="changeProject()">
@@ -254,7 +254,7 @@ function changeProject()
 </tal:block>
 
 <h2>
-	<span tal:condition="not:search_performed" i18n:translate="">Regional Environmental Projects</span>
+	<span tal:condition="not:search_performed" i18n:translate="">Environmental Projects</span>
 	<span tal:condition="search_performed" i18n:translate="">Search results</span>
 </h2>
 
