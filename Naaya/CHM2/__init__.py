@@ -71,3 +71,10 @@ def gallerybox_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self}, 'epoz_gallerybox')
 
 NyEpozToolbox.gallerybox_html = gallerybox_html
+
+#integrate Naaya Graphics Archive with Epoz toolbox
+def graphicsgallerybox_html(self, REQUEST=None, RESPONSE=None):
+   """ """
+   return self.getFormsTool().getContent({'here': self}, 'epoz_graphicsgallerybox')
+
+NyEpozToolbox.graphicsgallerybox_html = graphicsgallerybox_html
