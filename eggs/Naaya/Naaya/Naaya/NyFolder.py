@@ -754,6 +754,12 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_folder_subobjects_html?save=ok')
 
+    security.declareProtected(view_management_screens, 'setMaintainer')
+    def setMaintainer(self, maintainer_email):
+        """ """
+        self.maintainer_email = maintainer_email
+        self._p_changed = 1
+
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', coverage='',
