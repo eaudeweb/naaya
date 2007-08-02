@@ -26,6 +26,7 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Globals import HTMLFile
 import Products
 
 #Product imports
@@ -37,12 +38,13 @@ from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from study_item import study_item
+from converters.xslt import Converter
 
 #module constants
 METATYPE_OBJECT = 'Naaya Study'
 LABEL_OBJECT = 'Study'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Study objects'
-OBJECT_FORMS = ['study_add', 'study_edit', 'study_index']
+OBJECT_FORMS = ['study_add', 'study_edit', 'study_index', 'study_style']
 OBJECT_CONSTRUCTORS = ['manage_addNyStudy_html', 'study_add', 'addNyStudy', 'importNyStudy']
 OBJECT_ADD_FORM = 'study_add'
 DESCRIPTION_OBJECT = 'This is Naaya Study type.'
@@ -57,8 +59,9 @@ PROPERTIES_OBJECT = {
     'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':   (0, '', ''),
     'body':         (0, '', ''),
-    'topic':         (0, '', ''),
-    'scope':         (0, '', ''),
+    'toc':          (0, '', ''),
+    'topic':        (0, '', ''),
+    'scope':        (0, '', ''),
     'lang':         (0, '', '')
 }
 
@@ -74,7 +77,7 @@ def study_add(self, REQUEST=None, RESPONSE=None):
     if REQUEST: REQUEST.RESPONSE.redirect('%s/add_html' % self._getOb(id).absolute_url())
 
 def addNyStudy(self, id='', title='', description='', coverage='', keywords='',
-    sortorder='', body='', topic='', scope='', contributor=None, releasedate='', discussion='',
+    sortorder='', body='', topic='', scope='', toc='', contributor=None, releasedate='', discussion='',
     lang=None, REQUEST=None, **kwargs):
     """
     Create a Study type og object.
@@ -87,9 +90,14 @@ def addNyStudy(self, id='', title='', description='', coverage='', keywords='',
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
+    #generate table of contents
+    if toc: 
+        toc_body = self._generate_toc(body)
+    else:
+        toc_body = ''
     #create object
     ob = NyStudy(id, title, description, coverage, keywords, sortorder, body,
-        contributor, topic, scope, releasedate, lang)
+        contributor, topic, scope, toc_body, toc, releasedate, lang)
     self.gl_add_languages(ob)
     ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
     self._setObject(id, ob)
@@ -129,6 +137,7 @@ def importNyStudy(self, param, id, attrs, content, properties, discussion, objec
                 contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
                 scope=attrs['scope'].encode('utf-8'),
                 topic=attrs['topic'].encode('utf-8'),
+                toc=attrs['toc'].encode('utf-8'),
                 discussion=abs(int(attrs['discussion'].encode('utf-8'))))
             ob = self._getOb(id)
             for property, langs in properties.items():
@@ -176,10 +185,10 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyEpozToolbox, NyCheckContr
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, description, coverage, keywords, sortorder, body,
-        contributor, topic, scope, releasedate, lang):
+        contributor, topic, scope, toc_body, toc, releasedate, lang):
         """ """
         self.id = id
-        study_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder, body, topic, scope, releasedate, lang)
+        study_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder, body, topic, scope, toc_body, toc, releasedate, lang)
         NyValidation.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)
         NyContainer.__dict__['__init__'](self)
@@ -213,7 +222,7 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyEpozToolbox, NyCheckContr
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='', keywords='',
-        sortorder='', approved='', body='', topic='', scope='', releasedate='', discussion='', lang='',
+        sortorder='', approved='', body='', topic='', scope='', toc='', releasedate='', discussion='', lang='',
         REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
@@ -224,7 +233,12 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyEpozToolbox, NyCheckContr
         else: approved = 0
         releasedate = self.process_releasedate(releasedate, self.releasedate)
         if not lang: lang = self.gl_get_selected_language()
-        self.save_properties(title, description, coverage, keywords, sortorder, body, topic, scope, releasedate, lang)
+        #generate table of contents
+        if toc: 
+            toc_body = self._generate_toc(body)
+        else:
+            toc_body = ''
+        self.save_properties(title, description, coverage, keywords, sortorder, body, topic, scope, toc_body, toc, releasedate, lang)
         self.updatePropertiesFromGlossary(lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
@@ -246,7 +260,7 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyEpozToolbox, NyCheckContr
     #site actions
     security.declareProtected(PERMISSION_ADD_OBJECT, 'process_add')
     def process_add(self, title='', description='', coverage='', keywords='',
-        sortorder='', body='', topic='', scope='', releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
+        sortorder='', body='', topic='', scope='', toc='', releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         try: sortorder = abs(int(sortorder))
         except: sortorder = DEFAULT_SORTORDER
@@ -256,7 +270,7 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyEpozToolbox, NyCheckContr
         if not(l_referer == 'study_manage_add' or l_referer.find('study_manage_add') != -1):
             r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
                 description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
-                topic=topic, scope=scope, releasedate=releasedate, discussion=discussion, body=body)
+                topic=topic, scope=scope, toc=toc, releasedate=releasedate, discussion=discussion, body=body)
         else:
             r = []
         if not len(r):
@@ -266,7 +280,12 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyEpozToolbox, NyCheckContr
                 approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
             else:
                 approved, approved_by = 0, None
-            self.save_properties(title, description, coverage, keywords, sortorder, body, topic, scope, releasedate, lang)
+            #generate table of contents
+            if toc: 
+                toc_body = self._generate_toc(body)
+            else:
+                toc_body = ''
+            self.save_properties(title, description, coverage, keywords, sortorder, body, topic, scope, toc_body, toc, releasedate, lang)
             self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             self._p_changed = 1
             self.updatePropertiesFromGlossary(lang)
@@ -284,7 +303,7 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyEpozToolbox, NyCheckContr
                 self.setSessionErrors(r)
                 self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                     description=description, coverage=coverage, keywords=keywords, \
-                    sortorder=sortorder, topic=topic, scope=scope, releasedate=releasedate, discussion=discussion, body=body, lang=lang)
+                    sortorder=sortorder, topic=topic, scope=scope, releasedate=releasedate, discussion=discussion, body=body, toc=toc, lang=lang)
                 REQUEST.RESPONSE.redirect('%s/add_html' % self.absolute_url())
             else:
                 raise Exception, '%s' % ', '.join(r)
@@ -318,7 +337,7 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyEpozToolbox, NyCheckContr
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = study_item(self.title, self.description, self.coverage, self.keywords, self.sortorder,
-            self.body, self.releasedate, self.gl_get_selected_language())
+            self.body, self.toc, self.releasedate, self.gl_get_selected_language())
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
@@ -328,7 +347,7 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyEpozToolbox, NyCheckContr
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', coverage='', keywords='',
-        sortorder='', body='', topic='', scope='', releasedate='', discussion='', lang=None,
+        sortorder='', body='', topic='', scope='', toc='', releasedate='', discussion='', lang=None,
         REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
@@ -338,13 +357,18 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyEpozToolbox, NyCheckContr
         #check mandatory fiels
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
-            topic=topic, scope=scope, releasedate=releasedate, discussion=discussion, body=body)
+            topic=topic, scope=scope, toc=toc, releasedate=releasedate, discussion=discussion, body=body)
         if not len(r):
             sortorder = int(sortorder)
             if not self.hasVersion():
                 #this object has not been checked out; save changes directly into the object
                 releasedate = self.process_releasedate(releasedate, self.releasedate)
-                self.save_properties(title, description, coverage, keywords, sortorder, body, topic, scope, releasedate, lang)
+                #generate table of contents
+                if toc: 
+                    toc_body = self._generate_toc(body)
+                else:
+                    toc_body = ''
+                self.save_properties(title, description, coverage, keywords, sortorder, body, topic, scope, toc_body, toc, releasedate, lang)
                 self.updatePropertiesFromGlossary(lang)
                 self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             else:
@@ -352,7 +376,12 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyEpozToolbox, NyCheckContr
                 if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                     raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
                 releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-                self.version.save_properties(title, description, coverage, keywords, sortorder, body, topic, scope, releasedate, lang)
+                #generate table of contents
+                if toc: 
+                    toc_body = self._generate_toc(body)
+                else:
+                    toc_body = ''
+                self.version.save_properties(title, description, coverage, keywords, sortorder, body, topic, scope, toc_body, toc, releasedate, lang)
                 self.version.updatePropertiesFromGlossary(lang)
                 self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             if discussion: self.open_for_comments()
@@ -367,10 +396,17 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyEpozToolbox, NyCheckContr
                 self.setSessionErrors(r)
                 self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                     description=description, coverage=coverage, keywords=keywords, \
-                    sortorder=sortorder, releasedate=releasedate, discussion=discussion, body=body, topic=topic, scope=scope)
+                    sortorder=sortorder, releasedate=releasedate, discussion=discussion, body=body, topic=topic, scope=scope, toc=toc)
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
             else:
                 raise Exception, '%s' % ', '.join(r)
+
+    security.declarePrivate('_generate_toc')
+    def _generate_toc(self, html):
+        """ generate table of contents """
+        conv = Converter()
+        html = html.encode('latin1', 'ignore')
+        return unicode(conv("<html>%s</html>" % html, self.style_xsl()), 'utf-8')
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
@@ -391,5 +427,10 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyEpozToolbox, NyCheckContr
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'study_edit')
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'style_xsl')
+    def style_xsl(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'study_style')
 
 InitializeClass(NyStudy)

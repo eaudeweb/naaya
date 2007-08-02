@@ -32,7 +32,9 @@
 </tr>
 </table>
 <br />
-<p tal:replace="structure here/body" />
+
+<p tal:replace="structure here/toc_body" tal:condition="here/toc"/>
+<p tal:replace="structure here/body" tal:condition="not:here/toc"/>
 
 <span tal:replace="structure here/comments_box" />
 
