@@ -35,18 +35,19 @@ class study_item(Implicit, NyProperties):
     coverage = LocalProperty('coverage')
     keywords = LocalProperty('keywords')
     body = LocalProperty('body')
+    toc_body = LocalProperty('toc_body')
 
     def __init__(self, title, description, coverage, keywords, sortorder, body,
-        topic, scope, releasedate, lang):
+        topic, scope, toc_body, toc, releasedate, lang):
         """
         Constructor.
         """
         self.save_properties(title, description, coverage, keywords, sortorder,
-            body, topic, scope, releasedate, lang)
+            body, topic, scope, toc_body, toc, releasedate, lang)
         NyProperties.__dict__['__init__'](self)
 
     def save_properties(self, title, description, coverage, keywords, sortorder,
-        body, topic, scope, releasedate, lang):
+        body, topic, scope, toc_body, toc, releasedate, lang):
         """
         Save item properties.
         """
@@ -55,7 +56,9 @@ class study_item(Implicit, NyProperties):
         self._setLocalPropValue('coverage', lang, coverage)
         self._setLocalPropValue('keywords', lang, keywords)
         self._setLocalPropValue('body', lang, body)
+        self._setLocalPropValue('toc_body', lang, toc_body)
         self.topic = topic
         self.scope = scope
         self.sortorder = sortorder
+        self.toc = toc
         self.releasedate = releasedate

@@ -77,6 +77,10 @@ function fSet(ctrl, value)
 	<label for="body"><span i18n:translate="" tal:omit-tag="">Body (HTML)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'body')" class="mandatory_field"> *</span></label>
 	<span tal:replace="structure python:here.get_wysiwyg_widget('body:utf8:ustring', here.getSession('body', ''), toolbox='%s/toolbox_html' % here.absolute_url())" />
 </div>
+<div class="field-inline">
+    <label for="toc"><span i18n:translate="" tal:omit-tag="">Generate table of contents</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'toc')" class="mandatory_field"> *</span></label>
+    <input type="checkbox" name="toc" id="toc" tal:attributes="checked python:test(here.getSession('toc', ''), 'checked', '')" />
+</div>
 <div class="field">
 	<label for="scope"><span i18n:translate="" tal:omit-tag="">Scope</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'scope')" class="mandatory_field"> *</span></label>
 	<select name="scope:utf8:ustring" id="scope">
