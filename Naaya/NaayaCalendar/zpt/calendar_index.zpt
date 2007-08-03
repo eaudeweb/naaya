@@ -16,7 +16,7 @@
 						days_matrix python:here.getDaysMatrix(here.getRange(here.getCounter(date[0])), here.getRange(date[1]));">
 
 <!-- Calendar begin -->
-	<table id="calendar-container" cellspacing="1">
+	<table id="calendar-container" cellspacing="1" tal:attributes="summary python:here.title">
 		<!-- Title area begin -->
 		<caption id="calendar-title" tal:content="python:here.title">TITLE</caption>
 		<!-- Title area end -->
@@ -41,8 +41,8 @@
 		<tr>
 		<!-- Weeks area begin -->
 			<th class="calendar-week-day" scope="col"
-				tal:repeat="cshortday python:here.getShortWeekdays(here.day_len)" 
-				tal:content="python:cshortday[0]" 
+				tal:repeat="cshortday python:here.getShortWeekdays(here.day_len)"
+				tal:content="python:cshortday[0]"
 				tal:attributes="abbr python:cshortday[1]; id python:cshortday[1];">WEEK DAY</th>
 		<!-- Weeks area end -->
 		</tr>
