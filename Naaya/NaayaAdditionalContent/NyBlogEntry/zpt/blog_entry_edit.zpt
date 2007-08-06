@@ -31,7 +31,7 @@
 </div>
 <div class="field">
 	<label for="keywords"><span i18n:translate="" tal:omit-tag="">Tags</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'keywords')" class="mandatory_field"> *</span></label>
-	<input type="text" name="keywords:utf8:ustring" id="keywords" size="70" tal:attributes="value python:here.getSession('keywords', here.getVersionLocalProperty('keywords', curr_lang))" />
+	<input type="text" name="keywords:utf8:ustring" id="keywords" size="70" tal:attributes="value python:here.getSession('keywords', here.utJoinToString(here.getVersionLocalProperty('keywords', curr_lang), separator=' '))" />
 </div>
 <div class="field">
 	<label for="releasedate"><span i18n:translate="" tal:omit-tag="">Release date</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'releasedate')" class="mandatory_field"> *</span></label>
