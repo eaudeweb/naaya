@@ -18,7 +18,7 @@
 				tal:attributes="href string:${parent/absolute_url}?author=${here/contributor}" tal:content="author" class="postauthor" /> 
 			
 		<br />
-		<span class="entry-tags"><strong><span i18n:translate="">Tags</span>:</strong> <tal:block repeat="k here/keywords"><a tal:define="parent here/getParentNode" tal:attributes="href string:${here/absolute_url}?tag=${k}" tal:content="k" /></tal:block></span><br />
+		<span class="entry-tags"><strong><span i18n:translate="">Tags</span>:</strong> <tal:block repeat="k here/keywords"><a tal:define="parent here/getParentNode" tal:attributes="href string:${parent/absolute_url}?tag=${k}" tal:content="k" /> </tal:block></span><br />
 	</div>
 	<div class="entry-content" tal:content="structure here/content" />
 </div>
