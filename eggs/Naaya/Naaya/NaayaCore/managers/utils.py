@@ -215,6 +215,12 @@ class utils:
         """Constructor"""
         pass
 
+    def parse_tags(self, tag_names):
+        """ parse comma separated text """
+        #find_tag_re = re.compile('[-\w]+')
+        find_tag_re = re.compile('([^",]*)')
+        return find_tag_re.findall(tag_names or '')
+
     def utGetROOT(self):
         """ get the ROOT object"""
         return self.unrestrictedTraverse(('',))
