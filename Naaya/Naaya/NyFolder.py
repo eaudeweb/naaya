@@ -1055,8 +1055,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
             buf = copy.copy(words_score)
             buf.sort()
             #Find the difference between max and min, and the distribution
-            max = buf[0][0]
-            min = buf[-1][0]
+            max = buf[-1][0]
+            min = buf[0][0]
             diff = max - min
             distribution = diff / 4    #only 4 levels
             results = []
