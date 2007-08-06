@@ -193,3 +193,30 @@ class session_manager:
 
     def getSessionFeedbackWho(self, default=''):
         return self.__getSession('user_who', default)
+
+    #blog session
+    def setBlogSession(self, title='', body='', author='', email=''):
+        """ put the blog information on session """
+        self.__setSession('blog_title', title)
+        self.__setSession('blog_body', body)
+        self.__setSession('blog_author', author)
+        self.__setSession('blog_email', email)
+
+    def delBlogSession(self):
+        """delete Blog information from session """
+        self.__delSession('blog_title')
+        self.__delSession('blog_body')
+        self.__delSession('blog_author')
+        self.__delSession('blog_email')
+
+    def getSessionBlogTitle(self, default=''):
+        return self.__getSession('blog_title', default)
+
+    def getSessionBlogBody(self, default=''):
+        return self.__getSession('blog_body', default)
+
+    def getSessionBlogAuthor(self, default=''):
+        return self.__getSession('blog_author', default)
+
+    def getSessionBlogEmail(self, default=''):
+        return self.__getSession('blog_email', default)
