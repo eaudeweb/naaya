@@ -40,6 +40,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.Localizer.LocalPropertyManager import LocalProperty
+from Products.NaayaContent import *
 
 manage_addNyFolder_html = PageTemplateFile('zpt/folder_manage_add', globals())
 manage_addNyFolder_html.kind = METATYPE_FOLDER
@@ -997,6 +998,46 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
                 self.p_changed=1
 
     #blog functionalities
+    security.declareProtected(view, 'checkPermissionManageEntries')
+    def checkPermissionManageEntries(self, author='', tag=''):
+        """ This function is called on the folder index and it checkes whether or not
+            to display the various buttons on that form
+        """
+        results_objects = []
+        btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate = 0, 0, 0, 0, 0, 0
+        # btn_select - if there is at least one permisson to delete or copy an object
+        # btn_delete - if there is at least one permisson to delete an object
+        # btn_copy - if there is at least one permisson to copy an object
+        # btn_cut - if there is at least one permisson to delete AND copy an object
+        # btn_paste - if there is the add permission and there's some copyed data
+        btn_paste = self.cb_dataValid() and self.checkPermissionPasteObjects()
+        # Naaya objects
+        objects = self.getCatalogedObjects(meta_type=[METATYPE_NYBLOGENTRY], contributor=author, tags_en=tag)
+        sorted_objects = self.utSortObjsListByAttr(objects, 'releasedate', 1)
+        for x in self.utSortObjsListByAttr(sorted_objects, 'sortorder', 0):
+            del_permission = x.checkPermissionDeleteObject()
+            copy_permission = x.checkPermissionCopyObject()
+            edit_permission = x.checkPermissionEditObject()
+            if del_permission or copy_permission: btn_select = 1
+            if del_permission and copy_permission: btn_cut = 1
+            if del_permission: btn_delete = 1
+            if copy_permission: btn_copy = 1
+            if edit_permission: can_operate = 1
+            # version_status:  0 - cannot check out for some reason
+            #                  1 - can check in
+            #                  2 - can check out
+            if not edit_permission or not x.isVersionable():
+                version_status = 0
+            elif x.hasVersion():
+                if x.isVersionAuthor(): version_status = 1
+                else: version_status = 0
+            else:
+                version_status = 2
+            if ((del_permission or edit_permission) and not x.approved) or x.approved:
+                results_objects.append((del_permission, edit_permission, version_status, copy_permission, x))
+        can_operate = can_operate or btn_select
+        return (btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate, results_objects)
+
     security.declareProtected(view, 'getLatestComments')
     def getLatestComments(self, folder=None, number=None, date=None):
         """ get the latest comments """
@@ -1022,18 +1063,17 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         l_paging_information = (0, 0, 0, -1, -1, 0, NUMBER_OF_RESULTS_PER_PAGE, [0])
         try: p_start = abs(int(p_start))
         except: p_start = 0
-        batch_obj = batch_utils(NUMBER_OF_RESULTS_PER_PAGE, len(p_result[7]), p_start)
-        if len(p_result[7]):
+        batch_obj = batch_utils(NUMBER_OF_RESULTS_PER_PAGE, len(p_result[6]), p_start)
+        if len(p_result[6]):
             paging_informations = batch_obj.butGetPagingInformations()
         else:
             paging_informations = (-1, 0, 0, -1, -1, 0, NUMBER_OF_RESULTS_PER_PAGE, [0])
-        return (paging_informations, p_result[:6], p_result[7][paging_informations[0]:paging_informations[1]])
+        return (paging_informations, p_result[:6], p_result[6][paging_informations[0]:paging_informations[1]])
 
     security.declareProtected(view, 'getEntries')
-    def getEntries(self, p_start=0):
+    def getEntries(self, author='', tag='', p_start=0):
         """ get blog entries """
-        lang = self.gl_get_selected_language()
-        return self._page_result(self.checkPermissionManageObjects(), p_start)
+        return self._page_result(self.checkPermissionManageEntries(author, tag), p_start)
 
     def getWeekObjects(self): return [x for x in self.objectValues(self.get_meta_types()) if x.submitted==1 and x.releasedate > (self.utGetTodayDate() - 7)]
 
