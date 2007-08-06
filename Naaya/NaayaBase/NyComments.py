@@ -160,6 +160,11 @@ class NyComments:
         self.discussion = 0
         self._p_changed = 1
 
+    security.declarePrivate('insert_comment_obj')
+    def insert_comment_obj(self, comment_id, comment_ob):
+        self.__comments_collection[comment_id] = comment_ob
+        self._p_changed = 1
+
     security.declarePrivate('add_comment_item')
     def add_comment_item(self, id, title, body, author, date):
         """
