@@ -1038,6 +1038,42 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         can_operate = can_operate or btn_select
         return (btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate, results_objects)
 
+    security.declareProtected(view, 'getTagCloud')
+    def getTagCloud(self, tagCount=1):
+        """ """
+        import string, copy
+        chars = list(string.ascii_lowercase)
+        catalog_tool = self.getCatalogTool()
+        tag_index = [index for index in catalog_tool.getIndexObjects() if index.id == 'tags_en']
+        if tag_index:
+            index_obj = tag_index[0]
+            lexicon = index_obj.getLexicon()
+            words_score = []
+            for c in chars:
+                words = [word.encode('utf-8') for word in lexicon.getWordsForRightTruncation(unicode(c, 'utf-8'))]
+                words_score.extend([(len(index_obj.getDocumentsForWord(w)), w)for w in words if len(index_obj.getDocumentsForWord(w)) >= tagCount])
+            buf = copy.copy(words_score)
+            buf.sort()
+            #Find the difference between max and min, and the distribution
+            max = buf[0][0]
+            min = buf[-1][0]
+            diff = max - min
+            distribution = diff / 4    #only 4 levels
+            results = []
+            for score, word in words_score:
+                if score == min:
+                    tag = 4
+                elif score == max:
+                    tag = 1
+                elif score > (min + (distribution*2)):
+                    tag = 2
+                elif score > (min + distribution):
+                    tag = 3
+                else:
+                    tag = 4
+                results.append((tag, word))
+            return results
+
     security.declareProtected(view, 'getLatestComments')
     def getLatestComments(self, folder=None, number=None, date=None):
         """ get the latest comments """
