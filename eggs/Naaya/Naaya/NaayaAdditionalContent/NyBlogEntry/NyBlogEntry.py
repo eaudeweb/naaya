@@ -188,6 +188,10 @@ class NyBlogEntry(NyAttributes, blog_entry_item, NyBlogComments, NyContainer, Ny
     def objectkeywords(self, lang):
         return u' '.join([self._objectkeywords(lang), self.getLocalProperty('content', lang)])
 
+    security.declarePrivate('tags')
+    def tags(self, lang):
+        return u'%s' % self.getLocalProperty('keywords', lang)
+
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
         return 'updated_date="%s" validation_status="%s" validation_date="%s" validation_by="%s" validation_comment="%s"' % \

@@ -23,6 +23,7 @@ from Acquisition import Implicit
 #Product imports
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
+from Products.NaayaCore.managers.utils import utils
 
 class blog_entry_item(Implicit, NyProperties):
     """ """
@@ -50,7 +51,8 @@ class blog_entry_item(Implicit, NyProperties):
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
         self._setLocalPropValue('coverage', lang, coverage)
-        self._setLocalPropValue('keywords', lang, keywords)
+        parsed_keywords = [k.strip() for k in utils().parse_tags(keywords.lower()) if k]
+        self._setLocalPropValue('keywords', lang, parsed_keywords)
         self._setLocalPropValue('content', lang, content)
         self.updated_date = updated_date
         self.sortorder = sortorder

@@ -4,7 +4,7 @@
 
 <tal:block tal:condition="python:here.checkPermissionEditObject()">
 <div id="admin_this_folder">
-	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
+	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit entry</span></a>
 </div>
 </tal:block>
 
@@ -13,12 +13,14 @@
 		<a title="Read more..." tal:attributes="href string:${here/absolute_url}/index_html" tal:content="here/title_or_id">title</a>
 	</h1>
 	<div class="entry-metadata">
-		by <a href="" tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)" />, 
-			<span tal:replace="python:here.utShowDateTime(here.releasedate)" />
+		<span class="entry-comments"><strong><span i18n:translate="">Comments</span>:</strong> <a tal:attributes="href string:${here/absolute_url}#comments" tal:content="here/count_comments" /></span>
+		<span tal:replace="python:here.utShowDateTime(here.releasedate)" class="postdate" /> - <a tal:define="author python:here.getAuthenticationTool().getUserFullNameByID(here.contributor); parent here/getParentNode" 
+				tal:attributes="href string:${parent/absolute_url}?author=${here/contributor}" tal:content="author" class="postauthor" /> 
+			
 		<br />
-		<span i18n:translate="">Tags</span>: <a href="#">tag1</a>,<a href="#">tag2</a>, <a href="#">tag3</a>, <span i18n:translate="">Comments</span>:(<a tal:attributes="href string:${here/absolute_url}#comments" tal:content="here/count_comments" />)
+		<span class="entry-tags"><strong><span i18n:translate="">Tags</span>:</strong> <tal:block repeat="k here/keywords"><a tal:define="parent here/getParentNode" tal:attributes="href string:${here/absolute_url}?tag=${k}" tal:content="k" /></tal:block></span><br />
 	</div>
-	<div class="entry-content" tal:content="structure here/content">
+	<div class="entry-content" tal:content="structure here/content" />
 </div>
 
 <a name="comments"></a>
