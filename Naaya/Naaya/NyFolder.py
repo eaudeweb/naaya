@@ -33,7 +33,7 @@ import Products
 #Product imports
 from constants import *
 from Products.NaayaBase.constants import *
-from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.utils import utils, batch_utils
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyAttributes import NyAttributes
@@ -995,6 +995,113 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
             elif operation in ['d', 'del', 'delete']:
                 self.folder_meta_types.remove(subobject)
                 self.p_changed=1
+
+    #blog functionalities
+    security.declareProtected(view, 'getLatestComments')
+    def getLatestComments(self, folder=None, number=None, date=None):
+        """ get the latest comments """
+        folder_comments = {}
+        if folder is None:  folder = self
+        for obj in folder.getObjects():
+            folder_comments.update(obj.get_comments_collection())
+        if number and date is None:
+            t = [(x.date, x) for x in folder_comments.values()][:number]
+        elif number is None and date:
+            t = [(x.date, x) for x in folder_comments.values() if x.date.isCurrentDay()]
+        elif number and date:
+            t = [(x.date, x) for x in folder_comments.values() if x.date.isCurrentDay()][:number]
+        else:
+            t = [(x.date, x) for x in folder_comments.values()]
+        t.sort()
+        t.reverse()
+        return [val for (key, val) in t]
+
+    def _page_result(self, p_result, p_start):
+        #Returns results with paging information
+        NUMBER_OF_RESULTS_PER_PAGE = 5
+        l_paging_information = (0, 0, 0, -1, -1, 0, NUMBER_OF_RESULTS_PER_PAGE, [0])
+        try: p_start = abs(int(p_start))
+        except: p_start = 0
+        batch_obj = batch_utils(NUMBER_OF_RESULTS_PER_PAGE, len(p_result[7]), p_start)
+        if len(p_result[7]):
+            paging_informations = batch_obj.butGetPagingInformations()
+        else:
+            paging_informations = (-1, 0, 0, -1, -1, 0, NUMBER_OF_RESULTS_PER_PAGE, [0])
+        return (paging_informations, p_result[:6], p_result[7][paging_informations[0]:paging_informations[1]])
+
+    security.declareProtected(view, 'getEntries')
+    def getEntries(self, p_start=0):
+        """ get blog entries """
+        lang = self.gl_get_selected_language()
+        return self._page_result(self.checkPermissionManageObjects(), p_start)
+
+    def getWeekObjects(self): return [x for x in self.objectValues(self.get_meta_types()) if x.submitted==1 and x.releasedate > (self.utGetTodayDate() - 7)]
+
+    security.declareProtected(view, 'entries_rdf')
+    def entries_rdf(self, REQUEST=None, RESPONSE=None):
+        """ """
+        entries = self.getWeekObjects()
+        s = self.getSite()
+        lang = self.gl_get_selected_language()
+        r = []
+        ra = r.append
+        ra('<?xml version="1.0" encoding="utf-8"?>')
+        ra('<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://purl.org/rss/1.0/">')
+        ra('<channel rdf:about="%s">' % self.utXmlEncode(s.absolute_url()))
+        ra('<title>%s</title>' % s.utXmlEncode(s.title))
+        ra('<link>%s</link>' % self.utXmlEncode(s.portal_url))
+        ra('<description><![CDATA[%s]]></description>' % self.utXmlEncode(s.description))
+        ra('<dc:identifier>%s</dc:identifier>' % self.utXmlEncode(s.portal_url))
+        ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.utGetTodayDate()))
+        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(s.publisher))
+        ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(s.title))
+        ra('<dc:language>%s</dc:language>' % self.utXmlEncode(lang))
+        ra('</channel>')
+        for entry in entries:
+            ra('<item rdf:about="%s">' % self.utXmlEncode(entry.absolute_url()))
+            ra('<title>%s</title>' % self.utXmlEncode(entry.title))
+            ra('<url>%s</url>' % self.utXmlEncode(entry.absolute_url()))
+            ra('<description><![CDATA[%s]]></description>' % self.utXmlEncode(entry.content[:255]))
+            ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(entry.releasedate))
+            ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(entry.title))
+            ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(entry.contributor))
+            ra('</item>')
+        ra("</rdf:RDF>")
+        self.REQUEST.RESPONSE.setHeader('content-type', 'application/xhtml+xml')
+        return '\n'.join(r)
+
+    security.declareProtected(view, 'comments_rdf')
+    def comments_rdf(self, REQUEST=None, RESPONSE=None):
+        """ """
+        comments = self.getLatestComments(date=self.utGetTodayDate())
+        s = self.getSite()
+        lang = self.gl_get_selected_language()
+        r = []
+        ra = r.append
+        ra('<?xml version="1.0" encoding="utf-8"?>')
+        ra('<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://purl.org/rss/1.0/">')
+        ra('<channel rdf:about="%s">' % self.utXmlEncode(s.absolute_url()))
+        ra('<title>%s</title>' % s.utXmlEncode(s.title))
+        ra('<link>%s</link>' % self.utXmlEncode(s.portal_url))
+        ra('<description><![CDATA[%s]]></description>' % self.utXmlEncode(s.description))
+        ra('<dc:identifier>%s</dc:identifier>' % self.utXmlEncode(s.portal_url))
+        ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(self.utGetTodayDate()))
+        ra('<dc:publisher>%s</dc:publisher>' % self.utXmlEncode(s.publisher))
+        ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(s.title))
+        ra('<dc:language>%s</dc:language>' % self.utXmlEncode(lang))
+        ra('</channel>')
+        for comm in comments:
+            ra('<item rdf:about="%s">' % self.utXmlEncode('%s#%s' % (comm.entry, comm.id)))
+            ra('<title>%s</title>' % self.utXmlEncode(comm.title))
+            ra('<url>%s</url>' % self.utXmlEncode('%s#%s' % (comm.entry, comm.id)))
+            ra('<description><![CDATA[%s]]></description>' % self.utXmlEncode(comm.body))
+            ra('<dc:date>%s</dc:date>' % self.utShowFullDateTimeHTML(comm.date))
+            ra('<dc:subject>%s</dc:subject>' % self.utXmlEncode(comm.title))
+            ra('<dc:creator>%s</dc:creator>' % self.utXmlEncode(comm.author))
+            ra('</item>')
+        ra("</rdf:RDF>")
+        self.REQUEST.RESPONSE.setHeader('content-type', 'application/xhtml+xml')
+        return '\n'.join(r)
 
 
     #zmi pages

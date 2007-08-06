@@ -38,6 +38,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from ZPublisher import BeforeTraverse
 from Products.SiteErrorLog.SiteErrorLog import manage_addErrorLog
+from Globals import DTMLFile
 import Products
 
 #Product imports
@@ -622,8 +623,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             width, height = 800, 400
         elif size == 'medium':
             width, height = 600, 300
+        elif size == 'small-flat':
+            width, height = 600, 200
+        elif size == 'large':
+            width, height = 600, 400
         else: #small
             width, height = 400, 200
+        
         sfp = self.getLayoutTool().getSkinFilesPath()
         return self.Epoz(name=name, data=data, toolbox=toolbox, lang=lang,
             style='width:%spx;height:%spx;border:1px solid #000000;' % (width, height),
@@ -2797,4 +2803,16 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def channel_details_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'channel_details')
+
+    #calendar widget
+    security.declareProtected(view, 'calendar_js')
+    calendar_js = DTMLFile('zpt/calendar/calendar_js', globals())
+
+    security.declareProtected(view, 'core_js')
+    core_js = DTMLFile('zpt/calendar/core_js', globals())
+
+    security.declareProtected(view, 'datetime_js')
+    datetime_js = DTMLFile('zpt/calendar/datetime_js', globals())
+
+
 InitializeClass(NySite)

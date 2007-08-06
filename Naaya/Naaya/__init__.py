@@ -94,6 +94,11 @@ misc_ = {
     'translate_tooltips':ImageFile('www/documentation/translate_tooltips.gif', globals()),
     'translate_demo':ImageFile('www/documentation/translate_demo.gif', globals()),
     'translate_messages':ImageFile('www/documentation/translate_messages.gif', globals()),
+
+    #calendar
+    'icon_calendar.gif':ImageFile('www/icon_calendar.gif', globals()),
+    'nav-bg.gif':ImageFile('www/nav-bg.gif', globals()),
+    'default-bg.gif':ImageFile('www/default-bg.gif', globals()),
 }
 
 #constructors for pluggable content
