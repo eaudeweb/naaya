@@ -999,7 +999,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
 
     #blog functionalities
     security.declareProtected(view, 'checkPermissionManageEntries')
-    def checkPermissionManageEntries(self, author='', tag=''):
+    def checkPermissionManageEntries(self, author='', howmany=-1, tag=''):
         """ This function is called on the folder index and it checkes whether or not
             to display the various buttons on that form
         """
@@ -1012,7 +1012,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         # btn_paste - if there is the add permission and there's some copyed data
         btn_paste = self.cb_dataValid() and self.checkPermissionPasteObjects()
         # Naaya objects
-        objects = self.getCatalogedObjects(meta_type=[METATYPE_NYBLOGENTRY], contributor=author, tags_en=tag)
+        objects = self.getCatalogedObjects(meta_type=[METATYPE_NYBLOGENTRY], contributor=author, howmany=howmany, tags_en=tag, path='/%s' % self.absolute_url(1))
         sorted_objects = self.utSortObjsListByAttr(objects, 'releasedate', 1)
         for x in self.utSortObjsListByAttr(sorted_objects, 'sortorder', 0):
             del_permission = x.checkPermissionDeleteObject()
@@ -1108,9 +1108,9 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         return (paging_informations, p_result[:6], p_result[6][paging_informations[0]:paging_informations[1]])
 
     security.declareProtected(view, 'getEntries')
-    def getEntries(self, author='', tag='', p_start=0):
+    def getEntries(self, author='', tag='', p_start=0, howmany=-1):
         """ get blog entries """
-        return self._page_result(self.checkPermissionManageEntries(author, tag), p_start)
+        return self._page_result(self.checkPermissionManageEntries(author, howmany, tag), p_start)
 
     def getWeekObjects(self): return [x for x in self.objectValues(self.get_meta_types()) if x.submitted==1 and x.releasedate > (self.utGetTodayDate() - 7)]
 
