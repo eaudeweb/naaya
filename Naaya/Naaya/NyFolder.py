@@ -1055,23 +1055,24 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
             buf = copy.copy(words_score)
             buf.sort()
             #Find the difference between max and min, and the distribution
-            max = buf[-1][0]
-            min = buf[0][0]
-            diff = max - min
-            distribution = diff / 3
             results = []
-            for score, word in words_score:
-                if score == min:
-                    tag = 4
-                elif score == max:
-                    tag = 1
-                elif score > (min + (distribution*2)):
-                    tag = 2
-                elif score > (min + distribution):
-                    tag = 3
-                else:
-                    tag = 4
-                results.append((tag, word))
+            if buf:
+                max = buf[-1][0]
+                min = buf[0][0]
+                diff = max - min
+                distribution = diff / 3
+                for score, word in words_score:
+                    if score == min:
+                        tag = 4
+                    elif score == max:
+                        tag = 1
+                    elif score > (min + (distribution*2)):
+                        tag = 2
+                    elif score > (min + distribution):
+                        tag = 3
+                    else:
+                        tag = 4
+                    results.append((tag, word))
             return results
 
     security.declareProtected(view, 'getLatestComments')
