@@ -116,12 +116,14 @@ function CreateEpoz() {
     widget += '<img class="epoz_button_redo" style="'+form_button_style+'" src="'+form_path+'epoz_button_redo.gif" width="23" height="22" alt="'+EpozLang["Redo"]+'" title="'+EpozLang["Redo"]+'" onClick="if(isSafe(this))FormatText(\'redo\', \'\');" />';
 
 /*
-	CHM CUSTOM
+	EW CUSTOM
 */
     widget += spacer;
     widget += '<img class="epoz_button_relativelink" style="'+form_button_style+'" src="'+form_path+'epoz_button_relativelink.gif" width="23" height="22" alt="'+EpozLang["InsertRelativeLink"]+'" title="'+EpozLang["InsertRelativeLink"]+'" onClick="if(isSafe(this))window.open(\'insertrelativelink_html\',\'EpozToolbox\',\'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=400\');" />';
+    widget += spacer;
+    widget += '<img class="epoz_button_more" style="'+form_button_style+'" src="'+form_path+'epoz_button_more.gif" width="23" height="22" alt="'+EpozLang["InsertMoreTag"]+'" title="'+EpozLang["InsertMoreTag"]+'" onClick="if(isSafe(this))InsertMoreTag()" />';
 /*
-	end CHM CUSTOM
+	end EW CUSTOM
 */
 
 /*
