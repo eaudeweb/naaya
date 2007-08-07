@@ -121,6 +121,7 @@ misc_ = {
 #CHM CUSTOM
 'epoz_button_relativelink.gif':ImageFile('epoz/epoz_images/epoz_button_hyperlink.gif', globals()),
 'epoz_button_help.gif':ImageFile('epoz/epoz_images/epoz_button_help.gif', globals()),
+'epoz_button_more.gif':ImageFile('epoz/epoz_images/epoz_button_more.gif', globals()),
 #end CHM CUSTOM
 }
 

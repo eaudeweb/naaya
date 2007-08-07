@@ -58,6 +58,9 @@ EpozLang["EnterTableBorder"]='Enter Border';
 EpozLang["TableWithHead"]='Table with Head';
 EpozLang["TableWithoutHead"]='Table without Head';
 
+EpozLang["InsertMoreTag"]='Insert read more tag';
+EpozLang["InsertMoreTagMsg"]='Read more';
+
 EpozLang["HTML"]='View HTML source';
 
 // Browser-Status-Messages

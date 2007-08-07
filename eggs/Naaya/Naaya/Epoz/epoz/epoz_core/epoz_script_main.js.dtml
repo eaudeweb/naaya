@@ -152,6 +152,18 @@ function InsertHTML(html) {
 }
 
 
+/*
+	EW CUSTOM
+*/
+function InsertMoreTag() {
+    pmoretag = '<div class="moretag">'+EpozLang["InsertMoreTagMsg"]+'</div>';
+    InsertHTML(pmoretag);
+}
+/*
+	end EW CUSTOM
+*/
+
+
 // Create an anchor - no browser supports this directly
 
 
