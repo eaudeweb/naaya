@@ -1058,7 +1058,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
             max = buf[-1][0]
             min = buf[0][0]
             diff = max - min
-            distribution = diff / 4    #only 4 levels
+            distribution = diff / 3
             results = []
             for score, word in words_score:
                 if score == min:
