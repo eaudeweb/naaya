@@ -84,7 +84,7 @@ def addNyStudy(self, id='', title='', description='', coverage='', keywords='',
     """
     #process parameters
     id = self.utCleanupId(id)
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
+    if not id: id = self.utGenObjectId(title)
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
@@ -95,6 +95,12 @@ def addNyStudy(self, id='', title='', description='', coverage='', keywords='',
         toc_body = self._generate_toc(body)
     else:
         toc_body = ''
+    #verify if the object already exists
+    try:
+        ob = self._getOb(id)
+        id = '%s-%s' % (id, self.utGenRandomId(5))
+    except AttributeError:
+        pass
     #create object
     ob = NyStudy(id, title, description, coverage, keywords, sortorder, body,
         contributor, topic, scope, toc_body, toc, releasedate, lang)
