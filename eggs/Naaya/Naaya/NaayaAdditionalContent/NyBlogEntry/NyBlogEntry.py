@@ -49,12 +49,12 @@ DESCRIPTION_OBJECT = 'This is Naaya Blog Entry type.'
 PREFIX_OBJECT = 'doc'
 PROPERTIES_OBJECT = {
     'id':           (0, '', ''),
-    'title':        (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
+    'title':        (1, MUST_BE_NONEMPTY, 'Headline field must have a value.'),
     'description':  (0, '', ''),
     'coverage':     (0, '', ''),
     'keywords':     (0, '', ''),
     'sortorder':    (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positive integer.'),
-    'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
+    'releasedate':  (1, MUST_BE_DATETIME, 'Release date field must contain a valid date.'),
     'discussion':   (0, '', ''),
     'content':      (0, '', ''),
     'updated_date': (0, '', ''),
