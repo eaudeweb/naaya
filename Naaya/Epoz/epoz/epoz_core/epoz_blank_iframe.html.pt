@@ -19,12 +19,20 @@ xmlns:metal="http://xml.zope.org/namespaces/metal">
  a[name]:after {
      content: attr(name);
  }
+
+.moretag {
+   height: 16px;
+   border-bottom: 1px solid #ddd;
+   background: url(misc_/Epoz/epoz_button_readmore.gif) no-repeat top right;
+}
+
 -->
 </style>
 <style tal:condition="python: request.get('css')" type="text/css" media="all"
           tal:content="string:@import url(${request/css});"></style>
 <style tal:condition="python: request.get('customcss')" type="text/css" media="all"
           tal:content="string:@import url(${request/customcss});"></style>
+
 <script language="javascript" type="text/javascript" src="misc_/Epoz/epoz_script_detect.js"></script>
 <script language="javascript" type="text/javascript" src="misc_/Epoz/epoz_iframe_trigger.js"></script>
 </head>

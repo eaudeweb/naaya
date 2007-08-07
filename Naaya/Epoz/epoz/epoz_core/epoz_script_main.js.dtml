@@ -156,7 +156,7 @@ function InsertHTML(html) {
 	EW CUSTOM
 */
 function InsertMoreTag() {
-    pmoretag = '<div class="moretag">'+EpozLang["InsertMoreTagMsg"]+'</div>';
+    pmoretag = '<div class="moretag">&nbsp;</div>';
     InsertHTML(pmoretag);
 }
 /*
