@@ -10,7 +10,7 @@
 	<label for="author" i18n:translate="">Name<span class="mandatory_field">*</span></label>
 	<input type="text" name="author:utf8:ustring" id="author" size="30" tal:attributes="value python:test(username != 'Anonymous User', username, here.getSessionBlogAuthor())"/><em i18n:translate="">(required)</em>
 </div>
-<div class="field">
+<div class="field" tal:condition="python:username == 'Anonymous User'">
 	<label for="email" i18n:translate="">Email<span class="mandatory_field">*</span></label>
 	<input type="text" name="email:utf8:ustring" id="email" size="30" tal:attributes="value here/getSessionBlogEmail" />
 	<em i18n:translate="">(will not be published)</em>

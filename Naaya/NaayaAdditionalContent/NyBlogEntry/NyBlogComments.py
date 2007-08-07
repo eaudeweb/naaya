@@ -102,7 +102,7 @@ class NyBlogComments(NyComments):
 
     #site actions
     security.declareProtected(view, 'comment_add')
-    def comment_add(self, id='', title='', body='', author=None, email=None, date=None, contact_word='', REQUEST=None):
+    def comment_add(self, id='', title='', body='', author=None, email='', date=None, contact_word='', REQUEST=None):
         """
         Add a blog comment for this object.
         """
@@ -126,7 +126,7 @@ class NyBlogComments(NyComments):
                 REQUEST.RESPONSE.redirect('%s/blogcomment_add_html' % self.absolute_url())
         else:
             self.delBlogSession()
-            self.add_comment_item(id, title, body, author, email, date, self.absolute_url())
+            self.add_comment_item(id, title, body, author, email, date, self.absolute_url(1))
             self.recatalogNyObject(self)
             if REQUEST:
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
