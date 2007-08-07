@@ -18,7 +18,7 @@
 <!-- Calendar begin -->
 	<table id="calendar-container" cellspacing="1" tal:attributes="summary python:here.title">
 		<!-- Title area begin -->
-		<caption id="calendar-title" tal:content="python:here.title">TITLE</caption>
+		<caption id="calendar-title" tal:content="python:here.title" i18n:translate="">TITLE</caption>
 		<!-- Title area end -->
 
 		<tr>
@@ -28,7 +28,7 @@
 			</td>
 			<td id="calendar-date" colspan="5">
 				<a title="Month Events" tal:attributes="href string:${here/getIndexURL}cmonth=${cmonth}&cyear=${cyear};" i18n:attributes="title">
-					<span tal:content="python:here.getMonthName(cmonth)"/>
+					<span i18n:translate="" tal:content="python:here.getMonthName(cmonth)"/>
 					<span tal:content="cyear"/>
 				</a>
 			</td>
@@ -43,7 +43,7 @@
 			<th class="calendar-week-day" scope="col"
 				tal:repeat="cshortday python:here.getShortWeekdays(here.day_len)"
 				tal:content="python:cshortday[0]"
-				tal:attributes="abbr python:cshortday[1]; id python:cshortday[1];">WEEK DAY</th>
+				tal:attributes="abbr python:cshortday[1]; id python:cshortday[1];" i18n:translate="">WEEK DAY</th>
 		<!-- Weeks area end -->
 		</tr>
 
