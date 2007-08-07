@@ -59,7 +59,7 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     site = self.getSite()
     #process parameters
     id = self.utCleanupId(id)
-    if not id: id = PREFIX_FOLDER + self.utGenRandomId(6)
+    if not id: id = self.utGenObjectId(title)
     if publicinterface: publicinterface = 1
     else: publicinterface = 0
     try: sortorder = abs(int(sortorder))
@@ -76,6 +76,12 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
         else: folder_meta_types = self.folder_meta_types
     else: folder_meta_types = self.utConvertToList(folder_meta_types)
     if lang is None: lang = self.gl_get_selected_language()
+    #verify if the object already exists
+    try:
+        ob = self._getOb(id)
+        id = '%s-%s' % (id, self.utGenRandomId(5))
+    except AttributeError:
+        pass
     #create object
     ob = NyFolder(id, title, description, coverage, keywords, sortorder, publicinterface,
             maintainer_email, contributor, folder_meta_types, releasedate, lang)
