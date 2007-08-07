@@ -379,6 +379,11 @@ class NyBlogEntry(NyAttributes, blog_entry_item, NyBlogComments, NyContainer, Ny
             else:
                 raise Exception, '%s' % ', '.join(r)
 
+    security.declareProtected(view, 'getBrief')
+    def getBrief(self):
+        """ get a brief content """
+        return self.content.split('<div class="moretag">&nbsp;</div>')[0]
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/blog_entry_manage_edit', globals())
