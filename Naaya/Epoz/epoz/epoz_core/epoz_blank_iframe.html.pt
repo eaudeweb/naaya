@@ -24,6 +24,7 @@ xmlns:metal="http://xml.zope.org/namespaces/metal">
    height: 16px;
    border-bottom: 1px solid #ddd;
    background: url(misc_/Epoz/epoz_button_readmore.gif) no-repeat top right;
+   display: block !important;
 }
 
 -->
