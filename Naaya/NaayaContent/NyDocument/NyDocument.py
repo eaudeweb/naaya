@@ -79,12 +79,18 @@ def addNyDocument(self, id='', title='', description='', coverage='', keywords='
     """
     #process parameters
     id = self.utCleanupId(id)
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
+    if not id: id = self.utGenObjectId(title)
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
+    #verify if the object already exists
+    try:
+        ob = self._getOb(id)
+        id = '%s-%s' % (id, self.utGenRandomId(5))
+    except AttributeError:
+        pass
     #create object
     ob = NyDocument(id, title, description, coverage, keywords, sortorder, body,
         contributor, releasedate, lang)
@@ -244,6 +250,14 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         """ """
         try: sortorder = abs(int(sortorder))
         except: sortorder = DEFAULT_SORTORDER
+        id = self.utGenObjectId(title)
+        parent = self.getParentNode()
+        #verify if the object already exists
+        try:
+            ob = parent._getOb(id)
+            id = '%s-%s' % (id, self.utGenRandomId(5))
+        except AttributeError:
+            pass
         #check mandatory fiels
         l_referer = ''
         if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
@@ -254,6 +268,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         else:
             r = []
         if not len(r):
+            parent.manage_renameObjects([self.id], [id])
             if not lang: lang = self.gl_get_selected_language()
             releasedate = self.process_releasedate(releasedate, self.releasedate)
             if self.glCheckPermissionPublishObjects():

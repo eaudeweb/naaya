@@ -91,7 +91,7 @@ def addNyEvent(self, id='', title='', description='', coverage='',
     """
     #process parameters
     id = self.utCleanupId(id)
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
+    if not id: id = self.utGenObjectId(title)
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
     if topitem: topitem = 1
@@ -121,6 +121,12 @@ def addNyEvent(self, id='', title='', description='', coverage='',
         start_date = self.utConvertStringToDateTimeObj(start_date)
         end_date = self.utConvertStringToDateTimeObj(end_date)
         releasedate = self.process_releasedate(releasedate)
+        #verify if the object already exists
+        try:
+            ob = self._getOb(id)
+            id = '%s-%s' % (id, self.utGenRandomId(5))
+        except AttributeError:
+            pass
         #create object
         ob = NyEvent(id, title, description, coverage, keywords, sortorder,
             location, location_address, location_url, start_date, end_date, host, agenda_url,

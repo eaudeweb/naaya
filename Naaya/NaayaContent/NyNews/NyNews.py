@@ -83,7 +83,7 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
     """
     #process parameters
     id = self.utCleanupId(id)
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
+    if not id: id = self.utGenObjectId(title)
     if topitem: topitem = 1
     else:       topitem = 0
     try: sortorder =    abs(int(sortorder))
@@ -103,6 +103,12 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
     if not len(r):
         #process parameters
         if lang is None: lang = self.gl_get_selected_language()
+        #verify if the object already exists
+        try:
+            ob = self._getOb(id)
+            id = '%s-%s' % (id, self.utGenRandomId(5))
+        except AttributeError:
+            pass
         if self.glCheckPermissionPublishObjects():
             approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
         else:

@@ -74,7 +74,7 @@ def addNyPointer(self, id='', title='', description='', coverage='', keywords=''
     """
     #process parameters
     id = self.utCleanupId(id)
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(6)
+    if not id: id = self.utGenObjectId(title)
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
     #check mandatory fiels
@@ -95,6 +95,12 @@ def addNyPointer(self, id='', title='', description='', coverage='', keywords=''
             approved, approved_by = 0, None
         releasedate = self.process_releasedate(releasedate)
         if lang is None: lang = self.gl_get_selected_language()
+        #verify if the object already exists
+        try:
+            ob = self._getOb(id)
+            id = '%s-%s' % (id, self.utGenRandomId(5))
+        except AttributeError:
+            pass
         #create object
         ob = NyPointer(id, title, description, coverage, keywords, sortorder, pointer,
             contributor, releasedate, lang)
