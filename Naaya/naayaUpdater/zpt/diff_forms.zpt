@@ -8,8 +8,8 @@
 							pmeta python:request.get('p', ''); 
 							fpath python:request.get('fpath', '');
 							diff python:here.diffTemplate(fmod, fpath, pmeta)">
-			<h1 tal:content="fmod" />
-			<p>Cu + sunt marcate modificarile fata de versiunea de pe filesystem</p>
+			<h1>File ID: <span tal:content="fmod" /></h1>
+			<p>With + are marked the differences from the filesystem version.</p>
 			<span tal:replace="structure diff" />
 		</tal:block>
 	</tal:block>
