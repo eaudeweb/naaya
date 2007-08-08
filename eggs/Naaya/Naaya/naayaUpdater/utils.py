@@ -18,6 +18,7 @@
 # Alec Ghica, Eau de Web
 # Cornel Nitu, Eau de Web
 
+import sys
 
 def convertToList(data):
     """ convert to list """
@@ -33,3 +34,9 @@ def minDate(a,b):
     """."""
     if a<b: return a
     else:   return b
+
+def isUnixLike():
+    """ find if the operating system is Unix-like"""
+    if sys.platform == 'win32':
+        return False
+    return True
