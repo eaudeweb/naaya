@@ -5,6 +5,11 @@
 
 	<tal:block metal:fill-slot="body">
 
+	<div>
+		<a tal:attributes="href string:${here/absolute_url}" title="Back to index">Back to index</a>
+		<br /><br />
+	</div>
+
 	<script type="text/javascript">
 	<!--
 	function fOpen(diff_form)
@@ -27,7 +32,7 @@
 			<small>*separate multiple metatypes by commas</small><br /><br />
 
 			<input type="checkbox" name="nonrecursive" id="nonrecursive" checked="checked"/>
-			<label for="recursive">Only update portals from Zope root</label><br />
+			<label for="nonrecursive">Only update portals from Zope root</label><br />
 
 			<input type="checkbox" name="modified" id="modified" checked="checked"/>
 			<label for="modified">Report and don't update the modified forms</label>&nbsp;<small>(based on portal creation date)</small><br />

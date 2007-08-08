@@ -55,14 +55,12 @@ class NaayaUpdater(Folder):
         self.id = id
         self.title = UPDATERTITLE
 
-    security.declareProtected(view_management_screens, 'index_html')
-    index_html = PageTemplateFile('zpt/updater_index', globals())
 
     ###
-    #Reinstall Naaya content types
+    #General stuff
     ######
-    security.declareProtected(view_management_screens, 'reinstall_contenttypes_html')
-    reinstall_contenttypes_html = PageTemplateFile('zpt/reinstall_contenttypes', globals())
+    security.declareProtected(view_management_screens, 'index_html')
+    index_html = PageTemplateFile('zpt/updater_index', globals())
 
     security.declareProtected(view_management_screens, 'getRootNaayaSites')
     def getRootNaayaSites(self, context, meta_types):
@@ -81,8 +79,46 @@ class NaayaUpdater(Folder):
                 res.extend(self.getNaayaSites(portal, meta_types))
         return res
 
-    security.declareProtected(view_management_screens, 'reloadNaayaSiteForms')
-    def reloadNaayaSiteForms(self, portal):
+
+    ###
+    #See all modified forms
+    ######
+    security.declareProtected(view_management_screens, 'show_alldiff_html')
+    show_alldiff_html = PageTemplateFile('zpt/show_alldiff', globals())
+
+    security.declareProtected(view_management_screens, 'getAllModified')
+    def getAllModified(self, meta_types, nonrecursive=True, forms=True, contentype_forms=False, portlets=False, layout=False):
+        """ """
+        root = self.getPhysicalRoot()
+        meta_types = convertToList(meta_types)
+        out_modified = []
+        out_unmodified = []
+        out_diff = 0
+
+        if nonrecursive:
+            for portal in self.getRootNaayaSites(root, meta_types):
+                modified, unmodified, list_diff = self.get_modified_forms(portal)
+                out_modified.extend(modified)
+                out_unmodified.extend(unmodified)
+                out_diff += list_diff
+        else:
+            portals_list = self.getNaayaSites(root, meta_types)
+            for portal in portals_list:
+                modified, unmodified, list_diff = self.get_modified_forms(portal)
+                out_modified.extend(modified)
+                out_unmodified.extend(unmodified)
+                out_diff += list_diff
+        return out_modified, out_unmodified, out_diff
+
+
+    ###
+    #Reinstall Naaya content types
+    ######
+    security.declareProtected(view_management_screens, 'reinstall_contenttypes_html')
+    reinstall_contenttypes_html = PageTemplateFile('zpt/reinstall_contenttypes', globals())
+
+    security.declareProtected(view_management_screens, 'reloadMetaTypesForms')
+    def reloadMetaTypesForms(self, portal):
         """ reload Naaya portal forms"""
         for meta_type in portal.get_pluggable_metatypes():
             item = portal.get_pluggable_item(meta_type)
@@ -92,7 +128,7 @@ class NaayaUpdater(Folder):
                 portal.manage_install_pluggableitem(meta_type)    #install
 
     security.declareProtected(view_management_screens, 'reinstallMetaTypes')
-    def reinstallMetaTypes(self, meta_types='Naaya Site', nonrecursive=True, modified=True, REQUEST=None):
+    def reinstallMetaTypes(self, meta_types='Naaya Site', nonrecursive=True, modified=True, exclude='', REQUEST=None):
         """ reinstall active metatypes for Naaya portals"""
         root = self.getPhysicalRoot()
         meta_types = convertToList(meta_types)
@@ -100,14 +136,15 @@ class NaayaUpdater(Folder):
         #TODO: to implement MODIFIED parameter
         if nonrecursive:
             for portal in self.getRootNaayaSites(root, meta_types):
-                self.reloadNaayaSiteForms(portal)
+                self.reloadMetaTypesForms(portal)
         else:
             portals_list = self.getNaayaSites(root, meta_types)
             for portal in portals_list:
-                self.reloadNaayaSiteForms(portal)
+                self.reloadMetaTypesForms(portal)
 
         #TODO: to create/show the report
         return ''
+
 
     ###
     #Overwritte Naaya forms
@@ -152,7 +189,9 @@ class NaayaUpdater(Folder):
     def _get_path(self, metatype):
         """ return the product path """
         portal_path = NAAYAUPDATER_PRODUCT_PATH.split(os.sep)[:-1]
-        portal_path.append(metatype.split(' ')[0])
+        product_name = metatype.split(' ')[0]
+        if product_name.lower() == 'chm': product_name = 'CHM2'
+        portal_path.append(product_name)
         return str(os.sep).join(portal_path)
 
     def _list_forms(self, metatype=''):
