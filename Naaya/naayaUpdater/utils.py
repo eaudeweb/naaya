@@ -31,15 +31,25 @@ def convertToList(data):
     return res
 
 def minDate(a,b):
-    """."""
-    if a<b: return a
-    else:   return b
+    """.compare dates """
+    if a < b: return a
+    else:     return b
 
 def isUnixLike():
     """ find if the operating system is Unix-like"""
     if sys.platform == 'win32':
         return False
     return True
+
+def convertLinesToList(value):
+    """ takes a value from a textarea control and returns a list of values """
+    if type(value) == type([]): return value
+    elif value == '': return []
+    else:
+        values = []
+        for v in value.split('\n'):
+            if v != '': values.append(v.replace('\r', ''))
+    return values
 
 def readFile(p_path, p_flag='r'):
     """ """
