@@ -21,6 +21,7 @@
 #Python imports
 from os.path import join
 import os
+from OFS.History import html_diff
 
 from OFS.Folder import Folder
 import Globals
@@ -28,7 +29,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl.Permissions import view_management_screens
 from AccessControl import ClassSecurityInfo
 
-
+from Products.Naaya.managers.skel_parser import skel_parser
 from Products.naayaUpdater.utils import *
 
 UPDATERID = 'naaya_updates'
@@ -114,6 +115,9 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'overwritte_forms_html')
     overwritte_forms_html = PageTemplateFile('zpt/overwritte_forms', globals())
 
+    security.declareProtected(view_management_screens, 'diff_forms_html')
+    diff_forms_html = PageTemplateFile('zpt/diff_forms', globals())
+
 #    security.declareProtected(view_management_screens, 'getPortalCreationDate')
 #    def getPortalCreationDate(self, portal):
 #        """ """
@@ -151,6 +155,38 @@ class NaayaUpdater(Folder):
         portal_path.append(metatype.split(' ')[0])
         return str(os.sep).join(portal_path)
 
+    def _list_forms(self, metatype=''):
+        """ """
+        portal_product_path = self._get_path(metatype)
+        skel_handler, error = skel_parser().parse(readFile(join(portal_product_path, 'skel', 'skel.xml'), 'r'))
+        if skel_handler.root.forms is not None:
+            return [f.id for f in skel_handler.root.forms.forms]
+
+    def _get_form(self, idform, metatype=''):
+        """ """
+        portal_product_path = self._get_path(metatype)
+        skel_handler, error = skel_parser().parse(readFile(join(portal_product_path, 'skel', 'skel.xml'), 'r'))
+        if skel_handler.root.forms is not None:
+            return readFile(join(portal_product_path, 'skel', 'forms', '%s.zpt' % idform), 'r')
+
+    security.declareProtected(view_management_screens, 'diffTemplate')
+    def diffTemplate(self, idform, pathform, metatype):
+        """ """
+        NAAYA_METATYPE = 'Naaya Site'
+        source_meta = ''
+        if idform in self._list_forms(metatype):
+            source_meta = metatype
+        elif idform in self._list_forms(NAAYA_METATYPE):
+            source_meta = NAAYA_METATYPE
+
+        #get filesystem template content
+        fs_content = self._get_form(idform, source_meta)
+
+        #get ZMI template content
+        root = self.getPhysicalRoot()
+        zmi_content = root.unrestrictedTraverse(pathform)
+        return html_diff(fs_content, zmi_content._text)
+
     security.declareProtected(view_management_screens, 'getReportModifiedForms')
     def getReportModifiedForms(self, meta_types='Naaya Site', nonrecursive=True, modified=True, REQUEST=None):
         """ overwritte Naaya portal forms """
@@ -168,7 +204,7 @@ class NaayaUpdater(Folder):
             for portal in portals_list:
                 if modified:
                     modified, unmodified, list_diff = self.get_modified_forms(portal)
-                    out_modified.extend(modified)
+                    out_modified.append((modified, portal))
                     out_diff += list_diff
             return out_modified, out_diff
 

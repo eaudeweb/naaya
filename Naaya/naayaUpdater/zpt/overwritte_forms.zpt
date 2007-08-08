@@ -5,10 +5,22 @@
 
 	<tal:block metal:fill-slot="body">
 
+	<script type="text/javascript">
+	<!--
+	function fOpen(diff_form)
+	{
+		var frm = document.frmReloadForms;
+		var wnd = window.open(diff_form, "View differences", "height=1024,width=768,status=no,resizable=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
+		wnd.focus();
+	}
+	// -->
+	</script>
+
+
 	<fieldset>
 		<legend>Overwritte Naaya forms</legend>
 		<p>The missing forms will be also added.</p>
-		<form href="" method="post" name="frmForms">
+		<form href="" method="post" name="frmModForms">
 
 			<label for="meta_types">Naaya site(s)</label>
 			<input type="text" name="meta_types" size="60" value="CHM Site, Naaya Site" />
@@ -29,15 +41,28 @@
 						nonrecursive python:request.get('nonrecursive', 0);
 						modified python:request.get('modified', 0);
 						report python:here.getReportModifiedForms(meta_types, nonrecursive, modified, request)">
-			<span tal:replace="report" />
+		<h2>Report</h2>
+		<div tal:condition="report">
+			<form href="" method="post" name="frmReloadForms" tal:define="out_modified python:report[0];out_diff python:report[1];">
+				<div><span tal:replace="out_diff" /> unmodified forms found.</div>
+				<tal:block repeat="fmod_info out_modified">
+					<tal:block define="fmods python:fmod_info[0]; portal python:fmod_info[1]">
+					<h3><a tal:attributes="href portal/absolute_url; title portal/title_or_id" tal:content="portal/title_or_id" /></h3>
+					<ol>
+						<tal:block repeat="fmod fmods">
+						<li tal:define="fpath python:fmod.absolute_url(1)">
+							<input type="checkbox" name="fmod" tal:attributes="value fmod/absolute_url" />
+							<a tal:attributes="href fmod/absolute_url; title fmod/title_or_id" tal:content="fmod/id" />
+							<input type="button" value="diff" id="diff" tal:attributes="onclick string:javascript:fOpen('${here/absolute_url}/diff_forms_html?f=${fmod/id}&fpath=${fpath}&p=${portal/meta_type}');" />
+						</li>
+						</tal:block>
+					</ol>
+					</tal:block>
+				</tal:block>
+				<input type="submit" name="reload" value="Reload" />
+			</form>
+		</div>
 	</tal:block>
-
-<br>
-105 forms will be updated becous no diffs<br>
-
-checkbox linkFile buton:view diff<br>
-
-buton:update<br>
 
 	</tal:block>
 </tal:block>

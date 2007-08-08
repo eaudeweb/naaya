@@ -40,3 +40,7 @@ def isUnixLike():
     if sys.platform == 'win32':
         return False
     return True
+
+def readFile(p_path, p_flag='r'):
+    """ """
+    return open(p_path, p_flag).read()

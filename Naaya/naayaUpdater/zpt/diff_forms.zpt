@@ -1,0 +1,16 @@
+<tal:block metal:use-macro="here/standard_template.pt/macros/page">
+	<tal:block metal:fill-slot="head">
+		<title tal:content="here/title">TITLE</title>
+	</tal:block>
+
+	<tal:block metal:fill-slot="body">
+		<tal:block define="fmod python:request.get('f', ''); 
+							pmeta python:request.get('p', ''); 
+							fpath python:request.get('fpath', '');
+							diff python:here.diffTemplate(fmod, fpath, pmeta)">
+			<h1 tal:content="fmod" />
+			<p>Cu + sunt marcate modificarile fata de versiunea de pe filesystem</p>
+			<span tal:replace="structure diff" />
+		</tal:block>
+	</tal:block>
+</tal:block>
