@@ -1,0 +1,29 @@
+<tal:block metal:use-macro="here/standard_template.pt/macros/page">
+	<tal:block metal:fill-slot="head">
+		<title tal:content="here/title">TITLE</title>
+	</tal:block>
+
+	<tal:block metal:fill-slot="body">
+
+		<fieldset>
+			<legend>Reinstall Naaya content types</legend>
+			<p>Only the installed metatype(s) will be updated.</p>
+			<form tal:attributes="action string:${here/absolute_url}/reinstallMetaTypes" method="post" name="frmMetaTypes">
+
+				<label for="meta_types">Naaya site(s)</label>
+				<input type="text" name="meta_types" size="60" value="CHM Site, Naaya Site" />
+				<small>*separate multiple metatypes by commas</small><br /><br />
+
+				<input type="checkbox" name="nonrecursive" id="mtOpt1" checked="checked"/>
+				<label for="recursive">Only update portals from Zope root</label><br />
+
+				<input type="checkbox" name="modified" id="mtOpt2" checked="checked"/>
+				<label for="modified">Report and don't update the modified forms</label>&nbsp;<small>(based on portal creation date)&nbsp;<span style="color: red">*not yet implemented</span></small><br />
+
+				<br />
+				<input type="submit" name="btnMetaTypes" value="Reinstall" />
+			</form>
+		</fieldset>
+
+	</tal:block>
+</tal:block>

@@ -18,13 +18,18 @@
 # Alec Ghica, Eau de Web
 # Cornel Nitu, Eau de Web
 
+#Python imports
+from os.path import join
+import os
+
 from OFS.Folder import Folder
-from Globals import InitializeClass
+import Globals
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl.Permissions import view_management_screens
 from AccessControl import ClassSecurityInfo
 
-from Products.naayaUpdater.utils import convertToList, minDate
+
+from Products.naayaUpdater.utils import *
 
 UPDATERID = 'naaya_updates'
 UPDATERTITLE = 'Update scripts for Naaya'
@@ -54,6 +59,9 @@ class NaayaUpdater(Folder):
     ###
     #Reinstall Naaya content types
     ######
+    security.declareProtected(view_management_screens, 'reinstall_contenttypes_html')
+    reinstall_contenttypes_html = PageTemplateFile('zpt/reinstall_contenttypes', globals())
+
     security.declareProtected(view_management_screens, 'getRootNaayaSites')
     def getRootNaayaSites(self, context, meta_types):
         """ """
@@ -102,6 +110,9 @@ class NaayaUpdater(Folder):
     ###
     #Overwritte Naaya forms
     ######
+    security.declareProtected(view_management_screens, 'overwritte_forms_html')
+    overwritte_forms_html = PageTemplateFile('zpt/overwritte_forms', globals())
+
     security.declareProtected(view_management_screens, 'findModifiedForms')
     def getPortalCreationDate(self, portal):
         """ """
@@ -115,36 +126,48 @@ class NaayaUpdater(Folder):
         """ """
         forms_list = []
         add_form = forms_list.append
-        last_date = self.getPortalCreationDate(portal)
+        tmp_date = ''
 
-        for form in portal.getFormsTool().objectValues("Naaya Template"):
-            if form.id not in ["site_admin_comments", "site_admin_network", "site_external_search", "site_admin_properties"] and "old" not in str(form.id):
-                creation_date = form.bobobase_modification_time()
-                if creation_date > last_date:
-                    add_form(form.id)
+        forms_date = [(form.bobobase_modification_time(), form) for form in portal.getFormsTool().objectValues("Naaya Template")]
+        forms_date.sort()
+        last_date = forms_date[0][0]
+
+        if forms_date[0][0] != forms_date[-1][0]:
+            for form in portal.getFormsTool().objectValues("Naaya Template"):
+                if form.id not in ["site_admin_comments", "site_admin_network", "site_external_search", "site_admin_properties"] and "old" not in str(form.id):
+                    creation_date = form.bobobase_modification_time()
+                    if creation_date > last_date:
+                        add_form(form.id)
         return forms_list
 
+    def getPath(self, metatype='EnviroWindows Site'):
+        """ """
+        res = []
+        my_path = Globals.package_home(globals())
+        res.extend(my_path.split(os.sep)[:-1])
+        res.append(metatype.split(' ')[0])
+        return '%s'.join(res) % os.sep
+
     security.declareProtected(view_management_screens, 'reinstallMetaTypes')
-    def overwritteForms(self, meta_types='Naaya Site', nonrecursive=True, modified=True, force='', REQUEST=None):
+    def overwritteForms(self, meta_types='Naaya Site', nonrecursive=True, modified=True, REQUEST=None):
         """ overwritte Naaya portal forms """
         root = self.getPhysicalRoot()
         meta_types = convertToList(meta_types)
 
-        #TODO: to implement FORCE parameter
         #TODO: to implement MODIFIED parameter
         if nonrecursive:
             for portal in self.getRootNaayaSites(root, meta_types):
                 if modified:
                     for k in self.findModifiedForms(portal):
-                        #self.reloadNaayaSiteForms(portal)
+                        print '%s/portal_forms/%s' % (portal.absolute_url(), k)
         else:
             portals_list = self.getNaayaSites(root, meta_types)
             for portal in portals_list:
                 if modified:
                     for k in self.findModifiedForms(portal):
-                        #self.reloadNaayaSiteForms(portal)
+                        print k
 
         #TODO: to create/show the report
         return ''
 
-InitializeClass(NaayaUpdater)
+Globals.InitializeClass(NaayaUpdater)
