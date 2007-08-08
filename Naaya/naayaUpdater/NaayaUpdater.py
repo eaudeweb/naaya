@@ -154,21 +154,22 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'getReportModifiedForms')
     def getReportModifiedForms(self, meta_types='Naaya Site', nonrecursive=True, modified=True, REQUEST=None):
         """ overwritte Naaya portal forms """
-        root = self.getPhysicalRoot()
-        meta_types = convertToList(meta_types)
+        if REQUEST.has_key('show_report'):
+            root = self.getPhysicalRoot()
+            meta_types = convertToList(meta_types)
 
-        if nonrecursive:
-            portals_list = self.getRootNaayaSites(root, meta_types)
-        else:
-            portals_list = self.getNaayaSites(root, meta_types)
+            if nonrecursive:
+                portals_list = self.getRootNaayaSites(root, meta_types)
+            else:
+                portals_list = self.getNaayaSites(root, meta_types)
 
-        out_modified = []
-        out_diff = 0
-        for portal in portals_list:
-            if modified:
-                modified, unmodified, list_diff = self.get_modified_forms(portal)
-                out_modified.extend(modified)
-                out_diff += list_diff
-        return out_modified, out_diff
+            out_modified = []
+            out_diff = 0
+            for portal in portals_list:
+                if modified:
+                    modified, unmodified, list_diff = self.get_modified_forms(portal)
+                    out_modified.extend(modified)
+                    out_diff += list_diff
+            return out_modified, out_diff
 
 Globals.InitializeClass(NaayaUpdater)
