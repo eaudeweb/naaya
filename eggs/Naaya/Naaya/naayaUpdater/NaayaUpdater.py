@@ -33,6 +33,7 @@ from Products.naayaUpdater.utils import *
 
 UPDATERID = 'naaya_updates'
 UPDATERTITLE = 'Update scripts for Naaya'
+NAAYAUPDATER_PRODUCT_PATH = Globals.package_home(globals())
 
 class NaayaUpdater(Folder):
     """NaayaUpdater class"""
@@ -113,61 +114,61 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'overwritte_forms_html')
     overwritte_forms_html = PageTemplateFile('zpt/overwritte_forms', globals())
 
-    security.declareProtected(view_management_screens, 'findModifiedForms')
-    def getPortalCreationDate(self, portal):
-        """ """
-        creation_date = portal.error_log.bobobase_modification_time()
-        for form in portal.getFormsTool().objectValues("Naaya Template"):
-            creation_date = minDate(form.bobobase_modification_time(), creation_date)
-        return creation_date
+#    security.declareProtected(view_management_screens, 'getPortalCreationDate')
+#    def getPortalCreationDate(self, portal):
+#        """ """
+#        creation_date = portal.error_log.bobobase_modification_time()
+#        for form in portal.getFormsTool().objectValues("Naaya Template"):
+#            creation_date = minDate(form.bobobase_modification_time(), creation_date)
+#        return creation_date
 
-    security.declareProtected(view_management_screens, 'findModifiedForms')
-    def findModifiedForms(self, portal):
-        """ """
-        forms_list = []
-        add_form = forms_list.append
-        tmp_date = ''
+    security.declareProtected(view_management_screens, 'get_modified_forms')
+    def get_modified_forms(self, portal):
+        """ return the list of modified forms inside this portal"""
 
-        forms_date = [(form.bobobase_modification_time(), form) for form in portal.getFormsTool().objectValues("Naaya Template")]
-        forms_date.sort()
-        last_date = forms_date[0][0]
+        EXCLUSION_FORMS_LIST = ['site_admin_comments', 'site_admin_network', 'site_external_search', 'site_admin_properties']
+        modified = []   #modified forms list
+        unmodified = [] #unmodified forms list
 
-        if forms_date[0][0] != forms_date[-1][0]:
-            for form in portal.getFormsTool().objectValues("Naaya Template"):
-                if form.id not in ["site_admin_comments", "site_admin_network", "site_external_search", "site_admin_properties"] and "old" not in str(form.id):
-                    creation_date = form.bobobase_modification_time()
-                    if creation_date > last_date:
-                        add_form(form.id)
-        return forms_list
+        forms_date_list = [(f.bobobase_modification_time(), f) for f in portal.getFormsTool().objectValues("Naaya Template")]
+        forms_date_list.sort()
 
-    def getPath(self, metatype='EnviroWindows Site'):
-        """ """
-        res = []
-        my_path = Globals.package_home(globals())
-        res.extend(my_path.split(os.sep)[:-1])
-        res.append(metatype.split(' ')[0])
-        return '%s'.join(res) % os.sep
+        if forms_date_list[0][0] != forms_date_list[-1][0]:
+            for fdate in forms_date_list:
+                f = fdate[1]    #get form object
+                if f.id not in EXCLUSION_FORMS_LIST and f.id.find('_old') == -1:
+                    if f.bobobase_modification_time() > forms_date_list[0][0]:
+                        modified.append(f)
+                    else:
+                        unmodified.append(f)
 
-    security.declareProtected(view_management_screens, 'reinstallMetaTypes')
-    def overwritteForms(self, meta_types='Naaya Site', nonrecursive=True, modified=True, REQUEST=None):
+        list_diff = len(forms_date_list) - len(modified)    #number of unmodified forms
+        return modified, unmodified, list_diff
+
+    def _get_path(self, metatype):
+        """ return the product path """
+        portal_path = NAAYAUPDATER_PRODUCT_PATH.split(os.sep)[:-1]
+        portal_path.append(metatype.split(' ')[0])
+        return str(os.sep).join(portal_path)
+
+    security.declareProtected(view_management_screens, 'getReportModifiedForms')
+    def getReportModifiedForms(self, meta_types='Naaya Site', nonrecursive=True, modified=True, REQUEST=None):
         """ overwritte Naaya portal forms """
         root = self.getPhysicalRoot()
         meta_types = convertToList(meta_types)
 
-        #TODO: to implement MODIFIED parameter
         if nonrecursive:
-            for portal in self.getRootNaayaSites(root, meta_types):
-                if modified:
-                    for k in self.findModifiedForms(portal):
-                        print '%s/portal_forms/%s' % (portal.absolute_url(), k)
+            portals_list = self.getRootNaayaSites(root, meta_types)
         else:
             portals_list = self.getNaayaSites(root, meta_types)
-            for portal in portals_list:
-                if modified:
-                    for k in self.findModifiedForms(portal):
-                        print k
 
-        #TODO: to create/show the report
-        return ''
+        out_modified = []
+        out_diff = 0
+        for portal in portals_list:
+            if modified:
+                modified, unmodified, list_diff = self.get_modified_forms(portal)
+                out_modified.extend(modified)
+                out_diff += list_diff
+        return out_modified, out_diff
 
 Globals.InitializeClass(NaayaUpdater)
