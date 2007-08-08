@@ -8,16 +8,16 @@
 	<fieldset>
 		<legend>Overwritte Naaya forms</legend>
 		<p>The missing forms will be also added.</p>
-		<form tal:attributes="action string:${here/absolute_url}/overwritteForms" method="post" name="frmForms">
+		<form href="" method="post" name="frmForms">
 
 			<label for="meta_types">Naaya site(s)</label>
 			<input type="text" name="meta_types" size="60" value="CHM Site, Naaya Site" />
 			<small>*separate multiple metatypes by commas</small><br /><br />
 
-			<input type="checkbox" name="nonrecursive" id="mtOpt1" checked="checked"/>
+			<input type="checkbox" name="nonrecursive" id="nonrecursive" checked="checked"/>
 			<label for="recursive">Only update portals from Zope root</label><br />
 
-			<input type="checkbox" name="modified" id="mtOpt2" checked="checked"/>
+			<input type="checkbox" name="modified" id="modified" checked="checked"/>
 			<label for="modified">Report and don't update the modified forms</label>&nbsp;<small>(based on portal creation date)</small><br />
 
 			<br />
@@ -25,7 +25,11 @@
 		</form>
 	</fieldset>
 
-	<tal:block define
+	<tal:block define="meta_types python:request.get('meta_types', '');
+						nonrecursive python:request.get('nonrecursive', 0);
+						modified python:request.get('modified', 0);
+						report python:here.getReportModifiedForms(meta_types, nonrecursive, modified, request)">
+			<span tal:replace="report" />
 	</tal:block>
 
 <br>
