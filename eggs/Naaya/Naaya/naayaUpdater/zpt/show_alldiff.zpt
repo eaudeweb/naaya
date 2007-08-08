@@ -14,8 +14,7 @@
 	<!--
 	function fOpen(diff_form)
 	{
-		var frm = document.frmReloadForms;
-		var wnd = window.open(diff_form, "View differences", "height=1024,width=768,status=no,resizable=yes,toolbar=no,menubar=no,location=no,scrollbars=yes");
+		var wnd = window.open(diff_form);
 		wnd.focus();
 	}
 	// -->
@@ -72,7 +71,7 @@
 							modified python:res[0];
 							unmodified python:res[1];
 							list_diff python:res[2]">
-		<h2>Report:</h2>
+		<h2>Report</h2>
 
 		<ul>
 			<li><span style="font-weight:bold; color: green" tal:content="list_diff" /> unchanged forms found.</li>
