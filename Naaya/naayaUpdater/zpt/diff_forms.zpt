@@ -5,9 +5,9 @@
 
 	<tal:block metal:fill-slot="body">
 		<tal:block define="fmod python:request.get('f', ''); 
-							pmeta python:request.get('p', ''); 
+							ppath python:request.get('p', ''); 
 							fpath python:request.get('fpath', '');
-							diff python:here.diffTemplate(fmod, fpath, pmeta)">
+							diff python:here.diffTemplate(fmod, fpath, ppath)">
 			<h1>File ID: <span tal:content="fmod" /></h1>
 			<p>With + are marked the differences from the filesystem version.</p>
 			<span tal:replace="structure diff" />

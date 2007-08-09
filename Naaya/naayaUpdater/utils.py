@@ -19,6 +19,7 @@
 # Cornel Nitu, Eau de Web
 
 import sys
+import sha
 
 def convertToList(data):
     """ convert to list """
@@ -54,3 +55,9 @@ def convertLinesToList(value):
 def readFile(p_path, p_flag='r'):
     """ """
     return open(p_path, p_flag).read()
+
+def create_signature(s):
+    m = sha.new(s)
+    res = m.hexdigest()
+    m = None
+    return res
