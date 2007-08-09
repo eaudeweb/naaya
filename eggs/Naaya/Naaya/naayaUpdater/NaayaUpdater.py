@@ -64,22 +64,7 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'index_html')
     index_html = PageTemplateFile('zpt/updater_index', globals())
 
-    security.declareProtected(view_management_screens, 'getRootNaayaSites')
-    def getRootNaayaSites(self, context, meta_types):
-        """ """
-        res = []
-        [res.append(portal) for portal in context.objectValues(meta_types)]
-        return res
 
-    security.declareProtected(view_management_screens, 'getNaayaSites')
-    def getNaayaSites(self, context, meta_types):
-        """ """
-        res = []
-        for portal in context.objectValues(meta_types):
-            res.append(portal)
-            if len(portal.objectValues(meta_types)) > 0:
-                res.extend(self.getNaayaSites(portal, meta_types))
-        return res
 
 
     ###
@@ -98,13 +83,13 @@ class NaayaUpdater(Folder):
         out_diff = 0
 
         if nonrecursive:
-            for portal in self.getRootNaayaSites(root, meta_types):
+            for portal in self.get_root_ny_sites(root, meta_types):
                 modified, unmodified, list_diff = self.get_modified_forms(portal)
                 out_modified.extend(modified)
                 out_unmodified.extend(unmodified)
                 out_diff += list_diff
         else:
-            portals_list = self.getNaayaSites(root, meta_types)
+            portals_list = self.get_ny_sites(root, meta_types)
             for portal in portals_list:
                 modified, unmodified, list_diff = self.get_modified_forms(portal)
                 out_modified.extend(modified)
@@ -137,10 +122,10 @@ class NaayaUpdater(Folder):
 
         #TODO: to implement MODIFIED parameter
         if nonrecursive:
-            for portal in self.getRootNaayaSites(root, meta_types):
+            for portal in self.get_root_ny_sites(root, meta_types):
                 self.reloadMetaTypesForms(portal)
         else:
-            portals_list = self.getNaayaSites(root, meta_types)
+            portals_list = self.get_ny_sites(root, meta_types)
             for portal in portals_list:
                 self.reloadMetaTypesForms(portal)
 
@@ -165,15 +150,34 @@ class NaayaUpdater(Folder):
 #            creation_date = minDate(form.bobobase_modification_time(), creation_date)
 #        return creation_date
 
+#---------------------------------------------------------------------------------------------------------- API
+
+    security.declarePrivate('get_root_ny_sites')
+    def get_root_ny_sites(self, context, meta_types):
+        """ """
+        return [portal for portal in context.objectValues(meta_types)]
+
+    security.declarePrivate('get_ny_sites')
+    def get_ny_sites(self, context, meta_types):
+        """ """
+        res = []
+        for portal in context.objectValues(meta_types):
+            res.append(portal)
+            if len(portal.objectValues(meta_types)) > 0:
+                res.extend(self.get_ny_sites(portal, meta_types))
+        return res
+
     security.declarePrivate('get_modified_forms')
     def get_modified_forms(self, portal):
-        """ return the list of modified forms inside this portal"""
+        """ 
+            return the list of modified forms inside this portal ?????
+        """
 
         EXCLUSION_FORMS_LIST = ['site_admin_comments', 'site_admin_network', 'site_external_search', 'site_admin_properties']
         modified = []   #modified forms list
         unmodified = [] #unmodified forms list
 
-        forms_date_list = [(f.bobobase_modification_time(), f) for f in portal.getFormsTool().objectValues("Naaya Template")]
+        forms_date_list = [(f.bobobase_modification_time(), f) for f in self.list_zmi_templates(portal)]
         forms_date_list.sort()
 
         if forms_date_list[0][0] != forms_date_list[-1][0]:
@@ -188,78 +192,111 @@ class NaayaUpdater(Folder):
         list_diff = len(forms_date_list) - len(modified)    #number of unmodified forms
         return modified, unmodified, list_diff
 
-    security.declarePrivate('_get_path')
-    def _get_path(self, metatype):
-        """ return the product path """
-        portal_path = NAAYAUPDATER_PRODUCT_PATH.split(os.sep)[:-1]
-        product_name = metatype.split(' ')[0]
-        if product_name.lower() == 'chm': product_name = 'CHM2'
-        portal_path.append(product_name)
-        return str(os.sep).join(portal_path)
+    security.declarePrivate('get_portal_path')
+    def get_portal_path(self, metatype):
+        """ 
+            return the portal path given the metatype
+        """
+        ppath = NAAYAUPDATER_PRODUCT_PATH.split(os.sep)[:-1]
+        pname = metatype.split(' ')[0]
+        if pname.lower() == 'chm': pname = 'CHM2'
+        ppath.append(pname)
+        return str(os.sep).join(ppath)
 
-    security.declarePrivate('_list_forms')
-    def _list_forms(self, metatype=''):
-        portal_product_path = self._get_path(metatype)
-        skel_handler, error = skel_parser().parse(readFile(join(portal_product_path, 'skel', 'skel.xml'), 'r'))
+
+    security.declarePrivate('get_contenttype_content')
+    def get_contenttype_content(self, id, portal):
+        """
+            return the content of the filesystem content-type template
+        """
+        portal_path = self.get_portal_path(portal.meta_type)
+        data_path = join(portal_path, 'skel', 'forms')
+
+        for meta_type in portal.get_pluggable_metatypes():
+            pitem = portal.get_pluggable_item(meta_type)
+            #load pluggable item's data
+            for frm in pitem['forms']:
+                if id == frm:
+                    frm_name = '%s.zpt' % frm
+                    if isfile(join(data_path, frm_name)):
+                        #load form from the 'forms' directory because it si customized
+                        return readFile(join(data_path, frm_name), 'r')
+                    else:
+                        #load form from the pluggable meta type folder
+                        return readFile(join(NAAYACONTENT_PRODUCT_PATH, pitem['module'], 'zpt', frm_name), 'r')
+                    break
+
+
+    security.declarePrivate('list_zmi_templates')
+    def list_zmi_templates(self, portal):
+        """ 
+            return the list of the ZMI templates
+        """
+        return portal.getFormsTool().objectValues("Naaya Template")
+
+
+    security.declarePrivate('list_fs_templates')
+    def list_fs_templates(self, metatype):
+        """
+            return the list of the filesystem templates
+        """
+        portal_path = self.get_portal_path(metatype)
+        skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
         if skel_handler.root.forms is not None:
             return [f.id for f in skel_handler.root.forms.forms]
 
-    security.declarePrivate('_get_contenttypes_form')
-    def _get_contenttypes_form(self, idform, portal):
-        portal_product_path = self._get_path(portal.meta_type)
-        data_path = join(portal_product_path, 'skel', 'forms')
 
-        for meta_type in portal.get_pluggable_metatypes():
-            if portal.is_pluggable_item_installed(meta_type):
-                pitem = portal.get_pluggable_item(meta_type)
-                #load pluggable item's data
-                for frm in pitem['forms']:
-                    if idform == frm:
-                        frm_name = '%s.zpt' % frm
-                        if isfile(join(data_path, frm_name)):
-                            #load form from the 'forms' directory because it si customized
-                            content = readFile(join(data_path, frm_name), 'r')
-                        else:
-                            #load form from the pluggable meta type folder
-                            content = readFile(join(NAAYACONTENT_PRODUCT_PATH, pitem['module'], 'zpt', frm_name), 'r')
-                        break
-        return content
-
-    security.declarePrivate('_get_form')
-    def _get_form(self, idform, metatype=''):
-        portal_product_path = self._get_path(metatype)
-        skel_handler, error = skel_parser().parse(readFile(join(portal_product_path, 'skel', 'skel.xml'), 'r'))
+    security.declarePrivate('get_template_content')
+    def get_template_content(self, id, metatype):
+        """
+            return the content of the filesystem template
+        """
+        portal_path = self.get_portal_path(metatype)
+        skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
         if skel_handler.root.forms is not None:
-            return readFile(join(portal_product_path, 'skel', 'forms', '%s.zpt' % idform), 'r')
+            return readFile(join(portal_path, 'skel', 'forms', '%s.zpt' % id), 'r')
 
-    security.declarePrivate('getFSForm')
-    def getFSForm(self, idform, pathportal):
-        """ return the content of the filesystem template """
+
+    security.declarePrivate('get_fs_template')
+    def get_fs_template(self, id, portal):
+        """ 
+            return a filesystem template object given the id 
+        """
         NAAYA_METATYPE = 'Naaya Site'
+
+        if id in self.list_fs_templates(portal.meta_type):
+            return self.get_template_content(id, portal.meta_type)
+        elif id in self.list_fs_templates(NAAYA_METATYPE):   #fall back to Naaya filesytem templates
+            return self.get_template_content(id, NAAYA_METATYPE)
+        return self.get_contenttype_content(id, portal) #fall back to Naaya pluggable content types
+
+
+    security.declarePrivate('get_zmi_template')
+    def get_zmi_template(self, path):
+        """ 
+            return a ZMI template object given the path 
+        """
         root = self.getPhysicalRoot()
-        portal = root.unrestrictedTraverse(pathportal)
+        return root.unrestrictedTraverse(path)
 
-        if idform in self._list_forms(portal.meta_type):
-            content = self._get_form(idform, portal.meta_type)   #get filesystem template content
-        elif idform in self._list_forms(NAAYA_METATYPE):
-            content = self._get_form(idform, NAAYA_METATYPE)   #get filesystem template content
-        else:
-            #is pluggable content type
-            content = self._get_contenttypes_form(idform, portal)
-        return content
 
-    security.declarePrivate('getZMIForm')
-    def getZMIForm(self, pathform):
-        """ return the content of the ZMI template """
-        root = self.getPhysicalRoot()
-        return root.unrestrictedTraverse(pathform)
+    security.declarePrivate('get_template_content')
+    def get_template_content(self, form):
+        """
+            return a template content given the object 
+        """
+        return form._text
 
-    security.declareProtected(view_management_screens, 'diffTemplate')
-    def diffTemplate(self, idform, pathform, pathportal):
-        """ """
-        fs_content = self.getFSForm(idform, pathportal)
-        zmi_content = self.getZMIForm(pathform)
-        return html_diff(fs_content, zmi_content._text)
+#----------------------------------------------------------------------------------------------------------
+
+    security.declareProtected(view_management_screens, 'diffTemplates')
+    def diffTemplates(self, id, fpath, ppath):
+        """ return the differences between the ZMI and the filesytem versions of the template"""
+        fs = self.get_fs_template(id, ppath)
+        zmi = self.get_zmi_template(fpath)
+        return html_diff(fs, self.get_template_content(zmi))
+
+
 
     security.declareProtected(view_management_screens, 'getReportModifiedForms')
     def getReportModifiedForms(self, meta_types='Naaya Site', nonrecursive=True, modified=True, REQUEST=None):
@@ -269,9 +306,9 @@ class NaayaUpdater(Folder):
             meta_types = convertToList(meta_types)
 
             if nonrecursive:
-                portals_list = self.getRootNaayaSites(root, meta_types)
+                portals_list = self.get_root_ny_sites(root, meta_types)
             else:
-                portals_list = self.getNaayaSites(root, meta_types)
+                portals_list = self.get_ny_sites(root, meta_types)
 
             out_modified = []
             out_diff = 0
@@ -282,7 +319,7 @@ class NaayaUpdater(Folder):
                     buf = copy.copy(modified)
                     for m in buf:
                         zmi = self.getFSForm(m.id, portal.absolute_url(1))
-                        if create_signature(m._text) == create_signature(zmi):
+                        if create_signature(self.get_template_content(m)) == create_signature(zmi):
                             modified.remove(m)
                     #check for unmodified
                     out_modified.append((modified, portal))
