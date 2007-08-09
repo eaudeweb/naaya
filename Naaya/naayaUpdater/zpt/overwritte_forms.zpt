@@ -1,6 +1,15 @@
 <tal:block metal:use-macro="here/standard_template.pt/macros/page">
 	<tal:block metal:fill-slot="head">
 		<title tal:content="here/title">TITLE</title>
+		<script type="text/javascript">
+		<!--
+		function fOpen(diff_form)
+		{
+			var wnd = window.open(diff_form);
+			wnd.focus();
+		}
+		// -->
+		</script>
 	</tal:block>
 
 	<tal:block metal:fill-slot="body">
@@ -10,65 +19,64 @@
 		<br /><br />
 	</div>
 
-	<script type="text/javascript">
-	<!--
-	function fOpen(diff_form)
-	{
-		var wnd = window.open(diff_form);
-		wnd.focus();
-	}
-	// -->
-	</script>
-
+	<tal:block define="ppath python:request.get('ppath', '');
+						upload_ok python:request.get('u', 0);
+						report python:here.getReportModifiedForms(ppath, request)">
 
 	<fieldset>
 		<legend>Overwritte Naaya forms</legend>
 		<p>The missing forms will be also added.</p>
-		<form href="" method="post" name="frmModForms">
+		<form method="post" name="frmModForms">
+			<label for="ppath">Portal</label>
+			<select name="ppath" id="ppath">
+				<option tal:repeat="portal here/getPortals"
+						tal:attributes="selected python:test(ppath==portal.absolute_url(1), 'selected', ''); 
+										value python:portal.absolute_url(1)" 
+						tal:content="python:'%s (%s)' % (portal.title_or_id(),portal.absolute_url(1))" />
+			</select>
+			<br /><br />
 
-			<label for="meta_types">Naaya site(s)</label>
-			<input type="text" name="meta_types" size="60" tal:attributes="value python:request.get('meta_types', 'CHM Site, Naaya Site')" />
-			<small>*separate multiple metatypes by commas</small><br /><br />
-
-			<input type="checkbox" name="nonrecursive" id="nonrecursive" checked="checked"/>
-			<label for="nonrecursive">Only update portals from Zope root</label><br />
-
-			<input type="checkbox" name="modified" id="modified" checked="checked"/>
-			<label for="modified">Report and don't update the modified forms</label>&nbsp;<small>(based on portal creation date)</small><br />
-
-			<br />
 			<input type="submit" name="show_report" value="Show report" />
 		</form>
 	</fieldset>
 
-	<tal:block define="meta_types python:request.get('meta_types', '');
-						nonrecursive python:request.get('nonrecursive', 0);
-						modified python:request.get('modified', 0);
-						upload_ok python:request.get('u', 0);
-						report python:here.getReportModifiedForms(meta_types, nonrecursive, modified, request)">
-		<h2 tal:condition="report">Report</h2>
-		<div tal:condition="report">
-			<form tal:attributes="action string:${here/absolute_url}/reloadPortalForms" method="post" name="frmReloadForms" tal:define="out_modified python:report[0];out_diff python:report[1];">
-				<div><span tal:replace="out_diff" /> unmodified forms found.</div>
-				<tal:block repeat="fmod_info out_modified">
-					<tal:block define="fmods python:fmod_info[0]; portal python:fmod_info[1]">
-					<h3><a tal:attributes="href portal/absolute_url; title portal/title_or_id" tal:content="portal/title_or_id" /></h3>
-					<ol>
-						<tal:block repeat="fmod fmods">
-						<li tal:define="fpath python:fmod.absolute_url(1); ppath python:portal.absolute_url(1)">
-							<input type="checkbox" name="fmod" tal:attributes="value fpath" />
-							<a tal:attributes="id fpath" />
-							[<a tal:attributes="onclick string:javascript:fOpen('${here/absolute_url}/diff_forms_html?f=${fmod/id}&fpath=${fpath}&p=${ppath}'); href string:#${fpath}">see diff</a>]&nbsp;
-							<a tal:attributes="href string:${fmod/absolute_url}/pt_editForm; title fmod/title_or_id" tal:content="fmod/id" target="new" />
-						</li>
-						</tal:block>
-					</ol>
+	<h2 tal:condition="report">Report</h2>
+	<div tal:condition="report"
+		tal:define="portal python:here.getPortal(ppath)">
+		<h3><a tal:attributes="href ppath; title ppath" tal:content="ppath" /></h3>
+		<form tal:condition="python:not here.testFTCreationDate(portal)"
+			  tal:attributes="action string:${here/absolute_url}/setFTDateFormsPage" method="post" name="frmSetCreationDate">
+			<p>This portal has no creation date set for its PortalForms.<br />
+			   <em tal:content="python:here.formatDateTime(here.generateFTCreationDate(portal))" /> will be set as creation date.</p>
+			<input type="hidden" name="ppath" tal:attributes="value ppath" />
+
+			<input type="submit" name="setCD" value="Set creation date" />
+		</form>
+		<form tal:condition="python:here.testFTCreationDate(portal)"
+			  tal:attributes="action string:${here/absolute_url}/reloadPortalForms" method="post" name="frmReloadForms" tal:define="out_modified python:report[0];out_diff python:report[1];">
+			<div>
+				<input type="checkbox" name="funmod" />
+				<label for="funmod">
+					Update identical, unchanged and missing forms. (<span tal:replace="out_diff" /> unchanged forms found)
+				</label>
+			</div>
+
+				<ol>
+					<tal:block repeat="fmod out_modified">
+					<li tal:define="fpath python:fmod.absolute_url(1)">
+						<input type="checkbox" name="fmod" tal:attributes="value fpath" />
+						<a tal:attributes="id fpath" />
+						[<a tal:attributes="onclick string:javascript:fOpen('${here/absolute_url}/diff_forms_html?f=${fmod/id}&fpath=${fpath}&p=${ppath}'); href string:#${fpath}">see diff</a>]&nbsp;
+						<a tal:attributes="href string:${fmod/absolute_url}/pt_editForm; title fmod/title_or_id" tal:content="fmod/id" target="new" />
+					</li>
 					</tal:block>
-				</tal:block>
-				<input type="submit" name="reload" value="Reload" />
-			</form>
-		</div>
-		<div tal:condition="upload_ok">The operation completed successfully.</div>
+				</ol>
+			<input type="hidden" name="ppath" id="ppath" tal:attributes="value ppath" />
+			<input type="submit" name="reload" value="Reload" />
+		</form>
+	</div>
+	<div tal:condition="upload_ok">The operation completed successfully.</div>
+
 	</tal:block>
 
 	</tal:block>

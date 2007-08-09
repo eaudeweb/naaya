@@ -6,27 +6,18 @@
 	<tal:block metal:fill-slot="body">
 
 <ul>
-	<li><a tal:attributes="href string:${here/absolute_url}/show_alldiff_html" title="">See all modified data</a>&nbsp;<small>(its safe to run this first)</small></li>
-	<li><a tal:attributes="href string:${here/absolute_url}/reinstall_contenttypes_html" title="">Reinstall Naaya content types</a></li>
 	<li><a tal:attributes="href string:${here/absolute_url}/overwritte_forms_html" title="">Overwritte Naaya forms</a></li>
 
-
-
-
-
-<br><br><br><br>
-	<li><a href="" title="">LIKN</a></li>
-	<li><a href="" title="">LIKN</a></li>
-	<li><a href="" title="">LIKN</a></li>
+<!--	<li><a tal:attributes="href string:${here/absolute_url}/show_alldiff_html" title="">See all modified data</a>&nbsp;<small>(its safe to run this first)</small></li> -->
+<!--	<li><a tal:attributes="href string:${here/absolute_url}/reinstall_contenttypes_html" title="">Reinstall Naaya content types</a></li> -->
 </ul>
 
-		<fieldset>
-			<legend>Overwritte Naaya portlets and syndication</legend>
-			#TODO: idem Forms<br />
-		</fieldset>
-
-		<fieldset>
-			<legend>Overwritte Naaya layout</legend>
-		</fieldset>
+<br /><br />
+<h2>TODOs</h2>
+<ul>
+	<li>Naaya properties</li>
+	<li>Naaya portlets and syndication</li>
+	<li>Naaya layout</li>
+</ul>
 	</tal:block>
 </tal:block>
