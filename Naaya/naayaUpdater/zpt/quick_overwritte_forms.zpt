@@ -1,0 +1,85 @@
+<tal:block metal:use-macro="here/standard_template.pt/macros/page">
+	<tal:block metal:fill-slot="head">
+		<title tal:content="here/title">TITLE</title>
+		<script type="text/javascript">
+		<!--
+		function fOpen(diff_form)
+		{
+			var wnd = window.open(diff_form);
+			wnd.focus();
+		}
+		// -->
+		</script>
+	</tal:block>
+
+	<tal:block metal:fill-slot="body">
+
+	<div>
+		<a tal:attributes="href string:${here/absolute_url}" title="Back to index">Back to index</a>
+		<br /><br />
+	</div>
+
+	TODO: daca nu e in portal forma sa o adaug<br />
+
+	<tal:block define="forms python:request.get('forms', '');
+						upload_ok python:request.get('u', 0);
+						report python:here.getReportQuickModifiedForms(forms, request)">
+
+	<fieldset>
+		<legend>Quick update Naaya forms</legend>
+		<p>bla bla bla</p>
+		<form method="post" name="frmQuickModForms">
+
+			<label for="exclude">Forms</label><br />
+			<textarea name="forms" id="forms" cols="50" rows="5" tal:content="forms"></textarea>
+			<br />
+
+			<input type="submit" name="show_report" value="Show report" />
+		</form>
+	</fieldset>
+
+	<h2>Report</h2>
+
+	<div tal:condition="not:report">
+		<p>All forms are updated.</p>
+	</div>
+
+	<div tal:condition="report">
+		<form tal:attributes="action string:${here/absolute_url}/reloadQuickPortalForms"
+			  method="post" name="frmQuickReloadForms">
+			<input type="checkbox" name="all" />
+			<label for="all">Update all forms</label>
+
+			<tal:block repeat="portal_report python:report.items()">
+
+			<div tal:define="portal_path python:portal_report[0];
+							 portal python:here.getPortal(portal_path);
+							 report python:portal_report[1]">
+
+				<h3>
+					<span tal:content="portal/title_or_id" />
+					(<small>meta-type:<span tal:content="portal/meta_type" />, path:<span tal:content="portal_path" />)
+				</h3>
+
+				<ul>
+					<li tal:repeat="fmod report">
+						<tal:block define="fpath python:fmod.absolute_url(1)">
+						<input type="checkbox" name="fmod" tal:attributes="value fpath" />
+						<a tal:attributes="id fpath" />
+						[<a tal:attributes="onclick string:javascript:fOpen('${here/absolute_url}/diff_forms_html?f=${fmod/id}&fpath=${fpath}&p=${portal_path}'); href string:#${fpath}">see diff</a>]&nbsp;
+						<a tal:attributes="href string:${fmod/absolute_url}/pt_editForm; title fmod/title_or_id" tal:content="fmod/id" target="new" />
+						</tal:block>
+					</li>
+				</ul>
+
+			</div>
+			</tal:block>
+
+			<input type="hidden" name="forms" id="forms" tal:attributes="value forms" />
+			<input type="submit" name="reload" value="Reload" />
+		</form>
+	</div>
+
+	</tal:block>
+	</tal:block>
+</tal:block>

@@ -25,7 +25,7 @@
 
 	<fieldset>
 		<legend>Overwritte Naaya forms</legend>
-		<p>The missing forms will be also added.</p>
+		<p>Select the portal you want to update.</p>
 		<form method="post" name="frmModForms">
 			<label for="ppath">Portal</label>
 			<select name="ppath" id="ppath">
@@ -57,7 +57,7 @@
 			<div>
 				<input type="checkbox" name="funmod" />
 				<label for="funmod">
-					Update identical, unchanged and missing forms. (<span tal:replace="out_diff" /> unchanged forms found)
+					Update identical, unchanged and add missing forms. (<span tal:replace="out_diff" /> unchanged forms found)
 				</label>
 			</div>
 

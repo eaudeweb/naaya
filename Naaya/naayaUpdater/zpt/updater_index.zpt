@@ -6,7 +6,8 @@
 	<tal:block metal:fill-slot="body">
 
 <ul>
-	<li><a tal:attributes="href string:${here/absolute_url}/overwritte_forms_html" title="">Overwritte Naaya forms</a></li>
+	<li><a tal:attributes="href string:${here/absolute_url}/quick_overwritte_forms_html" title="">Quick update Naaya forms</a></li>
+	<li><a tal:attributes="href string:${here/absolute_url}/overwritte_forms_html" title="">Update Naaya forms</a></li>
 
 <!--	<li><a tal:attributes="href string:${here/absolute_url}/show_alldiff_html" title="">See all modified data</a>&nbsp;<small>(its safe to run this first)</small></li> -->
 <!--	<li><a tal:attributes="href string:${here/absolute_url}/reinstall_contenttypes_html" title="">Reinstall Naaya content types</a></li> -->
