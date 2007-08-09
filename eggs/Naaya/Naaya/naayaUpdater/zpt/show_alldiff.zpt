@@ -94,9 +94,9 @@
 				<td tal:content="form/id" />
 				<td><a tal:attributes="href python:form.getSite().absolute_url()+'/manage_main'; title python:form.getSite().title_or_id()"  target="new" tal:content="python:form.getSite().id" /></td>
 				<td><a tal:attributes="href string:${form/absolute_url}/pt_editForm;" target="new" title="Edit">edit</a></td>
-				<td tal:define="fpath python:form.absolute_url(1); portal_metatype python:form.getSite().meta_type">
+				<td tal:define="fpath python:form.absolute_url(1); portal_path python:form.getSite().absolute_url(1)">
 				<a tal:attributes="id fpath" />
-				<a tal:attributes="onclick string:javascript:fOpen('${here/absolute_url}/diff_forms_html?f=${form/id}&fpath=${fpath}&p=${portal_metatype}'); href string:#${fpath}" title="See diff">diff</a></td>
+				<a tal:attributes="onclick string:javascript:fOpen('${here/absolute_url}/diff_forms_html?f=${form/id}&fpath=${fpath}&p=${portal_path}'); href string:#${fpath}" title="See diff">diff</a></td>
 			</tr>
 		</table>
 
