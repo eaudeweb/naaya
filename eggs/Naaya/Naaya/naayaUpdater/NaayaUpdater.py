@@ -136,6 +136,9 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'overwritte_forms_html')
     overwritte_forms_html = PageTemplateFile('zpt/overwritte_forms', globals())
 
+    security.declareProtected(view_management_screens, 'quick_overwritte_forms_html')
+    quick_overwritte_forms_html = PageTemplateFile('zpt/quick_overwritte_forms', globals())
+
     security.declareProtected(view_management_screens, 'diff_forms_html')
     diff_forms_html = PageTemplateFile('zpt/diff_forms', globals())
 
@@ -441,5 +444,58 @@ class NaayaUpdater(Folder):
         portal = self.getPortal(ppath)
         self.setFTCreationDate(portal)
         return REQUEST.RESPONSE.redirect('%s/overwritte_forms_html?ppath=%s&show_report=1' % (self.absolute_url(), ppath))
+
+    security.declareProtected(view_management_screens, 'getReportQuickModifiedForms')
+    def getReportQuickModifiedForms(self, forms, REQUEST=None):
+        """ """
+        if REQUEST.has_key('show_report'):
+            report = {}
+            forms_list = convertLinesToList(forms)
+            portals_list = self.getPortals()
+            for portal in portals_list:
+                res = []
+                portal_path = portal.absolute_url(1)
+                for form_id in forms_list:
+                    form_path = '%s/portal_forms/%s' % (portal_path, form_id)
+                    form_fs = self.get_fs_template(form_id, portal)
+                    form_zmi_ob = self.get_zmi_template(form_path)
+                    if form_fs and form_zmi_ob:
+                        if not create_signature(form_fs) == create_signature(self.get_template_content(form_zmi_ob)):
+                            res.append(form_zmi_ob)
+                if len(res) > 0: report[portal_path] = res
+            return report
+
+    security.declareProtected(view_management_screens, 'reloadQuickPortalForms')
+    def reloadQuickPortalForms(self, all=False, fmod=[], forms='', REQUEST=None):
+        """ reload portal forms """
+        fmod = convertToList(fmod)
+        forms_list = convertLinesToList(forms)
+        if all:
+            forms_list = convertLinesToList(forms)
+            portals_list = self.getPortals()
+            for portal in portals_list:
+                portal_path = portal.absolute_url(1)
+                for form_id in forms_list:
+                    form_path = '%s/portal_forms/%s' % (portal_path, form_id)
+                    form_fs = self.get_fs_template(form_id, portal)
+                    form_zmi_ob = self.get_zmi_template(form_path)
+                    if form_fs and form_zmi_ob:
+                        if not create_signature(form_fs) == create_signature(self.get_template_content(form_zmi_ob)):
+                            try:
+                                form_zmi_ob.pt_edit(text=form_fs, content_type='')
+                                form_zmi_ob._p_changed = 1
+                            except Exception, error:
+                                print error
+        else:
+            for form_path in fmod:
+                form_ob = self.get_zmi_template(form_path)
+                portal = form_ob.getSite()
+                fs_content = self.get_fs_template(form_ob.id, portal)
+                try:
+                    form_ob.pt_edit(text=fs_content, content_type='')
+                    form_ob._p_changed = 1
+                except Exception, error:
+                    print error
+        return REQUEST.RESPONSE.redirect('%s/quick_overwritte_forms_html' % (self.absolute_url()))
 
 Globals.InitializeClass(NaayaUpdater)
