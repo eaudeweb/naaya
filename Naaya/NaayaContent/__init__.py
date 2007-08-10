@@ -100,3 +100,11 @@ for x in content.values():
 for x in dirs:
     misc_['%s.gif' % x] = ImageFile('%s/www/%s.gif' % (x, x), globals())
     misc_['%s_marked.gif' % x] = ImageFile('%s/www/%s_marked.gif' % (x, x), globals())
+    
+    ct_misc = {}
+    try:
+        exec("from %s import misc_ as ct_misc" % x)
+    except ImportError:
+        continue
+    
+    misc_.update(ct_misc)
