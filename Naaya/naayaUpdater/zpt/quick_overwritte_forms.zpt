@@ -62,12 +62,21 @@
 				</h3>
 
 				<ul>
-					<li tal:repeat="fmod report">
-						<tal:block define="fpath python:fmod.absolute_url(1)">
-						<input type="checkbox" name="fmod" tal:attributes="value fpath" />
-						<a tal:attributes="id fpath" />
-						[<a tal:attributes="onclick string:javascript:fOpen('${here/absolute_url}/diff_forms_html?f=${fmod/id}&fpath=${fpath}&p=${portal_path}'); href string:#${fpath}">see diff</a>]&nbsp;
-						<a tal:attributes="href string:${fmod/absolute_url}/pt_editForm; title fmod/title_or_id" tal:content="fmod/id" target="new" />
+					<li tal:repeat="rep report">
+						<tal:block define="action_type python:rep[1];
+											fmod python:rep[0]">
+							<tal:block condition="python:action_type=='edit'">
+								<tal:block define="fpath python:fmod.absolute_url(1)">
+								<input type="checkbox" name="fmod" tal:attributes="value fpath" />
+								<a tal:attributes="id fpath" />
+								[<a tal:attributes="onclick string:javascript:fOpen('${here/absolute_url}/diff_forms_html?f=${fmod/id}&fpath=${fpath}&p=${portal_path}'); href string:#${fpath}">see diff</a>]&nbsp;
+								<a tal:attributes="href string:${fmod/absolute_url}/pt_editForm; title fmod/title_or_id" tal:content="fmod/id" target="new" />
+								</tal:block>
+							</tal:block>
+							<tal:block condition="python:action_type=='add'">
+								<input type="checkbox" name="fmod" tal:attributes="value python:here.generateFormPath(fmod, portal)" />
+								<em tal:content="fmod" /> missing from ZMI
+							</tal:block>
 						</tal:block>
 					</li>
 				</ul>

@@ -461,7 +461,9 @@ class NaayaUpdater(Folder):
                     form_zmi_ob = self.get_zmi_template(form_path)
                     if form_fs and form_zmi_ob:
                         if not create_signature(form_fs) == create_signature(self.get_template_content(form_zmi_ob)):
-                            res.append(form_zmi_ob)
+                            res.append((form_zmi_ob, 'edit'))
+                    if form_fs and not form_zmi_ob:
+                        res.append((form_id, 'add'))
                 if len(res) > 0: report[portal_path] = res
             return report
 
@@ -486,16 +488,35 @@ class NaayaUpdater(Folder):
                                 form_zmi_ob._p_changed = 1
                             except Exception, error:
                                 print error
+                    if form_fs and not form_zmi_ob:
+                        try:
+                            formstool_ob = portal.getFormsTool()
+                            formstool_ob.manage_addTemplate(id=form_id, title='', file='')
+                            form_ob = formstool_ob._getOb(form_id, None)
+                            form_ob.pt_edit(text=form_fs, content_type='')
+                            form_ob._p_changed = 1
+                        except Exception, error:
+                            print error
         else:
             for form_path in fmod:
+                portal = self.getPortal(form_path[:form_path.find('portal_forms')])
+                form_id = form_path[form_path.find('portal_forms')+13:]
                 form_ob = self.get_zmi_template(form_path)
-                portal = form_ob.getSite()
-                fs_content = self.get_fs_template(form_ob.id, portal)
+                fs_content = self.get_fs_template(form_id, portal)
                 try:
+                    if form_ob is None:
+                        formstool_ob = portal.getFormsTool()
+                        formstool_ob.manage_addTemplate(id=form_id, title='', file='')
+                        form_ob = formstool_ob._getOb(form_id, None)
                     form_ob.pt_edit(text=fs_content, content_type='')
                     form_ob._p_changed = 1
                 except Exception, error:
                     print error
         return REQUEST.RESPONSE.redirect('%s/quick_overwritte_forms_html' % (self.absolute_url()))
+
+    security.declareProtected(view_management_screens, 'generateFormPath')
+    def generateFormPath(self, form_id, portal):
+        """ """
+        return '%s/portal_forms/%s' % (portal.absolute_url(1), form_id)
 
 Globals.InitializeClass(NaayaUpdater)
