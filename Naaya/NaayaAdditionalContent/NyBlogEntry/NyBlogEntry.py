@@ -26,6 +26,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import Products
+from Products.Epoz import EpozTidy
 
 #Product imports
 from Products.NaayaContent.constants import *
@@ -397,7 +398,9 @@ class NyBlogEntry(NyAttributes, blog_entry_item, NyBlogComments, NyContainer, Ny
     security.declareProtected(view, 'getBrief')
     def getBrief(self):
         """ get a brief content """
-        return self.content.split('<div class="moretag">&nbsp;</div>')[0]
+        brief = self.content.split('<div class="moretag">&nbsp;</div>')[0]
+        errors, output, errordata = self.EpozTidy(brief, self.absolute_url(1))
+        return output
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
