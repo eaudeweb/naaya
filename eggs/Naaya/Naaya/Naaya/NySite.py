@@ -19,6 +19,7 @@
 #
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
+# Alin Voinea, Eau de Web
 
 #Python imports
 from os.path import join, isfile
@@ -2596,6 +2597,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                         if not self.utIsFloat(value): la(translate('', v[2]))
                     elif v[1] == MUST_BE_CAPTCHA:
                         if value=='' or value!=self.getSession('captcha', None) : la(translate('', v[2]))
+                    elif v[1] == MUST_BE_FLVFILE:
+                        if not (value and value.headers.get("content-type", "") in [
+                            "application/x-flash-video", "video/x-flv"]):
+                            la(translate('', v[2]))
+                    elif v[1] == MUST_BE_VIDEOFILE:
+                        # TODO: Handle this
+                        pass
         return l
 
     def set_pluggable_item_session(self, meta_type, **args):
