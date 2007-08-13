@@ -32,11 +32,16 @@ import Products
 #Product imports
 from Products.NaayaContent.constants import *
 from Products.NaayaBase.constants import *
-from Products.NaayaBase.NyContainer import NyContainer
+from Products.NaayaBase.NyFSContainer import NyFSContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from mediafile_item import mediafile_item
+
+from converters.MediaConverter import \
+     media2flv, \
+     check_for_tools, \
+     get_conversion_errors
 
 #module constants
 METATYPE_OBJECT = 'Naaya Media File'
@@ -56,9 +61,17 @@ PROPERTIES_OBJECT = {
     'sortorder':    (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positive integer.'),
     'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':   (0, '', ''),
-    'file':         (0, '', ''),
+    'file':         (1, '', ''),
     'lang':         (0, '', '')
 }
+
+# If converters installed file must be video, otherwise must be 
+# flash video (flv)
+error = check_for_tools() or not NyFSContainer.is_ext
+if error: 
+    PROPERTIES_OBJECT["file"] = (1, MUST_BE_FLVFILE, "The file must be a valid flash video file (.flv)")
+else:
+    PROPERTIES_OBJECT["file"] = (1, MUST_BE_VIDEOFILE, "The file must be a valid video file (e.g. .avi, .mpg, .mp4, etc.)")
 
 manage_addNyMediaFile_html = PageTemplateFile('zpt/mediafile_manage_add', globals())
 manage_addNyMediaFile_html.kind = METATYPE_OBJECT
@@ -170,44 +183,45 @@ def importNyMediaFile(self, param, id, attrs, content, properties, discussion, o
         for object in objects:
             self.import_data_custom(ob, object)
 
-class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyValidation):
+class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, NyValidation):
     """ """
 
     meta_type = METATYPE_OBJECT
     meta_label = LABEL_OBJECT
     icon = 'misc_/NaayaContent/NyMediaFile.gif'
     icon_marked = 'misc_/NaayaContent/NyMediaFile_marked.gif'
-
+    player = 'misc_/NaayaContent/VPlayer.swf'
 
     def manage_options(self):
         """ """
-        l_options = (NyContainer.manage_options[0],)
+        l_options = (NyFSContainer.manage_options[0],)
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
         l_options += mediafile_item.manage_options
-        l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
+        l_options += ({'label': 'View', 'action': 'index_html'},) + NyFSContainer.manage_options[3:8]
         return l_options
 
     def all_meta_types(self, interfaces=None):
         """ """
         y = []
-        additional_meta_types = ['File']
+        additional_meta_types = ["ExtFile", "File"]
         for x in Products.meta_types:
             if x['name'] in additional_meta_types:
                 y.append(x)
         return y
 
     security = ClassSecurityInfo()
-
+    
     def __init__(self, id, title, description, coverage, keywords, sortorder,
         contributor, releasedate, lang):
         """ """
+        self.subobj_meta_type = NyFSContainer.is_ext and "ExtFile" or "File"
         self.id = id
         mediafile_item.__dict__['__init__'](self, id, title, description, coverage,
             keywords, sortorder, releasedate, lang)
         NyValidation.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)
-        NyContainer.__dict__['__init__'](self)
+        NyFSContainer.__dict__['__init__'](self)
         self.contributor = contributor
 
     security.declarePrivate('export_this_tag_custom')
@@ -247,17 +261,48 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
         """
         Returns the B{SINGLE} media file if exists.
         """
-        l = self.objectValues('File')
+        l = self.objectValues(self.subobj_meta_type)
         if len(l)>0:
             return l[0]
         else:
             return None
-
+    
+    def getSingleMediaId(self):
+        """ Return the B{SINGLE} media id if exists.
+        """
+        media = self.getSingleMediaObject()
+        return media and media.getId() or ""
+        
+    def mediaReady(self):
+        """ Check if media is ready
+        """
+        media = self.getSingleMediaObject()
+        if media:
+            return self.isReady(media.getId())
+        return False
+    
+    def mediaBroken(self):
+        """ Check if media conversion finished and no error occured.
+        """
+        if self.mediaReady():
+            return ""
+        
+        media = self.getSingleMediaObject()
+        if not media:
+            return "File broken."
+        
+        if not self.is_ext:
+            #TODO: Handle ZODB files
+            return ""
+        
+        mpath = media.get_filename()
+        return get_conversion_errors(mpath)
+    
     def getMediaObjects(self):
         """
         Returns the list of media files, B{File} objects.
         """
-        return self.objectValues('File')
+        return self.objectValues(self.subobj_meta_type)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
@@ -310,11 +355,55 @@ class NyMediaFile(NyAttributes, mediafile_item, NyContainer, NyCheckControl, NyV
         Handle upload of a media file. A B{File} object will be created inside
         the B{NyMediafile} object.
         """
-        if file != '':
-            if hasattr(file, 'filename'):
-                if file.filename != '':
-                    self.manage_delObjects(self.objectIds())
-                    self.manage_addFile('', file)
+        if file == '':
+            return
+        if not hasattr(file, 'filename'):
+            return
+        if file.filename == '':
+            return
+        
+        self.manage_delObjects(self.objectIds())
+        
+        ctype = file.headers.get("content-type")
+        filename = file.filename.split(".")
+        file.filename = filename[0] + ".flv"
+        file.headers["content-type"] = "application/x-flash-video"
+        mid = self.manage_addFile('', file)
+        self._processFile(mid, ctype)
+    
+    security.declarePrivate("_processFile")
+    def _processFile(self, mid, ctype):
+        """ Apply media converters to self subobject with given id (mid) with
+        original content-type ctype.
+        """
+        if self.is_ext:
+            self._processExtFile(mid, ctype)
+        else:
+            self._processZODBFile(mid, ctype)
+    
+    security.declarePrivate("_processZODBFile")
+    def _processZODBFile(self, mid, ctype):
+        """ Apply media converters to self subobject with given id (mid) which 
+        is stored in Data.fs, with original content-type ctype
+        """
+        # TODO: handle conversion of ZODB files
+        return
+    
+    security.declarePrivate("_processExtFile")
+    def _processExtFile(self, mid, ctype):
+        """ Apply media converters to self subobject with given id (mid) which 
+        is stored outside Data.fs, with original content-type ctype.
+        """
+        media = self._getOb(mid)
+        mid = media.get_filename()
+        error = media2flv(mid, ".tmp")
+        if not error:
+            return
+        
+        # Handle error
+        #if not ctype == "application/x-flash-video":
+            #os.unlink(mid + ".tmp")
+            # tell user to try with a valid file.
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
