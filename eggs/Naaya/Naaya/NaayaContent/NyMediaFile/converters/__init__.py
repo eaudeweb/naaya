@@ -14,13 +14,4 @@
 # Rights Reserved.
 #
 # Authors:
-#
-# Cornel Nitu, Eau de Web
-# Dragos Chirila
 # Alin Voinea, Eau de Web
-
-from ImageFile import ImageFile
-
-misc_ = {
-    'VPlayer.swf': ImageFile('www/VPlayer.swf', globals()),
-}
