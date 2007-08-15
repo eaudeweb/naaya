@@ -328,3 +328,25 @@
 .fieldset_div {
 	margin: 5px 0px;
 }
+
+/* Media file style sheet 
+*/
+.flvPlayer {
+}
+
+.flvPlayerBroken {
+}
+
+.flvPlayerNotReady {
+}
+
+.flashPlayerNotInstalled {
+  width: 450px;
+  overflow: auto;
+  background-color: #000000;
+  color: #ffffff;
+  text-align: center;
+  font-size: 107%;
+  font-weight: bold;
+  padding: 200px 0 200px 0;
+}
