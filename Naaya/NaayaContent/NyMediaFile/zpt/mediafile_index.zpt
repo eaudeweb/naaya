@@ -51,26 +51,18 @@
                   seekat python:0;
                   subtitle string:;
                   chapters string:;">
-    <object 
-        classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
-        id="VPlayer" width="450" height="410"
-        codebase="http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab">
-        <param name="movie" tal:attributes="value 
-        string:${player}?streamScript=${streamScript}&amp;flvpath=${flvpath}&amp;seekat=${seekat}&amp;subtitle=${subtitle}&amp;chapters=${chapters}" />
-        <param name="quality" value="high" />
-        <param name="bgcolor" value="#ffffff" />
-        <param name="allowScriptAccess" value="sameDomain" />
-        <embed tal:attributes="src 
-          string:${player}?streamScript=${streamScript}&amp;flvpath=${flvpath}&amp;seekat=${seekat}&amp;subtitle=${subtitle}&amp;chapters=${chapters}"
-          quality="high" bgcolor="#ffffff"
-          width="450" height="410" name="VPlayer" align="middle"
-          play="true"
-          loop="false"
-          quality="high"
-          allowScriptAccess="sameDomain"
-          type="application/x-shockwave-flash"
-          pluginspage="http://www.adobe.com/go/getflashplayer">
-        </embed>
+    <object width="450" height="410"
+      type="application/x-shockwave-flash"
+      tal:attributes="data string:${player}?streamScript=${streamScript}&amp;flvpath=${flvpath}&amp;seekat=${seekat}&amp;subtitle=${subtitle}&amp;chapters=${chapters}">
+      <param name="movie" 
+        tal:attributes="value string:${player}?streamScript=${streamScript}&amp;flvpath=${flvpath}&amp;seekat=${seekat}&amp;subtitle=${subtitle}&amp;chapters=${chapters}"/>
+      <param name="quality" value="high" />
+      <param name="bgcolor" value="#ffffff" />
+      <param name="allowScriptAccess" value="sameDomain" />
+      <div class="flashPlayerNotInstalled" i18n:translate="">
+        You must have Flash 9 or greater installed to watch this video. 
+        <a href="http://www.adobe.com/go/getflashplayer">Get Flash.</a>
+      </div>
     </object>
   </div>
   
