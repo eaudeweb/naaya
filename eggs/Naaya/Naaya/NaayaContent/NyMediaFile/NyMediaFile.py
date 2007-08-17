@@ -190,7 +190,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
     meta_label = LABEL_OBJECT
     icon = 'misc_/NaayaContent/NyMediaFile.gif'
     icon_marked = 'misc_/NaayaContent/NyMediaFile_marked.gif'
-    player = 'misc_/NaayaContent/VPlayer.swf'
+    player = 'misc_/NaayaContent/EdWideoPlayer.swf'
 
     def manage_options(self):
         """ """
