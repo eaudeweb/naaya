@@ -141,6 +141,16 @@ class EnviroWindowsSite(NySite):
         """ """
         return utils().utStripAllHtmlTags(p_text)
 
+################
+# Epoz related #
+################
+    security.declareProtected(view, 'insertrelativelink_html')
+    def insertrelativelink_html(self, REQUEST=None, RESPONSE=None):
+        """
+        Opens a page with site map and insert a relative link in the wysiwyg widget editor.
+        """
+        return self.getFormsTool().getContent({'here': self}, 'site_insertrelativelink')
+
 ##############################
 # Layer over selection lists #
 ##############################
