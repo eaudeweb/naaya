@@ -205,7 +205,7 @@
 		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="portlet_maincategories" title="Main sections" />
 		<linkslist id="places" title="Places" portlet="1">
-			<link id="103" title="EWindows" description="EnviroWindows" url="http://ewindows.eu.org/" relative="0" permission="" order="1"/>
+			<link id="103" title="EWindows" description="EnviroWindows" url="http://ew.eea.europa.eu/" relative="0" permission="" order="1"/>
 			<link id="104" title="EEA home" description="" url="http://www.eea.europa.eu/" relative="0" permission="" order="2"/>
 			<link id="105" title="Europa" description="EU website" url="http://www.europa.eu" relative="0" permission="" order="3"/>
 			<link id="106" title="Eionet" description="" url="http://eionet.europa.eu/" relative="0" permission="" order="4"/>
