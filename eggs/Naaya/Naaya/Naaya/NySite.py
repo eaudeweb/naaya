@@ -2007,13 +2007,23 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletemaintopics')
-    def admin_deletemaintopics(self, ids=None, REQUEST=None):
+    def admin_deletemaintopics(self, ids=None, delref=None, REQUEST=None):
         """ """
         if ids is not None: ids = self.utConvertToList(ids)
         else: ids = []
         for id in ids:
             try: self.maintopics.remove(id)
             except: pass
+            
+            if not delref: continue
+            doc = self.unrestrictedTraverse(id)
+            if not doc: continue
+            
+            parent = doc.aq_inner.aq_parent
+            if not parent: continue
+            try: parent.manage_delObjects([doc.getId(),])
+            except: pass
+        
         self._p_changed = 1
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])

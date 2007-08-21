@@ -54,19 +54,40 @@ function createKey(key)
 {
     document.forms['frmEditTopic'].folder_url.value = key;
 }
+
+function showDelBox(){
+  var ids = document.getElementsByName('ids');
+  var delbox = document.getElementById('delref_box');
+  for(i=0;i<ids.length;i++){
+    if(ids[i].checked){
+        delbox.style.display = 'block';
+        return;
+    }
+  }
+  delbox.style.display = 'none';
+}
 //-->
 </script>
 
 <form name="frmDragDrop" method="post">
 <ul id="maintopicslist" class="boxy">
 	<li tal:repeat="item maintopics" tal:attributes="itemID item/id">
-		<input type="checkbox" class="chk" name="ids" tal:attributes="value python:item.absolute_url(1)" />
+        <input type="checkbox" class="chk" name="ids" 
+               onclick="showDelBox()"
+               tal:attributes="value python:item.absolute_url(1)" />
 		<span tal:replace="python:here.utTruncateString(item.title_or_id(), 40)" />
 	</li>
 </ul>
+
+<div id="delref_box" style="display:none">
+  <input type="checkbox" id="delref" name="delref" class="chk"/>
+  <label for="delref" class="chk" 
+    i18n:translate="">Check this if you want to delete the folder(s) on remove</label>
+</div>
+
 <span tal:replace="structure python:here.DragDropHidden(maintopics)" />
 <input type="submit" value="Save positions" i18n:attributes="value" tal:attributes="onclick string:fSave('${site_url}/admin_ordermaintopics')" />
-<input type="submit" value="Delete" i18n:attributes="value" tal:attributes="onclick string:fSave('${site_url}/admin_deletemaintopics')" />
+<input type="submit" value="Remove" i18n:attributes="value" tal:attributes="onclick string:fSave('${site_url}/admin_deletemaintopics')" />
 </form>
 <p i18n:translate="">
 	<strong>Tip:</strong> when you delete a main section, the corresponding folder will be just
