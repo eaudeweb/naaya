@@ -203,6 +203,7 @@
 	</pluggablecontenttypes>
 	<portlets left="portlet_maincategories,portlet_places" center="portlet_latestuploads_rdf">
 		<portlet id="portlet_administration" title="Administration" />
+		<portlet id="portlet_maincategories" title="Main sections" />
 		<linkslist id="places" title="Places" portlet="1">
 			<link id="103" title="EWindows" description="EnviroWindows" url="http://ewindows.eu.org/" relative="0" permission="" order="1"/>
 			<link id="104" title="EEA home" description="" url="http://www.eea.europa.eu/" relative="0" permission="" order="2"/>
