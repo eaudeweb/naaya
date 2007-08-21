@@ -77,7 +77,7 @@
 				</form>
 			</div>
 		<div id="breadcrumbtrail" tal:define="crumbs python:here.getBreadCrumbTrail(request)">
-			<a href="http://ewindows.eu.org" title="EnviroWindows">EW</a> &raquo; 
+			<a href="http://ew.eea.europa.eu" title="EnviroWindows">EW</a> &raquo; 
 			<a tal:attributes="href string:${site_url}/" title="Home" i18n:attributes="title" i18n:translate="">Home</a>
 			<tal:block condition="crumbs">&raquo;</tal:block>
 			<tal:block repeat="crumb crumbs">
