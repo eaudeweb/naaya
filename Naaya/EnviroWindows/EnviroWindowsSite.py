@@ -14,10 +14,15 @@
 # Cornel Nitu
 # Gabriel Agu
 # Miruna Badescu
+# Alin Voinea
 
 #Python imports
+from StringIO import StringIO
+from zipfile import ZipFile, ZIP_DEFLATED, BadZipfile
 
 #Zope imports
+from zExceptions import BadRequest
+from ZPublisher.HTTPRequest import FileUpload
 from Globals                                    import InitializeClass
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
 from AccessControl                              import ClassSecurityInfo
@@ -305,4 +310,174 @@ class EnviroWindowsSite(NySite):
             project._p_changed = 1
         print 'done'
 
+    #
+    # Upload/download folder items from/to zip archive
+    #
+    security.declareProtected(view, 'getDocuments')
+    def getDocuments(self, path, meta_type=''):
+        """ Returns object values of given meta_type in given path.
+        """
+        meta_type = meta_type or METATYPE_NYEXFILE
+        folder = self.getObjectByPath(path)
+        if not folder: return []
+        return folder.objectValues(meta_type)
+    
+    security.declareProtected(view, 'getObjectByPath')
+    def getObjectByPath(self, path):
+        """ Returns object at given path
+        """
+        res = self.unrestrictedTraverse(path)
+        return res
+    
+    security.declareProtected(view, 'zip_upload_html')
+    def zip_upload_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'folder_zipupload')
+    
+    security.declareProtected(view, 'zip_download_html')
+    def zip_download_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'folder_zipdownload')
+
+    security.declarePrivate('zip_redirect')
+    def zip_redirect(self, path, errors="", RESPONSE=None):
+        """ Redirect RESPONSE to given path and add errors if exists to session.
+        """
+        if isinstance(errors, str):
+            errors = [errors]
+        if not RESPONSE:
+            return errors
+        
+        if errors:
+            self.setSessionErrors(errors)
+        RESPONSE.redirect(path)
+    
+    security.declareProtected(view, 'zipDownloadDocuments')
+    def zipDownloadDocuments(self, REQUEST=None, RESPONSE=None):
+        """ Return a zip archive content as a session response.
+        """
+        if not (REQUEST and RESPONSE):
+            return ""
+        
+        path = REQUEST.form.get('path', '')
+        doc_ids = REQUEST.form.get('ids', [])
+        folder = self.getObjectByPath(path)
+        if not folder:
+            self.zip_redirect(path, "Invalid folder path", RESPONSE)
+        
+        RESPONSE.setHeader('Content-Type', 'application/x-zip-compressed')
+        RESPONSE.setHeader('Content-Disposition', 
+                           'attachment; filename=%s.zip' % folder.getId())
+        return self._zipDownloadDocuments(path, doc_ids)
+    
+    security.declarePrivate('_zipDownloadDocuments')
+    def _zipDownloadDocuments(self, path, doc_ids):
+        """ Create and return a zip archive from folder items defined by 
+        doc_ids.
+        
+        @path: folder relative path
+        @doc_ids: folder items
+        returns a zip archive content
+        """
+        zip_buffer = StringIO()
+        zip_file = ZipFile(zip_buffer, 'w', ZIP_DEFLATED)
+        
+        for doc_id in doc_ids:
+            doc = self.getObjectByPath(path + "/" + doc_id)
+            if not doc: 
+                continue
+            doc_data = getattr(doc.getFileItem(), 'data', None)
+            
+            if not isinstance(doc_data, str):
+                data_buffer = StringIO()
+                while doc_data is not None:
+                    data_buffer.write(doc_data.data)
+                    doc_data = doc_data.next
+                doc_data = data_buffer.getvalue()
+                
+            if not doc_data:
+                continue
+            zip_file.writestr(doc_id, doc_data)
+        
+        zip_file.close()
+        return zip_buffer.getvalue()
+    
+    security.declareProtected(view, 'zipUploadDocuments')
+    def zipUploadDocuments(self, REQUEST=None, RESPONSE=None):
+        """ Call zip importer and redirect to folder index.
+        """
+        if not (REQUEST and RESPONSE):
+            return ""
+        
+        path = REQUEST.form.get('path', '')
+        upload_file = REQUEST.form.get('upload_file', None)
+        
+        folder = self.getObjectByPath(path)
+        if not folder:
+            self.zip_redirect(path, "Invalid folder path", RESPONSE)
+        
+        try:
+            errors = self._zipUploadDocuments(folder, upload_file)
+        except ZipUploadError, error:
+            self.zip_redirect(path, error, RESPONSE)
+        else:
+            self.zip_redirect(path, errors, RESPONSE)
+    
+    security.declarePrivate("_zipUploadDocuments")
+    def _zipUploadDocuments(self, folder, upload_file):
+        """ Create objects in given folder from upload_file zip archive.
+        
+        @folder: a NyFolder instance;
+        @upload_file: a FileUpload instance;
+        returns occured errors.
+        """
+        try:
+            zip_file = ZipFile(upload_file)
+        except BadZipfile, error:
+            raise ZipUploadError(error)
+        
+        namelist = zip_file.namelist()
+        folderish = [name for name in namelist if '/' in name]
+        if folderish: 
+            raise ZipUploadError("Invalid archive: folderish "
+                                 "structure not supported.")
+        
+        errors = []
+        for zinfo in zip_file.filelist:
+            filename = zinfo.filename
+            filesize = zinfo.file_size
+            # Handle CRC error
+            try:
+                file_data = zip_file.read(filename)
+            except BadZipfile, error:
+                errors.append("Could not add file %s: %s" % (filename, error))
+                continue
+            
+            headers = {'content-length': filesize}
+            file_buffer = StringIO(file_data)
+            
+            fs = SimpleFieldStorage(file_buffer, filename, headers)
+            file_obj = FileUpload(fs)
+            try:
+                folder.addNyExFile(title=filename, file=file_obj)
+            except BadRequest, error:
+                errors.append("Could not add file %s: %s" % (filename, error))
+                continue
+        
+        return errors
+
 InitializeClass(EnviroWindowsSite)
+
+#
+# Zip utils  
+#
+class ZipUploadError(Exception):
+    pass
+
+class SimpleFieldStorage(object):
+    """ A simple FieldStorage to hold a file.
+    """
+    def __init__(self, file, filename, headers):
+        self.file = file
+        self.filename = filename
+        self.headers = headers

@@ -10,7 +10,8 @@
     btn_copy python:objects_info[2];
     btn_cut python:objects_info[3];
     btn_paste python:objects_info[4];
-    can_operate python:objects_info[5] ">
+    can_operate python:objects_info[5];
+    logo here/getFolderLogo ">
 
 <script type="text/javascript" tal:condition="btn_select">
 <!--
@@ -92,7 +93,6 @@ function fRenameObjects()
 //-->
 </script>
 
-
 <div>
 <h1>
     <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" />
@@ -106,6 +106,7 @@ function fRenameObjects()
         [Restricted access]
     </tal:block>
 </h1>
+<img tal:condition="logo" tal:attributes="src logo/absolute_url" alt="Folder logo" i18n:attributes="alt" />
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <span tal:replace="structure here/menusubmissions" />
 
