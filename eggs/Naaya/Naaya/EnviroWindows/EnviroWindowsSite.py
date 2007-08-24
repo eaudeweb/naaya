@@ -388,6 +388,7 @@ class EnviroWindowsSite(NySite):
                 continue
             
             doc_name = getattr(doc, 'downloadfilename', "") or doc_id
+            doc_name = doc_name.encode("utf-8")
             namelist = zip_file.namelist()
             if doc_name in namelist:
                 doc_name = "%s-%s" % (len(namelist), doc_name)
