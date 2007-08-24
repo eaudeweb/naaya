@@ -62,6 +62,7 @@ function fDownloadObjects(){
         <th class="checkbox" style="width: 4%;" i18n:translate=""></th>
         <th class="type" style="width: 4%;" i18n:translate="">Type</th>
         <th class="title-column" i18n:translate="">Title</th>
+        <th class="size-column" i18n:translate="">Size</th>
       </tr>
       <tr tal:repeat="doc python:here.getDocuments(path)">
         <td class="checkbox"><input type="checkbox" name="ids:list"
@@ -70,6 +71,8 @@ function fDownloadObjects(){
           src doc/icon; alt doc/meta_type; title doc/meta_type"/></td>
         <td class="title-column"><tal:block 
           content="doc/title_or_id" /></td>
+        <td class="size-column"><tal:block 
+          content="python:str(doc.utShowSizeKb(doc.size())) + ' Kb'" /></td>
       </tr>
     </table>
   </form>

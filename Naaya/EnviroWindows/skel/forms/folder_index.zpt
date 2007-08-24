@@ -11,7 +11,8 @@
     btn_cut python:objects_info[3];
     btn_paste python:objects_info[4];
     can_operate python:objects_info[5];
-    logo here/getFolderLogo ">
+    logo here/getFolderLogo;
+    path python:here.absolute_url(1); ">
 
 <script type="text/javascript" tal:condition="btn_select">
 <!--
@@ -109,6 +110,11 @@ function fRenameObjects()
 <img tal:condition="logo" tal:attributes="src logo/absolute_url" alt="Folder logo" i18n:attributes="alt" />
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <span tal:replace="structure here/menusubmissions" />
+
+<a tal:condition="python:here.getDocuments(path)"
+  tal:attributes="href string:${here/absolute_url}/zip_download_html?path=${path}">
+  <span i18n:translate="">Bulk download</span>
+</a>
 
 <div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
     <div id="toolbar">

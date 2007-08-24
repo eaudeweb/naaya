@@ -386,6 +386,12 @@ class EnviroWindowsSite(NySite):
             doc = self.getObjectByPath(path + "/" + doc_id)
             if not doc: 
                 continue
+            
+            doc_name = getattr(doc, 'downloadfilename', "") or doc_id
+            namelist = zip_file.namelist()
+            if doc_name in namelist:
+                doc_name = "%s-%s" % (len(namelist), doc_name)
+
             doc_data = getattr(doc.getFileItem(), 'data', None)
             
             if not isinstance(doc_data, str):
@@ -397,7 +403,7 @@ class EnviroWindowsSite(NySite):
                 
             if not doc_data:
                 continue
-            zip_file.writestr(doc_id, doc_data)
+            zip_file.writestr(doc_name, doc_data)
         
         zip_file.close()
         return zip_buffer.getvalue()
@@ -434,6 +440,10 @@ class EnviroWindowsSite(NySite):
         try:
             zip_file = ZipFile(upload_file)
         except BadZipfile, error:
+            raise ZipUploadError(error)
+        except IOError, error:
+            raise ZipUploadError("Invalid archive: %s" % error)
+        except Exception, error:
             raise ZipUploadError(error)
         
         namelist = zip_file.namelist()
