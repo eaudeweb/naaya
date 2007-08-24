@@ -387,8 +387,11 @@ class EnviroWindowsSite(NySite):
             if not doc: 
                 continue
             
-            doc_name = getattr(doc, 'downloadfilename', "") or doc_id
-            doc_name = doc_name.encode("utf-8")
+            doc_name = getattr(doc, 'downloadfilename', "")
+            #TODO: Extend toAscii for other charsets
+            doc_name = self.toAscii(doc_name)
+            doc_name = doc_name.strip() or self.toAscii(doc_id)
+            
             namelist = zip_file.namelist()
             if doc_name in namelist:
                 doc_name = "%s-%s" % (len(namelist), doc_name)
