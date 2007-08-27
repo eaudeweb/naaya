@@ -470,6 +470,8 @@ class EnviroWindowsSite(NySite):
             headers = {'content-length': filesize}
             file_buffer = StringIO(file_data)
             
+            filename = filename.decode("utf-8")
+            filename = self.toAscii(filename)
             fs = SimpleFieldStorage(file_buffer, filename, headers)
             file_obj = FileUpload(fs)
             try:
