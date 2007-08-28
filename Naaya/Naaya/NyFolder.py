@@ -498,7 +498,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         if isinstance(buf, tuple):
             return buf[1]
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getParentFeedbackCustomized')
+    security.declareProtected(view, 'getParentFeedbackCustomized')
     def getParentFeedbackCustomized(self):
         """
         Test if the feedback form has been customized for this
