@@ -64,6 +64,9 @@
         <a href="http://www.adobe.com/go/getflashplayer">Get Flash.</a>
       </div>
     </object>
+    <div>
+      <a tal:attributes="href flvpath" i18n:translate="">Download</a>
+    </div>
   </div>
   
   <div class="flvPlayerNotReady" tal:condition="not:ready"
