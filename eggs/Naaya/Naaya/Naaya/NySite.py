@@ -2832,11 +2832,4 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(view, 'datetime_js')
     datetime_js = DTMLFile('zpt/calendar/datetime_js', globals())
 
-    def test_diff(self):
-        """ """
-        from OFS.History import html_diff
-        a = """<html>222</html>"""
-        b = """<html><td>222</td></html>"""
-        return html_diff(a, b)
-
 InitializeClass(NySite)
