@@ -399,14 +399,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
         """
         media = self._getOb(mid)
         mid = media.get_filename()
-        error = media2flv(mid, ".tmp")
-        if not error:
-            return
-        
-        # Handle error
-        #if not ctype == "application/x-flash-video":
-            #os.unlink(mid + ".tmp")
-            # tell user to try with a valid file.
+        return media2flv(mid, ".tmp")
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
