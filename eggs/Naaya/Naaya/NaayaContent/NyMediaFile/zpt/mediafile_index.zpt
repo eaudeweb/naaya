@@ -49,7 +49,7 @@
                   streamScript string:streamVideo;
                   flvpath string:${here_url}/${here/getSingleMediaId};
                   seekat python:0;
-                  subtitle string:;
+                  subtitle string:${here/absolute_url}/subtitle_xml;
                   chapters string:;">
     <object width="450" height="410"
       type="application/x-shockwave-flash"
