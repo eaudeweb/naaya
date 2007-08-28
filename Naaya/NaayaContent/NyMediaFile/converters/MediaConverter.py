@@ -33,7 +33,7 @@ class MediaConverter(Thread):
     def execute(self, com):
         """ Execute fs com
         """
-        return os.popen3(com)
+        return os.popen4(com)
     
     def run(self):
         """Converts media to flash video (flv) files"""
@@ -57,7 +57,7 @@ class MediaConverter(Thread):
 
 def check_for_tools():
     # Check for ffmpeg
-    fin, fout, ferr = os.popen3("ffmpeg")
+    fin, ferr = os.popen4("ffmpeg")
     error = ferr.read()
     error = error.lower()
     
@@ -71,7 +71,7 @@ def check_for_tools():
             "it with --enable-libmp3lame. E.g: ./configure --enable-libmp3lame"
     
     # Check for flvtool2
-    fin, fout, ferr = os.popen3("flvtool2")
+    fin, ferr = os.popen4("flvtool2")
     error = ferr.read()
     error = error.lower()
     if "flvtool2: command not found" in error:
