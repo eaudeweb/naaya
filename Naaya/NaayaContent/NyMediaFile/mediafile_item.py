@@ -34,18 +34,19 @@ class mediafile_item(Implicit, NyProperties):
     description = LocalProperty('description')
     coverage = LocalProperty('coverage')
     keywords = LocalProperty('keywords')
+    subtitle = LocalProperty('subtitle')
 
     def __init__(self, id, title, description, coverage, keywords, sortorder,
-        releasedate, lang):
+        releasedate, lang, subtitle):
         """
         Constructor.
         """
         self.save_properties(title, description, coverage, keywords, sortorder,
-            releasedate, lang)
+            releasedate, lang, subtitle)
         NyProperties.__dict__['__init__'](self)
 
     def save_properties(self, title, description, coverage, keywords, sortorder,
-        releasedate, lang):
+        releasedate, lang, subtitle):
         """
         Save item properties.
         """
@@ -53,5 +54,6 @@ class mediafile_item(Implicit, NyProperties):
         self._setLocalPropValue('description', lang, description)
         self._setLocalPropValue('coverage', lang, coverage)
         self._setLocalPropValue('keywords', lang, keywords)
+        self._setLocalPropValue('subtitle', lang, subtitle)
         self.sortorder = sortorder
         self.releasedate = releasedate

@@ -32,6 +32,17 @@ function fSet(ctrl, value)
 			items.value = items.value + ', ' + value;
 	}
 }
+
+function check_srt(file_obj) {
+  var ext = file_obj.value;
+  ext = ext.substring(ext.length - 3, ext.length);
+  ext = ext.toLowerCase();
+  if(ext != 'srt') {
+    file_obj.value = "";
+    alert('You selected a .' + ext +
+          ' file. Please select a .srt file instead!');
+  }
+}
 // -->
 </script>
 
@@ -44,7 +55,8 @@ function fSet(ctrl, value)
 	<form style="display: inline;" action="discardVersion"><input type="submit" value="Discard" i18n:attributes="value" /></form>
 </div>
 
-<form method="post" action="saveProperties" name="frmEdit">
+<form method="post" action="saveProperties" name="frmEdit" 
+  enctype="multipart/form-data">
 <div class="field">
 	<label for="title"><span i18n:translate="" tal:omit-tag="">Title</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'title')" class="mandatory_field"> *</span></label>
 	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', here.getVersionLocalProperty('title', curr_lang))" />
@@ -52,6 +64,19 @@ function fSet(ctrl, value)
 <div class="field">
 	<label for="description"><span i18n:translate="" tal:omit-tag="">Description</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'description')" class="mandatory_field"> *</span></label>
 	<span tal:replace="structure python:here.get_wysiwyg_widget('description:utf8:ustring', here.getSession('description', here.getVersionLocalProperty('description', curr_lang)))" />
+</div>
+<div class="field">
+	<label for="subtitle">
+		<span i18n:translate="" tal:omit-tag="">Subtitle</span>
+		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'subtitle')" class="mandatory_field"> *</span>
+	</label>
+	<textarea id="subtitle" name="subtitle" rows="15" cols="70"
+	  tal:content="python:here.getSession('subtitle', here.getVersionLocalProperty('subtitle', curr_lang))"></textarea><br />
+    <label for="subtitle_file">
+	  <span i18n:translate="" tal:omit-tag="">Upload subtitle (.srt)</span>
+	</label>
+    <input type="file" onchange="javascript:check_srt(this);" size="50"
+	  name="subtitle_file" id="subtitle_file" value=""/>
 </div>
 <div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
 	<label for="coverage"><span i18n:translate="" tal:omit-tag="">Geographical coverage</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'coverage')" class="mandatory_field"> *</span></label>

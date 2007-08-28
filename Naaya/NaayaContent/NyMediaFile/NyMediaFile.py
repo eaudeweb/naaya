@@ -43,11 +43,13 @@ from converters.MediaConverter import \
      check_for_tools, \
      get_conversion_errors
 
+from parsers import DEFAULT_PARSER as SubtitleParser
+
 #module constants
 METATYPE_OBJECT = 'Naaya Media File'
 LABEL_OBJECT = 'Media File'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Media File objects'
-OBJECT_FORMS = ['mediafile_add', 'mediafile_edit', 'mediafile_index']
+OBJECT_FORMS = ['mediafile_add', 'mediafile_edit', 'mediafile_index', 'mediafile_subtitle']
 OBJECT_CONSTRUCTORS = ['manage_addNyMediaFile_html', 'mediafile_add_html', 'addNyMediaFile', 'importNyMediaFile']
 OBJECT_ADD_FORM = 'mediafile_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Media File type.'
@@ -62,7 +64,8 @@ PROPERTIES_OBJECT = {
     'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':   (0, '', ''),
     'file':         (1, '', ''),
-    'lang':         (0, '', '')
+    'lang':         (0, '', ''),
+    'subtitle':     (0, '', ''),
 }
 
 # If converters installed file must be video, otherwise must be 
@@ -83,7 +86,7 @@ def mediafile_add_html(self, REQUEST=None, RESPONSE=None):
 
 def addNyMediaFile(self, id='', title='', description='', coverage='', keywords='',
     sortorder='', file='', contributor=None, releasedate='', discussion='',
-    lang=None, REQUEST=None, **kwargs):
+    lang=None, subtitle="", REQUEST=None, **kwargs):
     """
     Create a File type of object.
     """
@@ -98,7 +101,7 @@ def addNyMediaFile(self, id='', title='', description='', coverage='', keywords=
     if not(l_referer == 'mediafile_manage_add' or l_referer.find('mediafile_manage_add') != -1) and REQUEST:
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
-            releasedate=releasedate, discussion=discussion, file=file)
+            releasedate=releasedate, discussion=discussion, file=file, subtitle=subtitle)
     else:
         r = []
     if not len(r):
@@ -118,7 +121,7 @@ def addNyMediaFile(self, id='', title='', description='', coverage='', keywords=
             pass
         #create object
         ob = NyMediaFile(id, title, description, coverage, keywords, sortorder,
-            contributor, releasedate, lang)
+            contributor, releasedate, lang, subtitle)
         self.gl_add_languages(ob)
         ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._setObject(id, ob)
@@ -143,7 +146,7 @@ def addNyMediaFile(self, id='', title='', description='', coverage='', keywords=
             self.setSessionErrors(r)
             self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                 description=description, coverage=coverage, keywords=keywords, \
-                sortorder=sortorder, releasedate=releasedate, discussion=discussion, lang=lang)
+                sortorder=sortorder, releasedate=releasedate, discussion=discussion, lang=lang, subtitle=subtitle)
             REQUEST.RESPONSE.redirect('%s/mediafile_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)
@@ -213,12 +216,12 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
     security = ClassSecurityInfo()
     
     def __init__(self, id, title, description, coverage, keywords, sortorder,
-        contributor, releasedate, lang):
+        contributor, releasedate, lang, subtitle):
         """ """
         self.subobj_meta_type = NyFSContainer.is_ext and "ExtFile" or "File"
         self.id = id
         mediafile_item.__dict__['__init__'](self, id, title, description, coverage,
-            keywords, sortorder, releasedate, lang)
+            keywords, sortorder, releasedate, lang, subtitle)
         NyValidation.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)
         NyFSContainer.__dict__['__init__'](self)
@@ -308,7 +311,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='',
         coverage='', keywords='', sortorder='', approved='', releasedate='',
-        discussion='', lang='', REQUEST=None, **kwargs):
+        discussion='', lang='', subtitle="", REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -321,7 +324,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
         releasedate = self.process_releasedate(releasedate, self.releasedate)
         if not lang: lang = self.gl_get_selected_language()
         self.save_properties(title, description, coverage, keywords, sortorder,
-            releasedate, lang)
+            releasedate, lang, subtitle)
         self.updatePropertiesFromGlossary(lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
@@ -435,7 +438,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = mediafile_item(self.id, self.title, self.description,
             self.coverage, self.keywords, self.sortorder, self.releasedate,
-            self.gl_get_selected_language())
+            self.gl_get_selected_language(), self.subtitle)
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
@@ -445,22 +448,27 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', coverage='', keywords='',
-        sortorder='', releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
+        sortorder='', releasedate='', discussion='', lang=None, subtitle="", REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if not sortorder: sortorder = DEFAULT_SORTORDER
         if lang is None: lang = self.gl_get_selected_language()
+        
+        # Update subtitle
+        subtitle_file = REQUEST.form.get('subtitle_file', None)
+        if subtitle_file:
+            subtitle = subtitle_file.read()
         #check mandatory fiels
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
-            releasedate=releasedate, discussion=discussion, file=file)
+            releasedate=releasedate, discussion=discussion, file=file, subtitle=subtitle)
         if not len(r):
             sortorder = int(sortorder)
             if not self.hasVersion():
                 #this object has not been checked out; save changes directly into the object
                 releasedate = self.process_releasedate(releasedate, self.releasedate)
-                self.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang)
+                self.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang, subtitle)
                 self.updatePropertiesFromGlossary(lang)
                 self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             else:
@@ -468,7 +476,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
                 if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                     raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
                 releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-                self.version.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang)
+                self.version.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang, subtitle)
                 self.version.updatePropertiesFromGlossary(lang)
                 self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             if discussion: self.open_for_comments()
@@ -483,7 +491,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
                 self.setSessionErrors(r)
                 self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                     description=description, coverage=coverage, keywords=keywords, \
-                    sortorder=sortorder, releasedate=releasedate, discussion=discussion)
+                    sortorder=sortorder, releasedate=releasedate, discussion=discussion, subtitle=subtitle)
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
             else:
                 raise Exception, '%s' % ', '.join(r)
@@ -516,5 +524,17 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'mediafile_edit')
+    
+    security.declareProtected(view, 'subtitle_xml')
+    def subtitle_xml(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'mediafile_subtitle')
+        
+    def getSubtitle(self, REQUEST=None, RESPONSE=None):
+        """ """
+        parser = SubtitleParser(self.subtitle)
+        return parser.parse()
+    
+    
 
 InitializeClass(NyMediaFile)
