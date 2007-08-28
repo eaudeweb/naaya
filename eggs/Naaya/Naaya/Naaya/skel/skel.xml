@@ -16,6 +16,7 @@
 		<form id="folder_administration_users" title="Folder administration - users' management"/>
 		<form id="folder_administration_portlets" title="Folder administration - right side portlets"/>
 		<form id="folder_administration_feedback" title="Folder administration - customize feedback form"/>
+		<form id="folder_administration_source" title="Folder administration - acl_users source"/>
 		<form id="epoz_toolbox" title="Epoz toolbox"/>
 		<form id="messages_box" title="Box for info or error messages"/>
 		<form id="languages_box" title="Box for changing the language on pages"/>
