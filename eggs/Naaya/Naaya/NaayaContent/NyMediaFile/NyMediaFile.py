@@ -528,6 +528,11 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
         parser = SubtitleParser(self.subtitle)
         return parser.parse()
     
-    
+    security.declareProtected(view, 'getSize')
+    def getSize(self):
+        video = self.getSingleMediaObject()
+        if not (video and self.is_ext):
+            return 0
+        return video.get_size()
 
 InitializeClass(NyMediaFile)

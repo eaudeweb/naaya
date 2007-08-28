@@ -65,8 +65,13 @@
       </div>
     </object>
     <div>
-      <a tal:attributes="href flvpath" i18n:translate="">Download</a>
+      <a tal:attributes="href flvpath">
+        <span i18n:translate="">Download</span>
+        <span tal:content="python:'(' + here.utShowSize(here.getSize()) + ')'" />
+      </a><span i18n:translate="">as</span>
+      <a href="http://en.wikipedia.org/wiki/Flv">Flash video</a>
     </div>
+    <br /><br />
   </div>
   
   <div class="flvPlayerNotReady" tal:condition="not:ready"
