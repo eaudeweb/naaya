@@ -22,6 +22,7 @@
 from copy import deepcopy
 
 #Zope imports
+import zLOG
 from OFS.Image import File, cookId
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -71,7 +72,9 @@ PROPERTIES_OBJECT = {
 # If converters installed file must be video, otherwise must be 
 # flash video (flv)
 error = check_for_tools() or not NyFSContainer.is_ext
-if error: 
+if error:
+    zLOG.LOG("NyMediaFile", zLOG.WARNING, 
+             "%s Video conversion will not be supported." % error)
     PROPERTIES_OBJECT["file"] = (1, MUST_BE_FLVFILE, "The file must be a valid flash video file (.flv)")
 else:
     PROPERTIES_OBJECT["file"] = (1, MUST_BE_VIDEOFILE, "The file must be a valid video file (e.g. .avi, .mpg, .mp4, etc.)")
