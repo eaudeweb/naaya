@@ -22,5 +22,5 @@
 from ImageFile import ImageFile
 
 misc_ = {
-    'EdWideoPlayer.swf': ImageFile('www/EdWideoPlayer.swf', globals()),
+    'EdWideoPlayer.swf': ImageFile('player/EdWideoPlayer.swf', globals()),
 }
