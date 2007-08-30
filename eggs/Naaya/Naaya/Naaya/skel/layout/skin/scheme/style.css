@@ -335,9 +335,25 @@
 }
 
 .flvPlayerBroken {
+  width: 450px;
+  overflow: auto;
+  background-color: #000000;
+  color: #ffffff;
+  text-align: center;
+  font-size: 107%;
+  font-weight: bold;
+  padding: 150px 0 150px 0;
 }
 
 .flvPlayerNotReady {
+  width: 450px;
+  overflow: auto;
+  background-color: #000000;
+  color: #ffffff;
+  text-align: center;
+  font-size: 107%;
+  font-weight: bold;
+  padding: 150px 0 150px 0;
 }
 
 .flashPlayerNotInstalled {
@@ -348,5 +364,5 @@
   text-align: center;
   font-size: 107%;
   font-weight: bold;
-  padding: 200px 0 200px 0;
+  padding: 150px 0 150px 0;
 }
