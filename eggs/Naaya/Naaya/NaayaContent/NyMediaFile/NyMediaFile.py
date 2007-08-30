@@ -220,7 +220,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
         """ """
         self.subobj_meta_type = NyFSContainer.is_ext and "ExtFile" or "File"
         self.id = id
-        mediafile_item.__dict__['__init__'](self, id, title, description, coverage,
+        mediafile_item.__dict__['__init__'](self, title, description, coverage,
             keywords, sortorder, releasedate, lang, subtitle)
         NyValidation.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)

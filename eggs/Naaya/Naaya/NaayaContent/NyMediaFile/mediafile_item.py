@@ -36,7 +36,7 @@ class mediafile_item(Implicit, NyProperties):
     keywords = LocalProperty('keywords')
     subtitle = LocalProperty('subtitle')
 
-    def __init__(self, id, title, description, coverage, keywords, sortorder,
+    def __init__(self, title, description, coverage, keywords, sortorder,
         releasedate, lang, subtitle):
         """
         Constructor.
