@@ -26,7 +26,7 @@
 
 <p i18n:translate="">
 	You can search <a tal:attributes="href string:${here/getSitePath}/external_search_html"><strong>all 
-	CHM network</strong></a> for more results or use <a href="http://www.google.com/custom?q=&amp;as=Google+Search&amp;domains=eea.eu.int%3Beionet.eu.int&amp;sitesearch=eea.eu.int&amp;cof=GIMP%3A%23FF9900%3BT%3A%23000000%3BALC%3A%23006666%3BL%3Ahttp%3A%2F%2Ftemplate.eea.eu.int%2Fimages%2Feeabanner%3BGFNT%3A%23808080%3BLC%3A%23003366%3BBGC%3A%23FFFFFF%3BAH%3Aleft%3BVLC%3A%23993300%3BGL%3A0%3BS%3Ahttp%3A%2F%2Fwww.eea.eu.int%3BGALT%3A%23FF9900%3BAWFID%3A109f704edff0cc7d%3B&amp;config=&amp;restrict=&amp;exclude=&amp;page=" title="EEA Google Search"><strong>the wider EEA Google search</strong></a>.<br /><br />
+	CHM network</strong></a><br />
 </p>
 <p i18n:translate="">
 	The text is searched in local <strong>Folders, News, Stories, Events, Photos, URLs, Documents, Files and Pointers</strong> from this website (titles, descriptive texts and also in uploaded files)
@@ -91,7 +91,7 @@
 	records python:results[1];
 	sortdata python:({'sortable': 1, 'key': 'meta_type', 'label': 'Type'}, {'sortable': 1, 'key': 'title', 'label': 'Title/Abstract'}, {'sortable': 0, 'key': '', 'label': 'Translations in'}, {'sortable': 1, 'key': 'bobobase_modification_time', 'label': 'Last updated'},)">
 
-<h2 i18n:translate="">Search Results</h2>
+<h2 i18n:translate="">Search results</h2>
 
 <tal:block tal:condition="python:paging_total!=0">
 	<div>
@@ -109,14 +109,14 @@
 					<tal:block tal:condition="item/sortable">
 						<tal:block tal:condition="python:skey==item['key']">
 							<th tal:condition="python:rkey==''" class="sorted" scope="col">
-								<a title="Sorted A..Z - Click to reverse" rel="nofollow" tal:attributes="href string:${here/absolute_url}/search_html?skey=${item/key}&amp;rkey=1&amp;start=${paging_start}&amp;${querystring}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortup.gif" width="12" height="12" alt="" border="0" /></a>
+								<a title="Sorted A..Z - Click to reverse" rel="nofollow" tal:attributes="href string:${here/absolute_url}/search_html?skey=${item/key}&amp;rkey=1&amp;start=${paging_start}&amp;${querystring}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortup.gif" width="12" height="12" alt="" /></a>
 							</th>
 							<th tal:condition="python:rkey!=''" class="sorted" scope="col">
-								<a title="Sorted Z..A - Click to reverse" rel="nofollow" tal:attributes="href string:${here/absolute_url}/search_html?skey=${item/key}&amp;start=${paging_start}&amp;${querystring}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortdown.gif" width="12" height="12" alt="" border="0" /></a>
+								<a title="Sorted Z..A - Click to reverse" rel="nofollow" tal:attributes="href string:${here/absolute_url}/search_html?skey=${item/key}&amp;start=${paging_start}&amp;${querystring}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortdown.gif" width="12" height="12" alt="" /></a>
 							</th>
 						</tal:block>
 						<th tal:condition="python:skey!=item['key']" scope="col">
-							<a title="Sortable" rel="nofollow" tal:attributes="href string:${here/absolute_url}/search_html?skey=${item/key}&amp;start=${paging_start}&amp;${querystring}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortnot.gif" width="12" height="12" alt="" border="0" /></a>
+							<a title="Sortable" rel="nofollow" tal:attributes="href string:${here/absolute_url}/search_html?skey=${item/key}&amp;start=${paging_start}&amp;${querystring}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortnot.gif" width="12" height="12" alt="" /></a>
 						</th>
 					</tal:block>
 				</tal:block>
