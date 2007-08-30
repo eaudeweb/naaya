@@ -74,16 +74,20 @@
     <br /><br />
   </div>
   
-  <div class="flvPlayerNotReady" tal:condition="not:ready"
+  <div tal:condition="not:ready"
     tal:define="broken here/mediaBroken">
     <div tal:condition="broken" class="flvPlayerBroken">
+      <img src="misc_/NaayaContent/NyMediaFileBroken.gif" /><br />
       <label i18n:translate="">
-      The following error occured when trying to process your video file:</label>
-      <span i18n:translate=""  tal:content="broken" />
-      <label i18n:translate="">Please try again with a valid video file.</label>
+      An error occurred when trying to process uploaded video file. This may be
+      because uploaded file is not a valid video file, or not supported.
+      </label>
     </div>
-    <div tal:condition="not:broken">
-      <span i18n:translate="" >File not ready</span>
+    <div tal:condition="not:broken" class="flvPlayerNotReady">
+      <img src="misc_/NaayaContent/NyMediaFileLoading.gif" /><br />
+      <label i18n:translate="" >
+        Video file is been processed. Please try again later.
+      </label>
     </div>
   </div>
 

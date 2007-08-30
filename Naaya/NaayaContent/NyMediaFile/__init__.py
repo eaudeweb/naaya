@@ -23,4 +23,6 @@ from ImageFile import ImageFile
 
 misc_ = {
     'EdWideoPlayer.swf': ImageFile('player/EdWideoPlayer.swf', globals()),
+    'NyMediaFileLoading.gif': ImageFile('www/NyMediaFileLoading.gif', globals()),
+    'NyMediaFileBroken.gif': ImageFile('www/NyMediaFileBroken.gif', globals()),
 }

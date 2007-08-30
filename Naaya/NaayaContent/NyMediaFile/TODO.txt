@@ -1,0 +1,7 @@
+Features to add
+===============
+
+Chapters
+--------
+- A chapter is defined by title or description and time in movie where it will
+  occur. This will allow users to easily navigate into video file.

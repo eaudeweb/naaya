@@ -44,7 +44,7 @@ class MediaConverter(Thread):
         return self.execute("ffmpeg -y -v 0 "
                             "-benchmark "
                             "-i %(in)s "
-                            "-ar 22050 -s 450x336 -b 500k -f flv "
+                            "-ar 22050 -s 320x240 -b 500k -f flv "
                             "%(out)s &> %(done)s.log "
                             "&& rm %(in)s "
                             "&& flvtool2 -U %(out)s >> %(done)s.log "
@@ -75,7 +75,7 @@ def check_for_tools():
     error = ferr.read()
     error = error.lower()
     if "flvtool2: command not found" in error:
-        return "flvtool not installed."
+        return "flvtool2 not installed."
     return ""
 
 def get_conversion_errors(fpath, suffix=".log"):
