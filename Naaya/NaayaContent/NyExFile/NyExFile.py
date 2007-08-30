@@ -208,7 +208,6 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
     def __init__(self, id, title, description, coverage, keywords, sortorder, file, precondition,
         content_type, downloadfilename, contributor, releasedate, lang):
         """ """
-        self.id = id
         exfile_item.__dict__['__init__'](self, id, title, description, coverage, keywords, sortorder, file,
             precondition, content_type, downloadfilename, releasedate, lang)
         NyValidation.__dict__['__init__'](self)
