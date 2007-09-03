@@ -9,6 +9,16 @@
 		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
 		<form id="folder_zipupload" title="Upload items from zip archive"/>
 		<form id="folder_zipdownload" title="Download items as zip archive"/>
+		<form id="site_macro_edit" title="Macro for edit forms"/>
+		<form id="folder_edit" title="NyFolder edit"/>
+		<form id="form_languages_box" title="Box for changing the language when translating content"/>
+		<form id="site_admin_htmlportlets" title="Portal administration - html portlets section"/>
+		<form id="site_admin_metadata" title="Portal administration - medata"/>
+		<form id="exfile_edit" title=""/>
+		<form id="file_edit" title=""/>
+		<form id="mediafile_edit" title=""/>
+		<form id="expert_edit" title=""/>
+		<form id="project_edit" title=""/>
 	</forms>
 	<layout default_skin_id="envirowindows" default_scheme_id="EW-skin-00">
 		<skin id="envirowindows" title="EnviroWindows">
