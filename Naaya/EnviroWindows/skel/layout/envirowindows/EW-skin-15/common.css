@@ -12,8 +12,8 @@ a img {
 }
 .buttons a {
 	text-decoration: none;
-	background-color:
-	color: #ffffff; 
+	background: #ffffff; 
+	color: #666;
 	line-height: 2em;
 	border-left:2px solid #EEEEEE;
 	border-top:2px solid #EEEEEE;
@@ -25,7 +25,7 @@ a img {
 	font-weight: bold;
 }
 .buttons a:visited {
-	color: #ffffff; 
+	color: #000;
 }
 /* folder index styles */
 #admin_this_folder{
