@@ -771,3 +771,30 @@ tr.not-duplicate {
 .admin_table tr.even {
 	background: #fafafa;
 }
+/* Media file style sheet 
+*/
+.flvPlayer {
+}
+
+.flvPlayerBroken, .flvPlayerNotReady, .flashPlayerNotInstalled  {
+  width: 450px;
+  min-height: 10em;
+  overflow: auto;
+  background: url('flv-bg.jpg') no-repeat top left #555;
+  color: #ffffff;
+  text-align: center;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid #777;
+  padding-top: 5em;
+  margin: 0 auto;
+}
+* html .flvPlayerBroken, * html .flvPlayerNotReady, * html .flashPlayerNotInstalled  {
+	height: 10em;
+}
+.flvPlayerBroken p, .flvPlayerNotReady p, .flashPlayerNotInstalled p {
+	margin: 0;
+	padding: 0.5em;
+	background: #000;
+	font-size: 0.90em;
+}
