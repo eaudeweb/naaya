@@ -527,13 +527,4 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
             data=data.next
         return ''
 
-    security.declareProtected(view_management_screens, 'update_id')
-    def update_id(self):
-        """ """
-        #Zope imports
-        from OFS.Image import File
-
-        self.id = File.__dict__['id'](self)
-        self._p_changed = 1
-
 InitializeClass(NyExFile)
