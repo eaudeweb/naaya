@@ -44,6 +44,8 @@ class file_item(NyProperties, File):
         #"dirty" trick to get rid of the File's title property
         try: del self.title
         except: pass
+        try: del self.id
+        except: pass
         self.save_properties(title, description, coverage, keywords, sortorder,
             downloadfilename, releasedate, lang)
         NyProperties.__dict__['__init__'](self)

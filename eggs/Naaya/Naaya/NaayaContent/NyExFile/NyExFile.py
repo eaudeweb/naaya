@@ -208,6 +208,7 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
     def __init__(self, id, title, description, coverage, keywords, sortorder, file, precondition,
         content_type, downloadfilename, contributor, releasedate, lang):
         """ """
+        self.id = id
         exfile_item.__dict__['__init__'](self, id, title, description, coverage, keywords, sortorder, file,
             precondition, content_type, downloadfilename, releasedate, lang)
         NyValidation.__dict__['__init__'](self)
@@ -525,5 +526,14 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
             RESPONSE.write(data.data)
             data=data.next
         return ''
+
+    security.declareProtected(view_management_screens, 'update_id')
+    def update_id(self):
+        """ """
+        #Zope imports
+        from OFS.Image import File
+
+        self.id = File.__dict__['id'](self)
+        self._p_changed = 1
 
 InitializeClass(NyExFile)

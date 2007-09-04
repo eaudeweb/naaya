@@ -35,6 +35,9 @@ class file_item(File, NyVersioning):
         Constructor.
         """
         File.__dict__['__init__'](self, id, title, file, content_type, precondition)
+        #"dirty" trick to get rid of the File's title property
+        try: del self.id
+        except: pass
         NyVersioning.__dict__['__init__'](self)
 
     security = ClassSecurityInfo()
