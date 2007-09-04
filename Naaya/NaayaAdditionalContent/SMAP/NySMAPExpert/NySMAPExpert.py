@@ -213,6 +213,7 @@ class NySMAPExpert(NyAttributes, expert_item, NyItem, NyCheckControl):
                     maintopics, subtopics, sortorder, file, precondition, content_type, downloadfilename, 
                     email, contributor, releasedate, lang):
         """ """
+        self.id = id
         expert_item.__dict__['__init__'](self, id, title, description, coverage, keywords, surname, name, 
             ref_lang, country, maintopics, subtopics, sortorder, file, precondition, content_type, 
             downloadfilename, email, releasedate, lang)
