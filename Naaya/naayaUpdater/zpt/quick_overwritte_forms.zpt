@@ -19,15 +19,13 @@
 		<br /><br />
 	</div>
 
-	TODO: daca nu e in portal forma sa o adaug<br />
-
 	<tal:block define="forms python:request.get('forms', '');
 						upload_ok python:request.get('u', 0);
 						report python:here.getReportQuickModifiedForms(forms, request)">
 
 	<fieldset>
 		<legend>Quick update Naaya forms</legend>
-		<p>bla bla bla</p>
+		<p>Quick update Naaya forms.</p>
 		<form method="post" name="frmQuickModForms">
 
 			<label for="exclude">Forms</label><br />
@@ -75,7 +73,7 @@
 							</tal:block>
 							<tal:block condition="python:action_type=='add'">
 								<input type="checkbox" name="fmod" tal:attributes="value python:here.generateFormPath(fmod, portal)" />
-								<em tal:content="fmod" /> missing from ZMI
+								<em tal:content="fmod" /> missing from ZMI (form will be added)
 							</tal:block>
 						</tal:block>
 					</li>
