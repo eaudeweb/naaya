@@ -466,25 +466,37 @@ class NaayaUpdater(Folder):
         return REQUEST.RESPONSE.redirect('%s/overwritte_forms_html?ppath=%s&show_report=1' % (self.absolute_url(), ppath))
 
     security.declareProtected(view_management_screens, 'getReportQuickModifiedForms')
-    def getReportQuickModifiedForms(self, forms, REQUEST=None):
+    def getReportQuickModifiedForms(self, forms, portals='', p_action='', REQUEST=None):
         """ """
         if REQUEST.has_key('show_report'):
             report = {}
             forms_list = convertLinesToList(forms)
             portals_list = self.getPortals()
+            portals_custom = []
+            for portal_id in portals.split(','):
+                portals_custom.append(portal_id.strip())
+
             for portal in portals_list:
                 res = []
-                portal_path = portal.absolute_url(1)
-                for form_id in forms_list:
-                    form_path = '%s/portal_forms/%s' % (portal_path, form_id)
-                    form_fs = self.get_fs_template(form_id, portal)
-                    form_zmi_ob = self.get_zmi_template(form_path)
-                    if form_fs and form_zmi_ob:
-                        if not create_signature(form_fs) == create_signature(self.get_template_content(form_zmi_ob)):
-                            res.append((form_zmi_ob, 'edit'))
-                    if form_fs and not form_zmi_ob:
-                        res.append((form_id, 'add'))
+                do_update = False
+                if p_action == 'ep':
+                    if not portal.id in portals_custom: do_update = True
+                else:
+                    if portal.id in portals_custom: do_update = True
+                if do_update:
+                    portal_path = portal.absolute_url(1)
+                    for form_id in forms_list:
+                        form_path = '%s/portal_forms/%s' % (portal_path, form_id)
+                        form_fs = self.get_fs_template(form_id, portal)
+                        form_zmi_ob = self.get_zmi_template(form_path)
+                        if form_fs and form_zmi_ob:
+                            if not create_signature(form_fs) == create_signature(self.get_template_content(form_zmi_ob)):
+                                res.append((form_zmi_ob, 'edit'))
+                        if form_fs and not form_zmi_ob:
+                            res.append((form_id, 'add'))
                 if len(res) > 0: report[portal_path] = res
+            if not report:
+                report = {'all': 'unchanged'}
             return report
 
     security.declareProtected(view_management_screens, 'reloadQuickPortalForms')
