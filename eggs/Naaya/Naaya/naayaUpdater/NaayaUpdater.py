@@ -102,32 +102,52 @@ class NaayaUpdater(Folder):
     reinstall_contenttypes_html = PageTemplateFile('zpt/reinstall_contenttypes', globals())
 
     security.declareProtected(view_management_screens, 'reloadMetaTypesForms')
-    def reloadMetaTypesForms(self, portal):
+    def reloadMetaTypesForms(self, portal, contenttypes, ct_action):
         """ reload Naaya portal forms"""
+        report = []
+        ct_list = []
+        for ct_id in contenttypes.split(','):
+            ct_list.append(ct_id.strip())
+
         for meta_type in portal.get_pluggable_metatypes():
             item = portal.get_pluggable_item(meta_type)
             #chech if the meta_type is installed
             if portal.is_pluggable_item_installed(meta_type):
-                portal.manage_uninstall_pluggableitem(meta_type)  #uninstall
-                portal.manage_install_pluggableitem(meta_type)    #install
+                if (ct_action == 'ect' and meta_type not in ct_list) or \
+                   (ct_action == 'ict' and meta_type in ct_list):
+                    report.append(meta_type)
+                    portal.manage_uninstall_pluggableitem(meta_type)  #uninstall
+                    portal.manage_install_pluggableitem(meta_type)    #install
+
+        return report
 
     security.declareProtected(view_management_screens, 'reinstallMetaTypes')
-    def reinstallMetaTypes(self, meta_types='Naaya Site', nonrecursive=True, modified=True, exclude='', REQUEST=None):
+    def reinstallMetaTypes(self, all=False, ppath='', portals='', p_action='ep',
+                           contenttypes='', ct_action='ect', REQUEST=None):
         """ reinstall active metatypes for Naaya portals"""
-        root = self.getPhysicalRoot()
-        meta_types = convertToList(meta_types)
+        report = {}
+        portals_list = []
+        for portal_id in portals.split(','):
+            portals_list.append(portal_id.strip())
 
-        #TODO: to implement MODIFIED parameter
-        if nonrecursive:
-            for portal in self.get_root_ny_sites(root, meta_types):
-                self.reloadMetaTypesForms(portal)
-        else:
-            portals_list = self.getPortals(root, meta_types)
+        if all:
+            root = self.getPhysicalRoot()
+            portals_list = self.getPortals(root, self.pmeta_types)
             for portal in portals_list:
-                self.reloadMetaTypesForms(portal)
+                do_update = False
+                if p_action == 'ep':
+                    if not portal.id in portals_list: do_update = True
+                else:
+                    if portal.id in portals_list: do_update = True
+                if do_update:
+                    report[portal.id] = self.reloadMetaTypesForms(portal, contenttypes, ct_action)
+        else:
+            portal = self.getPortal(ppath)
+            if not portal.id in portals_list:
+                report[portal.id] = self.reloadMetaTypesForms(portal, contenttypes, ct_action)
 
-        #TODO: to create/show the report
-        return ''
+        REQUEST.SESSION.set('report', report)
+        return REQUEST.RESPONSE.redirect('%s/reinstall_contenttypes_html' % self.absolute_url())
 
 
     ###

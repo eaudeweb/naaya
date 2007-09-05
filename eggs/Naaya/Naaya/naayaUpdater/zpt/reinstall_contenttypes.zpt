@@ -4,35 +4,66 @@
 	</tal:block>
 
 	<tal:block metal:fill-slot="body">
-
-	<div>
-		<a tal:attributes="href string:${here/absolute_url}" title="Back to index">Back to index</a>
-		<br /><br />
-	</div>
+		<tal:block define="ppath python:request.get('ppath', '');
+						   report python:request.SESSION.get('report', '')">
+		<div>
+			<a tal:attributes="href string:${here/absolute_url}" title="Back to index">Back to index</a>
+			<br /><br />
+		</div>
 
 		<fieldset>
 			<legend>Reinstall Naaya content types</legend>
 			<p>Only the installed metatype(s) will be updated.</p>
 			<form tal:attributes="action string:${here/absolute_url}/reinstallMetaTypes" method="post" name="frmMetaTypes">
+				<input type="checkbox" name="all" id="all" />
+				<label for="all">All portals</label><br /><br />
 
-				<label for="meta_types">Naaya site(s)</label>
-				<input type="text" name="meta_types" id="meta_types" size="60" value="CHM Site, Naaya Site" />
-				<small>*separate multiple metatypes by commas</small><br /><br />
-
-				<input type="checkbox" name="nonrecursive" id="nonrecursive" checked="checked"/>
-				<label for="nonrecursive">Only update portals from Zope root</label><br />
-
-				<input type="checkbox" name="modified" id="modified" checked="checked"/>
-				<label for="modified">Report and don't update the modified forms</label>&nbsp;<small>(based on portal creation date)&nbsp;<span style="color: red">*not yet implemented</span></small><br /><br />
-
-				<label for="exclude">Exclude portal(s) and contenttypes</label>&nbsp;<small><span style="color: red">*not yet implemented</span></small><br />
-				<textarea name="exclude" id="exclude" cols="50" rows="5"></textarea>
-				<small>*separate portal and metatypes by commas</small><br />
+				<label for="ppath">Select a portal</label><br />
+				<select name="ppath" id="ppath">
+					<option tal:repeat="portal here/getPortals"
+							tal:attributes="selected python:test(ppath==portal.absolute_url(1), 'selected', ''); 
+											value python:portal.absolute_url(1)" 
+							tal:content="python:'%s (%s)' % (portal.title_or_id(),portal.absolute_url(1))" />
+				</select><br /><br />
+				<label for="portals">Portal(s) IDs list</label><br />
+				<textarea name="portals" id="portals" cols="50" rows="5"></textarea>
+				<small>*separate portal ids by commas</small><br />
+				<input type="radio" name="p_action" value="ep" checked/>
+				<span>exclude</span>
+				<input type="radio" name="p_action" value="ip" />
+				<span>update only</span>
+				<br />
 
 				<br />
+				<label for="contenttypes">Contenttype(s) list</label><br />
+				<textarea name="contenttypes" id="contenttypes" cols="50" rows="5"></textarea>
+				<small>*separate metatypes by commas</small><br />
+				<input type="radio" name="ct_action" value="ect" checked/>
+				<span>exclude</span>
+				<input type="radio" name="ct_action" value="ict" />
+				<span>update only</span>
+				<br />
+
 				<input type="submit" name="btnMetaTypes" value="Reinstall" />
 			</form>
 		</fieldset>
 
+		<tal:block condition="report">
+			<h3>Report</h3>
+			<p>the below content type(s) were updated</p>
+			<ul>
+				<tal:block repeat="portal python:report.keys()">
+					<li>
+						<span tal:replace="portal" />
+						<ul tal:condition="python:len(report[portal])>0">
+							<li tal:repeat="meta python:report[portal]" tal:content="meta" />
+						</ul>
+					</li>
+				</tal:block>
+			</ul>
+		</tal:block>
+
+		</tal:block>
+		<span tal:condition="python:request.SESSION.has_key('report')" tal:replace="python:request.SESSION.delete('report')" />
 	</tal:block>
 </tal:block>
