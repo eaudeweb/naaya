@@ -20,8 +20,10 @@
 	</div>
 
 	<tal:block define="forms python:request.get('forms', '');
+						portals python:request.get('portals', '');
+						p_action python:request.get('p_action', 'ep');
 						upload_ok python:request.get('u', 0);
-						report python:here.getReportQuickModifiedForms(forms, request)">
+						report python:here.getReportQuickModifiedForms(forms, portals, p_action, request)">
 
 	<fieldset>
 		<legend>Quick update Naaya forms</legend>
@@ -30,17 +32,23 @@
 
 			<label for="exclude">Forms</label><br />
 			<textarea name="forms" id="forms" cols="50" rows="5" tal:content="forms"></textarea>
+			<small>*one ID on a row</small>
+			<br />
+
+			<label for="portals">Portal(s) IDs list</label><br />
+			<textarea name="portals" id="portals" cols="50" rows="5" tal:content="portals"></textarea>
+			<small>*separate portal ids by commas</small><br />
+			<input type="radio" name="p_action" value="ep" tal:attributes="checked python:test(p_action=='ep','checked','')" />
+			<span>exclude</span>
+			<input type="radio" name="p_action" value="ip" tal:attributes="checked python:test(p_action=='ip','checked','')" />
+			<span>update only</span>
 			<br />
 
 			<input type="submit" name="show_report" value="Show report" />
 		</form>
 	</fieldset>
 
-	<h2>Report</h2>
-
-	<div tal:condition="not:report">
-		<p>All forms are updated.</p>
-	</div>
+	<h2 tal:condition="report">Report</h2>
 
 	<div tal:condition="report">
 		<form tal:attributes="action string:${here/absolute_url}/reloadQuickPortalForms"
@@ -48,8 +56,8 @@
 			<input type="checkbox" name="all" />
 			<label for="all">Update all forms</label>
 
+			<tal:block condition="python:report.items()[0][0] != 'all'">
 			<tal:block repeat="portal_report python:report.items()">
-
 			<div tal:define="portal_path python:portal_report[0];
 							 portal python:here.getPortal(portal_path);
 							 report python:portal_report[1]">
@@ -81,7 +89,9 @@
 
 			</div>
 			</tal:block>
+			</tal:block>
 
+			<br /><br />
 			<input type="hidden" name="forms" id="forms" tal:attributes="value forms" />
 			<input type="submit" name="reload" value="Reload" />
 		</form>
