@@ -65,6 +65,10 @@
       </div>
     </object>
     <div>
+    <input id="videoEmbed" name="videoEmbed" type="text" style="width: 450px;" readonly="true" onclick="javascript:this.select();"
+      tal:attributes='value string:<!-- Embed video - copy & paste --><object width="280" height="210" type="application/x-shockwave-flash" data="${here/absolute_url}/${player}?style=minimal&amp;streamScript=${streamScript}&amp;flvpath=${flvpath}&amp;seekat=${seekat}&amp;subtitle=${subtitle}&amp;chapters=${chapters}"><param name="movie" value="${here/absolute_url}/${player}?style=minimal&amp;streamScript=${streamScript}&amp;flvpath=${flvpath}&amp;seekat=${seekat}&amp;subtitle=${subtitle}&amp;chapters=${chapters}" /><param name="quality" value="high" /><param name="bgcolor" value="#ffffff" /><param name="allowScriptAccess" value="sameDomain" /></object>'/>
+    </div>
+    <div>
       <a tal:attributes="href flvpath">
         <span i18n:translate="">Download</span>
         <span tal:content="python:'(' + here.utShowSize(here.getSize()) + ')'" />
