@@ -1,6 +1,6 @@
 <tal:block metal:use-macro="here/standard_template.pt/macros/page">
 	<tal:block metal:fill-slot="head">
-		<title tal:content="here/title">TITLE</title>
+		<title>Quick update Naaya forms</title>
 		<script type="text/javascript">
 		<!--
 		function fOpen(diff_form)

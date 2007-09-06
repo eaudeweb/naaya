@@ -1,6 +1,6 @@
 <tal:block metal:use-macro="here/standard_template.pt/macros/page">
 	<tal:block metal:fill-slot="head">
-		<title tal:content="here/title">TITLE</title>
+		<title>Reinstall Naaya content types</title>
 	</tal:block>
 
 	<tal:block metal:fill-slot="body">
@@ -28,7 +28,7 @@
 				<label for="portals">Portal(s) IDs list</label><br />
 				<textarea name="portals" id="portals" cols="50" rows="5"></textarea>
 				<small>*separate portal ids by commas</small><br />
-				<input type="radio" name="p_action" value="ep" checked/>
+				<input type="radio" name="p_action" value="ep" checked />
 				<span>exclude</span>
 				<input type="radio" name="p_action" value="ip" />
 				<span>update only</span>
@@ -38,7 +38,7 @@
 				<label for="contenttypes">Contenttype(s) list</label><br />
 				<textarea name="contenttypes" id="contenttypes" cols="50" rows="5"></textarea>
 				<small>*separate metatypes by commas</small><br />
-				<input type="radio" name="ct_action" value="ect" checked/>
+				<input type="radio" name="ct_action" value="ect" checked />
 				<span>exclude</span>
 				<input type="radio" name="ct_action" value="ict" />
 				<span>update only</span>
