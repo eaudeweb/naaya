@@ -327,7 +327,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         return r
 
     security.declareProtected(view, 'checkPermissionManageObjects')
-    def checkPermissionManageObjects(self):
+    def checkPermissionManageObjects(self, sort_on='title', sort_order=0):
         """ This function is called on the folder index and it checkes whether or not
             to display the various buttons on that form
         """
@@ -355,7 +355,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
             if ((del_permission or edit_permission) and not x.approved) or x.approved:
                 results_folders.append((del_permission, edit_permission, version_status, copy_permission, x))
         # Naaya objects
-        sorted_objects = self.utSortObjsListByAttr(self.getObjects(), 'title', 0)
+        sorted_objects = self.utSortObjsListByAttr(self.getObjects(), sort_on, sort_order)
         for x in self.utSortObjsListByAttr(sorted_objects, 'sortorder', 0):
             del_permission = x.checkPermissionDeleteObject()
             copy_permission = x.checkPermissionCopyObject()
