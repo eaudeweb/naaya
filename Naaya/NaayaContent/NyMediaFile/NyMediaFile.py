@@ -432,7 +432,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
             raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        self.version = mediafile_item(self.id, self.title, self.description,
+        self.version = mediafile_item(self.title, self.description,
             self.coverage, self.keywords, self.sortorder, self.releasedate,
             self.gl_get_selected_language(), self.subtitle)
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
