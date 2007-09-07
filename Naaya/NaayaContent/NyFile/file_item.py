@@ -40,6 +40,9 @@ class file_item(NyProperties, File):
         """
         Constructor.
         """
+        try: id = id()
+        except TypeError: pass
+        
         File.__dict__['__init__'](self, id, title, file, content_type, precondition)
         #"dirty" trick to get rid of the File's title property
         try: del self.title

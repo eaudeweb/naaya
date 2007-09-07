@@ -276,7 +276,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
             if version_data is not None:
                 #show data for file: set content type and return data
                 RESPONSE.setHeader('Content-Type', version_data[1])
-                REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + utToUtf8(self.downloadfilename))
+                REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
                 return version_data[0]
             else:
                 return 'Invalid version data!'
