@@ -68,12 +68,12 @@ class PlugBase(SimpleItem):
         for l_item in l_folders:
             for l_roles_tuple in l_item.get_local_roles():
                 l_local_roles = self.getLocalRoles(l_roles_tuple[1])
-                #if l_roles_tuple[0] in p_user_folder.user_names() and len(l_local_roles)>0:
-                if len(l_local_roles)>0:
-                    if l_users_roles.has_key(str(l_roles_tuple[0])):
-                        l_users_roles[str(l_roles_tuple[0])].append((l_local_roles, l_item.absolute_url(1)))
+                user = l_roles_tuple[0]
+                if self.getUserSource(user) != 'acl_users' and len(l_local_roles)>0:
+                    if l_users_roles.has_key(str(user)):
+                        l_users_roles[str(user)].append((l_local_roles, l_item.absolute_url(1)))
                     else:
-                        l_users_roles[str(l_roles_tuple[0])] = [(l_local_roles, l_item.absolute_url(1))]
+                        l_users_roles[str(user)] = [(l_local_roles, l_item.absolute_url(1))]
         return l_users_roles
 
     def revokeUserRoles(self, roles='', REQUEST=None):
