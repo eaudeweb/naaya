@@ -1230,8 +1230,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 location_maintainer_email = self.getMaintainersEmails(obj)
         #create an account without role
         try:
-            self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname,
-                lastname, email)
+            self.getAuthenticationTool().admin_adduser(username, password, confirm, [], [], firstname, lastname, email)
         except Exception, error:
             err = error
         else:
@@ -1430,7 +1429,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if user._getPassword() == old_pass:
             try:
                 self.getAuthenticationTool().manage_changeUser(name, password, confirm, [], [], firstname,              lastname, email)
-                self.credentialsChanged(name, name, password)
+                self.credentialsChanged(name, password)
                 #keep authentication
             except Exception, error:
                 err = error
@@ -1661,12 +1660,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduser')
     def admin_adduser(self, firstname='', lastname='', email='', name='', password='',
-        confirm='', REQUEST=None):
+        confirm='', strict=0, REQUEST=None):
         """ """
         msg = err = ''
         try:
             self.getAuthenticationTool().manage_addUser(name, password, confirm, [], [], firstname,
-                lastname, email)
+                lastname, email, strict)
         except Exception, error:
             err = error
         else:
@@ -2494,6 +2493,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         l_content = l_content.replace('@@PORTAL_TITLE@@', self.site_title)
         l_content = l_content.replace('@@NAME@@', p_name)
         l_content = l_content.replace('@@USERNAME@@', p_username)
+        l_content = l_content.replace('@@EMAIL@@', p_email)
         mail_from = self.mail_address_from
         self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
 
