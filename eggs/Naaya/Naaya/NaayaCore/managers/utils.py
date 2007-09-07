@@ -514,6 +514,14 @@ class utils:
         l_tmp = l_tmp.replace('>', '&gt;')
         return l_tmp
 
+    def utJsEncode(self, p_string):
+        """Encode a string for javascript processing"""
+        l_tmp = str(p_string)
+        l_tmp = l_tmp.replace('\\', '\\\\')
+        l_tmp = l_tmp.replace('\'', '\\\'')
+        l_tmp = l_tmp.replace('\"', '\\\"')
+        return l_tmp
+
     def ut_content_disposition(self, filename=None): 
         """Generate a properly escaped Content-Disposition header""" 
         filename = self.utToUtf8(filename)

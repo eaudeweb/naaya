@@ -32,6 +32,7 @@ from AccessControl.User import BasicUserFolder
 from AccessControl.Permissions import view_management_screens, view, manage_users
 from Globals import InitializeClass, PersistentMapping
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from DateTime import DateTime
 
 #product imports
 from Products.NaayaCore.constants import *
@@ -139,7 +140,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
     #zmi actions
     security.declareProtected(manage_users, 'manage_addUser')
     def manage_addUser(self, name='', password='', confirm='', roles=[], domains=[], firstname='',
-        lastname='', email='', REQUEST=None):
+        lastname='', email='', strict=0, REQUEST=None):
         """ """
         if not firstname:
             raise Exception, 'The first name must be specified'
@@ -155,6 +156,14 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
             raise Exception, 'A user with the specified name already exists'
         if (password or confirm) and (password != confirm):
             raise Exception, 'Password and confirmation do not match'
+        if strict:
+            users = self.getUserNames()
+            for n in users:
+                us = self.getUser(n)
+                if email.strip() == us.email:
+                    raise Exception, 'A user with the specified email already exists, username %s' % n
+                if firstname == us.firstname and lastname == us.lastname:
+                    raise Exception, 'A user with the specified name already exists, username %s' % n
         #convert data
         roles = self.utConvertToList(roles)
         domains = self.utConvertToList(domains)
@@ -279,6 +288,14 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
                 return 1, users
         else:
             return 2, []
+
+    security.declareProtected(manage_users, 'isNewUser')
+    def isNewUser(self, user_obj, days=5):
+        """ check if the user is recently added """
+        if DateTime() - DateTime(self.getUserCreatedDate(user_obj)) <= 5:
+            return True
+        else:
+            return False
 
     security.declareProtected(view, 'isLocalUser')
     def isLocalUser(self, REQUEST=None):
