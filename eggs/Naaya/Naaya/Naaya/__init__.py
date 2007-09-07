@@ -74,6 +74,7 @@ misc_ = {
     'checkin':ImageFile('www/checkin.gif', globals()),
     'checkout':ImageFile('www/checkout.gif', globals()),
     'checked':ImageFile('www/checked.png', globals()),
+    'star.png':ImageFile('www/star.png', globals()),
 
     #drag & drop files
     'core.js': ImageFile('zpt/dragdrop/core.js.dtml', globals()),

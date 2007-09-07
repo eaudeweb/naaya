@@ -40,7 +40,11 @@
 		</td>
 		<td><strong><a tal:define="user python:user_tool.getUserAccount(user_obj);
 									user_quoted python:here.utUrlEncode(user)"
-						tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}" tal:content="user">username</a></strong></td>
+						tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}" tal:content="user">username</a></strong>
+			<span tal:condition="python:user_tool.isNewUser(user_obj)">
+				<img src="misc_/Naaya/star.png" alt="New account" />
+			</span>
+		</td>
 		<td tal:content="python:user_tool.getUserFirstName(user_obj) + ' ' + user_tool.getUserLastName(user_obj)" />
 		<td tal:content="python:user_tool.getUserEmail(user_obj)" />
 		</tal:block>
@@ -55,6 +59,7 @@
 <input type="button" value="Add role" onclick="document.location.href='admin_addrole_html';"  i18n:attributes="value" />
 <input type="button" value="Users & Roles" onclick="document.location.href='admin_roles_html';"  i18n:attributes="value" />
 </p>
+<strong>Note:</strong> The users marked with <img src="misc_/Naaya/star.png" alt="New account" /> are added in the last 5 days.
 </form>
 
 </tal:block>
