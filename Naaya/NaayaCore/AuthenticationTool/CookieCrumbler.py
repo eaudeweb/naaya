@@ -198,7 +198,7 @@ class CookieCrumbler:
                 phys_path + ('credentialsChanged',))
 
     security.declarePublic('credentialsChanged')
-    def credentialsChanged(self, user, name, pw):
+    def credentialsChanged(self, name, pw):
         ac = encodestring('%s:%s' % (name, pw)).rstrip()
         method = self.getCookieMethod( 'setAuthCookie'
                                        , self.defaultSetAuthCookie )
