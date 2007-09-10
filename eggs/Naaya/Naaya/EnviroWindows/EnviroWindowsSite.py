@@ -793,10 +793,21 @@ class EnviroWindowsSite(NySite):
                 emailtool_ob.manage_addEmailTemplate(k, v, content)
             else:
                 email_ob.manageProperties(title=email_ob.title, body=content)
-                return 'done'
+        return 'done'
 
     def update_portal_forms(self):
         """ """
+        skel_path = join(NAAYA_PRODUCT_PATH, 'skel')
+        formstool_ob = self.getFormsTool()
+        portal_forms = {'site_admin_users': 'Portal administration - users'}
+        for k, v in portal_forms.items():
+            content = self.futRead(join(skel_path, 'forms', '%s.zpt' % k), 'r')
+            form_ob = formstool_ob._getOb(k, None)
+            if form_ob is None:
+                formstool_ob.manage_addTemplate(id=k, title=v, file='')
+                form_ob = formstool_ob._getOb(k, None)
+            form_ob.pt_edit(text=content, content_type='')
+
         skel_path = join(ENVIROWINDOWS_PRODUCT_PATH, 'skel')
         formstool_ob = self.getFormsTool()
         portal_forms = {'site_requestrole': 'Portal request role', 'site_requestlocations': 'Portal request role form - step 3', 'site_requestinfo': 'Portal request account form - step 2', 'folder_index': 'NyFolder default view', 'site_login': 'Portal login', 'site_createaccount': 'Portal create account form'}
