@@ -2833,4 +2833,20 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(view, 'datetime_js')
     datetime_js = DTMLFile('zpt/calendar/datetime_js', globals())
 
+    #--------------------------------------------------------------------------------------------------
+    security.declareProtected(view_management_screens, 'update_portal_forms')
+    def update_portal_forms(self):
+        """ """
+        skel_path = join(NAAYA_PRODUCT_PATH, 'skel')
+        formstool_ob = self.getFormsTool()
+        portal_forms = {'site_admin_users': 'Portal administration - users'}
+        for k, v in portal_forms.items():
+            content = self.futRead(join(skel_path, 'forms', '%s.zpt' % k), 'r')
+            form_ob = formstool_ob._getOb(k, None)
+            if form_ob is None:
+                formstool_ob.manage_addTemplate(id=k, title=v, file='')
+                form_ob = formstool_ob._getOb(k, None)
+            form_ob.pt_edit(text=content, content_type='')
+        return 'done'
+
 InitializeClass(NySite)
