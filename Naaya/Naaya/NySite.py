@@ -2494,6 +2494,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         l_content = l_content.replace('@@NAME@@', p_name)
         l_content = l_content.replace('@@USERNAME@@', p_username)
         l_content = l_content.replace('@@EMAIL@@', p_email)
+        l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
         mail_from = self.mail_address_from
         self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
 
