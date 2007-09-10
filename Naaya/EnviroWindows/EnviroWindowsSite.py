@@ -767,6 +767,7 @@ class EnviroWindowsSite(NySite):
         
         return errors
 
+    security.declareProtected(view_management_screens, 'update_email_templates')
     def update_email_templates(self):
         """ """
         from os.path import join
@@ -795,6 +796,7 @@ class EnviroWindowsSite(NySite):
                 email_ob.manageProperties(title=email_ob.title, body=content)
         return 'done'
 
+    security.declareProtected(view_management_screens, 'update_portal_forms')
     def update_portal_forms(self):
         """ """
         skel_path = join(NAAYA_PRODUCT_PATH, 'skel')
@@ -820,6 +822,7 @@ class EnviroWindowsSite(NySite):
             form_ob.pt_edit(text=content, content_type='')
         return 'done'
 
+    security.declareProtected(view_management_screens, 'update_portal_css')
     def update_portal_css(self):
         """ """
         css_for_request = """/* request role styles */
