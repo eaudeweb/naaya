@@ -1230,7 +1230,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 location_maintainer_email = self.getMaintainersEmails(obj)
         #create an account without role
         try:
-            self.getAuthenticationTool().admin_adduser(username, password, confirm, [], [], firstname, lastname, email)
+            self.getAuthenticationTool().admin_adduser(firstname, lastname, email, username, password, confirm, 0, REQUEST)
         except Exception, error:
             err = error
         else:
@@ -1241,7 +1241,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 self.setRequestRoleSession(username, firstname, lastname, email, password, organisation, comments, location)
                 return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         if not err:
-            self.sendRequestRoleEmail(location_maintainer_email, firstname + ' ' + lastname, email, organisation, username, location_path, location_title, comments)
+            self.sendCreateAccountEmail(location_maintainer_email, firstname + ' ' + lastname, email, organisation, username, location_path, location_title, comments)
         if REQUEST:
             self.setSession('title', 'Thank you for registering')
             self.setSession('body', 'An account has been created for you. \
@@ -1745,7 +1745,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     auth_tool = self.getAuthenticationTool()
                     for name in names:
                         user_ob = auth_tool.getUser(name)
-                        self.sendCreateAccountEmail('%s %s' % (user_ob.firstname, user_ob.lastname), user_ob.email, user_ob.name, REQUEST)
+                        self.sendAccountCreatedEmail('%s %s' % (user_ob.firstname, user_ob.lastname), user_ob.email, user_ob.name, REQUEST)
                 except:
                     pass
         if REQUEST:
@@ -2484,7 +2484,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         return newimg.getvalue()
 
     #sending emails
-    def sendCreateAccountEmail(self, p_name, p_email, p_username, REQUEST):
+    def sendAccountCreatedEmail(self, p_name, p_email, p_username, REQUEST):
         #sends a confirmation email to the newlly created account's owner
         email_template = self.getEmailTool()._getOb('email_createaccount')
         l_subject = email_template.title
@@ -2520,7 +2520,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         l_content = l_content.replace('@@TIMEOFREQUEST@@', str(p_error_time))
         self.getEmailTool().sendEmail(l_content, p_to, p_from, l_subject)
 
-    def sendRequestRoleEmail(self, p_to, p_name, p_email, p_organisation, p_username, p_location_path, p_location_title, p_comments):
+    def sendCreateAccountEmail(self, p_to, p_name, p_email, p_organisation, p_username, p_location_path, p_location_title, p_comments):
         #sends a request role email
         email_template = self.getEmailTool()._getOb('email_requestrole')
         l_subject = email_template.title
