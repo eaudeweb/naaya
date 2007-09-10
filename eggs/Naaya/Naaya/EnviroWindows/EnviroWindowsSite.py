@@ -799,7 +799,7 @@ class EnviroWindowsSite(NySite):
         """ """
         skel_path = join(ENVIROWINDOWS_PRODUCT_PATH, 'skel')
         formstool_ob = self.getFormsTool()
-        portal_forms = {'site_requestrole': 'Portal request role', 'site_requestlocations': 'Portal request role form - step 3', 'site_requestinfo': 'Portal request account form - step 2', 'folder_index': 'NyFolder default view', 'site_login': 'Portal login'}
+        portal_forms = {'site_requestrole': 'Portal request role', 'site_requestlocations': 'Portal request role form - step 3', 'site_requestinfo': 'Portal request account form - step 2', 'folder_index': 'NyFolder default view', 'site_login': 'Portal login', 'site_createaccount': 'Portal create account form'}
         for k, v in portal_forms.items():
             content = self.futRead(join(skel_path, 'forms', '%s.zpt' % k), 'r')
             form_ob = formstool_ob._getOb(k, None)
