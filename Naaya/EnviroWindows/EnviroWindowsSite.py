@@ -310,6 +310,291 @@ class EnviroWindowsSite(NySite):
             project._p_changed = 1
         print 'done'
 
+#################################
+# Apply for contribution rigths #
+#################################
+
+    #---------- session objects ------
+    #manage users
+    def setContributorSession(self, name, roles, firstname, lastname, email, password='', 
+        organisation='', comments='', address='', phone='', title='', description='', fax='', website=''):
+        """ put the user information on session """
+        self.setSession('contr_firstname', firstname)
+        self.setSession('contr_lastname', lastname)
+        self.setSession('contr_email', email)
+        self.setSession('contr_address', address)
+        self.setSession('contr_phone', phone)
+        self.setSession('contr_name', name)
+        self.setSession('contr_password', password)#??
+        self.setSession('contr_organisation', organisation)
+        self.setSession('contr_title', title)
+        self.setSession('contr_description', description)
+        self.setSession('contr_fax', fax)
+        self.setSession('contr_website', website)
+        self.setSession('contr_roles', roles)
+        #self.setSession('contr_domains', domains)  #not used for the moment
+        self.setSession('contr_comments', comments)
+
+    def delContributorSession(self):
+        """ delete user information from session """
+        self.delSession('contr_firstname')
+        self.delSession('contr_lastname')
+        self.delSession('contr_email')
+        self.delSession('contr_address')
+        self.delSession('contr_phone')
+        self.delSession('contr_name')
+        self.delSession('contr_password')#??
+        self.delSession('contr_organisation')
+        self.delSession('contr_title')
+        self.delSession('contr_description')
+        self.delSession('contr_fax')
+        self.delSession('contr_website')
+        self.delSession('contr_roles')
+        #self.delSession('contr_domains')
+        self.delSession('contr_comments')
+
+    def getSessionContributorFirstname(self, default=''):
+        return self.getSession('contr_firstname', default)
+
+    def getSessionContributorLastname(self, default=''):
+        return self.getSession('contr_lastname', default)
+
+    def getSessionContributorEmail(self, default=''):
+        return self.getSession('contr_email', default)
+
+    def getSessionContributorAddress(self, default=''):
+        return self.getSession('contr_address', default)
+
+    def getSessionContributorPhone(self, default=''):
+        return self.getSession('contr_phone', default)
+
+    def getSessionContributorName(self, default=''):
+        return self.getSession('contr_name', default)
+
+    def getSessionContributorPassword(self, default=''):
+        return self.getSession('contr_password', default)
+
+    def getSessionContributorOrganisation(self, default=''):
+        return self.getSession('contr_organisation', default)
+
+    def getSessionContributorTitle(self, default=''):
+        return self.getSession('contr_title', default)
+
+    def getSessionContributorDescription(self, default=''):
+        return self.getSession('contr_description', default)
+
+    def getSessionContributorFax(self, default=''):
+        return self.getSession('contr_fax', default)
+
+    def getSessionContributorWebsite(self, default=''):
+        return self.getSession('contr_website', default)
+
+    def getSessionContributorRoles(self, default=''):
+        return self.getSession('contr_roles', default)
+
+    #def getSessionContributorDomains(self, default=''):
+    #    return self.getSession('contr_domains', default)
+
+    def getSessionContributorComments(self, default=''):
+        return self.getSession('contr_comments', default)
+
+    security.declareProtected(view, 'hasFolderLocalRoles')
+    def hasFolderLocalRoles(self, folder):
+        for roles_tuple in folder.get_local_roles():
+            for role in roles_tuple[1]:
+                if role in ['Administrator', 'Manager']:
+                    return True
+        return False
+
+    security.declareProtected(view, 'is_logged')
+    def is_logged(self, REQUEST):
+        """ """
+        return REQUEST.AUTHENTICATED_USER.getUserName() != 'Anonymous User'
+
+    #---------- request account & role ------
+    security.declareProtected(view, 'sendRequestRoleEmail')
+    def sendRequestRoleEmail(self, p_email_data, p_username, p_source, p_role, p_comments):
+        """ send email with a request for role """
+        if p_role == 'admin':   p_role = 'Administrator'
+        if p_role == 'contrib':  p_role = 'Contributor'
+        for l_data in p_email_data:
+            l_location_path = l_data[1]
+            l_location_title = l_data[0]
+            l_to = l_data[2]
+            obj = self.getEmailTool()._getOb('email_ldap_requestrole')
+            l_subject = obj.title
+            l_content = obj.body
+            l_content = l_content.replace('@@USERNAME@@', p_username)
+            l_content = l_content.replace('@@ROLE@@', p_role)
+            l_content = l_content.replace('@@SOURCE@@', p_source)
+            l_content = l_content.replace('@@LOCATIONPATH@@', l_location_path)
+            if len(l_location_path) > 0:
+                l_content = l_content.replace('@@LOCATION@@', "the '%s' folder %s" % (l_location_title, l_location_path))
+            else:
+                l_content = l_content.replace('@@LOCATION@@', l_location_path)
+            l_content = l_content.replace('@@COMMENTS@@', p_comments)
+            l_content = l_content.replace('@@PORTAL_URL@@', self.getSitePath(0))
+            l_content = l_content.replace('@@PORTAL_TITLE@@', self.site_title)
+            l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
+            self.getEmailTool().sendEmail(l_content, l_to, self.mail_address_from, l_subject)
+
+    security.declareProtected(view, 'sendRequestAccountAndRoleEmail')
+    def sendRequestAccountAndRoleEmail(self, p_email_data, p_title, p_name, p_email, p_organisation,
+            p_description, p_address, p_phone, p_fax, p_website, p_username, p_comments, p_role):
+        """ Sends email with a request for an account and role """
+        if p_role == 'admin':   p_role = 'Administrator'
+        if p_role == 'contrib':  p_role = 'Contributor'
+        for l_data in p_email_data:
+            l_location_path = l_data[1]
+            l_location_title = l_data[0]
+            l_to = l_data[2]
+            obj = self.getEmailTool()._getOb('email_requestaccount')
+            l_subject = obj.title
+            l_content = obj.body
+            l_content = l_content.replace('@@ROLE@@', p_role)
+            l_content = l_content.replace('@@TITLE@@', p_title)
+            l_content = l_content.replace('@@NAME@@', p_name)
+            l_content = l_content.replace('@@EMAIL@@', p_email)
+            l_content = l_content.replace('@@ORGANISATION@@', p_organisation)
+            l_content = l_content.replace('@@DESCRIPTION@@', p_description)
+            l_content = l_content.replace('@@ADDRESS@@', p_address)
+            l_content = l_content.replace('@@PHONE@@', p_phone)
+            l_content = l_content.replace('@@FAX@@', p_fax)
+            l_content = l_content.replace('@@WEBSITE@@', p_website)
+            l_content = l_content.replace('@@USERNAME@@', p_username)
+            l_content = l_content.replace('@@LOCATIONPATH@@', l_location_path)
+            if len(l_location_path) > 0:
+                l_content = l_content.replace('@@LOCATION@@', "the '%s' folder %s" % (l_location_title, l_location_path))
+            else:
+                l_content = l_content.replace('@@LOCATION@@', l_location_path)
+            l_content = l_content.replace('@@COMMENTS@@', p_comments)
+            l_content = l_content.replace('@@PORTAL_URL@@', self.getSitePath(0))
+            l_content = l_content.replace('@@PORTAL_TITLE@@', self.site_title)
+            l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
+            self.getEmailTool().sendEmail(l_content, l_to, self.mail_address_from, l_subject)
+
+    security.declareProtected(view, 'processRequestRole')
+    def processRequestRole(self, role, REQUEST=None, RESPONSE=None):
+        """ """
+        if REQUEST.has_key('cancel'):
+            if REQUEST.has_key('return_path'):
+                return RESPONSE.redirect(REQUEST['return_path'])
+            else:
+                return RESPONSE.redirect(self.getSitePath())
+        if self.is_logged(REQUEST):
+            return RESPONSE.redirect('requestlocations_html?auth=1&role=%s' % role)
+        else:
+            return RESPONSE.redirect('requestinfo_html?role=%s' % role)
+
+    security.declareProtected(view, 'processRequestAccount')
+    def processRequestAccount(self, username='', passwd='', role='', REQUEST=None, RESPONSE=None):
+        """ process an existing account """
+        _err = []
+        if REQUEST.has_key('cancel'):
+            if REQUEST.has_key('return_path'):
+                return RESPONSE.redirect(REQUEST['return_path'])
+            else:
+                return RESPONSE.redirect(self.getSitePath())
+        site = self.getSite()
+        auth_tool = site.getAuthenticationTool()
+        if not (username and passwd):
+            _err.append("Username and password must be specified")
+        auth_tool.credentialsChanged(username, passwd)
+        return RESPONSE.redirect('requestinfo_html?acc=1&role=%s' % role)
+
+    security.declareProtected(view, 'processRequestInfo')
+    def processRequestInfo(self, username='', password='', confirm='', title='', firstname='', lastname='',
+                    email='', address='', phone='', description='', fax='', website='',
+                    organisation='', role='', comments='', REQUEST=None, RESPONSE=None):
+        """ process the request for a new account """
+        if REQUEST.has_key('cancel'):
+            if REQUEST.has_key('return_path'):
+                return RESPONSE.redirect(REQUEST['return_path'])
+            else:
+                return RESPONSE.redirect(self.getSitePath())
+        self.setContributorSession(username, role, firstname, lastname, email, '',
+                    organisation, comments, address, phone, title, description, fax, website)
+        try:
+            self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname, lastname, email, strict=1)
+        except Exception, error:
+            _err = error
+        else:
+            _err = ''
+        if _err:
+            self.setSessionErrors(_err)
+            return RESPONSE.redirect('requestinfo_html?role=%s' % role)
+        else:
+            return RESPONSE.redirect('requestlocations_html?role=%s' % role)
+
+    security.declareProtected(view, 'processRequestLocation')
+    def processRequestLocation(self, role='', comments='', locationslist=[], REQUEST=None, RESPONSE=None):
+        """ Sends notification email(s) to the administrators when people apply for a role 
+        """
+        if REQUEST.has_key('cancel'):
+            if REQUEST.has_key('return_path'):
+                return RESPONSE.redirect(REQUEST['return_path'])
+            else:
+                return RESPONSE.redirect(self.getSitePath())
+        site = self.getSite()
+        auth_tool = site.getAuthenticationTool()
+
+        l_email_data = []
+        location_maintainer_email = []
+        l_locationslist = self.convertToList(locationslist)
+        if len(l_locationslist) > 0:
+            for loc in l_locationslist:
+                obj = self.getFolderByPath(loc)
+                if obj is not None:
+                    location_path = obj.absolute_url(0)
+                    location_title = obj.title
+                    admin_users = site.get_administrator(self)
+                    location_maintainer_email = auth_tool.getUsersEmails(admin_users)
+                    if len(location_maintainer_email) == 0: location_maintainer_email.append(self.administrator_email)
+                    l_email_data.append((location_title, location_path, location_maintainer_email))
+
+            if self.is_logged(REQUEST):
+                username = REQUEST.AUTHENTICATED_USER.getUserName()
+                user_source = auth_tool.getUserSource(username)
+                site.getEmailTool().sendRequestRoleEmail(l_email_data, username, user_source, role, comments)
+            else:
+                title = self.getSessionContributorTitle()
+                firstname = self.getSessionContributorFirstname()
+                lastname = self.getSessionContributorLastname()
+                email = self.getSessionContributorEmail()
+                organisation = self.getSessionContributorOrganisation()
+                description = self.getSessionContributorDescription()
+                address = self.getSessionContributorAddress()
+                phone = self.getSessionContributorPhone()
+                fax = self.getSessionContributorFax()
+                website = self.getSessionContributorWebsite()
+                username = self.getSessionContributorName()
+                if username and role:
+                    site.getEmailTool().sendRequestAccountAndRoleEmail(l_email_data, title, '%s %s' % (firstname, lastname), email,
+                            organisation, description, address, phone, fax, website, username, comments, role)
+                    self.delContributorSession()
+            return RESPONSE.redirect('messages_html?referer=%s' % REQUEST.URL1)
+        return RESPONSE.redirect('requestlocations_html?role=%s' % role)
+
+    security.declareProtected(view, 'createaccount_html')
+    def createaccount_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self.REQUEST.PARENTS[0]}, 'site_createaccount')
+
+    security.declareProtected(view, 'requestrole_html')
+    def requestrole_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self.REQUEST.PARENTS[0]}, 'site_requestrole')
+
+    security.declareProtected(view, 'requestlocations_html')
+    def requestlocations_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self.REQUEST.PARENTS[0]}, 'site_requestlocations')
+
+    security.declareProtected(view, 'requestinfo_html')
+    def requestinfo_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self.REQUEST.PARENTS[0]}, 'site_requestinfo')
+
     #
     # Upload/download folder items from/to zip archive
     #
@@ -326,7 +611,7 @@ class EnviroWindowsSite(NySite):
     def getObjectByPath(self, path):
         """ Returns object at given path
         """
-        res = self.unrestrictedTraverse(path)
+        res = self.unrestrictedTraverse(path, None)
         return res
     
     security.declareProtected(view, 'zip_upload_html')
@@ -481,6 +766,161 @@ class EnviroWindowsSite(NySite):
                 continue
         
         return errors
+
+    def update_email_templates(self):
+        """ """
+        from os.path import join
+        #reload Naaya email templates
+        skel_path = join(NAAYA_PRODUCT_PATH, 'skel')
+        emailtool_ob = self.getEmailTool()
+        email_templates = {'email_requestrole':'Request role'}
+        for k, v in email_templates.items():
+            content = self.futRead(join(skel_path, 'emails', '%s.txt' % k), 'r')
+            email_ob = emailtool_ob._getOb(k, None)
+            if email_ob is None:
+                emailtool_ob.manage_addEmailTemplate(k, v, content)
+            else:
+                email_ob.manageProperties(title=email_ob.title, body=content)
+
+        #reload EnviroWindows email templates
+        skel_path = join(ENVIROWINDOWS_PRODUCT_PATH, 'skel')
+        emailtool_ob = self.getEmailTool()
+        email_templates = {'email_createaccount':'Create account notification', 'email_ldap_requestrole':'Request role (LDAP)', 'email_requestaccount':'Request account'}
+        for k, v in email_templates.items():
+            content = self.futRead(join(skel_path, 'emails', '%s.txt' % k), 'r')
+            email_ob = emailtool_ob._getOb(k, None)
+            if email_ob is None:
+                emailtool_ob.manage_addEmailTemplate(k, v, content)
+            else:
+                email_ob.manageProperties(title=email_ob.title, body=content)
+                return 'done'
+
+    def update_portal_forms(self):
+        """ """
+        skel_path = join(ENVIROWINDOWS_PRODUCT_PATH, 'skel')
+        formstool_ob = self.getFormsTool()
+        portal_forms = {'site_requestrole': 'Portal request role', 'site_requestlocations': 'Portal request role form - step 3', 'site_requestinfo': 'Portal request account form - step 2', 'folder_index': 'NyFolder default view', 'site_login': 'Portal login'}
+        for k, v in portal_forms.items():
+            content = self.futRead(join(skel_path, 'forms', '%s.zpt' % k), 'r')
+            form_ob = formstool_ob._getOb(k, None)
+            if form_ob is None:
+                formstool_ob.manage_addTemplate(id=k, title=v, file='')
+                form_ob = formstool_ob._getOb(k, None)
+            form_ob.pt_edit(text=content, content_type='')
+        return 'done'
+
+    def update_portal_css(self):
+        """ """
+        css_for_request = """/* request role styles */
+.request_role {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1em;
+
+	padding-bottom: 1em;
+	background: #fff;
+}
+.request_role h2 {	
+	color: #669933;
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
+}
+.request_role div p {
+	border: 1px solid #ddd;
+	padding: 0.5em;
+}	
+.request_role .input_submit {
+	padding: 0.2em 0.5em;
+	border: 1px solid #ccc;
+	background: #fafafa;
+}
+* html .request_role .input_submit {
+	padding: 0 !important;
+}
+.request_role h3 {	
+	color: #000;
+	font-weight: bold;
+	font-size: 1em;
+	margin: 0;
+	padding: 0;
+	text-transform: uppercase;
+}
+* html .request_role form {
+	padding: 0;
+	margin: 0;
+}
+.request_role fieldset {
+	margin: 0;
+	padding: 0;
+}
+.request_role .existing_acc {
+	border-top: 1px solid #eee;
+	margin: 0;
+	padding: 0;
+}
+.request_role .nonexisting_acc {
+	margin: 0;
+	padding: 2em 0 0 0;
+}
+.request_role .existing_acc p, .request_role .nonexisting_acc p {
+	font-size: 0.9em;
+	border: none;
+	margin: 0;
+	padding: 0.4em;
+}
+.request_role .existing_acc td, .request_role .nonexisting_acc td  {
+	padding: 0.4em;
+	font-size: 0.9em;
+}
+.request_role .existing_acc td input, .request_role .nonexisting_acc td input, .request_role .nonexisting_acc td textarea {
+	margin-right: 0.3em;
+	font-size: 1em;
+	color: #555;
+	font-family: Arial, Helvetica, sans-serif;
+}
+.request_role .existing_acc td input, .request_role .nonexisting_acc td input {
+	height: 1.4em;
+}
+.request_role .mandatory {
+	color: #990000;
+}
+.message-error {
+	color: #f30;
+}
+.message-error fieldset {
+	border: 1px solid #999 !important;
+	color: #f40000;
+}
+.message-information {
+	color: #77b81f;
+}
+.message-information fieldset {
+	border: 1px solid #999 !important;
+	color: #77b81f;
+}
+
+a.b_download {
+float: right;
+font-size: 0.70em;
+font-size: normal;
+text-decoration: none;
+padding-right: 0.3em;
+}
+
+
+a.b_download:hover {
+text-decoration: underline;
+}"""
+        layout_tool = self.getLayoutTool()
+        for skin in layout_tool.getSkinsList():
+            for scheme in skin.getSchemes():
+                css_ob = scheme._getOb('style', None)
+                if css_ob is not None:
+                    content = css_ob.document_src() + '\n' + css_for_request
+                    css_ob.pt_edit(text=content, content_type='')
+                else:
+                    print "css not found for scheme %s" % scheme.id
+        return 'done'
 
 InitializeClass(EnviroWindowsSite)
 
