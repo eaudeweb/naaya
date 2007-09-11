@@ -37,6 +37,11 @@ from FormsTool import FormsTool
 from LayoutTool import LayoutTool
 from NotificationTool import NotificationTool
 from ProfilesTool import ProfilesTool
+try:
+    from GeoMapTool import GeoMapTool
+    geo_installed = True
+except ImportError:
+    geo_installed = False
 
 def initialize(context):
     """ """
@@ -136,6 +141,16 @@ def initialize(context):
                 ),
         icon = 'ProfilesTool/www/ProfilesTool.gif'
         )
+
+    if geo_installed:
+        context.registerClass(
+            GeoMapTool.GeoMapTool,
+            permission = PERMISSION_ADD_NAAYACORE_TOOL,
+            constructors = (
+                    GeoMapTool.manage_addGeoMapTool,
+                    ),
+            icon = 'GeoMapTool/www/GeoMapTool.gif'
+            )
 
 misc_ = {
     'PropertiesTool.gif':ImageFile('PropertiesTool/www/PropertiesTool.gif', globals()),
