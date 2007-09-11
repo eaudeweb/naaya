@@ -50,7 +50,7 @@ class GeoMapTool(Folder, symbols_tool):
     """ """
 
     meta_type = METATYPE_GEOMAPTOOL
-    icon = 'misc_/SMAP/GeoMapTool.gif'
+    icon = 'misc_/GeoMapTool/GeoMapTool.gif'
 
     security = ClassSecurityInfo()
 
