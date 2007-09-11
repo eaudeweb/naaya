@@ -1,42 +1,20 @@
 <span tal:replace="structure here/standard_html_header"/>
 <div id="center_content">
 
-<script type="text/javascript">
-<!--
-function fUploadObjects(){
-  var upload_file = document.getElementById("upload_file");
-  if (upload_file.value){
-    document.upload_form.action="zipUploadDocuments";
-    document.upload_form.submit();
-  }else{
-    alert('Please chose a zip file to upload.');
-  }
-}
-//-->
-</script>
+<tal:block tal:define="path python:request.get('path', ''); folder python:here.getObjectByPath(path)">
 
-<div tal:define="
-  path python:request.get('path', '');
-  folder python:here.getObjectByPath(path)">
-  <h1>
-    <tal:block i18n:translate="">Bulk upload</tal:block>
-    <tal:block tal:replace='string:"${folder/title_or_id}"' />
-  </h1>
-  <div>
-    <div id="toolbar">
-      <a href="javascript:fUploadObjects();"><span 
-         i18n:translate="">Upload</span></a>
-      <a tal:attributes="href folder/absolute_url"><span 
-         i18n:translate="">Back</span></a>
-    </div>
-  </div>
-  <form name="upload_form" method="post" 
-    action="" enctype="multipart/form-data">
-    <input type="hidden" id="path" name="path" tal:attributes="value path" />
-    <input type="file" id="upload_file" name="upload_file" value="" />
-  </form>
-</div>
-</div>
+<h1 i18n:translate="">Bulk upload</h1>
+<div class="floated-buttons"><span class="buttons"><a tal:attributes="href folder/absolute_url" i18n:translate="">Back to index</a></span></div>
 
+<p i18n:translate="">You can upload multiple files at one time. To upload many files at a time, you will need to create a ZIP (data compression) formatted file and then upload the file. <br />You may upload ZIP files as often as you wish, but only one ZIP file may be uploaded at a time</p>
+
+<form name="upload_form" method="post" action="zipUploadDocuments" enctype="multipart/form-data">
+	<input type="hidden" id="path" name="path" tal:attributes="value path" />
+	<input type="file" id="upload_file" name="upload_file" value="" />
+	<input type="submit" name="upload" id="upload" value="Upload" i18n:attributes="value" />
+</form>
+
+</tal:block>
+</div>
 
 <span tal:replace="structure here/standard_html_footer"/>

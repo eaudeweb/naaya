@@ -115,11 +115,6 @@ function fRenameObjects()
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <span tal:replace="structure here/menusubmissions" />
 
-<a tal:condition="python:here.getDocuments(path)"
-  tal:attributes="href string:${here/absolute_url}/zip_download_html?path=${path}">
-  <span i18n:translate="">Bulk download</span>
-</a>
-
 <div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
     <div id="toolbar">
         <tal:block tal:condition="btn_select"><a href="javascript:toggleSelect();"><span i18n:translate="">Select all</span></a></tal:block>
