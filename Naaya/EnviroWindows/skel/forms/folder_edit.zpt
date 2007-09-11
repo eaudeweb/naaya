@@ -33,7 +33,7 @@ function fSet(ctrl, value)
 </script>
 
 <form name="frmEdit" method="post" action="saveProperties">
-<div class="translate"><span  i18n:translate="" tal:omit-tag="">Translate in</span>
+<div class="translate"><span  i18n:translate="">Translate in</span>
 <tal:block tal:repeat="language languages">
 
 <div class="current" tal:condition="python:language['code'] == curr_lang">
@@ -46,7 +46,7 @@ function fSet(ctrl, value)
 	</a>
 </tal:block>
 </div>
-<br />
+
 <div class="field">
 	<label for="title" i18n:translate="">Title</label>
 	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getLocalProperty('title', curr_lang)" />
@@ -104,7 +104,7 @@ function fSet(ctrl, value)
 </div>
 </form>
 
-<div class="translate"><span  i18n:translate="" tal:omit-tag="">Translate in</span>
+<div class="translate"><span  i18n:translate="">Translate in</span>
 <tal:block tal:repeat="language languages">
 
 <div class="current" tal:condition="python:language['code'] == curr_lang">
