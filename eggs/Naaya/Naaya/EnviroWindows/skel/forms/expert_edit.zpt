@@ -55,7 +55,7 @@ function fSet(ctrl, value)
 		tal:define="countries here/getCountriesList;
 			maintopics here/getExpPrioritiesTypesList;
 			subtopics python:here.getExpFocusesTypesList(here.getVersionProperty('maintopics'))">
-<div class="translate"><span  i18n:translate="" tal:omit-tag="">Translate in</span>
+<div class="translate"><span  i18n:translate="">Translate in</span>
 <tal:block tal:repeat="language languages">
 
 <div class="current" tal:condition="python:language['code'] == curr_lang">
@@ -68,7 +68,7 @@ function fSet(ctrl, value)
 	</a>
 </tal:block>
 </div>
-<br />
+
 <div class="field">
 	<label for="surname">
 		<span i18n:translate="" tal:omit-tag="">Surname</span>
@@ -167,7 +167,7 @@ function fSet(ctrl, value)
 </div>
 </form>
 
-<div class="translate"><span  i18n:translate="" tal:omit-tag="">Translate in</span>
+<div class="translate"><span  i18n:translate="">Translate in</span>
 <tal:block tal:repeat="language languages">
 
 <div class="current" tal:condition="python:language['code'] == curr_lang">

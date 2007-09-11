@@ -18,7 +18,7 @@
 	<li><a tal:attributes="href string:${site_url}/admin_specialportlets_html" i18n:translate="">Special</a></li>
 </ul>
 </div>
-<div class="translate"><span  i18n:translate="" tal:omit-tag="">Translate in</span>
+<div class="translate"><span  i18n:translate="">Translate in</span>
 <tal:block tal:repeat="language languages">
 
 <div class="current" tal:condition="python:language['code'] == curr_lang">
@@ -31,7 +31,7 @@
 	</a>
 </tal:block>
 </div>
-<br />
+
 <p i18n:translate="">
 	This page displays the list of available portlets that contains static HTML. The content of
 	each of them can be modified using an WYSIWYG editor.
@@ -71,7 +71,7 @@
 		</tr>
 	</table>
 	</form>
-	<div class="translate"><span  i18n:translate="" tal:omit-tag="">Translate in</span>
+	<div class="translate"><span  i18n:translate="">Translate in</span>
 <tal:block tal:repeat="language languages">
 
 <div class="current" tal:condition="python:language['code'] == curr_lang">

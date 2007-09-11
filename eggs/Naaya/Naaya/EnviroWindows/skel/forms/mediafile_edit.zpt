@@ -62,7 +62,7 @@ function displayToolTips(tips_id, style){
 
 <form method="post" action="saveProperties" name="frmEdit" 
   enctype="multipart/form-data">
-<div class="translate"><span  i18n:translate="" tal:omit-tag="">Translate in</span>
+<div class="translate"><span  i18n:translate="">Translate in</span>
 <tal:block tal:repeat="language languages">
 
 <div class="current" tal:condition="python:language['code'] == curr_lang">
@@ -75,7 +75,7 @@ function displayToolTips(tips_id, style){
 	</a>
 </tal:block>
 </div>
-<br />
+
 <div class="field">
 	<label for="title"><span i18n:translate="" tal:omit-tag="">Title</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'title')" class="mandatory_field"> *</span></label>
 	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', here.getVersionLocalProperty('title', curr_lang))" />
@@ -166,7 +166,7 @@ Example:
 	<input type="submit" value="Save changes" i18:attributes="value" />
 </div>
 
-<div class="translate"><span  i18n:translate="" tal:omit-tag="">Translate in</span>
+<div class="translate"><span  i18n:translate="">Translate in</span>
 <tal:block tal:repeat="language languages">
 
 <div class="current" tal:condition="python:language['code'] == curr_lang">
