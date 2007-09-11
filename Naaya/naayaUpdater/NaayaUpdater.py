@@ -240,7 +240,7 @@ class NaayaUpdater(Folder):
             if locator == 'skin':
                 for file_id in self.list_fs_skinfiles(portal_meta, skin_id, False):
                     do_update = True
-                    if p_action == 'ef':
+                    if f_action == 'ef':
                         if file_id in file_custom: do_update = False
                     if do_update:
                         form_path = '%s/portal_layout/%s/%s' % (portal_path, skin_id, file_id)
@@ -250,9 +250,9 @@ class NaayaUpdater(Folder):
                         self.update_layout_file(portal, file_id, form_fs, form_zmi, skin_id, '', 'template')
             else:
                 for scheme_id in self.list_fs_skinfiles(portal_meta, skin_id, True):
-                    for file_id in self.list_fs_schemefiles(portal_meta, skin_id, scheme_id, ftype='style'):
+                    for file_id in self.list_fs_schemefiles(portal_meta, skin_id, scheme_id, ftype='styles'):
                         do_update = True
-                        if p_action == 'ef':
+                        if f_action == 'ef':
                             if file_id in file_custom: do_update = False
                         if do_update:
                             form_path = '%s/portal_layout/%s/%s/%s' % (portal_path, skin_id, scheme_id, file_id)
@@ -262,7 +262,7 @@ class NaayaUpdater(Folder):
                             self.update_layout_file(portal, file_id, form_fs, form_zmi, skin_id, scheme_id, 'style')
                     for file_id in self.list_fs_schemefiles(portal_meta, skin_id, scheme_id, ftype='images'):
                         do_update = True
-                        if p_action == 'ef':
+                        if f_action == 'ef':
                             if file_id in file_custom: do_update = False
                         if do_update:
                             form_path = '%s/portal_layout/%s/%s/%s' % (portal_path, skin_id, scheme_id, file_id)
@@ -340,7 +340,7 @@ class NaayaUpdater(Folder):
                             if ftype == 'styles':
                                 return [s.id for s in scheme.styles]
                             else:
-                                return [i.id for i in skin.images]
+                                return [i.id for i in scheme.images]
 
     security.declarePrivate('get_fs_layout_content')
     def get_fs_layout_content(self, metatype, skin_id, scheme_id, file_id, rtype='r'):
