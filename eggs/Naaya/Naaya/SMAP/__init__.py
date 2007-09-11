@@ -52,18 +52,7 @@ def initialize(context):
         icon = 'tools/SyncerTool/www/SyncerTool.gif'
         )
 
-    context.registerClass(
-        GeoMapTool.GeoMapTool,
-        permission = PERMISSION_ADD_NAAYACORE_TOOL,
-        constructors = (
-                GeoMapTool.manage_addGeoMapTool,
-                ),
-        icon = '../NaayaCore/GeoMapTool/www/GeoMapTool.gif'
-        )
-
-
 misc_ = {
-    'GeoMapTool.gif':ImageFile('../NaayaCore/GeoMapTool/www/GeoMapTool.gif', globals()),
     'dnt_rgis.swf': ImageFile('../NaayaCore/GeoMapTool/www/dnt_rgis.swf', globals()),
     'dntp_rgis.swf': ImageFile('../NaayaCore/GeoMapTool/www/dntp_rgis.swf', globals()),
     'bounding.xml': ImageFile('../NaayaCore/GeoMapTool/www/bounding.xml', globals()),
