@@ -15,6 +15,7 @@
 	<li><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
 </ul>
 </div>
+<br clear="all" />
 <div class="translate"><span  i18n:translate="">Translate in</span>
 <tal:block tal:repeat="language languages">
 
