@@ -654,7 +654,10 @@ class EnviroWindowsSite(NySite):
         folder = self.getObjectByPath(path)
         if not folder:
             self.zip_redirect(path, "Invalid folder path", RESPONSE)
-        
+        else:
+            if not folder.can_be_seen():
+                self.zip_redirect(path, "Restricted access", RESPONSE)
+
         RESPONSE.setHeader('Content-Type', 'application/x-zip-compressed')
         RESPONSE.setHeader('Content-Disposition', 
                            'attachment; filename=%s.zip' % folder.getId())
