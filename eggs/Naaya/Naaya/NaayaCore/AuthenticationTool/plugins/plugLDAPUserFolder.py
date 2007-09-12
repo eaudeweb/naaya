@@ -278,6 +278,14 @@ class plugLDAPUserFolder(PlugBase):
         else:
             return ''
 
+    def getUserFullName(self, p_username, acl_folder):
+        #return the email of the given user id
+        users = acl_folder.findUser(search_param='uid', search_term=p_username)
+        if users>0:
+            return unicode(users[0].get('cn', ''), 'iso-8859-1').encode('utf-8')
+        else:
+            return ''
+
     def getLDAPUserFirstName(self, dn):
         return unicode(dn.get('sn', ''), 'iso-8859-1').encode('utf-8')
 

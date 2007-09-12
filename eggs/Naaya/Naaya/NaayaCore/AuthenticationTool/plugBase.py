@@ -91,16 +91,24 @@ class PlugBase(SimpleItem):
 
     def addUserRoles(self, name='', roles='', loc='allsite', location='', user_location='', REQUEST=None):
         """ """
+        site = self.getSite()
+        auth_tool = site.getAuthenticationTool()
         #process form values
         if name == '':  name = []
         else: name = self.utConvertToList(name)
-        if loc == 'allsite': location = self.getSite()
+        if loc == 'allsite': location = site
         else: location = self.utGetObject(location)
         if roles == '': roles = []
         else: roles = self.utConvertToList(roles)
         #assing roles
         for n in name:
             location.manage_setLocalRoles(n, roles)
+            try:
+                email = auth_tool.getUsersEmails([n])[0]
+                fullname = auth_tool.getUsersFullNames([n])[0]
+                site.sendAccountCreatedEmail(fullname, email, n, REQUEST)
+            except:
+                pass
             try:
                 self.setUserLocation(n, user_location)
                 self.setUserCanonicalName(n, self.buffer[n])
