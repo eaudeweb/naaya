@@ -1,6 +1,7 @@
 An user located in '@@SOURCE@@' on the portal @@PORTAL_TITLE@@ (@@PORTAL_URL@@)
 has requested the '@@ROLE@@' role with the following credentials:
 
+Name: @@NAME@@
 Username: @@USERNAME@@
 Comments: @@COMMENTS@@
 

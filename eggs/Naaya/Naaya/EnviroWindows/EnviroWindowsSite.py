@@ -413,7 +413,7 @@ class EnviroWindowsSite(NySite):
 
     #---------- request account & role ------
     security.declareProtected(view, 'sendRequestRoleEmail')
-    def sendRequestRoleEmail(self, p_email_data, p_username, p_source, p_role, p_comments):
+    def sendRequestRoleEmail(self, p_email_data, p_username, p_fullname, p_source, p_role, p_comments):
         """ send email with a request for role """
         if p_role == 'admin':   p_role = 'Administrator'
         if p_role == 'contrib':  p_role = 'Contributor'
@@ -424,6 +424,7 @@ class EnviroWindowsSite(NySite):
             obj = self.getEmailTool()._getOb('email_ldap_requestrole')
             l_subject = obj.title
             l_content = obj.body
+            l_content = l_content.replace('@@NAME@@', p_fullname)
             l_content = l_content.replace('@@USERNAME@@', p_username)
             l_content = l_content.replace('@@ROLE@@', p_role)
             l_content = l_content.replace('@@SOURCE@@', p_source)
@@ -555,7 +556,11 @@ class EnviroWindowsSite(NySite):
             if self.is_logged(REQUEST):
                 username = REQUEST.AUTHENTICATED_USER.getUserName()
                 user_source = auth_tool.getUserSource(username)
-                site.getEmailTool().sendRequestRoleEmail(l_email_data, username, user_source, role, comments)
+                try:
+                    fullname = auth_tool.getUsersFullNames([username])[0]
+                except:
+                    fullname = ''
+                site.getEmailTool().sendRequestRoleEmail(l_email_data, username, fullname, user_source, role, comments)
             else:
                 title = self.getSessionContributorTitle()
                 firstname = self.getSessionContributorFirstname()
