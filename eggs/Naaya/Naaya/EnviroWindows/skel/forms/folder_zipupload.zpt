@@ -6,7 +6,7 @@
 <h1 i18n:translate="">Bulk upload</h1>
 <div class="floated-buttons"><span class="buttons"><a tal:attributes="href folder/absolute_url" i18n:translate="">Back to index</a></span></div>
 
-<p i18n:translate="">You can upload multiple files at one time. To upload many files at a time, you will need to create a ZIP (data compression) formatted file and then upload the file. <br />You may upload ZIP files as often as you wish, but only one ZIP file may be uploaded at a time</p>
+<p i18n:translate="">Using this form, you can upload multiple files at one time in a ZIP archive. The system will unpack the files found inside the ZIP and create multilingual files with them. Afterwards, you will need to edit each one and add corresponding titles and other metadata.</p>
 
 <form name="upload_form" method="post" action="zipUploadDocuments" enctype="multipart/form-data">
 	<input type="hidden" id="path" name="path" tal:attributes="value path" />
