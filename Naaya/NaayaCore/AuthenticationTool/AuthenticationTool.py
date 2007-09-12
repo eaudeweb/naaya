@@ -381,6 +381,35 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
                     return source.title
             return 'n/a'
 
+    security.declareProtected(manage_users, 'getUsersFullNames')
+    def getUsersFullNames(self, users):
+        """
+        Given a list of users ids it returns the list with their names.
+        A lookup will be made against the portal users folder and also
+        in against all the sources.
+        """
+        r = []
+        ra = r.append
+        buf = copy(users)
+        #first check local users
+        local_users = self.user_names()
+        for user in users:
+            if user in local_users:
+                name = self.getUserFullName(self.getUser(user))
+                if name is not None: ra(name)
+                buf.remove(user)
+        if len(buf):
+            buf1 = copy(buf)
+            #check sources
+            for source in self.getSources():
+                source_acl = source.getUserFolder()
+                for user in buf:
+                    name = source.getUserFullName(user, source_acl)
+                    if name is not None: ra(name)
+                    buf1.remove(user)
+                    if len(buf1)==0: break
+        return r
+
     security.declareProtected(manage_users, 'getUsersEmails')
     def getUsersEmails(self, users):
         """
@@ -403,12 +432,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
             #check sources
             for source in self.getSources():
                 source_acl = source.getUserFolder()
-                source_users = source_acl.user_names()
                 for user in buf:
-                    if user in source_users:
-                        email = source.getUserEmail(source_acl.getUser(user))
-                        if email is not None: ra(email)
-                        buf1.remove(user)
+                    email = source.getUserEmail(user, source_acl)
+                    if email is not None: ra(email)
+                    buf1.remove(user)
                     if len(buf1)==0: break
         return r
 
@@ -434,7 +461,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
 
     def getUserFullName(self, user_obj):
         """ Return the full name of the user """
-        return user_obj.firstname + ' ' + user_obj.lastname
+        return '%s %s' % (user_obj.firstname, user_obj.lastname)
 
     def getUserFullNameByID(self, user_str):
         """ Return the full name of the user """
