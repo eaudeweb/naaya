@@ -179,7 +179,7 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'update_layout_html')
     update_layout_html = PageTemplateFile('zpt/update_layout', globals())
 
-    security.declareProtected(view_management_screens, 'updateLayoutFiles')
+    security.declareProtected(view_management_screens, 'updateLayout')
     def updateLayout(self, ppath='', all=False, portals='', p_action='ep',
                      sel_skin='', locator='skin', f_action='af', file_id='', REQUEST=None):
         """ update files for Naaya layout """
@@ -360,7 +360,7 @@ class NaayaUpdater(Folder):
     security.declarePrivate('get_scheme_filetype')
     def get_scheme_filetype(self, file_id):
         """ """
-        if file_id in ['style', 'style_rtl', 'style_common', 'style_common_rtl', 'style_handheld', 'style_handheld_rtl', 'style_print']:
+        if file_id in ['style', 'style_rtl', 'style_common', 'style_common_rtl', 'style_handheld', 'style_handheld_rtl', 'style_print', 'common', 'print']:
             return 'style'
         return 'image'
 
