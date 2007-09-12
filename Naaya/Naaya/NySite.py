@@ -1741,13 +1741,14 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             else:
                 msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
             if not err:
-                try:    #backwards compatibility
-                    auth_tool = self.getAuthenticationTool()
-                    for name in names:
-                        user_ob = auth_tool.getUser(name)
-                        self.sendAccountCreatedEmail('%s %s' % (user_ob.firstname, user_ob.lastname), user_ob.email, user_ob.name, REQUEST)
-                except:
-                    pass
+                auth_tool = self.getAuthenticationTool()
+                for name in names:
+                    try:
+                        email = auth_tool.getUsersEmails([name])[0]
+                        fullname = auth_tool.getUsersFullNames([name])[0]
+                        self.sendAccountCreatedEmail(fullname, email, name, REQUEST)
+                    except:
+                        err = 'Could not send confirmation mail.'
         if REQUEST:
             if err != '': self.setSessionErrors([err])
             if msg != '': self.setSessionInfo([msg])
