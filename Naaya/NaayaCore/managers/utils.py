@@ -767,3 +767,116 @@ class ZZipFile(ZipFile):
         """ """
         self.hasbeenread = 0
         self.filename=filename
+
+#CUSTOM FUNCTIONS
+# arnaud.reveillon@naturalsciences.be
+
+    def utSetBodyClass(self,url):
+        if url.count('/admin_')>0 or url.count('/PhotoArchive')>0 or url.count('/GraphicsArchive')>0:
+         bodyClass=('admin')
+        elif url.count('edit_html')>0:
+         bodyClass=('edit')
+        elif url.count('add_html')>0:
+         bodyClass=('add')
+        try:return bodyClass
+        except:return ''
+
+    def utCustomShowDateTime(self, p_date):
+        """date is a DateTime object. This function returns a string 'dd month_name yyyy'"""
+        try: return p_date.strftime('%d.%m.%Y')
+        except: return ''
+
+    def utCustomShowWordedDate(self, p_date, p_language):
+        """date is a DateTime object. This function returns a string 'dd month_name yyyy'"""
+        nd=p_date.strftime('%d')
+        nm=p_date.strftime('%m')
+        ny=p_date.strftime('%Y')
+
+        if nm=='01':
+           if p_language=='fr-BE':
+             return nd+' janvier '+ny
+           elif p_language=='nl-BE':
+             return nd+' januari '+ny
+           else:
+              return nd+' January '+ny
+        elif nm=='02':
+           if p_language=='fr-BE':
+              return nd+' f&eacute;vrier '+ny
+           elif p_language=='nl-BE':
+              return nd+' februari '+ny
+           else:
+              return nd+' February '+ny
+        elif nm=='03':
+           if p_language=='fr-BE':
+              return nd+' mars '+ny
+           elif p_language=='nl-BE':
+              return nd+' maart '+ny
+           else:
+              return nd+' March '+ny
+        elif nm=='04':
+           if p_language=='fr-BE':
+              return nd+' avril '+ny
+           elif p_language=='nl-BE':
+              return nd+' april '+ny
+           else:
+              return nd+' April '+ny
+        elif nm=='05':
+           if p_language=='fr-BE':
+              return nd+' mai '+ny
+           elif p_language=='nl-BE':
+              return nd+' mei '+ny
+           else:
+              return nd+' May '+ny
+        elif nm=='06':
+           if p_language=='fr-BE':
+              return nd+' juin '+ny
+           elif p_language=='nl-BE':
+              return nd+' juni '+ny
+           else:
+              return nd+' June '+ny
+        elif nm=='07':
+           if p_language=='fr-BE':
+              return nd+' juillet '+ny
+           elif p_language=='nl-BE':
+              return nd+' juli '+ny
+           else:
+              return nd+' July '+ny
+        elif nm=='08':
+           if p_language=='fr-BE':
+              return nd+' ao&ucirc;t '+ny
+           elif p_language=='nl-BE':
+              return nd+' augustus '+ny
+           else:
+              return nd+' August '+ny
+        elif nm=='09':
+           if p_language=='fr-BE':
+              return nd+' septembre '+ny
+           elif p_language=='nl-BE':
+              return nd+' september '+ny
+           else:
+              return nd+' September '+ny
+        elif nm=='10':
+           if p_language=='fr-BE':
+              return nd+' octobre '+ny
+           elif p_language=='nl-BE':
+              return nd+' oktober '+ny
+           else:
+              return nd+' October '+ny
+        elif nm=='11':
+           if p_language=='fr-BE':
+              return nd+' novembre '+ny
+           elif p_language=='nl-BE':
+              return nd+' november '+ny
+           else:
+              return nd+' November '+ny
+        elif nm=='12':
+           if p_language=='fr-BE':
+              return nd+' d&eacute;cembre '+ny
+           elif p_language=='nl-BE':
+              return nd+' december '+ny
+           else:
+              return nd+' December '+ny
+        else:
+           return nm
+
+#END OF CUSTOM FUNCTIONS
