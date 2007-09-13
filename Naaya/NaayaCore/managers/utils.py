@@ -730,44 +730,6 @@ class utils:
         RESPONSE.setHeader('Content-Length', stat[6])
         return content
 
-class tmpfile:
-
-    def __init__(self, data):
-        self.fname = tempfile.mktemp()
-        writer = csv.writer(open(self.fname,'wb'))
-        for row in data:
-            writer.writerow(row)
-
-    def __str__(self): return self.fname
-    __repr__ = __str__
-
-    def __del__(self):
-        os.unlink(self.fname)
-
-class ZZipFile(ZipFile):
-
-    def read(self,size=-1):
-        """ """
-        if(self.hasbeenread == 0):
-            self.hasbeenread = 1
-            return ZipFile.read(self,self.filename)
-        else:
-            return ""
-
-    def seek(self):
-        """ Ignore since it is only used to figure out size """
-        self.hasbeenread = 0
-        return 0
-
-    def tell(self):
-        """ """
-        return self.getinfo(filename).file_size
-
-    def setcurrentfile(self,filename):
-        """ """
-        self.hasbeenread = 0
-        self.filename=filename
-
 #CUSTOM FUNCTIONS
 # arnaud.reveillon@naturalsciences.be
 
@@ -880,3 +842,42 @@ class ZZipFile(ZipFile):
            return nm
 
 #END OF CUSTOM FUNCTIONS
+
+class tmpfile:
+
+    def __init__(self, data):
+        self.fname = tempfile.mktemp()
+        writer = csv.writer(open(self.fname,'wb'))
+        for row in data:
+            writer.writerow(row)
+
+    def __str__(self): return self.fname
+    __repr__ = __str__
+
+    def __del__(self):
+        os.unlink(self.fname)
+
+class ZZipFile(ZipFile):
+
+    def read(self,size=-1):
+        """ """
+        if(self.hasbeenread == 0):
+            self.hasbeenread = 1
+            return ZipFile.read(self,self.filename)
+        else:
+            return ""
+
+    def seek(self):
+        """ Ignore since it is only used to figure out size """
+        self.hasbeenread = 0
+        return 0
+
+    def tell(self):
+        """ """
+        return self.getinfo(filename).file_size
+
+    def setcurrentfile(self,filename):
+        """ """
+        self.hasbeenread = 0
+        self.filename=filename
+
