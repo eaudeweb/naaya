@@ -1,0 +1,47 @@
+<tal:block define="objs python:request.get('index_html', None) and here.list_updates() or [];">
+<h1 tal:replace="structure here/manage_page_header" />
+<h2 tal:replace="structure here/manage_tabs" />
+
+<h3 tal:content="here/title|string:" />
+<h4 class="description" tal:content="here/description|string:" />
+
+<form action="." method="post">
+	<div class="submit">
+		<input type="submit" name="index_html:method" value="List updates">
+		<input type="submit" name="update:method" value="Update">
+	</div>
+</form>
+
+<tal:block tal:condition="not:request/index_html|nothing">
+	<div>
+	  <strong>Last run: </strong>
+	  <span tal:content="here/last_run"  tal:condition="here/last_run"/>
+	  <span tal:content="string:Never"  tal:condition="not:here/last_run"/>
+	</div>
+	<fieldset>
+	  <legend style="padding: 5px">Update log</legend>
+	  <tal:block replace="structure here/report" />
+	</fieldset>
+</tal:block>
+
+<table tal:condition="objs" width="100%">
+    <tr class="list-header">
+		<th>Title</th>
+		<th>Portal</th>
+	</tr>
+	<tr tal:repeat="ob objs" class="row-hilite">
+		<td>
+			<a tal:attributes="href ob/absolute_url" tal:content="ob/title_or_id" />
+		</td>
+		<td tal:define="portal ob/getSite">
+			<a tal:attributes="href portal/absolute_url"
+				tal:content="portal/title_or_id" />
+		</td>
+    </tr>
+</table>
+<div tal:condition="python:request.get('index_html', '') and not objs">
+  Nothing to update.
+</div>
+
+<h1 tal:replace="structure here/manage_page_footer" />
+</tal:block>
