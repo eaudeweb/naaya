@@ -1,0 +1,1 @@
+* Change the license to ZPL 2.1
