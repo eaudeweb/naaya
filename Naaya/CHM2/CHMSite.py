@@ -542,46 +542,6 @@ class CHMSite(NySite):
             or cmp(y.releasedate, x.releasedate))
         return self.get_archive_listing(p_objects)
 
-    security.declareProtected(view, 'processCreateAccountForm')
-    def processCreateAccountForm(self, username='', password='', confirm='', firstname='', lastname='', email='', REQUEST=None):
-        """ Creates an account on the local acl_users and sends an email to the maintainer 
-            with the account infomation
-        """
-        #create an account without any role
-        try:
-            self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname,
-                lastname, email)
-        except Exception, error:
-            err = error
-        else:
-            err = ''
-        if err:
-            if REQUEST:
-                self.setSessionErrors(err)
-                self.setCreateAccountSession(username, firstname, lastname, email, password)
-                REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
-        if not err:
-            self.sendCreateAccountEmail(firstname + ' ' + lastname, email, username, REQUEST)
-        if REQUEST:
-            self.setSession('title', 'Thank you for registering')
-            self.setSession('body', 'You will receive a confirmation email.')
-            self.setSession('referer', REQUEST['HTTP_REFERER'])
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
-
-    def sendCreateAccountEmail(self, p_name, p_email, p_username, REQUEST):
-        #sends a confirmation email to the newlly created account's owner
-        email_template = self.getEmailTool()._getOb('email_createaccount')
-        l_subject = email_template.title
-        l_content = email_template.body
-        l_content = l_content.replace('@@PORTAL_URL@@', self.portal_url)
-        l_content = l_content.replace('@@PORTAL_TITLE@@', self.site_title)
-        l_content = l_content.replace('@@NAME@@', p_name)
-        l_content = l_content.replace('@@EMAIL@@', p_email)
-        l_content = l_content.replace('@@USERNAME@@', p_username)
-        l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
-        mail_from = self.mail_address_from
-        self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
-
     security.declareProtected(view_management_screens, 'duplicate_translate')
     def duplicate_translate(self, property, source_lang, target_lang):
         """
