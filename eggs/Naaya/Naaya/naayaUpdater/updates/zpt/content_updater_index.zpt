@@ -31,11 +31,11 @@
 	</tr>
 	<tr tal:repeat="ob objs" class="row-hilite">
 		<td>
-			<a tal:attributes="href ob/absolute_url" tal:content="ob/title_or_id" />
+			<a tal:attributes="href ob/absolute_url" tal:content="python:ob.absolute_url(1)" />
 		</td>
 		<td tal:define="portal ob/getSite">
 			<a tal:attributes="href portal/absolute_url"
-				tal:content="portal/title_or_id" />
+				tal:content="python:portal.absolute_url(1)" />
 		</td>
     </tr>
 </table>
