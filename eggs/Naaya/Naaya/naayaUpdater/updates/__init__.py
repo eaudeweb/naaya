@@ -20,11 +20,12 @@ import os
 import glob
 import zLOG
 from Products.naayaUpdater.NaayaUpdater import UPDATERID
+import Globals
 
 def _get_available_updates():
     """ Return available updates in current dir."""
     name = __name__.split('.')
-    curent_dir = os.path.join('', *name)
+    curent_dir = Globals.package_home(globals())
     modules = [i.split('.')[0] for i in glob.glob1(curent_dir, "*.py")]
     updates = {}
     for mod in modules:
