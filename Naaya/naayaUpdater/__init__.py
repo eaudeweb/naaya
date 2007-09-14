@@ -20,6 +20,8 @@
 
 from ImageFile import ImageFile
 import NaayaUpdater
+import NaayaContentUpdater
+import updates
 
 UpdaterID = NaayaUpdater.UPDATERID
 
@@ -27,7 +29,8 @@ from NaayaPatches import *
 
 def initialize(context):
     """ """
-
+    updates.initialize(context)
+    
     #add Naaya Updater
     app = context._ProductContext__app
     global updater
