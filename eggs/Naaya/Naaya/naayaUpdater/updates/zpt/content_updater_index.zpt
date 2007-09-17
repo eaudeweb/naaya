@@ -18,7 +18,7 @@
 	  <span tal:content="here/last_run"  tal:condition="here/last_run"/>
 	  <span tal:content="string:Never"  tal:condition="not:here/last_run"/>
 	</div>
-	<fieldset>
+	<fieldset tal:condition="here/report">
 	  <legend style="padding: 5px">Update log</legend>
 	  <tal:block replace="structure here/report" />
 	</fieldset>
