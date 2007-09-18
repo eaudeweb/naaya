@@ -81,11 +81,20 @@ class CHMSite(NySite):
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
         """ """
+        #set default 'Naaya' configuration
         NySite.__dict__['createPortalTools'](self)
         NySite.__dict__['loadDefaultData'](self)
+
+        #load site skeleton - configuration
         self.loadSkeleton(join(CHM2_PRODUCT_PATH, 'skel'))
+
+        #remove Naaya default content
+        self.getLayoutTool().manage_delObjects('skin')
+
+        #set default PhotoFolder
         manage_addNyPhotoFolder(self, ID_PHOTOARCHIVE, TITLE_PHOTOARCHIVE)
         self._getOb(ID_PHOTOARCHIVE).approveThis()
+
         #create and configure LinkChecker instance
         manage_addLinkChecker(self, ID_LINKCHECKER, TITLE_LINKCHECKER)
         linkchecker_ob = self._getOb(ID_LINKCHECKER)
@@ -96,17 +105,21 @@ class CHMSite(NySite):
             linkchecker_ob.manage_addMetaType(k)
             for p in v:
                 linkchecker_ob.manage_addProperty(k, p)
+
         #create helpdesk instance
         manage_addHelpDesk(self, ID_HELPDESKAGENT, TITLE_HELPDESKAGENT, self.getAuthenticationToolPath(1))
+
         #create and fill glossaries
         manage_addGlossaryCentre(self, ID_GLOSSARY_KEYWORDS, TITLE_GLOSSARY_KEYWORDS)
         self._getOb(ID_GLOSSARY_KEYWORDS).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_keywords.xml')))
         manage_addGlossaryCentre(self, ID_GLOSSARY_COVERAGE, TITLE_GLOSSARY_COVERAGE)
         self._getOb(ID_GLOSSARY_COVERAGE).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_coverage.xml')))
+
         #set glossary for pick lists
         self.keywords_glossary = ID_GLOSSARY_KEYWORDS
         self.coverage_glossary = ID_GLOSSARY_COVERAGE
         self._p_changed = 1
+
         #add EC CHM to network portals list
         self.admin_addnetworkportal('EC CHM', 'http://biodiversity-chm.eea.eu.int/')
 
