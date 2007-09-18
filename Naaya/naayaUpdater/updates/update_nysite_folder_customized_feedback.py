@@ -18,32 +18,31 @@
 # Alin Voinea, Eau de Web
 
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
-SCHEMA_URL = 'http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaDocuments/schemas/naaya/naaya-nyexp-1.0.0.xsd'
 
 class CustomContentUpdater(NaayaContentUpdater):
-    """ Add nyexp_schema attribute to Naaya Site"""
+    """ Add folder_customized_feedback attribute to Naaya Site"""
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya Site properties'
-        self.description = 'Add nyexp_schema attribute'
-    
+        self.description = 'Add folder_customized_feedback attribute'
+
     def _verify_doc(self, doc):
         """ See super"""
-        if not hasattr(doc, 'nyexp_schema'):
+        if not hasattr(doc, 'folder_customized_feedback'):
             return doc
-    
+
     def _list_portal_updates(self, portal):
         """ Return all portals that need update"""
         portal = self._verify_doc(portal)
         if portal:
             return [portal,]
         return []
-    
+
     def _update(self):
         updates = self._list_updates()
         report = []
         for update in updates:
-            setattr(update, 'nyexp_schema', SCHEMA_URL)
+            setattr(update, 'folder_customized_feedback', {})
             report.append('<strong>Update site:</strong> ' + update.absolute_url(1))
         return '<br />'.join(report)
 
