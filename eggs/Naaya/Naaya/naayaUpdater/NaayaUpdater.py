@@ -82,9 +82,12 @@ class NaayaUpdater(Folder):
         zmi_obj = self.unrestrictedTraverse(ppath, None)
         fs_data = open(join(INSTANCE_HOME, fpath)).read()
         try:
-            zmi_data = zmi_obj.body
+            zmi_data = zmi_obj._body
         except AttributeError:
-            zmi_data = zmi_obj.document_src()
+            try:
+                zmi_data = zmi_obj.body
+            except AttributeError:
+                zmi_data = zmi_obj.document_src()
         return self.show_html_diff(zmi_data, fs_data)
 
     ###
