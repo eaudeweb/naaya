@@ -74,7 +74,7 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'get_fs_data')
     def get_fs_data(self, fpath):
         """ """
-        return join(INSTANCE_HOME, fpath).read()
+        return open(join(INSTANCE_HOME, fpath)).read()
 
     security.declareProtected(view_management_screens, 'show_diffTemplates')
     def show_diffTemplates(self, fpath, ppath):
