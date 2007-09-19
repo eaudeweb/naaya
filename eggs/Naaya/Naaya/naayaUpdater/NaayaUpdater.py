@@ -66,19 +66,26 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'index_html')
     index_html = PageTemplateFile('zpt/updater_index', globals())
 
-    security.declareProtected(view, 'show_html_diff')
+    security.declareProtected(view_management_screens, 'show_html_diff')
     def show_html_diff(self, source, target):
         """ """
         return html_diff(source, target)
 
+    security.declareProtected(view_management_screens, 'get_fs_data')
+    def get_fs_data(self, fpath):
+        """ """
+        return join(INSTANCE_HOME, fpath).read()
+
     security.declareProtected(view_management_screens, 'show_diffTemplates')
     def show_diffTemplates(self, fpath, ppath):
         """ """
-#        portal = self.getPortal(ppath)
-#        fs = self.get_fs_template(id, portal)
-#        zmi = self.get_zmi_template(fpath)
-#        return self.show_html_diff(fs, self.get_template_content(zmi))
-        pass
+        zmi_obj = self.unrestrictedTraverse(ppath, None)
+        fs_data = open(join(INSTANCE_HOME, fpath)).read()
+        try:
+            zmi_data = zmi_obj.body
+        except AttributeError:
+            zmi_data = zmi_obj.document_src()
+        return self.show_html_diff(zmi_data, fs_data)
 
     ###
     #See all modified forms
