@@ -88,6 +88,12 @@
     <td><input type="text" name="portal_url" id="portal_url" size="30" tal:attributes="value here/portal_url" /></td>
 </tr>
 </table>
+<table border="0" cellspacing="2" cellpadding="2" width="90%">
+<tr>
+    <td><strong><label for="http_proxy" i18n:translate="">HTTP Proxy</label></strong></td>
+    <td><input type="text" name="http_proxy" id="http_proxy" size="40" tal:attributes="value here/http_proxy" /></td>
+</tr>
+</table>
 
 <div><input type="submit" value="Save changes" i18n:attributes="value" /></div>
 </form>
