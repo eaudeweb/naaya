@@ -88,6 +88,10 @@
     <td><input type="text" name="portal_url" id="portal_url" size="30" tal:attributes="value here/portal_url" /></td>
 </tr>
 </table>
+<p i18n:translate="">
+	If your server is behind a proxy, specify its address followed by the port number. 
+	Leave the field blank to ignore. Example: http://proxy.mycompany.com:3128
+</p>
 <table border="0" cellspacing="2" cellpadding="2" width="90%">
 <tr>
     <td><strong><label for="http_proxy" i18n:translate="">HTTP Proxy</label></strong></td>
