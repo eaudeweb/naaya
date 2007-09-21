@@ -8,7 +8,29 @@
 			var wnd = window.open(diff_form);
 			wnd.focus();
 		}
-		// -->
+
+		var isSelected = false;
+		function toggleSelect()
+		{   var frm = document.frmQuickModForms;
+			var i;
+			if (isSelected == false)
+			{   for(i=0; i<frm.elements.length; i++)
+					if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
+				isSelected = true;}
+			else
+			{   for(i=0; i<frm.elements.length; i++)
+					if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
+				isSelected = false;}}
+
+		function fCheckSelection()
+		{   var frm = document.frmQuickModForms;
+			var i;
+			check = false;
+			for(i=0; i<frm.elements.length; i++)
+				if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
+				{   check = true; break;}
+			return check;}
+		//-->
 		</script>
 	</tal:block>
 
@@ -55,7 +77,7 @@
 			  method="post" name="frmQuickReloadForms">
 			<input type="checkbox" name="all" />
 			<label for="all">Update all forms</label>
-
+			<a href="javascript:toggleSelect();"><span i18n:translate="" tal:omit-tag="">Select all</span></a>
 			<tal:block condition="python:report.items()[0][0] != 'all'">
 			<tal:block repeat="portal_report python:report.items()">
 			<div tal:define="portal_path python:portal_report[0];
