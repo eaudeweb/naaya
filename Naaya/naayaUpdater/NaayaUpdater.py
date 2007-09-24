@@ -773,4 +773,22 @@ class NaayaUpdater(Folder):
         """ """
         return '%s/portal_forms/%s' % (portal.absolute_url(1), form_id)
 
+    security.declareProtected(view_management_screens, 'generateFormPath')
+    def updateBrokenDescription(self, portal_id='hazred'):
+        """ update broken description """
+        root = self.getPhysicalRoot()
+        portal_ob = root._getOb(portal_id, None)
+        if portal_ob is not None:
+            items = portal_ob.getCatalogedObjects()
+            for item in items:
+                descr = item.getPropertyValue('description', 'en')
+                try:
+                    item.createProperty('description', html_decode(descr), 'en')
+                    item._p_changed = 1
+                except:
+                    print item.absolute_url(0)
+            return 'done'
+        else:
+            return 'portal %s not found' % portal_id
+
 Globals.InitializeClass(NaayaUpdater)

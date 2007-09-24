@@ -61,3 +61,14 @@ def create_signature(s):
     res = m.hexdigest()
     m = None
     return res
+
+def html_decode(s):
+    """Decode some special chars"""
+    if isinstance(s, unicode): buf = s.encode('utf-8')
+    else: buf = str(s)
+    buf = buf.replace('&amp;', '&')
+    buf = buf.replace('&lt;', '<')
+    buf = buf.replace('&quot;', '"')
+    buf = buf.replace('&apos;', '\'')
+    buf = buf.replace('&gt;', '>')
+    return buf
