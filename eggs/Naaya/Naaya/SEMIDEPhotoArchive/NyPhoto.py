@@ -34,6 +34,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyItem import NyItem
 from Products.Naaya.constants import *
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from Products.NaayaBase.NyFSFile import NyFSImage
 
 manage_addNyPhoto_html = PageTemplateFile('zpt/photo_manage_add', globals())
 def addNyPhoto(self, id='', title='', author='', source='', description='', sortorder='',
@@ -67,7 +68,7 @@ def addNyPhoto(self, id='', title='', author='', source='', description='', sort
     self._setObject(id, ob)
     #extra settings
     ob = self._getOb(id)
-    ob.manage_upload(file)
+    ob.update_data(file)
     ob.submitThis()
     if discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
@@ -80,7 +81,7 @@ def addNyPhoto(self, id='', title='', author='', source='', description='', sort
             self.setSession('referer', self.absolute_url())
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.getSitePath())
 
-class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
+class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, NyFSImage):
     """ """
 
     meta_type = METATYPE_NYPHOTO
@@ -108,6 +109,7 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
         quality, displays, approved, approved_by, releasedate, lang):
         """ """
         #image stuff
+        NyFSImage.__init__(self, id, title, '', content_type)
         self.content_type = content_type
         self.precondition = precondition
         self.id = id
@@ -146,17 +148,18 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
         width, height = self.displays.get(display, (self.width, self.height))
         width, height = self.__get_aspect_ratio_size(width, height)
         newimg = StringIO()
-        img = PIL.Image.open(StringIO(str(self.data)))
+        img = PIL.Image.open(StringIO(str(self.get_data())))
         fmt = img.format
         try: img = img.resize((width, height), PIL.Image.ANTIALIAS)
         except AttributeError: img = img.resize((width, height))
         img.save(newimg, fmt, quality=self.quality)
         newimg.seek(0)
-        return Image('10', '', newimg)
+        return newimg
 
     def __generate_display(self, display):
         #generates and stores a display
-        self.__photos[display] = self.__resize(display)
+        self.__photos[display] = NyFSImage('10', '', '')
+        self.__photos[display].update_data(self.__resize(display))
         self._p_changed = 1
 
     #api
@@ -181,7 +184,7 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
         #returns widht, height, size of the specified display
         photo = self.__photos.get(display, None)
         if photo:
-            return (photo.width, photo.height, photo.size)
+            return (photo.width, photo.height, photo.get_size())
         else:
             return (None, None, None)
 
@@ -232,10 +235,16 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
         """ """
         if self.wl_isLocked():
             raise ResourceLockedError, "File is locked via WebDAV"
-        self.manage_upload(file)
+        self.update_data(file)
         self.managePurgeDisplays()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
-
+    
+    def manage_beforeDelete(self, item, container):
+        for photo in self.__photos.values():
+            photo.manage_beforeDelete(photo, self)
+        NyFSImage.manage_beforeDelete(self, item, container)
+        NyPhoto.inheritedAttribute('manage_beforeDelete')(self, item, container)
+        
     security.declareProtected(view_management_screens, 'manageDisplays')
     def manageDisplays(self, display=None, width=None, height=None, REQUEST=None):
         """ """
@@ -256,6 +265,8 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
     security.declareProtected(view_management_screens, 'managePurgeDisplays')
     def managePurgeDisplays(self, REQUEST=None):
         """ """
+        for photo in self.__photos.values():
+            photo.manage_beforeDelete(photo, self.__photos)
         self.__photos = {}
         self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_displays_html?save=ok')
@@ -303,7 +314,7 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
         if file != '':
             if hasattr(file, 'filename'):
                 if file.filename != '':
-                    self.manage_upload(file)
+                    self.update_data(file)
                     self.managePurgeDisplays()
         if lang is None: lang = self.get_default_language()
         if REQUEST:
@@ -324,8 +335,8 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
         """ """
-        self.REQUEST.RESPONSE.setHeader('Content-Type', self.content_type)
-        self.REQUEST.RESPONSE.setHeader('Content-Length', self.size)
+        self.REQUEST.RESPONSE.setHeader('Content-Type', self.getContentType())
+        self.REQUEST.RESPONSE.setHeader('Content-Length', self.get_size())
         self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.id)
         return NyPhoto.inheritedAttribute('index_html')(self, REQUEST, RESPONSE)
 
