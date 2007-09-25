@@ -203,7 +203,7 @@
 			background-color:#b8d6e8; /*#637785*/ /*#637048*/ /*#343434*/ /*#d3e189*/
 			margin-top:1px;
 			position: relative;
-			height: 1em;
+			height: 1.2em;
 		}
 
 			#nav2 ul {
@@ -553,9 +553,11 @@ vertical-align: top;
 	}
 	* html #search {
 		width: 15em;
+		padding-top:2px;
 	}
 	*:first-child+html #search {
 		max-width: 15em;
+		padding-top:2px;
 	}
 
 		#search form{
