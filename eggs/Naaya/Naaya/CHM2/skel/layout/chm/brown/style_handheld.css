@@ -338,6 +338,9 @@
 				width:12em;
 				margin:0px;
 			}
+			#language div{
+				display:inline;
+			}
 
 	td#center_cell {
 		/*border-bottom:1px solid #d8d8d8; 1px solid #acb9c1*/ /*1px solid #cfe0b4*/ /*1px solid #d4e28c*/ /*1px solid #d3e189*/

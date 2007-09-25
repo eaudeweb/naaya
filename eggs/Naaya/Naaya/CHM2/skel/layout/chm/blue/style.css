@@ -438,6 +438,9 @@
 				width:12em;
 				margin:0px;
 			}
+			#language div{
+				display:inline;
+			}
 
 	td#center_cell {
 
