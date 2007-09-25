@@ -337,7 +337,7 @@ class NyStory(NyAttributes, story_item, NyContainer, NyEpozToolbox, NyCheckContr
                 self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                     description=description, coverage=coverage, keywords=keywords, \
                     sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
-                    body=body, topitem=topitem, resourceurl=resourceurl, source=source, frontpicture=frontpicture, lang=lang)
+                    body=body, topitem=topitem, resourceurl=resourceurl, source=source, frontpicture='', lang=lang)
                 REQUEST.RESPONSE.redirect('%s/add_html' % self.absolute_url())
             else:
                 raise Exception, '%s' % ', '.join(r)
