@@ -553,9 +553,11 @@ vertical-align: top;
 	}
 	* html #search {
 		width: 15em;
+		padding-top:2px;
 	}
 	*:first-child+html #search {
 		max-width: 15em;
+		padding-top:2px;
 	}
 
 		#search form{
