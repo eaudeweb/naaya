@@ -20,7 +20,7 @@
 <tr>
 	<th i18n:translate="">Download</th>
 	<td>
-		<a tal:define="size python:here.utShowSizeKb(here.size); content_type python:here.getContentTypeTitle(here.content_type)"
+		<a tal:define="size python:here.utShowSizeKb(here.get_size()); content_type python:here.getContentTypeTitle(here.getContentType())"
 			tal:attributes="href string:${here/absolute_url}/download"><img tal:attributes="src string:getContentTypePicture?id=${here/getContentType}" border="0" alt="" /> <span tal:replace="string:${here/id} (${content_type}, ${size} Kb)"/></a>
 	</td>
 </tr>
