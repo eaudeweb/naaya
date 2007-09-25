@@ -60,6 +60,7 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     #process parameters
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(title)
+    if not id: id = PREFIX_FOLDER + self.utGenRandomId(5)
     if publicinterface: publicinterface = 1
     else: publicinterface = 0
     try: sortorder = abs(int(sortorder))
