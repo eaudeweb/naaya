@@ -83,11 +83,11 @@ class SemideZip:
                 zfi.date_time = timetuple
                 zfi.compress_type = ZIP_DEFLATED
                 if l_ob.meta_type == METATYPE_NYFILE: 
-                    p_zf.writestr(zfi, str(l_ob.data))
+                    p_zf.writestr(zfi, str(l_ob.get_data()))
                 elif l_ob.meta_type == METATYPE_NYPHOTO:
-                    p_zf.writestr(zfi, str(l_ob.data))
+                    p_zf.writestr(zfi, str(l_ob.get_data()))
                 else:
-                    p_zf.writestr(zfi, str(l_ob.getFileItem().data))
+                    p_zf.writestr(zfi, str(l_ob.getFileItem().get_data()))
             else:
                 l_child_size = self.__getTreeToZip(p_zf, l_ob, l_path)
                 l_size = l_size + l_child_size
