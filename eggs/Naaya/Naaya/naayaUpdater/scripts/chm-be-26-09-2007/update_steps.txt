@@ -1,0 +1,86 @@
+Steps made for CHM BE update [26 sept 2007]
+================================================================================================
+[x] RUN ../naaya_updates/layout_update -> /portal_layout:
+[x] SVN UPDATE naayaUpdater
+[x] SVN UPDATE CHM2
+
+[x] de sters/portat toate obiectele Naaya Media File
+	https://www.biodiv.be/rca/cooperation/part-belge/media639084
+	https://www.biodiv.be/rca/cooperation/part-belge/media977282
+
+[x] RUN ../naaya_updates/layout_update -> /portal_layout:
+	[x] site_header (except: [bch-cbd,maroc2,comifac_dev,test_layout_arnaud])
+	[x] site_footer (except: comifac_dev)
+	[x] folder_administration_macro (all added)
+	[x] portlet_left_macro (all upd)
+	[x] portlet_right_macro (all upd)
+	[x] portlet_center_macro
+	[x] style + style_handheld
+	- sunt 2 Color Scheme: zambia, comifac2
+	- si 1 Skin: bch-cbd,test_maroc,maroc2,test_layout_arnaud,comifac_dev
+
+[x] SVN UPDATE CHM2
+[x] SVN UPDATE Naaya
+[x] SVN UPDATE NaayaContent
+[x] DELETE NaayaForum
+[x] SVN CO NaayaForum
+
+[x] portla_forms update via "Quick update Naaya forms":
+	EXCEPT: bch-cbd,test_layout_arnaud,comifac_dev,maroc2
+	SKIP: epoz_toolbox
+
+[x] RUN ../naaya_updates/update_lang_box_form
+	[x] zambia/mtenr,rdcongo2,comifac,macolloq,togo2,formation_chm_madagascar,formation_chm_madagascar/mauritius,formation_chm_madagascar/madagasca
+
+[x] RUN ../naaya_updates/contenttype_update
+	[x] Naaya Event ->      [FOR: bch-cbd,test_layout_arnaud,maroc2]
+	[x] Naaya Media File -> [FOR: bch-cbd,test_layout_arnaud,comifac_dev]
+	[x] Naaya Document ->   [FOR: bch-cbd,test_layout_arnaud,comifac_dev,maroc2]
+	[x] Naaya News ->       [FOR: bch-cbd,test_layout_arnaud,comifac_dev,maroc2]
+	[x] Naaya Story ->      [FOR: bch-cbd,test_layout_arnaud,comifac_dev,maroc2]
+	[x] Naaya URL ->        [FOR: bch-cbd,test_layout_arnaud,comifac_dev,maroc2]
+	[x] Naaya Pointer ->    [FOR: bch-cbd,test_layout_arnaud,comifac_dev,maroc2]
+	[x] Naaya File ->       [FOR: bch-cbd,test_layout_arnaud,comifac_dev,maroc2]
+
+[x] SVN CO Captcha
+[x] re-install Naaya Media File
+[x] SVN UPDATE NaayaContent
+
+[x] RUN ../naaya_updates/forms_update_epoz_toolbox
+[x] RUN ../naaya_updates/update_syndication -> /portal_syndication + portletii asociati
+
+[x] SVN UPDATE Naaya
+
+[x] RUN ../naaya_updates/portlets_update -> /portal_portlets/portlets:
+	CHM2/portlet_administration.zpt (except: bch-cbd,test_layout_arnaud,comifac_dev,maroc2)
+	CHM2/portlet_maincategories.zpt (except: bch-cbd,test_layout_arnaud,comifac_dev,maroc2, test_maroc)
+	CHM2/portlet_latestphotos.zpt   (except: maroc2,comifac_dev)
+	Naaya/portlet_localchannels.zpt (All updated)
+	Naaya/portlet_folder_administration.zpt (All added - missing)
+
+[x] RUN ../naaya_updates/linkslist_update -> /portal_portlets/linklist:
+	topnav_links: test_maroc
+	menunav_links: -
+	menunav_services: bch-cbd,test_layout_arnaud,zambia/mtenr,formation_chm_madagascar/mauritius,formation_chm_madagascar/madagasca
+	menunav_content: bch-cbd,test_layout_arnaud,zambia/mtenr,formation_chm_madagascar/mauritius,formation_chm_madagascar/madagasca
+	menunav_about: bch-cbd,test_layout_arnaud,zambia/mtenr,formation_chm_madagascar/mauritius,formation_chm_madagascar/madagasca
+	menunav_sitemap: bch-cbd,test_layout_arnaud,zambia/mtenr,formation_chm_madagascar/mauritius,formation_chm_madagascar/madagasca
+
+[x] RUN ../naaya_updates/emails_update --> /portal_emails (ONLY: email_requestrole.txt)
+[x] RUN ../naaya_updates/sitemap_update --> /others - sitemap_xml (de adaugat)
+
+
+[x] RUN ../naaya_updates/update_nystory_frontpicture
+[x] RUN ../naaya_updates/delete_nysite_default_skin
+[x] RUN re-install content-types forms:
+	[x] Naaya Event ->      [EXCEPT: bch-cbd,test_layout_arnaud,maroc2]
+	[x] Naaya Media File -> [EXCEPT: bch-cbd,test_layout_arnaud,comifac_dev]
+	[x] Naaya Document ->   [EXCEPT: bch-cbd,test_layout_arnaud,comifac_dev,maroc2]
+	[x] Naaya News ->       [EXCEPT: bch-cbd,test_layout_arnaud,comifac_dev,maroc2]
+	[x] Naaya Story ->      [EXCEPT: bch-cbd,test_layout_arnaud,comifac_dev,maroc2]
+	[x] Naaya URL ->        [EXCEPT: bch-cbd,test_layout_arnaud,comifac_dev,maroc2]
+	[x] Naaya Pointer ->    [EXCEPT: bch-cbd,test_layout_arnaud,comifac_dev,maroc2]
+	[x] Naaya File ->       [EXCEPT: bch-cbd,test_layout_arnaud,comifac_dev,maroc2]
+[x] RUN ../naaya_updates/update_nysite_folder_customized_feedback
+[x] RUN ../naaya_updates/update_nysite_nyexpschema
+[x] SVN CO la toate produsele
