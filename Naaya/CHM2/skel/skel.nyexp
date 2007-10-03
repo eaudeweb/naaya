@@ -286,8 +286,8 @@ tal:content="python:item[1]" i18n:translate="" />
 
 <div tal:condition="python:objects_select_all or objects_delete_all">
 <div id="toolbar">
-<tal:block tal:condition="objects_delete_all"><a href="javascript:fDeleteObjects();"><span><img src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
-<tal:block tal:condition="objects_select_all"><a href="javascript:fSetTopStoryObjects();"><span><input src="/misc_/Naaya/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="" tal:omit-tag="">Save on front</span></span></a></tal:block>
+<tal:block tal:condition="objects_delete_all"><a href="javascript:fDeleteObjects();"><span><span i18n:translate="">Delete</span></a></tal:block>
+<tal:block tal:condition="objects_select_all"><a href="javascript:fSetTopStoryObjects();"><span><input src="/misc_/Naaya/delete.gif" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="">Save on front</span></span></a></tal:block>
 </div>
 </div>
 
@@ -412,8 +412,8 @@ tal:content="python:item[1]" i18n:translate="" />
 
 <div tal:condition="python:objects_select_all or objects_delete_all">
 	<div id="toolbar">
-		<tal:block tal:condition="objects_delete_all"><a href="javascript:fDeleteObjects();"><span><img src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
-		<tal:block tal:condition="objects_select_all"><a href="javascript:fSetTopStoryObjects();"><span><input src="/misc_/Naaya/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="" tal:omit-tag="">Save on front</span></span></a></tal:block>
+		<tal:block tal:condition="objects_delete_all"><a href="javascript:fDeleteObjects();"><span i18n:translate="">Delete</span></a></tal:block>
+		<tal:block tal:condition="objects_select_all"><a href="javascript:fSetTopStoryObjects();"><span><input src="/misc_/Naaya/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="">Save on front</span></span></a></tal:block>
 	</div>
 </div>
 
@@ -542,7 +542,7 @@ tal:content="python:item[1]" i18n:translate="" />
 
 <div tal:condition="python:objects_select_all or objects_delete_all">
 <div id="toolbar">
-<tal:block tal:condition="objects_delete_all"><a href="javascript:fDeleteObjects();"><span><img src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
+<tal:block tal:condition="objects_delete_all"><a href="javascript:fDeleteObjects();"><span i18n:translate="">Delete</span></a></tal:block>
 <tal:block tal:condition="objects_select_all"><a href="javascript:fSetTopStoryObjects();"><span><input src="/misc_/Naaya/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="" tal:omit-tag="">Save on front</span></span></a></tal:block>
 </div>
 </div>
