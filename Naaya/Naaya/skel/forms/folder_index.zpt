@@ -115,12 +115,12 @@ function fRenameObjects()
 
 <div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
     <div id="toolbar">
-        <tal:block tal:condition="btn_select"><a href="javascript:toggleSelect();"><span i18n:translate="" tal:omit-tag="">Select all</span></a></tal:block>
-        <tal:block tal:condition="btn_copy"><a href="javascript:fCopyObjects();"><span i18n:translate="" tal:omit-tag="">Copy</span></a></tal:block>
-        <tal:block tal:condition="btn_cut"><a href="javascript:fCutObjects();"><span i18n:translate="" tal:omit-tag="">Cut</span></a></tal:block>
-        <tal:block tal:condition="btn_paste"><a href="javascript:fPasteObjects();"><span i18n:translate="" tal:omit-tag="">Paste</span></a></tal:block>
-        <tal:block tal:condition="btn_delete"><a href="javascript:fDeleteObjects();"><span i18n:translate="" tal:omit-tag="">Delete</span></a></tal:block>
-        <tal:block tal:condition="python: here.rename_id and btn_delete"><a href="javascript:fRenameObjects();"><span i18n:translate="" tal:omit-tag="">Rename</span></a></tal:block>
+        <tal:block tal:condition="btn_select"><a href="javascript:toggleSelect();"><span i18n:translate="">Select all</span></a></tal:block>
+        <tal:block tal:condition="btn_copy"><a href="javascript:fCopyObjects();"><span i18n:translate="">Copy</span></a></tal:block>
+        <tal:block tal:condition="btn_cut"><a href="javascript:fCutObjects();"><span i18n:translate="">Cut</span></a></tal:block>
+        <tal:block tal:condition="btn_paste"><a href="javascript:fPasteObjects();"><span i18n:translate="">Paste</span></a></tal:block>
+        <tal:block tal:condition="btn_delete"><a href="javascript:fDeleteObjects();"><span i18n:translate="">Delete</span></a></tal:block>
+        <tal:block tal:condition="python: here.rename_id and btn_delete"><a href="javascript:fRenameObjects();"><span i18n:translate="">Rename</span></a></tal:block>
     </div>
 </div>
 
