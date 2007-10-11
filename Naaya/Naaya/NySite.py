@@ -2549,10 +2549,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         l_content = email_template.body
         l_content = l_content.replace('@@ITEMTITLEORID@@', p_item.title_or_id())
         l_content = l_content.replace('@@CONTAINERPATH@@', p_container_path)
-        l_content = l_content.replace('@@UPLOADTIME@@', str(self.utGetTodayDate()))
-        l_content = l_content.replace('@@CONTAINERBASKETPATH@@', p_container_basketpath)
+        l_content = l_content.replace('@@UPLOADTIME@@', str(self.utShowFullDateTime(self.utGetTodayDate())))
+        if (hasattr(p_item, 'approved') and p_item.approved == 0):
+            l_content = l_content.replace('@@CONTAINERBASKETPATH@@', p_container_basketpath)
+        else:
+            l_content = self.utRemoveLineInString('@@CONTAINERBASKETPATH@@', l_content)
         self.getEmailTool().sendEmail(l_content, p_to, p_from, l_subject)
-
     #pluggable content
     def get_pluggable_content(self):
         #information about the available types
