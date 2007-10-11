@@ -78,6 +78,15 @@ class comment_item(utils):
                 self.utXmlEncode(self.author),
                 self.utXmlEncode(self.date))
 
+    def title_or_id(self):
+        """
+        Returns title or id.
+        """
+        if not self.title:
+            return self.id
+        else:
+            return self.title
+
 InitializeClass(comment_item)
 
 class NyComments:
@@ -173,6 +182,7 @@ class NyComments:
         item = comment_item(id, title, body, author, date)
         self.__comments_collection[id] = item
         self._p_changed = 1
+        return item
 
     security.declarePrivate('update_comment_item')
     def update_comment_item(self, id, title, body):
@@ -244,8 +254,9 @@ class NyComments:
         if author is None: author = self.REQUEST.AUTHENTICATED_USER.getUserName()
         if date is None: date = self.utGetTodayDate()
         else: date = self.utGetDate(date)
-        self.add_comment_item(id, title, body, author, date)
+        ob = self.add_comment_item(id, title, body, author, date)
         self.recatalogNyObject(self)
+        self.notifyFolderMaintainer(self, ob)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
