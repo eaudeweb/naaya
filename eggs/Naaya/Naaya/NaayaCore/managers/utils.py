@@ -137,6 +137,17 @@ class list_utils:
                 u.append(x)
         return u
 
+    def utRemoveLineInString(self, p_keyword, p_string):
+        """ """
+        l_str_lines = p_string.splitlines(1)
+        l_str_refined = ''
+        for ln in l_str_lines:
+            if ln.find(p_keyword) != -1:
+                l_str_lines.remove(ln)
+        for st in l_str_lines:
+            l_str_refined = l_str_refined + st
+        return l_str_refined
+
     def utEliminateDuplicatesByURL(self, p_objects):
         """ eliminate duplicates from a list of objects """
         dict = {}
