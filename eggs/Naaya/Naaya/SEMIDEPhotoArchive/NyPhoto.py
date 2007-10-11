@@ -69,6 +69,7 @@ def addNyPhoto(self, id='', title='', author='', source='', description='', sort
     #extra settings
     ob = self._getOb(id)
     ob.update_data(file)
+    ob.pregenerate_displays()
     ob.submitThis()
     if discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
@@ -156,11 +157,17 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, NyFSImage):
         newimg.seek(0)
         return newimg
 
+    security.declarePrivate('pregenerate_displays')
+    def pregenerate_displays(self):
+        #pregenerate and stores all types of display
+        for display in self.get_displays():
+            self.__generate_display(display)
+        self._p_changed = 1
+
     def __generate_display(self, display):
         #generates and stores a display
         self.__photos[display] = NyFSImage('10', '', '')
         self.__photos[display].update_data(self.__resize(display))
-        self._p_changed = 1
 
     #api
     def get_displays(self):
@@ -237,14 +244,15 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, NyFSImage):
             raise ResourceLockedError, "File is locked via WebDAV"
         self.update_data(file)
         self.managePurgeDisplays()
+        self.pregenerate_displays()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
-    
+
     def manage_beforeDelete(self, item, container):
         for photo in self.__photos.values():
             photo.manage_beforeDelete(photo, self)
         NyFSImage.manage_beforeDelete(self, item, container)
         NyPhoto.inheritedAttribute('manage_beforeDelete')(self, item, container)
-        
+
     security.declareProtected(view_management_screens, 'manageDisplays')
     def manageDisplays(self, display=None, width=None, height=None, REQUEST=None):
         """ """
@@ -316,6 +324,7 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, NyFSImage):
                 if file.filename != '':
                     self.update_data(file)
                     self.managePurgeDisplays()
+                    self.pregenerate_displays()
         if lang is None: lang = self.get_default_language()
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
@@ -346,6 +355,7 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, NyFSImage):
         if display and self.displays.has_key(display):
             if not self.is_generated(display):
                 self.__generate_display(display)
+                self._p_changed = 1
             return self.__photos[display].index_html(REQUEST, RESPONSE)
         return NyPhoto.inheritedAttribute('index_html')(self, REQUEST, RESPONSE)
 
