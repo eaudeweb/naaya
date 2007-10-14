@@ -15,8 +15,9 @@
 #
 # Authors:
 #
-# Cornel Nitu, Finsiel Romania
-# Dragos Chirila, Finsiel Romania
+# Cornel Nitu, Eau de Web
+# Dragos Chirila
+# Alec Ghica, Eau de Web
 
 #Python imports
 from copy import copy
@@ -712,6 +713,26 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         """
         try: self.manage_delObjects('logo.gif')
         except: pass
+
+    security.declareProtected(view_management_screens, 'manage_edit_properties')
+    def manage_edit_properties(self, title='', description='', coverage=''keywords='', sortorder='')
+        """ Changes just the properties provided as parameters """
+        lang = self.gl_get_selected_language()
+        if not self.checkPermissionEditObject():
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+        if title:
+            self._setLocalPropValue('title', lang, title)
+        if description:
+            self._setLocalPropValue('description', lang, description)
+        if coverage:
+            self._setLocalPropValue('coverage', lang, coverage)
+        if keywords:
+            self._setLocalPropValue('keywords', lang, keywords)
+        if sortorder:
+            try: sortorder = abs(int(sortorder))
+            except: sortorder = DEFAULT_SORTORDER
+            self.sortorder = sortorder
+        self.recatalogNyObject(self)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
