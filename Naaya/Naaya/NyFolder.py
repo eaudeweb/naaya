@@ -715,7 +715,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         except: pass
 
     security.declareProtected(view_management_screens, 'manage_edit_properties')
-    def manage_edit_properties(self, title='', description='', coverage=''keywords='', sortorder='')
+    def manage_edit_properties(self, title='', description='', coverage=''keywords='', sortorder=''):
         """ Changes just the properties provided as parameters """
         lang = self.gl_get_selected_language()
         if not self.checkPermissionEditObject():
