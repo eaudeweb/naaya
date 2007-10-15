@@ -103,11 +103,14 @@ a:visited {
 #container {
 	width: 100%;
 	height: auto;
-	background: url(dot-bg.gif) repeat-y 82%;
+	background: url(dot-bg.gif) repeat-y 81.5%;
 	margin: 0px auto;
 	color: #333;
 	border-left: 1px solid #666666;
 	border-right: 1px solid #666666;
+}
+* html #container { 
+	background: url(dot-bg.gif) repeat-y 82%;
 }
 /* center part and content */
 #middle_port {
@@ -253,6 +256,9 @@ a:visited {
 	padding: 0;
 	width: 21%;
 	float: left;
+}
+* html #right_port { 
+	margin-left: 0.7%;
 }
 
 .right_portlet {
