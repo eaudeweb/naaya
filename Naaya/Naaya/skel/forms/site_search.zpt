@@ -1,5 +1,9 @@
 <span tal:replace="structure here/standard_html_header"/>
 
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+
 <h1 i18n:translate="">Free text search in this portal</h1>
 
 <tal:block tal:define="query python:request.get('query', '');
@@ -135,8 +139,8 @@
 				<option value="max" tal:attributes="selected python:releasedate_range=='max'" i18n:translate="">before</option>
 				<option value="min" tal:attributes="selected python:releasedate_range=='min'" i18n:translate="">after</option>
 			</select>
-			<input type="text" name="releasedate" id="releasedate" size="10" tal:attributes="value releasedate" style="margin:0;" />
-			<em i18n:translate="">(dd/mm/yyyy)</em>
+			<input type="text" name="releasedate" class="vDateField" id="releasedate" size="10" tal:attributes="value releasedate" style="margin:0;" />
+			<noscript><em i18n:translate="">(dd/mm/yyyy)</em></noscript>
 		</div>
 		<div style="margin-top:15px;">
 			<strong><label for="meta_types" i18n:translate="">Content type(s):</label></strong><br />

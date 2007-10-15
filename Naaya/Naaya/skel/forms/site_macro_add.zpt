@@ -2,6 +2,10 @@
 
 <tal:block tal:replace="structure here/standard_html_header"/>
 
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+
 <h1 metal:define-slot="title">add object</h1>
 
 <p metal:define-slot="description">description</p>
@@ -72,8 +76,8 @@ function fSet(ctrl, value)
     </tal:block>
 </div>
 <div class="field">
-    <label for="releasedate"><span i18n:translate="" tal:omit-tag="">Release date (<em>dd/mm/yyyy</em>)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'releasedate')" class="mandatory_field"> *</span></label>
-    <input type="text" name="releasedate" id="releasedate" size="20" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" />
+    <label for="releasedate"><span i18n:translate="" tal:omit-tag="">Release date <noscript>(<em>dd/mm/yyyy</em>)</noscript></span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'releasedate')" class="mandatory_field"> *</span></label>
+    <input type="text" name="releasedate" class="vDateField" id="releasedate" size="20" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" />
 </div>
 <div class="field-inline">
     <label for="discussion"><span i18n:translate="" tal:omit-tag="">Open for comments</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'discussion')" class="mandatory_field"> *</span></label>
