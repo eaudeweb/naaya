@@ -51,14 +51,14 @@
 		<span i18n:translate="" tal:omit-tag="">of</span>
 		<strong tal:content="paging_total" />.
 	</div>
-	<div>
+	<div class="pagination">
 		<span i18n:translate="" tal:omit-tag="">Pages</span>
-		<span tal:condition="python:paging_prev!=-1"><a tal:define="start python:(paging_current_page-1)*paging_records_page" tal:attributes="href string:${site_url}/admin_translations_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${query_string}" i18n:translate="">Previous</a></span>
+		<span tal:condition="python:paging_prev!=-1"><a tal:define="start python:(paging_current_page-1)*paging_records_page" tal:attributes="href string:${site_url}/admin_translations_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${query_string}" i18n:translate="">&laquo; previous</a></span>
 		<span tal:repeat="page paging_pages">
 			<span tal:condition="python:page==paging_current_page" tal:content="python:page+1" />
 			<a tal:define="start python:paging_records_page*page" tal:attributes="href string:${site_url}/admin_translations_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${query_string}" tal:condition="python:page!=paging_current_page" tal:content="python:page+1" />
 		</span>
-		<span tal:condition="python:paging_next!=-1"><a tal:define="start python:(paging_current_page+1)*paging_records_page" tal:attributes="href string:${site_url}/admin_translations_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${query_string}" i18n:translate="">Next</a></span>
+		<span tal:condition="python:paging_next!=-1"><a tal:define="start python:(paging_current_page+1)*paging_records_page" tal:attributes="href string:${site_url}/admin_translations_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${query_string}" i18n:translate="">next &raquo;</a></span>
 	</div>
 </div>
 <table cellspacing="0" border="0" width="95%">

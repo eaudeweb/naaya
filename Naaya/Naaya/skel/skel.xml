@@ -92,19 +92,24 @@
 			<template id="folder_administration_macro" title="Folder administration macro page"/>
 			<scheme id="scheme" title="Scheme">
 				<style id="style" title="Main CSS"/>
+				<style id="common" title="Common CSS"/>
 				<style id="print" title="CSS for print media"/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="tableft.gif" title="Tabbed menu item"/>
 				<image id="tableft_on.gif" title="Tabbed menu item"/>
 				<image id="tabright.gif" title="Tabbed menu item"/>
 				<image id="tabright_on.gif" title="Tabbed menu item"/>
-				<image id="addcomment.gif" title=""/>
-				<image id="comment.gif" title=""/>
-				<image id="logintoadd.gif" title=""/>
-				<image id="trash.gif" title=""/>
+				<image id="addcomment.gif" title="Add comment"/>
+				<image id="comment.gif" title="Comment icon"/>
+				<image id="logintoadd.gif" title="Login to add"/>
+				<image id="trash.gif" title="Trash"/>
 				<image id="sort_asc.gif" title="Sort in ascending order"/>
 				<image id="sort_desc.gif" title="Sort in descending order"/>
 				<image id="translate.gif" title="Translating language"/>
+				<image id="header-bg.gif" title="Header background"/>
+				<image id="left-li-bg.gif" title="Left background"/>
+				<image id="menunav-a-hover.gif" title="Menu hover"/>
+				<image id="menunav-bg.gif" title="Menunav background"/>
 			</scheme>
 		</skin>
 	</layout>
@@ -143,7 +148,6 @@
 		</linkslist>
 		<linkslist id="menunav_links" title="Menu navigation links" portlet="">
 			<link id="102" title="Login" description="Login page" url="login_html" relative="0" permission="" order="2"/>
-			<link id="108" title="Other searches" description="" url="/external_search_html" relative="1" permission="" order="8"/>
 			<link id="109" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="9"/>
 			<link id="110" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="10"/>
 		</linkslist>

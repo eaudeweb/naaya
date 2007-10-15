@@ -7,15 +7,21 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 </head>
 <body>
+<div id="wrapper">
+<div id="container">
 <div id="middle_port">
 
 	<!--SITE_HEADERFOOTER_MARKER-->
 
 </div>
-<div id="last_modified">Page last modified: dd-mm-yyyy </div>
+<div class="cleaner"></div>
+</div>
+</div> 
 <div id="footer">
-	[<a tal:attributes="href string:${site_url}/info/contact" i18n:translate="">Contact us</a>]
-	[<a tal:attributes="href string:${site_url}/info/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>]
+	<div class="footer_menu">
+		<a tal:attributes="href string:${site_url}/info/contact" i18n:translate="">Contact us</a>
+		<a tal:attributes="href string:${site_url}/info/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>
+	</div>
 </div>
 </body>
 </html>

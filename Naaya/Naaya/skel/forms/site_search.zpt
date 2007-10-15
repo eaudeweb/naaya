@@ -1,77 +1,18 @@
 <span tal:replace="structure here/standard_html_header"/>
 
-<fieldset style="width: 30%; float: right; background-color: #eeeeee;">
-<legend i18n:translate="">Search tips:</legend>
-<table cellpadding="2">
-<tr>
-	<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong>and</strong> water</td>
-	<td valign="top" i18n:translate="">the two words occur in the document in any order but not necessarily together</td>
-</tr>
-<tr>
-	<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish <strong>or</strong> water</td>
-	<td valign="top" i18n:translate="">either of the words occur in the document</td>
-</tr>
-<tr>
-	<td valign="top" style="border: 1px dashed black;" i18n:translate="">fish and <strong>not</strong> water</td>
-	<td valign="top" i18n:translate="">the word fish and not the word water occur</td>
-</tr>
-<tr>
-	<td valign="top" style="border: 1px dashed black;" i18n:translate="">wate<strong>*</strong></td>
-	<td valign="top" i18n:translate="">everything starting with <em>wate</em></td>
-</tr>
-</table>
-</fieldset>
-
 <h1 i18n:translate="">Free text search in this portal</h1>
-
-<p i18n:translate="">
-	This search is performed on the current website.
-</p>
 
 <tal:block tal:define="query python:request.get('query', '');
 	languages python:here.utConvertToList(request.get('languages', [here.gl_get_selected_language()]));
 	releasedate python:request.get('releasedate', None);
 	releasedate_range python:request.get('releasedate_range', None);
-	meta_types python:here.utConvertToList(request.get('meta_types', here.searchable_content));
+	meta_types_list python:[meta for meta in here.searchable_content if meta.replace(' ','_') in request.form.keys()];
+	meta_types python:test(len(meta_types_list), meta_types_list, here.searchable_content);
 	start python:request.get('start', 0);
 	skey python:request.get('skey', 'title');
 	rkey python:request.get('rkey', '');
 	querystring python:'query=%s&amp;languages=%s&amp;releasedate=%s&amp;releasedate_range=%s&amp;meta_types=%s' % (query, '&languages='.join(languages), here.utNoneToEmpty(releasedate), here.utNoneToEmpty(releasedate_range), '&meta_types='.join(meta_types));">
-
-<form method="get" name="frmSearch" action="search_html">
-	<strong i18n:translate="">Query</strong>
-	<input type="text" name="query:utf8:ustring" id="query" tal:attributes="value python:request.get('query', '')" size="40" maxLength="100" />
-	<div style="margin-top:10px;">
-		<strong><label i18n:translate="">Search items translated in the following language(s)</label></strong><br />
-		<tal:block repeat="item here/gl_get_languages_mapping">
-		<input name="languages" type="checkbox" tal:attributes="value item/code; checked python:item['code'] in languages; id string:language_${item/code}" style="margin:0 3px;" />
-		<label tal:attributes="for string:language_${item/code}" tal:content="item/name" />
-		</tal:block>
-	</div>
-	<div style="margin-top:10px;">
-		<strong><label for="releasedate" i18n:translate="">Released</label></strong>
-		<select name="releasedate_range" id="releasedate_range" style="vertical-align:middle;">
-			<option value="max" tal:attributes="selected python:releasedate_range=='max'" i18n:translate="">before</option>
-			<option value="min" tal:attributes="selected python:releasedate_range=='min'" i18n:translate="">after</option>
-		</select>
-		<input type="text" name="releasedate" id="releasedate" size="10" tal:attributes="value releasedate" style="margin:0;" />
-		<em i18n:translate="">(dd/mm/yyyy)</em>
-	</div>
-	<div style="margin-top:10px;">
-		<strong><label for="meta_types" i18n:translate="">Content type(s)</label></strong>
-		<select name="meta_types" multiple="multiple" size="5" style="vertical-align:top;">
-		<tal:block repeat="item here/searchable_content">
-			<option tal:attributes="value item; selected python:item in meta_types"
-				tal:content="python:here.get_label_for_meta_type(item)" />
-		</tal:block>
-		</select>
-	</div>
-	<br />
-	<input type="submit" value="Search" class="styled_button" i18n:attributes="value" />
-	<input type="hidden" name="sort_order" value="" />
-	<input type="hidden" name="sort_by" value="" />
-</form>
-
+<div class="searchQuery">
 <span tal:condition="query">
 <tal:block define="results python:here.internalSearch(query, languages, releasedate, releasedate_range, meta_types, skey, rkey, start);
 	age here/getItemsAge; number_of_results here/getNumberOfResults;
@@ -87,16 +28,15 @@
 	records python:results[1];
 	sortdata python:({'sortable': 1, 'key': 'meta_type', 'label': 'Type'}, {'sortable': 1, 'key': 'title', 'label': 'Title/Abstract'}, {'sortable': 0, 'key': '', 'label': 'Translations in'}, {'sortable': 1, 'key': 'bobobase_modification_time', 'label': 'Last updated'},)">
 
-<h2 i18n:translate="">Search Results</h2>
-
+<h2 i18n:translate="" style="padding-left: 0.5em; margin-bottom: 1em;"><strong>Search Results:</strong></h2>
 <tal:block tal:condition="python:paging_total!=0">
-	<div>
+	<!--<div>
 		<span i18n:translate="" tal:omit-tag="">Age:</span>
 		<span tal:replace="python:here.internal_get_items_age(records, age)"/>
 		<span i18n:translate="" tal:omit-tag="">% are more then</span>
 		<span tal:replace="age"/>
 		<span i18n:translate="" tal:omit-tag="">month(s) old</span>
-	</div>
+	</div>-->
 	<table class="sortable" border="0" width="100%">
 		<thead>
 			<tr>
@@ -142,17 +82,18 @@
 			</tr>
 		</tbody>
 	</table>
-	<div>
+	<div style="padding-top: 1em;">
 		<strong i18n:translate="">Results:</strong>
 		<strong tal:content="python:paging_start+1" />
 		-
 		<strong tal:content="paging_upper" />
 		<span i18n:translate="" tal:omit-tag="">of</span>
-		<strong tal:content="paging_total" /><br />
+		<strong tal:content="paging_total" />
+		<div class="pagination">
 		<span i18n:translate="" tal:omit-tag="">Page:</span>
 		<span tal:condition="python:paging_prev!=-1">
 			<a tal:define="url python:here.absolute_url; start_batch python:(paging_current_page-1)*paging_records_page"
-				tal:attributes="href string:${url}/search_html?start=${start_batch}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${querystring}" i18n:translate="">&lt;&lt;Previous</a>
+				tal:attributes="href string:${url}/search_html?start=${start_batch}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${querystring}" i18n:translate="">&laquo; previous</a>
 		</span>
 		<span tal:repeat="page paging_pages">
 			<a class="paging-link-off" tal:condition="python:paging_current_page==page" tal:content="python:page+1"></a>
@@ -162,16 +103,86 @@
 		</span>
 		<span tal:condition="python:paging_next!=-1">
 			<a tal:define="url here/absolute_url; start_batch python:(paging_current_page+1)*paging_records_page"
-				tal:attributes="href string:${url}/search_html?start=${start_batch}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${querystring}" i18n:translate="">Next&gt;&gt;</a>
+				tal:attributes="href string:${url}/search_html?start=${start_batch}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${querystring}" i18n:translate="">next &raquo;</a>
 		</span>
+		</div>
 	</div>
 </tal:block>
 <tal:block tal:condition="python:paging_total==0" i18n:translate="">
-	No results were found for this query.
+	<span style="font-size: 1.2em;"><strong>No results were found for this query.</strong></span>
 </tal:block>
-
+<p i18n:translate="">
+	This search is performed on the current website.
+</p>
 </tal:block>
 </span>
+
+<div class="searchQuery">
+	<h2 style="margin-bottom: 1em;"><strong>Search filters</strong></h2>
+	<form method="get" name="frmSearch" action="search_html">
+		<strong i18n:translate="">Enter your search term(s):</strong><br />
+		<input type="text" name="query:utf8:ustring" id="query" tal:attributes="value python:request.get('query', '')" size="40" maxLength="100" />
+		<div style="margin-top:15px;">
+			<strong><label i18n:translate="">Search items in:</label></strong><br />
+			<tal:block repeat="item here/gl_get_languages_mapping">
+			<input name="languages" type="checkbox" tal:attributes="value item/code; checked python:item['code'] in languages; id string:language_${item/code}" style="margin:0 3px;" />
+			<label tal:attributes="for string:language_${item/code}" tal:content="item/name" />
+			</tal:block>
+		</div>
+		<div style="margin-top:15px;">
+			<strong><label for="releasedate" i18n:translate="">Published:</label></strong><br />
+			<select name="releasedate_range" id="releasedate_range" style="vertical-align:middle;">
+				<option value="max" tal:attributes="selected python:releasedate_range=='max'" i18n:translate="">before</option>
+				<option value="min" tal:attributes="selected python:releasedate_range=='min'" i18n:translate="">after</option>
+			</select>
+			<input type="text" name="releasedate" id="releasedate" size="10" tal:attributes="value releasedate" style="margin:0;" />
+			<em i18n:translate="">(dd/mm/yyyy)</em>
+		</div>
+		<div style="margin-top:15px;">
+			<strong><label for="meta_types" i18n:translate="">Content type(s):</label></strong><br />
+			<ul style="list-style-type:none;" id="meta_types">
+		<tal:block repeat="item here/searchable_content">
+			<li tal:define="item_label python:here.get_label_for_meta_type(item)">
+			<input type="checkbox" style="margin:0 3px;"
+				   tal:attributes="checked python:item in meta_types;
+									id python:item.replace(' ', '_');
+									name python:item.replace(' ', '_');" />
+			<label tal:attributes="for python:item.replace(' ', '_')" tal:content="item_label"></label></li>
+		</tal:block>
+		</ul>
+
+		</div>
+		<br />
+		<input type="submit" value="Search" class="styled_button" i18n:attributes="value" />
+		<input type="hidden" name="sort_order" value="" />
+		<input type="hidden" name="sort_by" value="" />
+	</form>
+	
+</div>
+
+</div>
+<div class="tooltip" style="float: left;">
+		<strong>Search tips</strong>
+		<table cellpadding="0" cellspacing="0">
+			<tr>
+				<td valign="top" class="tip_item" i18n:translate="">fish <strong>AND</strong> water</td>
+				<td valign="top" i18n:translate="">the two words occur in the document in any order but not necessarily together</td>
+			</tr>
+			<tr>
+				<td valign="top" class="tip_item" i18n:translate="">fish <strong>OR</strong> water</td>
+				<td valign="top" i18n:translate="">either of the words occur in the document</td>
+			</tr>
+			<tr>
+				<td valign="top" class="tip_item" i18n:translate="">fish and <strong>NOT</strong> water</td>
+				<td valign="top" i18n:translate="">the word fish and not the word water occur</td>
+			</tr>
+			<tr>
+				<td valign="top" class="tip_item" i18n:translate="">wate<strong>*</strong></td>
+				<td valign="top" i18n:translate="">everything starting with <em>wate</em></td>
+			</tr>
+		</table>
+	</div>
+<br clear="all" />
 
 </tal:block>
 
