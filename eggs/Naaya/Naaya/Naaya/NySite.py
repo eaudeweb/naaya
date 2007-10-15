@@ -209,7 +209,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self, exclude_meta_types=[]):
         """ """
+        #load default skeleton
         self.loadSkeleton(join(NAAYA_PRODUCT_PATH, 'skel'), exclude_meta_types)
+        #set default main topics
+        self.getPropertiesTool().manageMainTopics(['info'])
 
     security.declarePrivate('loadSkeleton')
     def loadSkeleton(self, skel_path, exclude_meta_types=[]):
