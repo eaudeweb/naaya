@@ -140,8 +140,13 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
     #zmi actions
     security.declareProtected(manage_users, 'manage_addUser')
     def manage_addUser(self, name='', password='', confirm='', roles=[], domains=[], firstname='',
-        lastname='', email='', strict=0, REQUEST=None):
+        lastname='', email='', strict=0, REQUEST=None, **kwargs):
         """ """
+        # Verify captcha
+        captcha_gen_word = self.getSession('captcha', '')
+        captcha_prov_word = kwargs.get('verify_word', '')
+        if captcha_gen_word != captcha_prov_word:
+            raise Exception, 'The word you typed does not match with the one shown in the image. Please try again.'
         if not firstname:
             raise Exception, 'The first name must be specified'
         if not lastname:
