@@ -3,7 +3,8 @@
 <h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
 
 <tal:block metal:fill-slot="section"
-	tal:define="items_perpage python:here.REQUEST.form.get('items_perpage', 15);
+	tal:define="items_perpage_values python:(15, 30, 50, 100);
+				items_perpage python:here.REQUEST.form.get('items_perpage', 15);
 				items_perpage python:int(items_perpage);
 				site_url here/getSitePath;
 				start python:request.get('start', 0);
@@ -46,15 +47,14 @@
 		</label>
 		<input type="text" size="35" name="query:utf8:ustring" id="query_users" tal:attributes="value query" />
 		<select id="items_perpage" name="items_perpage" class="itemsPerPage">
-			<option value="15" 
-				i18n:translate="">15 results / page</option>
-			<option value="30" 
-				i18n:translate="">30 results / page</option>
-			<option value="50" 
-				i18n:translate="">50 results / page</option>
-			<option value="100" 
-				i18n:translate="">100 results / page</option>
+			<tal:block repeat="item items_perpage_values">
+				<option tal:attributes="value item; 
+						selected python:test(items_perpage == item, 1, None)" 
+						tal:content="string:${item} results / page" 
+						i18n:translate="" />
+			</tal:block>
 			<option value="100000" 
+				tal:attributes="selected python:test(items_perpage == 100000, 1, None)"
 				i18n:translate="">all results</option>
 		</select>
 		<input type="submit" value="Search" i18n:attributes="value" />
