@@ -27,11 +27,30 @@
 	</tr>
 	<tr>
 		<td i18n:translate="">Password</td>
-		<td><input type="password" name="password" size="30" value="" maxlength="255"></td>
+		<td><input type="password" name="password" size="40" value="" maxlength="255"></td>
 	</tr>
 	<tr>
 		<td i18n:translate="">Password verification</td>
-		<td><input type="password" name="confirm" value="" size="30" maxlength="255"></td>
+		<td><input type="password" name="confirm" value="" size="40" maxlength="255"></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>
+			<img tal:attributes="src string:${here/getSitePath}/getCaptcha" alt="" />
+		</td>
+	</tr>
+	<tr style="vertical-align: top;">
+		<td>
+			<label for="verify_word">
+				<span i18n:translate="" tal:omit-tag="">Word verification</span>
+				<span class="mandatory_field"> *</span>
+			</label>
+		</td>
+		<td>
+			<input type="text" name="verify_word" 
+				size="40" id="verify_word" value="" />(required)<br />
+			<em i18n:translate="">please type the word you see in the above picture.</em>
+		</td>
 	</tr>
 	<tr>
 		<td></td>

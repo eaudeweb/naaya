@@ -1113,9 +1113,10 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
             with the account infomation
         """
         #create an account without any role
+        verify_word = REQUEST.form.get('verify_word', '')
         try:
             self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname,
-                lastname, email)
+                lastname, email, verify_word=verify_word)
         except Exception, error:
             err = error
         else:
