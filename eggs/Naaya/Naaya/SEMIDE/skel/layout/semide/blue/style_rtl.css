@@ -101,6 +101,10 @@ a:visited {
 	color: #557ba1;
 }
 
+.itemsPerPage {
+        margin-top: 7px;
+}
+
 input {
 	margin-top: 7px;
 	margin-left: 4px;

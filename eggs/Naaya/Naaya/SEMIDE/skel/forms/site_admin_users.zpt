@@ -3,13 +3,15 @@
 <h1 metal:fill-slot="title" i18n:translate="">Users' management</h1>
 
 <tal:block metal:fill-slot="section"
-	tal:define="site_url here/getSitePath;
+	tal:define="items_perpage python:here.REQUEST.form.get('items_perpage', 15);
+				items_perpage python:int(items_perpage);
+				site_url here/getSitePath;
 				start python:request.get('start', 0);
 				query python:request.get('query', '');
 				skey python:request.get('skey', 'user');
 				rkey python:request.get('rkey', '');
 				query_string python:here.process_querystring(request.QUERY_STRING);
-				result python:here.page_something(here.getSemideUsers(query, skey, rkey), start, p_perpage=15);
+				result python:here.page_something(here.getSemideUsers(query, skey, rkey), start, p_perpage=items_perpage);
 				paging python:result[0];
 				paging_start python:paging[0]+1;
 				paging_upper python:paging[1];
@@ -43,6 +45,18 @@
 			<span i18n:translate="" tal:omit-tag="">Search users</span>
 		</label>
 		<input type="text" size="35" name="query:utf8:ustring" id="query_users" tal:attributes="value query" />
+		<select id="items_perpage" name="items_perpage" class="itemsPerPage">
+			<option value="15" 
+				i18n:translate="">15 results / page</option>
+			<option value="30" 
+				i18n:translate="">30 results / page</option>
+			<option value="50" 
+				i18n:translate="">50 results / page</option>
+			<option value="100" 
+				i18n:translate="">100 results / page</option>
+			<option value="100000" 
+				i18n:translate="">all results</option>
+		</select>
 		<input type="submit" value="Search" i18n:attributes="value" />
 	</form>
 </p>
