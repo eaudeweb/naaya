@@ -1985,9 +1985,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_updatemaintopics')
     def admin_updatemaintopics(self, folder_url='', REQUEST=None):
         """ """
-        if folder_url not in self.maintopics:
+        if folder_url and folder_url not in self.maintopics:
             self.maintopics.append(folder_url)
-        self._p_changed = 1
+            self._p_changed = 1
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
