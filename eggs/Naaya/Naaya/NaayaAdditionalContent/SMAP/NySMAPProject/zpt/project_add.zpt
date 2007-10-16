@@ -59,10 +59,10 @@
 	</p>
 	<ul id="tree" class="treeview">
 	<tal:block repeat="priority priorities">
-	<li><span tal:content="priority/title" />
+	<li><span tal:content="priority/title" i18n:translate="" />
 		<ul tal:define="focuses python:here.getFocusesTypesList(priority.id)">
 			<tal:block repeat="fc focuses">
-			<li><input type="checkbox" name="focus:list" tal:attributes="value string:${priority/id}|@|${fc/id}" /><span tal:content="fc/title" /></li>
+			<li><input type="checkbox" name="focus:list" tal:attributes="value string:${priority/id}|@|${fc/id}" /><span tal:content="fc/title" i18n:translate="" /></li>
 			</tal:block>
 		</ul>
 	</li>

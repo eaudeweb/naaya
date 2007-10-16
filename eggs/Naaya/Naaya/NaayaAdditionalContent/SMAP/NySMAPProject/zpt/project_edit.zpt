@@ -89,10 +89,10 @@ function fSet(ctrl, value)
 	</p>
 	<ul id="tree" class="treeview">
 	<tal:block repeat="priority priorities">
-	<li><span tal:content="priority/title" tal:attributes="style python:test(priority.id in here.priority_area, 'font-weight: bold', '')" />
+	<li><span tal:content="priority/title" tal:attributes="style python:test(priority.id in here.priority_area, 'font-weight: bold', '')" i18n:translate="" />
 		<ul tal:define="focuses python:here.getFocusesTypesList(priority.id)">
 			<tal:block repeat="fc focuses">
-			<li><input type="checkbox" name="focus:list" tal:attributes="value string:${priority/id}|@|${fc/id}; checked python:test(here.checkFocus(priority.id, fc.id), 'checked', '')" /><span tal:content="fc/title" /></li>
+			<li><input type="checkbox" name="focus:list" tal:attributes="value string:${priority/id}|@|${fc/id}; checked python:test(here.checkFocus(priority.id, fc.id), 'checked', '')" /><span tal:content="fc/title" i18n:translate="" /></li>
 			</tal:block>
 		</ul>
 	</li>

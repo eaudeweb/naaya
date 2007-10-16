@@ -69,12 +69,12 @@
 	</p>
 	<ul id="tree" class="treeview">
 	<tal:block repeat="maintopic maintopics">
-	<li><span tal:content="maintopic/title"  tal:attributes="style python:test(maintopic.id in here.getSessionMainTopics(here.getSession('subtopics', '')), 'font-weight: bold', '')" />
+	<li><span tal:content="maintopic/title"  tal:attributes="style python:test(maintopic.id in here.getSessionMainTopics(here.getSession('subtopics', '')), 'font-weight: bold', '')" i18n:translate="" />
 		<ul tal:define="subtopics python:here.getExpFocusesTypesList(maintopic.id)">
 			<tal:block repeat="subtopic subtopics">
 			<li><input type="checkbox" name="subtopics:list" 
 					tal:attributes="value string:${maintopic/id}|@|${subtopic/id};
-					checked python:test(here.checkSessionSubTopics(maintopic.id, subtopic.id, here.getSession('subtopics', '')), 'checked', '')" /><span tal:content="subtopic/title" /></li>
+					checked python:test(here.checkSessionSubTopics(maintopic.id, subtopic.id, here.getSession('subtopics', '')), 'checked', '')" /><span tal:content="subtopic/title" i18n:translate="" /></li>
 			</tal:block>
 		</ul>
 	</li>
