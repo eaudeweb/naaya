@@ -54,7 +54,7 @@ function fSet(ctrl, value)
 <div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
 	<label for="coverage"><span i18n:translate="" tal:omit-tag="">Geographical coverage</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'coverage')" class="mandatory_field"> *</span></label>
 	<tal:block tal:condition="python:coverage_glossary is None">
-		<p i18n:translate=""><strong>Tip:</strong> in order to specify more values, separate them by commas</p>
+		<p><strong i18n:translate="">Tip:</strong> <span tal:omit-tag="" i18n:translate="">in order to specify more values, separate them by commas</span></p>
 	</tal:block>
 	<tal:block tal:condition="python:coverage_glossary is not None">
 		<p i18n:translate=""><strong>Tip:</strong> you can type free text in the field below or pick words from the list. In order to specify more values, separate them by commas.</p>
@@ -75,7 +75,7 @@ function fSet(ctrl, value)
 	</tal:block>
 </div>
 <div class="field">
-	<label for="releasedate"><span i18n:translate="" tal:omit-tag="">Release date <noscript>(<em>dd/mm/yyyy</em>)</noscript></span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'releasedate')" class="mandatory_field"> *</span></label>
+	<label for="releasedate"><span tal:omit-tag="" i18n:translate="">Release date</span> <noscript>(<em i18n:translate="">dd/mm/yyyy</em>)</noscript><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'releasedate')" class="mandatory_field"> *</span></label>
 	<input type="text" name="releasedate" class="vDateField" id="releasedate" size="20" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" />
 </div>
 <div class="field-inline">
