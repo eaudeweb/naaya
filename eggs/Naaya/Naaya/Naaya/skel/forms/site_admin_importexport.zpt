@@ -13,9 +13,9 @@
 </ul>
 </div>
 
-<p i18n:translate="">
-	<strong>Note:</strong> the source of the messages in this portal is <em>English</em>.
-	This page allows you to import/export translations of messages in other languages.
+<p>
+	<strong i18n:translate="">Note:</strong> <span tal:omit-tag="" i18n:translate="">the source of the messages in this portal is <em>English</em>.
+	This page allows you to import/export translations of messages in other languages.</span>
 </p>
 <fieldset>
 	<legend i18n:translate="">Export messages to PO file</legend>
