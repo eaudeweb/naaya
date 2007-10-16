@@ -32,7 +32,7 @@
 	records python:results[1];
 	sortdata python:({'sortable': 1, 'key': 'meta_type', 'label': 'Type'}, {'sortable': 1, 'key': 'title', 'label': 'Title/Abstract'}, {'sortable': 0, 'key': '', 'label': 'Translations in'}, {'sortable': 1, 'key': 'bobobase_modification_time', 'label': 'Last updated'},)">
 
-<h2 i18n:translate="" style="padding-left: 0.5em; margin-bottom: 1em;"><strong>Search Results:</strong></h2>
+<h2 style="padding-left: 0.5em; margin-bottom: 1em;"><strong i18n:translate="">Search Results:</strong></h2>
 <tal:block tal:condition="python:paging_total!=0">
 	<!--<div>
 		<span i18n:translate="" tal:omit-tag="">Age:</span>
@@ -112,8 +112,8 @@
 		</div>
 	</div>
 </tal:block>
-<tal:block tal:condition="python:paging_total==0" i18n:translate="">
-	<span style="font-size: 1.2em;"><strong>No results were found for this query.</strong></span>
+<tal:block tal:condition="python:paging_total==0">
+	<span style="font-size: 1.2em;"><strong i18n:translate="">No results were found for this query.</strong></span>
 </tal:block>
 <p i18n:translate="">
 	This search is performed on the current website.
@@ -166,7 +166,7 @@
 
 </div>
 <div class="tooltip" style="float: left;">
-		<strong>Search tips</strong>
+		<strong i18n:translate="">Search tips</strong>
 		<table cellpadding="0" cellspacing="0">
 			<tr>
 				<td valign="top" class="tip_item" i18n:translate="">fish <strong>AND</strong> water</td>

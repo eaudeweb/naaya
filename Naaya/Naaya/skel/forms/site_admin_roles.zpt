@@ -114,7 +114,7 @@ function createKey(key)
 	</td>
 </tr>
 <tr>
-	<td valign="top" width="20%" i18n:translate="">Location:(folder)<br />e.g. /folderURL</td>
+	<td valign="top" width="20%"><span tal:omit-tag="" i18n:translate="">Location:(folder)</span><br /><span tal:omit-tag="" i18n:translate="">e.g. /folderURL</span></td>
 	<td valign="top" width="*">
 		<input type="radio" name="loc" value="allsite" checked="checked" onclick="emptyLocation();"  i18n:translate=""/> Entire portal<br />
 		<input type=radio name="loc" value="other" i18n:translate="" /> Pick other...<br />

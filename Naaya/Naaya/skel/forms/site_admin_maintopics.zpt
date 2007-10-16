@@ -89,9 +89,9 @@ function showDelBox(){
 <input type="submit" value="Save positions" i18n:attributes="value" tal:attributes="onclick string:fSave('${site_url}/admin_ordermaintopics')" />
 <input type="submit" value="Remove" i18n:attributes="value" tal:attributes="onclick string:fSave('${site_url}/admin_deletemaintopics')" />
 </form>
-<p i18n:translate="">
-	<strong>Tip:</strong> when you delete a main section, the corresponding folder will be just
-	taken out from the main sections' list, not physically deleted.
+<p>
+	<strong i18n:translate="">Tip:</strong> <span tal:omit-tag="" i18n:translate="">when you delete a main section, the corresponding folder will be just
+	taken out from the main sections' list, not physically deleted.</span>
 </p>
 <span tal:replace="structure python:here.DragDropCore('maintopicslist')" />
 

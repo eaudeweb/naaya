@@ -23,15 +23,15 @@ Change the settings for the notification services offered by this portal in the 
 <legend i18n:translate="">Settings</legend>
 <table border="0" cellspacing="2" cellpadding="2" width="90%">
     <tr>
-        <td align="center" i18n:translate=""><strong>Subject line for notifications</strong></td>
+        <td align="center"><strong i18n:translate="">Subject line for notifications</strong></td>
         <td width="50%" align="center"><input type="text" name="subject_notifications:utf8:ustring" id="subject_notifications" size="30" tal:attributes="value ob_notifications/subject_notifications" /></td>
     </tr>
     <tr>
-        <td align="center" i18n:translate=""><strong>Subject line for newsletter</strong></td>
+        <td align="center"><strong i18n:translate="">Subject line for newsletter</strong></td>
         <td width="50%" align="center"><input type="text" name="subject_newsletter:utf8:ustring" id="subject_newsletter" size="30" tal:attributes="value ob_notifications/subject_newsletter" /></td>
     </tr>
     <tr>
-        <td align="center" i18n:translate=""><strong>From field</strong></td>
+        <td align="center"><strong i18n:translate="">From field</strong></td>
         <td width="50%" align="center"><input type="text" name="from_email" id="from_email" size="30" tal:attributes="value ob_notifications/from_email" /></td>
     </tr>
 </table>
@@ -41,7 +41,7 @@ Change the settings for the notification services offered by this portal in the 
 <legend i18n:translate="">Metatypes</legend>
 <table border="0" cellspacing="2" cellpadding="2" width="90%">
 	<tr>
-		<td align="center" i18n:translate=""><strong>News metatypes</strong></td>
+		<td align="center"><strong i18n:translate="">News metatypes</strong></td>
 		<td width="50%" align="center">
 			<select name="newsmetatypes" size="5" multiple="true">
 				<option tal:repeat="item here/get_pluggable_metatypes"
@@ -51,7 +51,7 @@ Change the settings for the notification services offered by this portal in the 
 		</td>
 	</tr>
     <tr>		
-        <td align="center" i18n:translate=""><strong>Upload metatypes</strong></td>
+        <td align="center"><strong i18n:translate="">Upload metatypes</strong></td>
         <td width="50%" align="center">
 			<select name="uploadmetatypes" size="5" multiple="true">
 				<option tal:repeat="item here/get_pluggable_metatypes"
@@ -61,7 +61,7 @@ Change the settings for the notification services offered by this portal in the 
 		</td>
     </tr>
     <tr>    
-		<td align="center" i18n:translate=""><strong>Folder metatypes</strong></td>
+		<td align="center"><strong i18n:translate="">Folder metatypes</strong></td>
         <td width="50%" align="center">
 			<select name="foldermetatypes" size="3" multiple="true">
 				<option tal:repeat="item here/get_containers_metatypes"
