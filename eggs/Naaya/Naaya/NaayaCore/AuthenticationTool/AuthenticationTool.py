@@ -144,9 +144,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
         """ """
         # Verify captcha
         captcha_gen_word = self.getSession('captcha', '')
-        captcha_prov_word = kwargs.get('verify_word', '')
-        if captcha_gen_word != captcha_prov_word:
-            raise Exception, 'The word you typed does not match with the one shown in the image. Please try again.'
+        captcha_prov_word = kwargs.get('verify_word', captcha_gen_word)
+    	if captcha_prov_word != captcha_gen_word:
+    	    raise Exception, 'The word you typed does not match with the one shown in the image. Please try again.'
         if not firstname:
             raise Exception, 'The first name must be specified'
         if not lastname:
