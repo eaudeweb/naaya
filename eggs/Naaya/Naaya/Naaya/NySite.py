@@ -147,7 +147,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self._setLocalPropValue('creator', lang, u'')
         self._setLocalPropValue('rights', lang, u'')
         self.adt_meta_types = []
-        self.search_age = 1
+        self.search_age = 12
         self.searchable_content = []
         self.numberresultsperpage = 10
         self.notify_on_errors = 1
