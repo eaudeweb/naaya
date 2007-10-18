@@ -105,6 +105,7 @@
 				<image id="trash.gif" title="Trash"/>
 				<image id="sort_asc.gif" title="Sort in ascending order"/>
 				<image id="sort_desc.gif" title="Sort in descending order"/>
+				<image id="sort_not.gif" title="Not sortable"/>
 				<image id="translate.gif" title="Translating language"/>
 				<image id="header-bg.gif" title="Header background"/>
 				<image id="left-li-bg.gif" title="Left background"/>
