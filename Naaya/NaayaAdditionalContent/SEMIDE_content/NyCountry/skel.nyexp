@@ -502,7 +502,21 @@ alert('Please select one or more items to delete.');}
 	</p>
 </tal:block>
 
-<p><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a></p>
+<p tal:define="query request/form;
+	dummy python:query.get('sl', '') and query.pop('sl');
+	dummy python:query.setdefault('skey', 'start_date');
+	dummy python:query.setdefault('rkey', 1);
+	dummy python:query.setdefault('search_by', 'projects');
+	dummy python:query.setdefault('ps_start', request.get('start', 0));
+	dummy python:query.setdefault('p_context', here.absolute_url(1));
+	query_str python:here.utUrlLibEncode(query);
+	rdf_link python:'?'.join(('search_rdf', query_str));">
+
+	<a tal:attributes="href rdf_link" target="_blank">
+		<img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"
+		i18n:attributes="alt" />
+	</a>
+</p>
 <span tal:replace="structure here/comments_box" />
 
 </div>
