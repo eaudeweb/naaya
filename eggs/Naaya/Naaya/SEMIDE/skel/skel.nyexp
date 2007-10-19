@@ -3198,8 +3198,20 @@ function fDeleteObjects()
 </p>
 </tal:block>
 
-<p>
-	<a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a>
+<p tal:define="query request/form;
+        dummy python:query.get('sl', '') and query.pop('sl');
+	dummy python:query.setdefault('skey', 'start_date');
+	dummy python:query.setdefault('rkey', 1);
+	dummy python:query.setdefault('search_by', 'projects');
+	dummy python:query.setdefault('ps_start', request.get('start', 0));
+	dummy python:query.setdefault('p_context', here.absolute_url(1));
+	query_str python:here.utUrlLibEncode(query);
+	rdf_link python:'?'.join(('search_rdf', query_str));">
+
+	<a tal:attributes="href rdf_link" target="_blank">
+		<img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"
+		i18n:attributes="alt" />
+	</a>
 
 	<tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
 	<a tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank"><img tal:attributes="src string:${here/getSitePath}/images/pdf.gif" alt="PDF View" border="0"  i18n:attributes="alt" /></a>
@@ -6531,8 +6543,19 @@ alert('Please select one or more items to delete.');}
 
 </tal:block>
 
-<p>
-	<a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a>
+<p tal:define="query request/form;
+	dummy python:query.setdefault('skey', 'news_date');
+	dummy python:query.setdefault('rkey', 1);
+	dummy python:query.setdefault('search_by', 'news');
+	dummy python:query.setdefault('ps_start', request.get('start', 0));
+	dummy python:query.setdefault('p_context', here.absolute_url(1));
+	query_str python:here.utUrlLibEncode(query);
+	rdf_link python:'?'.join(('search_rdf', query_str));">
+
+	<a tal:attributes="href rdf_link" target="_blank">
+		<img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"
+		i18n:attributes="alt" />
+	</a>
 
 	<tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
 	<a tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank"><img tal:attributes="src string:${here/getSitePath}/images/pdf.gif" alt="PDF View" border="0"  i18n:attributes="alt" /></a>
@@ -6806,8 +6829,19 @@ alert('Please select one or more items to delete.');}
 </p>
 </tal:block>
 
-<p>
-	<a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a>
+<p tal:define="query request/form;
+               dummy python:query.setdefault('skey', 'start_date');
+               dummy python:query.setdefault('rkey', 1);
+	       dummy python:query.setdefault('search_by', 'events');
+               dummy python:query.setdefault('ps_start', request.get('start', 0));
+               dummy python:query.setdefault('p_context', here.absolute_url(1));
+	       query_str python:here.utUrlLibEncode(query);
+	       rdf_link python:'?'.join(('search_rdf', query_str));">
+
+	<a tal:attributes="href rdf_link" target="_blank">
+		<img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"
+			i18n:attributes="alt" />
+	</a>
 
 	<tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
 	<a tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank"><img tal:attributes="src string:${here/getSitePath}/images/pdf.gif" alt="PDF View" border="0"  i18n:attributes="alt" /></a>
@@ -7302,8 +7336,21 @@ function MM_findObj(n, d) { //v4.01
 		</span>
 </p>
 
-<p>
-	<a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a>
+
+<p tal:define="query request/form;
+	dummy python:query.setdefault('skey', 'date');
+	dummy python:query.setdefault('rkey', 1);
+	dummy python:query.setdefault('search_by', 'resources');
+	dummy python:query.setdefault('ps_start', request.get('start', 0));
+	dummy python:query.setdefault('p_context', here.absolute_url(1));
+        dummy python:query.setdefault('mt', ['Naaya Semide Text of Laws', 'Naaya Semide Document', 'Naaya Semide Multimedia']);
+	query_str python:here.utUrlLibEncode(query);
+	rdf_link python:'?'.join(('search_rdf', query_str));">
+
+	<a tal:attributes="href rdf_link" target="_blank">
+		<img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"
+		i18n:attributes="alt" />
+	</a>
 
 	<tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
 	<a tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${sel_lang}" target="_blank"><img tal:attributes="src string:${here/getSitePath}/images/pdf.gif" alt="PDF View" border="0"  i18n:attributes="alt" /></a>

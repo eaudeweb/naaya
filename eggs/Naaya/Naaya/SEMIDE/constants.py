@@ -220,3 +220,21 @@ MARKER_BREADBAR_BGIMG_START =                     '/*s35*/'
 MARKER_BREADBAR_BGIMG_END =                       '/*e35*/'
 MARKER_BREADBAR_BGIMG_AR_START =                  '/*s48*/'
 MARKER_BREADBAR_BGIMG_AR_END =                    '/*e48*/'
+
+RDF_SEARCH_MAPPING = {
+    'projects': 'getProjectsListing',
+    'news': 'getNewsListing',
+    'events': 'getEventsListing',
+    'resources': 'getResourceListing',
+}
+
+RDF_SEARCH_QUERY_MAPPING = {
+    'sq': 'query', 
+    'mt': 'meta_types', 
+    'tp': 'textlaws_props', 
+    'dp': 'document_props', 
+    'mp': 'multimedia_propes', 
+    'sd': 'start_date', 
+    'ed': 'end_date', 
+    'sl': 'languages',
+}

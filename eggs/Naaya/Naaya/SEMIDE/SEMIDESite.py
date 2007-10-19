@@ -612,7 +612,8 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         return results
 
     security.declareProtected(view, 'getNewsListing')
-    def getNewsListing(self, query='', languages=[], nt='', nd='', nc='', skey='', rkey='', p_context=None, ps_start=''):
+    def getNewsListing(self, query='', languages=[], nt='', nd='', nc='', skey='', 
+                       rkey='', p_context=None, ps_start='', **kwargs):
         """
         Returns a list of news
         """
@@ -676,7 +677,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
     security.declareProtected(view, 'getResourceListing')
     def getResourceListing(self, query='', meta_types=[], textlaws_props=[], document_props=[],
                            multimedia_props=[], start_date=None, end_date=None, languages=[],
-                           th='', skey='', rkey='', ps_start=''):
+                           th='', skey='', rkey='', ps_start='', **kwargs):
         """
         Returns a list of resources
         """
@@ -779,7 +780,9 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         return results
 
     security.declareProtected(view, 'getEventsListing')
-    def getEventsListing(self, query='', languages=[], et='', gz='', es='', skey='', rkey=0, sd='', ed='', p_context=None, ps_start=''):
+    def getEventsListing(self, query='', languages=[], et='', gz='', es='', skey='',
+                         rkey=0, sd='', ed='', p_context=None, 
+                         ps_start='', **kwargs):
         """
         Returns a list of events
         """
@@ -915,7 +918,8 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         return results
 
     security.declareProtected(view, 'getProjectsListing')
-    def getProjectsListing(self, query='', so='', languages=[], skey='', rkey=0, archive=[], ps_start='', gz='', th='', pr=''):
+    def getProjectsListing(self, query='', so='', languages=[], skey='', rkey=0, 
+                           archive=[], ps_start='', gz='', th='', pr='', **kwargs):
         """
         Returns a list of projects
         """
@@ -929,6 +933,10 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
 
         if query == '' and so == '' and gz == '' and th == '' and pr == '':
             #no criteria then returns the 10 more recent
+            if not archive:
+                p_context = kwargs.get('p_context', None)
+                try: archive = self.unrestrictedTraverse(p_context).getObjects()
+                except: pass
             results = self.get_archive_listing(self.sorted_projects_listing(archive, skey, rkey))
         else:
             if languages: langs = languages
@@ -2311,6 +2319,45 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
+
+    security.declareProtected(view, 'search_rdf')
+    def search_rdf(self, REQUEST=None, RESPONSE=None):
+        """ """
+        search_mapping = RDF_SEARCH_MAPPING
+        search_query_mapping = RDF_SEARCH_QUERY_MAPPING
+        
+        site = self.getSite()
+        form = REQUEST.form
+        search_by = form.get('search_by', '')
+        search_method = search_mapping.get(search_by, None)
+        search_method = search_method and getattr(site, search_method, None)
+        if not search_method:
+            zLOG.LOG('SEMIDESite.search_rdf', zLOG.DEBUG, 
+                     'Unknown search_by: %s => search_method: %s' % (
+                         search_by, search_method))
+            return self.getSyndicationTool().syndicateSomething(
+                self.absolute_url(), [])
+        
+        # XXX Ugly hack 
+        for key, value in search_query_mapping.items():
+            req_value = form.get(key, None)
+            if not req_value:
+                continue
+            form.setdefault(value, req_value)
+        
+        try:
+            results = search_method(**form)
+        except TypeError, err:
+            zLOG.LOG('SEMIDESite.search_rdf', zLOG.DEBUG, err)
+            return self.getSyndicationTool().syndicateSomething(
+                self.absolute_url(), [])
+        
+        # See getNewsListing or similar search methods
+        pag_info, list_results = results
+        objects = list_results[2]
+        objects = [x[2] for x in objects]
+        return self.getSyndicationTool().syndicateSomething(
+            self.absolute_url(), objects)
 
 InitializeClass(SEMIDESite)
 
