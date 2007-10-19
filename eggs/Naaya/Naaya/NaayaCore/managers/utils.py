@@ -37,6 +37,7 @@ import csv
 import tempfile
 import os
 from email.Utils import encode_rfc2231
+from urllib import urlencode
 
 #Zope imports
 from Products.PythonScripts.standard import url_quote, html_quote
@@ -324,6 +325,15 @@ class utils:
         if isinstance(p_id, unicode): x = p_id.encode('utf-8')
         else: x = str(p_id)
         x = x.strip()
+        return x.translate(TRANSMAP)
+
+    def utCleanupProfileId(self, p_id=''):
+        """ """
+        if isinstance(p_id, unicode): 
+            x = p_id.encode('utf-8')
+        else:
+            x = str(p_id)
+        TRANSMAP = string.maketrans('@', '_')
         return x.translate(TRANSMAP)
 
     def utValidateId(self, p_id=''):
@@ -851,6 +861,10 @@ class utils:
               return nd+' December '+ny
         else:
            return nm
+    
+    # Easy access to urlencode method
+    def utUrlLibEncode(self, query, doseq=1):
+        return urlencode(query, doseq)
 
 #END OF CUSTOM FUNCTIONS
 
