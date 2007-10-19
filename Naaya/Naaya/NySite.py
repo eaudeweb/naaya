@@ -85,7 +85,7 @@ from NyFolder import NyFolder, addNyFolder, importNyFolder
 
 #constructor
 manage_addNySite_html = PageTemplateFile('zpt/site_manage_add', globals())
-def manage_addNySite(self, id='', title='', lang=None, REQUEST=None):
+def manage_addNySite(self, id='', title='', lang=None, default_content=True, REQUEST=None):
     """ """
     ut = utils()
     id = ut.utCleanupId(id)
@@ -94,7 +94,8 @@ def manage_addNySite(self, id='', title='', lang=None, REQUEST=None):
     self._setObject(id, NySite(id, portal_uid, title, lang))
     ob = self._getOb(id)
     ob.createPortalTools()
-    ob.loadDefaultData()
+    if default_content:
+        ob.loadDefaultData()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
