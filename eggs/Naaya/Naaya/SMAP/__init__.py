@@ -28,7 +28,7 @@ from tools.constants import *
 from Products.NaayaCore.constants import *
 import SMAPSite
 from tools.SyncerTool import SyncerTool
-from Products.NaayaCore.GeoMapTool import GeoMapTool
+
 def initialize(context):
     """ """
 
@@ -53,9 +53,6 @@ def initialize(context):
         )
 
 misc_ = {
-    'dnt_rgis.swf': ImageFile('../NaayaCore/GeoMapTool/www/dnt_rgis.swf', globals()),
-    'dntp_rgis.swf': ImageFile('../NaayaCore/GeoMapTool/www/dntp_rgis.swf', globals()),
-    'bounding.xml': ImageFile('../NaayaCore/GeoMapTool/www/bounding.xml', globals()),
     'SyncerTool.gif':ImageFile('tools/SyncerTool/www/SyncerTool.gif', globals()),
     'Site.gif':ImageFile('www/Site.gif', globals()),
     'print.gif':ImageFile('www/print.gif', globals()),
