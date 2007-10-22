@@ -1,4 +1,4 @@
-<h2>The README file for Naaya Calendar</h2> 
+<h1>The README file for Naaya Calendar</h1> 
 
 <h3>Naaya Calendar</h3>
 <p>
@@ -51,6 +51,11 @@ Into "Warnings" fields you'll find a general message regarding that property of 
 </p>
 
 <h3>Look&feel</h3>
+
+<p><strong>Important note:</strong> when you add a calendar instance on a page of your portal, make sure you include its stylesheet in the header of the page:
+</p>
+
+<code>&lt;link rel="stylesheet" type="text/css" tal:attributes="href string:${here/getEventCalendarURL}/calendar_style" /&gt;</code>
 
 <p>
 The calendar can be easily integrated in any portal's look&feel by changing it's appearance
