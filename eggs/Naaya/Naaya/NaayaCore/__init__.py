@@ -187,5 +187,12 @@ misc_ = {
     'Profile.gif':ImageFile('ProfilesTool/www/Profile.gif', globals()),
     'ProfileSheet.gif':ImageFile('ProfilesTool/www/ProfileSheet.gif', globals()),
 
+    'GeoMapTool.gif':ImageFile('GeoMapTool/www/GeoMapTool.gif', globals()),
+    'yahoomaps.js':ImageFile('GeoMapTool/www/yahoomaps.js', globals()),
+    'remote.js':ImageFile('GeoMapTool/www/remote.js', globals()),
+    'Marker.png':ImageFile('GeoMapTool/www/Marker.png', globals()),
+    'Marker.gif':ImageFile('GeoMapTool/www/Marker.gif', globals()),
+    'MarkerHot.png':ImageFile('GeoMapTool/www/MarkerHot.png', globals()),
+
     'xml.png':ImageFile('SyndicationTool/www/xml.png', globals()),
 }
