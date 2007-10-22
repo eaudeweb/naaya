@@ -574,13 +574,13 @@ class CHMSite(NySite):
                 self.setCreateAccountSession(username, firstname, lastname, email, password)
                 return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         if not err:
-            self.sendCreateAccountEmail(firstname + ' ' + lastname, email, username, REQUEST)
+            self.sendCreateAccountEmail('', firstname + ' ' + lastname, email, '', username, '', '', '')
         if REQUEST:
             self.setSession('title', 'Thank you for registering')
             self.setSession('body', 'You will receive a confirmation email.')
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
-    def sendCreateAccountEmail(self, p_name, p_email, p_username, REQUEST):
+    def sendCreateAccountEmail(self, p_to, p_name, p_email, p_organisation, p_username, p_location_path, p_location_title, p_comments):
         #sends a confirmation email to the newlly created account's owner
         email_template = self.getEmailTool()._getOb('email_createaccount')
         l_subject = email_template.title
