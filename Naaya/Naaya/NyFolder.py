@@ -223,6 +223,15 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         self.releasedate = releasedate
         self.folder_meta_types = folder_meta_types
 
+    def write_import(self, REQUEST=None):
+        """ """
+        from os.path import join
+        file_id = REQUEST.get('id', None)
+        file_path = join(CLIENT_HOME, '%s.nyexp' % file_id)
+        if file_id is not None:
+            self.manage_import(source='', file=open(file_path).read(), url='')
+        return 'done import'
+
     #overwrite handler
     def manage_beforeDelete(self, item, container):
         """ This method is called, when the object is deleted. """
@@ -781,8 +790,12 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
             self.folder_meta_types = self.utConvertToList(REQUEST.get('subobjects', []))
             self.folder_meta_types.extend(self.utConvertToList(REQUEST.get('ny_subobjects', [])))
         self._p_changed = 1
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_folder_subobjects_html?save=ok')
-
+        if REQUEST:
+            self.setSessionInfo(['Saved changes (%s)' % DateTime()])
+            redirect = REQUEST.get('redirect_url', 'manage_folder_subobjects_html')
+            redirect += '?save=ok'
+            REQUEST.RESPONSE.redirect(redirect)
+    
     security.declareProtected(view_management_screens, 'setMaintainer')
     def setMaintainer(self, maintainer_email):
         """ """
@@ -1255,6 +1268,11 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         """ """
         return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getPublishedObjects())
 
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
+    def subobjects_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'folder_subobjects')
+    
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
