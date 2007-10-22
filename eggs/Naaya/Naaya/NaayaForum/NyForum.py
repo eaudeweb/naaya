@@ -120,6 +120,10 @@ class NyForum(NyForumBase, Folder, utils):
     def get_topics(self): return self.objectValues(METATYPE_NYFORUMTOPIC)
     def count_topics(self): return len(self.objectIds(METATYPE_NYFORUMTOPIC))
 
+    def getObjectsForValidation(self): return []
+    def count_notok_objects(self): return 0
+    def count_notchecked_objects(self): return 0
+
     security.declarePrivate('processIdentity')
     def processIdentity(self):
         """
