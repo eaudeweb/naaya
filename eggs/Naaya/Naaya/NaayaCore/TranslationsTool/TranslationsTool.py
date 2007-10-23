@@ -121,7 +121,7 @@ class TranslationsTool(MessageCatalog):
         except: regex = re.compile('')
         for m, t in self._messages.items():
             if regex.search(m.lower()):
-                e = [m]
+                e = [self.utToUtf8(m)]
                 i = 1
                 for lang in langs:
                     if skey == lang['code']: skey = i
