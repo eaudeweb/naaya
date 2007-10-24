@@ -2,6 +2,7 @@
 <skel>
 	<forms>
 		<form id="folder_add" title="NyFolder add"/>
+		<form id="folder_subobjects" title="NyFolder subobjects"/>
 		<form id="folder_basketofapprovals" title="NyFolder basket of approvals"/>
 		<form id="folder_basketofvalidation" title="NyFolder basket of invalid items"/>
 		<form id="folder_edit" title="NyFolder edit"/>
