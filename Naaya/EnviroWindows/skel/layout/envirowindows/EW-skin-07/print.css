@@ -16,14 +16,12 @@
 	margin-left: 1%;
 }
 
-#breadcrumptrail {
+#breadcrumbtrail {
 	display: none;
 }
 
 #middle_port {
-	padding:4%;
 	margin: 1% 0%;
-	border: 1px solid black;
 }
 
 #left_port {
