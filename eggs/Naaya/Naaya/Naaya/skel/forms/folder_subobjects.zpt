@@ -1,5 +1,16 @@
 <tal:block tal:replace="structure here/standard_html_header"/>
 
+<script type="text/javascript">
+  function displayElement(elm){
+    var obj = document.getElementById(elm);
+    if (obj.style.display == 'none'){
+      obj.style.display = 'block';
+    }else{
+      obj.style.display = 'none';
+    }
+  }
+</script>
+
 <h1 i18n:translate="">Edit Folder subobjects</h1>
 
 <div class="floated-buttons">
@@ -16,10 +27,12 @@
 <form method="post" action="manageSubobjects">
   <div>
     <input id="load_default"
+      onchange = "displayElement('pluggable_meta_types')"
       type="checkbox" name="default" value="Load default" />
     <label for="load_default" i18n:translate="">Load default</label>
   </div>
-  <div tal:define="pc here/get_pluggable_content;
+  <div id="pluggable_meta_types"
+       tal:define="pc here/get_pluggable_content;
                    meta_types python:here.get_meta_types(1)">
     <select name="ny_subobjects" 
       tal:attributes="size python:len(meta_types) or 10" 
