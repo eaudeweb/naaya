@@ -31,11 +31,6 @@ from AccessControl.Permissions                  import view_management_screens, 
 #Zope imports
 from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
 from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
-try:
-    from Products.NaayaCore.GeoMapTool.GeoMapTool       import manage_addGeoMapTool
-    GM_INSTALLED = 1
-except ImportError:
-    GM_INSTALLED = 0
 
 #Product imports
 from constants                                      import *
@@ -117,9 +112,6 @@ class EnviroWindowsSite(NySite):
         dynprop_tool = self.getDynamicPropertiesTool()
         dynprop_tool.manage_addDynamicPropertiesItem(id=METATYPE_FOLDER, title=METATYPE_FOLDER)
         dynprop_tool._getOb(METATYPE_FOLDER).manageAddDynamicProperty(id='show_contributor_request_role', name='Allow users enrolment here?', type='boolean')
-
-        if GM_INSTALLED:
-            manage_addGeoMapTool(self)
 
 
     security.declarePublic('getBreadCrumbTrail')
