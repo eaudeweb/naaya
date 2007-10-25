@@ -113,7 +113,6 @@ class EnviroWindowsSite(NySite):
         dynprop_tool.manage_addDynamicPropertiesItem(id=METATYPE_FOLDER, title=METATYPE_FOLDER)
         dynprop_tool._getOb(METATYPE_FOLDER).manageAddDynamicProperty(id='show_contributor_request_role', name='Allow users enrolment here?', type='boolean')
 
-
     security.declarePublic('getBreadCrumbTrail')
     def getBreadCrumbTrail(self, REQUEST):
         """ generates the breadcrumb trail """
