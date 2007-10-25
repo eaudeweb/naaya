@@ -16,7 +16,7 @@
 # Authors:
 #
 # Cornel Nitu, Eau de Web
-# Dragos Chirila
+# Alin Voinea, Eau de Web
 
 #Python imports
 from copy import deepcopy
