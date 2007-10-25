@@ -16,6 +16,7 @@ Required variables:
   show_toolbar btn_copy|btn_cut|btn_paste|btn_delete;">
 
 <div id="toolbar" tal:condition="show_toolbar">
+  <metal:block define-slot="default">
   <input type="submit" value="Copy" name="copyObjects:method"
     i18n:attributes="value"
     tal:condition="btn_copy" />
@@ -32,6 +33,12 @@ Required variables:
   <input type="submit" value="Rename" name="renameobject_html:method"
     i18n:attributes="value"
     tal:condition="python: here.rename_id and btn_delete" />
+  </metal:block>
+  <metal:block define-slot="custom">
+    <tal:comment condition="nothing">
+      Fill this slot to add custom buttons.
+    </tal:comment>
+  </metal:block>
 </div>
 
 </metal:block>
