@@ -64,24 +64,23 @@
 			</div>
 		</div>
 		<div id="header">
-			<img id="logobis" tal:attributes="src string:${here/getLayoutToolPath}/logobis.gif" alt="" i18n:attributes="alt" tal:condition="here/hasRightLogo">
+			<img id="logobis" tal:attributes="src string:${here/getLayoutToolPath}/logobis.gif" alt="" i18n:attributes="alt" tal:condition="here/hasRightLogo" />
 			<a tal:attributes="href site_url; title string:Home" tal:condition="here/hasLeftLogo"><img id="logo" tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" alt="Logo" i18n:attributes="alt" /></a>
 			<div class="page_title" tal:content="here/site_title" />
 			<div class="page_subtitle" tal:content="here/site_subtitle" />
 		</div>
 		<div id="menunav">
-				
-				<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
-				<tal:block tal:repeat="item l_list">
-					<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
-				</tal:block>
-				</ul>
-				<form method="get" tal:attributes="action string:${site_url}/search_html">
-					<div id="search"><label for="query"><span i18n:translate="">site search</span></label>
-					<input id="query" type="text" name="query:utf8:ustring"  accesskey="4" />
-					<input type="submit" value="GO" class="search_btn"/></div>
-				</form>
-			</div>
+			<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
+			<tal:block tal:repeat="item l_list">
+				<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
+			</tal:block>
+			</ul>
+			<form method="get" tal:attributes="action string:${site_url}/search_html">
+				<div id="search"><label for="query"><span i18n:translate="">site search</span></label>
+				<input id="query" type="text" name="query:utf8:ustring" accesskey="4" />
+				<input type="submit" value="GO" class="search_btn" /></div>
+			</form>
+		</div>
 		<div id="breadcrumbtrail" tal:define="crumbs python:here.getBreadCrumbTrail(request)">
 			<a href="http://ew.eea.europa.eu" title="EnviroWindows">EW</a> &raquo; 
 			<a tal:attributes="href string:${site_url}/" title="Home" i18n:attributes="title" i18n:translate="">Home</a>
@@ -98,11 +97,12 @@
 		</div>
 		<div id="middle_port">
 			<a id="startcontent" accesskey="2"></a>
-			<span tal:replace="structure here/messages_box"/>
+			<span tal:replace="structure here/messages_box" />
 
 	<!--SITE_HEADERFOOTER_MARKER-->
 
-</div>
+		</div>
+	</div>
 </div>
 </body>
 </html>
