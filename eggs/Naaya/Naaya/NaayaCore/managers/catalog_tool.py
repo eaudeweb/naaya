@@ -176,6 +176,8 @@ class catalog_tool:
             l_objects = self.__getObjects(l_results)
             return [obj for obj in l_objects if getSecurityManager().checkPermission(view, obj)]
         else:
+            if howmany > len(l_results):
+                howmany = len(l_results)
             l_temp = l_results[:howmany]
             l_all = len(l_results)
             l_objects = self.__getObjects(l_temp)
