@@ -2847,6 +2847,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(view, 'datetime_js')
     datetime_js = DTMLFile('zpt/calendar/datetime_js', globals())
+    #
+    # Macro libs
+    #
+    security.declareProtected(view, 'folder_lib_toolbar_buttons')
+    folder_lib_toolbar_buttons = PageTemplateFile(
+        'zpt/folder_lib_toolbar_buttons', globals())
 
     #--------------------------------------------------------------------------------------------------
     security.declareProtected(view_management_screens, 'update_portal_forms')

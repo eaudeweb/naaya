@@ -846,37 +846,47 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
     def copyObjects(self, REQUEST=None):
         """ """
         id_list = self.utConvertToList(REQUEST.get('id', []))
-        try: self.manage_copyObjects(id_list, REQUEST)
-        except: self.setSessionErrors(['Error while copy data.'])
-        else: self.setSessionInfo(['Item(s) copied.'])
+        if not id_list:
+            self.setSessionErrors(['Please select one or more items to copy.'])
+        else:
+            try: self.manage_copyObjects(id_list, REQUEST)
+            except: self.setSessionErrors(['Error while copy data.'])
+            else: self.setSessionInfo(['Item(s) copied.'])
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
 
     security.declareProtected(PERMISSION_DELETE_OBJECTS, 'cutObjects')
     def cutObjects(self, REQUEST=None):
         """ """
         id_list = self.utConvertToList(REQUEST.get('id', []))
-        try: self.manage_cutObjects(id_list, REQUEST)
-        except: self.setSessionErrors(['Error while cut data.'])
-        else: self.setSessionInfo(['Item(s) cut.'])
+        if not id_list:
+            self.setSessionErrors(['Please select one or more items to cut.'])
+        else:
+            try: self.manage_cutObjects(id_list, REQUEST)
+            except: self.setSessionErrors(['Error while cut data.'])
+            else: self.setSessionInfo(['Item(s) cut.'])
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
 
     security.declareProtected(view, 'pasteObjects')
     def pasteObjects(self, REQUEST=None):
         """ """
         if not self.checkPermissionPasteObjects():
-            raise Unauthorized, 'pasteObjects'
-        try: self.manage_pasteObjects(None, REQUEST)
-        except: self.setSessionErrors(['Error while paste data.'])
-        else: self.setSessionInfo(['Item(s) pasted.'])
+            self.setSessionErrors(['You are not allowed to paste objects in this context.'])
+        else:
+            try: self.manage_pasteObjects(None, REQUEST)
+            except: self.setSessionErrors(['Error while paste data.'])
+            else: self.setSessionInfo(['Item(s) pasted.'])
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
 
     security.declareProtected(PERMISSION_DELETE_OBJECTS, 'deleteObjects')
     def deleteObjects(self, REQUEST=None):
         """ """
         id_list = self.utConvertToList(REQUEST.get('id', []))
-        try: self.manage_delObjects(id_list)
-        except: self.setSessionErrors(['Error while delete data.'])
-        else: self.setSessionInfo(['Item(s) deleted.'])
+        if not id_list:
+            self.setSessionErrors(['Please select one or more items to delete.'])
+        else:
+            try: self.manage_delObjects(id_list)
+            except: self.setSessionErrors(['Error while delete data.'])
+            else: self.setSessionInfo(['Item(s) deleted.'])
         if REQUEST: REQUEST.RESPONSE.redirect('index_html')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'setTopStoryObjects')
