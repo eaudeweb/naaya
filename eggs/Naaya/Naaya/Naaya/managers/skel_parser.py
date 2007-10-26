@@ -107,13 +107,14 @@ class channeltype_struct:
         self.title = title
 
 class scriptchannel_struct:
-    def __init__(self, id, title, description, language, type, numberofitems):
+    def __init__(self, id, title, description, language, type, numberofitems, portlet):
         self.id = id
         self.title = title
         self.description = description
         self.language = language
         self.type = type
         self.numberofitems = numberofitems
+        self.portlet = int(portlet)
 
 class localchannel_struct:
     def __init__(self, id, title, description, language, type, objmetatype, numberofitems):
@@ -345,7 +346,7 @@ class skel_handler(ContentHandler):
             stackObj = saxstack_struct('namespace', obj)
             self.stack.append(stackObj)
         elif name == 'scriptchannel':
-            obj = scriptchannel_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['description'].encode('utf-8'), attrs['language'].encode('utf-8'), attrs['type'].encode('utf-8'), attrs['numberofitems'].encode('utf-8'))
+            obj = scriptchannel_struct(attrs['id'].encode('utf-8'), attrs['title'].encode('utf-8'), attrs['description'].encode('utf-8'), attrs['language'].encode('utf-8'), attrs['type'].encode('utf-8'), attrs['numberofitems'].encode('utf-8'), attrs['portlet'].encode('utf-8'))
             stackObj = saxstack_struct('scriptchannel', obj)
             self.stack.append(stackObj)
         elif name == 'localchannel':
