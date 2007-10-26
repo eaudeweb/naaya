@@ -62,7 +62,11 @@ from Products.NaayaCore.FormsTool.FormsTool import manage_addFormsTool
 from Products.NaayaCore.LayoutTool.LayoutTool import manage_addLayoutTool
 from Products.NaayaCore.NotificationTool.NotificationTool import manage_addNotificationTool
 from Products.NaayaCore.ProfilesTool.ProfilesTool import manage_addProfilesTool
-from Products.NaayaCore.GeoMapTool.GeoMapTool import manage_addGeoMapTool
+try:
+    from Products.NaayaCore.GeoMapTool.GeoMapTool import manage_addGeoMapTool
+    geo_installed = True
+except ImportError:
+    geo_installed = False
 from Products.NaayaBase.NyBase import NyBase
 from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
 from Products.NaayaBase.NyImportExport import NyImportExport
@@ -206,7 +210,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         manage_addLayoutTool(self)
         manage_addNotificationTool(self)
         manage_addProfilesTool(self)
-        manage_addGeoMapTool(self)
+        if geo_installed:
+            manage_addGeoMapTool(self)
         manage_addErrorLog(self)
 
     security.declarePrivate('loadDefaultData')
@@ -694,7 +699,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def getProfilesTool(self): return self._getOb(ID_PROFILESTOOL)
 
     security.declarePublic('getGeoMapTool')
-    def getGeoMapTool(self): return self._getOb(ID_GEOMAPTOOL)
+    def getGeoMapTool(self): 
+        if geo_installed:
+            return self._getOb(ID_GEOMAPTOOL)
 
     #objects absolute/relative path getters
     security.declarePublic('getSitePath')
@@ -729,7 +736,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def getProfilesToolPath(self, p=0): return self._getOb(ID_PROFILESTOOL).absolute_url(p)
 
     security.declarePublic('getGeoMapToolPath')
-    def getGeoMapToolPath(self, p=0): return self._getOb(ID_GEOMAPTOOL).absolute_url(p)
+    def getGeoMapToolPath(self, p=0):
+        if geo_installed:
+            return self._getOb(ID_GEOMAPTOOL).absolute_url(p)
 
     def getFolderMetaType(self):    return METATYPE_FOLDER
     security.declarePublic('getFolderMainParent')
