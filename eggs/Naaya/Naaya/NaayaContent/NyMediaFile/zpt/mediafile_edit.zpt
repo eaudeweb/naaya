@@ -1,10 +1,10 @@
 <span tal:replace="structure here/standard_html_header" />
 
+<h1 i18n:translate="">Edit Media File</h1>
+
 <tal:block tal:condition="python:(not here.hasVersion()) or (here.hasVersion() and here.isVersionAuthor())">
 <tal:block define="languages here/get_languages_mapping;
 					curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
-
-<h1 i18n:translate="">Edit Media File</h1>
 
 <div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span></div>
 
@@ -34,19 +34,19 @@ function fSet(ctrl, value)
 }
 
 function check_srt(file_obj) {
-  var ext = file_obj.value;
-  ext = ext.substring(ext.length - 3, ext.length);
-  ext = ext.toLowerCase();
-  if(ext != 'srt') {
-    file_obj.value = "";
-    alert('You selected a .' + ext +
-          ' file. Please select a .srt file instead!');
-  }
+	var ext = file_obj.value;
+	ext = ext.substring(ext.length - 3, ext.length);
+	ext = ext.toLowerCase();
+	if(ext != 'srt') {
+	file_obj.value = "";
+	alert('You selected a .' + ext +
+		' file. Please select a .srt file instead!');
+	}
 }
 
 function displayToolTips(tips_id, style){
-  var tips = document.getElementById(tips_id);
-  tips.style.display = style;
+	var tips = document.getElementById(tips_id);
+	tips.style.display = style;
 }
 // -->
 </script>
@@ -60,8 +60,19 @@ function displayToolTips(tips_id, style){
 	<form style="display: inline;" action="discardVersion"><input type="submit" value="Discard" i18n:attributes="value" /></form>
 </div>
 
-<form method="post" action="saveProperties" name="frmEdit" 
-  enctype="multipart/form-data">
+<form method="post" action="saveProperties" name="frmEdit" enctype="multipart/form-data">
+<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
+	<tal:block tal:repeat="language languages">
+		<div class="current" tal:condition="python:language['code'] == curr_lang">
+			<span tal:content="python:language['name']" />
+		</div>
+		<a tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+			<span tal:content="python:language['name']" />
+		</a>
+	</tal:block>
+</div>
+
 <div class="field">
 	<label for="title"><span i18n:translate="" tal:omit-tag="">Title</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'title')" class="mandatory_field"> *</span></label>
 	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', here.getVersionLocalProperty('title', curr_lang))" />
@@ -73,20 +84,20 @@ function displayToolTips(tips_id, style){
 <div class="field">
 
 <table>
-  <tr><td>
-    <label for="subtitle">
-      <span i18n:translate="" tal:omit-tag="">Subtitle</span>
-      <span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'subtitle')" class="mandatory_field"> *</span>
-   </label>
-   <p i18n:translate=""><strong>Tip:</strong> You can edit subtitle in text area below or upload it from a local file.</p>
-   <textarea 
-     onfocus="javascript:displayToolTips('subtitle_tips', 'block')"
-     onblur="javascript:displayToolTips('subtitle_tips', 'none')"
-     id="subtitle" name="subtitle" rows="15" cols="70"
-     tal:content="python:here.getSession('subtitle', here.getVersionLocalProperty('subtitle', curr_lang))"></textarea>
-  </td><td>
-  <div id="subtitle_tips" style="display: none" class="toolTips">
-    <pre>
+<tr><td>
+	<label for="subtitle">
+		<span i18n:translate="" tal:omit-tag="">Subtitle</span>
+		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'subtitle')" class="mandatory_field"> *</span>
+	</label>
+	<p i18n:translate=""><strong>Tip:</strong> you can edit subtitle in text area below or upload it from a local file.</p>
+	<textarea 
+		onfocus="javascript:displayToolTips('subtitle_tips', 'block')"
+		onblur="javascript:displayToolTips('subtitle_tips', 'none')"
+		id="subtitle" name="subtitle" rows="15" cols="70"
+		tal:content="python:here.getSession('subtitle', here.getVersionLocalProperty('subtitle', curr_lang))"></textarea>
+	</td><td>
+	<div id="subtitle_tips" style="display: none" class="toolTips">
+<pre>
 Example:
 
   1
@@ -97,16 +108,16 @@ Example:
   2
   00:00:24,600 --> 00:00:27,800
   The government is implementing a new policy...
-    </pre>
-  </div>
-  </td></tr>
+</pre>
+	</div>
+	</td></tr>
 </table>
 
-    <label for="subtitle_file">
-	  <span i18n:translate="" tal:omit-tag="">Upload subtitle (.srt)</span>
+	<label for="subtitle_file">
+		<span i18n:translate="" tal:omit-tag="">Upload subtitle (.srt)</span>
 	</label>
-    <input type="file" onchange="javascript:check_srt(this);" size="50"
-	  name="subtitle_file" id="subtitle_file" value=""/>
+	<input type="file" onchange="javascript:check_srt(this);" size="50"
+		name="subtitle_file" id="subtitle_file" value=""/>
 </div>
 <div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
 	<label for="coverage"><span i18n:translate="" tal:omit-tag="">Geographical coverage</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'coverage')" class="mandatory_field"> *</span></label>
@@ -153,14 +164,15 @@ Example:
 </div>
 
 <div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
-<tal:block tal:repeat="language languages">
-<strong tal:condition="python:language['code'] == curr_lang">
-<a class="current" tal:attributes="href string:?lang=${language/code}; title python:language['name']"
-	tal:content="python:language['name']" /></strong>
-<a tal:condition="python:language['code'] != curr_lang"
-	tal:attributes="href string:?lang=${language/code}; title python:language['name']"
-	tal:content="python:language['name']" />
-</tal:block>
+	<tal:block tal:repeat="language languages">
+		<div class="current" tal:condition="python:language['code'] == curr_lang">
+			<span tal:content="python:language['name']" />
+		</div>
+		<a tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+			<span tal:content="python:language['name']" />
+		</a>
+	</tal:block>
 </div>
 
 </form>
