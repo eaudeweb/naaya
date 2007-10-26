@@ -11,7 +11,7 @@
 <ul>
 	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_metadata_html" i18n:translate="">Metadata</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_logos_html" i18n:translate="">Logos</a></li>
-    <li><a tal:attributes="href string:${site_url}/admin_email_html" i18n:translate="">Email Settings</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_email_html" i18n:translate="">Email Settings</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
 </ul>
 </div>
@@ -57,15 +57,16 @@
 </tr>
 </table>
 
-<div class="translate"><span  i18n:translate="" tal:omit-tag="">Translate in</span>
-<tal:block tal:repeat="language languages">
-<strong tal:condition="python:language['code'] == curr_lang">
-<a class="current" tal:attributes="href string:?lang=${language/code}; title python:language['name']"
-	tal:content="python:language['name']" /></strong>
-<a tal:condition="python:language['code'] != curr_lang"
-	tal:attributes="href string:?lang=${language/code}; title python:language['name']"
-	tal:content="python:language['name']" />
-</tal:block>
+<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
+	<tal:block tal:repeat="language languages">
+		<div class="current" tal:condition="python:language['code'] == curr_lang">
+			<span tal:content="python:language['name']" />
+		</div>
+		<a tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+			<span tal:content="python:language['name']" />
+		</a>
+	</tal:block>
 </div>
 
 </form>
