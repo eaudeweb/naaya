@@ -2,7 +2,6 @@
 <skel>
 	<forms>
 		<form id="folder_index" title="NyFolder default view" />
-		<form id="site_index" title="Portal home page" />
 		<form id="site_admin_template" title="Portal administration - macro"/>
 		<form id="site_login" title="Portal login"/>
 		<form id="site_requestrole" title="Portal request role form step 1"/>
@@ -13,9 +12,6 @@
 		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
 		<form id="folder_zipupload" title="Upload items from zip archive"/>
 		<form id="folder_zipdownload" title="Download items as zip archive"/>
-		<form id="site_macro_edit" title="Macro for edit forms"/>
-		<form id="form_languages_box" title="Box for changing the language when translating content"/>
-		<form id="site_admin_metadata" title="Portal administration - medata"/>
 	</forms>
 	<layout default_skin_id="envirowindows" default_scheme_id="EW-skin-00">
 		<skin id="envirowindows" title="EnviroWindows">
