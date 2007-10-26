@@ -39,7 +39,7 @@ PORTLETS_TYPES = {
 
 #used for portlets that contains static HTML code
 DEFAULT_PORTLET_HEADER = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
-<tal:block metal:fill-slot="portlet_title"><span tal:replace="template/title" /></tal:block>
+<tal:block metal:fill-slot="portlet_title"><span i18n:translate="" tal:replace="template/title" /></tal:block>
 <tal:block metal:fill-slot="portlet_content">'''
 DEFAULT_PORTLET_FOOTER = '''</tal:block>
 </tal:block>'''
