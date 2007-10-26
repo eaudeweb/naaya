@@ -57,16 +57,18 @@
 		</tr>
 	</table>
 	</form>
-	<div class="translate"><span  i18n:translate="" tal:omit-tag="">Translate in</span>
-	<tal:block tal:repeat="language languages">
-	<strong tal:condition="python:language['code'] == curr_lang">
-	<a class="current" tal:attributes="href string:?id=${ob_id}&amp;lang=${language/code}; title python:language['name']"
-		tal:content="python:language['name']" /></strong>
-	<a tal:condition="python:language['code'] != curr_lang"
-		tal:attributes="href string:?id=${ob_id}&amp;lang=${language/code}; title python:language['name']"
-		tal:content="python:language['name']" />
-	</tal:block>
+	<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
+		<tal:block tal:repeat="language languages">
+			<div class="current" tal:condition="python:language['code'] == curr_lang">
+				<span tal:content="python:language['name']" />
+			</div>
+			<a tal:condition="python:language['code'] != curr_lang"
+				tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+				<span tal:content="python:language['name']" />
+			</a>
+		</tal:block>
 	</div>
+
 </fieldset>
 </tal:block>
 
