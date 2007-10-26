@@ -37,6 +37,17 @@ function fSet(ctrl, value)
 </script>
 
 <form name="frmEdit" method="post" action="saveProperties">
+<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
+	<tal:block tal:repeat="language languages">
+		<div class="current" tal:condition="python:language['code'] == curr_lang">
+			<span tal:content="python:language['name']" />
+		</div>
+		<a tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+			<span tal:content="python:language['name']" />
+		</a>
+	</tal:block>
+</div>
 <div class="field">
 	<label for="title" i18n:translate="">Title</label>
 	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getLocalProperty('title', curr_lang)" />
@@ -48,7 +59,7 @@ function fSet(ctrl, value)
 <div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
 	<label for="coverage" i18n:translate="">Geographical coverage</label>
 	<tal:block tal:condition="python:coverage_glossary is None">
-		<p><strong i18n:translate="">Tip:</strong> <span tal:omit-tag="" i18n:translate="">in order to specify more values, separate them by commas</span></p>
+		<p i18n:translate=""><strong>Tip:</strong> in order to specify more values, separate them by commas</p>
 	</tal:block>
 	<tal:block tal:condition="python:coverage_glossary is not None">
 		<p i18n:translate=""><strong>Tip:</strong> you can type free text in the field below or pick words from the list. In order to specify more values, separate them by commas.</p>
@@ -94,17 +105,16 @@ function fSet(ctrl, value)
 </div>
 </form>
 
-<div class="translate"><span  i18n:translate="" tal:omit-tag="">Translate in</span>
-<tal:block tal:repeat="language languages">
-    <strong tal:condition="python:language['code'] == curr_lang">
-    <a class="current" tal:attributes="href string:?lang=${language/code}; 
-                        title python:language['name']"
-       tal:content="python:language['name']" /></strong>
-    <a tal:condition="python:language['code'] != curr_lang" 
-        tal:attributes="href string:?lang=${language/code}; 
-                        title python:language['name']"
-       tal:content="python:language['name']" />
-</tal:block>
+<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
+	<tal:block tal:repeat="language languages">
+		<div class="current" tal:condition="python:language['code'] == curr_lang">
+			<span tal:content="python:language['name']" />
+		</div>
+		<a tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+			<span tal:content="python:language['name']" />
+		</a>
+	</tal:block>
 </div>
 </tal:block>
 
