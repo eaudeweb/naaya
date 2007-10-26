@@ -28,13 +28,30 @@
 	}
 	}
 	window.onload = externalLinks;
+
+	function fullScreen() {
+		if (!document.body.className)
+		{
+			document.body.className="fullscreen";
+			document.getElementById("outer_wrapper").id="outer_wrapper_fs";
+		}
+		else {
+			document.body.className="";
+			document.getElementById("outer_wrapper_fs").id="outer_wrapper";
+		}
+	}
+
+	function fs_show() {
+		document.getElementById('fs_hide').id='fs_show'
+	}
+
 	//]]>
 	</script>
 </head>
 <!--[if lt IE 7]>
 	</base>
 <![endif]-->
-<body>
+<body onload="fs_show()">
 <div id="outer_wrapper">
 	<div id="container" tal:attributes="style python:test(len(here.get_right_portlets_locations_objects(here)) or here.meta_type == here.get_constant('METATYPE_FOLDER'), '', 'background: none')">
 		<div id="toolribbon">
@@ -52,6 +69,7 @@
 				</ul>
 				<ul class="site_actions">
 					<li><a href="javascript:this.print();" title="Print this page"><img src="misc_/EnviroWindows/printer.gif" alt="print this page" /></a></li>
+					<li><a id="fs_hide" href="javascript:fullScreen()"></a></li>
 					<li><a href="feedback_html" title="Feedback"  accesskey="9">Feedback</a>
 				</ul>
 			</div>
