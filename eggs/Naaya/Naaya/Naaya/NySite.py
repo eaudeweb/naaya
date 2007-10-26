@@ -2630,7 +2630,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     elif v[1] == MUST_BE_POSITIV_INT:
                         if not self.utIsAbsInteger(value): la(translate('', v[2]))
                     elif v[1] == MUST_BE_POSITIV_FLOAT:
-                        if not self.utIsFloat(value): la(translate('', v[2]))
+                        if self.utIsEmptyString(value) or not self.utIsFloat(value): la(translate('', v[2]))
                     elif v[1] == MUST_BE_CAPTCHA:
                         if value != self.getSession('captcha', ''): la(translate('', v[2]))
                     elif v[1] == MUST_BE_FLVFILE:
