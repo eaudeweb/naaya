@@ -112,7 +112,7 @@ tal:define="mode python:request.get('mode', '');
 <input type="hidden" name="location" tal:attributes="value location" />
 <table border="0" cellspacing="4" cellpadding="4">
 	<tr>
-		<th class="form-label" width="20%" style="vertical-align: top">Location</td>
+		<td class="form-label" width="20%" style="vertical-align: top">Location</td>
 		<td colspan="4">
 			<tal:block tal:condition="python:mode=='edit'">
 				<strong tal:condition="python:location_obj is None">Portal main page</strong>
