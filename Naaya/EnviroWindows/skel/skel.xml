@@ -18,7 +18,6 @@
 		<form id="form_languages_box" title="Box for changing the language when translating content"/>
 		<form id="site_admin_htmlportlets" title="Portal administration - html portlets section"/>
 		<form id="site_admin_metadata" title="Portal administration - medata"/>
-		<form id="exfile_edit" title=""/>
 		<form id="file_edit" title=""/>
 		<form id="expert_edit" title=""/>
 		<form id="project_edit" title=""/>
