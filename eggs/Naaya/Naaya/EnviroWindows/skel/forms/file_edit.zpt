@@ -45,18 +45,16 @@ function fSet(ctrl, value)
 </div>
 
 <form method="post" action="saveProperties" name="frmEdit">
-<div class="translate"><span  i18n:translate="">Translate in</span>
-<tal:block tal:repeat="language languages">
-
-<div class="current" tal:condition="python:language['code'] == curr_lang">
-  <span tal:content="python:language['name']" />
-</div>
-
-<a tal:condition="python:language['code'] != curr_lang"
-	tal:attributes="href string:?lang=${language/code}; title python:language['name']">	
-	<span tal:content="python:language['name']" />
-	</a>
-</tal:block>
+<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
+	<tal:block tal:repeat="language languages">
+		<div class="current" tal:condition="python:language['code'] == curr_lang">
+			<span tal:content="python:language['name']" />
+		</div>
+		<a tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+			<span tal:content="python:language['name']" />
+		</a>
+	</tal:block>
 </div>
 
 <div class="field">
@@ -123,18 +121,16 @@ function fSet(ctrl, value)
 	<input type="submit" value="Save changes" i18:attributes="value" />
 </div>
 
-<div class="translate"><span  i18n:translate="">Translate in</span>
-<tal:block tal:repeat="language languages">
-
-<div class="current" tal:condition="python:language['code'] == curr_lang">
-  <span tal:content="python:language['name']" />
-</div>
-
-<a tal:condition="python:language['code'] != curr_lang"
-	tal:attributes="href string:?lang=${language/code}; title python:language['name']">	
-	<span tal:content="python:language['name']" />
-	</a>
-</tal:block>
+<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
+	<tal:block tal:repeat="language languages">
+		<div class="current" tal:condition="python:language['code'] == curr_lang">
+			<span tal:content="python:language['name']" />
+		</div>
+		<a tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+			<span tal:content="python:language['name']" />
+		</a>
+	</tal:block>
 </div>
 
 </form>

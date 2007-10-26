@@ -18,18 +18,16 @@
 	<li><a tal:attributes="href string:${site_url}/admin_specialportlets_html" i18n:translate="">Special</a></li>
 </ul>
 </div>
-<div class="translate"><span  i18n:translate="">Translate in</span>
-<tal:block tal:repeat="language languages">
-
-<div class="current" tal:condition="python:language['code'] == curr_lang">
-  <span tal:content="python:language['name']" />
-</div>
-
-<a tal:condition="python:language['code'] != curr_lang"
-	tal:attributes="href string:?lang=${language/code}; title python:language['name']">	
-	<span tal:content="python:language['name']" />
-	</a>
-</tal:block>
+<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
+	<tal:block tal:repeat="language languages">
+		<div class="current" tal:condition="python:language['code'] == curr_lang">
+			<span tal:content="python:language['name']" />
+		</div>
+		<a tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+			<span tal:content="python:language['name']" />
+		</a>
+	</tal:block>
 </div>
 
 <p i18n:translate="">
@@ -71,19 +69,19 @@
 		</tr>
 	</table>
 	</form>
-	<div class="translate"><span  i18n:translate="">Translate in</span>
-<tal:block tal:repeat="language languages">
 
-<div class="current" tal:condition="python:language['code'] == curr_lang">
-  <span tal:content="python:language['name']" />
+<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
+	<tal:block tal:repeat="language languages">
+		<div class="current" tal:condition="python:language['code'] == curr_lang">
+			<span tal:content="python:language['name']" />
+		</div>
+		<a tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+			<span tal:content="python:language['name']" />
+		</a>
+	</tal:block>
 </div>
 
-<a tal:condition="python:language['code'] != curr_lang"
-	tal:attributes="href string:?lang=${language/code}; title python:language['name']">	
-	<span tal:content="python:language['name']" />
-	</a>
-</tal:block>
-</div>
 </fieldset>
 </tal:block>
 
