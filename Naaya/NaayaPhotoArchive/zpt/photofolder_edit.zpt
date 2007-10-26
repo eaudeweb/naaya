@@ -12,6 +12,17 @@
 	curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
 
 <form method="post" tal:attributes="action string:${here/absolute_url}/saveProperties">
+<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
+	<tal:block tal:repeat="language languages">
+		<div class="current" tal:condition="python:language['code'] == curr_lang">
+			<span tal:content="python:language['name']" />
+		</div>
+		<a tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+			<span tal:content="python:language['name']" />
+		</a>
+	</tal:block>
+</div>
 <div class="field">
 	<label for="title" i18n:translate="">Title</label>
 	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getLocalProperty('title', curr_lang)" />
@@ -30,14 +41,15 @@
 <input type="hidden" name="lang" id="lang" tal:attributes="value curr_lang" />
 </form>
 <div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
-<tal:block tal:repeat="language languages">
-<strong tal:condition="python:language['code'] == curr_lang">
-<a class="current" tal:attributes="href string:?lang=${language/code}; title python:language['name']"
-	tal:content="python:language['name']" /></strong>
-<a tal:condition="python:language['code'] != curr_lang"
-	tal:attributes="href string:?lang=${language/code}; title python:language['name']"
-	tal:content="python:language['name']" />
-</tal:block>
+	<tal:block tal:repeat="language languages">
+		<div class="current" tal:condition="python:language['code'] == curr_lang">
+			<span tal:content="python:language['name']" />
+		</div>
+		<a tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+			<span tal:content="python:language['name']" />
+		</a>
+	</tal:block>
 </div>
 
 </tal:block>
