@@ -69,7 +69,7 @@
 				</ul>
 				<ul class="site_actions">
 					<li><a href="javascript:this.print();" title="Print this page"><img src="misc_/EnviroWindows/printer.gif" alt="print this page" /></a></li>
-					<li><a id="fs_hide" href="javascript:fullScreen()"></a></li>
+					<li><a id="fs_hide" title="Switch to/from full screen mode" href="javascript:fullScreen()" /></li>
 					<li><a href="feedback_html" title="Feedback"  accesskey="9">Feedback</a>
 				</ul>
 			</div>

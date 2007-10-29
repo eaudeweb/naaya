@@ -1195,6 +1195,7 @@ a.b_download:hover {
 text-decoration: underline;
 }
 
+/* Switch to/from full screen mode */
 #fs_hide {
 	display: none;
 }
