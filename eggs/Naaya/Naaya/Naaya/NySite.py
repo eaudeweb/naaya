@@ -980,10 +980,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         Process and notify by email that B{p_object} has been
         uploaded into the B{p_folder}.
         """
-        if p_object.submitted==1:
-            l_emails = self.getFolderMaintainersEmails(p_folder)
+        if (hasattr(p_object, 'submitted') and p_object.submitted==1) or not hasattr(p_object, 'submitted'):
+            l_emails = self.getMaintainersEmails(p_folder)
             if len(l_emails) > 0:
-                mail_from = self.mail_address_from
+                if self.portal_url != '': mail_from = 'notifications@%s' % self.portal_url
+                else: mail_from = 'notifications@%s' % self.REQUEST.SERVER_NAME
                 self.notifyMaintainerEmail(l_emails, mail_from, p_object, p_folder.absolute_url(), '%s/basketofapprovals_html' % p_folder.absolute_url())
 
     def processDynamicProperties(self, meta_type, REQUEST=None, keywords={}):
@@ -2577,6 +2578,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         else:
             l_content = self.utRemoveLineInString('@@CONTAINERBASKETPATH@@', l_content)
         self.getEmailTool().sendEmail(l_content, p_to, p_from, l_subject)
+
     #pluggable content
     def get_pluggable_content(self):
         #information about the available types
