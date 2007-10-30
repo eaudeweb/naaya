@@ -141,6 +141,7 @@ a:visited {
 
 .itemsPerPage {
 	margin-top: 7px;
+	vertical-align:middle;
 }
 
 input {
