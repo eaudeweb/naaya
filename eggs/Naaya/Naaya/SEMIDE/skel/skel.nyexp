@@ -23,87 +23,32 @@
 	btn_paste python:objects_info[4];
 	can_operate python:objects_info[5] ">
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
-<!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-    var i;
-    if (isSelected == false)
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-        isSelected = true;}
-    else
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-        isSelected = false;}}
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
 
-function fCheckSelection()
-{   var frm = document.objectItems;
-    var i;
-    check = false;
-    for(i=0; i<frm.elements.length; i++)
-        if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-        {   check = true; break;}
-    return check;}
+<script language="javascript" type="text/javascript">
+<!--
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="copyObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script language="javascript" type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-    {
-        document.objectItems.action="cutObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-    document.objectItems.submit();}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="deleteObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to delete.');}
-//-->
-</script>
-
-<div id="right_port" tal:define="items python:here.get_right_portlets_locations_objects(here)"
-	tal:condition="python:len(items)>0">
-	<tal:block tal:repeat="item items">
+<div id="right_port">
+	<tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
 		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
 	</tal:block>
 </div>
 
 <tal:block tal:define=" isArabic here/isArabicLanguage;
 						noArabic not:isArabic">
-<div class="middle_port" tal:define="margin_string python:test(isArabic,'margin-left:0;;','margin-right:0;;')" tal:attributes="style python:test(here.getPortletsTool().get_right_portlets_locations_objects(here), '', margin_string)">
+<div id="middle_port" tal:define="margin_string python:test(isArabic,'margin-left:0;;','margin-right:0;;')" tal:attributes="style python:test(here.getPortletsTool().get_right_portlets_locations_objects(here), '', margin_string)">
 <h2 tal:define="l_parent python:here.aq_parent">
-	<img tal:attributes="src python:test(l_parent.approved, l_parent.icon, l_parent.icon_marked); title l_parent/meta_label; alt l_parent/meta_label" border="0" />
+	<img tal:attributes="src python:test(l_parent.approved, l_parent.icon, l_parent.icon_marked); title l_parent/meta_type; alt l_parent/meta_type" border="0" />
 	<tal:block tal:replace="l_parent/title_or_id" />
 	<tal:block tal:condition="l_parent/can_be_seen">
 		<tal:block tal:condition="l_parent/has_restrictions" i18n:translate="">
@@ -129,35 +74,15 @@ function fDeleteObjects()
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <span tal:replace="structure here/menusubmissions" />
 
-<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
-	<div id="toolbar">
-		<tal:block tal:condition="btn_select">
-			<input type="reset" onclick="toggleSelect();return false" i18n:attributes="value" value="Select all" />
-				<img tal:condition="python:False" src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_copy">
-			<input type="reset" onclick="fCopyObjects();return false" i18n:attributes="value" value="Copy" />
-				<img tal:condition="python:False" src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_cut">
-			<input type="reset" onclick="fCutObjects();return false" i18n:attributes="value" value="Cut" />
-				<img tal:condition="python:False" src="/misc_/Naaya/cut.gif" border="0" alt="Cut" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_paste">
-			<input type="reset" onclick="fPasteObjects();return false" i18n:attributes="value" value="Paste" />
-				<img tal:condition="python:False" src="/misc_/Naaya/paste.gif" border="0" alt="Paste" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_delete">
-			<input type="reset" onclick="fDeleteObjects();return false" i18n:attributes="value" value="Delete" />
-				<img tal:condition="python:False" src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" />
-		</tal:block>
-	</div>
-</div>
+<form name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
-	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+	<th class="checkbox" style="width: 4%;" i18n:translate="" 
+		tal:condition="btn_select">
+		<input type="checkbox" onclick="toggleSelect(this)" />
+	</th>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -170,7 +95,7 @@ function fDeleteObjects()
 		copy_permission python:folders[3];
 		folder python:folders[4]">
 	<td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value folder/id" /></td>
-	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(folder.approved, folder.icon, folder.icon_marked); alt python:test(hasattr(folder, 'meta_label'), folder.meta_label, folder.meta_type); title python:test(hasattr(folder, 'meta_label'), folder.meta_label, folder.meta_type)" border="0" /></td>
+	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(folder.approved, folder.icon, folder.icon_marked); alt folder/meta_type; title folder/meta_type" border="0" /></td>
 	<td class="title-column">
 		<a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id" />
 		<tal:block tal:condition="folder/can_be_seen">
@@ -201,7 +126,7 @@ function fDeleteObjects()
 			copy_permission python:objects[3];
 			object python:objects[4]">
 	<td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value object/id" /></td>
-	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type); title python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type)" border="0" /></td>
+	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" /></td>
 	<td class="title-column">
 		<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
 		<tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
@@ -224,81 +149,45 @@ function fDeleteObjects()
 </table>
 </form>
 
-<p>
-	<a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a>
-
-	<tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-	<a tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank"><img tal:attributes="src string:${here/getSitePath}/images/pdf.gif" alt="PDF View" border="0"  i18n:attributes="alt" /></a>
-	</tal:block>
-</p>
+<p style="clear: both;"><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a></p>
 <span tal:replace="structure here/comments_box" />
 
 </div>
 </tal:block>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
-		]]>
+]]>
 		</ob>
 		<ob meta_type="Naaya Folder" param="0" id="agenda" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="1" maintainer_email="" folder_meta_types="Naaya Semide Event">
 			<title lang="en"><![CDATA[Agenda]]></title>
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-			<![CDATA[
+<![CDATA[
 <span tal:replace="structure here/standard_html_header" />
-<div class="middle_port" style='margin-right:0;'>
 
-<tal:block	define="sq python:request.get('sq', '');
-					sl python:here.utConvertToList(request.get('sl', []));
-					et python:request.get('et', '');
-					gz python:request.get('gz', '');
-					es python:request.get('es', '');
-					sd python:request.get('sd', '');
-					ed python:request.get('ed', '');
-					ps_start python:request.get('start', 0);
-					skey python:request.get('skey', 'start_date');
-					rkey python:request.get('rkey', test(request.has_key('skey'),'','1'));
-					rkey_param python:test(rkey, '', '&amp;rkey=1');
+<tal:block define="objects_info here/checkPermissionManageObjects;
+	folders_list python:objects_info[6];
+	objects_list python:objects_info[7];
+	btn_select python:objects_info[0];
+	btn_delete python:objects_info[1];
+	btn_copy python:objects_info[2];
+	btn_cut python:objects_info[3];
+	btn_paste python:objects_info[4];
+	can_operate python:objects_info[5] ">
 
-					page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&et=${et}&gz=${gz}&es=${es}&sd=${sd}&ed=${ed};
-					results python:here.getEventsNFP(sq, sl, et, gz, es, skey, rkey, sd, ed, here.absolute_url(1), ps_start);
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
 
-					list_paging python:results[0];
-					paging_start python:list_paging[0]+1;
-					paging_upper python:list_paging[1];
-					paging_total python:list_paging[2];
-					paging_prev python:list_paging[3];
-					paging_next python:list_paging[4];
-					paging_current_page python:list_paging[5];
-					paging_records_page python:list_paging[6];
-					paging_pages python:list_paging[7];
-
-					list_result python:results[1];
-					objects_list python:list_result[2];
-					objects_delete_all python:list_result[1];
-					objects_select_all python:list_result[0]">
-
-<script language="javascript" type="text/javascript" tal:condition="objects_select_all">
+<script language="javascript" type="text/javascript">
 <!--
-	function fCheckSelection()
-	{	var frm = document.objectItems;
-	var i;
-	check = false;
-	for(i=0; i<frm.elements.length; i++)
-		if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-		{	check = true; break;}
-		return check;}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="objects_delete_all">
-<!--
-	function fDeleteObjects()
-	{	if (fCheckSelection())
-	{	document.objectItems.action="deleteObjects";
-	document.objectItems.submit();}
-	else
-	alert('Please select one or more items to delete.');}
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
@@ -308,8 +197,11 @@ function fDeleteObjects()
 	</tal:block>
 </div>
 
+<tal:block tal:define=" isArabic here/isArabicLanguage;
+						noArabic not:isArabic">
+<div id="middle_port" tal:define="margin_string python:test(isArabic,'margin-left:0;;','margin-right:0;;')" tal:attributes="style python:test(here.getPortletsTool().get_right_portlets_locations_objects(here), '', margin_string)">
 <h2 tal:define="l_parent python:here.aq_parent">
-	<img tal:attributes="src python:test(l_parent.approved, l_parent.icon, l_parent.icon_marked); title l_parent/meta_label; alt l_parent/meta_label" border="0" />
+	<img tal:attributes="src python:test(l_parent.approved, l_parent.icon, l_parent.icon_marked); title l_parent/meta_type; alt l_parent/meta_type" border="0" />
 	<tal:block tal:replace="l_parent/title_or_id" />
 	<tal:block tal:condition="l_parent/can_be_seen">
 		<tal:block tal:condition="l_parent/has_restrictions" i18n:translate="">
@@ -332,202 +224,92 @@ function fDeleteObjects()
 		[Restricted access]
 	</tal:block>
 </h1>
-
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+<span tal:replace="structure here/menusubmissions" />
 
-<tal:block	tal:define="this_absolute_url python:here.absolute_url(0);
-						submissions here/process_submissions;
-						perm_add_something python:len(submissions)>0;
-						perm_edit_object here/checkPermissionEditObject;
-						perm_publish_objects here/checkPermissionPublishObjects">
-<div id="admin_this_folder" tal:condition="python:perm_edit_object and perm_publish_objects">
-	<span id="submission" tal:condition="perm_add_something">
-		<span i18n:translate="" tal:omit-tag="">Submit</span>:
-		<select name="typetoadd"
-			tal:attributes="onchange string:document.location.href='${this_absolute_url}/' + this.options[this.selectedIndex].value">
-			<option value="#" i18n:translate="">Type to add</option>
-			<option tal:repeat="item submissions"
-				tal:attributes="value python:item[0]"
-				tal:content="python:item[1]" i18n:translate="" />
-		</select>
-	</span>
-	<tal:block tal:condition="python:perm_edit_object or perm_publish_objects">
-		<a tal:condition="perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span class="buttons"><span i18n:translate="" tal:omit-tag="">Edit Folder</span></span></a>
-		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
-	</tal:block>
-</div>
-</tal:block>
+<form name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<fieldset class="search_field"><legend i18n:translate="">Search events</legend>
-<div class="fieldset_div">
-<form method="get" action="">
-<input type="hidden" name="skey" id="skey" tal:attributes="value skey" />
-<input type="hidden" name="rkey" id="rkey" tal:attributes="value rkey" />
-<div class="field">
-	<label for="sq" i18n:translate="">Query</label>
-	<input type="text" name="sq" id="sq" size="50" tal:attributes="value sq" />
-</div>
-<div class="field">
-	<label for="et" i18n:translate="">Type</label>
-	<select name="et" id="et">
-		<option value=""></option>
-		<option tal:repeat="item here/getEventTypesList"
-			tal:attributes="value item/id; selected python:item.id==et" tal:content="item/title" i18n:translate="" />
-	</select>
-</div>
-<div class="field">
-	<label for="es" i18n:translate="">Status</label>
-	<select name="es" id="es">
-		<option value=""></option>
-		<option tal:repeat="item here/getEventStatusList"
-			tal:attributes="value item/id; selected python:item.id==es" tal:content="item/title" i18n:translate="" />
-	</select>
-</div>
-<div class="field">
-	<label for="gz" i18n:translate="">Location</label>
-	<select	name="gz" id="gz" tal:define="langs_list here/getCoverageGlossaryObjects">
-		<option value="" />
-		<tal:block repeat="item langs_list">
-			<tal:block	define="lang_name python:here.gl_get_language_name(here.gl_get_selected_language());
-								translation python:item.get_translation_by_language(lang_name)">
-				<option	tal:condition="translation"
-						tal:attributes="value item/id; selected python:item.id == gz"
-						tal:content="translation" />
-				<tal:block	condition="not:translation"
-							define="lang_name python:here.gl_get_language_name(here.gl_get_default_language());
-									def_trans python:item.get_translation_by_language(lang_name)">
-					<option	tal:condition="def_trans"
-							tal:attributes="value item/id; selected python:item.id == gz"
-							tal:content="def_trans" />
-					<option	tal:condition="not:def_trans"
-							tal:attributes="value item/id; selected python:item.id == gz"
-							i18n:translate="">no translation available</option>
-				</tal:block>
+<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
+<tr tal:condition="can_operate">
+	<th class="checkbox" style="width: 4%;" i18n:translate="" 
+		tal:condition="btn_select">
+		<input type="checkbox" onclick="toggleSelect(this)" />
+	</th>
+	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
+	<th class="title-column" i18n:translate="">Title</th>
+	<th class="checkin" i18n:translate="">Version</th>
+	<th class="edit" i18n:translate="">Edit</th>
+</tr>
+<tr tal:repeat="folders folders_list">
+	<tal:block define="del_permission python:folders[0];
+		edit_permission python:folders[1];
+		version_status python:folders[2];
+		copy_permission python:folders[3];
+		folder python:folders[4]">
+	<td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value folder/id" /></td>
+	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(folder.approved, folder.icon, folder.icon_marked); alt folder/meta_type; title folder/meta_type" border="0" /></td>
+	<td class="title-column">
+		<a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id" />
+		<tal:block tal:condition="folder/can_be_seen">
+			<tal:block tal:condition="folder/has_restrictions" i18n:translate="">
+				[Limited access]
 			</tal:block>
 		</tal:block>
-	</select>
-</div>
-<div class="clear_float"></div>
-<div class="field" style="margin-top:10px;">
-	<span>Start date between:</span>
-	<input type="text" name="sd" id="sd" size="10" tal:attributes="value sd" /> and <input type="text" name="ed" id="es" size="10" tal:attributes="value ed" />
-	<span>dd/mm/yyyy</span>
-	<input type="submit" value="Search" i18n:attributes="value" />
-</div>
-<div class="clear_float"></div>
-</form>
-</div>
-</fieldset>
-
-
-<h2>
-	<span tal:condition="python:sq=='' and sl==[] and et=='' and gz=='' and es=='' and sd=='' and ed==''" i18n:translate="">Upcoming events</span>
-	<span tal:condition="python:not(sq=='' and sl==[] and et=='' and gz=='' and es=='' and sd=='' and ed=='')" i18n:translate="">Search results</span>
-</h2>
-
-<div tal:condition="python:objects_select_all or objects_delete_all">
-	<div id="toolbar">
-		<tal:block tal:condition="objects_delete_all"><a href="javascript:fDeleteObjects();"><span><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
-	</div>
-</div>
-
-<p i18n:translate="" tal:condition="python:len(objects_list) == 0">No events available</p>
-<form name="objectItems" method="post" action="" tal:condition="python:len(objects_list) > 0">
-<table	border="0" cellpadding="0" cellspacing="0" id="folderfile_list" class="sortable"
-		tal:define="sortup_gif string:${here/getSitePath}/images/sortup.gif;
-					sortnot_gif string:${here/getSitePath}/images/sortnot.gif;
-					sortdown_gif string:${here/getSitePath}/images/sortdown.gif;
-					req_params python:here.getRequestParams(request)">
-	<tr>
-		<th class="checkbox" style="width: 5%;" tal:condition="objects_delete_all"><span i18n:translate="" title="not sortable">Delete</span></th>
-		<th style="width: 10%;">
-			<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=start_date${rkey_param};
-								title python:test(skey=='start_date', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title"><span i18n:translate="">Starting date</span>
-			<img tal:attributes="src python:test(skey=='start_date', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
-				 width="12" height="12" alt=""/>
-			</a>
-		</th>
-		<th>
-			<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=title${rkey_param};
-								title python:test(skey=='title', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title"><span i18n:translate="">Title</span>
-			<img tal:attributes="src python:test(skey=='title', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
-				 width="12" height="12" alt=""/>
-			</a>
-		</th>
-		<th style="width: 15%;">
-			<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=coverage${rkey_param};
-								title python:test(skey=='coverage', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title"><span i18n:translate="">Location</span>
-			<img tal:attributes="src python:test(skey=='coverage', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
-				 width="12" height="12" alt=""/>
-			</a>
-		</th>
-		<th>
-			<a	tal:attributes="href string:${here/absolute_url}?${req_params}skey=source${rkey_param};
-								title python:test(skey=='source', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title"><span i18n:translate="">Source</span>
-			<img tal:attributes="src python:test(skey=='source', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
-				 width="12" height="12" alt=""/>
-			</a>
-		</th>
-		<th><span i18n:translate="" title="not sortable">Link</span></th>
-		<th class="edit" tal:condition="objects_select_all"><span i18n:translate="" title="not sortable">Edit</span></th>
-	</tr>
-	<tr tal:repeat="objects objects_list">
-		<tal:block define="del_permission python:objects[0]; edit_permission python:objects[1]; object python:objects[2]">
-			<td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
-			<td class="releasedate" tal:content="python:object.utShowDateTime(object.start_date)" />
-			<td class="title-column"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type); title python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type)" border="0" />
-			<a tal:attributes="href object/absolute_url;title object/description" tal:content="object/title_or_id" />
-				<tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
-					[<span tal:replace="object/count_comments" />
-					<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
-				</tal:block>
-			</td>
-			<td tal:content="python:test(object.coverage, object.coverage, '-')" />
-			<td tal:content="python:test(object.source, object.source, '-')" />
-			<td><a tal:condition="python:object.file_link not in ['', 'http://']" tal:attributes="href python:test(object.file_link, object.file_link, 'http://')" i18n:translate="">[link]</a><span tal:condition="python:object.file_link in ['', 'http://']">-</span></td>
-			<td class="edit" tal:condition="edit_permission">
-				<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
-			</td>
+		<tal:block tal:condition="python:not folder.can_be_seen()" i18n:translate="">
+			[Restricted access]
 		</tal:block>
-	</tr>
+		<tal:block tal:condition="python:folder.is_open_for_comments() and folder.count_comments()>0">
+			[<span tal:replace="folder/count_comments" />
+			<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+		</tal:block>
+		<tal:block condition="python:False" replace="structure folder/description" />
+	</td>
+	<td class="checkin" tal:condition="can_operate" i18n:translate="">n/a</td>
+	<td class="edit" tal:condition="can_operate">
+		<a tal:condition="edit_permission" tal:attributes="href string:${folder/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
+		<tal:block tal:condition="python:not edit_permission" i18n:translate="">n/a</tal:block>
+	</td>
+	</tal:block>
+</tr>
+<tr tal:repeat="objects objects_list">
+	<tal:block define="del_permission python:objects[0];
+			edit_permission python:objects[1];
+			version_status python:objects[2];
+			copy_permission python:objects[3];
+			object python:objects[4]">
+	<td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value object/id" /></td>
+	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" /></td>
+	<td class="title-column">
+		<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
+		<tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
+			[<span tal:replace="object/count_comments" />
+			<span tal:omit-tag="" i18n:translate="">comment(s)</span>]
+		</tal:block>
+		<span tal:replace="structure object/description" />
+	</td>
+	<td class="checkin" tal:condition="can_operate">
+		<tal:block tal:condition="python:version_status == 0" i18n:translate="">n/a</tal:block>
+		<a tal:condition="python:version_status == 2" tal:attributes="href string:${object/absolute_url}/startVersion"><img src="misc_/Naaya/checkout" border="0" alt="Checkout - start new version" i18n:attributes="alt" /></a>
+		<a tal:condition="python:version_status == 1" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/checkin" border="0" alt="Version control" i18n:attributes="alt" /></a>
+	</td>
+	<td class="edit" tal:condition="can_operate">
+		<a tal:condition="python:edit_permission and not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
+		<tal:block tal:condition="python:edit_permission and object.hasVersion() or not edit_permission" i18n:translate="">n/a</tal:block>
+	</td>
+	</tal:block>
+</tr>
 </table>
 </form>
 
-<p>
-	Results <strong tal:content="paging_start"/>&nbsp;-&nbsp;<strong tal:content="paging_upper"/>&nbsp;of&nbsp;<strong tal:content="paging_total"/><br />
-	Page <span tal:condition="python:paging_prev!=-1">&nbsp;&nbsp;
-	<a	tal:define="url python:here.absolute_url; start_batch python:(paging_current_page-1)*paging_records_page"
-		tal:attributes="href string:${url}?start=${start_batch}&${page_search_querystring}">&lt;&lt; Previous</a></span>
-		<span	tal:repeat="page paging_pages">
-			<a	class="paging-link-off"
-				tal:condition="python:paging_current_page==page"
-				tal:content="python:page+1" />
-			<a	tal:condition="python:paging_current_page!=page"
-				tal:define="url here/absolute_url; start_batch python:paging_records_page*page"
-				tal:attributes="href string:${url}?start=${start_batch}&${page_search_querystring}"
-				tal:content="python:page+1" />
-		</span>
-		<span	tal:condition="python:paging_next!=-1">&nbsp;&nbsp;
-			<a	tal:define="url here/absolute_url; start_batch python:(paging_current_page+1)*paging_records_page"
-				tal:attributes="href string:${url}?start=${start_batch}&${page_search_querystring}">Next &gt;&gt;</a>
-		</span>
-</p>
-</tal:block>
+<p style="clear: both;"><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a></p>
+<span tal:replace="structure here/comments_box" />
 
-<p>
-	<a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a>
-
-	<tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-	<a tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank"><img tal:attributes="src string:${here/getSitePath}/images/pdf.gif" alt="PDF View" border="0"  i18n:attributes="alt" /></a>
-	</tal:block>
-</p>
-
-<p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
-	[<a tal:attributes="href string:${here/absolute_url}/requestrole_html" i18n:translate="">Create an account for content contributions</a>]
-</p>
 </div>
+</tal:block>
+</tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
-			]]>
+]]>
 		</ob>
 		<ob meta_type="Naaya Folder" param="0" id="documents" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="1" maintainer_email="" folder_meta_types="Naaya Folder,Naaya Document,Naaya Pointer,Naaya URL,Naaya Extended File">
 			<title lang="en"><![CDATA[Documents]]></title>
@@ -547,87 +329,32 @@ function fDeleteObjects()
 	btn_paste python:objects_info[4];
 	can_operate python:objects_info[5] ">
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
-<!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-    var i;
-    if (isSelected == false)
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-        isSelected = true;}
-    else
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-        isSelected = false;}}
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
 
-function fCheckSelection()
-{   var frm = document.objectItems;
-    var i;
-    check = false;
-    for(i=0; i<frm.elements.length; i++)
-        if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-        {   check = true; break;}
-    return check;}
+<script language="javascript" type="text/javascript">
+<!--
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="copyObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script language="javascript" type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-    {
-        document.objectItems.action="cutObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-    document.objectItems.submit();}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="deleteObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to delete.');}
-//-->
-</script>
-
-<div id="right_port" tal:define="items python:here.get_right_portlets_locations_objects(here)"
-	tal:condition="python:len(items)>0">
-	<tal:block tal:repeat="item items">
+<div id="right_port">
+	<tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
 		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
 	</tal:block>
 </div>
 
 <tal:block tal:define=" isArabic here/isArabicLanguage;
 						noArabic not:isArabic">
-<div class="middle_port" tal:define="margin_string python:test(isArabic,'margin-left:0;;','margin-right:0;;')" tal:attributes="style python:test(here.getPortletsTool().get_right_portlets_locations_objects(here), '', margin_string)">
+<div id="middle_port" tal:define="margin_string python:test(isArabic,'margin-left:0;;','margin-right:0;;')" tal:attributes="style python:test(here.getPortletsTool().get_right_portlets_locations_objects(here), '', margin_string)">
 <h2 tal:define="l_parent python:here.aq_parent">
-	<img tal:attributes="src python:test(l_parent.approved, l_parent.icon, l_parent.icon_marked); title l_parent/meta_label; alt l_parent/meta_label" border="0" />
+	<img tal:attributes="src python:test(l_parent.approved, l_parent.icon, l_parent.icon_marked); title l_parent/meta_type; alt l_parent/meta_type" border="0" />
 	<tal:block tal:replace="l_parent/title_or_id" />
 	<tal:block tal:condition="l_parent/can_be_seen">
 		<tal:block tal:condition="l_parent/has_restrictions" i18n:translate="">
@@ -653,35 +380,15 @@ function fDeleteObjects()
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <span tal:replace="structure here/menusubmissions" />
 
-<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
-	<div id="toolbar">
-		<tal:block tal:condition="btn_select">
-			<input type="reset" onclick="toggleSelect();return false" i18n:attributes="value" value="Select all" />
-				<img tal:condition="python:False" src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_copy">
-			<input type="reset" onclick="fCopyObjects();return false" i18n:attributes="value" value="Copy" />
-				<img tal:condition="python:False" src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_cut">
-			<input type="reset" onclick="fCutObjects();return false" i18n:attributes="value" value="Cut" />
-				<img tal:condition="python:False" src="/misc_/Naaya/cut.gif" border="0" alt="Cut" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_paste">
-			<input type="reset" onclick="fPasteObjects();return false" i18n:attributes="value" value="Paste" />
-				<img tal:condition="python:False" src="/misc_/Naaya/paste.gif" border="0" alt="Paste" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_delete">
-			<input type="reset" onclick="fDeleteObjects();return false" i18n:attributes="value" value="Delete" />
-				<img tal:condition="python:False" src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" />
-		</tal:block>
-	</div>
-</div>
+<form name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
-	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+	<th class="checkbox" style="width: 4%;" i18n:translate="" 
+		tal:condition="btn_select">
+		<input type="checkbox" onclick="toggleSelect(this)" />
+	</th>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -694,7 +401,7 @@ function fDeleteObjects()
 		copy_permission python:folders[3];
 		folder python:folders[4]">
 	<td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value folder/id" /></td>
-	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(folder.approved, folder.icon, folder.icon_marked); alt python:test(hasattr(folder, 'meta_label'), folder.meta_label, folder.meta_type); title python:test(hasattr(folder, 'meta_label'), folder.meta_label, folder.meta_type)" border="0" /></td>
+	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(folder.approved, folder.icon, folder.icon_marked); alt folder/meta_type; title folder/meta_type" border="0" /></td>
 	<td class="title-column">
 		<a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id" />
 		<tal:block tal:condition="folder/can_be_seen">
@@ -725,7 +432,7 @@ function fDeleteObjects()
 			copy_permission python:objects[3];
 			object python:objects[4]">
 	<td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value object/id" /></td>
-	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type); title python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type)" border="0" /></td>
+	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" /></td>
 	<td class="title-column">
 		<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
 		<tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
@@ -748,20 +455,14 @@ function fDeleteObjects()
 </table>
 </form>
 
-<p>
-	<a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a>
-
-	<tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-	<a tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank"><img tal:attributes="src string:${here/getSitePath}/images/pdf.gif" alt="PDF View" border="0"  i18n:attributes="alt" /></a>
-	</tal:block>
-</p>
+<p style="clear: both;"><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a></p>
 <span tal:replace="structure here/comments_box" />
 
 </div>
 </tal:block>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
-		]]>
+]]>
 		</ob>
 		<ob meta_type="Naaya Folder" param="0" id="resources" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="1" maintainer_email="" folder_meta_types="Naaya Folder,Naaya Document,Naaya Pointer,Naaya URL,Naaya Extended File">
 			<title lang="en"><![CDATA[Resources]]></title>
@@ -781,87 +482,32 @@ function fDeleteObjects()
 	btn_paste python:objects_info[4];
 	can_operate python:objects_info[5] ">
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
-<!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-    var i;
-    if (isSelected == false)
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-        isSelected = true;}
-    else
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-        isSelected = false;}}
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
 
-function fCheckSelection()
-{   var frm = document.objectItems;
-    var i;
-    check = false;
-    for(i=0; i<frm.elements.length; i++)
-        if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-        {   check = true; break;}
-    return check;}
+<script language="javascript" type="text/javascript">
+<!--
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="copyObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script language="javascript" type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-    {
-        document.objectItems.action="cutObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-    document.objectItems.submit();}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="deleteObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to delete.');}
-//-->
-</script>
-
-<div id="right_port" tal:define="items python:here.get_right_portlets_locations_objects(here)"
-	tal:condition="python:len(items)>0">
-	<tal:block tal:repeat="item items">
+<div id="right_port">
+	<tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
 		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
 	</tal:block>
 </div>
 
 <tal:block tal:define=" isArabic here/isArabicLanguage;
 						noArabic not:isArabic">
-<div class="middle_port" tal:define="margin_string python:test(isArabic,'margin-left:0;;','margin-right:0;;')" tal:attributes="style python:test(here.getPortletsTool().get_right_portlets_locations_objects(here), '', margin_string)">
+<div id="middle_port" tal:define="margin_string python:test(isArabic,'margin-left:0;;','margin-right:0;;')" tal:attributes="style python:test(here.getPortletsTool().get_right_portlets_locations_objects(here), '', margin_string)">
 <h2 tal:define="l_parent python:here.aq_parent">
-	<img tal:attributes="src python:test(l_parent.approved, l_parent.icon, l_parent.icon_marked); title l_parent/meta_label; alt l_parent/meta_label" border="0" />
+	<img tal:attributes="src python:test(l_parent.approved, l_parent.icon, l_parent.icon_marked); title l_parent/meta_type; alt l_parent/meta_type" border="0" />
 	<tal:block tal:replace="l_parent/title_or_id" />
 	<tal:block tal:condition="l_parent/can_be_seen">
 		<tal:block tal:condition="l_parent/has_restrictions" i18n:translate="">
@@ -887,35 +533,15 @@ function fDeleteObjects()
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <span tal:replace="structure here/menusubmissions" />
 
-<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
-	<div id="toolbar">
-		<tal:block tal:condition="btn_select">
-			<input type="reset" onclick="toggleSelect();return false" i18n:attributes="value" value="Select all" />
-				<img tal:condition="python:False" src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_copy">
-			<input type="reset" onclick="fCopyObjects();return false" i18n:attributes="value" value="Copy" />
-				<img tal:condition="python:False" src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_cut">
-			<input type="reset" onclick="fCutObjects();return false" i18n:attributes="value" value="Cut" />
-				<img tal:condition="python:False" src="/misc_/Naaya/cut.gif" border="0" alt="Cut" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_paste">
-			<input type="reset" onclick="fPasteObjects();return false" i18n:attributes="value" value="Paste" />
-				<img tal:condition="python:False" src="/misc_/Naaya/paste.gif" border="0" alt="Paste" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_delete">
-			<input type="reset" onclick="fDeleteObjects();return false" i18n:attributes="value" value="Delete" />
-				<img tal:condition="python:False" src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" />
-		</tal:block>
-	</div>
-</div>
+<form name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
-	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+	<th class="checkbox" style="width: 4%;" i18n:translate="" 
+		tal:condition="btn_select">
+		<input type="checkbox" onclick="toggleSelect(this)" />
+	</th>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -928,7 +554,7 @@ function fDeleteObjects()
 		copy_permission python:folders[3];
 		folder python:folders[4]">
 	<td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value folder/id" /></td>
-	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(folder.approved, folder.icon, folder.icon_marked); alt python:test(hasattr(folder, 'meta_label'), folder.meta_label, folder.meta_type); title python:test(hasattr(folder, 'meta_label'), folder.meta_label, folder.meta_type)" border="0" /></td>
+	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(folder.approved, folder.icon, folder.icon_marked); alt folder/meta_type; title folder/meta_type" border="0" /></td>
 	<td class="title-column">
 		<a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id" />
 		<tal:block tal:condition="folder/can_be_seen">
@@ -959,7 +585,7 @@ function fDeleteObjects()
 			copy_permission python:objects[3];
 			object python:objects[4]">
 	<td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value object/id" /></td>
-	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type); title python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type)" border="0" /></td>
+	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" /></td>
 	<td class="title-column">
 		<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
 		<tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
@@ -982,20 +608,14 @@ function fDeleteObjects()
 </table>
 </form>
 
-<p>
-	<a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a>
-
-	<tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-	<a tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank"><img tal:attributes="src string:${here/getSitePath}/images/pdf.gif" alt="PDF View" border="0"  i18n:attributes="alt" /></a>
-	</tal:block>
-</p>
+<p style="clear: both;"><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a></p>
 <span tal:replace="structure here/comments_box" />
 
 </div>
 </tal:block>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
-		]]>
+]]>
 		</ob>
 		<ob meta_type="Naaya Folder" param="0" id="download" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="1" maintainer_email="" folder_meta_types="Naaya Folder,Naaya Extended File">
 			<title lang="en"><![CDATA[Download area]]></title>
@@ -1010,105 +630,37 @@ function fDeleteObjects()
 	objects_list python:objects_info[7];
 	btn_select python:objects_info[0];
 	btn_delete python:objects_info[1];
-	btn_download python:objects_info[1];
 	btn_copy python:objects_info[2];
 	btn_cut python:objects_info[3];
 	btn_paste python:objects_info[4];
-	can_operate python:objects_info[5];
-	fld_url python:here.utUrlEncode(here.absolute_url(1))">
+	can_operate python:objects_info[5] ">
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
+
+<script language="javascript" type="text/javascript">
 <!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-var i;
-if (isSelected == false)
-{   for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-isSelected = true;}
-else
-{   for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-isSelected = false;}}
-
-function fCheckSelection()
-{   var frm = document.objectItems;
-var i;
-check = false;
-for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-{   check = true; break;}
-return check;}
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-{   document.objectItems.action="copyObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script language="javascript" type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-{
-document.objectItems.action="cutObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-document.objectItems.submit();}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-{   document.objectItems.action="deleteObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to delete.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="python:here.testNFPContext(here.absolute_url())">
-<!--
-function fDownloadObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="downloadObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to download.');}
-//-->
-</script>
-
-<div id="right_port" tal:define="items python:here.get_right_portlets_locations_objects(here)"
-	tal:condition="python:len(items)>0">
-	<tal:block tal:repeat="item items">
+<div id="right_port">
+	<tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
 		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
 	</tal:block>
 </div>
 
 <tal:block tal:define=" isArabic here/isArabicLanguage;
 						noArabic not:isArabic">
-<div class="middle_port" tal:define="margin_string python:test(isArabic,'margin-left:0;;','margin-right:0;;')" tal:attributes="style python:test(here.getPortletsTool().get_right_portlets_locations_objects(here), '', margin_string)">
+<div id="middle_port" tal:define="margin_string python:test(isArabic,'margin-left:0;;','margin-right:0;;')" tal:attributes="style python:test(here.getPortletsTool().get_right_portlets_locations_objects(here), '', margin_string)">
 <h2 tal:define="l_parent python:here.aq_parent">
-	<img tal:attributes="src python:test(l_parent.approved, l_parent.icon, l_parent.icon_marked); title l_parent/meta_label; alt l_parent/meta_label" border="0" />
+	<img tal:attributes="src python:test(l_parent.approved, l_parent.icon, l_parent.icon_marked); title l_parent/meta_type; alt l_parent/meta_type" border="0" />
 	<tal:block tal:replace="l_parent/title_or_id" />
 	<tal:block tal:condition="l_parent/can_be_seen">
 		<tal:block tal:condition="l_parent/has_restrictions" i18n:translate="">
@@ -1134,40 +686,15 @@ function fDownloadObjects()
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <span tal:replace="structure here/menusubmissions" />
 
-<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
-	<div id="toolbar">
-		<tal:block tal:condition="btn_select">
-			<input type="reset" onclick="toggleSelect();return false" i18n:attributes="value" value="Select all" />
-				<img tal:condition="python:False" src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_copy">
-			<input type="reset" onclick="fCopyObjects();return false" i18n:attributes="value" value="Copy" />
-				<img tal:condition="python:False" src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_cut">
-			<input type="reset" onclick="fCutObjects();return false" i18n:attributes="value" value="Cut" />
-				<img tal:condition="python:False" src="/misc_/Naaya/cut.gif" border="0" alt="Cut" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_paste">
-			<input type="reset" onclick="fPasteObjects();return false" i18n:attributes="value" value="Paste" />
-				<img tal:condition="python:False" src="/misc_/Naaya/paste.gif" border="0" alt="Paste" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_delete">
-			<input type="reset" onclick="fDeleteObjects();return false" i18n:attributes="value" value="Delete" />
-				<img tal:condition="python:False" src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="python:here.testNFPContext(here.absolute_url())">
-			<input type="reset" onclick="fDownloadObjects();return false" i18n:attributes="value" value="Download" />
-				<img tal:condition="python:False" src="/misc_/Naaya/download.gif" border="0" alt="Download" i18n:attributes="alt" />
-		</tal:block>
-	</div>
-</div>
+<form name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<form name="objectItems" method="post" action="">
-<input type="hidden" name="fld_url" tal:attributes="value fld_url" />
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
-	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+	<th class="checkbox" style="width: 4%;" i18n:translate="" 
+		tal:condition="btn_select">
+		<input type="checkbox" onclick="toggleSelect(this)" />
+	</th>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -1180,7 +707,7 @@ function fDownloadObjects()
 		copy_permission python:folders[3];
 		folder python:folders[4]">
 	<td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value folder/id" /></td>
-	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(folder.approved, folder.icon, folder.icon_marked); alt python:test(hasattr(folder, 'meta_label'), folder.meta_label, folder.meta_type); title python:test(hasattr(folder, 'meta_label'), folder.meta_label, folder.meta_type)" border="0" /></td>
+	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(folder.approved, folder.icon, folder.icon_marked); alt folder/meta_type; title folder/meta_type" border="0" /></td>
 	<td class="title-column">
 		<a tal:attributes="href folder/absolute_url" tal:content="folder/title_or_id" />
 		<tal:block tal:condition="folder/can_be_seen">
@@ -1211,7 +738,7 @@ function fDownloadObjects()
 			copy_permission python:objects[3];
 			object python:objects[4]">
 	<td class="checkbox" tal:condition="btn_select" style="width: 4%; vertical-align: top;"><input tal:condition="python:del_permission or edit_permission or copy_permission" type="checkbox" name="id" tal:attributes="value object/id" /></td>
-	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type); title python:test(hasattr(object, 'meta_label'), object.meta_label, object.meta_type)" border="0" /></td>
+	<td class="type" style="width: 4%;"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" /></td>
 	<td class="title-column">
 		<a tal:attributes="href object/absolute_url" tal:content="object/title_or_id" />
 		<tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
@@ -1234,20 +761,14 @@ function fDownloadObjects()
 </table>
 </form>
 
-<p>
-	<a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a>
-
-	<tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-	<a tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank"><img tal:attributes="src string:${here/getSitePath}/images/pdf.gif" alt="PDF View" border="0"  i18n:attributes="alt" /></a>
-	</tal:block>
-</p>
+<p style="clear: both;"><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a></p>
 <span tal:replace="structure here/comments_box" />
 
 </div>
 </tal:block>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
-		]]>
+]]>
 		</ob>
 	</ob>
 	<ob meta_type="Naaya Folder" param="0" id="about" sortorder="0" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
@@ -1533,7 +1054,8 @@ function fDownloadObjects()
 		]]></description>
 		<coverage lang="en"><![CDATA[]]></coverage>
 		<keywords lang="en"><![CDATA[]]></keywords>
-			<![CDATA[<span tal:replace="structure here/standard_html_header" />
+<![CDATA[
+<span tal:replace="structure here/standard_html_header" />
 
 <tal:block define="objects_info here/checkPermissionManageObjects;
 	folders_list python:objects_info[6];
@@ -1545,72 +1067,18 @@ function fDownloadObjects()
 	btn_paste python:objects_info[4];
 	can_operate python:objects_info[5] ">
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
+
+<script language="javascript" type="text/javascript">
 <!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-    var i;
-    if (isSelected == false)
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-        isSelected = true;}
-    else
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-        isSelected = false;}}
-
-function fCheckSelection()
-{   var frm = document.objectItems;
-    var i;
-    check = false;
-    for(i=0; i<frm.elements.length; i++)
-        if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-        {   check = true; break;}
-    return check;}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="copyObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script language="javascript" type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-    {
-        document.objectItems.action="cutObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-    document.objectItems.submit();}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="deleteObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to delete.');}
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
@@ -1636,20 +1104,15 @@ function fDeleteObjects()
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <span tal:replace="structure here/menusubmissions" />
 
-<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
-	<div id="toolbar">
-		<tal:block tal:condition="btn_select"><a href="javascript:toggleSelect();"><span><img src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Select all</span></span></a></tal:block>
-		<tal:block tal:condition="btn_copy"><a href="javascript:fCopyObjects();"><span><img src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Copy</span></span></a></tal:block>
-		<tal:block tal:condition="btn_cut"><a href="javascript:fCutObjects();"><span><img src="/misc_/Naaya/cut.gif" border="0" alt="Cut" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Cut</span></span></a></tal:block>
-		<tal:block tal:condition="btn_paste"><a href="javascript:fPasteObjects();"><span><img src="/misc_/Naaya/paste.gif" border="0" alt="Paste" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Paste</span></span></a></tal:block>
-		<tal:block tal:condition="btn_delete"><a href="javascript:fDeleteObjects();"><span><img src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a></tal:block>
-	</div>
-</div>
+<form tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste or can_operate" name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<form tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste or can_operate" name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
-	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+	<th class="checkbox" style="width: 4%;" i18n:translate="" 
+		tal:condition="btn_select">
+		<input type="checkbox" onclick="toggleSelect(this)" />
+  	</th>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -1727,7 +1190,7 @@ function fDeleteObjects()
 <span tal:replace="structure here/comments_box" />
 
 <span tal:replace="structure here/standard_html_footer"/>
-			]]>
+]]>
 
 	</ob>
 	<ob meta_type="Naaya Folder" param="0" id="introduction" sortorder="2" contributor="" approved="1" approved_by="" releasedate="" discussion="0" publicinterface="0" maintainer_email="" folder_meta_types="">
@@ -1776,7 +1239,8 @@ function fDeleteObjects()
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-			<![CDATA[<span tal:replace="structure here/standard_html_header" />
+<![CDATA[
+<span tal:replace="structure here/standard_html_header" />
 
 <tal:block define="objects_info here/checkPermissionManageObjects;
 	folders_list python:objects_info[6];
@@ -1788,72 +1252,18 @@ function fDeleteObjects()
 	btn_paste python:objects_info[4];
 	can_operate python:objects_info[5] ">
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
+
+<script language="javascript" type="text/javascript">
 <!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-    var i;
-    if (isSelected == false)
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-        isSelected = true;}
-    else
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-        isSelected = false;}}
-
-function fCheckSelection()
-{   var frm = document.objectItems;
-    var i;
-    check = false;
-    for(i=0; i<frm.elements.length; i++)
-        if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-        {   check = true; break;}
-    return check;}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="copyObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script language="javascript" type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-    {
-        document.objectItems.action="cutObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-    document.objectItems.submit();}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="deleteObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to delete.');}
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
@@ -1885,6 +1295,7 @@ function fDeleteObjects()
 		</select>
 	</span>
 	<tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit Folder</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/editlogo_html"><span i18n:translate="">Change logo</span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
@@ -1895,35 +1306,14 @@ function fDeleteObjects()
 </div>
 </tal:block>
 
-<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
-	<div id="toolbar">
-		<tal:block tal:condition="btn_select">
-			<input type="reset" onclick="toggleSelect();return false" i18n:attributes="value" value="Select all" />
-				<img tal:condition="python:False" src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_copy">
-			<input type="reset" onclick="fCopyObjects();return false" i18n:attributes="value" value="Copy" />
-				<img tal:condition="python:False" src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_cut">
-			<input type="reset" onclick="fCutObjects();return false" i18n:attributes="value" value="Cut" />
-				<img tal:condition="python:False" src="/misc_/Naaya/cut.gif" border="0" alt="Cut" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_paste">
-			<input type="reset" onclick="fPasteObjects();return false" i18n:attributes="value" value="Paste" />
-				<img tal:condition="python:False" src="/misc_/Naaya/paste.gif" border="0" alt="Paste" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_delete">
-			<input type="reset" onclick="fDeleteObjects();return false" i18n:attributes="value" value="Delete" />
-				<img tal:condition="python:False" src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" />
-		</tal:block>
-	</div>
-</div>
+<form name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
-	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select">
+    		<input type="checkbox" onclick="toggleSelect(this)" />
+  	</th>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -2003,8 +1393,7 @@ function fDeleteObjects()
 </tal:block>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
-
-			]]>
+]]>
 			<template id="header" param="0" title="Custom HTML header for this item and below">
 			<![CDATA[<tal:block define="site here/getSite">
 <span tal:replace="structure site/standard_html_header" />
@@ -2052,7 +1441,7 @@ function fDeleteObjects()
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-			<![CDATA[
+<![CDATA[
 <span tal:replace="structure here/standard_html_header" />
 
 <tal:block define="objects_info here/checkPermissionManageObjects;
@@ -2065,72 +1454,18 @@ function fDeleteObjects()
 	btn_paste python:objects_info[4];
 	can_operate python:objects_info[5] ">
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
+
+<script language="javascript" type="text/javascript">
 <!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-    var i;
-    if (isSelected == false)
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-        isSelected = true;}
-    else
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-        isSelected = false;}}
-
-function fCheckSelection()
-{   var frm = document.objectItems;
-    var i;
-    check = false;
-    for(i=0; i<frm.elements.length; i++)
-        if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-        {   check = true; break;}
-    return check;}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="copyObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script language="javascript" type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-    {
-        document.objectItems.action="cutObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-    document.objectItems.submit();}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="deleteObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to delete.');}
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
@@ -2162,6 +1497,7 @@ function fDeleteObjects()
 		</select>
 	</span>
 	<tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit Folder</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/editlogo_html"><span i18n:translate="">Change logo</span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
@@ -2172,35 +1508,14 @@ function fDeleteObjects()
 </div>
 </tal:block>
 
-<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
-	<div id="toolbar">
-		<tal:block tal:condition="btn_select">
-			<input type="reset" onclick="toggleSelect();return false" i18n:attributes="value" value="Select all" />
-				<img tal:condition="python:False" src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_copy">
-			<input type="reset" onclick="fCopyObjects();return false" i18n:attributes="value" value="Copy" />
-				<img tal:condition="python:False" src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_cut">
-			<input type="reset" onclick="fCutObjects();return false" i18n:attributes="value" value="Cut" />
-				<img tal:condition="python:False" src="/misc_/Naaya/cut.gif" border="0" alt="Cut" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_paste">
-			<input type="reset" onclick="fPasteObjects();return false" i18n:attributes="value" value="Paste" />
-				<img tal:condition="python:False" src="/misc_/Naaya/paste.gif" border="0" alt="Paste" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_delete">
-			<input type="reset" onclick="fDeleteObjects();return false" i18n:attributes="value" value="Delete" />
-				<img tal:condition="python:False" src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" />
-		</tal:block>
-	</div>
-</div>
+<form name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
-	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select">
+    		<input type="checkbox" onclick="toggleSelect(this)" />
+  	</th>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -2280,8 +1595,7 @@ function fDeleteObjects()
 </tal:block>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
-
-			]]>
+]]>
 			<template id="header" param="0" title="Custom HTML header for this item and below">
 			<![CDATA[<tal:block define="site here/getSite">
 <span tal:replace="structure site/standard_html_header" />
@@ -2329,7 +1643,7 @@ function fDeleteObjects()
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-			<![CDATA[
+<![CDATA[
 <span tal:replace="structure here/standard_html_header" />
 
 <tal:block define="objects_info here/checkPermissionManageObjects;
@@ -2342,72 +1656,18 @@ function fDeleteObjects()
 	btn_paste python:objects_info[4];
 	can_operate python:objects_info[5] ">
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
+
+<script language="javascript" type="text/javascript">
 <!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-    var i;
-    if (isSelected == false)
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-        isSelected = true;}
-    else
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-        isSelected = false;}}
-
-function fCheckSelection()
-{   var frm = document.objectItems;
-    var i;
-    check = false;
-    for(i=0; i<frm.elements.length; i++)
-        if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-        {   check = true; break;}
-    return check;}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="copyObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script language="javascript" type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-    {
-        document.objectItems.action="cutObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-    document.objectItems.submit();}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="deleteObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to delete.');}
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
@@ -2439,6 +1699,7 @@ function fDeleteObjects()
 		</select>
 	</span>
 	<tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit Folder</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/editlogo_html"><span i18n:translate="">Change logo</span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
@@ -2449,35 +1710,14 @@ function fDeleteObjects()
 </div>
 </tal:block>
 
-<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
-	<div id="toolbar">
-		<tal:block tal:condition="btn_select">
-			<input type="reset" onclick="toggleSelect();return false" i18n:attributes="value" value="Select all" />
-				<img tal:condition="python:False" src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_copy">
-			<input type="reset" onclick="fCopyObjects();return false" i18n:attributes="value" value="Copy" />
-				<img tal:condition="python:False" src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_cut">
-			<input type="reset" onclick="fCutObjects();return false" i18n:attributes="value" value="Cut" />
-				<img tal:condition="python:False" src="/misc_/Naaya/cut.gif" border="0" alt="Cut" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_paste">
-			<input type="reset" onclick="fPasteObjects();return false" i18n:attributes="value" value="Paste" />
-				<img tal:condition="python:False" src="/misc_/Naaya/paste.gif" border="0" alt="Paste" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_delete">
-			<input type="reset" onclick="fDeleteObjects();return false" i18n:attributes="value" value="Delete" />
-				<img tal:condition="python:False" src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" />
-		</tal:block>
-	</div>
-</div>
+<form name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
-	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select">
+    		<input type="checkbox" onclick="toggleSelect(this)" />
+  	</th>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -2557,8 +1797,7 @@ function fDeleteObjects()
 </tal:block>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
-
-			]]>
+]]>
 			<template id="header" param="0" title="Custom HTML header for this item and below">
 			<![CDATA[<tal:block define="site here/getSite">
 <span tal:replace="structure site/standard_html_header" />
@@ -2606,7 +1845,7 @@ function fDeleteObjects()
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-			<![CDATA[
+<![CDATA[
 <span tal:replace="structure here/standard_html_header" />
 
 <tal:block define="objects_info here/checkPermissionManageObjects;
@@ -2619,72 +1858,18 @@ function fDeleteObjects()
 	btn_paste python:objects_info[4];
 	can_operate python:objects_info[5] ">
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
+
+<script language="javascript" type="text/javascript">
 <!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-    var i;
-    if (isSelected == false)
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-        isSelected = true;}
-    else
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-        isSelected = false;}}
-
-function fCheckSelection()
-{   var frm = document.objectItems;
-    var i;
-    check = false;
-    for(i=0; i<frm.elements.length; i++)
-        if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-        {   check = true; break;}
-    return check;}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="copyObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script language="javascript" type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-    {
-        document.objectItems.action="cutObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-    document.objectItems.submit();}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-    {   document.objectItems.action="deleteObjects";
-        document.objectItems.submit();}
-    else
-        alert('Please select one or more items to delete.');}
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
@@ -2716,6 +1901,7 @@ function fDeleteObjects()
 		</select>
 	</span>
 	<tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit Folder</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/editlogo_html"><span i18n:translate="">Change logo</span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
@@ -2726,35 +1912,14 @@ function fDeleteObjects()
 </div>
 </tal:block>
 
-<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
-	<div id="toolbar">
-		<tal:block tal:condition="btn_select">
-			<input type="reset" onclick="toggleSelect();return false" i18n:attributes="value" value="Select all" />
-				<img tal:condition="python:False" src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_copy">
-			<input type="reset" onclick="fCopyObjects();return false" i18n:attributes="value" value="Copy" />
-				<img tal:condition="python:False" src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_cut">
-			<input type="reset" onclick="fCutObjects();return false" i18n:attributes="value" value="Cut" />
-				<img tal:condition="python:False" src="/misc_/Naaya/cut.gif" border="0" alt="Cut" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_paste">
-			<input type="reset" onclick="fPasteObjects();return false" i18n:attributes="value" value="Paste" />
-				<img tal:condition="python:False" src="/misc_/Naaya/paste.gif" border="0" alt="Paste" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_delete">
-			<input type="reset" onclick="fDeleteObjects();return false" i18n:attributes="value" value="Delete" />
-				<img tal:condition="python:False" src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" />
-		</tal:block>
-	</div>
-</div>
+<form name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
-	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select">
+    		<input type="checkbox" onclick="toggleSelect(this)" />
+  	</th>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -2834,8 +1999,7 @@ function fDeleteObjects()
 </tal:block>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
-
-			]]>
+]]>
 			<template id="header" param="0" title="Custom HTML header for this item and below">
 			<![CDATA[<tal:block define="site here/getSite">
 <span tal:replace="structure site/standard_html_header" />
@@ -3229,7 +2393,8 @@ function toggleSelect(caller){
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-			<![CDATA[<span tal:replace="structure here/standard_html_header" />
+			<![CDATA[
+<span tal:replace="structure here/standard_html_header" />
 
 <tal:block define="objects_info here/checkPermissionManageObjects;
 	folders_list python:objects_info[6];
@@ -3241,72 +2406,18 @@ function toggleSelect(caller){
 	btn_paste python:objects_info[4];
 	can_operate python:objects_info[5] ">
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
+
+<script language="javascript" type="text/javascript">
 <!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-var i;
-if (isSelected == false)
-{   for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-isSelected = true;}
-else
-{   for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-isSelected = false;}}
-
-function fCheckSelection()
-{   var frm = document.objectItems;
-var i;
-check = false;
-for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-{   check = true; break;}
-return check;}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-{   document.objectItems.action="copyObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script language="javascript" type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-{
-document.objectItems.action="cutObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-document.objectItems.submit();}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-{   document.objectItems.action="deleteObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to delete.');}
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
@@ -3339,6 +2450,7 @@ alert('Please select one or more items to delete.');}
 		</select>
 	</span>
 	<tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit Folder</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/editlogo_html"><span i18n:translate="">Change logo</span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
@@ -3350,35 +2462,15 @@ alert('Please select one or more items to delete.');}
 </div>
 </tal:block>
 
-<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
-	<div id="toolbar">
-		<tal:block tal:condition="btn_select">
-			<input type="reset" onclick="toggleSelect();return false" i18n:attributes="value" value="Select all" />
-				<img tal:condition="python:False" src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_copy">
-			<input type="reset" onclick="fCopyObjects();return false" i18n:attributes="value" value="Copy" />
-				<img tal:condition="python:False" src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_cut">
-			<input type="reset" onclick="fCutObjects();return false" i18n:attributes="value" value="Cut" />
-				<img tal:condition="python:False" src="/misc_/Naaya/cut.gif" border="0" alt="Cut" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_paste">
-			<input type="reset" onclick="fPasteObjects();return false" i18n:attributes="value" value="Paste" />
-				<img tal:condition="python:False" src="/misc_/Naaya/paste.gif" border="0" alt="Paste" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_delete">
-			<input type="reset" onclick="fDeleteObjects();return false" i18n:attributes="value" value="Delete" />
-				<img tal:condition="python:False" src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" />
-		</tal:block>
-	</div>
-</div>
+<form name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
-	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+	<th class="checkbox" style="width: 4%;" i18n:translate="" 
+		tal:condition="btn_select">
+    		<input type="checkbox" onclick="toggleSelect(this)" />
+  	</th>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -3458,7 +2550,7 @@ alert('Please select one or more items to delete.');}
 </tal:block>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
-			]]>
+]]>
 			<template id="header" param="0" title="Custom HTML header for this item and below">
 			<![CDATA[
 <tal:block define="site here/getSite">
@@ -3554,7 +2646,8 @@ alert('Please select one or more items to delete.');}
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-			<![CDATA[<span tal:replace="structure here/standard_html_header" />
+			<![CDATA[
+<span tal:replace="structure here/standard_html_header" />
 
 <tal:block define="objects_info here/checkPermissionManageObjects;
 	folders_list python:objects_info[6];
@@ -3566,72 +2659,18 @@ alert('Please select one or more items to delete.');}
 	btn_paste python:objects_info[4];
 	can_operate python:objects_info[5] ">
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
+
+<script language="javascript" type="text/javascript">
 <!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-var i;
-if (isSelected == false)
-{   for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-isSelected = true;}
-else
-{   for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-isSelected = false;}}
-
-function fCheckSelection()
-{   var frm = document.objectItems;
-var i;
-check = false;
-for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-{   check = true; break;}
-return check;}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-{   document.objectItems.action="copyObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script language="javascript" type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-{
-document.objectItems.action="cutObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-document.objectItems.submit();}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-{   document.objectItems.action="deleteObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to delete.');}
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
@@ -3664,6 +2703,7 @@ alert('Please select one or more items to delete.');}
 		</select>
 	</span>
 	<tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit Folder</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/editlogo_html"><span i18n:translate="">Change logo</span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
@@ -3675,35 +2715,15 @@ alert('Please select one or more items to delete.');}
 </div>
 </tal:block>
 
-<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
-	<div id="toolbar">
-		<tal:block tal:condition="btn_select">
-			<input type="reset" onclick="toggleSelect();return false" i18n:attributes="value" value="Select all" />
-				<img tal:condition="python:False" src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_copy">
-			<input type="reset" onclick="fCopyObjects();return false" i18n:attributes="value" value="Copy" />
-				<img tal:condition="python:False" src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_cut">
-			<input type="reset" onclick="fCutObjects();return false" i18n:attributes="value" value="Cut" />
-				<img tal:condition="python:False" src="/misc_/Naaya/cut.gif" border="0" alt="Cut" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_paste">
-			<input type="reset" onclick="fPasteObjects();return false" i18n:attributes="value" value="Paste" />
-				<img tal:condition="python:False" src="/misc_/Naaya/paste.gif" border="0" alt="Paste" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_delete">
-			<input type="reset" onclick="fDeleteObjects();return false" i18n:attributes="value" value="Delete" />
-				<img tal:condition="python:False" src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" />
-		</tal:block>
-	</div>
-</div>
+<form name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
-	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+	<th class="checkbox" style="width: 4%;" i18n:translate="" 
+		tal:condition="btn_select">
+    		<input type="checkbox" onclick="toggleSelect(this)" />
+  	</th>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -3783,7 +2803,7 @@ alert('Please select one or more items to delete.');}
 </tal:block>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
-			]]>
+]]>
 			<template id="header" param="0" title="Custom HTML header for this item and below">
 			<![CDATA[
 <tal:block define="site here/getSite">
@@ -4164,7 +3184,8 @@ alert('Please select one or more items to delete.');}
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-			<![CDATA[<span tal:replace="structure here/standard_html_header" />
+			<![CDATA[
+<span tal:replace="structure here/standard_html_header" />
 
 <tal:block define="objects_info here/checkPermissionManageObjects;
 	folders_list python:objects_info[6];
@@ -4176,72 +3197,18 @@ alert('Please select one or more items to delete.');}
 	btn_paste python:objects_info[4];
 	can_operate python:objects_info[5] ">
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
+
+<script language="javascript" type="text/javascript">
 <!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-var i;
-if (isSelected == false)
-{   for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-isSelected = true;}
-else
-{   for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-isSelected = false;}}
-
-function fCheckSelection()
-{   var frm = document.objectItems;
-var i;
-check = false;
-for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-{   check = true; break;}
-return check;}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-{   document.objectItems.action="copyObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script language="javascript" type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-{
-document.objectItems.action="cutObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-document.objectItems.submit();}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-{   document.objectItems.action="deleteObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to delete.');}
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
@@ -4274,6 +3241,7 @@ alert('Please select one or more items to delete.');}
 		</select>
 	</span>
 	<tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit Folder</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/editlogo_html"><span i18n:translate="">Change logo</span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
@@ -4285,35 +3253,15 @@ alert('Please select one or more items to delete.');}
 </div>
 </tal:block>
 
-<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
-	<div id="toolbar">
-		<tal:block tal:condition="btn_select">
-			<input type="reset" onclick="toggleSelect();return false" i18n:attributes="value" value="Select all" />
-				<img tal:condition="python:False" src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_copy">
-			<input type="reset" onclick="fCopyObjects();return false" i18n:attributes="value" value="Copy" />
-				<img tal:condition="python:False" src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_cut">
-			<input type="reset" onclick="fCutObjects();return false" i18n:attributes="value" value="Cut" />
-				<img tal:condition="python:False" src="/misc_/Naaya/cut.gif" border="0" alt="Cut" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_paste">
-			<input type="reset" onclick="fPasteObjects();return false" i18n:attributes="value" value="Paste" />
-				<img tal:condition="python:False" src="/misc_/Naaya/paste.gif" border="0" alt="Paste" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_delete">
-			<input type="reset" onclick="fDeleteObjects();return false" i18n:attributes="value" value="Delete" />
-				<img tal:condition="python:False" src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" />
-		</tal:block>
-	</div>
-</div>
+<form name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
-	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+	<th class="checkbox" style="width: 4%;" i18n:translate="" 
+		tal:condition="btn_select">
+    		<input type="checkbox" onclick="toggleSelect(this)" />
+  	</th>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -4393,7 +3341,7 @@ alert('Please select one or more items to delete.');}
 </tal:block>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
-			]]>
+]]>
 			<template id="header" param="0" title="Custom HTML header for this item and below">
 			<![CDATA[
 <tal:block define="site here/getSite">
@@ -4494,7 +3442,8 @@ alert('Please select one or more items to delete.');}
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-			<![CDATA[<span tal:replace="structure here/standard_html_header" />
+			<![CDATA[
+<span tal:replace="structure here/standard_html_header" />
 
 <tal:block define="objects_info here/checkPermissionManageObjects;
 	folders_list python:objects_info[6];
@@ -4506,72 +3455,18 @@ alert('Please select one or more items to delete.');}
 	btn_paste python:objects_info[4];
 	can_operate python:objects_info[5] ">
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
+
+<script language="javascript" type="text/javascript">
 <!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-var i;
-if (isSelected == false)
-{   for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-isSelected = true;}
-else
-{   for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-isSelected = false;}}
-
-function fCheckSelection()
-{   var frm = document.objectItems;
-var i;
-check = false;
-for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-{   check = true; break;}
-return check;}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-{   document.objectItems.action="copyObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script language="javascript" type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-{
-document.objectItems.action="cutObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-document.objectItems.submit();}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-{   document.objectItems.action="deleteObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to delete.');}
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
@@ -4604,6 +3499,7 @@ alert('Please select one or more items to delete.');}
 		</select>
 	</span>
 	<tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit Folder</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/editlogo_html"><span i18n:translate="">Change logo</span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
@@ -4615,35 +3511,15 @@ alert('Please select one or more items to delete.');}
 </div>
 </tal:block>
 
-<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
-	<div id="toolbar">
-		<tal:block tal:condition="btn_select">
-			<input type="reset" onclick="toggleSelect();return false" i18n:attributes="value" value="Select all" />
-				<img tal:condition="python:False" src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_copy">
-			<input type="reset" onclick="fCopyObjects();return false" i18n:attributes="value" value="Copy" />
-				<img tal:condition="python:False" src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_cut">
-			<input type="reset" onclick="fCutObjects();return false" i18n:attributes="value" value="Cut" />
-				<img tal:condition="python:False" src="/misc_/Naaya/cut.gif" border="0" alt="Cut" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_paste">
-			<input type="reset" onclick="fPasteObjects();return false" i18n:attributes="value" value="Paste" />
-				<img tal:condition="python:False" src="/misc_/Naaya/paste.gif" border="0" alt="Paste" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_delete">
-			<input type="reset" onclick="fDeleteObjects();return false" i18n:attributes="value" value="Delete" />
-				<img tal:condition="python:False" src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" />
-		</tal:block>
-	</div>
-</div>
+<form name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
-	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+	<th class="checkbox" style="width: 4%;" i18n:translate="" 
+		tal:condition="btn_select">
+    		<input type="checkbox" onclick="toggleSelect(this)" />
+  	</th>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -4723,7 +3599,7 @@ alert('Please select one or more items to delete.');}
 </tal:block>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
-			]]>
+]]>
 			<template id="header" param="0" title="Custom HTML header for this item and below">
 			<![CDATA[
 <tal:block define="site here/getSite">
@@ -5105,7 +3981,8 @@ alert('Please select one or more items to delete.');}
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-			<![CDATA[<span tal:replace="structure here/standard_html_header" />
+			<![CDATA[
+<span tal:replace="structure here/standard_html_header" />
 
 <tal:block define="objects_info here/checkPermissionManageObjects;
 	folders_list python:objects_info[6];
@@ -5117,72 +3994,18 @@ alert('Please select one or more items to delete.');}
 	btn_paste python:objects_info[4];
 	can_operate python:objects_info[5] ">
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
+
+<script language="javascript" type="text/javascript">
 <!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-var i;
-if (isSelected == false)
-{   for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-isSelected = true;}
-else
-{   for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-isSelected = false;}}
-
-function fCheckSelection()
-{   var frm = document.objectItems;
-var i;
-check = false;
-for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-{   check = true; break;}
-return check;}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-{   document.objectItems.action="copyObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script language="javascript" type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-{
-document.objectItems.action="cutObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-document.objectItems.submit();}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-{   document.objectItems.action="deleteObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to delete.');}
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
@@ -5215,6 +4038,7 @@ alert('Please select one or more items to delete.');}
 		</select>
 	</span>
 	<tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit Folder</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/editlogo_html"><span i18n:translate="">Change logo</span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
@@ -5226,35 +4050,15 @@ alert('Please select one or more items to delete.');}
 </div>
 </tal:block>
 
-<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
-	<div id="toolbar">
-		<tal:block tal:condition="btn_select">
-			<input type="reset" onclick="toggleSelect();return false" i18n:attributes="value" value="Select all" />
-				<img tal:condition="python:False" src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_copy">
-			<input type="reset" onclick="fCopyObjects();return false" i18n:attributes="value" value="Copy" />
-				<img tal:condition="python:False" src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_cut">
-			<input type="reset" onclick="fCutObjects();return false" i18n:attributes="value" value="Cut" />
-				<img tal:condition="python:False" src="/misc_/Naaya/cut.gif" border="0" alt="Cut" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_paste">
-			<input type="reset" onclick="fPasteObjects();return false" i18n:attributes="value" value="Paste" />
-				<img tal:condition="python:False" src="/misc_/Naaya/paste.gif" border="0" alt="Paste" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_delete">
-			<input type="reset" onclick="fDeleteObjects();return false" i18n:attributes="value" value="Delete" />
-				<img tal:condition="python:False" src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" />
-		</tal:block>
-	</div>
-</div>
+<form name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
-	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+	<th class="checkbox" style="width: 4%;" i18n:translate="" 
+		tal:condition="btn_select">
+    		<input type="checkbox" onclick="toggleSelect(this)" />
+  	</th>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -5334,7 +4138,7 @@ alert('Please select one or more items to delete.');}
 </tal:block>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
-			]]>
+]]>
 			<template id="header" param="0" title="Custom HTML header for this item and below">
 			<![CDATA[
 <tal:block define="site here/getSite">
@@ -5715,7 +4519,8 @@ alert('Please select one or more items to delete.');}
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-			<![CDATA[<span tal:replace="structure here/standard_html_header" />
+			<![CDATA[
+<span tal:replace="structure here/standard_html_header" />
 
 <tal:block define="objects_info here/checkPermissionManageObjects;
 	folders_list python:objects_info[6];
@@ -5727,72 +4532,18 @@ alert('Please select one or more items to delete.');}
 	btn_paste python:objects_info[4];
 	can_operate python:objects_info[5] ">
 
-<script language="javascript" type="text/javascript" tal:condition="btn_select">
+<tal:comment condition="nothing">
+<!-- XXX Move javascript to dedicated js file -->
+</tal:comment>
+
+<script language="javascript" type="text/javascript">
 <!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.objectItems;
-var i;
-if (isSelected == false)
-{   for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = true;
-isSelected = true;}
-else
-{   for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'id') frm.elements[i].checked = false;
-isSelected = false;}}
-
-function fCheckSelection()
-{   var frm = document.objectItems;
-var i;
-check = false;
-for(i=0; i<frm.elements.length; i++)
-if (frm.elements[i].type == "checkbox" && frm.elements[i].name == "id" && frm.elements[i].checked)
-{   check = true; break;}
-return check;}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_copy">
-<!--
-function fCopyObjects()
-{   if (fCheckSelection())
-{   document.objectItems.action="copyObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to copy.');}
-//-->
-</script>
-
-
-<script language="javascript" type="text/javascript" tal:condition="btn_cut">
-<!--
-function fCutObjects()
-{   if (fCheckSelection())
-{
-document.objectItems.action="cutObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to cut.');}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_paste">
-<!--
-function fPasteObjects()
-{   document.objectItems.action="pasteObjects";
-document.objectItems.submit();}
-//-->
-</script>
-
-<script language="javascript" type="text/javascript" tal:condition="btn_delete">
-<!--
-function fDeleteObjects()
-{   if (fCheckSelection())
-{   document.objectItems.action="deleteObjects";
-document.objectItems.submit();}
-else
-alert('Please select one or more items to delete.');}
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
 //-->
 </script>
 
@@ -5825,6 +4576,7 @@ alert('Please select one or more items to delete.');}
 		</select>
 	</span>
 	<tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
+		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit Folder</span></a>
 		<a tal:condition="python:perm_edit_object" tal:attributes="href string:${this_absolute_url}/editlogo_html"><span i18n:translate="">Change logo</span></a>
 		<a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
@@ -5836,35 +4588,15 @@ alert('Please select one or more items to delete.');}
 </div>
 </tal:block>
 
-<div tal:condition="python:btn_select or btn_delete or btn_copy or btn_cut or btn_paste">
-	<div id="toolbar">
-		<tal:block tal:condition="btn_select">
-			<input type="reset" onclick="toggleSelect();return false" i18n:attributes="value" value="Select all" />
-				<img tal:condition="python:False" src="/misc_/Naaya/select_all.gif" border="0" alt="Select all" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_copy">
-			<input type="reset" onclick="fCopyObjects();return false" i18n:attributes="value" value="Copy" />
-				<img tal:condition="python:False" src="/misc_/Naaya/copy.gif" border="0" alt="Copy" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_cut">
-			<input type="reset" onclick="fCutObjects();return false" i18n:attributes="value" value="Cut" />
-				<img tal:condition="python:False" src="/misc_/Naaya/cut.gif" border="0" alt="Cut" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_paste">
-			<input type="reset" onclick="fPasteObjects();return false" i18n:attributes="value" value="Paste" />
-				<img tal:condition="python:False" src="/misc_/Naaya/paste.gif" border="0" alt="Paste" i18n:attributes="alt" />
-		</tal:block>
-		<tal:block tal:condition="btn_delete">
-			<input type="reset" onclick="fDeleteObjects();return false" i18n:attributes="value" value="Delete" />
-				<img tal:condition="python:False" src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" />
-		</tal:block>
-	</div>
-</div>
+<form name="objectItems" method="post" action=".">
+<metal:block use-macro="here/folder_lib_toolbar_buttons/macros/content" />
 
-<form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 <tr tal:condition="can_operate">
-	<th class="checkbox" style="width: 4%;" i18n:translate="" tal:condition="btn_select"></th>
+	<th class="checkbox" style="width: 4%;" i18n:translate="" 
+		tal:condition="btn_select">
+    		<input type="checkbox" onclick="toggleSelect(this)" />
+  	</th>
 	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
 	<th class="title-column" i18n:translate="">Title</th>
 	<th class="checkin" i18n:translate="">Version</th>
@@ -5944,7 +4676,7 @@ alert('Please select one or more items to delete.');}
 </tal:block>
 </tal:block>
 <span tal:replace="structure here/standard_html_footer"/>
-			]]>
+]]>
 			<template id="header" param="0" title="Custom HTML header for this item and below">
 			<![CDATA[
 <tal:block define="site here/getSite">
