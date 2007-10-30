@@ -82,7 +82,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
            method is responsible for performing any needed encryption."""
 
         if password is not None and self.encrypt_passwords:
-            assword = self._encryptPassword(password)
+            password = self._encryptPassword(password)
         self.data[name] = User(name, password, roles, domains, firstname, lastname, email)
         self._p_changed = 1
 
@@ -95,7 +95,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
         user=self.data[name]
         if password is not None:
             if self.encrypt_passwords and not self._isPasswordEncrypted(password):
-                assword = self._encryptPassword(password)
+                password = self._encryptPassword(password)
             user.__ = password
         user.roles = roles
         user.domains = domains
