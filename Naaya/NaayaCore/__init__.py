@@ -193,5 +193,6 @@ if geo_installed:
     'GeoMapTool.gif':ImageFile('GeoMapTool/www/GeoMapTool.gif', globals()),
     'yahoomaps.js':ImageFile('GeoMapTool/www/yahoomaps.js', globals()),
     'remote.js':ImageFile('GeoMapTool/www/remote.js', globals()),
+    'template.csv':ImageFile('GeoMapTool/www/template.csv', globals()),
     }
     misc_.update(gmisc_)
