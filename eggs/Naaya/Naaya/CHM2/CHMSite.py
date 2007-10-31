@@ -121,7 +121,7 @@ class CHMSite(NySite):
         self._p_changed = 1
 
         #add EC CHM to network portals list
-        self.admin_addnetworkportal('EC CHM', 'http://biodiversity-chm.eea.eu.int/')
+        self.admin_addnetworkportal('EC CHM', 'http://biodiversity-chm.eea.europa.eu/')
 
     def get_data_path(self):
         """ """

@@ -258,7 +258,7 @@ document.objectItems.submit();}
 </tal:block>
 </span>
 
-<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_type; alt here/meta_type" border="0" /> <tal:block tal:replace="here/title_or_id" /></h1>
+<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_type; alt here/meta_type" /> <tal:block tal:replace="here/title_or_id" /></h1>
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
 <tal:block tal:define="this_absolute_url python:here.absolute_url(0);
@@ -305,7 +305,7 @@ tal:content="python:item[1]" i18n:translate="" />
 <td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
 <td class="releasedate"><span tal:replace="python:object.utShowDateTime(object.releasedate)" /></td>
 <td class="title-column">
-<img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" />
+<img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" />
 <a tal:attributes="href object/absolute_url; title python:here.stripHTMLTags(object.description)" tal:content="object/title_or_id" />
 <tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
 	[<span tal:replace="object/count_comments" />
@@ -316,7 +316,7 @@ tal:content="python:item[1]" i18n:translate="" />
 <input type="checkbox" tal:attributes="name python:'topstory_' + object.id; checked python:object.topitem==1;" />
 </td>
 <td class="edit" tal:condition="edit_permission">
-<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
+<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" /></a>
 </td>
 </tal:block>
 </tr>
@@ -324,7 +324,7 @@ tal:content="python:item[1]" i18n:translate="" />
 </form>
 </tal:block>
 
-<p><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a></p>
+<p><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" /></a></p>
 
 <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
 [<a tal:attributes="href string:${here/absolute_url}/requestrole_html" i18n:translate="">Create an account for content contributions</a>]
@@ -384,7 +384,7 @@ tal:content="python:item[1]" i18n:translate="" />
 	</tal:block>
 </span>
 
-<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_type; alt here/meta_type" border="0" /> <tal:block tal:replace="here/title_or_id" /></h1>
+<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_type; alt here/meta_type" /> <tal:block tal:replace="here/title_or_id" /></h1>
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
 <tal:block tal:define="this_absolute_url python:here.absolute_url(0);
@@ -413,7 +413,7 @@ tal:content="python:item[1]" i18n:translate="" />
 <div tal:condition="python:objects_select_all or objects_delete_all">
 	<div id="toolbar">
 		<tal:block tal:condition="objects_delete_all"><a href="javascript:fDeleteObjects();"><span i18n:translate="">Delete</span></a></tal:block>
-		<tal:block tal:condition="objects_select_all"><a href="javascript:fSetTopStoryObjects();"><span><input src="/misc_/Naaya/delete.gif" border="0" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="">Save on front</span></span></a></tal:block>
+		<tal:block tal:condition="objects_select_all"><a href="javascript:fSetTopStoryObjects();"><span><input src="/misc_/Naaya/delete.gif" alt="Top Story" i18n:attributes="alt" type="image" name="setTopStoryObjects:method" /><span i18n:translate="">Save on front</span></span></a></tal:block>
 	</div>
 </div>
 
@@ -432,7 +432,7 @@ tal:content="python:item[1]" i18n:translate="" />
 			<td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
 			<td class="releasedate"><span tal:replace="python:object.utShowDateTime(object.releasedate)" /></td>
 			<td class="title-column">
-				<img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" />
+				<img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" />
 				<a tal:attributes="href object/absolute_url; title python:here.stripHTMLTags(object.description)" tal:content="object/title_or_id" />
 				<tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
 					[<span tal:replace="object/count_comments" />
@@ -445,7 +445,7 @@ tal:content="python:item[1]" i18n:translate="" />
 			</td>
 			<td class="edit">
 				<tal:block tal:condition="edit_permission">
-					<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
+					<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" /></a>
 				</tal:block>
 			</td>
 		</tal:block>
@@ -454,7 +454,7 @@ tal:content="python:item[1]" i18n:translate="" />
 </form>
 </tal:block>
 
-<p><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a></p>
+<p><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" /></a></p>
 
 <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
 	[<a tal:attributes="href string:${here/absolute_url}/requestrole_html" i18n:translate="">Create an account for content contributions</a>]
@@ -514,7 +514,7 @@ document.objectItems.submit();}
 </tal:block>
 </span>
 
-<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_type; alt here/meta_type" border="0" /> <tal:block tal:replace="here/title_or_id" /></h1>
+<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_type; alt here/meta_type" /> <tal:block tal:replace="here/title_or_id" /></h1>
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
 <tal:block tal:define="this_absolute_url python:here.absolute_url(0);
@@ -562,7 +562,7 @@ tal:content="python:item[1]" i18n:translate="" />
 <tal:block define="del_permission python:objects[0]; edit_permission python:objects[1]; object python:objects[2]">
 <td class="checkbox" tal:condition="del_permission" width="4%" valign="top"><input type="checkbox" name="id" tal:attributes="value object/id" /></td>
 <td class="releasedate"><span tal:replace="python:object.utShowDateTime(object.releasedate)"/></td>
-<td class="title-column"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" border="0" />
+<td class="title-column"><img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked); alt object/meta_type; title object/meta_type" />
 <a tal:attributes="href object/absolute_url; title python:here.stripHTMLTags(object.description)" tal:content="object/title_or_id" />
 <tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
 	[<span tal:replace="object/count_comments" />
@@ -575,7 +575,7 @@ tal:content="python:item[1]" i18n:translate="" />
 <input type="checkbox" tal:attributes="name python:'topstory_' + object.id; checked python:object.topitem==1;" />
 </td>
 <td class="edit" tal:condition="edit_permission">
-<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a>
+<a tal:condition="python:not object.hasVersion()" tal:attributes="href string:${object/absolute_url}/edit_html"><img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" /></a>
 </td>
 </tal:block>
 </tr>
@@ -583,7 +583,7 @@ tal:content="python:item[1]" i18n:translate="" />
 </form>
 </tal:block>
 
-<p><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0" i18n:attributes="alt" /></a></p>
+<p><a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" /></a></p>
 
 <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
 [<a tal:attributes="href string:${here/absolute_url}/requestrole_html" i18n:translate="">Create an account for content contributions</a>]
