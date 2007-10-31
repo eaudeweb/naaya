@@ -40,10 +40,6 @@
 	This search is performed on this and other collaborating websites: all titles and descriptive texts (folders, URLs, news, events, stories, etc.). Note: it does NOT search in uploaded files.
 </p>
 
-<p i18n:translate="">
-	You can use the <a href="http://www.google.com/custom?q=&amp;as=Google+Search&amp;domains=eea.eu.int%3Beionet.eu.int&amp;sitesearch=eea.eu.int&amp;cof=GIMP%3A%23FF9900%3BT%3A%23000000%3BALC%3A%23006666%3BL%3Ahttp%3A%2F%2Ftemplate.eea.eu.int%2Fimages%2Feeabanner%3BGFNT%3A%23808080%3BLC%3A%23003366%3BBGC%3A%23FFFFFF%3BAH%3Aleft%3BVLC%3A%23993300%3BGL%3A0%3BS%3Ahttp%3A%2F%2Fwww.eea.eu.int%3BGALT%3A%23FF9900%3BAWFID%3A109f704edff0cc7d%3B&amp;config=&amp;restrict=&amp;exclude=&amp;page=" title="EEA Google Search"><strong>the wider EEA Google search</strong></a> for more results.
-</p>
-
 <form method="get" name="frmSearch" action="external_search_html">
 
 <strong>Query string</strong>
