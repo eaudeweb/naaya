@@ -21,11 +21,13 @@
 # Dragos Chirila, Finsiel Romania
 
 #python imports
+import re
 import time
 import string
 from copy import copy
 
 #zope imports
+from OFS.PropertyManager import PropertyManager
 from OFS.ObjectManager import ObjectManager
 from AccessControl import ClassSecurityInfo
 from AccessControl.User import BasicUserFolder
@@ -36,7 +38,8 @@ from DateTime import DateTime
 
 #product imports
 from Products.NaayaCore.constants import *
-from Products.NaayaCore.managers.utils import file_utils,utils
+from Products.NaayaCore.managers.utils import \
+     string2object, object2string, InvalidStringError, file_utils, utils
 from Products.NaayaCore.managers.session_manager import session_manager
 from plugins_tool import plugins_tool
 from User import User
@@ -49,7 +52,8 @@ def manage_addAuthenticationTool(self, REQUEST=None):
     if REQUEST:
         return self.manage_main(self, REQUEST, update_menu=1)
 
-class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, file_utils, plugins_tool):
+class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
+                         file_utils, plugins_tool, PropertyManager):
 
     meta_type = METATYPE_AUTHENTICATIONTOOL
     icon = 'misc_/NaayaCore/AuthenticationTool.gif'
@@ -59,10 +63,29 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
         {'label': 'Roles', 'action': 'manage_roles_html'},
         {'label': 'Permissions', 'action': 'manage_permissions_html'},
         {'label': 'Other sources', 'action': 'manage_sources_html'},
+        {'label': 'Properties', 'action': 'manage_propertiesForm',
+         'help': ('OFSP','Properties.stx')},
     )
-
+    
+    _properties = (
+        {'id': 'title', 'type': 'string', 'mode': 'w',
+         'label': 'Title'},
+        {'id': 'encrypt_passwords', 'type': 'boolean', 'mode': 'w',
+         'label': 'Encrypt users passwords'},
+        {'id': 'email_expression', 'type': 'string', 'mode': 'w',
+         'label': 'E-mail should match this regular expression'},
+        {'id': 'email_confirmation', 'type': 'boolean', 'mode': 'w',
+         'label': 'Ask for email confirmation before add user '},
+    )
+    
     security = ClassSecurityInfo()
-
+    #
+    # Properties
+    #
+    encrypt_passwords = False
+    email_expression = '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$'
+    email_confirmation = False
+    
     def __init__(self, id, title):
         self.id = id
         self.title = title
@@ -75,6 +98,20 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
         #load default stuff
         pass
 
+    security.declarePrivate('_doAddTempUser')
+    def _doAddTempUser(self, **kwargs):
+        """Generate a confirmation string, add it to temp users list, 
+           and return it.
+        """
+        text = object2string(kwargs)
+        if not hasattr(self, '_temp_users'):
+            self._temp_users = []
+        if text in self._temp_users:
+            raise Exception, 'User already request access roles.'
+        self._temp_users.append(text)
+        self._p_changed = 1
+        return text
+        
     security.declarePrivate('_doAddUser')
     def _doAddUser(self, name, password, roles, domains, firstname, lastname, email, **kw):
         """Create a new user. The 'password' will be the
@@ -85,6 +122,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
             password = self._encryptPassword(password)
         self.data[name] = User(name, password, roles, domains, firstname, lastname, email)
         self._p_changed = 1
+        return name
 
     security.declarePrivate('_doChangeUser')
     def _doChangeUser(self, name, password, roles, domains, firstname, lastname, email, lastupdated, **kw):
@@ -138,6 +176,24 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
         self._p_changed = 1
 
     #zmi actions
+    security.declareProtected(manage_users, 'manage_confirmUser')
+    def manage_confirmUser(self, key='', REQUEST=None):
+        """ Add user from key
+        """
+        if key not in getattr(self, '_temp_users', []):
+            raise Exception, 'Invalid activation key !'
+        try:
+            res = string2object(key)
+        except InvalidStringError, err:
+            raise Exception, 'Invalid activation key !'
+        else:
+            self._temp_users.remove(key)
+            self._doAddUser(**res)
+            self._p_changed = 1
+        if REQUEST: 
+            REQUEST.RESPONSE.redirect('manage_users_html')
+        return res
+        
     security.declareProtected(manage_users, 'manage_addUser')
     def manage_addUser(self, name='', password='', confirm='', roles=[], domains=[], firstname='',
         lastname='', email='', strict=0, REQUEST=None, **kwargs):
@@ -145,14 +201,18 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
         # Verify captcha
         captcha_gen_word = self.getSession('captcha', '')
         captcha_prov_word = kwargs.get('verify_word', captcha_gen_word)
-    	if captcha_prov_word != captcha_gen_word:
-    	    raise Exception, 'The word you typed does not match with the one shown in the image. Please try again.'
+        if captcha_prov_word != captcha_gen_word:
+            raise Exception, 'The word you typed does not match with the one shown in the image. Please try again.'
         if not firstname:
             raise Exception, 'The first name must be specified'
         if not lastname:
             raise Exception, 'The last name must be specified'
         if not email:
             raise Exception, 'The email must be specified'
+        if getattr(self, 'email_expression', ''):
+            email_expr = re.compile(self.email_expression, re.IGNORECASE)
+            if not re.match(email_expr, email):
+                raise Exception, 'Invalid email address.'
         if not name:
             raise Exception, 'An username must be specified'
         if not password or not confirm:
@@ -172,8 +232,20 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
         #convert data
         roles = self.utConvertToList(roles)
         domains = self.utConvertToList(domains)
-        self._doAddUser(name, password, roles, domains, firstname, lastname, email)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_users_html')
+        #
+        # Confirm by mail
+        #
+        if self.email_confirmation:
+            user = self._doAddTempUser(name=name, password=password, roles=roles, 
+                                       domains=domains, firstname=firstname, 
+                                       lastname=lastname, email=email)
+            
+        else:
+            user = self._doAddUser(name, password, roles, domains, 
+                                   firstname, lastname, email)
+        if REQUEST: 
+            REQUEST.RESPONSE.redirect('manage_users_html')
+        return user
 
     security.declareProtected(manage_users, 'manage_changeUser')
     def manage_changeUser(self, name='', password='', confirm='', roles=[], domains=[], firstname='',
@@ -213,7 +285,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
         elif loc == 'other':
             location = location
             location_obj = self.unrestrictedTraverse(location, None)
-            if location_obj == None:
+            if location_obj is None:
                 raise Exception, 'Invalid location'
         #convert data
         roles = self.utConvertToList(roles)
@@ -525,6 +597,11 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_sources_html')
 
+    security.declareProtected(manage_users, 'emailConfirmationEnabled')
+    def emailConfirmationEnabled(self):
+        # Check to see if email confirmation is enabled
+        return self.email_confirmation
+    
     def manageDeleteSource(self, id, REQUEST = None):
         """ """
         try: self._delObject(id)
