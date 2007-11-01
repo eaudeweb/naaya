@@ -36,8 +36,10 @@ from zipfile import *
 import csv
 import tempfile
 import os
+import pickle
 from email.Utils import encode_rfc2231
 from urllib import urlencode
+from StringIO import StringIO
 
 #Zope imports
 from Products.PythonScripts.standard import url_quote, html_quote
@@ -909,3 +911,38 @@ class ZZipFile(ZipFile):
         self.hasbeenread = 0
         self.filename=filename
 
+class InvalidStringError(Exception):
+    """ Invalid String Exception """
+    def __init__(self, msg):
+        Exception.__init__(self)
+        self.msg = msg
+
+    def __str__(self):
+        return 'Invalid string: %s' % self.msg
+
+def object2string(obj):
+    """ Pickle obj and base64 encode. Use string2object to recover it.
+    """
+    buff = StringIO()
+    pickle.dump(obj, buff)
+    return base64.encodestring(buff.getvalue())
+
+def string2object(string):
+    """ Revert object2string.
+    """
+    buff = StringIO()
+    # base64 decode string
+    try:
+        text = base64.decodestring(string)
+    except base64.binascii.Error:
+        raise InvalidStringError(string)
+    else:
+        buff.write(text)
+        buff.seek(0)
+    # Convert to object
+    try:
+        obj = pickle.load(buff)
+    except IndexError:
+        raise InvalidStringError(string)
+    else:
+        return obj
