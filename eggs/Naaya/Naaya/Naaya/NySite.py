@@ -22,6 +22,7 @@
 # Alin Voinea, Eau de Web
 
 #Python imports
+import urllib
 from os.path import join, isfile
 from urllib import quote
 from urlparse import urlparse
@@ -1233,12 +1234,45 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         if REQUEST: return REQUEST.RESPONSE.redirect('changecredentials_html')
 
+    security.declareProtected(view, 'confirm_user')
+    def confirm_user(self, key='', REQUEST=None):
+        """ Confirm user by string
+        """
+        try:
+            res = self.getAuthenticationTool().manage_confirmUser(key)
+        except Exception, err:
+            title = err
+            body = 'Please make sure that you clicked on the \
+            correct link for activating your account as \
+            specified in the confirmation email. if the \
+            problem persists, try copying the link and \
+            pasteing it in the address bar.'
+        else:
+            title = 'Thank you for registering'
+            body = 'An account has been created for you. \
+            The administrator will be informed of your request \
+            and may or may not grant your account with the \
+            approriate role.'
+        
+        self.sendCreateAccountEmail(self.administrator_email,
+            res.get('firstname', '') + ' ' + res.get('lastname', ''),
+            res.get('email', ''), res.get('organisation', ''), 
+            res.get('name', ''), self.absolute_url(1), self.site_title,
+            res.get('comments', ''))
+        REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+        
     security.declareProtected(view, 'processRequestRoleForm')
-    def processRequestRoleForm(self, username='', password='', confirm='', firstname='', lastname='', email='', organisation='', location='', comments='', REQUEST=None):
-        """ Sends notification email(s) to the administrators when people apply for a role 
-            If the role is requested at portal level, the addresses from the 'administrator_email' property get it
-            If the role is requested at folder level, all 'maintainer_email' of the parent folders get it 
-            and eventually the portal 'administrator_email' gets it if there is no 'maintainer_email'
+    def processRequestRoleForm(self, username='', password='', confirm='',
+                               firstname='', lastname='', email='',
+                               organisation='', location='',
+                               comments='', REQUEST=None):
+        """
+        Sends notification email(s) to the administrators when people apply
+        for a role. If the role is requested at portal level, the addresses
+        from the 'administrator_email' property get it. If the role is 
+        requested at folder level, all 'maintainer_email' of the parent folders
+        get it and eventually the portal 'administrator_email' gets it if there
+        is no 'maintainer_email'
         """
         location_path = 'unspecified'
         location_title = 'unspecified'
@@ -1253,25 +1287,41 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 location_title = obj.title
                 location_maintainer_email = self.getMaintainersEmails(obj)
         #create an account without role
+        acl_tool = self.getAuthenticationTool()
         try:
-            self.getAuthenticationTool().admin_adduser(firstname, lastname, email, username, password, confirm, 0, REQUEST)
+            userinfo = acl_tool.manage_addUser(name=username, password=password,
+                       confirm=confirm, roles=[], domains=[], firstname=firstname,
+                       lastname=lastname, email=email, strict=0)
         except Exception, error:
             err = error
         else:
             err = ''
         if err:
-            if REQUEST:
-                self.setSessionErrors(err)
-                self.setRequestRoleSession(username, firstname, lastname, email, password, organisation, comments, location)
-                return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
-        if not err:
-            self.sendCreateAccountEmail(location_maintainer_email, firstname + ' ' + lastname, email, organisation, username, location_path, location_title, comments)
-        if REQUEST:
-            self.setSession('title', 'Thank you for registering')
-            self.setSession('body', 'An account has been created for you. \
-                The administrator will be informed of your request and may \
-                or may not grant your account with the approriate role.')
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+            if not REQUEST:
+                return err
+            self.setSessionErrors(err)
+            self.setRequestRoleSession(username, firstname, lastname, email,
+                                       password, organisation, comments,
+                                       location)
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        
+        if acl_tool.emailConfirmationEnabled():
+            self.sendConfirmationEmail(firstname + ' ' + lastname, userinfo, email)
+            message_body = 'Plase follow the link in your email in order to complete registration.'
+        else:
+            self.sendCreateAccountEmail(location_maintainer_email, 
+                                        firstname + ' ' + lastname, 
+                                        email, organisation, username, 
+                                        location_path, location_title, 
+                                        comments)
+            message_body = 'An account has been created for you. \
+            The administrator will be informed of your request and may \
+            or may not grant your account with the approriate role.'
+        if not REQUEST:
+            return message_body
+        
+        self.setSession('body', message_body)
+        return REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
     security.declareProtected(view, 'processNotifyOnErrors')
     def processNotifyOnErrors(self, error_type, error_value, REQUEST):
@@ -1283,7 +1333,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             error_time = self.utGetTodayDate()
             if self.portal_url != '': mail_from = 'error@%s' % self.portal_url
             else: mail_from = 'error@%s' % REQUEST.SERVER_NAME
-            self.notifyOnErrorsEmail(self.administrator_email, mail_from, error_url, error_ip, error_type, error_value, error_user, error_time)
+            self.notifyOnErrorsEmail(self.administrator_email, mail_from,
+                                     error_url, error_ip, error_type,
+                                     error_value, error_user, error_time)
 
     #external search
     security.declarePublic('external_search_capabilities')
@@ -1688,20 +1740,24 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         msg = err = ''
         try:
-            self.getAuthenticationTool().manage_addUser(name, password, confirm, [], [], firstname,
-                lastname, email, strict)
+            userinfo = self.getAuthenticationTool().manage_addUser(name, 
+                            password, confirm, [], [], firstname, lastname,
+                            email, strict)
         except Exception, error:
             err = error
         else:
             msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
-        if REQUEST:
-            if err != '':
-                self.setSessionErrors([err])
-                self.setUserSession(name, [], [], firstname, lastname, email, '')
-                REQUEST.RESPONSE.redirect('%s/admin_adduser_html' % self.absolute_url())
-            if msg != '':
-                self.setSessionInfo([msg])
-                REQUEST.RESPONSE.redirect('%s/admin_users_html' % self.absolute_url())
+        if not REQUEST:
+            return userinfo
+        
+        if err != '':
+            self.setSessionErrors([err])
+            self.setUserSession(name, [], [], firstname, lastname, email, '')
+            REQUEST.RESPONSE.redirect('%s/admin_adduser_html' % self.absolute_url())
+        if msg != '':
+            self.setSessionInfo([msg])
+            REQUEST.RESPONSE.redirect('%s/admin_users_html' % self.absolute_url())
+                
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edituser')
     def admin_edituser(self, firstname='', lastname='', email='', name='', password='',
@@ -2509,6 +2565,26 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         return newimg.getvalue()
 
     #sending emails
+    def sendConfirmationEmail(self, name, confirm_key, mto):
+        # Send confirmation email 
+        param = urllib.urlencode({'key': confirm_key})
+        portal_url = self.portal_url or self.absolute_url()
+        link = portal_url + '/confirm_user?' + param
+        info = {'NAME': name,
+                'PORTAL_TITLE': self.site_title,
+                'PORTAL_URL': portal_url,
+                'LINK': link,
+                'SENDER_NAME': self.site_title + ' team',
+            }
+        etool = self.getEmailTool()
+        template = etool._getOb('email_confirmuser')
+        msubj = template.title
+        mbody = template.body % info
+        mfrom = self.mail_address_from or self.administrator_email or \
+              'no-reply@' + portal_url.replace('http:', '', 1
+                            ).replace('/', '').replace('www.', '')
+        etool.sendEmail(mbody, mto, mfrom, msubj)
+        
     def sendAccountCreatedEmail(self, p_name, p_email, p_username, REQUEST):
         #sends a confirmation email to the newlly created account's owner
         email_template = self.getEmailTool()._getOb('email_createaccount')

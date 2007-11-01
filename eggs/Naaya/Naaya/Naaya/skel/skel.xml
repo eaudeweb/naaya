@@ -187,6 +187,7 @@
 		<emailtemplate id="email_requestrole" title="Request role"/>
 		<emailtemplate id="email_notifyonupload" title="Upload notification"/>
 		<emailtemplate id="email_createaccount" title="Create account notification"/>
+		<emailtemplate id="email_confirmuser" title="New user registration confirmation"/>
 	</emails>
 	<security>
 		<grouppermissions name="Browse content" description="Browse the site structure. This is the base privilege aimed for Anonymous users."
