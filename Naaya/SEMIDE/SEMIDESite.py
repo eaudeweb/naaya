@@ -1122,24 +1122,34 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         """
         #create an account without any role
         verify_word = REQUEST.form.get('verify_word', '')
+        acl_tool = self.getAuthenticationTool()
         try:
-            self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname,
-                lastname, email, verify_word=verify_word)
+            userinfo = acl_tool.manage_addUser(username, password, confirm,
+                        [], [], firstname,lastname, email, verify_word=verify_word)
         except Exception, error:
             err = error
         else:
             err = ''
+        
+        # Errors occured
         if err:
-            if REQUEST:
-                self.setSessionErrors(err)
-                self.setCreateAccountSession(username, firstname, lastname, email, password)
-                return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
-        if not err:
+            if not REQUEST: return err
+            self.setSessionErrors(err)
+            self.setCreateAccountSession(username, firstname, lastname, email, password)
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        
+        # No error occured
+        if acl_tool.emailConfirmationEnabled():
+            self.sendConfirmationEmail(firstname + ' ' + lastname, userinfo, email)
+            message_body = 'Plase follow the link in your email in order to complete registration.'
+        else:
             self.sendCreateAccountEmail(firstname + ' ' + lastname, email, username, REQUEST)
-        if REQUEST:
-            self.setSession('title', 'Thank you for registering')
-            self.setSession('body', 'You can now use this account to log in.')
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+            message_body = 'You can now use this account to log in.'
+        if not REQUEST:
+            return message_body
+        self.setSession('title', 'Thank you for registering')
+        self.setSession('body', message_body)
+        REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
     security.declareProtected(view, 'admin_welcome_page')
     def admin_welcome_page(self, REQUEST=None):
@@ -1155,7 +1165,8 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
             url_redirect = '%s/%s' % (self.absolute_url(), welcome_page)
         REQUEST.RESPONSE.redirect(url_redirect)
 
-    def sendCreateAccountEmail(self, p_name, p_email, p_username, REQUEST):
+    def sendCreateAccountEmail(self, p_name, p_to, p_username, 
+                               REQUEST=None, **kwargs):
         #sends a confirmation email to the newlly created account's owner
         email_template = self.getEmailTool()._getOb('email_createaccount')
         l_subject = email_template.title
@@ -1163,11 +1174,11 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         l_content = l_content.replace('@@PORTAL_URL@@', self.portal_url)
         l_content = l_content.replace('@@PORTAL_TITLE@@', self.site_title)
         l_content = l_content.replace('@@NAME@@', p_name)
-        l_content = l_content.replace('@@EMAIL@@', p_email)
+        l_content = l_content.replace('@@EMAIL@@', p_to)
         l_content = l_content.replace('@@USERNAME@@', p_username)
         l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
         mail_from = self.mail_address_from
-        self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
+        self.getEmailTool().sendEmail(l_content, p_to, mail_from, l_subject)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getSemideUsers')
     def getSemideUsers(self, query='', skey=0, rkey=''):
