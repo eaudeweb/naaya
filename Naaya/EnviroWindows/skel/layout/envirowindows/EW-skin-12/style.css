@@ -19,7 +19,7 @@ fieldset legend {
 #language {
 	float: right;
 	margin-right: 5px;
-	width: 20em;
+	width: 22em;
 	display: inline;
 	z-index: 100;
 	position: relative;
@@ -27,7 +27,6 @@ fieldset legend {
 	left: 0;
 }
 #language label {
-	text-transform: uppercase;
 	font-family: Arial, Helvetica, sans-serif;
 	float: left;
 	padding: 5px 0 0 0;
