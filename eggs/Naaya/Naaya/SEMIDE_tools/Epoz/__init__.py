@@ -67,6 +67,7 @@ misc_ = {
 'epoz_help.html':ImageFile('epoz/epoz_core/epoz_help.html.dtml', globals()),
 
  # The Epoz-Language-Files
+'epoz_lang_ar.js':ImageFile('epoz/epoz_i18n/epoz_lang_ar.js.dtml', globals()), 
 'epoz_lang_da.js':ImageFile('epoz/epoz_i18n/epoz_lang_da.js.dtml', globals()),
 'epoz_lang_de.js':ImageFile('epoz/epoz_i18n/epoz_lang_de.js.dtml', globals()),
 'epoz_lang_en.js':ImageFile('epoz/epoz_i18n/epoz_lang_en.js.dtml', globals()),
@@ -101,6 +102,7 @@ misc_ = {
 'epoz_button_outdent.gif':ImageFile('epoz/epoz_images/epoz_button_outdent.gif', globals()),
 'epoz_button_redo.gif':ImageFile('epoz/epoz_images/epoz_button_redo.gif', globals()),
 'epoz_button_right_just.gif':ImageFile('epoz/epoz_images/epoz_button_right_just.gif', globals()),
+'epoz_button_space.gif':ImageFile('epoz/epoz_images/epoz_button_space.gif', globals()),
 'epoz_button_strikethrough.gif':ImageFile('epoz/epoz_images/epoz_button_strikethrough.gif', globals()),
 'epoz_button_subscript.gif':ImageFile('epoz/epoz_images/epoz_button_subscript.gif', globals()),
 'epoz_button_superscript.gif':ImageFile('epoz/epoz_images/epoz_button_superscript.gif', globals()),
