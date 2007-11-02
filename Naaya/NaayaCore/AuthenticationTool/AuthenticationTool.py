@@ -235,7 +235,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         #
         # Confirm by mail
         #
-        if self.email_confirmation:
+        if self.emailConfirmationEnabled():
             user = self._doAddTempUser(name=name, password=password, roles=roles, 
                                        domains=domains, firstname=firstname, 
                                        lastname=lastname, email=email)
@@ -600,7 +600,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     security.declareProtected(manage_users, 'emailConfirmationEnabled')
     def emailConfirmationEnabled(self):
         # Check to see if email confirmation is enabled
-        return self.email_confirmation
+        if self.isAnonymousUser():
+            return self.email_confirmation
+        # No email confirmation need if user is not anonymous
+        return False
     
     def manageDeleteSource(self, id, REQUEST = None):
         """ """
