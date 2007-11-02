@@ -15,14 +15,16 @@
 # Authors:
 #
 # Cornel Nitu, Finsiel Romania
-
-
+import os
 from OracleConnector import OracleConnector, manage_addOracleConnectorForm, manage_addOracleConnector
 from ImageFile import ImageFile
 
 
+
 def initialize(context):
     """ Initialize the OracleConnector product"""
+    os.environ['ORACLE_HOME'] = '/u01/app/oracle/product/9.2.0.1.0'
+    os.environ['LD_LIBRARY_PATH'] = ':/u01/app/oracle/product/9.2.0.1.0/lib:/u01/app/oracle/product/9.2.0.1.0/network/lib'
     context.registerClass(
         OracleConnector,
         constructors = (manage_addOracleConnectorForm, manage_addOracleConnector),
