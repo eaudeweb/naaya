@@ -1254,11 +1254,16 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             and may or may not grant your account with the \
             approriate role.'
         
-        self.sendCreateAccountEmail(self.administrator_email,
-            res.get('firstname', '') + ' ' + res.get('lastname', ''),
-            res.get('email', ''), res.get('organisation', ''), 
-            res.get('name', ''), self.absolute_url(1), self.site_title,
-            res.get('comments', ''))
+        self.sendCreateAccountEmail(
+            p_to=self.administrator_email,
+            p_name=res.get('firstname', '') + ' ' + res.get('lastname', ''),
+            p_email=res.get('email', ''), 
+            p_organisation=res.get('organisation', ''), 
+            p_username=res.get('name', ''), 
+            p_location_path=self.absolute_url(1),
+            p_location_title=self.site_title,
+            p_comments=res.get('comments', '')
+        )
         REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
         
     security.declareProtected(view, 'processRequestRoleForm')
@@ -1309,17 +1314,22 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.sendConfirmationEmail(firstname + ' ' + lastname, userinfo, email)
             message_body = 'Plase follow the link in your email in order to complete registration.'
         else:
-            self.sendCreateAccountEmail(location_maintainer_email, 
-                                        firstname + ' ' + lastname, 
-                                        email, organisation, username, 
-                                        location_path, location_title, 
-                                        comments)
+            self.sendCreateAccountEmail(
+                p_to=location_maintainer_email, 
+                p_name=firstname + ' ' + lastname, 
+                p_email=email,
+                p_organisation=organisation,
+                p_username=username, 
+                p_location_path=location_path,
+                p_location_title=location_title, 
+                p_comments=comments)
             message_body = 'An account has been created for you. \
             The administrator will be informed of your request and may \
             or may not grant your account with the approriate role.'
         if not REQUEST:
             return message_body
         
+        self.setSession('title', 'Thank you for registering')
         self.setSession('body', message_body)
         return REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
