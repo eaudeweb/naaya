@@ -5310,7 +5310,7 @@ function toggleSelect(caller){
 			<description lang="en"><![CDATA[]]></description>
 			<coverage lang="en"><![CDATA[]]></coverage>
 			<keywords lang="en"><![CDATA[]]></keywords>
-			<![CDATA[
+<![CDATA[
 <span tal:replace="structure here/standard_html_header" />
 <div class="middle_port" style='margin-right:0;'>
 <tal:block define="sq python:request.get('sq', '');
@@ -5418,7 +5418,7 @@ function toggleSelect(caller){
     </select>
   </div>
   <div class="field">
-    <label for="gz" i18n:translate="">Location</label>
+    <label for="gz" i18n:translate="">Country</label>
     <select name="gz" id="gz" tal:define="langs_list here/getCoverageGlossaryObjects">
     <option value="" />
     <tal:block repeat="item langs_list">
@@ -5497,8 +5497,15 @@ function toggleSelect(caller){
   </th>
   <th style="width: 15%;">
     <a  tal:attributes="href string:${here/absolute_url}?${req_params}skey=coverage${rkey_param};
-        title python:test(skey=='coverage', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Location
+        title python:test(skey=='coverage', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Country
     <img tal:attributes="src python:test(skey=='coverage', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
+      width="12" height="12" alt=""/>
+    </a>
+  </th>
+  <th style="width: 15%;">
+    <a  tal:attributes="href string:${here/absolute_url}?${req_params}skey=address${rkey_param};
+        title python:test(skey=='address', test(rkey_param, 'sorted ascending', 'sorted descending'), 'sortable')" i18n:attributes="title" i18n:translate="">Location
+    <img tal:attributes="src python:test(skey=='address', test(rkey_param, sortup_gif, sortdown_gif), sortnot_gif)"
       width="12" height="12" alt=""/>
     </a>
   </th>
@@ -5524,6 +5531,7 @@ function toggleSelect(caller){
     </tal:block>
     </td>
     <td tal:content="python:test(object.coverage, object.coverage, '-')" />
+    <td tal:content="python:test(object.coverage, object.address, '-')" />
     <td tal:content="python:test(object.source, object.source, '-')" />
     <td>
     <a tal:condition="python:object.file_link != 'http://'" tal:attributes="href object/file_link" i18n:translate="">[link]</a>
