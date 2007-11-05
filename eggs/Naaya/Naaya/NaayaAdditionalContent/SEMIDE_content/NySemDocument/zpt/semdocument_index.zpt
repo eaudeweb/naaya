@@ -56,7 +56,7 @@
 		</tal:block>
 		<tal:block condition="file_link_local">
 		<a tal:attributes="href file_link_local" 
-		tal:content="string:${here/portal_url}/${file_link_local}" /> (<span tal:omit-tag="" i18n:translate="">copy</span>)
+		tal:content="file_link_local" /> (<span tal:omit-tag="" i18n:translate="">copy</span>)
 		</tal:block>
 		<span  tal:condition="python:not(file_link or file_link_local)" tal:omit-tag="">n/a</span>
 	</td>
