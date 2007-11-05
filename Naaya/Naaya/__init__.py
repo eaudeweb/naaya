@@ -22,6 +22,8 @@
 
 #Zope imports
 from ImageFile import ImageFile
+from AccessControl import ClassSecurityInfo
+from Globals import InitializeClass
 
 #Product imports
 from constants import *
@@ -106,12 +108,16 @@ misc_ = {
 }
 
 #constructors for pluggable content
+security = ClassSecurityInfo()
+NyFolder.NyFolder.security = security
 for k,v in get_pluggable_content().items():
     for cns in v['constructors']:
         c = 'from Products.NaayaContent.%s import %s' % (v['module'], v['module'])
         exec(c)
         c = 'NyFolder.NyFolder.%s = %s.%s' % (cns, v['module'], cns)
         exec(c)
+        NyFolder.NyFolder.security.declareProtected(v['permission'], cns)
+InitializeClass(NyFolder.NyFolder)
 
 #make drag & drop available globally
 def DragDropCore(self, name):
