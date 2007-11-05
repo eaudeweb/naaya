@@ -75,6 +75,7 @@ class ProfilesTool(Folder, utils):
         for the user then it will be created.
         """
         if name is None: name = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        name = self.utCleanupProfileId(name)
         profile_ob = self._getOb(name, None)
         if profile_ob is None:
             manage_addProfile(self, name, name)
