@@ -9,7 +9,7 @@
 # processname: maildrop
 #
 # Where is your Zope instance?
-ZOPE_HOME="/var/servere/Zope-8290"
+ZOPE_HOME="/usr/local/finsiel/Zope-2.7.6-final"
 
 # Set the maildrop main directory
 reldir=`dirname $0`
@@ -23,7 +23,7 @@ MAILDROP_SMTP="localhost"
 MAILDROP_POLLING_INTERVAL=60
 
 # Where is the python executable?
-PYTHON_EXE="/home/epoz/python/8280/bin/python"
+PYTHON_EXE="/usr/local/finsiel/bin/python2.3"
 #PYTHON_EXE="$ZOPE_HOME/bin/python"
 
 export MAILDROP_HOME ZOPE_HOME MAILDROP_SMTP MAILDROP_POLLING_INTERVAL

@@ -51,7 +51,7 @@ DEBUG = 0
 MAILDROP_INTERVAL = 120
 # User id to run maildrop as. Note that this only works under Unix, and if
 # maildrop is started by root.
-UID='nobody'
+UID='portal'
 MaildropError = 'Maildrop Error'
 
 def make_daemon():
