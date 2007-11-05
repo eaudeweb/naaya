@@ -1,3 +1,5 @@
+/* forum styles */
+
 .forum_message_top a {
 	margin-right: 0px;
 	padding: 0px 2px 0px 3px;
@@ -20,15 +22,26 @@
 	position: relative;
 }
 
+.message_top_buttons a, .message_top_buttons a:visited {
+	padding: 0.1em 0.5em 0.1em 0.5em;
+	color: white !important;
+}
+
 .message_top_buttons2 {
-	padding: 2px;
+	padding: 0.7em;
+}
+
+.message_top_buttons2 a, .message_top_buttons2 a:visited {
+	padding: 0.2em 1em 0.2em 1em;
+	color: white !important;
 }
 
 .forum_topic {
-	margin-bottom: 15px;
-	border: 1px solid #eeeeee;
+	margin-bottom: 1.5em;
+	border: 1px solid #447385; /*#8ca981;*/
 	padding: 5px;
 	color: #333333;
+	background-color: #eeece9;
 }
 
 .forum_topic a {
@@ -116,3 +129,5 @@
 	color: #666666;
 	font-size: 90%;
 }
+
+/* end forum styles */
