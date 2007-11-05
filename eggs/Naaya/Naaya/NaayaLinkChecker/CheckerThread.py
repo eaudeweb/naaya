@@ -57,8 +57,8 @@ class CheckerThread(threading.Thread):
         file = MyURLopener()
         if self.proxy != '':
             file.proxies['http'] = self.proxy
+        socket.setdefaulttimeout(5)
         try:
-            socket.setdefaulttimeout(5)
             file.open(url)
             file.close()
             return 'OK'
