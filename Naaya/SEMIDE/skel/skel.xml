@@ -225,8 +225,8 @@
 	</pluggablecontenttypes>
 	<syndication>
 		<namespace id="301" prefix="ut" value="http://www.semide.org/ut/"/>
-		<scriptchannel id="latestnews_rdf" title="Latest news" description="Latest news" language="en" type="News" numberofitems="5"/>
-		<scriptchannel id="upcomingevents_rdf" title="Upcoming events" description="Upcoming events" language="en" type="Events" numberofitems="5"/>
+		<scriptchannel id="latestnews_rdf" title="Latest news" description="Latest news" language="en" type="News" numberofitems="5" portlet="1"/>
+		<scriptchannel id="upcomingevents_rdf" title="Upcoming events" description="Upcoming events" language="en" type="Events" numberofitems="5" portlet="1"/>
 		<localchannel id="news_rdf" title="News" description="News" language="en" type="News" objmetatype="Naaya Semide News" numberofitems="5"/>
 	</syndication>
 	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
@@ -354,7 +354,9 @@
 			permissions="Add Naaya Forum Message"/>
 		<grouppermissions name="Add content" description="Create Naaya objects. Editing, publishing and deleting them are not granted as a part of thisprivilege."
 			permissions="Naaya - Access administrative area,Naaya - Add Naaya Folder objects,Naaya - Add Naaya Document objects,Naaya - Add Naaya Pointer objects,Naaya - Add Naaya URL objects,Naaya - Add Naaya Photo,Naaya - Add Naaya Media File objects,Naaya - Add Naaya Country objects,Naaya - Add Naaya Extended File objects,Naaya - Add Naaya Photo Folder,Naaya - Add Naaya Semide Event objects,Naaya - Add Naaya Semide Multimedia objects,Naaya - Add Naaya Semide Project objects,Naaya - Add Naaya Semide Thematic Folder,Naaya - Add Naaya Semide Field Site objects,Naaya - Add Naaya Semide News objects,Naaya - Add Naaya Semide Document objects,Naaya - Add Naaya Semide Funding objects,Naaya - Add Naaya Semide Organisation objects,Naaya - Add Naaya Semide Text of Laws objects,Take ownership"/>
-		<role name="Authenticated" grouppermissions="Add comments,Add forum message" permissions=""/>
+		<grouppermissions name="Add custom content" description="Create Semide objects. Editing, publishing and deleting them are not granted as a part of this privilege."
+			permissions="Naaya - Add Naaya Semide Event objects,Naaya - Add Naaya Semide Project objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Semide News objects,Naaya - Add Naaya Event objects"/>
+		<role name="Authenticated" grouppermissions="Add comments,Add forum message,Add custom content" permissions=""/>
 		<role name="Contributor" grouppermissions="Add content" permissions=""/>
 		<role name="Administrator" grouppermissions="Browse content,Add content,Add comments,Edit content,Copy content,Publish content,Delete content,Validate content,Translate pages,Manage Users,Manage forum,Add forum message" permissions=""/>
 	</security>
