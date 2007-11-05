@@ -329,7 +329,10 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'pointer_index')
+        pointer = self.restrictedTraverse(self.pointer, None)
+        if pointer is None:
+            return self.getFormsTool().getContent({'here': self}, 'pointer_index')
+        REQUEST.RESPONSE.redirect(pointer.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
