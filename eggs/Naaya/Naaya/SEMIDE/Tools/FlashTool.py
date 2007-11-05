@@ -242,10 +242,10 @@ class FlashTool(Folder, ProfileMeta, utils):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'exportFlashUsers')
     def exportFlashUsers(self, REQUEST=None, RESPONSE=None):
         """ """
-        data = [('Username', 'Firstname', 'Lastname', 'Email')]
+        data = [('Username', 'Firstname', 'Lastname', 'Email', 'Instant notification', 'Language')]
         data_app = data.append
         for user in self.getFlashUsers():
-            data_app((user[0], self.utToUtf8(user[1]), self.utToUtf8(user[2]), user[3]))
+            data_app((user[0], self.utToUtf8(user[1]), self.utToUtf8(user[2]), user[3], user[4], self.gl_get_language_name(user[5])))
         tmp_name = tmpfile(data)
         content = open(str(tmp_name)).read()
         RESPONSE.setHeader('Content-Type', 'text/csv')
@@ -333,8 +333,9 @@ class FlashTool(Folder, ProfileMeta, utils):
         publication = self.utSortObjsListByAttr(publication, 'resource_date')
         return inbrief, nomination, awards, publication, tender, papers, training, events
 
+    security.declarePrivate('generate_flash')
     def generate_flash(self):
-        #generate and save the flash message
+        """ """
         notifications = self.collect_objects(self.path)
         inbrief, nomination, awards, publication, tender, papers, training, events = self.filter_objects(notifications)
         if inbrief or nomination or awards or publication or tender or papers or training or events:
@@ -552,45 +553,48 @@ class FlashTool(Folder, ProfileMeta, utils):
         """
         if uid==self.get_site_uid():
             htmls = {}
-            #grab all the items
-            self.notif_cache = self.clean_duplicates(self.notif_cache)
-            #get the objects
-            items_obj = []
-            for item in self.notif_cache:
-                try:
-                    items_obj.append(self.unrestrictedTraverse(item))
-                except KeyError:
-                    pass
-            xmls_html = self.instant_xml(items_obj, 'html')
-            xmls_text = self.instant_xml(items_obj, 'text')
-            htmls = {}
-            for lang, xml in xmls_html.items():
-                #generate htmls
-                htmls[lang] = [self.instant_html(xml, 'html', lang)]
-            for lang, xml in xmls_text.items():
-                #generate texts
-                htmls[lang].append(self.instant_html(xml, 'text', lang))
-            #send notifications
-            if htmls:
-                #at least one item
-                mdh_ob = MDH()
-                site = self.getSite()
-                authtool_ob = site.getAuthenticationTool()
+            if self.notif_cache:
+                #grab all the items
+                self.notif_cache = self.clean_duplicates(self.notif_cache)
+                #get the objects
+                items_obj = []
+                for item in self.notif_cache:
+                    try:
+                        items_obj.append(self.unrestrictedTraverse(item))
+                    except KeyError:
+                        pass
+                xmls_html = self.instant_xml(items_obj, 'html')
+                xmls_text = self.instant_xml(items_obj, 'text')
+                htmls = {}
+                for lang, xml in xmls_html.items():
+                    #generate htmls
+                    htmls[lang] = [self.instant_html(xml, 'html', lang)]
+                for lang, xml in xmls_text.items():
+                    #generate texts
+                    htmls[lang].append(self.instant_html(xml, 'text', lang))
+                #send notifications
+                if htmls:
+                    #at least one item
+                    mdh_ob = MDH()
+                    site = self.getSite()
+                    authtool_ob = site.getAuthenticationTool()
 
-                for profile in site.getProfilesTool().getProfiles():
-                    sheet_ob = profile.getSheetById(self.getInstanceSheetId())
-                    if sheet_ob.notify == 1:
-                        #the user wants to receive instant notification
-                        if sheet_ob.language in htmls.keys():
-                            #get user
-                            user = authtool_ob.getUser(profile.id)
-                            #send email
-                            html, text = htmls[sheet_ob.language]
-                            mdh_ob.sendFlashEmail(html, text, user.email, site.mail_address_from, 'SEMIDE eFlash instant notification')
-                #clear cache
-                self.emptyNotifCache()
+                    for profile in site.getProfilesTool().getProfiles():
+                        sheet_ob = profile.getSheetById(self.getInstanceSheetId())
+                        if sheet_ob.notify == 1:
+                            #the user wants to receive instant notification
+                            if sheet_ob.language in htmls.keys():
+                                #get user
+                                user = authtool_ob.getUser(profile.id)
+                                #send email
+                                html, text = htmls[sheet_ob.language]
+                                mdh_ob.sendFlashEmail(html, text, 'cornel.nitu@eaudeweb.ro', site.mail_address_from, 'SEMIDE eFlash instant notification')
+                    #clear cache
+                    self.emptyNotifCache()
             return "e-Flash notification sent successfully"
 
+
+    security.declareProtected(view, 'mainTrigger')
     def mainTrigger(self, uid, now=0):
         """
         Used by cron tools to trigger the eFlash notification.
