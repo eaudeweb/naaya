@@ -14,17 +14,19 @@
 <table border="0" cellspacing="2" cellpadding="2">
 <tr>
 	<th i18n:translate="">Released</th>
-	<td tal:content="python:here.utShowDateTime(here.releasedate)"/>
+	<td tal:content="python:here.utShowDateTime(here.releasedate)" />
 </tr>
 <tr tal:condition="here/coverage">
 	<th i18n:translate="">Geographical coverage</th>
 	<td tal:content="here/coverage" />
 </tr>
-<tr>
+<tr tal:define="pointer here/pointer">
 	<th i18n:translate="">Pointer</th>
-	<td><a tal:define="pointer here/pointer"
-			tal:attributes="href string:/${pointer}"
-			tal:content="pointer"/></td>
+	<td>
+		<a tal:condition="python:here.restrictedTraverse(pointer, None)" tal:attributes="href string:/${pointer}" tal:content="python:here.restrictedTraverse(pointer).title_or_id()" />
+		<a tal:define="site_ob here/getSite" tal:condition="python:not here.restrictedTraverse(pointer, None)" tal:attributes="href string:${site_ob/absolute_url}/${pointer}" tal:content="string:${site_ob/absolute_url}/${pointer}" />
+		[<span i18n:translate="">restricted</span>]
+	</td>
 </tr>
 </table>
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
