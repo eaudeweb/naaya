@@ -89,10 +89,10 @@ CALENDAR_STARTING_DAY = 'Monday'
 INBRIEF = 'Inbrief'
 NOMINATION = 'Nomination'
 VACANCIES = 'Vacancies'
-AWARDS = 'Awards&Prizes'
+CALLFORPROPOSALS = 'Procurement'
 TENDERS = 'Call for tenders and proposals'
 PAPERS = 'CallForPaper'
-TRAINING = 'Training and courses'
+TRAINING = 'Training'
 
 #zip download related
 ZIP_DOWNLOAD_FILENAME = 'nfp_download.zip'
