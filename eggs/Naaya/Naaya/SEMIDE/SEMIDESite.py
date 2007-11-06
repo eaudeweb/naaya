@@ -190,7 +190,11 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[ar].xml')))
 
         #set the default thesaurus on picklists
-        self.admin_properties(1, '', '', ID_THESAURUS, ID_GLOSSARY_COVERAGE, '', '')
+        self.admin_properties(show_releasedate=1, rename_id='', http_proxy='',
+                              repository_url=ID_THESAURUS,
+                              keywords_glossary=ID_GLOSSARY_COVERAGE,
+                              coverage_glossary='',submit_unapproved='',
+                              portal_url='', rdf_max_items=10)
 
         #set default calendar object
         manage_addEventCalendar(self, ID_CALENDAR, '', '', '1',
