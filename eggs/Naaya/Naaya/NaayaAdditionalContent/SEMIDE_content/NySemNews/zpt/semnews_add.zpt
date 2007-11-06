@@ -46,8 +46,27 @@
 </p>
 <form name="frmAdd" method="post" tal:attributes="action action" enctype="multipart/form-data">
 
-<script language="javascript" type="text/javascript">
+<tal:comment condition="nothing">
+<!-- XXX Move javascript in specific js file -->
+</tal:comment>
+
+<script type="text/javascript">
 <!--
+var global_dest = '';
+function setupWin(url, theWidth, theHeight, dest)
+{
+	global_dest = dest;
+	wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
+	wwinn.focus();
+	return true;
+}
+
+function createKey(key)
+{
+	var dest = document.getElementById(global_dest);
+	dest.value = key;
+}
+
 function fPick(glossary_url)
 {
 	var frm = document.frmAdd;
@@ -180,9 +199,15 @@ function fSet(ctrl, value)
 </div>
 
 <div class="multicol" style="width:25em;">
-	<div class="field">
+	<div class="field" style="white-space: nowrap">
 		<label for="file_link_local"><span i18n:translate="" tal:omit-tag="">Full description link (local copy)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'file_link_local')" class="mandatory_field"> *</span></label>
-		<input type="text" name="file_link_local" id="file_link_local" size="50" tal:attributes="value python:here.getSession('file_link_local', '')" />
+		<input type="text" name="file_link_local" id="file_link_local"
+			size="50" style="display: inline"
+			tal:attributes="value python:here.getSession('file_link_local', '')" />
+		<input type="button" value="Pick" i18n:translate=""
+			style="display: inline; width: auto"
+			tal:define="sitemap_path here/getSitePath"
+			tal:attributes="onclick string:setupWin('${sitemap_path}/sitemap_add_html', 300, 500, 'file_link_local');;" />
 	</div>
 </div>
 
@@ -281,25 +306,10 @@ function fSet(ctrl, value)
 </div>
 
 <div class="field">
-	<script language="JavaScript">
-	<!--
-	function setupWin(url, theWidth, theHeight)
-	{
-		wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
-		wwinn.focus();
-		return true;
-	}
-
-	function createKey(key)
-	{
-		document.forms['frmAdd'].relation.value = key;
-	}
-	// -->
-	</script>
 	<label for="relation"><span i18n:translate="" tal:omit-tag="">Relation</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'relation')" class="mandatory_field"> *</span></label>
 	<p i18n:translate=""><strong>Tip:</strong> you can and URL address in the field below or pick one from the sitemap</p>
 	<input type="text" name="relation" id="relation" size="50" tal:attributes="value python:here.getSession('relation', '')" />
-	<input type="button" value="Pick" i18n:translate="" tal:define="sitemap_path here/getSitePath" tal:attributes="onclick string:setupWin('${sitemap_path}/sitemap_add_html', 300, 500);;" />
+	<input type="button" value="Pick" i18n:translate="" tal:define="sitemap_path here/getSitePath" tal:attributes="onclick string:setupWin('${sitemap_path}/sitemap_add_html', 300, 500, 'relation');;" />
 </div>
 
 <div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(kind)">
