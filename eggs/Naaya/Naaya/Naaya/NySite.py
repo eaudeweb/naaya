@@ -167,6 +167,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.mail_address_from = ''
         self.administrator_email = ''
         #holds info about customized folder's contact us page
+        self.rdf_max_items = 10
         self.folder_customized_feedback = {}
         self.portal_url = ''
         self.maintopics = []
@@ -1640,25 +1641,34 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
-    def admin_properties(self, show_releasedate='', rename_id='', http_proxy='', repository_url='',
-        keywords_glossary='', coverage_glossary='', submit_unapproved='', portal_url='', REQUEST=None):
-        """ """
-        if show_releasedate: show_releasedate = 1
-        else: show_releasedate = 0
-        if rename_id: rename_id = 1
-        else: rename_id = 0
-        if keywords_glossary == '': keywords_glossary = None
-        if coverage_glossary == '': coverage_glossary = None
-        if submit_unapproved: submit_unapproved = 1
-        else: submit_unapproved = 0
-        self.show_releasedate = show_releasedate
-        self.rename_id = rename_id
-        self.http_proxy = http_proxy
-        self.repository_url = repository_url
-        self.keywords_glossary = keywords_glossary
-        self.coverage_glossary = coverage_glossary
-        self.submit_unapproved = submit_unapproved
-        self.portal_url = portal_url
+    def admin_properties(self, REQUEST=None, **kwargs):
+        """ Update portal properties. 
+        
+        The following properties are accepted:
+        - show_releasedate: bool;
+        - rename_id: bool;
+        - submit_unapproved: bool;
+        - keywords_glossary: string;
+        - coverage_glossary: string;
+        - repository_url: string;
+        - portal_url: string;
+        - http_proxy: string;
+        - rdf_max_items: int;
+        """
+        if REQUEST:
+            kwargs.update(getattr(REQUEST, 'form', {}))
+        
+        # Update portal properties
+        self.rdf_max_items     = kwargs.get('rdf_max_items', 10)
+        self.show_releasedate  = kwargs.get('show_releasedate', 0) and 1 or 0
+        self.rename_id         = kwargs.get('rename_id', 0) and 1 or 0
+        self.submit_unapproved = kwargs.get('submit_unapproved', '') and 1 or 0
+        self.keywords_glossary = kwargs.get('keywords_glossary', '') or None
+        self.coverage_glossary = kwargs.get('coverage_glossary', '') or None
+        self.repository_url    = kwargs.get('repository_url', '')
+        self.portal_url        = kwargs.get('portal_url', '')
+        self.http_proxy        = kwargs.get('http_proxy', '')
+        
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_properties_html' % self.absolute_url())
