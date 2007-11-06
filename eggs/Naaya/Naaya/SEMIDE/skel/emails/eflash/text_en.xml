@@ -8,7 +8,6 @@
 <xsl:variable name="headline">Headline</xsl:variable>
 <xsl:variable name="inbrief">In brief</xsl:variable>
 <xsl:variable name="nominations">Nominations &amp; vacancies</xsl:variable>
-<xsl:variable name="awards">Awards &amp; Prizes</xsl:variable>
 <xsl:variable name="publications">Publications</xsl:variable>
 <xsl:variable name="proposal">Call for tenders and proposals</xsl:variable>
 <xsl:variable name="papers">Call for papers</xsl:variable>
@@ -26,20 +25,19 @@
 <!--End of page translations-->
 
 <xsl:template name="headings"><!--template used for section headings (in TOC and in the listing of documents)-->
-    <xsl:choose><!--Set section heading depending on 'id' attribute-->
-      <xsl:when test="@id='headline'"><xsl:value-of disable-output-escaping="yes" select="$headline" /></xsl:when>
-      <xsl:when test="@id='inbrief'"><xsl:value-of disable-output-escaping="yes" select="$inbrief" /></xsl:when>
-      <xsl:when test="@id='nominations'"><xsl:value-of disable-output-escaping="yes" select="$nominations" /></xsl:when>
-      <xsl:when test="@id='awards'"><xsl:value-of disable-output-escaping="yes" select="$awards" /></xsl:when>
-      <xsl:when test="@id='publications'"><xsl:value-of disable-output-escaping="yes" select="$publications" /></xsl:when>
-      <xsl:when test="@id='proposal'"><xsl:value-of disable-output-escaping="yes" select="$proposal" /></xsl:when>
-      <xsl:when test="@id='papers'"><xsl:value-of disable-output-escaping="yes" select="$papers" /></xsl:when>
-      <xsl:when test="@id='events'"><xsl:value-of disable-output-escaping="yes" select="$events" /></xsl:when>
-      <xsl:when test="@id='training'"><xsl:value-of disable-output-escaping="yes" select="$training" /></xsl:when>
-      <xsl:when test="@id='sitemap'"><xsl:value-of disable-output-escaping="yes" select="$sitemap" /></xsl:when>
-      <xsl:when test="@id='contact'"><xsl:value-of disable-output-escaping="yes" select="$contact" /></xsl:when>
-      <xsl:otherwise>WARNING: unnamed SECTION element was found with id="<xsl:value-of select="@id" />". The XSLT file(s) should be edited to offer a title for this section.</xsl:otherwise>
-    </xsl:choose>
+	<xsl:choose><!--Set section heading depending on 'id' attribute-->
+		<xsl:when test="@id='headline'"><xsl:value-of disable-output-escaping="yes" select="$headline" /></xsl:when>
+		<xsl:when test="@id='inbrief'"><xsl:value-of disable-output-escaping="yes" select="$inbrief" /></xsl:when>
+		<xsl:when test="@id='nominations'"><xsl:value-of disable-output-escaping="yes" select="$nominations" /></xsl:when>
+		<xsl:when test="@id='publications'"><xsl:value-of disable-output-escaping="yes" select="$publications" /></xsl:when>
+		<xsl:when test="@id='proposal'"><xsl:value-of disable-output-escaping="yes" select="$proposal" /></xsl:when>
+		<xsl:when test="@id='papers'"><xsl:value-of disable-output-escaping="yes" select="$papers" /></xsl:when>
+		<xsl:when test="@id='events'"><xsl:value-of disable-output-escaping="yes" select="$events" /></xsl:when>
+		<xsl:when test="@id='training'"><xsl:value-of disable-output-escaping="yes" select="$training" /></xsl:when>
+		<xsl:when test="@id='sitemap'"><xsl:value-of disable-output-escaping="yes" select="$sitemap" /></xsl:when>
+		<xsl:when test="@id='contact'"><xsl:value-of disable-output-escaping="yes" select="$contact" /></xsl:when>
+	<xsl:otherwise>WARNING: unnamed SECTION element was found with id="<xsl:value-of select="@id" />". The XSLT file(s) should be edited to offer a title for this section.</xsl:otherwise>
+	</xsl:choose>
 </xsl:template>
 
 <xsl:template match="/eflash">=====================================================================
@@ -58,12 +56,12 @@
  - </xsl:text>
 <xsl:call-template name="headings"/>
 <xsl:if test="@id='inbrief'">
-    <xsl:for-each select="news">
-        <xsl:text>
-      - </xsl:text>
-    <xsl:value-of disable-output-escaping="yes" select="@title"/>
-    </xsl:for-each>
-    </xsl:if>
+	<xsl:for-each select="news">
+		<xsl:text>
+	  - </xsl:text>
+	<xsl:value-of disable-output-escaping="yes" select="@title"/>
+	</xsl:for-each>
+	</xsl:if>
 </xsl:for-each>
 <xsl:text>
 
@@ -82,8 +80,11 @@
 <xsl:value-of select="@title"/>
 </xsl:if>
 <!--heading for events (includes dates too)-->
-<xsl:if test="name()='event'"
->[<xsl:value-of select="@start_date"/> - <xsl:value-of select="@end_date"/>] <xsl:value-of select="@title"/>
+<xsl:if test="name()='event'">
+[<xsl:value-of select="@start_date"/><xsl:if test="@end_date!='None'"> - <xsl:value-of select="@end_date"/></xsl:if>] <xsl:value-of select="@title"/>
+</xsl:if>
+<xsl:if test="name()='event' or name()='training'"><!--Event location-->
+Address: <xsl:value-of disable-output-escaping="yes" select="address"/>
 </xsl:if>
 ----------------------------------------------------------
 </xsl:if>

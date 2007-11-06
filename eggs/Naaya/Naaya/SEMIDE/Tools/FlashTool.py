@@ -304,16 +304,14 @@ class FlashTool(Folder, ProfileMeta, utils):
     security.declarePrivate('filter_objects')
     def filter_objects(self, objects):
         """ filter the objects """
-        inbrief, nomination, awards, publication, tender, papers, training, events = [], [], [], [], [], [], [], []
+        inbrief, nomination, publication, tender, papers, training, events = [], [], [], [], [], [], []
         for obj in objects:
             if obj.meta_type == METATYPE_NYSEMNEWS:
                 if obj.news_type == INBRIEF:
                     inbrief.append(obj)
                 if obj.news_type == NOMINATION or obj.news_type == VACANCIES:
                     nomination.append(obj)
-                if obj.news_type == AWARDS:
-                    awards.append(obj)
-                if obj.news_type == TENDERS:
+                if obj.news_type == TENDERS or obj.news_type == CALLFORPROPOSALS:
                     tender.append(obj)
                 if obj.news_type == PAPERS:
                     papers.append(obj)
@@ -326,22 +324,21 @@ class FlashTool(Folder, ProfileMeta, utils):
                 publication.append(obj)
         inbrief = self.utSortObjsListByAttr(inbrief, 'news_date')
         nomination = self.utSortObjsListByAttr(nomination, 'news_date')
-        awards = self.utSortObjsListByAttr(awards, 'news_date')
         tender = self.utSortObjsListByAttr(tender, 'news_date')
         papers = self.utSortObjsListByAttr(papers, 'news_date')
         training = self.utSortObjsListByAttr(training, 'start_date')
         events = self.utSortObjsListByAttr(events, 'start_date')
         publication = self.utSortObjsListByAttr(publication, 'resource_date')
-        return inbrief, nomination, awards, publication, tender, papers, training, events
+        return inbrief, nomination, publication, tender, papers, training, events
 
     security.declarePrivate('generate_flash')
     def generate_flash(self):
         """ """
         notifications = self.collect_objects(self.path)
-        inbrief, nomination, awards, publication, tender, papers, training, events = self.filter_objects(notifications)
-        if inbrief or nomination or awards or publication or tender or papers or training or events:
-            results_html = self.generate_xml(inbrief, nomination, awards, publication, tender, papers, training, events, self.langs, 'html')
-            results_text = self.generate_xml(inbrief, nomination, awards, publication, tender, papers, training, events, self.langs, 'text')
+        inbrief, nomination, publication, tender, papers, training, events = self.filter_objects(notifications)
+        if inbrief or nomination or publication or tender or papers or training or events:
+            results_html = self.generate_xml(inbrief, nomination, publication, tender, papers, training, events, self.langs, 'html')
+            results_text = self.generate_xml(inbrief, nomination, publication, tender, papers, training, events, self.langs, 'text')
             self.save_flash(results_html, 'html')
             self.save_flash(results_text, 'text')
             return True
@@ -372,7 +369,7 @@ class FlashTool(Folder, ProfileMeta, utils):
         return unicode(conv(xml, xslt), 'utf-8').replace('<?xml version="1.0"?>', '')
 
     security.declarePrivate('generate_xml')
-    def generate_xml(self, inbrief, nomination, awards, publication, tender, papers, training, events, langs, mesg_type='html'):
+    def generate_xml(self, inbrief, nomination, publication, tender, papers, training, events, langs, mesg_type='html'):
         """ """
         results = {}
         for lang in langs:
@@ -411,22 +408,6 @@ class FlashTool(Folder, ProfileMeta, utils):
             if nomination:
                 xml_append('<section id="nominations">')
                 for obj in nomination:
-                    if obj.istranslated(lang):
-                        xml_append('<news title="%s" source="%s" source_link="%s" file_link="%s" url="%s" lang="%s" isrtl="%s">' % 
-                        (self.utXmlEncode(obj.getLocalProperty('title', lang)), self.utXmlEncode(obj.getLocalProperty('source', lang)), \
-                        self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), self.utXmlEncode(obj.absolute_url(0)), \
-                        lang, self.is_arabic(lang)))
-                        if mesg_type == 'html':
-                            xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
-                        else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
-                        xml_append('</news>')
-                xml_append('</section>')
-
-            #awards & prizes section
-            if nomination:
-                xml_append('<section id="awards">')
-                for obj in awards:
                     if obj.istranslated(lang):
                         xml_append('<news title="%s" source="%s" source_link="%s" file_link="%s" url="%s" lang="%s" isrtl="%s">' % 
                         (self.utXmlEncode(obj.getLocalProperty('title', lang)), self.utXmlEncode(obj.getLocalProperty('source', lang)), \
@@ -496,6 +477,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                             (self.utXmlEncode(obj.getLocalProperty('title', lang)), self.utXmlEncode(obj.start_date), self.utXmlEncode(obj.end_date), \
                             self.utXmlEncode(obj.getLocalProperty('source', lang)), self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), \
                             self.utXmlEncode(obj.absolute_url(0)), lang, self.is_arabic(lang)))
+                        xml_append('<address>%s</address>' % self.utXmlEncode(obj.getLocalProperty('address', lang)))
                         if mesg_type == 'html':
                             xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
                         else:
@@ -512,6 +494,7 @@ class FlashTool(Folder, ProfileMeta, utils):
                             (self.utXmlEncode(obj.getLocalProperty('title', lang)), self.utXmlEncode(obj.start_date), self.utXmlEncode(obj.end_date), \
                             self.utXmlEncode(obj.getLocalProperty('source', lang)), self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), \
                             self.utXmlEncode(obj.absolute_url(0)), lang, self.is_arabic(lang)))
+                        xml_append('<address>%s</address>' % self.utXmlEncode(obj.getLocalProperty('address', lang)))
                         if mesg_type == 'html':
                             xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
                         else:
