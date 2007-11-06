@@ -35,6 +35,7 @@ from Products.NaayaCore.managers.utils import utils, tmpfile
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaContent.NyDocument.NyDocument import addNyDocument
 from Products.NaayaCore.ProfilesTool.ProfileMeta import ProfileMeta
+from Products.NaayaCore.managers.paginator import ObjectPaginator
 
 #SEMIDE imports
 from Products.SEMIDE.constants import *
@@ -237,7 +238,7 @@ class FlashTool(Folder, ProfileMeta, utils):
         results = [(x[skey], x) for x in users]
         results.sort()
         if rkey: results.reverse()
-        return [val for (key, val) in results]
+        return ObjectPaginator([val for (key, val) in results], num_per_page=15, orphans=5)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'exportFlashUsers')
     def exportFlashUsers(self, REQUEST=None, RESPONSE=None):
