@@ -329,10 +329,13 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        pointer = self.restrictedTraverse(self.pointer, None)
-        if pointer is None:
-            return self.getFormsTool().getContent({'here': self}, 'pointer_index')
-        REQUEST.RESPONSE.redirect(pointer.absolute_url())
+        from AccessControl import getSecurityManager
+        obj = self.unrestrictedTraverse(self.pointer, None)
+        if obj:
+            if not getSecurityManager().checkPermission(view, obj):
+                return self.getFormsTool().getContent({'here': self, 'broken': 0}, 'pointer_index')
+            REQUEST.RESPONSE.redirect(obj.absolute_url())
+        return self.getFormsTool().getContent({'here': self, 'broken': 1}, 'pointer_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
