@@ -133,6 +133,9 @@
 		text-align: center;
 	}
 
+#calendar-container a:visited {
+  color: #557BA1;
+}
 
 /**/
 .current-day a
