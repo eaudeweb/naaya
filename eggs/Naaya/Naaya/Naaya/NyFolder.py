@@ -434,7 +434,12 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
     def hasContent(self): return (len(self.getObjects()) > 0) or (len(self.objectValues(METATYPE_FOLDER)) > 0)
 
     def getPublishedFolders(self): return self.utSortObjsListByAttr([x for x in self.objectValues(METATYPE_FOLDER) if x.approved==1 and x.submitted==1], 'sortorder', 0)
-    def getPublishedObjects(self): return [x for x in self.getObjects() if x.approved==1 and x.submitted==1]
+    def getPublishedObjects(self, items=0):
+        res = [x for x in self.getObjects() if x.approved==1 and x.submitted==1]
+        if items:
+            return res[:items]
+        return res
+    
     def getPublishedContent(self):
         r = self.getPublishedFolders()
         r.extend(self.getPublishedObjects())
@@ -1276,7 +1281,15 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
     security.declareProtected(view, 'index_rdf')
     def index_rdf(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getSyndicationTool().syndicateSomething(self.absolute_url(), self.getPublishedObjects())
+        items = REQUEST.get('items', 0)
+        rdf_max_items = getattr(self.getSite(), 'rdf_max_items', 0)
+        items = items or rdf_max_items
+        try:
+            items = int(items)
+        except TypeError, ValueError:
+            items = 0
+        return self.getSyndicationTool().syndicateSomething(
+            self.absolute_url(), self.getPublishedObjects(items=items))
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def subobjects_html(self, REQUEST=None, RESPONSE=None):
