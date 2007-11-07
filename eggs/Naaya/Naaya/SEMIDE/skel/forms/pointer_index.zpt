@@ -23,9 +23,8 @@
 <tr tal:define="pointer here/pointer">
 	<th i18n:translate="">Pointer</th>
 	<td>
-		<a tal:condition="python:here.restrictedTraverse(pointer, None)" tal:attributes="href string:/${pointer}" tal:content="python:here.restrictedTraverse(pointer).title_or_id()" />
-		<a tal:define="site_ob here/getSite" tal:condition="python:not here.restrictedTraverse(pointer, None)" tal:attributes="href string:${site_ob/absolute_url}/${pointer}" tal:content="string:${site_ob/absolute_url}/${pointer}" />
-		[<span i18n:translate="">restricted</span>]
+		<a tal:define="pointer_path string:${here/getSitePath}/${pointer}" tal:attributes="href pointer_path" tal:content="pointer_path" />
+		[<span i18n:translate="" tal:condition="not:broken">restricted</span><span i18n:translate="" tal:condition="broken">broken link</span>]
 	</td>
 </tr>
 </table>
