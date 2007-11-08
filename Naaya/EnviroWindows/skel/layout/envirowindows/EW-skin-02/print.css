@@ -1,3 +1,5 @@
+#center_content { width: 100% !important; overflow-x: visible !important;}
+
 .skiplink {
 	display: none;
 }
@@ -59,6 +61,8 @@
 
 .page_title {}
 .page_subtitle {}
+
+.b_download { display: none; }
 
 /*	EPOZ buttons	*/
 #epoz_button_strikethrough {display:none;}

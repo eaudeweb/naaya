@@ -1,8 +1,9 @@
 <span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')"/>
-/* Operations buttons */
+
 a img {
 	border: none;
 }
+/* Operations buttons */
 .floated-buttons {
 	float: right;
 	margin-right: 0.5em;
@@ -677,8 +678,8 @@ body.visualFontSizeCorrection { /*do not display bg-image in EPOZ*/
 .list_of_roles {
 	display: inline; 
 }
-/* +++++++++ END modified on february 21 USERS-ROLES listing #############*/
-/* END STYLE */
+/* END modified on february 21 USERS-ROLES listing */
+
 /* Pop-ups epoz*/
 .pick_pop_up {
 	font-family: Verdana, Arial;
@@ -722,7 +723,7 @@ body.visualFontSizeCorrection { /*do not display bg-image in EPOZ*/
 /* Thesaurus style */
 .h2term {
 	font-family: Arial, Verdana;
-	margin-bottom: 20px;  
+	margin-bottom: 20px;
 }
 .bar {
 	background-color: #EFF6FA;
@@ -743,7 +744,6 @@ tr.duplicate a {
 }
 tr.not-duplicate {
 }
-
 
 /* administration table */
 .admin_table {
@@ -774,23 +774,21 @@ tr.not-duplicate {
 .admin_table tr.even {
 	background: #fafafa;
 }
-/* Media file style sheet 
-*/
+/* Media file style sheet */
 .flvPlayer {
 }
-
 .flvPlayerBroken, .flvPlayerNotReady, .flashPlayerNotInstalled  {
-  width: 450px;
-  min-height: 10em;
-  overflow: auto;
-  background: url('flv-bg.jpg') no-repeat top left #555;
-  color: #ffffff;
-  text-align: center;
-  font-weight: bold;
-  font-family: Arial, Helvetica, sans-serif;
-  border: 1px solid #777;
-  padding-top: 5em;
-  margin: 0 auto;
+	width: 450px;
+	min-height: 10em;
+	overflow: auto;
+	background: url('flv-bg.jpg') no-repeat top left #555;
+	color: #ffffff;
+	text-align: center;
+	font-weight: bold;
+	font-family: Arial, Helvetica, sans-serif;
+	border: 1px solid #777;
+	padding-top: 5em;
+	margin: 0 auto;
 }
 * html .flvPlayerBroken, * html .flvPlayerNotReady, * html .flashPlayerNotInstalled  {
 	height: 10em;
