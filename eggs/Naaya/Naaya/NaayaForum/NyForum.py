@@ -33,6 +33,10 @@ from constants import *
 from NyForumBase import NyForumBase
 from Products.NaayaCore.managers.utils import utils
 from NyForumTopic import manage_addNyForumTopic_html, topic_add_html, addNyForumTopic
+from Products.NaayaBase.NyGadflyContainer import manage_addNyGadflyContainer
+
+STATISTICS_CONTAINER = '.statistics'
+STATISTICS_COLUMNS = {'topic': 'VARCHAR', 'hits': 'INTEGER'}
 
 manage_addNyForum_html = PageTemplateFile('zpt/forum_manage_add', globals())
 def manage_addNyForum(self, id='', title='', description='', categories='', file_max_size=0, REQUEST=None):
@@ -244,7 +248,42 @@ class NyForum(NyForumBase, Folder, utils):
         except: self.setSessionErrors(['Error while delete data.'])
         else: self.setSessionInfo(['Topic(s) deleted.'])
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
-
+    
+    #
+    # Statistics
+    #
+    security.declarePrivate("_getStatisticsContainer")
+    def _getStatisticsContainer(self):
+        """ Create statistics container if it doesn't exists and return it
+        """
+        scontainer = getattr(self, STATISTICS_CONTAINER, None)
+        if not scontainer:
+            return manage_addNyGadflyContainer(self, STATISTICS_CONTAINER, 
+                                               **STATISTICS_COLUMNS)
+        return scontainer
+    
+    security.declareProtected(view, 'getTopicHits')
+    def getTopicHits(self, topic):
+        """ Returns statistics for given topic
+        """
+        scontainer = self._getStatisticsContainer()
+        res = scontainer.get('HITS', topic=topic)
+        if not res:
+            return 0
+        return res[0]['HITS']
+    
+    security.declareProtected(view, 'updateTopicHits')
+    def updateTopicHits(self, topic):
+        """ Update hits for topic
+        """
+        scontainer = self._getStatisticsContainer()
+        res = scontainer.get('HITS', topic=topic)
+        if not res:
+            return scontainer.add(hits=1, topic=topic)
+        hits = res[0]['HITS']
+        hits += 1
+        return scontainer.set(key='hits', value=hits, topic=topic)
+        
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/forum_manage_edit', globals())

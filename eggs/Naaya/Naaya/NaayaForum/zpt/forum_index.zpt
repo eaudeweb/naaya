@@ -30,6 +30,7 @@
 		<th class="title-column" i18n:translate="">Category</th>
 		<th class="title-column" i18n:translate="">Author</th>
 		<th class="title-column" i18n:translate="">Replies</th>
+		<th class="title-column" i18n:translate="">Views</th>
 		<th class="title-column" i18n:translate="">Last message</th>
 		<th class="edit" i18n:translate="" tal:condition="can_operate">Edit</th>
 	</tr>
@@ -52,6 +53,7 @@
 			<td tal:content="item/category" />
 			<td tal:content="item/author" />
 			<td tal:content="item/count_messages" />
+			<td tal:content="python:here.getTopicHits(topic=item.absolute_url(1))" />
 			<td tal:define="last item/get_last_message">
 				<span tal:replace="python:here.utShowFullDateTime(last.postdate)" />,
 				<span tal:replace="last/author" />
