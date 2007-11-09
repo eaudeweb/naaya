@@ -305,14 +305,21 @@ class NyForumTopic(NyForumBase, Folder):
         self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
+    _index_html = PageTemplateFile('zpt/topic_index', globals())
+    security.declareProtected(view, 'index_html')
+    def index_html(self, *args, **kwargs):
+        """ """
+        # Update hits
+        forum = self.aq_inner.aq_parent
+        forum.updateTopicHits(self.absolute_url(1))
+        
+        return self._index_html(*args, **kwargs)
+        
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/topic_manage_edit', globals())
 
     #site pages
-    security.declareProtected(view, 'index_html')
-    index_html = PageTemplateFile('zpt/topic_index', globals())
-
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'edit_html')
     edit_html = PageTemplateFile('zpt/topic_edit', globals())
 
