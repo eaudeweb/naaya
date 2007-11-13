@@ -18,30 +18,45 @@
 # Alin Voinea, Eau de Web
 from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
+from Products.ExtFile.ExtImage import ExtImage
 
 class CustomContentUpdater(NaayaContentUpdater):
-    """ Add frontpicture attribute to Naaya Stories"""
+    """ Move NyPhotos from ZODB to local disk"""
     
-    meta_type = "Naaya Story frontpicture Updater"
+    meta_type = 'Naaya Photo Storage Updater'
     
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
-        self.title = 'Update Naaya Story properties'
-        self.description = 'Add frontpicture attribute.'
-        self.update_meta_type = 'Naaya Story'
+        self.title = 'Update Naaya Photos storage type'
+        self.description = 'Move files from ZODB to disk.'
+        self.update_meta_type = 'Naaya Photo'
 
     def _verify_doc(self, doc):
+        """ Check for ZODB storage """
         # Verify ZODB storage
-        if not hasattr(doc, 'frontpicture'):
+        if getattr(doc, 'data', ''):
             return doc
-        logger.debug('%-15s %s', 'Skip NyStory', doc.absolute_url(1))
+        logger.debug('%-23s %s', 'Skip NyPhoto', doc.absolute_url(1))
         return None
     
+    def _update_doc_data(self, doc):
+        """ Move doc data from ZODB to disk"""
+        logger.debug('%-23s %s', 'Update NyPhoto data', doc.absolute_url(1))
+        if not hasattr(doc, '_ext_file'):
+            doc._ext_file = ExtImage(doc.getId(), doc.title)
+        doc.update_data(doc.data)
+    
+    def _update_doc_displays(self, doc):
+        """ Purge doc displays"""
+        logger.debug('%-23s %s', 'Purge NyPhoto displays', doc.absolute_url(1))
+        doc.managePurgeDisplays()
+        
     def _update(self):
+        """ Find files stored in ZODB and move them to disk"""
         updates = self._list_updates()
         for update in updates:
-            logger.debug('%-15s %s', 'Update NyStory', update.absolute_url(1))
-            setattr(update, 'frontpicture', '')
+            self._update_doc_data(update)
+            self._update_doc_displays(update)
 
 def register(uid):
     return CustomContentUpdater(uid)

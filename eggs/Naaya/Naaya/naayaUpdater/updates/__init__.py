@@ -18,9 +18,25 @@
 # Alin Voinea, Eau de Web
 import os
 import glob
+import logging
+
 import zLOG
 from Products.naayaUpdater.NaayaUpdater import UPDATERID
 import Globals
+
+# Config custom logger
+LOG_ROOT = os.path.join(Globals.INSTANCE_HOME, 'log')
+LOG_FILE = os.path.join(LOG_ROOT, 'updates.log')
+
+logging.basicConfig()
+_handler = logging.FileHandler(LOG_FILE)
+_formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
+_handler.setFormatter(_formatter)
+
+nyUpdateLogger = logging.getLogger('naayaUpdater')
+nyUpdateLogger.setLevel(logging.DEBUG)
+nyUpdateLogger.handlers = [_handler]
+nyUpdateLogger.propagate = 0
 
 def _get_available_updates():
     """ Return available updates in current dir."""

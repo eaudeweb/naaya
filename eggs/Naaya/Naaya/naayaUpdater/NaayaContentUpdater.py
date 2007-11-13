@@ -18,6 +18,7 @@
 # Alin Voinea, Eau de Web
 
 #Python imports
+import os
 
 # Zope imports
 from DateTime import DateTime
@@ -26,6 +27,8 @@ from AccessControl.Permissions import view_management_screens
 from AccessControl import ClassSecurityInfo
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.ExtFile.ExtFile import ExtFile
+from Products.naayaUpdater.updates import LOG_ROOT, LOG_FILE
 
 class NaayaContentUpdater(Folder):
     """ Naaya Content Updater abstract class. Subclass it for your content.
@@ -37,7 +40,6 @@ class NaayaContentUpdater(Folder):
     def manage_options(self):
         """ ZMI tabs """
         return ({'label': 'Update', 'action': 'index_html'},)
-    
     ###
     #General stuff
     ######
@@ -50,7 +52,6 @@ class NaayaContentUpdater(Folder):
         self.description = ''
         self.update_meta_type = ''
         self.last_run = None
-        self.report = ''
     #
     # Methods to override
     #
@@ -66,38 +67,64 @@ class NaayaContentUpdater(Folder):
     #
     # Util methods
     #
+    def _reset_log(self, backup=''):
+        """ Remove log file """
+        if backup:
+            f = open(LOG_FILE, 'r')
+            data = f.read()
+            f.close()
+            f = open(backup, 'w')
+            f.write(data)
+            f.close()
+        open(LOG_FILE, 'w').close()
+        
     def _list_updates(self):
         """ Return all objects that need update"""
         utool = self.aq_inner.aq_parent
         portals = utool.getPortals()
-        updates = []
         for portal in portals:
-            updates.extend(self._list_portal_updates(portal))
-        return updates
-    
-    def _list_portal_updates(self, portal):
-        """ Return all portal objects that need update"""
-        docs = portal.getCatalogedObjects(meta_type=self.update_meta_type)
-        updates = []
-        for doc in docs:
-            doc = self._verify_doc(doc)
-            if not doc:
-                continue
-            updates.append(doc)
-        return updates
+            query = {'meta_type': portal.utConvertToList(self.update_meta_type)}
+            brains = portal.getCatalogTool()(query)
+            for brain in brains:
+                doc = brain.getObject()
+                if doc is None:
+                    continue
+                if not self._verify_doc(doc):
+                    continue
+                yield doc
     #
     # Public methods. 
     #
+    security.declarePrivate('add_report')
+    def add_report(self):
+        """ Add update report """
+        if not os.path.isfile(LOG_FILE):
+            return
+        log = open(LOG_FILE, 'rb')
+        data = log.read()
+        log.close()
+        if not data:
+            return
+        time = DateTime()
+        report_id = 'update_' + time.strftime('%Y-%m-%d-%H-%M-%S') + '.log'
+        report_title = 'Update on %s' % time
+        tmpExtFile = ExtFile(report_id, report_title)
+        self._setObject(report_id, tmpExtFile)
+        self._getOb(report_id).manage_upload(data, 'text/plain')
+        self._reset_log(backup=os.path.join(LOG_ROOT, report_id))
+        
     security.declareProtected(view_management_screens, 'update')
     def update(self, REQUEST=None):
         """ Update site content. If safe is True nothing will be touched.
         """
+        self._reset_log()
+        self._update()
+        self.add_report()
         self.last_run = DateTime()
-        self.report = self._update()
         if REQUEST:
             REQUEST.RESPONSE.redirect('index_html')
             
-    security.declareProtected(view_management_screens, 'update')
+    security.declareProtected(view_management_screens, 'list_updates')
     def list_updates(self):
         """ Return the list of updates that will have place.
         """

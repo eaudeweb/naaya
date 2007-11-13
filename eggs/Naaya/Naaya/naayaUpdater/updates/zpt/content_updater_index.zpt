@@ -12,18 +12,22 @@
 	</div>
 </form>
 
+<!-- Update info -->
 <tal:block tal:condition="not:request/index_html|nothing">
 	<div>
 	  <strong>Last run: </strong>
 	  <span tal:content="here/last_run"  tal:condition="here/last_run"/>
 	  <span tal:content="string:Never"  tal:condition="not:here/last_run"/>
 	</div>
-	<fieldset tal:condition="here/report">
-	  <legend style="padding: 5px">Update log</legend>
-	  <tal:block replace="structure here/report" />
+	<fieldset tal:condition="here/objectValues">
+		<legend style="padding: 5px">Update logs</legend>
+		<div tal:repeat="log here/objectValues">
+			<a tal:attributes="href log/absolute_url" tal:content="log/title_or_id" />
+		</div>
 	</fieldset>
 </tal:block>
 
+<!-- List objects to update -->
 <table tal:condition="objs" width="100%">
     <tr class="list-header">
 		<th>Title</th>
