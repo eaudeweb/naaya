@@ -16,12 +16,15 @@
 # Authors:
 #
 # Alin Voinea, Eau de Web
-
+from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 SCHEMA_URL = 'http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaDocuments/schemas/naaya/naaya-nyexp-1.0.0.xsd'
 
 class CustomContentUpdater(NaayaContentUpdater):
     """ Add nyexp_schema attribute to Naaya Site"""
+    
+    meta_type = "Naaya Site nyexpschema Updater"
+    
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya Site properties'
@@ -31,21 +34,23 @@ class CustomContentUpdater(NaayaContentUpdater):
         """ See super"""
         if not hasattr(doc, 'nyexp_schema'):
             return doc
+        logger.debug('%-15s %s', 'Skip site', doc.absolute_url(1))
+        return None
     
-    def _list_portal_updates(self, portal):
+    def _list_updates(self):
         """ Return all portals that need update"""
-        portal = self._verify_doc(portal)
-        if portal:
-            return [portal,]
-        return []
+        utool = self.aq_inner.aq_parent
+        portals = utool.getPortals()
+        for portal in portals:
+            if not self._verify_doc(portal):
+                continue
+            yield portal
     
     def _update(self):
         updates = self._list_updates()
-        report = []
         for update in updates:
+            logger.debug('%-15s %s', 'Update site', update.absolute_url(1))
             setattr(update, 'nyexp_schema', SCHEMA_URL)
-            report.append('<strong>Update site:</strong> ' + update.absolute_url(1))
-        return '<br />'.join(report)
 
 def register(uid):
     return CustomContentUpdater(uid)

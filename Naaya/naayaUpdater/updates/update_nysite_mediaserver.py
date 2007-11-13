@@ -20,28 +20,44 @@ from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 
 class CustomContentUpdater(NaayaContentUpdater):
-    """ Add frontpicture attribute to Naaya Stories"""
+    """ """
     
-    meta_type = "Naaya Story frontpicture Updater"
+    meta_type = "Naaya Site MediaServer Updater"
+    _properties=({'id':'media_server', 'type': 'string','mode':'w'},)
+    
+    def manage_options(self):
+        """ ZMI tabs """
+        return ({'label':'Properties', 'action':'manage_propertiesForm'},) + \
+               NaayaContentUpdater.manage_options(self)
     
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
-        self.title = 'Update Naaya Story properties'
-        self.description = 'Add frontpicture attribute.'
-        self.update_meta_type = 'Naaya Story'
-
+        self.title = 'Update Naaya Site properties'
+        self.description = 'Add media_server attribute'
+        self.media_server = ''
+    
     def _verify_doc(self, doc):
-        # Verify ZODB storage
-        if not hasattr(doc, 'frontpicture'):
-            return doc
-        logger.debug('%-15s %s', 'Skip NyStory', doc.absolute_url(1))
-        return None
+        """ """
+        return doc
+    
+    def _list_updates(self):
+        """ Return all portals that need update """
+        utool = self.aq_inner.aq_parent
+        portals = utool.getPortals()
+        for portal in portals:
+            if not self._verify_doc(portal):
+                continue
+            yield portal
     
     def _update(self):
+        """ """
         updates = self._list_updates()
         for update in updates:
-            logger.debug('%-15s %s', 'Update NyStory', update.absolute_url(1))
-            setattr(update, 'frontpicture', '')
+            if not self.media_server:
+                raise RuntimeError, 'Please set media server first in Properties tab.'
+            logger.debug('Update site %s with property media_server = %s', 
+                         update.absolute_url(1), self.media_server)
+            setattr(update, 'media_server', self.media_server)
 
 def register(uid):
     return CustomContentUpdater(uid)
