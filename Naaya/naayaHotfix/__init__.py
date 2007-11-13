@@ -357,6 +357,36 @@ def _index_object(self, documentId, obj, threshold=None, attr=''):
 
 TextIndexNG._index_object = _index_object
 
+
+#
+# Patch zope pack in order to remove undo files from disk
+#
+from Products.ExtFile.Config import REPOSITORY_PATH
+from App.ApplicationManager import ApplicationManager
+from App.ApplicationManager import AltDatabaseManager
+from extfile_pack import pack_disk
+
+def am_manage_pack(self, days=0, REQUEST=None):
+    """ Override manage pack in order to delete .undo files from disk."""
+    # Run disk packing in separate thread
+    path = os.path.join(INSTANCE_HOME, *REPOSITORY_PATH)
+    pack_disk(path)
+    
+    t = self.__old_manage_pack(days, None)
+
+    if REQUEST is not None:
+        REQUEST['RESPONSE'].redirect(
+            REQUEST['URL1']+'/manage_workspace')
+    return t
+
+LOG('naayaHotfix', INFO, 'Patching ApplicationManager in order to delete .undo files from disk on database pack.')
+LOG('naayaHotfix', INFO, 'Patching AltDatabaseManager in order to delete .undo files from disk on database pack.')
+ApplicationManager.__old_manage_pack = ApplicationManager.manage_pack
+AltDatabaseManager.__old_manage_pack = ApplicationManager.manage_pack
+ApplicationManager.manage_pack = am_manage_pack
+AltDatabaseManager.manage_pack = am_manage_pack
+
+
 #patch ExtFile
 from Products.ExtFile.ExtFile import ExtFile
 from Products.ExtFile.Config import *
