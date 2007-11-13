@@ -24,7 +24,6 @@ This module contains the class that handles versioning for a single object.
 
 #Python imports
 from binascii import crc32
-from copy import deepcopy
 
 #Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -84,7 +83,9 @@ class NyVersioning(utils):
         Deletes a version entry.
         @param p_version_uid: version unique identifier
         """
-        raise EXCEPTION_NOTIMPLEMENTED
+        if self.__versions.has_key(p_version_uid):
+            del self.__versions[p_version_uid]
+        self._p_changed = 1
 
     def __compare_current_version_data_with_data(self, p_version_data, p_data):
         """
@@ -105,7 +106,7 @@ class NyVersioning(utils):
         Set versions structure for current object.
         @param versions: dictionary with versions info
         """
-        self.__versions = deepcopy(versions)
+        self.__versions = dict([(key, value) for key, value in versions.items()])
         self._p_changed = 1
 
     def getOlderVersions(self):
@@ -114,10 +115,8 @@ class NyVersioning(utils):
         version is removed because it cointains the current content of the
         object.
         """
-        buf = deepcopy(self.__versions)
-        try: del(buf[self.__current_version_uid])
-        except: pass
-        return buf
+        return dict([(key, value) for key, value in self.__versions.items()
+                    if key != self.__current_version_uid])
 
     def getCurrentVersionId(self):
         """
@@ -158,8 +157,19 @@ class NyVersioning(utils):
             #no versions yet
             self.__create_version(l_version_uid, self.objectDataForVersion(), username)
         else:
+            compare = self.objectVersionDataForVersionCompare(
+                    self.__get_version_data(self.__current_version_uid))
+            compare_index = getattr(compare, 'index_html', None)
+            if compare_index:
+                compare = compare_index()
+            
+            compare_with = self.objectDataForVersionCompare()
+            compare_with_index = getattr(compare_with, 'index_html', None)
+            if compare_with_index:
+                compare_with = compare_with_index()
+            
             #compare with current version
-            if self.__compare_current_version_data_with_data(self.objectVersionDataForVersionCompare(self.__get_version_data(self.__current_version_uid)), self.objectDataForVersionCompare()):
+            if self.__compare_current_version_data_with_data(compare, compare_with):
                 self.__create_version(l_version_uid, self.objectDataForVersion(), username)
 
     def objectDataForVersion(self):
