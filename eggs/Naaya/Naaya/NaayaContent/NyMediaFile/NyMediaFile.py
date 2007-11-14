@@ -308,7 +308,8 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
         """
         Returns the list of media files, B{File} objects.
         """
-        return self.objectValues(self.subobj_meta_type)
+        meta_types = getattr(self, 'subobj_meta_type', None)
+        return self.objectValues(meta_types)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
