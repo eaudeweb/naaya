@@ -501,9 +501,11 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
         """ """
-        self.REQUEST.RESPONSE.setHeader('Content-Type', self.content_type())
-        self.REQUEST.RESPONSE.setHeader('Content-Length', self.size())
-        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
+        RESPONSE.setHeader('Content-Type', self.content_type())
+        RESPONSE.setHeader('Content-Length', self.size())
+        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
+        RESPONSE.setHeader('Pragma', 'public')
+        RESPONSE.setHeader('Cache-Control', 'max-age=0')
         data = self.getFileItem(self.gl_get_selected_language()).data
         if type(data) is type(''):
             RESPONSE.setBase(None)
@@ -516,8 +518,11 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
     security.declareProtected(view, 'view')
     def view(self, REQUEST, RESPONSE):
         """ """
-        self.REQUEST.RESPONSE.setHeader('Content-Type', self.content_type)
-        self.REQUEST.RESPONSE.setHeader('Content-Length', self.size)
+        RESPONSE.setHeader('Content-Type', self.content_type)
+        RESPONSE.setHeader('Content-Length', self.size)
+        RESPONSE.setHeader('Pragma', 'public')
+        RESPONSE.setHeader('Cache-Control', 'max-age=0')
+        RESPONSE.setHeader('Content-Disposition', 'inline; filename=%s' % self.utToUtf8(self.downloadfilename))
         data = self.getFileItem(self.gl_get_selected_language()).data
         if type(data) is type(''):
             RESPONSE.setBase(None)
