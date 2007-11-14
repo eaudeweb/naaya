@@ -20,8 +20,11 @@ from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 import re
 
-PATTERN = 'ewindows.eu.org'
-REPLACEMENT = 'ew.eea.europa.eu'
+#PATTERN = 'ewindows.eu.org'
+#REPLACEMENT = 'ew.eea.europa.eu'
+
+PATTERN = 'smap-root.ew.eea.europa.eu'
+REPLACEMENT = 'root.ew.eea.europa.eu'
 
 class CustomContentUpdater(NaayaContentUpdater):
     """  replace broken links in the description """
