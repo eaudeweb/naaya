@@ -466,16 +466,20 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
         """ """
-        self.REQUEST.RESPONSE.setHeader('Content-Type', self.content_type)
-        self.REQUEST.RESPONSE.setHeader('Content-Length', self.size)
-        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
+        RESPONSE.setHeader('Content-Type', self.content_type)
+        RESPONSE.setHeader('Content-Length', self.size)
+        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
+        RESPONSE.setHeader('Pragma', 'public')
+        RESPONSE.setHeader('Cache-Control', 'max-age=0')
         return file_item.inheritedAttribute('index_html')(self, REQUEST, RESPONSE)
 
     security.declareProtected(view, 'view')
     def view(self, REQUEST, RESPONSE):
         """ """
-        self.REQUEST.RESPONSE.setHeader('Content-Type', self.content_type)
-        self.REQUEST.RESPONSE.setHeader('Content-Length', self.size)
+        RESPONSE.setHeader('Content-Type', self.content_type)
+        RESPONSE.setHeader('Content-Length', self.size)
+        RESPONSE.setHeader('Pragma', 'public')
+        RESPONSE.setHeader('Cache-Control', 'max-age=0')
         return file_item.inheritedAttribute('index_html')(self, REQUEST, RESPONSE)
 
 InitializeClass(NyFile)
