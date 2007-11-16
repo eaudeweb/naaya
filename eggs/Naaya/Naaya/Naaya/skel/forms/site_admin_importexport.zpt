@@ -147,6 +147,94 @@
 	</div>
 </fieldset>
 
+<fieldset>
+	<legend i18n:translate="">Export messages as spreadsheet</legend>
+	<div class="fieldset_div" tal:define="site here/getSite; 
+						trans_url site/getPortalTranslationsPath; 
+						default_lang site/gl_get_default_language;">
+		<p i18n:translate="">
+			You can export the messages and their translations to spreadsheet files. 
+			Choose the language and the desired format then click the <em>Export</em> button.
+		</p>
+		<p i18n:translate="">
+			<strong>WARNING:</strong> Make sure your editor (eg. MS Excel) supports UTF-8 encoding, otherwise some characters might not display correctly.
+		</p>
+		<form method="post" tal:attributes="action string:${trans_url}/spreadsheet_export">
+		<table border="0">
+		<tr>
+			<th align="right" i18n:translate="">Language</th>
+			<td valign="top">
+				<select name="target_lang">
+					<tal:block repeat="lang languages">
+					<option tal:attributes="value lang/code" tal:content="string:${lang/name}[${lang/code}]" />
+					</tal:block>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<th align="right" i18n:translate="">Format</th>
+			<td valign="top">
+				<select name="dialect">
+					<option value="excel" i18n:translate="">CSV (Comma delimited)</option>
+					<option value="excel-tab" i18n:translate="">Text (Tab delimited)</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit" value="Export" i18n:attributes="value"></td>
+		</tr>
+		</table>
+		</form>
+	</div>
+</fieldset>
+
+<fieldset>
+	<legend i18n:translate="">Import messages from spreadsheet</legend>
+	<div class="fieldset_div" tal:define="site here/getSite; 
+						trans_url site/getPortalTranslationsPath; 
+						default_lang site/gl_get_default_language;">
+		<p i18n:translate="">
+			You can import the messages and their translations from spreadsheet files. 
+			Choose the language and the format then click the <em>Import</em> button.
+		</p>
+		<p i18n:translate="">
+			<strong>WARNING:</strong> Make sure the file you are importing is encoded in UTF-8, otherwise translated messages might not be imported correctly.
+		</p>
+		<form method="post" tal:attributes="action string:${trans_url}/spreadsheet_import" enctype="multipart/form-data">
+		<table border="0">
+		<tr>
+			<th align="right" i18n:translate="">File</th>
+			<td><input type="file" name="file" /></td>
+		</tr>
+		<tr>
+			<th align="right" i18n:translate="">Language</th>
+			<td valign="top">
+				<select name="target_lang">
+					<tal:block repeat="lang languages">
+					<option tal:attributes="value lang/code" tal:content="string:${lang/name}[${lang/code}]"  />
+					</tal:block>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<th align="right" i18n:translate="">Format</th>
+			<td valign="top">
+				<select name="dialect">
+					<option value="comma" i18n:translate="">CSV (Comma delimited)</option>
+					<option value="tab" i18n:translate="">Text (Tab delimited)</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit" value="Import" i18n:attributes="value"></td>
+		</tr>
+		</table>
+		</form>
+	</div>
+</fieldset>
+
 <tal:block tal:condition="python:languages == []">
 	<em i18n:translate="">No languages available, please add them using the Languages tab</em>
 </tal:block>
