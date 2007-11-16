@@ -41,6 +41,9 @@ from Products.Localizer.MessageCatalog import MessageCatalog
 
 #Product imports
 from Products.NaayaCore.constants import *
+from Products.NaayaCore.managers.utils import spreadsheet_file
+from Products.NaayaCore.managers.utils import CSVReader
+
 
 def manage_addTranslationsTool(self, languages=None, REQUEST=None):
     """
@@ -246,5 +249,81 @@ class TranslationsTool(MessageCatalog):
                 r2.append(x)
 
         return '\r\n'.join(r2)
+
+
+    security.declareProtected('Manage messages', 'spreadsheet_export')
+    def spreadsheet_export(self, target_lang, dialect, encoding='utf-8', REQUEST=None, RESPONSE=None):
+        """ Exports the content of the message catalog to a spreadsheet format """
+        
+        site = self.getSite()
+        default_lang = site.gl_get_default_language()
+        if dialect == 'excel':
+            ct, ext = 'text/comma-separated-values', 'csv'
+        else:
+            ct, ext = 'text/tab-separated-values', 'txt'
+            
+        translations = {}
+        for msgkey, transunit in self._messages.items():
+            try:
+                translations[msgkey] = transunit[target_lang]
+            except KeyError:
+                translations[msgkey] = ""
+                
+        #sort translations
+        tkeys = translations.keys()
+        tkeys.sort()
+        
+        #build headers
+        output = [('source', 'target')]
+        output_app = output.append  #optimisations
+        
+        #build content
+        for msgkey in tkeys:
+            try:
+                output_app((unicode(msgkey, 'utf-8').encode(encoding), unicode(translations[msgkey], 'utf-8').encode(encoding)))
+            except TypeError:
+                output_app((msgkey.encode(encoding), translations[msgkey].encode(encoding)))
+            
+        #generate a temporary file on the filesystem that will be used to return the actual output
+        tmp_name = spreadsheet_file(output, dialect)
+        
+        #return spreadsheet file
+        content = open(str(tmp_name)).read()
+        RESPONSE.setHeader('Content-Type', '%s;charset=%s' % (ct, encoding))
+        RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s' % '%s-%s.%s' % (default_lang, target_lang, ext))
+        return content
+
+    security.declareProtected('Manage messages', 'spreadsheet_import')
+    def spreadsheet_import(self, file, target_lang, dialect, encoding='utf-8', REQUEST=None):
+        """Imports translations from a spreadsheet format into the message catalog."""
+        
+        if not file:
+            self.setSessionErrors(['You must select a file to import.'])
+        else:
+            #read translations from spreadsheet file
+            translations = CSVReader(file, dialect, encoding)
+            translations = translations.read()[0] #result.read() is ([{id, source, target}], '')
+            
+            #error message if file format doesn't match selected dialect
+            try:
+                #itterate translations
+                for translation in translations:
+                    
+                    #import only translated messages
+                    if translation['target'] != '':
+                        try:
+                            self._messages[translation['source']][target_lang] = translation['target']
+                            
+                        #if the message doesn't exist in the catalog, skip it
+                        except KeyError:
+                            pass
+                        
+                self.setSessionInfo(['Translations successfully imported.'])
+                
+            except KeyError:
+                self.setSessionErrors(['File format does not match selected format.'])
+                
+        REQUEST.RESPONSE.redirect('%s/admin_importexport_html' % self.absolute_url())
+
 
 InitializeClass(TranslationsTool)
