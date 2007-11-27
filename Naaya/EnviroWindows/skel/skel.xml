@@ -12,6 +12,7 @@
 		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
 		<form id="folder_zipupload" title="Upload items from zip archive"/>
 		<form id="folder_zipdownload" title="Download items as zip archive"/>
+		<form id="googlesearchinterfaces_html" title="List all GoogleSearchInterfaces"/>
 	</forms>
 	<layout default_skin_id="envirowindows" default_scheme_id="EW-skin-00">
 		<skin id="envirowindows" title="EnviroWindows">
