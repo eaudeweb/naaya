@@ -10,8 +10,6 @@
 		<form id="folder_index" title=""/>
 		<form id="folder_linkchecker" title="NyFolder link checker"/>
 		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
-		<form id="mediafile_edit" title=""/>
-		<form id="mediafile_index" title=""/>
 		<form id="pointer_index" title=""/>
 		<form id="site_admin_logos" title=""/>
 		<form id="site_admin_network" title=""/>
