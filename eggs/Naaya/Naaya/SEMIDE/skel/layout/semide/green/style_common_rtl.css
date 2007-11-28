@@ -442,6 +442,7 @@
 		background-color: white;
 		color: #444444;
 		font-weight: bold;
+		display: inline;
 		border-bottom: 2px solid #888888;
 		border-left: 2px solid #888888;
 		border-right: 2px solid #888888;
