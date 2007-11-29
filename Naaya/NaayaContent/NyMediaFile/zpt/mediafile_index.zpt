@@ -5,6 +5,12 @@
                        title here/meta_label; 
                        alt here/meta_label" />
   <span tal:replace="here/title_or_id" />
+		<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
 </h1>
 
 <tal:block tal:condition="python:here.checkPermissionEditObject()">
