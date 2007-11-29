@@ -1236,6 +1236,20 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozTo
         self.REQUEST.RESPONSE.setHeader('content-type', 'application/xhtml+xml')
         return '\n'.join(r)
 
+    security.declareProtected(view, 'check_item_title')
+    def check_item_title(self, object, obj_title=''):
+        """
+        Checks if the object has no display title and if it 
+        has a title in at least one of the portal languages
+        """
+        
+        if isinstance(object, str): return 0
+        
+        if obj_title == '':
+            for lang in self.gl_get_languages():
+                if object.getLocalProperty('title', lang):
+                    return 1
+                
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
