@@ -46,6 +46,12 @@ function toggleSelect(caller){
   <tal:block tal:condition="python:not here.can_be_seen()" i18n:translate="">
       [Restricted access]
   </tal:block>
+	<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
+		<span i18n:translate="">Item only translated in </span>
+		<span tal:repeat="lang here/gl_get_languages_map">
+			<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+		</span>
+	</span>
 </h1>
 
 <p tal:condition="python:here.description!=''" 
@@ -91,6 +97,12 @@ function toggleSelect(caller){
       <a tal:attributes="href folder/absolute_url; 
         title python:here.stripHTMLTags(folder.description)" 
         tal:content="folder/title_or_id" />
+		<span class="available_langs" tal:condition="python:here.check_item_title(folder, folder.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and folder.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
       <tal:block tal:condition="folder/can_be_seen">
         <tal:block tal:condition="folder/has_restrictions" i18n:translate="">
           [Limited access]
@@ -140,6 +152,12 @@ function toggleSelect(caller){
         href object/absolute_url; 
         title python:here.stripHTMLTags(object.description)" 
         tal:content="object/title_or_id" />
+		<span class="available_langs" tal:condition="python:here.check_item_title(object, object.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and object.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
       <tal:block tal:condition="python:object.is_open_for_comments() and object.count_comments()>0">
         [<span tal:replace="object/count_comments" />
         <span tal:omit-tag="" i18n:translate="">comment(s)</span>]
