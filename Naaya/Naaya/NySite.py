@@ -713,8 +713,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def getPropertiesToolPath(self, p=0): return self._getOb(ID_PROPERTIESTOOL).absolute_url(p)
     security.declarePublic('getPortletsToolPath')
     def getPortletsToolPath(self, p=0): return self._getOb(ID_PORTLETSTOOL).absolute_url(p)
-    security.declarePublic('getPortalTranslationsPath')
-    def getPortalTranslationsPath(self, p=0): return self._getOb(ID_TRANSLATIONSTOOL).absolute_url(p)    
     security.declarePublic('getAuthenticationToolPath')
     def getAuthenticationToolPath(self, p=0): return self._getOb(ID_AUTHENTICATIONTOOL).absolute_url(p)
     security.declarePublic('getDynamicPropertiesToolPath')
@@ -1901,6 +1899,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_translations_html' % self.absolute_url())
 
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deletereflist')
     def admin_deletereflist(self, ids=[], REQUEST=None):
         """ """
@@ -2957,6 +2956,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(view, 'datetime_js')
     datetime_js = DTMLFile('zpt/calendar/datetime_js', globals())
+    
+    #common javascript
+    security.declareProtected(view, 'common_js')
+    common_js = DTMLFile('zpt/common_js', globals())
     #
     # Macro libs
     #

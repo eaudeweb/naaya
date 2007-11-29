@@ -33,6 +33,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
+from constants import PERMISSION_EDIT_OBJECTS
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
 try:
@@ -232,6 +233,25 @@ class NyProperties(LocalPropertyManager):
         provider_coverage = self.get_coverage_glossary()
         if provider_coverage:
             self.__updatePropertyFromGlossary(provider_coverage, 'coverage', lang, lang_name)
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'update_session_from')
+    def update_session_from(self, REQUEST=None, **kwargs):
+        """Update session from a given language"""
+        # Update kwargs from request
+        if REQUEST:
+            form = getattr(REQUEST, 'form', {})
+            kwargs.update(form)
+        # Update session info
+        from_lang = kwargs.get('from_lang', None)
+        lang = kwargs.get('lang', None)
+        context = self.hasVersion() and self.version or self
+        for key, value in kwargs.items():
+            value = context.getPropertyValue(key, from_lang)
+            self.setSession(key, value)
+        # Return
+        if REQUEST:
+            REQUEST.RESPONSE.redirect(
+                '%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_dynamicproperties_html')
