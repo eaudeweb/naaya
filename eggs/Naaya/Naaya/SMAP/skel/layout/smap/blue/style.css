@@ -823,3 +823,9 @@ padding-left: 5px;
 font-size: 1em;
 cursor: default;
 }
+/* center content */
+#center_content {
+	float: left;
+	width: 100%;
+	background: #fff;
+}

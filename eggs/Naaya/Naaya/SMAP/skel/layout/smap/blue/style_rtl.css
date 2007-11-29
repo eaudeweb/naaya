@@ -905,3 +905,9 @@ div>ul.proj_projects {
 }
 /* --------- END THE FANCY NEW BLUE BANNER------------ */
 
+/* center content */
+#center_content {
+	float: left;
+	width: 100%;
+	background: #fff;
+}
