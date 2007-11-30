@@ -47,7 +47,7 @@
 <form name="frmEdit" method="post" action="." enctype="multipart/form-data">
 
 <!-- Update from other version box -->
-<div metal:define-slot="update_from_version" class="update_from_box"
+<div metal:define-slot="update_from_version" class="edit_right_box"
 	tal:condition="python:len(languages) > 1">
 	<label for="from_lang" i18n:translate="">Fill all from</label>
 	<select name="from_lang" id="from_lang">

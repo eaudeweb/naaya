@@ -264,6 +264,23 @@ td.title-column a:hover{
 	font-weight: bold;
 	color: #1578B0;
 }
+
+/* Object language availability */
+
+.available_langs {
+	font-size: x-small;
+}
+
+.available_langs a{
+	border-right: 1px solid #0F75B3;
+	padding-right: 0.3em;
+	padding-left: 0.3em;
+}
+
+.available_langs a:first-child {
+	border-left:1px solid #0F75B3;
+}
+
 /* Tabbed menus  */
 #tabbedmenu {
 	float:left;
@@ -329,7 +346,7 @@ td.title-column a:hover{
 	text-align: center;
 }
 
-.update_from_box {
+.edit_right_box {
 	clear: both;
 	background-color: #f4fff4;
 	padding: 1em;
