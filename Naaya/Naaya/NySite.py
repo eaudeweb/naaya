@@ -713,6 +713,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def getPropertiesToolPath(self, p=0): return self._getOb(ID_PROPERTIESTOOL).absolute_url(p)
     security.declarePublic('getPortletsToolPath')
     def getPortletsToolPath(self, p=0): return self._getOb(ID_PORTLETSTOOL).absolute_url(p)
+    security.declarePublic('getPortalTranslationsPath')
+    def getPortalTranslationsPath(self, p=0): return self._getOb(ID_TRANSLATIONSTOOL).absolute_url(p)
     security.declarePublic('getAuthenticationToolPath')
     def getAuthenticationToolPath(self, p=0): return self._getOb(ID_AUTHENTICATIONTOOL).absolute_url(p)
     security.declarePublic('getDynamicPropertiesToolPath')
