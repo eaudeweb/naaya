@@ -265,7 +265,7 @@ class NySemThematicDir(NyFolder):
         r = []
         ra = r.append
         for l in self.gl_get_languages():
-            ra('<criteria_keywords lang="%s"><![CDATA[%s]]></nfp_label>' % (l, self.utToUtf8(self.getLocalProperty('criteria_keywords', l))))
+            ra('<criteria_keywords lang="%s"><![CDATA[%s]]></criteria_keywords>' % (l, self.utToUtf8(self.getLocalProperty('criteria_keywords', l))))
         return ''.join(r)
 
 
