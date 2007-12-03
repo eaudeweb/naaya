@@ -321,6 +321,7 @@
 	background-color: white;
 	color: #444444;
 	font-weight: bold;
+	display: inline;
 	border-bottom: 2px solid #888888;
 	border-left: 2px solid #888888;
 	border-right: 2px solid #888888;
@@ -773,3 +774,12 @@ tr.not-duplicate {
 		color: #1578B0;
 	}
 
+.edit_right_box {
+	clear: both;
+	background-color: #f4fff4;
+	padding: 1em;
+	float: right;
+	border: 1px solid black;
+	width: 200px;
+	text-align: right;
+}
