@@ -3018,15 +3018,14 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         
         # Create new translation
         kwargs['lang'] = new_lang
+        deny_args = ('switch_to', 'from_lang', 'switchToLanguage', 
+                     'file', 'source', 'subtitle_file',
+                 )
+        if doc.meta_type not in ('Naaya GeoPoint',):
+            deny_args += ('url',)
+        
         kwargs = dict([(key, value) for key, value in kwargs.items() 
-                       if key not in ('switch_to', 
-                                      'from_lang', 
-                                      'switchToLanguage',
-                                      'file', 
-                                      'url', 
-                                      'source',
-                                      'subtitle_file',
-                                  )])
+                       if key not in deny_args])
         doc.manageProperties(**kwargs)
         
         # Return
