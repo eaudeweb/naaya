@@ -178,6 +178,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.submit_unapproved = 0
         self.rename_id = 0
         self.nyexp_schema = ''
+        # Allow users to move current language content to another language.
+        self.switch_language = 0
         contenttypes_tool.__dict__['__init__'](self)
         CookieCrumbler.__dict__['__init__'](self)
         catalog_tool.__dict__['__init__'](self)
@@ -194,6 +196,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.rename_id = 0
         if not hasattr(self, 'nyexp_schema'):
             self.nyexp_schema = NYEXP_SCHEMA_LOCATION
+        if not hasattr(self, 'switch_language'):
+            self.switch_language = 0
 
     security.declarePrivate('createPortalTools')
     def createPortalTools(self):
@@ -1656,6 +1660,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         - portal_url: string;
         - http_proxy: string;
         - rdf_max_items: int;
+        - switch_language: int;
         """
         if REQUEST:
             kwargs.update(getattr(REQUEST, 'form', {}))
@@ -1670,6 +1675,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.repository_url    = kwargs.get('repository_url', '')
         self.portal_url        = kwargs.get('portal_url', '')
         self.http_proxy        = kwargs.get('http_proxy', '')
+        self.switch_language   = kwargs.get('switch_language', 0)
         
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
@@ -1706,7 +1712,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_notif_sitemap_html?lang=%s' % (self.absolute_url(), lang))
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notif_add_folder')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_notif_add_folders')
     def admin_notif_add_folders(self, absolute_urls_to_be_added=[], lang=None, REQUEST=None):
         """sends a list of folders(absolute_urls) to be added to notifications list"""
         self.getNotificationTool().add_folders_to_notification_list(self.utConvertToList(absolute_urls_to_be_added))
@@ -2984,5 +2990,70 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 form_ob = formstool_ob._getOb(k, None)
             form_ob.pt_edit(text=content, content_type='')
         return 'done'
+    
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'switchToLanguage')
+    def switchToLanguage(self, REQUEST=None, **kwargs):
+        """Update session from a given language"""
+        # Update kwargs from request
+        if not REQUEST:
+            return
+        parents = REQUEST.get('PARENTS', None)
+        if not parents:
+            return
+        doc = parents[0]
+        form = getattr(REQUEST, 'form', {})
+        kwargs.update(form)
+        kwargs['approved'] = 1
+        # Reset current translation
+        lang = kwargs.get('lang', None)
+        doc.manageProperties(lang=lang, approved=1)
+        new_lang = kwargs.get('switch_to', None)
+        
+        # Update attached files
+        if doc.meta_type in ('Naaya Extended File',):
+            files = doc.getFileItems()
+            files[new_lang] = doc.getFileItem(lang)
+            files = dict([(key, value) for key, value in files.items() if key != lang])
+            doc.setFileItems(files)
+        
+        # Create new translation
+        kwargs['lang'] = new_lang
+        kwargs = dict([(key, value) for key, value in kwargs.items() 
+                       if key not in ('switch_to', 
+                                      'from_lang', 
+                                      'switchToLanguage',
+                                      'file', 
+                                      'url', 
+                                      'source',
+                                      'subtitle_file',
+                                  )])
+        doc.manageProperties(**kwargs)
+        
+        # Return
+        REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (doc.absolute_url(), new_lang))
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'update_session_from')
+    def updateSessionFrom(self, REQUEST=None, **kwargs):
+        """Update session from a given language"""
+        # Update kwargs from request
+        if not REQUEST:
+            return
+        parents = REQUEST.get('PARENTS', None)
+        if not parents:
+            return
+        
+        doc = parents[0]
+        form = getattr(REQUEST, 'form', {})
+        kwargs.update(form)
+        # Update session info
+        from_lang = kwargs.get('from_lang', None)
+        lang = kwargs.get('lang', None)
+        context = doc.hasVersion() and doc.version or doc
+        for key, value in kwargs.items():
+            value = context.getPropertyValue(key, from_lang)
+            self.setSession(key, value)
+        # Return
+        REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (doc.absolute_url(), lang))
+
 
 InitializeClass(NySite)
