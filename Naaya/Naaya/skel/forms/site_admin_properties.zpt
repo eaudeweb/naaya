@@ -130,6 +130,17 @@
   <td><strong><label for="rdf_max_items" i18n:translate="">RDF maximum number of items</label></strong></td>
   <td><input type="text" name="rdf_max_items:int" id="rdf_max_items" size="10" tal:attributes="value here/rdf_max_items|python:0" /></td>
 </tr>
+<tr>
+  <td colspan="2" i18n:translate="">
+    The edit form for all content types will be enhanced to contain this extra-option
+    for deleting the current language version of the object and create another one 
+    with the selected language.
+  </td>
+</tr>
+<tr>
+  <td><strong><label for="switch_language" i18n:translate="">Allow switching language for content?</label></strong></td>
+  <td><input type="checkbox" name="switch_language" id="switch_language" tal:attributes="checked here/switch_language" /></td>
+</tr>
 </table>
 <div><input type="submit" value="Save changes" i18n:attributes="value" /></div>
 
