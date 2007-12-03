@@ -198,6 +198,8 @@ def importNySemEvent(self, param, id, attrs, content, properties, discussion, ob
                 end_date=self.utConvertDateTimeObjToString(self.utGetDate(attrs['end_date'].encode('utf-8'))),
                 event_status=attrs['event_status'].encode('utf-8'),
                 contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
+                contact_email=attrs['contact_email'].encode('utf-8'),
+                contact_phone=attrs['contact_phone'].encode('utf-8'),
                 discussion=abs(int(attrs['discussion'].encode('utf-8'))))
             ob = self._getOb(id)
             for property, langs in properties.items():
