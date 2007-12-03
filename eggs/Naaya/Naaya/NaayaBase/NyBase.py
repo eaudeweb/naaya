@@ -242,7 +242,7 @@ class NyBase:
         return '<ob meta_type="%s" param="0" id="%s" sortorder="%s" contributor="%s" \
             approved="%s" approved_by="%s" releasedate="%s" discussion="%s" %s>' % \
             (self.utXmlEncode(self.meta_type),
-             self.utXmlEncode(self.id),
+             self.utXmlEncode(self.getId()),
              self.utXmlEncode(self.sortorder),
              self.utXmlEncode(self.contributor),
              self.utXmlEncode(self.approved),
