@@ -772,7 +772,11 @@ tr.not-duplicate {
 	margin-bottom: 0.5em;
 }
 
-.edit_right_box p{
+.edit_right_box p {
   font-size: 90%;
+  text-align: justify;
+  border-top: 1px dotted #000;
+  padding-top: 0.5em;
 }
+
 /* END STYLE */
