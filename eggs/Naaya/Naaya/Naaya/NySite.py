@@ -3050,6 +3050,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         context = doc.hasVersion() and doc.version or doc
         for key, value in kwargs.items():
             value = context.getPropertyValue(key, from_lang)
+            if not value:
+                continue
             self.setSession(key, value)
         # Return
         REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (doc.absolute_url(), lang))
