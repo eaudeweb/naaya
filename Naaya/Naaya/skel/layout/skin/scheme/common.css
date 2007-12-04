@@ -354,6 +354,11 @@ td.title-column a:hover{
 	border: 1px solid black;
 	width: 200px;
 	text-align: right;
+	margin-bottom: 0.5em;
+}
+
+.edit_right_box p{
+  font-size: 90%;
 }
 
 /* Content translation boxes */
@@ -1006,3 +1011,7 @@ tr.not-duplicate {
  .vDateField { 
 	 margin-left:4px; 
  }
+
+legend {
+	font-weight: bold;
+}
