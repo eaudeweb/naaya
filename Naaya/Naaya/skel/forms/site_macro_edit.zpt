@@ -40,19 +40,19 @@
   </form>
 </div>
 
-<!-- Translation bar on top -->
-<div metal:define-slot="translate_on_top" class="translate">
-	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['translation_bar']" />
-</div>
-
 <!-- Edit form -->
 <form name="frmEdit" method="post" action="." enctype="multipart/form-data">
+
+<!-- Translation bar on top -->
+<div metal:define-slot="translate_on_top" class="translate">
+	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['update_from_version']" />
+	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['translation_bar']" />
+</div>
 
 <tal:block condition="not:here/hasVersion">
 <tal:comment condition="nothing">
 	XXX Support these features in versions, too.
 </tal:comment>
-
 <!-- Switch content language box -->
 <div style="display:none" i18n:translate="" id="confirmSwMessage">
   This action will move current translation to selected one.
@@ -84,20 +84,6 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 	</p>
 </fieldset>
 </tal:block>
-
-<!-- Update from other version box -->
-<div metal:define-slot="update_from_version" class="edit_right_box"
-	tal:condition="python:len(languages) > 1">
-	<label for="from_lang" i18n:translate="">Fill all from</label>
-	<select name="from_lang" id="from_lang">
-		<tal:block repeat="language languages">
-		<option tal:condition="python:language['code'] != curr_lang"
-			tal:attributes="value language/code"
-			tal:content="language/name" />
-		</tal:block>
-	</select>
-	<input type="submit" name="updateSessionFrom:method" value="Ok" i18n:attributes="value"/>
-</div>
 
 <!-- Custom boxes -->
 <metal:block define-slot="custom_boxes" />
@@ -181,12 +167,12 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 	<input type="submit" value="Save changes" i18n:attributes="value" name="saveProperties:method"/>
 </div>
 
-</form>
-
 <!-- Translation bar on bottom -->
 <div metal:define-slot="translate_on_bottom" class="translate">
 	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['translation_bar']" />
 </div>
+
+</form>
 
 </tal:block>
 
@@ -215,4 +201,19 @@ curr_lang python:request.get('lang', None) or here.gl_get_selected_language();">
 	<span tal:content="python:language['name']" />
 	</a>
 </tal:block>
+</metal:block>
+
+<!-- Macro for update from other version box -->
+<metal:block define-macro="update_from_version">
+<div class="translate_bar_right" tal:condition="python:len(languages) > 1">
+	<label for="from_lang" i18n:translate="">Fill the fields below from</label>
+	<select name="from_lang" id="from_lang">
+		<tal:block repeat="language languages">
+		<option tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="value language/code"
+			tal:content="language/name" />
+		</tal:block>
+	</select>
+	<input type="submit" name="updateSessionFrom:method" value="Ok" i18n:attributes="value"/>
+</div>
 </metal:block>
