@@ -320,6 +320,12 @@
         background: #fff;
         color: #666666;
 }
+.translate_bar_right {
+	display: inline;
+	float: right;
+	width: 30em;
+	text-align: right;
+}
 	/* styles for forms */
 	.field {
 	margin-top: 1em;
