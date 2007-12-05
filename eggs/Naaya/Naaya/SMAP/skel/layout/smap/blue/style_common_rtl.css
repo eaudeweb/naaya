@@ -322,9 +322,9 @@
 }
 .translate_bar_right {
 	display: inline;
-	float: right;
+	float: left;
 	width: 30em;
-	text-align: right;
+	text-align: left;
 }
 	/* styles for forms */
 	.field {
