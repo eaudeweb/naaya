@@ -356,8 +356,7 @@ class utils:
 
     def utConvertListToLines(self, values):
         """Takes a list of values and returns a value for a textarea control"""
-        if len(values) == 0: return ''
-        else: return '\r\n'.join(values)
+        return '\r\n'.join(values)
 
     def utConvertLinesToList(self, value):
         """Takes a value from a textarea control and returns a list of values"""
