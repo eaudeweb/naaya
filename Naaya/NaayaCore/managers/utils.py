@@ -348,10 +348,10 @@ class utils:
 
     def utConvertToList(self, s):
         """Convert to list"""
-        if not isinstance(s, list):
-            s = [s]
-        elif isinstance(s, tuple):
+        if isinstance(s, tuple):
             s = list(s)
+        elif not isinstance(s, list):
+            s = [s]
         return s
 
     def utConvertListToLines(self, values):
