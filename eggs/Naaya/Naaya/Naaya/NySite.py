@@ -1399,15 +1399,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         return l.items(), d.values()
 
     security.declarePublic('handle_external_search')
-    def handle_external_search(self, query, langs):
+    def handle_external_search(self, query, langs, max_items=250):
         """
         Handle an external call: performs the search in the given languages.
         """
         if isinstance(query, unicode): query = query.encode('utf-8')
         r = []
         ra = r.append
+        index = 0
         for lang in langs:
             for ob in self.query_objects_ex(q=query, lang=lang):
+                if index >= max_items:
+                    break
                 item = {
                     'url': ob.absolute_url(),
                     'icon': '%s/%s' % (self.REQUEST.SERVER_URL, ob.icon),
@@ -1421,7 +1424,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     if description:
                         #strip all HTML tags from the description and take just
                         #the first 200 characters
-                        item['description'] = self.utStripAllHtmlTags(description.encode('utf-8'))[:200]
+                        desc = self.utStripAllHtmlTags(description.encode('utf-8', 'ignore'))[:200]
+                        item['description'] = self.utStripMSWordUTF8(desc)
                 except:
                     pass
                 try:
@@ -1429,14 +1433,16 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     if not title:
                         #get title; if it is empty return the id instead
                         title = title.encode('utf-8')
-                        if len(title) == 0: title = ob.id
+                        if len(title) == 0: title = ob.getId()
+                    title = self.utStripMSWordUTF8(title)
                     item['title'] = title
                 except:
                     #save id as title
-                    item['title'] = ob.id
+                    item['title'] = ob.getId()
                 t = unicode(str(ob.bobobase_modification_time()), 'latin-1').encode('utf-8')
                 item['time'] = t
                 ra(item)
+                index += 1
         return r
 
     security.declarePublic('external_search')

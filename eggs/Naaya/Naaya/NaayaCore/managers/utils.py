@@ -760,11 +760,11 @@ class utils:
 
     def utSetBodyClass(self,url):
         if url.count('/admin_')>0 or url.count('/PhotoArchive')>0 or url.count('/GraphicsArchive')>0:
-         bodyClass=('admin')
+            bodyClass=('admin')
         elif url.count('edit_html')>0:
-         bodyClass=('edit')
+            bodyClass=('edit')
         elif url.count('add_html')>0:
-         bodyClass=('add')
+            bodyClass=('add')
         try:return bodyClass
         except:return ''
 
@@ -780,95 +780,118 @@ class utils:
         ny=p_date.strftime('%Y')
 
         if nm=='01':
-           if p_language=='fr-BE':
-             return nd+' janvier '+ny
-           elif p_language=='nl-BE':
-             return nd+' januari '+ny
-           else:
-              return nd+' January '+ny
+            if p_language=='fr-BE':
+                return nd+' janvier '+ny
+            elif p_language=='nl-BE':
+                return nd+' januari '+ny
+            else:
+                return nd+' January '+ny
         elif nm=='02':
-           if p_language=='fr-BE':
-              return nd+' f&eacute;vrier '+ny
-           elif p_language=='nl-BE':
-              return nd+' februari '+ny
-           else:
-              return nd+' February '+ny
+            if p_language=='fr-BE':
+                return nd+' f&eacute;vrier '+ny
+            elif p_language=='nl-BE':
+                return nd+' februari '+ny
+            else:
+                return nd+' February '+ny
         elif nm=='03':
-           if p_language=='fr-BE':
-              return nd+' mars '+ny
-           elif p_language=='nl-BE':
-              return nd+' maart '+ny
-           else:
-              return nd+' March '+ny
+            if p_language=='fr-BE':
+                return nd+' mars '+ny
+            elif p_language=='nl-BE':
+                return nd+' maart '+ny
+            else:
+                return nd+' March '+ny
         elif nm=='04':
-           if p_language=='fr-BE':
-              return nd+' avril '+ny
-           elif p_language=='nl-BE':
-              return nd+' april '+ny
-           else:
-              return nd+' April '+ny
+            if p_language=='fr-BE':
+                return nd+' avril '+ny
+            elif p_language=='nl-BE':
+                return nd+' april '+ny
+            else:
+                return nd+' April '+ny
         elif nm=='05':
-           if p_language=='fr-BE':
-              return nd+' mai '+ny
-           elif p_language=='nl-BE':
-              return nd+' mei '+ny
-           else:
-              return nd+' May '+ny
+            if p_language=='fr-BE':
+                return nd+' mai '+ny
+            elif p_language=='nl-BE':
+                return nd+' mei '+ny
+            else:
+                return nd+' May '+ny
         elif nm=='06':
-           if p_language=='fr-BE':
-              return nd+' juin '+ny
-           elif p_language=='nl-BE':
-              return nd+' juni '+ny
-           else:
-              return nd+' June '+ny
+            if p_language=='fr-BE':
+                return nd+' juin '+ny
+            elif p_language=='nl-BE':
+                return nd+' juni '+ny
+            else:
+                return nd+' June '+ny
         elif nm=='07':
-           if p_language=='fr-BE':
-              return nd+' juillet '+ny
-           elif p_language=='nl-BE':
-              return nd+' juli '+ny
-           else:
-              return nd+' July '+ny
+            if p_language=='fr-BE':
+                return nd+' juillet '+ny
+            elif p_language=='nl-BE':
+                return nd+' juli '+ny
+            else:
+                return nd+' July '+ny
         elif nm=='08':
-           if p_language=='fr-BE':
-              return nd+' ao&ucirc;t '+ny
-           elif p_language=='nl-BE':
-              return nd+' augustus '+ny
-           else:
-              return nd+' August '+ny
+            if p_language=='fr-BE':
+                return nd+' ao&ucirc;t '+ny
+            elif p_language=='nl-BE':
+                return nd+' augustus '+ny
+            else:
+                return nd+' August '+ny
         elif nm=='09':
-           if p_language=='fr-BE':
-              return nd+' septembre '+ny
-           elif p_language=='nl-BE':
-              return nd+' september '+ny
-           else:
-              return nd+' September '+ny
+            if p_language=='fr-BE':
+                return nd+' septembre '+ny
+            elif p_language=='nl-BE':
+                return nd+' september '+ny
+            else:
+                return nd+' September '+ny
         elif nm=='10':
-           if p_language=='fr-BE':
-              return nd+' octobre '+ny
-           elif p_language=='nl-BE':
-              return nd+' oktober '+ny
-           else:
-              return nd+' October '+ny
+            if p_language=='fr-BE':
+                return nd+' octobre '+ny
+            elif p_language=='nl-BE':
+                return nd+' oktober '+ny
+            else:
+                return nd+' October '+ny
         elif nm=='11':
-           if p_language=='fr-BE':
-              return nd+' novembre '+ny
-           elif p_language=='nl-BE':
-              return nd+' november '+ny
-           else:
-              return nd+' November '+ny
+            if p_language=='fr-BE':
+                return nd+' novembre '+ny
+            elif p_language=='nl-BE':
+                return nd+' november '+ny
+            else:
+                return nd+' November '+ny
         elif nm=='12':
-           if p_language=='fr-BE':
-              return nd+' d&eacute;cembre '+ny
-           elif p_language=='nl-BE':
-              return nd+' december '+ny
-           else:
-              return nd+' December '+ny
+            if p_language=='fr-BE':
+                return nd+' d&eacute;cembre '+ny
+            elif p_language=='nl-BE':
+                return nd+' december '+ny
+            else:
+                return nd+' December '+ny
         else:
-           return nm
+            return nm
     
     # Easy access to urlencode method
     def utUrlLibEncode(self, query, doseq=1):
         return urlencode(query, doseq)
+
+    def utRemoveLineInString(self, p_keyword, p_string):
+        """ """
+        l_str_lines = p_string.splitlines(1)
+        l_str_refined = ''
+        for ln in l_str_lines:
+            if ln.find(p_keyword) != -1:
+                l_str_lines.remove(ln)
+        for st in l_str_lines:
+            l_str_refined = l_str_refined + st
+        return l_str_refined
+
+    def utStripMSWordUTF8(self, s):
+        """ replace MSWord characters """
+        s = s.replace('\\xe2\\x80\\xa6', '...') #ellipsis
+        s = s.replace('\\xe2\\x80\\x93', '-')   #long dash
+        s = s.replace('\\xe2\\x80\\x94', '-')   #long dash
+        s = s.replace('\\xe2\\x80\\x98', '\'')  #single quote opening
+        s = s.replace('\\xe2\\x80\\x99', '\'')  #single quote closing
+        s = s.replace('\\xe2\\x80\\x9c', '"')  #single quote closing
+        s = s.replace('\\xe2\\x80\\x9d', '"')  #single quote closing
+        s = s.replace('\\xe2\\x80\\xa2', '*')  #dot used for bullet points
+        return s
 
 #END OF CUSTOM FUNCTIONS
 
