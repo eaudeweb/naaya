@@ -269,6 +269,11 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyCheckControl, NyVal
         else:
             r = []
         if not len(r):
+            #replace the old id with the new one (for absolute URLs or pictures)
+            title = title.replace(self.id, id)
+            description = description.replace(self.id, id)
+            body = body.replace(self.id, id)
+
             parent.manage_renameObjects([self.id], [id])
             if not lang: lang = self.gl_get_selected_language()
             releasedate = self.process_releasedate(releasedate, self.releasedate)
@@ -276,6 +281,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyCheckControl, NyVal
                 approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
             else:
                 approved, approved_by = 0, None
+
             self.save_properties(title, description, coverage, keywords, sortorder, body, releasedate, lang)
             self.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             self._p_changed = 1
