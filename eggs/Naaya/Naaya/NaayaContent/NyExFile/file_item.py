@@ -21,20 +21,20 @@
 #Python imports
 
 #Zope imports
-from OFS.Image import File
 from AccessControl import ClassSecurityInfo
 
 #Product imports
 from Products.NaayaBase.NyVersioning import NyVersioning
+from Products.NaayaBase.NyFSFile import NyFSFile
 
-class file_item(File, NyVersioning):
+class file_item(NyFSFile, NyVersioning):
     """ """
 
     def __init__(self, id, title, file, precondition, content_type):
         """
         Constructor.
         """
-        File.__dict__['__init__'](self, id, title, file, content_type, precondition)
+        NyFSFile.__dict__['__init__'](self, id, title, file, content_type, precondition)
         #"dirty" trick to get rid of the File's title property
         try: del self.id
         except: pass
@@ -44,11 +44,11 @@ class file_item(File, NyVersioning):
 
     security.declarePrivate('objectDataForVersion')
     def objectDataForVersion(self):
-        return (str(self.data), self.content_type)
+        return (self.get_data(as_string=False), self.content_type)
 
     security.declarePrivate('objectDataForVersionCompare')
     def objectDataForVersionCompare(self):
-        return str(self.data)
+        return self.get_data(as_string=False)
 
     security.declarePrivate('objectVersionDataForVersionCompare')
     def objectVersionDataForVersionCompare(self, p_version_data):

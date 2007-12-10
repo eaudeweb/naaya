@@ -59,7 +59,8 @@ class exfile_item(Implicit, NyProperties):
         """ """
         files = {}
         for k, v in source.getFileItems().items():
-            files[k] = file_item(v.getId(), v.title, v.data, v.content_type, v.precondition)
+            files[k] = file_item(v.getId(), v.title, '', v.precondition, v.content_type)
+            files[k].update_data(v.get_data(as_string=False))
             files[k].content_type = v.content_type
             files[k].precondition = v.precondition
             files[k].copyVersions(v)
@@ -70,7 +71,7 @@ class exfile_item(Implicit, NyProperties):
         if lang is None: lang = self.gl_get_selected_language()
         if not self.__files.has_key(lang):
             self.__files[lang] = file_item('', '', '', '', '')
-        self._p_changed = 1
+            self._p_changed = 1
         return self.__files[lang]
 
     def size(self, lang=None):

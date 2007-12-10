@@ -228,6 +228,15 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         """
         This method is called, when the object is deleted.
         """
+        fileitems = self.getFileItems()
+        for fileitem in fileitems.values():
+            fileitem.manage_beforeDelete(fileitem, self)
+            # Apply manage_beforeDelete to versions, too
+            versions = fileitem.getVersions()
+            for version in versions.keys():
+                vdata = fileitem.getVersion(version)[0]
+                if hasattr(vdata, 'manage_beforeDelete'):
+                    vdata.manage_beforeDelete(vdata, fileitem)
         NyExFile.inheritedAttribute('manage_beforeDelete')(self, item, container)
         self.uncatalogNyObject(self)
 
@@ -248,7 +257,7 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         for lang, fileitem in self.getFileItems().items():
             ra('<item lang="%s" file="%s" content_type="%s" precondition="%s" />' % \
             (lang,
-                self.utBase64Encode(str(self.utNoneToEmpty(fileitem.data))),
+                self.utBase64Encode(str(self.utNoneToEmpty(fileitem.get_data()))),
                 self.utXmlEncode(fileitem.content_type),
                 self.utXmlEncode(fileitem.precondition)))
         return ''.join(r)
@@ -274,7 +283,7 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         res = ''
         if txng_converters:
             fileitem = self.getFileItem(lang)
-            data = str(fileitem.data)
+            data = str(fileitem.get_data())
             mimetype, encoding = guess_content_type(self.getId(), data)
             converter = ConverterRegistry.get(mimetype)
             if converter:
@@ -310,7 +319,7 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
             if version_data is not None:
                 #show data for file: set content type and return data
                 RESPONSE.setHeader('Content-Type', version_data[1])
-                REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + utToUtf8(self.downloadfilename))
+                REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
                 return version_data[0]
             else:
                 return 'Invalid version data!'
@@ -380,6 +389,12 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         self.downloadfilename = self.version.downloadfilename
         self.releasedate = self.version.releasedate
         self.setProperties(deepcopy(self.version.getProperties()))
+        
+        # Backup current files before commit version
+        fileitems = self.getFileItems()
+        for fileitem in fileitems.values():
+            fileitem.manage_beforeUpdate()
+        
         self.copyFileItems(self.version, self)
         self.checkout = 0
         self.checkout_user = None
@@ -406,6 +421,14 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'discardVersion')
+    def discardVersion(self, REQUEST=None):
+        """ """
+        fileitems = self.version.getFileItems()
+        for fileitem in fileitems.values():
+            fileitem.manage_beforeUpdate(fileitem, self)
+        NyExFile.inheritedAttribute('discardVersion')(self, REQUEST)
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', coverage='', keywords='',
@@ -506,14 +529,8 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
-        data = self.getFileItem(self.gl_get_selected_language()).data
-        if type(data) is type(''):
-            RESPONSE.setBase(None)
-            return data
-        while data is not None:
-            RESPONSE.write(data.data)
-            data=data.next
-        return ''
+        fileitem = self.getFileItem(self.gl_get_selected_language())
+        return fileitem.get_data()
 
     security.declareProtected(view, 'view')
     def view(self, REQUEST, RESPONSE):
@@ -523,13 +540,22 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         RESPONSE.setHeader('Content-Disposition', 'inline; filename=%s' % self.utToUtf8(self.downloadfilename))
-        data = self.getFileItem(self.gl_get_selected_language()).data
-        if type(data) is type(''):
-            RESPONSE.setBase(None)
-            return data
-        while data is not None:
-            RESPONSE.write(data.data)
-            data=data.next
-        return ''
+        fileitem = self.getFileItem(self.gl_get_selected_language())
+        return fileitem.get_data()
+    
+    security.declarePublic('getDownloadUrl')
+    def getDownloadUrl(self):
+        """ """
+        site = self.getSite()
+        fileitem = self.getFileItem(self.gl_get_selected_language())
+        if not fileitem:
+            return self.absolute_url() + '/download'
+        
+        file_path = fileitem._get_data_name()
+        media_server = getattr(site, 'media_server', '').strip()
+        if not (media_server and file_path):
+            return self.absolute_url() + '/download'
+        file_path = (media_server, ) + tuple(file_path)
+        return '/'.join(file_path)
 
 InitializeClass(NyExFile)
