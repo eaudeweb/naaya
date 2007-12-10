@@ -30,7 +30,7 @@
                     (Value 0 is for no limit uploads)
                 </td>
 	</tr>
-	<tr><td></td><td><input type="submit" value="Save changes"></td></tr>
+	<tr><td></td><td><input type="submit" value="Save changes" /></td></tr>
 </table>
 </form>
 
