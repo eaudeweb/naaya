@@ -571,3 +571,4 @@ h3 {
 .tooltip table td {
 	padding-bottom: 0.7em;
 }
+.mceStatusbarPathText { visibility: hidden; }
