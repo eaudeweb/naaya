@@ -33,9 +33,9 @@ from Products.NaayaContent.constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
-from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
+from Products.NaayaBase.NyImageContainer import NyImageContainer
 from document_item import document_item
 
 #module constants
@@ -149,7 +149,7 @@ def importNyDocument(self, param, id, attrs, content, properties, discussion, ob
         for object in objects:
             self.import_data_custom(ob, object)
 
-class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyCheckControl, NyValidation):
+class NyDocument(NyAttributes, document_item, NyContainer, NyCheckControl, NyValidation):
     """ """
 
     meta_type = METATYPE_OBJECT
@@ -186,6 +186,7 @@ class NyDocument(NyAttributes, document_item, NyContainer, NyEpozToolbox, NyChec
         NyCheckControl.__dict__['__init__'](self)
         NyContainer.__dict__['__init__'](self)
         self.contributor = contributor
+        self.imageContainer = NyImageContainer(self, True)
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
