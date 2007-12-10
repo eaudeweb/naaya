@@ -1,0 +1,69 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portal map settings</h1>
+
+<tal:block metal:fill-slot="section" tal:define="map_url here/getGeoMapToolPath;">
+
+<p i18n:translate="">
+	These settings apply to the <a tal:attributes="href string:${map_url}">portal_map</a> and the GeoPoint objects.
+</p>
+
+<div id="tabbedmenu">
+<ul>
+	<li id="currenttab"><a tal:attributes="href string:${map_url}/admin_map_html" i18n:translate="">General settings</a></li>
+	<li><a tal:attributes="href string:${map_url}/admin_maptypes_html" i18n:translate="">Location types</a></li>
+	<li><a tal:attributes="href string:${map_url}/admin_mapupload_html" i18n:translate="">Upload locations</a></li>
+	<li><a tal:attributes="href string:${map_url}/admin_maplocations_html" i18n:translate="">Manage locations</a></li>
+</ul>
+</div>
+
+<p i18n:translate="">
+	Obtaining a <em>Yahoo Map API key</em> is mandatory for the map to work and you can <a href="http://search.yahooapis.com/webservices/register_application" title="Yahoo.com | Get an application ID" i18n:translate="" i18n:attributes="title">request one here</a>.
+	Initially the map will have the center in one point which you should specify below in the <em>Center location</em> field.
+	<em>Center zoom</em> and <em>Detailed zoom</em> represent the initial zoom applied to the main map and correspondingly, to the small map shown on the location details
+</p>
+
+<form method="post" tal:attributes="action string:${map_url}/manageProperties">
+<table border="0" cellspacing="2" cellpadding="2" width="90%">
+<tr>
+	<td>
+		<label for="mapsapikey" i18n:translate="">Yahoo Maps API Key</label>
+	</td>
+	<td>
+		<input type="text" name="mapsapikey" id="mapsapikey" tal:attributes="value here/mapsapikey" size="50" />
+	</td>
+</tr>
+<tr>
+	<td>
+		<label for="center_locality" i18n:translate="">Center location</label>
+	</td>
+	<td>
+		<input type="text" name="center_locality" id="center_locality" tal:attributes="value here/center_locality" size="50" />
+		(e.g. <em>Stockholm, Sweden</em>)
+	</td>
+</tr>
+<tr>
+	<td>
+		<label for="center_zoom" i18n:translate="">Center zoom</label>
+	</td>
+	<td>
+		<input type="text" name="center_zoom" id="center_zoom" tal:attributes="value here/center_zoom" size="5" />
+	</td>
+</tr>
+<tr>
+	<td>
+		<label for="detailed_zoom" i18n:translate="">Detailed zoom</label>
+	</td>
+	<td>
+		<input type="text" name="detailed_zoom" id="detailed_zoom" tal:attributes="value here/detailed_zoom" size="5" />
+	</td>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+	<td><input type="submit" value="Save changes" i18n:attributes="value" /></td>
+</tr>
+</form>
+
+</tal:block>
+
+</tal:block>
