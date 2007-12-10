@@ -8,7 +8,6 @@
 		<form id="site_requestlocations" title="Portal request role form - step 3"/>
 		<form id="site_requestinfo" title="Portal request account form - step 2"/>
 		<form id="site_createaccount" title="Portal create account form"/>
-		<form id="site_insertrelativelink" title="Epoz insert relative link form"/>
 		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
 		<form id="folder_zipupload" title="Upload items from zip archive"/>
 		<form id="folder_zipdownload" title="Download items as zip archive"/>
