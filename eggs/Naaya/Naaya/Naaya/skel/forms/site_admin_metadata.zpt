@@ -34,7 +34,7 @@
 <tr tal:define="editor here/getEditorTool">
 	<td valign="top" i18n:translate="">Description (HTML)</td>
 	<span tal:replace="structure editor/render" />
-	<textarea name="description:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getLocalProperty('description', curr_lang)" />
+	<textarea name="description:utf8:ustring" class="mceEditor" cols="70" rows="20" tal:content="python:here.getLocalProperty('description', curr_lang)" />
 </tr>
 <tr>
 	<td i18n:translate="">Publisher</td>
