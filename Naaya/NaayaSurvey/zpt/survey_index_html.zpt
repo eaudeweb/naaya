@@ -2,8 +2,11 @@
 <h1><span tal:replace="here/title_or_id" /></h1>
 
 	<ul>
-		<li tal:repeat="template python:here.get_survey_templates()"><a tal:content="template/title_or_id" tal:attributes="href python:template.index_html.absolute_url()" /> (<span i18n:translate="">Can be answered until</span> <span tal:content="python:template.get_template_date()" />)
-		[<a tal:attributes="href python:'%s/manage_statistics' % template.absolute_url()" tal:condition="python:here.checkPermission('Naaya Survey - Manage')" i18n:translate="">View statistics</a>]</li>
+		<li tal:repeat="template python:here.get_survey_templates()">
+			<a tal:content="template/title_or_id" tal:attributes="href python:template.index_html.absolute_url()" /> (<span i18n:translate="">Can be answered until</span> <span tal:content="python:template.get_template_date()" />)
+			<tal:block tal:condition="python:here.checkPermission('Naaya Survey - Manage')">
+				[<a tal:attributes="href python:'%s/manage_statistics' % template.absolute_url()" i18n:translate="">View statistics</a>]
+			</tal:block></li>
 	</ul>
 
 

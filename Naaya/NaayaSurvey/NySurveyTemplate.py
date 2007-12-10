@@ -3,6 +3,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.Folder import Folder
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens, view
 
 #Product imports
 from constants import *
@@ -24,7 +25,15 @@ class NySurveyTemplate(Folder):
     
     meta_type = METATYPE_NYSURVEY_TEMPLATE
     
-    manage_options = (Folder.manage_options)
+    manage_options = (
+        Folder.manage_options[0:2]
+        +
+        (
+            {'label': 'Properties', 'action': 'manage_edit_html'},
+        )
+        +
+        Folder.manage_options[3:8]
+    )
     
     security = ClassSecurityInfo()
     
@@ -205,5 +214,17 @@ class NySurveyTemplate(Folder):
     def get_template_date(self):
         """Returns the maximum date of the template"""
         return self.date
+
+    #zmi actions
+    security.declareProtected(view_management_screens, 'manageProperties')
+    def manageProperties(self, date='', REQUEST=None):
+        """Modify template properties"""
+        if date: self.date = date
+        self._p_changed = 1
+        if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
+
+    #zmi pages
+    security.declareProtected(view_management_screens, 'manage_edit_html')
+    manage_edit_html = PageTemplateFile('zpt/template_manage_edit', globals())
 
 InitializeClass(NySurveyTemplate)
