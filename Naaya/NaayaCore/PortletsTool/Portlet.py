@@ -32,6 +32,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 #Product imports
 from Products.NaayaCore.constants import *
 from managers.portlets_templates import *
+from Products.NaayaBase.NyImageContainer import NyImageContainer
 
 manage_addPortlet_html = PageTemplateFile('zpt/portlet_manage_add', globals())
 def addPortlet(self, id='', title='', portlettype='0', REQUEST=None):
@@ -77,6 +78,7 @@ class Portlet(Folder, ZopePageTemplate):
         ZopePageTemplate.__dict__['__init__'](self, id, text, content_type)
         self.title = title
         self.portlettype = portlettype
+        self.imageContainer = NyImageContainer(self, False)
 
     def __call__(self, context={}, *args):
         """ """

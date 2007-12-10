@@ -32,7 +32,6 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 #Product imports
 from Products.NaayaCore.constants import *
 from managers.portlets_templates import *
-from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
 manage_addHTMLPortlet_html = PageTemplateFile('zpt/htmlportlet_manage_add', globals())
@@ -52,7 +51,7 @@ def addHTMLPortlet(self, id='', title='', body='', portlettype='0', lang=None, R
     if REQUEST:
         return self.manage_main(self, REQUEST, update_menu=1)
 
-class HTMLPortlet(LocalPropertyManager, Folder, NyEpozToolbox):
+class HTMLPortlet(LocalPropertyManager, Folder):
     """ """
 
     meta_type = METATYPE_HTMLPORTLET

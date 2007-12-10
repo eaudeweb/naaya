@@ -37,6 +37,7 @@ from FormsTool import FormsTool
 from LayoutTool import LayoutTool
 from NotificationTool import NotificationTool
 from ProfilesTool import ProfilesTool
+from EditorTool import EditorTool
 try:
     from GeoMapTool import GeoMapTool
     geo_installed = True
@@ -141,6 +142,14 @@ def initialize(context):
                 ),
         icon = 'ProfilesTool/www/ProfilesTool.gif'
         )
+    context.registerClass(
+        EditorTool.EditorTool,
+        permission = PERMISSION_ADD_NAAYACORE_TOOL,
+        constructors = (
+                EditorTool.manage_addEditorTool,
+                ),
+        icon = 'EditorTool/www/EditorTool.gif'
+        )
 
     if geo_installed:
         context.registerClass(
@@ -170,6 +179,7 @@ misc_ = {
     'DynamicPropertiesTool.gif':ImageFile('DynamicPropertiesTool/www/DynamicPropertiesTool.gif', globals()),
     'DynamicPropertiesItem.gif':ImageFile('DynamicPropertiesTool/www/DynamicPropertiesItem.gif', globals()),
     'PortletsTool.gif':ImageFile('PortletsTool/www/PortletsTool.gif', globals()),
+    'EditorTool.gif':ImageFile('EditorTool/www/EditorTool.gif', globals()),
     'Portlet.gif':ImageFile('PortletsTool/www/Portlet.gif', globals()),
     'HTMLPortlet.gif':ImageFile('PortletsTool/www/HTMLPortlet.gif', globals()),
     'LinksList.gif':ImageFile('PortletsTool/www/LinksList.gif', globals()),
