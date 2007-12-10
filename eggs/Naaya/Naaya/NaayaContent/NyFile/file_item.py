@@ -21,13 +21,13 @@
 #Python imports
 
 #Zope imports
-from OFS.Image import File
 
 #Product imports
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
+from Products.NaayaBase.NyFSFile import NyFSFile
 
-class file_item(NyProperties, File):
+class file_item(NyProperties, NyFSFile):
     """ """
 
     title = LocalProperty('title')
@@ -40,10 +40,7 @@ class file_item(NyProperties, File):
         """
         Constructor.
         """
-        try: id = id()
-        except TypeError: pass
-        
-        File.__dict__['__init__'](self, id, title, file, content_type, precondition)
+        NyFSFile.__init__(self, id, title, file, content_type, precondition)
         #"dirty" trick to get rid of the File's title property
         try: del self.title
         except: pass
@@ -51,7 +48,7 @@ class file_item(NyProperties, File):
         except: pass
         self.save_properties(title, description, coverage, keywords, sortorder,
             downloadfilename, releasedate, lang)
-        NyProperties.__dict__['__init__'](self)
+        NyProperties.__init__(self)
 
     def del_file_title(self):
         """

@@ -21,9 +21,9 @@
 <table border="0" cellspacing="2" cellpadding="2">
 <tr tal:condition="python:here.size>0">
 	<th i18n:translate="">Download</th>
-	<td>
+	<td tal:define="download_url here/getDownloadUrl">
 		<a tal:define="size python:here.utShowSizeKb(here.size); content_type python:here.getContentTypeTitle(here.content_type)"
-			tal:attributes="href string:${here/absolute_url}/download"><img tal:attributes="src string:getContentTypePicture?id=${here/getContentType}" alt="" /> <span tal:replace="string:${here/downloadfilename} (${content_type}, ${size} Kb)"/></a>
+			tal:attributes="href download_url"><img tal:attributes="src string:getContentTypePicture?id=${here/getContentType}" alt="" /> <span tal:replace="string:${here/downloadfilename} (${content_type}, ${size} Kb)"/></a>
 	</td>
 </tr>
 <tr>

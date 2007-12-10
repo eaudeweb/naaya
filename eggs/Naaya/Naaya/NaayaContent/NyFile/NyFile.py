@@ -221,13 +221,19 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         This method is called, when the object is deleted.
         """
         NyFile.inheritedAttribute('manage_beforeDelete')(self, item, container)
+        # Apply manage_beforeDelete to versions, too
+        versions = self.getVersions()
+        for version in versions.keys():
+            vdata = self.getVersion(version)[0]
+            if hasattr(vdata, 'manage_beforeDelete'):
+                vdata.manage_beforeDelete(vdata, self)
         self.uncatalogNyObject(self)
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
         return 'downloadfilename="%s" file="%s" content_type="%s" precondition="%s" validation_status="%s" validation_date="%s" validation_by="%s" validation_comment="%s"' % \
             (self.utXmlEncode(self.downloadfilename),
-                self.utBase64Encode(str(self.utNoneToEmpty(self.data))),
+                self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
                 self.utXmlEncode(self.content_type),
                 self.utXmlEncode(self.precondition),
                 self.utXmlEncode(self.validation_status),
@@ -253,11 +259,11 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
 
     security.declarePrivate('objectDataForVersion')
     def objectDataForVersion(self):
-        return (str(self.data), self.content_type)
+        return (self.get_data(as_string=False), self.content_type)
 
     security.declarePrivate('objectDataForVersionCompare')
     def objectDataForVersionCompare(self):
-        return str(self.data)
+        return self.get_data(as_string=False)
 
     security.declarePrivate('objectVersionDataForVersionCompare')
     def objectVersionDataForVersionCompare(self, p_version_data):
@@ -342,7 +348,8 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self._local_properties = deepcopy(self.version._local_properties)
         self.sortorder = self.version.sortorder
         self.downloadfilename = self.version.downloadfilename
-        self.update_data(self.version.data, self.version.content_type)
+        self.update_data(self.version.get_data(as_string=False), 
+                         self.version.getContentType(), self.version.get_size())
         self.content_type = self.version.content_type
         self.precondition = self.version.precondition
         self.releasedate = self.version.releasedate
@@ -365,16 +372,22 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = file_item(self.id, self.title, self.description, self.coverage, self.keywords,
-            self.sortorder, self.data, self.precondition, self.content_type, self.downloadfilename,
+            self.sortorder, '', self.precondition, self.content_type, self.downloadfilename,
             self.releasedate, self.gl_get_selected_language())
-        self.version.update_data(self.data, self.content_type)
+        self.version.update_data(self.get_data(), self.getContentType(), self.get_size())
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
-
+    
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'discardVersion')
+    def discardVersion(self, REQUEST=None):
+        """ """
+        self.version.manage_beforeUpdate()
+        NyFile.inheritedAttribute('discardVersion')(self, REQUEST)
+    
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', coverage='', keywords='',
         sortorder='', content_type='', precondition='', downloadfilename='',
@@ -440,7 +453,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
             if version: self.createVersion(self.REQUEST.AUTHENTICATED_USER.getUserName())
         else:
             #this object has been checked out; save changes into the version object
-            if self. checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
+            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
             self.version.handleUpload(source, file, url)
         self.recatalogNyObject(self)
@@ -471,7 +484,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
-        return file_item.inheritedAttribute('index_html')(self, REQUEST, RESPONSE)
+        return file_item.index_html(self, REQUEST, RESPONSE)
 
     security.declareProtected(view, 'view')
     def view(self, REQUEST, RESPONSE):
@@ -480,6 +493,17 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         RESPONSE.setHeader('Content-Length', self.size)
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
-        return file_item.inheritedAttribute('index_html')(self, REQUEST, RESPONSE)
+        return file_item.index_html(self, REQUEST, RESPONSE)
+    
+    security.declarePublic('getDownloadUrl')
+    def getDownloadUrl(self):
+        """ """
+        site = self.getSite()
+        file_path = self._get_data_name()
+        media_server = getattr(site, 'media_server', '').strip()
+        if not (media_server and file_path):
+            return self.absolute_url() + '/download'
+        file_path = (media_server,) + tuple(file_path)
+        return '/'.join(file_path)
 
 InitializeClass(NyFile)
