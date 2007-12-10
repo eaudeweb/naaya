@@ -330,7 +330,7 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
         from AccessControl import getSecurityManager
-        obj = self.unrestrictedTraverse(self.pointer, None)
+        obj = self.getSite().unrestrictedTraverse(self.pointer, None)
         if obj:
             if not getSecurityManager().checkPermission(view, obj):
                 return self.getFormsTool().getContent({'here': self, 'broken': 0}, 'pointer_index')
