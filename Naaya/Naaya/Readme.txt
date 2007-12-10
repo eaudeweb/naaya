@@ -51,7 +51,6 @@ Installation steps
 	- NaayaBase: https://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaBase
 	- NaayaContent: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaContent
 	- NaayaCore: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaCore
-        - Epoz: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/Epoz
         - naayaHotfix: http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/naayaHotfix
 
         Also, additional features can be installed:
