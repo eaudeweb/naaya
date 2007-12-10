@@ -28,7 +28,8 @@
 </div>
 <div class="field">
 	<label for="description"><span i18n:translate="" tal:omit-tag="">Description</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'description')" class="mandatory_field"> *</span></label>
-	<span tal:replace="structure python:here.get_wysiwyg_widget('description:utf8:ustring', here.getSession('description', ''))" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure editor/render" />
+	<textarea name="description:utf8:ustring" class="mceEditor" cols="85" rows="15" tal:content="python:here.getSession('description', '')" />
 </div>
 
 <tal:block tal:define="priorities here/getPrioritiesTypesList;
