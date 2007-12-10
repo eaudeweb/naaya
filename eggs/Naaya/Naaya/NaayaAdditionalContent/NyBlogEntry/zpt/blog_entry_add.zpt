@@ -26,7 +26,8 @@
 </div>
 <div class="field">
 	<label for="content"><span i18n:translate="" tal:omit-tag="">Content (HTML)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'content')" class="mandatory_field"> *</span></label>
-	<span tal:replace="structure python:here.get_wysiwyg_widget('content:utf8:ustring', here.getSession('content', ''), toolbox='%s/toolbox_html' % here.absolute_url(), size='large')" />
+	<span tal:replace="structure editor/render" />
+	<textarea name="body:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getSession('content', '')" />
 </div>
 <div class="field-inline">
 	<label for="discussion"><span i18n:translate="" tal:omit-tag="">Open for comments</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'discussion')" class="mandatory_field"> *</span></label>

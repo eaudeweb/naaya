@@ -26,14 +26,12 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import Products
-from Products.Epoz import EpozTidy
 
 #Product imports
 from Products.NaayaContent.constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
-from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from blog_entry_item import blog_entry_item
@@ -154,7 +152,7 @@ def importNyBlogEntry(self, param, id, attrs, content, properties, discussion, o
         for object in objects:
             self.import_data_custom(ob, object)
 
-class NyBlogEntry(NyAttributes, blog_entry_item, NyBlogComments, NyContainer, NyEpozToolbox, NyCheckControl, NyValidation):
+class NyBlogEntry(NyAttributes, blog_entry_item, NyBlogComments, NyContainer, NyCheckControl, NyValidation):
     """ """
 
     meta_type = METATYPE_OBJECT
@@ -398,9 +396,9 @@ class NyBlogEntry(NyAttributes, blog_entry_item, NyBlogComments, NyContainer, Ny
     security.declareProtected(view, 'getBrief')
     def getBrief(self):
         """ get a brief content """
-        brief = self.content.split('<div class="moretag">&nbsp;</div>')[0]
-        errors, output, errordata = self.EpozTidy(brief, self.absolute_url(1))
-        return output
+        return self.content.split('<div class="moretag">&nbsp;</div>')[0]
+        #errors, output, errordata = self.EpozTidy(brief, self.absolute_url(1))
+        #return output
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
