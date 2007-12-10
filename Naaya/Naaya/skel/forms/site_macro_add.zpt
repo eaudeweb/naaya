@@ -48,9 +48,9 @@ function fSet(ctrl, value)
     <label for="title"><span i18n:translate="" tal:omit-tag="">Title</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'title')" class="mandatory_field"> *</span></label>
     <input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', '')" />
 </div>
-<div class="field" tal:define="editor here/getEditorTool">
+<div class="field">
     <label for="description"><span i18n:translate="" tal:omit-tag="">Description</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'description')" class="mandatory_field"> *</span></label>
-    <span tal:replace="structure editor/render" />
+    <span tal:define="editor here/getEditorTool" tal:replace="structure editor/render" />
     <textarea name="description:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getSession('description', '')" />
 </div>
 <div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
