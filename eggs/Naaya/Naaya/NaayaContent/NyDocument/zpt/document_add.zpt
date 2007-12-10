@@ -47,9 +47,9 @@ function fSet(ctrl, value)
 	<label for="title"><span i18n:translate="" tal:omit-tag="">Title</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'title')" class="mandatory_field"> *</span></label>
 	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', '')" />
 </div>
-<div class="field" tal:define="editor here/getEditorTool">
+<div class="field">
 	<label for="description"><span i18n:translate="" tal:omit-tag="">Description</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'description')" class="mandatory_field"> *</span></label>
-	<span tal:replace="structure editor/render" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure editor/render" />
 	<textarea name="description:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getSession('description', '')" />
 </div>
 <div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
@@ -83,9 +83,9 @@ function fSet(ctrl, value)
 	<label for="discussion"><span i18n:translate="" tal:omit-tag="">Open for comments</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'discussion')" class="mandatory_field"> *</span></label>
 	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked python:test(here.getSession('discussion', ''), 'checked', '')"/>
 </div>
-<div class="field" tal:define="editor here/getEditorTool">
+<div class="field">
 	<label for="body"><span i18n:translate="" tal:omit-tag="">Body (HTML)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'body')" class="mandatory_field"> *</span></label>
-	<span tal:replace="structure editor/render" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure editor/render" />
 	<textarea name="body:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getSession('body', '')" />
 </div>
 <div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
