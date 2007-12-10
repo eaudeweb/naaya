@@ -1,0 +1,13 @@
+<span tal:replace="structure here/standard_html_header" />
+<h1>Answers to survey <em tal:content="python:here.title_or_id()" /></h1>
+
+<a tal:attributes="href python:here.manage_statistics.absolute_url()" tal:content="string:View survey statistics." />
+
+	<ol>
+		<li tal:repeat="answer python:here.get_template_answers()"><a tal:content="python:answer.title_or_id()" tal:attributes="href python:answer.absolute_url()" /></li>
+	</ol>
+
+
+
+
+<span tal:replace="structure here/standard_html_footer" />
