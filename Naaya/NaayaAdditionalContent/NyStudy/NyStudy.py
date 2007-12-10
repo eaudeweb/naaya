@@ -34,7 +34,6 @@ from Products.NaayaContent.constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
-from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from study_item import study_item
@@ -162,7 +161,7 @@ def importNyStudy(self, param, id, attrs, content, properties, discussion, objec
         for object in objects:
             self.import_data_custom(ob, object)
 
-class NyStudy(NyAttributes, study_item, NyContainer, NyEpozToolbox, NyCheckControl, NyValidation):
+class NyStudy(NyAttributes, study_item, NyContainer, NyCheckControl, NyValidation):
     """ """
 
     meta_type = METATYPE_OBJECT
