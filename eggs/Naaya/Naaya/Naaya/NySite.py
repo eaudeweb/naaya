@@ -64,15 +64,16 @@ from Products.NaayaCore.FormsTool.FormsTool import manage_addFormsTool
 from Products.NaayaCore.LayoutTool.LayoutTool import manage_addLayoutTool
 from Products.NaayaCore.NotificationTool.NotificationTool import manage_addNotificationTool
 from Products.NaayaCore.ProfilesTool.ProfilesTool import manage_addProfilesTool
+from Products.NaayaCore.EditorTool.EditorTool import manage_addEditorTool
 try:
     from Products.NaayaCore.GeoMapTool.GeoMapTool import manage_addGeoMapTool
     geo_installed = True
 except ImportError:
     geo_installed = False
 from Products.NaayaBase.NyBase import NyBase
-from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyPermissions import NyPermissions
+from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.NaayaCore.managers.utils import utils, list_utils, batch_utils, file_utils
 from Products.NaayaCore.managers.catalog_tool import catalog_tool
 from Products.NaayaCore.managers.captcha_tool import captcha_tool
@@ -107,7 +108,7 @@ def manage_addNySite(self, id='', title='', lang=None, default_content=True, REQ
         return self.manage_main(self, REQUEST, update_menu=1)
 
 class NySite(CookieCrumbler, LocalPropertyManager, Folder,
-    NyBase, NyEpozToolbox, NyPermissions, NyImportExport, NyVersions,
+    NyBase, NyPermissions, NyImportExport, NyVersions,
     utils, list_utils, file_utils,
     catalog_tool,
     search_tool,
@@ -217,6 +218,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         manage_addLayoutTool(self)
         manage_addNotificationTool(self)
         manage_addProfilesTool(self)
+        manage_addEditorTool(self)
         if geo_installed:
             manage_addGeoMapTool(self)
         manage_addErrorLog(self)
@@ -228,6 +230,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.loadSkeleton(join(NAAYA_PRODUCT_PATH, 'skel'), exclude_meta_types)
         #set default main topics
         self.getPropertiesTool().manageMainTopics(['info'])
+        self.imageContainer = NyImageContainer(self.getImagesFolder(), False)
 
     security.declarePrivate('loadSkeleton')
     def loadSkeleton(self, skel_path, exclude_meta_types=[]):
@@ -622,39 +625,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         return lang in ['ar', 'az', 'fa', 'jv', 'ks', 'kk', 'ku', 'ms', 'ml',\
                         'ps', 'pa', 'sd', 'so', 'tk', 'he', 'yi', 'ur']
 
-    #Epoz layer
-    def get_wysiwyg_widget(self, name, data='', toolbox='', size='medium', lang=None):
-        """
-        Returns an WYSIWYG widget. The Epoz is used for the moment.
-        Also the widget will have a black border.
-        @param name: name of the HTML control
-        @type name: string
-        @param data: piece of text to be displayed inside
-        @type data: string
-        @param toolbox: a link to a HTML-Page which delivers additional tools
-        @type toolbox: string
-        @param size: speciefies the size of the widget
-        @type size: string
-        @param lang: language code
-        @type lang: string
-        """
-        if lang is None: lang = self.gl_get_selected_language()
-        if size == 'big':
-            width, height = 800, 400
-        elif size == 'medium':
-            width, height = 600, 300
-        elif size == 'small-flat':
-            width, height = 600, 200
-        elif size == 'large':
-            width, height = 600, 400
-        else: #small
-            width, height = 400, 200
-        
-        sfp = self.getLayoutTool().getSkinFilesPath()
-        return self.Epoz(name=name, data=data, toolbox=toolbox, lang=lang,
-            style='width:%spx;height:%spx;border:1px solid #000000;' % (width, height),
-            css='%s/style' % sfp,
-            customcss='%s/style_common' % sfp)
 
     #objects getters
     security.declarePublic('getSite')
@@ -704,6 +674,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declarePublic('getProfilesTool')
     def getProfilesTool(self): return self._getOb(ID_PROFILESTOOL)
+
+    security.declarePublic('getEditorTool')
+    def getEditorTool(self): return self._getOb(ID_EDITORTOOL)
 
     security.declarePublic('getGeoMapTool')
     def getGeoMapTool(self): 
@@ -1124,7 +1097,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                         self.recatalogNyObject(ob)
         return 'gl_clean_objects_translations OK.'
 
-    #layer over NyEpozToolbox
+    #layer over NyEpozToolbox XXX
     def getUploadedImages(self): return self.getImagesFolder().objectValues(['Image'])
 
     security.declareProtected(view, 'process_image_upload')
@@ -1135,7 +1108,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 if file.filename != '':
                     manage_addImage(self.getImagesFolder(), '', file)
         if REQUEST:
-            REQUEST.RESPONSE.redirect('%s/toolbox_html' % self.absolute_url())
+            REQUEST.RESPONSE.redirect('%s?doc_url=%s' % \
+                                        (REQUEST['HTTP_REFERER'], 
+                                         self.utUrlEncode(self.absolute_url()))) # TODO update URL
 
     security.declareProtected(view, 'process_file_upload')
     def process_file_upload(self, file='', REQUEST=None):
@@ -1153,7 +1128,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                         except:
                             rand_id = utils().utGenRandomId(6)
                             file.filename = '%s%s_%s' % (ph, rand_id , id)
-        if REQUEST: REQUEST.RESPONSE.redirect('%s/toolbox_html' % self.absolute_url())
+        if REQUEST: REQUEST.RESPONSE.redirect('%s' % self.absolute_url()) # TODO update URL
 
     security.declareProtected(view, 'process_delete')
     def process_delete(self, ids=[], REQUEST=None):
@@ -1161,7 +1136,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         try: self.getImagesFolder().manage_delObjects(self.utConvertToList(ids))
         except: pass
         if REQUEST:
-            REQUEST.RESPONSE.redirect('%s/toolbox_html' % self.absolute_url())
+            REQUEST.RESPONSE.redirect('%s' % self.absolute_url()) # TODO update URL
 
     #site map stuff
     def getSiteMap(self, expand=[], root=None, showitems=0):
@@ -1174,6 +1149,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         #given a list with all tree nodes, returns a string with all relatives urls
         if expand == 'all': return ','.join([node[0].absolute_url(1) for node in tree])
         else: return expand
+
+    def getFolderPublishedContent(self, folder_path):
+        """ return the published content of a folder """
+        if folder_path:
+            folder_ob = self.restrictedTraverse(folder_path)
+            parent = folder_ob.getParentNode()
+            if parent == self:
+                ppath = ''
+            else:
+                ppath = parent.absolute_url(1)
+            return folder_ob.getPublishedFolders(), folder_ob.getPublishedObjects(), ppath
+        return [x for x in self.objectValues(self.get_naaya_containers_metatypes()) if x.approved == 1 and x.submitted==1], [], ''
 
     def __getSiteMap(self, root, showitems, expand, depth):
         #site map core

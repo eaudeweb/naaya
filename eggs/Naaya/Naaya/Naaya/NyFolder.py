@@ -38,7 +38,6 @@ from Products.NaayaCore.managers.utils import utils, batch_utils
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyAttributes import NyAttributes
-from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaContent import *
@@ -153,7 +152,7 @@ def importNyFolder(self, param, id, attrs, content, properties, discussion, obje
         for object in objects:
             ob.import_data(object)
 
-class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, NyEpozToolbox, utils):
+class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     """ """
 
     meta_type = METATYPE_FOLDER

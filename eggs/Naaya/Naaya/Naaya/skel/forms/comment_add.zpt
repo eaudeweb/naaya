@@ -13,7 +13,8 @@
 </div>
 <div class="field">
 	<label for="body" i18n:translate="">Body</label>
-	<span tal:replace="structure python:here.get_wysiwyg_widget('body:utf8:ustring')" />
+	<span tal:replace="structure here/getEditorTool/render" />
+	<textarea name="body:utf8:ustring" class="mceEditor" cols="125" rows="20" />
 </div>
 <div class="field">
 	<input type="submit" value="Submit" i18n:attributes="value" />

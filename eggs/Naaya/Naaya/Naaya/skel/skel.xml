@@ -18,7 +18,6 @@
 		<form id="folder_administration_portlets" title="Folder administration - right side portlets"/>
 		<form id="folder_administration_feedback" title="Folder administration - customize feedback form"/>
 		<form id="folder_administration_source" title="Folder administration - acl_users source"/>
-		<form id="epoz_toolbox" title="Epoz toolbox"/>
 		<form id="messages_box" title="Box for info or error messages"/>
 		<form id="languages_box" title="Box for changing the language on pages"/>
 		<form id="form_languages_box" title="Box for changing the language when translating content"/>
@@ -79,6 +78,7 @@
 		<form id="site_admin_delmessages" title="Portal administration - delete message translations"/>
 		<form id="site_admin_notifications" title="Portal administration - notifications settings"/>
 		<form id="site_admin_notif_sitemap" title="Portal administration - notifications sitemap"/>
+		<form id="site_admin_editor" title="Portal administration - editor settings"/>
 		<form id="sitemap_add" title="Sitemap for picklists"/>
 		<form id="site_userprofile_macro" title="Macro for user profile's sheets"/>
 		<form id="site_userprofile" title="Default user profile sheet"/>
