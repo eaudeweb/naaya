@@ -127,7 +127,11 @@ class EditorTool(Folder):
 
     security.declarePublic('getTinyMCEJavaScript')
     def getTinyMCEJavaScript(self, REQUEST):
-        """Return the TinyMCE JavaScript code"""
+        """Return all the TinyMCE JavaScript code.
+
+            The purpose of this function is to minimize the number of HTTP requests.
+            It's needed by tinyMCE_GZ.
+        """
         isJS = REQUEST.get('js', '') == 'true'
         languages = REQUEST['languages'].split(',')
         themes = REQUEST['themes'].split(',')
