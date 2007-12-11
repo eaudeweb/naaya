@@ -14,6 +14,8 @@ def getCompressedJavaScript(languages=[], themes=[], plugins=[],
         @param customFiles: custom files used along with TinyMCE
         @param suffix: "" or "_src" when using debug versions
     """
+    # Inspired by the .NET and PHP TinyMCE compressors
+
     # calculate list of files
     # TODO for Python 2.4: switch to iterator comprehension
     files = ['tiny_mce'+suffix+'.js']
