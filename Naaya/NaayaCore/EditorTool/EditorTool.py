@@ -37,6 +37,7 @@ from Products.LocalFS.LocalFS import manage_addLocalFS
 
 #Product imports
 from Products.NaayaCore.constants import *
+import tinyMCEUtils
 
 
 def manage_addEditorTool(self, REQUEST=None):
@@ -94,7 +95,7 @@ class EditorTool(Folder):
             lang = self._getTinyMCEDefaultLang()
 
         #render the javascript
-        tinymce_js_file = "tiny_mce.js"
+        tinymce_js_file = "tiny_mce_gzip.js"
         tinymce = self._getTinyMCEInstance()
         js = []
         jsappend = js.append
@@ -104,6 +105,18 @@ class EditorTool(Folder):
         jsappend('<script type="text/javascript" src="%s/%s"></script>' % (tinymce.jscripts.tiny_mce.absolute_url(), 'Naaya/jscripts/select_image.js'))
         jsappend('<script type="text/javascript">')
         jsappend('nyFileBrowserCallBack = getNyFileBrowserCallBack("%s")' % (self.REQUEST['URLPATH1'],))
+        jsappend('</script>')
+
+        jsappend('<script type="text/javascript">')
+        jsappend('tinyMCE_GZ.init({')
+        jsappend('language:"%s",' % lang)
+        [ jsappend('%s:"%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
+        jsappend('document_base_url:"%s/",' % self.getSitePath())
+        jsappend('page_name:"%s/getTinyMCEJavaScript"' % self.absolute_url())
+        jsappend('});')
+        jsappend('</script>')
+
+        jsappend('<script type="text/javascript">')
         jsappend('tinyMCE.init({')
         jsappend('language:"%s",' % lang)
         [ jsappend('%s:"%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
@@ -111,6 +124,21 @@ class EditorTool(Folder):
         jsappend('});')
         jsappend('</script>')
         return '\n'.join(js)
+
+    security.declarePublic('getTinyMCEJavaScript')
+    def getTinyMCEJavaScript(self, REQUEST):
+        """Return the TinyMCE JavaScript code"""
+        isJS = REQUEST.get('js', '') == 'true'
+        languages = REQUEST['languages'].split(',')
+        themes = REQUEST['themes'].split(',')
+        plugins = REQUEST['plugins'].split(',')
+        content = tinyMCEUtils.getCompressedJavaScript(isJS,
+                                                       languages,
+                                                       themes,
+                                                       plugins)
+        REQUEST.RESPONSE.enableHTTPCompression(REQUEST)
+        REQUEST.RESPONSE.setHeader('Content-type', 'application/x-javascript')
+        REQUEST.RESPONSE.write(content)
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
