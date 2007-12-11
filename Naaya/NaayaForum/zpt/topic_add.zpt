@@ -21,7 +21,7 @@
 <div class="field">
 	<label for="description" i18n:translate="">Text</label>
 	<span tal:define="editor here/getEditorTool" tal:replace="structure editor/render" />
-	<textarea name="description:utf8:ustring" class="mceEditor" cols="125" rows="20" />
+	<textarea name="description:utf8:ustring" class="mceEditor" />
 </div>
 <div class="field">
 	<label for="attachment" i18n:translate="">Attachment</label>
