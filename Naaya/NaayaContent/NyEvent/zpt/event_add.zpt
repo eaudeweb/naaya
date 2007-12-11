@@ -41,7 +41,6 @@
 </div>
 <div class="field" tal:define="editor here/getEditorTool">
 	<label for="details"><span i18n:translate="" tal:omit-tag="">Details (HTML)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'details')" class="mandatory_field"> *</span></label>
-	<span tal:replace="structure editor/render" />
 	<textarea name="details:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getSession('details', '')" />
 </div>
 <div class="field-inline">
