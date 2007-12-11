@@ -571,4 +571,17 @@ h3 {
 .tooltip table td {
 	padding-bottom: 0.7em;
 }
+/*	editor style	*/
+.mceEditor {
+	width: 600px;
+	height: 250px;
+}
+.mceEditor-small {
+	width: 300px;
+	height: 150px;
+}
+.mceEditor-big {
+	width: 700px;
+	height: 400px;
+}
 .mceStatusbarPathText { visibility: hidden; }
