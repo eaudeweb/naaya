@@ -215,13 +215,6 @@ class NySurveyTemplate(Folder):
         """Returns the maximum date of the template"""
         return self.date
 
-    def get_survey_contributor(self, REQUEST=None):
-        """Returns the full name of the authenticated user"""
-        if not REQUEST: return ''
-        
-        if hasattr(REQUEST.AUTHENTICATED_USER, 'firstname') and hasattr(REQUEST.AUTHENTICATED_USER, 'lastname'):
-            return self.getAuthenticationTool().getUserFullName(REQUEST.AUTHENTICATED_USER)
-
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, date='', REQUEST=None):
