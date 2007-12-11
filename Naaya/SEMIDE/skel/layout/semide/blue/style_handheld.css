@@ -7,10 +7,6 @@
 </tal:block>
 <span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')"/>
 
-body.visualFontSizeCorrection { /*do not display bg-image in EPOZ*/
-	background-image: none;
-}
-
 body {
 	margin:0;
 	padding:0;
@@ -866,19 +862,6 @@ ul.nostyle li {
 }
 /* END STYLE */
 
-/*page break for EPOZ*/
-.pbreak {
-	display: none;
-}
-
-body.visualFontSizeCorrection .pbreak {
-	display: block;
-	margin: 0.5em;
-	border:1px dotted blue;
-	color: blue;
-}
-
-
 div.proj_subjects {
 	border:1px dashed #999999;
 	height: 4.8em;
@@ -899,10 +882,6 @@ div.proj_subtitle {
 	Current-skin: blue;<tal:block condition="false">/*.*.green.*.*//*.*.magenta.*.*/</tal:block>
 </tal:block>
 <span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')"/>
-
-body.visualFontSizeCorrection { /*do not display bg-image in EPOZ*/
-	background-image: none;
-}
 
 body {
 	margin:0;
@@ -1763,19 +1742,6 @@ ul.nostyle li {
 	border:1px solid white;
 }
 /* END STYLE */
-
-/*page break for EPOZ*/
-.pbreak {
-	display: none;
-}
-
-body.visualFontSizeCorrection .pbreak {
-	display: block;
-	margin: 0.5em;
-	border:1px dotted blue;
-	color: blue;
-}
-
 
 div.proj_subjects {
 	border:1px dashed #999999;

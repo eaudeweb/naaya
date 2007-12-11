@@ -20,11 +20,6 @@
 	}
 </tal:block>
 
-body.visualFontSizeCorrection { /*do not display bg-image in EPOZ*/
-	background-image: none;
-}
-
-
 body {
 	margin:0;
 	padding:0;
@@ -1410,20 +1405,6 @@ ul.nostyle li {
 </tal:block>
 
 </tal:block>
-
-
-/*page break for EPOZ*/
-.pbreak {
-	display: none;
-}
-
-body.visualFontSizeCorrection .pbreak {
-	display: block;
-	margin: 0.5em;
-	border:1px dotted blue;
-	color: blue;
-}
-
 
 div ul.proj_projects {
 	border:1px dashed #999999;
