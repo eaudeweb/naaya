@@ -48,7 +48,7 @@ def getFileContent(name):
     # directory to event reading other unrelated files
     # (e.g. "/etc/passwd")
     name = abspath(join(TINYMCE_DIR, name))
-    if not name.startswith(tiny_mce_dir):
+    if not name.startswith(TINYMCE_DIR):
         raise RuntimeError('File is not under the TinyMCE directory')
     f = open(name)
     content.append(f.read())
