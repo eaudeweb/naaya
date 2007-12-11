@@ -26,11 +26,15 @@ th {font-weight: bold; background-color: #FFFF84;}
 <strong>NOTE:</strong> You can answer this survey only once.</p>
 
 <form id="survey" method="post" action="addNySurveyAnswer">
-<label for="country">Country</label>
+
+<label for="survey_contributor">Your name:</label>
+<input type="text" name="survey_contributor" id="survey_contributor" tal:attributes="value python:here.get_survey_contributor(request)" />
+
+<label for="country">Country:</label>
 <input id="country" name="country" type="text" size="20" tal:attributes="value python:here.REQUEST.SESSION['country']" tal:condition="python:here.REQUEST.SESSION.has_key('country')" />
 <input id="country" name="country" type="text" size="20" tal:condition="not:python:here.REQUEST.SESSION.has_key('country')" />
 
-<label for="agency">Name of the Agency</label>
+<label for="agency">Name of the Agency:</label>
 <input id="agency" name="agency" type="text" size="20" tal:attributes="value python:here.REQUEST.SESSION['agency']" tal:condition="python:here.REQUEST.SESSION.has_key('agency')" />
 <input id="agency" name="agency" type="text" size="20" tal:condition="not:python:here.REQUEST.SESSION.has_key('agency')" />
 <br />

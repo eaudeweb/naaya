@@ -15,7 +15,7 @@ def addNySurveyAnswer(self, REQUEST=None, **kwargs):
     if REQUEST:
         kwargs.update(getattr(REQUEST, 'form', {}))
     
-    id = PREFIX_NYSURVEY_ANSWER + self.utGenRandomId(6)    
+    id = PREFIX_NYSURVEY_ANSWER + self.utGenRandomId(6)
     country = kwargs.get('country', '')
     agency = kwargs.get('agency', '')
     title = '%s %s' % (country, agency)
@@ -43,6 +43,7 @@ class NySurveyAnswer(SimpleItem):
         self.id = id
         self.title = title
         self.user = user
+        
         for key, value in kwargs.items():
             setattr(self, key, value)
 
