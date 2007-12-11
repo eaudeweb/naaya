@@ -19,10 +19,8 @@ def getCompressedJavaScript(isJS=False, languages=[], themes=[], plugins=[],
 
     tiny_mce_dir = join(dirname(__file__), 'tinymce', 'jscripts', 'tiny_mce')
     if not isJS:
-        f = open(tiny_mce_dir, 'tiny_mce_gzip.js')
-        content = f.read() + '\ntinyMCE_GZ.init({});'
-        f.close()
-        return content
+        return getFileContent(join(tiny_mce_dir, 'tiny_mce_gzip.js')) + \
+               'tinyMCE_GZ.init({});'
 
     # calculate list of files
     # TODO for Python 2.4: switch to iterator comprehension
@@ -44,9 +42,14 @@ def getCompressedJavaScript(isJS=False, languages=[], themes=[], plugins=[],
         name = abspath(join(tiny_mce_dir, name))
         if not name.startswith(tiny_mce_dir):
             raise RuntimeError('File is not under the TinyMCE directory')
-        f = open(name)
-        content.append(f.read())
-        f.close()
+        content.append(getFileContent(name))
     content.append('tinyMCE_GZ.end();') # restore loading functions
     content = "".join(content)
+    return content
+
+def getFileContent(name):
+    """Return the contents of the file"""
+    f = open(name)
+    content.append(f.read())
+    f.close()
     return content
