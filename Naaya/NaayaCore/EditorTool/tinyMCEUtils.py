@@ -51,6 +51,6 @@ def getFileContent(name):
     if not name.startswith(TINYMCE_DIR):
         raise RuntimeError('File is not under the TinyMCE directory')
     f = open(name)
-    content.append(f.read())
+    content = f.read()
     f.close()
     return content
