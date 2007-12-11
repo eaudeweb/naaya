@@ -105,8 +105,8 @@ class EditorTool(Folder):
         jsappend('<script type="text/javascript">')
         jsappend('nyFileBrowserCallBack = getNyFileBrowserCallBack("%s")' % (self.REQUEST['URLPATH1'],))
         jsappend('tinyMCE.init({')
-        jsappend('language:"%s", ' % lang)
-        [ jsappend('%s:"%s", ' % (k, ','.join(v))) for k, v in self.configuration.items() ]
+        jsappend('language:"%s",' % lang)
+        [ jsappend('%s:"%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
         jsappend('document_base_url:"%s/"' % self.getSitePath())
         jsappend('});')
         jsappend('</script>')
