@@ -1,7 +1,7 @@
 # Python imports
 from os.path import join, dirname, abspath
 
-def getCompressedJavaScript(self, languages=[], themes=[], plugins=[],
+def getCompressedJavaScript(languages=[], themes=[], plugins=[],
                             customFiles=[], suffix=""):
     """Packs the TinyMCE core, languages, themes, plugins and the custom files
        in a single string.
