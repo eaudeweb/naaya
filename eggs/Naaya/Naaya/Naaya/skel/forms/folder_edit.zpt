@@ -55,7 +55,7 @@ function fSet(ctrl, value)
 <div class="field" tal:define="editor here/getEditorTool">
 	<label for="description" i18n:translate="">Description</label>
 	<span tal:replace="structure editor/render" />
-	<textarea name="description:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getLocalProperty('description', curr_lang)" />
+	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getLocalProperty('description', curr_lang)" />
 </div>
 <div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
 	<label for="coverage" i18n:translate="">Geographical coverage</label>
