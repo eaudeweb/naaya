@@ -1,7 +1,6 @@
 # Python imports
 from os.path import join, dirname, abspath
 
-
 TINYMCE_DIR = join(dirname(__file__), 'tinymce', 'jscripts', 'tiny_mce')
 
 def getCompressedJavaScript(isJS=False, languages=[], themes=[], plugins=[],
@@ -25,7 +24,7 @@ def getCompressedJavaScript(isJS=False, languages=[], themes=[], plugins=[],
 
     # calculate list of files
     # TODO for Python 2.4: switch to iterator comprehension
-    files = ['tiny_mce'+suffix+'.js']
+    files = []
     files += [join('langs', lang+'.js') for lang in languages]
     files += [join('themes', theme, 'editor_template'+suffix+'.js') \
                 for theme in themes]
@@ -35,7 +34,9 @@ def getCompressedJavaScript(isJS=False, languages=[], themes=[], plugins=[],
         files += [join('langs', lang+'.js') for lang in languages]
     files += customFiles
     # concatenate files
-    content = ['tinyMCE_GZ.start();'] # patch loading functions
+    content = []
+    content.append(getFileContent('tiny_mce'+suffix+'.js'))
+    content.append('tinyMCE_GZ.start();') # patch loading functions
     for name in files:
         content.append(getFileContent(name))
     content.append('tinyMCE_GZ.end();') # restore loading functions
