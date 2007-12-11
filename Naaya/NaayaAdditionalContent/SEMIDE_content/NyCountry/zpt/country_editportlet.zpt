@@ -22,7 +22,8 @@
 		</tr>
 		<tr>
 			<td i18n:translate="" valign="top">Body</td>
-			<td><span tal:replace="structure python:here.get_wysiwyg_widget('body:utf8:ustring', ob.getLocalProperty('body', curr_lang), toolbox='%s/toolbox_html' % ob.absolute_url(), size='medium')" /></td>
+			<span tal:define="editor here/getEditorTool" tal:replace="structure editor/render" />
+			<td><textarea name="body:utf8:ustring" class="mceEditor" cols="85" rows="10" tal:content="python:ob.getLocalProperty('body', curr_lang)" /></td>
 		</tr>
 		<tr>
 			<td><input type="hidden" name="lang" tal:attributes="value curr_lang" /></td>

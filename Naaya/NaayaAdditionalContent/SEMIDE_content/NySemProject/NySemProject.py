@@ -31,7 +31,6 @@ from Products.NaayaContent.constants    import *
 from Products.NaayaBase.constants       import *
 from Products.NaayaBase.NyContainer     import NyContainer
 from Products.NaayaBase.NyAttributes    import NyAttributes
-from Products.NaayaBase.NyEpozToolbox   import NyEpozToolbox
 from Products.NaayaBase.NyCheckControl  import NyCheckControl
 from semproject_item                    import semproject_item
 
@@ -207,7 +206,7 @@ def importNySemProject(self, param, id, attrs, content, properties, discussion, 
                     object.properties, object.discussion, object.objects)
 
 
-class NySemProject(NyAttributes, semproject_item, NyContainer, NyEpozToolbox, NyCheckControl):
+class NySemProject(NyAttributes, semproject_item, NyContainer, NyCheckControl):
     """ """
 
     meta_type = METATYPE_OBJECT
