@@ -538,7 +538,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
     def getUserFullName(self, user_obj):
         """ Return the full name of the user """
-        return '%s %s' % (user_obj.firstname, user_obj.lastname)
+        try:
+            return '%s %s' % (user_obj.firstname, user_obj.lastname)
+        except AttributeError:
+            return ''
 
     def getUserFullNameByID(self, user_str):
         """ Return the full name of the user """
