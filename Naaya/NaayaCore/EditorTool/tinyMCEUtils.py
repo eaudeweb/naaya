@@ -3,8 +3,10 @@ from os.path import join, dirname, abspath
 
 def getCompressedJavaScript(self, languages=[], themes=[], plugins=[],
                             customFiles=[], suffix=""):
-    """Returns the content of all the TinyMCE JavaScript files as a single
-       string, in order to minimize the number of HTTP requests.
+    """Packs the TinyMCE core, languages, themes, plugins and the custom files
+       in a single string.
+
+	The purpose of this function is to minimize the number of HTTP requests.
 
         @param languages: languages used by TinyMCE
         @param themes: themes used by TinyMCE
