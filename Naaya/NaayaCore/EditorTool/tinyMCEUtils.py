@@ -10,7 +10,7 @@ def getCompressedJavaScript(languages=[], themes=[], plugins=[],
 
         @param languages: languages used by TinyMCE
         @param themes: themes used by TinyMCE
-        @param plugins: plusings used by TinyMCE
+        @param plugins: plugins used by TinyMCE
         @param customFiles: custom files used along with TinyMCE
         @param suffix: "" or "_src" when using debug versions
     """
