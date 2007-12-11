@@ -124,11 +124,13 @@ class NySurveyTemplate(Folder):
         if not kwargs.has_key('c133'): kwargs['c133'] = ''
 
         for key, value in kwargs.items():
-            if value:
-                continue
-            self.setSessionErrors(['Please answer all fields.'])
-            return REQUEST.RESPONSE.redirect(self.absolute_url())
-
+            if not (key.endswith('P') or key.endswith('S') or key.endswith('T') or key.endswith('C')):
+                if value:
+                    continue
+                self.setSessionErrors(['Please answer all fields.'])
+                return REQUEST.RESPONSE.redirect(self.absolute_url())
+        
+        REQUEST.SESSION.clear()
         addNySurveyAnswer(self, REQUEST=REQUEST, **kwargs)
         
     #view answers and statistics for this survey template
