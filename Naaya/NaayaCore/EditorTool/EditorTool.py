@@ -121,7 +121,7 @@ class EditorTool(Folder):
         config.read(join(dirname(__file__), 'config.ini'))
         for section in config.sections():
             for option in config.options(section):
-                self.configuration[option] = config.get(section, option).split(',')
+                self.configuration[option] = [i.strip() for i in config.get(section, option).split(',')]
 
     security.declarePrivate('manage_props')
     def manage_props(self, wordlike, justify, links):
