@@ -16,7 +16,6 @@ def getCompressedJavaScript(self, languages=[], themes=[], plugins=[],
     """
     # calculate list of files
     # TODO for Python 2.4: switch to iterator comprehension
-    print languages, themes, plugins
     files = ['tiny_mce'+suffix+'.js']
     files += [join('langs', lang+'.js') for lang in languages]
     files += [join('themes', theme, 'editor_template'+suffix+'.js') \
@@ -27,7 +26,6 @@ def getCompressedJavaScript(self, languages=[], themes=[], plugins=[],
         files += [join('langs', lang+'.js') for lang in languages]
     files += customFiles
     # concatenate files
-    print "_getTinyMCEJavaScript files =", files
     tiny_mce_dir = join(dirname(__file__), 'tinymce', 'jscripts', 'tiny_mce')
     content = ['tinyMCE_GZ.end();'] # patch loading functions
     for name in files:
