@@ -42,7 +42,8 @@ function fSet(ctrl, value)
 </div>
 <div class="field">
 	<label for="description" i18n:translate="">Description</label>
-	<span tal:replace="structure python:here.get_wysiwyg_widget('description:utf8:ustring', here.getLocalProperty('description', curr_lang), toolbox='%s/toolbox_html' % here.absolute_url())" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure editor/render" />
+	<textarea name="description:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getLocalProperty('description', curr_lang)" />
 </div>
 <div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
 	<label for="coverage" i18n:translate="">Coverage</label>
