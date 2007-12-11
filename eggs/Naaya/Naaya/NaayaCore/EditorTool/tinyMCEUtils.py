@@ -1,6 +1,9 @@
 # Python imports
 from os.path import join, dirname, abspath
 
+
+TINYMCE_DIR = join(dirname(__file__), 'tinymce', 'jscripts', 'tiny_mce')
+
 def getCompressedJavaScript(isJS=False, languages=[], themes=[], plugins=[],
                             customFiles=[], suffix=""):
     """Packs the TinyMCE core, languages, themes, plugins and the custom files
@@ -17,10 +20,8 @@ def getCompressedJavaScript(isJS=False, languages=[], themes=[], plugins=[],
     """
     # Inspired by the .NET and PHP TinyMCE compressors
 
-    tiny_mce_dir = join(dirname(__file__), 'tinymce', 'jscripts', 'tiny_mce')
     if not isJS:
-        return getFileContent(join(tiny_mce_dir, 'tiny_mce_gzip.js')) + \
-               'tinyMCE_GZ.init({});'
+        return getFileContent('tiny_mce_gzip.js') + 'tinyMCE_GZ.init({});'
 
     # calculate list of files
     # TODO for Python 2.4: switch to iterator comprehension
@@ -36,19 +37,19 @@ def getCompressedJavaScript(isJS=False, languages=[], themes=[], plugins=[],
     # concatenate files
     content = ['tinyMCE_GZ.start();'] # patch loading functions
     for name in files:
-        # security check: verify that the file is under the TinyMCE
-        # directory to event reading other unrelated files
-        # (e.g. "/etc/passwd")
-        name = abspath(join(tiny_mce_dir, name))
-        if not name.startswith(tiny_mce_dir):
-            raise RuntimeError('File is not under the TinyMCE directory')
         content.append(getFileContent(name))
     content.append('tinyMCE_GZ.end();') # restore loading functions
     content = "".join(content)
     return content
 
 def getFileContent(name):
-    """Return the contents of the file"""
+    """Return the contents of the file from the TinyMCE directory"""
+    # security check: verify that the file is under the TinyMCE
+    # directory to event reading other unrelated files
+    # (e.g. "/etc/passwd")
+    name = abspath(join(TINYMCE_DIR, name))
+    if not name.startswith(tiny_mce_dir):
+        raise RuntimeError('File is not under the TinyMCE directory')
     f = open(name)
     content.append(f.read())
     f.close()
