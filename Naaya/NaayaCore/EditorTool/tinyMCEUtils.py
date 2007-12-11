@@ -6,7 +6,7 @@ def getCompressedJavaScript(languages=[], themes=[], plugins=[],
     """Packs the TinyMCE core, languages, themes, plugins and the custom files
        in a single string.
 
-	The purpose of this function is to minimize the number of HTTP requests.
+        The purpose of this function is to minimize the number of HTTP requests.
 
         @param languages: languages used by TinyMCE
         @param themes: themes used by TinyMCE
