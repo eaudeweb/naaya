@@ -1,13 +1,14 @@
 # Python imports
 from os.path import join, dirname, abspath
 
-def getCompressedJavaScript(languages=[], themes=[], plugins=[],
+def getCompressedJavaScript(isJS=False, languages=[], themes=[], plugins=[],
                             customFiles=[], suffix=""):
     """Packs the TinyMCE core, languages, themes, plugins and the custom files
        in a single string.
 
         The purpose of this function is to minimize the number of HTTP requests.
 
+        @param isJS: ??? TODO
         @param languages: languages used by TinyMCE
         @param themes: themes used by TinyMCE
         @param plugins: plugins used by TinyMCE
@@ -15,6 +16,13 @@ def getCompressedJavaScript(languages=[], themes=[], plugins=[],
         @param suffix: "" or "_src" when using debug versions
     """
     # Inspired by the .NET and PHP TinyMCE compressors
+
+    tiny_mce_dir = join(dirname(__file__), 'tinymce', 'jscripts', 'tiny_mce')
+    if not isJS:
+        f = open(tiny_mce_dir, 'tiny_mce_gzip.js')
+        content = f.read() + '\ntinyMCE_GZ.init({});'
+        f.close()
+        return content
 
     # calculate list of files
     # TODO for Python 2.4: switch to iterator comprehension
@@ -28,8 +36,7 @@ def getCompressedJavaScript(languages=[], themes=[], plugins=[],
         files += [join('langs', lang+'.js') for lang in languages]
     files += customFiles
     # concatenate files
-    tiny_mce_dir = join(dirname(__file__), 'tinymce', 'jscripts', 'tiny_mce')
-    content = ['tinyMCE_GZ.init({});'] # patch loading functions
+    content = ['tinyMCE_GZ.start();'] # patch loading functions
     for name in files:
         # security check: verify that the file is under the TinyMCE
         # directory to event reading other unrelated files
