@@ -27,7 +27,7 @@ def getCompressedJavaScript(languages=[], themes=[], plugins=[],
     files += customFiles
     # concatenate files
     tiny_mce_dir = join(dirname(__file__), 'tinymce', 'jscripts', 'tiny_mce')
-    content = ['tinyMCE_GZ.end();'] # patch loading functions
+    content = ['tinyMCE_GZ.init({});'] # patch loading functions
     for name in files:
         # security check: verify that the file is under the TinyMCE
         # directory to event reading other unrelated files
