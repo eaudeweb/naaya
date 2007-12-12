@@ -114,7 +114,7 @@ class EditorTool(Folder):
         jsappend('</script>')
 
         jsappend('<script type="text/javascript">')
-        jsappend('nyFileBrowserCallBack = getNyFileBrowserCallBack("%s")' % (self.REQUEST['URLPATH1'],))
+        jsappend('nyFileBrowserCallBack = getNyFileBrowserCallBack("%s")' % (self.REQUEST['URLPATH1'].lstrip('/'),))
         jsappend('</script>')
 
         jsappend('<script type="text/javascript">')
