@@ -56,8 +56,10 @@ var tinyMCE_GZ = {
 		v += '&languages=' + escape(s.languages);
 		v += '&diskcache=' + (s.disk_cache ? 'true' : 'false');
 		//v += this.checkCompress() ? '' : '&compress=false';
-
-		this.loadFile(this.baseURL + v);
+		if (v.indexOf('://') == -1 && v.charAt(0) != '/')
+			this.loadFile(this.baseURL + v);
+		else
+			this.loadFile(v);
 	},
 
 	checkCompress : function() {
