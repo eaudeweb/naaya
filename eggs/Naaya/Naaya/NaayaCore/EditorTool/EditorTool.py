@@ -80,19 +80,20 @@ class EditorTool(Folder):
         """ return the TinyMCE instance object we intend to use """
         return self._getOb('tinymce')
 
-#    def _getTinyMCELanguages(self):
-#        """ return the list of languages that TinyMCE could handle """
-#        return ['da', 'en', 'es', 'fr', 'hu', 'it', 'ro', 'ru']
-#
-#    def _getTinyMCEDefaultLang(self):
-#        return 'en'
+    def _getTinyMCELanguages(self):
+        """ return the list of languages that TinyMCE could handle """
+        return ['da', 'en', 'es', 'fr', 'hu', 'it', 'ro', 'ru']
+
+    def _getTinyMCEDefaultLang(self):
+        return 'en'
 
     def render(self, lang=None, **kwargs):
         """ return the HTML necessary to run the TinyMCE """
         #language negotiations
         if lang is None: lang = self.gl_get_selected_language()
-#        if lang not in self._getTinyMCELanguages():
-#            lang = self._getTinyMCEDefaultLang()
+        is_rtl = self.isRTL(lang)
+        if lang not in self._getTinyMCELanguages():
+            lang = self._getTinyMCEDefaultLang()
 
         #render the javascript
         tinymce_js_file = "tiny_mce_gzip.js"
@@ -108,16 +109,20 @@ class EditorTool(Folder):
         jsappend('nyFileBrowserCallBack = getNyFileBrowserCallBack("%s")' % (self.REQUEST['URLPATH1'],))
         jsappend('</script>')
 
+        #javascript parameters
+        params = []
+        pappend = params.append
+        pappend('language:"%s",' % lang)
+        if is_rtl:
+            pappend('directionality:"rtl",')
+        [ pappend('%s:"%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
+        pappend('document_base_url:"%s/",' % self.getSitePath())
+        pappend('page_name:"%s/getTinyMCEJavaScript"' % self.absolute_url())
+
         for statement in 'tinyMCE_GZ.init({', 'tinyMCE.init({':
             jsappend('<script type="text/javascript">')
             jsappend(statement)
-            #jsappend('language:"%s",' % lang)
-            jsappend('language:"en",')
-            if self.isRTL(lang):
-                jsappend('directionality:"rtl",')
-            [ jsappend('%s:"%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
-            jsappend('document_base_url:"%s/",' % self.getSitePath())
-            jsappend('page_name:"%s/getTinyMCEJavaScript"' % self.absolute_url())
+            jsappend('\n'.join(params))
             jsappend('});')
             jsappend('</script>')
 
