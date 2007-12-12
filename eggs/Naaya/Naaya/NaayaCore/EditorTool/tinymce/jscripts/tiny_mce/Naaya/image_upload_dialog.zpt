@@ -60,7 +60,7 @@
 				</tal:block>
 			</tal:block>
 			<hr style="border: 1px solid #f0f0f0; background-color:white;" />
-			<form>
+			<form action="">
 				<input type="button" value="Close window" onclick="javascript:tinyMCEPopup.close();" i18n:attributes="value" />
 			</form>
 		</div>
