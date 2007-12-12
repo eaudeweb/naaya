@@ -4,6 +4,7 @@ from OFS.Folder import Folder
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
+from DateTime import DateTime
 
 #Product imports
 from constants import *
@@ -122,18 +123,20 @@ class NySurveyTemplate(Folder):
         if not kwargs.has_key('c131'): kwargs['c131'] = ''
         if not kwargs.has_key('c132'): kwargs['c132'] = ''
         if not kwargs.has_key('c133'): kwargs['c133'] = ''
-
+        
+        #check if the user didn't already answer
+        if self.check_if_answered(REQUEST):
+            return REQUEST.RESPONSE.redirect(self.absolute_url())
+        
+        #check template deadline
+        if not self.check_template_deadline():
+            return REQUEST.RESPONSE.redirect(self.absolute_url())
+        
         for key, value in kwargs.items():
             if not (key.endswith('P') or key.endswith('S') or key.endswith('T') or key.endswith('C')):
                 if value:
                     continue
                 self.setSessionErrors(['Please answer all fields.'])
-                return REQUEST.RESPONSE.redirect(self.absolute_url())
-        
-        #check if the user didn't allready answer
-        user = REQUEST.AUTHENTICATED_USER.getUserName()
-        for answer in self.get_template_answers():
-            if answer.user == user:
                 return REQUEST.RESPONSE.redirect(self.absolute_url())
         
         REQUEST.SESSION.clear()
@@ -167,20 +170,19 @@ class NySurveyTemplate(Folder):
 
     def check_if_answered(self, REQUEST=None):
         """
-        Checks if the current user allready answered to this template.
-        Returns False if the user did not allready answer.
+        Checks if the current user allready answered this template.
         """
         
+        user = REQUEST.AUTHENTICATED_USER.getUserName()
+        return user in [answer.user for answer in self.get_template_answers()]
+
+    def check_template_deadline(self):
+        """
+        True if deadline not reached.
+        """
         
-        logged_user = REQUEST.AUTHENTICATED_USER.getUserName()
-        users_responded = []
-        
-        for answer in self.get_template_answers():
-            if hasattr(answer, 'user'):
-                users_responded.append(getattr(answer, 'user', ''))
-            
-        
-        return logged_user in users_responded
+        today = DateTime(self.utShowDateTime(DateTime()))
+        return today.lessThanEqualTo(DateTime(self.date))
 
     def get_statistics(self):
         """ """
