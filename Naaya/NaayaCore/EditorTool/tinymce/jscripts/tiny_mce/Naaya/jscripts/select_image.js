@@ -1,6 +1,6 @@
 function selectNyImage(field_name, url, win, nydocument_url) {
 	tinyMCE.openWindow({
-		file : "../../Naaya/image_upload_dialog.zpt?imageContainer=" + nydocument_url + '/' + 'imageContainer',
+		file : "../../Naaya/image_upload_dialog.zpt?document=" + nydocument_url,
 		title : "File Browser",
 		width : 420,
 		height : 400,
