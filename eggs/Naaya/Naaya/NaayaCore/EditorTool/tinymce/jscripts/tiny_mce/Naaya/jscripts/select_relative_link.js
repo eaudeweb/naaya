@@ -1,5 +1,8 @@
 function init() {
-	tinyMCEPopup.resizeToInnerSize()
+	var isMSIE = (navigator.appName == "Microsoft Internet Explorer");
+	if (!isMSIE) {
+		tinyMCEPopup.resizeToContent();
+	}
 }
 
 function selectNyRelativeLink(field_name, url, win, nydocument_url) {
@@ -13,6 +16,7 @@ function selectNyRelativeLink(field_name, url, win, nydocument_url) {
 		window : win,
 		input : field_name,
 		resizable : "yes",
+		scrollbars : "yes",
 		inline : "yes",  // This parameter only has an effect if you use the inlinepopups plugin!
 		editor_id : tinyMCE.selectedInstance.editorId
 	});
