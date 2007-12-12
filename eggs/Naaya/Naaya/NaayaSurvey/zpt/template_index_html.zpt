@@ -17,9 +17,9 @@ textarea {width: 98%;}
 </style>
 <h1 tal:content="here/title_or_id" />
 
-<p i18n:translate="" tal:condition="not:python:DateTime(here.utShowDateTime(DateTime())).lessThanEqualTo(DateTime(here.date))">Cannot fill in the answers since the deadline for this survey has passed.
+<p i18n:translate="" tal:condition="not:python:here.check_template_deadline()">Cannot fill in the answers since the deadline for this survey has passed.
 </p>
-<tal:block tal:condition="python:DateTime(here.utShowDateTime(DateTime())).lessThanEqualTo(DateTime(here.date))">
+<tal:block tal:condition="python:here.check_template_deadline()">
 <p i18n:translate="" tal:condition="python:here.check_if_answered(request)">You already answered this survey.</p>
 <tal:block tal:condition="not:python:here.check_if_answered(request)" tal:define="ses python:here.REQUEST.SESSION">
 
