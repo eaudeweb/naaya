@@ -33,6 +33,7 @@ from Products.NaayaBase.NyItem          import NyItem
 from Products.NaayaBase.NyAttributes    import NyAttributes
 from Products.NaayaBase.NyCheckControl  import NyCheckControl
 from semdocument_item                   import semdocument_item
+from Products.NaayaBase.NyImageContainer import NyImageContainer
 
 #module constants
 METATYPE_OBJECT = 'Naaya Semide Document'
@@ -209,6 +210,7 @@ class NySemDocument(NyAttributes, semdocument_item, NyItem, NyCheckControl):
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
+        self.imageContainer = NyImageContainer(self, True)
 
     security.declareProtected(view, 'testContext')
     def testContext(self):
