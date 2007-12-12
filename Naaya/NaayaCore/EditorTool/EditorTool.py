@@ -119,6 +119,8 @@ class EditorTool(Folder):
         jsappend('<script type="text/javascript">')
         jsappend('tinyMCE.init({')
         jsappend('language:"%s",' % lang)
+        if self.isRTL():
+            jsappend('directionality:"rtl",')
         [ jsappend('%s:"%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
         jsappend('document_base_url:"%s/"' % self.getSitePath())
         jsappend('});')
@@ -154,23 +156,6 @@ class EditorTool(Folder):
         for section in config.sections():
             for option in config.options(section):
                 self.configuration[option] = [i.strip() for i in config.get(section, option).split(',')]
-
-    security.declarePrivate('manage_props')
-    def manage_props(self, wordlike, justify, links):
-        """ manage properties """
-        if wordlike:
-            pass
-        if justify:
-            justify = ['justifyleft', 'justifycenter', 'justifyright', 'justifyfull', 'separator']
-            buttons1 = self.configuration.get('theme_advanced_buttons1', '')
-            pos = buttons1.index('strikethrough') + 1
-            for j in justify:
-                buttons1.insert(j, pos)
-                pos += 1
-            self.configuration['theme_advanced_buttons1'] = buttons1
-            self._p_changed = 1
-        if links:
-            pass
 
     security.declareProtected(view_management_screens, 'index_html')
     index_html = PageTemplateFile('zpt/editor_test', globals())
