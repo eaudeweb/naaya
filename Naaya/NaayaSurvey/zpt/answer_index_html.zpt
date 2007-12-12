@@ -1,19 +1,18 @@
 <span tal:replace="structure here/standard_html_header" />
 <style type="text/css">
-table {width: 100%; border:1px solid black; table-layout: auto; border-collapse: separate;}
+table {width: 100%; border:1px solid black; table-layout: auto; border-collapse: collapse; empty-cells: show;}
 table td {border:1px solid black}
 table th {border:1px solid black}
 colgroup.column1 {width: 5em;}
-colgroup.column2 {width: 70%;}
+colgroup.column2 {width: 70%; overflow: scroll;}
 colgroup.column3 {width: 30%;}
 colgroup.column4 {width: 30%;}
 caption {font-size: larger; border: 1px solid black; font-weight: bold; text-align: center;}
 th {font-weight: bold; background-color: #FFFF84;}
-textarea {width: 98%; overflow: hidden;}
-.comments_field {background-color: #F1F1F1; overflow: scroll;}
+.comments_field {background-color: #F1F1F1; overflow: auto; width: 40em; height: 5em;}
 </style>
-<h1><em tal:content="python:here.agency" />'s answer to <em tal:content="python:here.getParentNode().title_or_id()" /></h1>
-<p>This page lists the answers given by <strong tal:content="python:here.agency" /> from <strong tal:content="python:here.country" /> submitted by <strong tal:content="python:here.survey_contributor" />.</p>
+<h1><em tal:content="python:here.agency" i18n:translate="" />'s answer to <em tal:content="python:here.getParentNode().title_or_id()" /></h1>
+<p><span i18n:translate="">This page lists the answers given by</span> <strong tal:content="python:here.agency" /> <span i18n:translate="">from</span> <strong tal:content="python:here.country" /> <span i18n:translate="">submitted by</span> <strong tal:content="python:here.survey_contributor" />.</p>
 <a tal:attributes="href python:here.getParentNode().manage_answers.absolute_url()" tal:content="string:View all answers for this survey." />
 <br />
 <tal:block tal:define="drp_opt python:['Regulation', 'Planning', 'Guidance', 'Incentive', 'Monitoring', 'Incentive payments', 'Advice', 'Management', 'Habitat', 'Other - specify']" >
@@ -37,7 +36,7 @@ textarea {width: 98%; overflow: hidden;}
 	<tbody>
 		<tr tal:define="atr python:'a113'">
 			<td>A1.1.3</td>
-			<td>Fully implement Article 6 Habitats Directive.<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div></td>
+			<td>Fully implement Article 6 Habitats Directive.<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div></td>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -49,7 +48,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a114'">
 			<td>A1.1.4</td>
-			<td>Strengthen application of SEA and EIA<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Strengthen application of SEA and EIA<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -61,7 +60,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a115'">
 			<td>A1.1.5</td>
-			<td>Implement Environmental Liability Directive<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Implement Environmental Liability Directive<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -73,7 +72,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a123'">
 			<td>A1.2.3</td>
-			<td>Improve coherence, connectivity and resilience of protected areas<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Improve coherence, connectivity and resilience of protected areas<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -85,7 +84,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a131'">
 			<td>A1.3.1</td>
-			<td>Implement species action or management plans<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Implement species action or management plans<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -119,7 +118,7 @@ textarea {width: 98%; overflow: hidden;}
 	<tbody>
 		<tr tal:define="atr python:'a211'">
 			<td>A2.1.1</td>
-			<td>Ensure adequate financing of rural development programme (RDP) measures<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Ensure adequate financing of rural development programme (RDP) measures<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -131,7 +130,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a212'">
 			<td>A2.1.2</td>
-			<td>Apply RDP measures to protect Natura 2000 sites and high-nature-value (HNV) land<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Apply RDP measures to protect Natura 2000 sites and high-nature-value (HNV) land<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -143,7 +142,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a213'">
 			<td>A2.1.3</td>
-			<td>Identify priority HNV areas and adjust RDP<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Identify priority HNV areas and adjust RDP<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -155,7 +154,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a214'">
 			<td>A2.1.4</td>
-			<td>Ensure effective cross-compliance of RDP measures<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Ensure effective cross-compliance of RDP measures<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -167,7 +166,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a217'">
 			<td>A2.1.7</td>
-			<td>Ensure favoured areas require contributions to HNV<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Ensure favoured areas require contributions to HNV<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -179,7 +178,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a218'">
 			<td>A2.1.8</td>
-			<td>Implement common monitoring and evaluation framework for the SEA Directive<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Implement common monitoring and evaluation framework for the SEA Directive<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -191,7 +190,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a219'">
 			<td>A2.1.9</td>
-			<td>Maximise biodiversity benefits from CAP Pillar 1<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Maximise biodiversity benefits from CAP Pillar 1<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -203,7 +202,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a221'">
 			<td>A2.2.1</td>
-			<td>Identify geographical risk areas for factors affecting soil biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Identify geographical risk areas for factors affecting soil biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -215,7 +214,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a222'">
 			<td>A2.2.2</td>
-			<td>Propose measures to prevent soil erosion<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Propose measures to prevent soil erosion<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -227,7 +226,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a231'">
 			<td>A2.3.1</td>
-			<td>Ensure implementation of planning and programme of measures under the Water Framework Directive (WFD)<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Ensure implementation of planning and programme of measures under the Water Framework Directive (WFD)<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -239,7 +238,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a241'">
 			<td>A2.4.1</td>
-			<td>Significantly reduce point source pollution pressures (air, land, water)<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Significantly reduce point source pollution pressures (air, land, water)<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -251,7 +250,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a242'">
 			<td>A2.4.2</td>
-			<td>Significantly reduce airborne eutrophication and acidifying pollution<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Significantly reduce airborne eutrophication and acidifying pollution<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -263,7 +262,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a243'">
 			<td>A2.4.3</td>
-			<td>Significantly reduce pollution from agriculture sources<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Significantly reduce pollution from agriculture sources<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -275,7 +274,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a244'">
 			<td>A2.4.4</td>
-			<td>Significantly reduce toxic pollution<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Significantly reduce toxic pollution<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -287,7 +286,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a251'">
 			<td>A2.5.1</td>
-			<td>Assess risks and benefits of flooding for biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Assess risks and benefits of flooding for biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -299,7 +298,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a252'">
 			<td>A2.5.2</td>
-			<td>Ensure flood risk plans maximise benefits for biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Ensure flood risk plans maximise benefits for biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -311,7 +310,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a311'">
 			<td>A3.1.1</td>
-			<td>Preparatory work (good environmental status) for Marine Framework Directive<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Preparatory work (good environmental status) for Marine Framework Directive<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -323,7 +322,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a312'">
 			<td>A3.1.2</td>
-			<td>Develop programme of measures to achieve good environmental status<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Develop programme of measures to achieve good environmental status<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -335,7 +334,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a314'">
 			<td>A3.1.4</td>
-			<td>Implement WFD measures needed for coastal and marine areas<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Implement WFD measures needed for coastal and marine areas<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -347,7 +346,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a315'">
 			<td>A3.1.5</td>
-			<td>Implement EU Integrated Coastal Zone Management Recommendation<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Implement EU Integrated Coastal Zone Management Recommendation<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -359,7 +358,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a321'">
 			<td>A3.2.1</td>
-			<td>Significantly reduce point source pollution affecting marine area<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Significantly reduce point source pollution affecting marine area<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -371,7 +370,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a322'">
 			<td>A3.2.2</td>
-			<td>Significantly reduce airborne eutrophicating and acidifying pollution of marine areas<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Significantly reduce airborne eutrophicating and acidifying pollution of marine areas<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -383,7 +382,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a323'">
 			<td>A3.2.3</td>
-			<td>Significantly reduce pollution of marine areas from agricultural sources<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Significantly reduce pollution of marine areas from agricultural sources<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -395,7 +394,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a324'">
 			<td>A3.2.4</td>
-			<td>Significantly, reduce toxic pollution of marine areas<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Significantly, reduce toxic pollution of marine areas<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -407,7 +406,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a352'">
 			<td>A3.5.2</td>
-			<td>Develop and implement restoration programmes for (salmon)<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Develop and implement restoration programmes for (salmon)<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -419,7 +418,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a411'">
 			<td>A4.1.1</td>
-			<td>Allocate/encourage structural funds (financing  Natura 2000)<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Allocate/encourage structural funds (financing  Natura 2000)<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -431,7 +430,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a414'">
 			<td>A4.1.4</td>
-			<td>Ensure SEA of operational programmes to minimise impact on biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Ensure SEA of operational programmes to minimise impact on biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -443,7 +442,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a412'">
 			<td>A4.1.2</td>
-			<td>Funding allocated for capacity-building<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Funding allocated for capacity-building<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -455,7 +454,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a431'">
 			<td>A4.3.1</td>
-			<td>Encourage spatial plans that support coherence of Natura 2000<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Encourage spatial plans that support coherence of Natura 2000<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -467,7 +466,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a461'">
 			<td>A4.6.1</td>
-			<td>Ensure biodiversity requirement covered in SEAs<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Ensure biodiversity requirement covered in SEAs<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -479,7 +478,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a462'">
 			<td>A4.6.2</td>
-			<td>Ensure biodiversity requirements covered in EIAs<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Ensure biodiversity requirements covered in EIAs<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -491,7 +490,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a512'">
 			<td>A5.1.2</td>
-			<td>Develop and implement national strategies on invasive alien species<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Develop and implement national strategies on invasive alien species<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -503,7 +502,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a514'">
 			<td>A5.1.4</td>
-			<td>Establish and use early warning system<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Establish and use early warning system<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -515,7 +514,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a931'">
 			<td>A9.3.1</td>
-			<td>Adaptation and mitigation measures checked for impact on biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Adaptation and mitigation measures checked for impact on biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -527,7 +526,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a932'">
 			<td>A9.3.2</td>
-			<td>Ensure Biomass Action Plan takes account of biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Ensure Biomass Action Plan takes account of biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -539,7 +538,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a941'">
 			<td>A9.4.1</td>
-			<td>Develop programme of priority actions to support biodiversity adaptation<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Develop programme of priority actions to support biodiversity adaptation<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -551,7 +550,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a942'">
 			<td>A9.4.2</td>
-			<td>Assess coherence and resilience of Natura 2000 network in relation to climate change<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Assess coherence and resilience of Natura 2000 network in relation to climate change<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -563,7 +562,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a943'">
 			<td>A9.4.3</td>
-			<td>Establish habitats and species at most risk and prepare adaptation measures<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Establish habitats and species at most risk and prepare adaptation measures<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -575,7 +574,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a1014'">
 			<td>A10.1.4</td>
-			<td>Enhance research on the most significant pressures on biodiversity, and test presentation/mitigation measures<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Enhance research on the most significant pressures on biodiversity, and test presentation/mitigation measures<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -587,7 +586,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a1015'">
 			<td>A10.1.5</td>
-			<td>Apply effective tools to support policy instruments to biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Apply effective tools to support policy instruments to biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -599,7 +598,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a1018'">
 			<td>A10.1.8</td>
-			<td>Commission policy-relevant research<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Commission policy-relevant research<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -611,7 +610,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'a1019'">
 			<td>A10.1.9</td>
-			<td>Establish common data standards and quality assurance<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Establish common data standards and quality assurance<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -623,7 +622,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'b111'">
 			<td>B1.1.1</td>
-			<td>Ensure adequate financing for Natura 2000<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Ensure adequate financing for Natura 2000<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -647,7 +646,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'b212'">
 			<td>B2.1.2</td>
-			<td>Strengthen understanding of value of ecosystem services<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Strengthen understanding of value of ecosystem services<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -659,7 +658,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'b222'">
 			<td>B2.2.2</td>
-			<td>Screen new legislation for potential impact on biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Screen new legislation for potential impact on biodiversity<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -671,7 +670,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'b241'">
 			<td>B2.4.1</td>
-			<td>Realign national biodiversity strategy with EU Action Plan<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Realign national biodiversity strategy with EU Action Plan<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -683,7 +682,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'b251'">
 			<td>B2.5.1</td>
-			<td>Strengthen integration of planning instruments (eg WFD)<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Strengthen integration of planning instruments (eg WFD)<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -695,7 +694,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'b261'">
 			<td>B2.6.1</td>
-			<td>Ensure compliance with environmental regulation<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Ensure compliance with environmental regulation<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -719,7 +718,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'b314'">
 			<td>B3.1.4</td>
-			<td>Establish a Climate Change adaptation task force<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Establish a Climate Change adaptation task force<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -731,7 +730,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'b315'">
 			<td>B3.1.5</td>
-			<td>Develop biodiversity and planning partnership (exchange of best practice)<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Develop biodiversity and planning partnership (exchange of best practice)<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -743,7 +742,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'b316'">
 			<td>B3.1.6</td>
-			<td>Develop business and biodiversity partnership<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Develop business and biodiversity partnership<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -778,7 +777,7 @@ textarea {width: 98%; overflow: hidden;}
 	<tbody>
 		<tr tal:define="atr python:'b412'">
 			<td>B4.1.2</td>
-			<td>Implement ‘Countdown 2010’ initiative<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Implement ‘Countdown 2010’ initiative<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -811,7 +810,7 @@ textarea {width: 98%; overflow: hidden;}
 	<tbody>
 		<tr tal:define="atr python:'c121'">
 			<td>C1.2.1</td>
-			<td>Adopt biodiversity headline indicators<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Adopt biodiversity headline indicators<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -823,7 +822,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'c131'">
 			<td>C1.3.1</td>
-			<td>Establish reference values for favourable conservation status for Habitats Directive<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Establish reference values for favourable conservation status for Habitats Directive<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -835,7 +834,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'c132'">
 			<td>C1.3.2</td>
-			<td>Develop monitoring tools to support reporting of biodiversity indicators<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Develop monitoring tools to support reporting of biodiversity indicators<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />
@@ -847,7 +846,7 @@ textarea {width: 98%; overflow: hidden;}
 		</tr>
 		<tr tal:define="atr python:'c133'">
 			<td>C1.3.3</td>
-			<td>Develop shared information system for reporting<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
+			<td>Develop shared information system for reporting<div tal:condition="python:getattr(here, '%sC' % atr, '')"><br /><label tal:attributes="for python:'%sC' % atr"><strong>Additional comments:</strong></label><br /><div class="comments_field" tal:attributes="id python:'%sC' % atr" tal:content="python:getattr(here, '%sC' % atr, '')"></div></div>
 			<td><span tal:replace="structure python:'''<strong>Primary:</strong> %s''' % getattr(here, '%sP' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Secondary:</strong> %s''' % getattr(here, '%sS' % atr, '')" /><br />
 				<span tal:replace="structure python:'''<strong>Tertiary:</strong> %s''' % getattr(here, '%sT' % atr, '')" />

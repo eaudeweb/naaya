@@ -1,6 +1,6 @@
 <span tal:replace="structure here/standard_html_header" />
 <style type="text/css">
-table {width: 100%; border:1px solid black; table-layout: auto; border-collapse: separate;}
+table {width: 100%; border:1px solid black; table-layout: auto; border-collapse: collapse;}
 table td {border:1px solid black}
 table th {border:1px solid black}
 colgroup.column1 {width: 5%;}
@@ -13,29 +13,29 @@ colgroup.column4 {width: 8%;}
 .major {background-color: red; color: white; display: block;}
 caption {font-size: larger; border: 1px solid black; font-weight: bold; text-align: center;}
 th {font-weight: bold; background-color: #FFFF84;}
-textarea {width: 98%; overflow: hidden;}
+textarea {width: 98%;}
 </style>
 <h1 tal:content="here/title_or_id" />
 
-<p tal:condition="not:python:DateTime(here.utShowDateTime(DateTime())).lessThanEqualTo(DateTime(here.date))">Cannot fill in the answers since the deadline for this survey has passed.
+<p i18n:translate="" tal:condition="not:python:DateTime(here.utShowDateTime(DateTime())).lessThanEqualTo(DateTime(here.date))">Cannot fill in the answers since the deadline for this survey has passed.
 </p>
 <tal:block tal:condition="python:DateTime(here.utShowDateTime(DateTime())).lessThanEqualTo(DateTime(here.date))">
-<p tal:condition="python:here.check_if_answered(request)">You already answered this survey.</p>
+<p i18n:translate="" tal:condition="python:here.check_if_answered(request)">You already answered this survey.</p>
 <tal:block tal:condition="not:python:here.check_if_answered(request)" tal:define="ses python:here.REQUEST.SESSION">
 
-<p>Please fill in the appropriate boxes, then click the <em>Submit answer</em> button.<br />
+<p i18n:translate="">Please fill in the appropriate boxes, then click the <em>Submit answer</em> button.<br />
 <strong>NOTE:</strong> You can answer this survey only once.</p>
 
 <form id="survey" method="post" action="addNySurveyAnswer" tal:define="drp_opt python:['none', 'Regulation', 'Planning', 'Guidance', 'Incentive', 'Monitoring', 'Incentive payments', 'Advice', 'Management', 'Habitat', 'Other - specify']">
 
-<label for="survey_contributor">Your name:</label>
+<label for="survey_contributor" i18n:translate="">Your name:</label>
 <input type="text" name="survey_contributor" id="survey_contributor" tal:attributes="value python:here.getAuthenticationTool().getUserFullName(here.REQUEST.AUTHENTICATED_USER)" />
 
-<label for="country">Country:</label>
+<label for="country" i18n:translate="">Country:</label>
 <input id="country" name="country" type="text" size="20" tal:attributes="value python:here.REQUEST.SESSION['country']" tal:condition="python:here.REQUEST.SESSION.has_key('country')" />
 <input id="country" name="country" type="text" size="20" tal:condition="not:python:here.REQUEST.SESSION.has_key('country')" />
 
-<label for="agency">Name of the Agency:</label>
+<label for="agency" i18n:translate="">Name of the Agency:</label>
 <input id="agency" name="agency" type="text" size="20" tal:attributes="value python:here.REQUEST.SESSION['agency']" tal:condition="python:here.REQUEST.SESSION.has_key('agency')" />
 <input id="agency" name="agency" type="text" size="20" tal:condition="not:python:here.REQUEST.SESSION.has_key('agency')" />
 <br />
@@ -52,7 +52,7 @@ textarea {width: 98%; overflow: hidden;}
 		<tr>
 			<th>Action</th>
 			<th>Requirement</th>
-			<th colspan="3">Method applicable by the EPA<br />(Just add additional method if there is <br />a combination of methods)</th>
+			<th colspan="3">Method applicable by the EPA<br /> (Just add secondary and tertiary options if<br />there is a combination of methods)</th>
 			<th>Influence of the Agency</th>
 		</tr>
 	</thead>

@@ -5,14 +5,14 @@ table td {border:1px solid black}
 table th {border:1px solid black}
 colgroup.column1 {width: 5em;}
 colgroup.column2 {width: 80%;}
-colgroup.column3 {width: 15%;}
+colgroup.column3 {width: 15%; background-color: pink;}
 colgroup.column4 {width: 30%;}
 caption {font-size: larger; border: 1px solid black; font-weight: bold; text-align: center;}
 th {font-weight: bold; background-color: #FFFF84;}
 </style>
-<h1>Answer statistics for <em tal:content="python:here.title_or_id()" /></h1>
+<h1><span i18n:translate="">Answer statistics for </span><em tal:content="python:here.title_or_id()" /></h1>
 
-<p>There are <span tal:replace="python:here.count_answers()" /> answer(s) to this survey.</p>
+<p><span i18n:translate="">There are</span> <span tal:replace="python:here.count_answers()" /> <span i18n:translate="">answer(s) to this survey.</span></p>
 <a tal:attributes="href python:here.manage_answers.absolute_url()" tal:content="string:View all answers for this survey." />
 <br />
 
