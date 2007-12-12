@@ -109,23 +109,24 @@ class EditorTool(Folder):
         jsappend('nyFileBrowserCallBack = getNyFileBrowserCallBack("%s")' % (self.REQUEST['URLPATH1'],))
         jsappend('</script>')
 
-        #javascript parameters
-        params = []
-        pappend = params.append
-        pappend('language:"%s",' % lang)
-        if is_rtl:
-            pappend('directionality:"rtl",')
-        [ pappend('%s:"%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
-        pappend('document_base_url:"%s/",' % self.getSitePath())
-        pappend('page_name:"%s/getTinyMCEJavaScript"' % self.absolute_url())
+        jsappend('<script type="text/javascript">')
+        jsappend('tinyMCE_GZ.init({')
+        jsappend('page_name: "%s/getTinyMCEJavaScript",' % self.absolute_url())
+        jsappend('plugins: "%s",' %  ','.join(self.configuration['plugins']))
+        jsappend('themes: "%s",' %  ','.join(self.configuration['theme']))
+        jsappend('languages: "%s"' % lang)
+        jsappend('});')
+        jsappend('</script>')
 
-        for statement in 'tinyMCE_GZ.init({', 'tinyMCE.init({':
-            jsappend('<script type="text/javascript">')
-            jsappend(statement)
-            jsappend('\n'.join(params))
-            jsappend('});')
-            jsappend('</script>')
-
+        jsappend('<script type="text/javascript">')
+        jsappend('tinyMCE.init({')
+        jsappend('language:"%s",' % lang)
+        if self.isRTL():
+            jsappend('directionality:"rtl",')
+        [ jsappend('%s: "%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
+        jsappend('document_base_url:"%s/"' % self.getSitePath())
+        jsappend('});')
+        jsappend('</script>')
         return '\n'.join(js)
 
     security.declarePublic('getTinyMCEJavaScript')
