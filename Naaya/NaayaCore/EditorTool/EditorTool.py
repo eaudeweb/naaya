@@ -101,13 +101,7 @@ class EditorTool(Folder):
         js = []
         jsappend = js.append
         jsappend('<script type="text/javascript" src="%s/%s"></script>' % (tinymce.jscripts.tiny_mce.absolute_url(), tinymce_js_file))
-        jsappend('<script type="text/javascript" src="%s/%s"></script>' % (tinymce.jscripts.tiny_mce.absolute_url(), 'Naaya/file_browser_callback.js'))
-        jsappend('<script type="text/javascript" src="%s/%s"></script>' % (tinymce.jscripts.tiny_mce.absolute_url(), 'Naaya/jscripts/select_relative_link.js'))
-        jsappend('<script type="text/javascript" src="%s/%s"></script>' % (tinymce.jscripts.tiny_mce.absolute_url(), 'Naaya/jscripts/select_image.js'))
 
-        jsappend('<script type="text/javascript">')
-        jsappend('nyFileBrowserCallBack = getNyFileBrowserCallBack("%s")' % (self.REQUEST['URLPATH1'],))
-        jsappend('</script>')
         #jsappend('content_css:"%s/style_css",' % self.absolute_url())
 
         jsappend('<script type="text/javascript">')
@@ -117,6 +111,10 @@ class EditorTool(Folder):
         jsappend('themes: "%s",' %  ','.join(self.configuration['theme']))
         jsappend('languages: "%s"' % lang)
         jsappend('});')
+        jsappend('</script>')
+
+        jsappend('<script type="text/javascript">')
+        jsappend('nyFileBrowserCallBack = getNyFileBrowserCallBack("%s")' % (self.REQUEST['URLPATH1'],))
         jsappend('</script>')
 
         jsappend('<script type="text/javascript">')
@@ -141,10 +139,14 @@ class EditorTool(Folder):
         languages = REQUEST['languages'].split(',')
         themes = REQUEST['themes'].split(',')
         plugins = REQUEST['plugins'].split(',')
+        custom_files = [join('Naaya', 'file_browser_callback.js'),
+                        join('Naaya', 'jscripts', 'select_relative_link.js'),
+                        join('Naaya', 'jscripts', 'select_image.js')]
         content = tinyMCEUtils.getCompressedJavaScript(isJS,
                                                        languages,
                                                        themes,
-                                                       plugins)
+                                                       plugins,
+                                                       custom_files)
         REQUEST.RESPONSE.enableHTTPCompression(REQUEST)
         REQUEST.RESPONSE.setHeader('Content-type', 'application/x-javascript')
         REQUEST.RESPONSE.write(content)
