@@ -7,8 +7,9 @@
                    skin_path python:here.getLayoutTool().getSkinFilesPath();
                    ctrl python:request.get('ctrl', '');
                    tab python:request.get('tab', 'them');
-                   theme_id python:request.get('theme_id', '');
-                   imageContainer python:here.restrictedTraverse(request['imageContainer']);">
+				   theme_id python:request.get('theme_id', '');
+				   document python:here.restrictedTraverse(request['document']);
+				   imageContainer document/imageContainer;">
 
 	<html xmlns="http://www.w3.org/1999/xhtml" tal:attributes="xml:lang lang; lang lang; dir python:test(isArabic, 'rtl', 'ltr')">
 	<head tal:define="skin_files_path python:here.getLayoutTool().getSkinFilesPath()">
@@ -27,7 +28,7 @@
 			<!-- <h2 tal:content="here"></h2> -->
 			<p i18n:translate="">This window allows you to <strong>upload</strong> images and <strong>insert</strong> them in your text.</p>
 
-			<form method="post" tal:attributes="action string:${request/imageContainer}/uploadImage" enctype="multipart/form-data" style="margin-bottom:1.2em;">
+			<form method="post" tal:attributes="action string:${imageContainer/absolute_url}/imageContainer/uploadImage" enctype="multipart/form-data" style="margin-bottom:1.2em;">
 				<a name="upload"></a>
 				<strong i18n:translate="">Upload an image</strong><br /><br />
 				<input type="file" name="file" />
@@ -39,7 +40,7 @@
 			<tal:block define="images imageContainer/getImages">
 				<tal:block condition="images">
 				<p i18n:translate="">Click on an image to insert it in your text. Also you can select images for deletion.</p>
-				<form method="post" tal:attributes="action string:${request/imageContainer}/deleteImages">
+				<form method="post" tal:attributes="action string:${imageContainer/absolute_url}/imageContainer/deleteImages">
 					<input tal:condition="python:len(images)>5" type="submit" value="Delete selected images" i18n:attributes="value" />
 					<ul style="list-style:none;">
 						<li tal:repeat="item images">
