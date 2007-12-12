@@ -135,7 +135,7 @@ textarea {width: 98%;}
 		<tr>
 			<th>Action</th>
 			<th>Requirement</th>
-			<th colspan="3">Method applicable by the EPA<br />(Just add additional method if there is <br />a combination of methods)</th>
+			<th colspan="3">Method applicable by the EPA<br /> (Just add secondary and tertiary options if<br />there is a combination of methods)</th>
 			<th>Influence of the Agency</th>
 		</tr>
 	</thead>
@@ -842,7 +842,7 @@ textarea {width: 98%;}
 		<tr>
 			<th>Action</th>
 			<th>Requirement</th>
-			<th colspan="3">Method applicable by the EPA<br />(Just add additional method if there is <br />a combination of methods)</th>
+			<th colspan="3">Method applicable by the EPA<br /> (Just add secondary and tertiary options if<br />there is a combination of methods)</th>
 			<th>Influence of the Agency</th>
 		</tr>
 	</thead>
@@ -873,7 +873,7 @@ textarea {width: 98%;}
 		<tr>
 			<th>Action</th>
 			<th>Requirement</th>
-			<th colspan="3">Method applicable by the EPA<br />(Just add additional method if there is <br />a combination of methods)</th>
+			<th colspan="3">Method applicable by the EPA<br /> (Just add secondary and tertiary options if<br />there is a combination of methods)</th>
 			<th>Influence of the Agency</th>
 		</tr>
 	</thead>
