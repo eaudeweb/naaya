@@ -27,8 +27,10 @@ def getCompressedJavaScript(isJS=False, languages=[], themes=[], plugins=[],
     # TODO for Python 2.4: switch to iterator comprehension
     files = []
     files += [join('langs', lang+'.js') for lang in languages]
-    files += [join('themes', theme, 'editor_template'+suffix+'.js') \
-                for theme in themes]
+    for theme in themes:
+        base = join('themes', theme)
+        files.append(join(base, 'editor_template'+suffix+'.js'))
+        files += [join(base, 'langs', lang+'.js') for lang in languages]
     for plugin in plugins:
         base = join('plugins', plugin)
         files.append(join(base, 'editor_plugin'+suffix+'.js'))
