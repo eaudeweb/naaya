@@ -34,7 +34,7 @@
 </div>
 <div class="field">
 	<label for="content"><span i18n:translate="" tal:omit-tag="">Content (HTML)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'content')" class="mandatory_field"> *</span></label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure editor/render" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render(curr_lang)" />
 	<textarea name="body:utf8:ustring" class="mceEditor" tal:content="python:here.getVersionLocalProperty('content', curr_lang)" />
 </div>
 <div class="field-inline">
