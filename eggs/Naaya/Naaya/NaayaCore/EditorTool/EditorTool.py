@@ -108,6 +108,7 @@ class EditorTool(Folder):
         jsappend('<script type="text/javascript">')
         jsappend('nyFileBrowserCallBack = getNyFileBrowserCallBack("%s")' % (self.REQUEST['URLPATH1'],))
         jsappend('</script>')
+        #jsappend('content_css:"%s/style_css",' % self.absolute_url())
 
         jsappend('<script type="text/javascript">')
         jsappend('tinyMCE_GZ.init({')
@@ -121,7 +122,7 @@ class EditorTool(Folder):
         jsappend('<script type="text/javascript">')
         jsappend('tinyMCE.init({')
         jsappend('language:"%s",' % lang)
-        if self.isRTL():
+        if is_rtl:
             jsappend('directionality:"rtl",')
         [ jsappend('%s: "%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
         jsappend('document_base_url:"%s/"' % self.getSitePath())
@@ -161,5 +162,8 @@ class EditorTool(Folder):
 
     security.declareProtected(view_management_screens, 'index_html')
     index_html = PageTemplateFile('zpt/editor_test', globals())
+
+    security.declarePublic('style_css')
+    style_css = PageTemplateFile('zpt/editor_css', globals())
 
 InitializeClass(EditorTool)
