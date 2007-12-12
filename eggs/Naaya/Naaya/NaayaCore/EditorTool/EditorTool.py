@@ -80,19 +80,19 @@ class EditorTool(Folder):
         """ return the TinyMCE instance object we intend to use """
         return self._getOb('tinymce')
 
-    def _getTinyMCELanguages(self):
-        """ return the list of languages that TinyMCE could handle """
-        return ['da', 'en', 'es', 'fr', 'hu', 'it', 'ro', 'ru']
-
-    def _getTinyMCEDefaultLang(self):
-        return 'en'
+#    def _getTinyMCELanguages(self):
+#        """ return the list of languages that TinyMCE could handle """
+#        return ['da', 'en', 'es', 'fr', 'hu', 'it', 'ro', 'ru']
+#
+#    def _getTinyMCEDefaultLang(self):
+#        return 'en'
 
     def render(self, lang=None, **kwargs):
         """ return the HTML necessary to run the TinyMCE """
         #language negotiations
         if lang is None: lang = self.gl_get_selected_language()
-        if lang not in self._getTinyMCELanguages():
-            lang = self._getTinyMCEDefaultLang()
+#        if lang not in self._getTinyMCELanguages():
+#            lang = self._getTinyMCEDefaultLang()
 
         #render the javascript
         tinymce_js_file = "tiny_mce_gzip.js"
@@ -111,8 +111,9 @@ class EditorTool(Folder):
         for statement in 'tinyMCE_GZ.init({', 'tinyMCE.init({':
             jsappend('<script type="text/javascript">')
             jsappend(statement)
-            jsappend('language:"%s",' % lang)
-            if self.isRTL():
+            #jsappend('language:"%s",' % lang)
+            jsappend('language:"en",')
+            if self.isRTL(lang):
                 jsappend('directionality:"rtl",')
             [ jsappend('%s:"%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
             jsappend('document_base_url:"%s/",' % self.getSitePath())
