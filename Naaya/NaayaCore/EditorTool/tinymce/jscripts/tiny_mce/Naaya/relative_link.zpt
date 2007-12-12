@@ -4,16 +4,15 @@
 	tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language;">
 	<head>
 		<title i18n:translate="">Add Relative Link</title>
-		<script language="javascript" type="text/javascript" src="../tiny_mce_popup.js"></script>
-		<script language="javascript" type="text/javascript" src="../utils/mctabs.js"></script>
-		<script language="javascript" type="text/javascript" src="../utils/form_utils.js"></script>
-		<script language="javascript" type="text/javascript" src="jscripts/select_relative_link.js"></script>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
 		<link href="css/rellink.css" rel="stylesheet" type="text/css" />
-		<base target="_self" />
+		<script type="text/javascript" src="../tiny_mce_popup.js"></script>
+		<script type="text/javascript" src="../utils/mctabs.js"></script>
+		<script type="text/javascript" src="../utils/form_utils.js"></script>
+		<script type="text/javascript" src="jscripts/select_relative_link.js"></script>
 	</head>
 
-<body id="rellink" onload="tinyMCEPopup.executeOnLoad('init();')"
+<body onload="tinyMCEPopup.executeOnLoad('init();')"
 	tal:define="parent python:request.get('parent', '');
 				content python:here.getFolderPublishedContent(parent);
 				folders python:content[0];
