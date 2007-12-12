@@ -130,6 +130,12 @@ class NySurveyTemplate(Folder):
                 self.setSessionErrors(['Please answer all fields.'])
                 return REQUEST.RESPONSE.redirect(self.absolute_url())
         
+        #check if the user didn't allready answer
+        user = REQUEST.AUTHENTICATED_USER.getUserName()
+        for answer in self.get_template_answers():
+            if answer.user == user:
+                return REQUEST.RESPONSE.redirect(self.absolute_url())
+        
         REQUEST.SESSION.clear()
         addNySurveyAnswer(self, REQUEST=REQUEST, **kwargs)
         
