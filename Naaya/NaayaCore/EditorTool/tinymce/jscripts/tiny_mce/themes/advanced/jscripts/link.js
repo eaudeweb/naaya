@@ -8,7 +8,12 @@ if (url != null) {
 }
 
 function init() {
-	tinyMCEPopup.resizeToInnerSize();
+	var isMSIE = (navigator.appName == "Microsoft Internet Explorer");
+	if (isMSIE) {
+		tinyMCEPopup.resizeToInnerSize();
+	}else {
+		tinyMCEPopup.resizeToContent();
+	}
 
 	document.getElementById('hrefbrowsercontainer').innerHTML = getBrowserHTML('hrefbrowser','href','file','theme_advanced_link');
 
