@@ -5,12 +5,13 @@ TINYMCE_DIR = join(dirname(__file__), 'tinymce', 'jscripts', 'tiny_mce')
 
 def getCompressedJavaScript(isJS=False, languages=[], themes=[], plugins=[],
                             customFiles=[], suffix=""):
-    """Packs the TinyMCE core, languages, themes, plugins and the custom files
-       in a single string.
+    """Packs the TinyMCE code in a single string.
 
-        The purpose of this function is to minimize the number of HTTP requests.
+        The core, the languages, the themes, the plugins and the custom files
+        are included. The purpose of this function is to minimize the number
+        of HTTP requests.
 
-        @param isJS: ??? TODO
+        @param isJS: ??? (see TinyMCE docs) TODO
         @param languages: languages used by TinyMCE
         @param themes: themes used by TinyMCE
         @param plugins: plugins used by TinyMCE
