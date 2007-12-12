@@ -31,7 +31,7 @@ def getCompressedJavaScript(isJS=False, languages=[], themes=[], plugins=[],
     for plugin in plugins:
         base = join('plugins', plugin)
         files.append(join(base, 'editor_plugin'+suffix+'.js'))
-        files += [join('langs', lang+'.js') for lang in languages]
+        files += [join(base, 'langs', lang+'.js') for lang in languages]
     files += customFiles
     # concatenate files
     content = []
