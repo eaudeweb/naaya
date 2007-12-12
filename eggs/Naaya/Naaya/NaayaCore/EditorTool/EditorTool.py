@@ -103,28 +103,23 @@ class EditorTool(Folder):
         jsappend('<script type="text/javascript" src="%s/%s"></script>' % (tinymce.jscripts.tiny_mce.absolute_url(), 'Naaya/file_browser_callback.js'))
         jsappend('<script type="text/javascript" src="%s/%s"></script>' % (tinymce.jscripts.tiny_mce.absolute_url(), 'Naaya/jscripts/select_relative_link.js'))
         jsappend('<script type="text/javascript" src="%s/%s"></script>' % (tinymce.jscripts.tiny_mce.absolute_url(), 'Naaya/jscripts/select_image.js'))
+
         jsappend('<script type="text/javascript">')
         jsappend('nyFileBrowserCallBack = getNyFileBrowserCallBack("%s")' % (self.REQUEST['URLPATH1'],))
         jsappend('</script>')
 
-        jsappend('<script type="text/javascript">')
-        jsappend('tinyMCE_GZ.init({')
-        jsappend('language:"%s",' % lang)
-        [ jsappend('%s:"%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
-        jsappend('document_base_url:"%s/",' % self.getSitePath())
-        jsappend('page_name:"%s/getTinyMCEJavaScript"' % self.absolute_url())
-        jsappend('});')
-        jsappend('</script>')
+        for statement in 'tinyMCE_GZ.init({', 'tinyMCE.init({':
+            jsappend('<script type="text/javascript">')
+            jsappend(statement)
+            jsappend('language:"%s",' % lang)
+            if self.isRTL():
+                jsappend('directionality:"rtl",')
+            [ jsappend('%s:"%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
+            jsappend('document_base_url:"%s/",' % self.getSitePath())
+            jsappend('page_name:"%s/getTinyMCEJavaScript"' % self.absolute_url())
+            jsappend('});')
+            jsappend('</script>')
 
-        jsappend('<script type="text/javascript">')
-        jsappend('tinyMCE.init({')
-        jsappend('language:"%s",' % lang)
-        if self.isRTL():
-            jsappend('directionality:"rtl",')
-        [ jsappend('%s:"%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
-        jsappend('document_base_url:"%s/"' % self.getSitePath())
-        jsappend('});')
-        jsappend('</script>')
         return '\n'.join(js)
 
     security.declarePublic('getTinyMCEJavaScript')
