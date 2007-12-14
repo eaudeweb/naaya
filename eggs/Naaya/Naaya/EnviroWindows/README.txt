@@ -20,12 +20,11 @@ Zope instance (Products):
     - NaayaCore
     - naayaHotfix
     - Localizer
-    - iHotfix
-    - ExtFile
-    - LocalFS
     - RDFCalendar
     - RDFSummary
 
     *Zope products*
     - TextIndexNG2
     - iHotfix
+    - LocalFS
+    - ExtFile
