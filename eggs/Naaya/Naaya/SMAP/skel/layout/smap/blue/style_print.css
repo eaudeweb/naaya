@@ -153,12 +153,3 @@ td#right_cell2{
 }
 
 .message-information {display: none;}
-
-/*page break for EPOZ*/
-.pbreak {
-	visibility: false;
-	height: 1px;
-	width: 1px;
-	overflow: hidden;
-	page-break-before: always;
-}

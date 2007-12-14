@@ -355,14 +355,6 @@
 	display: none;
 	}
 
-	/*	EPOZ buttons	*/
-	.epoz_button_strikethrough {display:none;}
-	.epoz_button_subscript {display:none;}
-	.epoz_button_superscript {display:none;}
-	.epoz_button_unformat {display:none;}
-	.epoz_button_undo {display:none;}
-	.epoz_button_redo {display:none;}
-
 	/*  Comment box form */
 	.comment_box {
 	background-color:#FAFAFA; 
@@ -784,5 +776,20 @@ tr.not-duplicate {
   border-top: 1px dotted #000;
   padding-top: 0.5em;
 }
+
+ /*	editor style	*/
+.mceEditor {
+	width: 600px;
+	height: 250px;
+}
+.mceEditor-small {
+	width: 300px;
+	height: 150px;
+}
+.mceEditor-big {
+	width: 700px;
+	height: 400px;
+}
+.mceStatusbarPathText { visibility: hidden; }
 
 /* END STYLE */
