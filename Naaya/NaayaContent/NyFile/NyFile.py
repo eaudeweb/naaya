@@ -103,6 +103,11 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
             approved, approved_by = 0, None
         releasedate = self.process_releasedate(releasedate)
         if lang is None: lang = self.gl_get_selected_language()
+        #check if the id is invalid (it is already in use)
+        i = 0
+        while self._getOb(id, None):
+            i += 1
+            id = '%s-%u' % (id, i)
         #create object
         ob = NyFile(id, title, description, coverage, keywords, sortorder, '', precondition, content_type,
             downloadfilename, contributor, releasedate, lang)

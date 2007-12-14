@@ -85,12 +85,11 @@ def addNyDocument(self, id='', title='', description='', coverage='', keywords='
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
     releasedate = self.process_releasedate(releasedate)
     if lang is None: lang = self.gl_get_selected_language()
-    #verify if the object already exists
-    try:
-        ob = self._getOb(id)
-        id = '%s-%s' % (id, self.utGenRandomId(5))
-    except AttributeError:
-        pass
+    #check if the id is invalid (it is already in use)
+    i = 0
+    while self._getOb(id, None):
+        i += 1
+        id = '%s-%u' % (id, i)
     #create object
     ob = NyDocument(id, title, description, coverage, keywords, sortorder, body,
         contributor, releasedate, lang)

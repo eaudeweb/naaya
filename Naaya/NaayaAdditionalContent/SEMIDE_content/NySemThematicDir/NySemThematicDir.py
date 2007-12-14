@@ -134,6 +134,11 @@ def addNySemThematicDir(self, id='', title='', description='', coverage='', keyw
             approved, approved_by = 0, None
         releasedate = self.process_releasedate(releasedate)
         criteria_date = self.process_releasedate(criteria_date)
+        #check if the id is invalid (it is already in use)
+        i = 0
+        while self._getOb(id, None):
+            i += 1
+            id = '%s-%u' % (id, i)
         #create object
         ob = NySemThematicDir(id, title, description, coverage,
                     keywords, criteria_keywords, sortorder, publicinterface, maintainer_email, contributor,

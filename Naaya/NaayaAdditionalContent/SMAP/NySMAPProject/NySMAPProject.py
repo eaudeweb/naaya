@@ -113,6 +113,11 @@ def addNySMAPProject(self, id='', title='', description='', coverage='', keyword
         for x in focus:
             res[x.split('|@|')[0]] = ''
         priority_area = res.keys()
+        #check if the id is invalid (it is already in use)
+        i = 0
+        while self._getOb(id, None):
+            i += 1
+            id = '%s-%u' % (id, i)
         #create object
         ob = NySMAPProject(id, title, description, coverage, keywords, country, contact, donor, links, organisation,
                     location, main_issues, tools, budget, timeframe, priority_area, focus, sortorder, 

@@ -106,6 +106,11 @@ def addNySemOrganisation(self, id='', title='', description='', coverage='', key
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
         releasedate = self.process_releasedate(releasedate)
         if lang is None: lang = self.gl_get_selected_language()
+        #check if the id is invalid (it is already in use)
+        i = 0
+        while self._getOb(id, None):
+            i += 1
+            id = '%s-%u' % (id, i)
         #create object
         ob = NySemOrganisation(id, title, description, coverage, keywords, sortorder,
             org_type, address, org_url, contact_title, contact_firstname,

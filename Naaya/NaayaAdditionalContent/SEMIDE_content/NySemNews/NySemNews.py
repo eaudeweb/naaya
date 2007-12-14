@@ -115,6 +115,11 @@ def addNySemNews(self, id='', creator='', creator_email='', contact_person='', c
         releasedate = self.process_releasedate(releasedate)
         subject = self.utConvertToList(subject)
         if lang is None: lang = self.gl_get_selected_language()
+        #check if the id is invalid (it is already in use)
+        i = 0
+        while self._getOb(id, None):
+            i += 1
+            id = '%s-%u' % (id, i)
         #create object
         ob = NySemNews(id, creator, creator_email, contact_person, contact_email,
             contact_phone, rights, title, news_type, file_link, file_link_local, 
