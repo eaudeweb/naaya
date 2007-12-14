@@ -173,7 +173,7 @@ class NyFeed:
         if type(value) == type(u''): value = value
         return value
 
-    def harvest_feed(self, http_proxy):
+    def harvest_feed(self, http_proxy=None):
         """
         Handles the feed grabbing and parsing.
         """
