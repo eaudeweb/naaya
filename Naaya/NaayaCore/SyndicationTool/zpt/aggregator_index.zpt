@@ -1,0 +1,26 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+
+<p class="form-help">
+	Aggregator data.
+</p>
+
+<h3 i18n:translate="">Remote channels aggregator</h3>
+<strong i18n:translate="">Title</strong>: <span tal:replace="here/title" /><br />
+<strong i18n:translate="">Description</strong>: <span tal:replace="here/description" /><br />
+<strong i18n:translate="">Channels</strong>: <span tal:replace="python:[ch.id for ch in here.get_channels()]" /><br />
+
+<h3 i18n:translate="">Items</h3>
+<tal:block tal:repeat="channel here/getRemoteChannelsItems">
+	<tal:block tal:repeat="item channel">
+		<h4><a tal:attributes="href python:item['link']" tal:content="python:item['title']" /></h4>
+		<ul>
+			<li tal:repeat="key python:item.keys()">
+				<strong tal:content="key" />
+				<div tal:content="python:item[key]">
+				</div>
+			</li>
+		</ul>
+	</tal:block>
+</tal:block>
+<span tal:replace="structure here/manage_page_footer" />
