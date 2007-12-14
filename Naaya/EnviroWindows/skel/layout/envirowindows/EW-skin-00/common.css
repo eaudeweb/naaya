@@ -814,3 +814,18 @@ tr.not-duplicate {
 	background: #000;
 	font-size: 0.90em;
 }
+
+/*	editor style	*/
+.mceEditor {
+	width: 600px;
+	height: 250px;
+}
+.mceEditor-small {
+	width: 300px;
+	height: 150px;
+}
+.mceEditor-big {
+	width: 700px;
+	height: 400px;
+}
+.mceStatusbarPathText { visibility: hidden; }
