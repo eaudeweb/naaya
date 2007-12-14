@@ -161,6 +161,16 @@ class portlets_manager:
         content = portlet_ob.document_src().replace('PORTLET_REMOTECHANNEL_ID', channel_ob.id)
         portlet_ob.pt_edit(text=content, content_type='text/html')
 
+    #remote channels aggregator
+    def create_portlet_for_remotechannels_aggregator(self, aggregator_ob):
+        #create a portlet for this aggregator using the specific template, TYPE = 7
+        portlets_ob = self.getPortletsTool()
+        portlet_id = '%s%s' % (PREFIX_PORTLET, aggregator_ob.id)
+        portlets_ob.addPortlet(portlet_id, aggregator_ob.title_or_id(), 7)
+        portlet_ob = portlets_ob._getOb(portlet_id)
+        content = portlet_ob.document_src().replace('PORTLET_AGGREGATOR_ID', aggregator_ob.id)
+        portlet_ob.pt_edit(text=content, content_type='text/html')
+
     #local channel
     def create_portlet_for_localchannel(self, channel_ob):
         #create a portlet for this channel using the specific template, TYPE = 3

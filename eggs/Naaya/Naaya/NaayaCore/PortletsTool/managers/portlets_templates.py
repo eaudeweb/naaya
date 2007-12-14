@@ -33,6 +33,7 @@ PORTLETS_TYPES = {
     4: 'Folder',
     5: 'Script channel',
     6: 'Remote channel facade',
+    7: 'Remote channel aggregator',
     99: 'Other',
     100: 'Special'
 }
@@ -115,6 +116,23 @@ SCRIPTCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.g
 </tal:block>
 </tal:block>'''
 
+CHANNEL_AGGREGATOR_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"><span tal:content="python:here.getSyndicationTool().PORTLET_AGGREGATOR_ID.title_or_id()" /></tal:block>
+<tal:block metal:fill-slot="portlet_content">
+	<ul>
+		<tal:block tal:repeat="channel python:here.getSyndicationTool().PORTLET_AGGREGATOR_ID.getRemoteChannelsItems()">
+			<li tal:repeat="item channel" ><a tal:attributes="href python:item['link']" tal:content="python:item['title']" /></li>
+		</tal:block>
+	</ul>
+	<div style="text-align: right;">
+	<a tal:attributes="href string:${here/absolute_url}/channel_details_html?id_channel=PORTLET_AGGREGATOR_ID">
+		<span i18n:translate="">More...</span>
+	</a>
+	</div>
+</tal:block>
+</tal:block>'''
+
+
 PORTLETS_BODIES = {
     0: HTML_PORTLET_TEMPLATE,
     1: LINKSLIST_PORTLET_TEMPLATE,
@@ -123,6 +141,7 @@ PORTLETS_BODIES = {
     4: FOLDER_PORTLET_TEMPLATE,
     5: SCRIPTCHANNEL_PORTLET_TEMPLATE,
     6: REMOTECHANNEL_PORTLET_TEMPLATE,
+    7: CHANNEL_AGGREGATOR_PORTLET_TEMPLATE,
     99: SIMPLE_PORTLET_TEMPLATE,
     100: SIMPLE_PORTLET_TEMPLATE
 }
