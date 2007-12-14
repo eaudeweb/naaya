@@ -38,7 +38,7 @@ class NyImageContainer(Acquisition.Implicit):
         i = 0
         while self.storage._getOb(id, None):
             i += 1
-            id = '%s_%u' % (id, i)
+            id = '%s-%u' % (id, i)
         manage_addImage(self.storage, id, file, title)
         self._redirectBack(REQUEST)
 
