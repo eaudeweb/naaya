@@ -690,21 +690,6 @@ ul.nostyle li {
 	width: auto;
 }
 
-/*page break for EPOZ*/
-.pbreak {
-	display: none;
-}
-body.visualFontSizeCorrection { 
-	background-image: none;
-}
-body.visualFontSizeCorrection .pbreak {
-	display: block;
-	margin: 0.5em;
-	border:1px dotted blue;
-	color: blue;
-}
-
-
 div ul.proj_projects {
 	border:1px dashed #999999;
 	height: 9.6em;

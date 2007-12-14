@@ -17,13 +17,11 @@ Zope server (site-packages):
 
 Zope instance (Products):
     *EIONET SVN*
-    - Epoz
     - Naaya
     - NaayaBase
     - NaayaContent
     - NaayaCore
     - naayaHotfix
-    - SMAP
     - Localizer
     - RDFCalendar
     - RDFSummary
@@ -31,3 +29,6 @@ Zope instance (Products):
     *Zope products*
     - TextIndexNG2
     - iHotfix
+    - ZSyncer
+    - ExtFile
+    - LocalFS
