@@ -95,6 +95,11 @@ def addNySemFunding(self, id='', title='', description='', coverage='', keywords
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
         releasedate = self.process_releasedate(releasedate)
         if lang is None: lang = self.gl_get_selected_language()
+        #check if the id is invalid (it is already in use)
+        i = 0
+        while self._getOb(id, None):
+            i += 1
+            id = '%s-%u' % (id, i)
         #create object
         ob = NySemFunding(id, title, description, coverage, keywords, sortorder,
                 funding_source, funding_programme, funding_type, funding_rate,

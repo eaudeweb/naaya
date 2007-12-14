@@ -88,12 +88,11 @@ def addNyBlogEntry(self, id='', title='', description='', coverage='', keywords=
     updated_date = self.utConvertStringToDateTimeObj(updated_date)
 
     if lang is None: lang = self.gl_get_selected_language()
-    #verify if the object already exists
-    try:
-        ob = self._getOb(id)
-        id = '%s-%s' % (id, self.utGenRandomId(5))
-    except AttributeError:
-        pass
+    #check if the id is invalid (it is already in use)
+    i = 0
+    while self._getOb(id, None):
+        i += 1
+        id = '%s-%u' % (id, i)
     #create object
     ob = NyBlogEntry(id, title, description, coverage, keywords, sortorder, content, updated_date, contributor, releasedate, lang)
     self.gl_add_languages(ob)

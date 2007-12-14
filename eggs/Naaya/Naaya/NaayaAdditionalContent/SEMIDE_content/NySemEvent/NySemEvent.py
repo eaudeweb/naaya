@@ -128,6 +128,11 @@ def addNySemEvent(self, id='', title='', description='', coverage='',
         releasedate = self.process_releasedate(releasedate)
         subject = self.utConvertToList(subject)
         if lang is None: lang = self.gl_get_selected_language()
+        #check if the id is invalid (it is already in use)
+        i = 0
+        while self._getOb(id, None):
+            i += 1
+            id = '%s-%u' % (id, i)
         #create object
         ob = NySemEvent(id, title, description, coverage, keywords, sortorder,
             creator, creator_email, topitem, event_type, source, source_link,

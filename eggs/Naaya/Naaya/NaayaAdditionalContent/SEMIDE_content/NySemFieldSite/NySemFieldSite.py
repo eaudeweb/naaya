@@ -92,6 +92,11 @@ def addNySemFieldSite(self, id='', title='', description='', coverage='', keywor
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
         releasedate = self.process_releasedate(releasedate)
         if lang is None: lang = self.gl_get_selected_language()
+        #check if the id is invalid (it is already in use)
+        i = 0
+        while self._getOb(id, None):
+            i += 1
+            id = '%s-%u' % (id, i)
         #create object
         ob = NySemFieldSite(id, title, description, coverage, keywords, sortorder,
                 fieldsite_rb, fieldsite_loc, contributor, releasedate, lang)

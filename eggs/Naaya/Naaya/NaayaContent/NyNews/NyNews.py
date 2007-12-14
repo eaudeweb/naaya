@@ -103,12 +103,11 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
     if not len(r):
         #process parameters
         if lang is None: lang = self.gl_get_selected_language()
-        #verify if the object already exists
-        try:
-            ob = self._getOb(id)
-            id = '%s-%s' % (id, self.utGenRandomId(5))
-        except AttributeError:
-            pass
+        #check if the id is invalid (it is already in use)
+        i = 0
+        while self._getOb(id, None):
+            i += 1
+            id = '%s-%u' % (id, i)
         if self.glCheckPermissionPublishObjects():
             approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
         else:

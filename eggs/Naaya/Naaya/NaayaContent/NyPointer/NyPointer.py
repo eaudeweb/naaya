@@ -95,12 +95,11 @@ def addNyPointer(self, id='', title='', description='', coverage='', keywords=''
             approved, approved_by = 0, None
         releasedate = self.process_releasedate(releasedate)
         if lang is None: lang = self.gl_get_selected_language()
-        #verify if the object already exists
-        try:
-            ob = self._getOb(id)
-            id = '%s-%s' % (id, self.utGenRandomId(5))
-        except AttributeError:
-            pass
+        #check if the id is invalid (it is already in use)
+        i = 0
+        while self._getOb(id, None):
+            i += 1
+            id = '%s-%u' % (id, i)
         #create object
         ob = NyPointer(id, title, description, coverage, keywords, sortorder, pointer,
             contributor, releasedate, lang)

@@ -121,12 +121,11 @@ def addNyEvent(self, id='', title='', description='', coverage='',
         start_date = self.utConvertStringToDateTimeObj(start_date)
         end_date = self.utConvertStringToDateTimeObj(end_date)
         releasedate = self.process_releasedate(releasedate)
-        #verify if the object already exists
-        try:
-            ob = self._getOb(id)
-            id = '%s-%s' % (id, self.utGenRandomId(5))
-        except AttributeError:
-            pass
+        #check if the id is invalid (it is already in use)
+        i = 0
+        while self._getOb(id, None):
+            i += 1
+            id = '%s-%u' % (id, i)
         #create object
         ob = NyEvent(id, title, description, coverage, keywords, sortorder,
             location, location_address, location_url, start_date, end_date, host, agenda_url,

@@ -110,6 +110,11 @@ def addNySemTextLaws(self, id='', title='', description='', coverage='', keyword
         releasedate = self.process_releasedate(releasedate)
         subject = self.utConvertToList(subject)
         if lang is None: lang = self.gl_get_selected_language()
+        #check if the id is invalid (it is already in use)
+        i = 0
+        while self._getOb(id, None):
+            i += 1
+            id = '%s-%u' % (id, i)
         #create object
         ob = NySemTextLaws(id, title, description, coverage, keywords, sortorder, source, source_link,
             subject, relation, geozone, file_link, file_link_local, official_journal_ref, type_law,
