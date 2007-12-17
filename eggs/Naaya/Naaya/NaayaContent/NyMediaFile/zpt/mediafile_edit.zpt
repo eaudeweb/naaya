@@ -46,11 +46,6 @@ Example:
 	The government is implementing a new policy...
 </pre>
 </div>
-<div class="field" tal:define="editor here/getEditorTool">
-	<label for="description"><span i18n:translate="" tal:omit-tag="">Description</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'description')" class="mandatory_field"> *</span></label>
-	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', here.getVersionLocalProperty('description', curr_lang))" />
-</div>
-
 <div class="field">
 	<label for="subtitle"><span i18n:translate="" tal:omit-tag="">Subtitle</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'subtitle')" class="mandatory_field"> *</span></label>
 	<p i18n:translate=""><strong>Tip:</strong> you can edit subtitle in text area below or upload it from a local file.</p>
