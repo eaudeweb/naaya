@@ -140,12 +140,12 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             results = portal_ob.getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=show, path=path)
             for res in results:
                 if res.latitude != 0.0 and res.longitude != 0.0:
-                    ra('%s|%s|mk_%s|%s|%s' % (res.latitude, res.longitude, res.id, self.utToUtf8(res.title_or_id()), 'mk_%s' % res.geo_type))
+                    ra('%s|%s|mk_%s|%s|%s' % (res.latitude, res.longitude, res.id, res.title_or_id(), 'mk_%s' % res.geo_type))
                     t.append(res.marker_html())
         i = ''.join(t)
         #self.delSession(MSP_SESSION_KEY)
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
-        return '%s\n\n%s' % ('\n'.join(r), i)
+        return '%s\n\n%s' % ('\n'.join(r), self.utToUnicode(i))
 
     security.declareProtected(view, 'xrjs_simple_feed')
     def xrjs_simple_feed(self, key, show, REQUEST):
@@ -155,7 +155,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         ob = self.unrestrictedTraverse('%s' % show)
         if ob:
             if ob.latitude != 0.0 and ob.longitude != 0.0:
-                res = '%s|%s|%s' % (ob.latitude, ob.longitude, self.utToUtf8(ob.title_or_id()))
+                res = '%s|%s|%s' % (ob.latitude, ob.longitude, ob.title_or_id())
         #self.delSession(MSP_SESSION_KEY)
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
         return res
