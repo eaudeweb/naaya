@@ -94,6 +94,7 @@ class EditorTool(Folder):
         is_rtl = self.isRTL(lang)
         if lang not in self._getTinyMCELanguages():
             lang = self._getTinyMCEDefaultLang()
+        doc_url = self.REQUEST['URLPATH1'].lstrip('/')
 
         #render the javascript
         tinymce_js_file = "tiny_mce_gzip.js"
@@ -114,7 +115,7 @@ class EditorTool(Folder):
         jsappend('</script>')
 
         jsappend('<script type="text/javascript">')
-        jsappend('nyFileBrowserCallBack = getNyFileBrowserCallBack("%s")' % (self.REQUEST['URLPATH1'].lstrip('/'),))
+        jsappend('nyFileBrowserCallBack = getNyFileBrowserCallBack("%s")' % (doc_url,))
         jsappend('</script>')
 
         jsappend('<script type="text/javascript">')
@@ -123,7 +124,9 @@ class EditorTool(Folder):
         if is_rtl:
             jsappend('directionality:"rtl",')
         [ jsappend('%s: "%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
-        jsappend('document_base_url:"%s/"' % self.getSitePath())
+        doc = self.restrictedTraverse(doc_url)
+        if not doc.imageContainer.relative:
+            jsappend('document_base_url:"%s/"' % self.getSitePath())
         jsappend('});')
         jsappend('</script>')
         return '\n'.join(js)
