@@ -2700,9 +2700,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     #pluggable meta types properties
     def get_pluggable_item_properties_ids(self, meta_type):
+        if meta_type in ('Naaya Folder',):
+            #XXX: Hardcoded
+            return ['title', 'description', 'coverage', 'keywords', 'sortorder',
+                    'releasedate', 'maintainer_email']
         if self.is_pluggable_item_installed(meta_type):
             return get_pluggable_content().get(meta_type, None)['properties'].keys()
-        return {}
+        return []
 
     def get_pluggable_item_properties_item(self, meta_type, prop):
         return get_pluggable_content().get(meta_type, None)['properties'][prop]
@@ -3040,7 +3044,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         # Update session info
         from_lang = kwargs.get('from_lang', None)
         lang = kwargs.get('lang', None)
-        context = doc.hasVersion() and doc.version or doc
+        
+        version = getattr(doc, 'hasVersion', None) and doc.hasVersion()
+        context = version and doc.version or doc
         for key, value in kwargs.items():
             value = context.getPropertyValue(key, from_lang)
             if not value:

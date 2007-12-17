@@ -36,26 +36,58 @@ function fSet(ctrl, value)
 // -->
 </script>
 
-<form name="frmEdit" method="post" action="saveProperties">
-<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
-	<tal:block tal:repeat="language languages">
-		<div class="current" tal:condition="python:language['code'] == curr_lang">
-			<span tal:content="python:language['name']" />
-		</div>
-		<a tal:condition="python:language['code'] != curr_lang"
-			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
-			<span tal:content="python:language['name']" />
-		</a>
-	</tal:block>
+<form name="frmEdit" method="post" action=".">
+<!-- Translation bar on top -->
+<div class="translate">
+	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['update_from_version']" />
+	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['translation_bar']" />
 </div>
+
+<tal:comment condition="nothing">
+	XXX Support these features in versions, too.
+</tal:comment>
+<!-- Switch content language box -->
+<div style="display:none" i18n:translate="" id="confirmSwMessage">
+  This action will move current translation to selected one.
+  The target translation will be lost. Are you sure?
+</div>
+<script type="text/javascript">
+<!--
+var swMsg = document.getElementById('confirmSwMessage').innerHTML;
+//-->
+</script>
+<fieldset class="edit_right_box" tal:define="
+	site here/getSite;
+	curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
+	curr_lang_label python:here.get_language_name(curr_lang);"
+	tal:condition="python:len(languages) > 1 and getattr(site, 'switch_language', 0)">
+	<legend i18n:translate="">Choose correct language</legend>
+	<label for="switch_to" i18n:translate="">Mark as</label>
+	<select name="switch_to" id="switch_to">
+		<tal:block repeat="language languages">
+		<option tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="value language/code"
+			tal:content="language/name" />
+		</tal:block>
+	</select>
+	<input type="submit" name="switchToLanguage:method"
+		onclick="javascript:return window.confirm(swMsg)"
+		value="Ok" i18n:attributes="value"/>
+	<p>
+		<span i18n:translate="">The text currently displayed is marked as</span>
+		<strong tal:content="curr_lang_label" />.
+		<span i18n:translate="">If this is not the case, choose the right language and click Ok.</span>
+	</p>
+</fieldset>
+
 <div class="field">
 	<label for="title" i18n:translate="">Title</label>
-	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getLocalProperty('title', curr_lang)" />
+	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', here.getLocalProperty('title', curr_lang))" />
 </div>
 <div class="field" tal:define="editor here/getEditorTool">
 	<label for="description" i18n:translate="">Description</label>
 	<span tal:replace="structure python:editor.render(curr_lang)" />
-	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getLocalProperty('description', curr_lang)" />
+	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', here.getLocalProperty('description', curr_lang))" />
 </div>
 <div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
 	<label for="coverage" i18n:translate="">Geographical coverage</label>
@@ -65,7 +97,7 @@ function fSet(ctrl, value)
 	<tal:block tal:condition="python:coverage_glossary is not None">
 		<p i18n:translate=""><strong>Tip:</strong> you can type free text in the field below or pick words from the list. In order to specify more values, separate them by commas.</p>
 	</tal:block>
-	<input type="text" name="coverage:utf8:ustring" id="coverage" size="50" tal:attributes="value python:here.getLocalProperty('coverage', curr_lang)" />
+	<input type="text" name="coverage:utf8:ustring" id="coverage" size="50" tal:attributes="value python:here.getSession('coverage', here.getLocalProperty('coverage', curr_lang))" />
 	<tal:block tal:condition="python:coverage_glossary is not None">
 		<label for="pick-coverage" class="invisible" i18n:translate="">Pick coverage</label><input type="button" value="Pick" id="pick-coverage" tal:attributes="onclick string:javascript:fPick('${coverage_glossary/absolute_url}/GlossMap_html?ctrl=coverage&amp;lang=${curr_lang}');" />
 	</tal:block>
@@ -75,26 +107,26 @@ function fSet(ctrl, value)
 	<tal:block tal:condition="python:keywords_glossary is not None">
 		<p><strong>Tip:</strong> you can type free text in the field below or pick words from the list</p>
 	</tal:block>
-	<input type="text" name="keywords:utf8:ustring" id="keywords" size="50" tal:attributes="value python:here.getLocalProperty('keywords', curr_lang)" />
+	<input type="text" name="keywords:utf8:ustring" id="keywords" size="50" tal:attributes="value python:here.getSession('keywords', here.getLocalProperty('keywords', curr_lang))" />
 	<tal:block tal:condition="python:keywords_glossary is not None">
 		<label for="pick-keywords" class="invisible">Pick keywords</label><input type="button" value="Pick" id="pick-keywords" tal:attributes="onclick string:javascript:fPick('${keywords_glossary/absolute_url}/GlossMap_html?ctrl=keywords&amp;lang=${curr_lang}');" />
 	</tal:block>
 </div>
-<div class="field">
+<div class="field" tal:define="sortorder here/sortorder|python:0">
 	<label for="sortorder" i18n:translate="">Sort order</label>
-	<input type="text" name="sortorder" id="sortorder" size="2" tal:attributes="value here/sortorder" />
+	<input type="text" name="sortorder" id="sortorder" size="2" tal:attributes="value python:here.getSession('sortorder', sortorder)" />
 </div>
 <div class="field">
 	<label for="releasedate"><span tal:omit-tag="" i18n:translate="">Release date</span> <noscript>(<em i18n:translate="">dd/mm/yyyy</em>)</noscript></label>
-	<input type="text" name="releasedate" class="vDateField" id="releasedate" size="20" tal:attributes="value python:here.utConvertDateTimeObjToString(here.releasedate)" />
+	<input type="text" name="releasedate" class="vDateField" id="releasedate" size="20" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.releasedate))" />
 </div>
 <div class="field-inline">
 	<label for="discussion" i18n:translate="">Open for comments</label>
 	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked here/is_open_for_comments" />
 </div>
-<div class="field">
+<div class="field" tal:define="maintainer_email here/maintainer_email|string:">
 	<label for="maintainer_email" i18n:translate="">Maintainer email</label>
-	<input type="text" name="maintainer_email:utf8:ustring" id="maintainer_email" size="50" tal:attributes="value here/maintainer_email" />
+	<input type="text" name="maintainer_email:utf8:ustring" id="maintainer_email" size="50" tal:attributes="value python:here.getSession('maintainer_email', maintainer_email)" />
 </div>
 <div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
 	<label tal:attributes="for record/id" i18n:translate=""><span tal:replace="record/name" /></label>
@@ -102,21 +134,16 @@ function fSet(ctrl, value)
 </div>
 <div class="field">
 	<input type="hidden" name="lang" tal:attributes="value curr_lang" />
-	<input type="submit" value="Save changes" i18n:attributes="value" />
+	<input type="submit" value="Save changes" i18n:attributes="value" name="saveProperties:method"/>
+</div>
+
+<!-- Translation bar on bottom -->
+<div class="translate">
+	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['translation_bar']" />
 </div>
 </form>
 
-<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
-	<tal:block tal:repeat="language languages">
-		<div class="current" tal:condition="python:language['code'] == curr_lang">
-			<span tal:content="python:language['name']" />
-		</div>
-		<a tal:condition="python:language['code'] != curr_lang"
-			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
-			<span tal:content="python:language['name']" />
-		</a>
-	</tal:block>
-</div>
 </tal:block>
 
+<span tal:content="python:here.del_pluggable_item_session(here.meta_type)" tal:omit-tag="" />
 <tal:block tal:replace="structure here/standard_html_footer"/>

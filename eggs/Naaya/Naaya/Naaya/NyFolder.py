@@ -762,7 +762,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         if approved: approved = 1
         else: approved = 0
         releasedate = self.process_releasedate(releasedate, self.releasedate)
-        lang = self.gl_get_selected_language()
+        lang = kwargs.get('lang', self.gl_get_selected_language())
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
         self._setLocalPropValue('coverage', lang, coverage)
