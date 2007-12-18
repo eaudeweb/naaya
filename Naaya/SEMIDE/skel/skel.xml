@@ -3,10 +3,8 @@
 	<forms>
 		<form id="folder_basketofapprovals" title="NyFolder basket of approvals"/>
 		<form id="document_index" title=""/>
-		<form id="file_edit" title=""/>
 		<form id="file_index" title=""/>
 		<form id="languages_box" title="Box for changing the language on pages"/>
-		<form id="folder_edit" title=""/>
 		<form id="folder_index" title=""/>
 		<form id="folder_linkchecker" title="NyFolder link checker"/>
 		<form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
@@ -18,7 +16,6 @@
 		<form id="site_index" title=""/>
 		<form id="site_login" title=""/>
 		<form id="site_macro_add" title=""/>
-		<form id="site_macro_edit" title=""/>
 		<form id="site_requestrole" title=""/>
 		<form id="site_search" title=""/>
 		<form id="site_search_advanced" title="Portal advanced search"/>

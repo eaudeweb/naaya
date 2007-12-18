@@ -1414,5 +1414,42 @@ div>ul.proj_projects {
 	max-height: 16.2em;
 }
 
+/* Media file style sheet
+*/
+.flvPlayer {
+}
+
+.flvPlayerBroken {
+  width: 450px;
+  overflow: auto;
+  background-color: #000000;
+  color: #ffffff;
+  text-align: center;
+  font-size: 107%;
+  font-weight: bold;
+  padding: 150px 0 150px 0;
+}
+
+.flvPlayerNotReady {
+  width: 450px;
+  overflow: auto;
+  background-color: #000000;
+  color: #ffffff;
+  text-align: center;
+  font-size: 107%;
+  font-weight: bold;
+  padding: 150px 0 150px 0;
+}
+
+.flashPlayerNotInstalled {
+  width: 450px;
+  overflow: auto;
+  background-color: #000000;
+  color: #ffffff;
+  text-align: center;
+  font-size: 107%;
+  font-weight: bold;
+  padding: 150px 0 150px 0;
+}
 
 
