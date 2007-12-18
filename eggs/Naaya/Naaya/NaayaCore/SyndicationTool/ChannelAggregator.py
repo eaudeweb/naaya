@@ -48,6 +48,11 @@ class ChannelAggregator(SimpleItem):
         self.channels = channels
         self.description = description
 
+    def manage_beforeDelete(self, item, container):
+        """ This method is called, when the object is deleted. """
+        SimpleItem.inheritedAttribute('manage_beforeDelete')(self, item, container)
+        self.delete_portlet_for_object(item)
+
     #api
     def getRemoteChannelsItems(self):
         #returns a list with all the item data from each remote channel
