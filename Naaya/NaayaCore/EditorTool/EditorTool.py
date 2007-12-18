@@ -87,41 +87,49 @@ class EditorTool(Folder):
     def _getTinyMCEDefaultLang(self):
         return 'en'
 
-    def render(self, lang=None, **kwargs):
-        """ return the HTML necessary to run the TinyMCE """
-        #language negotiations
+    def _getTinyMCELang(self, lang=None):
+        """Return the language that should be used by TinyMCE.
+
+            If the desired language is unsupported by TinyMCE,
+            another language will be chosen.
+            @param lang: language to use; if None, use the
+                         language of the portal
+        """
         if lang is None: lang = self.gl_get_selected_language()
-        is_rtl = self.isRTL(lang)
         if lang not in self._getTinyMCELanguages():
             lang = self._getTinyMCEDefaultLang()
-        doc_url = self.REQUEST['URLPATH1'].lstrip('/')
+        return lang
 
-        #render the javascript
-        tinymce_js_file = "tiny_mce_gzip.js"
+    def includeLibs(self, lang=None):
+        """Return HTML code that includes the TinyMCE JavaScript libraries."""
         tinymce = self._getTinyMCEInstance()
+        doc_url = self.REQUEST['URLPATH1'].lstrip('/')
         js = []
         jsappend = js.append
-        jsappend('<script type="text/javascript" src="%s/%s"></script>' % (tinymce.jscripts.tiny_mce.absolute_url(), tinymce_js_file))
-
-        #jsappend('content_css:"%s/style_css",' % self.absolute_url())
-
+        jsappend('<script type="text/javascript" src="%s/%s"></script>' % (tinymce.jscripts.tiny_mce.absolute_url(), 'tiny_mce_gzip.js'))
         jsappend('<script type="text/javascript">')
         jsappend('tinyMCE_GZ.init({')
         jsappend('page_name: "%s/getTinyMCEJavaScript",' % self.absolute_url())
         jsappend('plugins: "%s",' %  ','.join(self.configuration['plugins']))
         jsappend('themes: "%s",' %  ','.join(self.configuration['theme']))
-        jsappend('languages: "%s"' % lang)
+        jsappend('languages: "%s"' % self._getTinyMCELang(lang))
         jsappend('});')
         jsappend('</script>')
-
         jsappend('<script type="text/javascript">')
         jsappend('nyFileBrowserCallBack = getNyFileBrowserCallBack("%s")' % (doc_url,))
         jsappend('</script>')
+        return '\n'.join(js)
 
+    def render(self, lang=None, **kwargs):
+        """ return the HTML necessary to run the TinyMCE """
+        doc_url = self.REQUEST['URLPATH1'].lstrip('/')
+        lang = self._getTinyMCELang(lang)
+        js = []
+        jsappend = js.append
         jsappend('<script type="text/javascript">')
         jsappend('tinyMCE.init({')
         jsappend('language:"%s",' % lang)
-        if is_rtl:
+        if self.isRTL(lang):
             jsappend('directionality:"rtl",')
         [ jsappend('%s: "%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
         doc = self.restrictedTraverse(doc_url)
