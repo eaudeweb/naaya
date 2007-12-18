@@ -2180,6 +2180,31 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addremotechannels_aggregator')
+    def admin_addremotechannels_aggregator(self, title='', channels=[], portlet='', description='', REQUEST=None):
+        """ """
+        self.getSyndicationTool().manage_addChannelAggregator('', title, channels, portlet, description)
+        
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_aggregators_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editremotechannels_aggregator')
+    def admin_editremotechannels_aggregator(self, id='', title='', channels=[], description='', REQUEST=None):
+        """ """
+        self.getSyndicationTool().get_channel(id).manageProperties(title, channels, description)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_aggregators_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_deleteremotechannel')
+    def admin_deleteremotechannels_aggregator(self, ids=[], REQUEST=None):
+        """ """
+        self.getSyndicationTool().manage_delObjects(self.utConvertToList(ids))
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_remotechannels_aggregators_html' % self.absolute_url())
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addlocalchannel')
     def admin_addlocalchannel(self, title='', description='', language=None, type=None, objmetatype=[], numberofitems='', portlet='', REQUEST=None):
         """ """
@@ -2480,6 +2505,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def admin_remotechannels_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_remotechannels')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_remotechannels_aggregators_html')
+    def admin_remotechannels_aggregators_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_remotechannels_aggregators')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_leftportlets_html')
     def admin_leftportlets_html(self, REQUEST=None, RESPONSE=None):

@@ -66,6 +66,7 @@
 		<form id="site_admin_maintopics" title="Portal administration - main sections"/>
 		<form id="site_admin_localchannels" title="Portal administration - local channels"/>
 		<form id="site_admin_remotechannels" title="Portal administration - remote channels"/>
+		<form id="site_admin_remotechannels_aggregators" title="Portal administration - remote channels aggregators"/>
 		<form id="site_admin_leftportlets" title="Portal administration - left portlets section"/>
 		<form id="site_admin_frontportlets" title="Portal administration - front portlets section"/>
 		<form id="site_admin_rightportlets" title="Portal administration - right portlets section"/>
