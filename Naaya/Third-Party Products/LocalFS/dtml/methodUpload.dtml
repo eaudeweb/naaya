@@ -1,0 +1,55 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<p class="form-help">
+You may upload a file using the form below.  
+Choose an existing file from your local computer by clicking the
+<em>Browse</em> button.
+
+<form action="manage_upload" method="post" enctype="multipart/form-data">
+<table border="0" cellpadding="0" cellspacing="2">
+<tr>
+  <td align="left" valign="top">
+    <div class="form-label">
+    File
+    </div>
+  </td>
+  <td align="left" valign="top">
+  <input type="file" name="file" size="25"/>
+  </td>
+</tr>
+<tr>
+<td></td>
+<td>
+  <br/>
+  <input class="form-element" type="submit" value="Add"/>
+</td>
+</tr>
+</table>
+</form>
+
+<p class="form-help">
+You can also create new directories relative to the base path of the file
+system object using the form below.
+</p>
+
+<form action="manage_createDirectory" method="post">
+<table border="0" cellpadding="0" cellspacing="2">
+<tr>
+  <td align="left" valign="top">
+    <div class="form-label">
+    Path
+    </div>
+  </td>
+  <td align="left" valign="top">
+    <input type="text" name="path" size="25"/>
+  </td>
+  <td>
+    <input class="form-element" type="submit" value="Create Directory"/>
+  </td>
+</tr>
+</table>
+</form>
+StreamingFile used:<dtml-var IteratorsPresent>
+<dtml-var manage_page_footer>
+

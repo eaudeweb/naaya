@@ -1,0 +1,35 @@
+Local File System - Add: Add a Local File System.
+
+  Description
+
+    This view allows you to create a new Local File System.
+
+    Local File System objects allow you to serve files and browse directories 
+    in Zope from the local file system.
+    
+    When you add a Local File System object to a folder, the path to the
+    file system object becomes the "mount point" for the file system. The object
+    has a property called "basepath" which works just like the base path of a
+    regular web server.
+
+    For example, if you create a file system object in the root folder
+    with an id of 'images' and set the base path to '/usr/local/www/images', 
+    then the url http://zopeserver/images/bullet.gif will display the file 
+    /usr/local/www/images/bullet.gif.
+
+  Controls
+
+    'Id' -- The id of the Local File System.
+
+    'Title' -- The optional title of the Local File System.
+
+    'Base Path' -- The path to the directory in the file system where the Local 
+            File System accesses its contents.
+
+    'Username' -- The username for a Windows share that requires login 
+            information (Win32 only).
+
+    'Password' -- The password for a Windows share that requires login 
+            information (Win32 only).
+    
+    'Add' -- Creates a new Local File System.
