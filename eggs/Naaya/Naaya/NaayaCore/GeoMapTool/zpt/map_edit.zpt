@@ -52,10 +52,44 @@
 </tr>
 <tr>
 	<td>
+		<label for="map_width" i18n:translate="">Map width</label>
+	</td>
+	<td>
+		<input type="text" name="map_width" id="map_width" tal:attributes="value here/map_width" size="8" />
+	</td>
+</tr>
+<tr>
+	<td>
+		<label for="map_height" i18n:translate="">Map height</label>
+	</td>
+	<td>
+		<input type="text" name="map_height" id="map_height" tal:attributes="value here/map_height" size="8" />
+	</td>
+</tr>
+
+<tr>
+	<td>
 		<label for="detailed_zoom" i18n:translate="">Detailed zoom</label>
 	</td>
 	<td>
 		<input type="text" name="detailed_zoom" id="detailed_zoom" tal:attributes="value here/detailed_zoom" size="5" />
+	</td>
+</tr>
+<hr />
+<tr>
+	<td>
+		<label for="detailed_map_width" i18n:translate="">Detailed map width</label>
+	</td>
+	<td>
+		<input type="text" name="detailed_map_width" id="detailed_map_width" tal:attributes="value here/detailed_map_width" size="8" />
+	</td>
+</tr>
+<tr>
+	<td>
+		<label for="detailed_map_height" i18n:translate="">Detailed map height</label>
+	</td>
+	<td>
+		<input type="text" name="detailed_map_height" id="detailed_map_height" tal:attributes="value here/detailed_map_height" size="8" />
 	</td>
 </tr>
 <tr>
