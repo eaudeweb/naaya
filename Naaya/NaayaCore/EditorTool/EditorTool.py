@@ -140,6 +140,7 @@ class EditorTool(Folder):
         jsappend('language:"%s",' % lang)
         if self.isRTL(lang):
             jsappend('directionality:"rtl",')
+        # TODO: find a better way (optimized?!) to do this
         if image_support:
             [ jsappend('%s: "%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
         else:
