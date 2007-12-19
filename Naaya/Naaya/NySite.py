@@ -3018,6 +3018,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             form_ob.pt_edit(text=content, content_type='')
         return 'done'
     
+    security.declarePrivate('_getSwitchToLangDenyArgs')
+    def _getSwitchToLangDenyArgs(self, meta_type=""):
+        """ Return a list of keys to deny according with given meta_type
+        """
+        deny_args = ('switch_to', 'from_lang', 'switchToLanguage', 
+                     'file', 'source', 'subtitle_file', 'url',
+                 )
+        if meta_type in ('Naaya GeoPoint',):
+            deny_args = tuple([x for x in deny_args if x != 'url'])
+        
+        return deny_args
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'switchToLanguage')
     def switchToLanguage(self, REQUEST=None, **kwargs):
         """Update session from a given language"""
@@ -3045,14 +3057,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         
         # Create new translation
         kwargs['lang'] = new_lang
-        deny_args = ('switch_to', 'from_lang', 'switchToLanguage', 
-                     'file', 'source', 'subtitle_file',
-                 )
-        if doc.meta_type not in ('Naaya GeoPoint',):
-            deny_args += ('url',)
-        
-        kwargs = dict([(key, value) for key, value in kwargs.items() 
+        deny_args = self._getSwitchToLangDenyArgs(doc.meta_type)
+        kwargs = dict([(key, value) for key, value in kwargs.items()
                        if key not in deny_args])
+        
         doc.manageProperties(**kwargs)
         
         # Return

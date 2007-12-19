@@ -2373,6 +2373,19 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         objects = [x[2] for x in objects]
         return self.getSyndicationTool().syndicateSomething(
             self.absolute_url(), objects)
+    
+    # Customize Naaya switchToLanguage in order to handle Semide content types
+    security.declarePrivate('_getSwitchToLangDenyArgs')
+    def _getSwitchToLangDenyArgs(self, meta_type=""):
+        """ Handle custom semide content types
+        """
+        deny_args = NySite._getSwitchToLangDenyArgs(self, meta_type)
+        if meta_type in ('Naaya Semide Event', 'Naaya Semide Document',
+                         'Naaya Semide Multimedia', 'Naaya Semide News',
+                         'Naaya Semide Text of Laws',
+                         ):
+            deny_args = tuple([x for x in deny_args if x != 'source'])
+        return deny_args
 
 InitializeClass(SEMIDESite)
 
