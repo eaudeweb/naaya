@@ -122,7 +122,7 @@ class EditorTool(Folder):
         jsappend('</script>')
         return '\n'.join(js)
 
-    def render(self, element, lang=None, image_support=False, **kwargs):
+    def render(self, element, lang=None, image_support=False):
         """Return the HTML necessary to run the TinyMCE.
 
             @param element: name of the HTML element that will be converted to TinyMCE;
