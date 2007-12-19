@@ -21,11 +21,11 @@
 	<input type="text" name="location_url:utf8:ustring" id="location_url" size="50" tal:attributes="value python:here.getSession('location_url', 'http://')" />
 </div>
 <div class="field">
-	<label for="start_date"><span i18n:translate="" tal:omit-tag="">Start date <noscript>(<em>dd/mm/yyyy</em>)</noscript></span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'start_date')" class="mandatory_field"> *</span></label>
+	<label for="start_date"><span i18n:translate="" tal:omit-tag="">Start date</span> <noscript>(<em>dd/mm/yyyy</em>)</noscript><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'start_date')" class="mandatory_field"> *</span></label>
 	<input type="text" name="start_date:utf8:ustring" size="10" class="vDateField" id="start_date" tal:attributes="value python:here.getSession('start_date', '')" />
 </div>
 <div class="field">
-	<label for="end_date"><span i18n:translate="" tal:omit-tag="">End date <noscript>(<em>dd/mm/yyyy</em>)</noscript></span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'end_date')" class="mandatory_field"> *</span></label>
+	<label for="end_date"><span i18n:translate="" tal:omit-tag="">End date</span><noscript>(<em>dd/mm/yyyy</em>)</noscript><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'end_date')" class="mandatory_field"> *</span></label>
 	<input type="text" name="end_date:utf8:ustring" size="10" class="vDateField" id="end_date" tal:attributes="value python:here.getSession('end_date', '')" />
 </div>
 <div class="field">

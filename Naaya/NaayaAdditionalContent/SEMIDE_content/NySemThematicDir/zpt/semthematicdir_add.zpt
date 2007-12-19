@@ -27,8 +27,12 @@
 			</tal:block>
 		</select>
 		<div class="field">
-			<label for="criteria_date"><span i18n:translate="" tal:omit-tag="">Display objects released after (<em>dd/mm/yyyy</em>)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'criteria_date')" class="mandatory_field"> *</span></label>
-			<input type="text" name="criteria_date" id="criteria_date" size="20" tal:attributes="value python:here.getSession('criteria_date', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" />
+			<label for="criteria_date">
+				<span i18n:translate="" tal:omit-tag="">Display objects released after</span>
+				<noscript><em i18n:translate="">(dd/mm/yyyy)</em></noscript>
+				<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'criteria_date')" class="mandatory_field"> *</span>
+			</label>
+			<input type="text" name="criteria_date" id="criteria_date" size="20" class="vDateField" tal:attributes="value python:here.getSession('criteria_date', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" />
 		</div>
 		<div class="field" tal:define="keywords_glossary here/get_keywords_glossary">
 			<label for="criteria_keywords"><span i18n:translate="" tal:omit-tag="">Additional keywords</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'criteria_keywords')" class="mandatory_field"> *</span></label>
