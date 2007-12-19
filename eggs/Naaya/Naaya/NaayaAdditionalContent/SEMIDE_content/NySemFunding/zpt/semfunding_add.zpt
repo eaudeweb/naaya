@@ -46,7 +46,7 @@ function fSet(ctrl, value)
 </div>
 <div class="field">
 	<label for="description"><span i18n:translate="" tal:omit-tag="">Description</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'description')" class="mandatory_field"> *</span></label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure editor/render" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description:utf8:ustring')"/>
 	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', '')" />
 </div>
 <div class="field" tal:define="keywords_glossary here/get_keywords_glossary">
