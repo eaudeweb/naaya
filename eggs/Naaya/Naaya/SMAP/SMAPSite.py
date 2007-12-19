@@ -364,6 +364,24 @@ class SMAPSite(NySite, ProfileMeta):
         """ Search projects by country search form """
         return self.getFormsTool().getContent({'here': context, 'country_code': [country_code]}, 'experts_search')
 
+    security.declareProtected(view, 'administration_map_html')
+    def administration_map_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self.REQUEST.PARENTS[0]}, 'folder_administration_map')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_folder_map')
+    def admin_folder_map(self, folder, center_map='', zoom_map='', width_map='', height_map='', REQUEST=None):
+        """ """
+        object = self.restrictedTraverse(folder, None)
+        if object:
+            center_map = center_map or 'Palermo, Italy'
+            zoom_map = zoom_map or 11
+            width_map = width_map or 600
+            height_map = height_map or 300
+            object.manage_changeProperties({'center_map' : center_map, 'zoom_map': zoom_map, 'width_map': width_map, 'height_map': height_map})
+            object._p_changed = 1
+        if REQUEST: return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
 ###
 # Folder export/import
 ######################
