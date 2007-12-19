@@ -92,8 +92,7 @@ class EditorTool(Folder):
 
             If the desired language is unsupported by TinyMCE,
             another language will be chosen.
-            @param lang: language to use; if None, use the
-                         language of the portal
+            @param lang: language to use; default is the language of the portal
         """
         if lang is None: lang = self.gl_get_selected_language()
         if lang not in self._getTinyMCELanguages():
@@ -101,7 +100,10 @@ class EditorTool(Folder):
         return lang
 
     def includeLibs(self, lang=None):
-        """Return HTML code that includes the TinyMCE JavaScript libraries."""
+        """Return HTML code that includes the TinyMCE JavaScript libraries.
+
+            @param lang: language to use; default is the language of the portal
+        """
         tinymce = self._getTinyMCEInstance()
         doc_url = self.REQUEST['URLPATH1'].lstrip('/')
         js = []
@@ -121,7 +123,10 @@ class EditorTool(Folder):
         return '\n'.join(js)
 
     def render(self, lang=None, **kwargs):
-        """ return the HTML necessary to run the TinyMCE """
+        """Return the HTML necessary to run the TinyMCE.
+
+            @param lang: language to use; default is the language of the portal
+        """
         doc_url = self.REQUEST['URLPATH1'].lstrip('/')
         lang = self._getTinyMCELang(lang)
         js = []
@@ -164,7 +169,10 @@ class EditorTool(Folder):
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
-        """ Creates default stuff. """
+        """Loads the default TinyMCE configuration.
+
+            The configuration is loaded from the "config.ini" file.
+        """
         self.manage_addProduct['LocalFS'].manage_addLocalFS('tinymce', '', join(dirname(__file__), 'tinymce'))
 
         config = ConfigParser()
