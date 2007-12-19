@@ -3,7 +3,6 @@
 	<forms>
 		<form id="folder_basketofapprovals" title="NyFolder basket of approvals"/>
 		<form id="document_index" title=""/>
-		<form id="file_index" title=""/>
 		<form id="languages_box" title="Box for changing the language on pages"/>
 		<form id="folder_index" title=""/>
 		<form id="folder_linkchecker" title="NyFolder link checker"/>
