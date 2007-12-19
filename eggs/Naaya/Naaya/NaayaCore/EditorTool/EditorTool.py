@@ -122,10 +122,13 @@ class EditorTool(Folder):
         jsappend('</script>')
         return '\n'.join(js)
 
-    def render(self, lang=None, **kwargs):
+    def render(self, element, lang=None, image_support=False, **kwargs):
         """Return the HTML necessary to run the TinyMCE.
 
+            @param element: name of the HTML element that will be converted to TinyMCE;
+                            the element can be any kind, e.g. textarea or div
             @param lang: language to use; default is the language of the portal
+            @param image_support: if True, the user can add images
         """
         doc_url = self.REQUEST['URLPATH1'].lstrip('/')
         lang = self._getTinyMCELang(lang)
@@ -133,10 +136,18 @@ class EditorTool(Folder):
         jsappend = js.append
         jsappend('<script type="text/javascript">')
         jsappend('tinyMCE.init({')
+        jsappend('elements:"%s",' % element)
         jsappend('language:"%s",' % lang)
         if self.isRTL(lang):
             jsappend('directionality:"rtl",')
-        [ jsappend('%s: "%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
+        if image_support:
+            [ jsappend('%s: "%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
+        else:
+            [ jsappend('%s: "%s",' % (k, ','.join(v))) for k, v in self.configuration.items()
+                                                        if k != "theme_advanced_buttons2" ]
+            L = list(self.configuration['theme_advanced_buttons2'])
+            L.remove('image')
+            jsappend('theme_advanced_buttons2: "%s",' % ','.join(L))
         doc = self.restrictedTraverse(doc_url)
         if not doc.imageContainer.relative:
             jsappend('document_base_url:"%s/"' % self.getSitePath())

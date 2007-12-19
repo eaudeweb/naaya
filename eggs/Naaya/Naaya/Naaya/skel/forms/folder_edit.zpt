@@ -87,7 +87,7 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 </div>
 <div class="field" tal:define="editor here/getEditorTool">
 	<label for="description" i18n:translate="">Description</label>
-	<span tal:replace="structure python:editor.render(curr_lang)" />
+	<span tal:replace="structure python:editor.render('description:utf8:ustring', curr_lang, image_support=True)" />
 	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', here.getLocalProperty('description', curr_lang))" />
 </div>
 <div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
