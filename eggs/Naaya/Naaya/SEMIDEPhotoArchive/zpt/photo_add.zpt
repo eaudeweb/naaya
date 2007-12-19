@@ -27,8 +27,11 @@
 	<input type="text" name="source:utf8:ustring" id="source" size="50" />
 </div>
 <div class="field">
-	<label for="releasedate" i18n:translate="">Release date (<em>dd/mm/yyyy</em>)</label>
-	<input type="text" name="releasedate" id="releasedate" size="20" />
+	<label for="releasedate" i18n:translate="">
+		<span i18n:translate="">Release date</span>
+		<noscript><em i18n:translate="">(dd/mm/yyyy)</em></noscript>
+	</label>
+	<input type="text" name="releasedate" id="releasedate" size="20" class="vDateField" />
 </div>
 <div class="field">
 	<label for="description" i18n:translate="">Description</label>
