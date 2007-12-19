@@ -277,7 +277,7 @@ class NySemThematicDir(NyFolder):
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='', keywords='',
-        criteria_keywords='', sortorder='', publicinterface='', approved='', releasedate='',
+        criteria_keywords='', sortorder='', maintainer_email='', publicinterface='', approved='', releasedate='',
         criteria_date='', discussion='', themes='', lang='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
@@ -298,6 +298,7 @@ class NySemThematicDir(NyFolder):
         self._setLocalPropValue('keywords', lang, keywords)
         self._setLocalPropValue('criteria_keywords', lang, criteria_keywords)
         self.sortorder = sortorder
+        self.maintainer_email = maintainer_email
         self.publicinterface = publicinterface
         self.themes = themes
         self.approved = approved
