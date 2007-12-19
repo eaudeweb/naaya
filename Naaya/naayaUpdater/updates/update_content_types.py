@@ -75,15 +75,15 @@ CONTENT_TYPES = [{'id':'text/plain', 'title':'TXT', 'picture':'txt.png'},
     ]
 
 class CustomContentUpdater(NaayaContentUpdater):
-    """ Add frontpicture attribute to Naaya Stories"""
+    """ Add new content types and icons"""
     
-    meta_type = "Naaya Story frontpicture Updater"
+    meta_type = "Naaya Content types updater"
     
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
-        self.title = 'Update Naaya Story properties'
-        self.description = 'Add frontpicture attribute.'
-        self.update_meta_type = 'Naaya Story'
+        self.title = 'Update Naaya content types'
+        self.description = 'Add new content types and icons.'
+        self.update_meta_type = ''
 
     def _verify_doc(self, doc):
         """ """
