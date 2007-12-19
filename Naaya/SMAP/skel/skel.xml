@@ -16,6 +16,7 @@
 		<form id="folder_impex_import" title="Folder import content"/>
 		<form id="folder_impex_update" title="Folder update content"/>
 		<form id="site_admin_reflists" title="Portal administration - selection lists"/>
+		<form id="folder_administration_map" title="Folder administration - country map"/>
 	</forms>
 	<emails>
 		<emailtemplate id="email_createaccount" title="Create account"/>
