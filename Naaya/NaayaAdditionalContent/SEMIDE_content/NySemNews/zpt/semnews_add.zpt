@@ -35,6 +35,11 @@
 -->
 </style>
 
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+
 <h1 i18n:translate="">Submit News</h1>
 
 <p i18n:translate="">
