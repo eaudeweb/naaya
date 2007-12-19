@@ -27,7 +27,7 @@ TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER = """<script type="text/javascript">
 	var mapMarker = null;
 	var mapCenterLoc = "%s", mapCenterZoom = %s;
 	function handlerLoad() {
-		map = new YMap(document.getElementById("map"));
+		map = new YMap(document.getElementById("map"), YAHOO_MAP_REG, new YSize(%s, %s));
 		// Display the map centered on given address 
 		map.drawZoomAndCenter(mapCenterLoc, mapCenterZoom);
 
@@ -75,13 +75,12 @@ TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER = """<script type="text/javascript">
 	var mapMarker = null;
 	var mapCenterLat = "%s", mapCenterLng = "%s", mapCenterZoom = %s;
 	function handlerLoad() {
-		map = new YMap(document.getElementById("map"));
+		map = new YMap(document.getElementById("map"), YAHOO_MAP_REG, new YSize(%s, %s));
 		map.drawZoomAndCenter(new YGeoPoint(mapCenterLat, mapCenterLng), mapCenterZoom);
 		map.addTypeControl();
 		var zp = new YCoordPoint(15,30);
 		zp.translate('right','top');
 		map.addZoomLong(zp);
-		map.setMapType(YAHOO_MAP_REG);
 		//markers
 		mapMarker = new YImage();
 		mapMarker.src = "%s";
@@ -118,12 +117,11 @@ TEMPLATE_XMLRPC_ADDPICK_MAP_LOADER = """<script type="text/javascript">
 	var map = null;
 	var mapMarker = null;
 	var defaultLocality = "%s", defaultZoom = %s;
-	map = new YMap(document.getElementById("map"));
+	map = new YMap(document.getElementById("map"), YAHOO_MAP_REG, new YSize(%s, %s));
 	// Display the map centered on given address 
 	map.addTypeControl();
 	map.addPanControl();
 	map.addZoomLong();
-	map.setMapType(YAHOO_MAP_REG);
 
 	function setLatLonValues(lat, lon){
 		// set the value of the form fields
@@ -174,11 +172,10 @@ TEMPLATE_XMLRPC_EDITPICK_MAP_LOADER = """<script type="text/javascript">
 	var map = null;
 	var mapMarker = null;
 	var PointLat = "%s", PointLon = "%s", PointZoom = %s, MapLoc = "%s", MapZoom = %s;
-	map = new YMap(document.getElementById("map"));
+	map = new YMap(document.getElementById("map"), YAHOO_MAP_REG, new YSize(%s, %s));
 	map.addTypeControl();
 	map.addZoomLong();
 	map.addPanControl();
-	map.setMapType(YAHOO_MAP_REG);
 
 	function handlerLoad() {
 		if (PointLat == 0.0 || PointLon == 0.0) {

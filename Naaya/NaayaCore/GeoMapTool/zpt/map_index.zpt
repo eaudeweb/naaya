@@ -5,13 +5,12 @@
 						query python:request.get('query', '');
 						center python:request.get('center', '');
 						zoom python:request.get('zoom', '');
-						path python:request.get('path', '');">
+						path python:request.get('path', '');
+						width python:request.get('width', here.map_width);
+						height python:request.get('height', here.map_height)">
+
 
 <style type="text/css">
-div#map {
-	width: 100%;
-	height: 610px;
-}
 div.marker {
 	display: none;
 }
@@ -58,7 +57,7 @@ function toggleSelect()
 </script>
 
 
-<span tal:replace="structure python:here.xrjs_loader(show, query, center, zoom, path)" />
+<span tal:replace="structure python:here.xrjs_loader(show, query, center, zoom, path, width, height)" />
 
 <div id="center_content" style="width: 78%; overflow-x: auto;">
 
