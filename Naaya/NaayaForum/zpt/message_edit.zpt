@@ -1,4 +1,6 @@
 <span tal:replace="structure here/standard_html_header" />
+<!-- TODO put editor/includeLibs in head -->
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
 
 <h1 i18n:translate="">Edit message</h1>
 
@@ -16,7 +18,7 @@
 </div>
 <div class="field">
 	<label for="description" i18n:translate="">Text</label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure editor/render" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description:utf8:ustring', image_support=True)" />
 	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="here/description" />
 </div>
 <div class="field">
