@@ -365,6 +365,22 @@ td.title-column a:hover{
 	background: #fff;
 	color: #666666;
 }
+.translate_bar_right {
+        display: inline;
+        float: right;
+        width: 30em;
+        text-align: right;
+}
+.edit_right_box {
+        clear: both;
+        background-color: #f4fff4;
+        padding: 1em;
+        float: right;
+        border: 1px solid black;
+        width: 200px;
+        text-align: right;
+        margin-bottom: 0.5em;
+}
 /* styles for forms */
 .field {
 	margin-top: 1em;
