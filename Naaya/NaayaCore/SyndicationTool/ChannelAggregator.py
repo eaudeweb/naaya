@@ -68,7 +68,7 @@ class ChannelAggregator(SimpleItem):
         """ """
         self.title = title
         self.description = description
-        self.channels = channels
+        self.channels = [ch for ch in channels if self.getSyndicationTool()._getOb(ch, None)]
         
         self._p_changed = 1
         if REQUEST:
