@@ -49,6 +49,10 @@ class CustomContentUpdater(NaayaContentUpdater):
         
     def _verify_doc(self, doc):
         """ Check for ZODB storage """
+	if not getattr(doc, 'getFileItems', None):
+	    logger.debug("Invalid NyExFile: %s" % doc)
+	    return None
+	
         fileitems = doc.getFileItems()
         for ob in fileitems.values():
             if self._verify_lang_doc(ob):
@@ -59,6 +63,10 @@ class CustomContentUpdater(NaayaContentUpdater):
     
     def _update_lang_doc(self, doc):
         """ Move doc data from ZODB to disk """
+	if not getattr(doc, 'getFileItems', None):
+	    logger.debug("Invalid NyExFile: %s" % doc)
+	    return None
+	
         fileitems = doc.getFileItems()
         logger.debug('%-20s %s', 'Update NyExFile', doc.absolute_url(1))
         for ob in fileitems.values():
