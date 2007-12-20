@@ -348,6 +348,7 @@ class NaayaUpdater(Folder):
                         return [s.id for s in skin.schemes]
                     else:
                         return [f.id for f in skin.templates]
+	return []
 
     security.declarePrivate('list_fs_schemefiles')
     def list_fs_schemefiles(self, metatype, skin_id, scheme_id, ftype='styles'):
