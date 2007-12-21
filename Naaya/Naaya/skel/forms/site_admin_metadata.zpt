@@ -6,7 +6,7 @@
 	tal:define="site_url here/getSitePath;
 				languages here/get_languages_mapping;
 				curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
-
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
 <div id="tabbedmenu">
 <ul>
 	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_metadata_html" i18n:translate="">Metadata</a></li>
