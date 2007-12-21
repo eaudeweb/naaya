@@ -688,9 +688,7 @@ class utils:
 
     def utIsEmptyString(self, p_str):
         """Test if empty string"""
-        if p_str:
-            if p_str.count(" ") != len(p_str): return 0
-        return 1
+        return not p_str.strip()
 
     def utIsValidDateTime(self, p_str):
         """Test if the string is a valid date"""
