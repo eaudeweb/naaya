@@ -31,8 +31,12 @@
 	<tal:block tal:repeat="channels python:ob_channel.getRemoteChannelsItems()">
 		<li tal:repeat="item channels">
 			<a tal:content="item/title" tal:attributes="href item/link" /><br />
-			[<span i18n:translate="">released on: </span> <span tal:content="item/date" />]<br />
-			<span tal:content="python:item['summary']" /><br />
+			<tal:block define="item_date item/date|nothing" tal:condition="item_date">
+				[<span i18n:translate="">released on: </span> <span tal:content="item_date" />]<br />
+			</tal:block>
+			<tal:block define="item_summary item/summary|nothing" tal:condition="item_summary">
+				<span tal:content="item_summary" /><br />
+			</tal:block>
 		</li>
 	</tal:block>
 	</ul>
