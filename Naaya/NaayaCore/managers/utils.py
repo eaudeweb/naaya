@@ -1031,7 +1031,7 @@ class CSVReader:
     def read(self):
         """ return the content of the file """
         try:
-            header = self.csv.next()
+            header = [field.encode('utf-8') for field in self.csv.next()]
             output = []
             while 1:
                 buf = {}
@@ -1041,7 +1041,7 @@ class CSVReader:
                     break
                 else:
                     for field, value in zip(header, values):
-                        buf[field.encode('utf-8')] = value.encode('utf-8')
+                        buf[field] = value.encode('utf-8')
                 output.append(buf)
             return (output, '')
         except Exception, error:
