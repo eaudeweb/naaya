@@ -983,8 +983,6 @@ def string2object(string):
 
 #classes used by spreadsheet_import
 
-import csv, codecs
-
 class UTF8Recoder:
     """
     Iterator that reads an encoded stream and reencodes the input to UTF-8
