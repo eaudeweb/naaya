@@ -1016,7 +1016,6 @@ class UnicodeReader:
     def __iter__(self):
         return self
 
-import re
 
 class CSVReader:
     """ Manipulate CSV files """
