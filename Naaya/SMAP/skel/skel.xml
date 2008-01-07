@@ -58,10 +58,11 @@
 		<pluggablecontenttype meta_type="Naaya GeoPoint" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Contact" action="1"/>
 	</pluggablecontenttypes>
-	<portlets left="portlet_quick_links,portlet_left_side" center="portlet_latestuploads_rdf">
+	<portlets left="portlet_quick_links,portlet_places,portlet_left_side" center="portlet_latestuploads_rdf">
 		<portlet id="portlet_rdfcalendar" title="RDF Calendar"/>
 		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="portlet_left_side" title="Left-side navigation" />
+		<portlet id="portlet_places" title="Useful links" />
 		<portlet id="portlet_quick_links" title="Left-side quick links" />
 		<portlet id="portlet_folder_impex" title="Export/Import"/>
 		<linkslist id="menunav_links" title="Menu navigation links" portlet="">
@@ -69,11 +70,18 @@
 			<link id="109" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="9"/>
 			<link id="110" title="Administration" description="" url="/admin_centre_html" relative="1" permission="Publish content" order="10"/>
 		</linkslist>
-		<linkslist id="places" title="Places" portlet="1">
+		<linkslist id="places" title="Places" portlet="">
 			<link id="11" title="Europa" description="European Union on-line" url="http://europa.eu/" relative="0" permission="" order="10"/>
-			<link id="12" title="EEA Home" description="European Environment Agency" url="http://www.eea.europa.eu" relative="0" permission="" order="20"/>
+			<link id="12" title="EEA" description="European Environment Agency" url="http://www.eea.europa.eu" relative="0" permission="" order="20"/>
 			<link id="13" title="EIONET" description="EIONET" url="http://www.eionet.europa.eu/" relative="0" permission="" order="30"/>
-			<link id="14" title="CIRCA Forum" description="CIRCA Forum" url="http://forum.europa.eu.int/" relative="0" permission="" order="40"/>
+			<link id="14" title="SYKE" description="SYKE" url="http://www.ymparisto.fi/default.asp?node=5297&lan=en" relative="0" permission="" order="40"/>
+			<link id="15" title="APAT" description="APAT" url="http://www.apat.gov.it/site/en-GB/" relative="0" permission="" order="50"/>
+			<link id="16" title="MSSD" description="MSSD" url="http://www.medstrategy.org/" relative="0" permission="" order="60"/>
+			<link id="17" title="Horizon 2020" description="Horizon 2020" url="http://ec.europa.eu/environment/enlarg/med/horizon_2020_en.htm" relative="0" permission="" order="70"/>
+			<link id="18" title="SMAP" description="SMAP" url="http://ec.europa.eu/environment/smap/home.htm" relative="0" permission="" order="80"/>
+			<link id="19" title="UNEP/MAP" description="UNEP/MAP" url="http://www.unepmap.org/" relative="0" permission="" order="90"/>
+			<link id="20" title="MEDSTAT" description="MEDSTAT" url="http://ec.europa.eu/eurostat/medstat" relative="0" permission="" order="100"/>
+			<link id="21" title="CEDARE" description="CEDARE" url="http://www.cedare.int/Main.aspx?code=219" relative="0" permission="" order="110"/>
 		</linkslist>
 		<linkslist id="footer_links" title="Footer links" portlet="">
 			<link id="20" title="Copyright" description="" url="/about/copyright" relative="1" permission="" order="10"/>
