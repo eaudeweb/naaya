@@ -435,7 +435,6 @@ div#bread_crumb_trail a:visited{
 #left_port ul a.active_link:visited {
 }
 
-
 /* Left side navigation dropdown menu */
 
 ul.left_side_navigation ul {
@@ -458,7 +457,7 @@ ul.left_side_navigation ul li {
 	
 ul.left_side_navigation li ul {
 	position: absolute;
-	left: 149px; /* Set 1px less than menu width */
+	left: 153px;
 	top: auto;
 	display: none;
 	background: #9bc0dd;
@@ -467,7 +466,8 @@ ul.left_side_navigation li ul {
 
 ul.left_side_navigation li ul li {
 	background-image: none !important;
-	padding-left: 1.5em;
+	padding-left: 1.5em !important;
+	padding-right: 1em !important;
 }
 
 /* Styles for Menu Items */
@@ -486,8 +486,6 @@ ul.left_side_navigation html ul li a { height: 1%; }
 /* End */
 
 ul.left_side_navigation li:hover ul, ul.left_side_navigation li.over ul { display: block; } /* The magic */
-
-
 
 /* @@@@@@@@@@@@@@@@@@@@@@ RIGHT PORTLETS @@@@@@@@@@@@@@@@@@@@@@@ */
 /* RIGHT PORTLET VERSION 1 */
