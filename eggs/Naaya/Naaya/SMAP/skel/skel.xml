@@ -74,7 +74,7 @@
 			<link id="11" title="Europa" description="European Union on-line" url="http://europa.eu/" relative="0" permission="" order="10"/>
 			<link id="12" title="EEA" description="European Environment Agency" url="http://www.eea.europa.eu" relative="0" permission="" order="20"/>
 			<link id="13" title="EIONET" description="EIONET" url="http://www.eionet.europa.eu/" relative="0" permission="" order="30"/>
-			<link id="14" title="SYKE" description="SYKE" url="http://www.ymparisto.fi/default.asp?node=5297&lan=en" relative="0" permission="" order="40"/>
+			<link id="14" title="SYKE" description="SYKE" url="http://www.ymparisto.fi/default.asp?node=5297&amp;lan=en" relative="0" permission="" order="40"/>
 			<link id="15" title="APAT" description="APAT" url="http://www.apat.gov.it/site/en-GB/" relative="0" permission="" order="50"/>
 			<link id="16" title="MSSD" description="MSSD" url="http://www.medstrategy.org/" relative="0" permission="" order="60"/>
 			<link id="17" title="Horizon 2020" description="Horizon 2020" url="http://ec.europa.eu/environment/enlarg/med/horizon_2020_en.htm" relative="0" permission="" order="70"/>
