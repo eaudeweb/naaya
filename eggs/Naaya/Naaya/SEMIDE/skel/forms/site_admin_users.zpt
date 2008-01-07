@@ -89,7 +89,7 @@
 		<tal:block tal:condition="python:skey=='user'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="sort_asc_th">
-					<a tal:attributes="href string:${site_url}/admin_users_html?skey=user&amp;rkey=1&amp;query=${query}">
+					<a tal:attributes="href string:${site_url}/admin_users_html?skey=user&amp;rkey=1&amp;query=${query}&amp;items_perpage=${items_perpage}">
 						<span i18n:translate="" tal:omit-tag="">Username</span>
 						<img src="misc_/Naaya/sort_asc.gif" border="0" align="absmiddle" alt="" />
 					</a>
@@ -97,7 +97,7 @@
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th class="sort_desc_th">
-					<a tal:attributes="href string:${site_url}/admin_users_html?skey=user&amp;query=${query}">
+					<a tal:attributes="href string:${site_url}/admin_users_html?skey=user&amp;query=${query}&amp;items_perpage=${items_perpage}">
 						<span i18n:translate="" tal:omit-tag="">Username</span>
 						<img src="misc_/Naaya/sort_desc.gif" border="0" align="absmiddle" alt="" />
 					</a>
@@ -106,14 +106,14 @@
 		</tal:block>
 		<tal:block tal:condition="python:skey!='user'">
 			<th class="sort_th">
-				<a tal:attributes="href string:${site_url}/admin_users_html?skey=user&amp;query=${query}" i18n:translate="">Username</a>
+				<a tal:attributes="href string:${site_url}/admin_users_html?skey=user&amp;query=${query}&amp;items_perpage=${items_perpage}" i18n:translate="">Username</a>
 			</th>
 		</tal:block>
 
 		<tal:block tal:condition="python:skey=='name'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="sort_asc_th">
-					<a tal:attributes="href string:${site_url}/admin_users_html?skey=name&amp;rkey=1&amp;query=${query}">
+					<a tal:attributes="href string:${site_url}/admin_users_html?skey=name&amp;rkey=1&amp;query=${query}&amp;items_perpage=${items_perpage}">
 						<span i18n:translate="" tal:omit-tag="">Name</span>
 						<img src="misc_/Naaya/sort_asc.gif" border="0" align="absmiddle" alt="" />
 					</a>
@@ -121,7 +121,7 @@
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th class="sort_desc_th">
-					<a tal:attributes="href string:${site_url}/admin_users_html?skey=name&amp;query=${query}">
+					<a tal:attributes="href string:${site_url}/admin_users_html?skey=name&amp;query=${query}&amp;items_perpage=${items_perpage}">
 						<span i18n:translate="" tal:omit-tag="">Name</span>
 						<img src="misc_/Naaya/sort_desc.gif" border="0" align="absmiddle" alt="" />
 					</a>
@@ -130,14 +130,14 @@
 		</tal:block>
 		<tal:block tal:condition="python:skey!='name'">
 			<th class="sort_th">
-				<a tal:attributes="href string:${site_url}/admin_users_html?skey=name&amp;query=${query}" i18n:translate="">Name</a>
+				<a tal:attributes="href string:${site_url}/admin_users_html?skey=name&amp;query=${query}&amp;items_perpage=${items_perpage}" i18n:translate="">Name</a>
 			</th>
 		</tal:block>
 
 		<tal:block tal:condition="python:skey=='email'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="sort_asc_th">
-					<a tal:attributes="href string:${site_url}/admin_users_html?skey=email&amp;rkey=1&amp;query=${query}">
+					<a tal:attributes="href string:${site_url}/admin_users_html?skey=email&amp;rkey=1&amp;query=${query}&amp;items_perpage=${items_perpage}">
 						<span i18n:translate="" tal:omit-tag="">Email</span>
 						<img src="misc_/Naaya/sort_asc.gif" border="0" align="absmiddle" alt="" />
 					</a>
@@ -145,7 +145,7 @@
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th class="sort_desc_th">
-					<a tal:attributes="href string:${site_url}/admin_users_html?skey=email&amp;query=${query}">
+					<a tal:attributes="href string:${site_url}/admin_users_html?skey=email&amp;query=${query}&amp;items_perpage=${items_perpage}">
 						<span i18n:translate="" tal:omit-tag="">Email</span>
 						<img src="misc_/Naaya/sort_desc.gif" border="0" align="absmiddle" alt="" />
 					</a>
@@ -154,7 +154,7 @@
 		</tal:block>
 		<tal:block tal:condition="python:skey!='email'">
 			<th class="sort_th">
-				<a tal:attributes="href string:${site_url}/admin_users_html?skey=email&amp;query=${query}" i18n:translate="">Email</a>
+				<a tal:attributes="href string:${site_url}/admin_users_html?skey=email&amp;query=${query}&amp;items_perpage=${items_perpage}" i18n:translate="">Email</a>
 			</th>
 		</tal:block>
 	</thead>
