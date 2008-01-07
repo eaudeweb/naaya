@@ -435,6 +435,60 @@ div#bread_crumb_trail a:visited{
 #left_port ul a.active_link:visited {
 }
 
+
+/* Left side navigation dropdown menu */
+
+ul.left_side_navigation ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	width: 150px; /* Width of Menu Items */
+	}
+
+ul.left_side_navigation li:hover {
+	background: #9bc0dd !important;
+	color: white !important;
+	}
+
+ul.left_side_navigation li:hover a {color: white !important;}
+
+ul.left_side_navigation ul li {
+	position: relative;
+	}
+	
+ul.left_side_navigation li ul {
+	position: absolute;
+	left: 149px; /* Set 1px less than menu width */
+	top: auto;
+	display: none;
+	background: #9bc0dd;
+	margin-top: -13px !important;
+	}
+
+ul.left_side_navigation li ul li {
+	background-image: none !important;
+	padding-left: 1.5em;
+}
+
+/* Styles for Menu Items */
+ul.left_side_navigation ul li a {
+	display: block;
+	text-decoration: none;
+	background: #9bc0dd;
+	font-weight: normal;
+	color: white !important;
+	}
+	
+/* Holly Hack. IE Requirement \*/
+ul.left_side_navigation html ul li { float: left; height: 1%; }
+ul.left_side_navigation html ul li a { height: 1%; }
+
+/* End */
+
+ul.left_side_navigation li:hover ul, ul.left_side_navigation li.over ul { display: block; } /* The magic */
+
+
+
 /* @@@@@@@@@@@@@@@@@@@@@@ RIGHT PORTLETS @@@@@@@@@@@@@@@@@@@@@@@ */
 /* RIGHT PORTLET VERSION 1 */
 
