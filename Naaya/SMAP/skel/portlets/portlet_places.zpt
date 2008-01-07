@@ -5,11 +5,13 @@
 		<tal:block tal:repeat="item python:here.getPortletsTool().places.get_links_list()">
 			<li tal:condition="python:here.checkPermissionForLink(item.permission, here)">
 				<a tal:attributes="href python:test(item.relative, '%s%s' % (here.getSitePath(), item.url), item.url); title item/description" i18n:attributes="title" i18n:translate="" tal:content="item/title" />
-				<ul tal:define="group_list python:here.getPortletsTool().getLinksListById(item.title);">
-					<li tal:condition="group_list" tal:repeat="l_item group_list/get_links_list">
+				<tal:block define="group_list python:here.getPortletsTool().getLinksListById(item.title);">
+				<ul tal:condition="group_list">
+					<li tal:repeat="l_item group_list/get_links_list">
 						<a tal:attributes="href python:test(l_item.relative, '%s%s' % (here.absolute_url(), l_item.url), l_item.url); title l_item/description" tal:content="l_item/title" i18n:translate="" i18n:attributes="title" />
 					</li>
 				</ul>
+				</tal:block>
 			</li>
 		</tal:block>
 		</ul>
