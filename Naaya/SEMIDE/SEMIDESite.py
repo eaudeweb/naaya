@@ -1198,9 +1198,9 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
             if query:
                 if self.utToUnicode(user.name).find(query)!=-1 or user.email.find(query)!=-1 or \
                         self.utToUnicode(user.firstname).find(query)!=-1 or self.utToUnicode(user.lastname).find(query)!=-1:
-                    users_a((user.name, '%s %s' % (user.firstname, user.lastname), user.email))
+                    users_a((user.name, '%s %s' % (user.firstname, user.lastname), user.email, user.created, user.lastupdated, user.lastlogin, user.lastpost))
             else:
-                users_a((user.name, '%s %s' % (user.firstname, user.lastname), user.email))
+                users_a((user.name, '%s %s' % (user.firstname, user.lastname), user.email, user.created, user.lastupdated, user.lastlogin, user.lastpost))
         results = [(x[skey], x) for x in users]
         results.sort()
         if rkey: results.reverse()
@@ -1955,10 +1955,10 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_exportusers')
     def admin_exportusers(self, REQUEST=None, RESPONSE=None):
         """ """
-        data = [('Username', 'Firstname Lastname', 'Email')]
+        data = [('Username', 'Name', 'Email', 'Created', 'Updated', 'Last login', 'Last activity')]
         data_app = data.append
         for user in self.getSemideUsers():
-            data_app((user[0], self.utToUtf8(user[1]), user[2]))
+            data_app((user[0], self.utToUtf8(user[1]), user[2], user[3], user[4], user[5], user[6]))
         tmp_name = tmpfile(data)
         content = open(str(tmp_name)).read()
         RESPONSE.setHeader('Content-Type', 'text/csv')
