@@ -35,7 +35,7 @@
 	<div style="margin-left: 10em;"><textarea name="cal_meta_types" cols="40" rows="5"></textarea></div>
 
 	<div style="float: left;" i18n:translate="">Use catalog<br /> <small>(catalog's id)</small></div>
-	<div style="margin-left: 10em;"><input type="text" name="use_catalog" size="30" value="portal_catalog" /></div>
+	<div style="margin-left: 10em;"><input type="text" name="catalog" size="30" value="portal_catalog" /></div>
 
 	<div style="margin-left: 10em;"><input type="submit" value="Add Naaya Calendar" i18n:attributes="value" /></div>
 </form>

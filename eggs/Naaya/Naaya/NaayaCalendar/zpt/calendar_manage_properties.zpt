@@ -35,8 +35,8 @@
 
 	<div class="layout-label" i18n:translate="">Use catalog <br /><small>(catalog's id)</small></div>
 	<div class="layout-box">
-		<input type="text" name="use_catalog" size="30" tal:attributes="value here/use_catalog" />
-		<small	tal:condition="here/use_catalog"
+		<input type="text" name="catalog" size="30" tal:attributes="value here/catalog" />
+		<small	tal:condition="here/catalog"
 				tal:content="python:test(here.testCatalog(),'catalog found', 'catalog not found')"
 				tal:attributes="style python:test(here.testCatalog(), 'color:green', 'color:red')" />
 	</div>
