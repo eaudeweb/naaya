@@ -73,9 +73,22 @@
 <fieldset><legend i18n:translate="">Record information</legend>
 <p>
 	<span i18n:translate="" tal:omit-tag="">Created: </span><tal:block tal:content="python:test(user_created=='', ' - ', user_created)" /><br />
-	<span i18n:translate="" tal:omit-tag="">Last updated: </span><tal:block tal:content="python:test(user_lastupdated=='', ' - ', user_lastupdated)" />
+	<span i18n:translate="" tal:omit-tag="">Last updated: </span><tal:block tal:content="python:test(user_lastupdated=='', ' - ', user_lastupdated)" /><br />
 </p>
 </fieldset>
+<br />
+<fieldset><legend i18n:translate="">User activity log</legend>
+<p>
+	<span i18n:translate="" tal:omit-tag="">Last login:</span>
+	<tal:block tal:define="user_lastlogin python:user_tool.getUserLastLogin(user_obj)" 
+				tal:content="python:test(user_lastlogin=='', ' - ', user_lastlogin)" /><br />
+	<span i18n:translate="" tal:omit-tag="">Last activity:</span>
+	<tal:block tal:define="user_lastpost python:user_tool.getUserLastPost(user_obj)" 
+				tal:content="python:test(user_lastpost=='', ' - ', user_lastpost)" />
+</p>
+</fieldset>
+
+
 </form>
 <span tal:replace="here/delUserSession" />
 </tal:block>
