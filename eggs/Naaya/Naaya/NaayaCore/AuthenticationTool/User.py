@@ -30,6 +30,8 @@ class User(SimpleUser, Persistent):
         self.history = ''
         self.created = time.strftime('%d %b %Y %H:%M:%S')
         self.lastupdated = ''
+        self.lastlogin = ''
+        self.lastpost = ''
 
     def _getPassword(self):
         """Return the password of the user."""

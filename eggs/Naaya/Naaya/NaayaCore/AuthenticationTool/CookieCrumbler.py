@@ -293,6 +293,8 @@ class CookieCrumbler:
             url = self.unauthorized()
             return RESPONSE.redirect("%s%s" % (self.auto_login_page,url))
         else:
+            auth_tool = self.getAuthenticationTool()
+            auth_tool.changeLastLogin(self._getAuthenticatedUser().getUserName())
             if came_from:
                 return RESPONSE.redirect(came_from)
             else:
