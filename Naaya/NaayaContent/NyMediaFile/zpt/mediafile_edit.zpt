@@ -51,15 +51,21 @@ Example:
 	<label for="subtitle_file"><span i18n:translate="" tal:omit-tag="">Upload subtitle (.srt)</span></label>
 	<input type="file" onchange="javascript:check_srt(this);" size="50" name="subtitle_file" id="subtitle_file" value=""/>
 </div>
-<!-- File -->
-<div class="field">
-	<label><span i18n:translate="" tal:omit-tag="">Upload media file</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'file')" class="mandatory_field"> *</span></label>
-</div>
-<div class="field-inline">
-	<input type="file" name="file" id="file" size="40" value="" />
-	<label for="file" class="invisible" i18n:translate="">(local computer or network)</label>
-	<input type="submit" value="Upload" i18n:attributes="value" name="saveUpload:method" />
-</div>
+
 </tal:block>
+
+<metal:block fill-slot="bottom_content">
+	<form method="post" action="." enctype="multipart/form-data">
+	<!-- File -->
+	<div class="field">
+		<label><span i18n:translate="" tal:omit-tag="">Upload media file</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'file')" class="mandatory_field"> *</span></label>
+	</div>
+	<div class="field-inline">
+		<input type="file" name="file" id="file" size="40" value="" />
+		<label for="file" class="invisible" i18n:translate="">(local computer or network)</label>
+		<input type="submit" value="Upload" i18n:attributes="value" name="saveUpload:method" />
+	</div>
+	</form>
+</metal:block>
 
 </tal:block>

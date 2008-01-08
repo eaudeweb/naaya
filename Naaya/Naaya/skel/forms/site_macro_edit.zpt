@@ -176,6 +176,9 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['translation_bar']" />
 </div>
 
+<!-- Custom bottom content -->
+<metal:block define-slot="bottom_content" />
+
 </form>
 
 </tal:block>
