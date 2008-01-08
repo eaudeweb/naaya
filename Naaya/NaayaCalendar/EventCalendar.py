@@ -58,6 +58,9 @@ def manage_addEventCalendar(self, id, title='', description='', day_len='', cal_
     l_meta_types = ob.cal_meta_types
     ob.cal_meta_types = {}
     ob.cal_meta_types = ob.setCalMetaTypes(l_meta_types)
+    # TODO: configure catalog
+    if ob.testCatalog():
+        pass
     #loads default css
     ob.css_calendar = css_calendar_default
     ob.css_events = css_events_default
