@@ -51,9 +51,9 @@ css_events_default = {'table-font-size':'90', 'title-font-color':'#000000', \
 
 manage_addEventCalendar_html = PageTemplateFile('zpt/calendar_add', globals())
 
-def manage_addEventCalendar(self, id, title='', description='', day_len='', cal_meta_types='', start_day='Monday', use_catalog='', REQUEST=None):
+def manage_addEventCalendar(self, id, title='', description='', day_len='', cal_meta_types='', start_day='Monday', catalog='', REQUEST=None):
     """ Adds a new EventCalendar object """
-    ob = EventCalendar(id, title, description, day_len, cal_meta_types, start_day, use_catalog)
+    ob = EventCalendar(id, title, description, day_len, cal_meta_types, start_day, catalog)
     self._setObject(id, ob)
     l_meta_types = ob.cal_meta_types
     ob.cal_meta_types = {}
@@ -82,7 +82,7 @@ class EventCalendar(Folder, DateFunctions, Utils):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, description, day_len, cal_meta_types, start_day, use_catalog):
+    def __init__(self, id, title, description, day_len, cal_meta_types, start_day, catalog):
         """ constructor """
         self.id =               id
         self.title =            title
@@ -90,7 +90,7 @@ class EventCalendar(Folder, DateFunctions, Utils):
         self.day_len =          day_len
         self.cal_meta_types =   cal_meta_types
         self.start_day =        start_day
-        self.use_catalog =      use_catalog
+        self.catalog =          catalog
 
     def __str__(self):  return self.index_html()
 
@@ -196,7 +196,7 @@ class EventCalendar(Folder, DateFunctions, Utils):
     def testCatalog(self):
         """ test if catalog found """
         try:
-            used_catalog = self.unrestrictedTraverse(self.use_catalog)
+            used_catalog = self.unrestrictedTraverse(self.catalog)
             if used_catalog: return 1
             else:            return 0
         except:              return 0
@@ -214,7 +214,7 @@ class EventCalendar(Folder, DateFunctions, Utils):
             try:
                 l_brains = []
                 l_query = {}
-                used_catalog = self.unrestrictedTraverse(self.use_catalog)
+                used_catalog = self.unrestrictedTraverse(self.catalog)
 
                 for meta in self.getSortedMetaTypes():
                     l_query['meta_type'] = meta
@@ -364,14 +364,14 @@ class EventCalendar(Folder, DateFunctions, Utils):
     ######################
 
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', day_len='', cal_meta_types='', start_day='', use_catalog='', REQUEST=None):
+    def manageProperties(self, title='', description='', day_len='', cal_meta_types='', start_day='', catalog='', REQUEST=None):
         """ manage basic properties """
         self.title =            title
         self.description =      description
         self.day_len =          day_len
         self.cal_meta_types =   self.setCalMetaTypes(cal_meta_types)
         self.start_day =        start_day
-        self.use_catalog =      use_catalog
+        self.catalog =          catalog
         self._p_changed = 1
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect('manage_properties')
