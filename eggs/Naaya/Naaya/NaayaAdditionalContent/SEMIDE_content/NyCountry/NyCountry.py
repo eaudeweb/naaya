@@ -142,6 +142,9 @@ def addNyCountry(self, id='', title='', description='', coverage='', keywords=''
         if load_default_data: ob.loadDefaultData(lang, legislation_feed_url, project_feed_url)
         self.recatalogNyObject(ob)
         self.notifyFolderMaintainer(ob.getSite(), ob)
+        #log post date
+        auth_tool = self.getAuthenticationTool()
+        auth_tool.changeLastPost(contributor)
         #redirect if case
         if REQUEST is not None:
             if l_referer == 'country_manage_add' or l_referer.find('country_manage_add') != -1:
@@ -524,6 +527,10 @@ class NyCountry(NyFolder):
             if discussion: self.open_for_comments()
             else: self.close_for_comments()
             self.recatalogNyObject(self)
+            #log date
+            contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            auth_tool = self.getAuthenticationTool()
+            auth_tool.changeLastPost(contributor)
             #update remote channels feeds
             self.get_rc_legislation().set_new_feed_url(legislation_feed_url)
             self.get_rc_project().set_new_feed_url(project_feed_url)

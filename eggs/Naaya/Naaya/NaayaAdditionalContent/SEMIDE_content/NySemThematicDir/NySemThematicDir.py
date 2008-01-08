@@ -155,7 +155,9 @@ def addNySemThematicDir(self, id='', title='', description='', coverage='', keyw
         if discussion: ob.open_for_comments()
         self.recatalogNyObject(ob)
         self.notifyFolderMaintainer(ob.getSite(), ob)
-
+        #log post date
+        auth_tool = self.getAuthenticationTool()
+        auth_tool.changeLastPost(contributor)
         #redirect if case
         if REQUEST is not None:
             if l_referer == 'semthematicdir_manage_add' or l_referer.find('semthematicdir_manage_add') != -1:
@@ -359,6 +361,10 @@ class NySemThematicDir(NyFolder):
             if discussion: self.open_for_comments()
             else: self.close_for_comments()
             self.recatalogNyObject(self)
+            #log date
+            contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            auth_tool = self.getAuthenticationTool()
+            auth_tool.changeLastPost(contributor)
             #update remote channels feeds
             if REQUEST:
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])

@@ -132,6 +132,9 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
         if discussion: ob.open_for_comments()
         self.recatalogNyObject(ob)
         self.notifyFolderMaintainer(self, ob)
+        #log post date
+        auth_tool = self.getAuthenticationTool()
+        auth_tool.changeLastPost(contributor)
         #redirect if case
         if REQUEST is not None:
             if l_referer == 'news_manage_add' or l_referer.find('news_manage_add') != -1:
@@ -415,6 +418,10 @@ class NyNews(NyAttributes, news_item, NyItem, NyCheckControl):
             else: self.close_for_comments()
             self._p_changed = 1
             self.recatalogNyObject(self)
+            #log date
+            contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            auth_tool = self.getAuthenticationTool()
+            auth_tool.changeLastPost(contributor)
             if REQUEST:
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))

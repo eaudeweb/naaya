@@ -108,6 +108,9 @@ def addNyStory(self, id='', title='', description='', coverage='', keywords='',
     if kwargs.has_key('submitted'): ob.submitThis()
     if discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
+    #log post date
+    auth_tool = self.getAuthenticationTool()
+    auth_tool.changeLastPost(contributor)
     #redirect if case
     if REQUEST is not None:
         if REQUEST.has_key('submitted'): ob.submitThis()
@@ -423,6 +426,10 @@ class NyStory(NyAttributes, story_item, NyContainer, NyCheckControl):
             else: self.close_for_comments()
             self._p_changed = 1
             self.recatalogNyObject(self)
+            #log date
+            contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            auth_tool = self.getAuthenticationTool()
+            auth_tool.changeLastPost(contributor)
             if REQUEST:
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
