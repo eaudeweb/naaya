@@ -132,13 +132,11 @@ class Utils:
         """ evaluates an expresion """
         if not p_expr: return True
         try:
-            return bool(eval(self.utStrReplace(p_expr, 'self.', 'p_obj.')))
+            return bool(eval(p_expr,
+                             {'__builtins__': __builtins__},
+                             {'self': p_obj}))
         except:
             return False
-
-    def utStrReplace(self, p_string, p_old, p_new):
-        """ replace """
-        return string.replace(p_string, p_old, p_new)
 
     #####################
     #   File Funtions   #
