@@ -68,7 +68,7 @@ def manage_addEventCalendar(self, id, title='', description='', day_len='', cal_
         return self.manage_main(self, REQUEST, update_menu=1)
 
 
-class EventCalendar(Folder, DateFunctions, Utils):
+class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Folder
     """ Event calendar """
 
     meta_type = 'Naaya Calendar'
