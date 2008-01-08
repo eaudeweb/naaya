@@ -83,6 +83,7 @@ class CatalogTool(ZCatalog, utils):
         Creates default indexes and metadata.
         """
         languages = self.utConvertToList(languages)
+        # TODO for Zope 2.10: remove try: ... except: pass
         try: self.addIndex('bobobase_modification_time', 'FieldIndex')
         except: pass
         try: self.addIndex('id', 'FieldIndex')
