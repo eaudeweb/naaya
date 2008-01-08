@@ -181,8 +181,8 @@ class NySurveyTemplate(Folder):
         True if deadline not reached.
         """
         
-        today = DateTime(self.utShowDateTime(DateTime()))
-        return today.lessThanEqualTo(DateTime(self.date))
+        today = self.utGetTodayDate()
+        return today.lessThanEqualTo(self.utConvertStringToDateTimeObj(self.date))
 
     def get_statistics(self):
         """ """
