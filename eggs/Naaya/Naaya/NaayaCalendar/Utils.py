@@ -130,13 +130,11 @@ class Utils:
 
     def utEval(self, p_expr, p_obj):
         """ evaluates an expresion """
-        if len(p_expr)==0:  return 1
+        if not p_expr: return True
         try:
-            if eval(self.utStrReplace(p_expr, 'self.', 'p_obj.')):  return 1
-            return 0
+            return bool(eval(self.utStrReplace(p_expr, 'self.', 'p_obj.')))
         except:
-            pass
-        return 0
+            return False
 
     def utStrReplace(self, p_string, p_old, p_new):
         """ replace """
