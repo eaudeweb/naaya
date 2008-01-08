@@ -98,6 +98,9 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     if discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     self.notifyFolderMaintainer(site, ob)
+    #log post date
+    auth_tool = self.getAuthenticationTool()
+    auth_tool.changeLastPost(contributor)
     #redirect if case
     if REQUEST is not None:
         referer = REQUEST['HTTP_REFERER'].split('/')[-1]
@@ -831,6 +834,10 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         if discussion: self.open_for_comments()
         else: self.close_for_comments()
         self.recatalogNyObject(self)
+        #log date
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        auth_tool = self.getAuthenticationTool()
+        auth_tool.changeLastPost(contributor)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('edit_html?lang=%s' % lang)
