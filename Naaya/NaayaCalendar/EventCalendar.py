@@ -355,7 +355,7 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
         l_dict = {}
         l_list = self.utConvertLinesToList(p_meta_types)
         for item in l_list:
-            if item in self.cal_meta_types.keys():
+            if item in self.cal_meta_types:
                 l_dict[item] = self.cal_meta_types[item]
             else:
                 l_dict[item] = ('start_date', 'end_date', '')
