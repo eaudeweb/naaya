@@ -257,6 +257,9 @@ class NyComments:
         ob = self.add_comment_item(id, title, body, author, date)
         self.recatalogNyObject(self)
         self.notifyFolderMaintainer(self, ob)
+        #log post date
+        auth_tool = self.getAuthenticationTool()
+        auth_tool.changeLastPost(author)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
@@ -268,6 +271,10 @@ class NyComments:
         """
         self.delete_comment_item(id)
         self.recatalogNyObject(self)
+        #log date
+        user = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        auth_tool = self.getAuthenticationTool()
+        auth_tool.changeLastPost(user)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
