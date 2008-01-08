@@ -143,6 +143,20 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         user.lastupdated = lastupdated
         self._p_changed = 1
 
+    security.declarePublic('changeLastLogin')
+    def changeLastLogin(self, name):
+        user=self.data.get(name, None)
+        if user:
+            user.lastlogin = time.strftime('%d %b %Y %H:%M:%S')
+            self._p_changed = 1
+
+    security.declarePublic('changeLastPost')
+    def changeLastPost(self, name):
+        user=self.data.get(name, None)
+        if user:
+            user.lastpost = time.strftime('%d %b %Y %H:%M:%S')
+            self._p_changed = 1
+
     security.declareProtected(manage_users, 'getUserPass')
     def getUserPass(self):
         """Return a list of usernames"""
@@ -566,6 +580,14 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     def getUserLastUpdated(self, user_obj):
         """ Return the lastupdated date"""
         return user_obj.lastupdated
+
+    def getUserLastLogin(self, user_obj):
+        """ Return the user's last login date """
+        return user_obj.lastlogin
+
+    def getUserLastPost(self, user_obj):
+        """ Return the user's last post date """
+        return user_obj.lastpost
 
     def getSuperUserFolders(self):
         #return s list with user folders
