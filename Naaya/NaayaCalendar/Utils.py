@@ -47,7 +47,7 @@ class Utils:
     def utGenerateList(self, p_index, p_list):
         """ creates a list according to a given index """
         while (p_index)>0:
-            p_index = p_index-1
+            p_index -= 1
             p_list.append(p_list[0])
             p_list.remove(p_list[0])
         return p_list
