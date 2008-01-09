@@ -218,14 +218,3 @@ class DateFunctions:
         day1 = self.getWeekday(int(year), int(month), 1)
         ndays = self.mdays[int(month)] + (int(month) == 2 and self.isLeapYear(int(year)))
         return day1, ndays
-
-#    def dfConvStrToDateTimeObj(self, p_datestring, p_separator='/'):
-#        """Takes a string that represents a date like 'dd/mm/yyyy' and returns a DateTime object"""
-#        if p_datestring != '':
-#            l_dateparts = p_datestring.split(p_separator)
-#            l_intYear = int(l_dateparts[2], 10)
-#            l_intMonth = int(l_dateparts[1], 10)
-#            l_intDay = int(l_dateparts[0], 10)
-#            return DateTime(str(l_intYear) + '/' + str(l_intMonth) + '/' + str(l_intDay) + ' 00:00:00')
-#        else:
-#            return None
