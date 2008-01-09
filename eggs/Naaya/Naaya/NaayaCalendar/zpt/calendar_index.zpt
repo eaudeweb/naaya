@@ -1,19 +1,19 @@
 <span metal:use-macro="here/calendar_template/macros/calendar_page">
 
 <tal:block metal:fill-slot="page_body">
-	<tal:block define="	cyear python:request.get('cyear', here.getCurrentYear());
-						cmonth python:request.get('cmonth', here.getCurrentMonth());
+	<tal:block define="cyear python:request.get('cyear', here.getCurrentYear());
+	                   cmonth python:request.get('cmonth', here.getCurrentMonth());
 
-						next_date python:here.getNextDate(cmonth, cyear);
-						prev_date python:here.getPrevDate(cmonth, cyear);
-						forw_month python:next_date[0];
-						forw_year python:next_date[1];
-						back_month python:prev_date[0];
-						back_year python:prev_date[1];
+	                   next_date python:here.getNextDate(cmonth, cyear);
+	                   prev_date python:here.getPrevDate(cmonth, cyear);
+	                   forw_month python:next_date[0];
+	                   forw_year python:next_date[1];
+	                   back_month python:prev_date[0];
+	                   back_year python:prev_date[1];
 
-						daily_events python:here.getDailyEvents(cmonth, cyear);
-						date python:here.getMonthRange(cyear, cmonth);
-						days_matrix python:here.getDaysMatrix(here.getRange(here.getCounter(date[0])), here.getRange(date[1]));">
+	                   daily_events python:here.getDailyEvents(cmonth, cyear);
+	                   date python:here.getMonthRange(cyear, cmonth);
+	                   days_matrix python:here.getDaysMatrix(here.getRange(here.getCounter(date[0])), here.getRange(date[1]));">
 
 <!-- Calendar begin -->
 	<table id="calendar-container" cellspacing="1" tal:attributes="summary python:here.title">
