@@ -1,8 +1,9 @@
 <span metal:use-macro="here/calendar_template/macros/calendar_page">
 
 <tal:block metal:fill-slot="page_body">
-	<tal:block define="cyear python:request.get('cyear', here.getCurrentYear());
-	                   cmonth python:request.get('cmonth', here.getCurrentMonth());
+	<!-- TODO: make Zope to do the conversion of parameters to int -->
+	<tal:block define="cyear python:int(request.get('cyear', here.getCurrentYear()));
+	                   cmonth python:int(request.get('cmonth', here.getCurrentMonth()));
 
 	                   next_date python:here.getNextDate(cmonth, cyear);
 	                   prev_date python:here.getPrevDate(cmonth, cyear);
