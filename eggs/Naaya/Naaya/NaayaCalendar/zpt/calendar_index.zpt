@@ -50,12 +50,12 @@
 		<!-- Days area begin -->
 		<tr tal:repeat="week days_matrix">
 			<tal:block repeat="day week">
-			<td tal:attributes="class python:test(here.testCurrentDay(day, cmonth, cyear)==1, 'current-day', 'event-day');
+			<td tal:attributes="class python:test(here.isCurrentDay(day, cmonth, cyear)==1, 'current-day', 'event-day');
 								headers python:here.getShortWeekdays(here.day_len)[path('repeat/day/index')][1];"
 				tal:condition="python:str(day) in daily_events.keys()">
 					<a tal:attributes="href string:${here/getDaysURL}cday=${day}/${cmonth}/${cyear};" tal:content="day"></a>
 			</td>
-			<td tal:attributes="class python:test(here.testCurrentDay(day, cmonth, cyear)==1, 'current-day', 'normal-day');
+			<td tal:attributes="class python:test(here.isCurrentDay(day, cmonth, cyear)==1, 'current-day', 'normal-day');
 								headers python:here.getShortWeekdays(here.day_len)[path('repeat/day/index')][1];"
 				tal:condition="python:not (str(day) in daily_events.keys())"
 				tal:content="day"></td>

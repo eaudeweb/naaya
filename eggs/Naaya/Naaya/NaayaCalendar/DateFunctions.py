@@ -145,7 +145,7 @@ class DateFunctions:
     #   FUNCTIONS   #
     #################
 
-    def testCurrentDay(self, p_day, p_month, p_year):
+    def isCurrentDay(self, p_day, p_month, p_year):
         """ test if current day """
         if self.getCurrentDay()==p_day and self.getCurrentMonth()==int(p_month) and int(self.getCurrentYear())==int(p_year):
             return 1
