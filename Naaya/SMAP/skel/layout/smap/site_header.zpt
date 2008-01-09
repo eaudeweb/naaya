@@ -31,6 +31,78 @@
 			/*]]>*/
 			</style>
 		<![endif]-->
+
+	<script type="text/javascript">
+
+		function toggle_nav(element){
+
+			var parentsChildren = element.parentNode.childNodes
+			var higherChildren = element.parentNode.parentNode.childNodes
+
+			for (var node = 0; node < higherChildren.length; node++) {
+				if (higherChildren.item(node).className) {
+					if (higherChildren.item(node).className == 'portlet_folder') {
+						var lowerChildren = higherChildren.item(node).childNodes
+
+						for (var l_node = 0; l_node < lowerChildren.length; l_node++) {
+							if (lowerChildren.item(l_node).className) {
+								if (lowerChildren.item(l_node).className == 'sub_folder') {
+									lowerChildren.item(l_node).style.display = 'none'
+								}
+							}
+						}
+					}
+				}
+			}
+
+			for (var node = 0; node < parentsChildren.length; node++) {
+				if (parentsChildren.item(node).className) {
+					if (parentsChildren.item(node).className == 'sub_folder') {
+						
+						if (parentsChildren.item(node).style.display != 'none'){parentsChildren.item(node).style.display = 'none'}
+						else {parentsChildren.item(node).style.display = 'block'}
+					}
+				}
+			}
+		}
+
+		function style_nav(){
+
+			tree_container =  document.getElementById('left_port');
+			divs = tree_container.getElementsByTagName('div');
+
+			for (var i = 0; i < divs.length; i++) {
+				if (divs.item(i).className == 'sub_folder') {
+					divs.item(i).style.display = 'none'
+				}
+
+				if (divs.item(i).className == 'left_port_title') {
+					divs.item(i).style.cursor = 'pointer'
+				}
+			}
+
+			// IE6 fix for submenu
+			sfHover = function() {
+				var sfEls = document.getElementById("left_port").getElementsByTagName("LI");
+				for (var i=0; i<sfEls.length; i++) {
+					sfEls[i].onmouseover=function() {
+						this.className+=" sfhover";
+					}
+					sfEls[i].onmouseout=function() {
+						this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
+					}
+				}
+			}
+			if (window.attachEvent) window.attachEvent("onload", sfHover);
+
+
+				}
+
+		window.onload=style_nav;
+
+	</script>
+
+
 </head>
 <body>
 	<a class="skiplink" href="#contentstart" accesskey="2" i18n:translate="">Skip navigation</a>
