@@ -7,6 +7,7 @@
 	                   cyear python:request.get('cday', '').split('/')[2];">
 	<div id="middle_port" style='margin-right:0;'>
 		<h3 id="Event-Title">
+			<!-- TODO: use localized strftime for displaying the date bellow -->
 			<span tal:omit-tag="" i18n:translate="">Day events for</span> <span tal:replace="python:cday+' '+here.getMonthName(cmonth)+' '+cyear"/>
 		</h3>
 
