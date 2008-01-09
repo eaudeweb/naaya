@@ -1,7 +1,7 @@
 <span metal:use-macro="here/calendar_template/macros/calendar_page">
 
 <tal:block metal:fill-slot="page_body">
-	<!-- TODO: make Zope to do the conversion of parameters to int -->
+	<!-- TODO: make Zope do the conversion of parameters to int -->
 	<tal:block define="cyear python:int(request.get('cyear', here.getCurrentYear()));
 	                   cmonth python:int(request.get('cmonth', here.getCurrentMonth()));
 
