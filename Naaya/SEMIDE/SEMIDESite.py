@@ -61,6 +61,7 @@ from SemideVersions                                 import SemideVersions
 from pdf.export_pdf                                 import export_pdf
 from Tools.FlashTool                                import manage_addFlashTool
 from Products.Naaya.NyFolder                        import addNyFolder
+from Products.NaayaCore.managers.paginator          import ObjectPaginator
 
 manage_addSEMIDESite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addSEMIDESite(self, id='', title='', lang=None, REQUEST=None):
@@ -1030,30 +1031,30 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
             return results
         else: return ['', '', '']
 
-    def getDuplicatesInFolder(self, pending, published):
+    def paggingContent(self, content):
+        return ObjectPaginator(content, num_per_page=25, orphans=15)
+
+    def getDuplicatesInFolder(self, folder):
         """
         Builds a disctionary with objects URLs that are potential duplicates:
         - news are duplicates if news.title and news.coverage are identical
         - events are duplicates if event.start_date and events.coverage are identical
         """
-        r = {}
-        news = [x for x in pending if x.meta_type == METATYPE_NYSEMNEWS]
-        news.extend([x for x in published if x.meta_type == METATYPE_NYSEMNEWS])
-        events = [x for x in pending if x.meta_type == METATYPE_NYSEMEVENT]
-        events.extend([x for x in published if x.meta_type == METATYPE_NYSEMEVENT])
-        for x in news:
-            for y in news:
-                if x != y:
-                    if (x.title == y.title) and (x.coverage == y.coverage):
-                        r[x.absolute_url()] = 1
-                        r[y.absolute_url()] = 1
-        for x in events:
-            for y in events:
-                if x != y:
-                    if (x.start_date == y.start_date) and (x.coverage == y.coverage):
-                        r[x.absolute_url()] = 1
-                        r[y.absolute_url()] = 1
-        return r
+        buf = {}
+        output = []
+        for n in folder.objectValues(METATYPE_NYSEMNEWS):
+            patt = (n.title, n.coverage)
+            if patt not in buf:
+                buf[patt] = 1
+            else:
+                output.append(n.absolute_url())
+        for e in folder.objectValues(METATYPE_NYSEMEVENT):
+            patt = (e.start_date, e.coverage)
+            if patt not in buf:
+                buf[patt] = 1
+            else:
+                output.append(e.absolute_url())
+        return output
 
     #left navigation related
     def getNavFolders(self, l_folder):

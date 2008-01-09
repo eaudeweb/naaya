@@ -9,6 +9,7 @@
 	For the pending onces, you can review them, select <strong>Approve</strong> or <strong>Delete</strong>
 	for any subset and click <strong>Save changes</strong>.
 	For the already approved ones, you can un-approve some of them and therefore make them not available for the public anymore.
+	The items colored in red are considered duplicates for the current language.
 </p>
 
 <h2 i18n:translate="">Pending items</h2>
@@ -42,8 +43,33 @@ function checkApp(frm, control)
 </script>
 <tal:block tal:define="pendings here/getPendingContent;
 		published here/getPublishedContent;
-		duplicates python:here.getDuplicatesInFolder(pendings, published)">
-<tal:block tal:condition="python:len(pendings)>0">
+		duplicates python:here.getDuplicatesInFolder(here);
+		folder_url here/absolute_url;
+		page python:request.get('page', 0);">
+
+<tal:block define="paginator python:here.paggingContent(pendings)" condition="python:len(pendings)>0">
+
+<div tal:define="curr_page python:paginator.validate_page_number(page)" tal:condition="paginator/hits">
+	<div>
+		<span tal:replace="python:paginator.first_on_page(curr_page)" /> - <span tal:replace="python:paginator.last_on_page(curr_page)" />
+		<span i18n:translate="" tal:omit-tag="">of</span>
+		<span tal:replace="paginator/hits" />
+	</div>
+	<div>
+		<span tal:condition="python:paginator.has_previous_page(curr_page)">
+			<a tal:define="page python:curr_page-1" tal:attributes="href string:${folder_url}/basketofapprovals_html?page=${page}" i18n:translate="">Previous</a>
+		</span>
+		<span tal:repeat="page python:paginator.page_range[:-1]">
+			<span tal:condition="python:page==curr_page" tal:content="page" />
+			<a tal:attributes="href string:${folder_url}/basketofapprovals_html?page=${page}" 
+				tal:condition="python:page!=curr_page" tal:content="page" />
+		</span>
+		<span tal:condition="python:paginator.has_next_page(curr_page)">
+			<a tal:define="page python:curr_page+1" tal:attributes="href string:${folder_url}/basketofapprovals_html?page=${page}" i18n:translate="">Next</a>
+		</span>
+	</div>
+</div>
+
 <form method="post" name="pndForm" id="pndForm"
 	tal:attributes="action string:${here/absolute_url}/processPendingContent">
 <table border="0" cellspacing="2" cellpadding="2" align="center">
@@ -56,13 +82,13 @@ function checkApp(frm, control)
 		<th i18n:translate="" style="width: 5%;">Approve</th>
 		<th i18n:translate="" style="width: 5%;">Delete</th>
 	</tr>
-	<tal:block tal:repeat="item pendings">
-	<tr tal:attributes="class python:test(duplicates.has_key(item.absolute_url()), 'duplicate', 'not-duplicate')">
+	<tal:block tal:repeat="item python:paginator.get_page(page)">
+	<tr tal:attributes="class python:test(item.absolute_url() in duplicates, 'duplicate', 'not-duplicate')">
 		<td width="1%"><img tal:attributes="src item/icon" border="0" /></td>
 		<td tal:content="python:here.utShowDateTime(item.releasedate)" />
 		<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id"/></td>
 		<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(item.contributor)" />
-		<td><a tal:attributes="href string:${item/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a></td>
+		<td><a tal:attributes="href string:${item/absolute_url}/edit_html" i18n:translate="">edit</a></td>
 		<td><input type="checkbox" name="appids" tal:attributes="value item/id" onclick="javascript:checkApp(document.pndForm, this)" /></td>
 		<td><input type="checkbox" name="delids" tal:attributes="value item/id" onclick="javascript:checkApp(document.pndForm, this)" /></td>
 	</tr>
@@ -82,7 +108,29 @@ function checkApp(frm, control)
 </tal:block>
 
 <h2 i18n:translate="">Published items</h2>
-<tal:block tal:condition="python:len(published)>0">
+<tal:block define="paginator python:here.paggingContent(published)"  condition="python:len(published)>0">
+
+<div tal:define="curr_page python:paginator.validate_page_number(page)" tal:condition="paginator/hits">
+	<div>
+		<span tal:replace="python:paginator.first_on_page(curr_page)" /> - <span tal:replace="python:paginator.last_on_page(curr_page)" />
+		<span i18n:translate="" tal:omit-tag="">of</span>
+		<span tal:replace="paginator/hits" />
+	</div>
+	<div>
+		<span tal:condition="python:paginator.has_previous_page(curr_page)">
+			<a tal:define="page python:curr_page-1" tal:attributes="href string:${folder_url}/basketofapprovals_html?page=${page}" i18n:translate="">Previous</a>
+		</span>
+		<span tal:repeat="page python:paginator.page_range[:-1]">
+			<span tal:condition="python:page==curr_page" tal:content="page" />
+			<a tal:attributes="href string:${folder_url}/basketofapprovals_html?page=${page}" 
+				tal:condition="python:page!=curr_page" tal:content="page" />
+		</span>
+		<span tal:condition="python:paginator.has_next_page(curr_page)">
+			<a tal:define="page python:curr_page+1" tal:attributes="href string:${folder_url}/basketofapprovals_html?page=${page}" i18n:translate="">Next</a>
+		</span>
+	</div>
+</div>
+
 <form method="post" name="pblForm" id="pblForm"
 	tal:attributes="action string:${here/absolute_url}/processPublishedContent">
 <table border="0" cellspacing="2" cellpadding="2" align="center">
@@ -95,13 +143,13 @@ function checkApp(frm, control)
 		<th i18n:translate="" style="width: 5%;">Unapprove</th>
 		<th i18n:translate="" style="width: 5%;">Delete</th>
 	</tr>
-	<tal:block tal:repeat="item published">
-	<tr tal:attributes="class python:test(duplicates.has_key(item.absolute_url()), 'duplicate', 'not-duplicate')">
+	<tal:block tal:repeat="item python:paginator.get_page(page)">
+	<tr tal:attributes="class python:test(item.absolute_url() in duplicates, 'duplicate', 'not-duplicate')">
 		<td width="1%"><img tal:attributes="src item/icon" border="0" /></td>
 		<td tal:content="python:here.utShowDateTime(item.releasedate)" />
 		<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id"/></td>
 		<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(item.contributor)" />
-		<td><a tal:attributes="href string:${item/absolute_url}/edit_html"><img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" /></a></td>
+		<td><a tal:attributes="href string:${item/absolute_url}/edit_html" i18n:translate="">edit</a></td>
 		<td><input type="checkbox" name="appids" tal:attributes="value item/id" onclick="javascript:checkApp(pblForm, this)" /></td>
 		<td><input type="checkbox" name="delids" tal:attributes="value item/id" onclick="javascript:checkApp(pblForm, this)" /></td>
 	</tr>
