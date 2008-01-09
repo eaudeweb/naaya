@@ -60,30 +60,27 @@
 		</tr>
 
 		<tal:block repeat="meta python:here.getSortedMetaTypes()">
-		<tr>
-			<td tal:attributes='class python:test(path("repeat/meta/odd"), "layout-row-odd", "layout-row-even")'
-				tal:content="meta"></td>
-			<td tal:attributes='class python:test(path("repeat/meta/odd"), "layout-row-odd", "layout-row-even")'>
+		<tr tal:attributes='class python:test(path("repeat/meta/odd"), "layout-row-odd", "layout-row-even")'>
+			<td tal:content="meta"></td>
+			<td>
 				<input type="text" size="20" tal:attributes="name meta; value python:here.cal_meta_types[meta][0]" />
 			</td>
 			<td tal:define="msg python:here.testMetaType(meta, here.cal_meta_types[meta][0]);
 							msg_type python:msg[0];
-							msg_body python:msg[1];"
-				tal:attributes='class python:test(path("repeat/meta/odd"), "layout-row-odd", "layout-row-even")'>
+							msg_body python:msg[1];">
 				<span style="color: red;" tal:condition="python:not msg_type" tal:content="msg_body"></span>
 				<span style="color: green;" tal:condition="python:msg_type" tal:content="msg_body"></span>
 			</td>
-			<td tal:attributes='class python:test(path("repeat/meta/odd"), "layout-row-odd", "layout-row-even")'>
+			<td>
 				<input type="text" size="20" tal:attributes="name python:'end_'+meta; value python:here.cal_meta_types[meta][1]" />
 			</td>
 			<td tal:define="msg python:here.testMetaType(meta, here.cal_meta_types[meta][1]);
 							msg_type python:msg[0];
-							msg_body python:msg[1];"
-				tal:attributes='class python:test(path("repeat/meta/odd"), "layout-row-odd", "layout-row-even")'>
+							msg_body python:msg[1];">
 				<span style="color: red;" tal:condition="python:not msg_type" tal:content="msg_body"></span>
 				<span style="color: green;" tal:condition="python:msg_type" tal:content="msg_body"></span>
 			</td>
-			<td tal:attributes='class python:test(path("repeat/meta/odd"), "layout-row-odd", "layout-row-even")'>
+			<td>
 				<input style="float: left;" type="text" size="40" tal:attributes="name python:'app_'+meta; value python:here.cal_meta_types[meta][2]" />
 			</td>
 		</tr>
