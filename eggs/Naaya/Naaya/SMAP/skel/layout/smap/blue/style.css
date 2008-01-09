@@ -449,6 +449,14 @@ ul.left_side_navigation li:hover {
 	color: white !important;
 	}
 
+/* IE6 Fix*/
+ul.left_side_navigation li.sfhover {
+	background: #9bc0dd !important;
+	color: white !important;
+	}
+
+ul.left_side_navigation li.sfhover a {color: white !important;}
+
 ul.left_side_navigation li:hover a {color: white !important;}
 
 ul.left_side_navigation ul li {
@@ -485,7 +493,7 @@ ul.left_side_navigation html ul li a { height: 1%; }
 
 /* End */
 
-ul.left_side_navigation li:hover ul, ul.left_side_navigation li.over ul { display: block; } /* The magic */
+ul.left_side_navigation li:hover ul, ul.left_side_navigation li.sfhover ul { display: block; } /* The magic */
 
 /* @@@@@@@@@@@@@@@@@@@@@@ RIGHT PORTLETS @@@@@@@@@@@@@@@@@@@@@@@ */
 /* RIGHT PORTLET VERSION 1 */
@@ -846,7 +854,6 @@ font-size: 1.1em;
 
 .treeview li.submenu{ /* Style for LI that contains sub lists (other ULs). */
 background: white url(misc_/SMAP/closed.gif) no-repeat left 1px;
-cursor: hand !important;
 cursor: pointer !important;
 }
 
