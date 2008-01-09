@@ -2,15 +2,15 @@
 <span metal:use-macro="here/calendar_template/macros/calendar_page">
 
 <tal:block metal:fill-slot="page_body">
-	<tal:block define="	cmonth python:request.get('cmonth', str(here.getCurrentMonth()));
-						cyear python:request.get('cyear', str(here.getCurrentYear()));
+	<tal:block define="cmonth python:request.get('cmonth', str(here.getCurrentMonth()));
+	                   cyear python:request.get('cyear', str(here.getCurrentYear()));
 
-						next_date python:here.getNextDate(cmonth, cyear);
-						prev_date python:here.getPrevDate(cmonth, cyear);
-						forw_month python:next_date[0];
-						forw_year python:next_date[1];
-						back_month python:prev_date[0];
-						back_year python:prev_date[1];">
+	                   next_date python:here.getNextDate(cmonth, cyear);
+	                   prev_date python:here.getPrevDate(cmonth, cyear);
+	                   forw_month python:next_date[0];
+	                   forw_year python:next_date[1];
+	                   back_month python:prev_date[0];
+	                   back_year python:prev_date[1];">
 <div id="middle_port" style="margin-right:0;">
 		<a tal:attributes="href string:${here/getArrowURL}cmonth=${back_month}&cyear=${back_year};" title="Previous month" i18n:attributes="title"><img tal:attributes="src string:${here/getEventCalendarURL}/left_arrow" title="Previous month" alt="Previous month" i18n:attributes="title alt" /></a>
 		<h3 id="Event-Title">
