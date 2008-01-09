@@ -95,8 +95,7 @@ class Utils:
 
     def utTestHasAttr(self, p_obj, p_meta):
         """ test if an object has a specific property """
-        if hasattr(p_obj, p_meta[0]) and (p_meta[1]=='' or hasattr(p_obj, p_meta[1])):  return 1
-        return 0
+        return hasattr(p_obj, p_meta[0]) and (p_meta[1]=='' or hasattr(p_obj, p_meta[1]))
 
     def utTestBobobase(self, p_string):
         """ test if a given string is equal with bobobase_modification_time """
