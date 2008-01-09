@@ -147,9 +147,9 @@ class DateFunctions:
 
     def isCurrentDay(self, p_day, p_month, p_year):
         """ test if current day """
-        if self.getCurrentDay()==p_day and self.getCurrentMonth()==int(p_month) and int(self.getCurrentYear())==int(p_year):
-            return 1
-        return 0
+        return self.getCurrentDay() == p_day and \
+               self.getCurrentMonth() == int(p_month) and \
+               int(self.getCurrentYear()) == int(p_year)
 
     def getNextDate(self, p_month, p_year):
         """ return next month """
