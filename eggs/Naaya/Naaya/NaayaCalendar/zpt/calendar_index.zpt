@@ -51,15 +51,15 @@
 		<tr tal:repeat="week days_matrix">
 			<tal:block repeat="day week">
 				<tal:block define="isCurrentDay python:here.isCurrentDay(day, cmonth, cyear);
-				                   inDailyEvents python:str(day) in daily_events">
+				                   hasEvents python:str(day) in daily_events">
 				<td tal:attributes="class python:test(isCurrentDay, 'current-day', 'event-day');
 				                    headers python:here.getShortWeekdays(here.day_len)[path('repeat/day/index')][1];"
-				    tal:condition="python:inDailyEvents">
+				    tal:condition="python:hasEvents">
 					<a tal:attributes="href string:${here/getDaysURL}cday=${day}/${cmonth}/${cyear};" tal:content="day"></a>
 				</td>
 				<td tal:attributes="class python:test(isCurrentDay, 'current-day', 'normal-day');
 				                    headers python:here.getShortWeekdays(here.day_len)[path('repeat/day/index')][1];"
-				    tal:condition="python:not inDailyEvents"
+				    tal:condition="python:not hasEvents"
 				    tal:content="day">
 				</td>
 				</tal:block>
