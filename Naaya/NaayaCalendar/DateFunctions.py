@@ -54,15 +54,15 @@ class DateFunctions:
 
     def getCurrentYear(self):
         """ return current year """
-        return DateTime().year()
+        return localtime()[0]
 
     def getCurrentMonth(self):
         """ return current month """
-        return DateTime().month()
+        return localtime()[1]
 
     def getCurrentDay(self):
         """ return current day """
-        return DateTime().day()
+        return localtime()[2]
 
     def getShortWeekdays(self, p_length):
         """."""
