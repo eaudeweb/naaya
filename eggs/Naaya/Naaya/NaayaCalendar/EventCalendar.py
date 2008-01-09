@@ -191,7 +191,7 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
     def getObjects(self, used_catalog, p_brains):
         """ return objects from used catalog """
         try:
-            return map(used_catalog.getobject, map(getattr, p_brains, ('data_record_id_',)*len(p_brains)))
+            return [used_catalog.getobject(brain.data_record_id_) for brain in p_brains]
         except:
             return []
 
