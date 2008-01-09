@@ -181,11 +181,10 @@ class Utils:
 
 
 def evalPredicate(predicate, event):
-    """Return the value of predicate for event.
+    """Return the value of predicate for event; empty expressions evaluate to True.
 
         @param predicate: a predicate expression where self is the event,
-                          e.g. "self.approved"; empty expressions evaluate
-                          to True
+                          e.g. "self.approved";
         @param event: event
     """
     if not predicate:
