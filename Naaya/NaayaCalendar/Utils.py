@@ -130,11 +130,8 @@ class Utils:
 
     def utEval(self, p_expr, p_obj):
         """ evaluates an expresion """
-        if not p_expr: return True
         try:
-            return bool(eval(p_expr,
-                             {'__builtins__': __builtins__},
-                             {'self': p_obj}))
+            return evalPredicate(p_expr, p_obj)
         except:
             return False
 
@@ -180,3 +177,19 @@ class Utils:
                 p_list.append('')
         l_list[len(l_list)-1] = p_list
         return l_list
+
+
+
+def evalPredicate(predicate, event):
+    """Return the value of predicate for event.
+
+        @param predicate: a predicate expression where self is the event,
+                          e.g. "self.approved"; empty expressions evaluate
+                          to True
+        @param event: event
+    """
+    if not predicate:
+        return True
+    return bool(eval(predicate,
+                     {'__builtins__': __builtins__},
+                     {'self': event}))
