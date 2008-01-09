@@ -71,7 +71,6 @@ class DateFunctions:
     def LongMonths(self, p_index):
         """ return the month's name """
         setTranslation = self.getSite().getPortalTranslations().translate
-        # TODO: replace ifs with months[p_index] tuple constant
         if p_index == 0:
             return setTranslation('', 'January')
         elif p_index == 1:
@@ -100,7 +99,6 @@ class DateFunctions:
     def LongDays(self, p_index):
         """ return the day's name """
         setTranslation = self.getSite().getPortalTranslations().translate
-        # TODO: replace ifs with days[p_index] tuple constant
         if p_index == 0:
             return setTranslation('', 'Monday')
         elif p_index == 1:
