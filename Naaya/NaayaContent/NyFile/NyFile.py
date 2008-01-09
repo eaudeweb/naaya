@@ -409,47 +409,62 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion, downloadfilename=downloadfilename)
-        if not len(r):
-            sortorder = int(sortorder)
-            if not self.hasVersion():
-                #this object has not been checked out; save changes directly into the object
-                releasedate = self.process_releasedate(releasedate, self.releasedate)
-                self.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
-                self.updatePropertiesFromGlossary(lang)
-                self.content_type = content_type
-                self.precondition = precondition
-                self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-            else:
-                #this object has been checked out; save changes into the version object
-                if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                    raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-                releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-                self.version.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
-                self.version.updatePropertiesFromGlossary(lang)
-                self.version.content_type = content_type
-                self.version.precondition = precondition
-                self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-            if discussion: self.open_for_comments()
-            else: self.close_for_comments()
-            self._p_changed = 1
-            self.recatalogNyObject(self)
-            #log date
-            contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
-            auth_tool = self.getAuthenticationTool()
-            auth_tool.changeLastPost(contributor)
-            if REQUEST:
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
-        else:
-            if REQUEST is not None:
-                self.setSessionErrors(r)
-                self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
-                    description=description, coverage=coverage, keywords=keywords, \
-                    sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
-                    downloadfilename=downloadfilename, content_type=content_type)
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
-            else:
+        # If errors return
+        if len(r):
+            if not REQUEST:
                 raise Exception, '%s' % ', '.join(r)
+            self.setSessionErrors(r)
+            self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
+                description=description, coverage=coverage, keywords=keywords, \
+                sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
+                downloadfilename=downloadfilename, content_type=content_type)
+            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            return
+        #
+        # Save properties
+        #
+        # Upload file
+        file_form = dict([(key, value) for key, value in kwargs.items()])
+        if REQUEST:
+            file_form.update(REQUEST.form)
+        source = file_form.get('source', None)
+        if source:
+            attached_file = file_form.get('file', '')
+            attached_url = file_form.get('url', '')
+            version = file_form.get('version', '')
+            self.saveUpload(source=source, file=attached_file, url=attached_url,
+                            version='', lang=lang)
+        # Update properties
+        sortorder = int(sortorder)
+        if not self.hasVersion():
+            #this object has not been checked out; save changes directly into the object
+            releasedate = self.process_releasedate(releasedate, self.releasedate)
+            self.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
+            self.updatePropertiesFromGlossary(lang)
+            self.content_type = content_type
+            self.precondition = precondition
+            self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        else:
+            #this object has been checked out; save changes into the version object
+            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
+                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            releasedate = self.process_releasedate(releasedate, self.version.releasedate)
+            self.version.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
+            self.version.updatePropertiesFromGlossary(lang)
+            self.version.content_type = content_type
+            self.version.precondition = precondition
+            self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
+        self._p_changed = 1
+        self.recatalogNyObject(self)
+        #log date
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        auth_tool = self.getAuthenticationTool()
+        auth_tool.changeLastPost(contributor)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveUpload')
     def saveUpload(self, source='file', file='', url='', version='', lang=None, REQUEST=None):
@@ -491,11 +506,14 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
         """ """
+        version = REQUEST.get('version', False)
         RESPONSE.setHeader('Content-Type', self.content_type)
         RESPONSE.setHeader('Content-Length', self.size)
         RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
+        if version and self.hasVersion():
+            return file_item.index_html(self.version, REQUEST, RESPONSE)
         return file_item.index_html(self, REQUEST, RESPONSE)
 
     security.declareProtected(view, 'view')
@@ -515,6 +533,17 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         media_server = getattr(site, 'media_server', '').strip()
         if not (media_server and file_path):
             return self.absolute_url() + '/download'
+        file_path = (media_server,) + tuple(file_path)
+        return '/'.join(file_path)
+    
+    security.declarePublic('getEditDownloadUrl')
+    def getEditDownloadUrl(self):
+        """ """
+        site = self.getSite()
+        file_path = self._get_data_name()
+        media_server = getattr(site, 'media_server', '').strip()
+        if not (media_server and file_path):
+            return self.absolute_url() + '/download?version=1'
         file_path = (media_server,) + tuple(file_path)
         return '/'.join(file_path)
 

@@ -462,42 +462,55 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion, file=file, subtitle=subtitle)
-        if not len(r):
-            sortorder = int(sortorder)
-            if not self.hasVersion():
-                #this object has not been checked out; save changes directly into the object
-                releasedate = self.process_releasedate(releasedate, self.releasedate)
-                self.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang, subtitle)
-                self.updatePropertiesFromGlossary(lang)
-                self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-            else:
-                #this object has been checked out; save changes into the version object
-                if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                    raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-                releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-                self.version.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang, subtitle)
-                self.version.updatePropertiesFromGlossary(lang)
-                self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-            if discussion: self.open_for_comments()
-            else: self.close_for_comments()
-            self._p_changed = 1
-            self.recatalogNyObject(self)
-            #log date
-            contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
-            auth_tool = self.getAuthenticationTool()
-            auth_tool.changeLastPost(contributor)
-            if REQUEST:
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
-        else:
-            if REQUEST is not None:
-                self.setSessionErrors(r)
-                self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
-                    description=description, coverage=coverage, keywords=keywords, \
-                    sortorder=sortorder, releasedate=releasedate, discussion=discussion, subtitle=subtitle)
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
-            else:
+        # If errors return
+        if len(r):
+            if not REQUEST:
                 raise Exception, '%s' % ', '.join(r)
+        
+            self.setSessionErrors(r)
+            self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
+                description=description, coverage=coverage, keywords=keywords, \
+                sortorder=sortorder, releasedate=releasedate, discussion=discussion, subtitle=subtitle)
+            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            return
+        #
+        # Save properties
+        #
+        # Upload file
+        file_form = dict([(key, value) for key, value in kwargs.items()])
+        if REQUEST:
+            file_form.update(REQUEST.form)
+        source = file_form.get('source', None)
+        if source:
+            attached_file = file_form.get('file', '')
+            self.saveUpload(file=attached_file, lang=lang)
+        # Update properties
+        sortorder = int(sortorder)
+        if not self.hasVersion():
+            #this object has not been checked out; save changes directly into the object
+            releasedate = self.process_releasedate(releasedate, self.releasedate)
+            self.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang, subtitle)
+            self.updatePropertiesFromGlossary(lang)
+            self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        else:
+            #this object has been checked out; save changes into the version object
+            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
+                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            releasedate = self.process_releasedate(releasedate, self.version.releasedate)
+            self.version.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang, subtitle)
+            self.version.updatePropertiesFromGlossary(lang)
+            self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
+        self._p_changed = 1
+        self.recatalogNyObject(self)
+        #log date
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        auth_tool = self.getAuthenticationTool()
+        auth_tool.changeLastPost(contributor)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveUpload')
     def saveUpload(self, file='', lang=None, REQUEST=None):
