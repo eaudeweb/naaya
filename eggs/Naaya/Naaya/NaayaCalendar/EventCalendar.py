@@ -75,13 +75,13 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
     product_name = 'Naaya Calendar'
 
     manage_options =((Folder.manage_options[0],) +
-                    ({'label':'Properties',     'action':'manage_properties'},
-                    {'label':'View',            'action':'index_html'},
-                    {'label':'Calendar style',  'action':'manage_style_calendar'},
-                    {'label':'Events style',    'action':'manage_style_events'},
-                    {'label':'Calendar',        'action':'show_calendar'},
-                    {'label':'Undo',            'action':'manage_UndoForm'},) +
-                    (Folder.manage_options[3],))
+                     ({'label':'Properties',     'action':'manage_properties'},
+                      {'label':'View',            'action':'index_html'},
+                      {'label':'Calendar style',  'action':'manage_style_calendar'},
+                      {'label':'Events style',    'action':'manage_style_events'},
+                      {'label':'Calendar',        'action':'show_calendar'},
+                      {'label':'Undo',            'action':'manage_UndoForm'},) +
+                     (Folder.manage_options[3],))
 
     security = ClassSecurityInfo()
 
