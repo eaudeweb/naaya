@@ -46,7 +46,7 @@
 </fieldset>
 
 <fieldset style="padding-left:10px; padding-right:10px;" tal:condition="python:here.utTestEmptyList(here.getSortedMetaTypes())"><legend><strong i18n:translate="">Manage date properties for meta types</strong></legend>
-	<div><em i18n:translate="">If left empty, the "Start date" field will take "bobobase_modification_time" as default value.</em></div>
+	<div><em i18n:translate="">The catalog index will need to be added and configured.</em></div>
 	<form name="frmProperties" action="manageMetaTypes" method="post" tal:condition="python:len(here.cal_meta_types) != 0">
 
 	<table id="layout-meta-table" cellspacing="0">
