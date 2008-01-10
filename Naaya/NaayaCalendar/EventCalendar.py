@@ -196,10 +196,9 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
     def testCatalog(self):
         """ test if catalog found """
         try:
-            used_catalog = self.unrestrictedTraverse(self.catalog)
-            if used_catalog: return 1
-            else:            return 0
-        except:              return 0
+            return bool(self.unrestrictedTraverse(self.catalog))
+        except:
+            return False
 
     security.declareProtected(view, 'getResults')
     def getResults(self, use=0):
