@@ -56,6 +56,7 @@
 			<th style="width: 14%;" i18n:translate="">Warnings</th>
 			<th style="width: 15%;" i18n:translate="">End date</th>
 			<th style="width: 14%;" i18n:translate="">Warnings</th>
+			<th i18n:translate="">Catalog index</th>
 			<th i18n:translate="">Visualisation condition (python expr.)</th>
 		</tr>
 
@@ -79,6 +80,9 @@
 							msg_body python:msg[1];">
 				<span style="color: red;" tal:condition="python:not msg_type" tal:content="msg_body"></span>
 				<span style="color: green;" tal:condition="python:msg_type" tal:content="msg_body"></span>
+			</td>
+			<td>
+				<input style="float: left;" type="text" size="40" tal:attributes="name python:'idx_'+meta; value python:here.cal_meta_types[meta][3]" />
 			</td>
 			<td>
 				<input style="float: left;" type="text" size="40" tal:attributes="name python:'app_'+meta; value python:here.cal_meta_types[meta][2]" />

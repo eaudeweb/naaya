@@ -2,24 +2,24 @@
 <span metal:use-macro="here/calendar_template/macros/calendar_page">
 
 <tal:block metal:fill-slot="page_body">
-	<tal:block define="cday python:request.get('cday', '').split('/')[0];
-	                   cmonth python:request.get('cday', '').split('/')[1];
-	                   cyear python:request.get('cday', '').split('/')[2];">
+	<tal:block define="cday python:int(request.get('cday', '').split('/')[0]);
+	                   cmonth python:int(request.get('cday', '').split('/')[1]);
+	                   cyear python:int(request.get('cday', '').split('/')[2]);">
 	<div id="middle_port" style='margin-right:0;'>
 		<h3 id="Event-Title">
 			<!-- TODO: use localized strftime for displaying the date bellow -->
-			<span tal:omit-tag="" i18n:translate="">Day events for</span> <span tal:replace="python:cday+' '+here.getMonthName(cmonth)+' '+cyear"/>
+			<span tal:omit-tag="" i18n:translate="">Day events for</span> <span tal:replace="python:str(cday)+' '+here.getMonthName(cmonth)+' '+str(cyear)"/>
 		</h3>
 
-		<table id="Event-Container" cellspacing="0" tal:define="daily_events python:here.getDailyEvents(cmonth, cyear);">
-			<tr tal:condition="python:len(cday)!=0">
+		<table id="Event-Container" cellspacing="0" tal:define="daily_events python:here.getEvents(cyear, cmonth, cday);">
+			<tr>
 				<th></th>
 				<th i18n:translate="">Event</th>
 			</tr>
-			<tr tal:condition="python:len(cday)==0">
+			<tr>
 				<td colspan="3" id="Event-None" i18n:translate="">No events this day</td>
 			</tr>
-			<tr tal:condition="python:len(cday)!=0" tal:repeat="obj python:daily_events[cday]">
+			<tr tal:repeat="obj python:daily_events">
 				<td><img tal:attributes="src python:obj[0].icon; title python:obj[0].meta_type; alt python:obj[0].meta_type;" /></td>
 				<td><a tal:attributes="href python:obj[0].absolute_url(0); title python:obj[0].title_or_id();" tal:content="python:obj[0].title_or_id()"></a></td>
 			</tr>

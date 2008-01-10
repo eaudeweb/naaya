@@ -12,7 +12,6 @@
 	                   back_month python:prev_date[0];
 	                   back_year python:prev_date[1];
 
-	                   daily_events python:here.getDailyEvents(cmonth, cyear);
 	                   date python:here.getMonthRange(cyear, cmonth);
 	                   days_matrix python:here.getDaysMatrix(here.getRange(here.getCounter(date[0])), here.getRange(date[1]));">
 
@@ -52,7 +51,7 @@
 		<tr tal:repeat="week days_matrix">
 			<tal:block repeat="day week">
 				<tal:block define="isCurrentDay python:here.isCurrentDay(day, cmonth, cyear);
-				                   hasEvents python:str(day) in daily_events">
+				                   hasEvents python:day and here.getEvents(cyear, cmonth, day)">
 				<td tal:attributes="class python:test(isCurrentDay, 'current-day', 'event-day');
 				                    headers python:here.getShortWeekdays(here.day_len)[path('repeat/day/index')][1];"
 				    tal:condition="python:hasEvents">

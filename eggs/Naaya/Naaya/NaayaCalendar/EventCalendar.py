@@ -20,6 +20,7 @@ __version__='$Revision: 1.38 $'[11:-2]
 
 # python imports
 from os.path import join
+import calendar
 
 # Zope imports
 from AccessControl import ClassSecurityInfo
@@ -34,7 +35,7 @@ from DateTime import DateTime
 
 # product imports
 from DateFunctions import DateFunctions
-from Utils import Utils
+from Utils import Utils, evalPredicate
 
 # constants
 css_calendar_default = {'border-weight':'2', 'border-color':'#cccccc', 'width':'160', 'height':'150', 'font-family':'Arial, Helvetica, Sans-Serif', \
@@ -155,7 +156,7 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
     security.declareProtected(view, 'getSortedMetaTypes')
     def getSortedMetaTypes(self):
         """ sorts the meta_type list """
-        return self.sortedKeysOfDict(self.cal_meta_types)
+        return self.sortedKeysOfDict(self.cal_meta_types) # TODO: use sorted in newer Pythons
 
     security.declareProtected(view, 'getCalMetaTypes')
     def getCalMetaTypes(self):
@@ -184,13 +185,31 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
     #########################
     #   EVENTS FUNCTIONS    #
     #########################
-    security.declareProtected(view, 'getObjects')
-    def getObjects(self, used_catalog, p_brains):
-        """ return objects from used catalog """
-        try:
-            return [used_catalog.getobject(brain.data_record_id_) for brain in p_brains]
-        except:
-            return []
+    security.declareProtected(view, 'getEvents')
+    def getEvents(self, year, month, day=None):
+        """Return the events for the specified date or the whole month if day
+            is not specified.
+        """
+        if day:
+            dates = [DateTime(year, month, day)]
+        else:
+            dates = [DateTime(year, month, day)
+                        for day in range(1, calendar.monthrange(year, month)[1] + 1)]
+
+        events = []
+        catalog = self.unrestrictedTraverse(self.catalog)
+        for date in dates:
+            for meta_type, (start_date_attr, end_date_attr,
+                            predicate, interval_idx) in self.cal_meta_types.items():
+                for brain in catalog({'meta_type': meta_type,
+                                      interval_idx: date}):
+                    event = brain.getObject()
+                    if evalPredicate(predicate, event):
+                        events.append((event,
+                                       self.getDate(getattr(event, start_date_attr)),
+                                       self.getDate(getattr(event, end_date_attr))))
+
+        return events
 
     security.declareProtected(view, 'testCatalog')
     def testCatalog(self):
@@ -199,135 +218,6 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
             return bool(self.unrestrictedTraverse(self.catalog))
         except:
             return False
-
-    security.declareProtected(view, 'getResults')
-    def getResults(self, use=0):
-        """ return results from used catalog or using PrincipiaFind """
-        results = []
-        #Use PrincipiaFind
-        if not use:
-            results = self.PrincipiaFind(self.getParent(), obj_metatypes=self.getSortedMetaTypes(), search_sub=1)
-
-        #Use catalog
-        else:
-            try:
-                l_brains = []
-                l_query = {}
-                used_catalog = self.unrestrictedTraverse(self.catalog)
-
-                for meta in self.getSortedMetaTypes():
-                    l_query['meta_type'] = meta
-                    l_brains.extend(used_catalog(l_query))
-
-                for item in self.getObjects(used_catalog, l_brains):
-                    results.append(('', item))
-            except:
-                results = []
-
-        return results
-
-    security.declareProtected(view, 'getMonthEvents')
-    def getMonthEvents(self, p_month, p_year):
-        """ return monthly events """
-        l_results = []
-        l_find = self.getResults(1)
-        for obj in l_find:
-            l_end_date = ''
-            l_start_date = self.getDatePropertyValue(obj[1], 0)
-            if self.testEndDate(obj[1]):
-                l_end_date = self.getDatePropertyValue(obj[1], 1)
-                if self.testInRangeDate(l_start_date, l_end_date, p_year, p_month):
-                    if self.getHasAttr(obj[1]) and self.utEval(self.getApprovedExpr(obj[1]), obj[1]):
-                        l_results.append((obj[1], self.getDate(l_start_date), self.getDate(l_end_date)))
-            else:
-                if (self.getMonth(l_start_date) == p_month) and (self.getYear(l_start_date) == p_year):
-                    if self.getHasAttr(obj[1]) and self.utEval(self.getApprovedExpr(obj[1]), obj[1]):
-                        l_results.append((obj[1], self.getDate(l_start_date), self.getDate(l_end_date)))
-        return l_results
-
-    security.declareProtected(view, 'getDailyEvents')
-    def getDailyEvents(self, p_month, p_year, REQUEST=None):
-        """ return daily events """
-        l_results = {}
-        l_find = self.getResults(1)
-        for obj in l_find:
-            l_start_date = self.getDatePropertyValue(obj[1], 0)
-            if self.testEndDate(obj[1]):
-                l_end_date = self.getDatePropertyValue(obj[1], 1)
-                if self.testValidDate(l_start_date,l_end_date):
-                    l_range = int(DateTime(l_end_date) - DateTime(l_start_date))
-                    for i in range(l_range+1):
-                        if (self.getMonth(DateTime(l_start_date)+i) == str(p_month)) and (self.getYear(DateTime(l_start_date)+i) == str(p_year)) and self.getHasAttr(obj[1]):
-                            if l_results.has_key(self.getDay(DateTime(l_start_date)+i)) and self.utEval(self.getApprovedExpr(obj[1]), obj[1]):
-                                l_results[self.getDay(DateTime(l_start_date)+i)].append((obj[1], self.getDate(DateTime(l_start_date)+i)))
-                            else:
-                                if self.utEval(self.getApprovedExpr(obj[1]), obj[1]):
-                                    l_results[self.getDay(DateTime(l_start_date)+i)] = [(obj[1], self.getDate(DateTime(l_start_date)+i))]
-            else:
-                if (self.getMonth(l_start_date) == str(p_month)) and (self.getYear(l_start_date) == str(p_year)) and self.getHasAttr(obj[1]):
-                    if l_results.has_key(self.getDay(l_start_date)) and self.utEval(self.getApprovedExpr(obj[1]), obj[1]):
-                        l_results[self.getDay(l_start_date)].append((obj[1], self.getDate(l_start_date)))
-                    else:
-                        if self.utEval(self.getApprovedExpr(obj[1]), obj[1]):
-                            l_results[self.getDay(l_start_date)] = [(obj[1], self.getDate(l_start_date))]
-        return l_results
-
-    security.declareProtected(view, 'testValidDate')
-    def testValidDate(self, p_sdate, p_edate):
-        """ test if start and end dates are in the correct format """
-        try:
-            DateTime(p_sdate)
-            DateTime(p_edate)
-            return 1
-        except:
-            return 0
-
-    security.declareProtected(view, 'getDatePropertyValue')
-    def getDatePropertyValue(self, p_obj, p_date):
-        """ return the value found in the specified (datetime) property """
-        l_meta = p_obj.meta_type
-        for k in self.cal_meta_types.keys():
-            if k == l_meta and self.getHasAttr(p_obj):
-                if self.utTestBobobase(self.cal_meta_types[k][p_date]):
-                    return p_obj.bobobase_modification_time()
-                return getattr(p_obj, self.cal_meta_types[k][p_date])
-        return ''
-
-    security.declareProtected(view, 'getApprovedExpr')
-    def getApprovedExpr(self, p_obj):
-        """ return approved expresion for this object """
-        l_meta = p_obj.meta_type
-        for k in self.cal_meta_types.keys():
-            if k == l_meta:
-                return self.cal_meta_types[k][2]
-
-    security.declarePrivate('getHasAttr')
-    def getHasAttr(self, p_obj):
-        """ test if an object has a specific property """
-        if self.utTestHasAttr(p_obj, self.cal_meta_types[p_obj.meta_type]):
-            return 1
-        return 0
-
-    security.declareProtected(view, 'getApprovedExpr')
-    def testEndDate(self, p_obj):
-        """ test if obj have end_date property set and is callable """
-        if self.cal_meta_types[p_obj.meta_type][1] != '':
-            return 1
-        return 0
-
-    security.declareProtected(view, 'getApprovedExpr')
-    def testInRangeDate(self, p_start_date, p_end_date, p_curr_year, p_curr_month):
-        """ test if current date is in start/end range """
-        try:
-            s_curr_date = DateTime(p_curr_month + '/' + self.getDay(p_start_date) + '/' + p_curr_year)
-            e_curr_date = DateTime(p_curr_month + '/' + self.getDay(p_end_date) + '/' + p_curr_year)
-            l_start_date = DateTime(self.getMonth(p_start_date) + '/' + self.getDay(p_start_date) + '/' + self.getYear(p_start_date))
-            l_end_date = DateTime(self.getMonth(p_end_date) + '/' + self.getDay(p_end_date) + '/' + self.getYear(p_end_date))
-            if s_curr_date >= l_start_date and e_curr_date <= l_end_date:
-                return 1
-        except:
-            pass
-        return 0
 
     #############################
     #   META TYPES FUNCTIONS    #
@@ -354,7 +244,7 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
             if item in self.cal_meta_types:
                 l_dict[item] = self.cal_meta_types[item]
             else:
-                l_dict[item] = ('start_date', 'end_date', '')
+                l_dict[item] = ('start_date', 'end_date', '', 'interval')
         return l_dict
 
 
@@ -419,11 +309,13 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
             if self.REQUEST[meta]:
                 self.cal_meta_types[meta]=(self.REQUEST[meta],
                                            self.REQUEST['end_'+meta],
-                                           self.REQUEST['app_'+meta])
+                                           self.REQUEST['app_'+meta],
+                                           self.REQUEST['idx_'+meta])
             else:
                 self.cal_meta_types[meta]=('bobobase_modification_time',
                                            self.REQUEST['end_'+meta],
-                                           self.REQUEST['app_'+meta])
+                                           self.REQUEST['app_'+meta],
+                                           self.REQUEST['idx_'+meta])
         self._p_changed = 1
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect('manage_properties')
