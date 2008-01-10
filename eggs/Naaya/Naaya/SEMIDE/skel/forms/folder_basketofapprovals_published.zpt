@@ -45,8 +45,8 @@ function checkApp(frm, control)
 -->
 </script>
 <tal:block tal:define="published here/getPublishedContent;
-					folder_url here/absolute_url;
-					page python:request.get('page', 0);">
+			folder_url here/absolute_url;
+			page python:request.get('page', 0);">
 
 <tal:block define="paginator python:here.paggingContent(published)"  condition="python:len(published)>0">
 
