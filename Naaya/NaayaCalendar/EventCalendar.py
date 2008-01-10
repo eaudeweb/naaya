@@ -200,11 +200,16 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
 
         events = []
         catalog = self.unrestrictedTraverse(self.catalog)
+        items = {}
         for date in dates:
             for meta_type, (start_date_attr, end_date_attr,
                             predicate, interval_idx) in self.cal_meta_types.items():
                 for brain in catalog({'meta_type': meta_type,
                                       interval_idx: date}):
+                    path = brain.getPath()
+                    if path in items:
+                        continue
+                    items[path] = None
                     event = brain.getObject()
                     if evalPredicate(predicate, event):
                         events.append((event,
