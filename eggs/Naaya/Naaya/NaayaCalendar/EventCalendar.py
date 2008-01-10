@@ -367,7 +367,9 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
     ######################
 
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', day_len='', cal_meta_types='', start_day='', catalog='', REQUEST=None):
+    def manageProperties(self, title='', description='', day_len='',
+                         cal_meta_types='', start_day='', catalog='',
+                         REQUEST=None):
         """ manage basic properties """
         self.title =            title
         self.description =      description
