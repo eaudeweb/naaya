@@ -2,8 +2,9 @@
 <span metal:use-macro="here/calendar_template/macros/calendar_page">
 
 <tal:block metal:fill-slot="page_body">
-	<tal:block define="cmonth python:request.get('cmonth', str(here.getCurrentMonth()));
-	                   cyear python:request.get('cyear', str(here.getCurrentYear()));
+	<!-- TODO: make Zope do the conversion of parameters to int -->
+	<tal:block define="cmonth python:int(request.get('cmonth', here.getCurrentMonth()));
+	                   cyear python:int(request.get('cyear', here.getCurrentYear()));
 
 	                   next_date python:here.getNextDate(cmonth, cyear);
 	                   prev_date python:here.getPrevDate(cmonth, cyear);
@@ -14,11 +15,11 @@
 <div id="middle_port" style="margin-right:0;">
 		<a tal:attributes="href string:${here/getArrowURL}cmonth=${back_month}&cyear=${back_year};" title="Previous month" i18n:attributes="title"><img tal:attributes="src string:${here/getEventCalendarURL}/left_arrow" title="Previous month" alt="Previous month" i18n:attributes="title alt" /></a>
 		<h3 id="Event-Title">
-			<span tal:omit-tag="" i18n:translate="">Month events for</span> <span tal:replace="python:here.getMonthName(cmonth)+' '+cyear" />
+			<span tal:omit-tag="" i18n:translate="">Month events for</span> <span tal:replace="python:here.getMonthName(cmonth)+' '+str(cyear)" />
 		</h3>
 		<a tal:attributes="href string:${here/getArrowURL}cmonth=${forw_month}&cyear=${forw_year};" title="Next month" i18n:attributes="title"><img tal:attributes="src string:${here/getEventCalendarURL}/right_arrow" title="Next month" alt="Next month" i18n:attributes="title alt" /></a>
 
-		<table id="Event-Container" cellspacing="0" tal:define="obj_list python:here.getMonthEvents(cmonth, cyear)">
+		<table id="Event-Container" cellspacing="0" tal:define="obj_list python:here.getEvents(cyear, cmonth)">
 			<tr tal:condition="python:len(obj_list)!=0">
 				<th width="2%"></th>
 				<th width="50%" i18n:translate="">Name</th>
