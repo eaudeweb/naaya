@@ -268,7 +268,7 @@ class NySemEvent(NyAttributes, semevent_item, NyItem, NyCheckControl):
 
     security.declareProtected(view, 'resource_end_date')
     def resource_end_date(self):
-        return self.end_date
+        return self.end_date or self.start_date
 
     security.declareProtected(view, 'resource_subject')
     def resource_subject(self):
