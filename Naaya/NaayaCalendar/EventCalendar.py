@@ -212,9 +212,14 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
                     items[path] = None
                     event = brain.getObject()
                     if evalPredicate(predicate, event):
-                        events.append((event,
-                                       self.getDate(getattr(event, start_date_attr)),
-                                       self.getDate(getattr(event, end_date_attr))))
+                        # TODO: refactor this callable thing with some code from TAL (PageTemplates)
+                        start_date = getattr(event, start_date_attr)
+                        if callable(start_date):
+                            start_date = start_date()
+                        end_date = getattr(event, end_date_attr)
+                        if callable(end_date):
+                            end_date = end_date()
+                        events.append((event, self.getDate(start_date), self.getDate(end_date)))
 
         return events
 
