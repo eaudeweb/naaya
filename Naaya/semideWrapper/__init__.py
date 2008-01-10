@@ -17,12 +17,16 @@
 #
 # Cornel Nitu, Eau de Web Romania
 
+from Products import Naaya
+
 from Products.Naaya.NyFolder import NyFolder
 from AccessControl import ClassSecurityInfo
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS, MESSAGE_SAVEDCHANGES
 from Products.Naaya.constants import METATYPE_FOLDER
 from Products.NaayaContent.NySemNews.NySemNews import METATYPE_OBJECT as METATYPE_NYSEMNEWS
 from Products.NaayaContent.NySemEvent.NySemEvent import METATYPE_OBJECT as METATYPE_NYSEMEVENT
+from Globals import InitializeClass
+
 security = ClassSecurityInfo()
 
 def getFolders(self): 
@@ -81,12 +85,32 @@ def processDuplicateContent(self, delids=[], REQUEST=None):
         REQUEST.RESPONSE.redirect('%s/basketofapprovals_duplicates_html' % self.absolute_url())
 NyFolder.processDuplicateContent = processDuplicateContent
 
+def processPublishedContent(self, appids=[], delids=[], REQUEST=None):
+    """
+    Process the published content inside this folder.
+    Objects with ids in appids list will be unapproved.
+    Objects with ids in delids will be deleted.
+    """
+    for id in self.utConvertToList(appids):
+        try:
+            ob = self._getOb(id)
+            ob.approveThis(0, None)
+            self.recatalogNyObject(ob)
+        except:
+            pass
+    for id in self.utConvertToList(delids):
+        try: self._delObject(id)
+        except: pass
+    if REQUEST:
+        self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+        REQUEST.RESPONSE.redirect('%s/basketofapprovals_published_html' % self.absolute_url())
+NyFolder.processPublishedContent = processPublishedContent
+
 security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processDuplicateContent')
 security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getDuplicatesInFolder')
 security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'folder_basketofapprovals_published')
 security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'folder_basketofapprovals_duplicates')
+security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPublishedContent')
 
 security.apply(NyFolder)
-
-
-
+InitializeClass(NyFolder)
