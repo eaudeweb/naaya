@@ -251,7 +251,7 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
             if item in self.cal_meta_types:
                 l_dict[item] = self.cal_meta_types[item]
             else:
-                l_dict[item] = ('start_date', 'end_date', '', 'interval')
+                l_dict[item] = ('resource_date', 'resource_end_date', '', 'resource_interval')
         return l_dict
 
 

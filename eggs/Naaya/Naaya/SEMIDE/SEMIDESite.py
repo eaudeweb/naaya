@@ -299,6 +299,11 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         except: pass
         try:    self.getCatalogTool().addIndex('resource_end_date', 'DateIndex')
         except: pass
+        class DateRangeIndexExtraParams: # 100% stupid code needed for DateRangeIndex
+            def __init__(self, since_field, until_field):
+                self.since_field = since_field
+                self.until_field = until_field
+        self.getCatalogTool().manage_addIndex('resource_interval', 'DateRangeIndex', extra=DateRangeIndexExtraParams('resource_date', 'resource_end_date'))
         try:    self.getCatalogTool().manage_addIndex('resource_subject', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
         except: pass
         try:    self.getCatalogTool().addIndex('statute', 'FieldIndex')
