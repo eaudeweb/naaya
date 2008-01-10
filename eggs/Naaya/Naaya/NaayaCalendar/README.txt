@@ -34,7 +34,7 @@ The "visualisation condition" properties by default is empty and ignored.
 
 <p>
 According to your needs you can fill "start date" and/or "end date" with a date type property name of the defined object and in
-"visualisation condition" filed you can put a python expression like "self.approved == 1" or "self.getApproved() == 1" to
+"visualisation condition" field you can put a python expression like "self.approved == 1" or "self.getApproved() == 1" to
 be evaluated.
 
 If "start date" is left empty, "bobobase_modification_time" will be set automatically.
