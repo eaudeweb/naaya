@@ -52,7 +52,9 @@ css_events_default = {'table-font-size':'90', 'title-font-color':'#000000', \
 
 manage_addEventCalendar_html = PageTemplateFile('zpt/calendar_add', globals())
 
-def manage_addEventCalendar(self, id, title='', description='', day_len='', cal_meta_types='', start_day='Monday', catalog='', REQUEST=None):
+def manage_addEventCalendar(self, id, title='', description='',
+                            day_len='', cal_meta_types='', start_day='Monday',
+                            catalog='', REQUEST=None):
     """ Adds a new EventCalendar object """
     ob = EventCalendar(id, title, description, day_len, cal_meta_types, start_day, catalog)
     self._setObject(id, ob)
