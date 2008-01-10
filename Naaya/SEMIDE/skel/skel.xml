@@ -2,6 +2,8 @@
 <skel>
 	<forms>
 		<form id="folder_basketofapprovals" title="NyFolder basket of approvals"/>
+		<form id="folder_basketofapprovals_published" title="NyFolder basket of approvals - published"/>
+		<form id="folder_basketofapprovals_duplicates" title="NyFolder basket of approvals - duplicates"/>
 		<form id="document_index" title=""/>
 		<form id="languages_box" title="Box for changing the language on pages"/>
 		<form id="folder_index" title=""/>

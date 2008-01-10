@@ -1034,28 +1034,6 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
     def paggingContent(self, content):
         return ObjectPaginator(content, num_per_page=25, orphans=15)
 
-    def getDuplicatesInFolder(self, folder):
-        """
-        Builds a disctionary with objects URLs that are potential duplicates:
-        - news are duplicates if news.title and news.coverage are identical
-        - events are duplicates if event.start_date and events.coverage are identical
-        """
-        buf = {}
-        output = []
-        for n in folder.objectValues(METATYPE_NYSEMNEWS):
-            patt = (n.title, n.coverage)
-            if patt not in buf:
-                buf[patt] = 1
-            else:
-                output.append(n.absolute_url())
-        for e in folder.objectValues(METATYPE_NYSEMEVENT):
-            patt = (e.start_date, e.coverage)
-            if patt not in buf:
-                buf[patt] = 1
-            else:
-                output.append(e.absolute_url())
-        return output
-
     #left navigation related
     def getNavFolders(self, l_folder):
         #sort alphabeticaly if sortorder is the same.
