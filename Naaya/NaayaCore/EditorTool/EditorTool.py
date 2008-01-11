@@ -136,22 +136,22 @@ class EditorTool(Folder):
         jsappend = js.append
         jsappend('<script type="text/javascript">')
         jsappend('tinyMCE.init({')
-        jsappend('elements:"%s",' % element)
-        jsappend('language:"%s",' % lang)
+        jsappend('elements:"%s"' % element)
+        jsappend(',language:"%s"' % lang)
         if self.isRTL(lang):
-            jsappend('directionality:"rtl",')
+            jsappend(',directionality:"rtl"')
         # TODO: find a better way (optimized?!) to do this
         if image_support:
-            [ jsappend('%s: "%s",' % (k, ','.join(v))) for k, v in self.configuration.items() ]
+            [ jsappend(',%s: "%s"' % (k, ','.join(v))) for k, v in self.configuration.items() ]
         else:
-            [ jsappend('%s: "%s",' % (k, ','.join(v))) for k, v in self.configuration.items()
+            [ jsappend(',%s: "%s"' % (k, ','.join(v))) for k, v in self.configuration.items()
                                                         if k != "theme_advanced_buttons2" ]
             L = list(self.configuration['theme_advanced_buttons2'])
             L.remove('image')
-            jsappend('theme_advanced_buttons2: "%s",' % ','.join(L))
+            jsappend(',theme_advanced_buttons2: "%s"' % ','.join(L))
         doc = self.restrictedTraverse(doc_url)
         if not doc.imageContainer.relative:
-            jsappend('document_base_url:"%s/"' % self.getSitePath())
+            jsappend(',document_base_url:"%s/"' % self.getSitePath())
         jsappend('});')
         jsappend('</script>')
         return '\n'.join(js)
