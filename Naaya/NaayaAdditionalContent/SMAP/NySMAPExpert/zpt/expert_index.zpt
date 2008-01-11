@@ -51,6 +51,14 @@
 		<a tal:attributes="href string:${here/absolute_url}/download"><span tal:replace="string:${here/downloadfilename}"/></a>
 	</td>
 </tr>
+<tal:block repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
+<tal:block define="rec_value python:here.getLocalProperty(record.id, here.gl_get_selected_language())">
+<tr tal:condition="rec_value">
+	<th i18n:translate="" tal:content="record/name" />
+	<td tal:content="rec_value" />
+</tr>
+</tal:block>
+</tal:block>
 </table>
 
 <span tal:replace="structure here/comments_box" />
