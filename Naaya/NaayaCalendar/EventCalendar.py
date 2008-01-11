@@ -202,8 +202,9 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
         catalog = self.unrestrictedTraverse(self.catalog)
         items = {}
         for date in dates:
-            for meta_type, (start_date_attr, end_date_attr,
-                            predicate, interval_idx) in self.cal_meta_types.items():
+            for meta_type, (interval_idx, predicate) in self.cal_meta_types.items():
+                start_date_attr = catalog.Indexes[interval_idx].getSinceField()
+                end_date_attr = catalog.Indexes[interval_idx].getUntilField()
                 for brain in catalog({'meta_type': meta_type,
                                       interval_idx: date}):
                     path = brain.getPath()
@@ -256,7 +257,7 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
             if item in self.cal_meta_types:
                 l_dict[item] = self.cal_meta_types[item]
             else:
-                l_dict[item] = ('resource_date', 'resource_end_date', '', 'resource_interval')
+                l_dict[item] = ('resource_interval', '')
         return l_dict
 
 
