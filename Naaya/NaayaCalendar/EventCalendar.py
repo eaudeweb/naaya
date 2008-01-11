@@ -318,7 +318,7 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
     security.declareProtected(view_management_screens, 'manageMetaTypes')
     def manageMetaTypes(self, REQUEST=None):
         """ manage meta types properties """
-        for meta in self.cal_meta_types.keys():
+        for meta in self.cal_meta_types:
             if self.REQUEST[meta]:
                 self.cal_meta_types[meta]=(self.REQUEST[meta],
                                            self.REQUEST['end_'+meta],
