@@ -25,9 +25,9 @@ Naaya Calendar
 		search the objects displayed by the calendar.
 
 		The objects will be included in the calendar based on some
-		date property and a visualisation condition.
-		By default, "start_date" value is taken for "start date"
-		property and "end_date" for "end date" property.
+		date properties (e.g. "resource_date" and "resource_end_date")
+		and a visualisation condition. A DateRangeIndex for these date
+		properties will need to be added to the catalog.
 		The "visualisation condition" properties is empty by default,
 		so it will be ignored.
 
@@ -35,16 +35,8 @@ Naaya Calendar
 		"end date" with a date type property name of the defined
 		object and in "visualisation condition" field you can put a
 		python expression like "self.approved" or "self.getApproved()"
-		to be evaluated. An DateRangeIndex for each "start date" and
-		"end date" pair, must be specified and added to the catalog,
-		e.g. "interval" for "start_date" and "end_date".
+		to be evaluated.
 
-		In the "Warnings" fields you'll find a general message regarding
-		that property of object such:
-		- Property found
-		- No such property
-		- Empty
-		- No object found
 
 
 
