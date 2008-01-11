@@ -28,8 +28,8 @@ Naaya Calendar
 		date property and a visualisation condition.
 		By default, "start_date" value is taken for "start date"
 		property and "end_date" for "end date" property.
-		The "visualisation condition" properties by default is empty
-		and ignored.
+		The "visualisation condition" properties is empty by default,
+		so it will be ignored.
 
 		According to your needs you can fill "start date" and
 		"end date" with a date type property name of the defined
