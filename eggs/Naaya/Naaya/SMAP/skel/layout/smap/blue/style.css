@@ -150,6 +150,38 @@ li {
 	margin-top: 1px;
 	display: none; /* to be changed */
 }
+
+/* Top drop down menu */
+ul.topnav_menu {
+	position: absolute;
+	top: auto;
+	left: auto;
+	background-color: #87aac6;
+	color: white;
+	display: none;
+	list-style-type: none;
+	padding: 0;
+	margin-top: 1em;
+	margin-left: 0;
+	z-index: 1000;
+}
+
+ul.topnav_menu li {
+	border-bottom: 1px dotted #9bc0dd;
+	border-left: 1px dotted #9bc0dd;
+	border-right: 1px dotted #9bc0dd;
+}
+
+ul.topnav_menu li:hover, ul.topnav_menu li.sfhover {
+	background-color: #7cae31;
+}
+
+ul.topnav_menu li a {
+	display: inline;
+}
+
+div.menuitem:hover ul, div.menuitem.sfhover ul, div.menuitem a {display: block;}
+
 /* ------------ END NAV_UPPER ---------- */
 
 #top_banner {
