@@ -106,6 +106,18 @@ def processPublishedContent(self, appids=[], delids=[], REQUEST=None):
         REQUEST.RESPONSE.redirect('%s/basketofapprovals_published_html' % self.absolute_url())
 NyFolder.processPublishedContent = processPublishedContent
 
+def getSortedPublishedContent(self, skey='', rkey=0):
+    return self.utSortObjsListByAttr(self.getPublishedContent(), skey, rkey)
+NyFolder.getSortedPublishedContent = getSortedPublishedContent
+
+def getSortedPendingContent(self, skey='', rkey=0):
+    return self.utSortObjsListByAttr(self.getPendingContent(), skey, rkey)
+NyFolder.getSortedPendingContent = getSortedPendingContent
+
+def getSortedDuplicateContent(self, skey='', rkey=0):
+    return self.utSortObjsListByAttr(self.getDuplicatesInFolder(), skey, rkey)
+NyFolder.getSortedDuplicateContent = getSortedDuplicateContent
+
 security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processDuplicateContent')
 security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getDuplicatesInFolder')
 security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'folder_basketofapprovals_published')
