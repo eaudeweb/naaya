@@ -132,29 +132,24 @@ class EditorTool(Folder):
         """
         doc_url = self.REQUEST['URLPATH1'].lstrip('/')
         lang = self._getTinyMCELang(lang)
-        js = []
-        jsappend = js.append
-        jsappend('<script type="text/javascript">')
-        jsappend('tinyMCE.init({')
-        jsappend('elements:"%s"' % element)
-        jsappend(',language:"%s"' % lang)
+        params = []
+        params.append('elements:"%s"' % element)
+        params.append('language:"%s"' % lang)
         if self.isRTL(lang):
-            jsappend(',directionality:"rtl"')
-        # TODO: find a better way (optimized?!) to do this
+            params.append('directionality:"rtl"')
+        # TODO for Python 2.4: use generator comprehension
         if image_support:
-            [ jsappend(',%s: "%s"' % (k, ','.join(v))) for k, v in self.configuration.items() ]
+            params.extend([('%s: "%s"' % (k, ','.join(v))) for k, v in self.configuration.items()])
         else:
-            [ jsappend(',%s: "%s"' % (k, ','.join(v))) for k, v in self.configuration.items()
-                                                        if k != "theme_advanced_buttons2" ]
+            params.extend(['%s: "%s"' % (k, ','.join(v)) for k, v in self.configuration.items()
+                                                                    if k != "theme_advanced_buttons2"])
             L = list(self.configuration['theme_advanced_buttons2'])
             L.remove('image')
-            jsappend(',theme_advanced_buttons2: "%s"' % ','.join(L))
+            params.append('theme_advanced_buttons2: "%s"' % ','.join(L))
         doc = self.restrictedTraverse(doc_url)
         if not doc.imageContainer.relative:
-            jsappend(',document_base_url:"%s/"' % self.getSitePath())
-        jsappend('});')
-        jsappend('</script>')
-        return '\n'.join(js)
+            params.append('document_base_url:"%s/"' % self.getSitePath())
+        return """<script type="text/javascript">tinyMCE.init({%s});</script>""" % (',\n'.join(params), )
 
     security.declarePublic('getTinyMCEJavaScript')
     def getTinyMCEJavaScript(self, REQUEST):
