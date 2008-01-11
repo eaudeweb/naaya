@@ -29,7 +29,7 @@
 	</td>
 </tr>
 <tr tal:condition="here/focus">
-	<th i18n:translate="">Focus(es) of the project(s)</th>
+	<th i18n:translate="">Area(s) and focus(es) of the project</th>
 	<td>
 		<ul>
 		<tal:block repeat="priority_id here/priority_area">
