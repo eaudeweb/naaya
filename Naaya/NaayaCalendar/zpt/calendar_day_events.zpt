@@ -16,7 +16,7 @@
 				<th></th>
 				<th i18n:translate="">Event</th>
 			</tr>
-			<tr tal:condition="python: not daily_events">
+			<tr tal:condition="not: daily_events">
 				<td colspan="3" id="Event-None" i18n:translate="">No events this day</td>
 			</tr>
 			<tr tal:repeat="obj python:daily_events">
