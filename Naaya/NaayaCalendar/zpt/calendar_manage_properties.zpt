@@ -58,7 +58,7 @@
 		<tr tal:attributes='class python:test(path("repeat/meta/odd"), "layout-row-odd", "layout-row-even")'>
 			<td tal:content="meta"></td>
 			<td>
-				<input type="text" size="20" tal:attributes="name meta; value python:here.cal_meta_types[meta][0]" />
+				<input type="text" size="20" tal:attributes="name python:'app_'+meta; value python:here.cal_meta_types[meta][0]" />
 			</td>
 			<td>
 				<input type="text" size="40" tal:attributes="name python:'idx_'+meta; value python:here.cal_meta_types[meta][1]" />
