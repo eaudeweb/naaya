@@ -44,7 +44,9 @@ function checkApp(frm, control)
 }
 -->
 </script>
-<tal:block tal:define="published here/getPublishedContent;
+<tal:block tal:define="skey python:request.get('skey', 'releasedate');
+			rkey python:request.get('rkey', '');
+			published python:here.getSortedPublishedContent(skey, rkey);
 			folder_url here/absolute_url;
 			page python:request.get('page', 0);">
 
@@ -58,15 +60,15 @@ function checkApp(frm, control)
 	</div>
 	<div>
 		<span tal:condition="python:paginator.has_previous_page(curr_page)">
-			<a tal:define="page python:curr_page-1" tal:attributes="href string:${folder_url}/basketofapprovals_published_html?page=${page}" i18n:translate="">Previous</a>
+			<a tal:define="page python:curr_page-1" tal:attributes="href string:${folder_url}/basketofapprovals_published_html?page=${page}&amp;skey=${skey}&amp;rkey=${rkey}" i18n:translate="">Previous</a>
 		</span>
 		<span tal:repeat="page python:paginator.page_range[:-1]">
 			<span tal:condition="python:page==curr_page" tal:content="page" />
-			<a tal:attributes="href string:${folder_url}/basketofapprovals_published_html?page=${page}" 
+			<a tal:attributes="href string:${folder_url}/basketofapprovals_published_html?page=${page}&amp;skey=${skey}&amp;rkey=${rkey}" 
 				tal:condition="python:page!=curr_page" tal:content="page" />
 		</span>
 		<span tal:condition="python:paginator.has_next_page(curr_page)">
-			<a tal:define="page python:curr_page+1" tal:attributes="href string:${folder_url}/basketofapprovals_published_html?page=${page}" i18n:translate="">Next</a>
+			<a tal:define="page python:curr_page+1" tal:attributes="href string:${folder_url}/basketofapprovals_published_html?page=${page}&amp;skey=${skey}&amp;rkey=${rkey}" i18n:translate="">Next</a>
 		</span>
 	</div>
 </div>
@@ -75,10 +77,76 @@ function checkApp(frm, control)
 <table border="0" cellspacing="2" cellpadding="2" align="center">
 	<tr>
 		<th></th>
-		<th i18n:translate="" style="width: 10%;">Submitted at</th>
-		<th i18n:translate="" style="width: 60%;">Title</th>
-		<th i18n:translate="" style="width: 10%;">Contributor</th>
-		<th i18n:translate="" style="width: 10%;">Edit</th>
+		<tal:block tal:condition="python:skey=='releasedate'">
+			<tal:block tal:condition="python:rkey==''">
+				<th class="sort_asc_th">
+					<a tal:attributes="href string:${folder_url}/basketofapprovals_published_html?page=${page}&amp;rkey=1">
+						<span i18n:translate="" tal:omit-tag="">Submitted at</span>
+						<img src="misc_/Naaya/sort_asc.gif" border="0" align="absmiddle" alt="" />
+					</a>
+				</th>
+			</tal:block>
+			<tal:block tal:condition="python:rkey=='1'">
+				<th class="sort_desc_th">
+					<a tal:attributes="href string:${folder_url}/basketofapprovals_published_html?page=${page}&amp;skey=releasedate">
+						<span i18n:translate="" tal:omit-tag="">Submitted at</span>
+						<img src="misc_/Naaya/sort_desc.gif" border="0" align="absmiddle" alt="" />
+					</a>
+				</th>
+			</tal:block>
+		</tal:block>
+		<tal:block tal:condition="python:skey!='releasedate'">
+			<th class="sort_th">
+				<a tal:attributes="href string:${folder_url}/basketofapprovals_published_html?page=${page}&amp;skey=releasedate" i18n:translate="">Submitted at</a>
+			</th>
+		</tal:block>
+		<tal:block tal:condition="python:skey=='title'">
+			<tal:block tal:condition="python:rkey==''">
+				<th class="sort_asc_th">
+					<a tal:attributes="href string:${folder_url}/basketofapprovals_published_html?page=${page}&amp;skey=title&amp;rkey=1">
+						<span i18n:translate="" tal:omit-tag="">Title</span>
+						<img src="misc_/Naaya/sort_asc.gif" border="0" align="absmiddle" alt="" />
+					</a>
+				</th>
+			</tal:block>
+			<tal:block tal:condition="python:rkey=='1'">
+				<th class="sort_desc_th">
+					<a tal:attributes="href string:${folder_url}/basketofapprovals_published_html?page=${page}&amp;skey=title">
+						<span i18n:translate="" tal:omit-tag="">Title</span>
+						<img src="misc_/Naaya/sort_desc.gif" border="0" align="absmiddle" alt="" />
+					</a>
+				</th>
+			</tal:block>
+		</tal:block>
+		<tal:block tal:condition="python:skey!='title'">
+			<th class="sort_th">
+				<a tal:attributes="href string:${folder_url}/basketofapprovals_published_html?page=${page}&amp;skey=title" i18n:translate="">Title</a>
+			</th>
+		</tal:block>
+		<tal:block tal:condition="python:skey=='contributor'">
+			<tal:block tal:condition="python:rkey==''">
+				<th class="sort_asc_th">
+					<a tal:attributes="href string:${folder_url}/basketofapprovals_published_html?page=${page}&amp;skey=contributor&amp;rkey=1">
+						<span i18n:translate="" tal:omit-tag="">Contributor</span>
+						<img src="misc_/Naaya/sort_asc.gif" border="0" align="absmiddle" alt="" />
+					</a>
+				</th>
+			</tal:block>
+			<tal:block tal:condition="python:rkey=='1'">
+				<th class="sort_desc_th">
+					<a tal:attributes="href string:${folder_url}/basketofapprovals_published_html?page=${page}&amp;skey=contributor">
+						<span i18n:translate="" tal:omit-tag="">Contributor</span>
+						<img src="misc_/Naaya/sort_desc.gif" border="0" align="absmiddle" alt="" />
+					</a>
+				</th>
+			</tal:block>
+		</tal:block>
+		<tal:block tal:condition="python:skey!='contributor'">
+			<th class="sort_th">
+				<a tal:attributes="href string:${folder_url}/basketofapprovals_published_html?page=${page}&amp;skey=contributor" i18n:translate="">Contributor</a>
+			</th>
+		</tal:block>
+		<th i18n:translate="">Edit</th>
 		<th i18n:translate="" style="width: 5%;">Unapprove</th>
 		<th i18n:translate="" style="width: 5%;">Delete</th>
 	</tr>
