@@ -319,16 +319,8 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
     def manageMetaTypes(self, REQUEST=None):
         """ manage meta types properties """
         for meta in self.cal_meta_types:
-            if self.REQUEST[meta]:
-                self.cal_meta_types[meta]=(self.REQUEST[meta],
-                                           self.REQUEST['end_'+meta],
-                                           self.REQUEST['app_'+meta],
-                                           self.REQUEST['idx_'+meta])
-            else:
-                self.cal_meta_types[meta]=('bobobase_modification_time',
-                                           self.REQUEST['end_'+meta],
-                                           self.REQUEST['app_'+meta],
-                                           self.REQUEST['idx_'+meta])
+            self.cal_meta_types[meta]=(self.REQUEST['idx_'+meta],
+                                       self.REQUEST['app_'+meta])
         self._p_changed = 1
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect('manage_properties')
