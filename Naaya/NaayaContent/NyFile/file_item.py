@@ -79,10 +79,11 @@ class file_item(NyProperties, NyFSFile):
         if source=='file':
             if file != '':
                 if hasattr(file, 'filename'):
-                    if file.filename != '':
+                    filename = file.filename
+                    if filename != '':
                         data, size = self._read_data(file)
                         content_type = self._get_content_type(file, data, self.__name__, 'application/octet-stream')
-                        self.update_data(data, content_type, size)
+                        self.update_data(data, content_type, size, filename)
                 else:
                     self.update_data(file)
         elif source=='url':

@@ -51,13 +51,14 @@ class NyFSFile(File):
             eid = getattr(self, '__name__', 'data.fs')
             self._ext_file = ExtFile(eid, etitle)
 
-    def _update_data(self, data, content_type=''):
+    def _update_data(self, data, content_type='', filename=''):
         self.manage_beforeUpdate()
         if hasattr(data, '__class__') and data.__class__ is Pdata:
             data = str(data)
         if not data:
             return
-        
+        if filename:
+            self._ext_file.id = filename
         self.data = ''
         if isinstance(data, ExtFile):
             self._ext_file = data
@@ -98,13 +99,13 @@ class NyFSFile(File):
     def __str__(self):
         return self.get_data()
     
-    def update_data(self, data, content_type=None, size=None):
+    def update_data(self, data, content_type=None, size=None, filename=''):
         if content_type is not None: 
             self.content_type = content_type
         if size is None: 
             size = len(data)
         self.size = size
-        self._update_data(data, content_type)
+        self._update_data(data, content_type, filename)
         self.ZCacheable_invalidate()
         self.ZCacheable_set(None)
         self.http__refreshEtag()
@@ -155,9 +156,11 @@ class NyFSImage(NyFSFile):
     def __str__(self):
         return self.tag()
 
-    def update_data(self, data, content_type=None, size=None):
+    def update_data(self, data, content_type=None, size=None, filename=''):
         file = data
         data, size = self._read_data(data)
+        if not filename:
+            filename = getattr(file, 'filename', '')
         content_type = self._get_content_type(file, data, self.__name__, 
                                               'application/octet-stream')
         ct, width, height = getImageInfo(data)
@@ -166,6 +169,6 @@ class NyFSImage(NyFSFile):
         if width >= 0 and height >= 0:
             self.width = width
             self.height = height
-        NyFSImage.inheritedAttribute('update_data')(self, data, content_type, size)
+        NyFSImage.inheritedAttribute('update_data')(self, data, content_type, size, filename)
 
 InitializeClass(NyFSImage)
