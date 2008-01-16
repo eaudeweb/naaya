@@ -2359,11 +2359,10 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
             self.absolute_url(), objects)
     
     # Customize Naaya switchToLanguage in order to handle Semide content types
-    security.declarePrivate('_getSwitchToLangDenyArgs')
-    def _getSwitchToLangDenyArgs(self, meta_type=""):
+    security.declarePrivate('_getCustomSwitchToLangDenyArgs')
+    def _getCustomSwitchToLangDenyArgs(self, meta_type="", deny_args=[]):
         """ Handle custom semide content types
         """
-        deny_args = NySite._getSwitchToLangDenyArgs(self, meta_type)
         if meta_type in ('Naaya Semide Event', 'Naaya Semide Document',
                          'Naaya Semide Multimedia', 'Naaya Semide News',
                          'Naaya Semide Text of Laws',
