@@ -1320,14 +1320,20 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
                  )
         if meta_type in ('Naaya GeoPoint',):
             deny_args = tuple([x for x in deny_args if x != 'url'])
-
+        if meta_type in ('Naaya Story', 'Naaya News'):
+            deny_args = tuple([x for x in deny_args if x != 'source'])
+        
+        # Custom filter by site
+        site = self.getSite()
+        custom_meth = getattr(site, '_getCustomSwitchToLangDenyArgs', None)
+        if custom_meth:
+            deny_args = custom_meth(meta_type, deny_args)
         return deny_args
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'switchToLanguage')
     def switchToLanguage(self, REQUEST=None, **kwargs):
         """Update session from a given language"""
         # Update kwargs from request
-        print 'intra'
         if not REQUEST:
             return
         parents = REQUEST.get('PARENTS', None)
