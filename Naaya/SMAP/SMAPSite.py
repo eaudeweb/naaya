@@ -120,6 +120,8 @@ class SMAPSite(NySite, ProfileMeta):
         #                     'http://smap.ewindows.eu.org/events/index_rdf', '', 'no')
         #rdfcal_ob = self._getOb(ID_RDFCALENDAR)
         #rdfcal_ob._getOb('events').update()
+        country_folder = self._getOb('fol112686')
+        country_folder.manage_role('Authenticated', ['Naaya - Add Naaya Contact objects', 'Naaya - Add Naaya Event objects', 'Naaya - Add Naaya Document objects', 'Naaya - Add Naaya Extended File objects', 'Naaya - Add Naaya File objects', 'Naaya - Access administrative area', 'Naaya - Add Naaya Folder objects', 'Naaya - Add Naaya GeoPoint objects', 'Naaya - Add Naaya Media File objects', 'Naaya - Add Naaya News objects', 'Naaya - Add Naaya Pointer objects', 'Naaya - Add Naaya SMAP Expert objects', 'Naaya - Add Naaya SMAP Project objects'])
 
     security.declarePrivate('createSMAPPortalTools')
     def createSMAPPortalTools(self):
