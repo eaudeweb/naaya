@@ -224,6 +224,49 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
 
         return events
 
+    # this is another implementation of the getEvents method; it's kept for reference
+    #security.declareProtected(view, 'getEvents')
+    #def getEvents(self, year, month, day=None):
+    #    """Return the events for the specified date or the whole month if day
+    #        is not specified.
+    #    """
+    #    if day:
+    #        first_date = last_date = DateTime(year, month, day)
+    #        # last_date = first_date.latestTime()
+    #    else:
+    #        first_date = DateTime(year, month, 1)
+    #        last_date = DateTime(year, month, calendar.monthrange(year, month)[1]) #.latestTime()
+    #
+    #    events = []
+    #    catalog = self.unrestrictedTraverse(self.catalog)
+    #    items = {}
+    #    for meta_type, (start_date_attr, end_date_attr,
+    #                    predicate, interval_idx) in self.cal_meta_types.items():
+    #        for query_kw in {start_date_attr: {'query': (first_date, last_date), \
+    #                                           'range': 'minmax'}},              \
+    #                        {end_date_attr:   {'query': (first_date, last_date), \
+    #                                           'range': 'minmax'}},              \
+    #                        {start_date_attr: {'query': first_date,              \
+    #                                           'range': 'max'},                  \
+    #                         end_date_attr:   {'query': last_date,               \
+    #                                           'range': 'min'}}:
+    #            for brain in catalog(meta_type=meta_type, **query_kw):
+    #                path = brain.getPath()
+    #                if path in items:
+    #                    continue
+    #                items[path] = None
+    #                event = brain.getObject()
+    #                if evalPredicate(predicate, event):
+    #                    # TODO: refactor this callable thing with some code from TAL (PageTemplates)
+    #                    start_date = getattr(event, start_date_attr)
+    #                    if callable(start_date):
+    #                        start_date = start_date()
+    #                    end_date = getattr(event, end_date_attr)
+    #                    if callable(end_date):
+    #                        end_date = end_date()
+    #                    events.append((event, self.getDate(start_date), self.getDate(end_date)))
+    #    return events
+
     security.declareProtected(view, 'testCatalog')
     def testCatalog(self):
         """ test if catalog found """
