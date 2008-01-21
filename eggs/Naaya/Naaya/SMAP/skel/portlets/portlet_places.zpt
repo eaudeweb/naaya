@@ -1,5 +1,5 @@
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
-	<tal:block metal:fill-slot="portlet_title"><span tal:replace="python:here.getPortletsTool().places.title_or_id()" /></tal:block>
+	<tal:block metal:fill-slot="portlet_title" i18n:translate=""><span tal:replace="python:here.getPortletsTool().places.title_or_id()" /></tal:block>
 	<tal:block metal:fill-slot="portlet_content">
 		<ul class="left_side_navigation">
 		<tal:block tal:repeat="item python:here.getPortletsTool().places.get_links_list()">
