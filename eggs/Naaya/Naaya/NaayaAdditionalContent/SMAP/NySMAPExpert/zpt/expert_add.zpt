@@ -98,6 +98,10 @@
 	</label>
 	<input type="file" name="file" id="file" size="40" value="" />
 </div>
+<div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(kind)">
+	<label tal:attributes="for record/id" i18n:translate=""><span tal:replace="record/name" /></label>
+	<tal:block tal:content="structure python:record.render(record.defaultvalue)">dynamic html control</tal:block>
+</div>
 
 <div class="field">
 	<input type="submit" value="Submit" i18n:attributes="value" />
