@@ -1,8 +1,8 @@
 <span tal:replace="structure here/standard_html_header" />
 
 <tal:block	define="priority_area python:request.get('priority_area', '');
-					focus python:here.utConvertToList(request.get('focus', []));
-					country python:here.encodeList(here.utConvertToList(request.get('country', [])));
+					focus python:here.utURLEncodeList(here.utConvertToList(request.get('focus', [])));
+					country python:here.utURLEncodeList(here.utConvertToList(request.get('country', [])));
 					free_text python:request.get('free_text', '');
 					exp_changed python:request.get('exp_changed', 0);
 
