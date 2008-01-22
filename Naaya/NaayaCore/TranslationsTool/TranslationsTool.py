@@ -264,26 +264,28 @@ class TranslationsTool(MessageCatalog):
             
         translations = {}
         for msgkey, transunit in self._messages.items():
+            if isinstance(msgkey, unicode):
+                msgkey = msgkey.encode(encoding)
             try:
                 translations[msgkey] = transunit[target_lang]
             except KeyError:
                 translations[msgkey] = ""
-                
+
         #sort translations
         tkeys = translations.keys()
         tkeys.sort()
-        
+
         #build headers
         output = [('source', 'target')]
         output_app = output.append  #optimisations
-        
+
         #build content
         for msgkey in tkeys:
             try:
                 output_app((unicode(msgkey, 'utf-8').encode(encoding), unicode(translations[msgkey], 'utf-8').encode(encoding)))
             except TypeError:
                 output_app((msgkey.encode(encoding), translations[msgkey].encode(encoding)))
-            
+
         #generate a temporary file on the filesystem that will be used to return the actual output
         tmp_name = spreadsheet_file(output, dialect)
         
