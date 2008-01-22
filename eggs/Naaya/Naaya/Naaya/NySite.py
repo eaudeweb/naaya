@@ -569,8 +569,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declarePublic('get_meta_types')
     def get_meta_types(self, folder=0):
         #returns a list with objects metatypes
-        if folder==1: return [METATYPE_FOLDER] + self.get_pluggable_installed_meta_types()
-        else: return self.get_pluggable_installed_meta_types()
+        res = []
+        if folder==1: 
+            res.append(METATYPE_FOLDER)
+        # Add Naaya Forum to subobjects list
+        try:
+            from Products.NaayaForum.constants import METATYPE_NYFORUM
+        except ImportError:
+            pass
+        else:
+            res.append(METATYPE_NYFORUM)
+        res.extend(self.get_pluggable_installed_meta_types())
+        return res
 
     security.declarePublic('get_label_for_meta_type')
     def get_label_for_meta_type(self, meta_type):
