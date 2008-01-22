@@ -331,6 +331,14 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         if METATYPE_FOLDER in self.folder_meta_types:
             if self.checkPermission(PERMISSION_ADD_FOLDER):
                 ra(('folder_add_html', LABEL_NYFOLDER))
+        # check for adding forums
+        try:
+            from Products.NaayaForum.constants import METATYPE_NYFORUM, PERMISSION_ADD_FORUM, LABEL_NYFORUM
+        except ImportError:
+            pass
+        else:
+            if self.checkPermission(PERMISSION_ADD_FORUM):
+                ra(('forum_add_html', LABEL_NYFORUM))
         #check pluggable content
         pc = self.get_pluggable_content()
         for k in self.get_pluggable_installed_meta_types():

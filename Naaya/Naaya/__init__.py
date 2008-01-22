@@ -118,6 +118,18 @@ for k,v in get_pluggable_content().items():
         c = 'NyFolder.NyFolder.%s = %s.%s' % (cns, v['module'], cns)
         exec(c)
         NyFolder.NyFolder.security.declareProtected(v['permission'], cns)
+    # Add forum to NyFolder
+    try:
+        from Products.NaayaForum.NyForum import NyForum, manage_addNyForum
+        from Products.NaayaForum.constants import PERMISSION_ADD_FORUM
+    except ImportError:
+        pass
+    else:
+        NyFolder.NyFolder.security.declareProtected(PERMISSION_ADD_FORUM, 'manage_addNyForum')
+        NyFolder.NyFolder.manage_addNyForum = manage_addNyForum
+        NyFolder.NyFolder.security.declareProtected(PERMISSION_ADD_FORUM, 'forum_add_html')
+        NyFolder.NyFolder.forum_add_html = NyForum.forum_add_html
+
 InitializeClass(NyFolder.NyFolder)
 
 #make drag & drop available globally
