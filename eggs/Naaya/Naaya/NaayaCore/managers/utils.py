@@ -496,12 +496,12 @@ class utils:
         """Encode a string using html_quote"""
         return html_quote(p_string)
 
-    def utUrlEncode(self, p_string):
+    def utUrlEncode(self, p_string, qtype=0):
         """Encode a string using url_quote"""
         if qtype:
             return p_string
         else:
-            return url_quote(utToUTF8(p_string))
+            return url_quote(self.utToUTF8(p_string))
 
     def utURLEncodeList(self, list):
         return [self.utUrlEncode(l) for l in list]
