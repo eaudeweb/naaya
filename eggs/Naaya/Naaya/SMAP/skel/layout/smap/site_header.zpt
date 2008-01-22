@@ -153,7 +153,7 @@
 				<div class="toplanguage" > <tal:block replace="structure here/languages_box" /> </div>
 
 				<div tal:repeat="main_categ here/getMainTopics" class="menuitem">
-					<a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/title" tal:content="main_categ/title" />
+					<a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/title" tal:content="main_categ/title" tal:condition="main_categ/checkPermissionView" />
 					<tal:block tal:define="sub_items python:main_categ.objectValues('Naaya Folder')">
 						<ul class="topnav_menu" tal:condition="sub_items">
 								<li tal:repeat="sub_item sub_items">
