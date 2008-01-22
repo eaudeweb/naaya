@@ -34,6 +34,7 @@ from NyForumBase import NyForumBase
 from Products.NaayaCore.managers.utils import utils
 from NyForumTopic import manage_addNyForumTopic_html, topic_add_html, addNyForumTopic
 from Products.NaayaBase.NyGadflyContainer import manage_addNyGadflyContainer
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 
 STATISTICS_CONTAINER = '.statistics'
 STATISTICS_COLUMNS = {'topic': 'VARCHAR', 'hits': 'INTEGER'}
@@ -48,8 +49,12 @@ def manage_addNyForum(self, id='', title='', description='', categories='', file
     ob = NyForum(id, title, description, categories, file_max_size)
     self._setObject(id, ob)
     self._getOb(id).loadDefaultData()
-    if REQUEST is not None:
+    if not REQUEST:
+        return id
+    # Redirect
+    if not REQUEST.form.get('redirect_url', None):
         return self.manage_main(self, REQUEST, update_menu=1)
+    REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
 class NyForum(NyForumBase, Folder, utils):
     """ """
@@ -240,6 +245,18 @@ class NyForum(NyForumBase, Folder, utils):
         self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
+    #zmi actions
+    security.declareProtected(PERMISSION_ADD_FORUM, 'saveProperties')
+    def saveProperties(self, title='', description='', categories='', REQUEST=None):
+        """ """
+        self.title = title
+        self.description = description
+        self.categories = self.utConvertLinesToList(categories)
+        self._p_changed = 1
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('edit_html?save=ok')
+
     #site actions
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'deleteTopics')
     def deleteTopics(self, ids='', REQUEST=None):
@@ -283,7 +300,12 @@ class NyForum(NyForumBase, Folder, utils):
         hits = res[0]['HITS']
         hits += 1
         return scontainer.set(key='hits', value=hits, topic=topic)
-        
+    
+    security.declareProtected(view, 'hasVersion')
+    def hasVersion(self):
+        """ """
+        return False
+    
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/forum_manage_edit', globals())
@@ -291,5 +313,11 @@ class NyForum(NyForumBase, Folder, utils):
     #site pages
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/forum_index', globals())
-
+    
+    security.declareProtected(PERMISSION_ADD_FORUM, 'edit_html')
+    edit_html = PageTemplateFile('zpt/forum_edit', globals())
+    
+    security.declareProtected(PERMISSION_ADD_FORUM, 'forum_add_html')
+    forum_add_html = PageTemplateFile('zpt/forum_add', globals())
+    
 InitializeClass(NyForum)
