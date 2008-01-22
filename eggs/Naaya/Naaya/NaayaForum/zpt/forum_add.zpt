@@ -28,7 +28,7 @@
 </div>
 <div class="field">
     <label for="title" i18n:translate="">Max allowed uploaded files size</label>
-    <input type="text" name="file_max_size:int" id="file_max_size" size="10" tal:attributes="value python:here.getSession('file_max_size', '')" />
+    <input type="text" name="file_max_size:int" id="file_max_size" size="10" tal:attributes="value python:here.getSession('file_max_size', 1048576)" />
     <span i18n:translate="">(bytes)</span>
 </div>
 <!-- Submit buttons-->
