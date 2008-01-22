@@ -84,7 +84,7 @@ class NyGadflyContainer(Folder):
                                 kwargs[keyN] = kwargs[valueN])
         """
         path = self.absolute_url(1)
-        self._table_name = path.replace('.', '').replace('/', '_')
+        self._table_name = path.replace('.', '').replace('-', '').replace('/', '_')
 
         attrs = []
         for key, value in kwargs.items():
