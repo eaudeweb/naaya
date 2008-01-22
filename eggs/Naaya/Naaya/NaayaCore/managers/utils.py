@@ -498,7 +498,13 @@ class utils:
 
     def utUrlEncode(self, p_string):
         """Encode a string using url_quote"""
-        return url_quote(p_string)
+        if qtype:
+            return p_string
+        else:
+            return url_quote(utToUTF8(p_string))
+
+    def utURLEncodeList(self, list):
+        return [self.utUrlEncode(l) for l in list]
 
     def utToUtf8(self, p_string):
         #convert to utf-8
