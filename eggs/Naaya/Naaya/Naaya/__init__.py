@@ -21,6 +21,7 @@
 #Python imports
 
 #Zope imports
+import zLOG
 from ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
@@ -140,7 +141,9 @@ def register_content(module, klass, module_methods, klass_methods, add_method):
     
     klass_label = getattr(klass, 'meta_label', klass.meta_type)
     NyFolder.NyFolder._dynamic_content_types[klass.meta_type] = (add_method, klass_label)
-    
+    zLOG.LOG(module.__name__, zLOG.INFO,
+             'Dynamic module "%s" registered' % klass.__name__)
+
     InitializeClass(NyFolder.NyFolder)
 
 #constructors for pluggable content
