@@ -9,8 +9,8 @@
 	<param name="bgcolor" value="#666666"/>
 
 	<embed tal:attributes="src options/charts_url"
-	       quality=high
-	       bgcolor=#666666
+	       quality="high"
+	       bgcolor="#666666"
 	       width="400"
 	       height="250"
 	       name="charts"
