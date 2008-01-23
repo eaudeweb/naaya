@@ -57,6 +57,7 @@ class ChartTool(Folder):
         """Load the XML/SWF Charts files"""
         self.manage_addProduct['LocalFS'].manage_addLocalFS('XmlSwfCharts', '', join(dirname(__file__), 'XmlSwfCharts'))
 
+    security.declarePublic('render')
     def render(self, data_url):
         """Render chart
 
