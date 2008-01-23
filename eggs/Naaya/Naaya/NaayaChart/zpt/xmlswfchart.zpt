@@ -1,14 +1,16 @@
 <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
     codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
-    width="400"
-    height="250"
+	tal:attributes="width options/with|python:400;
+	                height options/height|python:250"
     id="charts"
     align="">
 	<param name="movie" tal:attributes="value options/charts_url"/>
 	<param name="quality" value="high"/>
 	<param name="bgcolor" value="#666666"/>
 
-	<embed tal:attributes="src options/charts_url"
+	<embed tal:attributes="src options/charts_url;
+	                       width options/with|python:400;
+	                       height options/height|python:250"
 	       quality="high"
 	       bgcolor="#666666"
 	       width="400"
