@@ -58,15 +58,17 @@ class ChartTool(Folder):
         self.manage_addProduct['LocalFS'].manage_addLocalFS('XmlSwfCharts', '', join(dirname(__file__), 'XmlSwfCharts'))
 
     security.declarePublic('render')
-    def render(self, data_url):
+    def render(self, data_url, width=400, height=250):
         """Render chart using the data from data_url.
 
             @param data_url: URL of the XML data source
+            @param width: width of the chart
+            @param height: height of the chart
         """
         charts_url = '%s/charts.swf?%s' % \
                         (self.XmlSwfCharts.absolute_url(),
                          urllib.urlencode({'library_path': self.XmlSwfCharts.absolute_url() + '/' + 'charts_library',
                                            'xml_source': data_url}))
-        return self.xmlswfchart(charts_url=charts_url)
+        return self.xmlswfchart(charts_url=charts_url, width=width, height=height)
 
 InitializeClass(ChartTool)
