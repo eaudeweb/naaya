@@ -34,6 +34,7 @@ class ChartTool(Folder):
     )
 
     manage_options = (
+        {'label':'Contents', 'action':'manage_main'},
         {'label': 'View', 'action': 'index_html'},
     )
 
