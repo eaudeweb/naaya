@@ -325,6 +325,26 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         else:
             self.import_data_custom(self, object)
     
+    security.declarePublic('get_meta_type_label')
+    def get_meta_type_label(self, meta_type=None):
+        # Return label from meta_type
+        if not meta_type:
+            return ''
+        # Folder
+        if meta_type == METATYPE_FOLDER:
+            return LABEL_NYFOLDER
+        # Plugable content
+        pc = self.get_pluggable_content()
+        meta_item = pc.get(meta_type, {})
+        meta_label = meta_item.get('label', '')
+        if meta_label:
+            return meta_label
+        # Dynamic meta types
+        meta_item = self._dynamic_content_types.get(meta_type, ())
+        if len(meta_item) <= 1 or not meta_item[1]:
+            return meta_type
+        return meta_item[1]
+
     security.declarePublic('get_meta_types')
     def get_meta_types(self, folder=0):
         #returns a list with objects metatypes

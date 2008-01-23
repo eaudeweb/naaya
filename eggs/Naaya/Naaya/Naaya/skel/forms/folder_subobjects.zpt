@@ -32,15 +32,12 @@
     <label for="load_default" i18n:translate="">Load default</label>
   </div>
   <div id="pluggable_meta_types"
-       tal:define="pc here/get_pluggable_content;
-                   meta_types python:here.get_meta_types(1)">
+       tal:define="meta_types python:here.get_meta_types(1)">
     <select name="ny_subobjects" 
       tal:attributes="size python:len(meta_types) or 10" 
       multiple="true">
       <tal:block repeat="item meta_types">
-        <option tal:define="pc_item python:pc.get(item, {});
-                            item_label python:pc_item.get('label', item);
-                            item_label python:test(item_label=='Naaya Folder', 'Folder', item_label);"
+        <option tal:define="item_label python:here.get_meta_type_label(item);"
           tal:attributes="value item; selected python:item in here.folder_meta_types"
           tal:content="item_label" />
       </tal:block>
