@@ -59,7 +59,7 @@ class ChartTool(Folder):
 
     security.declarePublic('render')
     def render(self, data_url):
-        """Render chart
+        """Render chart using the data from data_url.
 
             @param data_url: URL of the XML data source
         """
