@@ -190,6 +190,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     description = LocalProperty('description')
     coverage = LocalProperty('coverage')
     keywords = LocalProperty('keywords')
+    
+    _dynamic_content_types = {}
 
     def all_meta_types(self, interfaces=None):
         """ What can you put inside me? """
@@ -322,6 +324,17 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             exec(c)
         else:
             self.import_data_custom(self, object)
+    
+    security.declarePublic('get_meta_types')
+    def get_meta_types(self, folder=0):
+        #returns a list with objects metatypes
+        res = []
+        if folder==1: 
+            res.append(METATYPE_FOLDER)
+        # Add Naaya Forum to subobjects list
+        res.extend(self._dynamic_content_types.keys())
+        res.extend(self.get_pluggable_installed_meta_types())
+        return res
 
     def process_submissions(self):
         #returns info regarding the meta_types that ce be added inside the folder
@@ -331,14 +344,10 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         if METATYPE_FOLDER in self.folder_meta_types:
             if self.checkPermission(PERMISSION_ADD_FOLDER):
                 ra(('folder_add_html', LABEL_NYFOLDER))
-        # check for adding forums
-        try:
-            from Products.NaayaForum.constants import METATYPE_NYFORUM, PERMISSION_ADD_FORUM, LABEL_NYFORUM
-        except ImportError:
-            pass
-        else:
-            if self.checkPermission(PERMISSION_ADD_FORUM):
-                ra(('forum_add_html', LABEL_NYFORUM))
+        # check for adding dynamic registered content types
+        for dynamic_key, dynamic_value in self._dynamic_content_types.items():
+            if dynamic_key in self.folder_meta_types:
+                ra(dynamic_value)
         #check pluggable content
         pc = self.get_pluggable_content()
         for k in self.get_pluggable_installed_meta_types():

@@ -108,6 +108,41 @@ misc_ = {
     'default-bg.gif':ImageFile('www/default-bg.gif', globals()),
 }
 
+def register_content(module, klass, module_methods, klass_methods, add_method):
+    """ To be called from content type you want to register within Naaya Folder.
+    
+    module_methods = {METHOD_1: PERMISSION_1, METHOD_2: PERMISSION_2}
+    klass_methods  = {METHOD_1: PERMISSION_1, METHOD_2: PERMISSION_2}
+    add_method = 'METHOD_ADD_HTML'
+    
+    See NaayaForum for an example.
+    """
+    security = ClassSecurityInfo()
+    NyFolder.NyFolder.security = security
+    
+    # Register module methods
+    for meth, permission in module_methods.items():
+        meth_obj = getattr(module, meth, None)
+        if not meth_obj:
+            continue
+        setattr(NyFolder.NyFolder, meth, meth_obj)
+        if permission:
+            NyFolder.NyFolder.security.declareProtected(permission, meth)
+    
+    # Register class methods
+    for meth, permission in klass_methods.items():
+        meth_obj = getattr(klass, meth, None)
+        if not meth_obj:
+            continue
+        setattr(NyFolder.NyFolder, meth, meth_obj)
+        if permission:
+            NyFolder.NyFolder.security.declareProtected(permission, meth)
+    
+    klass_label = getattr(klass, 'meta_label', klass.meta_type)
+    NyFolder.NyFolder._dynamic_content_types[klass.meta_type] = (add_method, klass_label)
+    
+    InitializeClass(NyFolder.NyFolder)
+
 #constructors for pluggable content
 security = ClassSecurityInfo()
 NyFolder.NyFolder.security = security
@@ -118,17 +153,6 @@ for k,v in get_pluggable_content().items():
         c = 'NyFolder.NyFolder.%s = %s.%s' % (cns, v['module'], cns)
         exec(c)
         NyFolder.NyFolder.security.declareProtected(v['permission'], cns)
-    # Add forum to NyFolder
-    try:
-        from Products.NaayaForum.NyForum import NyForum, manage_addNyForum
-        from Products.NaayaForum.constants import PERMISSION_ADD_FORUM
-    except ImportError:
-        pass
-    else:
-        NyFolder.NyFolder.security.declareProtected(PERMISSION_ADD_FORUM, 'manage_addNyForum')
-        NyFolder.NyFolder.manage_addNyForum = manage_addNyForum
-        NyFolder.NyFolder.security.declareProtected(PERMISSION_ADD_FORUM, 'forum_add_html')
-        NyFolder.NyFolder.forum_add_html = NyForum.forum_add_html
 
 InitializeClass(NyFolder.NyFolder)
 

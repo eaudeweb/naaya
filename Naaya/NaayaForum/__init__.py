@@ -29,6 +29,16 @@ import NyForum
 import NyForumTopic
 import NyForumMessage
 
+from Products.Naaya import register_content
+# Register as a folder content type
+register_content(
+    module=NyForum,
+    klass=NyForum.NyForum,
+    module_methods={'manage_addNyForum': PERMISSION_ADD_FORUM},
+    klass_methods={'forum_add_html': PERMISSION_ADD_FORUM},
+    add_method='forum_add_html'
+)
+
 def initialize(context):
     """ """
 
