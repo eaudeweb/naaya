@@ -2,7 +2,6 @@
     codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0"
 	tal:attributes="width options/with|python:400;
 	                height options/height|python:250"
-    id="charts"
     align="">
 	<param name="movie" tal:attributes="value options/charts_url"/>
 	<param name="quality" value="high"/>
@@ -15,7 +14,6 @@
 	       bgcolor="#666666"
 	       width="400"
 	       height="250"
-	       name="charts"
 	       align=""
 	       swLiveConnect="true"
 	       type="application/x-shockwave-flash"
