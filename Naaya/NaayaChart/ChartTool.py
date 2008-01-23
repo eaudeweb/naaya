@@ -25,7 +25,13 @@ def manage_addChartTool(context, REQUEST=None):
 
 
 class ChartTool(Folder):
-    """Tool for generating charts"""
+    """Tool for generating charts
+
+        Usage example (ZPT):
+        <span tal:replace="structure python: here.portal_chart.render(here.chart_data.absolute_url())">
+            CHART
+        </span>
+    """
 
     meta_type = 'Naaya Chart Tool'
     portal_id = 'portal_chart'
