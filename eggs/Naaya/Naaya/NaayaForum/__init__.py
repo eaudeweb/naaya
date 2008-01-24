@@ -36,7 +36,7 @@ register_content(
     klass=NyForum.NyForum,
     module_methods={'manage_addNyForum': PERMISSION_ADD_FORUM},
     klass_methods={'forum_add_html': PERMISSION_ADD_FORUM},
-    add_method='forum_add_html'
+    add_method=('forum_add_html', PERMISSION_ADD_FORUM),
 )
 
 def initialize(context):

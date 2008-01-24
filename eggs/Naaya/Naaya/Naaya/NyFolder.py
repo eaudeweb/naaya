@@ -367,7 +367,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         # check for adding dynamic registered content types
         for dynamic_key, dynamic_value in self._dynamic_content_types.items():
             if dynamic_key in self.folder_meta_types:
-                ra(dynamic_value)
+                if self.checkPermission(dynamic_value[2]):
+                    ra(dynamic_value[:2])
         #check pluggable content
         pc = self.get_pluggable_content()
         for k in self.get_pluggable_installed_meta_types():
