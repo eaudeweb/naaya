@@ -255,37 +255,53 @@ class SMAPSite(NySite, ProfileMeta):
 # Projects/Experts search
 #########################
 
+    security.declarePublic('parametrize_url')
+    def parametrize_url(self, url, page=0, free_text='', focus=[], country=[], priority_area=[], exp_changed='', prj_changed='', skey='', rkey=''):
+        """ """
+        from ZTUtils import make_query
+        params = {}
+        params['page'] = page
+        if free_text:
+            params['free_text'] = free_text
+        if focus:
+            params['focus'] = focus
+        if country:
+            params['country'] = country
+        if priority_area:
+            params['priority_area'] = priority_area
+        if exp_changed:
+            params['exp_changed'] = exp_changed
+        if prj_changed:
+            params['prj_changed'] = prj_changed
+        if skey:
+            params['skey'] = skey
+        if rkey:
+            params['rkey'] = rkey
+        query = make_query(params)
+        return '%s?%s' % (url, query)
+
     security.declarePublic('paggingContent')
     def paggingContent(self, content):
         return ObjectPaginator(content, num_per_page=10, orphans=6)
 
     security.declarePublic('searchExperts')
-    def searchExperts(self, priority_area='', focus=[], country='', free_text='', skey='', rkey=0, perform_search='', meta='', REQUEST=None):
+    def searchExperts(self, priority_area='', focus=[], country='', free_text='', skey='', rkey=0, perform_search='', REQUEST=None):
         """ """
-        res_per_page = 10
+        country = self.utConvertToList(country)
+        focus = self.utConvertToList(focus)
+
         query = ''
         res = []
-        results = []
         lang = self.gl_get_selected_language()
-        if meta == 'prj':
-            meta = '[METATYPE_NYSMAPPROJECT]'
-            area_indexname = 'resource_area'
-            focus_indexname = 'resource_focus'
-        elif meta == 'exp':
-            meta = '[METATYPE_NYSMAPEXPERT]'
-            area_indexname = 'resource_area_exp'
-            focus_indexname = 'resource_focus_exp'
-        else:               meta = '[]'
-
         _focus = ["%s|@|%s" % (priority_area, f) for f in self.utConvertToList(focus)]
         if perform_search:
-            query = 'self.getCatalogedObjects(meta_type=%s, approved=1' % meta
+            query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSMAPEXPERT], approved=1'
             if len(priority_area) > 0 and priority_area != 'all':
-                query += ', %s=priority_area' % area_indexname
+                query += ', resource_area_exp=priority_area'
             if len(_focus) > 0:
                 focuses = " or ".join(_focus)
                 focuses = self.utStrEscapeForSearch(focuses)
-                query += ', %s=focuses' % focus_indexname
+                query += ', resource_focus_exp=focuses'
             if len(country) > 0:
                 countries = " or ".join(country)
                 countries = self.utStrEscapeForSearch(countries)
@@ -298,56 +314,35 @@ class SMAPSite(NySite, ProfileMeta):
 
         return self.get_archive_listing(self.sorted_archive(res, skey, rkey))
 
-    #security.declarePublic('searchSMAP')
-    #def searchSMAP(self, priority_area='', focus=[], country='', free_text='', skey='',
-                       #rkey=0, start='', perform_search='', meta='', REQUEST=None):
-        #""" """
-        #res_per_page = 10
-        #query = ''
-        #res = []
-        #results = []
-        #lang = self.gl_get_selected_language()
-        #if meta == 'prj':
-            #meta = '[METATYPE_NYSMAPPROJECT]'
-            #area_indexname = 'resource_area'
-            #focus_indexname = 'resource_focus'
-        #elif meta == 'exp':
-            #meta = '[METATYPE_NYSMAPEXPERT]'
-            #area_indexname = 'resource_area_exp'
-            #focus_indexname = 'resource_focus_exp'
-        #else:               meta = '[]'
+    security.declarePublic('searchProjects')
+    def searchProjects(self, priority_area='', focus=[], country='', free_text='', skey='', rkey=0, perform_search='', REQUEST=None):
+        """ """
+        country = self.utConvertToList(country)
+        focus = self.utConvertToList(focus)
 
-        #try:    start = int(start)
-        #except: start = 0
+        query = ''
+        res = []
+        lang = self.gl_get_selected_language()
+        _focus = ["%s|@|%s" % (priority_area, f) for f in self.utConvertToList(focus)]
+        if perform_search:
+            query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSMAPPROJECT], approved=1'
+            if len(priority_area) > 0 and priority_area != 'all':
+                query += ', resource_area=priority_area'
+            if len(_focus) > 0:
+                focuses = " or ".join(_focus)
+                focuses = self.utStrEscapeForSearch(focuses)
+                query += ', resource_focus=focuses'
+            if len(country) > 0:
+                countries = " or ".join(country)
+                countries = self.utStrEscapeForSearch(countries)
+                query += ', resource_country=countries'
+            if free_text:
+                free_text = self.utStrEscapeForSearch(free_text)
+                query += ', objectkeywords_%s=free_text' % lang
+            query += ')'
+            res.extend(eval(query))
 
-        #_focus = ["%s|@|%s" % (priority_area, f) for f in self.utConvertToList(focus)]
-        #if perform_search:
-            #query = 'self.getCatalogedObjects(meta_type=%s, approved=1' % meta
-            #if len(priority_area) > 0 and priority_area != 'all':
-                #query += ', %s=priority_area' % area_indexname
-            #if len(_focus) > 0:
-                #focuses = " or ".join(_focus)
-                #focuses = self.utStrEscapeForSearch(focuses)
-                #query += ', %s=focuses' % focus_indexname
-            #if len(country) > 0:
-                #countries = " or ".join(country)
-                #countries = self.utStrEscapeForSearch(countries)
-                #query += ', resource_country=countries'
-            #if free_text:
-                #free_text = self.utStrEscapeForSearch(free_text)
-                #query += ', objectkeywords_%s=free_text' % lang
-            #query += ')'
-            #res.extend(eval(query))
-
-        #results = self.get_archive_listing(self.sorted_archive(res, skey, rkey))
-
-        ##batch related
-        #batch_obj = batch_utils(res_per_page, len(results[2]), start)
-        #if len(results[2]) > 0:
-            #paging_informations = batch_obj.butGetPagingInformations()
-        #else:
-            #paging_informations = (-1, 0, 0, -1, -1, 0, res_per_page, [0])
-        #return (paging_informations, (results[0], results[1], results[2][paging_informations[0]:paging_informations[1]]))
+        return self.get_archive_listing(self.sorted_archive(res, skey, rkey))
 
     def sorted_archive(self, p_objects=[], skey='', rkey=0):
         """ Return sorted projects """
@@ -377,24 +372,6 @@ class SMAPSite(NySite, ProfileMeta):
             if ((del_permission or edit_permission) and not x.approved) or x.approved:
                 results.append((del_permission, edit_permission, x))
         return (select_all, delete_all, results)
-
-    security.declareProtected(view, 'getRequestParams')
-    def getRequestParams(self, REQUEST=None):
-        """ Returns a REQUEST.QUERY_STRING (using REQUEST.form,
-            REQUEST.form=REQUEST.QUERY_STRING as a dictionary) """
-        ignore_list = ['skey', 'rkey', 'prj_changed', 'exp_changed']
-        res=''
-        if REQUEST:
-            for key in self.REQUEST.form.keys():
-                if key not in ignore_list:
-                    p_value = self.REQUEST.form[key]
-                    if type(p_value) == type([]):
-                        l_name = '&%s:list=' % key
-                        p_all = l_name.join(p_value)
-                        res = res + key + ':list=' + self.utUrlEncode(p_all) + '&'
-                    else:
-                        res = res + key + '=' + self.utUrlEncode(p_value) + '&'
-        return res
 
     security.declarePublic('stripAllHtmlTags')
     def stripAllHtmlTags(self, p_text):
