@@ -501,7 +501,7 @@ class utils:
         if qtype:
             return p_string
         else:
-            return url_quote(self.utToUTF8(p_string))
+            return url_quote(self.utToUtf8(p_string))
 
     def utURLEncodeList(self, list):
         return [self.utUrlEncode(l) for l in list]
