@@ -114,7 +114,7 @@ def register_content(module, klass, module_methods, klass_methods, add_method):
     
     module_methods = {METHOD_1: PERMISSION_1, METHOD_2: PERMISSION_2}
     klass_methods  = {METHOD_1: PERMISSION_1, METHOD_2: PERMISSION_2}
-    add_method = 'METHOD_ADD_HTML'
+    add_method = ('METHOD_ADD_HTML', 'PERMISSION')
     
     See NaayaForum for an example.
     """
@@ -140,7 +140,8 @@ def register_content(module, klass, module_methods, klass_methods, add_method):
             NyFolder.NyFolder.security.declareProtected(permission, meth)
     
     klass_label = getattr(klass, 'meta_label', klass.meta_type)
-    NyFolder.NyFolder._dynamic_content_types[klass.meta_type] = (add_method, klass_label)
+    add_meth, add_perm = add_method
+    NyFolder.NyFolder._dynamic_content_types[klass.meta_type] = (add_meth, klass_label, add_perm)
     zLOG.LOG(module.__name__, zLOG.INFO,
              'Dynamic module "%s" registered' % klass.__name__)
 
