@@ -24,11 +24,11 @@
 }
 .x-tree-node-collapsed .x-tree-node-icon, .x-tree-node-expanded .x-tree-node-icon, .x-tree-node-leaf .x-tree-node-icon{
 	border: 0 none;
-	height: 18px;
+	height: 16px;
 	margin: 0;
 	padding: 0;
 	vertical-align: top;
-	width: 16px;
+	width: 18px;
 	background-position:center;
     background-repeat: no-repeat;
 }
