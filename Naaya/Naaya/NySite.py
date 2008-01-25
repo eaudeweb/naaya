@@ -1630,11 +1630,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             'logo.gif' and 'logobis.gif' (or, for older versions of Naaya, 'logo' and 'logobis'
         """
         left_logo_ob = self.getLayoutTool()._getOb('logo.gif', None)
-        if left_logo_ob is not None:
+        if left_logo_ob is None:
             left_logo_ob = self.getLayoutTool()._getOb('logo', None)
+
         right_logo_ob = self.getLayoutTool()._getOb('logobis.gif', None)
-        if right_logo_ob is not None:
+        if right_logo_ob is None:
             right_logo_ob = self.getLayoutTool()._getOb('logobis', None)
+
         if del_leftlogo:
             left_logo_ob.update_data(data='')
             left_logo_ob._p_changed = 1
