@@ -31,10 +31,12 @@ from constants import *
 from Products.NaayaContent import get_pluggable_content
 import NySite
 import NyFolder
+from managers import initialize as managers_initialize
 
 def initialize(context):
     """ """
-
+    managers_initialize(context)
+    
     #register classes
     context.registerClass(
         NySite.NySite,

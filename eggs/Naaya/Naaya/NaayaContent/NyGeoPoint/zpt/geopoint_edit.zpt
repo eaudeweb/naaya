@@ -3,11 +3,13 @@
 <h1 metal:fill-slot="title" i18n:translate="">Edit Geo Point</h1>
 
 <tal:block metal:fill-slot="custom_properties" tal:define="portal_map here/getGeoMapTool;">
-
-
 <script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${portal_map/mapsapikey}"></script>
 <script type="text/javascript" src="misc_/NaayaCore/remote.js"></script>
 <script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
+<!-- Extjs tree libs -->
+<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/tree.css"/>
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext.js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-navigation.js.dtml"></script>
 
 <div class="field" tal:define="geo_type python:request.get('geo_type', here.geo_type)">
 	<label for="geo_type">
@@ -60,60 +62,14 @@
 </div>
 
 <div class="field">
-	<script type="text/javascript">
-	<!--
-	function fTreeClick(expand)
-	{
-		document.frmEdit.action = '';
-		document.frmEdit.expand.value = expand;
-		document.frmEdit.submit();
-	}
-	function fTreeNodeClick(node_path, node_title, node_description)
-	{
-		document.frmEdit.pointer.value = node_path;
-	}
-	//-->
-	</script>
-	<tal:block tal:define="expand python:request.get('expand', ''); expand_list python:here.splitToList(expand); tree python:here.getSiteMap(expand_list, None, 1)">
-		<table border="0" cellspacing="1" cellpadding="1" width="100%">
-			<tr tal:repeat="tree_node tree">
-				<td>
-					<table border="0" cellspacing="1" cellpadding="1">
-						<tr>
-							<td>
-								<img tal:repeat="i python:range(0, tree_node[2])"
-									 src="misc_/Naaya/square.gif" alt="" />
-								<tal:block tal:condition="python:tree_node[1]==-1">
-									<img src="misc_/Naaya/square.gif" alt="" />
-								</tal:block>
-								<tal:block
-									tal:define="node_expand python:here.processCollapse(expand_list, tree_node[0].absolute_url(1))"
-									tal:condition="python:tree_node[1]==0">
-									<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/minus.gif" alt="Collapse" /></a>
-								</tal:block>
-								<tal:block
-									tal:define="node_expand python:here.processExpand(expand_list, tree_node[0].absolute_url(1))"
-									tal:condition="python:tree_node[1]==1">
-									<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/plus.gif" alt="Expand" /></a>
-								</tal:block>
-							</td>
-							<td><img tal:attributes="src python:tree_node[0].icon" alt="" /></td>
-							<td><a tal:define="node_path python:tree_node[0].absolute_url(1); node_title python:tree_node[0].title_or_id(); node_description python:tree_node[0].description;" tal:attributes="href string:javascript:fTreeNodeClick('${node_path}', '${node_title}', '${node_description}')" tal:content="python:node_title">folder</a></td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-		</table>
-		<input type="hidden" name="expand" tal:attributes="value expand" />
-	</tal:block>
-</div>
-
-<div class="field">
 	<label for="pointer">
 		<span i18n:translate="" tal:omit-tag="">Related to local item (if any)</span>
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'pointer')" class="mandatory_field"> *</span>
 	</label>
-	<input type="text" name="pointer" id="pointer" size="50" tal:attributes="value python:here.getSession('pointer', request.get('pointer', here.pointer))" />
+	<!-- Extjs tree -->
+	<div id="pointer_tree" class="custom-tree"></div>
+	<div style="clear: both"></div>
+	<input class="extjs_tree" type="text" name="pointer" id="pointer" size="50" tal:attributes="value python:here.getSession('pointer', request.get('pointer', here.pointer))" />
 </div>
 
 </tal:block>

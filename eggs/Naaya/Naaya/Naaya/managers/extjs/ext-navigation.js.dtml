@@ -1,0 +1,47 @@
+<dtml-let the_site="getSite()">
+<dtml-let the_site_title="the_site.getLocalProperty('title') or the_site.title_or_id()">
+<dtml-let the_site_icon="the_site.absolute_url() + '/misc_/Naaya/NyFolder.gif' ">
+Ext.BLANK_IMAGE_URL = '<dtml-var "the_site.absolute_url()">/extjs/images/default/tree/s.gif';
+
+function makeTree(div_id, inp){
+  var Tree = Ext.tree;
+  var tree = new Tree.TreePanel(div_id, {
+      animate:true, 
+      rootVisible:true,
+      singleExpand: true,
+      loader: new Tree.TreeLoader({
+        dataUrl:'getNavigationSiteMap'
+      })
+    });
+  
+  // set the root node
+  var root = new Tree.AsyncTreeNode({
+    text: '<dtml-var the_site_title>',
+    icon: '<dtml-var the_site_icon>',
+    draggable:false,
+    id:'__root'
+  });
+  tree.setRootNode(root);
+  
+  tree.on('click', function(node){
+    if(node.id != '__root') inp.value = node.id;
+  });
+  
+  tree.render();
+  root.expand();
+}
+
+Ext.onReady(function(){
+  var inp_list = document.getElementsByTagName('input');
+  for (var k=0; k<inp_list.length; k++){
+    var inp = inp_list[k];
+    if (inp.getAttribute('type') == 'text' && inp.className.match(/extjs_tree/)){
+      var parent = inp.parentNode;
+      var target = parent.getElementsByTagName('div')[0];
+      makeTree(target.id, inp);
+    }
+  }
+});
+</dtml-let>
+</dtml-let>
+</dtml-let>

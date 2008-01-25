@@ -1149,6 +1149,50 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             REQUEST.RESPONSE.redirect('%s' % self.absolute_url()) # TODO update URL
 
     #site map stuff
+    security.declareProtected(view, 'getNavigationSiteMap')
+    def getNavigationSiteMap(self, REQUEST=None, **kwargs):
+        """ Returns site map in order to be used with extjs library"""
+        node = REQUEST.form.get('node', '')
+        if not node or node == '__root':
+            node = ''
+        
+        items = self.getFolderPublishedContent(node)
+        folders = items[0]
+        documents = items[1]
+        res = []
+        for folder in folders:
+            icon = getattr(folder, 'icon', '')
+            icon = icon and '/'.join((self.absolute_url(), icon))
+            res.append("""{
+                "id": "%(id)s",
+                "text": "%(title)s",
+                "leaf": false,
+                "href": "%(href)s",
+                "icon": "%(icon)s"
+                }""" % {
+                    "id": folder.absolute_url(1),
+                    "title": folder.getLocalProperty('title') or folder.title_or_id(),
+                    "href": '',
+                    "icon": icon
+                })
+        for document in documents:
+            icon = getattr(document, 'icon', '')
+            icon = icon and '/'.join((self.absolute_url(), icon))
+            res.append("""{
+                "id": "%(id)s",
+                "text": "%(title)s",
+                "leaf": true,
+                "href": "%(href)s",
+                "icon": "%(icon)s"
+                }""" % {
+                    "id": document.absolute_url(1),
+                    "title": document.getLocalProperty('title') or document.title_or_id(),
+                    "href": '',
+                    "icon": icon,
+                })
+        res = ', '.join(res)
+        return '[%s]' % res
+        
     def getSiteMap(self, expand=[], root=None, showitems=0):
         #returns a list of objects with additional information
         #in order to draw the site map

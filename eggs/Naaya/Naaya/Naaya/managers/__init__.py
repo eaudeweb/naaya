@@ -23,3 +23,16 @@
 #Zope imports
 
 #Product imports
+from os.path import join, dirname
+import zLOG
+from Products.LocalFS.LocalFS import manage_addLocalFS
+
+def initialize(context):
+    """ Register extjs lib"""
+    app = context._ProductContext__app
+    extjs_lib = getattr(app, 'extjs', None)
+    # Already installed
+    if extjs_lib:
+        return
+    manage_addLocalFS(app, 'extjs', 'ExtJs Library', join(dirname(__file__), 'extjs'))
+    zLOG.LOG('Naaya.managers', zLOG.INFO, 'ExtJs Library registered')
