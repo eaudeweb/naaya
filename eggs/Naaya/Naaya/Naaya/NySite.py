@@ -1202,7 +1202,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     "icon": icon,
                 })
         res = ', '.join(res)
-        return '[%s]' % res
+        return '[%s]' % res.encode('utf-8')
         
     def getSiteMap(self, expand=[], root=None, showitems=0):
         #returns a list of objects with additional information
