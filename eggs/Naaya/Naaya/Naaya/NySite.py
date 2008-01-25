@@ -1163,6 +1163,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         for folder in folders:
             icon = getattr(folder, 'icon', '')
             icon = icon and '/'.join((self.absolute_url(), icon))
+            title = folder.getLocalProperty('title') or folder.title_or_id()
+            title = title.replace('"', "'")
             res.append("""{
                 "id": "%(id)s",
                 "text": "%(title)s",
@@ -1171,13 +1173,15 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 "icon": "%(icon)s"
                 }""" % {
                     "id": folder.absolute_url(1),
-                    "title": folder.getLocalProperty('title') or folder.title_or_id(),
+                    "title": title,
                     "href": '',
                     "icon": icon
                 })
         for document in documents:
             icon = getattr(document, 'icon', '')
             icon = icon and '/'.join((self.absolute_url(), icon))
+            title = document.getLocalProperty('title') or document.title_or_id()
+            title = title.replace('"', "'")
             res.append("""{
                 "id": "%(id)s",
                 "text": "%(title)s",
@@ -1186,7 +1190,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 "icon": "%(icon)s"
                 }""" % {
                     "id": document.absolute_url(1),
-                    "title": document.getLocalProperty('title') or document.title_or_id(),
+                    "title": title,
                     "href": '',
                     "icon": icon,
                 })
