@@ -1,23 +1,26 @@
 <dtml-let the_site="getSite()">
 <dtml-let the_site_title="the_site.getLocalProperty('title') or the_site.title_or_id()">
 <dtml-let the_site_icon="the_site.absolute_url() + '/misc_/Naaya/NyFolder.gif' ">
+
 Ext.BLANK_IMAGE_URL = '<dtml-var "the_site.absolute_url()">/extjs/images/default/tree/s.gif';
 
 function makeTree(div_id, inp){
   var Tree = Ext.tree;
-  var tree = new Tree.TreePanel(div_id, {
+  var tree = new Tree.TreePanel({
+      el: div_id,
       animate:true, 
-      rootVisible:true,
+      autoScroll:true,
+      containerScroll: true,
       singleExpand: true,
-      loader: new Tree.TreeLoader({
-        dataUrl:'getNavigationSiteMap'
-      })
+      loader: new Tree.TreeLoader({dataUrl:'getNavigationSiteMap'})
     });
   
+  // add a tree sorter in folder mode
+  new Tree.TreeSorter(tree, {folderSort:true});
+
   // set the root node
   var root = new Tree.AsyncTreeNode({
     text: '<dtml-var the_site_title>',
-    icon: '<dtml-var the_site_icon>',
     draggable:false,
     id:'__root'
   });
@@ -28,10 +31,10 @@ function makeTree(div_id, inp){
   });
   
   tree.render();
-  root.expand();
+  root.expand(false, /*no anim*/ false);
 }
 
-Ext.onReady(function(){
+Ext.EventManager.onDocumentReady(function(){
   var inp_list = document.getElementsByTagName('input');
   for (var k=0; k<inp_list.length; k++){
     var inp = inp_list[k];

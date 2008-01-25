@@ -1,4 +1,10 @@
 <tal:block metal:use-macro="here/macro_manage_edit/macros/page">
+<!-- Extjs tree libs -->
+<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/tree.css"/>
+<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/custom-tree.css"/>
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-base.js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-all.js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-navigation.js.dtml"></script>
 
 <tal:block metal:fill-slot="description">
 	Change the properties in the form below and click <b>Save changes</b>.
