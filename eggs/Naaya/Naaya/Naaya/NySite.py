@@ -1597,53 +1597,64 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declarePublic('hasLeftLogo')
     def hasLeftLogo(self):
-        """ """
+        """ Returns true if the left logo image from the portal_layout tool is not empty
+            and therefore telling if this image should be displayed in the standard header.
+            Since older versions of Naaya used 'logo' as the image ID, this is the second choice
+        """
         layout_tool = self.getLayoutTool()
         logo = layout_tool._getOb('logo.gif', None)
+        if not logo:
+            logo = layout_tool._getOb('logo', None)
         if logo and logo.size:
             return True
         return False
 
     security.declarePublic('hasRightLogo')
     def hasRightLogo(self):
-        """ """
+        """ Returns true if the right logo image from the portal_layout tool is not empty
+            and therefore telling if this image should be displayed in the standard header.
+            Since older versions of Naaya used 'logobis' as the image ID, this is the second choice
+        """
         layout_tool = self.getLayoutTool()
         logo = layout_tool._getOb('logobis.gif', None)
+        if not logo:
+            logo = layout_tool._getOb('logobis', None)
         if logo and logo.size:
             return True
         return False
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_logos')
     def admin_logos(self, logo='', logobis='', del_leftlogo='', del_rightlogo='', REQUEST=None):
-        """ """
+        """ Allows changing and deleting the left and right logos for a Naaya site.
+            Left and right logos are independent of the layout chosen and are images called 
+            'logo.gif' and 'logobis.gif' (or, for older versions of Naaya, 'logo' and 'logobis'
+        """
+        left_logo_ob = self.getLayoutTool()._getOb('logo.gif', None)
+        if left_logo_ob is not None:
+            left_logo_ob = self.getLayoutTool()._getOb('logo', None)
+        right_logo_ob = self.getLayoutTool()._getOb('logobis.gif', None)
+        if right_logo_ob is not None:
+            right_logo_ob = self.getLayoutTool()._getOb('logobis', None)
         if del_leftlogo:
-            skel_path = join(NAAYA_PRODUCT_PATH, 'skel')
-            content = self.futRead(join(skel_path, 'layout', 'logo.gif'), 'rb')
-            image_ob = self.getLayoutTool()._getOb('logo.gif')
-            image_ob.update_data(data=content)
-            image_ob._p_changed=1
+            left_logo_ob.update_data(data='')
+            left_logo_ob._p_changed = 1
         if del_rightlogo:
-            skel_path = join(NAAYA_PRODUCT_PATH, 'skel')
-            content = self.futRead(join(skel_path, 'layout', 'logobis.gif'), 'rb')
-            image_ob = self.getLayoutTool()._getOb('logobis.gif')
-            image_ob.update_data(data=content)
-            image_ob._p_changed=1
+            right_logo_ob.update_data(data='')
+            right_logo_ob._p_changed = 1
         if logo != '':
             if hasattr(logo, 'filename'):
                 if logo.filename != '':
                     content = logo.read()
                     if content != '':
-                        image_ob = self.getLayoutTool()._getOb('logo.gif')
-                        image_ob.update_data(data=content)
-                        image_ob._p_changed=1
+                        left_logo_ob.update_data(data=content)
+                        left_logo_ob._p_changed = 1
         if logobis != '':
             if hasattr(logobis, 'filename'):
                 if logobis.filename != '':
                     content = logobis.read()
                     if content != '':
-                        image_ob = self.getLayoutTool()._getOb('logobis.gif')
-                        image_ob.update_data(data=content)
-                        image_ob._p_changed=1
+                        right_logo_ob.update_data(data=content)
+                        right_logo_ob._p_changed = 1
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_logos_html' % self.absolute_url())
