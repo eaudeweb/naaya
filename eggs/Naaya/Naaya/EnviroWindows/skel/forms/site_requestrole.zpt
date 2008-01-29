@@ -13,9 +13,8 @@
 </fieldset>
 
 <form method="post" name="frmrequest_role" tal:attributes="action string:${here/absolute_url}/processRequestRole">
-<div>
 	<p>
-	<input type="radio" name="role" value="admin">
+	<input type="radio" name="role" value="admin" />
 		<strong>Administrator</strong> - With this role you become authenticated user and you are 
 		responsible for content uploaded by yourself and by contributors in your folder. You have 
 		contribution, reviewing and publishing permissions. Besides that, you can manage other
@@ -23,12 +22,12 @@
 		roles, administrate remote channels and customise your folder with your logo and contact information.
 	</p>
 	<p>
-	<input type="radio" name="role" value="contrib" checked="checked">
+	<input type="radio" name="role" value="contrib" checked="checked" />
 		<strong>Contributor</strong> - With this role you become authenticated user and you have permission to
 		post data in the folders in which you have been given this role. The information submitted by 
 		contributors is not visible by anonymous users until is has been reviewd and approved by administrators 
 		or managers of the system.
-</div>
+	</p>
 <input type="hidden" name="return_path" tal:attributes="value python:request.URL1" />
 <input type="submit" name="apply" value="Apply for this role" class="input_submit" />
 <input type="submit" name="cancel" value="Cancel" class="input_submit" />
@@ -37,4 +36,4 @@
 <span tal:content="python:here.delSessionErrors()" tal:omit-tag=""></span>
 <span tal:content="python:here.delContributorSession()" tal:omit-tag=""></span>
 </div>
-<span tal:replace="structure here/standard_html_footer"/>
+<span tal:replace="structure here/standard_html_footer" />
