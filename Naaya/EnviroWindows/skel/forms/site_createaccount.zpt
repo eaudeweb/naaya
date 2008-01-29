@@ -11,7 +11,7 @@
 <form method="post" tal:attributes="action string:${here/getSitePath}/processRequestRoleForm">
 <table border="0" cellspacing="2" cellpadding="2">
 	<tr>
-		<td valign="top" i18n:translate="">Username<br/></td>
+		<td valign="top" i18n:translate="">Username</td>
 		<td><input type="text" name="username:utf8:ustring" size="40" tal:attributes="value here/getSessionUserName" />*</td>
 	</tr>
 	<tr>
@@ -28,11 +28,11 @@
 	</tr>
 	<tr>
 		<td i18n:translate="">Password:</td>
-		<td><input type="password" name="password" size="30" value="" maxlength="255">*</td>
+		<td><input type="password" name="password:utf8:ustring" size="30" value="" maxlength="255">*</td>
 	</tr>
 	<tr>
 		<td i18n:translate="">Password verification:</td>
-		<td><input type="password" name="confirm" value="" size="30" maxlength="255">*</td>
+		<td><input type="password" name="confirm:utf8:ustring" value="" size="30" maxlength="255">*</td>
 	</tr>
 	<tr>
 		<td i18n:translate="">Organisation</td>
