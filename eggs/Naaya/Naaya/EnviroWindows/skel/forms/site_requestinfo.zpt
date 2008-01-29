@@ -94,7 +94,7 @@
 			</tr>
 			<tr>
 				<td>Phone:</td>
-				<td><input type="text" name="phone:utf8:ustrings" tal:attributes="value python:here.getSessionContributorPhone(request.get('phone', ''))">*</td>
+				<td><input type="text" name="phone:utf8:ustring" tal:attributes="value python:here.getSessionContributorPhone(request.get('phone', ''))">*</td>
 			</tr>
 			<tr>
 				<td>Username:</td>
