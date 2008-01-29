@@ -1,7 +1,7 @@
 <span tal:replace="structure here/standard_html_header"/>
 <div class="request_role">
 <h1>Application for administration or contributor rights</h1>
-<h2><strong>Step 2: Provide personal information</strong></h2>
+<h2>Step 2: Provide personal information</h2>
 
 <span tal:condition="python:request.has_key('acc') and not here.is_logged(request)">
 	Invalid username or password
@@ -74,19 +74,19 @@
 		<table border="0" cellspacing="0" style="0">
 		<tr>
 			<td>Title:</td>
-			<td><input type="text" name="title" size="30" tal:attributes="value python:here.getSessionContributorTitle(request.get('title', ''))" /></td>
+			<td><input type="text" name="title:utf8:ustring" size="30" tal:attributes="value python:here.getSessionContributorTitle(request.get('title', ''))" /></td>
 		</tr>
 		<tr>
 				<td>First Name:</td>
-				<td><input type="text" name="firstname" size="20" tal:attributes="value python:here.getSessionContributorFirstname(request.get('firstname', ''))" />*</td>
+				<td><input type="text" name="firstname:utf8:ustring" size="20" tal:attributes="value python:here.getSessionContributorFirstname(request.get('firstname', ''))" />*</td>
 			</tr>
 			<tr>
 				<td>Surname:</td>
-				<td><input type="text" name="lastname" size="20" tal:attributes="value python:here.getSessionContributorLastname(request.get('lastname', ''))" />*</td>
+				<td><input type="text" name="lastname:utf8:ustring" size="20" tal:attributes="value python:here.getSessionContributorLastname(request.get('lastname', ''))" />*</td>
 			</tr>
 			<tr>
 				<td>Email:</td>
-				<td><input type="text" name="email" size="20" tal:attributes="value python:here.getSessionContributorEmail(request.get('email', ''))" />*</td>
+				<td><input type="text" name="email:utf8:ustring" size="20" tal:attributes="value python:here.getSessionContributorEmail(request.get('email', ''))" />*</td>
 			</tr>
 			<tr>
 				<td>Postal <br />address:</td>
@@ -94,7 +94,7 @@
 			</tr>
 			<tr>
 				<td>Phone:</td>
-				<td><input type="text" name="phone" tal:attributes="value python:here.getSessionContributorPhone(request.get('phone', ''))">*</td>
+				<td><input type="text" name="phone:utf8:ustrings" tal:attributes="value python:here.getSessionContributorPhone(request.get('phone', ''))">*</td>
 			</tr>
 			<tr>
 				<td>Username:</td>
@@ -113,7 +113,7 @@
 		<table border="0" cellspacing="0" style="margin:0;">
 			<tr>
 				<td>Organisation:</td>
-				<td><input type="text" name="organisation" size="30" tal:attributes="value python:here.getSessionContributorOrganisation(request.get('organisation', ''))" /></td>
+				<td><input type="text" name="organisation:utf8:ustring" size="30" tal:attributes="value python:here.getSessionContributorOrganisation(request.get('organisation', ''))" /></td>
 			</tr>
 			<tr>
 				<td>Description:</td>
@@ -121,11 +121,11 @@
 			</tr>
 			<tr>
 				<td>Fax:</td>
-				<td><input type="text" name="fax" tal:attributes="value python:here.getSessionContributorFax(request.get('fax', ''))" /></td>
+				<td><input type="text" name="fax:utf8:ustring" tal:attributes="value python:here.getSessionContributorFax(request.get('fax', ''))" /></td>
 			</tr>
 			<tr>
 				<td>URL address:</td>
-				<td><input type="text" name="website" tal:attributes="value python:here.getSessionContributorWebsite(request.get('website', ''))" /></td>
+				<td><input type="text" name="website:utf8:ustring" tal:attributes="value python:here.getSessionContributorWebsite(request.get('website', ''))" /></td>
 			</tr>
 		</table>
 	<br />
