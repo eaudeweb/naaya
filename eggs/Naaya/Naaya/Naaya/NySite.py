@@ -30,6 +30,7 @@ from copy import copy
 from cStringIO import StringIO
 
 #Zope imports
+import zLOG
 from OFS.Folder import Folder, manage_addFolder
 from OFS.Image import manage_addImage
 from OFS.DTMLMethod import addDTMLMethod
@@ -1042,6 +1043,16 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             try: x.add_language(language)
             except: pass
         self.gl_add_site_language_custom(language)
+        # Custom update site children languages
+        for x in self.objectValues():
+            object_add_meth = getattr(x, 'custom_object_add_language', None)
+            if not object_add_meth:
+                continue
+            try:
+                object_add_meth(language)
+            except Exception, exc_error:
+                zLOG.LOG('NySite', zLOG.DEBUG, 'Could not add language %s for object %s: %s' % (language, x.absolute_url(1), exc_error))
+                continue
 
     def gl_add_site_language_custom(self, language):
         #this is called to handle other types of multilanguage objects
@@ -1065,6 +1076,17 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 try: x.del_language(language)
                 except: pass
         self.gl_del_site_languages_custom(languages)
+        # Custom update site children languages
+        for x in self.objectValues():
+            object_del_meth = getattr(x, 'custom_object_del_language', None)
+            if not object_del_meth:
+                continue
+            for language in languages:
+                try:
+                    object_del_meth(language)
+                except Exception, exc_error:
+                    zLOG.LOG('NySite', zLOG.DEBUG, 'Could not delete language %s for object %s: %s' % (language, x.getId(), exc_error))
+                    continue
 
     def gl_del_site_languages_custom(self, languages):
         #this is called to handle other types of multilanguage objects
