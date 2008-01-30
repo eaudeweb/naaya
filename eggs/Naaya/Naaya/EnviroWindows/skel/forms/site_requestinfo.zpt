@@ -20,12 +20,12 @@
 
 	<table cellspacing="0">
 		<tr>
-			<td>User Name:</td>
-			<td><input type="text" name="username" size="20" />*</td>
+			<td>Username:</td>
+			<td><input type="text" name="username:utf8:ustring" size="20" />*</td>
 		</tr>
 		<tr>
 			<td>Password:</td>
-			<td><input type="password" name="passwd" size="20" />*</td>
+			<td><input type="password" name="passwd:utf8:ustring" size="20" />*</td>
 		</tr>
 	</table>
 
@@ -98,15 +98,15 @@
 			</tr>
 			<tr>
 				<td>Username:</td>
-				<td><input type="text" name="username" size="12" tal:attributes="value python:here.getSessionContributorName(request.get('username', ''))" />*</td>
+				<td><input type="text" name="username:utf8:ustring" size="12" tal:attributes="value python:here.getSessionContributorName(request.get('username', ''))" />*</td>
 			</tr>
 			<tr>
 				<td>Password:</td>
-				<td><input type="password" name="password" size="12" tal:attributes="value python:request.get('password','')" maxlength="255">*</td>
+				<td><input type="password" name="password:utf8:ustring" size="12" tal:attributes="value python:request.get('password','')" maxlength="255">*</td>
 			</tr>
 			<tr>
 				<td>Verify:</td>
-				<td><input type="password" name="confirm" size="12" tal:attributes="value python:request.get('password','')" maxlength="255">*</td>
+				<td><input type="password" name="confirm:utf8:ustring" size="12" tal:attributes="value python:request.get('password','')" maxlength="255">*</td>
 			</tr>
 		</table>
 		<p style="padding: 1em 0.4em 0.5em 0.4em"><strong>Other information</strong></p>
@@ -117,7 +117,7 @@
 			</tr>
 			<tr>
 				<td>Description:</td>
-				<td><textarea name="description" rows="5" cols="30" tal:content="python:here.getSessionContributorDescription(request.get('description', ''))" /></td>
+				<td><textarea name="description:utf8:ustring" rows="5" cols="30" tal:content="python:here.getSessionContributorDescription(request.get('description', ''))" /></td>
 			</tr>
 			<tr>
 				<td>Fax:</td>
