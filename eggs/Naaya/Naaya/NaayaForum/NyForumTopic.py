@@ -129,10 +129,14 @@ class NyForumTopic(NyForumBase, Folder):
     def get_messages(self): return self.objectValues(METATYPE_NYFORUMMESSAGE)
     def count_messages(self): return len(self.objectIds(METATYPE_NYFORUMMESSAGE))
     def get_attachments(self): return self.objectValues('File')
-
+    
     def is_topic_opened(self): return self.status==0
     def is_topic_closed(self): return self.status==1
 
+    security.declareProtected(view, 'getPublishedFolders')
+    def getPublishedFolders(self):
+        return self.objectValues(METATYPE_NYFORUMMESSAGE)
+    
     security.declarePrivate('get_message_parent')
     def get_message_parent(self, msg):
         """
