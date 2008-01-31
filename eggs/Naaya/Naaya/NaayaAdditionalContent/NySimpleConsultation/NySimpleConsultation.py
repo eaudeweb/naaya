@@ -47,7 +47,7 @@ PERMISSION_MANAGE_SIMPLECONSULTATION = 'Manage Simple Consultation'
 METATYPE_OBJECT = 'Naaya Simple Consultation'
 LABEL_OBJECT = 'Simple Consultation'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Simple Consultation objects'
-OBJECT_FORMS = ['simpleconsultation_add', 'simpleconsultation_edit', 'simpleconsultation_index']
+OBJECT_FORMS = []
 OBJECT_CONSTRUCTORS = ['manage_addNySimpleConsultation_html', 'simpleconsultation_add_html', 'addNySimpleConsultation']
 OBJECT_ADD_FORM = 'simpleconsultation_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Simple Consultation type.'
@@ -69,10 +69,7 @@ manage_addNySimpleConsultation_html = PageTemplateFile('zpt/simpleconsultation_m
 manage_addNySimpleConsultation_html.kind = METATYPE_OBJECT
 manage_addNySimpleConsultation_html.action = 'addNySimpleConsultation'
 
-def simpleconsultation_add_html(self, REQUEST=None, RESPONSE=None):
-    """ """
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNySimpleConsultation'}, 'simpleconsultation_add')
-
+simpleconsultation_add_html = PageTemplateFile('zpt/simpleconsultation_add', globals())
 
 def addNySimpleConsultation(self, id='', title='', description='', sortorder='', start_date='', end_date='', public_registration='', 
                             allow_file='', contributor=None, releasedate='', lang=None, REQUEST=None, **kwargs):
@@ -169,11 +166,20 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
 
     security.declarePrivate('save_properties')
     def save_properties(self, title, description, sortorder, start_date, end_date, public_registration, allow_file, releasedate, lang):
+        
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
         
-        self.start_date = self.utConvertStringToDateTimeObj(start_date)
-        self.end_date = self.utConvertStringToDateTimeObj(end_date)
+        if start_date:
+            self.start_date = self.utConvertStringToDateTimeObj(start_date)
+        else:
+            self.start_date = self.utGetTodayDate()
+            
+        if end_date:
+            self.end_date = self.utConvertStringToDateTimeObj(end_date)
+        else:
+            self.end_date = self.utGetTodayDate()
+            
         self.sortorder = sortorder
         self.releasedate = releasedate
         self.public_registration = public_registration
@@ -275,8 +281,7 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
         if not contributor and REQUEST:
             contributor = REQUEST.AUTHENTICATED_USER.getUserName()
             
-        if contributor in [comment.contributor for comment in self.objectValues(['Simple Consultation Comment'])]:
-            return True
+        return contributor in [comment.contributor for comment in self.objectValues(['Simple Consultation Comment'])]
         
     security.declareProtected(PERMISSION_REVIEW_SIMPLECONSULTATION, 'addComment')
     def addComment(self, title='', contributor_name='', message='', file='', REQUEST=None):
@@ -322,15 +327,11 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
 
     #site pages
     security.declareProtected(view, 'index_html')
-    def index_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'simpleconsultation_index')
-
+    index_html = PageTemplateFile('zpt/simpleconsultation_index', globals())
+    
     security.declareProtected(PERMISSION_MANAGE_SIMPLECONSULTATION, 'edit_html')
-    def edit_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'simpleconsultation_edit')
-
+    edit_html = PageTemplateFile('zpt/simpleconsultation_edit', globals())
+    
     security.declareProtected(PERMISSION_REVIEW_SIMPLECONSULTATION, 'add_simpleconsultation_comment')
     add_simpleconsultation_comment = PageTemplateFile('zpt/simpleconsultation_comment_add', globals())
 
