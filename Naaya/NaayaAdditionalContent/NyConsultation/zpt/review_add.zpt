@@ -1,0 +1,126 @@
+<span tal:replace="structure here/standard_html_header" />
+<style type="text/css">
+
+a.consultation_button {
+    height: 1.5em;
+    border: 1px outset black;
+    padding: 0.3em;
+    background-color: #EDE9E3;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 0.1em;
+    color: #042D5D;
+    cursor: pointer;
+}
+</style>
+
+<script>
+
+function addRowInnerHTML(tblId)
+{
+	var tblBody = document.getElementById(tblId).tBodies[0];
+	var newRow = tblBody.insertRow(-1);
+	var newCell0 = newRow.insertCell(0);
+
+	newCell0.innerHTML = '<div style="padding: 0.6em; background-color: #E5EFF6;">	<label for="adt_comment.page:records" style="vertical-align: top;" i18n:translate="">page #<' + '/' + 'label> 	<input style="vertical-align: top;" type="text" name="adt_comment.page:records" size="3" value="" id="adt_comment.page:records" /> 	<label for="adt_comment.line:records" style="vertical-align: top;" i18n:translate="">line #<' + '/' + 'label> 	<input style="vertical-align: top;" type="text" name="adt_comment.line:records" id="adt_comment.line:records" size="3" value="" /> 	<label for="adt_comment.comment:records" style="vertical-align: top;" i18n:translate="">comment<' + '/' + 'label> 	<textarea style="vertical-align: bottom;" name="adt_comment.comment:records" id="adt_comment.comment:records" rows="4" cols="50">	<' + '/' + 'textarea><' + '/' + 'div>';}
+
+
+
+</script>
+
+<tal:block tal:condition="python:not request.get('status', '')">
+
+    <h1 i18n:translate="">Add Review</h1>
+    <p i18n:translate="">Please answer the folowing questions.</p>
+
+    <form method="post" action="addConsultationReview" enctype="multipart/form-data">
+        <div class="field">
+            <label for="contributor_name"><span i18n:translate="">Your name</span> <span class="mandatory_field">*</span></label>
+            <input type="text" name="contributor_name:utf8:ustring" id="contributor_name" tal:attributes="value python:here.getAuthenticationTool().getUserFullName(here.REQUEST.AUTHENTICATED_USER)" />
+        </div>
+
+    <tal:block tal:repeat="qs here/get_questions" tal:define="selected_language python:here.getSession('lang', here.gl_get_selected_language())">
+        <tal:block tal:define="q_id python:qs[0]; q_body python:here.getQuestionBody(q_id, selected_language)">
+            <p tal:content="q_body" tal:condition="q_body" />
+            <p tal:condition="not:q_body" i18n:translate="">This question is not translated in the currently selected site language.</p>
+            <textarea tal:attributes="name string:${q_id}:utf8:ustring; id q_id"></textarea>
+        </tal:block>
+    </tal:block>
+
+    <div class="field">
+        <tal:block tal:condition="here/allow_file">
+            <label for="file" i18n:translate="">Attach file (optional)</label>
+            <input type="file" name="file" id="file" />
+        </tal:block>
+    </div>
+
+
+    <!-- Comment on line -->
+    <table id="tblInnerHTML">
+        <thead>
+            <tr colspan="2"><p>Additionally, you can enter specific comments to the text using the form below. For each comment make clear reference to the page and line numbers as they appear in the consultation file.</p>
+            </tr>
+        </thead>
+
+    <tbody>
+    </tbody>
+</table>
+
+
+
+
+
+    <div style="margin: 2px 0px 2px 3px;">
+    <div style="padding: 0.6em; background-color: #E5EFF6;">
+        <label for="adt_comment.page:records"
+    style="vertical-align: top;">page #</label>
+        <input style="vertical-align: top;" type="text" name="adt_comment.page:records" size="3" value="" id="adt_comment.page:records" />
+        <label for="adt_comment.line:records"
+    style="vertical-align: top;">line #</label>
+        <input style="vertical-align: top;" type="text" name="adt_comment.line:records" id="adt_comment.line:records" size="3" value="" />
+
+    <label for="adt_comment.comment:records"
+style="vertical-align: top;">comment</label> 
+    <textarea style="vertical-align: bottom;" name="adt_comment.comment:records" id="adt_comment.comment:records" rows="4" cols="50"></textarea>
+</div>
+
+    <input type="button" value="Add comment"
+    onclick="addRowInnerHTML('tblInnerHTML');"
+    style="background-color: #E5EFF6;" />
+
+    <input type="hidden" name="releasedate" id="releasedate"
+    value="30/01/2008" />
+
+    <div class="field"><input type="submit" value="Add Review" i18n:attributes="value" /></div>
+</form>
+</tal:block>
+
+
+<tal:block tal:condition="python:request.get('status', '') == 'ok'">
+    <h1 i18n:translate="">Comment added</h1>
+    <p i18n:translate="">Thank you for your submission.</p>
+    <a tal:attributes="href here/absolute_url">Go back.</a>
+</tal:block>
+
+<tal:block tal:condition="python:request.get('status', '') == 'failed'">
+    <h1 i18n:translate="">Comment not added</h1>
+    <p i18n:translate="">You have already added a comment for this consultation. You cannot add another.</p>
+    <a tal:attributes="href here/absolute_url">Go back.</a>
+</tal:block>
+
+<tal:block tal:condition="python:request.get('status', '') == 'late'">
+    <h1 i18n:translate="">Comment not added</h1>
+    <p i18n:translate="">Comments are disabled since the deadline for this consultation has passed.</p>
+    <a tal:attributes="href here/absolute_url">Go back.</a>
+</tal:block>
+
+<tal:block tal:condition="python:request.get('status', '') == 'soon'">
+    <h1 i18n:translate="">Comment not added</h1>
+    <p i18n:translate="">Comments are disabled since this consultation has not yet begun.</p>
+    <a tal:attributes="href here/absolute_url">Go back.</a>
+</tal:block>
+
+
+
+
+<span tal:replace="structure here/standard_html_footer" />
