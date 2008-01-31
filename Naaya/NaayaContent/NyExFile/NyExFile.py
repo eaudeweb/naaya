@@ -555,7 +555,7 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         version = REQUEST.get('version', False)
         RESPONSE.setHeader('Content-Type', self.content_type())
         RESPONSE.setHeader('Content-Length', self.size())
-        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
+        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.getLocalProperty('downloadfilename', lang)))
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         if version and self.hasVersion():
