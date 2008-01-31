@@ -20,6 +20,7 @@
 #Zope imports
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from DateTime import DateTime
 
 #Product imports
 from Products.NaayaBase.NyFSFile import NyFSFile
@@ -53,6 +54,7 @@ class SimpleConsultationComment(NyFSFile):
         self.contributor = contributor
         self.contributor_name = contributor_name
         self.message = message
+        self.comment_date = DateTime()
         NyFSFile.__init__(self, id, title, file)
         
     def handleUpload(self, file=None):

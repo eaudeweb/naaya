@@ -4,8 +4,8 @@
 
 	<h1 i18n:translate="">Add a comment</h1>
 	
-	<p>Fill the properties in the form below and click <strong>Add comment</strong>. Fields marked with <span class="mandatory_field">*</span> are mandatory.</p>
-
+	<p><span i18n:translate="">Fill the properties in the form below and click</span> <strong i18n:translate="">Add comment</strong>. <span i18n:translate="">Fields marked with</span> <span class="mandatory_field">*</span> <span i18n:translate="">are mandatory.</span></p>
+	
 	<form method="post" action="addComment" enctype="multipart/form-data">
 		<div class="field">
 			<label for="title"><span i18n:translate="">Coment title</span> <span class="mandatory_field">*</span></label>
