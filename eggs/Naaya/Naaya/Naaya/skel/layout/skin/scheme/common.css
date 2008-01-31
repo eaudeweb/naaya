@@ -181,6 +181,32 @@ td.title-column a:hover{
 #folderfile_list th.edit{
 	vertical-align: middle;
 }
+
+.floated-buttons {
+	float: right;
+	margin-right: 0.5em;
+}
+.buttons {
+	font-weight: bold;
+}
+.buttons a {
+	text-decoration: none;
+	background: #ffffff; 
+	color: #666;
+	line-height: 2em;
+	border-left:2px solid #EEEEEE;
+	border-top:2px solid #EEEEEE;
+	border-bottom:2px solid #2F6C91;
+	border-right:2px solid #2F6C91;
+	padding:0.2em 0.5em;
+	margin: 0em 0.3em;
+	font-size: 90%;
+	font-weight: bold;
+}
+.buttons a:visited {
+	color: #000;
+}
+
 /*______- sortables columns -_____ */
 /* -------ASC SORT--------- */
 .sort_asc_th {
