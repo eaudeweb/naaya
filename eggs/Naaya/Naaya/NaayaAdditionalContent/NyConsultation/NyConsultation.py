@@ -48,7 +48,7 @@ PERMISSION_MANAGE_CONSULTATION = 'Manage Consultation'
 METATYPE_OBJECT = 'Naaya Consultation'
 LABEL_OBJECT = 'Consultation'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Consultation objects'
-OBJECT_FORMS = ['consultation_add', 'consultation_edit', 'consultation_index']
+OBJECT_FORMS = []
 OBJECT_CONSTRUCTORS = ['manage_addNyConsultation_html', 'consultation_add_html', 'addNyConsultation']
 OBJECT_ADD_FORM = 'consultation_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Consultation type.'
@@ -169,11 +169,20 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declarePrivate('save_properties')
     def save_properties(self, title, description, sortorder, start_date, end_date, public_registration, allow_file, line_comments, releasedate, lang):
+        
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
         
-        self.start_date = self.utConvertStringToDateTimeObj(start_date)
-        self.end_date = self.utConvertStringToDateTimeObj(end_date)
+        if start_date:
+            self.start_date = self.utConvertStringToDateTimeObj(start_date)
+        else:
+            self.start_date = self.utGetTodayDate()
+            
+        if end_date:
+            self.end_date = self.utConvertStringToDateTimeObj(end_date)
+        else:
+            self.end_date = self.utGetTodayDate()
+            
         self.sortorder = sortorder
         self.releasedate = releasedate
         self.public_registration = public_registration
@@ -207,6 +216,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
             addNyExFile(self, title=title, file=file, lang=lang, source='file')
             
         releasedate = self.releasedate
+        
         self.save_properties(title, description, sortorder, start_date, end_date, public_registration, allow_file, line_comments, releasedate, lang)
             
         if REQUEST:
@@ -267,29 +277,48 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
         return l_options
 
-    security.declareProtected(view, 'check_contributor_comment')
-    def check_contributor_comment(self, contributor='', REQUEST=None):
+    security.declareProtected(view, 'check_contributor_review')
+    def check_contributor_review(self, contributor='', REQUEST=None):
         """ Returns True if user already posted a comment """
         
         if not contributor and REQUEST:
             contributor = REQUEST.AUTHENTICATED_USER.getUserName()
             
-        if contributor in [comment.contributor for comment in self.objectValues(['Consultation Comment'])]:
-            return True
+        return contributor in [review.contributor for review in self.objectValues(['Consultation Review'])]
 
     security.declareProtected(PERMISSION_REVIEW_CONSULTATION, 'addConsultationReview')
-    def addConsultationReview(self, contributor_name, file='', REQUEST=None, **kwargs):
+    def addConsultationReview(self, contributor_name='', file='', REQUEST=None, **kwargs):
         """ """
         
         contributor = REQUEST.AUTHENTICATED_USER.getUserName()
+        
+        if not contributor_name:
+            self.setSession('contributor_name', contributor_name)
+            self.setSessionErrors(['Fill in the name field.'])
+            return REQUEST.RESPONSE.redirect(self.absolute_url() + '/review_add_html')
+        
         if REQUEST:
             kwargs.update(REQUEST.form)
+            
+        if self.allow_file != '1':
+            file = ''
         
-        addConsultationReviewItem(self, contributor, contributor_name, file, kwargs)
+        if self.line_comments != '1':
+            kwargs['adt_comment'] = {}
         
-        return REQUEST.RESPONSE.redirect('%s/review_add_html?status=ok' % (self.absolute_url(), ))
+        days = self.get_days_left()
+        if days[0] == 1 and days[1] > 0 and self.get_exfile():
+            if not self.check_contributor_review(contributor):
+                addConsultationReviewItem(self, contributor, contributor_name, file, kwargs)
+                return REQUEST.RESPONSE.redirect(self.absolute_url() + '/review_add_html?status=ok')
+            else:
+                return REQUEST.RESPONSE.redirect(self.absolute_url() + '/review_add_html?status=failed')
+        elif days[0] ==1 and days[1] <= 0:
+            return REQUEST.RESPONSE.redirect(self.absolute_url() + '/review_add_html?status=late')
+        elif days[0] <= 0:
+            return REQUEST.RESPONSE.redirect(self.absolute_url() + '/review_add_html?status=soon')
+        else: return REQUEST.RESPONSE.redirect(self.absolute_url())
 
-    #permissions
     def checkPermissionReviewConsultation(self):
         """
         Check for reviewing the Consultation.
@@ -302,9 +331,48 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         """
         return self.checkPermission(PERMISSION_MANAGE_CONSULTATION)
 
+    security.declareProtected(view, 'get_reviews')
     def get_reviews(self):
         """ Returns a list with all the Consultation Review objects """
         return self.objectValues(['Consultation Review'])
+
+    def count_line_comments(self):
+        """ Returns the total count of line comments in all reviews """
+        
+        reviews = self.get_reviews()
+        count = 0
+        if reviews:
+            for review in reviews:
+                if self.review_has_comments(review):
+                    count = count + 1
+        return count
+
+    def count_additional_files(self):
+        """ Returns the total count of additional files in all reviews """
+        
+        reviews = self.get_reviews()
+        count = 0
+        if reviews:
+            for review in reviews:
+                if review.size > 0:
+                    count = count + 1
+        return count
+
+    def count_question_answers(self):
+        """ Returns (question_id, answer_count) """
+        
+        reviews = self.get_reviews()
+        questions = self.get_questions()
+        count = {}
+        
+        for qid, q in questions:
+            count[qid] = 0
+            
+        for review in reviews:
+            for qid, answer in review.answers:
+                if answer:
+                    count[qid] = count[qid] + 1
+        return count.items()
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'addQuestion')
     def addQuestion(self, question_body, lang, sortorder, REQUEST=None):
@@ -332,11 +400,12 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
     def edit_question(self, qid, question_body, lang, REQUEST=None):
         """ """
         self.questions[qid].save_properties(question_body, lang)
+        self._p_changed = 1
         return REQUEST.RESPONSE.redirect('%s/question_edit_html?qid=%s' % (self.absolute_url(), qid))
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'get_questions')
     def get_questions(self):
-        """ Returns the questions sorted by sortorder """
+        """ Returns the questions sorted by sortorder (question_id, question_item)"""
         question_items = self.questions.items()
         question_items.sort(lambda x, y: cmp(x[1].sortorder, y[1].sortorder))
         return question_items
@@ -352,17 +421,21 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         self.getQuestionById(qid).set_sortorder(sortorder)
         self._p_changed = 1
 
+    security.declareProtected(view, 'getQuestionBody')
     def getQuestionBody(self, qid, lang):
         """ Returns the question's body string for the specified language """
         return self.getQuestionById(qid).get_body(lang)
 
+    security.declareProtected(view, 'getQuestionSortorder')
     def getQuestionSortorder(self, qid):
         """ """
         return self.getQuestionById(qid).get_sortorder()
 
+    security.declareProtected(view, 'review_has_comments')
     def review_has_comments(self, review):
-        """ """
-        return review.linecomments[0]['comment']
+        """ Checks if the review has any line comments """
+        try: return review.linecomments[0]['comment']
+        except KeyError: return ''
 
     #site pages
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'question_edit_html')
@@ -382,6 +455,10 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
     
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'edit_html')
     edit_html = PageTemplateFile('zpt/consultation_edit', globals())
+    
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'view_statistics_html')
+    view_statistics_html = PageTemplateFile('zpt/view_statistics', globals())
+
     
 InitializeClass(NyConsultation)
 

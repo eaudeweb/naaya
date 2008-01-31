@@ -21,6 +21,7 @@
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from DateTime import DateTime
 
 #Product imports
 from Products.NaayaBase.NyFSFile import NyFSFile
@@ -49,9 +50,10 @@ class ConsultationReviewItem(NyFSFile):
     def __init__(self, id, title, contributor, contributor_name, file, kwargs):
         self.contributor = contributor
         self.contributor_name = contributor_name
+        self.review_date = DateTime()
         self.store_kwargs(kwargs)
         NyFSFile.__init__(self, id, title, file)
-        
+
     def handleUpload(self, file=None):
         if not file: return
         self.filename = file.filename

@@ -9,7 +9,7 @@
             <form method="post" action="edit_question">
                 <fieldset tal:define="lang python:langs['id']">
                     <legend tal:content="python:langs['title']" />
-                    <textarea cols="70" rows="5" name="question_body" tal:content="python:here.getQuestionBody(qid, lang)"></textarea>
+                    <textarea cols="70" rows="5" name="question_body:utf8:ustring" tal:content="python:here.getQuestionBody(qid, lang)"></textarea>
                     <input type="hidden" name="qid" tal:attributes="value qid" />
                     <input type="hidden" name="lang" tal:attributes="value python:lang" />
                     <br />
