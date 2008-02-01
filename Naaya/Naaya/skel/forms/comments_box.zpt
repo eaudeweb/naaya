@@ -9,7 +9,7 @@
 			i18n:translate="">Login to add a comment</a>
 	</div>
 	<div tal:repeat="item here/get_comments_list" class="comment_box">
-		<span tal:content="item/title" class="commentbox_title">Coment Title Here</span>
+		<span tal:content="item/title" class="commentbox_title">Comment title here</span>
 		<br /><br />
 		<span style="font-size:95%;">
 			<span tal:replace="structure item/body" />

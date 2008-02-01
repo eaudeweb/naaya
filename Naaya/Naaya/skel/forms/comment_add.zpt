@@ -13,7 +13,7 @@
 	<input type="text" name="title:utf8:ustring" id="title" size="50" />
 </div>
 <div class="field">
-	<label for="body" i18n:translate="">Body</label>
+	<label for="body" i18n:translate="">Comment</label>
 	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('body:utf8:ustring')" />
 	<textarea name="body:utf8:ustring" class="mceEditor"></textarea>
 </div>
