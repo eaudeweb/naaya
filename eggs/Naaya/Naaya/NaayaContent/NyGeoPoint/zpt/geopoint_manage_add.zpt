@@ -46,7 +46,7 @@
 	</td>
 </tr>
 <tr>
-	<td class="form-label">Url</td>
+	<td class="form-label">URL</td>
 	<td><input type="text" name="url" id="url" size="50" tal:attributes="value python:request.get('url', 'http://')" /></td>
 </tr>
 <tr>
@@ -56,7 +56,7 @@
 	<!-- Extjs tree -->
 		<div id="pointer_tree" class="custom-tree"></div>
 		<div style="clear: both"></div>
-		<input class="extjs_tree" type="text" id="pointer" name="pointer" size="50" readonly tal:attributes="value python:request.get('pointer', '')" />
+		<input class="extjs_tree" type="text" id="pointer" name="pointer" size="50" tal:attributes="value python:request.get('pointer', '')" />
 	</div>
 	</td>
 </tr>
