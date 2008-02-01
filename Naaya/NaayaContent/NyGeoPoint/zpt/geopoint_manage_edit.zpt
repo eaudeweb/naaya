@@ -7,7 +7,7 @@
 <script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-navigation.js.dtml"></script>
 
 <tal:block metal:fill-slot="description">
-	Change the properties in the form below and click <b>Save changes</b>.
+	Change the properties in the form below and click <strong>Save changes</strong>.
 </tal:block>
 
 <tal:block metal:fill-slot="custom_properties">
@@ -46,7 +46,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="form-label">Url</td>
+		<td class="form-label">URL</td>
 		<td><input type="text" name="url" id="url" size="50" tal:attributes="value python:request.get('url', here.url)" /></td>
 	</tr>
 	<tr>
@@ -54,13 +54,11 @@
 		<td></td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Item</td>
-		<td><div>
-		<!-- Extjs tree -->
-		<div id="pointer_tree" class="custom-tree"></div>
-		<div style="clear: both"></div>
-		<input class="extjs_tree" 
-		<input class="extjsDateField" type="text" id="extjs_pointer" name="pointer" size="50" readonly tal:attributes="value python:request.get('pointer', here.pointer)" />
+		<td class="form-label" valign="top">Related to local item (if any)</td>
+		<td>
+			<div id="pointer_tree" class="custom-tree"></div>
+			<div style="clear: both"></div>
+			<input class="extjs_tree" type="text" name="pointer" id="pointer" size="50" tal:attributes="value python:here.getSession('pointer', request.get('pointer', here.pointer))" />
 		</td>
 		</div>
 	</tr>
