@@ -50,17 +50,10 @@
 		<td><input type="text" name="url" id="url" size="50" tal:attributes="value python:request.get('url', here.url)" /></td>
 	</tr>
 	<tr>
-		<td class="form-label" valign="top">Site map</td>
-		<td></td>
-	</tr>
-	<tr>
 		<td class="form-label" valign="top">Related to local item (if any)</td>
 		<td>
-			<div id="pointer_tree" class="custom-tree"></div>
-			<div style="clear: both"></div>
-			<input class="extjs_tree" type="text" name="pointer" id="pointer" size="50" tal:attributes="value python:here.getSession('pointer', request.get('pointer', here.pointer))" />
+			<input type="text" name="pointer" id="pointer" size="50" tal:attributes="value python:here.getSession('pointer', request.get('pointer', here.pointer))" />
 		</td>
-		</div>
 	</tr>
 </tal:block>
 
