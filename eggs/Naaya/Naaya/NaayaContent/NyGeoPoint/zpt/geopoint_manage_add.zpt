@@ -12,27 +12,15 @@
 
 <tal:block metal:fill-slot="custom_properties">
 <tr>
-	<td class="form-label">Longitude</td>
-	<td tal:define="lon_cardinal python:request.get('lon_cardinal', '')">
-		<select name="lon_cardinal" id="lon_cardinal">
-			<option value="W" tal:attributes="selected python:lon_cardinal=='W'">W</option>
-			<option value="E" tal:attributes="selected python:lon_cardinal=='E'">E</option>
-		</select>
-		<input type="text" name="lon_ds" id="lon_ds" size="2" maxlength="2" tal:attributes="value python:request.get('lon_ds', '')" />
-		<input type="text" name="lon_ms" id="lon_ms" size="2" maxlength="2" tal:attributes="value python:request.get('lon_ms', '')" />
-		<input type="text" name="lon_ss" id="lon_ss" size="2" maxlength="2" tal:attributes="value python:request.get('lon_ss', '')" />
+	<td class="form-label">Latitude</td>
+	<td>
+		<input type="text" name="latitude:utf8:ustring" id="latitude" size="20" maxlength="20" />
 	</td>
 </tr>
 <tr>
-	<td class="form-label">Latitude</td>
-	<td tal:define="lat_cardinal python:request.get('lat_cardinal', '')">
-		<select name="lat_cardinal" id="lat_cardinal">
-			<option value="N" tal:attributes="selected python:lat_cardinal=='N'">N</option>
-			<option value="S" tal:attributes="selected python:lat_cardinal=='S'">S</option>
-		</select>
-		<input type="text" name="lat_ds" id="lat_ds" size="2" maxlength="2" tal:attributes="value python:request.get('lat_ds', '')" />
-		<input type="text" name="lat_ms" id="lat_ms" size="2" maxlength="2" tal:attributes="value python:request.get('lat_ms', '')" />
-		<input type="text" name="lat_ss" id="lat_ss" size="2" maxlength="2" tal:attributes="value python:request.get('lat_ss', '')" />
+	<td class="form-label">Longitude</td>
+	<td>
+		<input type="text" name="longitude:utf8:ustring" id="longitude" size="20" maxlength="20" />
 	</td>
 </tr>
 <tr>
@@ -47,12 +35,12 @@
 </tr>
 <tr>
 	<td class="form-label">URL</td>
-	<td><input type="text" name="url" id="url" size="50" tal:attributes="value python:request.get('url', 'http://')" /></td>
+	<td><input type="text" name="url:utf8:ustring" id="url" size="50" tal:attributes="value python:request.get('url', 'http://')" /></td>
 </tr>
 <tr>
 	<td class="form-label" valign="top">Related to local item (if any)</td>
 	<td>
-		<input class="extjs_tree" type="text" id="pointer" name="pointer" size="50" tal:attributes="value python:request.get('pointer', '')" />
+		<input class="extjs_tree" type="text" id="pointer" name="pointer:utf8:ustring" size="50" tal:attributes="value python:request.get('pointer', '')" />
 	</td>
 </tr>
 
