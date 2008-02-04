@@ -74,4 +74,8 @@ class SimpleConsultationComment(NyFSFile):
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         return self.index_html()
 
+    def get_comment_date(self):
+        """ """
+        return self.comment_date
+
 InitializeClass(SimpleConsultationComment)
