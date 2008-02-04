@@ -54,43 +54,43 @@ a.consultation-inline-button {
 }
 
 .cr_review {
-border: 1px solid black;
-margin-bottom: 1.5em;
+	border: 1px solid black;
+	margin-bottom: 1.5em;
 	background-color: #FAFAFA;
 	padding: 0.5em;
-	}
+}
 
 .cr_answers {
-border: 1px dashed gray;
-padding-left: 0.5em;
+	border: 1px dashed gray;
+	padding-left: 0.5em;
 	padding-right: 0.5em;
 	margin-bottom: 0.5em;
 	background-color: #FFFFE1;
-	}
+}
 
 .cr_line_comments > span{
-font-weight: bolder;
+	font-weight: bolder;
 }
 
 .cr_line_comments div {
-border: 1px dotted black;
-margin-bottom: 0.3em;
+	border: 1px dotted black;
+	margin-bottom: 0.3em;
 	background-color: #F0F5FB;
 	padding: 0.3em;
-	}
+}
 
 .cr_rating_box {
-position: relative;
-background-color: white;
+	position: relative;
+	background-color: white;
 	float:right;
 	right: 0.3em;
 	top: 0.3em;
-	}
+}
 
 div.consultation_lc {
-    margin: 2px 0px 2px 3px;
-    padding: 0.6em;
-    background-color: #E5EFF6;
+	margin: 2px 0px 2px 3px;
+	padding: 0.6em;
+	background-color: #E5EFF6;
 	width: 45em;
 }
 
@@ -108,4 +108,24 @@ input.consultation_lc_button {background-color: #E5EFF6; }
 	padding: 0.5em;
 	padding-bottom: 1em;
 
+}
+
+.consultation-count-number {
+	color: blue;
+	font-weight: bolder;
+}
+
+
+div.progress-container {
+	border: 1px solid #ccc;
+	width: 100px;
+	margin: 2px 5px 2px 0;
+	padding: 1px;
+	background: white;
+}
+
+div.progress-container div {
+	background-color: #ACE97C;
+	height: 8px;
+	font-size: 10%;
 }
