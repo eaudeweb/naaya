@@ -53,6 +53,8 @@ class ConsultationReviewItem(NyFSFile):
         self.review_date = DateTime()
         self.store_kwargs(kwargs)
         NyFSFile.__init__(self, id, title, file)
+        self.ratings = {}
+        self.votes = 0
 
     def handleUpload(self, file=None):
         if not file: return
@@ -68,6 +70,34 @@ class ConsultationReviewItem(NyFSFile):
         #store line comments
         self.linecomments = kwargs['adt_comment']
 
+    def saveRate(self, REQUEST=None):
+        """ """
+        rate_lists = self.getRateLists()
+        for r in rate_lists:
+            if REQUEST.has_key(r.id):
+                self.ratings[r.title] = REQUEST[r.id]
+                self.votes += 1
+        self._p_changed = 1
+        REQUEST.RESPONSE.redirect('%s/reviews_index_html' % self.absolute_url())
+
+    def getRatings(self):
+        output = {}
+        rate_lists = self.getRateLists()
+        if self.votes == 0:
+            return None
+        else:
+            for r in rate_lists:
+                procent = 0
+                if r.title in self.ratings.keys():
+                    try:
+                        buf = [o.id for o in r.get_list()]
+                        val = buf.index(self.ratings[r.title]) + 1
+                        procent = val*100/len(r.get_list())
+                    except:
+                        return None
+                output[r.title] = procent
+            return output
+
     def get_cr_file(self, REQUEST, RESPONSE):
         """Download the attached file"""
         
@@ -78,6 +108,11 @@ class ConsultationReviewItem(NyFSFile):
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         return self.index_html()
 
+    def get_review_date(self):
+        """ """
+        return self.review_date
+
     review_index_html = PageTemplateFile('zpt/review_index', globals())
+    rate_review_html = PageTemplateFile('zpt/review_rate', globals())
 
 InitializeClass(ConsultationReviewItem)

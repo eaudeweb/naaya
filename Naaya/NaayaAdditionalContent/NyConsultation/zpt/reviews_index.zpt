@@ -1,32 +1,41 @@
 <span tal:replace="structure here/standard_html_header" />
-    <h1><span i18n:translate="">Questions and answers for </span> <span tal:replace="here/title_or_id" /></h1>
-    <div class="floated-buttons"><span class="buttons">
-        <a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span>
-    </div>
-    <div class="cleaner" />
-    <tal:block tal:define="selected_language python:here.getSession('lang', here.gl_get_selected_language())">
-    
-        <fieldset class="cr_review" tal:repeat="review here/get_reviews">
-            <fieldset tal:condition="here/checkPermissionManageConsultation" class="cr_rating_box">
-                <legend i18n:translate="">Rating</legend>
-                <span i18n:translate="">Answer not yet rated</span> <a class="consultation-inline-button" tal:attributes="href string:${here/absolute_url}/rate_review_html" i18n:translate="">Rate answer</a>
-            </fieldset>
-            <legend tal:content="python:'%s (%s) -- %s' % (review.contributor_name, review.contributor, here.utShowFullDateTime(review.review_date))" />
-            <tal:block tal:repeat="answer review/answers">
-                <div class="cr_answers" tal:condition="python:answer[1]">
-                    <p><strong><span i18n:translate="">Q:</span></strong><span tal:content="python:here.getQuestionBody(answer[0], selected_language)" /></p>
-                    <p><strong><span i18n:translate="">A:</span></strong><em><span tal:content="python:answer[1]" /></em></p>
-                </div>
-            </tal:block>
-            <div class="cr_line_comments" tal:condition="python:here.review_has_comments(review)">
-                <span i18n:translate="">Line comments:</span>
-                <div tal:repeat="comment review/linecomments">
-                    <span i18n:translate="">Page:</span> <span tal:content="python:comment['page']" /> | <span i18n:translate="">Line:</span> <span tal:content="python:comment['line']" />
-                    <p tal:content="python:comment['comment']" />
-                </div>
-            </div>
-            <a tal:attributes="href string:${review/absolute_url}/get_cr_file" i18n:translate="" tal:condition="python:review.size > 0">Download attached file</a>
-        </fieldset>
-    </tal:block>
+	<h1><span i18n:translate="">Questions and answers for </span> <span tal:replace="here/title_or_id" /></h1>
+	<div class="floated-buttons"><span class="buttons">
+		<a tal:attributes="href here/get_consultation_url" i18n:translate="">Back to index</a></span>
+	</div>
+	<div class="cleaner" />
+	<tal:block tal:define="selected_language python:here.getSession('lang', here.gl_get_selected_language())">
+
+	<fieldset class="cr_review" tal:repeat="review python:here.utSortObjsListByMethod(here.get_reviews(), 'get_review_date', 1)">
+		<fieldset tal:condition="python:here.checkPermissionManageConsultation()" class="cr_rating_box" tal:define="ratings review/getRatings">
+			<legend i18n:translate="">Rating</legend>
+			<div tal:repeat="rating python:ratings.keys()" tal:condition="python:ratings is not None">
+				<span tal:content="rating" />
+				<div class="progress-container">
+					<div tal:define="val python:ratings[rating]" tal:attributes="style string:width: ${val}%"></div>
+				</div>
+			</div>
+			<tal:block tal:condition="not:ratings">
+				<span i18n:translate="">Answer not yet rated</span> <a class="consultation-inline-button" tal:attributes="href string:${review/absolute_url}/rate_review_html" i18n:translate="">Rate answer</a>
+			</tal:block>
+			<a tal:condition="python:ratings" class="consultation-button" tal:attributes="href string:${review/absolute_url}/rate_review_html" i18n:translate="">Change rating</a>
+		</fieldset>
+		<legend tal:content="python:'%s (%s) -- %s' % (review.contributor_name, review.contributor, here.utShowFullDateTime(review.review_date))" />
+		<tal:block tal:repeat="answer review/answers">
+			<div class="cr_answers" tal:condition="python:answer[1]">
+				<p><strong><span i18n:translate="">Q:</span></strong><span tal:content="python:here.getQuestionBody(answer[0], selected_language)" /></p>
+				<p><strong><span i18n:translate="">A:</span></strong><em><span tal:content="python:answer[1]" /></em></p>
+			</div>
+		</tal:block>
+		<div class="cr_line_comments" tal:condition="python:here.review_has_comments(review)">
+			<span i18n:translate="">Line comments:</span>
+			<div tal:repeat="comment review/linecomments">
+				<span i18n:translate="">Page:</span> <span tal:content="python:comment['page']" /> | <span i18n:translate="">Line:</span> <span tal:content="python:comment['line']" />
+				<p tal:content="python:comment['comment']" />
+			</div>
+		</div>
+		<a tal:attributes="href string:${review/absolute_url}/get_cr_file" i18n:translate="" tal:condition="python:review.size > 0">Download attached file</a>
+	</fieldset>
+</tal:block>
 
 <span tal:replace="structure here/standard_html_footer" />

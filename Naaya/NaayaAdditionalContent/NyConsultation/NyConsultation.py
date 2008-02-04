@@ -39,7 +39,7 @@ from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Products.NaayaContent.NyExFile.NyExFile import addNyExFile
 from question_item import question_item
 from review_item import addConsultationReviewItem
-
+from RateList import manage_addRateList
 
 #module constants
 PERMISSION_REVIEW_CONSULTATION = 'Review Consultation'
@@ -115,6 +115,7 @@ def addNyConsultation(self, id='', title='', description='', sortorder='', start
         #extra settings
         ob = self._getOb(id)
         ob.submitThis()
+        ob.default_rating()
         self.recatalogNyObject(ob)
         self.notifyFolderMaintainer(self, ob)
         #log post date
@@ -222,6 +223,95 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+
+    ########################
+    # Rate lists
+    ########################
+    manage_addRateList = manage_addRateList
+
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'default_rating')
+    def default_rating(self):
+        self.admin_addratelist('Relevancy', 'Relevancy', 'Relevancy')
+        self.admin_additem('Relevancy', '1', 'Less relevant')
+        self.admin_additem('Relevancy', '2', 'Average relevant')
+        self.admin_additem('Relevancy', '3', 'Very relevant')
+
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'getRateValue')
+    def getRateValue(self, review, rate):
+        """ """
+        try:
+            return review.ratings[rate.title]
+        except:
+            return None
+
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'getRateLists')
+    def getRateLists(self): return self.objectValues('Rate Item')
+
+
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'getRateListById')
+    def getRateListById(self, p_id):
+        #return the selection list with the given id
+        try: ob = self._getOb(p_id)
+        except: ob = None
+        if ob is not None:
+            if ob.meta_type != 'Rate Item': ob = None
+        return ob
+
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_deleteratelist')
+    def admin_deleteratelist(self, ids=[], REQUEST=None):
+        """ """
+        self.manage_delObjects(self.utConvertToList(ids))
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_ratelists_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_addratelist')
+    def admin_addratelist(self, id='', title='', description='', REQUEST=None):
+        """ """
+        self.manage_addRateList(id, title, description)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_ratelists_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_editratelist')
+    def admin_editratelist(self, id='', title='', description='', REQUEST=None):
+        """ """
+        ob = self.getRateListById(id)
+        if ob is not None:
+            ob.manageProperties(title, description)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_ratelist_html?id=%s' % (self.absolute_url(), id))
+
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_deleteitems')
+    def admin_deleteitems(self, id='', ids=[], REQUEST=None):
+        """ """
+        ob = self.getRateListById(id)
+        if ob is not None:
+            ob.manage_delete_items(self.utConvertToList(ids))
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_ratelist_html?id=%s' % (self.absolute_url(), id))
+
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_additem')
+    def admin_additem(self, id='', item='', title='', REQUEST=None):
+        """ """
+        ob = self.getRateListById(id)
+        if ob is not None:
+            ob.manage_add_item(item, title)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_ratelist_html?id=%s' % (self.absolute_url(), id))
+
+    security.declareProtected(view, 'get_consultation')
+    def get_consultation(self):
+        """ Returns this object"""
+        return self
+
+    security.declareProtected(view, 'get_consultation_url')
+    def get_consultation_url(self):
+        """ Returns this object's url"""
+        return self.absolute_url()
 
     security.declareProtected(view, 'get_exfile')
     def get_exfile(self):
@@ -441,6 +531,12 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'question_edit_html')
     question_edit_html = PageTemplateFile('zpt/question_edit', globals())
     
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_ratelist_html')
+    admin_ratelist_html = PageTemplateFile('zpt/admin_ratelist', globals())
+
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_ratelists_html')
+    admin_ratelists_html = PageTemplateFile('zpt/admin_ratelists', globals())
+
     security.declareProtected(PERMISSION_REVIEW_CONSULTATION, 'review_add_html')
     review_add_html = PageTemplateFile('zpt/review_add', globals())
 

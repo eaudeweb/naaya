@@ -52,7 +52,7 @@ function addRowInnerHTML(tblId)
         <tbody>
         </tbody>
     </table>
-    :utf8:ustring
+
     <div class="consultation_lc">
         <label for="adt_comment.page:records">page #</label>
         <input type="text" name="adt_comment.page:records" size="3" value="" id="adt_comment.page:records" />
