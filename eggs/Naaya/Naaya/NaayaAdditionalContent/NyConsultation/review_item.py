@@ -25,6 +25,7 @@ from DateTime import DateTime
 
 #Product imports
 from Products.NaayaBase.NyFSFile import NyFSFile
+from constants import *
 
 def addConsultationReviewItem(self, contributor, contributor_name, file, kwargs):
     """ """
@@ -70,6 +71,7 @@ class ConsultationReviewItem(NyFSFile):
         #store line comments
         self.linecomments = kwargs['adt_comment']
 
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'saveRate')
     def saveRate(self, REQUEST=None):
         """ """
         rate_lists = self.getRateLists()
@@ -80,6 +82,7 @@ class ConsultationReviewItem(NyFSFile):
         self._p_changed = 1
         REQUEST.RESPONSE.redirect('%s/reviews_index_html' % self.absolute_url())
 
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'getRatings')
     def getRatings(self):
         output = {}
         rate_lists = self.getRateLists()

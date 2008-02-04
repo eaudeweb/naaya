@@ -40,10 +40,8 @@ from Products.NaayaContent.NyExFile.NyExFile import addNyExFile
 from question_item import question_item
 from review_item import addConsultationReviewItem
 from RateList import manage_addRateList
+from constants import *
 
-#module constants
-PERMISSION_REVIEW_CONSULTATION = 'Review Consultation'
-PERMISSION_MANAGE_CONSULTATION = 'Manage Consultation'
 
 METATYPE_OBJECT = 'Naaya Consultation'
 LABEL_OBJECT = 'Consultation'
