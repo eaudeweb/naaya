@@ -89,27 +89,49 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
 
     def getChannelItems(self):
         #returns a list of dictionaries, where a dictionary stores the link and the title of the item
-        l = map(lambda x: ({'link': x['link'], 'title': x['title']}), self.get_feed_items())
-        if self.numbershownitems > 0: return l[:self.numbershownitems]
-        else: return l
+        L = self.getAllChannelItems()
+        if self.numbershownitems > 0: return L[:self.numbershownitems]
+        else: return L
 
     def getChannelItems_complete(self):
         #returns a list of dictionaries, where a dictionary stores the link and the title of the item
-        try:
-            try: l = map(lambda x: ({'link': x['link'], 'title': x['title'], 'summary': x['summary'], 'date': x['modified']}), self.get_feed_items())
-            except: l = map(lambda x: ({'link': x['link'], 'title': x['title'], 'date': x['modified']}), self.get_feed_items())
-        except:
-            l = map(lambda x: ({'link': x['link'], 'title': x['title']}), self.get_feed_items())
-        if self.numbershownitems > 0: return l[:self.numbershownitems]
-        else: return l
+        L = self._getAllChannelItems({'summary': 'summary', 'date': 'modified'})
+        if self.numbershownitems > 0: return L[:self.numbershownitems]
+        else: return L
+
     def getAllChannelItems(self):
         #returns a list of dictionaries, where a dictionary stores the link and the title of the item
-        try:
-            try: l = map(lambda x: ({'link': x['link'], 'title': x['title'], 'date': x['modified'], 'summary': x['summary']}), self.get_feed_items())
-            except: l = map(lambda x: ({'link': x['link'], 'title': x['title'], 'date': x['modified']}), self.get_feed_items())
-        except:
-            l = map(lambda x: ({'link': x['link'], 'title': x['title']}), self.get_feed_items())
-        return l
+        return self._getAllChannelItems({'summary': 'summary', 'date': 'modified'})
+
+    def _getAllChannelItems(self, extra_tags={}):
+        """Returns a list of dictionaries for each channel item with a link and a title.
+
+            Only the link and title values are stored in the dictionary.
+            To get the information from other tags, use the extra_tags parameter.
+
+            @param extra_tags: mapping between the dictionary key and the
+                               feed tag, e.g. {'date': 'modified'}
+        """
+        mandatory_tags = ['link', 'title'] # Naaya needs these tags
+        L = []
+        for feed_item in self.get_feed_items():
+            x = {}
+            incomplete_feed = False
+            for tag in mandatory_tags:
+                v = feed_item.get(tag, None)
+                if v is None:
+                    incomplete_feed = True
+                    break
+                x[tag] = v
+            if incomplete_feed:
+                continue
+            for key, tag in extra_tags.items():
+                v = feed_item.get(tag, None)
+                if v is not None:
+                    x[key] = v
+            L.append(x)
+        return L
+
     def updateChannel(self, uid):
         """ """
         if uid==self.get_site_uid():
