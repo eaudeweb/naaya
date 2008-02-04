@@ -39,7 +39,7 @@
 <br />
 <tal:block define="comments python:here.objectValues(['Simple Consultation Comment'])">
 <p><span tal:replace="python:len(comments)" /> <span i18n:translate="">reviewers have commented on this consultation.</span></p>
-<tal:block tal:repeat="comment python:here.utSortObjsListByMethod(comments, 'bobobase_modification_time', 1)">
+<tal:block tal:repeat="comment python:here.utSortObjsListByMethod(comments, 'get_comment_date', 1)">
 	<fieldset class="consultation-comments">
 		<legend tal:content="python:'%s -- %s' % (comment.title, here.utShowFullDateTime(comment.comment_date))" />
 		<span i18n:translate="">Submitted by:</span> <span tal:content="comment/contributor_name" />
