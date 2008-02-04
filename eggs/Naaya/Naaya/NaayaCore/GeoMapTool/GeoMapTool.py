@@ -161,7 +161,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         i = ''.join(t)
         #self.delSession(MSP_SESSION_KEY)
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
-        return '%s\n\n%s' % ('\n'.join(r), self.utToUnicode(i))
+        return '%s\n\n%s' % ('\n'.join(r), i)
 
     security.declareProtected(view, 'xrjs_simple_feed')
     def xrjs_simple_feed(self, key, show, REQUEST):
