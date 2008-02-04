@@ -14,7 +14,7 @@
 		<p tal:content="q_body" tal:condition="q_body" />
 		<p tal:condition="not:q_body" i18n:translate="">This question is not translated in the currently selected site language.</p>
 		<a class="consultation-inline-button" tal:attributes="href python:'%s/question_edit_html?qid=%s' % (here.absolute_url(), q_id)" href="#" style="height">Edit</a>
-		<a class="consultation-inline-button" tal:attributes="href string:${here/absolute_url}/delete_question?qid=${q_id}" style="height">Delete</a>
+		<a tal:condition="not:python:here.get_days_left()[0]" class="consultation-inline-button" tal:attributes="href string:${here/absolute_url}/delete_question?qid=${q_id}" style="height">Delete</a>
 	</fieldset>
 </tal:block>
 

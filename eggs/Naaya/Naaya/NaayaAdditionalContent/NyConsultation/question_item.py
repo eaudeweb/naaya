@@ -16,7 +16,8 @@ class question_item(Implicit, NyProperties):
 
     def save_properties(self, body, lang, sortorder=100):
         self._setLocalPropValue('body', lang, body)
-        self.sortorder = sortorder
+        try: self.sortorder = int(sortorder)
+        except ValueError: self.sortorder = 100
 
     def set_sortorder(self, sortorder):
         self.sortorder = sortorder
