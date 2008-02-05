@@ -156,11 +156,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             results = portal_ob.getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=show, path=path)
             for res in results:
                 if res.latitude != 0.0 and res.longitude != 0.0:
-                    ra('%s|%s|mk_%s|%s|%s' % (res.latitude,
-                                              res.longitude,
-                                              res.id,
+                    ra('%s|%s|mk_%s|%s|%s' % (self.utToUtf8(res.latitude),
+                                              self.utToUtf8(res.longitude),
+                                              self.utToUtf8(res.id),
                                               self.utToUtf8(res.title_or_id()),
-                                              'mk_%s' % res.geo_type))
+                                              'mk_%s' % self.utToUtf8(res.geo_type)))
                     t.append(res.marker_html())
         i = ''.join(t)
         #self.delSession(MSP_SESSION_KEY)
