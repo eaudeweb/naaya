@@ -25,7 +25,7 @@ def addNySurveyAnswer(self, REQUEST=None, **kwargs):
     self._setObject(id, ob)
     
     if REQUEST is not None:
-        return REQUEST.RESPONSE.redirect(self.answer_end.absolute_url())
+        return REQUEST.RESPONSE.redirect(self.absolute_url() + '?done=ok')
 
 class NySurveyAnswer(SimpleItem):
     """ """
