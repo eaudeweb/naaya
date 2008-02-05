@@ -145,6 +145,13 @@ class NySurveyTemplate(Folder):
     #view answers and statistics for this survey template
     security.declareProtected(PERMISSION_NYSURVEY_ADMINISTRATE, 'manage_statistics')
     manage_statistics = PageTemplateFile('zpt/manage_template_statistics_html', globals())
+
+    security.declareProtected(PERMISSION_NYSURVEY_ADMINISTRATE, 'manage_statistics_counted')
+    manage_statistics_counted = PageTemplateFile('zpt/manage_template_statistics_counted_html', globals())
+
+    security.declareProtected(PERMISSION_NYSURVEY_ADMINISTRATE, 'manage_statistics')
+    manage_statistics_colored = PageTemplateFile('zpt/manage_template_statistics_colored_html', globals())
+
     
     security.declareProtected(PERMISSION_NYSURVEY_ADMINISTRATE, 'manage_answers')
     manage_answers = PageTemplateFile('zpt/manage_answers_html', globals())
@@ -164,6 +171,15 @@ class NySurveyTemplate(Folder):
 
     def get_template_answers(self):
         return self.objectValues(METATYPE_NYSURVEY_ANSWER)
+    
+    def get_country_class(self, aw='N'):
+        if aw == 'Ma':
+            return 'major'
+        if aw == 'Mi':
+            return 'minor'
+        if aw == 'Me':
+            return 'medium'
+        return 'none'
 
     def count_answers(self):
         return len(self.get_template_answers())
@@ -185,6 +201,45 @@ class NySurveyTemplate(Folder):
         return today.lessThanEqualTo(self.utConvertStringToDateTimeObj(self.date))
 
     def get_statistics(self):
+        """ """
+        answer_count = self.count_answers()
+        res = {}
+        for answer in self.get_template_answers():
+            for answer_attr in answer.get_attrs():
+                if getattr(answer, answer_attr, '') == 'N':
+                    if not res.has_key(answer_attr + '_N'):
+                        res[answer_attr + '_N'] = []
+                    res[answer_attr + '_N'].append(answer)
+                if getattr(answer, answer_attr, '') == 'Mi':
+                    if not res.has_key(answer_attr + '_Mi'):
+                        res[answer_attr + '_Mi'] = []
+                    res[answer_attr + '_Mi'].append(answer)
+                if getattr(answer, answer_attr, '') == 'Me':
+                    if not res.has_key(answer_attr + '_Me'):
+                        res[answer_attr + '_Me'] = []
+                    res[answer_attr + '_Me'].append(answer)
+                if getattr(answer, answer_attr, '') == 'Ma':
+                    if not res.has_key(answer_attr + '_Ma'):
+                        res[answer_attr + '_Ma'] = []
+                    res[answer_attr + '_Ma'].append(answer)
+       
+        ret = {}
+        for key, value in res.items():
+            z_key = key.split('_')[0]
+            if not ret.has_key(z_key):
+                ret[z_key] = {'N': 0, 'Mi': 0, 'Me': 0, 'Ma': 0}
+            if key.endswith('N'):
+                ret[z_key]['N'] = (len(value)*100)/answer_count
+            if key.endswith('Mi'):
+                ret[z_key]['Mi'] = (len(value)*100)/answer_count
+            if key.endswith('Me'):
+                ret[z_key]['Me'] = (len(value)*100)/answer_count
+            if key.endswith('Ma'):
+                ret[z_key]['Ma'] = (len(value)*100)/answer_count
+        return ret
+
+
+    def get_statistics_counted(self):
         """ """
         res = {}
         for answer in self.get_template_answers():
@@ -220,6 +275,8 @@ class NySurveyTemplate(Folder):
             if key.endswith('Ma'):
                 ret[z_key]['Ma'] = len(value)
         return ret
+
+
 
     def get_template_date(self):
         """Returns the maximum date of the template"""
