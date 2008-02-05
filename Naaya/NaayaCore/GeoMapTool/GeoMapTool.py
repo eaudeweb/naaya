@@ -156,11 +156,16 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             results = portal_ob.getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=show, path=path)
             for res in results:
                 if res.latitude != 0.0 and res.longitude != 0.0:
-                    ra('%s|%s|mk_%s|%s|%s' % (res.latitude, res.longitude, res.id, res.title_or_id(), 'mk_%s' % res.geo_type))
+                    ra('%s|%s|mk_%s|%s|%s' % (res.latitude,
+                                              res.longitude,
+                                              res.id,
+                                              self.utToUtf8(res.title_or_id()),
+                                              'mk_%s' % res.geo_type))
                     t.append(res.marker_html())
         i = ''.join(t)
         #self.delSession(MSP_SESSION_KEY)
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
+        print r
         return '%s\n\n%s' % ('\n'.join(r), i)
 
     security.declareProtected(view, 'xrjs_simple_feed')
@@ -262,7 +267,6 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'uploadLocations')
     def uploadLocations(self, file='', dialect='comma', encoding='utf-8', approved=0, parent_folder='', geo_type='', REQUEST=None):
         """ """
-
         if file.filename.find('\\') != -1:
             filename = file.filename.split('\\')[-1]
         else:
@@ -283,7 +287,15 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         #step 2. add locations
         for rec in records:
             if rec:
-                err = self.add_location(rec['name'], rec['description'], rec['address'], rec.get('URL', ''), approved, parent_folder, geo_type, rec.get('latitude', ''), rec.get('longitude', ''))
+                err = self.add_location(self.utToUnicode(rec['name']),
+                                        self.utToUnicode(rec['description']),
+                                        rec['address'],
+                                        rec.get('URL', ''),
+                                        approved,
+                                        parent_folder,
+                                        geo_type,
+                                        rec.get('latitude', ''),
+                                        rec.get('longitude', ''))
                 if err is not None:
                     errs.append(err)
 
