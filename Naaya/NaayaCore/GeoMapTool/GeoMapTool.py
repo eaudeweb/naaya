@@ -137,7 +137,17 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         out_app(kml.style())
         for loc in site_ob.getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=show, path=path):
             if loc.latitude != 0.0 and loc.longitude != 0.0:
-                out_app(kml.add_point(loc.id, self.utXmlEncode(loc.title), self.utXmlEncode(loc.description), '%s/getSymbolPicture?id=%s' % (self.absolute_url(), loc.geo_type), loc.longitude, loc.latitude, self.utXmlEncode(self.getSymbolTitle(loc.geo_type)), self.absolute_url(), loc.absolute_url(), loc.url, self.utXmlEncode(loc.address)))
+                out_app(kml.add_point(self.utToUtf8(loc.id),
+                                      self.utXmlEncode(loc.title),
+                                      self.utXmlEncode(loc.description),
+                                      '%s/getSymbolPicture?id=%s' % (self.absolute_url(), self.utToUtf8(loc.geo_type)),
+                                      self.utToUtf8(loc.longitude),
+                                      self.utToUtf8(loc.latitude),
+                                      self.utXmlEncode(self.getSymbolTitle(loc.geo_type)),
+                                      self.utToUtf8(self.absolute_url()),
+                                      self.utToUtf8(loc.absolute_url()),
+                                      self.utToUtf8(loc.url),
+                                      self.utXmlEncode(loc.address)))
         out_app(kml.footer())
         REQUEST.RESPONSE.setHeader('Content-Type', 'application/vnd.google-earth.kml+xml')
         REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=locations.kml')
@@ -165,7 +175,6 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         i = ''.join(t)
         #self.delSession(MSP_SESSION_KEY)
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
-        print r
         return '%s\n\n%s' % ('\n'.join(r), i)
 
     security.declareProtected(view, 'xrjs_simple_feed')
