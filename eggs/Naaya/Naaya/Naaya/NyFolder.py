@@ -1404,7 +1404,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         # Return
         REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (doc.absolute_url(), new_lang))
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'update_session_from')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'updateSessionFrom')
     def updateSessionFrom(self, REQUEST=None, **kwargs):
         """Update session from a given language"""
         # Update kwargs from request
