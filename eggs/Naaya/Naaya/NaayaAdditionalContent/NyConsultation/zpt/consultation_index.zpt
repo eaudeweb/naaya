@@ -34,6 +34,7 @@
 	<a tal:attributes="href string:${here/absolute_url}/manage_questions_html"><span i18n:translate="">Manage Consultation Questions</span></a>
 	<a tal:attributes="href string:${here/absolute_url}/admin_ratelists_html"><span i18n:translate="">Manage Consultation Ratings</span></a>
 	<a tal:attributes="href string:${here/absolute_url}/view_statistics_html"><span i18n:translate="">View statistics</span></a>
+	<a tal:attributes="href string:${here/absolute_url}/instructions_html"><span i18n:translate="">Consultation instructions</span></a>
 </div>
 
 <p tal:content="structure python:here.getLocalProperty('description', lang)" />
