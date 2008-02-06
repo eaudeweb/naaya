@@ -1,5 +1,8 @@
 <span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')"/>
 /* COMMENT VAR  indicates that the following style attributes are to be changed for the ARABIC version */
+#main_structure { position: absolute; padding-right:15px; top: 0; }
+#main_structure_ie_fixer{ position:relative; }
+
 body {
 	margin:0;
 	padding:0;
@@ -24,7 +27,6 @@ td input {
 h1,h2,h3,h4,h5,h6 {
 	padding: 0;
 }
-
 
 table h1 {
 	position:relative;
@@ -85,21 +87,12 @@ input {
 fieldset {
 }
 
-
 div.fieldset_div {
 }
 
 legend {
-    font-weight: bold;
+	font-weight: bold;
 }
-
-ul, dl, ol {
-}
-
-li {
-}
-
-
 
 .sitemap {
 	margin-top: 0.5em;
@@ -128,18 +121,19 @@ li {
 #nav_upper a {
 	color: white;
 }
-.navuplinks {
-}
-
-.clearing_div_top {
-	display: none; /* define only for RTL */
+#nav_upper div {
+	margin: 0;
+	margin-right:4px;
+	padding:0;
+	list-style:none;
+	display:block;
+	position:relative;
 }
 #nav_upper span a {
 	padding: 0 4px;
 	color: white;
 	text-decoration: none;
 }
-
 #nav_upper a:visited {
 	color: white;
 }
@@ -149,6 +143,9 @@ li {
 #nav_upper_log img {
 	margin-top: 1px;
 	display: none; /* to be changed */
+}
+.clearing_div_top {
+	display: none; /* define only for RTL */
 }
 
 /* Top drop down menu */
@@ -165,21 +162,17 @@ ul.topnav_menu {
 	margin-left: 0;
 	z-index: 1000;
 }
-
 ul.topnav_menu li {
 	border-bottom: 1px dotted #9bc0dd;
 	border-left: 1px dotted #9bc0dd;
 	border-right: 1px dotted #9bc0dd;
 }
-
 ul.topnav_menu li:hover, ul.topnav_menu li.sfhover {
 	background-color: #7cae31;
 }
-
 ul.topnav_menu li a {
 	display: inline;
 }
-
 div.menuitem:hover ul, div.menuitem.sfhover ul, div.menuitem a {display: block;}
 
 /* ------------ END NAV_UPPER ---------- */
@@ -195,11 +188,17 @@ div.menuitem:hover ul, div.menuitem.sfhover ul, div.menuitem a {display: block;}
 	width: 170px;
 	margin-top: 10px;
 }
-
 #site_logo img {
 	margin-left: 21px;
 }
-
+.logobis {
+	float: right;
+}
+.logobis img { 
+	margin: 5px;
+	width: 190px; 
+	height: 50px;
+}
 #site_title {
 	font-family: "Times New Roman", Times, serif;
 	border: 1px solid white;
@@ -211,14 +210,11 @@ div.menuitem:hover ul, div.menuitem.sfhover ul, div.menuitem a {display: block;}
 	padding-top: 0px;
 	height: 2.4em;
 }
-
 #top_banner>#site_title {
 	height: auto;
 }
-
 #site_title span{
 }
-
 #site_subtitle {
 }
 
@@ -230,28 +226,23 @@ div.menuitem:hover ul, div.menuitem.sfhover ul, div.menuitem a {display: block;}
 	border-bottom: 1px solid white;
 	border-top: 1px solid white;
 }
-
 #nav_main_language {
 	position:relative;
 	float: right;
 	margin-top: 7px;
 	z-index:1000;
 }
-
 #nav_main_language form {
 	margin:0;
 }
-
 #nav_main_language select {
 	font-family: Arial,sans-serif;
 	margin-right: 5px;
 	font-size: 85%;
 }
-
 #nav_main_links {
 	background-color: #eaeaea;
 }
-
 #nav_main_links ul {
 	position:relative;
 	display: inline;
@@ -264,13 +255,11 @@ div.menuitem:hover ul, div.menuitem.sfhover ul, div.menuitem a {display: block;}
 	margin: 0 5px 0 0;
 	padding: 0 8px 0 0;
 }
-
 #nav_main_links a {
 	white-space: nowrap;
 	text-decoration: none;
 /*	vertical-align:middle;*/
-	}
-
+}
 #nav_main_links a:visited {
 }
 
@@ -279,16 +268,14 @@ div.menuitem:hover ul, div.menuitem.sfhover ul, div.menuitem a {display: block;}
 	height: 1px;
 	font-size: 1px;
 	line-height: 1px;
-	}
+}
 
 #search_area {
-
 }
 #search_area form {
 	margin: 0;
 	padding: 0;
 }
-
 #search_area label {
 	display: block;
 	background-color: white;
@@ -301,7 +288,6 @@ div.menuitem:hover ul, div.menuitem.sfhover ul, div.menuitem a {display: block;}
 	padding: 2px 0px 2px 12px;
 	background-position: right top;
 }
-
 #search_area #query {
 	position: relative;
 	width: 11em;
@@ -311,7 +297,6 @@ div.menuitem:hover ul, div.menuitem.sfhover ul, div.menuitem a {display: block;}
 	font-family: Verdana, Arial;
 	margin: 0px 5px 0px 5px;
 }
-
 #search_area #go_search {
 	width: 2.5em;
 	border: 1px solid #CEE1EE;
@@ -319,7 +304,6 @@ div.menuitem:hover ul, div.menuitem.sfhover ul, div.menuitem a {display: block;}
 	background-color: white;
 	font-family: Verdana, Arial;
 }
-
 #search_area #sub {
 	margin:0;
 	border:0;
@@ -330,24 +314,12 @@ div.menuitem:hover ul, div.menuitem.sfhover ul, div.menuitem a {display: block;}
 	color: #7CAE31;
 	margin: 12px 0 8px 0;
 }
-
 div#bread_crumb_trail a{
 	font-size: 100%;
 	color: #4E8EC2;
 	text-decoration: none;
 }
-
 div#bread_crumb_trail a:visited{
-}
-
-#main_structure_ie_fixer{
-	position:relative;
-}
-
-#main_structure {
-	position: absolute;
-	padding-right:15px;
-	top: 0; 
 }
 
 #left_port {
@@ -359,11 +331,9 @@ div#bread_crumb_trail a:visited{
 	width: 173px;
 }
 
-
 #middle_right_port {
 	margin:0px 0px 10px 193px;
 }
-
 .middle_port {
 	margin-right: 165px; /* to be changed */
 	background-color: white;
@@ -385,6 +355,55 @@ div#bread_crumb_trail a:visited{
 	height:0;
 	border:1px solid white;
 }
+
+/* Left side navigation dropdown menu */
+ul.left_side_navigation ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	width: 150px; /* Width of Menu Items */
+	}
+ul.left_side_navigation li:hover {
+	background: #9bc0dd !important;
+	color: white !important;
+	}
+/* IE6 Fix*/
+ul.left_side_navigation li.sfhover {
+	background: #9bc0dd !important;
+	color: white !important;
+}
+ul.left_side_navigation li.sfhover a {color: white !important;}
+ul.left_side_navigation li:hover a {color: white !important;}
+ul.left_side_navigation ul li {
+	position: relative;
+}
+ul.left_side_navigation li ul {
+	position: absolute;
+	left: 153px;
+	top: auto;
+	display: none;
+	background: #9bc0dd;
+	margin-top: -13px !important;
+}
+ul.left_side_navigation li ul li {
+	background-image: none !important;
+	padding-left: 1.5em !important;
+	padding-right: 1em !important;
+}
+/* Styles for Menu Items */
+ul.left_side_navigation ul li a {
+	display: block;
+	text-decoration: none;
+	background: #9bc0dd;
+	font-weight: normal;
+	color: white !important;
+	}
+	
+/* Holly Hack. IE Requirement \*/
+ul.left_side_navigation html ul li { float: left; height: 1%; }
+ul.left_side_navigation html ul li a { height: 1%; }
+ul.left_side_navigation li:hover ul, ul.left_side_navigation li.sfhover ul { display: block; } /* The magic */
+/* End Right side navigation dropdown menu */
 
 #site_footer {
 	clear: both;
@@ -411,10 +430,8 @@ div#bread_crumb_trail a:visited{
 	text-decoration: none;
 }
 .left-logos {
-
 }
 .portlet_folder {
-
 }
 #left_port ul {
 	list-style: none;
@@ -427,7 +444,6 @@ div#bread_crumb_trail a:visited{
 	text-decoration: none;
 	color: #227AAB;
 }
-
 #left_port ul li {
 	background-repeat: no-repeat;
 	background-image: url(bck_li.gif);
@@ -437,105 +453,21 @@ div#bread_crumb_trail a:visited{
 	padding: 0 0 5px 29px;
 	background-position: left 2px;
 }
-/*
-#left_port ul ul {
-	margin: 8px 0px 8px 25px;
-	width: auto;
-	list-style-image: url(bullet_submenu.gif);
-	padding: 0 0 0 0;
-}
-
-#left_port ul ul li {
-	background-image: none;
-	 font-weight: normal;
-	 font-size: 90%;
-	 margin: 0 0 6px 0;
-	 padding: 0 0 0 0;
-}
-*/
-
 #left_port ul a.inactive_link:hover {
 }
-
 #left_port ul a.inactive_link:visited {
 }
-
-
 #left_port ul a.active_link {
 }
-
 #left_port ul a.active_link:visited {
 }
 
-/* Left side navigation dropdown menu */
-
-ul.left_side_navigation ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-	width: 150px; /* Width of Menu Items */
-	}
-
-ul.left_side_navigation li:hover {
-	background: #9bc0dd !important;
-	color: white !important;
-	}
-
-/* IE6 Fix*/
-ul.left_side_navigation li.sfhover {
-	background: #9bc0dd !important;
-	color: white !important;
-	}
-
-ul.left_side_navigation li.sfhover a {color: white !important;}
-
-ul.left_side_navigation li:hover a {color: white !important;}
-
-ul.left_side_navigation ul li {
-	position: relative;
-	}
-	
-ul.left_side_navigation li ul {
-	position: absolute;
-	left: 153px;
-	top: auto;
-	display: none;
-	background: #9bc0dd;
-	margin-top: -13px !important;
-	}
-
-ul.left_side_navigation li ul li {
-	background-image: none !important;
-	padding-left: 1.5em !important;
-	padding-right: 1em !important;
-}
-
-/* Styles for Menu Items */
-ul.left_side_navigation ul li a {
-	display: block;
-	text-decoration: none;
-	background: #9bc0dd;
-	font-weight: normal;
-	color: white !important;
-	}
-	
-/* Holly Hack. IE Requirement \*/
-ul.left_side_navigation html ul li { float: left; height: 1%; }
-ul.left_side_navigation html ul li a { height: 1%; }
-
-/* End */
-
-ul.left_side_navigation li:hover ul, ul.left_side_navigation li.sfhover ul { display: block; } /* The magic */
-
-/* @@@@@@@@@@@@@@@@@@@@@@ RIGHT PORTLETS @@@@@@@@@@@@@@@@@@@@@@@ */
-/* RIGHT PORTLET VERSION 1 */
-
+/* Right portlets */
 .right_portlet {
 	margin-bottom: 10px;
 	border: 1px solid white;
 	width: 157px;
 }
-
 .right_portlet_tile {
 	position: relative;
 	background-color: #9BC0DD;
@@ -550,7 +482,6 @@ ul.left_side_navigation li:hover ul, ul.left_side_navigation li.sfhover ul { dis
 .right_portlet_tile img { /* TEMPORARY!!!! - to be removed*/
 	display: none;
 }
-
 .right_portlet_body {
 	position: relative;
 	z-index: 1;
@@ -558,7 +489,6 @@ ul.left_side_navigation li:hover ul, ul.left_side_navigation li.sfhover ul { dis
 	border-top: 2px solid white;
 	padding: 5px 0px;
 }
-
 .right_portlet ul {
 	list-style: none;
 	padding: 0;
@@ -578,41 +508,25 @@ ul.left_side_navigation li:hover ul, ul.left_side_navigation li.sfhover ul { dis
 .right_portlet li img {
 	display: none;
 }
-
 .right_portlet a {
 	text-decoration: none;
 	color: #227AAB;
 }
-
 .right_portlet a:visited {
 }
-
 .right_portlet .icoxml {
 /* var */
 	margin: 6px 12px 4px 12px;
 	text-align: right;
 }
-/* end RIGHT PORTLET VERSION 1 */
-
-
-/* @@@@@@@@@@@@@@@@@@@@@@ RIGHT PORTLETS @@@@@@@@@@@@@@@@@@@@@@@ */
-/*
-#right_calendar {
-}
-#right_event {
-}
-#right_news {
-}
-#right_flash {
-}
-*/
+/* End right portlets */
 
 #footer {
 	padding: 4px 5px 0px 0px;
 	margin: 10px 10px 15px 15px;
 	background-color:white;
-	}
-	
+}
+
 #site_update{
 	margin-bottom:5px;
 	padding-left:5px;
@@ -627,7 +541,6 @@ ul.left_side_navigation li:hover ul, ul.left_side_navigation li.sfhover ul { dis
 	text-indent: 0em;
 	color: #3978AC;
 }
-
 #footer li {
 	display: inline;
 	border-right: 1px solid white;
@@ -635,7 +548,6 @@ ul.left_side_navigation li:hover ul, ul.left_side_navigation li.sfhover ul { dis
 	padding-left: 0;
 	padding-right: 0;
 }
-	
 #footer a {
 	color: #3978AC;
 }
@@ -645,53 +557,43 @@ ul.left_side_navigation li:hover ul, ul.left_side_navigation li.sfhover ul { dis
 	border:1px solid white;
 	/*margin-top: 10px;*/
 }
-
 .middle-portlet h4 {
 	border-bottom:1px solid #cbcbcb;
 	padding-bottom: 2px;
 	color:#557595;
 }
-
 .middle-portlet ul {
 	list-style:none;
 	margin: 5px 0px 5px 10px;
 	padding: 0;
 }
-
 .middle-portlet li {
 	padding-bottom: 2px;
 }
-
 ul.nostyle {
 	list-style:none;
 	margin: 0;
 	padding: 0;
 }
-
 ul.nostyle li {
 	margin: 0;
 	padding: 0;
 }
-
 
 .list_of_images {
 	list-style:none;
 	margin:0;
 	padding:0;
 }
-
 .list_of_images li {
 	display:inline;
 }
-
 .list_of_images .image_block {
 	white-space:nowrap;
 }
-
 .list_of_images input {
 	vertical-align:top;
 }
-
 .list_of_images img {
 	vertical-align:middle;
 	width: 91px;
@@ -717,7 +619,6 @@ ul.nostyle li {
 .error li{
 	color: #990000;
 }
-
 .error fieldset{
 	border: 1px solid #990000;
 }
@@ -762,12 +663,10 @@ ul.nostyle li {
 	padding: 0;
 	margin: 0;
 }
-
 .checklist li {
 	margin: 0;
 	padding: 0;
 }
-
 .checklist,.columns_more input {
 	vertical-align: middle;
 	position: relative;
@@ -777,7 +676,6 @@ ul.nostyle li {
 	float:left;
 	margin: 0px 10px 15px 10px;
 }
-
 .columns_more .columns_more{
 	width: auto;
 }
@@ -788,15 +686,12 @@ div ul.proj_projects {
 	overflow: scroll;
 	overflow: auto;
 }
-
 div>ul.proj_projects {
 	height: auto;
 	max-height: 16.2em;
 }
 
-
 /* --------- THE FANCY NEW BLUE BANNER------------ */
-
 
 .topban {
 	background-color: #3978AC;
@@ -814,14 +709,6 @@ div>ul.proj_projects {
 	margin-left: 172px;
 	height: 95px; 
 	position: relative;
-}
-.logobis {
-	float: right;
-}
-.logobis img { 
-	margin: 5px;
-	width: 190px; 
-	height: 50px;
 }
 .topmenu {
 	position: absolute; 
@@ -854,7 +741,6 @@ div>ul.proj_projects {
 	font-size: 20px;
 	font-family: "Times New Roman", Times, serif;
 	color: #DFF0C6;
-	
 }
 .sitesubtitle {
 	display: none;
@@ -875,7 +761,6 @@ div>ul.proj_projects {
 margin: 0;
 padding: 0;
 }
-
 .treeview li{ /*Style for LI elements in general (excludes an LI that contains sub lists)*/
 background: white left center;
 list-style-type: none;
@@ -883,17 +768,13 @@ padding-left: 22px;
 margin-bottom: 3px;
 font-size: 1.1em;
 }
-
 .treeview li.submenu{ /* Style for LI that contains sub lists (other ULs). */
 background: white url(misc_/SMAP/closed.gif) no-repeat left 1px;
 cursor: pointer !important;
 }
-
-
 .treeview li.submenu ul{ /*Style for ULs that are children of LIs (submenu) */
 display: none; /*Hide them by default. Don't delete. */
 }
-
 .treeview .submenu ul li{ /*Style for LIs of ULs that are children of LIs (submenu) */
 padding-left: 5px;
 font-size: 1em;

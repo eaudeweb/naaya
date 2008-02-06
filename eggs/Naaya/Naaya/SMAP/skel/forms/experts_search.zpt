@@ -236,7 +236,7 @@
 		</div>
 	</div>
 
-	<p i18n:translate="" tal:condition="python:len(objects_list) == 0">No expert available</p>
+	<p i18n:translate="" tal:condition="python:len(objects_list) == 0 and len(request['QUERY_STRING']) > 0">No expert available for this search</p>
 
 	<tal:block condition="objects_list" define="paginator python:here.paggingContent(objects_list)">
 	<form name="objectItems" method="post" action="">
