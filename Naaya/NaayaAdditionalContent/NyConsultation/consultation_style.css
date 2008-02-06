@@ -129,3 +129,15 @@ div.progress-container div {
 	height: 8px;
 	font-size: 10%;
 }
+
+div.consultation-instructions, div.consultation-questions {background-color: #F2F2F2; }
+
+fieldset.consultation-instructions legend {
+	font-weight: bolder;
+	font-size: larger;
+}
+
+fieldset.consultation-instructions {
+	margin-bottom: 1em;
+
+}

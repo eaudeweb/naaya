@@ -22,6 +22,7 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from ImageFile import ImageFile
 from Acquisition import Implicit
 from OFS.Image import cookId
 
@@ -525,6 +526,9 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         try: return review.linecomments[0]['comment']
         except KeyError: return ''
 
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'comment_image')
+    comment_image = ImageFile('www/consultation-comment.gif', globals())
+
     #site pages
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'question_edit_html')
     question_edit_html = PageTemplateFile('zpt/question_edit', globals())
@@ -553,6 +557,8 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'view_statistics_html')
     view_statistics_html = PageTemplateFile('zpt/view_statistics', globals())
 
-    
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'instructions_html')
+    instructions_html = PageTemplateFile('zpt/instructions', globals())
+
 InitializeClass(NyConsultation)
 

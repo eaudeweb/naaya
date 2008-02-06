@@ -10,7 +10,7 @@
 
 <tal:block tal:repeat="qs here/get_questions">
 	<fieldset class="consultation-questions" tal:define="q_id python:qs[0]; q_body python:here.getQuestionBody(q_id, selected_language)">
-		<legend tal:content="q_id" />
+		<legend><span i18n:translate="">Question</span> <span tal:replace="repeat/qs/number" /></legend>
 		<p tal:content="q_body" tal:condition="q_body" />
 		<p tal:condition="not:q_body" i18n:translate="">This question is not translated in the currently selected site language.</p>
 		<a class="consultation-inline-button" tal:attributes="href python:'%s/question_edit_html?qid=%s' % (here.absolute_url(), q_id)" href="#" style="height">Edit</a>
