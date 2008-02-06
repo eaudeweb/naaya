@@ -238,6 +238,14 @@ class NySurveyTemplate(Folder):
                 ret[z_key]['Ma'] = (len(value)*100)/answer_count
         return ret
 
+    def count_attr_value(self, attr, value):
+        answers = self.get_template_answers()
+        count = 0
+        for answer in answers:
+            for suffix in ('P', 'S', 'T'):
+                if getattr(answer, attr + suffix, '') == value:
+                    count += 1
+        return count
 
     def get_statistics_counted(self):
         """ """
@@ -260,7 +268,7 @@ class NySurveyTemplate(Folder):
                     if not res.has_key(answer_attr + '_Ma'):
                         res[answer_attr + '_Ma'] = []
                     res[answer_attr + '_Ma'].append(answer)
-       
+
         ret = {}
         for key, value in res.items():
             z_key = key.split('_')[0]

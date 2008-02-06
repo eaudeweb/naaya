@@ -4,8 +4,8 @@
 <div id="tabbedmenu">
 <ul>
 	<li><a href="manage_statistics" i18n:translate="">Percentage statistics</a></li>
-	<li><a href="manage_statistics_counted" i18n:translate="">Numeric statistics</a></li>
 	<li><a href="manage_statistics_colored" i18n:translate="">Colored statistics</a></li>
+	<li><a href="manage_statistics_counted" i18n:translate="">Numeric statistics</a></li>
 	<li id="currenttab"><a tal:attributes="href python:here.manage_answers.absolute_url()" i18n:translate="">View all answers for this survey</a></li>
 </ul>
 </div>
