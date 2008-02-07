@@ -115,6 +115,7 @@ def addNyConsultation(self, id='', title='', description='', sortorder='', start
         ob = self._getOb(id)
         ob.submitThis()
         ob.default_rating()
+        ob.updateRequestRoleStatus(public_registration, lang)
         self.recatalogNyObject(ob)
         self.notifyFolderMaintainer(self, ob)
         #log post date
@@ -166,6 +167,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         except: pass
         self.save_properties(title, description, sortorder, start_date, end_date, public_registration, allow_file, line_comments, releasedate, lang)
         NyProperties.__dict__['__init__'](self)
+        self.submitted = 1
 
     security.declarePrivate('save_properties')
     def save_properties(self, title, description, sortorder, start_date, end_date, public_registration, allow_file, line_comments, releasedate, lang):
@@ -216,12 +218,17 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
             addNyExFile(self, title=title, file=file, lang=lang, source='file')
             
         releasedate = self.releasedate
-        
+        self.updateRequestRoleStatus(public_registration, lang)
         self.save_properties(title, description, sortorder, start_date, end_date, public_registration, allow_file, line_comments, releasedate, lang)
             
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'updateRequestRoleStatus')    
+    def updateRequestRoleStatus(self, public_registration, lang):
+        if public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, {'show_contributor_request_role': 'on'}), lang)
+        if not public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, {'show_contributor_request_role': ''}), lang)
 
     ########################
     # Rate lists
@@ -408,6 +415,19 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
             return REQUEST.RESPONSE.redirect(self.absolute_url() + '/review_add_html?status=soon')
         else: return REQUEST.RESPONSE.redirect(self.absolute_url())
 
+    def checkConsultationUser(self):
+        """
+        Checks if the user is logged in and has reviewer rights:
+        0 if user is anonymous, 
+        1 if user has reviewer role
+        2 if user doesn't have reviewer role
+        """
+        review_check = self.checkPermissionReviewConsultation()
+        
+        if self.isAnonymousUser(): return 0
+        elif review_check: return 1
+        elif not review_check: return 2
+
     def checkPermissionReviewConsultation(self):
         """
         Check for reviewing the Consultation.
@@ -492,7 +512,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         self._p_changed = 1
         return REQUEST.RESPONSE.redirect('%s/question_edit_html?qid=%s' % (self.absolute_url(), qid))
 
-    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'get_questions')
+    security.declareProtected(PERMISSION_REVIEW_CONSULTATION, 'get_questions')
     def get_questions(self):
         """ Returns the questions sorted by sortorder (question_id, question_item)"""
         question_items = self.questions.items()
