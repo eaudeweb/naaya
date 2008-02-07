@@ -341,6 +341,14 @@ div#bread_crumb_trail a:visited{
 	background-color: white;
 }
 
+*:first-child+html .middle_port ul {
+	padding-right: 0px;
+}
+
+.middle_port ul {
+	padding-right: 14em;
+}
+
 #right_port {
 	position:relative;
 	border-right: 6px solid white;
@@ -568,6 +576,23 @@ ul.left_side_navigation li:hover ul, ul.left_side_navigation li.sfhover ul { dis
 	margin: 5px 0px 5px 10px;
 	padding: 0;
 }
+
+*:first-child+html .middle-portlet li {
+	padding-bottom: 2px;
+	padding-right: 0px;
+	/* RTL hack 
+	position: relative;
+	padding-right: 145px;*/
+}
+
+.middle-portlet li {
+	padding-bottom: 2px;
+	padding-right: 12em;
+	/* RTL hack 
+	position: relative;
+	padding-right: 145px;*/
+}
+
 .middle-portlet li {
 	padding-bottom: 2px;
 	/* RTL hack 
