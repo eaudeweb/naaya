@@ -23,9 +23,9 @@ def addNySurveyTemplate(self, id='', title='',date='', REQUEST=None):
 
 class NySurveyTemplate(Folder):
     """ """
-    
+
     meta_type = METATYPE_NYSURVEY_TEMPLATE
-    
+
     manage_options = (
         Folder.manage_options[0:2]
         +
@@ -35,31 +35,31 @@ class NySurveyTemplate(Folder):
         +
         Folder.manage_options[3:8]
     )
-    
+
     security = ClassSecurityInfo()
-    
+
     meta_types = ({'name':METATYPE_NYSURVEY_ANSWER, 'action':'manage_addNySurveyAnswer_html'}, )
     all_meta_types = meta_types
-    
+
     security.declareProtected(PERMISSION_NYSURVEY_RESPOND, 'index_html')
     index_html = PageTemplateFile('zpt/template_index_html', globals())
-    
+
     security.declareProtected(PERMISSION_NYSURVEY_RESPOND, 'answer_end')
     answer_end = PageTemplateFile('zpt/answer_end_html', globals())
-    
+
     #constructors
     manage_addNySurveyAnswer_html = manage_addNySurveyAnswer_html
-    
+
     #addNySurveyAnswer = addNySurveyAnswer
-    
+
     def addNySurveyAnswer(self, REQUEST=None, **kwargs):
         """ """
         if REQUEST:
             kwargs.update(REQUEST.form)
-        
+
         for k, v in kwargs.items():
             REQUEST.SESSION.set(k, v)
-        
+
         if not kwargs.has_key('a113'): kwargs['a113'] = ''
         if not kwargs.has_key('a114'): kwargs['a114'] = ''
         if not kwargs.has_key('a115'): kwargs['a115'] = ''
@@ -123,41 +123,45 @@ class NySurveyTemplate(Folder):
         if not kwargs.has_key('c131'): kwargs['c131'] = ''
         if not kwargs.has_key('c132'): kwargs['c132'] = ''
         if not kwargs.has_key('c133'): kwargs['c133'] = ''
-        
+
         #check if the user didn't already answer
         if self.check_if_answered(REQUEST):
             return REQUEST.RESPONSE.redirect(self.absolute_url())
-        
+
         #check template deadline
         if not self.check_template_deadline():
             return REQUEST.RESPONSE.redirect(self.absolute_url())
-        
+
         for key, value in kwargs.items():
             if not (key.endswith('P') or key.endswith('S') or key.endswith('T') or key.endswith('C')):
                 if value:
                     continue
                 self.setSessionErrors(['Please answer all fields.'])
                 return REQUEST.RESPONSE.redirect(self.absolute_url())
-        
+
         REQUEST.SESSION.clear()
         addNySurveyAnswer(self, REQUEST=REQUEST, **kwargs)
-        
+
     #view answers and statistics for this survey template
     security.declareProtected(PERMISSION_NYSURVEY_ADMINISTRATE, 'manage_statistics')
     manage_statistics = PageTemplateFile('zpt/manage_template_statistics_html', globals())
 
+    security.declareProtected(PERMISSION_NYSURVEY_ADMINISTRATE, 'manage_statistics_inf')
+    manage_statistics_inf = PageTemplateFile('zpt/manage_template_statistics_inf_html', globals())
+
     security.declareProtected(PERMISSION_NYSURVEY_ADMINISTRATE, 'manage_statistics_counted')
     manage_statistics_counted = PageTemplateFile('zpt/manage_template_statistics_counted_html', globals())
+
+    security.declareProtected(PERMISSION_NYSURVEY_ADMINISTRATE, 'manage_statistics_counted_inf')
+    manage_statistics_counted_inf = PageTemplateFile('zpt/manage_template_statistics_counted_inf_html', globals())
 
     security.declareProtected(PERMISSION_NYSURVEY_ADMINISTRATE, 'manage_statistics_colored')
     manage_statistics_colored = PageTemplateFile('zpt/manage_template_statistics_colored_html', globals())
 
-    
     security.declareProtected(PERMISSION_NYSURVEY_ADMINISTRATE, 'manage_answers')
     manage_answers = PageTemplateFile('zpt/manage_answers_html', globals())
-    
+
     def __init__(self, id='', title='', date=''):
-        
         self.id = id
         self.title = title
         self.date = date
@@ -171,7 +175,7 @@ class NySurveyTemplate(Folder):
 
     def get_template_answers(self):
         return self.objectValues(METATYPE_NYSURVEY_ANSWER)
-    
+
     def get_country_class(self, aw='N'):
         if aw == 'Ma':
             return 'major'
@@ -188,7 +192,7 @@ class NySurveyTemplate(Folder):
         """
         Checks if the current user allready answered this template.
         """
-        
+
         user = REQUEST.AUTHENTICATED_USER.getUserName()
         return user in [answer.user for answer in self.get_template_answers()]
 
@@ -196,7 +200,6 @@ class NySurveyTemplate(Folder):
         """
         True if deadline not reached.
         """
-        
         today = self.utGetTodayDate()
         return today.lessThanEqualTo(self.utConvertStringToDateTimeObj(self.date))
 
@@ -222,7 +225,7 @@ class NySurveyTemplate(Folder):
                     if not res.has_key(answer_attr + '_Ma'):
                         res[answer_attr + '_Ma'] = []
                     res[answer_attr + '_Ma'].append(answer)
-       
+
         ret = {}
         for key, value in res.items():
             z_key = key.split('_')[0]
@@ -238,14 +241,20 @@ class NySurveyTemplate(Folder):
                 ret[z_key]['Ma'] = (len(value)*100)/answer_count
         return ret
 
-    def count_attr_value(self, attr, value):
+    def count_attr_value(self, attr, value, suffixes=('P', 'S', 'T')):
         answers = self.get_template_answers()
         count = 0
+        if isinstance(suffixes, str):
+            suffixes = (suffixes,)
         for answer in answers:
-            for suffix in ('P', 'S', 'T'):
+            for suffix in suffixes:
                 if getattr(answer, attr + suffix, '') == value:
                     count += 1
         return count
+
+    def percent_attr_value(self, attr, value):
+        count = self.count_attr_value(attr, value)
+        return count * 100.0 / (self.count_answers() * 3)
 
     def get_statistics_counted(self):
         """ """
@@ -283,8 +292,6 @@ class NySurveyTemplate(Folder):
             if key.endswith('Ma'):
                 ret[z_key]['Ma'] = len(value)
         return ret
-
-
 
     def get_template_date(self):
         """Returns the maximum date of the template"""
