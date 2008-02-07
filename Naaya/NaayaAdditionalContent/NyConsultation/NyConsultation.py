@@ -580,5 +580,8 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'instructions_html')
     instructions_html = PageTemplateFile('zpt/instructions', globals())
 
+    security.declareProtected(view, 'consultation_style')
+    consultation_style = PageTemplateFile('consultation_style.css', globals())
+
 InitializeClass(NyConsultation)
 
