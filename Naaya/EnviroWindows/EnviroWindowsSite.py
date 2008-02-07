@@ -73,6 +73,18 @@ class EnviroWindowsSite(NySite):
 ###
 # Default 'Naaya' configuration
 ###############################
+
+    security.declareProtected(view_management_screens, 'addConsultationDynProp')
+    def addConsultationDynProp(self):
+        dynprop_tool = self.getDynamicPropertiesTool()
+        try:
+            dynprop_tool.manage_addDynamicPropertiesItem(id=METATYPE_NYCONSULTATION, title=METATYPE_NYCONSULTATION)
+            dynprop_tool._getOb(METATYPE_NYCONSULTATION).manageAddDynamicProperty(id='show_contributor_request_role', name='Allow visitors to register as reviewers for this consultation', type='boolean')
+            
+            dynprop_tool.manage_addDynamicPropertiesItem(id=METATYPE_NYSIMPLECONSULTATION, title=METATYPE_NYSIMPLECONSULTATION)
+            dynprop_tool._getOb(METATYPE_NYSIMPLECONSULTATION).manageAddDynamicProperty(id='show_contributor_request_role', name='Allow visitors to register as reviewers for this consultation', type='boolean')
+        except: pass
+
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):
         """ """
@@ -112,6 +124,9 @@ class EnviroWindowsSite(NySite):
         dynprop_tool = self.getDynamicPropertiesTool()
         dynprop_tool.manage_addDynamicPropertiesItem(id=METATYPE_FOLDER, title=METATYPE_FOLDER)
         dynprop_tool._getOb(METATYPE_FOLDER).manageAddDynamicProperty(id='show_contributor_request_role', name='Allow users enrolment here?', type='boolean')
+        
+        #dynamic properties for consultation objects
+        self.addConsultationDynProp()
 
     security.declarePublic('getBreadCrumbTrail')
     def getBreadCrumbTrail(self, REQUEST):
