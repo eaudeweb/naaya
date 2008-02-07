@@ -42,10 +42,13 @@
 	<label for="file_link"><span i18n:translate="" tal:omit-tag="">File link</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'file_link')" class="mandatory_field"> *</span></label>
 	<input type="text" name="file_link:utf8:ustring" id="file_link" size="50" tal:attributes="value python:here.getSession('file_link', '')" />
 </div>
+<!-- Attached file -->
 <div class="field">
-	<label for="file_link_local"><span i18n:translate="" tal:omit-tag="">File link local</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'file_link_local')" class="mandatory_field"> *</span></label>
-	<input type="text" name="file_link_local:utf8:ustring" id="file_link_local" size="50" tal:attributes="value python:here.getSession('file_link_local', '')" />
-	<input type="button" value="Pick" i18n:translate="" tal:define="sitemap_path here/getSitePath" tal:attributes="onclick string:setupWin('${sitemap_path}/sitemap_add_html', 300, 500, 'file_link_local');;" />
+	<label for="file">
+		<span i18n:translate="" tal:omit-tag="">File link local</span>
+		<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'file')" class="mandatory_field"> *</span>
+	</label>
+	<input type="file" name="file" id="file" size="40" value="" />
 </div>
 <div class="field">
 	<label for="source"><span i18n:translate="" tal:omit-tag="">Source</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'source')" class="mandatory_field"> *</span></label>
