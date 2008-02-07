@@ -149,7 +149,7 @@ class NySurveyTemplate(Folder):
     security.declareProtected(PERMISSION_NYSURVEY_ADMINISTRATE, 'manage_statistics_counted')
     manage_statistics_counted = PageTemplateFile('zpt/manage_template_statistics_counted_html', globals())
 
-    security.declareProtected(PERMISSION_NYSURVEY_ADMINISTRATE, 'manage_statistics')
+    security.declareProtected(PERMISSION_NYSURVEY_ADMINISTRATE, 'manage_statistics_colored')
     manage_statistics_colored = PageTemplateFile('zpt/manage_template_statistics_colored_html', globals())
 
     
