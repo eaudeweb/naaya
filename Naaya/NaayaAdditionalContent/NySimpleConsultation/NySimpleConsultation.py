@@ -113,6 +113,7 @@ def addNySimpleConsultation(self, id='', title='', description='', sortorder='',
         #extra settings
         ob = self._getOb(id)
         ob.submitThis()
+        ob.updateRequestRoleStatus(public_registration, lang)
         self.recatalogNyObject(ob)
         self.notifyFolderMaintainer(self, ob)
         #log post date
@@ -163,6 +164,7 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
         except: pass
         self.save_properties(title, description, sortorder, start_date, end_date, public_registration, allow_file, releasedate, lang)
         NyProperties.__dict__['__init__'](self)
+        self.submitted = 1
 
     security.declarePrivate('save_properties')
     def save_properties(self, title, description, sortorder, start_date, end_date, public_registration, allow_file, releasedate, lang):
@@ -212,11 +214,17 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
             addNyExFile(self, title=title, file=file, lang=lang, source='file')
             
         releasedate = self.releasedate
+        self.updateRequestRoleStatus(public_registration, lang)
         self.save_properties(title, description, sortorder, start_date, end_date, public_registration, allow_file, releasedate, lang)
             
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+
+    security.declareProtected(PERMISSION_MANAGE_SIMPLECONSULTATION, 'updateRequestRoleStatus')    
+    def updateRequestRoleStatus(self, public_registration, lang):
+        if public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, {'show_contributor_request_role': 'on'}), lang)
+        if not public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, {'show_contributor_request_role': ''}), lang)
 
     security.declareProtected(view, 'get_exfile')
     def get_exfile(self):
@@ -307,6 +315,19 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
             return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_simpleconsultation_comment?status=late')
         elif days[0] <= 0:
             return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_simpleconsultation_comment?status=soon')
+
+    def checkSimpleConsultationUser(self):
+        """
+        Checks if the user is logged in and has reviewer rights:
+        0 if user is anonymous, 
+        1 if user has reviewer role
+        2 if user doesn't have reviewer role
+        """
+        review_check = self.checkPermissionReviewSimpleConsultation()
+        
+        if self.isAnonymousUser(): return 0
+        elif review_check: return 1
+        elif not review_check: return 2
 
     #permissions
     def checkPermissionReviewSimpleConsultation(self):
