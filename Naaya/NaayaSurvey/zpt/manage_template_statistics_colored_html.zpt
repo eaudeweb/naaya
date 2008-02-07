@@ -49,31 +49,31 @@ th {font-weight: bold; background-color: #FFFF84;}
 		<tr tal:define="atr python:'a113'">
 			<td>A1.1.3</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')"/>
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a114'">
 			<td>A1.1.4</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a115'">
 			<td>A1.1.5</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a123'">
 			<td>A1.2.3</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a131'">
 			<td>A1.3.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 	</tbody>
@@ -95,319 +95,319 @@ th {font-weight: bold; background-color: #FFFF84;}
 		<tr tal:define="atr python:'a211'">
 			<td>A2.1.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a212'">
 			<td>A2.1.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a213'">
 			<td>A2.1.3</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a214'">
 			<td>A2.1.4</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a217'">
 			<td>A2.1.7</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a218'">
 			<td>A2.1.8</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a219'">
 			<td>A2.1.9</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a221'">
 			<td>A2.2.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a222'">
 			<td>A2.2.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a231'">
 			<td>A2.3.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a241'">
 			<td>A2.4.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a242'">
 			<td>A2.4.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a243'">
 			<td>A2.4.3</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a244'">
 			<td>A2.4.4</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a251'">
 			<td>A2.5.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a252'">
 			<td>A2.5.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a311'">
 			<td>A3.1.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a312'">
 			<td>A3.1.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a314'">
 			<td>A3.1.4</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a315'">
 			<td>A3.1.5</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a321'">
 			<td>A3.2.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a322'">
 			<td>A3.2.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a323'">
 			<td>A3.2.3</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a324'">
 			<td>A3.2.4</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a352'">
 			<td>A3.5.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a411'">
 			<td>A4.1.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a414'">
 			<td>A4.1.4</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a412'">
 			<td>A4.1.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a431'">
 			<td>A4.3.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a461'">
 			<td>A4.6.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a462'">
 			<td>A4.6.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a512'">
 			<td>A5.1.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a514'">
 			<td>A5.1.4</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a931'">
 			<td>A9.3.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a932'">
 			<td>A9.3.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a941'">
 			<td>A9.4.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a942'">
 			<td>A9.4.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a943'">
 			<td>A9.4.3</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a1014'">
 			<td>A10.1.4</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a1015'">
 			<td>A10.1.5</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a1018'">
 			<td>A10.1.8</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'a1019'">
 			<td>A10.1.9</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'b111'">
 			<td>B1.1.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'b112'">
 			<td>B1.1.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'b212'">
 			<td>B2.1.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'b222'">
 			<td>B2.2.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'b241'">
 			<td>B2.4.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'b251'">
 			<td>B2.5.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'b261'">
 			<td>B2.6.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'b311'">
 			<td>B3.1.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'b314'">
 			<td>B3.1.4</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'b315'">
 			<td>B3.1.5</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'b316'">
 			<td>B3.1.6</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		</tbody>
@@ -430,7 +430,7 @@ th {font-weight: bold; background-color: #FFFF84;}
 		<tr tal:define="atr python:'b412'">
 			<td>B4.1.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 	</tbody>
@@ -451,25 +451,25 @@ th {font-weight: bold; background-color: #FFFF84;}
 		<tr tal:define="atr python:'c121'">
 			<td>C1.2.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'c131'">
 			<td>C1.3.1</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'c132'">
 			<td>C1.3.2</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 		<tr tal:define="atr python:'c133'">
 			<td>C1.3.3</td>
 			<tal:block repeat="answer answers">
-				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" />
+				<td tal:attributes="class python:here.get_country_class(aw=getattr(answer, atr, 'N'))" tal:content="python:getattr(answer, atr, 'N')" />
 			</tal:block>
 		</tr>
 
