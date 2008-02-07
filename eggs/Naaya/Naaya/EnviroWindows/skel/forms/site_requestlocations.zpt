@@ -1,6 +1,6 @@
 <span tal:replace="structure here/standard_html_header"/>
 <div class="request_role">
-<h1>Application for administration or contributor rights</h1>
+<h1>Application for additional rights for this portal</h1>
 <h2>Step 3: Select the location</h2>
 
 <form method="post" name="frmrequest_role" tal:attributes="action string:${here/absolute_url}/processRequestLocation">
