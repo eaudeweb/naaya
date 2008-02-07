@@ -356,4 +356,7 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     security.declareProtected(PERMISSION_REVIEW_SIMPLECONSULTATION, 'add_simpleconsultation_comment')
     add_simpleconsultation_comment = PageTemplateFile('zpt/simpleconsultation_comment_add', globals())
 
+    security.declareProtected(view, 'simpleconsultation_style')
+    simpleconsultation_style = PageTemplateFile('simpleconsultation_style.css', globals())
+
 InitializeClass(NySimpleConsultation)
