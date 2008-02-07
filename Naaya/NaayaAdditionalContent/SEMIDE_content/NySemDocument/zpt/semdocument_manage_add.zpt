@@ -27,6 +27,15 @@
 </tr>
 <tr>
 	<td class="form-label">
+		<label for="file_link_local" i18n:translate="">File link local</label>
+	</td>
+	<td>
+		<input type="text" name="file_link_local:utf8:ustring" id="file_link_local" size="50" value="" />
+	</td>
+</tr>
+
+<tr>
+	<td class="form-label">
 		<label for="source" i18n:translate="">Source</label>
 	</td>
 	<td>
