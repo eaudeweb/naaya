@@ -11,6 +11,7 @@
 <div metal:fill-slot="doc_releasedate" />
 <div metal:fill-slot="doc_discussion" />
 <div metal:fill-slot="update_content_language" />
+<div metal:fill-slot="dynamic_properties" />
 
 <div metal:fill-slot="translate_on_top" class="translate">
 	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['translation_bar']" />
