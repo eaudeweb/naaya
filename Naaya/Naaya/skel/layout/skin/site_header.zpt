@@ -58,7 +58,7 @@
 		<div id="search">
 			<form method="get" tal:attributes="action string:${site_url}/search_html">
 				<label accesskey="4" for="query">Site search:</label>
-				<input type="text" name="query" />
+				<input type="text" name="query" id="query" />
 			</form>
 		</div>
 		<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
