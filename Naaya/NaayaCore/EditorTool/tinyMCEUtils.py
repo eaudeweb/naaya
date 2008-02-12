@@ -49,8 +49,7 @@ def getCompressedJavaScript(isJS=False, languages=[], themes=[], plugins=[],
 def getFileContent(name):
     """Return the contents of the file from the TinyMCE directory"""
     # security check: verify that the file is under the TinyMCE
-    # directory to event reading other unrelated files
-    # (e.g. "/etc/passwd")
+    # directory to prevent reading other unrelated files, e.g. "/etc/passwd"
     name = abspath(join(TINYMCE_DIR, name))
     if not name.startswith(TINYMCE_DIR):
         raise RuntimeError('File is not under the TinyMCE directory')
