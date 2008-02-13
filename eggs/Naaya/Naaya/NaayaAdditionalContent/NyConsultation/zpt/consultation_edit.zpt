@@ -61,7 +61,7 @@
 		</tal:block>
 		<tal:block tal:condition="python:exfile and exfile.size(lang) > 0">
 			<label for="currentfile" i18n:translate="">Current file</label>
-			<a id="currentfile" tal:attributes="href python:exfile.getEditDownloadUrl(lang)" tal:content="python:exfile.getLocalProperty('downloadfilename', lang)" />
+			<a id="currentfile" tal:attributes="href python:here.get_exfile_url(lang)" tal:content="python:exfile.getLocalProperty('downloadfilename', lang)" />
 			<span tal:content="python:'(%s bytes)' % exfile.size(lang)" />
 		</tal:block>
 		<br />
