@@ -12,13 +12,13 @@
 	<a i18n:translate="" class="consultation-button" tal:attributes="href python:here.absolute_url() + '/reviews_index_html'">View answers</a>
 	<tal:block tal:condition="exfile">
 		<tal:block tal:condition="python:here.check_exfile_for_lang(lang)">
-			<a i18n:translate="" class="consultation-button" tal:attributes="href python:exfile.getEditDownloadUrl(lang)" tal:condition="exfile">Download file</a>
+			<a i18n:translate="" class="consultation-button" tal:attributes="href python:here.get_exfile_url(lang)" tal:condition="exfile">Download file</a>
 		</tal:block>
 		
 		<tal:block tal:condition="not:python:here.check_exfile_for_lang(lang)">
 			<p i18n:translate="">No file has yet been submitted for the current language. You can choose to download one from the available languages.</p>
 			<tal:block tal:repeat="ex_lang here/get_exfile_langs">
-				<a class="consultation-button" tal:content="python:ex_lang['title']" tal:attributes="href python:exfile.getEditDownloadUrl(ex_lang['id'])" />
+				<a class="consultation-button" tal:content="python:ex_lang['title']" tal:attributes="href python:here.get_exfile_url(ex_lang['id'])" />
 			</tal:block>
 		</tal:block>
 	

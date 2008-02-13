@@ -47,11 +47,12 @@ PERMISSION_MANAGE_SIMPLECONSULTATION = 'Manage Simple Consultation'
 METATYPE_OBJECT = 'Naaya Simple Consultation'
 LABEL_OBJECT = 'Simple Consultation'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Simple Consultation objects'
-OBJECT_FORMS = []
+OBJECT_FORMS = ['simpleconsultation_style']
 OBJECT_CONSTRUCTORS = ['manage_addNySimpleConsultation_html', 'simpleconsultation_add_html', 'addNySimpleConsultation']
 OBJECT_ADD_FORM = 'simpleconsultation_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Simple Consultation type.'
 PREFIX_OBJECT = 'scns'
+CUSTOM_STYLE = 'simpleconsultation_style'
 PROPERTIES_OBJECT = {
     'id':                  (0, '', ''),
     'title':               (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -114,6 +115,7 @@ def addNySimpleConsultation(self, id='', title='', description='', sortorder='',
         ob = self._getOb(id)
         ob.submitThis()
         ob.updateRequestRoleStatus(public_registration, lang)
+        ob.checkReviewerRole()
         self.recatalogNyObject(ob)
         self.notifyFolderMaintainer(self, ob)
         #log post date
@@ -225,6 +227,34 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     def updateRequestRoleStatus(self, public_registration, lang):
         if public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, {'show_contributor_request_role': 'on'}), lang)
         if not public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, {'show_contributor_request_role': ''}), lang)
+
+    security.declareProtected(PERMISSION_MANAGE_SIMPLECONSULTATION, 'checkReviewerRole')
+    def checkReviewerRole(self):
+        """
+        Checks if the 'Reviewer' role exists, 
+        creates and adds review permissions if it doesn't exist
+        """
+        
+        
+        auth_tool = self.getAuthenticationTool()
+        roles = auth_tool.list_all_roles()
+        PERMISSION_GROUP = 'Review content'
+        
+        if PERMISSION_GROUP not in auth_tool.listPermissions().keys():
+            auth_tool.addPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', [PERMISSION_REVIEW_SIMPLECONSULTATION])
+        else:
+            permissions = auth_tool.getPermission(PERMISSION_GROUP).get('permissions', [])
+            if PERMISSION_REVIEW_SIMPLECONSULTATION not in permissions:
+                permissions.append(PERMISSION_REVIEW_SIMPLECONSULTATION)
+                auth_tool.editPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', permissions)
+        
+        if 'Reviewer' not in roles:
+            auth_tool.addRole('Reviewer', [PERMISSION_GROUP])
+        else:
+            role_permissions = auth_tool.getRolePermissions('Reviewer')
+            if PERMISSION_GROUP not in role_permissions:
+                role_permissions.append(PERMISSION_GROUP)
+                auth_tool.editRole('Reviewer', role_permissions)        
 
     security.declareProtected(view, 'get_exfile')
     def get_exfile(self):
@@ -346,6 +376,11 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/simpleconsultation_manage_edit', globals())
 
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'simpleconsultation_style')
+    def simpleconsultation_style(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'simpleconsultation_style')
+
     #site pages
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/simpleconsultation_index', globals())
@@ -355,8 +390,5 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     
     security.declareProtected(PERMISSION_REVIEW_SIMPLECONSULTATION, 'add_simpleconsultation_comment')
     add_simpleconsultation_comment = PageTemplateFile('zpt/simpleconsultation_comment_add', globals())
-
-    security.declareProtected(view, 'simpleconsultation_style')
-    simpleconsultation_style = PageTemplateFile('simpleconsultation_style.css', globals())
 
 InitializeClass(NySimpleConsultation)

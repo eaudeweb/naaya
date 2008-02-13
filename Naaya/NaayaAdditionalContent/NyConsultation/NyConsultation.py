@@ -47,11 +47,12 @@ from constants import *
 METATYPE_OBJECT = 'Naaya Consultation'
 LABEL_OBJECT = 'Consultation'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Consultation objects'
-OBJECT_FORMS = []
+OBJECT_FORMS = ['consultation_style']
 OBJECT_CONSTRUCTORS = ['manage_addNyConsultation_html', 'consultation_add_html', 'addNyConsultation']
 OBJECT_ADD_FORM = 'consultation_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Consultation type.'
 PREFIX_OBJECT = 'cns'
+CUSTOM_STYLE = 'consultation_style'
 PROPERTIES_OBJECT = {
     'id':                  (0, '', ''),
     'title':               (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -116,6 +117,7 @@ def addNyConsultation(self, id='', title='', description='', sortorder='', start
         ob.submitThis()
         ob.default_rating()
         ob.updateRequestRoleStatus(public_registration, lang)
+        ob.checkReviewerRole()
         self.recatalogNyObject(ob)
         self.notifyFolderMaintainer(self, ob)
         #log post date
@@ -225,10 +227,38 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
-    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'updateRequestRoleStatus')    
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'updateRequestRoleStatus')
     def updateRequestRoleStatus(self, public_registration, lang):
         if public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, {'show_contributor_request_role': 'on'}), lang)
         if not public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, {'show_contributor_request_role': ''}), lang)
+
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'checkReviewerRole')
+    def checkReviewerRole(self):
+        """
+        Checks if the 'Reviewer' role exists, 
+        creates and adds review permissions if it doesn't exist
+        """
+        
+        
+        auth_tool = self.getAuthenticationTool()
+        roles = auth_tool.list_all_roles()
+        PERMISSION_GROUP = 'Review content'
+        
+        if PERMISSION_GROUP not in auth_tool.listPermissions().keys():
+            auth_tool.addPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', [PERMISSION_REVIEW_CONSULTATION])
+        else:
+            permissions = auth_tool.getPermission(PERMISSION_GROUP).get('permissions', [])
+            if PERMISSION_REVIEW_CONSULTATION not in permissions:
+                permissions.append(PERMISSION_REVIEW_CONSULTATION)
+                auth_tool.editPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', permissions)
+        
+        if 'Reviewer' not in roles:
+            auth_tool.addRole('Reviewer', [PERMISSION_GROUP])
+        else:
+            role_permissions = auth_tool.getRolePermissions('Reviewer')
+            if PERMISSION_GROUP not in role_permissions:
+                role_permissions.append(PERMISSION_GROUP)
+                auth_tool.editRole('Reviewer', role_permissions)
 
     ########################
     # Rate lists
@@ -329,6 +359,12 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
             exfile = None
             
         return exfile
+
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'get_exfile_url')
+    def get_exfile_url(self, lang):
+        """ Returns the exfile download url for the given language """
+        try: return self.get_exfile().getEditDownloadUrl(lang)
+        except: return '[no_file]'
 
     security.declareProtected(view, 'check_exfile_for_lang')
     def check_exfile_for_lang(self, lang):
@@ -550,9 +586,14 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
     comment_image = ImageFile('www/consultation-comment.gif', globals())
 
     #site pages
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'consultation_style')
+    def consultation_style(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'consultation_style')
+
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'question_edit_html')
     question_edit_html = PageTemplateFile('zpt/question_edit', globals())
-    
+
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'admin_ratelist_html')
     admin_ratelist_html = PageTemplateFile('zpt/admin_ratelist', globals())
 
@@ -564,24 +605,21 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'manage_questions_html')
     manage_questions_html = PageTemplateFile('zpt/manage_questions', globals())
-    
+
     security.declareProtected(view, 'index_html')
     reviews_index_html = PageTemplateFile('zpt/reviews_index', globals())
-    
+
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/consultation_index', globals())
-    
+
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'edit_html')
     edit_html = PageTemplateFile('zpt/consultation_edit', globals())
-    
+
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'view_statistics_html')
     view_statistics_html = PageTemplateFile('zpt/view_statistics', globals())
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'instructions_html')
     instructions_html = PageTemplateFile('zpt/instructions', globals())
-
-    security.declareProtected(view, 'consultation_style')
-    consultation_style = PageTemplateFile('consultation_style.css', globals())
 
 InitializeClass(NyConsultation)
 

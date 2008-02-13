@@ -43,8 +43,8 @@
 				<div class="consultation-instructions">
 				<p>Reviewing instructions<br /><br />
 					The content of this consultation is provided in PDF format (this document) at 
-					<a i18n:translate="" tal:attributes="href python:here.get_consultation().get_exfile().getEditDownloadUrl(lang)" 
-										tal:content="python:here.get_consultation().get_exfile().getEditDownloadUrl(lang)"/>. <br />
+					<a i18n:translate="" tal:attributes="href python:here.get_exfile_url(lang)" 
+										tal:content="python:here.get_exfile_url(lang)" />. <br />
 					Please read the text and prepare the answers/comments you might have on the content.
 					When you finish, return to the <a tal:attributes="href here/get_consultation_url">consultation web page </a> and follow these
 					steps:
