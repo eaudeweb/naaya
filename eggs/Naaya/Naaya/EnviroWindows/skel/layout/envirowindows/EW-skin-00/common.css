@@ -1,4 +1,7 @@
-<span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')"/>
+<span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')" />
+
+/* Load Naaya Content custom styles */
+<span tal:replace="python:here.getLayoutTool().getNaayaContentStyles()" />
 
 a img {
 	border: none;
