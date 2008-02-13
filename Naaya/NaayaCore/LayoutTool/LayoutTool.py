@@ -115,6 +115,15 @@ class LayoutTool(Folder, combosync_tool):
         p_context['skin_files_path'] = '%s/%s' % (l_skin.absolute_url(), self.getCurrentSkinSchemeId())
         return l_skin._getOb(p_page)(p_context)
 
+    def getNaayaContentStyles(self):
+        ny_content = self.get_pluggable_content()
+        res = []
+        for v in ny_content.values():
+            if v.has_key('customstyle'):
+                style = self.getFormsTool().getContent({'here': self}, v['customstyle'])
+                res.append(style)
+        return '\n'.join(res)
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageLayout')
     def manageLayout(self, theMasterList='', theSlaveList='', REQUEST=None):
