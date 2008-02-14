@@ -131,6 +131,12 @@ TinyMCE_Popup.prototype = {
 			return;
 		}
 
+		   // Gecko workaround
+		if (this.isWindow && tinyMCE.isGecko) {
+			window.resizeBy(20, 10);
+			return;
+		}
+
 		if (this.isWindow) {
 			doc = document;
 			body = doc.body;
