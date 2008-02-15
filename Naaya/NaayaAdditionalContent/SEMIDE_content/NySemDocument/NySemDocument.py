@@ -218,7 +218,6 @@ class NySemDocument(NyAttributes, semdocument_item, NyItem, NyCheckControl):
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
-        self.imageContainer = NyImageContainer(self, True)
 
     security.declareProtected(view, 'testContext')
     def testContext(self):

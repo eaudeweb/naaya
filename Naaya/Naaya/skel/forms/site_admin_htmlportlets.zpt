@@ -50,7 +50,7 @@
 		</tr>
 		<tr tal:define="editor here/getEditorTool">
 			<td i18n:translate="" valign="top">Body</td>
-			<span tal:replace="structure python:editor.render('body:utf8:ustring', curr_lang)" />
+			<span tal:replace="structure python:editor.render('body:utf8:ustring', curr_lang, image_support=True)" />
 			<td><textarea name="body:utf8:ustring" class="mceEditor" tal:content="python:ob.getLocalProperty('body', curr_lang)" /></td>
 		</tr>
 		<tr>

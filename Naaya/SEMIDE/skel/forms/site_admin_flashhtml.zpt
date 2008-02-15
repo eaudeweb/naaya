@@ -47,7 +47,7 @@
 		<form method="post" tal:attributes="action string:${site_url}/admin_flashhtml_save" style="border-top:1px solid #cccccc; margin-top:3px;">
 			<div class="field">
 				<label for="body" i18n:translate="">Body</label>
-				<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('body:utf8:ustring', curr_lang)" />
+				<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('body:utf8:ustring', curr_lang, image_support=True)" />
 				<textarea name="body:utf8:ustring" class="mceEditor" tal:content="python:doc.getLocalProperty('body', curr_lang)" />
 			<div>
 			<div class="field">
