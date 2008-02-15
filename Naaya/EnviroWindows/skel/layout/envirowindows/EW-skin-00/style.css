@@ -1222,3 +1222,32 @@ text-decoration: underline;
 	background:transparent url(misc_/Naaya/fullscreencollapse_icon.gif) no-repeat scroll left center;
 	padding:3px 0.5em 1px 16px;
 }
+
+/* site search page */
+.searchQuery {
+	float: left;
+	width: 59%;
+
+}
+
+.searchQuery li {
+	float: left;
+	margin: 0.3em;
+	width: 15em;
+}
+
+.searchQuery ul {
+	float: left;
+	padding: 1em;
+}
+
+.tooltip {
+	float: right;
+	border: 1px dashed black;
+	font-size: 0.88em;
+	width: 35%;
+	background-color: #F3F3F3;
+	padding: 0.5em;
+}
+
+.tip_item {padding:0.3em 0.3em 0.3em 0pt;}
