@@ -19,7 +19,7 @@
 </div>
 <div class="field">
     <label for="description" i18n:translate="">Description</label>
-    <span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description:utf8:ustring')" />
+    <span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description:utf8:ustring', image_support=True)" />
     <textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', description)" />
 </div>
 <div class="field">
