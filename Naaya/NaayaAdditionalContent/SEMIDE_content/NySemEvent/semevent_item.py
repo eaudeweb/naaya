@@ -20,13 +20,14 @@
 #Python imports
 
 #Zope imports
-from Acquisition import Implicit
 
 #Product imports
+from Products.NaayaBase.NyFSContainer import NyFSContainer
+from Products.NaayaCore.managers.utils import utils
 from Products.Localizer.LocalPropertyManager    import LocalProperty
 from Products.NaayaBase.NyProperties            import NyProperties
 
-class semevent_item(Implicit, NyProperties):
+class semevent_item(NyProperties, NyFSContainer):
     """ """
 
     contact_person =    LocalProperty('contact_person')
@@ -41,22 +42,30 @@ class semevent_item(Implicit, NyProperties):
     duration =          LocalProperty('duration')
     file_link =         LocalProperty('file_link')
     file_link_copy =    LocalProperty('file_link_copy')
-
+    
     def __init__(self, title, description, coverage, keywords, sortorder,
         creator, creator_email, topitem, event_type, source, source_link,
         file_link, file_link_copy, subject, relation, organizer, duration,
         geozone, address, start_date, end_date, event_status, contact_person,
-        contact_email, contact_phone, working_langs, releasedate, lang):
+        contact_email, contact_phone, working_langs, releasedate, lang, file=None):
         """
         Constructor.
         """
+        # Initialize file
+        filename = getattr(file, 'filename', '')
+        if isinstance(filename, list) and len(filename)>0:
+            filename = filename[-1]
+        if not filename:
+            util = utils()
+            filename = util.utGenObjectId(title)
+        NyFSContainer.__init__(self)
+        # Initialize properties
         self.save_properties(title, description, coverage, keywords, sortorder,
             creator, creator_email, topitem, event_type, source, source_link,
             file_link, file_link_copy, subject, relation, organizer, duration,
             geozone, address, start_date, end_date, event_status, contact_person,
             contact_email, contact_phone, working_langs, releasedate, lang)
         NyProperties.__dict__['__init__'](self)
-
 
     def save_properties(self, title, description, coverage, keywords, sortorder,
         creator, creator_email, topitem, event_type, source,
@@ -93,3 +102,14 @@ class semevent_item(Implicit, NyProperties):
         self.end_date =         end_date
         self.event_status =     event_status
         self.releasedate =      releasedate
+
+    def handleUpload(self, file):
+        """
+        Upload a file from disk.
+        """
+        filename = getattr(file, 'filename', '')
+        if not filename:
+            return
+        
+        self.manage_delObjects(self.objectIds())
+        self.manage_addFile(id=filename, file=file)

@@ -28,13 +28,17 @@
 		<tal:block condition="file_link">
 		<a tal:attributes="href file_link" tal:content="file_link" /><br />
 		</tal:block>
-		<tal:block condition="file_link_local">
-		<a tal:attributes="href file_link_local" tal:content="file_link_local" /> (<span tal:omit-tag="" i18n:translate="">copy</span>)
-		</tal:block>
-		<span  tal:condition="python:not(file_link or file_link_local)" tal:omit-tag="">n/a</span>
+		<span  tal:condition="not:file_link" tal:omit-tag="">n/a</span>
 	</td>
 </tr>
-
+<tr tal:condition="python:here.getSize()>0">
+	<th i18n:translate="">File link local</th>
+	<td tal:define="download_url here/getDownloadUrl">
+		<a tal:define="size python:here.utShowSizeKb(here.getSize()); content_type python:here.getContentTypeTitle(here.getContentType())"
+			tal:attributes="href download_url"><img tal:attributes="src string:getContentTypePicture?id=${here/getContentType}" alt="" />
+			<span tal:replace="string:${here/downloadfilename} (${content_type}, ${size} Kb)"/></a>
+	</td>
+</tr>
 <tr tal:condition="python:here.official_journal_ref != ''">
 	<th i18n:translate="">Official journal reference</th>
 	<td tal:content="here/official_journal_ref" />

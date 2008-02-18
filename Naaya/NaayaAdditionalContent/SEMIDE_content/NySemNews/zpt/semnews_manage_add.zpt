@@ -66,10 +66,6 @@
 	<td><input type="text" name="file_link" id="file_link" size="50" value="http://" /></td>
 </tr>
 <tr>
-	<td class="form-label">File link local</td>
-	<td><input type="text" name="file_link_local" id="file_link_local" size="50" value="http://" /></td>
-</tr>
-<tr>
 	<td class="form-label">Source</td>
 	<td><input type="text" name="source" id="source" size="50" value="" /></td>
 </tr>

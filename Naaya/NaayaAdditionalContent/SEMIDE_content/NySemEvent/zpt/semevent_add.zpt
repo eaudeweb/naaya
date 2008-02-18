@@ -233,28 +233,10 @@ function fSet(ctrl, value)
 	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', '')" />
 </div>
 
-<div class="multicol" style="width:25em;">
-	<div class="field">
-		<label for="file_link"><span i18n:translate="" tal:omit-tag="">Full description link</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'file_link')" class="mandatory_field"> *</span></label>
-		<input type="text" name="file_link" id="file_link" size="50" tal:attributes="value python:here.getSession('file_link', 'http://')" />
-	</div>
+<div class="field">
+	<label for="file_link"><span i18n:translate="" tal:omit-tag="">Full description link</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'file_link')" class="mandatory_field"> *</span></label>
+	<input type="text" name="file_link" id="file_link" size="50" tal:attributes="value python:here.getSession('file_link', 'http://')" />
 </div>
-
-<div class="multicol" style="width:25em;">
-	<div class="field" style="white-space: nowrap">
-		<label for="file_link_copy"><span i18n:translate="" tal:omit-tag="">Full description link (local copy)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'file_link_copy')" class="mandatory_field"> *</span></label>
-		<input type="text" name="file_link_copy" 
-			id="file_link_copy" size="50" 
-			 style="display: inline"
-			tal:attributes="value python:here.getSession('file_link_copy', '')" />
-		<input type="button" value="Pick" i18n:translate=""
-			style="display: inline; width: auto"
-			tal:define="sitemap_path here/getSitePath"
-			tal:attributes="onclick string:setupWin('${sitemap_path}/sitemap_add_html', 300, 500, 'file_link_copy');;" />
-	</div>
-</div>
-
-<div class="multicol_clear"></div>
 
 <div class="field">
 	<label for="subject"><span i18n:translate="" tal:omit-tag="">Subject</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'subject')" class="mandatory_field"> *</span></label>
@@ -385,6 +367,15 @@ function fSet(ctrl, value)
 		<option tal:repeat="item here/getEventStatusList"
 			tal:attributes="value item/id; selected python:item.id==here.getSession('event_status', '')" tal:content="item/title" i18n:translate="" />
 	</select>
+</div>
+
+<!-- Attached file -->
+<div class="field">
+	<label for="file">
+		<span i18n:translate="" tal:omit-tag="">Full description link (local copy)</span>
+		<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'file')" class="mandatory_field"> *</span>
+	</label>
+	<input type="file" name="file" id="file" size="40" value="" />
 </div>
 
 <div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(kind)">

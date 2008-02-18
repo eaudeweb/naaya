@@ -20,13 +20,14 @@
 #Python imports
 
 #Zope imports
-from Acquisition import Implicit
 
 #Product imports
+from Products.NaayaBase.NyFSContainer import NyFSContainer
+from Products.NaayaCore.managers.utils import utils
 from Products.Localizer.LocalPropertyManager    import LocalProperty
 from Products.NaayaBase.NyProperties            import NyProperties
 
-class semmultimedia_item(Implicit, NyProperties):
+class semmultimedia_item(NyProperties, NyFSContainer):
     """ """
 
     title =         LocalProperty('title')
@@ -39,15 +40,23 @@ class semmultimedia_item(Implicit, NyProperties):
 
     def __init__(self, title, description, coverage, keywords, sortorder, creator, creator_email, 
             rights, type_multimedia, source, source_link, subject, relation, file_link, 
-            file_link_local, format, releasedate, lang):
+            file_link_local, format, releasedate, lang, file=None):
         """
         Constructor.
         """
+        # Initialize file
+        filename = getattr(file, 'filename', '')
+        if isinstance(filename, list) and len(filename)>0:
+            filename = filename[-1]
+        if not filename:
+            util = utils()
+            filename = util.utGenObjectId(title)
+        NyFSContainer.__init__(self)
+        # Initialize properties
         self.save_properties(title, description, coverage, keywords, sortorder, creator, creator_email, 
             rights, type_multimedia, source, source_link, subject, relation, file_link, file_link_local, 
             format, releasedate, lang)
         NyProperties.__dict__['__init__'](self)
-
 
     def save_properties(self, title, description, coverage, keywords, sortorder, creator, creator_email, rights,
             type_multimedia, source, source_link, subject, relation, file_link, file_link_local, 
@@ -71,8 +80,13 @@ class semmultimedia_item(Implicit, NyProperties):
         self.format =           format
         self.releasedate =      releasedate
 
-
-
-
-
-
+    def handleUpload(self, file):
+        """
+        Upload a file from disk.
+        """
+        filename = getattr(file, 'filename', '')
+        if not filename:
+            return
+        
+        self.manage_delObjects(self.objectIds())
+        self.manage_addFile(id=filename, file=file)
