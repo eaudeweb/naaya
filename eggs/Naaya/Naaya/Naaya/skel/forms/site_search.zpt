@@ -117,9 +117,6 @@
 <tal:block tal:condition="python:paging_total==0">
 	<span style="font-size: 1.2em;"><strong i18n:translate="">No results were found for this query.</strong></span>
 </tal:block>
-<p i18n:translate="">
-	This search is performed on the current website.
-</p>
 </tal:block>
 </span>
 
@@ -187,6 +184,9 @@
 				<td valign="top" i18n:translate="">everything starting with <em>wate</em></td>
 			</tr>
 		</table>
+		<span i18n:translate="">
+			This search is performed on the current website.
+		</span>
 	</div>
 <br clear="all" />
 

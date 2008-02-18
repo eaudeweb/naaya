@@ -61,3 +61,50 @@
 
 .page_title {}
 .page_subtitle {}
+
+/* Data tables*/
+.sortable, .datatable {
+	font-family: Verdana, Avenir, Helvetica, sans-serif; 
+	font-size: 10pt; 
+	margin: 1em 0.5em;
+	border-collapse: collapse;
+	border-top:    1.5pt solid black;
+	border-bottom: 1.5pt solid black;
+	empty-cells: show;
+}
+
+.sortable td, .datatable td {
+	border-bottom: 1pt solid black;
+	padding: 0.3em;
+}
+
+.sortable th, .datatable th {
+	color: black;
+	font-weight: bold; 
+	text-align: center;
+	border-bottom: 2pt solid black;
+	padding: 0.3em;
+}
+
+.sortable th.scope-row, .datatable th.scope-row { /* IE6 doesn't understand [scope="row"] */
+	text-align: left;
+	border-bottom: 1pt solid black;
+}
+
+.sortable th[scope="row"], .datatable th[scope="row"] {
+	text-align: left;
+	border-bottom: 1pt solid black;
+}
+
+table .number {
+	text-align: right;
+}
+
+table .center {
+	text-align: center;
+}
+
+table .sum {
+	font-weight: bold;
+}
+
