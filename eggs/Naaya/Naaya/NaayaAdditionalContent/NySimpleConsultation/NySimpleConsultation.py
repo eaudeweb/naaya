@@ -33,6 +33,7 @@ from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyValidation import NyValidation
+from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
@@ -47,12 +48,12 @@ PERMISSION_MANAGE_SIMPLECONSULTATION = 'Manage Simple Consultation'
 METATYPE_OBJECT = 'Naaya Simple Consultation'
 LABEL_OBJECT = 'Simple Consultation'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Simple Consultation objects'
-OBJECT_FORMS = ['simpleconsultation_style']
+OBJECT_FORMS = []
 OBJECT_CONSTRUCTORS = ['manage_addNySimpleConsultation_html', 'simpleconsultation_add_html', 'addNySimpleConsultation']
 OBJECT_ADD_FORM = 'simpleconsultation_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Simple Consultation type.'
 PREFIX_OBJECT = 'scns'
-CUSTOM_STYLE = 'simpleconsultation_style'
+ADDITIONAL_STYLE = PageTemplateFile('zpt/simpleconsultation_style', globals()).read()
 PROPERTIES_OBJECT = {
     'id':                  (0, '', ''),
     'title':               (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -173,6 +174,9 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
         
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
+        
+        if not hasattr(self, 'imageContainer'):
+            self.imageContainer = NyImageContainer(self, True)
         
         if start_date:
             self.start_date = self.utConvertStringToDateTimeObj(start_date)
@@ -375,11 +379,6 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/simpleconsultation_manage_edit', globals())
-
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'simpleconsultation_style')
-    def simpleconsultation_style(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'simpleconsultation_style')
 
     #site pages
     security.declareProtected(view, 'index_html')
