@@ -163,6 +163,7 @@ class EditorTool(Folder):
         themes = REQUEST['themes'].split(',')
         plugins = REQUEST['plugins'].split(',')
         custom_files = [join('Naaya', 'file_browser_callback.js'),
+                        join('Naaya', 'urlconverter_callback.js'),
                         join('Naaya', 'jscripts', 'select_relative_link.js'),
                         join('Naaya', 'jscripts', 'select_image.js')]
         content = tinyMCEUtils.getCompressedJavaScript(isJS,
