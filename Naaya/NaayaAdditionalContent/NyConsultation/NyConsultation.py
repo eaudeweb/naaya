@@ -34,6 +34,7 @@ from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyValidation import NyValidation
+from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
@@ -47,12 +48,12 @@ from constants import *
 METATYPE_OBJECT = 'Naaya Consultation'
 LABEL_OBJECT = 'Consultation'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Consultation objects'
-OBJECT_FORMS = ['consultation_style']
+OBJECT_FORMS = []
 OBJECT_CONSTRUCTORS = ['manage_addNyConsultation_html', 'consultation_add_html', 'addNyConsultation']
 OBJECT_ADD_FORM = 'consultation_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Consultation type.'
 PREFIX_OBJECT = 'cns'
-CUSTOM_STYLE = 'consultation_style'
+ADDITIONAL_STYLE = PageTemplateFile('zpt/consultation_style', globals()).read()
 PROPERTIES_OBJECT = {
     'id':                  (0, '', ''),
     'title':               (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -176,6 +177,9 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
         
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
+        
+        if not hasattr(self, 'imageContainer'):
+            self.imageContainer = NyImageContainer(self, True)
         
         if start_date:
             self.start_date = self.utConvertStringToDateTimeObj(start_date)
@@ -586,10 +590,6 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
     comment_image = ImageFile('www/consultation-comment.gif', globals())
 
     #site pages
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'consultation_style')
-    def consultation_style(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'consultation_style')
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'question_edit_html')
     question_edit_html = PageTemplateFile('zpt/question_edit', globals())
