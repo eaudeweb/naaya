@@ -60,9 +60,9 @@ for x in dirs:
         content[m]['validation'] = eval('issubclass(%s.%s, NyValidation)' % (x, x))
         content[m]['description'] = eval('%s.DESCRIPTION_OBJECT' % x)
         content[m]['properties'] = eval('%s.PROPERTIES_OBJECT' % x)
-        #TODO: add CUSTOM_STYLE to all Naaya content modules in order to remove try/except
+        #TODO: add ADDITIONAL_STYLE to all Naaya content modules in order to remove try/except
         try:
-            content[m]['customstyle'] = eval('%s.CUSTOM_STYLE' % x)
+            content[m]['additional_style'] = eval('%s.ADDITIONAL_STYLE' % x)
         except:
             pass
         zLOG.LOG(NAAYACONTENT_PRODUCT_NAME, zLOG.INFO,
