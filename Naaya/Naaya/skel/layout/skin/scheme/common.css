@@ -1041,3 +1041,59 @@ tr.not-duplicate {
 legend {
 	font-weight: bold;
 }
+
+table .number {
+	text-align: right;
+}
+table .sum {
+	font-weight: bold;
+}
+table .center {
+	text-align: center;
+}
+
+/* Data tables */
+.datatable caption {
+	font-weight: bold;
+}
+.datatable th {
+	text-align: center;
+	background-color: #f6f6f6;
+	font-weight: bold;
+/*	border-top:    1px solid white;*/
+	border-bottom: 2px solid white;
+}
+.datatable th.scope-row { /* IE6 doesn't understand [scope="row"] */
+	text-align: right;
+	vertical-align:top;
+}
+.datatable th[scope="row"] {
+	text-align: right;
+	vertical-align:top;
+}
+
+.datatable td, .datatable th  {
+	margin:0;
+	padding: 0.3em;
+	vertical-align: top;
+}
+.datatable td {
+/*	border-top:    2px solid #f6f6f6;*/
+	border-bottom: 2px solid #f6f6f6;
+}
+/*
+.datatable tr.zebraeven {
+	background-color: #f6f6f6;
+}
+*/
+/*
+.datatable tr:hover, .datatable tr:hover th {
+	background-color: #e4f1bc;
+}
+*/
+table.datatable {
+	border: 1px solid #b6b6b6;
+	color: #666666;
+	margin: 1em 0em;
+}
+
