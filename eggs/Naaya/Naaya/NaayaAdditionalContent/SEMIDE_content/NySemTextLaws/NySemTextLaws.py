@@ -63,7 +63,8 @@ PROPERTIES_OBJECT = {
     'type_law':             (0, '', ''),
     'original_language':    (0, '', ''),
     'statute':              (0, '', ''),
-    'lang':                 (0, '', '')
+    'lang':                 (0, '', ''),
+    'file':                 (0, '', ''),
 }
 
 manage_addNySemTextLaws_html = PageTemplateFile('zpt/semtextlaws_manage_add', globals())
@@ -78,14 +79,14 @@ def semtextlaws_add_html(self, REQUEST=None, RESPONSE=None):
 def addNySemTextLaws(self, id='', title='', description='', coverage='', keywords='', sortorder='',
     source='', source_link='', subject='', relation='', geozone='', file_link='',
     file_link_local='', official_journal_ref='', type_law='', original_language='',
-    statute='', discussion='', contributor=None, releasedate='', lang=None,
+    statute='', discussion='', contributor=None, releasedate='', lang=None, file=None,
     REQUEST=None, **kwargs):
     """
     Create an Text Laws type of object.
     """
     #process parameters
     id = self.utCleanupId(id)
-    if not id: id = self.generateItemId(PREFIX_OBJECT)
+    if not id: id = self.utGenObjectId(title)
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
     #check mandatory fiels
@@ -126,6 +127,7 @@ def addNySemTextLaws(self, id='', title='', description='', coverage='', keyword
         ob = self._getOb(id)
         ob.updatePropertiesFromGlossary(lang)
         ob.approveThis(approved, approved_by)
+        ob.handleUpload(file)
         ob.submitThis()
         if discussion: ob.open_for_comments()
         self.recatalogNyObject(ob)
@@ -184,6 +186,16 @@ def importNySemTextLaws(self, param, id, attrs, content, properties, discussion,
                 contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
                 discussion=abs(int(attrs['discussion'].encode('utf-8'))))
             ob = self._getOb(id)
+            if objects:
+                obj = objects[0]
+                data=self.utBase64Decode(obj.attrs['file'].encode('utf-8'))
+                ctype = obj.attrs['content_type'].encode('utf-8')
+                try:
+                    size = int(obj.attrs['size'])
+                except TypeError, ValueError:
+                    size = 0
+                name = obj.attrs['name'].encode('utf-8')
+                ob.update_data(data, ctype, size, name)
             for property, langs in properties.items():
                 [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
             ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
@@ -215,13 +227,13 @@ class NySemTextLaws(NyAttributes, semtextlaws_item, NyItem, NyCheckControl):
 
     def __init__(self, id, title, description, coverage, keywords, sortorder, source, source_link,
         subject, relation, geozone, file_link, file_link_local, official_journal_ref, type_law,
-        original_language, statute, contributor, releasedate, lang):
+        original_language, statute, contributor, releasedate, lang, file=None):
         """ """
         self.id = id
         semtextlaws_item.__dict__['__init__'](self, title, description, coverage, keywords, 
             sortorder, source, source_link, subject, relation, geozone, file_link, 
             file_link_local, official_journal_ref, type_law, original_language, statute, 
-            releasedate, lang)
+            releasedate, lang, file)
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
@@ -258,6 +270,12 @@ class NySemTextLaws(NyAttributes, semtextlaws_item, NyItem, NyCheckControl):
         ra = r.append
         for l in self.gl_get_languages():
             ra('<source lang="%s"><![CDATA[%s]]></source>' % (l, self.utToUtf8(self.getLocalProperty('source', l))))
+        ra('<item file="%s" content_type="%s" size="%s" name="%s"/>' % (
+            self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
+            self.utXmlEncode(self.getContentType()),
+            self.getSize(),
+            self.downloadfilename())
+        )
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')
@@ -347,6 +365,9 @@ class NySemTextLaws(NyAttributes, semtextlaws_item, NyItem, NyCheckControl):
         self.statute =              self.version.statute
         self.releasedate =          self.version.releasedate
         self.original_language =    self.version.original_language
+        self.update_data(self.version.get_data(as_string=False),
+                         self.version.getContentType(), self.version.get_size(),
+                         self.downloadfilename(version=True))
         self.setProperties(deepcopy(self.version.getProperties()))
         self.checkout = 0
         self.checkout_user = None
@@ -367,7 +388,8 @@ class NySemTextLaws(NyAttributes, semtextlaws_item, NyItem, NyCheckControl):
         self.version = semtextlaws_item(self.title, self.description, self.coverage, self.keywords, 
             self.sortorder, self.source, self.source_link, self.subject, self.relation, self.geozone, self.file_link, 
             self.file_link_local, self.official_journal_ref, self.type_law, self.original_language, self.statute, 
-            self.releasedate, self.gl_get_selected_language())
+            self.releasedate, self.gl_get_selected_language(), self.get_data(as_string=False))
+        self.version.update_data(self.get_data(), self.getContentType(), self.get_size(), self.downloadfilename())
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
@@ -393,50 +415,65 @@ class NySemTextLaws(NyAttributes, semtextlaws_item, NyItem, NyCheckControl):
             subject=subject, relation=relation, geozone=geozone, file_link=file_link, file_link_local=file_link_local, \
             official_journal_ref=official_journal_ref, type_law=type_law, original_language=original_language, \
             statute=statute)
-        if not len(r):
-            sortorder = int(sortorder)
-            if not self.hasVersion():
-                #this object has not been checked out; save changes directly into the object
-                releasedate = self.process_releasedate(releasedate, self.releasedate)
-                self.save_properties(title, description, coverage, keywords, sortorder, source, 
-                        source_link, subject, relation, geozone, file_link, file_link_local, 
-                        official_journal_ref, type_law, original_language, statute, releasedate, lang)
-                self.updatePropertiesFromGlossary(lang)
-                self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-            else:
-                #this object has been checked out; save changes into the version object
-                if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                    raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-                releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-                self.version.save_properties(title, description, coverage, keywords, sortorder, source, 
-                        source_link, subject, relation, geozone, file_link, file_link_local, official_journal_ref, 
-                        type_law, original_language, statute, releasedate, lang)
-                self.version.updatePropertiesFromGlossary(lang)
-                self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-            if discussion: self.open_for_comments()
-            else: self.close_for_comments()
-            self._p_changed = 1
-            self.recatalogNyObject(self)
-            #log date
-            contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
-            auth_tool = self.getAuthenticationTool()
-            auth_tool.changeLastPost(contributor)
-            if REQUEST:
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
-        else:
-            if REQUEST is not None:
-                self.setSessionErrors(r)
-                self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
-                    description=description, coverage=coverage, keywords=keywords, \
-                    sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
-                    source=source, source_link=source_link, subject=subject, relation=relation, \
-                    geozone=geozone, file_link=file_link, file_link_local=file_link_local, \
-                    official_journal_ref=official_journal_ref, type_law=type_law, original_language=original_language, \
-                    statute=statute)
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
-            else:
+        # If errors raise
+        if len(r):
+            if not REQUEST:
                 raise Exception, '%s' % ', '.join(r)
+            self.setSessionErrors(r)
+            self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
+                description=description, coverage=coverage, keywords=keywords, \
+                sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
+                source=source, source_link=source_link, subject=subject, relation=relation, \
+                geozone=geozone, file_link=file_link, file_link_local=file_link_local, \
+                official_journal_ref=official_journal_ref, type_law=type_law, original_language=original_language, \
+                statute=statute)
+            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            return
+        #
+        # Save properties
+        #
+        # Upload file
+        file_form = dict([(key, value) for key, value in kwargs.items()])
+        if REQUEST:
+            file_form.update(REQUEST.form)
+        file_source = file_form.get('file_source', None)
+        if file_source:
+            attached_file = file_form.get('file', '')
+            context = self
+            if self.hasVersion():
+                context = self.version
+            context.handleUpload(attached_file)
+        # Update properties
+        sortorder = int(sortorder)
+        if not self.hasVersion():
+            #this object has not been checked out; save changes directly into the object
+            releasedate = self.process_releasedate(releasedate, self.releasedate)
+            self.save_properties(title, description, coverage, keywords, sortorder, source, 
+                    source_link, subject, relation, geozone, file_link, file_link_local, 
+                    official_journal_ref, type_law, original_language, statute, releasedate, lang)
+            self.updatePropertiesFromGlossary(lang)
+            self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        else:
+            #this object has been checked out; save changes into the version object
+            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
+                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            releasedate = self.process_releasedate(releasedate, self.version.releasedate)
+            self.version.save_properties(title, description, coverage, keywords, sortorder, source, 
+                    source_link, subject, relation, geozone, file_link, file_link_local, official_journal_ref, 
+                    type_law, original_language, statute, releasedate, lang)
+            self.version.updatePropertiesFromGlossary(lang)
+            self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
+        self._p_changed = 1
+        self.recatalogNyObject(self)
+        #log date
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        auth_tool = self.getAuthenticationTool()
+        auth_tool.changeLastPost(contributor)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
@@ -452,5 +489,52 @@ class NySemTextLaws(NyAttributes, semtextlaws_item, NyItem, NyCheckControl):
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'semtextlaws_edit')
+
+    security.declarePublic('downloadfilename')
+    def downloadfilename(self, version=False):
+        """ """
+        context = self
+        if version and self.hasVersion():
+            context = self.version
+        attached_file = context.get_data(as_string=False)
+        filename = getattr(attached_file, 'filename', [])
+        if not filename:
+            return self.title_or_id()
+        return filename[-1]
+        
+    security.declareProtected(view, 'download')
+    def download(self, REQUEST, RESPONSE):
+        """ """
+        version = REQUEST.get('version', False)
+        RESPONSE.setHeader('Content-Type', self.getContentType())
+        RESPONSE.setHeader('Content-Length', self.getSize())
+        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.downloadfilename(version=version))
+        RESPONSE.setHeader('Pragma', 'public')
+        RESPONSE.setHeader('Cache-Control', 'max-age=0')
+        if version and self.hasVersion():
+            return semtextlaws_item.index_html(self.version, REQUEST, RESPONSE)
+        return semtextlaws_item.index_html(self, REQUEST, RESPONSE)
+
+    security.declarePublic('getDownloadUrl')
+    def getDownloadUrl(self):
+        """ """
+        site = self.getSite()
+        file_path = self._get_data_name()
+        media_server = getattr(site, 'media_server', '').strip()
+        if not (media_server and file_path):
+            return self.absolute_url() + '/download'
+        file_path = (media_server,) + tuple(file_path)
+        return '/'.join(file_path)
+    
+    security.declarePublic('getEditDownloadUrl')
+    def getEditDownloadUrl(self):
+        """ """
+        site = self.getSite()
+        file_path = self._get_data_name()
+        media_server = getattr(site, 'media_server', '').strip()
+        if not (media_server and file_path):
+            return self.absolute_url() + '/download?version=1'
+        file_path = (media_server,) + tuple(file_path)
+        return '/'.join(file_path)
 
 InitializeClass(NySemTextLaws)

@@ -73,7 +73,8 @@ PROPERTIES_OBJECT = {
     'contact_email':    (0, '', ''),
     'contact_phone':    (0, '', ''),
     'working_langs':    (0, '', ''),
-    'lang':             (0, '', '')
+    'lang':             (0, '', ''),
+    'file':             (0, '', ''),
 }
 
 manage_addNySemEvent_html = PageTemplateFile('zpt/semevent_manage_add', globals())
@@ -90,13 +91,13 @@ def addNySemEvent(self, id='', title='', description='', coverage='',
     file_link_copy='', subject=[], relation='', organizer='', duration='',
     geozone='', address='', start_date='', end_date='', event_status='',
     contact_person='', contact_email='', contact_phone='', working_langs=[],
-    contributor=None, releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
+    contributor=None, releasedate='', discussion='', lang=None, file=None, REQUEST=None, **kwargs):
     """
     Create an Event type of object.
     """
     #process parameters
     id = self.utCleanupId(id)
-    if not id: id = self.generateItemId(PREFIX_OBJECT)
+    if not id: id = self.utGenObjectId(title)
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
     if topitem: topitem = 1
@@ -146,6 +147,7 @@ def addNySemEvent(self, id='', title='', description='', coverage='',
         ob = self._getOb(id)
         ob.updatePropertiesFromGlossary(lang)
         ob.approveThis(approved, approved_by)
+        ob.handleUpload(file)
         ob.submitThis()
         if discussion: ob.open_for_comments()
         self.recatalogNyObject(ob)
@@ -208,8 +210,21 @@ def importNySemEvent(self, param, id, attrs, content, properties, discussion, ob
                 contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
                 contact_email=attrs['contact_email'].encode('utf-8'),
                 contact_phone=attrs['contact_phone'].encode('utf-8'),
-                discussion=abs(int(attrs['discussion'].encode('utf-8'))))
+                discussion=abs(int(attrs['discussion'].encode('utf-8'))),
+            )
             ob = self._getOb(id)
+            # Upload file
+            if objects:
+                obj = objects[0]
+                data=self.utBase64Decode(obj.attrs['file'].encode('utf-8'))
+                ctype = obj.attrs['content_type'].encode('utf-8')
+                try:
+                    size = int(obj.attrs['size'])
+                except TypeError, ValueError:
+                    size = 0
+                name = obj.attrs['name'].encode('utf-8')
+                ob.update_data(data, ctype, size, name)
+            # Update properties
             for property, langs in properties.items():
                 [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
             ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
@@ -242,14 +257,14 @@ class NySemEvent(NyAttributes, semevent_item, NyItem, NyCheckControl):
         creator, creator_email, topitem, event_type, source, source_link,
         file_link, file_link_copy, subject, relation, organizer, duration, geozone,
         address, start_date, end_date, event_status, contact_person, contact_email,
-        contact_phone, working_langs, contributor, releasedate, lang):
+        contact_phone, working_langs, contributor, releasedate, lang, file=None):
         """ """
         self.id = id
         semevent_item.__dict__['__init__'](self, title, description, coverage, keywords,
             sortorder, creator, creator_email, topitem, event_type, source,
             source_link, file_link, file_link_copy, subject, relation, organizer,
             duration, geozone, address, start_date, end_date, event_status,
-            contact_person, contact_email, contact_phone, working_langs, releasedate, lang)
+            contact_person, contact_email, contact_phone, working_langs, releasedate, lang, file=file)
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
@@ -308,6 +323,12 @@ class NySemEvent(NyAttributes, semevent_item, NyItem, NyCheckControl):
             ra('<duration lang="%s"><![CDATA[%s]]></duration>' % (l, self.utToUtf8(self.getLocalProperty('duration', l))))
             ra('<address lang="%s"><![CDATA[%s]]></address>' % (l, self.utToUtf8(self.getLocalProperty('address', l))))
             ra('<contact_person lang="%s"><![CDATA[%s]]></contact_person>' % (l, self.utToUtf8(self.getLocalProperty('contact_person', l))))
+        ra('<item file="%s" content_type="%s" size="%s" name="%s"/>' % (
+            self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
+            self.utXmlEncode(self.getContentType()),
+            self.getSize(),
+            self.downloadfilename())
+        )
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')
@@ -423,6 +444,9 @@ class NySemEvent(NyAttributes, semevent_item, NyItem, NyCheckControl):
         self.event_status =     self.version.event_status
         self.releasedate =      self.version.releasedate
         self.releasedate =      self.version.releasedate
+        self.update_data(self.version.get_data(as_string=False), 
+                         self.version.getContentType(), self.version.get_size(),
+                         self.downloadfilename(version=True))
         self.setProperties(deepcopy(self.version.getProperties()))
         self.checkout = 0
         self.checkout_user = None
@@ -446,7 +470,9 @@ class NySemEvent(NyAttributes, semevent_item, NyItem, NyCheckControl):
             self.file_link, self.file_link_copy, self.subject, self.relation,
             self.organizer, self.duration, self.geozone, self.address, self.start_date,
             self.end_date, self.event_status, self.contact_person, self.contact_email,
-            self.contact_phone, self.working_langs, self.releasedate, self.gl_get_selected_language())
+            self.contact_phone, self.working_langs, self.releasedate, self.gl_get_selected_language(),
+            self.get_data(as_string=False))
+        self.version.update_data(self.get_data(), self.getContentType(), self.get_size(), self.downloadfilename())
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
@@ -480,58 +506,74 @@ class NySemEvent(NyAttributes, semevent_item, NyItem, NyCheckControl):
             duration=duration, geozone=geozone, address=address, start_date=start_date, end_date=end_date, \
             event_status=event_status, contact_person=contact_person, contact_email=contact_email, \
             contact_phone=contact_phone, working_langs=working_langs)
-        if not len(r):
-            start_date = self.utConvertStringToDateTimeObj(start_date)
-            end_date = self.utConvertStringToDateTimeObj(end_date)
-            sortorder = int(sortorder)
-            if not self.hasVersion():
-                #this object has not been checked out; save changes directly into the object
-                releasedate = self.process_releasedate(releasedate, self.releasedate)
-                self.save_properties(title, description, coverage, keywords, sortorder,
-                    creator, creator_email, topitem, event_type, source,
-                    source_link, file_link, file_link_copy, subject, relation, organizer,
-                    duration, geozone, address, start_date, end_date, event_status,
-                    contact_person, contact_email, contact_phone, working_langs, releasedate, lang)
-                self.updatePropertiesFromGlossary(lang)
-                self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-            else:
-                #this object has been checked out; save changes into the version object
-                if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                    raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-                releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-                self.version.save_properties(title, description, coverage, keywords, sortorder,
-                    creator, creator_email, topitem, event_type, source,
-                    source_link, file_link, file_link_copy, subject, relation, organizer,
-                    duration, geozone, address, start_date, end_date, event_status,
-                    contact_person, contact_email, contact_phone, working_langs, releasedate, lang)
-                self.version.updatePropertiesFromGlossary(lang)
-                self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
-            if discussion: self.open_for_comments()
-            else: self.close_for_comments()
-            self._p_changed = 1
-            self.recatalogNyObject(self)
-            #log date
-            contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
-            auth_tool = self.getAuthenticationTool()
-            auth_tool.changeLastPost(contributor)
-            if REQUEST:
-                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
-        else:
-            if REQUEST is not None:
-                self.setSessionErrors(r)
-                self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
-                    description=description, coverage=coverage, keywords=keywords, \
-                    sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
-                    creator=creator, creator_email=creator_email, topitem=topitem, \
-                    event_type=event_type, source=source, source_link=source_link, file_link=file_link, \
-                    file_link_copy=file_link_copy, subject=subject, relation=relation, organizer=organizer, \
-                    duration=duration, geozone=geozone, address=address, start_date=start_date, end_date=end_date, \
-                    event_status=event_status, contact_person=contact_person, contact_email=contact_email, \
-                    contact_phone=contact_phone, working_langs=working_langs)
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
-            else:
+        # If errors raise
+        if len(r):
+            if not REQUEST:
                 raise Exception, '%s' % ', '.join(r)
+            self.setSessionErrors(r)
+            self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
+                description=description, coverage=coverage, keywords=keywords, \
+                sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
+                creator=creator, creator_email=creator_email, topitem=topitem, \
+                event_type=event_type, source=source, source_link=source_link, file_link=file_link, \
+                file_link_copy=file_link_copy, subject=subject, relation=relation, organizer=organizer, \
+                duration=duration, geozone=geozone, address=address, start_date=start_date, end_date=end_date, \
+                event_status=event_status, contact_person=contact_person, contact_email=contact_email, \
+                contact_phone=contact_phone, working_langs=working_langs)
+            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            return
+        #
+        # Save properties
+        #
+        # Upload file
+        file_form = dict([(key, value) for key, value in kwargs.items()])
+        if REQUEST:
+            file_form.update(REQUEST.form)
+        file_source = file_form.get('file_source', None)
+        if file_source:
+            attached_file = file_form.get('file', '')
+            context = self
+            if self.hasVersion():
+                context = self.version
+            context.handleUpload(attached_file)
+            
+        # Update properties
+        start_date = self.utConvertStringToDateTimeObj(start_date)
+        end_date = self.utConvertStringToDateTimeObj(end_date)
+        sortorder = int(sortorder)
+        if not self.hasVersion():
+            #this object has not been checked out; save changes directly into the object
+            releasedate = self.process_releasedate(releasedate, self.releasedate)
+            self.save_properties(title, description, coverage, keywords, sortorder,
+                creator, creator_email, topitem, event_type, source,
+                source_link, file_link, file_link_copy, subject, relation, organizer,
+                duration, geozone, address, start_date, end_date, event_status,
+                contact_person, contact_email, contact_phone, working_langs, releasedate, lang)
+            self.updatePropertiesFromGlossary(lang)
+            self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        else:
+            #this object has been checked out; save changes into the version object
+            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
+                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+            releasedate = self.process_releasedate(releasedate, self.version.releasedate)
+            self.version.save_properties(title, description, coverage, keywords, sortorder,
+                creator, creator_email, topitem, event_type, source,
+                source_link, file_link, file_link_copy, subject, relation, organizer,
+                duration, geozone, address, start_date, end_date, event_status,
+                contact_person, contact_email, contact_phone, working_langs, releasedate, lang)
+            self.version.updatePropertiesFromGlossary(lang)
+            self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
+        if discussion: self.open_for_comments()
+        else: self.close_for_comments()
+        self._p_changed = 1
+        self.recatalogNyObject(self)
+        #log date
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        auth_tool = self.getAuthenticationTool()
+        auth_tool.changeLastPost(contributor)
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
@@ -547,5 +589,52 @@ class NySemEvent(NyAttributes, semevent_item, NyItem, NyCheckControl):
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'semevent_edit')
+
+    security.declarePublic('downloadfilename')
+    def downloadfilename(self, version=False):
+        """ """
+        context = self
+        if version and self.hasVersion():
+            context = self.version
+        attached_file = context.get_data(as_string=False)
+        filename = getattr(attached_file, 'filename', [])
+        if not filename:
+            return self.title_or_id()
+        return filename[-1]
+        
+    security.declareProtected(view, 'download')
+    def download(self, REQUEST, RESPONSE):
+        """ """
+        version = REQUEST.get('version', False)
+        RESPONSE.setHeader('Content-Type', self.getContentType())
+        RESPONSE.setHeader('Content-Length', self.getSize())
+        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.downloadfilename(version=version))
+        RESPONSE.setHeader('Pragma', 'public')
+        RESPONSE.setHeader('Cache-Control', 'max-age=0')
+        if version and self.hasVersion():
+            return semevent_item.index_html(self.version, REQUEST, RESPONSE)
+        return semevent_item.index_html(self, REQUEST, RESPONSE)
+
+    security.declarePublic('getDownloadUrl')
+    def getDownloadUrl(self):
+        """ """
+        site = self.getSite()
+        file_path = self._get_data_name()
+        media_server = getattr(site, 'media_server', '').strip()
+        if not (media_server and file_path):
+            return self.absolute_url() + '/download'
+        file_path = (media_server,) + tuple(file_path)
+        return '/'.join(file_path)
+    
+    security.declarePublic('getEditDownloadUrl')
+    def getEditDownloadUrl(self):
+        """ """
+        site = self.getSite()
+        file_path = self._get_data_name()
+        media_server = getattr(site, 'media_server', '').strip()
+        if not (media_server and file_path):
+            return self.absolute_url() + '/download?version=1'
+        file_path = (media_server,) + tuple(file_path)
+        return '/'.join(file_path)
 
 InitializeClass(NySemEvent)

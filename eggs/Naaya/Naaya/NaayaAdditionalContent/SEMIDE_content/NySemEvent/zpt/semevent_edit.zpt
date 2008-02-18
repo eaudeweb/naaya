@@ -200,27 +200,11 @@
 	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', here.getVersionLocalProperty('description', curr_lang))" />
 </div>
 <!-- File link -->
-<div class="multicol" style="width:25em;">
-	<div class="field">
-		<label for="file_link"><span i18n:translate="" tal:omit-tag="">Full description link</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'file_link')" class="mandatory_field"> *</span></label>
-		<input type="text" name="file_link" id="file_link" size="50" 
-			tal:attributes="value python:here.getSession('file_link', here.getVersionLocalProperty('file_link', curr_lang))" />
-	</div>
+<div class="field">
+	<label for="file_link"><span i18n:translate="" tal:omit-tag="">Full description link</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'file_link')" class="mandatory_field"> *</span></label>
+	<input type="text" name="file_link" id="file_link" size="50" 
+		tal:attributes="value python:here.getSession('file_link', here.getVersionLocalProperty('file_link', curr_lang))" />
 </div>
-<!-- File link local copy -->
-<div class="multicol" style="width:25em;">
-	<div class="field"  style="white-space: nowrap">
-		<label for="file_link_copy"><span i18n:translate="" tal:omit-tag="">Full description link (local copy)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'file_link_copy')" class="mandatory_field"> *</span></label>
-		<input type="text" name="file_link_copy" id="file_link_copy" size="50"
-			style="display: inline;"
-			tal:attributes="value python:here.getSession('file_link_copy', here.getVersionLocalProperty('file_link_copy', curr_lang))" />
-		<input type="button" value="Pick" i18n:translate=""
-			style="display: inline; width:  auto;"
-			tal:define="sitemap_path here/getSitePath"
-			tal:attributes="onclick string:setupWin('${sitemap_path}/sitemap_add_html', 300, 500, 'file_link_copy');;" />
-	</div>
-</div>
-<div class="multicol_clear"></div>
 <!-- Subject -->
 <div class="field">
 	<label for="subject"><span i18n:translate="" tal:omit-tag="">Subject</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'subject')" class="mandatory_field"> *</span></label>
@@ -356,6 +340,28 @@
 			tal:content="item/title" i18n:translate="" />
 	</select>
 </div>
+<!-- Attached file -->
+<fieldset style="background-color: #F9FCFE; padding-bottom: 1em; margin-bottom: 1em;">
+<legend>
+	<span i18n:translate="">Full description link (local copy)</span>
+	<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'file')" class="mandatory_field"> *</span>
+</legend>
+<div class="field-inline" tal:condition="python:here.getSize()>0">
+	<input type="radio" name="file_source" id="file-source-none" value="" checked="checked" />
+	<label for="file-source-none" i18n:translate="">Keep</label>
+	<tal:block define="filename python:here.downloadfilename(version=True); size python:here.utShowSizeKb(here.getSize()); content_type python:here.getContentTypeTitle(here.getContentType())">
+		<a tal:attributes="href here/getEditDownloadUrl"><img tal:attributes="src string:getContentTypePicture?id=${here/getContentType}" alt="" />
+			<span tal:replace="string:${filename} (${content_type}, ${size} Kb)"/>
+		</a>
+	</tal:block>
+</div>
+<div class="field-inline">
+	<input type="radio" name="file_source" id="file-source-file" value="file" tal:attributes="checked python:test(here.getSize()<=0, 'checked', None)"/>
+	<label for="source-file" i18n:translate="">Upload file</label>
+	<input type="file" name="file" id="file" value="" size="50" onclick="document.getElementById('file-source-file').checked='checked'"/>
+</div>
+</fieldset>
+
 </tal:block>
 
 <!-- Submit bar -->
