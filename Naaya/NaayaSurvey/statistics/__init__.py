@@ -36,7 +36,7 @@ def _get_available_statistics():
     return statistics
 
 AVAILABLE_STATISTICS = _get_available_statistics()
-#AVAILABLE_STATISTICS.sort(lambda x, y: cmp(x.meta_sortorder, y.meta_sortorder)) # predictible order
+AVAILABLE_STATISTICS.sort(lambda x, y: cmp(x.meta_sortorder, y.meta_sortorder)) # predictible order
 
 def register_statistic(context, statistic):
     """ Register given statistic to context"""
