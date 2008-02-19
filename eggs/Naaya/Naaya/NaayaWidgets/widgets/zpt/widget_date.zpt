@@ -1,0 +1,43 @@
+<tal:comment condition="nothing">
+<!-- mode can be: view, edit or manage -->
+</tal:comment>
+
+<tal:block define="
+    mode options/mode|string:view;
+    datamodel options/datamodel|nothing;
+	widget_id here/getWidgetId;">
+
+<!-- View mode -->
+<div tal:condition="python:mode == 'view'" class="widgetViewMode dateWidget"
+     tal:define="value python:datamodel.get(widget_id, None)">
+	<strong tal:content="here/title" />
+	<br />
+	<span tal:condition="value" tal:content="python: value.strftime('%Y-%m-%d')" />
+	<span tal:condition="not: value" i18n:translate="" class="no-response">
+		No response
+	</span>
+</div>
+
+<!-- Edit mode -->
+<div tal:condition="python:mode == 'edit'" class="widgetEditMode"
+     tal:define="value python:here.getSession(widget_id, '')">
+	<label tal:attributes="for widget_id" class="label">
+		<span i18n:translate="" tal:content="here/title" />
+		<span tal:condition="here/required" class="required">*</span>
+	</label>
+	<div class="tooltips" tal:content="here/tooltips" />
+	<input type="text" class="vDateField" size="10" maxlength="10" tal:attributes="
+		value value;
+		name widget_id;
+		id widget_id" />
+	<noscript><em i18n:translate="" class="tooltips">(dd/mm/yyyy)</em></noscript>
+</div>
+
+<!-- Edit widget properties -->
+<div tal:condition="python:mode == 'manage'" class="widgetManageMode"
+     tal:define="required python:here.getSession('required', here.getProperty('required', None));">
+<metal:block use-macro="here/common_render_meth/macros/manage">
+</metal:block>
+</div>
+
+</tal:block>
