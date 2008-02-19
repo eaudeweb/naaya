@@ -50,7 +50,7 @@ class MultipleChoiceGoogleBarChartStatistics(BaseMultipleChoiceStatistics):
         return self.page(question=self.question,
                          chart_url=chart.get_url())
 
-    page = PageTemplateFile("zpt/multiplechoice_barchart_statistics.zpt", globals())
+    page = PageTemplateFile("zpt/multiplechoice_google_barchart_statistics.zpt", globals())
 
 InitializeClass(MultipleChoiceGoogleBarChartStatistics)
 
