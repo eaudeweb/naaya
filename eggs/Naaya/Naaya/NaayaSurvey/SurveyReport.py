@@ -36,18 +36,9 @@ from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 
 from constants import PERMISSION_MANAGE_SURVEYTYPE
-from statistics.SimpleTabularStatistics import SimpleTabularStatistics
-from statistics.MultipleChoiceTabularStatistics import MultipleChoiceTabularStatistics
-from statistics.MultipleChoiceGoogleBarChartStatistics import MultipleChoiceGoogleBarChartStatistics
-from statistics.MatrixTabularStatistics import MatrixTabularStatistics
-from statistics.MultipleChoicePieChartStatistics import MultipleChoicePieChartStatistics
+import statistics
 
-STATISTICS = {SimpleTabularStatistics.meta_type: SimpleTabularStatistics,
-              MultipleChoiceTabularStatistics.meta_type: MultipleChoiceTabularStatistics,
-              MultipleChoiceGoogleBarChartStatistics.meta_type: MultipleChoiceGoogleBarChartStatistics,
-              MatrixTabularStatistics.meta_type: MatrixTabularStatistics,
-              MultipleChoicePieChartStatistics.meta_type: MultipleChoicePieChartStatistics,
-              }
+STATISTICS = dict([(statistic.meta_type, statistic) for statistic in statistics.AVAILABLE_STATISTICS])
 
 def manage_addSurveyReport(context, id="", title="", REQUEST=None, **kwargs):
     """
