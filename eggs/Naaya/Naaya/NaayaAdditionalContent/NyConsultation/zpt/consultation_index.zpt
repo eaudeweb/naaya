@@ -8,7 +8,7 @@
 	<tal:block tal:condition="python:days_left[0] == 1 and days_left[1] > 0"><span tal:content="python:days_left[1]" class="consultation_day_counter" /> <span i18n:translate="">day(s) left for this consultation.</span></tal:block>
 	<tal:block tal:condition="python:days_left[0] == 0 and days_left[1] > 0"><span tal:content="python:days_left[1]" class="consultation_day_counter" /> <span i18n:translate="">day(s) until this consultation starts.</span></tal:block>
 	<span tal:condition="python:days_left[1] <= 0" class="consultation_day_counter" i18n:translate="">Consultation deadline has been reached.</span>
-	<p tal:condition="not:exfile" i18n:translate="">No file has yet been submited for this consultation.</p>
+	<p tal:condition="not:exfile" i18n:translate="">No file has yet been submitted for this consultation.</p>
 	<a i18n:translate="" class="consultation-button" tal:attributes="href python:here.absolute_url() + '/reviews_index_html'">View answers</a>
 	<tal:block tal:condition="exfile">
 		<tal:block tal:condition="python:here.check_exfile_for_lang(lang)">
