@@ -134,11 +134,11 @@ table.widgetTypesTable td:first-child {
 
 .statistics.bar-charts table
 
-.statistics div {
+.statistics.bar-charts div {
 	margin-bottom: 1.5em;
 }
 
-.statistics div.progress-container {
+.statistics.bar-charts div.progress-container {
 	border: 1px solid #CCCCCC;
 	float: right;
 	margin: 2px 5px 2px 0pt;
@@ -146,7 +146,7 @@ table.widgetTypesTable td:first-child {
 	width: 100%;
 }
 
-.statistics div.progress-container div {
+.statistics.bar-charts div.progress-container div {
 	background-color:#ACE97C;
 	font-size:10%;
 	height: 3em;
