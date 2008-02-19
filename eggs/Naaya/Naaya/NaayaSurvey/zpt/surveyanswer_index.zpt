@@ -1,0 +1,28 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<link rel="stylesheet" type="text/css" media="all"
+	tal:define="stool here/portal_survey;"
+	tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+
+<h1>
+	<img tal:attributes="
+		src python:test(here.approved, here.icon, here.icon_marked); 
+		title here/meta_label; 
+		alt here/meta_label" />
+	<tal:block tal:replace="here/title_or_id" />
+</h1>
+
+<p tal:condition="python:here.description!=''" 
+	tal:content="structure here/description" />
+
+<tal:block tal:define="stype here/getSurveyType;
+                       datamodel python:dict([(widget.id, getattr(here, widget.id, None)) for widget in stype.getSortedWidgets()]);
+					   rendered python:test(stype, stype.render(mode='view', datamodel=datamodel), 'Error');">
+	<span tal:content="structure rendered" />
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />

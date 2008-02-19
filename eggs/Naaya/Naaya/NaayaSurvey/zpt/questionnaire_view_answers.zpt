@@ -1,0 +1,45 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<link rel="stylesheet" type="text/css" media="all"
+	tal:define="stool here/portal_survey;"
+	tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+
+<h1>
+	<img tal:attributes="
+		src python:test(here.approved, here.icon, here.icon_marked); 
+		title here/meta_label; 
+		alt here/meta_label" />
+	<tal:block tal:replace="here/title_or_id" />
+		<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+</h1>
+
+<p tal:condition="python:here.description!=''" 
+	tal:content="structure here/description" />
+
+<tal:block define="answers python:here.getSurveyAnswers();
+                   auth_tool python:here.getSite().getAuthenticationTool()">
+	<p i18n:translate="">List of answers</p>
+	<ol>
+		<tal:block repeat="answer answers">
+			<li>
+				<a tal:attributes="href answer/absolute_url">
+					Answered by
+					<tal:block replace="python: auth_tool.getUserFullNameByID(answer.respondent)">username</tal:block>
+					on
+					<tal:block replace="python: here.utShowFullDateTime(answer.bobobase_modification_time())">date</tal:block>
+				</a>
+			</li>
+		</tal:block>
+	</ol>
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />

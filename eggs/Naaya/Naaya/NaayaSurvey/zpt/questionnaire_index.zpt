@@ -1,0 +1,59 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<link rel="stylesheet" type="text/css" media="all"
+	tal:define="stool here/portal_survey;"
+	tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+
+<h1>
+	<img tal:attributes="
+		src python:test(here.approved, here.icon, here.icon_marked); 
+		title here/meta_label; 
+		alt here/meta_label" />
+	<tal:block tal:replace="here/title_or_id" />
+		<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+</h1>
+
+<div class="buttons">
+	<tal:block condition="here/checkPermissionEditObjects">
+		<a tal:attributes="href here/edit_html/absolute_url" i18n:translate="">Edit</a>
+	</tal:block>
+	<tal:block condition="here/checkPermissionViewAnswers">
+		<a href="questionnaire_view_answers_html" i18n:translate="">View answers</a>
+		<a href="questionnaire_view_reports_html" i18n:translate="">View reports</a>
+	</tal:block>
+</div>
+
+<p tal:condition="python:here.description!=''" 
+	tal:content="structure here/description" />
+
+<p i18n:translate="" tal:condition="here/expired">Survey expired.</p>
+
+<tal:block condition="not:here/expired">
+	<tal:block define="my_answer python:here.getMySurveyAnswer()">
+	<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
+	      tal:define="stype here/getSurveyType;
+	                  rendered python:test(stype, stype.render(mode='edit', datamodel={}), 'Error');"
+	      tal:condition="not: my_answer">
+
+		<tal:block content="structure rendered" />
+
+		<div class="surveySubmit">
+			<input type="submit" value="Submit" i18n:attributes="value" name="addSurveyAnswer:method"/>
+			<input type="reset" value="Reset" i18n:attributes="value" name="reset"/>
+		</div>
+	</form>
+
+	<p i18n:translate="" tal:condition="my_answer">You have already taken the survey.</p>
+	</tal:block>
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />
