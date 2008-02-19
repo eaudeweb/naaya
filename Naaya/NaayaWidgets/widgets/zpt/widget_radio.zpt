@@ -1,0 +1,74 @@
+<tal:comment condition="nothing">
+<!-- mode can be: view, edit or manage -->
+</tal:comment>
+
+<tal:block define="
+    mode options/mode|string:view;
+    datamodel options/datamodel|nothing;
+	widget_id here/getWidgetId;">
+
+<!-- View mode -->
+<div tal:condition="python:mode == 'view'" class="widgetViewMode"
+     tal:define="checked_choice python:datamodel.get(widget_id, None)">
+	<strong tal:content="here/title" />
+	<br />
+	<span tal:condition="python: checked_choice is not None"
+		  tal:content="python: here.choices[checked_choice]" />
+	<span tal:condition="python: checked_choice is None" i18n:translate="" class="no-response">
+		No response
+	</span>
+</div>
+
+<!-- Edit mode -->
+<div tal:condition="python:mode == 'edit'" class="widgetEditMode"
+	 tal:define="checked_choice python:here.getSession(widget_id, None)">
+	<label tal:attributes="for widget_id" class="label">
+		<span i18n:translate="" tal:content="here/title" />
+		<span tal:condition="here/required" class="required">*</span>
+	</label>
+	<div class="tooltips" tal:content="here/tooltips" />
+	<tal:block repeat="choice here/choices">
+		<tal:block define="choice_idx repeat/choice/index;
+		                   choice_id python:'%s_%d' % (widget_id, choice_idx);">
+			<input type="radio" tal:attributes="
+				value choice_idx;
+				name string:${widget_id}:int;
+				id choice_id;
+				checked python:choice_idx==checked_choice"/>
+			<label tal:attributes="for choice_id" i18n:translate="" tal:content="choice">Choice</label>
+		</tal:block>
+		<br tal:condition="python:here.display == 'vertical'" />
+	</tal:block>
+</div>
+
+<!-- Edit widget properties -->
+<div tal:condition="python:mode == 'manage'" class="widgetManageMode"
+     tal:define="lang request/lang|here/gl_get_selected_language;
+                 required python:here.getSession('required', here.getProperty('required', None));
+                 choices python:here.getSession('choices', here.getLocalProperty('choices', lang));
+                 display python:here.getSession('display', here.getProperty('display', 'vertical'));">
+<metal:block use-macro="here/common_render_meth/macros/manage">
+
+<!-- Custom fields -->
+<metal:block fill-slot="custom_fields">
+<!-- Display mode-->
+	<div class="field">
+		<label for="display" i18n:translate="">Display mode</label>
+		<select id="display" name="display">
+			<tal:block repeat="mode here/display_modes">
+				<option  i18n:translate="" tal:content="mode"  tal:attributes="
+					value mode;
+					selected python:test(mode == here.display, 'selected', None)"/>
+			</tal:block>
+		</select>
+	</div>
+<!-- Choices -->
+	<div class="field">
+		<label for="choices" i18n:translate="">Choices (one per line)</label><!-- should i18n be used here? -->
+		<textarea name="choices:lines" id="choices" cols="50" rows="10" tal:content="python:'\n'.join(choices)"></textarea><!-- TODO: fix conversion to lines -->
+	</div>
+</metal:block>
+</metal:block>
+</div>
+
+</tal:block>

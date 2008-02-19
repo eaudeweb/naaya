@@ -1,0 +1,60 @@
+<tal:comment condition="nothing">
+<!-- mode can be: view, edit or manage -->
+</tal:comment>
+
+<tal:block define="
+    mode options/mode|string:view;
+    datamodel options/datamodel|nothing;
+	widget_id here/getWidgetId;">
+
+<!-- View mode -->
+<div tal:condition="python:mode == 'view'" class="widgetViewMode comboboxWidget"
+     tal:define="checked_choice python:datamodel.get(widget_id, None)">
+	<strong tal:content="here/title" />
+	<br />
+	<span tal:condition="python: checked_choice is not None"
+		  tal:content="python: here.choices[checked_choice]" />
+	<span tal:condition="python: checked_choice is None" i18n:translate="" class="no-response">
+		No response
+	</span>
+</div>
+
+<!-- Edit mode -->
+<div tal:condition="python:mode == 'edit'" class="widgetEditMode"
+	 tal:define="checked_choice python:here.getSession(widget_id, None)">
+	<label tal:attributes="for widget_id" class="label">
+		<span i18n:translate="" tal:content="here/title" />
+		<span tal:condition="here/required" class="required">*</span>
+	</label>
+	<div class="tooltips" tal:content="here/tooltips" />
+	<select tal:attributes="name string:${widget_id}:int; id widget_id">
+		<tal:block repeat="choice here/choices">
+			<tal:block define="choice_id python:widget_id + choice.strip().replace(' ', '_');">
+				<option tal:attributes="value repeat/choice/index; selected python:repeat['choice'].index==checked_choice"
+				        i18n:translate="" tal:content="choice">
+					OPTION
+				</option>
+			</tal:block>
+		</tal:block>
+	</select>
+</div>
+
+<!-- Edit widget properties -->
+<div tal:condition="python:mode == 'manage'" class="widgetManageMode"
+     tal:define="lang request/lang|here/gl_get_selected_language;
+                 required python:here.getSession('required', here.getProperty('required', None));
+                 choices python:here.getSession('choices', here.getLocalProperty('choices', lang));">
+<metal:block use-macro="here/common_render_meth/macros/manage">
+
+<!-- Custom fields -->
+<metal:block fill-slot="custom_fields">
+<!-- Choices -->
+	<div class="field">
+		<label for="choices" i18n:translate="">Choices</label><!-- should i18n be used here? -->
+		<textarea name="choices:lines" id="choices" cols="50" rows="10" tal:content="python:'\n'.join(choices)"></textarea><!-- TODO: fix conversion to lines -->
+	</div>
+</metal:block>
+</metal:block>
+</div>
+
+</tal:block>

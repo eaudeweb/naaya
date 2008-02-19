@@ -1,0 +1,46 @@
+<tal:comment condition="nothing">
+<!-- mode can be: view, edit or manage -->
+</tal:comment>
+
+<tal:block define="
+    mode options/mode|string:view;
+	widget_id here/getWidgetId;">
+
+<!-- View mode -->
+<div tal:condition="python:mode == 'view'" class="widgetViewMode labelWidget">
+	<span tal:replace="structure here/text">text of the label</span>
+</div>
+
+<!-- Edit mode -->
+<div tal:condition="python:mode == 'edit'" class="widgetEditMode">
+	<span tal:replace="structure here/text">text of the label</span>
+</div>
+
+<!-- Edit widget properties -->
+<div tal:condition="python:mode == 'manage'" class="widgetManageMode"
+     tal:define="lang request/lang|here/gl_get_selected_language;
+                 title python:here.getSession('title', here.getLocalProperty('title', lang));
+                 text python:here.getSession('text', here.getLocalProperty('text', lang));
+                 sortorder python:here.getSession('sortorder', here.getProperty('sortorder', 100));">
+<!-- Language -->
+<input type="hidden" name="lang" id="lang" tal:attributes="value lang" />
+<!-- Title -->
+<div class="field">
+	<label for="title" i18n:translate="">Title</label>
+	<input type="text" size="40" name="title" id="title" tal:attributes="value title"/>
+</div>
+<!-- Text -->
+<div class="field" tal:define="editor here/getEditorTool">
+	<tal:block tal:replace="structure editor/includeLibs" />
+	<tal:block tal:replace="structure python:editor.render('text')" />
+	<label for="text" i18n:translate="">Text</label>
+	<textarea name="text" class="mceEditor" cols="50" rows="10" id="title" tal:content="text">text</textarea>
+</div>
+<!-- Sort order -->
+<div class="field">
+	<label for="sortorder" i18n:translate="">Sort Order</label>
+	<input type="text" size="40" name="sortorder:int" id="sortorder" tal:attributes="value sortorder"/>
+</div>
+</div>
+
+</tal:block>
