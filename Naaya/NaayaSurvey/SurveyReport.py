@@ -185,8 +185,7 @@ class SurveyReport(Folder, LocalPropertyManager):
 
     def getAvailableStatistics(self):
         """Return the available statistics"""
-        global STATISTICS
-        return STATISTICS.values()
+        return statistics.AVAILABLE_STATISTICS
 
     security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'index_html')
     index_html = PageTemplateFile('zpt/surveyreport_index', globals())
