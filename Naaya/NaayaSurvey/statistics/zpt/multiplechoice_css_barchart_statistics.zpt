@@ -1,0 +1,22 @@
+<div tal:define="question options/question;
+                 total options/total;
+                 answered options/answered;
+                 unanswered options/unanswered;
+                 per_choice options/per_choice;"
+     class="statistics bar-charts">
+	<table style="width: 99%">
+		<caption tal:content="question/title">question</caption>
+		<col width="10%">
+		<col width="90%">
+		<tbody>
+			<tr tal:repeat="choice question/choices">
+				<th tal:content="choice">choice</th>
+				<td tal:define="percent python:per_choice[repeat['choice'].index][1]">
+					<div class="progress-container">
+						<div tal:attributes="style python:'width: %.2f%%' % (percent, )"></div>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
