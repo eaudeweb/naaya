@@ -5,10 +5,6 @@
 <dtml-call "REQUEST.RESPONSE.setHeader( 'Expires', expires.toZone('GMT').rfc822() )" >
 </dtml-let>
 
-.statistics div {
-	margin-bottom: 1.5em;
-}
-
 div.widgetViewMode {
   border: 1px solid #EFEFEF;
   padding: 0.5em;
@@ -133,3 +129,28 @@ table.widgetTypesTable td:first-child {
   padding: 0.5em;
   margin-top: 0.5em;
 }
+
+/* BEGIN STATISTICS */
+
+.statistics.bar-charts table
+
+.statistics div {
+	margin-bottom: 1.5em;
+}
+
+.statistics div.progress-container {
+	border: 1px solid #CCCCCC;
+	float: right;
+	margin: 2px 5px 2px 0pt;
+	padding: 1px;
+	width: 100%;
+}
+
+.statistics div.progress-container div {
+	background-color:#ACE97C;
+	font-size:10%;
+	height: 3em;
+}
+
+
+/* END STATISTICS */
