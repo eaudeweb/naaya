@@ -139,7 +139,6 @@ table.widgetTypesTable td:first-child {
 }
 
 .statistics.bar-charts div.progress-container {
-	border: 1px solid #CCCCCC;
 	float: right;
 	margin: 2px 5px 2px 0pt;
 	padding: 1px;
@@ -147,10 +146,8 @@ table.widgetTypesTable td:first-child {
 }
 
 .statistics.bar-charts div.progress-container div {
-	background-color:#ACE97C;
-	font-size:10%;
-	height: 3em;
+	background-color: #B0C6DF;
+	height: 0.8em;
 }
-
 
 /* END STATISTICS */
