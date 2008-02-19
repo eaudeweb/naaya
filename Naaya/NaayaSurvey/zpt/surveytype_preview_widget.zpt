@@ -1,0 +1,38 @@
+<span tal:replace="structure here/standard_html_header" />
+<tal:block define="
+	widget_id request/widget_id|string:;
+	widget python:getattr(here, widget_id, None);
+	rendered python:widget and widget.render(mode='edit', datamodel={}) or None;"
+	tal:condition="rendered">
+
+<link rel="stylesheet" type="text/css" media="all"
+	tal:define="stool here/portal_survey;"
+	tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+
+<h1>
+	<tal:block i18n:translate="">Preview of:</tal:block> <tal:block replace="widget/title" />
+</h1>
+
+<!-- Submission bar -->
+<div id="admin_this_folder">
+	<a tal:attributes="href string:${here/absolute_url}/edit_widget_html?widget_id=${widget_id}">
+		<span i18n:translate="">Edit</span>
+	</a>
+</div>
+
+<div>
+	<span i18n:translate="">
+		<strong>Note: </strong>
+		this is the preview of <em tal:content="widget/meta_type">widget</em> (<tal:block replace="widget/meta_description"/>).
+		Click on the "Edit" button to change its properties.
+	</span>
+</div>
+
+<tal:block replace="structure rendered" />
+
+</tal:block>
+<span tal:replace="structure here/standard_html_footer" />

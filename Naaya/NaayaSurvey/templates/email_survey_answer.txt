@@ -1,0 +1,6 @@
+Hello %(NAME)s,
+
+%(RESPONDENT)s has answered to survey %(SURVEY_TITLE)s (%(SURVEY_URL)s).
+You can see his/her answers at:
+
+%(LINK)s

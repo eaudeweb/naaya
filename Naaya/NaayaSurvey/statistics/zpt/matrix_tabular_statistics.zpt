@@ -1,0 +1,23 @@
+<div tal:define="question options/question;
+                 total options/total;
+                 answered options/answered;
+                 unanswered options/unanswered;
+                 per_row_and_choice options/per_row_and_choice"
+     class="statistics">
+	<table class="datatable">
+		<caption tal:content="question/title">question</caption>
+		<tr>
+			<th scope="col" class="scope-col" i18n:translate=""></th>
+			<tal:block repeat="choice question/choices">
+				<th scope="col" class="scope-col" tal:content="choice" i18n:translate="">Choice</th>
+			</tal:block>
+		</tr>
+
+		<tr tal:repeat="row question/rows">
+			<th tal:content="row">Row</th>
+			<tal:block repeat="statistics python: per_row_and_choice[repeat['row'].index]">
+				<td class="number" tal:content="python: '%u (%s)%%' % (statistics[0], round(statistics[1], 2))">count (percent%)</td>
+			</tal:block>
+		</tr>
+	</table>
+</div>

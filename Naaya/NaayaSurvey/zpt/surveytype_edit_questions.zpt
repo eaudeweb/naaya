@@ -1,0 +1,143 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<link rel="stylesheet" type="text/css" media="all"
+	tal:define="stool here/portal_survey;"
+	tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
+
+<script language="javascript" type="text/javascript">
+<!--
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
+//-->
+</script>
+
+<h1><span i18n:translate="">Survey type:</span> <span tal:replace="here/title" /></h1>
+<p tal:content="structure here/description" />
+
+<div id="tabbedmenu">
+	<ul>
+		<li id="currenttab">
+			<a tal:attributes="href string:${here/absolute_url}/edit_questions_html">
+				<span i18n:translate="">Questions</span>
+			</a>
+		</li>
+		<li>
+			<a tal:attributes="href string:${here/absolute_url}/edit_reports_html">
+				<span i18n:translate="">Reports</span>
+			</a>
+		</li>
+	</ul>
+</div>
+
+<!-- Submission bar -->
+<div id="admin_this_folder">
+	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit survey type</span></a>
+	<a i18n:translate=""
+		tal:condition="here/objectIds"
+		tal:attributes="href string:${here/absolute_url}/preview_html"><span i18n:translate="">Preview survey type</span></a>
+</div>
+
+<form action="." method="post" class="surveyAddWidgetsForm">
+<!-- Title -->
+<div>
+	<label for="title">
+		<span i18n:translate="" tal:omit-tag="">Question name: </span>
+		<span class="required"> *</span>
+	</label>
+	<input type="text" id="title" name="title" size="40" tal:attributes="value python:here.getSession('title', '')" />
+</div>
+<br />
+
+<!-- Field types -->
+<div>
+	<span i18n:translate="">Choose question type: </span><span class="required"> *</span>
+	<table class="widgetTypesTable" tal:define="
+		cols python:3;
+		widget_types python:here.getWidgetTypesAsMatrix(cols)">
+		<tr tal:repeat="row widget_types">
+			<td tal:repeat="widget_type row">
+				<tal:block define="action_id string:add_action_${repeat/row/index}_${repeat/widget_type/index};">
+					<input type="radio" name="add_action" tal:attributes="
+					    checked python:here.getSession('add_action', '') == widget_type.get('action', None);
+					    value widget_type/action;
+						id action_id;">
+					<label tal:attributes="for action_id">
+						<strong i18n:translate="" tal:content="widget_type/meta_label" />
+					</label>
+					<br />
+					<span i18n:translate="" tal:content="widget_type/meta_description"></span>
+				</tal:block>
+			</td>
+			<td tal:repeat="dummy python:range(len(row), cols)">
+			</td>
+		</tr>
+	</table>
+</div>
+
+<br />
+<input class="surveySubmitButton" type="submit" name="addWidget:method" value="Add question" i18n:attributes="value" />
+</form>
+
+<form name="objectItems" method="post" action="." tal:define="
+	objects here/getSortedWidgets|python:[]"
+	tal:condition="objects">
+
+<div id="toolbar">
+	<input type="submit" value="Delete" name="deleteItems:method"
+		onclick="javascript:window.confirm('Are you sure?')"
+		i18n:attributes="value" />
+	<input type="submit" value="Set sort order" i18n:attributes="value"
+	       name="setSortOrder:method" />
+</div>
+
+<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
+
+<tr>
+	<th class="checkbox" style="width: 4%;" i18n:translate="">
+		<input type="checkbox" onclick="toggleSelect(this)" />
+	</th>
+	<th class="type" style="width: 4%;" i18n:translate="">Type</th>
+	<th class="title-column" i18n:translate="">Title</th>
+	<th class="type" style="width: 8%;" i18n:translate="">Sort order</th>
+	<th class="edit" i18n:translate="">Edit</th>
+</tr>
+
+<tr tal:repeat="object objects">
+	<td class="checkbox" style="width: 4%; vertical-align: top;">
+		<input type="checkbox" name="ids:list" 
+			tal:attributes="value object/getId" />
+	</td>
+	<td class="type" style="width: 4%;">
+		<img tal:attributes="
+			src object/icon;
+			alt object/meta_type;
+			title object/meta_type"/>
+	</td>
+	<td class="title-column">
+	<a tal:attributes="
+		href string:${here/absolute_url}/preview_widget_html?widget_id=${object/getId};
+		title object/title"
+		tal:content="object/title" />
+	</td>
+	<td class="edit">
+		<input type="text" size="3" tal:attributes="
+			name string:${object/getId}:int;
+			value object/sortorder" />
+	</td>
+	<td class="edit">
+	<a tal:attributes="href string:${here/absolute_url}/edit_widget_html?widget_id=${object/getId}">
+		<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
+	</a>
+	</td>
+</tr>
+
+</table>
+
+</form>
+
+<span tal:define="delManager python:here.delSessionKeys(['title', 'add_action'])"/>
+<span tal:replace="structure here/standard_html_footer" />
