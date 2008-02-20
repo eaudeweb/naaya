@@ -22,6 +22,7 @@ class MultipleChoiceCssBarChartStatistics(BaseMultipleChoiceStatistics):
     meta_label = "Multiple Choice CSS Bar Chart Statistics"
     meta_description = """Bar chart for every choice"""
     meta_sortorder = 211
+    icon_filename = 'statistics/www/multiplechoice_css_barchart_statistics.gif'
 
     security.declarePublic('render')
     def render(self, answers):
