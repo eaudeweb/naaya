@@ -3,8 +3,8 @@
                  answered options/answered;
                  unanswered options/unanswered;
                  per_choice options/per_choice;"
-     class="statistics bar-charts">
-	<table style="width: 99%">
+     class="statistics">
+	<table class="bar-charts" style="width: 100%">
 		<caption tal:content="question/title">question</caption>
 		<col width="10%">
 		<col width="90%">

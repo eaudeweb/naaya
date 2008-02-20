@@ -33,7 +33,7 @@ class MultipleChoiceGoogleBarChartStatistics(BaseMultipleChoiceStatistics):
         data += [i[0] for i in per_choice]
         for x in data:
             chart.add_data([x, 0]) # the 0 is an ugly hack
-        legend = ['No choice']
+        legend = ['No choice'] # XXX translate
         legend.extend(self.question.choices)
         chart.set_legend(legend)
 
