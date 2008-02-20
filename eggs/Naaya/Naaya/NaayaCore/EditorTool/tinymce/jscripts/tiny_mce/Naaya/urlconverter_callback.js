@@ -1,5 +1,5 @@
 function nyUrlConverterCallBack(url, node, on_save) {
-	if (node != null) {
+	if (node != null && node.baseURI != null) {
 		// tinyMCE seems to have problems with URLs that have anchors
 		// so we'll use this workaround
 		if (url.substring(0, node.baseURI.length + 1) == (node.baseURI + "#"))
