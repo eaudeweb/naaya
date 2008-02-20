@@ -3,7 +3,7 @@
                  answered options/answered;
                  unanswered options/unanswered;
                  per_choice options/per_choice"
-     class="statistics">
+     class="statistic">
 	<table class="datatable">
 		<caption tal:content="question/title">question</caption>
 		<tr>

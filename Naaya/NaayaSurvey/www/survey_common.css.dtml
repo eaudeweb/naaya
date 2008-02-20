@@ -130,24 +130,29 @@ table.widgetTypesTable td:first-child {
   margin-top: 0.5em;
 }
 
+
+
+
 /* BEGIN STATISTICS */
 
-.statistics.bar-charts table
-
-.statistics.bar-charts div {
-	margin-bottom: 1.5em;
+div.statistic {
+	margin-bottom: 3em;
 }
 
-.statistics.bar-charts div.progress-container {
+/* BEGIN BAR CHARTS */
+
+div.bar-chart {
 	float: right;
 	margin: 2px 5px 2px 0pt;
 	padding: 1px;
 	width: 100%;
 }
 
-.statistics.bar-charts div.progress-container div {
+div.bar-chart div {
 	background-color: #B0C6DF;
 	height: 0.8em;
 }
+
+/* END BAR CHARTS */
 
 /* END STATISTICS */

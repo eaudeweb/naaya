@@ -2,7 +2,7 @@
                  total options/total;
                  answered options/answered;
                  unanswered options/unanswered;"
-     class="statistics">
+     class="statistic">
 	<table class="datatable">
 		<caption tal:content="question/title">question</caption>
 		<tr>

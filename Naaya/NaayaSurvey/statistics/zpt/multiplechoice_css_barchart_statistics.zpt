@@ -3,8 +3,8 @@
                  answered options/answered;
                  unanswered options/unanswered;
                  per_choice options/per_choice;"
-     class="statistics">
-	<table class="bar-charts" style="width: 100%">
+     class="statistic">
+	<table class="datatable" style="width: 100%">
 		<caption tal:content="question/title">question</caption>
 		<col width="10%">
 		<col width="90%">
@@ -12,7 +12,7 @@
 			<tr tal:repeat="choice question/choices">
 				<th tal:content="choice">choice</th>
 				<td tal:define="percent python:'%.2f%%' % (round(per_choice[repeat['choice'].index][1], 2), )">
-					<div class="progress-container" tal:attributes="title percent">
+					<div class="bar-chart" tal:attributes="title percent">
 						<div tal:attributes="style python:'width: %s' % (percent, )"></div>
 					</div>
 				</td>
@@ -20,7 +20,7 @@
 			<tr>
 				<th i18n:translate="">Not answered</th>
 				<td tal:define="percent python:'%.2f%%' % (round(unanswered[1], 2), )">
-					<div class="progress-container" tal:attributes="title percent">
+					<div class="bar-chart" tal:attributes="title percent">
 						<div tal:attributes="style python:'width: %s' % (percent, )"></div>
 					</div>
 				</td>
