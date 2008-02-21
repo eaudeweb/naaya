@@ -139,21 +139,20 @@ div.statistic {
 	margin-bottom: 3em;
 }
 
+
 /* BEGIN BAR CHARTS */
 
-div.bar-chart {
-	float: right;
-	margin: 2px 5px 2px 0pt;
-	padding: 1px;
-	width: 100%;
+td.bar-chart {
+	vertical-align: middle;
 }
 
-div.bar-chart div {
+td.bar-chart div {
 	border: 1px solid black;
 	background-color: #B0C6DF;
 	height: 0.8em;
 }
 
 /* END BAR CHARTS */
+
 
 /* END STATISTICS */
