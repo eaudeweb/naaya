@@ -37,6 +37,7 @@ def _get_available_widgets():
 
 AVAILABLE_WIDGETS = _get_available_widgets()
 AVAILABLE_WIDGETS.sort(lambda x, y: cmp(x.meta_sortorder, y.meta_sortorder)) # predictible order
+AVAILABLE_WIDGETS = tuple(AVAILABLE_WIDGETS) # make it readonly and suitable of isinstance
 
 def register_widget(context, widget):
     """ Register given widget to context"""
