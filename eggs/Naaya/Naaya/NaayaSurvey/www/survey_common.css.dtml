@@ -149,6 +149,7 @@ div.bar-chart {
 }
 
 div.bar-chart div {
+	border: 1px solid black;
 	background-color: #B0C6DF;
 	height: 0.8em;
 }
