@@ -78,4 +78,5 @@ misc_ = {
     'NySurveyQuestionnaire.gif': ImageFile('www/NySurveyQuestionnaire.gif', globals()),
     'NySurveyQuestionnaire_marked.gif': ImageFile('www/NySurveyQuestionnaire_marked.gif', globals()),
     'NySurveyAnswer.gif': ImageFile('www/NySurveyAnswer.gif', globals()),
+    'barchart': ImageFile('www/barchart.png', globals()),
 }
