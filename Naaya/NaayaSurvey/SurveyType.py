@@ -18,6 +18,7 @@
 # Alin Voinea, Eau de Web
 
 # Python imports
+import sys
 from urllib import urlencode
 
 # Zope imports
@@ -228,9 +229,21 @@ class SurveyType(Folder, LocalPropertyManager):
         if not ids:
             self.setSessionErrors(['Please select one or more items to delete.'])
         else:
-            try: self.manage_delObjects(ids)
-            except: self.setSessionErrors(['Error while delete data.'])
-            else: self.setSessionInfo(['Item(s) deleted.'])
+            try:
+                if isinstance(self._getOb(ids[0]), AVAILABLE_WIDGETS):
+                    # if we're deleting questions, delete the 
+                    # corresponding statistics too
+                    for report in self.getReports():
+                        statistic_ids = [stat.id for stat in report.getStatistics() if stat.question.id in ids]
+                        report.manage_delObjects(statistic_ids)
+                self.manage_delObjects(ids)
+            except:
+                err = sys.exc_info()
+                zLOG.LOG('Naaya Survey Tool', zLOG.ERROR,
+                         'Could not delete items', error=err)
+                self.setSessionErrors(['Error while delete data.'])
+            else:
+                self.setSessionInfo(['Item(s) deleted.'])
         if REQUEST:
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
