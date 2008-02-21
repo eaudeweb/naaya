@@ -214,17 +214,12 @@ function toggleSelect(caller){
 </table>
 </form>
 <!-- Export folder -->
-<p>
-  <a href="index_rdf" target="_blank">
-    <img src="/misc_/NaayaCore/xml.png"
-      alt="Syndication (XML)" border="0"  i18n:attributes="alt" />
-  </a>
+<div class="xmlExportButtons">
+  <a href="index_atom" target="_blank" class="xml">ATOM</a>
+  <a href="index_rdf" target="_blank" class="xml">RSS</a>
   <a tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}"
-    target="_blank">
-    <img tal:attributes="src string:${here/getSitePath}/images/pdf.gif"
-      alt="PDF View" border="0"  i18n:attributes="alt" />
-  </a>
-</p>
+    target="_blank" class="pdf">PDF</a>
+</div>
 <!-- Comments -->
 <tal:block replace="structure here/comments_box" />
 

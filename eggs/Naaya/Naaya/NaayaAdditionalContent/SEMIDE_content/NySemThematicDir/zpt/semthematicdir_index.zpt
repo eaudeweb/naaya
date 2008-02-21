@@ -448,9 +448,10 @@ function fDownloadObjects()
 </table>
 </form>
 </tal:block>
-<p>
-	<a href="index_rdf" target="_blank"><img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"  i18n:attributes="alt" /></a>
-</p>
+<div class="xmlExportButtons">
+  <a href="index_atom" target="_blank" class="xml">ATOM</a>
+  <a href="index_rdf" target="_blank" class="xml">RSS</a>
+</div>
 
 <span tal:replace="structure here/comments_box" />
 
