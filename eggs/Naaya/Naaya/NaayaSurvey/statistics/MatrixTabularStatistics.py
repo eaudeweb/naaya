@@ -26,10 +26,9 @@ class MatrixTabularStatistics(BaseMatrixStatistics):
     security.declarePublic('render')
     def render(self, answers):
         """Render statistics as HTML code"""
-        total, answered, unanswered, per_row_and_choice = self.calculate(self.question, answers)
+        total, unanswered, per_row_and_choice = self.calculate(self.question, answers)
         return self.page(question=self.question,
                          total=total,
-                         answered=answered,
                          unanswered=unanswered,
                          per_row_and_choice=per_row_and_choice)
 
