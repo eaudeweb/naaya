@@ -863,5 +863,32 @@ tr.not-duplicate {
 .available_langs a:first-child {
         border-left:1px solid #0F75B3;
 }
+/* Feeds */
+div.xmlExportButtons {
+  padding-top: 1em;
+}
+
+div.xmlExportButtons a {
+  border: 1px outset #ff6600;
+  background: #fff;
+  color: #f60;
+  font: bold 70% 'Lucida Grande', Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  padding: 15px 0 0.2em 0;
+  margin: 0 0.1em 0 0.1em;
+}
+
+div.xmlExportButtons a.pdf {
+  background-image: url("images/pdf.gif");
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+div.xmlExportButtons a.xml {
+  background-image: url("misc_/NaayaCore/xml.png");
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
 /* END STYLE */
 </tal:block>
