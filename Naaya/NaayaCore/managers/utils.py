@@ -76,7 +76,8 @@ class list_utils:
     def stripHTMLTags(self, s):
         """ Takes a text and removes the HTML tags leaving just plain text """
         strip_html_pattern = re.compile(r'<[^>]*>')
-        plaintext = strip_html_pattern.sub('', s)
+        plaintext = strip_html_pattern.sub(' ', s)
+        plaintext = plaintext.replace('&nbsp;', ' ')
         return plaintext.replace('  ', ' ')
 
     def splitToList(self, s, separator=','):

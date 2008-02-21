@@ -1338,7 +1338,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
 
     security.declareProtected(view, 'index_rdf')
     def index_rdf(self, REQUEST=None, RESPONSE=None):
-        """ """
+        """ RDF feed """
         items = REQUEST.get('items', 0)
         rdf_max_items = getattr(self.getSite(), 'rdf_max_items', 0)
         items = items or rdf_max_items
@@ -1349,6 +1349,20 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         return self.getSyndicationTool().syndicateSomething(
             self.absolute_url(), self.getPublishedObjects(items=items))
 
+    security.declareProtected(view, 'index_rdf')
+    def index_atom(self, REQUEST=None, RESPONSE=None):
+        """ Atom feed """
+        items = REQUEST.get('items', 0)
+        lang = REQUEST.get('lang', None)
+        rdf_max_items = getattr(self.getSite(), 'rdf_max_items', 0)
+        items = items or rdf_max_items
+        try:
+            items = int(items)
+        except TypeError, ValueError:
+            items = 0
+        return self.getSyndicationTool().syndicateAtom(
+            context=self, items=self.getPublishedObjects(items=items), lang=lang, REQUEST=REQUEST)
+        
     security.declarePrivate('_getSwitchToLangDenyArgs')
     def _getSwitchToLangDenyArgs(self, meta_type=""):
         """ Return a list of keys to deny according with given meta_type

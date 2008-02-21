@@ -19,9 +19,10 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+import re
 
 #Zope imports
-from Globals import InitializeClass
+from Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
@@ -51,7 +52,10 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
 
     meta_type = METATYPE_SYNDICATIONTOOL
     icon = 'misc_/NaayaCore/SyndicationTool.gif'
-
+    atom_template = PageTemplateFile('zpt/atom', globals())
+    atom_entry_template = PageTemplateFile('zpt/atom_entry', globals())
+    atom_css = DTMLFile('www/atom.css', globals())
+    
     manage_options = (
         Folder.manage_options[:1]
         +
@@ -135,7 +139,40 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
 
     def getNamespacesForRdf(self):
         return ' '.join(map(lambda x: str(x), self.getNamespaceItemsList()))
-
+    
+    def generateAtomTagId(self, permalink, datetime):
+        """
+        http://diveintomark.org/archives/2004/05/28/howto-atom-id - article
+        about constructing id
+        """
+        urlregexp = r"^(http://|https://)([^/:]+):?(\d+)?(/.*)?$"
+        m = re.search(urlregexp, permalink)
+        if m:
+            location, port, path = m.groups()[1:]
+            uid = 'tag:' + location + ',' + datetime.strftime('%Y-%m-%d') + ':' + path
+            return uid
+        # problems parsing url, so permalink will be id
+        return permalink
+        
+    def syndicateAtom(self, context=None, items=(), lang=None, REQUEST=None, **kwargs):
+        """ Syndicate context with provided items"""
+        query = {}
+        site = self.getSite()
+        
+        if lang is None:
+            lang = self.gl_get_selected_language()
+        if context is None:
+            context = site
+        
+        query = {
+            'lang': lang,
+            'context': context,
+            'entries': items,
+        }
+        if REQUEST:
+            REQUEST.RESPONSE.setHeader('Content-Type', 'application/xml; charset=UTF-8')
+        return self.atom_template(**query)
+        
     def syndicateSomething(self, p_url, p_items=[], lang=None):
         s = self.getSite()
         if lang is None: lang = self.gl_get_selected_language()
