@@ -14,10 +14,9 @@
 				<tr tal:repeat="choice question/choices">
 					<th tal:content="row" tal:attributes="rowspan python:len(question.choices)" tal:condition="python: repeat['choice'].index==0">row</th>
 					<th tal:content="choice">choice</th>
-					<td tal:define="percent python:'%.2f%%' % (round(per_row_and_choice[repeat['row'].index][repeat['choice'].index][1], 2), )">
-						<div class="bar-chart" tal:attributes="title percent">
-							<div tal:attributes="style python:'width: %s' % (percent, )"></div>
-						</div>
+					<td tal:define="percent python:'%.2f%%' % (round(per_row_and_choice[repeat['row'].index][repeat['choice'].index][1], 2), )"
+					    tal:attributes="title percent" class="bar-chart">
+						<div tal:attributes="style python:'width: %s' % (percent, )"></div>
 					</td>
 				</tr>
 			</tal:block>
