@@ -194,12 +194,10 @@ function toggleSelect(caller){
 </div>
 </tal:block>
 
-<p>
-  <a href="index_rdf" target="_blank">
-    <img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)"
-      i18n:attributes="alt" />
-  </a>
-</p>
+<div class="xmlExportButtons">
+  <a href="index_atom" target="_blank" class="xml">ATOM</a>
+  <a href="index_rdf" target="_blank" class="xml">RSS</a>
+</div>
 
 <span tal:replace="structure here/comments_box" />
 <span tal:replace="structure here/standard_html_footer"/>
