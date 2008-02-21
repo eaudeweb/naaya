@@ -11,16 +11,18 @@
 		<tbody>
 			<tr tal:repeat="choice question/choices">
 				<th tal:content="choice">choice</th>
-				<td tal:define="percent python:'%.2f%%' % (round(per_choice[repeat['choice'].index][1], 2), )"
-				    tal:attributes="title percent" class="bar-chart">
-					<div tal:attributes="style python:'width: %s' % (percent, )"></div>
+				<td tal:define="percent python: round(per_choice[repeat['choice'].index][1], 2)"
+				    tal:attributes="title python:'%.2f%%' % (percent, )" class="bar-chart">
+					<div tal:attributes="style python:'width: %f%%' % (percent, )"></div>
+					<img src="misc_/NaayaSurvey/barchart" height="12" tal:attributes="width python:'%u%%' % (int(percent), )" />
 				</td>
 			</tr>
 			<tr>
 				<th i18n:translate="">Not answered</th>
-				<td tal:define="percent python:'%.2f%%' % (round(unanswered[1], 2), )"
-				    tal:attributes="title percent" class="bar-chart">
-					<div tal:attributes="style python:'width: %s' % (percent, )"></div>
+				<td tal:define="percent python: round(unanswered[1], 2)"
+				    tal:attributes="title python:'%.2f%%' % (percent, )" class="bar-chart">
+					<div tal:attributes="style python:'width: %f%%' % (percent, )"></div>
+					<img src="misc_/NaayaSurvey/barchart" height="12" tal:attributes="width python:'%u%%' % (int(percent), )" />
 				</td>
 			</tr>
 		</tbody>

@@ -152,6 +152,24 @@ td.bar-chart div {
 	height: 0.8em;
 }
 
+/*
+ * img is a workaround for printing bar charts with default settings
+ * (no background printing)
+ */
+td.bar-chart img {
+	border: 1px solid black;
+	display: none;
+}
+
+@media print {
+	td.bar-chart div {
+		display: none;
+	}
+	td.bar-chart img {
+		display: block;
+	}
+}
+
 /* END BAR CHARTS */
 
 
