@@ -18,10 +18,11 @@
 # Cristian Ciupitu, Eau de Web
 
 # Python imports
+import sys
 from urllib import urlencode
 
 # Zope imports
-import zLOG
+from zLOG import LOG, DEBUG
 import Products
 from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
@@ -155,11 +156,21 @@ class SurveyReport(Folder, LocalPropertyManager):
 
         statistic_cls = STATISTICS[statistic_meta_type]
         question = self.getWidget(question)
-        return manage_addStatistic(statistic_cls,
-                                   self,
-                                   gUtils.utGenObjectId(question.title),
-                                   REQUEST=REQUEST,
-                                   question=question)
+        try:
+            return manage_addStatistic(statistic_cls,
+                                       self,
+                                       gUtils.utGenObjectId(question.title),
+                                       REQUEST=REQUEST,
+                                       question=question)
+        except TypeError:
+            if not REQUEST:
+                raise
+            err = sys.exc_info()
+            LOG('Products.NaayaSurvey.statistics.manage_addStatistic', DEBUG,
+                'Error creating statistic %s for question %s' % (statistic_cls, question.absolute_url()), error=err)
+            self.setSessionErrors(['''"%s" can't be used for question "%s"''' % \
+                                    (statistic_cls.meta_label, question.title)])
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'deleteStatistics')
     def deleteStatistics(self, ids=[], REQUEST=None):

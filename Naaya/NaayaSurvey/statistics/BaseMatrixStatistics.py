@@ -1,7 +1,16 @@
+# Naaya imports
+from Products.NaayaWidgets.widgets.RadioMatrixWidget import RadioMatrixWidget
+from Products.NaayaWidgets.widgets.CheckboxMatrixWidget import CheckboxMatrixWidget
+
 from Statistic import Statistic
 
 class BaseMatrixStatistics(Statistic):
     """Base class for calculating statistics for matrix questions"""
+
+    def __init__(self, id, question, lang=None, **kwargs):
+        if not isinstance(question, (RadioMatrixWidget, CheckboxMatrixWidget)):
+            raise TypeError('Unsupported question type')
+        Statistic.__init__(self, id, question, lang=None, **kwargs)
 
     def calculate(self, question, answers):
         """ -> (total, answered, unanswered, per_choice)"""
