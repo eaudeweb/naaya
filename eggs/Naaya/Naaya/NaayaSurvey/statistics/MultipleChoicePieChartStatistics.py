@@ -26,13 +26,15 @@ class MultipleChoicePieChartStatistics(BaseMultipleChoiceStatistics):
         """Render statistics as HTML code"""
         total, answered, unanswered, per_choice = self.calculate(self.question, answers)
         chart = pygooglechart.PieChart3D(600, 170)
+        # data
         data = [i[1] for i in per_choice]
         data.append(unanswered[1])
         chart.add_data(data)
+        # legend
         legend = list(self.question.choices)
         legend.append(self.getPortalTranslations().translate('', 'Not answered'))
         chart.set_pie_labels(legend)
-        # chart.set_colours(['303020', '3030f0'])
+
         return self.page(question=self.question,
                          chart_url=chart.get_url())
 
