@@ -23,7 +23,7 @@
 	
 		<a class="consultation-special-button" tal:condition="python:days_left[0] == 1 and days_left[1] > 0 and not here.check_contributor_comment(REQUEST=request) and here.checkSimpleConsultationUser() == 1" tal:attributes="href string:${here/absolute_url}/add_simpleconsultation_comment" i18n:translate="">Add a comment</a>
 		<a class="consultation-special-button" tal:condition="not:here/checkSimpleConsultationUser" tal:attributes="href string:${here/absolute_url}/add_simpleconsultation_comment">Log in to comment</a>
-		<a class="consultation-special-button" tal:condition="python:here.checkSimpleConsultationUser() == 2 and here.public_registration" tal:attributes="href string:${here/absolute_url}/add_simpleconsultation_comment">Get reviewer rights</a>
+		<a class="consultation-special-button" tal:condition="python:here.checkSimpleConsultationUser() == 2 and here.public_registration" tal:attributes="href string:${here/absolute_url}/add_simpleconsultation_comment">Apply for reviewer rights</a>
 		<p tal:condition="python:days_left[1] <= 0" i18n:translate="">Comments are disabled since the deadline for this consultation has passed.</p>
 		<p tal:condition="python:here.check_contributor_comment(REQUEST=request)" i18n:translate="">You already added a comment for this consultation.</p>
 	</tal:block>
