@@ -49,14 +49,16 @@ class MultipleChoiceGoogleBarChartStatistics(BaseMultipleChoiceStatistics):
         chart = pygooglechart.GroupedHorizontalBarChart(500, 300)
         chart.set_bar_width(5)
         # data
-        data = [i[1] for i in per_choice]
-        data.append(unanswered[1])
+        data = [i[0] for i in per_choice]
+        data.append(unanswered[0])
         for x in data:
             chart.add_data([x, 0]) # the 0 is an ugly hack
         # legend
         legend = list(self.question.choices)
         legend.append(self.getPortalTranslations().translate('', 'Not answered'))
         chart.set_legend(legend)
+        # axis
+        chart.set_axis_range(pygooglechart.Axis.BOTTOM, *chart.data_x_range())
         # colors
         colors = []
         h, s, v = 0.01, 0.55, 0.95
