@@ -15,7 +15,7 @@ function toggleSelect(caller){
 //-->
 </script>
 
-<h1><span i18n:translate="">Survey type:</span> <span tal:replace="here/title" /></h1>
+<h1><span i18n:translate="">Survey template:</span> <span tal:replace="here/title" /></h1>
 <p tal:content="structure here/description" />
 
 <div id="tabbedmenu">
@@ -35,10 +35,10 @@ function toggleSelect(caller){
 
 <!-- Submission bar -->
 <div id="admin_this_folder">
-	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit survey type</span></a>
+	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit survey template</span></a>
 	<a i18n:translate=""
 		tal:condition="here/objectIds"
-		tal:attributes="href string:${here/absolute_url}/preview_html"><span i18n:translate="">Preview survey type</span></a>
+		tal:attributes="href string:${here/absolute_url}/preview_html"><span i18n:translate="">Preview survey template</span></a>
 </div>
 
 <form action="." method="post" class="surveyAddWidgetsForm">

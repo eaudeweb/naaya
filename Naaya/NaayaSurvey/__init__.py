@@ -21,7 +21,7 @@ from constants import *
 import SurveyQuestionnaire
 import SurveyAnswer
 import SurveyTool
-import SurveyType
+import SurveyTemplate
 import SurveyReport
 from ImageFile import ImageFile
 
@@ -47,9 +47,9 @@ def initialize(context):
         icon = 'www/SurveyTool.gif'
     )
     context.registerClass(
-        SurveyType.SurveyType,
+        SurveyTemplate.SurveyTemplate,
         permission = PERMISSION_ADD_SURVEYTYPE,
-        constructors = SurveyType.SurveyType._constructors,
+        constructors = SurveyTemplate.SurveyTemplate._constructors,
         icon = 'www/Survey.gif'
     )
     context.registerClass(
@@ -73,7 +73,7 @@ def initialize(context):
     statistics.initialize(context)
 
 misc_ = {
-    'SurveyType.gif': ImageFile('www/Survey.gif', globals()),
+    'SurveyTemplate.gif': ImageFile('www/Survey.gif', globals()),
     'SurveyTool.gif': ImageFile('www/SurveyTool.gif', globals()),
     'NySurveyQuestionnaire.gif': ImageFile('www/NySurveyQuestionnaire.gif', globals()),
     'NySurveyQuestionnaire_marked.gif': ImageFile('www/NySurveyQuestionnaire_marked.gif', globals()),

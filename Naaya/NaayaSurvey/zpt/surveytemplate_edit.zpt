@@ -11,7 +11,7 @@
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
 <tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
 
-<h1 i18n:translate="">Edit Survey Type</h1>
+<h1 i18n:translate="">Edit Survey Template</h1>
 
 <div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span></div>
 

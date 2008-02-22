@@ -20,9 +20,9 @@
 # Survey tool
 PERMISSION_ADD_SURVEYTOOL = 'Naaya - Add Naaya Survey Tool'
 
-# Survey type
-PERMISSION_ADD_SURVEYTYPE = 'Naaya - Add Naaya Survey Type'
-PERMISSION_MANAGE_SURVEYTYPE = 'Naaya - Manage Naaya Survey Type'
+# Survey template
+PERMISSION_ADD_SURVEYTYPE = 'Naaya - Add Naaya Survey Template'
+PERMISSION_MANAGE_SURVEYTYPE = 'Naaya - Manage Naaya Survey Template'
 
 # Questionnaire
 PERMISSION_ADD_QUESTIONNAIRE = 'Naaya - Add Naaya Survey Questionnaire'

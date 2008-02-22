@@ -202,33 +202,33 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         """ """
         return getattr(self, id, '')
 
-    security.declareProtected(view, 'getSurveyType')
-    def getSurveyType(self):
-        """ return survey type"""
+    security.declareProtected(view, 'getSurveyTemplate')
+    def getSurveyTemplate(self):
+        """ return survey template"""
         stool = self.portal_survey
         stype = getattr(stool, self._survey_type, None)
         return stype
 
-    security.declareProtected(view, 'getSurveyTypeId')
-    def getSurveyTypeId(self):
-        """ return survey type id"""
-        stype = self.getSurveyType()
+    security.declareProtected(view, 'getSurveyTemplateId')
+    def getSurveyTemplateId(self):
+        """ return survey template id"""
+        stype = self.getSurveyTemplate()
         if not stype:
             return ''
         return stype.getId()
 
-    security.declareProtected(view, 'getSurveyTypeLabel')
-    def getSurveyTypeLabel(self):
+    security.declareProtected(view, 'getSurveyTemplateLabel')
+    def getSurveyTemplateLabel(self):
         """ Return label """
-        stype = self.getSurveyType()
+        stype = self.getSurveyTemplate()
         if stype:
             return stype.title
         return ''
 
-    security.declareProtected(view, 'getSurveyTypeDescription')
-    def getSurveyTypeDescription(self):
+    security.declareProtected(view, 'getSurveyTemplateDescription')
+    def getSurveyTemplateDescription(self):
         """ Return description """
-        stype = self.getSurveyType()
+        stype = self.getSurveyTemplate()
         if stype:
             return stype.description
         return ''
@@ -243,7 +243,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             raise Exception("You have already answered")
         datamodel = {}
         errors = []
-        for widget in self.getSurveyType().getWidgets():
+        for widget in self.getSurveyTemplate().getWidgets():
             try:
                 value = widget.getDatamodel(REQUEST.form)
                 widget.validateDatamodel(value)
@@ -335,7 +335,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     security.declarePublic('questionnaire_view_report_html')
     def questionnaire_view_report_html(self, report_id, REQUEST):
         """View the report report_id"""
-        report = self.getSurveyType().getReport(report_id)
+        report = self.getSurveyTemplate().getReport(report_id)
         if not report:
             raise NotFound('Report %s' % (report_id,))
         return report.view_report_html()

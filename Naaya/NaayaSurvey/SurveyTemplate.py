@@ -41,7 +41,7 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from SurveyReport import SurveyReport, manage_addSurveyReport
 from constants import PERMISSION_MANAGE_SURVEYTYPE
 
-def manage_addSurveyType(context, id="", title="SurveyType", REQUEST=None, **kwargs):
+def manage_addSurveyTemplate(context, id="", title="SurveyTemplate", REQUEST=None, **kwargs):
     """
     ZMI method that creates an object of this type.
     """
@@ -58,17 +58,17 @@ def manage_addSurveyType(context, id="", title="SurveyType", REQUEST=None, **kwa
     lang = REQUEST and REQUEST.form.get('lang', None)
     lang = lang or kwargs.get('lang', context.gl_get_selected_language())
 
-    ob = SurveyType(id, lang=lang, title=title)
+    ob = SurveyTemplate(id, lang=lang, title=title)
     context.gl_add_languages(ob)
     context._setObject(id, ob)
     if REQUEST:
         return context.manage_main(context, REQUEST, update_menu=1)
     return id
 
-class SurveyType(Folder, LocalPropertyManager):
-    """Survey Type"""
+class SurveyTemplate(Folder, LocalPropertyManager):
+    """Survey Template"""
 
-    meta_type = 'Naaya Survey Type'
+    meta_type = 'Naaya Survey Template'
 
     manage_options=(
         {'label':'Contents', 'action':'manage_main',
@@ -80,11 +80,11 @@ class SurveyType(Folder, LocalPropertyManager):
          'help':('OFSP', 'Security.stx')},
         )
 
-    _constructors = (manage_addSurveyType,)
+    _constructors = (manage_addSurveyTemplate,)
 
     _properties=()
 
-    icon = 'misc_/NaayaSurvey/SurveyType.gif'
+    icon = 'misc_/NaayaSurvey/SurveyTemplate.gif'
 
     security = ClassSecurityInfo()
 
@@ -339,24 +339,24 @@ class SurveyType(Folder, LocalPropertyManager):
 
     # "Questions" tab
     security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'edit_questions_html')
-    edit_questions_html = PageTemplateFile('zpt/surveytype_edit_questions', globals())
+    edit_questions_html = PageTemplateFile('zpt/surveytemplate_edit_questions', globals())
 
     security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'preview_html')
-    preview_html = PageTemplateFile('zpt/surveytype_preview', globals())
+    preview_html = PageTemplateFile('zpt/surveytemplate_preview', globals())
 
     security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'edit_html')
-    edit_html = PageTemplateFile('zpt/surveytype_edit', globals())
+    edit_html = PageTemplateFile('zpt/surveytemplate_edit', globals())
 
     security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'edit_widget_html')
-    edit_widget_html = PageTemplateFile('zpt/surveytype_edit_widget', globals())
+    edit_widget_html = PageTemplateFile('zpt/surveytemplate_edit_widget', globals())
 
     security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'preview_widget_html')
-    preview_widget_html = PageTemplateFile('zpt/surveytype_preview_widget', globals())
+    preview_widget_html = PageTemplateFile('zpt/surveytemplate_preview_widget', globals())
 
     # "Reports" tab
     security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'edit_reports_html')
-    edit_reports_html = PageTemplateFile('zpt/surveytype_edit_reports', globals())
+    edit_reports_html = PageTemplateFile('zpt/surveytemplate_edit_reports', globals())
 
 
 
-InitializeClass(SurveyType)
+InitializeClass(SurveyTemplate)
