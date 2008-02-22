@@ -1,8 +1,10 @@
 # Zope imports
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+
+# Naaya imports
+from Products.NaayaWidgets.widgets.LabelWidget import LabelWidget
 
 from Statistic import Statistic, manage_addStatistic
 
@@ -19,6 +21,11 @@ class SimpleTabularStatistics(Statistic):
     meta_description = """Table with the count and percent of answered and unanswered questions."""
     meta_sortorder = 100
     icon_filename = 'statistics/www/simple_tabular_statistics.gif'
+
+    def __init__(self, id, question, lang=None, **kwargs):
+        if isinstance(question, LabelWidget):
+            raise TypeError('Unsupported question type')
+        Statistic.__init__(self, id, question, lang=None, **kwargs)
 
     def calculate(self, question, answers):
         """ -> (total, answered, unanswered)"""

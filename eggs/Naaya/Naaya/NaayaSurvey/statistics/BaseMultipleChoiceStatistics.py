@@ -1,7 +1,17 @@
+# Naaya imports
+from Products.NaayaWidgets.widgets.ComboboxWidget import ComboboxWidget
+from Products.NaayaWidgets.widgets.RadioWidget import RadioWidget
+from Products.NaayaWidgets.widgets.CheckboxesWidget import CheckboxesWidget
+
 from Statistic import Statistic
 
 class BaseMultipleChoiceStatistics(Statistic):
     """Base class for calculating statistics for multiple choice questions"""
+
+    def __init__(self, id, question, lang=None, **kwargs):
+        if not isinstance(question, (ComboboxWidget, RadioWidget, CheckboxesWidget)):
+            raise TypeError('Unsupported question type')
+        Statistics.__init__(self, id, question, lang=None, **kwargs)
 
     def calculate(self, question, answers):
         """ -> (total, answered, unanswered, per_choice)"""
