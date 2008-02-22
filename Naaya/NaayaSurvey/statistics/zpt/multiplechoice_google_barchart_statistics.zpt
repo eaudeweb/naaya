@@ -2,5 +2,6 @@
 				 chart_url options/chart_url;"
      class="statistics">
 	<strong tal:content="question/title">question</strong>
+	<br />
 	<img tal:attributes="src chart_url" />
 </div>
