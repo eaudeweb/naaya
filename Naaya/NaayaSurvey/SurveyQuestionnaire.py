@@ -22,7 +22,7 @@ import sys
 from urllib import urlencode
 
 # Zope imports
-from zLOG import LOG, ERROR
+from zLOG import LOG, ERROR, DEBUG
 from OFS.Traversable import path2url
 from Acquisition import Implicit
 from DateTime import DateTime
@@ -301,6 +301,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         try:
             recp_email = auth_tool.getUserEmail(owner)
             email_tool.sendEmail(content, recp_email, sender_email, template.title)
+            LOG('Products.NaayaSurvey.SurveyQuestionnaire', DEBUG, 'Notification sent from %s to %s' % (sender_email, recp_email))
         except:
             # possible causes - the owner doesn't have email (e.g. regular Zope user)
             #                 - we can not send the email
