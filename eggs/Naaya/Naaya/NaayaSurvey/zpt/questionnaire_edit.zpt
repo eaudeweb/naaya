@@ -12,20 +12,20 @@
 <div class="field" metal:fill-slot="doc_discussion" />
 
 <metal:block fill-slot="custom_boxes">
-<!-- Survey type -->
+<!-- Survey template -->
 <div class="field-inline" tal:define="
 	stool context/portal_survey|nothing;
-	stype here/getSurveyType;
-	canAddSurveyType python:stype and stool and stool.checkPermissionAdministrate();
+	stype here/getSurveyTemplate;
+	canAddSurveyTemplate python:stype and stool and stool.checkPermissionAdministrate();
 	stype_path python:stype and stype.absolute_url()">
-	<label i18n:translate="">Survey type</label>
+	<label i18n:translate="">Survey template</label>
 	<a tal:attributes="href stype_path"
-		tal:omit-tag="not:canAddSurveyType">
-		<span tal:content="here/getSurveyTypeLabel"/>
+		tal:omit-tag="not:canAddSurveyTemplate">
+		<span tal:content="here/getSurveyTemplateLabel"/>
 	</a>
 	<div class="surveyDescription" 
-		tal:condition="here/getSurveyTypeDescription"
-		tal:content="structure here/getSurveyTypeDescription" />
+		tal:condition="here/getSurveyTemplateDescription"
+		tal:content="structure here/getSurveyTemplateDescription" />
 </div>
 </metal:block>
 

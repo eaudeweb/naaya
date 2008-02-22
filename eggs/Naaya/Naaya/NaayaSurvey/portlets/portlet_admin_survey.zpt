@@ -7,7 +7,7 @@
 	stool here/portal_survey;
 	stool_url stool/absolute_url;">
 	<li><a tal:attributes="href string:${stool_url}/index_html"
-		title="Survey types administration" i18n:attributes="title" i18n:translate="">Survey types management</a>
+		title="Survey templates administration" i18n:attributes="title" i18n:translate="">Survey templates management</a>
 	</li>
 </ul>
 </tal:block>

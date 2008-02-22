@@ -40,7 +40,7 @@
 <tal:block condition="not:here/expired">
 	<tal:block define="my_answer python:here.getMySurveyAnswer()">
 	<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
-	      tal:define="stype here/getSurveyType;
+	      tal:define="stype here/getSurveyTemplate;
 	                  rendered python:test(stype, stype.render(mode='edit', datamodel={}), 'Error');"
 	      tal:condition="not: my_answer">
 

@@ -36,8 +36,8 @@ from Products.ZCatalog.Catalog import CatalogError
 from Products.NaayaBase.constants import \
      MESSAGE_SAVEDCHANGES, PERMISSION_ADMINISTRATE, PERMISSION_PUBLISH_OBJECTS
 
-from SurveyType import SurveyType
-from SurveyType import manage_addSurveyType
+from SurveyTemplate import SurveyTemplate
+from SurveyTemplate import manage_addSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
 from constants import PERMISSION_ADD_SURVEYTYPE
 
@@ -56,7 +56,7 @@ def manage_addSurveyTool(context, REQUEST=None):
     try:
         if 'survey_type' not in ctool.indexes():
             ctool.addIndex(name='survey_type', type='FieldIndex',
-                           extra={'indexed_attrs': 'getSurveyTypeId'})
+                           extra={'indexed_attrs': 'getSurveyTemplateId'})
         if 'respondent' not in ctool.indexes():
             ctool.addIndex('respondent', 'FieldIndex')
     except CatalogError:
@@ -122,7 +122,7 @@ class SurveyTool(Folder):
         """ What can you put inside me? """
         meta_types = []
         for meta_type in Products.meta_types:
-            if meta_type['name'] == SurveyType.meta_type:
+            if meta_type['name'] == SurveyTemplate.meta_type:
                 meta_types.append(meta_type)
         return meta_types
 
@@ -137,7 +137,7 @@ class SurveyTool(Folder):
     # This is called by gl_add_site_lanaguage from NySite when a language
     # is added to naaya portal
     def custom_object_add_language(self, language, **kwargs):
-        # Update survey types
+        # Update survey templates
         for doc in self.objectValues():
             doc.add_language(language)
             # Update subobjects
@@ -145,7 +145,7 @@ class SurveyTool(Folder):
                 doc._object_add_language(language)
 
     def custom_object_del_language(self, language, **kwargs):
-        # Update survey types
+        # Update survey templates
         for doc in self.objectValues():
             doc.del_language(language)
             # Update subobjects
@@ -182,22 +182,22 @@ class SurveyTool(Folder):
     #
     # Edit methods
     #
-    security.declareProtected(PERMISSION_ADD_SURVEYTYPE, 'addSurveyType')
-    def addSurveyType(self, title='', REQUEST=None, **kwargs):
-        """Add a new survey type"""
+    security.declareProtected(PERMISSION_ADD_SURVEYTYPE, 'addSurveyTemplate')
+    def addSurveyTemplate(self, title='', REQUEST=None, **kwargs):
+        """Add a new survey template"""
         stype_id = None
         if not title:
             self.setSessionErrors(['Survey title is required',])
         else:
-            stype_id = manage_addSurveyType(self, title=title)
+            stype_id = manage_addSurveyTemplate(self, title=title)
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
         # Return
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
         return stype_id
 
-    security.declareProtected(PERMISSION_ADMINISTRATE, 'deleteSurveyTypes')
-    def deleteSurveyTypes(self, ids=[], REQUEST=None):
+    security.declareProtected(PERMISSION_ADMINISTRATE, 'deleteSurveyTemplates')
+    def deleteSurveyTemplates(self, ids=[], REQUEST=None):
         """Delete types by id"""
         if not ids:
             if not REQUEST:
@@ -234,8 +234,8 @@ class SurveyTool(Folder):
     #
     security.declareProtected(view, 'getAvailableTypes')
     def getAvailableTypes(self, **kwargs):
-        """Returns defined survey types"""
-        return self.objectValues(SurveyType.meta_type)
+        """Returns defined survey templates"""
+        return self.objectValues(SurveyTemplate.meta_type)
 
     # site pages
     security.declareProtected(PERMISSION_ADMINISTRATE, 'index_html')

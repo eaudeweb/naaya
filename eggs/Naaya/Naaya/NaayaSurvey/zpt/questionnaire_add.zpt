@@ -13,19 +13,19 @@
 <h1 i18n:translate="">Submit Survey</h1>
 
 <tal:block condition="not:stypes" tal:define="
-	canAddSurveyType python:stool and stool.checkPermissionAdministrate();
-	stool_path python:canAddSurveyType and stool.absolute_url() or '#';
+	canAddSurveyTemplate python:stool and stool.checkPermissionAdministrate();
+	stool_path python:canAddSurveyTemplate and stool.absolute_url() or '#';
 	">
 
 <p i18n:translate="">
-	You cannot create a survery at this time since no survey type has been defined. Please 
-	<a tal:attributes="href stool_path" tal:omit-tag="not:canAddSurveyType">
-		define a survey type first.
+	You cannot create a survery at this time since no survey template has been defined. Please 
+	<a tal:attributes="href stool_path" tal:omit-tag="not:canAddSurveyTemplate">
+		define a survey template first.
 	</a>
 </p>
 </tal:block>
 
-<!-- Survey types defined -->
+<!-- Survey templates defined -->
 <tal:block condition="stypes">
 <p i18n:translate="">
 	Fill the properties in the form below and click <strong>Submit</strong>.
@@ -33,8 +33,8 @@
 
 <form name="frmAdd" method="post" action="." enctype="multipart/form-data">
 <div class="field">
-	<label for="releasedate" i18n:translate="">Survey type</label>
-	<p i18n:translate=""><strong>Tip:</strong> you can define more survey types in Administration panel</p>
+	<label for="releasedate" i18n:translate="">Survey template</label>
+	<p i18n:translate=""><strong>Tip:</strong> you can define more survey templates in Administration panel</p>
 	<select name="survey_type">
 		<tal:block repeat="stype stypes">
 			<option tal:attributes="value stype/getId" tal:content="stype/title" />

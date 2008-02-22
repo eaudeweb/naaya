@@ -22,31 +22,31 @@ function toggleSelect(caller){
 <div id="admin_this_folder">
 	<form action="." method="post">
 		<label for="title">
-			<span i18n:translate="" tal:omit-tag="">New survey type</span>
+			<span i18n:translate="" tal:omit-tag="">New survey template</span>
 			<span class="mandatory_field" tal:omit-tag=""> *</span>
 		</label>
 		<input type="text" id="title" size="50" name="title" value="" />
-		<input class="surveySubmitButton" type="submit" name="addSurveyType:method" value="Add survey type" i18n:attributes="value" />
+		<input class="surveySubmitButton" type="submit" name="addSurveyTemplate:method" value="Add survey template" i18n:attributes="value" />
 	</form>
 </div>
 
 <p i18n:translate="">
-Use this page to define the types of surveys that you want to use later
+Use this page to define the survey templates that you want to use later
 in this portal. In order to design its appearance and define its questions
 click on its name in the list below; click on the "Edit" button to
 change its title or description.
 
-When you're done designing the survey type, you can add
+When you're done designing the survey template, you can add
 one or more surveys of this type in any of the portal folders
 for your visitors to answer.
 </p>
 
 <form name="objectItems" method="post" action="."
-	tal:define="objects python:here.objectValues('Naaya Survey Type')"
+	tal:define="objects python:here.objectValues('Naaya Survey Template')"
 	tal:condition="objects">
 
 <div id="toolbar">
-	<input type="submit" value="Delete" name="deleteSurveyTypes:method"
+	<input type="submit" value="Delete" name="deleteSurveyTemplates:method"
 		onclick="javascript:window.confirm('Are you sure?')"
 		i18n:attributes="value" />
 </div>
@@ -57,7 +57,7 @@ for your visitors to answer.
 	<th class="checkbox" style="width: 4%;" i18n:translate="">
 		<input type="checkbox" onclick="toggleSelect(this)" />
 	</th>
-	<th class="title-column" i18n:translate="">Survey type</th>
+	<th class="title-column" i18n:translate="">Survey template</th>
 	<th class="edit" i18n:translate="">Edit</th>
 </tr>
 
