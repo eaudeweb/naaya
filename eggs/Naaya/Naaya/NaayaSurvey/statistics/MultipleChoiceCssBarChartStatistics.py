@@ -17,9 +17,6 @@
 #
 # Cristian Ciupitu, Eau de Web
 
-# Python imports
-import colorsys
-
 # Zope imports
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
