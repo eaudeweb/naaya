@@ -46,7 +46,7 @@ class MultipleChoiceGoogleBarChartStatistics(BaseMultipleChoiceStatistics):
     def render(self, answers):
         """Render statistics as HTML code"""
         total, answered, unanswered, per_choice = self.calculate(self.question, answers)
-        chart = pygooglechart.GroupedHorizontalBarChart(500, 300)
+        chart = pygooglechart.GroupedHorizontalBarChart(500, 23 + (len(self.question.choices)+1) * 22)
         chart.set_bar_width(5)
         # data
         data = [i[0] for i in per_choice]
