@@ -16,7 +16,7 @@
 	<strong i18n:translate="" tal:content="here/title" />
 	<br />
 	<tal:block condition="value">
-		<a tal:attributes="href string:${value/absolute_url}/index_html"
+		<a tal:attributes="href string:${value/absolute_url}/index_html?as_attachment:int=1"
 		   tal:content="value/title">
 		</a>
 	</tal:block>
