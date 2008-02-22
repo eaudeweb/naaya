@@ -113,9 +113,9 @@
 
 </table>
 
-<div style="margin-top:1em">
+<div class="xmlExportButtons" style="margin-top:1em">
 	<tal:block define="ob_url python:here.utUrlEncode(here.absolute_url(1))">
-	<a tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${ob_url}&amp;lang=${here/gl_get_selected_language}" target="_blank"><img tal:attributes="src string:${here/getSitePath}/images/pdf.gif" alt="PDF View" border="0" i18n:attributes="alt" /></a>
+	<a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${ob_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
 	</tal:block>
 </div>
 
