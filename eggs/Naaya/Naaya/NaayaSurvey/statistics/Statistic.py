@@ -1,3 +1,22 @@
+# The contents of this file are subject to the Mozilla Public
+# License Version 1.1 (the "License"); you may not use this file
+# except in compliance with the License. You may obtain a copy of
+# the License at http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS
+# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+# implied. See the License for the specific language governing
+# rights and limitations under the License.
+#
+# The Initial Owner of the Original Code is European Environment
+# Agency (EEA).  Portions created by Finsiel Romania and Eau de Web are
+# Copyright (C) European Environment Agency.  All
+# Rights Reserved.
+#
+# Authors:
+#
+# Cristian Ciupitu, Eau de Web
+
 # Zope imports
 from OFS.SimpleItem import SimpleItem
 
@@ -6,7 +25,6 @@ from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalP
 from Products.NaayaCore.managers.utils import utils
 
 gUtil = utils()
-
 
 def manage_addStatistic(klass, container, id="", REQUEST=None, **kwargs):
     """Add statistic"""
@@ -32,7 +50,6 @@ def manage_addStatistic(klass, container, id="", REQUEST=None, **kwargs):
     if REQUEST:
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
     return id
-
 
 class Statistic(SimpleItem, LocalPropertyManager):
     """Base class for statistics"""
