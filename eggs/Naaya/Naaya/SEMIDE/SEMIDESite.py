@@ -2357,7 +2357,43 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         objects = [x[2] for x in objects]
         return self.getSyndicationTool().syndicateSomething(
             self.absolute_url(), objects)
-    
+
+    security.declareProtected(view, 'search_atom')
+    def search_atom(self, REQUEST=None, RESPONSE=None):
+        """ """
+        search_mapping = RDF_SEARCH_MAPPING
+        search_query_mapping = RDF_SEARCH_QUERY_MAPPING
+        
+        site = self.getSite()
+        form = REQUEST.form
+        search_by = form.get('search_by', '')
+        search_method = search_mapping.get(search_by, None)
+        search_method = search_method and getattr(site, search_method, None)
+        if not search_method:
+            zLOG.LOG('SEMIDESite.search_atom', zLOG.DEBUG, 
+                     'Unknown search_by: %s => search_method: %s' % (
+                         search_by, search_method))
+            return self.getSyndicationTool().syndicateAtom(self, [])
+        
+        # XXX Ugly hack 
+        for key, value in search_query_mapping.items():
+            req_value = form.get(key, None)
+            if not req_value:
+                continue
+            form.setdefault(value, req_value)
+        
+        try:
+            results = search_method(**form)
+        except TypeError, err:
+            zLOG.LOG('SEMIDESite.search_atom', zLOG.DEBUG, err)
+            return self.getSyndicationTool().syndicateAtom(self, [])
+        
+        # See getNewsListing or similar search methods
+        pag_info, list_results = results
+        objects = list_results[2]
+        objects = [x[2] for x in objects]
+        return self.getSyndicationTool().syndicateAtom(self, objects)
+
     # Customize Naaya switchToLanguage in order to handle Semide content types
     security.declarePrivate('_getCustomSwitchToLangDenyArgs')
     def _getCustomSwitchToLangDenyArgs(self, meta_type="", deny_args=[]):

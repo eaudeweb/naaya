@@ -2389,9 +2389,10 @@ function toggleSelect(caller){
   dummy python:query.setdefault('ps_start', request.get('start', 0));
   dummy python:query.setdefault('p_context', here.absolute_url(1));
   query_str python:here.utUrlLibEncode(query);
+  atom_link python:'?'.join(('search_atom', query_str));
   rdf_link python:'?'.join(('search_rdf', query_str));">
 
-  <a class="xml" href="index_atom" target="_blank">ATOM</a>
+  <a class="xml" tal:attributes="href atom_link" target="_blank">ATOM</a>
   <a class="xml" tal:attributes="href rdf_link" target="_blank">RSS</a>
 
   <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
@@ -5300,9 +5301,10 @@ function toggleSelect(caller){
   dummy python:query.setdefault('ps_start', request.get('start', 0));
   dummy python:query.setdefault('p_context', here.absolute_url(1));
   query_str python:here.utUrlLibEncode(query);
+  atom_link python:'?'.join(('search_atom', query_str));
   rdf_link python:'?'.join(('search_rdf', query_str));">
 
-  <a class="xml" href="index_atom" target="_blank">ATOM</a>
+  <a class="xml" tal:attributes="href atom_link" target="_blank">ATOM</a>
   <a class="xml" tal:attributes="href rdf_link" target="_blank">RSS</a>
 
   <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
@@ -5591,9 +5593,10 @@ function toggleSelect(caller){
     dummy python:query.setdefault('ps_start', request.get('start', 0));
     dummy python:query.setdefault('p_context', here.absolute_url(1));
     query_str python:here.utUrlLibEncode(query);
+    atom_link python:'?'.join(('search_atom', query_str));
     rdf_link python:'?'.join(('search_rdf', query_str));">
 
-  <a class="xml" href="index_atom" target="_blank">ATOM</a>
+  <a class="xml" tal:attributes="href atom_link" target="_blank">ATOM</a>
   <a class="xml" tal:attributes="href rdf_link" target="_blank">RSS</a>
 
   <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
@@ -6097,9 +6100,10 @@ function MM_findObj(n, d) { //v4.01
 	dummy python:query.setdefault('p_context', here.absolute_url(1));
 	dummy python:query.setdefault('mt', ['Naaya Semide Text of Laws', 'Naaya Semide Document', 'Naaya Semide Multimedia']);
 	query_str python:here.utUrlLibEncode(query);
+	atom_link python:'?'.join(('search_atom', query_str));
 	rdf_link python:'?'.join(('search_rdf', query_str));">
 
-  <a class="xml" href="index_atom" target="_blank">ATOM</a>
+  <a class="xml" tal:attributes="href atom_link" target="_blank">ATOM</a>
   <a class="xml" tal:attributes="href rdf_link" target="_blank">RSS</a>
 
   <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
