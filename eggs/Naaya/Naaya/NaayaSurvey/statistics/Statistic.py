@@ -12,6 +12,9 @@ def manage_addStatistic(klass, container, id="", REQUEST=None, **kwargs):
     """Add statistic"""
     global gUtil
 
+    if not id:
+        id = gUtil.utGenRandomId()
+
     idSuffix = ''
     while (id+idSuffix in container.objectIds() or
            getattr(container, id+idSuffix, None) is not None):

@@ -37,20 +37,24 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 
 from constants import PERMISSION_MANAGE_SURVEYTYPE
 import statistics
+from statistics.Statistic import manage_addStatistic
 
 STATISTICS = dict([(statistic.meta_type, statistic) for statistic in statistics.AVAILABLE_STATISTICS])
+
+gUtils = utils()
 
 def manage_addSurveyReport(context, id="", title="", REQUEST=None, **kwargs):
     """
     ZMI method that creates an object of this type.
     """
-    util = utils()
+    global gUtils
+
     if not id:
-        id = util.utGenObjectId(title)
+        id = gUtils.utGenObjectId(title)
 
     idSuffix = ''
     while id+idSuffix in context.objectIds():
-        idSuffix = util.utGenRandomId(p_length=4)
+        idSuffix = gUtils.utGenRandomId(p_length=4)
     id = id + idSuffix
 
     # Get selected language
@@ -147,16 +151,15 @@ class SurveyReport(Folder, LocalPropertyManager):
             @param statistic_meta_type: metatype of the statistic
         """
         global STATISTICS
-        util = utils()
+        global gUtils
+
         statistic_cls = STATISTICS[statistic_meta_type]
         question = self.getWidget(question)
-
-        id = util.utGenRandomId()
-        statistic = statistic_cls(id, question)
-        self._setObject(id, statistic)
-
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+        return manage_addStatistic(statistic_cls,
+                                   self,
+                                   gUtils.utGenObjectId(question.title),
+                                   REQUEST=REQUEST,
+                                   question=question)
 
     security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'deleteStatistics')
     def deleteStatistics(self, ids=[], REQUEST=None):
