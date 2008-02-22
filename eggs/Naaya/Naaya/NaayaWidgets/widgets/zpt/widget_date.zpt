@@ -27,7 +27,7 @@
 	</label>
 	<div class="tooltips" tal:content="here/tooltips" />
 	<input type="text" class="vDateField" size="10" maxlength="10" tal:attributes="
-		value value;
+		value python: value.strftime('%d/%m/%y');
 		name widget_id;
 		id widget_id" />
 	<noscript><em i18n:translate="" class="tooltips">(dd/mm/yyyy)</em></noscript>
