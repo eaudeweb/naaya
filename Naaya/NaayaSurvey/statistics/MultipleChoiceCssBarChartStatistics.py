@@ -24,7 +24,6 @@ from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from BaseMultipleChoiceStatistics import BaseMultipleChoiceStatistics
-import pygooglechart
 
 class MultipleChoiceCssBarChartStatistics(BaseMultipleChoiceStatistics):
     """Barchart ...
