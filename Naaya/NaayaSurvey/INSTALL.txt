@@ -1,0 +1,4 @@
+NaayaSurvey uses the NaayaWidgets product.
+
+Some of the charts are generated using the Google Charts API, so an Internet
+connection is needed (charts won't work in an isolated LAN).
