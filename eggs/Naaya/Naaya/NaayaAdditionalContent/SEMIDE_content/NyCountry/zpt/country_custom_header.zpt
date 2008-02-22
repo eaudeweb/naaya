@@ -34,9 +34,9 @@
 			<a tal:condition="python:portlet_reports is not None" tal:attributes="href string:${country/absolute_url}/editportlet_html?id=${portlet_reports/id}"><span><span i18n:translate="" tal:omit-tag="">Edit</span> <span tal:replace="portlet_reports/title_or_id" /></a>
 		</div>
 		<p tal:condition="python:country.description!=''" tal:content="structure country/description" />
-		<div style="margin-top:1em" tal:condition="python:here.testCountryContext(here)">
+		<div class="xmlExportButtons" style="margin-top:1em" tal:condition="python:here.testCountryContext(here)">
 			<tal:block define="ob_url python:here.utUrlEncode(here.absolute_url(1))">
-			<a tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${ob_url}&amp;lang=${here/gl_get_selected_language}" target="_blank"><img tal:attributes="src string:${here/getSitePath}/images/pdf.gif" alt="PDF View" border="0"  i18n:attributes="alt" /></a>
+			<a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${ob_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
 			</tal:block>
 		</div>
 	</div>

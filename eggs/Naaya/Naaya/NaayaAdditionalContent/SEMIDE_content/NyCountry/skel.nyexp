@@ -429,7 +429,7 @@ function toggleSelect(caller){
   </p>
 </tal:block>
 
-<p tal:define="query request/form;
+<div class="xmlExportButtons" tal:define="query request/form;
   dummy python:query.get('sl', '') and query.pop('sl');
   dummy python:query.setdefault('skey', 'start_date');
   dummy python:query.setdefault('rkey', 1);
@@ -439,11 +439,9 @@ function toggleSelect(caller){
   query_str python:here.utUrlLibEncode(query);
   rdf_link python:'?'.join(('search_rdf', query_str));">
 
-  <a tal:attributes="href rdf_link" target="_blank">
-  <img src="/misc_/NaayaCore/xml.png" alt="Syndication (XML)" border="0"
-  i18n:attributes="alt" />
-  </a>
-</p>
+  <a class="xml" href="index_atom" target="_blank">ATOM</a>
+  <a class="xml" tal:attributes="href rdf_link" target="_blank">RSS</a>
+</div>
 <span tal:replace="structure here/comments_box" />
 
 </div>
