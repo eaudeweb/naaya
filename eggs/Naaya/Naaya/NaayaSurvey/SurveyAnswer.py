@@ -98,6 +98,7 @@ class SurveyAnswer(Folder):
     def handle_upload(self, id, attached_file):
         if id in self.objectIds():
             self.manage_delObjects([id,])
-        manage_addExtFile(self, id, file=attached_file)
+        manage_addExtFile(self, id, title=attached_file.filename, file=attached_file)
+        ob = self._getOb(id)
 
     index_html = PageTemplateFile('zpt/surveyanswer_index', globals())
