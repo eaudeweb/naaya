@@ -630,7 +630,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         """
         #default data
         results = []
-        res_per_page = 10
+        res_per_page = kwargs.get('items', 10)
         try:    ps_start = int(ps_start)
         except: ps_start = 0
 
@@ -693,7 +693,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         Returns a list of resources
         """
         r = []
-        res_per_page = 10
+        res_per_page = kwargs.get('items', 10)
         results = []
         dict = {}
 
@@ -798,7 +798,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         """
         #default data
         results = []
-        res_per_page = 10
+        res_per_page = kwargs.get('items', 10)
         try:    ps_start = int(ps_start)
         except: ps_start = 0
         try:    l_archive = self.unrestrictedTraverse(p_context)
@@ -935,7 +935,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         """
         #default data
         results = []
-        res_per_page = 10
+        res_per_page = kwargs.get('items', 10)
         r = []
         dict = {}
         try:    ps_start = int(ps_start)

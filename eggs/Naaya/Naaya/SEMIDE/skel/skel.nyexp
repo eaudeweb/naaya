@@ -2120,10 +2120,11 @@ function toggleSelect(caller){
   skey python:request.get('skey', 'start_date');
   rkey python:request.get('rkey', test(request.has_key('skey'),'','1'));
   rkey_param python:test(rkey, '', '&amp;rkey=1');
+  items python:request.get('items', 10);
 
   langs_querystring python:'&sl:list='.join(sl);
-  page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&so=${so}&sl:list=${langs_querystring}&gz=${gz}&th=${th}&pr=${pr};
-  results python:here.getProjectsListing(sq, so, sl, skey, rkey, archive, ps_start, gz, th, pr);
+  page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&so=${so}&sl:list=${langs_querystring}&gz=${gz}&th=${th}&pr=${pr}&items=${items};
+  results python:here.getProjectsListing(sq, so, sl, skey, rkey, archive, ps_start, gz, th, pr, items=items);
 
   list_paging python:results[0];
   paging_start python:list_paging[0]+1;
@@ -2255,6 +2256,10 @@ function toggleSelect(caller){
             </tal:block>
           </tal:block>
         </select>
+      </div>
+      <div class="field">
+        <label for="items" i18n:translate="">Items per page</label>
+        <input type="text" name="items:int" id="items" size="30" tal:attributes="value items" />
       </div>
       <div class="field">
         <br />
@@ -5097,9 +5102,10 @@ function toggleSelect(caller){
   skey python:request.get('skey', 'news_date');
   rkey python:request.get('rkey', test(request.has_key('skey'),'','1'));
   rkey_param python:test(rkey, '', '&amp;rkey=1');
+  items python:request.get('items', 10);
 
-  page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&nt=${nt}&nc=${nc}&nd=${nd};
-  results python:here.getNewsListing(sq, sl, nt, nd, nc, skey, rkey, here.absolute_url(1), ps_start);
+  page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&nt=${nt}&nc=${nc}&nd=${nd}&items=${items};
+  results python:here.getNewsListing(sq, sl, nt, nd, nc, skey, rkey, here.absolute_url(1), ps_start, items=items);
 
   list_paging python:results[0];
   paging_start python:list_paging[0]+1;
@@ -5189,6 +5195,10 @@ function toggleSelect(caller){
   </select
   ><input type="text" name="nd" id="nd" size="10" tal:attributes="value nd" />
   <em>(dd/mm/yyyy)</em>
+</div>
+<div class="field">
+  <label for="items" i18n:translate="">Items per page</label>
+  <input type="text" name="items:int" id="items" size="30" tal:attributes="value items" />
   <input type="submit" value="Search" i18n:attributes="value" />
 </div>
 <div class="clear_float"></div>
@@ -5344,9 +5354,10 @@ function toggleSelect(caller){
   skey python:request.get('skey', 'start_date');
   rkey python:request.get('rkey', test(request.has_key('skey'),'','1'));
   rkey_param python:test(rkey, '', '&amp;rkey=1');
+  items python:request.get('items', 10);
 
-  page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&et=${et}&gz=${gz}&es=${es}&sd=${sd}&ed=${ed};
-  results python:here.getEventsListing(sq, sl, et, gz, es, skey, rkey, sd, ed, here.absolute_url(1), ps_start);
+  page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&et=${et}&gz=${gz}&es=${es}&sd=${sd}&ed=${ed}&items=${items};
+  results python:here.getEventsListing(sq, sl, et, gz, es, skey, rkey, sd, ed, here.absolute_url(1), ps_start, items=items);
 
   list_paging python:results[0];
   paging_start python:list_paging[0]+1;
@@ -5463,10 +5474,14 @@ function toggleSelect(caller){
   </div>
   <div class="clear_float"></div>
 
-  <div class="field" style="margin-top:10px;">
-    <span>Start date between:</span>
+  <div class="field">
+    <label for="sd">Start date between:</label>
     <input type="text" name="sd" id="sd" size="10" tal:attributes="value sd" /> and <input type="text" name="ed" id="es" size="10" tal:attributes="value ed" />
     <span>dd/mm/yyyy</span>
+  </div>
+  <div class="field">
+    <label for="items" i18n:translate="">Items per page</label>
+    <input type="text" name="items:int" id="items" size="30" tal:attributes="value items" />
     <input type="submit" value="Search" i18n:attributes="value" />
   </div>
   <div class="clear_float"></div>
@@ -5739,15 +5754,16 @@ function toggleSelect(caller){
 					skey python:request.get('skey', 'date');
 					rkey python:request.get('rkey', test(request.has_key('skey'),'','1'));
 					rkey_param python:test(rkey, '', '&amp;rkey=1');
+					items python:request.get('items', 10);
 
 					sl_querystring python:'&sl:list='.join(sl);
 					mt_querystring python:'&mt:list='.join(mt);
 					tp_querystring python:'&tp:list='.join(tp);
 					dp_querystring python:'&dp:list='.join(dp);
 					mp_querystring python:'&mp:list='.join(mp);
-					page_search_querystring string:sq=${sq}&th=${th}&sd=${sd}&ed=${ed}&lh=${lh}&skey=${skey}&rkey=${rkey}&sl:list=${sl_querystring}&mt:list=${mt_querystring}&tp:list=${tp_querystring}&dp:list=${dp_querystring}&mp:list=${mp_querystring};
+					page_search_querystring string:sq=${sq}&th=${th}&sd=${sd}&ed=${ed}&lh=${lh}&skey=${skey}&rkey=${rkey}&sl:list=${sl_querystring}&mt:list=${mt_querystring}&tp:list=${tp_querystring}&dp:list=${dp_querystring}&mp:list=${mp_querystring}&items=${items};
 
-					results python:here.getResourceListing(sq, mt, tp, dp, mp, sd, ed, sl, th, skey, rkey, ps_start);
+					results python:here.getResourceListing(sq, mt, tp, dp, mp, sd, ed, sl, th, skey, rkey, ps_start, items=items);
 
 					list_paging python:results[0];
 					paging_start python:list_paging[0]+1;
@@ -5993,6 +6009,15 @@ function MM_findObj(n, d) { //v4.01
 			</div>
 		</div>
 	</fieldset>
+	<div class="clear_float">&nbsp;</div>
+
+	<fieldset class="columns_more">
+		<legend i18n:translate="">Items per page</legend>
+		<div class="fieldset_div">
+			<input type="text" name="items:int" id="items" size="30" tal:attributes="value items" />
+		</div>
+	</fieldset>
+
 	<div class="clear_float">&nbsp;</div>
 </div>
 </div>

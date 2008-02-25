@@ -236,10 +236,11 @@ function toggleSelect(caller){
       skey python:request.get('skey', 'start_date');
       rkey python:request.get('rkey', test(request.has_key('skey'),'','1'));
       rkey_param python:test(rkey, '', '&amp;rkey=1');
+      items python:request.get('items', 10);
 
       langs_querystring python:'&sl:list='.join(sl);
-      page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&so=${so}&sl:list=${langs_querystring}&gz=${gz}&th=${th}&pr=${pr};
-      results python:here.getProjectsListing(sq, so, sl, skey, rkey, archive, ps_start, gz, th, pr);
+      page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&so=${so}&sl:list=${langs_querystring}&gz=${gz}&th=${th}&pr=${pr}&items=${items};
+      results python:here.getProjectsListing(sq, so, sl, skey, rkey, archive, ps_start, gz, th, pr, items=items);
 
       list_paging python:results[0];
       paging_start python:list_paging[0]+1;
@@ -312,6 +313,10 @@ function toggleSelect(caller){
         </tal:block>
       </tal:block>
       </select>
+    </div>
+    <div class="field">
+      <label for="items" i18n:translate="">Items per page</label>
+      <input type="text" name="items:int" id="items" size="30" tal:attributes="value items" />
     </div>
     <div class="field">
       <br />
