@@ -74,3 +74,4 @@ To use the Naaya Survey product two steps must be followed:
 	--------------
 
 	The respondents must have the "Naaya - Add Naaya Survey Answer" permission.
+	Because the basic view permission is too general, two other permissions are required to view the reports and the list of answers: "Naaya - View Naaya Survey Reports" and "Naaya - View Naaya Survey Answers".
