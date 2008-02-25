@@ -108,8 +108,12 @@ class SimpleData(Data):
     def scale_value(cls, value, range):
         lower, upper = range
         max_value = cls.max_value()
-        scaled = int(round((float(value) - lower) * max_value / upper))
-        clipped = max(0, min(scaled, max_value))
+        if upper:
+            scaled = int(round((float(value) - lower) * max_value / upper))
+            clipped = max(0, min(scaled, max_value))
+        else:
+            assert(value == 0)
+            clipped = 0
         return clipped
     scale_value = classmethod(scale_value)
 
@@ -139,8 +143,12 @@ class TextData(Data):
     def scale_value(cls, value, range):
         lower, upper = range
         max_value = cls.max_value()
-        scaled = (float(value) - lower) * max_value / upper
-        clipped = max(0, min(scaled, max_value))
+        if upper:
+            scaled = (float(value) - lower) * max_value / upper
+            clipped = max(0, min(scaled, max_value))
+        else:
+            assert(value == 0)
+            clipped = 0
         return clipped
     scale_value = classmethod(scale_value)
 
