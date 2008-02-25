@@ -124,8 +124,6 @@
 		<pluggablecontenttype meta_type="Naaya File" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Pointer" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Story" action="1"/>
-		<pluggablecontenttype meta_type="Naaya Consultation" action="1"/>
-		<pluggablecontenttype meta_type="Naaya Simple Consultation" action="1"/>
 	</pluggablecontenttypes>
 	<syndication>
 		<namespace id="101" prefix="rdf" value="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
