@@ -21,6 +21,7 @@
 from DateTime import DateTime
 from OFS.Folder import Folder
 from OFS.Traversable import path2url
+from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from ZPublisher.HTTPRequest import FileUpload
 from zLOG import LOG, INFO
@@ -29,6 +30,8 @@ from zLOG import LOG, INFO
 from Products.ExtFile.ExtFile import manage_addExtFile
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.managers.utils import utils
+
+from constants import PERMISSION_VIEW_ANSWERS
 
 gUtil = utils()
 
@@ -82,6 +85,8 @@ class SurveyAnswer(Folder):
          'help':('OFSP','ObjectManager_Contents.stx')},
      )
 
+    security = ClassSecurityInfo()
+
     def __init__(self, id, datamodel, respondent):
         Folder.__init__(self, id)
         self.add_properties(datamodel)
@@ -101,4 +106,9 @@ class SurveyAnswer(Folder):
         manage_addExtFile(self, id, title=attached_file.filename,
                           file=attached_file)
 
+    # The special permission PERMISSION_VIEW_ANSWERS is used instead of the
+    # regular "view" permission because otherwise, by default, all users
+    # (including anonymous ones) can see all answers. Also setting the view
+    # permission for each SurveyAnswer wouldn't be practical.
+    security.declareProtected(PERMISSION_VIEW_ANSWERS, 'index_html')
     index_html = PageTemplateFile('zpt/surveyanswer_index', globals())
