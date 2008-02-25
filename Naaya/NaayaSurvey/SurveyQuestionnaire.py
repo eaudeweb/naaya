@@ -187,6 +187,10 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         """Check if the user has the VIEW_ANSWERS permission"""
         return self.checkPermission(PERMISSION_VIEW_ANSWERS)
 
+    def checkPermissionViewReports(self):
+        """Check if the user has the VIEW_REPORTS permission"""
+        return self.checkPermission(PERMISSION_VIEW_REPORTS)
+
     security.declareProtected(view, 'hasVersion')
     def hasVersion(self):
         """ """
@@ -333,13 +337,13 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             return brain.getObject()
         return None
 
-    security.declarePublic('questionnaire_view_report_html')
+    security.declareProtected(PERMISSION_VIEW_REPORTS, 'questionnaire_view_report_html')
     def questionnaire_view_report_html(self, report_id, REQUEST):
         """View the report report_id"""
         report = self.getSurveyTemplate().getReport(report_id)
         if not report:
             raise NotFound('Report %s' % (report_id,))
-        return report.view_report_html()
+        return report.view_report_html(answers=self.getAnswers())
 
     # site pages
     security.declareProtected(view, 'index_html')

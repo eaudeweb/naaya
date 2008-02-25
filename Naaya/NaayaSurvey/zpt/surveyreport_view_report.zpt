@@ -25,7 +25,7 @@
 <p tal:condition="python:here.description!=''" 
 	tal:content="structure here/description" />
 
-<tal:block define="answers python:here.getAnswers();">
+<tal:block define="answers options/answers">
 	<tal:block repeat="statistic python:here.getSortedStatistics()">
 		<span tal:replace="structure python:statistic.render(answers)">widget statistics</span>
 	</tal:block>

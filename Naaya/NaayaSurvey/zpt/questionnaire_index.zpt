@@ -28,6 +28,8 @@
 	</tal:block>
 	<tal:block condition="here/checkPermissionViewAnswers">
 		<a href="view_answers_html" i18n:translate="">View answers</a>
+	</tal:block>
+	<tal:block condition="here/checkPermissionViewReports">
 		<a href="view_reports_html" i18n:translate="">View reports</a>
 	</tal:block>
 </div>
