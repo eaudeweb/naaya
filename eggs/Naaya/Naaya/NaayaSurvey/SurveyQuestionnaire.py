@@ -351,10 +351,10 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     security.declareProtected(PERMISSION_ADD_QUESTIONNAIRE, 'questionnaire_add_html')
     questionnaire_add_html = PageTemplateFile('zpt/questionnaire_add', globals())
 
-    security.declarePublic('questionnaire_view_reports_html')
-    questionnaire_view_reports_html = PageTemplateFile('zpt/questionnaire_view_reports', globals())
+    security.declarePublic('view_reports_html')
+    view_reports_html = PageTemplateFile('zpt/questionnaire_view_reports', globals())
 
-    security.declarePublic('questionnaire_view_answers_html')
-    questionnaire_view_answers_html = PageTemplateFile('zpt/questionnaire_view_answers', globals())
+    security.declarePublic('view_answers_html')
+    view_answers_html = PageTemplateFile('zpt/questionnaire_view_answers', globals())
 
 InitializeClass(SurveyQuestionnaire)
