@@ -19,7 +19,8 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
-import re
+import urlparse
+import urllib
 
 #Zope imports
 from Globals import InitializeClass, DTMLFile
@@ -145,14 +146,10 @@ class SyndicationTool(Folder, utils, namespaces_tool, channeltypes_manager):
         http://diveintomark.org/archives/2004/05/28/howto-atom-id - article
         about constructing id
         """
-        urlregexp = r"^(http://|https://)([^/:]+):?(\d+)?(/.*)?$"
-        m = re.search(urlregexp, permalink)
-        if m:
-            location, port, path = m.groups()[1:]
-            uid = 'tag:' + location + ',' + datetime.strftime('%Y-%m-%d') + ':' + path
-            return uid
-        # problems parsing url, so permalink will be id
-        return permalink
+        scheme, netloc, path, query, fragment = urlparse.urlsplit(permalink)
+        location, port = urllib.splitport(netloc)
+        uid = "tag:%s,%s:%s" % (location, datetime.strftime('%Y-%m-%d'), path)
+        return uid
         
     def syndicateAtom(self, context=None, items=(), lang=None, REQUEST=None, **kwargs):
         """ Syndicate context with provided items"""
