@@ -224,6 +224,8 @@
 		<pluggablecontenttype meta_type="Naaya Document" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Pointer" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Event" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Consultation" action="1"/>
+		<pluggablecontenttype meta_type="Naaya Simple Consultation" action="1"/>
 	</pluggablecontenttypes>
 	<emails>
 		<emailtemplate id="email_ldap_requestrole" title="Request role (LDAP)"/>
