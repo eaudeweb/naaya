@@ -312,8 +312,8 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     #
     # Answer read methods
     #
-    security.declareProtected(PERMISSION_VIEW_ANSWERS, 'getSurveyAnswers')
-    def getSurveyAnswers(self):
+    security.declareProtected(PERMISSION_VIEW_ANSWERS, 'getAnswers')
+    def getAnswers(self):
         # Return answers
         return self.objectValues(SurveyAnswer.meta_type)
 

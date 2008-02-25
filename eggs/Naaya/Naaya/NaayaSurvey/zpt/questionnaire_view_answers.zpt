@@ -25,7 +25,7 @@
 <p tal:condition="python:here.description!=''" 
 	tal:content="structure here/description" />
 
-<tal:block define="answers python:here.getSurveyAnswers();
+<tal:block define="answers python:here.getAnswers();
                    auth_tool python:here.getSite().getAuthenticationTool()">
 	<p i18n:translate="">List of answers</p>
 	<ol>
