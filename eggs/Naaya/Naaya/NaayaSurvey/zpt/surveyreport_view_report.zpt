@@ -23,9 +23,10 @@
 </h1>
 
 <p tal:condition="python:here.description!=''" 
-	tal:content="structure here/description" />
+   tal:content="structure here/description" />
 
 <tal:block define="answers options/answers">
+	<p><span tal:replace="python:len(answers)">NNN</span> answers were analyzed.</p>
 	<tal:block repeat="statistic python:here.getSortedStatistics()">
 		<span tal:replace="structure python:statistic.render(answers)">widget statistics</span>
 	</tal:block>

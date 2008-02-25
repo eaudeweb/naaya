@@ -27,7 +27,7 @@
 
 <tal:block define="answers python:here.getAnswers();
                    auth_tool python:here.getSite().getAuthenticationTool()">
-	<p i18n:translate="">List of answers</p>
+	<p i18n:translate="">List of answers (<tal:block replace="python:len(answers)"/> answers)</p>
 	<ol>
 		<tal:block repeat="answer answers">
 			<li>
