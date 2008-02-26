@@ -5,7 +5,7 @@ To use the Naaya Survey product two steps must be followed:
 
 
 	Creating a Survey Template
-	----------------------
+	--------------------------
 
 	Go to the portal administration page and click on the "Survey templates management" link. In this section you will be able to manage (add, edit, delete) the survey templates.
 	To add a new survey template, choose a title for it and click on "Add survey template" and edit it. Next you will be able to add questions.
