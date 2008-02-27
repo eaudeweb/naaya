@@ -536,6 +536,28 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/exfile_manage_edit', globals())
+    
+    security.declareProtected(view_management_screens, 'manage_advanced_html')
+    manage_advanced_html = PageTemplateFile('zpt/exfile_manage_advanced', globals())
+    
+    security.declareProtected(view_management_screens, 'manageAdvancedProperties')
+    def manageAdvancedProperties(self, REQUEST=None, **kwargs):
+        """ """
+        fileitems = self.getFileItems()
+        if REQUEST:
+            kwargs.update(REQUEST.form)
+        
+        langs = kwargs.get('langs', [])
+        for lang in langs:
+            filename = kwargs.get('filename_%s' % lang, '')
+            filename = filename.split('/')
+            filename = [x.strip() for x in filename if x]
+            content_type = kwargs.get('content_type_%s' % lang, '')
+            fileitem = fileitems.get(lang, None)
+            if not fileitem:
+                return self.manage_advanced_html(REQUEST=REQUEST, update_menu=1)
+            fileitem._update_properties(filename=filename, content_type=content_type)
+        return self.manage_advanced_html(REQUEST=REQUEST, update_menu=1)
 
     #site actions
     security.declareProtected(view, 'index_html')
