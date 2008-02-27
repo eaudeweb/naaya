@@ -12,6 +12,9 @@ from zLOG import LOG, DEBUG, INFO, ERROR
 # Naaya imports
 from Products.Naaya.constants import METATYPE_NYSITE
 
+from constants import CATALOG_ID
+
+
 PERMISSION_ADD_CRON_TOOL = 'Naaya - Add Naaya Cron Tool'
 PERMISSION_USE_CRON_TOOL = 'Naaya - Use Naaya Cron Tool'
 
@@ -55,7 +58,11 @@ class CronTool(Folder):
     security.declarePrivate('getSites')
     def getSites(self):
         """ """
-        return self.restrictedTraverse('/').objectValues([METATYPE_NYSITE])
+        root = self.restrictedTraverse('/')
+        catalog = root._getOb(CATALOG_ID)
+        sites = [brain.getObject() for brain in catalog({'isNySite': True})]
+        print 'XXX getSites ->', sites
+        return sites
 
     security.declareProtected(PERMISSION_USE_CRON_TOOL, 'runActions')
     def runActions(self, REQUEST=None):
