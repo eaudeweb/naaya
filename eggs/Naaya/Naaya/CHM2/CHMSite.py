@@ -562,8 +562,7 @@ class CHMSite(NySite):
         """
         #create an account without any role
         try:
-            self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname,
-                lastname, email)
+            self.getAuthenticationTool().manage_addUser(username, password, confirm, [], [], firstname, lastname, email, 0)
         except Exception, error:
             err = error
         else:
