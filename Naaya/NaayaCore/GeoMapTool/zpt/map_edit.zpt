@@ -4,6 +4,21 @@
 
 <tal:block metal:fill-slot="section" tal:define="map_url here/getGeoMapToolPath;">
 
+<style>
+	.maptypes {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.maptypes li {
+		margin: 2px;
+		padding: 2px;
+		display: inline;
+	}
+</style>
+
+
 <p i18n:translate="">
 	These settings apply to the <a tal:attributes="href string:${map_url}">portal_map</a> and the GeoPoint objects.
 </p>
@@ -90,6 +105,44 @@
 	</td>
 	<td>
 		<input type="text" name="detailed_map_height" id="detailed_map_height" tal:attributes="value here/detailed_map_height" size="8" />
+	</td>
+</tr>
+<tr>
+	<td i18n:translate="">Choose possible map types:</td>
+	<td>
+		<ul class="maptypes">
+			<li>
+				<label for="YAHOO_MAP_SAT" i18n:translate="">Satelite</label>
+				<input type="checkbox" name="map_types" id="YAHOO_MAP_SAT" value="YAHOO_MAP_SAT" tal:attributes="checked python:'YAHOO_MAP_SAT' in here.map_types" />
+			</li>
+			<li>
+				<label for="YAHOO_MAP_HYB" i18n:translate="">Hybrid</label>
+				<input type="checkbox" name="map_types" id="YAHOO_MAP_HYB" value="YAHOO_MAP_HYB" tal:attributes="checked python:'YAHOO_MAP_HYB' in here.map_types" />
+			</li>
+			<li>
+				<label for="YAHOO_MAP_REG" i18n:translate="">Map</label>
+				<input type="checkbox" name="map_types" id="YAHOO_MAP_REG" value="YAHOO_MAP_REG" tal:attributes="checked python:'YAHOO_MAP_REG' in here.map_types" />
+			</li>
+		<ul>
+	</td>
+</tr>
+<tr>
+	<td i18n:translate="">Default map type</td>
+	<td>
+		<ul class="maptypes">
+			<li>
+				<label for="YAHOO_MAP_SAT" i18n:translate="">Satelite</label>
+				<input type="radio" name="default_type" id="YAHOO_MAP_SAT" value="YAHOO_MAP_SAT" tal:attributes="checked python:'YAHOO_MAP_SAT'==here.default_type" />
+			</li>
+			<li>
+				<label for="YAHOO_MAP_HYB" i18n:translate="">Hybrid</label>
+				<input type="radio" name="default_type" id="YAHOO_MAP_HYB" value="YAHOO_MAP_HYB" tal:attributes="checked python:'YAHOO_MAP_HYB'==here.default_type" />
+			</li>
+			<li>
+				<label for="YAHOO_MAP_REG" i18n:translate="">Map</label>
+				<input type="radio" name="default_type" id="YAHOO_MAP_REG" value="YAHOO_MAP_REG" tal:attributes="checked python:'YAHOO_MAP_REG'==here.default_type" />
+			</li>
+		<ul>
 	</td>
 </tr>
 <tr>
