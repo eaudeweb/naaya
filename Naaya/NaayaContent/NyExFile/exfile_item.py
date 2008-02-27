@@ -73,6 +73,10 @@ class exfile_item(Implicit, NyProperties):
             self.__files[lang] = file_item('', '', '', '', '')
             self._p_changed = 1
         return self.__files[lang]
+    
+    def getFileItemData(self, lang=None, as_string=False):
+        fileitem = self.getFileItem(lang)
+        return fileitem.get_data(as_string=as_string)
 
     def size(self, lang=None):
         """ """
