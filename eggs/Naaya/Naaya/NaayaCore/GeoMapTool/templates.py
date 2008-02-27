@@ -27,18 +27,17 @@ TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER = """<script type="text/javascript">
 	var mapMarker = null;
 	var mapCenterLoc = "%s", mapCenterZoom = %s;
 	function handlerLoad() {
-		map = new YMap(document.getElementById("map"), YAHOO_MAP_REG, new YSize(%s, %s));
+		map = new YMap(document.getElementById("map"), new YSize(%s, %s));
 		// Display the map centered on given address 
 		map.drawZoomAndCenter(mapCenterLoc, mapCenterZoom);
-
-		map.addTypeControl();
+		map.setMapType(%s);
+		map.addTypeControl(mapType=[%s]);
 		var zp = new YCoordPoint(40,30);
 		zp.translate('right','top');
 		map.addPanControl(zp);
 		var zp = new YCoordPoint(20,30);
 		zp.translate('right','top');
 		map.addZoomLong(zp);
-		map.setMapType(YAHOO_MAP_REG);
 		//markers
 		%s
 		loadXMLDoc('%s/xrjs_feed?key=%s&show=%s&query=%s&path=%s', processRequest);
@@ -75,9 +74,10 @@ TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER = """<script type="text/javascript">
 	var mapMarker = null;
 	var mapCenterLat = "%s", mapCenterLng = "%s", mapCenterZoom = %s;
 	function handlerLoad() {
-		map = new YMap(document.getElementById("map"), YAHOO_MAP_REG, new YSize(%s, %s));
+		map = new YMap(document.getElementById("map"), new YSize(%s, %s));
 		map.drawZoomAndCenter(new YGeoPoint(mapCenterLat, mapCenterLng), mapCenterZoom);
-		map.addTypeControl();
+		map.setMapType(%s);
+		map.addTypeControl(mapType=[%s]);
 		var zp = new YCoordPoint(15,30);
 		zp.translate('right','top');
 		map.addZoomLong(zp);
@@ -117,9 +117,10 @@ TEMPLATE_XMLRPC_ADDPICK_MAP_LOADER = """<script type="text/javascript">
 	var map = null;
 	var mapMarker = null;
 	var defaultLocality = "%s", defaultZoom = %s;
-	map = new YMap(document.getElementById("map"), YAHOO_MAP_REG, new YSize(%s, %s));
+	map = new YMap(document.getElementById("map"), new YSize(%s, %s));
 	// Display the map centered on given address 
-	map.addTypeControl();
+	map.setMapType(%s);
+	map.addTypeControl(mapType=[%s]);
 	map.addPanControl();
 	map.addZoomLong();
 
@@ -172,8 +173,9 @@ TEMPLATE_XMLRPC_EDITPICK_MAP_LOADER = """<script type="text/javascript">
 	var map = null;
 	var mapMarker = null;
 	var PointLat = "%s", PointLon = "%s", PointZoom = %s, MapLoc = "%s", MapZoom = %s;
-	map = new YMap(document.getElementById("map"), YAHOO_MAP_REG, new YSize(%s, %s));
-	map.addTypeControl();
+	map = new YMap(document.getElementById("map"), new YSize(%s, %s));
+	map.setMapType(%s);
+	map.addTypeControl(mapType=[%s]);
 	map.addZoomLong();
 	map.addPanControl();
 
