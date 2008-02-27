@@ -45,26 +45,27 @@ content = {}
 err_list = []
 for x in dirs:
     try:
-        c = 'from %s import %s' % (x, x)
-        exec(c)
-        m = eval('%s.METATYPE_OBJECT' % x)
+        module = __import__('%s.%s' % (x, x), globals(), locals())
+        module = getattr(module, x) # the top-level package (the name up till the first dot) was returned
+        content_class = getattr(module, x)
+        m = module.METATYPE_OBJECT
         content[m] = {}
         content[m]['product'] = NAAYACONTENT_PRODUCT_NAME
         content[m]['module'] = x
         content[m]['meta_type'] = m
-        content[m]['label'] = eval('%s.LABEL_OBJECT' % x)
-        content[m]['permission'] = eval('%s.PERMISSION_ADD_OBJECT' % x)
-        content[m]['forms'] = copy(eval('%s.OBJECT_FORMS' % x))
-        content[m]['constructors'] = copy(eval('%s.OBJECT_CONSTRUCTORS' % x))
-        content[m]['addform'] = eval('%s.OBJECT_ADD_FORM' % x)
-        content[m]['validation'] = eval('issubclass(%s.%s, NyValidation)' % (x, x))
-        content[m]['description'] = eval('%s.DESCRIPTION_OBJECT' % x)
-        content[m]['properties'] = eval('%s.PROPERTIES_OBJECT' % x)
-        #TODO: add ADDITIONAL_STYLE to all Naaya content modules in order to remove try/except
-        try:
-            content[m]['additional_style'] = eval('%s.ADDITIONAL_STYLE' % x)
-        except:
-            pass
+        content[m]['label'] = module.LABEL_OBJECT
+        content[m]['permission'] = module.PERMISSION_ADD_OBJECT
+        content[m]['forms'] = copy(module.OBJECT_FORMS)
+        content[m]['constructors'] = copy(module.OBJECT_CONSTRUCTORS)
+        content[m]['addform'] = module.OBJECT_ADD_FORM
+        content[m]['validation'] = issubclass(content_class, NyValidation)
+        content[m]['description'] = module.DESCRIPTION_OBJECT
+        content[m]['properties'] = module.PROPERTIES_OBJECT
+        content[m]['_module'] = module
+        content[m]['_class'] = content_class
+        style = getattr(module, 'ADDITIONAL_STYLE', None)
+        if style:
+            content[m]['additional_style'] = style
         zLOG.LOG(NAAYACONTENT_PRODUCT_NAME, zLOG.INFO,
             'Pluggable module "%s" registered' % x)
     except Exception, error:
@@ -84,21 +85,19 @@ def initialize(context):
 
     #register classes
     for x in content.values():
-        m, p, a = x['module'], x['permission'], x['addform']
-        c = """context.registerClass(
-            %s.%s,
-            permission='%s',
-            constructors=(%s.manage_add%s_html, %s.add%s, %s.%s),
-            icon='%s/www/%s.gif',
-            visibility=None
-        )""" % (m, m, p, m, m, m, m, m, a, m, m)
-        exec(c)
+        context.registerClass(
+                x['_class'],
+                permission=x['permission'],
+                constructors=(getattr(x['_module'], 'manage_add%s_html' % (x['module'],)),
+                              getattr(x['_module'], 'add%s' % (x['module'],))),
+                icon='%s/www/%s.gif' % (x['module'], x['module']),
+                visibility=None)
 
 #meta types as global variables
 for x in content.values():
-    c = 'METATYPE_%s = \'%s\'' % (x['module'].upper(), x['meta_type'])
+    c = 'METATYPE_%s = %s' % (x['module'].upper(), repr(x['meta_type']))
     exec(c)
-    c = 'PERMISSION_ADD_%s = \'%s\'' % (x['module'].upper(), x['permission'])
+    c = 'PERMISSION_ADD_%s = %s' % (x['module'].upper(), repr(x['permission']))
     exec(c)
 
 #images
