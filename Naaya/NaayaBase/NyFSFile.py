@@ -51,6 +51,14 @@ class NyFSFile(File):
             eid = getattr(self, '__name__', 'data.fs')
             self._ext_file = ExtFile(eid, etitle)
 
+    def _update_properties(self, **properties):
+        for property, value in properties.items():
+            ext_property = getattr(self._ext_file, property, None)
+            if ext_property is None:
+                raise KeyError('Unknown property %s' % property)
+            setattr(self._ext_file, property, value)
+        self._p_changed = 1
+        
     def _update_data(self, data, content_type='', filename=''):
         self.manage_beforeUpdate()
         if hasattr(data, '__class__') and data.__class__ is Pdata:
