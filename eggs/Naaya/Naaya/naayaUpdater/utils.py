@@ -57,10 +57,13 @@ def readFile(p_path, p_flag='r'):
     return open(p_path, p_flag).read()
 
 def create_signature(s):
-    m = sha.new(s)
-    res = m.hexdigest()
-    m = None
-    return res
+    if s is not None:
+        m = sha.new(s)
+        res = m.hexdigest()
+        m = None
+        return res
+    else:
+        return s
 
 def html_decode(s):
     """Decode some special chars"""
