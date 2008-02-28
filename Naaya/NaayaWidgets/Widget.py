@@ -166,4 +166,7 @@ class Widget(Folder, LocalPropertyManager):
     security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'preview_html')
     preview_html = PageTemplateFile('zpt/preview_widget', globals())
 
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'index_html')
+    index_html = preview_html
+
 InitializeClass(Widget)
