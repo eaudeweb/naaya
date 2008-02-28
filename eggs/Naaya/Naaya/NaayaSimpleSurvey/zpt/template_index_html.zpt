@@ -19,9 +19,9 @@ textarea {width: 98%;}
 
 <p i18n:translate="" tal:condition="not:python:here.check_template_deadline()">Cannot fill in the answers since the deadline for this survey has passed.
 </p>
-<tal:block tal:condition="python:here.check_template_deadline()">
+<tal:block tal:condition="python:here.check_template_deadline() or here.checkPermissionPublishObjects()">
 <p i18n:translate="" tal:condition="python:here.check_if_answered(request)">You already answered this survey.</p>
-<tal:block tal:condition="not:python:here.check_if_answered(request)" tal:define="ses python:here.REQUEST.SESSION">
+<tal:block tal:condition="python:not(here.check_if_answered(request)) or here.checkPermissionPublishObjects()" tal:define="ses python:here.REQUEST.SESSION">
 
 <p i18n:translate="">Please fill in the appropriate boxes, then click the <em>Submit answer</em> button.<br />
 <strong>NOTE:</strong> You can answer this survey only once.</p>
