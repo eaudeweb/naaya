@@ -92,7 +92,7 @@ class CustomContentUpdater(NaayaContentUpdater):
     def _list_updates(self):
         """ Return all portals that need update """
         utool = self.aq_inner.aq_parent
-        portals = utool.getPortals(meta_types=['EnviroWindows Site', 'Naaya Site'])
+        portals = utool.getPortals(meta_types=['EnviroWindows Site', 'Naaya Site', 'CHM Site'])
         for portal in portals:
             if not self._verify_doc(portal):
                 continue
