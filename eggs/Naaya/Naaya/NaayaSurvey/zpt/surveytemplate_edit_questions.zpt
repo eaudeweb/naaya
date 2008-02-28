@@ -119,7 +119,7 @@ function toggleSelect(caller){
 	</td>
 	<td class="title-column">
 	<a tal:attributes="
-		href string:${here/absolute_url}/preview_widget_html?widget_id=${object/getId};
+		href string:${object/absolute_url}/preview_html;
 		title object/title"
 		tal:content="object/title" />
 	</td>
@@ -129,7 +129,7 @@ function toggleSelect(caller){
 			value object/sortorder" />
 	</td>
 	<td class="edit">
-	<a tal:attributes="href string:${here/absolute_url}/edit_widget_html?widget_id=${object/getId}">
+	<a tal:attributes="href string:${object/absolute_url}/edit_html">
 		<img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
 	</a>
 	</td>
