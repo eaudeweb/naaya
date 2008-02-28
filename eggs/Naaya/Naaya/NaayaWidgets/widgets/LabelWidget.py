@@ -18,11 +18,14 @@
 # Alin Voinea, Eau de Web
 # Cristian Ciupitu, Eau de Web
 
+# Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
-from Products.Localizer.LocalPropertyManager import LocalProperty
 
+# Product imports
+from Products.Localizer.LocalPropertyManager import LocalProperty
+from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.NaayaWidgets.Widget import Widget, WidgetError, addWidget
 
 def addLabelWidget(container, id="", title="Label Widget", REQUEST=None, **kwargs):
@@ -50,6 +53,7 @@ class LabelWidget(Widget):
     def __init__(self, id, lang=None, **kwargs):
         Widget.__init__(self, id, lang, **kwargs)
         self.set_localproperty('text', 'text', lang)
+        self.imageContainer = NyImageContainer(self, False)
 
     def getDatamodel(self, form):
         """Get datamodel from form"""
