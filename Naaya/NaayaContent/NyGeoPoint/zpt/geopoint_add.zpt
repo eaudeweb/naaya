@@ -46,14 +46,12 @@
 	<div style="margin: 0.5em;">
 		<div id="map" style="width: 400px;"></div>
 		<p>Use the address to retrieve the location coordinates <em>(e.g. Kongens Nytorv 6, 1050 Copenhagen K, Denmark)</em></p>
-		<form action="#map">
-			<label for="address">
-				<span i18n:translate="" tal:omit-tag="">Address</span>
-				<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'address')" class="mandatory_field"> *</span>
-			</label>
-			<input type="text" id="address" name="address:utf8:ustring" size="50" tal:attributes="value python:here.getSession('address', request.get('address', ''))" />
-			<input type="button" name="address_button" value="Search" onclick="findAddress()" />
-		</form>
+		<label for="address">
+			<span i18n:translate="" tal:omit-tag="">Address</span>
+			<span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'address')" class="mandatory_field"> *</span>
+		</label>
+		<input type="text" id="address" name="address:utf8:ustring" size="50" tal:attributes="value python:here.getSession('address', request.get('address', ''))" />
+		<input type="button" name="address_button" value="Search" onclick="findAddress()" />
 	</div>
 </div>
 
