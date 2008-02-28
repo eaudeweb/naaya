@@ -228,7 +228,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         center_locality = center or self.center_locality
         center_zoom = zoom or self.center_zoom
         path = path or '/'
-        return TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER % (center_locality, center_zoom, width, height, self.default_type, ",".join(self.map_types), self.xrjs_markers(), self.absolute_url(), xr_key, show, query, path)
+        return TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER % (center_locality, center_zoom, self.default_type, width, height, ",".join(self.map_types), self.xrjs_markers(), self.absolute_url(), xr_key, show, query, path)
 
     def xrjs_simple_loader(self, show):
         #initialize marker loader - location
@@ -241,7 +241,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             center_latitude, center_longitude = 0.0, 0.0
             if ob.latitude != 0.0 and ob.longitude != 0.0:
                 center_latitude, center_longitude, center_zoom = ob.latitude, ob.longitude, self.detailed_zoom
-        return TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER % (center_latitude, center_longitude, center_zoom, self.detailed_map_width, self.detailed_map_height, self.default_type, ",".join(self.map_types), self.get_location_marker(ob), self.absolute_url(), xr_key, show)
+        return TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER % (center_latitude, center_longitude, center_zoom, self.default_type, self.detailed_map_width, self.detailed_map_height, ",".join(self.map_types), self.get_location_marker(ob), self.absolute_url(), xr_key, show)
 
     def xrjs_editpick_loader(self, show):
         #initialize edit pick map
@@ -249,12 +249,12 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         ob = self.unrestrictedTraverse('%s' % show)
         if ob:
             latitude, longitude, zoom = ob.latitude, ob.longitude, self.detailed_zoom
-        return TEMPLATE_XMLRPC_EDITPICK_MAP_LOADER % (latitude, longitude, zoom, self.center_locality, self.center_zoom, self.detailed_map_width, self.detailed_map_height, self.default_type, ",".join(self.map_types))
+        return TEMPLATE_XMLRPC_EDITPICK_MAP_LOADER % (latitude, longitude, zoom, self.center_locality, self.center_zoom, self.default_type, self.detailed_map_width, self.detailed_map_height, ",".join(self.map_types))
 
     def xrjs_addpick_loader(self):
         #initialize add pick map
         center_locality, center_zoom = self.center_locality, self.center_zoom + 2
-        return TEMPLATE_XMLRPC_ADDPICK_MAP_LOADER % (center_locality, center_zoom, self.detailed_map_width, self.detailed_map_height, self.default_type, ",".join(self.map_types))
+        return TEMPLATE_XMLRPC_ADDPICK_MAP_LOADER % (center_locality, center_zoom, self.default_type, self.detailed_map_width, self.detailed_map_height, ",".join(self.map_types))
 
     def get_location_marker(self, location):
         symbol = self.getSymbol(location.geo_type)

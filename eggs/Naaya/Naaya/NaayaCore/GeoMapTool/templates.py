@@ -27,10 +27,9 @@ TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER = """<script type="text/javascript">
 	var mapMarker = null;
 	var mapCenterLoc = "%s", mapCenterZoom = %s;
 	function handlerLoad() {
-		map = new YMap(document.getElementById("map"), new YSize(%s, %s));
+		map = new YMap(document.getElementById("map"), %s, new YSize(%s, %s));
 		// Display the map centered on given address 
 		map.drawZoomAndCenter(mapCenterLoc, mapCenterZoom);
-		map.setMapType(%s);
 		map.addTypeControl(mapType=[%s]);
 		var zp = new YCoordPoint(40,30);
 		zp.translate('right','top');
@@ -74,9 +73,8 @@ TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER = """<script type="text/javascript">
 	var mapMarker = null;
 	var mapCenterLat = "%s", mapCenterLng = "%s", mapCenterZoom = %s;
 	function handlerLoad() {
-		map = new YMap(document.getElementById("map"), new YSize(%s, %s));
+		map = new YMap(document.getElementById("map"), %s, new YSize(%s, %s));
 		map.drawZoomAndCenter(new YGeoPoint(mapCenterLat, mapCenterLng), mapCenterZoom);
-		map.setMapType(%s);
 		map.addTypeControl(mapType=[%s]);
 		var zp = new YCoordPoint(15,30);
 		zp.translate('right','top');
@@ -117,9 +115,8 @@ TEMPLATE_XMLRPC_ADDPICK_MAP_LOADER = """<script type="text/javascript">
 	var map = null;
 	var mapMarker = null;
 	var defaultLocality = "%s", defaultZoom = %s;
-	map = new YMap(document.getElementById("map"), new YSize(%s, %s));
+	map = new YMap(document.getElementById("map"), %s, new YSize(%s, %s));
 	// Display the map centered on given address 
-	map.setMapType(%s);
 	map.addTypeControl(mapType=[%s]);
 	map.addPanControl();
 	map.addZoomLong();
@@ -173,8 +170,7 @@ TEMPLATE_XMLRPC_EDITPICK_MAP_LOADER = """<script type="text/javascript">
 	var map = null;
 	var mapMarker = null;
 	var PointLat = "%s", PointLon = "%s", PointZoom = %s, MapLoc = "%s", MapZoom = %s;
-	map = new YMap(document.getElementById("map"), new YSize(%s, %s));
-	map.setMapType(%s);
+	map = new YMap(document.getElementById("map"), %s, new YSize(%s, %s));
 	map.addTypeControl(mapType=[%s]);
 	map.addZoomLong();
 	map.addPanControl();
