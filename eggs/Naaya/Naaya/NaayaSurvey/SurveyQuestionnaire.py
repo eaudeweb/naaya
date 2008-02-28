@@ -18,6 +18,7 @@
 # Alin Voinea, Eau de Web
 
 # Python imports
+import captcha
 import sys
 from urllib import urlencode
 
@@ -253,13 +254,18 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
                 widget.validateDatamodel(value)
                 datamodel[widget.getWidgetId()] = value
             except WidgetError, ex:
+                if not REQUEST:
+                    raise
                 datamodel[widget.getWidgetId()] = None
                 errors.append(ex)
 
-        if errors:
-            if not REQUEST:
-                raise WidgetError(', '.join([i for i in str(errors)]))
-            self.setSessionErrors(errors)
+        captcha_err = self.isAnonymousUser() and not self.isValidCaptcha(REQUEST)
+
+        if errors or captcha_err:
+            if captcha_err:
+                self.setSession('err_captcha', 'Incorrect. Try again')
+            if errors:
+                self.setSessionErrors(errors)
             for widget, value in datamodel.items():
                 if value is None:
                     continue
@@ -344,6 +350,27 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         if not report:
             raise NotFound('Report %s' % (report_id,))
         return report.view_report_html(answers=self.getAnswers())
+
+    # captcha
+    security.declareProtected(view, 'showCaptcha')
+    def showCaptcha(self):
+        """ """
+        return captcha.displayhtml(getattr(self.getSurveyTemplate(), 'public_key'))
+
+    security.declarePrivate('isValidCaptcha')
+    def isValidCaptcha(self, REQUEST):
+        """ """
+        check_captcha = captcha.submit(REQUEST.get('recaptcha_challenge_field', ''),
+                                                   REQUEST.get('recaptcha_response_field', ''),
+                                                   getattr(self.getSurveyTemplate(), 'private_key'),
+                                                   REQUEST.get('REMOTE_ADDR', ''))
+        return check_captcha.is_valid
+
+    security.declareProtected(view, 'deleteSessionCaptchaErrors')
+    def deleteSessionCaptchaErrors(self): #, REQUEST=None):
+        """ """
+        if 'err_captcha' in self.REQUEST.SESSION.keys():
+            del self.REQUEST.SESSION['err_captcha']
 
     # site pages
     security.declareProtected(view, 'index_html')
