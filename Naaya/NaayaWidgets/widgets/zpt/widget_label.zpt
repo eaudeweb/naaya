@@ -31,10 +31,11 @@
 </div>
 <!-- Text -->
 <div class="field" tal:define="editor here/getEditorTool">
-	<tal:block tal:replace="structure editor/includeLibs" />
-	<tal:block tal:replace="structure python:editor.render('text')" />
+	<tal:block replace="structure editor/includeLibs" />
+	<tal:block define="editor here/getEditorTool; curr_lang python:request.get('lang', None) or here.gl_get_selected_language()"
+	           replace="structure python:editor.render('text', curr_lang, image_support=True)" />
 	<label for="text" i18n:translate="">Text</label>
-	<textarea name="text" class="mceEditor" cols="50" rows="10" id="title" tal:content="text">text</textarea>
+	<textarea id="text" name="text" cols="78" rows="15" id="title" tal:content="text">text</textarea>
 </div>
 <!-- Sort order -->
 <div class="field">
