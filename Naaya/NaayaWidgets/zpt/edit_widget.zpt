@@ -1,5 +1,4 @@
 <tal:block tal:replace="structure here/standard_html_header"/>
-<tal:block define="widget_id request/widget_id|string:;">
 
 <link rel="stylesheet" type="text/css" media="all"
 	tal:define="stool here/portal_survey;"
@@ -9,7 +8,7 @@
 
 <div class="floated-buttons">
 	<span class="buttons">
-	<a tal:attributes="href string:${here/absolute_url}/preview_widget_html?widget_id=${widget_id};"
+	<a tal:attributes="href string:${here/absolute_url}/preview_html"
 		i18n:translate="">Back to index</a>
 	</span>
 </div>
@@ -26,27 +25,20 @@
 	<span tal:content="python:language['name']" />
 		</div>
 		<a tal:condition="python:language['code'] != lang"
-			tal:attributes="href string:?widget_id=${widget_id}&amp;lang=${language/code}; title python:language['name']">
+			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
 		<span tal:content="python:language['name']" />
 		</a>
 	</tal:block>
 </div>
 
-<form name="frmEdit" method="post" action="." tal:define="
-	mode string:manage;
-	widget python:here.getWidget(widget_id);
-	render python:widget and widget.render(mode='manage', datamodel={}) or ''"
-	tal:condition="render">
-
-<tal:block replace="structure render" />
+<form name="frmEdit" method="post" action=".">
+<tal:block replace="structure python:here.render(mode='manage', datamodel={})" />
 <div class="field">
-	<input type="hidden" name="widget_id" tal:attributes="value widget_id" />
-	<input type="submit" name="saveWidgetProperties:method" value="Save Changes" i18n:attributes="value" />
+	<input type="submit" name="saveProperties:method" value="Save Changes" i18n:attributes="value" />
 </div>
 </form>
 
 <!-- Translation bar on bottom -->
-<div metal:use-macro="here/edit_widget_html/macros/translation_bar" />
+<div metal:use-macro="here/edit_html/macros/translation_bar" />
 
-</tal:block>
 <tal:block tal:replace="structure here/standard_html_footer"/>

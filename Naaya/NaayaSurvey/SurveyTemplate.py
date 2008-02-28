@@ -35,7 +35,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaWidgets.widgets import AVAILABLE_WIDGETS
-from Products.NaayaWidgets.Widget import WidgetError
+from Products.NaayaWidgets.Widget import Widget, WidgetError
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 
 from SurveyReport import SurveyReport, manage_addSurveyReport
@@ -247,34 +247,16 @@ class SurveyTemplate(Folder, LocalPropertyManager):
         if REQUEST:
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'saveWidgetProperties')
-    def saveWidgetProperties(self, widget_id='', REQUEST=None, **kwargs):
-        """ Update widget properties"""
-        widget = self.getWidget(widget_id)
-        if not widget:
-            self.setSessionErrors(['Unknown widget.',])
-        else:
-            widget.saveProperties(REQUEST=REQUEST, **kwargs)
-        if REQUEST:
-            query = {'widget_id': widget_id}
-            kwargs.update(REQUEST.form)
-            lang = kwargs.get('lang', None)
-            if lang:
-                query['lang'] = lang
-            query = urlencode(query)
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/edit_widget_html?%s' % (self.absolute_url(), query))
-        return True
-
     security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'setSortOrder')
     def setSortOrder(self, REQUEST=None, **kwargs):
         """ Bulk update widgets sort order"""
         if REQUEST:
             kwargs.update(REQUEST.form)
         for key, value in kwargs.items():
-            if key not in self.objectIds():
+            widget = self._getOb(key, None)
+            if widget is None or not isinstance(widget, Widget):
                 continue
-            self.saveWidgetProperties(widget_id=key, sortorder=value)
+            widget.saveProperties(sortorder=value)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
@@ -346,12 +328,6 @@ class SurveyTemplate(Folder, LocalPropertyManager):
 
     security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'edit_html')
     edit_html = PageTemplateFile('zpt/surveytemplate_edit', globals())
-
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'edit_widget_html')
-    edit_widget_html = PageTemplateFile('zpt/surveytemplate_edit_widget', globals())
-
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'preview_widget_html')
-    preview_widget_html = PageTemplateFile('zpt/surveytemplate_preview_widget', globals())
 
     # "Reports" tab
     security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'edit_reports_html')
