@@ -165,6 +165,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.repository_url = ''
         self.mail_server_name = DEFAULT_MAILSERVERNAME
         self.mail_server_port = DEFAULT_MAILSERVERPORT
+        self.recaptcha_public_key = ''
+        self.recaptcha_private_key = ''
         # The email address (must exist) from which the email tool sends mails 
         self.mail_address_from = ''
         self.administrator_email = ''
@@ -1759,16 +1761,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             kwargs.update(getattr(REQUEST, 'form', {}))
         
         # Update portal properties
-        self.rdf_max_items     = kwargs.get('rdf_max_items', 10)
-        self.show_releasedate  = kwargs.get('show_releasedate', 0) and 1 or 0
-        self.rename_id         = kwargs.get('rename_id', 0) and 1 or 0
-        self.submit_unapproved = kwargs.get('submit_unapproved', '') and 1 or 0
-        self.keywords_glossary = kwargs.get('keywords_glossary', '') or None
-        self.coverage_glossary = kwargs.get('coverage_glossary', '') or None
-        self.repository_url    = kwargs.get('repository_url', '')
-        self.portal_url        = kwargs.get('portal_url', '')
-        self.http_proxy        = kwargs.get('http_proxy', '')
-        self.switch_language   = kwargs.get('switch_language', 0)
+        self.rdf_max_items          = kwargs.get('rdf_max_items', 10)
+        self.show_releasedate       = kwargs.get('show_releasedate', 0) and 1 or 0
+        self.rename_id              = kwargs.get('rename_id', 0) and 1 or 0
+        self.submit_unapproved      = kwargs.get('submit_unapproved', '') and 1 or 0
+        self.keywords_glossary      = kwargs.get('keywords_glossary', '') or None
+        self.coverage_glossary      = kwargs.get('coverage_glossary', '') or None
+        self.repository_url         = kwargs.get('repository_url', '')
+        self.portal_url             = kwargs.get('portal_url', '')
+        self.http_proxy             = kwargs.get('http_proxy', '')
+        self.recaptcha_public_key   = kwargs.get('recaptcha_public_key', '')
+        self.recaptcha_private_key  = kwargs.get('recaptcha_private_key', '')
+        self.switch_language        = kwargs.get('switch_language', 0)
         
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
