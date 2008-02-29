@@ -37,14 +37,14 @@
 <p tal:condition="python:here.description!=''" 
 	tal:content="structure here/description" />
 
-<p i18n:translate="" tal:condition="here/expired">Survey expired.</p>
+<p i18n:translate="" tal:condition="python: here.expired() and not here.checkPermissionEditObjects()">Survey expired.</p>
 
-<tal:block condition="not:here/expired">
+<tal:block condition="python: not here.expired() or here.checkPermissionEditObjects()">
 	<tal:block define="my_answer python:here.getMySurveyAnswer()">
 	<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
 	      tal:define="stype here/getSurveyTemplate;
 	                  rendered python:test(stype, stype.render(mode='edit', datamodel={}), 'Error');"
-	      tal:condition="not: my_answer">
+	      tal:condition="python: my_answer is None or here.checkPermissionEditObjects()">
 
 		<tal:block content="structure rendered" />
 
@@ -60,7 +60,7 @@
 		</div>
 	</form>
 
-	<p i18n:translate="" tal:condition="my_answer">You have already taken the survey.</p>
+	<p i18n:translate="" tal:condition="python: my_answer is not None">You have already taken the survey.</p>
 	</tal:block>
 </tal:block>
 
