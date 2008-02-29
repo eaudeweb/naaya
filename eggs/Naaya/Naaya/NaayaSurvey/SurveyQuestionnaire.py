@@ -373,14 +373,14 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     security.declareProtected(view, 'showCaptcha')
     def showCaptcha(self):
         """ """
-        return captcha.displayhtml(getattr(self.getSurveyTemplate(), 'public_key'))
+        return captcha.displayhtml(self.getSite().recaptcha_public_key)
 
     security.declarePrivate('isValidCaptcha')
     def isValidCaptcha(self, REQUEST):
         """ """
         check_captcha = captcha.submit(REQUEST.get('recaptcha_challenge_field', ''),
                                                    REQUEST.get('recaptcha_response_field', ''),
-                                                   getattr(self.getSurveyTemplate(), 'private_key'),
+                                                   self.getSite().recaptcha_private_key,
                                                    REQUEST.get('REMOTE_ADDR', ''))
         return check_captcha.is_valid
 
