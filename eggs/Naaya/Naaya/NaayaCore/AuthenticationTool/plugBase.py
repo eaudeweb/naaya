@@ -83,6 +83,8 @@ class PlugBase(SimpleItem):
         else: roles = self.utConvertToList(roles)
         for l_role in roles:
             l_users_roles = l_role.split('||')
+            if not l_users_roles[1] and getattr(self, 'getSite', None):
+                l_users_roles[1] = self.getSite().getId()
             l_user = self.utConvertToList(l_users_roles[0])
             l_location = self.utGetObject(l_users_roles[1])
             l_location.manage_delLocalRoles(l_user)
