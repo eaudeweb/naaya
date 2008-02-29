@@ -53,6 +53,10 @@ from SurveyReport import manage_addSurveyReport
 from statistics.SimpleTabularStatistics import SimpleTabularStatistics
 from statistics.MultipleChoiceTabularStatistics import MultipleChoiceTabularStatistics
 
+class SurveyQuestionnaireException(Exception):
+    """Survey related exception"""
+    pass
+
 
 def manage_addSurveyQuestionnaire(context, id='', title='', lang=None, REQUEST=None, **kwargs):
     """ """
@@ -192,6 +196,10 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         """Check if the user has the VIEW_REPORTS permission"""
         return self.checkPermission(PERMISSION_VIEW_REPORTS)
 
+    def checkPermissionEditObjects(self):
+        """Check if the user has the EDIT_OBJECTS permission"""
+        return self.checkPermission(PERMISSION_EDIT_OBJECTS)
+
     security.declareProtected(view, 'hasVersion')
     def hasVersion(self):
         """ """
@@ -243,9 +251,19 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     #
     security.declareProtected(PERMISSION_ADD_ANSWER, 'addSurveyAnswer')
     def addSurveyAnswer(self, REQUEST=None, **kwargs):
-        """ """
-        if self.getMySurveyAnswer():
-            raise Exception("You have already answered")
+        """Add someone's answer"""
+        try:
+            if self.expired():
+                raise SurveyQuestionnaireException("The survey has expired")
+            if self.getMySurveyAnswer() is not None:
+                raise SurveyQuestionnaireException("You have already answered")
+        except SurveyQuestionnaireException, ex:
+            if REQUEST:
+                self.setSessionErrors([ex])
+                return REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+            else:
+                raise
+
         datamodel = {}
         errors = []
         for widget in self.getSurveyTemplate().getWidgets():
