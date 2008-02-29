@@ -4,20 +4,15 @@ from OFS.Folder import manage_addFolder
 
 # Product imports
 from Products.ZCatalog.ZCatalog import manage_addZCatalog
+from Products.Naaya.NySite import NySite
 
 from CronTool import CronTool, manage_addCronTool, PERMISSION_ADD_CRON_TOOL, CRON_TOOL_ID
 from constants import CATALOG_ID
 
 
 def findNySites(container):
-    try:
-        if container.isNySite():
-            yield container
-    except:
-        pass
-    #if hasattr(container, 'isNySite') and container.isNySite():
-    #    yield container
-
+    if isinstance(container, NySite): # TODO replace isinstance with meta_type
+        yield container
     if not hasattr(container, 'objectValues'):
         return
     for ob in container.objectValues():
@@ -31,8 +26,8 @@ def configure_catalog(container):
         LOG('NaayaAdminTool', INFO, '%s created' % (CATALOG_ID,))
     catalog = container._getOb(CATALOG_ID)
 
-    if 'isNySite' not in catalog.indexes():
-        catalog.addIndex(name='isNySite', type='FieldIndex')
+    if 'meta_type' not in catalog.indexes():
+        catalog.addIndex(name='meta_type', type='FieldIndex')
         LOG('NaayaAdminTool', INFO, 'cataloging all Naaya sites')
         for site in findNySites(container):
             catalog.catalog_object(site)
