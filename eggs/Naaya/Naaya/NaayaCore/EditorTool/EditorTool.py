@@ -34,7 +34,6 @@ from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.LocalFS.LocalFS import manage_addLocalFS
-
 #Product imports
 from Products.NaayaCore.constants import *
 import tinyMCEUtils
@@ -181,7 +180,7 @@ class EditorTool(Folder):
 
             The configuration is loaded from the "config.ini" file.
         """
-        self.manage_addProduct['LocalFS'].manage_addLocalFS('tinymce', '', join(dirname(__file__), 'tinymce'))
+        manage_addLocalFS(self, 'tinymce', '', join(dirname(__file__), 'tinymce'))
 
         config = ConfigParser()
         config.read(join(dirname(__file__), 'config.ini'))

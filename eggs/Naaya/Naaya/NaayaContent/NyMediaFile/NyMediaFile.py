@@ -455,7 +455,9 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
         if lang is None: lang = self.gl_get_selected_language()
         
         # Update subtitle
-        subtitle_file = REQUEST.form.get('subtitle_file', None)
+        if REQUEST:
+            kwargs.update(REQUEST.form)
+        subtitle_file = kwargs.get('subtitle_file', None)
         if subtitle_file:
             subtitle = subtitle_file.read()
         #check mandatory fiels
