@@ -465,7 +465,7 @@ class NaayaTests(ZopeTestCase.ZopeTestCase):
         """ Add, Find, Edit and Delete a User"""
         usr_name = 'test_user'
         usr_pwd = 'test_user_password'
-        usr_mail = 'test_user_email'
+        usr_mail = 'test@user-email.com'
         
         #Add user.
         self.portal.getAuthenticationTool().manage_addUser(name=usr_name, password=usr_pwd, confirm=usr_pwd, firstname=usr_name, lastname=usr_name, email=usr_mail)
@@ -476,8 +476,8 @@ class NaayaTests(ZopeTestCase.ZopeTestCase):
         
         #change user email
         self.portal.getAuthenticationTool().manage_changeUser(name=usr_name, password=usr_pwd, confirm=usr_pwd, 
-                                                              email='changed_test_user_email', firstname=usr_name, lastname=usr_name)
-        self.assertEqual(usr_obj.email, 'changed_test_user_email')
+                                                              email='changed@test-user-email.com', firstname=usr_name, lastname=usr_name)
+        self.assertEqual(usr_obj.email, 'changed@test-user-email.com')
         
         #add user roles
         self.portal.getAuthenticationTool().manage_addUsersRoles(name=usr_obj.name, roles=['Administrator', 'Manager', 'Contributor'])
@@ -531,6 +531,12 @@ class NaayaTests(ZopeTestCase.ZopeTestCase):
         """ delete the test portal """
         noSecurityManager()
         self.root.manage_delObjects(self.portal.id)
+
+def test_suite():
+    from unittest import TestSuite, makeSuite
+    suite = TestSuite()
+    suite.addTest(makeSuite(NaayaTests))
+    return suite
 
 if __name__ == '__main__':
     framework()
