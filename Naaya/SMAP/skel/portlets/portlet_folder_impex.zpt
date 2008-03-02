@@ -1,5 +1,5 @@
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
-<tal:block metal:fill-slot="portlet_title">Import/Export</tal:block>
+<tal:block metal:fill-slot="portlet_title"><span i18n:translate="">Import/Export</span></tal:block>
 <tal:block metal:fill-slot="portlet_content">
 	<ul tal:define="folder_url python:here.absolute_url(1)">
 		<li><a tal:attributes="href string:${here/absolute_url}/import_html?url=${folder_url}"
