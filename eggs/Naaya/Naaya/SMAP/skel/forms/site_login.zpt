@@ -22,11 +22,9 @@
 <div id="log1"><a tal:define="url python:here.absolute_url()" tal:attributes="href string:${url}/logout" i18n:translate="">Logout</a></div>
 <br />
 <tal:block tal:define="roles python:here.getAuthenticationTool().getAuthenticatedUserRoles()">
-    <div tal:condition="python:user_obj is None" i18n:translate="">This is a Zope user.
-        You must create a user for you in the acl_users folder.
-    </div>
+    <div tal:condition="python:user_obj is None" i18n:translate=""></div>
     <tal:block tal:condition="python:len(roles) and user_obj is not None">
-        You have the following rights in this portal:<br />
+        <p i18n:translate="">You have the following rights in this portal:</p>
         <ul>
             <li tal:repeat="item roles">
                 <span tal:replace="python:', '.join(item[0])" />
@@ -38,7 +36,7 @@
         </ul>
     </tal:block>
     <tal:block tal:condition="python:not len(roles)">
-        You have no rights in this portal.
+        <p i18n:translate="">You have no rights in this portal.</p>
     </tal:block>
 </tal:block>
 <br />
