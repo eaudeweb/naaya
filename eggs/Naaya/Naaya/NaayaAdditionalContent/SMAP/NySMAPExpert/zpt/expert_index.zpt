@@ -29,7 +29,7 @@
 	<td>
 		<ul>
 		<tal:block repeat="topic_id here/maintopics">
-			<li tal:content="python:here.getExpPriorityTitle(topic_id)" />
+			<li i18n:translate="" tal:content="python:here.getExpPriorityTitle(topic_id)" />
 			<ul>
 				<tal:block repeat="subtopic_id here/subtopics">
 					<tal:block define="data python:subtopic_id.split('|@|')">
