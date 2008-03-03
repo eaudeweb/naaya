@@ -30,7 +30,7 @@ class BaseMultipleChoiceStatistic(BaseStatistic):
     def __init__(self, id, question, lang=None, **kwargs):
         if not isinstance(question, (ComboboxWidget, RadioWidget, CheckboxesWidget)):
             raise TypeError('Unsupported question type')
-        BaseStatistic.__init__(self, id, question, lang=None, **kwargs)
+        BaseStatistic.__init__(self, id, question, lang=lang, **kwargs)
 
     def calculate(self, question, answers):
         """ -> (total, answered, unanswered, per_choice)"""

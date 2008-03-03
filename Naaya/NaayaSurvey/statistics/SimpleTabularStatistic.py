@@ -44,7 +44,7 @@ class SimpleTabularStatistic(BaseStatistic):
     def __init__(self, id, question, lang=None, **kwargs):
         if isinstance(question, LabelWidget):
             raise TypeError('Unsupported question type')
-        BaseStatistic.__init__(self, id, question, lang=None, **kwargs)
+        BaseStatistic.__init__(self, id, question, lang=lang, **kwargs)
 
     def calculate(self, question, answers):
         """ -> (total, answered, unanswered)"""
