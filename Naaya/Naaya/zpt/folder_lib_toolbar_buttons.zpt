@@ -27,7 +27,7 @@ Required variables:
     i18n:attributes="value"
     tal:condition="btn_paste" />
   <input type="submit" value="Delete" name="deleteObjects:method"
-    onclick="javascript:window.confirm('Are you sure?')"
+    onclick="javascript:return window.confirm('Are you sure?')"
     i18n:attributes="value"
     tal:condition="btn_delete" />
   <input type="submit" value="Rename" name="renameobject_html:method"
