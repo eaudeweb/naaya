@@ -80,6 +80,7 @@ To use the Naaya Survey product two steps must be followed:
 		- 'Naaya - Add Naaya Survey Tool': used for adding the survey tool
 		- 'Naaya - Add Naaya Survey Template'; by default it's given to Manager and Administrator
 		- 'Naaya - Manage Naaya Survey Template'; by default it's given to Manager and Administrator
+		- 'Naaya - Add Naaya Statistic': used for reports; by default it's given to Manager and Administrator
 		- 'Naaya - Add Naaya Survey Questionnaire': create a survey;  by default it's given to Contributor
 		- 'Naaya - Add Naaya Survey Answer': answer/take a survey; by default it's given to all users (Authenticated and Anonymous)
 		- 'Naaya - View Naaya Survey Answers': view the list of answers

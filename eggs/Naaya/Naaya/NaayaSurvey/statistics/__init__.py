@@ -22,6 +22,8 @@ import glob
 import os.path
 import Globals
 
+from constants import PERMISSION_ADD_STATISTIC
+
 def _get_available_statistics():
     """ Return available statistics in current dir."""
     current_dir = os.path.dirname(__file__)
@@ -43,7 +45,7 @@ def register_statistic(context, statistic):
     context.registerClass(
         statistic,
         constructors = statistic._constructors,
-        permission = 'Naaya - Add Naaya Statistic',
+        permission = PERMISSION_ADD_STATISTIC,
         icon = getattr(statistic, 'icon_filename', 'statistics/www/statistic.gif'))
 
 def initialize(context):

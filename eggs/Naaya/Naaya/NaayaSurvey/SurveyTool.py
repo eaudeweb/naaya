@@ -45,6 +45,7 @@ from constants import PERMISSION_ADD_SURVEYTEMPLATE,      \
                         PERMISSION_ADD_QUESTIONNAIRE,     \
                         PERMISSION_ADD_ANSWER,            \
                         PERMISSION_VIEW_REPORTS
+from statistics.constants import PERMISSION_ADD_STATISTIC
 
 def configure_catalog(catalog_tool):
     """Configure  catalog tool:
@@ -93,6 +94,7 @@ def configure_security(site):
     site.manage_permission(PERMISSION_MANAGE_SURVEYTEMPLATE, ('Manager', 'Administrator'), acquire=0)
     site.manage_permission(PERMISSION_ADD_SURVEYTEMPLATE, ('Manager', 'Administrator'), acquire=0)
     site.manage_permission(PERMISSION_ADD_WIDGETS, ('Manager', 'Administrator'), acquire=0)
+    site.manage_permission(PERMISSION_ADD_STATISTIC, ('Manager', 'Administrator'), acquire=0)
 
     site.manage_permission(PERMISSION_ADD_QUESTIONNAIRE, ('Contributor', ), acquire=0)
 
