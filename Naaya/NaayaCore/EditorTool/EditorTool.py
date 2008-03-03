@@ -98,16 +98,13 @@ class EditorTool(Folder):
             lang = self._getTinyMCEDefaultLang()
         return lang
 
-    def includeLibs(self, lang=None, doc=None):
+    def includeLibs(self, lang=None):
         """Return HTML code that includes the TinyMCE JavaScript libraries.
 
             @param lang: language to use; default is the language of the portal
         """
         tinymce = self._getTinyMCEInstance()
-        if doc is None:
-            doc_url = self.REQUEST['URLPATH1'].lstrip('/')
-        else:
-            doc_url = doc.absolute_url()
+        doc_url = self.REQUEST['URLPATH1'].lstrip('/')
         js = []
         jsappend = js.append
         jsappend('<script type="text/javascript" src="%s/%s"></script>' % (tinymce.jscripts.tiny_mce.absolute_url(), 'tiny_mce_gzip.js'))
@@ -124,7 +121,7 @@ class EditorTool(Folder):
         jsappend('</script>')
         return '\n'.join(js)
 
-    def render(self, element, lang=None, image_support=False, doc=None):
+    def render(self, element, lang=None, image_support=False):
         """Return the HTML necessary to run the TinyMCE.
 
             @param element: name of the HTML element that will be converted to TinyMCE;
@@ -132,10 +129,7 @@ class EditorTool(Folder):
             @param lang: language to use; default is the language of the portal
             @param image_support: if True, the user can add images
         """
-        if doc is None:
-            doc_url = self.REQUEST['URLPATH1'].lstrip('/')
-            doc = self.restrictedTraverse(doc_url)
-        print 'XXX EditorTool doc =', doc
+        doc_url = self.REQUEST['URLPATH1'].lstrip('/')
         lang = self._getTinyMCELang(lang)
         params = []
         params.append('elements:"%s"' % element)
@@ -151,6 +145,7 @@ class EditorTool(Folder):
             L = list(self.configuration['theme_advanced_buttons2'])
             L.remove('image')
             params.append('theme_advanced_buttons2: "%s"' % ','.join(L))
+        doc = self.restrictedTraverse(doc_url)
         if not doc.imageContainer.relative:
             params.append('document_base_url:"%s/"' % self.getSitePath())
         return """<script type="text/javascript">tinyMCE.init({%s});</script>""" % (',\n'.join(params), )
