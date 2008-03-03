@@ -57,7 +57,7 @@ To use the Naaya Survey product two steps must be followed:
 		-----------------
 
 		Send the link of the survey to the respondents. When a respondent answers, the owner of the survey will receive a notification email, which includes a link to the newly added answer.
-
+		To prevent spam, captcha is used for anonymous users. Authenticated users are permitted to answer only once.
 
 		Analyzing the results
 		---------------------
@@ -73,5 +73,17 @@ To use the Naaya Survey product two steps must be followed:
 	Administration
 	--------------
 
-	The respondents must have the "Naaya - Add Naaya Survey Answer" permission.
-	Because the basic view permission is too general, two other permissions are required to view the reports and the list of answers: "Naaya - View Naaya Survey Reports" and "Naaya - View Naaya Survey Answers".
+		Security
+		--------
+
+		The following permissions exists:
+		- 'Naaya - Add Naaya Survey Tool': used for adding the survey tool
+		- 'Naaya - Add Naaya Survey Template'; by default it's given to Manager and Administrator
+		- 'Naaya - Manage Naaya Survey Template'; by default it's given to Manager and Administrator
+		- 'Naaya - Add Naaya Survey Questionnaire': create a survey;  by default it's given to Contributor
+		- 'Naaya - Add Naaya Survey Answer': answer/take a survey; by default it's given to all users (Authenticated and Anonymous)
+		- 'Naaya - View Naaya Survey Answers': view the list of answers
+		- 'Naaya - View Naaya Survey Reports': view the reports;  by default it's given to all users (Authenticated and Anonymous)
+		Also the 'Naaya - Add Naaya Widgets' permission from NaayaWidgets is given by default to Manager and Administrator, since it's needed for creating a survey template.
+
+		When a "Survey Tool" is added, the security of the site will be configured as described above.
