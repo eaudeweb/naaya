@@ -38,7 +38,7 @@ from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 
 from constants import PERMISSION_MANAGE_SURVEYTEMPLATE
 import statistics
-from statistics.Statistic import manage_addStatistic
+from statistics.BaseStatistic import manage_addStatistic
 
 STATISTICS = dict([(statistic.meta_type, statistic) for statistic in statistics.AVAILABLE_STATISTICS])
 

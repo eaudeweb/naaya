@@ -51,7 +51,7 @@ def manage_addStatistic(klass, container, id="", REQUEST=None, **kwargs):
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
     return id
 
-class Statistic(SimpleItem, LocalPropertyManager):
+class BaseStatistic(SimpleItem, LocalPropertyManager):
     """Base class for statistics"""
 
     manage_options=(

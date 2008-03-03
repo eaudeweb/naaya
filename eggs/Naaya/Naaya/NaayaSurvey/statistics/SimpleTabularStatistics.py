@@ -25,9 +25,9 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 # Naaya imports
 from Products.NaayaWidgets.widgets.LabelWidget import LabelWidget
 
-from Statistic import Statistic, manage_addStatistic
+from BaseStatistic import BaseStatistic, manage_addStatistic
 
-class SimpleTabularStatistics(Statistic):
+class SimpleTabularStatistics(BaseStatistic):
     """Table with the count and percent of answered and unanswered questions.
     """
 
@@ -44,7 +44,7 @@ class SimpleTabularStatistics(Statistic):
     def __init__(self, id, question, lang=None, **kwargs):
         if isinstance(question, LabelWidget):
             raise TypeError('Unsupported question type')
-        Statistic.__init__(self, id, question, lang=None, **kwargs)
+        BaseStatistic.__init__(self, id, question, lang=None, **kwargs)
 
     def calculate(self, question, answers):
         """ -> (total, answered, unanswered)"""
