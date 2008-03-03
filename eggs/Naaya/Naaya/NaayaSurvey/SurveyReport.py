@@ -160,8 +160,8 @@ class SurveyReport(Folder, LocalPropertyManager):
             return manage_addStatistic(statistic_cls,
                                        self,
                                        gUtils.utGenObjectId(question.title),
-                                       REQUEST=REQUEST,
-                                       question=question)
+                                       question=question,
+                                       REQUEST=REQUEST)
         except TypeError:
             if not REQUEST:
                 raise
