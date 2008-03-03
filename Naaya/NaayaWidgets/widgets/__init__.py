@@ -21,6 +21,8 @@
 import glob
 import os.path
 
+from Products.NaayaWidgets.constants import PERMISSION_ADD_WIDGETS
+
 def _get_available_widgets():
     """ Return available widgets in current dir."""
     current_dir = os.path.dirname(__file__)
@@ -43,7 +45,7 @@ def register_widget(context, widget):
     context.registerClass(
         widget,
         constructors = widget._constructors,
-        permission = 'Naaya - Add Naaya Widgets',
+        permission = PERMISSION_ADD_WIDGETS,
         icon = getattr(widget, 'icon_filename', 'www/widget.gif'))
 
 def initialize(context):
