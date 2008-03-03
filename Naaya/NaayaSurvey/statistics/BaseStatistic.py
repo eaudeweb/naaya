@@ -26,7 +26,7 @@ from Products.NaayaCore.managers.utils import utils
 
 gUtil = utils()
 
-def manage_addStatistic(klass, container, id="", REQUEST=None, **kwargs):
+def manage_addStatistic(klass, container, id="", question=None, REQUEST=None, **kwargs):
     """Add statistic"""
     global gUtil
 
@@ -42,7 +42,7 @@ def manage_addStatistic(klass, container, id="", REQUEST=None, **kwargs):
     # Get selected language
     lang = REQUEST and REQUEST.form.get('lang', None)
     lang = lang or kwargs.get('lang', container.gl_get_selected_language())
-    statistic = klass(id, lang=lang, **kwargs)
+    statistic = klass(id, question, lang=lang, **kwargs)
 
     container.gl_add_languages(statistic)
     container._setObject(id, statistic)
