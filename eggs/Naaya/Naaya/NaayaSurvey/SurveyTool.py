@@ -39,7 +39,7 @@ from Products.NaayaBase.constants import \
 from SurveyTemplate import SurveyTemplate
 from SurveyTemplate import manage_addSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
-from constants import PERMISSION_ADD_SURVEYTYPE
+from constants import PERMISSION_ADD_SURVEYTEMPLATE
 
 def configure_catalog(catalog_tool):
     """Configure  catalog tool:
@@ -192,7 +192,7 @@ class SurveyTool(Folder):
     #
     # Edit methods
     #
-    security.declareProtected(PERMISSION_ADD_SURVEYTYPE, 'addSurveyTemplate')
+    security.declareProtected(PERMISSION_ADD_SURVEYTEMPLATE, 'addSurveyTemplate')
     def addSurveyTemplate(self, title='', REQUEST=None, **kwargs):
         """Add a new survey template"""
         stype_id = None

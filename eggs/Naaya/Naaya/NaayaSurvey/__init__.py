@@ -48,7 +48,7 @@ def initialize(context):
     )
     context.registerClass(
         SurveyTemplate.SurveyTemplate,
-        permission = PERMISSION_ADD_SURVEYTYPE,
+        permission = PERMISSION_ADD_SURVEYTEMPLATE,
         constructors = SurveyTemplate.SurveyTemplate._constructors,
         icon = 'www/Survey.gif'
     )
@@ -66,7 +66,7 @@ def initialize(context):
     )
     context.registerClass(
         SurveyReport.SurveyReport,
-        permission = PERMISSION_MANAGE_SURVEYTYPE,
+        permission = PERMISSION_MANAGE_SURVEYTEMPLATE,
         constructors = SurveyReport.SurveyReport._constructors,
         icon = 'www/NySurveyReport.gif'
     )

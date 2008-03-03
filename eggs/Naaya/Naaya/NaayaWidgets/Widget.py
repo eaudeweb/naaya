@@ -27,7 +27,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaCore.managers.utils import utils
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from Products.NaayaSurvey.constants import PERMISSION_MANAGE_SURVEYTYPE
+from Products.NaayaSurvey.constants import PERMISSION_MANAGE_SURVEYTEMPLATE
 
 gUtil = utils()
 
@@ -111,7 +111,7 @@ class Widget(Folder, LocalPropertyManager):
         """ Returns widget id"""
         return self.getId()
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'saveProperties')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ Update widget properties"""
         if REQUEST:
@@ -160,13 +160,13 @@ class Widget(Folder, LocalPropertyManager):
         """Render widget according with given mode"""
         return self.render_meth(mode=mode, datamodel=datamodel, **kwargs)
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'edit_html')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'edit_html')
     edit_html = PageTemplateFile('zpt/edit_widget', globals())
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'preview_html')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'preview_html')
     preview_html = PageTemplateFile('zpt/preview_widget', globals())
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'index_html')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'index_html')
     index_html = preview_html
 
 InitializeClass(Widget)

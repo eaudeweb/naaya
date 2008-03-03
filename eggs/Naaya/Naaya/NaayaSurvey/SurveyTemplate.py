@@ -39,7 +39,7 @@ from Products.NaayaWidgets.Widget import Widget, WidgetError
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 
 from SurveyReport import SurveyReport, manage_addSurveyReport
-from constants import PERMISSION_MANAGE_SURVEYTYPE
+from constants import PERMISSION_MANAGE_SURVEYTEMPLATE
 
 def manage_addSurveyTemplate(context, id="", title="SurveyTemplate", REQUEST=None, **kwargs):
     """
@@ -131,7 +131,7 @@ class SurveyTemplate(Folder, LocalPropertyManager):
     #
     # Self edit methods
     #
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'saveProperties')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ Update type properties"""
         if REQUEST:
@@ -198,7 +198,7 @@ class SurveyTemplate(Folder, LocalPropertyManager):
     #
     # Widget edit methods
     #
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'addWidget')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'addWidget')
     def addWidget(self, title='', add_action='', REQUEST=None, **kwargs):
         """ Add a new widget"""
         if not REQUEST:
@@ -223,7 +223,7 @@ class SurveyTemplate(Folder, LocalPropertyManager):
             redirect_url = '%s/%s?%s' % (self.absolute_url(), add_action, urlencode(url_param))
         REQUEST.RESPONSE.redirect(redirect_url)
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'deleteItems')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'deleteItems')
     def deleteItems(self, ids=[], REQUEST=None):
         """ Delete items (e.g. widgets, reports) by ids"""
         if not ids:
@@ -247,7 +247,7 @@ class SurveyTemplate(Folder, LocalPropertyManager):
         if REQUEST:
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'setSortOrder')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'setSortOrder')
     def setSortOrder(self, REQUEST=None, **kwargs):
         """ Bulk update widgets sort order"""
         if REQUEST:
@@ -293,7 +293,7 @@ class SurveyTemplate(Folder, LocalPropertyManager):
         """ """
         return sort(self.getReports(), ( (sort_by, 'cmp', 'asc'), ))
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'addReport')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'addReport')
     def addReport(self, title='', add_action='', REQUEST=None, **kwargs):
         """ Add a new report"""
         if not REQUEST:
@@ -314,23 +314,23 @@ class SurveyTemplate(Folder, LocalPropertyManager):
     #
     # Site pages
     #
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'index_html')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'index_html')
     def index_html(self, *args, **kw):
         """ """
         return self.edit_questions_html(*args, **kw)
 
     # "Questions" tab
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'edit_questions_html')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'edit_questions_html')
     edit_questions_html = PageTemplateFile('zpt/surveytemplate_edit_questions', globals())
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'preview_html')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'preview_html')
     preview_html = PageTemplateFile('zpt/surveytemplate_preview', globals())
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'edit_html')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'edit_html')
     edit_html = PageTemplateFile('zpt/surveytemplate_edit', globals())
 
     # "Reports" tab
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'edit_reports_html')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'edit_reports_html')
     edit_reports_html = PageTemplateFile('zpt/surveytemplate_edit_reports', globals())
 
 
