@@ -23,35 +23,43 @@ from AccessControl import ClassSecurityInfo
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from BaseMultipleChoiceStatistics import BaseMultipleChoiceStatistics
+from BaseMultipleChoiceStatistic import BaseMultipleChoiceStatistic
+import pygooglechart
 
-class MultipleChoiceCssBarChartStatistics(BaseMultipleChoiceStatistics):
-    """Barchart ...
+class MultipleChoicePieChartStatistic(BaseMultipleChoiceStatistic):
+    """Piechart ...
     """
 
     security = ClassSecurityInfo()
 
-    _constructors = (lambda *args, **kw: manage_addStatistic(MultipleChoiceCssBarChartStatistics, *args, **kw), )
+    _constructors = (lambda *args, **kw: manage_addStatistic(MultipleChoicePieChartStatistic, *args, **kw), )
 
-    meta_type = "Naaya Survey - Multiple Choice CSS Bar Chart Statistics"
-    meta_label = "Multiple Choice CSS Bar Chart Statistics"
-    meta_description = """Bar chart for every choice"""
-    meta_sortorder = 211
-    icon_filename = 'statistics/www/multiplechoice_css_barchart_statistics.gif'
+    meta_type = "Naaya Survey - Multiple Choice Pie Chart Statistic"
+    meta_label = "Multiple Choice Pie Chart Statistic"
+    meta_description = """Pie Chart for every choice"""
+    meta_sortorder = 220
+    icon_filename = 'statistics/www/multiplechoice_piechart_statistic.gif'
 
     security.declarePublic('render')
     def render(self, answers):
         """Render statistics as HTML code"""
         total, answered, unanswered, per_choice = self.calculate(self.question, answers)
+        chart = pygooglechart.PieChart3D(600, 170)
+        # data
+        data = [i[1] for i in per_choice]
+        data.append(unanswered[1])
+        chart.add_data(data)
+        # legend
+        legend = list(self.question.choices)
+        legend.append(self.getPortalTranslations().translate('', 'Not answered'))
+        chart.set_pie_labels(legend)
+
         return self.page(question=self.question,
-                         total=total,
-                         answered=answered,
-                         unanswered=unanswered,
-                         per_choice=per_choice)
+                         chart_url=chart.get_url())
 
-    page = PageTemplateFile("zpt/multiplechoice_css_barchart_statistics.zpt", globals())
+    page = PageTemplateFile("zpt/multiplechoice_piechart_statistics.zpt", globals())
 
-InitializeClass(MultipleChoiceCssBarChartStatistics)
+InitializeClass(MultipleChoicePieChartStatistic)
 
 def getStatistic():
-    return MultipleChoiceCssBarChartStatistics
+    return MultipleChoicePieChartStatistic

@@ -24,7 +24,7 @@ from Products.NaayaWidgets.widgets.CheckboxesWidget import CheckboxesWidget
 
 from BaseStatistic import BaseStatistic
 
-class BaseMultipleChoiceStatistics(BaseStatistic):
+class BaseMultipleChoiceStatistic(BaseStatistic):
     """Base class for calculating statistics for multiple choice questions"""
 
     def __init__(self, id, question, lang=None, **kwargs):

@@ -26,19 +26,19 @@ from AccessControl import ClassSecurityInfo
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from BaseMultipleChoiceStatistics import BaseMultipleChoiceStatistics
+from BaseMultipleChoiceStatistic import BaseMultipleChoiceStatistic
 import pygooglechart
 
-class MultipleChoiceGoogleBarChartStatistics(BaseMultipleChoiceStatistics):
+class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
     """Barchart ...
     """
 
     security = ClassSecurityInfo()
 
-    _constructors = (lambda *args, **kw: manage_addStatistic(MultipleChoiceGoogleBarChartStatistics, *args, **kw), )
+    _constructors = (lambda *args, **kw: manage_addStatistic(MultipleChoiceGoogleBarChartStatistic, *args, **kw), )
 
-    meta_type = "Naaya Survey - Multiple Choice Google Bar Chart Statistics"
-    meta_label = "Multiple Choice Google Bar Chart Statistics"
+    meta_type = "Naaya Survey - Multiple Choice Google Bar Chart Statistic"
+    meta_label = "Multiple Choice Google Bar Chart Statistic"
     meta_description = """Bar chart for every choice"""
     meta_sortorder = 210
 
@@ -75,7 +75,7 @@ class MultipleChoiceGoogleBarChartStatistics(BaseMultipleChoiceStatistics):
 
     page = PageTemplateFile("zpt/multiplechoice_google_barchart_statistics.zpt", globals())
 
-InitializeClass(MultipleChoiceGoogleBarChartStatistics)
+InitializeClass(MultipleChoiceGoogleBarChartStatistic)
 
 def getStatistic():
-    return MultipleChoiceGoogleBarChartStatistics
+    return MultipleChoiceGoogleBarChartStatistic

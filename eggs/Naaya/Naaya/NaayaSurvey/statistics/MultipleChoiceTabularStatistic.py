@@ -23,43 +23,38 @@ from AccessControl import ClassSecurityInfo
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from BaseMultipleChoiceStatistics import BaseMultipleChoiceStatistics
-import pygooglechart
+from BaseStatistic import manage_addStatistic
+from BaseMultipleChoiceStatistic import BaseMultipleChoiceStatistic
 
-class MultipleChoicePieChartStatistics(BaseMultipleChoiceStatistics):
-    """Piechart ...
+class MultipleChoiceTabularStatistic(BaseMultipleChoiceStatistic):
+    """Table with the count and percent of answered and unanswered questions,
+        diveded per choice. It should be used for multiple choice questions.
     """
 
     security = ClassSecurityInfo()
 
-    _constructors = (lambda *args, **kw: manage_addStatistic(MultipleChoicePieChartStatistics, *args, **kw), )
+    _constructors = (lambda *args, **kw: manage_addStatistic(MultipleChoiceTabularStatistic, *args, **kw), )
 
-    meta_type = "Naaya Survey - Multiple Choice Pie Chart Statistics"
-    meta_label = "Multiple Choice Pie Chart Statistics"
-    meta_description = """Pie Chart for every choice"""
-    meta_sortorder = 220
-    icon_filename = 'statistics/www/multiplechoice_piechart_statistics.gif'
+    meta_type = "Naaya Survey - Multiple Choice Tabular Statistic"
+    meta_label = "Multiple Choice Tabular Statistic"
+    meta_description = """Table with the count and percent of answered and unanswered questions,
+        diveded per choice. It should be used for multiple choice questions."""
+    meta_sortorder = 200
+    icon_filename = 'statistics/www/multiplechoice_tabular_statistic.gif'
 
     security.declarePublic('render')
     def render(self, answers):
         """Render statistics as HTML code"""
         total, answered, unanswered, per_choice = self.calculate(self.question, answers)
-        chart = pygooglechart.PieChart3D(600, 170)
-        # data
-        data = [i[1] for i in per_choice]
-        data.append(unanswered[1])
-        chart.add_data(data)
-        # legend
-        legend = list(self.question.choices)
-        legend.append(self.getPortalTranslations().translate('', 'Not answered'))
-        chart.set_pie_labels(legend)
-
         return self.page(question=self.question,
-                         chart_url=chart.get_url())
+                         total=total,
+                         answered=answered,
+                         unanswered=unanswered,
+                         per_choice=per_choice)
 
-    page = PageTemplateFile("zpt/multiplechoice_piechart_statistics.zpt", globals())
+    page = PageTemplateFile("zpt/multiplechoice_tabular_statistics.zpt", globals())
 
-InitializeClass(MultipleChoicePieChartStatistics)
+InitializeClass(MultipleChoiceTabularStatistic)
 
 def getStatistic():
-    return MultipleChoicePieChartStatistics
+    return MultipleChoiceTabularStatistic
