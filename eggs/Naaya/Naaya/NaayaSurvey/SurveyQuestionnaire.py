@@ -50,8 +50,6 @@ from Products.NaayaBase.constants import \
      MESSAGE_SAVEDCHANGES, PERMISSION_EDIT_OBJECTS
 
 from SurveyReport import manage_addSurveyReport
-from statistics.SimpleTabularStatistics import SimpleTabularStatistics
-from statistics.MultipleChoiceTabularStatistics import MultipleChoiceTabularStatistics
 
 class SurveyQuestionnaireException(Exception):
     """Survey related exception"""
