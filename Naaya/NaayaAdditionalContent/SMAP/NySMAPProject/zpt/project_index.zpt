@@ -33,7 +33,7 @@
 	<td>
 		<ul>
 		<tal:block repeat="priority_id here/priority_area">
-			<li tal:content="python:here.getPriorityTitle(priority_id)" />
+			<li i18n:translate="" tal:content="python:here.getPriorityTitle(priority_id)" />
 			<ul>
 				<tal:block repeat="focus_id here/focus">
 					<tal:block define="data python:focus_id.split('|@|')">
