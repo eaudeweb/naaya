@@ -18,18 +18,21 @@
 # Alin Voinea, Eau de Web
 # Cristian Ciupitu, Eau de Web
 
+# Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
-from Products.Localizer.LocalPropertyManager import LocalProperty
 
-from Products.NaayaWidgets.Widget import Widget, WidgetError, addWidget
+# Product imports
+from Products.NaayaWidgets.Widget import addWidget
+
+from MatrixWidget import MatrixWidget
 
 def addRadioMatrixWidget(container, id="", title="RadioMatrix Widget", REQUEST=None, **kwargs):
     """ Contructor for RadioMatrix widget"""
     return addWidget(RadioMatrixWidget, container, id, title, REQUEST, **kwargs)
 
-class RadioMatrixWidget(Widget):
+class RadioMatrixWidget(MatrixWidget):
     """ RadioMatrix Widget """
 
     meta_type = "Naaya Radio Matrix Widget"
@@ -38,20 +41,11 @@ class RadioMatrixWidget(Widget):
     meta_sortorder = 500
     icon_filename = 'widgets/www/widget_radiomatrix.gif'
 
-    _properties = Widget._properties + ()
+    _properties = MatrixWidget._properties + ()
 
     # Constructor
     _constructors = (addRadioMatrixWidget,)
     render_meth = PageTemplateFile('zpt/widget_radiomatrix.zpt', globals())
-
-    # Local properties
-    choices = LocalProperty('choices')
-    rows = LocalProperty('rows')
-
-    def __init__(self, id, lang=None, **kwargs):
-        self.set_localproperty('choices', 'lines', lang)
-        self.set_localproperty('rows', 'lines', lang)
-        Widget.__init__(self, id, lang, **kwargs)
 
     def getDatamodel(self, form):
         """Get datamodel from form"""

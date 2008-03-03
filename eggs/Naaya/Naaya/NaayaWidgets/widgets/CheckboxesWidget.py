@@ -21,9 +21,8 @@
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
-from Products.Localizer.LocalPropertyManager import LocalProperty
 
-from Products.NaayaWidgets.Widget import Widget, WidgetError, addWidget
+from Products.NaayaWidgets.Widget import WidgetError, addWidget
 
 from MultipleChoiceWidget import MultipleChoiceWidget
 
@@ -40,7 +39,7 @@ class CheckboxesWidget(MultipleChoiceWidget):
     meta_sortorder = 102
     icon_filename = 'widgets/www/widget_checkbox.gif'
 
-    _properties = Widget._properties + (
+    _properties = MultipleChoiceWidget._properties + (
         {'id': 'display', 'type': 'selection', 'mode': 'w',
          'select_variable': 'display_modes', 'label': 'Display mode'},
         )
@@ -50,13 +49,6 @@ class CheckboxesWidget(MultipleChoiceWidget):
     render_meth = PageTemplateFile('zpt/widget_checkboxes.zpt', globals())
 
     display = 'vertical'
-    
-    # Local properties
-    choices = LocalProperty('choices')
-    
-    def __init__(self, id, lang=None, **kwargs):
-        self.set_localproperty('choices', 'lines', lang)
-        Widget.__init__(self, id, lang, **kwargs)
 
     def display_modes(self):
         """ """

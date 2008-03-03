@@ -21,9 +21,8 @@
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
-from Products.Localizer.LocalPropertyManager import LocalProperty
 
-from Products.NaayaWidgets.Widget import Widget, WidgetError, addWidget
+from Products.NaayaWidgets.Widget import WidgetError, addWidget
 
 from MultipleChoiceWidget import MultipleChoiceWidget
 
@@ -40,18 +39,11 @@ class ComboboxWidget(MultipleChoiceWidget):
     meta_sortorder = 101
     icon_filename = 'widgets/www/widget_combobox.gif'
 
-    _properties = Widget._properties + ()
+    _properties = MultipleChoiceWidget._properties + ()
 
     # Constructor
     _constructors = (addComboboxWidget,)
     render_meth = PageTemplateFile('zpt/widget_combobox.zpt', globals())
-
-    # Local properties
-    choices = LocalProperty('choices')
-
-    def __init__(self, id, lang=None, **kwargs):
-        self.set_localproperty('choices', 'lines', lang)
-        Widget.__init__(self, id, lang, **kwargs)
 
     def getDatamodel(self, form):
         """Get datamodel from form"""
