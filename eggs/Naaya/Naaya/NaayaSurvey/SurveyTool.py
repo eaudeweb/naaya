@@ -35,11 +35,16 @@ from Products.ZCatalog.Catalog import CatalogError
 # Naaya imports
 from Products.NaayaBase.constants import \
      MESSAGE_SAVEDCHANGES, PERMISSION_ADMINISTRATE, PERMISSION_PUBLISH_OBJECTS
+from Products.NaayaWidgets.constants import PERMISSION_ADD_WIDGETS
 
 from SurveyTemplate import SurveyTemplate
 from SurveyTemplate import manage_addSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
-from constants import PERMISSION_ADD_SURVEYTEMPLATE
+from constants import PERMISSION_ADD_SURVEYTEMPLATE,      \
+                        PERMISSION_MANAGE_SURVEYTEMPLATE, \
+                        PERMISSION_ADD_QUESTIONNAIRE,     \
+                        PERMISSION_ADD_ANSWER,            \
+                        PERMISSION_VIEW_REPORTS
 
 def configure_catalog(catalog_tool):
     """Configure  catalog tool:
@@ -79,6 +84,21 @@ def configure_email_notifications(site):
         else:
             t_ob.manageProperties(title=title, body=content)
 
+def configure_security(site):
+    """Configure security for surveys:
+        - Manager + Administrator: add/manage survey templates
+        - Contributor: add/manage questionnaires (surveys)
+        - Anonymous + Authenticated: add answer (take survey) & view reports
+    """
+    site.manage_permission(PERMISSION_MANAGE_SURVEYTEMPLATE, ('Manager', 'Administrator'), acquire=0)
+    site.manage_permission(PERMISSION_ADD_SURVEYTEMPLATE, ('Manager', 'Administrator'), acquire=0)
+    site.manage_permission(PERMISSION_ADD_WIDGETS, ('Manager', 'Administrator'), acquire=0)
+
+    site.manage_permission(PERMISSION_ADD_QUESTIONNAIRE, ('Contributor', ), acquire=0)
+
+    site.manage_permission(PERMISSION_ADD_ANSWER, ('Anonymous', 'Authenticated'), acquire=0)
+    site.manage_permission(PERMISSION_VIEW_REPORTS, ('Anonymous', 'Authenticated'), acquire=0)
+
 def manage_addSurveyTool(context, REQUEST=None):
     """ZMI method that creates an object of this type."""
     portal_id = SurveyTool.portal_id
@@ -90,6 +110,7 @@ def manage_addSurveyTool(context, REQUEST=None):
     configure_catalog(ob.getSite().getCatalogTool())
     configure_email_notifications(ob.getSite())
     ob.getSite().searchable_content.append(SurveyQuestionnaire.meta_type)
+    configure_security(ob.getSite())
 
     if REQUEST:
         return context.manage_main(context, REQUEST, update_menu=1)
