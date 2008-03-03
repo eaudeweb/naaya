@@ -18,18 +18,21 @@
 # Alin Voinea, Eau de Web
 # Cristian Ciupitu, Eau de Web
 
+# Zope imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
-from Products.Localizer.LocalPropertyManager import LocalProperty
 
-from Products.NaayaWidgets.Widget import Widget, WidgetError, addWidget
+# Product imports
+from Products.NaayaWidgets.Widget import addWidget
+
+from MatrixWidget import MatrixWidget
 
 def addCheckboxMatrixWidget(container, id="", title="CheckboxMatrix Widget", REQUEST=None, **kwargs):
     """ Contructor for CheckboxMatrix widget"""
     return addWidget(CheckboxMatrixWidget, container, id, title, REQUEST, **kwargs)
 
-class CheckboxMatrixWidget(Widget):
+class CheckboxMatrixWidget(MatrixWidget):
     """ CheckboxMatrix Widget """
 
     meta_type = "Naaya Checkbox Matrix Widget"
@@ -38,20 +41,11 @@ class CheckboxMatrixWidget(Widget):
     meta_sortorder = 501
     icon_filename = 'widgets/www/widget_checkboxmatrix.gif'
 
-    _properties = Widget._properties + ()
+    _properties = MatrixWidget._properties + ()
 
     # Constructor
     _constructors = (addCheckboxMatrixWidget,)
     render_meth = PageTemplateFile('zpt/widget_checkboxmatrix.zpt', globals())
-
-    # Local properties
-    choices = LocalProperty('choices')
-    rows = LocalProperty('rows')
-
-    def __init__(self, id, lang=None, **kwargs):
-        self.set_localproperty('choices', 'lines', lang)
-        self.set_localproperty('rows', 'lines', lang)
-        Widget.__init__(self, id, lang, **kwargs)
 
     def getDatamodel(self, form):
         """Get datamodel from form"""
