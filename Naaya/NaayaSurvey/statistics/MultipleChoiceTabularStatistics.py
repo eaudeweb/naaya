@@ -23,7 +23,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from Statistic import manage_addStatistic
+from BaseStatistic import manage_addStatistic
 from BaseMultipleChoiceStatistics import BaseMultipleChoiceStatistics
 
 class MultipleChoiceTabularStatistics(BaseMultipleChoiceStatistics):
