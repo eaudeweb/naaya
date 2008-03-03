@@ -20,7 +20,6 @@
 
 import glob
 import os.path
-import Globals
 
 def _get_available_widgets():
     """ Return available widgets in current dir."""
