@@ -41,31 +41,32 @@ from SurveyTemplate import manage_addSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
 from constants import PERMISSION_ADD_SURVEYTYPE
 
-def manage_addSurveyTool(context, REQUEST=None):
-    """
-    ZMI method that creates an object of this type.
-    """
-    portal_id = SurveyTool.portal_id
-    ob = SurveyTool(portal_id, title="Portal Survey Manager")
-    context._setObject(portal_id, ob)
-    ob = context._getOb(portal_id)
-    ob.manage_updatePortlets()
+def configure_catalog(catalog_tool):
+    """Configure  catalog tool:
+        - add a survey_type index for the getSurveyTemplateId method
 
-    # configure catalog
-    ctool = context.getCatalogTool()
+        @param catalog_tool: catalog tool
+    """
+
     try:
-        if 'survey_type' not in ctool.indexes():
-            ctool.addIndex(name='survey_type', type='FieldIndex',
-                           extra={'indexed_attrs': 'getSurveyTemplateId'})
-        if 'respondent' not in ctool.indexes():
-            ctool.addIndex('respondent', 'FieldIndex')
+        if 'survey_type' not in catalog_tool.indexes():
+            catalog_tool.addIndex(name='survey_type', type='FieldIndex',
+                                  extra={'indexed_attrs': 'getSurveyTemplateId'})
+        if 'respondent' not in catalog_tool.indexes():
+            catalog_tool.addIndex('respondent', 'FieldIndex')
     except CatalogError:
         err = sys.exc_info()
         zLOG.LOG('Naaya Survey Tool', zLOG.ERROR,
                  'Could not add catalog index survey_type', error=err)
 
-    # configure email notifications
-    email_tool = ob.getSite().getEmailTool()
+def configure_email_notifications(site):
+    """Configure email notifications for surveys:
+        - configure email template
+
+        @param site: Naaya Site
+    """
+
+    email_tool = site.getEmailTool()
     for template, title in [('email_survey_answer.txt', 'Survey answered')]:
         id = template[:-4] # without .txt
         f = open(os.path.join(os.path.dirname(__file__),
@@ -78,7 +79,16 @@ def manage_addSurveyTool(context, REQUEST=None):
         else:
             t_ob.manageProperties(title=title, body=content)
 
-    # configure searchable metatypes
+def manage_addSurveyTool(context, REQUEST=None):
+    """ZMI method that creates an object of this type."""
+    portal_id = SurveyTool.portal_id
+    ob = SurveyTool(portal_id, title="Portal Survey Manager")
+    context._setObject(portal_id, ob)
+    ob = context._getOb(portal_id)
+    ob.manage_updatePortlets()
+
+    configure_catalog(ob.getSite().getCatalogTool())
+    configure_email_notifications(ob.getSite())
     ob.getSite().searchable_content.append(SurveyQuestionnaire.meta_type)
 
     if REQUEST:
