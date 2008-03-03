@@ -36,7 +36,7 @@ from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalP
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 
-from constants import PERMISSION_MANAGE_SURVEYTYPE
+from constants import PERMISSION_MANAGE_SURVEYTEMPLATE
 import statistics
 from statistics.Statistic import manage_addStatistic
 
@@ -113,7 +113,7 @@ class SurveyReport(Folder, LocalPropertyManager):
     #
     # Self edit methods
     #
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'saveProperties')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """Update properties"""
         if REQUEST:
@@ -144,7 +144,7 @@ class SurveyReport(Folder, LocalPropertyManager):
         return sort(self.getStatistics(), ((sort_by, 'cmp', 'asc'), ))
 
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'deleteStatistics')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'deleteStatistics')
     def addStatistic(self, question, statistic_meta_type, REQUEST=None):
         """Add a statistic for question.
 
@@ -172,7 +172,7 @@ class SurveyReport(Folder, LocalPropertyManager):
                                     (statistic_cls.meta_label, question.title)])
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'deleteStatistics')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'deleteStatistics')
     def deleteStatistics(self, ids=[], REQUEST=None):
         """ Delete statistics by ids"""
         if not ids:
@@ -183,7 +183,7 @@ class SurveyReport(Folder, LocalPropertyManager):
             else: self.setSessionInfo(['Item(s) deleted.'])
         REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'setSortOrder')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'setSortOrder')
     def setSortOrder(self, order={}, REQUEST=None):
         """Set the order of the statistics"""
         if REQUEST:
@@ -201,7 +201,7 @@ class SurveyReport(Folder, LocalPropertyManager):
         """Return the available statistics"""
         return statistics.AVAILABLE_STATISTICS
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTYPE, 'index_html')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'index_html')
     index_html = PageTemplateFile('zpt/surveyreport_index', globals())
 
     security.declareProtected(view, 'edit_html')
