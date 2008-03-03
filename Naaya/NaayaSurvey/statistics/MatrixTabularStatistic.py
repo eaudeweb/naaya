@@ -24,23 +24,23 @@ from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from BaseStatistic import manage_addStatistic
-from BaseMatrixStatistics import BaseMatrixStatistics
+from BaseMatrixStatistic import BaseMatrixStatistic
 
-class MatrixTabularStatistics(BaseMatrixStatistics):
+class MatrixTabularStatistic(BaseMatrixStatistic):
     """Table with the count and percent of answered and unanswered questions,
         diveded per choice. It should be used for matrix questions.
     """
 
     security = ClassSecurityInfo()
 
-    _constructors = (lambda *args, **kw: manage_addStatistic(MatrixTabularStatistics, *args, **kw), )
+    _constructors = (lambda *args, **kw: manage_addStatistic(MatrixTabularStatistic, *args, **kw), )
 
-    meta_type = "Naaya Survey - Matrix Tabular Statistics"
-    meta_label = "Matrix Tabular Statistics"
+    meta_type = "Naaya Survey - Matrix Tabular Statistic"
+    meta_label = "Matrix Tabular Statistic"
     meta_sortorder = 300
     meta_description = """Table with the count and percent of answered and unanswered questions,
         diveded per choice. It should be used for matrix questions."""
-    icon_filename = 'statistics/www/matrix_tabular_statistics.gif'
+    icon_filename = 'statistics/www/matrix_tabular_statistic.gif'
 
     security.declarePublic('render')
     def render(self, answers):
@@ -53,7 +53,7 @@ class MatrixTabularStatistics(BaseMatrixStatistics):
 
     page = PageTemplateFile("zpt/matrix_tabular_statistics.zpt", globals())
 
-InitializeClass(MatrixTabularStatistics)
+InitializeClass(MatrixTabularStatistic)
 
 def getStatistic():
-    return MatrixTabularStatistics
+    return MatrixTabularStatistic

@@ -23,7 +23,7 @@ from Products.NaayaWidgets.widgets.CheckboxMatrixWidget import CheckboxMatrixWid
 
 from BaseStatistic import BaseStatistic
 
-class BaseMatrixStatistics(BaseStatistic):
+class BaseMatrixStatistic(BaseStatistic):
     """Base class for calculating statistics for matrix questions"""
 
     def __init__(self, id, question, lang=None, **kwargs):

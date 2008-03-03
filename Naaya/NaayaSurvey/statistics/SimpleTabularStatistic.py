@@ -27,19 +27,19 @@ from Products.NaayaWidgets.widgets.LabelWidget import LabelWidget
 
 from BaseStatistic import BaseStatistic, manage_addStatistic
 
-class SimpleTabularStatistics(BaseStatistic):
+class SimpleTabularStatistic(BaseStatistic):
     """Table with the count and percent of answered and unanswered questions.
     """
 
     security = ClassSecurityInfo()
 
-    _constructors = (lambda *args, **kw: manage_addStatistic(SimpleTabularStatistics, *args, **kw), )
+    _constructors = (lambda *args, **kw: manage_addStatistic(SimpleTabularStatistic, *args, **kw), )
 
-    meta_type = "Naaya Survey - Simple Tabular Statistics"
-    meta_label = "Simple Tabular Statistics"
+    meta_type = "Naaya Survey - Simple Tabular Statistic"
+    meta_label = "Simple Tabular Statistic"
     meta_description = """Table with the count and percent of answered and unanswered questions."""
     meta_sortorder = 100
-    icon_filename = 'statistics/www/simple_tabular_statistics.gif'
+    icon_filename = 'statistics/www/simple_tabular_statistic.gif'
 
     def __init__(self, id, question, lang=None, **kwargs):
         if isinstance(question, LabelWidget):
@@ -77,7 +77,7 @@ class SimpleTabularStatistics(BaseStatistic):
 
     page = PageTemplateFile("zpt/simple_tabular_statistics.zpt", globals())
 
-InitializeClass(SimpleTabularStatistics)
+InitializeClass(SimpleTabularStatistic)
 
 def getStatistic():
-    return SimpleTabularStatistics
+    return SimpleTabularStatistic

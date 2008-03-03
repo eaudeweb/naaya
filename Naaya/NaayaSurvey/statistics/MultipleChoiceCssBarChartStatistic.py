@@ -23,24 +23,21 @@ from AccessControl import ClassSecurityInfo
 
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
-from BaseStatistic import manage_addStatistic
-from BaseMultipleChoiceStatistics import BaseMultipleChoiceStatistics
+from BaseMultipleChoiceStatistic import BaseMultipleChoiceStatistic
 
-class MultipleChoiceTabularStatistics(BaseMultipleChoiceStatistics):
-    """Table with the count and percent of answered and unanswered questions,
-        diveded per choice. It should be used for multiple choice questions.
+class MultipleChoiceCssBarChartStatistic(BaseMultipleChoiceStatistic):
+    """Barchart ...
     """
 
     security = ClassSecurityInfo()
 
-    _constructors = (lambda *args, **kw: manage_addStatistic(MultipleChoiceTabularStatistics, *args, **kw), )
+    _constructors = (lambda *args, **kw: manage_addStatistic(MultipleChoiceCssBarChartStatistic, *args, **kw), )
 
-    meta_type = "Naaya Survey - Multiple Choice Tabular Statistics"
-    meta_label = "Multiple Choice Tabular Statistics"
-    meta_description = """Table with the count and percent of answered and unanswered questions,
-        diveded per choice. It should be used for multiple choice questions."""
-    meta_sortorder = 200
-    icon_filename = 'statistics/www/multiplechoice_tabular_statistics.gif'
+    meta_type = "Naaya Survey - Multiple Choice CSS Bar Chart Statistic"
+    meta_label = "Multiple Choice CSS Bar Chart Statistic"
+    meta_description = """Bar chart for every choice"""
+    meta_sortorder = 211
+    icon_filename = 'statistics/www/multiplechoice_css_barchart_statistic.gif'
 
     security.declarePublic('render')
     def render(self, answers):
@@ -52,9 +49,9 @@ class MultipleChoiceTabularStatistics(BaseMultipleChoiceStatistics):
                          unanswered=unanswered,
                          per_choice=per_choice)
 
-    page = PageTemplateFile("zpt/multiplechoice_tabular_statistics.zpt", globals())
+    page = PageTemplateFile("zpt/multiplechoice_css_barchart_statistics.zpt", globals())
 
-InitializeClass(MultipleChoiceTabularStatistics)
+InitializeClass(MultipleChoiceCssBarChartStatistic)
 
 def getStatistic():
-    return MultipleChoiceTabularStatistics
+    return MultipleChoiceCssBarChartStatistic

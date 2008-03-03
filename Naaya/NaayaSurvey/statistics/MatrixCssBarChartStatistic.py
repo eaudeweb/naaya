@@ -27,23 +27,23 @@ from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from BaseStatistic import manage_addStatistic
-from BaseMatrixStatistics import BaseMatrixStatistics
+from BaseMatrixStatistic import BaseMatrixStatistic
 
-class MatrixCssBarChartStatistics(BaseMatrixStatistics):
+class MatrixCssBarChartStatistic(BaseMatrixStatistic):
     """Table with the count and percent of answered and unanswered questions,
         diveded per choice. It should be used for matrix questions.
     """
 
     security = ClassSecurityInfo()
 
-    _constructors = (lambda *args, **kw: manage_addStatistic(MatrixCssBarChartStatistics, *args, **kw), )
+    _constructors = (lambda *args, **kw: manage_addStatistic(MatrixCssBarChartStatistic, *args, **kw), )
 
-    meta_type = "Naaya Survey - Matrix CSS Bar Chart Statistics"
-    meta_label = "Matrix CSS Bar Chart Statistics"
+    meta_type = "Naaya Survey - Matrix CSS Bar Chart Statistic"
+    meta_label = "Matrix CSS Bar Chart Statistic"
     meta_sortorder = 311
     meta_description = """Table with the count and percent of answered and unanswered questions,
         diveded per choice. It should be used for matrix questions."""
-    icon_filename = "statistics/www/matrix_css_barchart_statistics.gif"
+    icon_filename = "statistics/www/matrix_css_barchart_statistic.gif"
 
     security.declarePublic('getColors')
     def getPallete(self, numcolors):
@@ -73,7 +73,7 @@ class MatrixCssBarChartStatistics(BaseMatrixStatistics):
 
     page = PageTemplateFile("zpt/matrix_css_barchart_statistics.zpt", globals())
 
-InitializeClass(MatrixCssBarChartStatistics)
+InitializeClass(MatrixCssBarChartStatistic)
 
 def getStatistic():
-    return MatrixCssBarChartStatistics
+    return MatrixCssBarChartStatistic
