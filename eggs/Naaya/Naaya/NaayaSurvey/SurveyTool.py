@@ -96,7 +96,7 @@ def configure_security(site):
     site.manage_permission(PERMISSION_ADD_WIDGETS, ('Manager', 'Administrator'), acquire=0)
     site.manage_permission(PERMISSION_ADD_STATISTIC, ('Manager', 'Administrator'), acquire=0)
 
-    site.manage_permission(PERMISSION_ADD_QUESTIONNAIRE, ('Contributor', ), acquire=0)
+    site.manage_permission(PERMISSION_ADD_QUESTIONNAIRE, ('Manager', 'Administrator', 'Contributor', ), acquire=0)
 
     site.manage_permission(PERMISSION_ADD_ANSWER, ('Anonymous', 'Authenticated'), acquire=0)
     site.manage_permission(PERMISSION_VIEW_REPORTS, ('Anonymous', 'Authenticated'), acquire=0)
