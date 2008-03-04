@@ -308,7 +308,7 @@ class SurveyTemplate(Folder, LocalPropertyManager):
 
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'addReport')
     def addReport(self, title='', add_action='', REQUEST=None, **kwargs):
-        """ Add a new report"""
+        """Add a new report"""
         if not REQUEST:
             return
         err = []
@@ -375,7 +375,5 @@ class SurveyTemplate(Folder, LocalPropertyManager):
     # "Reports" tab
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'edit_reports_html')
     edit_reports_html = PageTemplateFile('zpt/surveytemplate_edit_reports', globals())
-
-
 
 InitializeClass(SurveyTemplate)

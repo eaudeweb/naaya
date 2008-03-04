@@ -1,6 +1,6 @@
 <tal:block define="
 	stool context/portal_survey|nothing;
-	stypes python:stool and stool.getAvailableTypes() or [];
+	stemplates python:stool and stool.getAvailableTemplates() or [];
 	">
 <tal:block tal:replace="structure here/standard_html_header"/>
 
@@ -12,7 +12,7 @@
 
 <h1 i18n:translate="">Submit Survey</h1>
 
-<tal:block condition="not:stypes" tal:define="
+<tal:block condition="not:stemplates" tal:define="
 	canAddSurveyTemplate python:stool and stool.checkPermissionAdministrate();
 	stool_path python:canAddSurveyTemplate and stool.absolute_url() or '#';
 	">
@@ -26,7 +26,7 @@
 </tal:block>
 
 <!-- Survey templates defined -->
-<tal:block condition="stypes">
+<tal:block condition="stemplates">
 <p i18n:translate="">
 	Fill the properties in the form below and click <strong>Submit</strong>.
 </p>
@@ -35,9 +35,9 @@
 <div class="field">
 	<label for="releasedate" i18n:translate="">Survey template</label>
 	<p i18n:translate=""><strong>Tip:</strong> you can define more survey templates in Administration panel</p>
-	<select name="survey_type">
-		<tal:block repeat="stype stypes">
-			<option tal:attributes="value stype/getId" tal:content="stype/title" />
+	<select name="survey_template">
+		<tal:block repeat="stemplate stemplates">
+			<option tal:attributes="value stemplate/getId" tal:content="stemplate/title" />
 		</tal:block>
 	</select>
 </div>
