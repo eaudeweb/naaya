@@ -54,6 +54,8 @@ def configure_catalog(catalog_tool):
         @param catalog_tool: catalog tool
     """
 
+    zLOG.LOG('NaayaSurvey', zLOG.INFO,
+             'Configuring catalog tool %s' % (catalog_tool.absolute_url(1)))
     try:
         if 'survey_template' not in catalog_tool.indexes():
             catalog_tool.addIndex(name='survey_template', type='FieldIndex',
@@ -72,6 +74,8 @@ def configure_email_notifications(site):
         @param site: Naaya Site
     """
 
+    zLOG.LOG('NaayaSurvey', zLOG.INFO,
+             'Configuring email notifications on site %s' % (site.absolute_url(1)))
     email_tool = site.getEmailTool()
     for template, title in [('email_survey_answer.txt', 'Survey answered')]:
         id = template[:-4] # without .txt
@@ -90,7 +94,12 @@ def configure_security(site):
         - Manager + Administrator: add/manage survey templates
         - Contributor: add/manage questionnaires (surveys)
         - Anonymous + Authenticated: add answer (take survey) & view reports
+
+        @param site: Naaya site
     """
+
+    zLOG.LOG('NaayaSurvey', zLOG.INFO,
+             'Configuring security for surveys on site %s' % (site.absolute_url(1)))
     site.manage_permission(PERMISSION_MANAGE_SURVEYTEMPLATE, ('Manager', 'Administrator'), acquire=0)
     site.manage_permission(PERMISSION_ADD_SURVEYTEMPLATE, ('Manager', 'Administrator'), acquire=0)
     site.manage_permission(PERMISSION_ADD_WIDGETS, ('Manager', 'Administrator'), acquire=0)
