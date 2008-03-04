@@ -55,7 +55,6 @@ class SurveyQuestionnaireException(Exception):
     """Survey related exception"""
     pass
 
-
 def manage_addSurveyQuestionnaire(context, id='', title='', lang=None, REQUEST=None, **kwargs):
     """ """
     util = utils()
@@ -177,9 +176,6 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
-    #
-    # Self read mehtods
-    #
     security.declarePublic('expired')
     def expired(self):
         """expired() -> true if it's expired, false otherwise"""
@@ -187,6 +183,9 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         expire_date = DateTime(self.expirationdate)
         return now.greaterThan(expire_date)
 
+    #
+    # Methods required by the Naaya framework
+    #
     security.declareProtected(view, 'hasVersion')
     def hasVersion(self):
         """ """
