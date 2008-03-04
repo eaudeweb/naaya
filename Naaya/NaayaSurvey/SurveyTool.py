@@ -242,7 +242,8 @@ class SurveyTool(Folder):
         ctool = self.getCatalogTool()
         all_errors = []
         for stemplate_id in ids:
-            brains = ctool(survey_template=stemplate_id)
+            brains = ctool(meta_type=SurveyQuestionnaire.meta_type,
+                           survey_template=stemplate_id)
             dependencies = [brain.getObject().absolute_url() for brain in brains]
             if not dependencies:
                 try:
