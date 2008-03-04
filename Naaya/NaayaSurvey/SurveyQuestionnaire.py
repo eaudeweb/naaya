@@ -139,6 +139,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         self.save_properties(lang=lang, **kwargs)
         NyContainer.__dict__['__init__'](self)
         self.imageContainer = NyImageContainer(self, True)
+
     #
     # Self edit methods
     #
@@ -181,22 +182,10 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     #
     security.declarePublic('expired')
     def expired(self):
-        """ """
+        """expired() -> true if it's expired, false otherwise"""
         now = DateTime()
         expire_date = DateTime(self.expirationdate)
         return now.greaterThan(expire_date)
-
-    def checkPermissionViewAnswers(self):
-        """Check if the user has the VIEW_ANSWERS permission"""
-        return self.checkPermission(PERMISSION_VIEW_ANSWERS)
-
-    def checkPermissionViewReports(self):
-        """Check if the user has the VIEW_REPORTS permission"""
-        return self.checkPermission(PERMISSION_VIEW_REPORTS)
-
-    def checkPermissionEditObjects(self):
-        """Check if the user has the EDIT_OBJECTS permission"""
-        return self.checkPermission(PERMISSION_EDIT_OBJECTS)
 
     security.declareProtected(view, 'hasVersion')
     def hasVersion(self):
@@ -340,12 +329,12 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     #
     security.declareProtected(PERMISSION_VIEW_ANSWERS, 'getAnswers')
     def getAnswers(self):
-        # Return answers
+        """Return a list of answers"""
         return self.objectValues(SurveyAnswer.meta_type)
 
     security.declarePublic('getMySurveyAnswer')
     def getMySurveyAnswer(self):
-        """Return the answer of the current user or None if it doesn't exist
+        """Return the answer of the current user or None if it doesn't exist.
 
             If multiple answers exist, only the first one is returned.
         """
@@ -367,15 +356,17 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             raise NotFound('Report %s' % (report_id,))
         return report.view_report_html(answers=self.getAnswers())
 
+    #
     # captcha
+    #
     security.declareProtected(view, 'showCaptcha')
     def showCaptcha(self):
-        """ """
+        """Return HTML code for CAPTCHA"""
         return captcha.displayhtml(self.getSite().recaptcha_public_key)
 
     security.declarePrivate('isValidCaptcha')
     def isValidCaptcha(self, REQUEST):
-        """ """
+        """Test is captcha was passed"""
         check_captcha = captcha.submit(REQUEST.get('recaptcha_challenge_field', ''),
                                                    REQUEST.get('recaptcha_response_field', ''),
                                                    self.getSite().recaptcha_private_key,
@@ -384,11 +375,28 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
 
     security.declareProtected(view, 'deleteSessionCaptchaErrors')
     def deleteSessionCaptchaErrors(self): #, REQUEST=None):
-        """ """
+        """Delete captcha errors from session"""
         if 'err_captcha' in self.REQUEST.SESSION.keys():
             del self.REQUEST.SESSION['err_captcha']
 
+    #
+    # utils
+    #
+    def checkPermissionViewAnswers(self):
+        """Check if the user has the VIEW_ANSWERS permission"""
+        return self.checkPermission(PERMISSION_VIEW_ANSWERS)
+
+    def checkPermissionViewReports(self):
+        """Check if the user has the VIEW_REPORTS permission"""
+        return self.checkPermission(PERMISSION_VIEW_REPORTS)
+
+    def checkPermissionEditObjects(self):
+        """Check if the user has the EDIT_OBJECTS permission"""
+        return self.checkPermission(PERMISSION_EDIT_OBJECTS)
+
+    #
     # site pages
+    #
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/questionnaire_index', globals())
 
