@@ -211,7 +211,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
 
     security.declareProtected(view, 'getSurveyTemplateId')
     def getSurveyTemplateId(self):
-        """ return survey template id"""
+        """Return survey template id; used by the catalog tool."""
         stype = self.getSurveyTemplate()
         if not stype:
             return ''
