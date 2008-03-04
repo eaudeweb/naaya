@@ -217,22 +217,6 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             return ''
         return stype.getId()
 
-    security.declareProtected(view, 'getSurveyTemplateLabel')
-    def getSurveyTemplateLabel(self):
-        """ Return label """
-        stype = self.getSurveyTemplate()
-        if stype:
-            return stype.title
-        return ''
-
-    security.declareProtected(view, 'getSurveyTemplateDescription')
-    def getSurveyTemplateDescription(self):
-        """ Return description """
-        stype = self.getSurveyTemplate()
-        if stype:
-            return stype.description
-        return ''
-
     #
     # Answer edit methods
     #
