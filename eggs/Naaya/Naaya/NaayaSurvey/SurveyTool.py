@@ -238,22 +238,20 @@ class SurveyTool(Folder):
             self.setSessionErrors(['Please select one or more items to delete.'])
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
-        # Check for dependences
+        # Check for dependencies
         ctool = self.getCatalogTool()
         all_errors = []
         for stemplate_id in ids:
-            errors = []
             brains = ctool(survey_template=stemplate_id)
-            errors = [brain.getObject().absolute_url() for brain in brains]
-            if not errors:
+            dependencies = [brain.getObject().absolute_url() for brain in brains]
+            if not dependencies:
                 try:
                     self.manage_delObjects([stemplate_id,])
                 except Exception, err:
                     all_errors.append('Error while deleting %s: %s' % (stemplate_id, err))
             else:
-                errors.insert(0, """You can't delete "%s"
-                because of the following dependencies: """ % stemplate_id)
-                all_errors.extend(errors)
+                all_errors.append("""You can't delete "%s" because of the following dependencies: """ % stemplate_id)
+                all_errors.extend(dependencies)
 
         if all_errors:
             self.setSessionErrors(all_errors)
