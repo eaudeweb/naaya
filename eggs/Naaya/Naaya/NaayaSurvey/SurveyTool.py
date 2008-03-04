@@ -49,21 +49,21 @@ from statistics.constants import PERMISSION_ADD_STATISTIC
 
 def configure_catalog(catalog_tool):
     """Configure  catalog tool:
-        - add a survey_type index for the getSurveyTemplateId method
+        - add a survey_template index for the getSurveyTemplateId method
 
         @param catalog_tool: catalog tool
     """
 
     try:
-        if 'survey_type' not in catalog_tool.indexes():
-            catalog_tool.addIndex(name='survey_type', type='FieldIndex',
+        if 'survey_template' not in catalog_tool.indexes():
+            catalog_tool.addIndex(name='survey_template', type='FieldIndex',
                                   extra={'indexed_attrs': 'getSurveyTemplateId'})
         if 'respondent' not in catalog_tool.indexes():
             catalog_tool.addIndex('respondent', 'FieldIndex')
     except CatalogError:
         err = sys.exc_info()
         zLOG.LOG('Naaya Survey Tool', zLOG.ERROR,
-                 'Could not add catalog index survey_type', error=err)
+                 'Could not add catalog index survey_template', error=err)
 
 def configure_email_notifications(site):
     """Configure email notifications for surveys:
@@ -243,7 +243,7 @@ class SurveyTool(Folder):
         all_errors = []
         for stype_id in ids:
             errors = []
-            brains = ctool(survey_type=stype_id)
+            brains = ctool(survey_template=stype_id)
             errors = [brain.getObject().absolute_url() for brain in brains]
             if not errors:
                 try:
@@ -265,8 +265,8 @@ class SurveyTool(Folder):
     #
     # Read methods
     #
-    security.declareProtected(view, 'getAvailableTypes')
-    def getAvailableTypes(self, **kwargs):
+    security.declareProtected(view, 'getAvailableTemplates')
+    def getAvailableTemplates(self, **kwargs):
         """Returns defined survey templates"""
         return self.objectValues(SurveyTemplate.meta_type)
 

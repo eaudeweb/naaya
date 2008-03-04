@@ -129,11 +129,13 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
 
     security = ClassSecurityInfo()
 
-    _survey_type = None
-
-    def __init__(self, id, survey_type, lang=None, **kwargs):
+    def __init__(self, id, survey_template, lang=None, **kwargs):
+        """
+            @param id: id
+            @param survey_template: id of the survey template
+        """
         self.id = id
-        self._survey_type = survey_type
+        self._survey_template = survey_template
 
         self.save_properties(lang=lang, **kwargs)
         NyContainer.__dict__['__init__'](self)
@@ -196,10 +198,9 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
 
     security.declareProtected(view, 'getSurveyTemplate')
     def getSurveyTemplate(self):
-        """ return survey template"""
+        """Return the survey template used for this questionnaire"""
         stool = self.portal_survey
-        stype = getattr(stool, self._survey_type, None)
-        return stype
+        return getattr(stool, self._survey_template)
 
     security.declareProtected(view, 'getSurveyTemplateId')
     def getSurveyTemplateId(self):
