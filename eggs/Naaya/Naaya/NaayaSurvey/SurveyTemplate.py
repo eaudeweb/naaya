@@ -149,8 +149,7 @@ class SurveyTemplate(Folder, LocalPropertyManager):
         """ Update type properties"""
         if REQUEST:
             kwargs.update(REQUEST.form)
-        local_properties = self.getLocalProperties()
-        local_properties = filter(None, [x.get('id', None) for x in local_properties])
+        local_properties = filter(None, [x.get('id', None) for x in self.getLocalProperties()])
         # Update local properties
         lang = kwargs.get('lang', self.get_selected_language())
         for local_property in local_properties:
@@ -357,23 +356,20 @@ class SurveyTemplate(Folder, LocalPropertyManager):
     #
     # Site pages
     #
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'index_html')
-    def index_html(self, *args, **kw):
-        """ """
-        return self.edit_questions_html(*args, **kw)
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'edit_html')
+    edit_html = PageTemplateFile('zpt/surveytemplate_edit', globals())
 
-    # "Questions" tab
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'edit_questions_html')
     edit_questions_html = PageTemplateFile('zpt/surveytemplate_edit_questions', globals())
+
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'edit_reports_html')
+    edit_reports_html = PageTemplateFile('zpt/surveytemplate_edit_reports', globals())
 
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'preview_html')
     preview_html = PageTemplateFile('zpt/surveytemplate_preview', globals())
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'edit_html')
-    edit_html = PageTemplateFile('zpt/surveytemplate_edit', globals())
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'index_html')
+    index_html = edit_questions_html
 
-    # "Reports" tab
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'edit_reports_html')
-    edit_reports_html = PageTemplateFile('zpt/surveytemplate_edit_reports', globals())
 
 InitializeClass(SurveyTemplate)
