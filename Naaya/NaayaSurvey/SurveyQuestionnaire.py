@@ -379,16 +379,16 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         return self.checkPermission(PERMISSION_EDIT_OBJECTS)
 
     #
-    # site pages
+    # Site pages
     #
+    security.declareProtected(PERMISSION_ADD_QUESTIONNAIRE, 'questionnaire_add_html')
+    questionnaire_add_html = PageTemplateFile('zpt/questionnaire_add', globals())
+
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/questionnaire_index', globals())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     edit_html = PageTemplateFile('zpt/questionnaire_edit', globals())
-
-    security.declareProtected(PERMISSION_ADD_QUESTIONNAIRE, 'questionnaire_add_html')
-    questionnaire_add_html = PageTemplateFile('zpt/questionnaire_add', globals())
 
     security.declarePublic('view_reports_html')
     view_reports_html = PageTemplateFile('zpt/questionnaire_view_reports', globals())
