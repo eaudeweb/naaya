@@ -21,11 +21,11 @@
 	<label i18n:translate="">Survey template</label>
 	<a tal:attributes="href stype_path"
 		tal:omit-tag="not:canAddSurveyTemplate">
-		<span tal:content="here/getSurveyTemplateLabel"/>
+		<span tal:content="stype/title"/>
 	</a>
 	<div class="surveyDescription" 
-		tal:condition="here/getSurveyTemplateDescription"
-		tal:content="structure here/getSurveyTemplateDescription" />
+		tal:condition="stype/description"
+		tal:content="structure stype/description" />
 </div>
 </metal:block>
 
