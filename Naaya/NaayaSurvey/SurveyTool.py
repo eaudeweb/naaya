@@ -218,16 +218,16 @@ class SurveyTool(Folder):
     security.declareProtected(PERMISSION_ADD_SURVEYTEMPLATE, 'addSurveyTemplate')
     def addSurveyTemplate(self, title='', REQUEST=None, **kwargs):
         """Add a new survey template"""
-        stype_id = None
+        stemplate_id = None
         if not title:
             self.setSessionErrors(['Survey title is required',])
         else:
-            stype_id = manage_addSurveyTemplate(self, title=title)
+            stemplate_id = manage_addSurveyTemplate(self, title=title)
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
         # Return
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
-        return stype_id
+        return stemplate_id
 
     security.declareProtected(PERMISSION_ADMINISTRATE, 'deleteSurveyTemplates')
     def deleteSurveyTemplates(self, ids=[], REQUEST=None):
@@ -241,18 +241,18 @@ class SurveyTool(Folder):
         # Check for dependences
         ctool = self.getCatalogTool()
         all_errors = []
-        for stype_id in ids:
+        for stemplate_id in ids:
             errors = []
-            brains = ctool(survey_template=stype_id)
+            brains = ctool(survey_template=stemplate_id)
             errors = [brain.getObject().absolute_url() for brain in brains]
             if not errors:
                 try:
-                    self.manage_delObjects([stype_id,])
+                    self.manage_delObjects([stemplate_id,])
                 except Exception, err:
-                    all_errors.append('Error while deleting %s: %s' % (stype_id, err))
+                    all_errors.append('Error while deleting %s: %s' % (stemplate_id, err))
             else:
                 errors.insert(0, """You can't delete "%s"
-                because of the following dependencies: """ % stype_id)
+                because of the following dependencies: """ % stemplate_id)
                 all_errors.extend(errors)
 
         if all_errors:
