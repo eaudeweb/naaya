@@ -176,13 +176,6 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
-    security.declarePublic('expired')
-    def expired(self):
-        """expired() -> true if it's expired, false otherwise"""
-        now = DateTime()
-        expire_date = DateTime(self.expirationdate)
-        return now.greaterThan(expire_date)
-
     #
     # Methods required by the Naaya framework
     #
@@ -365,6 +358,13 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     #
     # utils
     #
+    security.declarePublic('expired')
+    def expired(self):
+        """expired() -> true if it's expired, false otherwise"""
+        now = DateTime()
+        expire_date = DateTime(self.expirationdate)
+        return now.greaterThan(expire_date)
+
     def checkPermissionViewAnswers(self):
         """Check if the user has the VIEW_ANSWERS permission"""
         return self.checkPermission(PERMISSION_VIEW_ANSWERS)
