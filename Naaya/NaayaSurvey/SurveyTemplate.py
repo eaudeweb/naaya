@@ -36,9 +36,22 @@ from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalP
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaWidgets.widgets import AVAILABLE_WIDGETS
 from Products.NaayaWidgets.Widget import Widget, WidgetError
+from Products.NaayaWidgets.widgets.LabelWidget import LabelWidget
+from Products.NaayaWidgets.widgets.MultipleChoiceWidget import MultipleChoiceWidget
+from Products.NaayaWidgets.widgets.MatrixWidget import MatrixWidget
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 
+# reports
 from SurveyReport import SurveyReport, manage_addSurveyReport
+from statistics.BaseStatistic import manage_addStatistic
+from statistics.SimpleTabularStatistic import SimpleTabularStatistic
+from statistics.MultipleChoiceTabularStatistic import MultipleChoiceTabularStatistic
+from statistics.MultipleChoiceCssBarChartStatistic import MultipleChoiceCssBarChartStatistic
+from statistics.MultipleChoiceGoogleBarChartStatistic import MultipleChoiceGoogleBarChartStatistic
+from statistics.MultipleChoicePieChartStatistic import MultipleChoicePieChartStatistic
+from statistics.MatrixTabularStatistic import MatrixTabularStatistic
+from statistics.MatrixCssBarChartStatistic import MatrixCssBarChartStatistic
+
 from constants import PERMISSION_MANAGE_SURVEYTEMPLATE
 
 def manage_addSurveyTemplate(context, id="", title="SurveyTemplate", REQUEST=None, **kwargs):
@@ -310,6 +323,36 @@ class SurveyTemplate(Folder, LocalPropertyManager):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             manage_addSurveyReport(self, title=title, REQUEST=REQUEST)
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'generateFullReport')
+    def generateFullReport(self, id='full_report', title='Full report', REQUEST=None):
+        """Generate a full report"""
+        if self._getOb(id, None) is not None:
+            self.manage_delObjects([id])
+        id = manage_addSurveyReport(self, id, title)
+        report = self._getOb(id)
+        sortorder = 1
+        for question in self.getSortedWidgets():
+            stat_classes = []
+            if isinstance(question, LabelWidget):
+                pass
+            elif isinstance(question, MultipleChoiceWidget):
+                stat_classes.extend([MultipleChoiceTabularStatistic,
+                                     MultipleChoiceCssBarChartStatistic,
+                                     MultipleChoiceGoogleBarChartStatistic,
+                                     MultipleChoicePieChartStatistic])
+            elif isinstance(question, MatrixWidget):
+                stat_classes.extend([MatrixTabularStatistic,
+                                     MatrixCssBarChartStatistic])
+            else:
+                stat_classes.extend([SimpleTabularStatistic])
+
+            for stat_class in stat_classes:
+                manage_addStatistic(stat_class,
+                                    report,
+                                    question=question,
+                                    sortorder=sortorder)
+                sortorder += 1
 
     #
     # Site pages
