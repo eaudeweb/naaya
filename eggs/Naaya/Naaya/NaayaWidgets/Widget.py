@@ -56,15 +56,10 @@ def addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs):
 
     container.gl_add_languages(widget)
     container._setObject(id, widget)
+    widget = container._getOb(id)
     if REQUEST:
-        kwargs.update(REQUEST.form)
-        redirect_url = kwargs.get('redirect_url', '')
-        if redirect_url:
-            REQUEST.RESPONSE.redirect(redirect_url)
-        else:
-            return container.manage_main(container, REQUEST, update_menu=1)
+        REQUEST.RESPONSE.redirect('%s/edit_html' % widget.absolute_url())
     return id
-
 
 class Widget(Folder, LocalPropertyManager):
     """ Abstract class for widget
