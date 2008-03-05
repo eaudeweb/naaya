@@ -350,12 +350,6 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
                                                    REQUEST.get('REMOTE_ADDR', ''))
         return check_captcha.is_valid
 
-    security.declareProtected(view, 'deleteSessionCaptchaErrors')
-    def deleteSessionCaptchaErrors(self): #, REQUEST=None):
-        """Delete captcha errors from session"""
-        if 'err_captcha' in self.REQUEST.SESSION.keys():
-            del self.REQUEST.SESSION['err_captcha']
-
     #
     # utils
     #
