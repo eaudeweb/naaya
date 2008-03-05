@@ -2,6 +2,8 @@
 /******************************************/
 /* Active-css:INDIGO; /*GREEN*/ /*BROWN*/ /* DARK GREEN*/ /* BLUE-WHITE*/
 
+/* Load Naaya Content custom styles */
+<span tal:replace="python:here.getLayoutTool().getNaayaContentStyles()" />
 
 /* Required tags - to be implemented in all skins since these classes appear in the forms */
 
