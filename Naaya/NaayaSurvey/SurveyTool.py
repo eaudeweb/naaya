@@ -44,7 +44,8 @@ from constants import PERMISSION_ADD_SURVEYTEMPLATE,      \
                         PERMISSION_MANAGE_SURVEYTEMPLATE, \
                         PERMISSION_ADD_QUESTIONNAIRE,     \
                         PERMISSION_ADD_ANSWER,            \
-                        PERMISSION_VIEW_REPORTS
+                        PERMISSION_VIEW_REPORTS,          \
+                        PERMISSION_VIEW_ANSWERS
 from statistics.constants import PERMISSION_ADD_STATISTIC
 
 def configure_catalog(catalog_tool):
@@ -109,6 +110,7 @@ def configure_security(site):
 
     site.manage_permission(PERMISSION_ADD_ANSWER, ('Anonymous', 'Authenticated'), acquire=0)
     site.manage_permission(PERMISSION_VIEW_REPORTS, ('Anonymous', 'Authenticated'), acquire=0)
+    site.manage_permission(PERMISSION_VIEW_ANSWERS, ('Manager', 'Administrator'), acquire=0)
 
 def manage_addSurveyTool(context, REQUEST=None):
     """ZMI method that creates an object of this type."""
