@@ -1,0 +1,16 @@
+<tal:block metal:define-macro="tabs">
+<div id="tabbedmenu">
+	<ul>
+		<li tal:attributes="id python: 'questions'==selected_tab and 'currenttab' or None">
+			<a tal:attributes="href string:${here/absolute_url}/edit_questions_html">
+			<span i18n:translate="">Questions</span>
+			</a>
+		</li>
+		<li tal:attributes="id python: 'reports'==selected_tab and 'currenttab' or None">
+			<a tal:attributes="href string:${here/absolute_url}/edit_reports_html">
+				<span i18n:translate="">Reports</span>
+			</a>
+		</li>
+	</ul>
+</div>
+</tal:block>
