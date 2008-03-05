@@ -5,6 +5,45 @@
 <dtml-call "REQUEST.RESPONSE.setHeader( 'Expires', expires.toZone('GMT').rfc822() )" >
 </dtml-let>
 
+
+div.survey_right_box {
+    float: right;
+    width: 15%;
+    border: 1px solid black;
+    padding: 0.5em;
+    background-color:#FAFAFA;
+}
+		    
+a.survey-button {
+    display: block;
+    border: 1px outset black;
+    padding: 0.3em;
+    background-color: #EDE9E3;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 0.1em;
+    color: #042D5D;
+}
+						    
+a.survey-special-button {
+    display: block;
+    border: 1px outset black;
+    padding: 0.3em;
+    background-color: #D2DFFF;
+    text-decoration: none;
+    text-align: center;
+    margin-top: 0.5em;
+    color: #042D5D;
+}
+										    
+div.survey_right_box a, div.consultation_right_box a:visited { color: #042D5D; }
+										    
+span.survey_day_counter {
+    color: blue;
+    font-weight: bold;
+}
+
+
 div.widgetViewMode {
   border: 1px solid #EFEFEF;
   padding: 0.5em;
