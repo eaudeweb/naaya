@@ -211,10 +211,8 @@ class SurveyTemplate(Folder, LocalPropertyManager):
     # Widget edit methods
     #
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'addWidget')
-    def addWidget(self, title='', add_action='', REQUEST=None, **kwargs):
+    def addWidget(self, REQUEST, title='', add_action='', **kwargs):
         """ Add a new widget"""
-        if not REQUEST:
-            return
         err = []
         if not title:
             err.append('Field title is required')
