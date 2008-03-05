@@ -365,5 +365,9 @@ class SurveyTemplate(Folder, LocalPropertyManager):
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'index_html')
     index_html = edit_questions_html
 
+    # macros
+    security.declareProtected(view, 'tabs')
+    tabs = PageTemplateFile('zpt/surveytemplate_tabs', globals())
+
 
 InitializeClass(SurveyTemplate)
