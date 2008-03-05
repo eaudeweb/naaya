@@ -226,11 +226,7 @@ class SurveyTemplate(Folder, LocalPropertyManager):
             redirect_url = '%s/index_html' % self.absolute_url()
         else:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            url_param = {
-                'title':title,
-                'redirect_url': '%s/index_html' % self.absolute_url(),
-            }
-            redirect_url = '%s/%s?%s' % (self.absolute_url(), add_action, urlencode(url_param))
+            redirect_url = '%s/%s?%s' % (self.absolute_url(), add_action, urlencode({'title': title}))
         REQUEST.RESPONSE.redirect(redirect_url)
 
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'deleteItems')
