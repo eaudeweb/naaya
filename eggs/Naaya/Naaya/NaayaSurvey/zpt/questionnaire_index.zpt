@@ -51,7 +51,7 @@
 		<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
 			<span tal:replace="structure here/showCaptcha" />
 			<span class="errormsg" tal:define="session python:request.SESSION" tal:content="session/err_captcha | nothing" />
-			<span tal:replace="here/deleteSessionCaptchaErrors"></span>
+			<span tal:define="dummy python:here.delSessionKeys(['err_captcha'])"></span>
 		</tal:block>
 
 		<div class="surveySubmit">
