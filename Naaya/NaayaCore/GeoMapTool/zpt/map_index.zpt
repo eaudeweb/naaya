@@ -59,29 +59,12 @@ function toggleSelect()
 
 <span tal:replace="structure python:here.xrjs_loader(show, query, center, zoom, path, width, height)" />
 
-<div id="center_content" style="width: 78%; overflow-x: auto;">
-
-	<h1 i18n:translate="">Geo map</h1>
-
-	<noscript i18n:translate="">You must have Javascript turned on to view all YahooMap features</noscript>
-	<a id="mappage"></a>
-	<div id="map"></div>
-
-	<a href="http://developer.yahoo.com/about/" title="Yahoo.com | About Applications that Use Yahoo! Web Services" i18n:translate="" i18n:attributes="title">Service provided by Yahoo!</a>
-
-	<br />
-	<p i18n:translate="">Additionally you can <a tal:attributes="href string:${here/absolute_url}/locations_kml?path=${path}&show=${show}" title="Show locations in Google Earth" i18n:translate="" i18n:attributes="title">display map in Google Earth viewer</a> (requires <a href="http://earth.google.com/downloads.html">Google Earth</a> version 4.0 or higher installed).</p>
-
-	<div style="display:none" id="map_markers"></div>
-
-</div>
-
 <div id="right_port">
-	<div class="right_portlet">
+	<div class="right_portlet right_link_portlet">
 		<a style="float:right; margin-right: 0.1em;" href="javascript:toggleSelect();" title="Select all">all</a>
-		<div class="right_portlet_title" i18n:translate="">Filter locations</div>
+		<div class="right_portlet_title portlet-title" i18n:translate="">Filter locations</div>
 
-		<div class="right_portlet_content">
+		<div class="right_portlet_content content">
 
 			<form action="#mappage" name="frmFilterMap" method="post" id="frmFilterMap">
 				<ul class="map_legend" id="filter_map">
@@ -114,6 +97,24 @@ function toggleSelect()
 		</div>
 	</div>
 </div>
+
+<div id="center_content" style="width: 78%; overflow-x: auto;">
+
+	<h1 i18n:translate="">Geo map</h1>
+
+	<noscript i18n:translate="">You must have Javascript turned on to view all YahooMap features</noscript>
+	<a id="mappage"></a>
+	<div id="map"></div>
+
+	<a href="http://developer.yahoo.com/about/" title="Yahoo.com | About Applications that Use Yahoo! Web Services" i18n:translate="" i18n:attributes="title">Service provided by Yahoo!</a>
+
+	<br />
+	<p i18n:translate="">Additionally you can <a tal:attributes="href string:${here/absolute_url}/locations_kml?path=${path}&show=${show}" title="Show locations in Google Earth" i18n:translate="" i18n:attributes="title">display map in Google Earth viewer</a> (requires <a href="http://earth.google.com/downloads.html">Google Earth</a> version 4.0 or higher installed).</p>
+
+	<div style="display:none" id="map_markers"></div>
+
+</div>
+
 </tal:block>
 
 <span tal:replace="structure here/standard_html_footer" />
