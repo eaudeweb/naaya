@@ -64,7 +64,7 @@ function toggleSelect(caller){
 					<input type="radio" name="add_action" tal:attributes="
 					    checked python:here.getSession('add_action', '') == widget_type.get('action', None);
 					    value widget_type/action;
-						id action_id;">
+						id action_id;" />
 					<label tal:attributes="for action_id">
 						<strong i18n:translate="" tal:content="widget_type/meta_label" />
 					</label>
