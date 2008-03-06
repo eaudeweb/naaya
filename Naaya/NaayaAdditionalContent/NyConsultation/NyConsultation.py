@@ -606,7 +606,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'manage_questions_html')
     manage_questions_html = PageTemplateFile('zpt/manage_questions', globals())
 
-    security.declareProtected(view, 'index_html')
+    security.declareProtected(view, 'reviews_index_html')
     reviews_index_html = PageTemplateFile('zpt/reviews_index', globals())
 
     security.declareProtected(view, 'index_html')
