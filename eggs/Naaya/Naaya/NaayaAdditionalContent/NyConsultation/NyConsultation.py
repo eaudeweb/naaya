@@ -364,7 +364,7 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
             
         return exfile
 
-    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'get_exfile_url')
+    security.declareProtected(view, 'get_exfile_url')
     def get_exfile_url(self, lang):
         """ Returns the exfile download url for the given language """
         try: return self.get_exfile().getEditDownloadUrl(lang)
