@@ -5,8 +5,8 @@
 	<tal:block metal:fill-slot="portlet_content">
 		<ul>
 			<li><a tal:attributes="href here/events/absolute_url; title here/events/title_or_id" tal:content="here/events/title_or_id" /></li>
-			<li><a tal:attributes="href here/portal_forum/absolute_url; title here/portal_forum/title_or_id" tal:content="here/portal_forum/title_or_id" /></li>
-			<li><a tal:attributes="href here/geomap/absolute_url; title here/geomap/title_or_id" tal:content="here/geomap/title_or_id" /></li>
+			<li><a tal:attributes="href here/portal_forum/absolute_url; title here/portal_forum/title_or_id" i18n:translate="" tal:content="here/portal_forum/title_or_id" /></li>
+			<li><a tal:attributes="href here/geomap/absolute_url; title here/geomap/title_or_id" i18n:translate="" tal:content="here/geomap/title_or_id" /></li>
 		</ul>
 		<br />
 	</tal:block>
