@@ -35,6 +35,7 @@ from ZPublisher.HTTPRequest import FileUpload
 from zLOG import LOG, ERROR, DEBUG
 
 # Product imports
+from Products.Naaya.constants import DEFAULT_SORTORDER
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyImageContainer import NyImageContainer
@@ -154,7 +155,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         kwargs.setdefault('description', kwargs.get('description', ''))
         kwargs.setdefault('keywords', kwargs.get('keywords', ''))
         kwargs.setdefault('coverage', kwargs.get('coverage', ''))
-        kwargs.setdefault('sortorder', kwargs.get('sortorder', 100))
+        kwargs.setdefault('sortorder', kwargs.get('sortorder', DEFAULT_SORTORDER))
 
         releasedate = kwargs.get('releasedate', DateTime())
         releasedate = self.process_releasedate(releasedate)
