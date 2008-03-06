@@ -33,9 +33,9 @@
 
 <form name="frmAdd" method="post" action="." enctype="multipart/form-data">
 <div class="field">
-	<label for="releasedate" i18n:translate="">Survey template</label>
+	<label for="survey_template" i18n:translate="">Survey template</label>
 	<p i18n:translate=""><strong>Tip:</strong> you can define more survey templates in Administration panel</p>
-	<select name="survey_template">
+	<select id="survey_template" name="survey_template">
 		<tal:block repeat="stemplate stemplates">
 			<option tal:attributes="value stemplate/getId" tal:content="stemplate/title" />
 		</tal:block>
