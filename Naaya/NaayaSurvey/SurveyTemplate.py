@@ -373,4 +373,7 @@ class SurveyTemplate(Folder, LocalPropertyManager):
     security.declareProtected(view, 'base_edit_questions_html')
     base_edit_questions_html = PageTemplateFile('zpt/base_surveytemplate_edit_questions', globals())
 
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'base_edit_reports_html')
+    base_edit_reports_html = PageTemplateFile('zpt/base_surveytemplate_edit_reports', globals())
+
 InitializeClass(SurveyTemplate)
