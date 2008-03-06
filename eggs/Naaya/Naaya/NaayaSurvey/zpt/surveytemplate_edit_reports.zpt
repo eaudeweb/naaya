@@ -4,17 +4,6 @@
 	tal:define="stool here/portal_survey;"
 	tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
 
-<script language="javascript" type="text/javascript">
-<!--
-function toggleSelect(caller){
-  var frm = document.objectItems;
-  for(var i=0; i<frm.elements.length; i++){
-    frm.elements[i].checked = caller.checked;
-  }
-}
-//-->
-</script>
-
 <h1 i18n:translate="">Survey Template Reports</h1>
 
 <tal:block define="selected_tab string:reports"> 

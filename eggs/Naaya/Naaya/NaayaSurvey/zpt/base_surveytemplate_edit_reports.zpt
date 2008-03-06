@@ -1,4 +1,15 @@
 <tal:block metal:define-macro="main">
+<script language="javascript" type="text/javascript">
+<!--
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
+//-->
+</script>
+
 <form action="." method="post" class="surveyAddWidgetsForm">
 <!-- Title -->
 <div>
