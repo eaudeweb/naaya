@@ -104,4 +104,7 @@ class MegaSurvey(SurveyTemplate, SurveyQuestionnaire):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     edit_html = PageTemplateFile('zpt/megasurvey_edit', globals())
 
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_questions_html')
+    edit_questions_html = PageTemplateFile('zpt/megasurvey_edit_questions', globals())
+
 InitializeClass(MegaSurvey)
