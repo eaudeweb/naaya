@@ -13,6 +13,13 @@
 	<li tal:condition="canTranslate"><a tal:attributes="href string:${site_url}/admin_translations_html" title="Translate messages" i18n:attributes="title" i18n:translate="">Translate messages</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_linkslists_html" title="Lists of links" i18n:attributes="title" i18n:translate="">Lists of links</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_reflists_html" title="Manage selection lists" i18n:attributes="title" i18n:translate="">Selection lists</a></li>
+	<tal:block tal:condition="here/getGeoMapTool">
+		<li><strong i18n:translate="">Map management</strong></li>
+		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_map_html" title="Map general settings" i18n:attributes="title" i18n:translate="">General settings</a></li>
+		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_maptypes_html" title="Map location types" i18n:attributes="title" i18n:translate="">Location types</a></li>
+		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_mapupload_html" title="Map upload locations" i18n:attributes="title" i18n:translate="">Upload locations</a></li>
+		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_maplocations_html" title="Map manage locations" i18n:attributes="title" i18n:translate="">Manage locations</a></li>
+	</tal:block>
 	<li><strong i18n:translate="">Content management</strong></li>
 	<li tal:condition="canAdd"><a tal:attributes="href string:${site_url}/admin_submissions_html" title="Submit content in various parts of the portal" i18n:attributes="title" i18n:translate="">Submissions</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_deletions_html" title="Delete content from various parts of the portal" i18n:attributes="title" i18n:translate="">Deletions</a></li>
