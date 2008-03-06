@@ -23,33 +23,32 @@ import sys
 from urllib import urlencode
 
 # Zope imports
-from zLOG import LOG, ERROR, DEBUG
-from OFS.Traversable import path2url
 from Acquisition import Implicit
-from DateTime import DateTime
-from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
+from DateTime import DateTime
+from Globals import InitializeClass
+from OFS.Traversable import path2url
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from ZPublisher import BadRequest, InternalError, NotFound
 from ZPublisher.HTTPRequest import FileUpload
+from zLOG import LOG, ERROR, DEBUG
 
 # Product imports
-from Products.NaayaWidgets.Widget import WidgetError
-from SurveyAnswer import manage_addSurveyAnswer, SurveyAnswer
-from questionnaire_item import questionnaire_item
-from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.NaayaBase.NyCheckControl import NyCheckControl
-
-from constants import *
 from Products.NaayaBase.constants import \
      EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG, \
      MESSAGE_SAVEDCHANGES, PERMISSION_EDIT_OBJECTS
+from Products.NaayaCore.managers.utils import utils
+from Products.NaayaWidgets.Widget import WidgetError
 
+from SurveyAnswer import manage_addSurveyAnswer, SurveyAnswer
 from SurveyReport import manage_addSurveyReport
+from constants import *
+from questionnaire_item import questionnaire_item
 
 class SurveyQuestionnaireException(Exception):
     """Survey related exception"""
