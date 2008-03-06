@@ -8,6 +8,7 @@
 	</label>
 	<input type="text" id="title" name="title" size="40" tal:attributes="value python:here.getSession('title', '')" />
 	<input class="surveySubmitButton" type="submit" name="addReport:method" value="Add report" i18n:attributes="value" />
+	<input class="surveySubmitButton" type="submit" name="generateFullReport:method" value="Generate full report" i18n:attributes="value" />
 </div>
 </form>
 

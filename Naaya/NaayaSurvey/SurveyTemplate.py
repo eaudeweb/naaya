@@ -319,11 +319,15 @@ class SurveyTemplate(Folder, LocalPropertyManager):
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'generateFullReport')
-    def generateFullReport(self, id='full_report', title='Full report', REQUEST=None):
+    def generateFullReport(self, title='', REQUEST=None):
         """Generate a full report"""
-        if self._getOb(id, None) is not None:
-            self.manage_delObjects([id])
-        id = manage_addSurveyReport(self, id, title)
+        if not title:
+            if REQUEST:
+                self.setSessionErrors(('Field title is required',))
+                return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+            else:
+                raise ValueError('Field title is required')
+        id = manage_addSurveyReport(self, title=title)
         report = self._getOb(id)
         sortorder = 1
         for question in self.getSortedWidgets():
@@ -347,6 +351,9 @@ class SurveyTemplate(Folder, LocalPropertyManager):
                                     question=question,
                                     sortorder=sortorder)
                 sortorder += 1
+        if REQUEST:
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        return report
 
     #
     # Site pages
