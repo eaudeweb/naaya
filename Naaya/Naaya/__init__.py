@@ -84,6 +84,7 @@ misc_ = {
     'fullscreencollapse_icon.gif':ImageFile('www/fullscreencollapse_icon.gif', globals()),
     'fullscreenexpand_icon.gif':ImageFile('www/fullscreenexpand_icon.gif', globals()),
     'gadfly_container.gif': ImageFile('www/gadfly_container.gif', globals()),
+    'printer.gif': ImageFile('www/printer.gif', globals()),
 
     #drag & drop files
     'core.js': ImageFile('zpt/dragdrop/core.js.dtml', globals()),
