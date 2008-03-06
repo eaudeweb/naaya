@@ -81,7 +81,7 @@ def manage_addSurveyQuestionnaire(context, id='', title='', lang=None, REQUEST=N
     auth_tool = context.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
 
-    kwargs.setdefault('id', id)
+    kwargs['id'] = id
     kwargs.setdefault('title', title)
     kwargs.setdefault('lang', lang)
 
