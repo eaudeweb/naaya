@@ -7,6 +7,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zLOG import LOG, ERROR, DEBUG
 
 # Product imports
+from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import utils
 
 from SurveyTemplate import SurveyTemplate
@@ -96,5 +97,8 @@ class MegaSurvey(SurveyTemplate, SurveyQuestionnaire):
     #
     security.declareProtected(PERMISSION_ADD_MEGASURVEY, 'megasurvey_add_html')
     megasurvey_add_html = PageTemplateFile('zpt/megasurvey_add', globals())
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
+    edit_html = PageTemplateFile('zpt/megasurvey_edit', globals())
 
 InitializeClass(MegaSurvey)
