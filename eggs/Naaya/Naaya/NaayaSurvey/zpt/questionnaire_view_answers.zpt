@@ -25,21 +25,25 @@
 <p tal:condition="python:here.description!=''" 
 	tal:content="structure here/description" />
 
-<tal:block define="answers python:here.getAnswers();
-                   auth_tool python:here.getSite().getAuthenticationTool()">
-	<p i18n:translate="">List of answers (<tal:block replace="python:len(answers)"/> answers)</p>
-	<ol>
-		<tal:block repeat="answer answers">
-			<li>
-				<a tal:attributes="href answer/absolute_url">
-					Answered by
-					<tal:block replace="python: auth_tool.getUserFullNameByID(answer.respondent)">username</tal:block>
-					on
-					<tal:block replace="python: here.utShowFullDateTime(answer.bobobase_modification_time())">date</tal:block>
-				</a>
-			</li>
-		</tal:block>
-	</ol>
+<tal:block define="answers python:here.getAnswers()">
+	<tal:block condition="answers">
+		<p i18n:translate="">List of answers (<tal:block replace="python:len(answers)"/> answers)</p>
+		<ol tal:define="auth_tool python:here.getSite().getAuthenticationTool()">
+			<tal:block repeat="answer answers">
+				<li>
+					<a tal:attributes="href answer/absolute_url">
+						Answered by
+						<tal:block replace="python: auth_tool.getUserFullNameByID(answer.respondent)">username</tal:block>
+						on
+						<tal:block replace="python: here.utShowFullDateTime(answer.bobobase_modification_time())">date</tal:block>
+					</a>
+				</li>
+			</tal:block>
+		</ol>
+	</tal:block>
+	<tal:block condition="not: answers">
+		<p i18n:translate="">There are no answers.</p>
+	</tal:block>
 </tal:block>
 
 <span tal:replace="structure here/standard_html_footer" />
