@@ -66,12 +66,12 @@
 		<portlet id="portlet_places" title="Useful links" />
 		<portlet id="portlet_quick_links" title="Left-side quick links" />
 		<portlet id="portlet_folder_impex" title="Export/Import"/>
-		<linkslist id="menunav_links" title="Menu navigation links" portlet="">
+		<linkslist id="menunav_links" title="Menu navigation links" portlet="1">
 			<link id="108" title="About us" description="" url="/about" relative="1" permission="" order="9"/>
 			<link id="109" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="9"/>
 			<link id="110" title="Administration" description="" url="/admin_centre_html" relative="1" permission="Publish content" order="10"/>
 		</linkslist>
-		<linkslist id="places" title="Places" portlet="">
+		<linkslist id="places" title="Places" portlet="1">
 			<link id="11" title="Europa" description="European Union on-line" url="http://europa.eu/" relative="0" permission="" order="10"/>
 			<link id="12" title="EEA" description="European Environment Agency" url="http://www.eea.europa.eu" relative="0" permission="" order="20"/>
 			<link id="13" title="EIONET" description="EIONET" url="http://www.eionet.europa.eu/" relative="0" permission="" order="30"/>
@@ -84,7 +84,7 @@
 			<link id="20" title="MEDSTAT" description="MEDSTAT" url="http://ec.europa.eu/eurostat/medstat" relative="0" permission="" order="100"/>
 			<link id="21" title="CEDARE" description="CEDARE" url="http://www.cedare.int/Main.aspx?code=219" relative="0" permission="" order="110"/>
 		</linkslist>
-		<linkslist id="footer_links" title="Footer links" portlet="">
+		<linkslist id="footer_links" title="Footer links" portlet="1">
 			<link id="20" title="Copyright" description="" url="/about/copyright" relative="1" permission="" order="10"/>
 			<link id="21" title="Contact us" description="" url="/about/contact_html" relative="1" permission="" order="20"/>
 			<link id="22" title="Webmaster" description="" url="/feedback_html" relative="1" permission="" order="30"/>
