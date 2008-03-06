@@ -23,20 +23,12 @@ import SurveyAnswer
 import SurveyTool
 import SurveyTemplate
 import SurveyReport
+import MegaSurvey
 from ImageFile import ImageFile
 
 from Products.Naaya import register_content
 
 import statistics
-
-# Register as a folder content type
-register_content(
-    module=SurveyQuestionnaire,
-    klass=SurveyQuestionnaire.SurveyQuestionnaire,
-    module_methods={'manage_addSurveyQuestionnaire': PERMISSION_ADD_QUESTIONNAIRE},
-    klass_methods={'questionnaire_add_html': PERMISSION_ADD_QUESTIONNAIRE},
-    add_method=('questionnaire_add_html', PERMISSION_ADD_QUESTIONNAIRE),
-)
 
 def initialize(context):
     """ """
@@ -59,6 +51,12 @@ def initialize(context):
         icon = 'www/NySurveyQuestionnaire.gif'
     )
     context.registerClass(
+        MegaSurvey.MegaSurvey,
+        permission = PERMISSION_ADD_QUESTIONNAIRE,
+        constructors = MegaSurvey.MegaSurvey._constructors,
+        icon = 'www/NySurveyQuestionnaire.gif'
+    )
+    context.registerClass(
         SurveyAnswer.SurveyAnswer,
         permission = PERMISSION_ADD_ANSWER,
         constructors = SurveyAnswer.SurveyAnswer._constructors,
@@ -71,6 +69,22 @@ def initialize(context):
         icon = 'www/NySurveyReport.gif'
     )
     statistics.initialize(context)
+
+    # Register as a folder content type
+    register_content(
+        module=SurveyQuestionnaire,
+        klass=SurveyQuestionnaire.SurveyQuestionnaire,
+        module_methods={'manage_addSurveyQuestionnaire': PERMISSION_ADD_QUESTIONNAIRE},
+        klass_methods={'questionnaire_add_html': PERMISSION_ADD_QUESTIONNAIRE},
+        add_method=('questionnaire_add_html', PERMISSION_ADD_QUESTIONNAIRE),
+    )
+    register_content(
+        module=MegaSurvey,
+        klass=MegaSurvey.MegaSurvey,
+        module_methods={'manage_addMegaSurvey': PERMISSION_ADD_QUESTIONNAIRE},
+        klass_methods={'questionnaire_add_html': PERMISSION_ADD_QUESTIONNAIRE},
+        add_method=('questionnaire_add_html', PERMISSION_ADD_QUESTIONNAIRE),
+    )
 
 misc_ = {
     'SurveyTemplate.gif': ImageFile('www/Survey.gif', globals()),
