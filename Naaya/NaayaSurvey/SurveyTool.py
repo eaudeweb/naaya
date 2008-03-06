@@ -40,6 +40,7 @@ from Products.NaayaWidgets.constants import PERMISSION_ADD_WIDGETS
 from SurveyTemplate import SurveyTemplate
 from SurveyTemplate import manage_addSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
+from MegaSurvey import MegaSurvey
 from constants import PERMISSION_ADD_SURVEYTEMPLATE,      \
                         PERMISSION_MANAGE_SURVEYTEMPLATE, \
                         PERMISSION_ADD_QUESTIONNAIRE,     \
@@ -123,6 +124,7 @@ def manage_addSurveyTool(context, REQUEST=None):
     configure_catalog(ob.getSite().getCatalogTool())
     configure_email_notifications(ob.getSite())
     ob.getSite().searchable_content.append(SurveyQuestionnaire.meta_type)
+    ob.getSite().searchable_content.append(MegaSurvey.meta_type)
     configure_security(ob.getSite())
 
     if REQUEST:
