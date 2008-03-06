@@ -16,6 +16,7 @@
 # Authors:
 #
 # Alin Voinea, Eau de Web
+# Cristian Ciupitu, Eau de Web
 
 # Python imports
 import os.path
@@ -285,5 +286,9 @@ class SurveyTool(Folder):
     # site pages
     security.declareProtected(PERMISSION_ADMINISTRATE, 'index_html')
     index_html = PageTemplateFile('zpt/surveytool_index', globals())
+
+    # macros
+    security.declarePublic('base_questionnaire_add_html')
+    base_questionnaire_add_html = PageTemplateFile('zpt/base_questionnaire_add', globals())
 
 InitializeClass(SurveyTool)
