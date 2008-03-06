@@ -98,6 +98,9 @@ class MegaSurvey(SurveyTemplate, SurveyQuestionnaire):
     security.declareProtected(PERMISSION_ADD_MEGASURVEY, 'megasurvey_add_html')
     megasurvey_add_html = PageTemplateFile('zpt/megasurvey_add', globals())
 
+    security.declareProtected(view, 'index_html')
+    index_html = PageTemplateFile('zpt/megasurvey_index', globals())
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     edit_html = PageTemplateFile('zpt/megasurvey_edit', globals())
 

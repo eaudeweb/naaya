@@ -399,4 +399,8 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     security.declarePublic('view_answers_html')
     view_answers_html = PageTemplateFile('zpt/questionnaire_view_answers', globals())
 
+    # macros
+    security.declareProtected(view, 'base_index_html')
+    base_index_html = PageTemplateFile('zpt/base_questionnaire_index', globals())
+
 InitializeClass(SurveyQuestionnaire)
