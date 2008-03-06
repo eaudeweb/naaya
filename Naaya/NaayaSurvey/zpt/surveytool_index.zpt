@@ -47,7 +47,7 @@ for your visitors to answer.
 
 <div id="toolbar">
 	<input type="submit" value="Delete" name="deleteSurveyTemplates:method"
-		onclick="javascript:window.confirm('Are you sure?')"
+		onclick="javascript:return window.confirm('Are you sure?')"
 		i18n:attributes="value" />
 </div>
 

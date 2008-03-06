@@ -60,7 +60,7 @@ function toggleSelect(caller){
 
 <div id="toolbar">
 	<input type="submit" value="Delete" name="deleteStatistics:method"
-		onclick="javascript:window.confirm('Are you sure?')"
+		onclick="javascript:return window.confirm('Are you sure?')"
 		i18n:attributes="value" />
 	<input type="submit" value="Set sort order" i18n:attributes="value"
 	       name="setSortOrder:method" />

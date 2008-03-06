@@ -29,7 +29,7 @@ function toggleSelect(caller){
 
 <div id="toolbar">
 	<input type="submit" value="Delete" name="deleteItems:method"
-		onclick="javascript:window.confirm('Are you sure?')"
+		onclick="javascript:return window.confirm('Are you sure?')"
 		i18n:attributes="value" />
 </div>
 
