@@ -35,19 +35,14 @@ from Products.ZCatalog.Catalog import CatalogError
 
 # Naaya imports
 from Products.NaayaBase.constants import \
-     MESSAGE_SAVEDCHANGES, PERMISSION_ADMINISTRATE, PERMISSION_PUBLISH_OBJECTS
+     MESSAGE_SAVEDCHANGES, PERMISSION_ADMINISTRATE
 from Products.NaayaWidgets.constants import PERMISSION_ADD_WIDGETS
 
 from SurveyTemplate import SurveyTemplate
 from SurveyTemplate import manage_addSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
 from MegaSurvey import MegaSurvey
-from constants import PERMISSION_ADD_SURVEYTEMPLATE,      \
-                        PERMISSION_MANAGE_SURVEYTEMPLATE, \
-                        PERMISSION_ADD_QUESTIONNAIRE,     \
-                        PERMISSION_ADD_ANSWER,            \
-                        PERMISSION_VIEW_REPORTS,          \
-                        PERMISSION_VIEW_ANSWERS
+from constants import *
 from statistics.constants import PERMISSION_ADD_STATISTIC
 
 def configure_catalog(catalog_tool):
@@ -109,6 +104,7 @@ def configure_security(site):
     site.manage_permission(PERMISSION_ADD_STATISTIC, ('Manager', 'Administrator'), acquire=0)
 
     site.manage_permission(PERMISSION_ADD_QUESTIONNAIRE, ('Manager', 'Administrator', 'Contributor', ), acquire=0)
+    site.manage_permission(PERMISSION_ADD_MEGASURVEY, ('Manager', 'Administrator', 'Contributor', ), acquire=0)
 
     site.manage_permission(PERMISSION_ADD_ANSWER, ('Anonymous', 'Authenticated'), acquire=0)
     site.manage_permission(PERMISSION_VIEW_REPORTS, ('Anonymous', 'Authenticated'), acquire=0)
