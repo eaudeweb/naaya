@@ -81,7 +81,7 @@ class EditorTool(Folder):
 
     def _getTinyMCELanguages(self):
         """ return the list of languages that TinyMCE could handle """
-        return ['da', 'en', 'es', 'fr', 'hu', 'it', 'ro', 'ru']
+        return ['da', 'en', 'es', 'fr', 'it', 'ro', 'ru']
 
     def _getTinyMCEDefaultLang(self):
         return 'en'
