@@ -1,0 +1,16 @@
+<tal:block replace="structure here/standard_html_header"/>
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/common_js"></script>
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+
+<h1 i18n:translate="">Submit MegaSurvey</h1>
+
+<tal:block define="add_method string:manage_addMegaSurvey">
+	<tal:block metal:use-macro="python: here.getSite().portal_survey.base_questionnaire_add_html.macros['submit_form']">
+	</tal:block>
+</tal:block >
+
+<tal:block tal:replace="structure here/standard_html_footer"/>
