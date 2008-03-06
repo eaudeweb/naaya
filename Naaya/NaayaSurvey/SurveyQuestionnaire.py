@@ -360,7 +360,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         expire_date = DateTime(self.expirationdate)
         return now.greaterThan(expire_date)
 
-    security.declarePublic('get_days_left')        
+    security.declarePublic('get_days_left')
     def get_days_left(self):
         """ Returns the remaining days for the survey or the number of days before it starts """
         today = self.utGetTodayDate().earliestTime()
@@ -368,9 +368,6 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             return (1, int(str(self.expirationdate - today).split('.')[0]))
         else:
             return (0, int(str(self.releasedate - today).split('.')[0]))
-                                                                
-                                                                
-            
 
     def checkPermissionViewAnswers(self):
         """Check if the user has the VIEW_ANSWERS permission"""
