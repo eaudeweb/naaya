@@ -1,0 +1,73 @@
+<tal:block metal:define-macro="page">
+<span tal:replace="structure here/standard_html_header" />
+
+<link rel="stylesheet" type="text/css" media="all"
+	tal:define="stool here/portal_survey;"
+	tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+
+<h1>
+	<img tal:attributes="
+		src python:test(here.approved, here.icon, here.icon_marked); 
+		title here/meta_label; 
+		alt here/meta_label" />
+	<tal:block tal:replace="here/title_or_id" />
+		<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+</h1>
+
+<tal:block metal:define-slot="toolbar">
+</tal:block>
+
+<div class="survey_right_box" tal:define="days_left python:here.get_days_left()">
+    <tal:block tal:condition="python:days_left[0] == 1 and days_left[1] > 0">
+	<span tal:content="python:days_left[1]" class="survey_day_counter" /><span i18n:translate=""> day(s) left for this survey.</span>
+    </tal:block>
+    <tal:block tal:condition="python:days_left[0] == 0 and days_left[1] > 0">
+	<span  tal:content="python:days_left[1]" class="survey_day_counter" /><span i18n:translate=""> day(s) until this survey starts.</span>
+    </tal:block>
+	<span tal:condition="python:days_left[1] <= 0" class="survey_day_counter" i18n:translate=""> Survey's deadline has been reached.</span>
+	<a tal:condition="here/checkPermissionViewAnswers" href="view_answers_html" i18n:translate="" class="survey-button">View answers</a>
+	<a tal:condition="here/checkPermissionViewReports" href="view_reports_html" i18n:translate="" class="survey-button">View reports</a>
+</div>
+
+
+<p tal:condition="python:here.description!=''" 
+	tal:content="structure here/description" />
+
+<p i18n:translate="" tal:condition="python: here.expired() and not here.checkPermissionEditObjects()">Survey expired.</p>
+
+<tal:block condition="python: not here.expired() or here.checkPermissionEditObjects()">
+	<tal:block define="my_answer python:here.getMySurveyAnswer()">
+	<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
+	      tal:define="stype here/getSurveyTemplate;
+	                  rendered python:test(stype, stype.render(mode='edit', datamodel={}), 'Error');"
+	      tal:condition="python: my_answer is None or here.checkPermissionEditObjects()">
+
+		<tal:block content="structure rendered" />
+
+		<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
+			<span tal:replace="structure here/showCaptcha" />
+			<span class="errormsg" tal:define="session python:request.SESSION" tal:content="session/err_captcha | nothing" />
+			<span tal:define="dummy python:here.delSessionKeys(['err_captcha'])"></span>
+		</tal:block>
+
+		<div class="surveySubmit">
+			<input type="submit" value="Submit" i18n:attributes="value" name="addSurveyAnswer:method"/>
+			<input type="reset" value="Reset" i18n:attributes="value" name="reset"/>
+		</div>
+	</form>
+
+	<p i18n:translate="" tal:condition="python: my_answer is not None">You have already taken the survey.</p>
+	</tal:block>
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />
+</tal:block>
