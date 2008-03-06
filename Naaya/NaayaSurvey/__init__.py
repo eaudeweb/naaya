@@ -81,9 +81,9 @@ def initialize(context):
     register_content(
         module=MegaSurvey,
         klass=MegaSurvey.MegaSurvey,
-        module_methods={'manage_addMegaSurvey': PERMISSION_ADD_QUESTIONNAIRE},
-        klass_methods={'questionnaire_add_html': PERMISSION_ADD_QUESTIONNAIRE},
-        add_method=('questionnaire_add_html', PERMISSION_ADD_QUESTIONNAIRE),
+        module_methods={'manage_addMegaSurvey': PERMISSION_ADD_MEGASURVEY},
+        klass_methods={'questionnaire_add_html': PERMISSION_ADD_MEGASURVEY},
+        add_method=('questionnaire_add_html', PERMISSION_ADD_MEGASURVEY),
     )
 
 misc_ = {
