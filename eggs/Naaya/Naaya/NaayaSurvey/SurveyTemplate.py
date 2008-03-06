@@ -146,15 +146,16 @@ class SurveyTemplate(Folder, LocalPropertyManager):
     #
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
-        """ Update type properties"""
+        """Update properties"""
         if REQUEST:
             kwargs.update(REQUEST.form)
-        local_properties = filter(None, [x.get('id', None) for x in self.getLocalProperties()])
-        # Update local properties
         lang = kwargs.get('lang', self.get_selected_language())
+        local_properties = filter(None, [x.get('id', None) for x in self.getLocalProperties()])
+        # Update localized properties
         for local_property in local_properties:
             prop_value = kwargs.get(local_property, '')
             self.set_localpropvalue(local_property, lang, prop_value)
+        # Update non-localized properties
         kwargs = dict([(key, value) for key, value in kwargs.items()
                        if key not in local_properties])
         self.manage_changeProperties(**kwargs)
