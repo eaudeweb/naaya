@@ -84,7 +84,7 @@ def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None, **kw
         context.setSession('referer', context.absolute_url())
         REQUEST.RESPONSE.redirect('%s/messages_html' % context.absolute_url())
 
-class MegaSurvey(BaseSurveyTemplate, SurveyQuestionnaire):
+class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     """ """
 
     meta_type = 'Naaya Mega Survey'
@@ -96,7 +96,7 @@ class MegaSurvey(BaseSurveyTemplate, SurveyQuestionnaire):
 
     def __init__(self, id, **kwargs):
         """ """
-        BaseSurveyTemplate.__init__(self, id, **kwargs)
+        #BaseSurveyTemplate.__init__(self, id, **kwargs)
         SurveyQuestionnaire.__init__(self, id, None, **kwargs)
 
     security.declareProtected(view, 'getSurveyTemplate')
