@@ -64,7 +64,7 @@ def initialize(context):
     )
     context.registerClass(
         SurveyReport.SurveyReport,
-        permission = PERMISSION_MANAGE_SURVEYTEMPLATE,
+        permission = PERMISSION_ADD_REPORT,
         constructors = SurveyReport.SurveyReport._constructors,
         icon = 'www/NySurveyReport.gif'
     )
