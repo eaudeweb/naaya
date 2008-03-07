@@ -20,10 +20,8 @@
 import time
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import base
-from Products.Naaya.NySite import NySite, manage_addNySite
-from Products.Naaya.NyFolder import addNyFolder
-from AccessControl.SecurityManagement import \
-     newSecurityManager, getSecurityManager, noSecurityManager
+from Products.Naaya.NySite import manage_addNySite
+from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
 
 portal_name = 'portal'
 from Testing.ZopeTestCase import user_name
@@ -110,8 +108,7 @@ class NaayaInstaller:
         newSecurityManager(None, user)
 
     def addPortal(self, portal_id):
-        factory = self.app.manage_addProduct['Naaya']
-        factory.manage_addNySite(portal_id)
+        manage_addNySite(self.app, portal_id)
 
     def addPortalManager(self, portal_id, user=user_name, password=user_password):
         portal = getattr(self.app, portal_id)
