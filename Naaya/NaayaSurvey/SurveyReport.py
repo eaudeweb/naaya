@@ -145,20 +145,19 @@ class SurveyReport(Folder, LocalPropertyManager):
 
 
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'deleteStatistics')
-    def addStatistic(self, question=None, meta_type=None, REQUEST=None):
+    def addStatistic(self, REQUEST, question=None, meta_type=None):
         """Add a statistic for question.
 
             @param question: id of the question
             @param meta_type: metatype of the statistic
         """
-        global STATISTICS
-        global gUtils
-
+        err = []
         if not question:
-            self.setSessionErrors(['Please select a statistic type'])
-            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+            err.append('Please select a question')
         if not meta_type:
-            self.setSessionErrors(['Please select a statistic type'])
+            err.append('Please select a statistic type')
+        if err:
+            self.setSessionErrors(err)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
         statistic_cls = STATISTICS[meta_type]
