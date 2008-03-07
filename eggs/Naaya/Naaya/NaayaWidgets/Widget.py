@@ -24,10 +24,10 @@ from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 # Naaya imports
-from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
+                                         PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import utils
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from Products.NaayaSurvey.permissions import PERMISSION_MANAGE_SURVEYTEMPLATE
 
 gUtil = utils()
 
@@ -106,7 +106,7 @@ class Widget(Folder, LocalPropertyManager):
         """ Returns widget id"""
         return self.getId()
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'saveProperties')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ Update widget properties"""
         if REQUEST:
@@ -155,13 +155,13 @@ class Widget(Folder, LocalPropertyManager):
         """Render widget according with given mode"""
         return self.render_meth(mode=mode, datamodel=datamodel, **kwargs)
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'edit_html')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     edit_html = PageTemplateFile('zpt/edit_widget', globals())
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'preview_html')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'preview_html')
     preview_html = PageTemplateFile('zpt/preview_widget', globals())
 
-    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'index_html')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'index_html')
     index_html = preview_html
 
 InitializeClass(Widget)
