@@ -58,7 +58,7 @@ def addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs):
     container._setObject(id, widget)
     widget = container._getOb(id)
     if REQUEST:
-        REQUEST.RESPONSE.redirect('%s/edit_html' % widget.absolute_url())
+        REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
     return id
 
 class Widget(Folder, LocalPropertyManager):
