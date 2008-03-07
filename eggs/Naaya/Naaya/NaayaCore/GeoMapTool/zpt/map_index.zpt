@@ -73,13 +73,13 @@ function toggleSelect()
 					<li>
 						<input type="checkbox" name="geo_type:list" tal:attributes="value item/id; id item/id; checked python:item.id in show" />
 						<img tal:condition="python:item.picture is not None" tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title" />
-						<span tal:replace="item/title" />
+						<span i18n:translate="" tal:content="item/title" />
 					</li>
 					<ul tal:condition="children" class="category_child">
 						<li tal:repeat="child children">
 							<input type="checkbox" name="geo_type:list" tal:attributes="value child/id; id child/id; checked python:child.id in show" />
 							<img tal:condition="python:child.picture is not None" tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title" />
-							<label tal:attributes="for child/id"><span tal:replace="child/title" /></label>
+							<label tal:attributes="for child/id"><span i18n:translate="" tal:content="child/title" /></label>
 						</li>
 					</ul>
 					</tal:block>
@@ -109,7 +109,7 @@ function toggleSelect()
 	<a href="http://developer.yahoo.com/about/" title="Yahoo.com | About Applications that Use Yahoo! Web Services" i18n:translate="" i18n:attributes="title">Service provided by Yahoo!</a>
 
 	<br />
-	<p i18n:translate="">Additionally you can <a tal:attributes="href string:${here/absolute_url}/locations_kml?path=${path}&show=${show}" title="Show locations in Google Earth" i18n:translate="" i18n:attributes="title">display map in Google Earth viewer</a> (requires <a href="http://earth.google.com/downloads.html">Google Earth</a> version 4.0 or higher installed).</p>
+	<p i18n:translate="">Additionally you can <a tal:attributes="href string:${here/absolute_url}/locations_kml?path=${path}&show=${show}" title="Show locations in Google Earth" i18n:attributes="title">display map in Google Earth viewer</a> (requires <a href="http://earth.google.com/downloads.html">Google Earth</a> version 4.0 or higher installed).</p>
 
 	<div style="display:none" id="map_markers"></div>
 

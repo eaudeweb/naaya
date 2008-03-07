@@ -47,7 +47,7 @@ function fTreeNodeClick(node_path, node_title, node_description)
 	<tr>
 		<th align="right">
 			<label for="file">
-				<span i18n:translate="" tal:omit-tag="">File</span>
+				<span i18n:translate="">File</span>
 			</label>
 		</th>
 		<td><input type="file" name="file" /></td>
@@ -55,33 +55,33 @@ function fTreeNodeClick(node_path, node_title, node_description)
 	<tr>
 		<th align="right">
 			<label for="dialect">
-				<span i18n:translate="" tal:omit-tag="">File format</span>
+				<span i18n:translate="">File format</span>
 			</label>
 		</th>
 		<td>
 			<select name="dialect">
-				<option value="comma">CSV (Comma delimited)</option>
-				<option value="tab">Text (Tab delimited)</option>
+				<option value="comma" i18n:translate="">CSV (Comma delimited)</option>
+				<option value="tab" i18n:translate="">Text (Tab delimited)</option>
 			</select>
 		</td>
 	</tr>
 	<tr>
 		<th align="right">
 			<label for="encoding">
-				<span i18n:translate="" tal:omit-tag="">File encoding</span>
+				<span i18n:translate="">File encoding</span>
 			</label>
 		</th>
 		<td>
 			<select name="encoding">
-				<option value="utf-8">UTF-8</option>
-				<option value="latin-1">Latin-1</option>
+				<option value="utf-8" i18n:translate="">UTF-8</option>
+				<option value="latin-1" i18n:translate="">Latin-1</option>
 			</select>
 		</td>
 	</tr>
 	<tr>
 		<th align="right">
 			<label for="geo_type">
-				<span i18n:translate="" tal:omit-tag="">Locations type</span>
+				<span i18n:translate="">Locations type</span>
 			</label>
 		</th>
 		<td>
@@ -95,7 +95,7 @@ function fTreeNodeClick(node_path, node_title, node_description)
 	<tr>
 		<th align="right">
 			<label for="parent_folder">
-				<span i18n:translate="" tal:omit-tag="">Upload in folder</span>
+				<span i18n:translate="">Upload in folder</span>
 			</label>
 		</th>
 		<td>
@@ -106,20 +106,19 @@ function fTreeNodeClick(node_path, node_title, node_description)
 							<table border="0" cellspacing="1" cellpadding="1">
 								<tr>
 									<td>
-										<img tal:repeat="i python:range(0, tree_node[2])"
-											 src="misc_/Naaya/square.gif" alt="" />
+										<img tal:repeat="i python:range(0, tree_node[2])" src="misc_/Naaya/square.gif" alt="" />
 										<tal:block tal:condition="python:tree_node[1]==-1">
 											<img src="misc_/Naaya/square.gif" alt="" />
 										</tal:block>
 										<tal:block
 											tal:define="node_expand python:here.processCollapse(expand_list, tree_node[0].absolute_url(1))"
 											tal:condition="python:tree_node[1]==0">
-											<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/minus.gif" alt="Collapse" /></a>
+											<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/minus.gif" alt="Collapse" i18n:attributes="alt" /></a>
 										</tal:block>
 										<tal:block
 											tal:define="node_expand python:here.processExpand(expand_list, tree_node[0].absolute_url(1))"
 											tal:condition="python:tree_node[1]==1">
-											<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/plus.gif" alt="Expand" /></a>
+											<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/plus.gif" alt="Expand" i18n:attributes="alt" /></a>
 										</tal:block>
 									</td>
 									<td><img tal:attributes="src python:tree_node[0].icon" alt="" /></td>
@@ -142,7 +141,7 @@ function fTreeNodeClick(node_path, node_title, node_description)
 	<tr>
 		<th align="right">
 			<label for="approved">
-				<span i18n:translate="" tal:omit-tag="">Upload approved</span>
+				<span i18n:translate="">Upload approved</span>
 			</label>
 		</th>
 		<td>
