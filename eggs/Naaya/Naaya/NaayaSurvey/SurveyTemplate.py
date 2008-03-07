@@ -344,7 +344,6 @@ class SurveyTemplate(Folder, LocalPropertyManager):
                                      MatrixCssBarChartStatistic])
             else:
                 stat_classes.extend([SimpleTabularStatistic])
-
             for stat_class in stat_classes:
                 manage_addStatistic(stat_class,
                                     report,
