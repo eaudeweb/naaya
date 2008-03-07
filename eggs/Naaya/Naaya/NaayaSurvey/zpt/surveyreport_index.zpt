@@ -34,8 +34,8 @@ function toggleSelect(caller){
 
 		<span i18n:translate="">Statistic type</span><br />
 		<tal:block repeat="statistic here/getAvailableStatistics">
-			<tal:block define="input_id string:statistic_meta_type_${repeat/statistic/index}">
-				<input type="radio" name="statistic_meta_type"
+			<tal:block define="input_id string:meta_type_${repeat/statistic/index}">
+				<input type="radio" name="meta_type"
 				       tal:attributes="id input_id;
 				                       value statistic/meta_type" />
 				<label tal:attributes="for input_id" i18n:translate=""
