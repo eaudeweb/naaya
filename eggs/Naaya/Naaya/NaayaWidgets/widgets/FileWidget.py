@@ -21,12 +21,12 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
-from Products.NaayaWidgets.Widget import Widget, WidgetError, addWidget
+from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
 from Products.NaayaCore.managers.utils import utils
 
 def addFileWidget(container, id="", title="String Widget", REQUEST=None, **kwargs):
     """ Contructor for String widget"""
-    return addWidget(FileWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(FileWidget, container, id, title, REQUEST, **kwargs)
 
 class FileWidget(Widget):
     """ String Widget """

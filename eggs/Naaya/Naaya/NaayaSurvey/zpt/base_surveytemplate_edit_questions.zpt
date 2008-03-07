@@ -18,12 +18,12 @@
 		widget_types python:here.getWidgetTypesAsMatrix(cols)">
 		<tr tal:repeat="row widget_types">
 			<td tal:repeat="widget_type row">
-				<tal:block define="action_id string:add_action_${repeat/row/index}_${repeat/widget_type/index};">
-					<input type="radio" name="add_action" tal:attributes="
-					    checked python:here.getSession('add_action', '') == widget_type.get('action', None);
-					    value widget_type/action;
-						id action_id;" />
-					<label tal:attributes="for action_id">
+				<tal:block define="input_id string:add_action_${repeat/row/index}_${repeat/widget_type/index};">
+					<input type="radio" name="meta_type" tal:attributes="
+					    checked python:here.getSession('meta_type', '') == widget_type['meta_type'];
+					    value widget_type/meta_type;
+						id input_id;" />
+					<label tal:attributes="for input_id">
 						<strong i18n:translate="" tal:content="widget_type/meta_label" />
 					</label>
 					<br />
@@ -34,6 +34,7 @@
 			</td>
 		</tr>
 	</table>
+	<span tal:define="delManager python:here.delSessionKeys(['title', 'meta_type'])"/>
 </div>
 
 <br />
@@ -96,6 +97,5 @@
 </table>
 
 </form>
-<span tal:define="delManager python:here.delSessionKeys(['title', 'add_action'])"/>
 
 </tal:block>

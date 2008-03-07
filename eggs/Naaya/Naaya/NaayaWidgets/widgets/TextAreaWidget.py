@@ -22,11 +22,11 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
-from Products.NaayaWidgets.Widget import Widget, WidgetError, addWidget
+from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
 
 def addTextAreaWidget(container, id="", title="Lines Widget", REQUEST=None, **kwargs):
     """ Contructor for Lines widget"""
-    return addWidget(TextAreaWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(TextAreaWidget, container, id, title, REQUEST, **kwargs)
 
 class TextAreaWidget(Widget):
     """ Multi-line text Widget """

@@ -24,13 +24,13 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
 # Product imports
-from Products.NaayaWidgets.Widget import addWidget
+from Products.NaayaWidgets.Widget import manage_addWidget
 
 from MatrixWidget import MatrixWidget
 
 def addCheckboxMatrixWidget(container, id="", title="CheckboxMatrix Widget", REQUEST=None, **kwargs):
     """ Contructor for CheckboxMatrix widget"""
-    return addWidget(CheckboxMatrixWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(CheckboxMatrixWidget, container, id, title, REQUEST, **kwargs)
 
 class CheckboxMatrixWidget(MatrixWidget):
     """ CheckboxMatrix Widget """

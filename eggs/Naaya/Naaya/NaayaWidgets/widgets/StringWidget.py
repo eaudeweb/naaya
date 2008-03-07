@@ -21,11 +21,11 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
-from Products.NaayaWidgets.Widget import Widget, WidgetError, addWidget
+from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
 
 def addStringWidget(container, id="", title="String Widget", REQUEST=None, **kwargs):
     """ Contructor for String widget"""
-    return addWidget(StringWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(StringWidget, container, id, title, REQUEST, **kwargs)
 
 class StringWidget(Widget):
     """ String Widget """

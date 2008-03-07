@@ -24,13 +24,13 @@ from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
 # Product imports
-from Products.NaayaWidgets.Widget import addWidget
+from Products.NaayaWidgets.Widget import manage_addWidget
 
 from MatrixWidget import MatrixWidget
 
 def addRadioMatrixWidget(container, id="", title="RadioMatrix Widget", REQUEST=None, **kwargs):
     """ Contructor for RadioMatrix widget"""
-    return addWidget(RadioMatrixWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(RadioMatrixWidget, container, id, title, REQUEST, **kwargs)
 
 class RadioMatrixWidget(MatrixWidget):
     """ RadioMatrix Widget """

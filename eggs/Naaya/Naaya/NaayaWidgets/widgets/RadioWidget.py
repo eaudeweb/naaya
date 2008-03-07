@@ -22,13 +22,13 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
-from Products.NaayaWidgets.Widget import WidgetError, addWidget
+from Products.NaayaWidgets.Widget import WidgetError, manage_addWidget
 
 from MultipleChoiceWidget import MultipleChoiceWidget
 
 def addRadioWidget(container, id="", title="Radio Widget", REQUEST=None, **kwargs):
     """ Contructor for Radio widget"""
-    return addWidget(RadioWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(RadioWidget, container, id, title, REQUEST, **kwargs)
 
 class RadioWidget(MultipleChoiceWidget):
     """ Radio Widget """
