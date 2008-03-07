@@ -131,8 +131,11 @@ class LocalChannel(SimpleItem, utils):
         return l_items
 
     security.declareProtected(view, 'index_html')
-    def index_html(self, REQUEST=None, RESPONSE=None):
+    def index_html(self, feed='', REQUEST=None, RESPONSE=None):
         """ """
+        if feed == 'atom':
+            return self.syndicateAtom(items=self.get_objects_for_rdf())
+            
         s = self.getSite()
         lang = self.language
         if lang == 'auto':
