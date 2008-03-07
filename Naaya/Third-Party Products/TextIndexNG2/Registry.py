@@ -55,9 +55,9 @@ class Registry:
 
     def register(self, id, instance=None):
         """ map an id to an instance """
-
         if self.data.has_key(id):
-            raise RegistryException, '"%s" already registered' % id
+            pass
+            #raise RegistryException, '"%s" already registered' % id
         
         for iface in self.ifaces:
             try:
