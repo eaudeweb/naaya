@@ -898,6 +898,29 @@ class utils:
         s = s.replace('\\xe2\\x80\\xa2', '*')  #dot used for bullet points
         return s
 
+    def process_releasedate(self, p_string='', p_date=None):
+        """
+        Process a value for an object's release date.
+
+        @param p_string: represents a date like 'dd/mm/yyyy'
+        @type lang: string
+        @param p_date: represents a date
+        @type p_date: DateTime
+        @return: a DateTime value
+        """
+        releasedate = self.utConvertStringToDateTimeObj(p_string)
+        if releasedate is None:
+            if p_date is None: releasedate = self.utGetTodayDate()
+            else: releasedate = p_date
+        else:
+            if p_date is not None:
+                #check if the day was changed: if no then restore release date
+                if (p_date.year() == releasedate.year()) and \
+                    (p_date.month() == releasedate.month()) and \
+                    (p_date.day() == releasedate.day()):
+                    releasedate = p_date
+        return releasedate
+
 #END OF CUSTOM FUNCTIONS
 
 class spreadsheet_file:
