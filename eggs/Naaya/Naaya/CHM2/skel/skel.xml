@@ -30,6 +30,7 @@
 		<form id="site_admin_users_unnassigned" title="View users with no roles"/>
 		<form id="site_admin_users_assigned" title="View users with roles"/>
 		<form id="site_admin_userroles" title="View the roles of a user"/>
+		<form id="site_admin_template" title="Portal administration - macro"/>
 		<form id="site_links_group" title="Group of links"/>
 	</forms>
 	<layout default_skin_id="chm" default_scheme_id="indigo">
