@@ -22,19 +22,19 @@ import sys
 from urllib import urlencode
 
 # Zope imports
-from zLOG import LOG, DEBUG
-import Products
-from OFS.Folder import Folder
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
-from Globals import InitializeClass
 from DocumentTemplate.sequence import sort
+from Globals import InitializeClass
+from OFS.Folder import Folder
+import Products
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from zLOG import LOG, DEBUG
 
 # Naaya imports
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
+from Products.NaayaCore.managers.utils import utils
+from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
 from permissions import PERMISSION_MANAGE_SURVEYTEMPLATE
 import statistics
@@ -145,16 +145,16 @@ class SurveyReport(Folder, LocalPropertyManager):
 
 
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'deleteStatistics')
-    def addStatistic(self, question, statistic_meta_type, REQUEST=None):
+    def addStatistic(self, question, meta_type, REQUEST=None):
         """Add a statistic for question.
 
             @param question: id of the question
-            @param statistic_meta_type: metatype of the statistic
+            @param meta_type: metatype of the statistic
         """
         global STATISTICS
         global gUtils
 
-        statistic_cls = STATISTICS[statistic_meta_type]
+        statistic_cls = STATISTICS[meta_type]
         question = self.getWidget(question)
         try:
             return manage_addStatistic(statistic_cls,
