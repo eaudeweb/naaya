@@ -36,7 +36,7 @@
 <tr>
 	<td>
 		<fieldset>
-		<legend tal:content="python:test(record_data['action']=='add', 'Add location type', 'Edit location type')"></legend>
+		<legend i18n:translate="" tal:content="python:test(record_data['action']=='add', 'Add location type', 'Edit location type')"></legend>
 		<table border="0" cellspacing="2" cellpadding="2" width="100%">
 			<tr>
 				<td i18n:translate="">Title</td>
@@ -52,7 +52,7 @@
 					<select name="parent">
 						<option value=""></option>
 						<tal:block repeat="item here/getParentsList">
-						<option tal:attributes="value item/id; selected python:record_data['parent'] == item.id" tal:content="item/title" />
+						<option i18n:translate="" tal:attributes="value item/id; selected python:record_data['parent'] == item.id" tal:content="item/title" />
 						</tal:block>
 					</select>
 				</td>
@@ -71,10 +71,10 @@
 			</tr>
 			<tr tal:condition="record_data/picture">
 				<td></td>
-				<td><img tal:attributes="src string:getSymbolPicture?id=${record_data/id}" border="0" /></td>
+				<td><img tal:attributes="src string:getSymbolPicture?id=${record_data/id}" /></td>
 			</tr>
 			<tr>
-				<td><input type="hidden" name="id" tal:attributes="value record_data/id"></td>
+				<td><input type="hidden" name="id" tal:attributes="value record_data/id" /></td>
 				<td><input type="submit" i18n:attributes="value" tal:attributes="value python:test(record_data['action']=='add', 'Add', 'Update')" /></td>
 			</tr>
 		</table>
@@ -93,14 +93,14 @@
 			<tal:block tal:condition="python:rkey==''">
 				<th>
 					<a id="title" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=title&amp;rkey=1#title">
-						<span i18n:translate="" tal:omit-tag="">Title</span>
+						<span i18n:translate="">Title</span>
 					</a>
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th>
 					<a id="title" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=title#title">
-						<span i18n:translate="" tal:omit-tag="">Title</span>
+						<span i18n:translate="">Title</span>
 					</a>
 				</th>
 			</tal:block>
@@ -114,14 +114,14 @@
 			<tal:block tal:condition="python:rkey==''">
 				<th>
 					<a id="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=parent&amp;rkey=1#parent">
-						<span i18n:translate="" tal:omit-tag="">Parent</span>
+						<span i18n:translate="">Parent</span>
 					</a>
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th>
 					<a id="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=parent#parent">
-						<span i18n:translate="" tal:omit-tag="">Parent</span>
+						<span i18n:translate="">Parent</span>
 					</a>
 				</th>
 			</tal:block>

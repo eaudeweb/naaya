@@ -56,14 +56,14 @@ function toggleSelect()
 			<tal:block tal:condition="python:rkey==''">
 				<th>
 					<a id="title" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=title&amp;rkey=1#title">
-						<span i18n:translate="" tal:omit-tag="">Title</span>
+						<span i18n:translate="">Title</span>
 					</a>
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th>
 					<a id="title" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=title#title">
-						<span i18n:translate="" tal:omit-tag="">Title</span>
+						<span i18n:translate="">Title</span>
 					</a>
 				</th>
 			</tal:block>
@@ -77,14 +77,14 @@ function toggleSelect()
 			<tal:block tal:condition="python:rkey==''">
 				<th>
 					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=address&amp;rkey=1#address">
-						<span i18n:translate="" tal:omit-tag="">Address</span>
+						<span i18n:translate="">Address</span>
 					</a>
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th>
 					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=address#address">
-						<span i18n:translate="" tal:omit-tag="">Address</span>
+						<span i18n:translate="">Address</span>
 					</a>
 				</th>
 			</tal:block>
@@ -98,14 +98,14 @@ function toggleSelect()
 			<tal:block tal:condition="python:rkey==''">
 				<th>
 					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude&amp;rkey=1#latitude">
-						<span i18n:translate="" tal:omit-tag="">Latitude</span>
+						<span i18n:translate="">Latitude</span>
 					</a>
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th>
 					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude#latitude">
-						<span i18n:translate="" tal:omit-tag="">Latitude</span>
+						<span i18n:translate="">Latitude</span>
 					</a>
 				</th>
 			</tal:block>
@@ -119,14 +119,14 @@ function toggleSelect()
 			<tal:block tal:condition="python:rkey==''">
 				<th>
 					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude&amp;rkey=1#longitude">
-						<span i18n:translate="" tal:omit-tag="">Longitude</span>
+						<span i18n:translate="">Longitude</span>
 					</a>
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th>
 					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude#longitude">
-						<span i18n:translate="" tal:omit-tag="">Longitude</span>
+						<span i18n:translate="">Longitude</span>
 					</a>
 				</th>
 			</tal:block>
@@ -140,7 +140,7 @@ function toggleSelect()
 	</tr>
 	<tal:block define="records python:here.getLocations(skey, rkey)">
 	<tr tal:condition="not:records">
-		<td colspan="7">No locations found</td>
+		<td colspan="7" i18n:translate="">No locations found</td>
 	</tr>
 	<tr tal:repeat="record records" tal:condition="records">
 		<td><input type="checkbox" name="locations:list" tal:attributes="value python:record.absolute_url(1)"></td>
@@ -149,7 +149,7 @@ function toggleSelect()
 		<td tal:content="record/address" />
 		<td tal:content="record/latitude" />
 		<td tal:content="record/longitude" />
-		<td><a tal:attributes="href string:${record/absolute_url}/edit_html" title="Edit location">edit</a></td>
+		<td><a tal:attributes="href string:${record/absolute_url}/edit_html" title="Edit location" i18n:translate="" i18n:attributes="title">edit</a></td>
 	</tr>
 	<tr tal:condition="records">
 		<td></td>
