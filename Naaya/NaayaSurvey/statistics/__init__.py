@@ -21,7 +21,7 @@
 import glob
 import os.path
 
-from permissions import PERMISSION_ADD_STATISTIC
+from permissions import PERMISSION_ADD_STATISTICS
 
 def _get_available_statistics():
     """ Return available statistics in current dir."""
@@ -44,7 +44,7 @@ def register_statistic(context, statistic):
     context.registerClass(
         statistic,
         constructors = statistic._constructors,
-        permission = PERMISSION_ADD_STATISTIC,
+        permission = PERMISSION_ADD_STATISTICS,
         icon = getattr(statistic, 'icon_filename', 'statistics/www/statistic.gif'))
 
 def initialize(context):

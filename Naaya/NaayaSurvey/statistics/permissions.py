@@ -1,1 +1,1 @@
-PERMISSION_ADD_STATISTIC = 'Naaya - Add Naaya Statistic'
+PERMISSION_ADD_STATISTICS = 'Naaya - Add Naaya Statistics'
