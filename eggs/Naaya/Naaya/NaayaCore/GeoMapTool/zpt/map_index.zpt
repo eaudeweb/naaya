@@ -61,7 +61,7 @@ function toggleSelect()
 
 <div id="right_port">
 	<div class="right_portlet right_link_portlet">
-		<a style="float:right; margin-right: 0.1em;" href="javascript:toggleSelect();" title="Select all">all</a>
+		<a style="float:right; margin-right: 0.1em;" href="javascript:toggleSelect();" title="Select all" i18n:translate="" i18n:attributes="title">all</a>
 		<div class="right_portlet_title portlet-title" i18n:translate="">Filter locations</div>
 
 		<div class="right_portlet_content content">
