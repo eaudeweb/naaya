@@ -36,7 +36,7 @@ from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalP
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 
-from constants import PERMISSION_MANAGE_SURVEYTEMPLATE
+from permissions import PERMISSION_MANAGE_SURVEYTEMPLATE
 import statistics
 from statistics.BaseStatistic import manage_addStatistic
 

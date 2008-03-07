@@ -31,7 +31,7 @@ from Products.NaayaCore.managers.utils import utils
 
 from BaseSurveyTemplate import BaseSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
-from constants import PERMISSION_ADD_MEGASURVEY
+from permissions import PERMISSION_ADD_MEGASURVEY
 
 def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None, **kwargs):
     """ """

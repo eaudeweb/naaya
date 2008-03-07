@@ -22,7 +22,7 @@ import glob
 import os.path
 import Globals
 
-from constants import PERMISSION_ADD_STATISTIC
+from permissions import PERMISSION_ADD_STATISTIC
 
 def _get_available_statistics():
     """ Return available statistics in current dir."""

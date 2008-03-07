@@ -31,7 +31,7 @@ from Products.ExtFile.ExtFile import manage_addExtFile
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.managers.utils import utils
 
-from constants import PERMISSION_VIEW_ANSWERS
+from permissions import PERMISSION_VIEW_ANSWERS
 
 gUtil = utils()
 

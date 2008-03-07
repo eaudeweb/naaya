@@ -27,7 +27,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.managers.utils import utils
 
 from BaseSurveyTemplate import BaseSurveyTemplate
-from constants import PERMISSION_MANAGE_SURVEYTEMPLATE
+from permissions import PERMISSION_MANAGE_SURVEYTEMPLATE
 
 def manage_addSurveyTemplate(context, id="", title="SurveyTemplate", REQUEST=None, **kwargs):
     """

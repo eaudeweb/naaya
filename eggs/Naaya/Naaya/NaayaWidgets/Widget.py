@@ -27,7 +27,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 from Products.NaayaCore.managers.utils import utils
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from Products.NaayaSurvey.constants import PERMISSION_MANAGE_SURVEYTEMPLATE
+from Products.NaayaSurvey.permissions import PERMISSION_MANAGE_SURVEYTEMPLATE
 
 gUtil = utils()
 

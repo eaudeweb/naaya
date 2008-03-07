@@ -48,7 +48,7 @@ from Products.NaayaWidgets.Widget import WidgetError
 
 from SurveyAnswer import manage_addSurveyAnswer, SurveyAnswer
 from SurveyReport import manage_addSurveyReport
-from constants import *
+from permissions import *
 from questionnaire_item import questionnaire_item
 
 class SurveyQuestionnaireException(Exception):
