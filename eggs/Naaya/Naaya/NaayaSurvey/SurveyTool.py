@@ -43,7 +43,7 @@ from SurveyTemplate import manage_addSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
 from MegaSurvey import MegaSurvey
 from permissions import *
-from statistics.permissions import PERMISSION_ADD_STATISTIC
+from statistics.permissions import PERMISSION_ADD_STATISTICS
 
 
 def manage_addSurveyTool(context, REQUEST=None):
@@ -159,7 +159,7 @@ class SurveyTool(Folder):
         site.manage_permission(PERMISSION_MANAGE_SURVEYTEMPLATE, ('Manager', 'Administrator'), acquire=0)
         site.manage_permission(PERMISSION_ADD_SURVEYTEMPLATE, ('Manager', 'Administrator'), acquire=0)
         site.manage_permission(PERMISSION_ADD_WIDGETS, ('Manager', 'Administrator'), acquire=0)
-        site.manage_permission(PERMISSION_ADD_STATISTIC, ('Manager', 'Administrator'), acquire=0)
+        site.manage_permission(PERMISSION_ADD_STATISTICS, ('Manager', 'Administrator'), acquire=0)
 
         site.manage_permission(PERMISSION_ADD_QUESTIONNAIRE, ('Manager', 'Administrator', 'Contributor', ), acquire=0)
         site.manage_permission(PERMISSION_ADD_MEGASURVEY, ('Manager', 'Administrator', 'Contributor', ), acquire=0)
