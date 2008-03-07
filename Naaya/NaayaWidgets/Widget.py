@@ -35,7 +35,7 @@ class WidgetError(Exception):
     """Widget error"""
     pass
 
-def addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs):
+def manage_addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs):
     """Add widget"""
     global gUtil
     if not title:

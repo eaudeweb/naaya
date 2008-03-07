@@ -22,13 +22,13 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
-from Products.NaayaWidgets.Widget import WidgetError, addWidget
+from Products.NaayaWidgets.Widget import WidgetError, manage_addWidget
 
 from MultipleChoiceWidget import MultipleChoiceWidget
 
 def addComboboxWidget(container, id="", title="Combobox Widget", REQUEST=None, **kwargs):
     """ Contructor for Combobox widget"""
-    return addWidget(ComboboxWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(ComboboxWidget, container, id, title, REQUEST, **kwargs)
 
 class ComboboxWidget(MultipleChoiceWidget):
     """ Combobox Widget """

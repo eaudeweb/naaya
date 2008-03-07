@@ -24,12 +24,12 @@ from DateTime import DateTime
 
 # Product imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Products.NaayaWidgets.Widget import Widget, WidgetError, addWidget
+from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
 
 
 def addDateWidget(container, id="", title="Date Widget", REQUEST=None, **kwargs):
     """ Contructor for Date widget"""
-    return addWidget(DateWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(DateWidget, container, id, title, REQUEST, **kwargs)
 
 class DateWidget(Widget):
     """Date Widget"""

@@ -35,7 +35,7 @@ import zLOG
 # Naaya imports
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from Products.NaayaWidgets.widgets import AVAILABLE_WIDGETS
-from Products.NaayaWidgets.Widget import Widget, WidgetError
+from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
 from Products.NaayaWidgets.widgets.LabelWidget import LabelWidget
 from Products.NaayaWidgets.widgets.MultipleChoiceWidget import MultipleChoiceWidget
 from Products.NaayaWidgets.widgets.MatrixWidget import MatrixWidget
@@ -53,6 +53,8 @@ from statistics.MatrixTabularStatistic import MatrixTabularStatistic
 from statistics.MatrixCssBarChartStatistic import MatrixCssBarChartStatistic
 
 from permissions import PERMISSION_MANAGE_SURVEYTEMPLATE
+
+WIDGETS = dict([(widget.meta_type, widget) for widget in AVAILABLE_WIDGETS])
 
 class BaseSurveyTemplate(Folder, LocalPropertyManager):
     """Survey Template"""
@@ -145,6 +147,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
         for widget_type in types:
             instance = widget_type.get('instance', None)
             widget_type.update({
+                'meta_type': getattr(instance, 'meta_type', ''),
                 'meta_label': getattr(instance, 'meta_label', ''),
                 'meta_description': getattr(instance, 'meta_description', ''),
             })
@@ -182,23 +185,28 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
     # Widget edit methods
     #
     security.declarePrivate('addWidget')
-    def addWidget(self, REQUEST, title='', add_action='', **kwargs):
-        """ Add a new widget"""
+    def addWidget(self, REQUEST, title='', meta_type=None, **kwargs):
+        """Add a widget.
+
+            @param meta_type: metatype of the widget
+        """
         err = []
         if not title:
             err.append('Field title is required')
-        if not add_action:
+        if not meta_type:
             err.append('Field type is required')
 
         if err:
             self.setSessionErrors(err)
             self.setSession('title', title)
-            self.setSession('add_action', add_action)
-            redirect_url = '%s/index_html' % self.absolute_url()
-        else:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            redirect_url = '%s/%s?%s' % (self.absolute_url(), add_action, urlencode({'title': title}))
-        REQUEST.RESPONSE.redirect(redirect_url)
+            self.setSession('meta_type', meta_type)
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+        widget_cls = WIDGETS[meta_type]
+        return manage_addWidget(widget_cls,
+                                self,
+                                title=title,
+                                REQUEST=REQUEST)
 
     security.declarePrivate('deleteItems')
     def deleteItems(self, ids=[], REQUEST=None):

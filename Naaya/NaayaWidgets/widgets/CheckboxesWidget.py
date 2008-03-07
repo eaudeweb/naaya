@@ -22,13 +22,13 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 
-from Products.NaayaWidgets.Widget import WidgetError, addWidget
+from Products.NaayaWidgets.Widget import WidgetError, manage_addWidget
 
 from MultipleChoiceWidget import MultipleChoiceWidget
 
 def addCheckboxesWidget(container, id="", title="Checkboxes Widget", REQUEST=None, **kwargs):
     """ Contructor for Checkboxes widget"""
-    return addWidget(CheckboxesWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(CheckboxesWidget, container, id, title, REQUEST, **kwargs)
 
 class CheckboxesWidget(MultipleChoiceWidget):
     """ Checkboxes Widget """

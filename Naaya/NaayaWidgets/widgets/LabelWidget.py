@@ -26,11 +26,11 @@ from Globals import InitializeClass
 # Product imports
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyImageContainer import NyImageContainer
-from Products.NaayaWidgets.Widget import Widget, WidgetError, addWidget
+from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
 
 def addLabelWidget(container, id="", title="Label Widget", REQUEST=None, **kwargs):
     """ Contructor for Label widget"""
-    return addWidget(LabelWidget, container, id, title, REQUEST, **kwargs)
+    return manage_addWidget(LabelWidget, container, id, title, REQUEST, **kwargs)
 
 class LabelWidget(Widget):
     """ Multi-line text Widget """
