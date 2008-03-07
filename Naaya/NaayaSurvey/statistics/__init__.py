@@ -20,7 +20,6 @@
 
 import glob
 import os.path
-import Globals
 
 from permissions import PERMISSION_ADD_STATISTIC
 
