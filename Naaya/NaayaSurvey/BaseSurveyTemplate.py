@@ -52,7 +52,7 @@ from statistics.MultipleChoicePieChartStatistic import MultipleChoicePieChartSta
 from statistics.MatrixTabularStatistic import MatrixTabularStatistic
 from statistics.MatrixCssBarChartStatistic import MatrixCssBarChartStatistic
 
-from constants import PERMISSION_MANAGE_SURVEYTEMPLATE
+from permissions import PERMISSION_MANAGE_SURVEYTEMPLATE
 
 class BaseSurveyTemplate(Folder, LocalPropertyManager):
     """Survey Template"""

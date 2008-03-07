@@ -17,7 +17,7 @@
 #
 # Alin Voinea, Eau de Web
 
-from constants import *
+from permissions import *
 import SurveyQuestionnaire
 import SurveyAnswer
 import SurveyTool

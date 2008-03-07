@@ -42,8 +42,8 @@ from SurveyTemplate import SurveyTemplate
 from SurveyTemplate import manage_addSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
 from MegaSurvey import MegaSurvey
-from constants import *
-from statistics.constants import PERMISSION_ADD_STATISTIC
+from permissions import *
+from statistics.permissions import PERMISSION_ADD_STATISTIC
 
 
 def manage_addSurveyTool(context, REQUEST=None):
