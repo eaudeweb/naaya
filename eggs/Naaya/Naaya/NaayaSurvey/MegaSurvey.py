@@ -1,3 +1,22 @@
+# The contents of this file are subject to the Mozilla Public
+# License Version 1.1 (the "License"); you may not use this file
+# except in compliance with the License. You may obtain a copy of
+# the License at http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS
+# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+# implied. See the License for the specific language governing
+# rights and limitations under the License.
+#
+# The Initial Owner of the Original Code is European Environment
+# Agency (EEA).  Portions created by Finsiel Romania and Eau de Web are
+# Copyright (C) European Environment Agency.  All
+# Rights Reserved.
+#
+# Authors:
+#
+# Cristian Ciupitu, Eau de Web
+
 # Zope imports
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view
@@ -10,7 +29,7 @@ from zLOG import LOG, ERROR, DEBUG
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import utils
 
-from SurveyTemplate import SurveyTemplate
+from BaseSurveyTemplate import BaseSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
 from constants import PERMISSION_ADD_MEGASURVEY
 
@@ -65,9 +84,7 @@ def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None, **kw
         context.setSession('referer', context.absolute_url())
         REQUEST.RESPONSE.redirect('%s/messages_html' % context.absolute_url())
 
-
-
-class MegaSurvey(SurveyTemplate, SurveyQuestionnaire):
+class MegaSurvey(BaseSurveyTemplate, SurveyQuestionnaire):
     """ """
 
     meta_type = 'Naaya Mega Survey'
@@ -79,7 +96,7 @@ class MegaSurvey(SurveyTemplate, SurveyQuestionnaire):
 
     def __init__(self, id, **kwargs):
         """ """
-        SurveyTemplate.__init__(self, id, **kwargs)
+        BaseSurveyTemplate.__init__(self, id, **kwargs)
         SurveyQuestionnaire.__init__(self, id, None, **kwargs)
 
     security.declareProtected(view, 'getSurveyTemplate')
@@ -109,5 +126,15 @@ class MegaSurvey(SurveyTemplate, SurveyQuestionnaire):
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_reports_html')
     edit_reports_html = PageTemplateFile('zpt/megasurvey_edit_reports', globals())
+
+    #
+    # change the security of the inherited methods
+    #
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'addWidget')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'deleteItems')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'setSortOrder')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'addReport')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'generateFullReport')
 
 InitializeClass(MegaSurvey)
