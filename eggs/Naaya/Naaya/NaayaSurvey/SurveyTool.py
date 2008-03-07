@@ -159,6 +159,7 @@ class SurveyTool(Folder):
         site.manage_permission(PERMISSION_MANAGE_SURVEYTEMPLATE, ('Manager', 'Administrator'), acquire=0)
         site.manage_permission(PERMISSION_ADD_SURVEYTEMPLATE, ('Manager', 'Administrator'), acquire=0)
         site.manage_permission(PERMISSION_ADD_WIDGETS, ('Manager', 'Administrator'), acquire=0)
+        site.manage_permission(PERMISSION_ADD_REPORT, ('Manager', 'Administrator'), acquire=0)
         site.manage_permission(PERMISSION_ADD_STATISTICS, ('Manager', 'Administrator'), acquire=0)
 
         site.manage_permission(PERMISSION_ADD_QUESTIONNAIRE, ('Manager', 'Administrator', 'Contributor', ), acquire=0)
