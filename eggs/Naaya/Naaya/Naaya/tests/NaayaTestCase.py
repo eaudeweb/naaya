@@ -131,9 +131,7 @@ class NaayaInstaller:
                 % (time.time() - self._start,))
 
 def setupPortal(PortalInstaller=NaayaInstaller):
-    # Create a CPS site in the test (demo-) storage
     app = ZopeTestCase.app()
-    # PortalTestCase expects object to be called "portal", not "cps"
     if not hasattr(app, portal_name):
         PortalInstaller(app).install(portal_name)
     ZopeTestCase.close(app)
