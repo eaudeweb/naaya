@@ -2,6 +2,7 @@ To use the Naaya Survey product two steps must be followed:
 1. Create a Survey Template in the portal administration, in the survey templates administration area.
 2. Add somewhere in the portal a survey of that type and let responds take it.
 
+You can also use the "Mega Survey" Naaya content type. This type lets you define questions and collect answers in the same place.
 
 
 	Creating a Survey Template
@@ -46,7 +47,7 @@ To use the Naaya Survey product two steps must be followed:
 
 
 	Using a Survey Template
-	-------------------
+	-----------------------
 
 	Go to the folder where you want to publish your survey. Click on the "Subobjects" button. Make sure that "Survey" is selected in the list of object types, click "Save changes" and then go back to index. Note: this step is needs to be done only once per folder.
 
@@ -77,14 +78,22 @@ To use the Naaya Survey product two steps must be followed:
 		--------
 
 		The following permissions exists:
-		- 'Naaya - Add Naaya Survey Tool': used for adding the survey tool
-		- 'Naaya - Add Naaya Survey Template'; by default it's given to Manager and Administrator
-		- 'Naaya - Manage Naaya Survey Template'; by default it's given to Manager and Administrator
-		- 'Naaya - Add Naaya Statistic': used for reports; by default it's given to Manager and Administrator
-		- 'Naaya - Add Naaya Survey Questionnaire': create a survey;  by default it's given to Contributor
-		- 'Naaya - Add Naaya Survey Answer': answer/take a survey; by default it's given to all users (Authenticated and Anonymous)
-		- 'Naaya - View Naaya Survey Answers': view the list of answers
-		- 'Naaya - View Naaya Survey Reports': view the reports;  by default it's given to all users (Authenticated and Anonymous)
-		Also the 'Naaya - Add Naaya Widgets' permission from NaayaWidgets is given by default to Manager and Administrator, since it's needed for creating a survey template.
+		- Add permissions:
+			- 'Naaya - Add Naaya Survey Tool': used for adding the survey tool
+			- 'Naaya - Add Naaya Survey Template'; by default it's given to Manager and Administrator
+			- 'Naaya - Add Naaya Statistic': used for reports; by default it's given to Manager and Administrator
+			- 'Naaya - Add Naaya Survey Questionnaire': create a survey;  by default it's given to Contributor
+			- 'Naaya - Add Naaya Mega Survey': create a survey;  by default it's given to Contributor
+			- 'Naaya - Add Naaya Survey Answer': answer/take a survey; by default it's given to all users (Authenticated and Anonymous)
+		- Edit/Manage permissions:
+			- 'Naaya - Manage Naaya Survey Template'; by default it's given to Manager and Administrator
+			- the generic *edit published object* permission lets you edit *Survey Questionnaires*, *Mega Surveys*, questions and reports
+		- View permissions
+			- 'Naaya - View Naaya Survey Answers': view the list of answers
+			- 'Naaya - View Naaya Survey Reports': view the reports;  by default it's given to all users (Authenticated and Anonymous)
+		Also the 'Naaya - Add Naaya Widgets' permission from NaayaWidgets is given by default to Manager and Administrator.
+
+		N.B.: the 'Naaya - Manage Naaya Survey Template' permission doesn't apply to questions and reports inside a *Survey Template*! You'll need to give the *edit published object* permission for the *Survey Tool* (/portal_survey) only to trusted users.
 
 		When a "Survey Tool" is added, the security of the site will be configured as described above.
+		Unsupported: you can also call through the web the manage_configureSite method, e.g. "/portal_survey/manage_configureSite".
