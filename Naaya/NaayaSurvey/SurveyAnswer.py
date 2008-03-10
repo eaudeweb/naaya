@@ -94,8 +94,6 @@ class SurveyAnswer(Folder):
 
     def add_properties(self, datamodel):
         for key, value in datamodel.items():
-            if value is None:
-                continue
             if isinstance(value, FileUpload):
                 continue # Handled somewhere else
             setattr(self, key, value)
