@@ -11,6 +11,11 @@
 				<span i18n:translate="">Edit</span>
 			</a>
 		</li>
+		<li tal:attributes="id python: 'attachments'==selected_tab and 'currenttab' or None">
+			<a tal:attributes="href string:${here/absolute_url}/edit_attachments_html">
+				<span i18n:translate="">Edit</span>
+			</a>
+		</li>
 		<li tal:attributes="id python: 'questions'==selected_tab and 'currenttab' or None">
 			<a tal:attributes="href string:${here/absolute_url}/edit_questions_html">
 				<span i18n:translate="">Questions</span>

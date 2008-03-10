@@ -125,6 +125,9 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     edit_html = PageTemplateFile('zpt/megasurvey_edit', globals())
 
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_attachments_html')
+    edit_attachments_html = PageTemplateFile('zpt/megasurvey_edit_attachments', globals())
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_questions_html')
     edit_questions_html = PageTemplateFile('zpt/megasurvey_edit_questions', globals())
 
@@ -140,5 +143,6 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'setSortOrder')
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'addReport')
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'generateFullReport')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'addAttachment')
 
 InitializeClass(MegaSurvey)

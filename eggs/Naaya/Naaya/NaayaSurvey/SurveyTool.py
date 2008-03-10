@@ -158,6 +158,7 @@ class SurveyTool(Folder):
                  'Configuring security for surveys on site %s' % (site.absolute_url(1)))
         site.manage_permission(PERMISSION_MANAGE_SURVEYTEMPLATE, ('Manager', 'Administrator'), acquire=0)
         site.manage_permission(PERMISSION_ADD_SURVEYTEMPLATE, ('Manager', 'Administrator'), acquire=0)
+        site.manage_permission(PERMISSION_ADD_ATTACHMENT, ('Manager', 'Administrator'), acquire=0)
         site.manage_permission(PERMISSION_ADD_WIDGETS, ('Manager', 'Administrator'), acquire=0)
         site.manage_permission(PERMISSION_ADD_REPORT, ('Manager', 'Administrator'), acquire=0)
         site.manage_permission(PERMISSION_ADD_STATISTICS, ('Manager', 'Administrator'), acquire=0)

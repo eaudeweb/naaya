@@ -42,6 +42,7 @@ from Products.NaayaWidgets.widgets.MatrixWidget import MatrixWidget
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 
 # reports
+from SurveyAttachment import SurveyAttachment, addSurveyAttachment
 from SurveyReport import SurveyReport, manage_addSurveyReport
 from statistics.BaseStatistic import manage_addStatistic
 from statistics.SimpleTabularStatistic import SimpleTabularStatistic
@@ -216,7 +217,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
         else:
             try:
                 if isinstance(self._getOb(ids[0]), AVAILABLE_WIDGETS):
-                    # if we're deleting questions, delete the 
+                    # if we're deleting questions, delete the
                     # corresponding statistics too
                     for report in self.getReports():
                         statistic_ids = [stat.id for stat in report.getStatistics() if stat.question.id in ids]
@@ -332,10 +333,34 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
         return report
 
     #
+    # Attachments
+    #
+    security.declareProtected(view, 'getAttachments')
+    def getAttachments(self):
+        """ """
+        return self.objectValues([SurveyAttachment.meta_type])
+
+    security.declareProtected(view, 'getReports')
+    def getSortedAttachments(self, sort_by='title'):
+        """ """
+        return sort(self.getAttachments(), ( (sort_by, 'cmp', 'asc'), ))
+
+    security.declarePrivate('addAttachment')
+    def addAttachment(self, title='', REQUEST=None, **kwargs):
+        """Add an attachment"""
+        result = addSurveyAttachment(self, title=title, REQUEST=REQUEST, **kwargs)
+        if REQUEST:
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        return result
+
+    #
     # Macros
     #
     security.declareProtected(view, 'tabs')
     tabs = PageTemplateFile('zpt/surveytemplate_tabs', globals())
+
+    security.declareProtected(view, 'base_edit_attachments_html')
+    base_edit_attachments_html = PageTemplateFile('zpt/base_surveytemplate_edit_attachments', globals())
 
     security.declareProtected(view, 'base_edit_questions_html')
     base_edit_questions_html = PageTemplateFile('zpt/base_surveytemplate_edit_questions', globals())

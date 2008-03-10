@@ -17,16 +17,22 @@
 #
 # Alin Voinea, Eau de Web
 
-from permissions import *
-import SurveyQuestionnaire
-import SurveyAnswer
-import SurveyTool
-import SurveyTemplate
-import SurveyReport
-import MegaSurvey
+# Zope imports
 from ImageFile import ImageFile
 
+# Naaya imports
 from Products.Naaya import register_content
+
+# pkg imports
+import MegaSurvey
+from permissions import *
+import SurveyAnswer
+import SurveyAttachment
+import SurveyQuestionnaire
+import SurveyReport
+import SurveyTemplate
+import SurveyTool
+
 
 import statistics
 
@@ -67,6 +73,12 @@ def initialize(context):
         permission = PERMISSION_ADD_REPORT,
         constructors = SurveyReport.SurveyReport._constructors,
         icon = 'www/NySurveyReport.gif'
+    )
+    context.registerClass(
+        SurveyAttachment.SurveyAttachment,
+        permission = PERMISSION_ADD_ATTACHMENT,
+        constructors = SurveyAttachment.SurveyAttachment._constructors,
+        icon = 'www/NySurveyAttachment.gif'
     )
     statistics.initialize(context)
 
