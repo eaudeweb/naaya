@@ -204,8 +204,8 @@ class SurveyTool(Folder):
         self.manage_configureCatalog()
         self.manage_configureEmailNotifications()
         self.manage_configureSecurity()
-        self.manage_updatePortlets()
-        self.getSite().searchable_content.append(SurveyQuestionnaire.meta_type)
+        #self.manage_updatePortlets() # disabled for the moment
+        #self.getSite().searchable_content.append(SurveyQuestionnaire.meta_type) # disabled for the moment
         self.getSite().searchable_content.append(MegaSurvey.meta_type)
 
     #
