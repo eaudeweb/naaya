@@ -129,8 +129,9 @@ class ScriptChannel(PythonScript, utils):
     security.declareProtected(view, 'index_html')
     def index_html(self, feed='', REQUEST=None, RESPONSE=None):
         """ """
+        
         if feed == 'atom':
-            return self.syndicateAtom(items=self.get_objects_for_rdf())
+            return self.syndicateAtom(self, self.get_objects_for_rdf(), self.language)
         
         s = self.getSite()
         lang = self.language
