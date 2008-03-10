@@ -108,7 +108,7 @@ class SurveyTool(Folder):
     #
     security.declareProtected(PERMISSION_ADMINISTRATE, 'manage_configureCatalog')
     def manage_configureCatalog(self):
-        """Configure  catalog tool:
+        """Configure catalog tool:
             - add a survey_template index for the getSurveyTemplateId method
         """
         catalog_tool = self.getSite().getCatalogTool()
