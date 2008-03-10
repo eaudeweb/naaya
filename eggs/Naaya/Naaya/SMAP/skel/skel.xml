@@ -60,7 +60,7 @@
 	</pluggablecontenttypes>
 	<portlets left="portlet_quick_links,portlet_places,portlet_left_side" center="portlet_latestuploads_rdf">
 		<portlet id="portlet_rdfcalendar" title="RDF Calendar"/>
-		<portlet id="portlet_submit_public" title="Submit Events & News"/>
+		<portlet id="portlet_submit_public" title="Submit Events &amp; News"/>
 		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="portlet_left_side" title="Left-side navigation" />
 		<portlet id="portlet_places" title="Useful links" />
