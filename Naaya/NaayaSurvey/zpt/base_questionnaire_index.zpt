@@ -49,8 +49,19 @@
 	<tal:block define="my_answer python:here.getMySurveyAnswer()">
 	<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
 	      tal:define="stype here/getSurveyTemplate;
-	                  rendered python:test(stype, stype.render(mode='edit', datamodel={}), 'Error');"
+		              rendered python:test(stype, stype.render(mode='edit', datamodel={}), 'Error');"
 	      tal:condition="python: my_answer is None or here.checkPermissionEditObjects()">
+
+		<ul tal:define="attachments here/getSortedAttachments" tal:condition="attachments">
+			<li tal:repeat="attachment attachments">
+				<p tal:condition="attachment/description" tal:content="attachment/description">description</p>
+				<tal:block tal:define="download_url attachment/getDownloadUrl">
+					<a tal:define="size python:attachment.utShowSizeKb(attachment.size()); content_type attachment/content_type; content_type_title python:attachment.getContentTypeTitle(content_type)" tal:attributes="href download_url">
+						<img tal:attributes="src string:getContentTypePicture?id=${content_type}" alt="" /> <span tal:replace="string:${attachment/downloadfilename} (${content_type_title}, ${size} Kb)"/>
+					</a>
+				</tal:block>
+			</li>
+		</ul>
 
 		<tal:block content="structure rendered" />
 
