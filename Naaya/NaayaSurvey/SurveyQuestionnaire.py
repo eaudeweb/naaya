@@ -220,7 +220,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             if self.expired():
                 raise SurveyQuestionnaireException("The survey has expired")
             if self.getMySurveyAnswer() is not None:
-                raise SurveyQuestionnaireException("You have already answered")
+                raise SurveyQuestionnaireException("You have already taken this survey")
         except SurveyQuestionnaireException, ex:
             if REQUEST:
                 self.setSessionErrors([ex])
