@@ -99,6 +99,10 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
         #BaseSurveyTemplate.__init__(self, id, **kwargs)
         SurveyQuestionnaire.__init__(self, id, None, **kwargs)
 
+    def all_meta_types(self, interfaces=None):
+        """What can you put inside me?"""
+        return BaseSurveyTemplate.all_meta_types(self, interfaces)
+
     security.declareProtected(view, 'getSurveyTemplate')
     def getSurveyTemplate(self):
         """Return the survey template used for this questionnaire"""
