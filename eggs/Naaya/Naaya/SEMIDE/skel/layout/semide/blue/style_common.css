@@ -194,7 +194,7 @@
 	/* Tabbed menus  */
 
 #tabbedmenu {
-	float: left;
+	float: none;
 	width:100%;
 	border-bottom: thin solid #E3E2D3;
 	font-size: 1.1em;
