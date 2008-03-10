@@ -272,7 +272,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
         """ """
         return self.objectValues([SurveyReport.meta_type])
 
-    security.declareProtected(view, 'getReports')
+    security.declareProtected(view, 'getSortedReports')
     def getSortedReports(self, sort_by='title'):
         """ """
         return sort(self.getReports(), ( (sort_by, 'cmp', 'asc'), ))
