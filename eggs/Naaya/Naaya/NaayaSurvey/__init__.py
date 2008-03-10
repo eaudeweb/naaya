@@ -52,7 +52,7 @@ def initialize(context):
     )
     context.registerClass(
         MegaSurvey.MegaSurvey,
-        permission = PERMISSION_ADD_QUESTIONNAIRE,
+        permission = PERMISSION_ADD_MEGASURVEY,
         constructors = MegaSurvey.MegaSurvey._constructors,
         icon = 'www/NySurveyQuestionnaire.gif'
     )
