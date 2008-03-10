@@ -37,7 +37,7 @@ def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None, **kw
     """ """
     util = utils()
     if not title:
-        title = 'Mega Survey'
+        title = 'Survey'
     if not id:
         id = util.utGenObjectId(title)
 
@@ -88,7 +88,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     """ """
 
     meta_type = 'Naaya Mega Survey'
-    meta_label = 'Mega Survey'
+    meta_label = 'Survey'
 
     _constructors = (manage_addMegaSurvey, )
 

@@ -8,7 +8,7 @@
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
 
-<h1 i18n:translate="">Edit MegaSurvey Questions</h1>
+<h1 i18n:translate="">Edit Survey Questions</h1>
 
 <div class="floated-buttons">
 	<span class="buttons">

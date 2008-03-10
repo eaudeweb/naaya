@@ -59,7 +59,7 @@ def manage_addSurveyQuestionnaire(context, id='', title='', lang=None, REQUEST=N
     """ """
     util = utils()
     if not title:
-        title = 'Questionnaire'
+        title = 'Survey Instance'
     if not id:
         id = util.utGenObjectId(title)
 
@@ -109,7 +109,7 @@ def manage_addSurveyQuestionnaire(context, id='', title='', lang=None, REQUEST=N
 class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     """ """
     meta_type = "Naaya Survey Questionnaire"
-    meta_label = "Survey"
+    meta_label = "Survey Instance"
     icon = 'misc_/NaayaSurvey/NySurveyQuestionnaire.gif'
     icon_marked = 'misc_/NaayaSurvey/NySurveyQuestionnaire_marked.gif'
 
