@@ -12,10 +12,15 @@
 				ob_id python:request.get('id', '');
 				ob_data python:syndication_tool.get_data_local_channel(ob_id)">
 <p i18n:translate="">
-	This section lists the local channels of information offered to remote sources of information 
-	in a standardized manor (XML). Although RDF files are automatically generated from various parts 
-	of a portal (e.g. every Naaya Folder), the administrators of other websites will not be aware of
-	that so they will be offered the list you define below in XML format.
+	This page lists the local channels that this portal offers as feeds to other sites. 
+	RDF and Atom feeds are automatically generated from each channel listed below as well as for each portal folder.
+	Only the local channels listed below will appear when clicking the syndication icon 
+	( <img src="misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" /> ) available in some browsers 
+	(e.g. Internet Explorer 7, Mozilla Firefox 2).
+	Local channels are automatically generated in both <a href="http://en.wikipedia.org/wiki/Atom_%28standard%29">Atom</a> 
+	and <a href="http://en.wikipedia.org/wiki/Resource_Description_Framework">RDF</a> formats.
+	Read more about <a href="http://www.intertwingly.net/wiki/pie/Rss20AndAtom10Compared" i18n:translate="">
+	the differences between these formats on the Atom wiki</a>.
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_deletelocalchannel">
 <table border="0" cellspacing="0" cellpadding="1" class="admin_table">
@@ -36,6 +41,7 @@
 		<td valign="top" tal:content="python:syndication_tool.get_channeltype_title(channel.type)" />
 		<td valign="top">
 			[<a tal:attributes="href channel/absolute_url" i18n:translate="">Preview RDF</a>]
+			[<a tal:attributes="href string:${channel/absolute_url}?feed=atom" i18n:translate="">Preview Atom</a>]
 		</td>
 	</tr>
 	<tr tal:repeat="channel syndication_tool/get_local_channels">
@@ -47,6 +53,7 @@
 		<td valign="top" tal:content="python:syndication_tool.get_channeltype_title(channel.type)" />
 		<td valign="top">
 			[<a tal:attributes="href channel/absolute_url" i18n:translate="">Preview RDF</a>]
+			[<a tal:attributes="href string:${channel/absolute_url}?feed=atom" i18n:translate="">Preview Atom</a>]
 			[<a tal:attributes="href string:${site_url}/admin_localchannels_html?id=${channel/id}" i18n:translate="">Edit channel</a>]
 		</td>
 	</tr>
