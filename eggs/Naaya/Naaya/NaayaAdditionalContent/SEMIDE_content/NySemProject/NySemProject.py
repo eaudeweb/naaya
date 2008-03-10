@@ -31,6 +31,7 @@ from Products.NaayaContent.constants    import *
 from Products.NaayaBase.constants       import *
 from Products.NaayaBase.NyContainer     import NyContainer
 from Products.NaayaBase.NyAttributes    import NyAttributes
+from Products.NaayaBase.NyImportExport  import NyImportExport
 from Products.NaayaBase.NyCheckControl  import NyCheckControl
 from semproject_item                    import semproject_item
 
@@ -214,7 +215,7 @@ def importNySemProject(self, param, id, attrs, content, properties, discussion, 
                     object.properties, object.discussion, object.objects)
 
 
-class NySemProject(NyAttributes, semproject_item, NyContainer, NyCheckControl):
+class NySemProject(NyAttributes, semproject_item, NyImportExport, NyContainer, NyCheckControl):
     """ """
 
     meta_type = METATYPE_OBJECT
@@ -227,7 +228,7 @@ class NySemProject(NyAttributes, semproject_item, NyContainer, NyCheckControl):
         l_options = (NyContainer.manage_options[0],) + semproject_item.manage_options
         if not self.hasVersion():
             l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
+        l_options = l_options + ({'label': 'View', 'action': 'index_html'},) + NyImportExport.manage_options + NyContainer.manage_options[3:8]
         return l_options
 
     meta_types = (
@@ -307,6 +308,10 @@ class NySemProject(NyAttributes, semproject_item, NyContainer, NyCheckControl):
             self.getLocalProperty('programme', lang), self.getLocalProperty('objectives', lang),
             self.getLocalProperty('results', lang)])
 
+    def exportdata_custom(self):
+        # exports all the Naaya content in XML format from this project
+        return self.export_this()
+
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
         return 'budget="%s" resourceurl="%s" start_date="%s" end_date="%s" pr_number="%s" subject="%s"' % \
@@ -326,7 +331,6 @@ class NySemProject(NyAttributes, semproject_item, NyContainer, NyCheckControl):
             ra('<programme lang="%s"><![CDATA[%s]]></programme>' % (l, self.utToUtf8(self.getLocalProperty('programme', l))))
             ra('<objectives lang="%s"><![CDATA[%s]]></objectives>' % (l, self.utToUtf8(self.getLocalProperty('objectives', l))))
             ra('<results lang="%s"><![CDATA[%s]]></results>' % (l, self.utToUtf8(self.getLocalProperty('results', l))))
-
         for x in self.getFundings():
             ra(x.export_this())
         for x in self.getDocuments():
