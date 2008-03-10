@@ -14,16 +14,13 @@
 div.marker {
 	display: none;
 }
-
 div.marker-body {
 	width: 290px;
 	margin-top: 0;
 }
-
 div.marker-more {
 	padding: 10px 5px 5px 30px;	/* T   R   B   L */
 }
-
 div.marker-body h3 {
 	font-weight: bold;
 	font-size: 1em;
