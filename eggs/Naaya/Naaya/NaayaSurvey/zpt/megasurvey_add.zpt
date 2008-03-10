@@ -6,7 +6,7 @@
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/common_js"></script>
 <tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
 
-<h1 i18n:translate="">Submit MegaSurvey</h1>
+<h1 i18n:translate="">Submit Survey</h1>
 
 <tal:block define="add_method string:manage_addMegaSurvey">
 	<tal:block metal:use-macro="python: here.getSite().portal_survey.base_questionnaire_add_html.macros['submit_form']">

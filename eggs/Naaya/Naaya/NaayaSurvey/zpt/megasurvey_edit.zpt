@@ -7,7 +7,7 @@
 	tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
 </metal:block>
 
-<h1 metal:fill-slot="title" i18n:translate="">Edit MegaSurvey</h1>
+<h1 metal:fill-slot="title" i18n:translate="">Edit Survey</h1>
 
 <div class="field" metal:fill-slot="doc_discussion" />
 
