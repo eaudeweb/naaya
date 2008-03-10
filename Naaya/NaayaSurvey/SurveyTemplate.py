@@ -70,6 +70,8 @@ class SurveyTemplate(BaseSurveyTemplate):
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'edit_html')
     edit_html = PageTemplateFile('zpt/surveytemplate_edit', globals())
 
+    # TODO: add edit_attachments_html
+
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'edit_questions_html')
     edit_questions_html = PageTemplateFile('zpt/surveytemplate_edit_questions', globals())
 
@@ -91,5 +93,6 @@ class SurveyTemplate(BaseSurveyTemplate):
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'setSortOrder')
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'addReport')
     security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'generateFullReport')
+    security.declareProtected(PERMISSION_MANAGE_SURVEYTEMPLATE, 'addAttachment')
 
 InitializeClass(SurveyTemplate)
