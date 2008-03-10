@@ -40,7 +40,6 @@
 		<form id="flashtool_subscribe" title="Subscribe page"/>
 		<form id="site_insertrelativelink" title=""/>
 		<form id="nfp_download" title="NFP Download"/>
-		<form id="site_external_search" title="External search"/>
 		<form id="site_admin_users" title="Semide users"/>
 		<form id="site_admin_roles" title="Semide users/roles"/>
 		<form id="site_admin_flash_notification" title="Semide notification confirmation"/>
