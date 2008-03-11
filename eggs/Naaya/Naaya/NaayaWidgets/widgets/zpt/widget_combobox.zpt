@@ -26,7 +26,7 @@
 		<span i18n:translate="" tal:content="here/title" />
 		<span tal:condition="here/required" class="required">*</span>
 	</label>
-	<div class="tooltips" tal:content="here/tooltips" />
+	<div class="tooltips" tal:content="structure here/tooltips" />
 	<select tal:attributes="name string:${widget_id}:int; id widget_id">
 		<tal:block repeat="choice here/choices">
 			<tal:block define="choice_id python:widget_id + choice.strip().replace(' ', '_');">
