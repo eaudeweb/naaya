@@ -308,9 +308,9 @@ class NySemProject(NyAttributes, semproject_item, NyImportExport, NyContainer, N
             self.getLocalProperty('programme', lang), self.getLocalProperty('objectives', lang),
             self.getLocalProperty('results', lang)])
 
-    def exportdata_custom(self):
+    def exportdata_custom(self, all_levels=1):
         # exports all the Naaya content in XML format from this project
-        return self.export_this()
+        return self.export_this(all_levels=all_levels)
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
