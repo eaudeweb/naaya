@@ -128,7 +128,7 @@
 		<ul style="margin-left: 0em;" tal:define="items partners" tal:condition="python:len(items) > 0">
 			<li tal:repeat="item items" style="list-style: none;">
 				<tal:block tal:condition="permission_edit"><input type="checkbox" name="id" tal:attributes="value item/id" /></tal:block>
-				<strong style="font-size: 1.4em;" tal:content="item/title_or_id" />
+				<strong style="font-size: 1.4em;" tal:attributes="name item/id; id item/id;" tal:content="item/title_or_id" />
 				<a tal:condition="permission_edit"
 					tal:attributes="href string:${item/absolute_url}/edit_html">
 					<img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" />
@@ -178,7 +178,7 @@
 		<ul style="margin-left: 0em;" tal:define="items fundings" tal:condition="python:len(items) > 0">
 			<li tal:repeat="item items" style="list-style: none;">
 				<tal:block tal:condition="permission_edit"><input type="checkbox" name="id" tal:attributes="value item/id" /></tal:block>
-				<strong style="font-size: 1.4em;" tal:content="item/title_or_id" />
+				<strong style="font-size: 1.4em;" tal:attributes="name item/id; id item/id;" tal:content="item/title_or_id" />
 				<a tal:condition="permission_edit"
 					tal:attributes="href string:${item/absolute_url}/edit_html">
 					<img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" />
@@ -210,7 +210,7 @@
 		<ul style="margin-left: 0em;" tal:define="items field_sites" tal:condition="python:len(items) > 0">
 			<li tal:repeat="item items" style="list-style: none;">
 				<tal:block tal:condition="permission_edit"><input type="checkbox" name="id" tal:attributes="value item/id" /></tal:block>
-				<strong style="font-size: 1.4em;" tal:content="item/title_or_id" />
+				<strong style="font-size: 1.4em;" tal:attributes="name item/id; id item/id;" tal:content="item/title_or_id" />
 				<a tal:condition="permission_edit"
 					tal:attributes="href string:${item/absolute_url}/edit_html">
 					<img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" />
@@ -238,7 +238,7 @@
 		<ul style="margin-left: 0em;" tal:define="items documents" tal:condition="python:len(items) > 0">
 			<li tal:repeat="item items" style="list-style: none;">
 				<tal:block tal:condition="permission_edit"><input type="checkbox" name="id" tal:attributes="value item/id" /></tal:block>
-				<strong style="font-size: 1.4em;" tal:content="item/title_or_id" />
+				<strong style="font-size: 1.4em;" tal:attributes="name item/id; id item/id;" tal:content="item/title_or_id" />
 				<a tal:condition="permission_edit"
 					tal:attributes="href string:${item/absolute_url}/edit_html">
 					<img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" />
