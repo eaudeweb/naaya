@@ -244,12 +244,12 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         self.delete_portlet_for_object(item)
 
     #import/export
-    def exportdata_custom(self):
+    def exportdata_custom(self, all_levels):
         #exports all the Naaya content in XML format from this folder
-        return self.export_this()
+        return self.export_this(all_levels=all_levels)
 
     security.declarePublic('export_this')
-    def export_this(self, folderish=0):
+    def export_this(self, folderish=0, all_levels=1):
         r = []
         ra = r.append
         ra(self.export_this_tag())
@@ -261,8 +261,9 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         if not folderish:
             for x in self.getObjects():
                 ra(x.export_this())
-        for x in self.getFolders():
-            ra(x.export_this(folderish))
+        if all_levels:
+            for x in self.getFolders():
+                ra(x.export_this(folderish))
         ra('</ob>')
         return ''.join(r)
 
