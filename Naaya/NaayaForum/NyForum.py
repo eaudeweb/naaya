@@ -305,7 +305,12 @@ class NyForum(NyForumBase, Folder, utils):
     def hasVersion(self):
         """ """
         return False
-    
+
+    security.declarePublic('export_this')
+    def export_this(self, folderish=0):
+        """ """
+        return ''
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/forum_manage_edit', globals())
