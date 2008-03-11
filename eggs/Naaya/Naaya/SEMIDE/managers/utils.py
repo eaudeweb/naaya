@@ -129,11 +129,16 @@ class html_utils(HTMLParser.HTMLParser):
 
     def stripAllHtmlTags(self, p_html_string):
         """Removes all html tags from an html string"""
-        l_parser = html_utils()
-        l_parser.feed(p_html_string)
-        l_parser.close()
-        l_parser.cleanup()
-        return ' '.join([x.strip() for x in l_parser.result]).replace('&nbsp', ' ')
+        try:
+            l_parser = html_utils()
+            l_parser.feed(p_html_string)
+            l_parser.close()
+            l_parser.cleanup()
+        except Exception, err:
+            # XXX Handle err
+            return p_html_string
+        else:
+            return ' '.join([x.strip() for x in l_parser.result]).replace('&nbsp', ' ')
 
     def stripHtmlTags(self, p_html_string):
         """removes the html tags that are not allowe from a string"""
