@@ -204,7 +204,7 @@ def importNySemThematicDir(self, param, id, attrs, content, properties, discussi
                 folder_meta_types=meta_types,
                 contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
                 discussion=abs(int(attrs['discussion'].encode('utf-8'))),
-                themes=eval(attrs['themes'].encode('utf-8')))
+                themes=self.parseValue(attrs['themes'].encode('utf-8')))
             ob = self._getOb(id)
             for property, langs in properties.items():
                 [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]

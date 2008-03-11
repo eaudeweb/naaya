@@ -174,7 +174,7 @@ def importNySemDocument(self, param, id, attrs, content, properties, discussion,
                 creator_email=attrs['creator_email'].encode('utf-8'),
                 document_type=attrs['document_type'].encode('utf-8'),
                 source_link=attrs['source_link'].encode('utf-8'),
-                subject=eval(attrs['subject'].encode('utf-8')),
+                subject=self.parseValue(attrs['subject'].encode('utf-8')),
                 rights=attrs['rights'].encode('utf-8'),
                 relation=attrs['relation'].encode('utf-8'),
                 contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
@@ -268,11 +268,12 @@ class NySemDocument(NyAttributes, semdocument_item, NyItem, NyCheckControl):
             ra('<source lang="%s"><![CDATA[%s]]></source>' % (l, self.utToUtf8(self.getLocalProperty('source', l))))
             ra('<creator lang="%s"><![CDATA[%s]]></creator>' % (l, self.utToUtf8(self.getLocalProperty('creator', l))))
             ra('<publisher lang="%s"><![CDATA[%s]]></publisher>' % (l, self.utToUtf8(self.getLocalProperty('publisher', l))))
-        ra('<item file="%s" content_type="%s" size="%s" name="%s"/>' % (
-            self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
-            self.utXmlEncode(self.utToUtf8(self.getContentType())),
-            self.utToUtf8(self.getSize()),
-            self.utToUtf8(self.downloadfilename()))
+        if self.getSize():
+            ra('<item file="%s" content_type="%s" size="%s" name="%s"/>' % (
+                self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
+                self.utXmlEncode(self.utToUtf8(self.getContentType())),
+                self.utToUtf8(self.getSize()),
+                self.utToUtf8(self.downloadfilename()))
         )
         return ''.join(r)
 

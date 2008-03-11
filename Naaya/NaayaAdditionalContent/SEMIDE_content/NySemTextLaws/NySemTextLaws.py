@@ -174,7 +174,7 @@ def importNySemTextLaws(self, param, id, attrs, content, properties, discussion,
             addNySemTextLaws(self, id=id,
                 sortorder=attrs['sortorder'].encode('utf-8'),
                 source_link=attrs['source_link'].encode('utf-8'),
-                subject=eval(attrs['subject'].encode('utf-8')),
+                subject=self.parseValue(attrs['subject'].encode('utf-8')),
                 relation=attrs['relation'].encode('utf-8'),
                 geozone=attrs['geozone'].encode('utf-8'),
                 file_link=attrs['file_link'].encode('utf-8'),
@@ -270,11 +270,12 @@ class NySemTextLaws(NyAttributes, semtextlaws_item, NyItem, NyCheckControl):
         ra = r.append
         for l in self.gl_get_languages():
             ra('<source lang="%s"><![CDATA[%s]]></source>' % (l, self.utToUtf8(self.getLocalProperty('source', l))))
-        ra('<item file="%s" content_type="%s" size="%s" name="%s"/>' % (
-            self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
-            self.utXmlEncode(self.getContentType()),
-            self.getSize(),
-            self.downloadfilename())
+        if self.getSize():
+            ra('<item file="%s" content_type="%s" size="%s" name="%s"/>' % (
+                self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
+                self.utXmlEncode(self.getContentType()),
+                self.getSize(),
+                self.downloadfilename())
         )
         return ''.join(r)
 

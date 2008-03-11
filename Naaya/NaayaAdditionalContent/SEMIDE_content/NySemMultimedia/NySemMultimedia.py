@@ -173,7 +173,7 @@ def importNySemMultimedia(self, param, id, attrs, content, properties, discussio
                 creator_email=attrs['creator_email'].encode('utf-8'),
                 type_multimedia=attrs['type_multimedia'].encode('utf-8'),
                 source_link=attrs['source_link'].encode('utf-8'),
-                subject=eval(attrs['subject'].encode('utf-8')),
+                subject=self.parseValue(attrs['subject'].encode('utf-8')),
                 rights=attrs['rights'].encode('utf-8'),
                 relation=attrs['relation'].encode('utf-8'),
                 format=attrs['format'].encode('utf-8'),
@@ -264,11 +264,12 @@ class NySemMultimedia(NyAttributes, semmultimedia_item, NyItem, NyCheckControl):
         for l in self.gl_get_languages():
             ra('<source lang="%s"><![CDATA[%s]]></source>' % (l, self.utToUtf8(self.getLocalProperty('source', l))))
             ra('<creator lang="%s"><![CDATA[%s]]></creator>' % (l, self.utToUtf8(self.getLocalProperty('creator', l))))
-        ra('<item file="%s" content_type="%s" size="%s" name="%s"/>' % (
-            self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
-            self.utXmlEncode(self.getContentType()),
-            self.getSize(),
-            self.downloadfilename())
+        if self.getSize():
+            ra('<item file="%s" content_type="%s" size="%s" name="%s"/>' % (
+                self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
+                self.utXmlEncode(self.getContentType()),
+                self.getSize(),
+                self.downloadfilename())
         )
         return ''.join(r)
 
