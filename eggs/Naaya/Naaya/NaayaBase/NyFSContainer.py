@@ -50,7 +50,8 @@ class NyFSContainer(NyContainer):
     def update_data(self, data, content_type=None, size=None, filename=''):
         self.manage_delObjects(self.objectIds())
         filename = filename or 'attached-file'
-        child_id = self.manage_addFile(filename)
+        id = self.utCleanupId(filename)
+        child_id = self.manage_addFile(id)
         child = self._getOb(child_id)
         if getattr(data, 'index_html', None):
             data = data.index_html()
