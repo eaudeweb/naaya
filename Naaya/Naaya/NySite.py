@@ -1327,17 +1327,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             The administrator will be informed of your request \
             and may or may not grant your account with the \
             approriate role.'
-        
-        self.sendCreateAccountEmail(
-            p_to=self.administrator_email,
-            p_name=res.get('firstname', '') + ' ' + res.get('lastname', ''),
-            p_email=res.get('email', ''), 
-            p_organisation=res.get('organisation', ''), 
-            p_username=res.get('name', ''), 
-            p_location_path=self.absolute_url(1),
-            p_location_title=self.site_title,
-            p_comments=res.get('comments', '')
-        )
+            self.sendCreateAccountEmail(
+                p_to=self.administrator_email,
+                p_name=res.get('firstname', '') + ' ' + res.get('lastname', ''),
+                p_email=res.get('email', ''), 
+                p_organisation=res.get('organisation', ''), 
+                p_username=res.get('name', ''), 
+                p_location_path=self.absolute_url(1),
+                p_location_title=self.site_title,
+                p_comments=res.get('comments', '')
+            )
+        self.setSession('title', title)
+        self.setSession('body', body)
         REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
         
     security.declareProtected(view, 'processRequestRoleForm')
