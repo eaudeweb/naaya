@@ -200,10 +200,10 @@ def importNySemEvent(self, param, id, attrs, content, properties, discussion, ob
                 topitem=abs(int(attrs['topitem'].encode('utf-8'))),
                 event_type=attrs['event_type'].encode('utf-8'),
                 source_link=attrs['source_link'].encode('utf-8'),
-                subject=eval(attrs['subject'].encode('utf-8')),
+                subject=self.parseValue(attrs['subject'].encode('utf-8')),
                 relation=attrs['relation'].encode('utf-8'),
                 geozone=attrs['geozone'].encode('utf-8'),
-                working_langs=attrs['working_langs'].encode('utf-8'),
+                working_langs=self.parseValue(attrs['working_langs'].encode('utf-8')),
                 start_date=self.utConvertDateTimeObjToString(self.utGetDate(attrs['start_date'].encode('utf-8'))),
                 end_date=self.utConvertDateTimeObjToString(self.utGetDate(attrs['end_date'].encode('utf-8'))),
                 event_status=attrs['event_status'].encode('utf-8'),
@@ -323,11 +323,12 @@ class NySemEvent(NyAttributes, semevent_item, NyItem, NyCheckControl):
             ra('<duration lang="%s"><![CDATA[%s]]></duration>' % (l, self.utToUtf8(self.getLocalProperty('duration', l))))
             ra('<address lang="%s"><![CDATA[%s]]></address>' % (l, self.utToUtf8(self.getLocalProperty('address', l))))
             ra('<contact_person lang="%s"><![CDATA[%s]]></contact_person>' % (l, self.utToUtf8(self.getLocalProperty('contact_person', l))))
-        ra('<item file="%s" content_type="%s" size="%s" name="%s"/>' % (
-            self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
-            self.utXmlEncode(self.utToUtf8(self.getContentType())),
-            self.utToUtf8(self.getSize()),
-            self.utToUtf8(self.downloadfilename()))
+        if self.getSize():
+            ra('<item file="%s" content_type="%s" size="%s" name="%s"/>' % (
+                self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
+                self.utXmlEncode(self.utToUtf8(self.getContentType())),
+                self.utToUtf8(self.getSize()),
+                self.utToUtf8(self.downloadfilename()))
         )
         return ''.join(r)
 
@@ -601,7 +602,7 @@ class NySemEvent(NyAttributes, semevent_item, NyItem, NyCheckControl):
         if not filename:
             return self.title_or_id()
         return filename[-1]
-        
+
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
         """ """
