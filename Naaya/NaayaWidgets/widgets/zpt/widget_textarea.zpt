@@ -22,7 +22,7 @@
 		<span i18n:translate="" tal:content="here/title" />
 		<span tal:condition="here/required" class="required">*</span>
 	</label>
-	<div class="tooltips" tal:content="here/tooltips" />
+	<div class="tooltips" tal:content="structure here/tooltips" />
 	<textarea tal:attributes="
 		rows here/rows;
 		cols here/columns;

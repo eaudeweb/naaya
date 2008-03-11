@@ -31,7 +31,7 @@
 		<span i18n:translate="" tal:content="here/title" />
 		<span tal:condition="required" class="required">*</span>
 	</label>
-	<div class="tooltips" tal:content="here/tooltips" />
+	<div class="tooltips" tal:content="structure here/tooltips" />
 	<input type="file" tal:attributes="
 		size width;
 		name widget_id;

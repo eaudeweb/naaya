@@ -25,7 +25,7 @@
 		<span i18n:translate="" tal:content="here/title" />
 		<span tal:condition="here/required" class="required">*</span>
 	</label>
-	<div class="tooltips" tal:content="here/tooltips" />
+	<div class="tooltips" tal:content="structure here/tooltips" />
 	<input type="text" class="vDateField" size="10" maxlength="10" tal:attributes="
 		value python: value and value.strftime('%d/%m/%y');
 		name widget_id;
