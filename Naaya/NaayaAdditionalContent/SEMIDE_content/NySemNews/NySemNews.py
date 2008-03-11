@@ -286,9 +286,9 @@ class NySemNews(NyAttributes, semnews_item, NyItem, NyCheckControl):
             ra('<file_link_local lang="%s"><![CDATA[%s]]></file_link_local>' % (l, self.utToUtf8(self.getLocalProperty('file_link_local', l))))
         ra('<item file="%s" content_type="%s" size="%s" name="%s"/>' % (
             self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
-            self.utXmlEncode(self.getContentType()),
-            self.getSize(),
-            self.downloadfilename())
+            self.utXmlEncode(self.utToUtf8(self.getContentType())),
+            self.utToUtf8(self.getSize()),
+            self.utToUtf8(self.downloadfilename()))
         )
         return ''.join(r)
 

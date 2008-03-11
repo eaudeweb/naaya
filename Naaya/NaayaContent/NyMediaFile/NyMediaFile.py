@@ -246,7 +246,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
         ra = r.append
         for i in self.getMediaObjects():
             ra('<file param="0" id="%s" content="%s" />' % \
-                (self.utXmlEncode(i.id), self.utXmlEncode(self.utBase64Encode(str(i.data)))))
+                (self.utXmlEncode(i.id), self.utXmlEncode(self.utBase64Encode(str(i.get_data())))))
         return ''.join(r)
 
     security.declarePrivate('syndicateThis')
