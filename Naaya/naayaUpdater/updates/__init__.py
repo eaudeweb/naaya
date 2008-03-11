@@ -45,7 +45,12 @@ def _get_available_updates():
     modules = [i.split('.')[0] for i in glob.glob1(curent_dir, "*.py")]
     updates = {}
     for mod in modules:
-        update = __import__(mod, globals(), locals(), name)
+        try:
+            update = __import__(mod, globals(), locals(), name)
+        except:
+            zLOG.LOG('NaayaUpdater', zLOG.WARNING,
+                     "Could not import module %s" % mod)
+            continue
         if not hasattr(update, 'register'):
             continue
         updates[mod] = update
