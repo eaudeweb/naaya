@@ -133,27 +133,9 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         all_urls = 0
         objects_founded = self.findObjects()
         for obj in objects_founded:
-            properties = self.getPropertiesMeta(obj.meta_type)
-            for property, multilingual in properties:
-                values = []
-                #check if the property is multiligual
-                if multilingual:
-                    try:
-                        for lang in self.gl_get_languages():
-                            values.append((obj.getLocalProperty(property, lang), property, lang))
-                    except:
-                        pass #Invalid property
-                else:
-                    try:
-                        values.append((getattr(obj, property), property, None))
-                    except:
-                        pass #Invalid property
-                for value in values:
-                    links = [ (f, value[1], value[2]) for f in self.umConvertToList(self.parseUrls(value[0])) ]
-                    results_entry = results.get(obj.absolute_url(1), [])
-                    results_entry.extend(links)
-                    results[obj.absolute_url(1)] = results_entry
-                    all_urls += len(links)
+            tmp_results, tmp_all_urls = self._processObject(obj)
+            results.update(tmp_results)
+            all_urls += tmp_all_urls
         return results, all_urls
 
     security.declarePrivate('processObject')
@@ -163,30 +145,47 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             - parse the content of each property and extract links
             - save results into a dictionary like {'obj_url':[list_of_links]}
         """
+        object_checked = self.unrestrictedTraverse(context, None)
+        if object_checked is None:
+            return {}, 0
+        return self._processObject(ob, properties)
+
+    security.declarePrivate('_processObject')
+    def _processObject(self, ob, properties=None):
+        """Return a list of URLs contained in the properties of ob.
+
+            @param ob: object to check
+            @param properties: properties to check;
+                               if None all the properties of the
+                               object's meta_type are checked
+            @rtype: (dictionary, int)
+            @return: a dictionary like D[ob_absolute_url] = list_of_links
+                     and the total count of count links
+        """
         results = {}
         all_urls = 0
-        object_checked = self.unrestrictedTraverse(context, None)
-        if object_checked != None:
-            for property, multilingual in properties:
-                values = []
-                #check if the property is multiligual
-                if multilingual:
-                    try:
-                        for lang in self.gl_get_languages():
-                            values.append((object_checked.getLocalProperty(property, lang), property, lang))
-                    except:
-                        pass #Invalid property
-                else:
-                    try:
-                        values.append((getattr(object_checked, property), property, None))
-                    except:
-                        pass #Invalid property
-                for value in values:
-                    links = [ (f, value[1], value[2]) for f in self.umConvertToList(self.parseUrls(value[0])) ]
-                    results_entry = results.get(object_checked.absolute_url(1), [])
-                    results_entry.extend(links)
-                    results[object_checked.absolute_url(1)] = results_entry
-                    all_urls += len(links)
+        if properties is None:
+            properties = self.getPropertiesMeta(ob.meta_type)
+        for property, multilingual in properties:
+            values = []
+            #check if the property is multiligual
+            if multilingual:
+                try:
+                    for lang in self.gl_get_languages():
+                        values.append((ob.getLocalProperty(property, lang), property, lang))
+                except:
+                    pass #Invalid property
+            else:
+                try:
+                    values.append((getattr(ob, property), property, None))
+                except:
+                    pass #Invalid property
+            for value in values:
+                links = [ (f, value[1], value[2]) for f in self.umConvertToList(self.parseUrls(value[0])) ]
+                results_entry = results.get(ob.absolute_url(1), [])
+                results_entry.extend(links)
+                results[ob.absolute_url(1)] = results_entry
+                all_urls += len(links)
         return results, all_urls
 
     security.declarePrivate('verifyIP')
