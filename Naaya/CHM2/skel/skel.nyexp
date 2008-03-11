@@ -368,8 +368,8 @@
 </tal:block>
 
 <div class="xmlExportButtons">
-	<a href="index_atom" target="_blank" class="xml">ATOM</a>
-	<a href="index_rdf" target="_blank" class="xml">RSS</a>
+	<a href="index_atom" class="xml">ATOM</a>
+	<a href="index_rdf" class="xml">RSS</a>
 </div>
 
 <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
@@ -541,8 +541,8 @@
 </tal:block>
 
 <div class="xmlExportButtons">
-	<a href="index_atom" target="_blank" class="xml">ATOM</a>
-	<a href="index_rdf" target="_blank" class="xml">RSS</a>
+	<a href="index_atom" class="xml">ATOM</a>
+	<a href="index_rdf" class="xml">RSS</a>
 </div>
 
 <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
@@ -716,8 +716,8 @@
 </tal:block>
 
 <div class="xmlExportButtons">
-	<a href="index_atom" target="_blank" class="xml">ATOM</a>
-	<a href="index_rdf" target="_blank" class="xml">RSS</a>
+	<a href="index_atom" class="xml">ATOM</a>
+	<a href="index_rdf" class="xml">RSS</a>
 </div>
 
 <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
