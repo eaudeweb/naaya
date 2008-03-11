@@ -270,9 +270,9 @@ class NySemDocument(NyAttributes, semdocument_item, NyItem, NyCheckControl):
             ra('<publisher lang="%s"><![CDATA[%s]]></publisher>' % (l, self.utToUtf8(self.getLocalProperty('publisher', l))))
         ra('<item file="%s" content_type="%s" size="%s" name="%s"/>' % (
             self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
-            self.utXmlEncode(self.getContentType()),
-            self.getSize(),
-            self.downloadfilename())
+            self.utXmlEncode(self.utToUtf8(self.getContentType())),
+            self.utToUtf8(self.getSize()),
+            self.utToUtf8(self.downloadfilename()))
         )
         return ''.join(r)
 

@@ -203,7 +203,7 @@ def importNySemEvent(self, param, id, attrs, content, properties, discussion, ob
                 subject=eval(attrs['subject'].encode('utf-8')),
                 relation=attrs['relation'].encode('utf-8'),
                 geozone=attrs['geozone'].encode('utf-8'),
-                working_langs=eval(attrs['working_langs'].encode('utf-8')),
+                working_langs=attrs['working_langs'].encode('utf-8'),
                 start_date=self.utConvertDateTimeObjToString(self.utGetDate(attrs['start_date'].encode('utf-8'))),
                 end_date=self.utConvertDateTimeObjToString(self.utGetDate(attrs['end_date'].encode('utf-8'))),
                 event_status=attrs['event_status'].encode('utf-8'),
@@ -218,11 +218,11 @@ def importNySemEvent(self, param, id, attrs, content, properties, discussion, ob
                 obj = objects[0]
                 data=self.utBase64Decode(obj.attrs['file'].encode('utf-8'))
                 ctype = obj.attrs['content_type'].encode('utf-8')
+                name = obj.attrs['name'].encode('utf-8')
                 try:
                     size = int(obj.attrs['size'])
                 except TypeError, ValueError:
                     size = 0
-                name = obj.attrs['name'].encode('utf-8')
                 ob.update_data(data, ctype, size, name)
             # Update properties
             for property, langs in properties.items():
@@ -325,9 +325,9 @@ class NySemEvent(NyAttributes, semevent_item, NyItem, NyCheckControl):
             ra('<contact_person lang="%s"><![CDATA[%s]]></contact_person>' % (l, self.utToUtf8(self.getLocalProperty('contact_person', l))))
         ra('<item file="%s" content_type="%s" size="%s" name="%s"/>' % (
             self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
-            self.utXmlEncode(self.getContentType()),
-            self.getSize(),
-            self.downloadfilename())
+            self.utXmlEncode(self.utToUtf8(self.getContentType())),
+            self.utToUtf8(self.getSize()),
+            self.utToUtf8(self.downloadfilename()))
         )
         return ''.join(r)
 
