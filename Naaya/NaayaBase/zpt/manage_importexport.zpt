@@ -10,7 +10,7 @@
 </p>
 
 <p>
-	<a href="exportdata">Export data</a>
+	<a href="exportdata?all_levels=1">Export all content</a> | <a href="exportdata?all_levels=0">Export first level content (without sub-folders content)</a>
 </p>
 
 <form method="post" action="manage_import" enctype="multipart/form-data">
