@@ -78,7 +78,7 @@ class NyImportExport:
         if REQUEST: REQUEST.RESPONSE.redirect('manage_importexport_html')
 
     security.declareProtected(view_management_screens, 'exportdata')
-    def exportdata(self):
+    def exportdata(self, all_levels):
         """
         Generetes an XML with the object content.
         @return: a downloadable Naaya XML file
@@ -87,7 +87,7 @@ class NyImportExport:
         ra = r.append
         ra('<?xml version="1.0" encoding="utf-8"?>')
         ra('<export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="%s">' % self.nyexp_schema)
-        ra(self.exportdata_custom())
+        ra(self.exportdata_custom(int(all_levels)))
         ra('</export>')
         self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/xml')
         self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=%s.nyexp' % self.id)
