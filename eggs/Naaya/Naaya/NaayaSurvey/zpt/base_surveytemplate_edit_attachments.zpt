@@ -20,6 +20,7 @@ function toggleSelect(caller){
 	<input type="text" id="title" name="title" size="40" tal:attributes="value python:here.getSession('title', '')" />
 	<input class="surveySubmitButton" type="submit" name="addAttachment:method" value="Add attachment" i18n:attributes="value" />
 </div>
+<span tal:define="delManager python:here.delSessionKeys(['title'])"/>
 </form>
 
 <tal:block define="objects here/getSortedAttachments|python:[]">
@@ -67,5 +68,4 @@ function toggleSelect(caller){
 	<p tal:condition="not: objects" i18n:translate="">No attachments defined.</p>
 </tal:block>
 
-<span tal:define="delManager python:here.delSessionKeys(['title', 'add_action'])"/>
 </tal:block>

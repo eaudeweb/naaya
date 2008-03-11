@@ -21,6 +21,7 @@ function toggleSelect(caller){
 	<input class="surveySubmitButton" type="submit" name="addReport:method" value="Add report" i18n:attributes="value" />
 	<input class="surveySubmitButton" type="submit" name="generateFullReport:method" value="Generate full report" i18n:attributes="value" />
 </div>
+<span tal:define="delManager python:here.delSessionKeys(['title'])"/>
 </form>
 
 <tal:block tal:define="objects here/getSortedReports|python:[]">
@@ -68,5 +69,4 @@ function toggleSelect(caller){
 	<p tal:condition="not: objects" i18n:translate="">No reports defined.</p>
 </tal:block>
 
-<span tal:define="delManager python:here.delSessionKeys(['title', 'add_action'])"/>
 </tal:block>
