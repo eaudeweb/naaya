@@ -1,6 +1,7 @@
 <tal:block metal:define-macro="main">
 <script language="javascript" type="text/javascript">
 <!--
+// TODO: move the jscript to a library included in the header
 function toggleSelect(caller){
   var frm = document.objectItems;
   for(var i=0; i<frm.elements.length; i++){
