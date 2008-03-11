@@ -56,7 +56,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
 
     manage_options = (ObjectManager.manage_options[0],) + \
           ({'label' : 'Properties', 'action' : 'manage_properties'},
-          {'label' : 'View', 'action' : 'index_html'},
+          {'label' : 'Run', 'action' : 'index_html'},
           {'label' : 'Logs', 'action' : 'log_html'},) + SimpleItem.manage_options
 
     def __init__(self, id, title='',objectMetaType={}, proxy='', batch_size=10):
