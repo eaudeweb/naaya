@@ -56,7 +56,7 @@
 			<h2 i18n:translate="">Attachments</h2>
 			<ol>
 				<li tal:repeat="attachment attachments">
-					<p tal:condition="attachment/description" tal:content="attachment/description">description</p>
+					<p tal:condition="attachment/description" tal:content="structure attachment/description">description</p>
 					<tal:block tal:define="download_url attachment/getDownloadUrl">
 						<a tal:define="size python:attachment.utShowSizeKb(attachment.size()); content_type attachment/content_type; content_type_title python:attachment.getContentTypeTitle(content_type)" tal:attributes="href download_url">
 							<img tal:attributes="src string:getContentTypePicture?id=${content_type}" alt="" /> <span tal:replace="string:${attachment/downloadfilename} (${content_type_title}, ${size} Kb)"/>
