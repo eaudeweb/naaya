@@ -83,6 +83,7 @@ You can also use the "Mega Survey" Naaya content type. This type lets you define
 			- 'Naaya - Add Naaya Survey Template'; by default it's given to Manager and Administrator
 			- 'Naaya - Add Naaya Statistic': used for reports; by default it's given to Manager and Administrator
 			- 'Naaya - Add Naaya Survey Questionnaire': create a survey;  by default it's given to Contributor
+			- 'Naaya - Add Naaya Survey Attachment; by default it's given to Manager and Administrator'
 			- 'Naaya - Add Naaya Mega Survey': create a survey;  by default it's given to Contributor
 			- 'Naaya - Add Naaya Survey Answer': answer/take a survey; by default it's given to all users (Authenticated and Anonymous)
 		- Edit/Manage permissions:
@@ -93,7 +94,7 @@ You can also use the "Mega Survey" Naaya content type. This type lets you define
 			- 'Naaya - View Naaya Survey Reports': view the reports;  by default it's given to all users (Authenticated and Anonymous)
 		Also the 'Naaya - Add Naaya Widgets' permission from NaayaWidgets is given by default to Manager and Administrator.
 
-		N.B.: the 'Naaya - Manage Naaya Survey Template' permission doesn't apply to questions and reports inside a *Survey Template*! You'll need to give the *edit published object* permission for the *Survey Tool* (/portal_survey) only to trusted users.
+		N.B.: the 'Naaya - Manage Naaya Survey Template' permission doesn't apply to objects (e.g. questions, reports) inside a *Survey Template*! You'll need to give the *edit published object* permission for the *Survey Tool* (/portal_survey) only to trusted users.
 
 		When a "Survey Tool" is added, the security of the site will be configured as described above.
 		Unsupported: you can also call through the web the manage_configureSite method, e.g. "/portal_survey/manage_configureSite".
