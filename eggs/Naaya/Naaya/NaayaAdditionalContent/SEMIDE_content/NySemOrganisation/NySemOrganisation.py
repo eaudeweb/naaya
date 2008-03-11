@@ -407,6 +407,11 @@ class NySemOrganisation(NyAttributes, semorganisation_item, NyItem, NyCheckContr
         """ """
         return self.getFormsTool().getContent({'here': self}, 'semorganisation_add')
 
+    security.declareProtected(view, 'index_html')
+    def index_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        REQUEST.RESPONSE.redirect('%s/index_html#%s' % (self.getParentNode().absolute_url(), self.id))
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """

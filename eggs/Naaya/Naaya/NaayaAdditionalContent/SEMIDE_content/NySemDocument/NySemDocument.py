@@ -480,7 +480,7 @@ class NySemDocument(NyAttributes, semdocument_item, NyItem, NyCheckControl):
         """ """
         if self.testContext():
             #in case of Semide Project context, redirect to Projects index
-            REQUEST.RESPONSE.redirect('%s/index_html' % self.getParentNode().absolute_url())
+            REQUEST.RESPONSE.redirect('%s/index_html#%s' % (self.getParentNode().absolute_url(), self.id))
         else:
             return self.getFormsTool().getContent({'here': self}, 'semdocument_index')
 
