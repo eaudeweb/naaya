@@ -712,6 +712,13 @@ class utils:
         except:
             return 0
 
+    def parseValue(self, value):
+        """ parse a value """
+        if value.startswith('['):
+            return eval(value)
+        else:
+            return value
+
     def utIsFloat(self, p_data, positive=1):
         """Test if the p_data parameter is float"""
         if p_data:
