@@ -67,7 +67,6 @@
 			</ol>
 		</tal:block>
 
-		<h2 i18n:translate="">Questions</h2>
 		<tal:block content="structure rendered" />
 
 		<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
