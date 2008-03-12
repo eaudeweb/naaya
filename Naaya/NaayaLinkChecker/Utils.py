@@ -26,8 +26,10 @@ from whrandom import choice
 from DateTime import DateTime
 from BeautifulSoup import BeautifulSoup
 
+URL_PROTOCOLS = ("http", "https", "telnet", "gopher", "file", "wais", "ftp")
+
 def _get_url_regex():
-    urls = '(?: %s)' % '|'.join("http https telnet gopher file wais ftp".split())
+    urls = '(?: %s)' % '|'.join(URL_PROTOCOLS)
     ltrs = r'\w'
     gunk = r'/#~:.?+=&%@!\-'
     punc = r'.:?\-'
@@ -41,7 +43,6 @@ _url_regex = _get_url_regex()
 
 def extractUrlsFromText(text):
     """Given a text string, returns all the urls we can find in it."""
-    global _url_regex
     return _url_regex.findall(text)
 
 def extractUrlsFromHtmlAttributes(html, link_filter=True):
