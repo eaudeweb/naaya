@@ -15,24 +15,24 @@
 #
 # Authors:
 #
-# Cristian Ciupitu, Eau de Web
+# Alin Voinea, Eau de Web
 from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
-from Products.NaayaSurvey.SurveyTool import SurveyTool, manage_addSurveyTool
 
 class CustomContentUpdater(NaayaContentUpdater):
-    """Add Survey Tool to Naaya Site if necessarily"""
+    """Adds the islink setting to Naaya LinkChecker"""
 
-    meta_type = "Naaya Site Survey Tool Adder"
+    meta_type = "Naaya LinkChecker islink setting Updater"
 
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
-        self.title = 'Update Naaya Sites'
-        self.description = 'Add Survey Tool if necessarily'
+        self.title = 'Update Naaya LinkChecker properties'
+        self.description = 'Adds the islink setting and sets it to False.'
+        self.update_meta_type = 'Naaya LinkChecker'
 
     def _verify_doc(self, doc):
         """See super"""
-        if getattr(doc, SurveyTool.portal_id, None) is None:
+        if getattr(doc, 'portal_linkchecker', None) is not None:
             return doc
 
     def _list_updates(self):
@@ -42,16 +42,22 @@ class CustomContentUpdater(NaayaContentUpdater):
         for portal in portals:
             if not self._verify_doc(portal):
                 continue
-            yield portal
+            yield portal.portal_linkchecker
 
     def _update(self):
         updates = self._list_updates()
-        report = []
         for update in updates:
-            manage_addSurveyTool(update)
-            logger.debug('Added survey tool to %s' % (update.absolute_url(1),))
-            report.append('<strong>Added survey tool to site:</strong> ' + update.absolute_url(1))
-        return '<br />'.join(report)
+            #update = update.portal_linkchecker
+            logger.debug('Updating %s' % (update.absolute_url(1),))
+            for meta_type, properties in update.objectMetaType.iteritems():
+                for i, property in enumerate(properties):
+                    if len(property) == 3:
+                        logger.debug('  - no need to update property "%s" of meta_type "%s"' % (property[0], meta_type))
+                        continue
+                    property = tuple(property + (False,))
+                    properties[i] = property
+                    logger.debug('  - added islink=False to property "%s" of meta_type %s' % (property[0], meta_type))
+            update._p_changed = 1
 
 def register(uid):
     return CustomContentUpdater(uid)

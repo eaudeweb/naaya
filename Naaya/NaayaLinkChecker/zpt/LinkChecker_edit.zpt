@@ -127,8 +127,8 @@
                     <input type="text" name="objectProperty" size="30" class="input_small" />
                     <input type="submit" name="addProperty" value=" Add " class="input_small" /><br />
                     <input type="checkbox" name="multilingual"> Multilingual property 
+                    <input type="checkbox" name="islink"> Link property 
                     <input type="hidden" name="editmetatype" tal:attributes="value editmetatype" />
-                    
                 </td>
             </tr>
         </form>
@@ -149,6 +149,7 @@
                             <td class="note">
                                 <span tal:content="python:prop[0]"/>
                                 <span tal:condition="python:prop[1]">(multilingual)</span>
+                                <span tal:condition="python:prop[2]">(link)</span>
                             </td>
                         </tr>
                         </tal:block>

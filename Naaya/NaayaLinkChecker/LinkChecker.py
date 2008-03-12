@@ -166,7 +166,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         all_urls = 0
         if properties is None:
             properties = self.getPropertiesMeta(ob.meta_type)
-        for property, multilingual in properties:
+        for property, multilingual, islink in properties:
             values = []
             #check if the property is multiligual
             if multilingual:
@@ -181,7 +181,10 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                 except:
                     pass #Invalid property
             for value in values:
-                links = [ (f, value[1], value[2]) for f in self.umConvertToList(extractUrlsFromText(value[0])) ]
+                if islink:
+                    links = [value]
+                else:
+                    links = [ (f, value[1], value[2]) for f in self.umConvertToList(extractUrlsFromText(value[0])) ]
                 results_entry = results.get(ob.absolute_url(1), [])
                 results_entry.extend(links)
                 results[ob.absolute_url(1)] = results_entry
@@ -368,7 +371,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             REQUEST.RESPONSE.redirect('manage_properties')
 
     security.declareProtected(view_management_screens, 'manage_addProperty')
-    def manage_addProperty(self, MetaType=None, Property=None, multilingual=0, REQUEST=None):
+    def manage_addProperty(self, MetaType=None, Property=None, multilingual=0, islink=False, REQUEST=None):
         """Add a new property for a meta type"""
         if MetaType is None:
             editmetatype = REQUEST.get('editmetatype', '')
@@ -381,7 +384,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             listproperties = self.objectMetaType[editmetatype]
             if addobjectproperty != '':
                 if addobjectproperty not in [p[0] for p in listproperties]:
-                    listproperties.append((addobjectproperty, multilingual))
+                    listproperties.append((addobjectproperty, multilingual, islink))
                     self.objectMetaType[editmetatype] = listproperties
                     self._p_changed = 1
             if REQUEST is not None:
