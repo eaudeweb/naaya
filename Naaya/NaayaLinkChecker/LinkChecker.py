@@ -33,7 +33,7 @@ from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view
 
 #Product's related imports
-from Products.NaayaLinkChecker.Utils import UtilsManager, extractUrlsFromText
+from Products.NaayaLinkChecker.Utils import *
 from Products.NaayaLinkChecker.CheckerThread import CheckerThread, logresults
 from Products.NaayaLinkChecker import LogEntry
 
@@ -46,6 +46,16 @@ def manage_addLinkChecker(self, id, title, REQUEST=None):
     self._setObject(id,ob)
     if REQUEST:
         return self.manage_main(self,REQUEST)
+
+def html_url_filter(url):
+    if url is None:
+        return False
+    if is_absolute_url(url):
+        return False
+    if url.startswith('mailto:'):
+        return False
+    return True
+
 
 class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     """ Link checker is meant to check the links to remote websites """
@@ -184,7 +194,20 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                 if islink:
                     links = [value]
                 else:
-                    links = [ (x, property, lang) for x in self.umConvertToList(extractUrlsFromText(value)) ]
+                    links1 = self.umConvertToList(get_urls_from_text(value))
+                    # we'll extract the links from HTML attributes
+                    # and exclude the absolute links which we just obtained
+                    try:
+                        try:
+                            links2 = get_urls_from_html_attributes(value, html_url_filter)
+                        except UnicodeDecodeError:
+                            safe_value = value.encode('ascii', 'ignore')
+                            links2 = get_urls_from_html_attributes(safe_value, html_url_filter)
+                    except:
+                        links2 = [] # tough luck
+                    links = []
+                    links.extend([ (x, property, lang) for x in links1 ]) # TODO: use generator comprehension
+                    links.extend([ (x, property, lang) for x in links2 ]) # TODO: use generator comprehension
                 results_entry = results.get(ob.absolute_url(1), [])
                 results_entry.extend(links)
                 results[ob.absolute_url(1)] = results_entry

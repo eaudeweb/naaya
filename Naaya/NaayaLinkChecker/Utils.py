@@ -40,12 +40,17 @@ def _get_url_regex():
 
 _url_regex = _get_url_regex()
 
+def is_absolute_url(url):
+    for proto in URL_PROTOCOLS:
+        if url.startswith(proto+'://'):
+            return True
+    return False
 
-def extractUrlsFromText(text):
+def get_urls_from_text(text):
     """Given a text string, returns all the urls we can find in it."""
     return _url_regex.findall(text)
 
-def extractUrlsFromHtmlAttributes(html, link_filter=True):
+def get_urls_from_html_attributes(html, link_filter=True):
     """Return the list of URLs from HTML attributes after filtering them.
 
         The following attributes are checked:
