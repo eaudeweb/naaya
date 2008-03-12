@@ -24,6 +24,52 @@ from Products.PythonScripts.standard import url_quote
 import re
 from whrandom import choice
 from DateTime import DateTime
+from BeautifulSoup import BeautifulSoup
+
+def _get_url_regex():
+    urls = '(?: %s)' % '|'.join("http https telnet gopher file wais ftp".split())
+    ltrs = r'\w'
+    gunk = r'/#~:.?+=&%@!\-'
+    punc = r'.:?\-'
+    any = "%(ltrs)s%(gunk)s%(punc)s" % { 'ltrs':ltrs, 'gunk':gunk, 'punc':punc}
+    url = r'\b%(urls)s:[%(any)s]+?(?=[%(punc)s]*(?:   [^%(any)s]|$))' % {'urls':urls, 'any':any, 'punc':punc}
+    url_re = re.compile(url, re.VERBOSE | re.MULTILINE)
+    return url_re
+
+_url_regex = _get_url_regex()
+
+
+def extractUrlsFromText(text):
+    """Given a text string, returns all the urls we can find in it."""
+    global _url_regex
+    return _url_regex.findall(text)
+
+def extractUrlsFromHtmlAttributes(html, link_filter=True):
+    """Return the list of URLs from HTML attributes after filtering them.
+
+        The following attributes are checked:
+        - a.href
+        - script.src
+        - img.src
+
+        @param html: html source code
+        @type html: string
+        @param link_filter: a link filter.
+              It can be a regular expression, a list, the special values
+            True or None, or a callable that takes the attribute value as
+            its argument (note that the value may be None).
+              True matches a tag that has any value for the given attribute,
+              and None matches a tag that has no value for the given attribute.
+        @rtype: list
+        @return: the list of URLs from html after filtering them
+    """
+    soup = BeautifulSoup(html)
+    links = []
+    for tag, attr in (('a', 'href'), ('script', 'src'), ('img', 'src')):
+        tags = soup.findAll(tag, {attr: link_filter})
+        links.extend([tag.get(attr) for tag in tags])
+    return links
+
 
 class UtilsManager:
     """UtilsManager class"""
@@ -79,17 +125,6 @@ class UtilsManager:
     #################
     # PARSING STUFF #
     #################
-
-    def parseUrls(self, text):
-        """Given a text string, returns all the urls we can find in it."""
-        urls = '(?: %s)' % '|'.join("http https telnet gopher file wais ftp".split())
-        ltrs = r'\w'
-        gunk = r'/#~:.?+=&%@!\-'
-        punc = r'.:?\-'
-        any = "%(ltrs)s%(gunk)s%(punc)s" % { 'ltrs':ltrs, 'gunk':gunk, 'punc':punc}
-        url = r'\b%(urls)s:[%(any)s]+?(?=[%(punc)s]*(?:   [^%(any)s]|$))' % {'urls':urls, 'any':any, 'punc':punc}
-        url_re = re.compile(url, re.VERBOSE | re.MULTILINE)
-        return url_re.findall(text)
 
     def getItemTitle(self, url, size=20):
         """ return the object by url """
