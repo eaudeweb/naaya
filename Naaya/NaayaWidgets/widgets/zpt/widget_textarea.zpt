@@ -12,7 +12,7 @@
 <div tal:condition="python:mode == 'view'" class="widgetViewMode textareaWidget">
 	<strong tal:content="here/title" />
 	<br />
-	<pre tal:content="value" />
+	<p tal:content="value" class="textareaWidgetAnswer"/>
 </div>
 
 <!-- Edit mode -->
