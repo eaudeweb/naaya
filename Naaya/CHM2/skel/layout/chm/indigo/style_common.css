@@ -189,6 +189,14 @@
 			top:1px;
 		}
 
+	div#toolbar input[type="submit"] {
+		border: 1px outset white;
+		font-size: x-small;
+		color: white;
+		background-color: #336699;
+		width: 6em;
+	}
+
 	div.folderfile_container {
 		margin-right:200px;
 	}
