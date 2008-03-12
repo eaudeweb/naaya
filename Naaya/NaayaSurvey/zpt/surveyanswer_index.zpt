@@ -19,8 +19,8 @@
 <p tal:condition="here/description" tal:content="structure here/description" />
 
 <tal:block tal:define="stype here/getSurveyTemplate;
-					datamodel python:dict([(widget.id, here.getAnswerForQuestionId(widget.id)) for widget in stype.getSortedWidgets()]);
-					rendered python:test(stype, stype.render(mode='view', datamodel=datamodel), 'Error');">
+                       datamodel python:dict([(widget.id, getattr(here.aq_explicit, widget.id, None)) for widget in stype.getSortedWidgets()]);
+                       rendered python:test(stype, stype.render(mode='view', datamodel=datamodel), 'Error');">
 	<span tal:content="structure rendered" />
 </tal:block>
 
