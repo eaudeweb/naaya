@@ -168,7 +168,7 @@ class SurveyTool(Folder):
 
         site.manage_permission(PERMISSION_ADD_ANSWER, ('Anonymous', 'Authenticated'), acquire=0)
         site.manage_permission(PERMISSION_VIEW_REPORTS, ('Anonymous', 'Authenticated'), acquire=0)
-        site.manage_permission(PERMISSION_VIEW_ANSWERS, ('Manager', 'Administrator'), acquire=0)
+        site.manage_permission(PERMISSION_VIEW_ANSWERS, ('Manager', 'Administrator', 'Contributor'), acquire=0)
 
     # Add tool specific portlets
     security.declareProtected(PERMISSION_ADMINISTRATE, 'manage_updatePortlets')
@@ -289,11 +289,15 @@ class SurveyTool(Folder):
         """Returns defined survey templates"""
         return self.objectValues(SurveyTemplate.meta_type)
 
-    # site pages
+    #
+    # Site pages
+    #
     security.declareProtected(PERMISSION_ADMINISTRATE, 'index_html')
     index_html = PageTemplateFile('zpt/surveytool_index', globals())
 
+    #
     # macros
+    #
     security.declarePublic('base_questionnaire_add_html')
     base_questionnaire_add_html = PageTemplateFile('zpt/base_questionnaire_add', globals())
 

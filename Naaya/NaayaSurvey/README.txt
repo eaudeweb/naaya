@@ -89,8 +89,8 @@ You can also use the "Mega Survey" Naaya content type. This type lets you define
 		- Edit/Manage permissions:
 			- 'Naaya - Manage Naaya Survey Template'; by default it's given to Manager and Administrator
 			- the generic *edit published object* permission lets you edit *Survey Questionnaires*, *Mega Surveys*, questions and reports
-		- View permissions
-			- 'Naaya - View Naaya Survey Answers': view the list of answers
+		- View permissions:
+			- 'Naaya - View Naaya Survey Answers': view the list of answers; by default it's given to Contributor
 			- 'Naaya - View Naaya Survey Reports': view the reports;  by default it's given to all users (Authenticated and Anonymous)
 		Also the 'Naaya - Add Naaya Widgets' permission from NaayaWidgets is given by default to Manager and Administrator.
 
