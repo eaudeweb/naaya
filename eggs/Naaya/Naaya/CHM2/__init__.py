@@ -27,7 +27,6 @@ from ImageFile import ImageFile
 #Product imports
 from constants import *
 from Products.NaayaCore.managers.utils import file_utils
-from Products.NaayaBase.NyEpozToolbox import NyEpozToolbox
 from managers.config_parser import config_parser
 import CHMSite
 
@@ -65,16 +64,3 @@ def get_content_urls(self):
 
 CHMSite.CHMSite.get_content_urls = get_content_urls
 
-#integrate Naaya Photo Archive with Epoz toolbox
-def gallerybox_html(self, REQUEST=None, RESPONSE=None):
-    """ """
-    return self.getFormsTool().getContent({'here': self}, 'epoz_gallerybox')
-
-NyEpozToolbox.gallerybox_html = gallerybox_html
-
-#integrate Naaya Graphics Archive with Epoz toolbox
-def graphicsgallerybox_html(self, REQUEST=None, RESPONSE=None):
-   """ """
-   return self.getFormsTool().getContent({'here': self}, 'epoz_graphicsgallerybox')
-
-NyEpozToolbox.graphicsgallerybox_html = graphicsgallerybox_html
