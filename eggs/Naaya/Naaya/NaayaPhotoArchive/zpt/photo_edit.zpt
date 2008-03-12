@@ -1,5 +1,10 @@
 <span tal:replace="structure here/standard_html_header" />
 
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+
 <h1 i18n:translate="">Edit photo</h1>
 
 <div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span></div>
@@ -42,7 +47,8 @@
 </div>
 <div class="field">
 	<label for="description" i18n:translate="">Description</label>
-	<span tal:replace="structure python:here.get_wysiwyg_widget('description:utf8:ustring', here.getLocalProperty('description', curr_lang))" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description:utf8:ustring', curr_lang, image_support=True)" />
+	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', here.getVersionLocalProperty('description', curr_lang))"></textarea>
 </div>
 <div class="field">
 	<label for="sortorder" i18n:translate="">Sort order</label>
