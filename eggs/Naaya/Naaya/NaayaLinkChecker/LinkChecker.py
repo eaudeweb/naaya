@@ -172,19 +172,19 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             if multilingual:
                 try:
                     for lang in self.gl_get_languages():
-                        values.append((ob.getLocalProperty(property, lang), property, lang))
+                        values.append((ob.getLocalProperty(property, lang), lang))
                 except:
                     pass #Invalid property
             else:
                 try:
-                    values.append((getattr(ob, property), property, None))
+                    values.append((getattr(ob, property), None))
                 except:
                     pass #Invalid property
-            for value in values:
+            for value, lang in values:
                 if islink:
                     links = [value]
                 else:
-                    links = [ (f, value[1], value[2]) for f in self.umConvertToList(extractUrlsFromText(value[0])) ]
+                    links = [ (x, property, lang) for x in self.umConvertToList(extractUrlsFromText(value)) ]
                 results_entry = results.get(ob.absolute_url(1), [])
                 results_entry.extend(links)
                 results[ob.absolute_url(1)] = results_entry
