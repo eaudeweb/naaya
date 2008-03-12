@@ -24,11 +24,23 @@ class CustomContentUpdater(NaayaContentUpdater):
 
     meta_type = "Naaya LinkChecker islink setting Updater"
 
+    _properties=({'id':'Naaya URL', 'type': 'tokens', 'mode':'w', },
+                 {'id':'Naaya Pointer', 'type': 'tokens', 'mode':'w'},)
+
+    def manage_options(self):
+        """ ZMI tabs """
+        return ({'label':'Properties', 'action':'manage_propertiesForm'},) + \
+               NaayaContentUpdater.manage_options(self)
+
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya LinkChecker properties'
-        self.description = 'Adds the islink setting and sets it to False.'
+        self.description = '''Adds the islink setting and sets it to False.
+                              Use the Properties tab to specify for which properties the islink setting should be set to True.
+                           '''
         self.update_meta_type = 'Naaya LinkChecker'
+        self.manage_changeProperties(**{'Naaya URL': ('locator',),
+                                        'Naaya Pointer': ('pointer',)})
 
     def _verify_doc(self, doc):
         """See super"""
@@ -47,16 +59,16 @@ class CustomContentUpdater(NaayaContentUpdater):
     def _update(self):
         updates = self._list_updates()
         for update in updates:
-            #update = update.portal_linkchecker
             logger.debug('Updating %s' % (update.absolute_url(1),))
             for meta_type, properties in update.objectMetaType.iteritems():
                 for i, property in enumerate(properties):
                     if len(property) == 3:
                         logger.debug('  - no need to update property "%s" of meta_type "%s"' % (property[0], meta_type))
                         continue
-                    property = tuple(property + (False,))
+                    islink = property[0] in getattr(self, meta_type, ())
+                    property = tuple(property + (islink,))
                     properties[i] = property
-                    logger.debug('  - added islink=False to property "%s" of meta_type %s' % (property[0], meta_type))
+                    logger.debug('  - added islink=%s to property "%s" of meta_type %s' % (islink, property[0], meta_type))
             update._p_changed = 1
 
 def register(uid):
