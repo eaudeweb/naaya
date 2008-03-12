@@ -67,6 +67,7 @@ div.widgetViewMode {
 
 .textareaWidgetAnswer {
 	background-color: #eef7f9;
+	padding: 1em;
 }
 
 .widgetEditMode {
