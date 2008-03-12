@@ -12,7 +12,10 @@
 <div tal:condition="python:mode == 'view'" class="widgetViewMode stringWidget">
 	<strong tal:content="here/title" />
 	<br />
-	<span tal:content="python:datamodel.get(widget_id, '')" />
+	<span tal:condition="value" tal:content="value" />
+	<span tal:condition="not: value" i18n:translate="" class="no-response">
+		No response
+	</span>
 </div>
 
 <!-- Edit mode -->
