@@ -32,7 +32,6 @@ from Products.NaayaContent.constants    import *
 from Products.NaayaBase.constants       import *
 from Products.NaayaBase.NyContainer     import NyContainer
 from Products.NaayaBase.NyAttributes    import NyAttributes
-from Products.NaayaBase.NyEpozToolbox   import NyEpozToolbox
 from Products.NaayaBase.NyCheckControl  import NyCheckControl
 from reportreference_item               import reportreference_item
 
@@ -163,7 +162,7 @@ def importNyReportReference(self, param, id, attrs, content, properties, discuss
 #            ob.import_comments(discussion)
 #            self.recatalogNyObject(ob)
 
-class NyReportReference(NyAttributes, reportreference_item, NyContainer, NyEpozToolbox, NyCheckControl):
+class NyReportReference(NyAttributes, reportreference_item, NyContainer, NyCheckControl):
     """ """
 
     meta_type = METATYPE_OBJECT
