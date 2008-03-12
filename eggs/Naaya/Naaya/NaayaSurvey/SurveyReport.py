@@ -134,15 +134,15 @@ class SurveyReport(Folder, LocalPropertyManager):
             REQUEST.RESPONSE.redirect('%s/edit_html?%s' % (self.absolute_url(), query))
         return True
 
-
+    security.declareProtected(view, 'getStatistics')
     def getStatistics(self):
         """Return the statistics"""
         return self.objectValues()
 
+    security.declareProtected(view, 'getSortedStatistics')
     def getSortedStatistics(self, sort_by='sortorder'):
         """Return the statistics in sorted order"""
         return sort(self.getStatistics(), ((sort_by, 'cmp', 'asc'), ))
-
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'deleteStatistics')
     def addStatistic(self, REQUEST, question=None, meta_type=None):

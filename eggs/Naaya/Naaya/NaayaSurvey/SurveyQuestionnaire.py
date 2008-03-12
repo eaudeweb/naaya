@@ -268,6 +268,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
         return answer_id
 
+    security.declarePrivate('_sendNotifications')
     def _sendNotifications(self, answer):
         """Send email notifications about the newly added answer.
 
@@ -353,14 +354,14 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     #
     # utils
     #
-    security.declarePublic('expired')
+    security.declareProtected(view, 'expired')
     def expired(self):
         """expired() -> true if it's expired, false otherwise"""
         now = DateTime()
         expire_date = DateTime(self.expirationdate)
         return now.greaterThan(expire_date)
 
-    security.declarePublic('get_days_left')
+    security.declareProtected(view, 'get_days_left')
     def get_days_left(self):
         """ Returns the remaining days for the survey or the number of days before it starts """
         today = self.utGetTodayDate().earliestTime()
@@ -393,10 +394,10 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     edit_html = PageTemplateFile('zpt/questionnaire_edit', globals())
 
-    security.declarePublic('view_reports_html')
+    security.declareProtected(PERMISSION_VIEW_REPORTS, 'view_reports_html')
     view_reports_html = PageTemplateFile('zpt/questionnaire_view_reports', globals())
 
-    security.declarePublic('view_answers_html')
+    security.declareProtected(PERMISSION_VIEW_ANSWERS, 'view_answers_html')
     view_answers_html = PageTemplateFile('zpt/questionnaire_view_answers', globals())
 
     # macros

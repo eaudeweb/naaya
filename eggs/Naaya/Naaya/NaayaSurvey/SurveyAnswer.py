@@ -92,25 +92,19 @@ class SurveyAnswer(Folder):
         self.add_properties(datamodel)
         self.respondent = respondent
 
-    security.declareProtected(PERMISSION_VIEW_ANSWERS, 'add_properties')
+    security.declarePrivate('add_properties')
     def add_properties(self, datamodel):
         for key, value in datamodel.items():
             if isinstance(value, FileUpload):
                 continue # Handled somewhere else
             setattr(self, key, value)
 
-    security.declareProtected(PERMISSION_VIEW_ANSWERS, 'handle_upload')
+    security.declarePrivate('handle_upload')
     def handle_upload(self, id, attached_file):
         if id in self.objectIds():
             self.manage_delObjects([id,])
         manage_addExtFile(self, id, title=attached_file.filename,
                           file=attached_file)
-
-    security.declareProtected(PERMISSION_VIEW_ANSWERS, 'getAnswerForQuestionId')
-    def getAnswerForQuestionId(self, question_id):
-        if hasattr(self, question_id):
-            return getattr(self, question_id)
-        return None
 
     # The special permission PERMISSION_VIEW_ANSWERS is used instead of the
     # regular "view" permission because otherwise, by default, all users
