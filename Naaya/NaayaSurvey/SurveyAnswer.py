@@ -109,7 +109,7 @@ class SurveyAnswer(Folder):
     security.declareProtected(PERMISSION_VIEW_ANSWERS, 'getAnswerForQuestionId')
     def getAnswerForQuestionId(self, question_id):
         if hasattr(self, question_id):
-            return self.question_id
+            return getattr(self, question_id)
         return None
 
     # The special permission PERMISSION_VIEW_ANSWERS is used instead of the
