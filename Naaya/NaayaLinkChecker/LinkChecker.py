@@ -33,7 +33,7 @@ from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view
 
 #Product's related imports
-from Products.NaayaLinkChecker.Utils import UtilsManager
+from Products.NaayaLinkChecker.Utils import UtilsManager, extractUrlsFromText
 from Products.NaayaLinkChecker.CheckerThread import CheckerThread, logresults
 from Products.NaayaLinkChecker import LogEntry
 
@@ -181,7 +181,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                 except:
                     pass #Invalid property
             for value in values:
-                links = [ (f, value[1], value[2]) for f in self.umConvertToList(self.parseUrls(value[0])) ]
+                links = [ (f, value[1], value[2]) for f in self.umConvertToList(extractUrlsFromText(value[0])) ]
                 results_entry = results.get(ob.absolute_url(1), [])
                 results_entry.extend(links)
                 results[ob.absolute_url(1)] = results_entry
