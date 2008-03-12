@@ -65,6 +65,9 @@ div.widgetViewMode {
 	padding-left: 11px;
 }
 
+.textareaWidgetAnswer {
+	background-color: #eef7f9;
+}
 
 .widgetEditMode {
   margin: 0.5em 0 0.5em 0;
