@@ -19,6 +19,7 @@
 import os
 import glob
 import logging
+import sys
 
 import zLOG
 from Products.naayaUpdater.NaayaUpdater import UPDATERID
@@ -48,8 +49,9 @@ def _get_available_updates():
         try:
             update = __import__(mod, globals(), locals(), name)
         except:
+            err = sys.exc_info()
             zLOG.LOG('NaayaUpdater', zLOG.WARNING,
-                     "Could not import module %s" % mod)
+                     "Could not import module %s" % mod, error=err)
             continue
         if not hasattr(update, 'register'):
             continue
@@ -72,11 +74,11 @@ def registerUpdate(utool, uid, uhandler):
     try:
         update = uhandler.register(uid)
     except AttributeError:
-        zLOG.LOG('NaayaUpdater', zLOG.WARNING, 
+        zLOG.LOG('NaayaUpdater', zLOG.WARNING,
                  "Could not register updater %s" % uid)
     else:
         utool._setObject(uid, update)
-        zLOG.LOG('NaayaUpdater', zLOG.INFO, 
+        zLOG.LOG('NaayaUpdater', zLOG.INFO,
                  "Register update %s" % uid)
 
 def initialize(context):
