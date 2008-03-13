@@ -114,23 +114,21 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     def findObjects(self):
         """ find all the objects according with the LinkChecker criterias
         """
-        res = []
         mt = self.getObjectMetaTypes()
         if len(mt) == 0:
-            return []
+            return
         if self.use_catalog == 1:
             cat_obj = self.unrestrictedTraverse(self.catalog_name)
             objs = cat_obj({'meta_type':mt})
             for obj in objs:
                 obj = cat_obj.getobject(obj.data_record_id_)
                 if obj.absolute_url().find('Control_Panel') == -1:
-                    res.append(obj)
+                    yield obj
         else:
             objs = FindSupport().ZopeFind(self.umGetROOT(), obj_metatypes=mt, search_sub=1)
             for obj in objs:
                 if obj[1].absolute_url().find('Control_Panel') == -1:
-                    res.append(obj[1])
-        return res
+                    yield obj[1]
 
     security.declarePrivate('processObjects')
     def processObjects(self):
@@ -149,7 +147,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
 
     security.declarePrivate('processObject')
     def processObject(self, properties=[], context=''):
-        """Get a list of 'findObjects' results and for each result:
+        """For the object obtained from context with unrestrictedTraverse:
             - gets all specified properties
             - parse the content of each property and extract links
             - save results into a dictionary like {'obj_url':[list_of_links]}
