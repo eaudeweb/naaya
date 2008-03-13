@@ -8,8 +8,6 @@
 #implied. See the License for the specific language governing
 #rights and limitations under the License.
 #
-#The Original Code is "LinkChecker"
-#
 #The Initial Owner of the Original Code is European Environment
 #Agency (EEA).  Portions created by Finsiel Romania are
 #Copyright (C) 2006 by European Environment Agency.  All
@@ -20,34 +18,36 @@
 
 from types import *
 import socket
-import threading
+from threading import Thread
 import time
+from urlparse import urljoin
 from Queue import Empty
 
 from MyURLopener import MyURLopener
-import LinkChecker
 logresults = {}
 
-class CheckerThread(threading.Thread):
+class CheckerThread(Thread):
 
     def __init__(self, urls, proxy):
         """
-            @param urls: a queue of URLs to check
-            @type urls: Queue
+            @param urls: a queue of URLs to check of this format;
+                         each item is of form (ob_url, link)
+            @type urls: Queue of (string, string) tuples
             @param proxy: proxy
         """
-        threading.Thread.__init__(self)
+        Thread.__init__(self)
         self.urls = urls
         self.proxy = proxy
 
     def run(self):
         while True:
             try:
-                url = self.urls.get_nowait()
+                ob_url, link = self.urls.get_nowait()
             except Empty:
                 break
+            url = urljoin(ob_url, link)
             result = self.readhtml(url)
-            logresults[url] = str(result)
+            logresults[link] = str(result)
 
     def readhtml(self, url):
         file = MyURLopener()
