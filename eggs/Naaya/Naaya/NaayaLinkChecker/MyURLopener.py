@@ -17,18 +17,16 @@
 #
 #Contributor(s):
 #  Original Code: Cornel Nitu (Finsiel Romania)
-
-
 import urllib
 
 class MyURLopener(urllib.FancyURLopener):
 
     http_error_default = urllib.URLopener.http_error_default
 
-    def __init__(*args):
+    def __init__(*args, **kw):
         self = args[0]
-        apply(urllib.FancyURLopener.__init__, args)
-        self.addheaders = [('User-agent', 'LinkChecker'),]
+        urllib.FancyURLopener.__init__(*args, **kw)
+        self.addheaders = [('User-agent', 'Naaya Link Checker'),]
 
     def http_error_401(self, url, fp, errcode, errmsg, headers):
         return self.http_error_default(url, fp, errcode, errmsg, headers)
