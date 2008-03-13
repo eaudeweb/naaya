@@ -141,11 +141,10 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         """
         results = {}
         all_urls = 0
-        objects_founded = self.findObjects()
-        for obj in objects_founded:
-            tmp_results, tmp_all_urls = self.getUrlsFromOb(obj)
-            results.update(tmp_results)
-            all_urls += tmp_all_urls
+        for obj in self.findObjects():
+            links = self.getLinksFromOb(obj)
+            results[obj.absolute_url(1)] = links
+            all_urls += len(links)
         return results, all_urls
 
     security.declarePrivate('processObject')
@@ -158,22 +157,21 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         object_checked = self.unrestrictedTraverse(context, None)
         if object_checked is None:
             return {}, 0
-        return self.getUrlsFromOb(ob, properties)
+        links = self.getLinksFromOb(ob, properties)
+        return dict((object_checked.absolute_url(1), links)), len(links)
 
-    security.declarePrivate('getUrlsFromOb')
-    def getUrlsFromOb(self, ob, properties=None):
-        """Return a list of URLs contained in the properties of ob.
+    security.declarePrivate('getLinksFromOb')
+    def getLinksFromOb(self, ob, properties=None):
+        """Return a list of links contained in the properties of ob.
 
             @param ob: object to check
             @param properties: properties to check;
                                if None all the properties of the
                                object's meta_type are checked
-            @rtype: (dictionary, int)
-            @return: a dictionary like D[ob_absolute_url] = list_of_links
-                     and the total count of count links
+            @rtype: list
+            @return: links contained in the properties of ob
         """
-        results = {}
-        all_urls = 0
+        all_links = []
         if properties is None:
             properties = self.getPropertiesMeta(ob.meta_type)
         for property, multilingual, islink in properties:
@@ -194,25 +192,21 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                 if islink:
                     links = [value]
                 else:
-                    links1 = self.umConvertToList(get_urls_from_text(value))
+                    links1 = self.umConvertToList(get_links_from_text(value))
                     # we'll extract the links from HTML attributes
                     # and exclude the absolute links which we just obtained
                     try:
                         try:
-                            links2 = get_urls_from_html_attributes(value, html_url_filter)
+                            links2 = get_links_from_html_attributes(value, html_url_filter)
                         except UnicodeDecodeError:
                             safe_value = value.encode('ascii', 'ignore')
-                            links2 = get_urls_from_html_attributes(safe_value, html_url_filter)
+                            links2 = get_links_from_html_attributes(safe_value, html_url_filter)
                     except:
                         links2 = [] # tough luck
                     links = []
-                    links.extend([ (x, property, lang) for x in links1 ]) # TODO: use generator comprehension
-                    links.extend([ (x, property, lang) for x in links2 ]) # TODO: use generator comprehension
-                results_entry = results.get(ob.absolute_url(1), [])
-                results_entry.extend(links)
-                results[ob.absolute_url(1)] = results_entry
-                all_urls += len(links)
-        return results, all_urls
+                    all_links.extend([ (x, property, lang) for x in links1 ]) # TODO: use generator comprehension
+                    all_links.extend([ (x, property, lang) for x in links2 ]) # TODO: use generator comprehension
+        return all_links
 
     security.declarePrivate('verifyIP')
     def verifyIP(self, REQUEST=None):
