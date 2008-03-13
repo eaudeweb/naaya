@@ -260,9 +260,6 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         urls = []
         urlsinfo, total = self.processObjects()
         for val in urlsinfo.values():
-            #for link_item in link_value:
-            #    if not link_item in links_list:
-            #        links_list.append(link_item)
             urls.extend([v[0] for v in val])
 
         #start threads
@@ -288,9 +285,6 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         urls = []
         urlsinfo, total = self.processObject(properties, context)
         for val in urlsinfo.values():
-            #for link_item in link_value:
-            #    if not link_item in links_list:
-            #        links_list.append(link_item)
             urls.extend([v[0] for v in val])
 
         #start threads
@@ -312,9 +306,6 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         #build a list with all links
         urls = []
         for val in urlsinfo.values():
-            #for link_item in link_value:
-            #    if not link_item in links_list:
-            #        links_list.append(link_item)
             urls.extend([v[0] for v in val])
 
         #start threads
