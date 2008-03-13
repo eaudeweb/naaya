@@ -11,7 +11,8 @@
 	<a tal:attributes="href item/absolute_url" tal:content="item/title_or_id">item</a>
 	<span tal:replace="structure item/description" />
 	<br />
-	<span tal:replace="python:item.utShowDateTime(item.start_date)" />, <span tal:replace="item/location" />
+	<span tal:condition="python:getattr(item, 'start_date', '')" tal:replace="python:item.utShowDateTime(item.start_date)" />
+	<span tal:condition="python:getattr(item, 'location', '')">, <span tal:replace="item/location" /></span>
 </li>
 </ul>
 </tal:block>
