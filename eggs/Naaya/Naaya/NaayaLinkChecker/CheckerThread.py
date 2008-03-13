@@ -24,11 +24,10 @@ from urlparse import urljoin
 from Queue import Empty
 
 from MyURLopener import MyURLopener
-logresults = {}
 
 class CheckerThread(Thread):
 
-    def __init__(self, urls, proxy):
+    def __init__(self, urls, logresults, proxy):
         """
             @param urls: a queue of URLs to check of this format;
                          each item is of form (ob_url, link)
@@ -37,6 +36,7 @@ class CheckerThread(Thread):
         """
         Thread.__init__(self)
         self.urls = urls
+        self.logresults = logresults
         self.proxy = proxy
 
     def run(self):
@@ -47,7 +47,7 @@ class CheckerThread(Thread):
                 break
             url = urljoin(ob_url, link)
             result = self.readhtml(url)
-            logresults[link] = str(result)
+            self.logresults[link] = str(result)
 
     def readhtml(self, url):
         file = MyURLopener()
