@@ -17,13 +17,15 @@
 #
 #Contributor(s):
 #  Original Code: Cornel Nitu (Finsiel Romania)
+__version__ = '''$Revision$'''
+
 import urllib
 
 class MyURLopener(urllib.FancyURLopener):
 
     http_error_default = urllib.URLopener.http_error_default
 
-    version = "Naaya Link Checker"
+    version = "Naaya Link Checker/%s" % __version__
 
     def __init__(self, *args, **kw):
         urllib.FancyURLopener.__init__(self, *args, **kw)
