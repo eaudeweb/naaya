@@ -189,7 +189,8 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                     pass #Invalid property
             for value, lang in values:
                 if islink:
-                    all_links.append( (value, property, lang) )
+                    if value:
+                        all_links.append( (value, property, lang) )
                 else:
                     links1 = self.umConvertToList(get_links_from_text(value))
                     # we'll extract the links from HTML attributes
@@ -262,15 +263,15 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     def prepareLog(self, links_dict, logresults, all_urls, manual=0):
         """ """
         log = []
-        for key in links_dict.keys():
-            object = self.unrestrictedTraverse(key)
+        for ob_url, links in links_dict.items():
+            ob = self.unrestrictedTraverse(ob_url)
             buf = []
-            for link in links_dict[key]:
+            for link in links:
                 err = logresults.get(link[0], None)
-                if err != 'OK' or manual == 1:
+                if err != 'OK' or manual:
                     buf.append((link[0], err, link[1], link[2]))
             if buf:
-                log.append((object.getId(), object.meta_type, object.absolute_url(1), object.icon, buf))
+                log.append((ob.getId(), ob.meta_type, ob.absolute_url(1), ob.icon, buf))
         return log, all_urls
 
     security.declareProtected(view_management_screens, 'getProperties')
@@ -321,7 +322,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             REQUEST.RESPONSE.redirect('manage_properties')
 
     security.declareProtected(view_management_screens, 'manage_addProperty')
-    def manage_addProperty(self, MetaType=None, Property=None, multilingual=0, islink=False, REQUEST=None):
+    def manage_addProperty(self, MetaType=None, Property=None, multilingual=False, islink=False, REQUEST=None):
         """Add a new property for a meta type"""
         if MetaType is None:
             editmetatype = REQUEST.get('editmetatype', '')
