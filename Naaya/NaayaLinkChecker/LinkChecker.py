@@ -37,7 +37,7 @@ from zLOG import LOG, INFO
 
 #Product's related imports
 from Products.NaayaLinkChecker.Utils import *
-from Products.NaayaLinkChecker.CheckerThread import CheckerThread, logresults
+from Products.NaayaLinkChecker.CheckerThread import CheckerThread
 from Products.NaayaLinkChecker import LogEntry
 
 THREAD_COUNT = 4
@@ -252,14 +252,15 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                 urls.put_nowait((ob_url, v[0]))
         #start threads
         LOG('NaayaLinkChecker', INFO, 'Starting link checking threads')
+        logresults = {}
         threads = []
         for thread in range(0,THREAD_COUNT):
-            th = CheckerThread(urls, proxy=self.proxy)
+            th = CheckerThread(urls, logresults, proxy=self.proxy)
             th.setName(thread)
             threads.append(th)
             results = th.start()
-        for thread in range(0,THREAD_COUNT):
-            threads[thread].join()
+        for thread in threads:
+            thread.join()
         LOG('NaayaLinkChecker', INFO, 'Link checking threads stopped')
         return self.prepareLog(urlsinfo, logresults, urlsnumber, 0)
 
