@@ -46,12 +46,12 @@ def is_absolute_url(url):
             return True
     return False
 
-def get_urls_from_text(text):
-    """Given a text string, returns all the urls we can find in it."""
+def get_links_from_text(text):
+    """Given a text string, returns all the links we can find in it."""
     return _url_regex.findall(text)
 
-def get_urls_from_html_attributes(html, link_filter=True):
-    """Return the list of URLs from HTML attributes after filtering them.
+def get_links_from_html_attributes(html, link_filter=True):
+    """Return the list of links from HTML attributes, after filtering them.
 
         The following attributes are checked:
         - a.href
