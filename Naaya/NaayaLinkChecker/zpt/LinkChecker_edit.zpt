@@ -126,8 +126,8 @@
                 <td width="100%" class="note">
                     <input type="text" name="objectProperty" size="30" class="input_small" />
                     <input type="submit" name="addProperty" value=" Add " class="input_small" /><br />
-                    <input type="checkbox" name="multilingual"> Multilingual property 
-                    <input type="checkbox" name="islink"> Link property 
+                    <input type="checkbox" name="multilingual:boolean"> Multilingual property 
+                    <input type="checkbox" name="islink:boolean"> Link property 
                     <input type="hidden" name="editmetatype" tal:attributes="value editmetatype" />
                 </td>
             </tr>
