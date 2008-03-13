@@ -22,6 +22,7 @@
 import string
 import threading
 import time
+from Queue import Queue
 
 #Zope imports
 from OFS.ObjectManager import ObjectManager
@@ -243,14 +244,14 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     security.declarePrivate('check_links')
     def check_links(self, urlsinfo, urlsnumber):
         #build a list with all links
-        urls = []
+        urls = Queue()
         for val in urlsinfo.values():
-            urls.extend([v[0] for v in val])
+            for v in val:
+                urls.put_nowait(v[0])
         #start threads
-        lock = threading.Lock()
         threads = []
         for thread in range(0,THREAD_COUNT):
-            th = CheckerThread(urls, lock, proxy=self.proxy)
+            th = CheckerThread(urls, proxy=self.proxy)
             th.setName(thread)
             threads.append(th)
             results = th.start()

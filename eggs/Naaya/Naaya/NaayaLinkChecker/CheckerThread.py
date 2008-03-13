@@ -22,6 +22,7 @@ from types import *
 import socket
 import threading
 import time
+from Queue import Empty
 
 from MyURLopener import MyURLopener
 import LinkChecker
@@ -29,29 +30,24 @@ logresults = {}
 
 class CheckerThread(threading.Thread):
 
-    def __init__(self, URLList, URLListLock, proxy):
+    def __init__(self, urls, proxy):
+        """
+            @param urls: a queue of URLs to check
+            @type urls: Queue
+            @param proxy: proxy
+        """
         threading.Thread.__init__(self)
-        self.URLList = URLList
-        self.URLListLock = URLListLock
+        self.urls = urls
         self.proxy = proxy
 
-    def grabNextURL(self):
-        self.URLListLock.acquire(1)
-        if (len(self.URLList) < 1):
-            NextURL = None
-        else:
-            NextURL = self.URLList[0]
-            del self.URLList[0]
-        self.URLListLock.release()
-        return NextURL
-
     def run(self):
-        while 1:
-            NextURL = self.grabNextURL()
-            if (NextURL == None):
-                break;
-            result = self.readhtml(NextURL)
-            logresults[NextURL] = str(result)
+        while True:
+            try:
+                url = self.urls.get_nowait()
+            except Empty:
+                break
+            result = self.readhtml(url)
+            logresults[url] = str(result)
 
     def readhtml(self, url):
         file = MyURLopener()
