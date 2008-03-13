@@ -7,19 +7,21 @@
 	<tal:block tal:define="selected_language python:here.getSession('lang', here.gl_get_selected_language())">
 
 	<fieldset class="cr_review" tal:repeat="review python:here.utSortObjsListByMethod(here.get_reviews(), 'get_review_date', 1)">
-		<fieldset tal:condition="python:here.checkPermissionManageConsultation()" class="cr_rating_box" tal:define="ratings review/getRatings">
-			<legend i18n:translate="">Rating</legend>
-			<div tal:repeat="rating python:ratings.keys()" tal:condition="python:ratings is not None">
-				<span tal:content="rating" />
-				<div class="progress-container">
-					<div tal:define="val python:ratings[rating]" tal:attributes="style string:width: ${val}%"></div>
+		<tal:block tal:condition="python:here.checkPermissionManageConsultation()">
+			<fieldset tal:define="ratings review/getRatings" class="cr_rating_box">
+				<legend i18n:translate="">Rating</legend>
+				<div tal:repeat="rating python:ratings.keys()" tal:condition="python:ratings is not None">
+					<span tal:content="rating" />
+					<div class="progress-container">
+						<div tal:define="val python:ratings[rating]" tal:attributes="style string:width: ${val}%"></div>
+					</div>
 				</div>
-			</div>
-			<tal:block tal:condition="not:ratings">
-				<span i18n:translate="">Answer not yet rated</span> <a class="consultation-inline-button" tal:attributes="href string:${review/absolute_url}/rate_review_html" i18n:translate="">Rate answer</a>
-			</tal:block>
-			<a tal:condition="python:ratings" class="consultation-button" tal:attributes="href string:${review/absolute_url}/rate_review_html" i18n:translate="">Change rating</a>
-		</fieldset>
+				<tal:block tal:condition="not:ratings">
+					<span i18n:translate="">Answer not yet rated</span> <a class="consultation-inline-button" tal:attributes="href string:${review/absolute_url}/rate_review_html" i18n:translate="">Rate answer</a>
+				</tal:block>
+				<a tal:condition="python:ratings" class="consultation-button" tal:attributes="href string:${review/absolute_url}/rate_review_html" i18n:translate="">Change rating</a>
+			</fieldset>
+		</tal:block>
 		<legend tal:content="python:'%s (%s) -- %s' % (review.contributor_name, review.contributor, here.utShowFullDateTime(review.review_date))" />
 		<tal:block tal:repeat="answer review/answers">
 			<div class="cr_answers" tal:condition="python:answer[1]">
