@@ -189,7 +189,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                     pass #Invalid property
             for value, lang in values:
                 if islink:
-                    links = [value]
+                    all_links.append( (value, property, lang) )
                 else:
                     links1 = self.umConvertToList(get_links_from_text(value))
                     # we'll extract the links from HTML attributes
@@ -202,7 +202,6 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                             links2 = get_links_from_html_attributes(safe_value, html_url_filter)
                     except:
                         links2 = [] # tough luck
-                    links = []
                     all_links.extend([ (x, property, lang) for x in links1 ]) # TODO: use generator comprehension
                     all_links.extend([ (x, property, lang) for x in links2 ]) # TODO: use generator comprehension
         return all_links
