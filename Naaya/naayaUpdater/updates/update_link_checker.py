@@ -65,9 +65,10 @@ class CustomContentUpdater(NaayaContentUpdater):
                     if len(property) == 3:
                         logger.debug('  - no need to update property "%s" of meta_type "%s"' % (property[0], meta_type))
                         continue
+                    name, multilingual = property
+                    multilingual = bool(multilingual)
                     islink = property[0] in getattr(self, meta_type, ())
-                    property = tuple(property + (islink,))
-                    properties[i] = property
+                    properties[i] = (name, multilingual, islink)
                     logger.debug('  - added islink=%s to property "%s" of meta_type %s' % (islink, property[0], meta_type))
             update._p_changed = 1
 
