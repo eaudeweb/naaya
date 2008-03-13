@@ -1019,3 +1019,18 @@ div.xmlExportButtons a.xml {
   background-repeat: no-repeat;
 }
 
+/* Object language availability */
+
+.available_langs {
+	font-size: x-small;
+}
+
+.available_langs a{
+	border-right: 1px solid #0F75B3;
+	padding-right: 0.3em;
+	padding-left: 0.3em;
+}
+
+.available_langs a:first-child {
+	border-left:1px solid #0F75B3;
+}
