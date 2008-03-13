@@ -16,12 +16,13 @@
 #Contributor(s):
 #  Original Code: Cornel Nitu (Finsiel Romania)
 
-from types import *
+from httplib import InvalidURL
+from Queue import Empty
 import socket
 from threading import Thread
 import time
+from types import *
 from urlparse import urljoin
-from Queue import Empty
 
 from MyURLopener import MyURLopener
 
@@ -63,6 +64,10 @@ class CheckerThread(Thread):
             return msg
         except socket.timeout:
             return "Attempted connect timed out."
+        except socket.sslerror, err:
+            return "SSL error: " + err
+        except InvalidURL:
+            return "Invalid URL."
 
     def sanitize(self, msg):
         if isinstance(IOError, ClassType) and isinstance(msg, IOError):
