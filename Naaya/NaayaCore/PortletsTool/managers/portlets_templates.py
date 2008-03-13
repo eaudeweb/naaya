@@ -112,7 +112,11 @@ SCRIPTCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.g
 <tal:block metal:fill-slot="portlet_title"><span tal:replace="channel/title_or_id" /></tal:block>
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
-		<li tal:repeat="item channel/get_objects_for_rdf"><a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id" /></li>
+		<li tal:repeat="item channel/get_objects_for_rdf">
+			<img tal:attributes="src item/icon; alt item/meta_type; title item/meta_type" style="vertical-align: -5px;" />
+			<a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id" />
+			<span tal:replace="structure item/description" />
+		</li>
 	</ul>
 	<a tal:attributes="href channel/absolute_url"><img src="misc_/NaayaCore/xml.png" alt="Syndication (XML)" i18n:attributes="alt" /></a>
 </tal:block>
