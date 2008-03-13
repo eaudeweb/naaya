@@ -143,7 +143,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         all_urls = 0
         objects_founded = self.findObjects()
         for obj in objects_founded:
-            tmp_results, tmp_all_urls = self._processObject(obj)
+            tmp_results, tmp_all_urls = self.getUrlsFromOb(obj)
             results.update(tmp_results)
             all_urls += tmp_all_urls
         return results, all_urls
@@ -158,10 +158,10 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         object_checked = self.unrestrictedTraverse(context, None)
         if object_checked is None:
             return {}, 0
-        return self._processObject(ob, properties)
+        return self.getUrlsFromOb(ob, properties)
 
-    security.declarePrivate('_processObject')
-    def _processObject(self, ob, properties=None):
+    security.declarePrivate('getUrlsFromOb')
+    def getUrlsFromOb(self, ob, properties=None):
         """Return a list of URLs contained in the properties of ob.
 
             @param ob: object to check
