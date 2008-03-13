@@ -22,6 +22,7 @@
 import string
 import threading
 import time
+import urlparse
 from Queue import Queue
 
 #Zope imports
@@ -32,6 +33,7 @@ from Globals import InitializeClass
 from OFS.FindSupport import FindSupport
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view
+from zLOG import LOG, INFO
 
 #Product's related imports
 from Products.NaayaLinkChecker.Utils import *
@@ -142,7 +144,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         all_urls = 0
         for obj in self.findObjects():
             links = self.getLinksFromOb(obj)
-            results[obj.absolute_url(1)] = links
+            results[obj.absolute_url()+'/'] = links
             all_urls += len(links)
         return results, all_urls
 
@@ -157,7 +159,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         if object_checked is None:
             return {}, 0
         links = self.getLinksFromOb(ob, properties)
-        return dict((object_checked.absolute_url(1), links)), len(links)
+        return dict((object_checked.absolute_url()+'/', links)), len(links)
 
     security.declarePrivate('getLinksFromOb')
     def getLinksFromOb(self, ob, properties=None):
@@ -245,10 +247,11 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     def check_links(self, urlsinfo, urlsnumber):
         #build a list with all links
         urls = Queue()
-        for val in urlsinfo.values():
+        for ob_url, val in urlsinfo.items():
             for v in val:
-                urls.put_nowait(v[0])
+                urls.put_nowait((ob_url, v[0]))
         #start threads
+        LOG('NaayaLinkChecker', INFO, 'Starting link checking threads')
         threads = []
         for thread in range(0,THREAD_COUNT):
             th = CheckerThread(urls, proxy=self.proxy)
@@ -257,6 +260,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             results = th.start()
         for thread in range(0,THREAD_COUNT):
             threads[thread].join()
+        LOG('NaayaLinkChecker', INFO, 'Link checking threads stopped')
         return self.prepareLog(urlsinfo, logresults, urlsnumber, 0)
 
     security.declarePrivate('prepareLog')
@@ -264,7 +268,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         """ """
         log = []
         for ob_url, links in links_dict.items():
-            ob = self.unrestrictedTraverse(ob_url)
+            ob = self.unrestrictedTraverse(urlparse.urlsplit(ob_url)[2])
             buf = []
             for link in links:
                 err = logresults.get(link[0], None)
