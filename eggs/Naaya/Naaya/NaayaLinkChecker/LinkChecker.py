@@ -219,28 +219,9 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         """ extract the urls from the objects,
             verify them and save the results for the broken links found in a log file
         """
-        #verify request
         self.verifyIP(REQUEST)
-
-        #extract all the urls
-        urls = []
         urlsinfo, total = self.processObjects()
-        for val in urlsinfo.values():
-            urls.extend([v[0] for v in val])
-
-        #start threads
-        lock = threading.Lock()
-        threads = []
-        for thread in range(0, THREAD_COUNT):
-            th = CheckerThread(urls, lock, proxy=self.proxy)
-            th.setName(thread)
-            threads.append(th)
-            results = th.start()
-        for thread in range(0, THREAD_COUNT):
-            threads[thread].join()
-
-        #save results in log
-        log_entries, all_urls = self.prepareLog(urlsinfo, logresults, total)
+        log_entries, all_urls = self.check_links(urlsinfo, total)
         self.manage_addLogEntry(self.REQUEST.AUTHENTICATED_USER.getUserName(), time.localtime(), log_entries)
 
     security.declareProtected('Run Manual Check', 'manualCheck')
@@ -248,50 +229,16 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         """ extract the urls from the objects,
             verify them and return the results for the broken links found
         """
-        #build a list with all links
-        urls = []
         urlsinfo, total = self.processObjects()
-        for val in urlsinfo.values():
-            urls.extend([v[0] for v in val])
-
-        #start threads
-        lock = threading.Lock()
-        threads = []
-        for thread in range(0,THREAD_COUNT):
-            th = CheckerThread(urls, lock, proxy=self.proxy)
-            th.setName(thread)
-            threads.append(th)
-            results = th.start()
-        for thread in range(0,THREAD_COUNT):
-            threads[thread].join()
-
-        #return the results
-        return self.prepareLog(urlsinfo, logresults, total, 0)
+        return self.check_links(urlsinfo, total)
 
     security.declareProtected('Run Manual Check', 'manualCheck')
     def objectCheck(self, properties=[], context=''):
         """ extract the urls from the given object,
             verify it and return the results for the broken links found
         """
-        #build a list with all links
-        urls = []
         urlsinfo, total = self.processObject(properties, context)
-        for val in urlsinfo.values():
-            urls.extend([v[0] for v in val])
-
-        #start threads
-        lock = threading.Lock()
-        threads = []
-        for thread in range(0,THREAD_COUNT):
-            th = CheckerThread(urls, lock, proxy=self.proxy)
-            th.setName(thread)
-            threads.append(th)
-            results = th.start()
-        for thread in range(0,THREAD_COUNT):
-            threads[thread].join()
-
-        #return the results
-        return self.prepareLog(urlsinfo, logresults, total, 0)
+        return self.check_links(urlsinfo, total)
 
     security.declarePrivate('check_links')
     def check_links(self, urlsinfo, urlsnumber):
@@ -299,7 +246,6 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         urls = []
         for val in urlsinfo.values():
             urls.extend([v[0] for v in val])
-
         #start threads
         lock = threading.Lock()
         threads = []
@@ -310,8 +256,6 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             results = th.start()
         for thread in range(0,THREAD_COUNT):
             threads[thread].join()
-
-        #return the results
         return self.prepareLog(urlsinfo, logresults, urlsnumber, 0)
 
     security.declarePrivate('prepareLog')
