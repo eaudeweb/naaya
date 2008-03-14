@@ -322,7 +322,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     def check_internal_links(self, links, logresults):
         for link, path in links:
             if self.unrestrictedTraverse(str(path), None) is None:
-                logresults[link] = 'http error 404'
+                logresults[link] = '404: Not Found'
             else:
                 logresults[link] = 'OK'
 
