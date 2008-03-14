@@ -233,12 +233,8 @@
 		<emailtemplate id="email_createaccount" title="Create account"/>
 	</emails>
 	<security>
-		<grouppermissions name="Review content" description="Allow posting reviews/comments to consultation objects." 
-			permissions="Naaya - Review Consultation,Naaya - Review Simple Consultation"/>
 		<role name="Authenticated" grouppermissions="Copy content,Add comments" permissions="Naaya - Add Naaya Story objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Event objects"/>
 		<role name="Validator" grouppermissions="Validate content" permissions=""/>
-		<role name="Reviewer" grouppermissions="Review content" permissions=""/>
-		<role name="Administrator" grouppermissions="Browse content,Add content,Add comments,Edit content,Copy content,Publish content,Delete content,Validate content,Translate pages,Manage Users" permissions="Naaya - Manage Consultation,Naaya - Manage Simple Consultation"/>
 	</security>
 	<others>
 		<favicon />
