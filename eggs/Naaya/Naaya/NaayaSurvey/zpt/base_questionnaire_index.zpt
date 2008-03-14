@@ -47,41 +47,41 @@
 
 <tal:block condition="python: not here.expired() or here.checkPermissionEditObjects()">
 	<tal:block define="my_answer python:here.getMySurveyAnswer()">
-	<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
-	      tal:define="stype here/getSurveyTemplate;
-		              rendered python:test(stype, stype.render(mode='edit', datamodel={}), 'Error');"
-	      tal:condition="python: my_answer is None or here.checkPermissionEditObjects()">
+		<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
+			  tal:define="stype here/getSurveyTemplate;
+						  rendered python:test(stype, stype.render(mode='edit', datamodel={}), 'Error');"
+			  tal:condition="python: (my_answer is None and here.checkPermissionAddAnswer()) or here.checkPermissionEditObjects()">
 
-		<tal:block tal:define="attachments here/getSortedAttachments" condition="attachments">
-			<h2 i18n:translate="">Attachments</h2>
-			<ol>
-				<li tal:repeat="attachment attachments">
-					<tal:block tal:replace="structure attachment/description">description</tal:block>
-					<br/>
-					<tal:block tal:define="download_url attachment/getDownloadUrl">
-						<a tal:define="size python:attachment.utShowSizeKb(attachment.size()); content_type attachment/content_type; content_type_title python:attachment.getContentTypeTitle(content_type)" tal:attributes="href download_url">
-							<img tal:attributes="src string:getContentTypePicture?id=${content_type}" alt="" /> <span tal:replace="string:${attachment/downloadfilename} (${content_type_title}, ${size} Kb)"/>
-						</a>
-					</tal:block>
-				</li>
-			</ol>
-		</tal:block>
+			<tal:block tal:define="attachments here/getSortedAttachments" condition="attachments">
+				<h2 i18n:translate="">Attachments</h2>
+				<ol>
+					<li tal:repeat="attachment attachments">
+						<tal:block tal:replace="structure attachment/description">description</tal:block>
+						<br/>
+						<tal:block tal:define="download_url attachment/getDownloadUrl">
+							<a tal:define="size python:attachment.utShowSizeKb(attachment.size()); content_type attachment/content_type; content_type_title python:attachment.getContentTypeTitle(content_type)" tal:attributes="href download_url">
+								<img tal:attributes="src string:getContentTypePicture?id=${content_type}" alt="" /> <span tal:replace="string:${attachment/downloadfilename} (${content_type_title}, ${size} Kb)"/>
+							</a>
+						</tal:block>
+					</li>
+				</ol>
+			</tal:block>
 
-		<tal:block content="structure rendered" />
+			<tal:block content="structure rendered" />
 
-		<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
-			<span tal:replace="structure here/showCaptcha" />
-			<span class="errormsg" tal:define="session python:request.SESSION" tal:content="session/err_captcha | nothing" />
-			<span tal:define="dummy python:here.delSessionKeys(['err_captcha'])"></span>
-		</tal:block>
+			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
+				<span tal:replace="structure here/showCaptcha" />
+				<span class="errormsg" tal:define="session python:request.SESSION" tal:content="session/err_captcha | nothing" />
+				<span tal:define="dummy python:here.delSessionKeys(['err_captcha'])"></span>
+			</tal:block>
 
-		<div class="surveySubmit">
-			<input type="submit" value="Submit" i18n:attributes="value" name="addSurveyAnswer:method"/>
-			<input type="reset" value="Reset" i18n:attributes="value" name="reset"/>
-		</div>
-	</form>
-
-	<p i18n:translate="" tal:condition="python: my_answer is not None">You have already taken this survey.</p>
+			<div class="surveySubmit">
+				<input type="submit" value="Submit" i18n:attributes="value" name="addSurveyAnswer:method"/>
+				<input type="reset" value="Reset" i18n:attributes="value" name="reset"/>
+			</div>
+		</form>
+		<p i18n:translate="" tal:condition="python: not here.checkPermissionAddAnswer()">You don't have enough permissions to take this survey.</p>
+		<p i18n:translate="" tal:condition="python: my_answer is not None">You have already taken this survey.</p>
 	</tal:block>
 </tal:block>
 
