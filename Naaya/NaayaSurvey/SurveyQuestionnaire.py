@@ -382,6 +382,10 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         """Check if the user has the EDIT_OBJECTS permission"""
         return self.checkPermission(PERMISSION_EDIT_OBJECTS)
 
+    def checkPermissionAddAnswer(self):
+        """Check if the user has the ADD_ANSWER permission"""
+        return self.checkPermission(PERMISSION_ADD_ANSWER)
+
     #
     # Site pages
     #
