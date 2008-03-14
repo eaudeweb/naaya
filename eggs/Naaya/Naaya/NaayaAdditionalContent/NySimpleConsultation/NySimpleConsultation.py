@@ -258,7 +258,14 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
             role_permissions = auth_tool.getRolePermissions('Reviewer')
             if PERMISSION_GROUP not in role_permissions:
                 role_permissions.append(PERMISSION_GROUP)
-                auth_tool.editRole('Reviewer', role_permissions)        
+                auth_tool.editRole('Reviewer', role_permissions)
+                
+        #give permissions to administrators
+        admin_permissions = self.permissionsOfRole('Administrator')
+        site = self.getSite()
+        if PERMISSION_MANAGE_SIMPLECONSULTATION not in admin_permissions:
+            site.manage_permission(PERMISSION_MANAGE_SIMPLECONSULTATION, ('Administrator', ), acquire=1)
+            site.manage_permission(PERMISSION_REVIEW_SIMPLECONSULTATION, ('Administrator', ), acquire=1)
 
     security.declareProtected(view, 'get_exfile')
     def get_exfile(self):
