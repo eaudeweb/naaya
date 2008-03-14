@@ -370,18 +370,22 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         else:
             return (0, int(str(self.releasedate - today).split('.')[0]))
 
+    security.declarePublic('checkPermissionViewAnswers')
     def checkPermissionViewAnswers(self):
         """Check if the user has the VIEW_ANSWERS permission"""
         return self.checkPermission(PERMISSION_VIEW_ANSWERS)
 
+    security.declarePublic('checkPermissionViewReports')
     def checkPermissionViewReports(self):
         """Check if the user has the VIEW_REPORTS permission"""
         return self.checkPermission(PERMISSION_VIEW_REPORTS)
 
+    security.declarePublic('checkPermissionEditObjects')
     def checkPermissionEditObjects(self):
         """Check if the user has the EDIT_OBJECTS permission"""
         return self.checkPermission(PERMISSION_EDIT_OBJECTS)
 
+    security.declarePublic('checkPermissionAddAnswer')
     def checkPermissionAddAnswer(self):
         """Check if the user has the ADD_ANSWER permission"""
         return self.checkPermission(PERMISSION_ADD_ANSWER)
