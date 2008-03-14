@@ -19,11 +19,9 @@
 #  Original Code: Cornel Nitu (Finsiel Romania)
 
 #Python imports
-import string
-import threading
+from Queue import Queue
 import time
 import urlparse
-from Queue import Queue
 
 #Zope imports
 from OFS.ObjectManager import ObjectManager
@@ -249,7 +247,8 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         urls = Queue()
         for ob_url, val in urlsinfo.items():
             for v in val:
-                urls.put_nowait((ob_url, v[0]))
+                url = urlparse.urljoin(ob_url, v[0])
+                urls.put_nowait(url)
         #start threads
         LOG('NaayaLinkChecker', INFO, 'Starting link checking threads')
         logresults = {}

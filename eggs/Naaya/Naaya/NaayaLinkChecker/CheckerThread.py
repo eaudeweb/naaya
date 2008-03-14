@@ -22,7 +22,6 @@ import socket
 from threading import Thread
 import time
 from types import *
-from urlparse import urljoin
 
 from MyURLopener import MyURLopener
 
@@ -30,9 +29,8 @@ class CheckerThread(Thread):
 
     def __init__(self, urls, logresults, proxy):
         """
-            @param urls: a queue of URLs to check of this format;
-                         each item is of form (ob_url, link)
-            @type urls: Queue of (string, string) tuples
+            @param urls: a queue of URLs to check
+            @type urls: Queue of strings
             @param proxy: proxy
         """
         Thread.__init__(self)
@@ -43,12 +41,11 @@ class CheckerThread(Thread):
     def run(self):
         while True:
             try:
-                ob_url, link = self.urls.get_nowait()
+                url = self.urls.get_nowait()
             except Empty:
                 break
-            url = urljoin(ob_url, link)
             result = self.readhtml(url)
-            self.logresults[link] = str(result)
+            self.logresults[url] = str(result)
 
     def readhtml(self, url):
         file = MyURLopener()
