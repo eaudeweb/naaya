@@ -107,6 +107,54 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             self.use_catalog = 1
             self.catalog_name = catalog_name
 
+    security.declareProtected(view_management_screens, 'manage_addMetaType')
+    def manage_addMetaType(self, MetaType=None, REQUEST=None):
+        """Add a new meta type to list"""
+        if MetaType is None:
+            addmetatype = REQUEST.get('objectMetaType', '')
+        else:
+            addmetatype = MetaType
+        if addmetatype != '':
+            if addmetatype not in self.objectMetaType.keys():
+                self.objectMetaType[addmetatype] = []
+                self._p_changed = 1
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect('manage_properties')
+
+    security.declareProtected(view_management_screens,'manage_delMetaType')
+    def manage_delMetaType(self, REQUEST=None):
+        """Delete meta types from list"""
+        delmetatype = REQUEST.get('objectMetaType', [])
+        for metatype in self.umConvertToList(delmetatype):
+            try:
+                del(self.objectMetaType[metatype])
+            except:
+                pass
+        self._p_changed = 1
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect('manage_properties')
+
+    security.declareProtected(view_management_screens, 'manage_addProperty')
+    def manage_addProperty(self, MetaType=None, Property=None, multilingual=False, islink=False, REQUEST=None):
+        """Add a new property for a meta type"""
+        if MetaType is None:
+            editmetatype = REQUEST.get('editmetatype', '')
+            addobjectproperty = REQUEST.get('objectProperty', '')
+        else:
+            editmetatype = MetaType
+            addobjectproperty = Property
+        if self.hasMetaType(editmetatype):
+            # valid meta type - add property
+            listproperties = self.objectMetaType[editmetatype]
+            if addobjectproperty != '':
+                if addobjectproperty not in [p[0] for p in listproperties]:
+                    listproperties.append((addobjectproperty, multilingual, islink))
+                    self.objectMetaType[editmetatype] = listproperties
+                    self._p_changed = 1
+            if REQUEST is not None:
+                REQUEST.RESPONSE.redirect('manage_properties?editmetatype=' + self.umURLEncode(editmetatype) + '#property')
+
+
     def getObjectMetaTypes(self):
         """Get all added meta types"""
         return self.objectMetaType.keys()
@@ -142,7 +190,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         all_urls = 0
         for obj in self.findObjects():
             links = self.getLinksFromOb(obj)
-            results[obj.absolute_url()+'/'] = links
+            results[obj.absolute_url(1)] = links
             all_urls += len(links)
         return results, all_urls
 
@@ -157,7 +205,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         if object_checked is None:
             return {}, 0
         links = self.getLinksFromOb(ob, properties)
-        return dict((object_checked.absolute_url()+'/', links)), len(links)
+        return dict((object_checked.absolute_url(1), links)), len(links)
 
     security.declarePrivate('getLinksFromOb')
     def getLinksFromOb(self, ob, properties=None):
@@ -244,24 +292,39 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     security.declarePrivate('check_links')
     def check_links(self, urlsinfo, urlsnumber):
         #build a list with all links
-        urls = Queue()
+        external_links = Queue()
+        internal_links = []
         for ob_url, val in urlsinfo.items():
             for v in val:
-                url = urlparse.urljoin(ob_url, v[0])
-                urls.put_nowait(url)
+                link = v[0]
+                if is_absolute_url(link):
+                    external_links.put_nowait(link)
+                else:
+                    url = urlparse.urljoin(ob_url, link)
+                    scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
+                    internal_links.append((link, path))
         #start threads
         LOG('NaayaLinkChecker', INFO, 'Starting link checking threads')
         logresults = {}
         threads = []
-        for thread in range(0,THREAD_COUNT):
-            th = CheckerThread(urls, logresults, proxy=self.proxy)
+        for thread in range(THREAD_COUNT):
+            th = CheckerThread(external_links, logresults, proxy=self.proxy)
             th.setName(thread)
             threads.append(th)
             results = th.start()
+        self.check_internal_links(internal_links, logresults)
         for thread in threads:
             thread.join()
         LOG('NaayaLinkChecker', INFO, 'Link checking threads stopped')
         return self.prepareLog(urlsinfo, logresults, urlsnumber, 0)
+
+    security.declarePrivate('check_internal_links')
+    def check_internal_links(self, links, logresults):
+        for link, path in links:
+            if self.unrestrictedTraverse(str(path), None) is None:
+                logresults[link] = 'http error 404'
+            else:
+                logresults[link] = 'OK'
 
     security.declarePrivate('prepareLog')
     def prepareLog(self, links_dict, logresults, all_urls, manual=0):
@@ -297,53 +360,6 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     def getObjectMetaTypes(self):
         """Get all added meta types"""
         return self.objectMetaType.keys()
-
-    security.declareProtected(view_management_screens, 'manage_addMetaType')
-    def manage_addMetaType(self, MetaType=None, REQUEST=None):
-        """Add a new meta type to list"""
-        if MetaType is None:
-            addmetatype = REQUEST.get('objectMetaType', '')
-        else:
-            addmetatype = MetaType
-        if addmetatype != '':
-            if addmetatype not in self.objectMetaType.keys():
-                self.objectMetaType[addmetatype] = []
-                self._p_changed = 1
-        if REQUEST is not None:
-            REQUEST.RESPONSE.redirect('manage_properties')
-
-    security.declareProtected(view_management_screens,'manage_delMetaType')
-    def manage_delMetaType(self, REQUEST=None):
-        """Delete meta types from list"""
-        delmetatype = REQUEST.get('objectMetaType', [])
-        for metatype in self.umConvertToList(delmetatype):
-            try:
-                del(self.objectMetaType[metatype])
-            except:
-                pass
-        self._p_changed = 1
-        if REQUEST is not None:
-            REQUEST.RESPONSE.redirect('manage_properties')
-
-    security.declareProtected(view_management_screens, 'manage_addProperty')
-    def manage_addProperty(self, MetaType=None, Property=None, multilingual=False, islink=False, REQUEST=None):
-        """Add a new property for a meta type"""
-        if MetaType is None:
-            editmetatype = REQUEST.get('editmetatype', '')
-            addobjectproperty = REQUEST.get('objectProperty', '')
-        else:
-            editmetatype = MetaType
-            addobjectproperty = Property
-        if self.hasMetaType(editmetatype):
-            # valid meta type - add property
-            listproperties = self.objectMetaType[editmetatype]
-            if addobjectproperty != '':
-                if addobjectproperty not in [p[0] for p in listproperties]:
-                    listproperties.append((addobjectproperty, multilingual, islink))
-                    self.objectMetaType[editmetatype] = listproperties
-                    self._p_changed = 1
-            if REQUEST is not None:
-                REQUEST.RESPONSE.redirect('manage_properties?editmetatype=' + self.umURLEncode(editmetatype) + '#property')
 
     security.declareProtected(view_management_screens, 'manage_delProperty')
     def manage_delProperty(self, REQUEST=None):
