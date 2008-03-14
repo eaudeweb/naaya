@@ -127,37 +127,6 @@ class CHMSite(NySite):
         """ """
         return CHM2_PRODUCT_PATH
 
-    #Epoz layer
-    def get_wysiwyg_widget(self, name, data='', toolbox='', size='big', lang=None):
-        """
-        Returns an WYSIWYG widget. The Epoz is used for the moment.
-        Also the widget will have a black border.
-        @param name: name of the HTML control
-        @type name: string
-        @param data: piece of text to be displayed inside
-        @type data: string
-        @param toolbox: a link to a HTML-Page which delivers additional tools
-        @type toolbox: string
-        @param size: speciefies the size of the widget
-        @type size: string
-        @param lang: language code
-        @type lang: string
-        """
-        if lang is None: lang = self.gl_get_selected_language()
-        if size == 'big':
-            width, height = 800, 400
-        elif size == 'medium':
-            width, height = 600, 300
-        else: #small
-            width, height = 400, 200
-        sfp = self.getLayoutTool().getSkinFilesPath()
-        return self.Epoz(name=name, data=data, toolbox=toolbox, lang=lang,
-            style='width:%spx;height:%spx;border:1px solid #000000;' % (width, height),
-            textstyle='width:%spx;height:%spx;border:1px solid #000000;' % (width, height+49),
-            epoz_toolbar_style='width:%spx' % (width + 2),
-            css='%s/style' % sfp,
-            customcss='%s/style_common' % sfp)
-
     #objects getters
     def getLinkChecker(self): return self._getOb(ID_LINKCHECKER, None)
     def getLinkCheckerLastLog(self):
@@ -991,14 +960,6 @@ class CHMSite(NySite):
         self.workgroups = []
         self._p_changed = 1
         return 'OK update to 2.1'
-
-    #epoz insert relative link form
-    security.declareProtected(view, 'insertrelativelink_html')
-    def insertrelativelink_html(self, REQUEST=None, RESPONSE=None):
-        """
-        Opens a page with site map and insert a relative link in the wysiwyg widget editor.
-        """
-        return self.getFormsTool().getContent({'here': self}, 'site_insertrelativelink')
 
     #expandable portlets functions
     security.declareProtected(view, 'epFromCookiesToSession')
