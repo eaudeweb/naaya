@@ -42,8 +42,8 @@ from simpleconsultation_comment import addSimpleConsultationComment
 
 
 #module constants
-PERMISSION_REVIEW_SIMPLECONSULTATION = 'Review Simple Consultation'
-PERMISSION_MANAGE_SIMPLECONSULTATION = 'Manage Simple Consultation'
+PERMISSION_REVIEW_SIMPLECONSULTATION = 'Naaya - Review Simple Consultation'
+PERMISSION_MANAGE_SIMPLECONSULTATION = 'Naaya - Manage Simple Consultation'
 
 METATYPE_OBJECT = 'Naaya Simple Consultation'
 LABEL_OBJECT = 'Simple Consultation'

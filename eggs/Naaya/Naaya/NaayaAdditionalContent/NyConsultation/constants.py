@@ -19,5 +19,5 @@
 
 
 #Consultation permissions
-PERMISSION_REVIEW_CONSULTATION = 'Review Consultation'
-PERMISSION_MANAGE_CONSULTATION = 'Manage Consultation'
+PERMISSION_REVIEW_CONSULTATION = 'Naaya - Review Consultation'
+PERMISSION_MANAGE_CONSULTATION = 'Naaya - Manage Consultation'
