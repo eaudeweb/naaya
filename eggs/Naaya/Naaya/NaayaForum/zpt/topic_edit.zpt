@@ -50,10 +50,6 @@
 
 <h2 i18n:translate="">Attachments</h2>
 
-<p i18n:translate="">
-	Explanatory text here ...
-</p>
-
 <form tal:attributes="action string:${here/absolute_url}/deleteAttachments" method="post">
 <div>
 	<div id="toolbar">
@@ -79,7 +75,7 @@
 </form>
 
 <p i18n:translate="">
-	You can add new attachments from here ...
+	Add new attachments one by one using the form below:
 </p>
 
 <form tal:attributes="action string:${here/absolute_url}/addAttachment" method="post" enctype="multipart/form-data">
