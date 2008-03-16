@@ -50,8 +50,8 @@
 		<td tal:content="here/author" />
 	</tr>
 	<tr>
-		<td class="form-label">Post date</td>
-		<td tal:content="here/postdate" />
+		<td class="form-label">Posting date</td>
+		<td><input type="text" name="postdate" id="postdate" tal:attributes="value here/postdate" />
 	</tr>
 	<tr><td></td><td><input type="submit" value="Save changes"></td></tr>
 </table>
