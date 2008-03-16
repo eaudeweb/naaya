@@ -231,7 +231,7 @@ class NyForumTopic(NyForumBase, Folder):
     #site actions
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'saveProperties')
     def saveProperties(self, title='', category='', status='', description='',
-        notify='', REQUEST=None):
+        notify='', postdate='', REQUEST=None):
         """ """
         try: status = abs(int(status))
         except: status = 0
@@ -294,7 +294,7 @@ class NyForumTopic(NyForumBase, Folder):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', category='', status='', description='', notify='',
+    def manageProperties(self, title='', category='', status='', description='', notify='', postdate='', 
         REQUEST=None):
         """ """
         try: status = abs(int(status))
@@ -306,6 +306,9 @@ class NyForumTopic(NyForumBase, Folder):
         self.status = status
         self.description = description
         self.notify = notify
+        if postdate:
+            if self.utGetDate(str(postdate)):
+                self.postdate = self.utGetDate(str(postdate))
         self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
