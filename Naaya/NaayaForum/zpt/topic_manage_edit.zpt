@@ -51,9 +51,9 @@
 	</tr>
 	<tr>
 		<td class="form-label">Posting date</td>
-		<td><input type="text" name="postdate" id="postdate" tal:attributes="value here/postdate" />
+		<td><input type="text" name="postdate" id="postdate" size="30" tal:attributes="value here/postdate" /></td>
 	</tr>
-	<tr><td></td><td><input type="submit" value="Save changes"></td></tr>
+	<tr><td></td><td><input type="submit" value="Save changes" /></td></tr>
 </table>
 </form>
 
