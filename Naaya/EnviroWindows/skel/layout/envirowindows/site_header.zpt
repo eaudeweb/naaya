@@ -58,7 +58,7 @@
 			<div id="topnav">
 				<div id="language">
 					<span tal:replace="structure here/languages_box"/>
-					<label for="language">Select language</label>
+					<label for="old_lang">Select language</label>
 				</div>
 				<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('top').get_links_list()">
 					<li><a tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'" tal:attributes="href string:${site_url}/login_html" i18n:translate="">Login</a></li>
