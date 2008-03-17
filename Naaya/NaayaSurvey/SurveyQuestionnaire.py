@@ -253,7 +253,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         old_answer = self.getMyAnswer()
         if old_answer is not None:
             self._delObject(old_answer.id)
-            LOG('Products.NaayaSurvey.SurveyQuestionnaire', DEBUG, 'Deleted previous answer %s' % (old_answer.absolute_url()))
+            LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG, 'Deleted previous answer %s' % (old_answer.absolute_url()))
 
         answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST)
         self._sendNotifications(self._getOb(answer_id))
@@ -292,13 +292,13 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         try:
             recp_email = auth_tool.getUserEmail(owner)
             email_tool.sendEmail(content, recp_email, sender_email, template.title)
-            LOG('Products.NaayaSurvey.SurveyQuestionnaire', DEBUG, 'Notification sent from %s to %s' % (sender_email, recp_email))
+            LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG, 'Notification sent from %s to %s' % (sender_email, recp_email))
         except:
             # possible causes - the owner doesn't have email (e.g. regular Zope user)
             #                 - we can not send the email
             # these aren't fatal errors, so we'll just log the error
             err = sys.exc_info()
-            LOG('Products.NaayaSurvey.SurveyQuestionnaire', ERROR, 'Could not send notifications', error=err)
+            LOG('NaayaSurvey.SurveyQuestionnaire', ERROR, 'Could not send notifications', error=err)
 
     #
     # Answer read methods
