@@ -43,7 +43,10 @@ def manage_addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs
     if not id:
         id = gUtil.utGenObjectId(title)
 
-    idSuffix = ''
+    if id=='respondent': # reserved id
+        idSuffix = '_w' # TODO: refactor SurveyAnswer and remove this workaround
+    else:
+        idSuffix = ''
     while (id+idSuffix in container.objectIds() or
            getattr(container, id+idSuffix, None) is not None):
         idSuffix = gUtil.utGenRandomId(p_length=4)
