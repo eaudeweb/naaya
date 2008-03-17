@@ -32,7 +32,7 @@
 </div>
 
 <form name="frmEdit" method="post" action=".">
-<tal:block replace="structure python:here.render(mode='manage', answer={})" />
+<tal:block replace="structure python:here.render(mode='manage', datamodel={})" />
 <div class="field">
 	<input type="submit" name="saveProperties:method" value="Save Changes" i18n:attributes="value" />
 </div>

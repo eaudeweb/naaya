@@ -4,12 +4,12 @@
 
 <tal:block define="
     mode options/mode|string:view;
-    answer options/answer|nothing;
+    datamodel options/datamodel|nothing;
 	widget_id here/getWidgetId;">
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode radioMatrixWidget"
-     tal:define="checked_choices python:answer.get(widget_id, None)">
+     tal:define="checked_choices python:datamodel.get(widget_id, None)">
 	<table class="datatable" tal:condition="checked_choices">
 		<caption tal:content="here/title"></caption>
 		<tbody>

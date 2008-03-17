@@ -51,7 +51,7 @@
 		<h2 i18n:translate="" tal:condition="python: my_answer is not None">You have already taken this survey!</h2>
 		<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
 			  tal:define="stype here/getSurveyTemplate;
-						  rendered python:test(stype, stype.render(mode='edit', answer={}), 'Error');"
+						  rendered python:test(stype, stype.render(mode='edit', datamodel={}), 'Error');"
 			  tal:condition="python: (my_answer is None and here.checkPermissionAddAnswer()) or here.checkPermissionEditObjects()">
 
 			<tal:block tal:define="attachments here/getSortedAttachments" condition="attachments">

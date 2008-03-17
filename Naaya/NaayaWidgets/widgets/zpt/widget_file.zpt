@@ -4,9 +4,9 @@
 
 <tal:block define="
     mode options/mode|string:view;
-    answer options/answer|nothing;
+    datamodel options/datamodel|nothing;
     widget_id here/getWidgetId;
-    value python:answer.get(widget_id, None);
+    value python:datamodel.get(widget_id, None);
     required python:here.getSession('required', here.getProperty('required', None));
     size_max python:here.getSession('size_max', here.getProperty('size_max', 0));
     width python:here.getSession('width', here.getProperty('width', 50));">

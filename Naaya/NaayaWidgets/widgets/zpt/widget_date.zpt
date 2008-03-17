@@ -4,12 +4,12 @@
 
 <tal:block define="
     mode options/mode|string:view;
-    answer options/answer|nothing;
+    datamodel options/datamodel|nothing;
 	widget_id here/getWidgetId;">
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode dateWidget"
-     tal:define="value python:answer.get(widget_id, None)">
+     tal:define="value python:datamodel.get(widget_id, None)">
 	<strong tal:content="here/title" />
 	<br />
 	<span tal:condition="value" tal:content="python: value.strftime('%Y-%m-%d')" />
