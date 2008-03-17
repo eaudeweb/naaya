@@ -248,12 +248,12 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
                 self.setSession('err_captcha', 'Incorrect. Try again')
             if errors:
                 self.setSessionErrors(errors)
-            for widget, value in datamodel.items():
+            for widget_id, value in datamodel.items():
                 if value is None:
                     continue
                 if isinstance(value, FileUpload):
                     continue
-                self.setSession(widget, value)
+                self.setSession(widget_id, value)
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
             return
 
