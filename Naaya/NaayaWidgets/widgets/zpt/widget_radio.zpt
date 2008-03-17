@@ -8,20 +8,19 @@
 	widget_id here/getWidgetId;">
 
 <!-- View mode -->
-<div tal:condition="python:mode == 'view'" class="widgetViewMode"
-     tal:define="checked_choice python:datamodel.get(widget_id, None)">
+<div tal:condition="python:mode == 'view'" class="widgetViewMode">
 	<strong tal:content="here/title" />
 	<br />
-	<span tal:condition="python: checked_choice is not None"
-		  tal:content="python: here.choices[checked_choice]" />
-	<span tal:condition="python: checked_choice is None" i18n:translate="" class="no-response">
+	<span tal:condition="python: datamodel is not None"
+		  tal:content="python: here.choices[datamodel]" />
+	<span tal:condition="python: datamodel is None" i18n:translate="" class="no-response">
 		No response
 	</span>
 </div>
 
 <!-- Edit mode -->
 <div tal:condition="python:mode == 'edit'" class="widgetEditMode"
-	 tal:define="checked_choice python:here.getSession(widget_id, None)">
+	 tal:define="datamodel python:here.getSession(widget_id, datamodel)">
 	<label tal:attributes="for widget_id" class="label">
 		<span i18n:translate="" tal:content="here/title" />
 		<span tal:condition="here/required" class="required">*</span>
@@ -34,7 +33,7 @@
 				value choice_idx;
 				name string:${widget_id}:int;
 				id choice_id;
-				checked python:choice_idx==checked_choice"/>
+				checked python:choice_idx==datamodel"/>
 			<label tal:attributes="for choice_id" i18n:translate="" tal:content="choice">Choice</label>
 		</tal:block>
 		<br tal:condition="python:here.display == 'vertical'" />

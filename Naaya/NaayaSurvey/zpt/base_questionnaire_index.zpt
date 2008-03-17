@@ -67,10 +67,8 @@
 				</ol>
 			</tal:block>
 
-			<span tal:define="dummy python:here.setSessionAnswer(my_answer)"></span>
-
 			<tal:block define="stype here/getSurveyTemplate"
-			           content="structure python:test(stype, stype.render(mode='edit', datamodel={}), 'Error')" />
+			           content="structure python:test(stype, stype.render(mode='edit', datamodel=my_answer), 'Error')" />
 
 			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
 				<span tal:replace="structure here/showCaptcha" />

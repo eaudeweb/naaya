@@ -5,29 +5,29 @@
 <tal:block define="
     mode options/mode|string:view;
     datamodel options/datamodel|nothing;
-	widget_id here/getWidgetId;
-	value python:datamodel.get(widget_id, '');">
+	widget_id here/getWidgetId;">
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode stringWidget">
 	<strong tal:content="here/title" />
 	<br />
-	<span tal:condition="value" tal:content="value" />
-	<span tal:condition="not: value" i18n:translate="" class="no-response">
+	<span tal:condition="datamodel" tal:content="datamodel" />
+	<span tal:condition="not: datamodel" i18n:translate="" class="no-response">
 		No response
 	</span>
 </div>
 
 <!-- Edit mode -->
 <div tal:condition="python:mode == 'edit'" class="widgetEditMode"
-     tal:define="value python:here.getSession(widget_id, value)">
+     tal:define="datamodel python:here.getSession(widget_id, datamodel);
+                 datamodel python:datamodel or '';">
 	<label tal:attributes="for widget_id" class="label">
 		<span i18n:translate="" tal:content="here/title" />
 		<span tal:condition="here/required" class="required">*</span>
 	</label>
 	<div class="tooltips" tal:content="structure here/tooltips" />
 	<input type="text" tal:attributes="
-		value value;
+		value datamodel;
 		size here/width;
 		maxlength python:test(here.size_max, here.size_max, None);
 		name string:${widget_id}:utf8:ustring;

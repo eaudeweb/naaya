@@ -255,7 +255,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
     def render(self, mode='view', datamodel={}, **kwargs):
         """Render widgets"""
         widgets = self.getSortedWidgets()
-        return '\n'.join([widget.render(mode=mode, datamodel=datamodel, **kwargs)
+        return '\n'.join([widget.render(mode=mode, datamodel=datamodel.get(widget.id, None), **kwargs)
                           for widget in widgets])
 
     #

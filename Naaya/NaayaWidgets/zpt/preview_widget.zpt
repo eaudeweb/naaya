@@ -27,6 +27,6 @@
 	</span>
 </div>
 
-<tal:block replace="structure python:here.render(mode='edit', datamodel={})" />
+<tal:block replace="structure python:here.render(mode='edit')" />
 
 <span tal:replace="structure here/standard_html_footer" />
