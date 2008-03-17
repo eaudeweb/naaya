@@ -219,7 +219,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         try:
             if self.expired():
                 raise SurveyQuestionnaireException("The survey has expired")
-            if self.getMySurveyAnswer() is not None:
+            if self.getMyAnswer() is not None:
                 raise SurveyQuestionnaireException("You have already taken this survey")
         except SurveyQuestionnaireException, ex:
             if REQUEST:
@@ -310,8 +310,8 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         """Return a list of answers"""
         return self.objectValues(SurveyAnswer.meta_type)
 
-    security.declarePublic('getMySurveyAnswer')
-    def getMySurveyAnswer(self):
+    security.declarePublic('getMyAnswer')
+    def getMyAnswer(self):
         """Return the answer of the current user or None if it doesn't exist.
 
             If multiple answers exist, only the first one is returned.
