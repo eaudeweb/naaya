@@ -50,8 +50,6 @@
 		<h2 i18n:translate="" tal:condition="python: not here.checkPermissionAddAnswer()">You don't have enough permissions to take this survey!</h2>
 		<h2 i18n:translate="" tal:condition="python: my_answer is not None">You have already taken this survey!</h2>
 		<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
-			  tal:define="stype here/getSurveyTemplate;
-						  rendered python:test(stype, stype.render(mode='edit', datamodel={}), 'Error');"
 			  tal:condition="python: (my_answer is None and here.checkPermissionAddAnswer()) or here.checkPermissionEditObjects()">
 
 			<tal:block tal:define="attachments here/getSortedAttachments" condition="attachments">
@@ -69,7 +67,8 @@
 				</ol>
 			</tal:block>
 
-			<tal:block content="structure rendered" />
+			<tal:block define="stype here/getSurveyTemplate"
+			           content="structure python:test(stype, stype.render(mode='edit', datamodel={}), 'Error')" />
 
 			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
 				<span tal:replace="structure here/showCaptcha" />
