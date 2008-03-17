@@ -46,11 +46,11 @@
 <p i18n:translate="" tal:condition="python: here.expired() and not here.checkPermissionEditObjects()">Survey expired.</p>
 
 <tal:block condition="python: not here.expired() or here.checkPermissionEditObjects()">
-	<tal:block define="my_answer python:here.getMyAnswer()">
-		<h2 i18n:translate="" tal:condition="python: not here.checkPermissionAddAnswer()">You don't have enough permissions to take this survey!</h2>
-		<h2 i18n:translate="" tal:condition="python: my_answer is not None">You have already taken this survey!</h2>
+	<tal:block define="my_answer python:here.getMyAnswerDatamodel()">
+		<h2 i18n:translate="" tal:condition="not: here/checkPermissionAddAnswer">You don't have enough permissions to take this survey!</h2>
+		<h2 i18n:translate="" tal:condition="my_answer">You have already taken this survey. If you decide to take it again, you will overwrite the previous answers!</h2>
 		<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
-			  tal:condition="python: (my_answer is None and here.checkPermissionAddAnswer()) or here.checkPermissionEditObjects()">
+		      tal:condition="here/checkPermissionAddAnswer">
 
 			<tal:block tal:define="attachments here/getSortedAttachments" condition="attachments">
 				<h2 i18n:translate="">Attachments</h2>
@@ -67,6 +67,8 @@
 				</ol>
 			</tal:block>
 
+			<span tal:define="dummy python:here.setSessionAnswer(my_answer)"></span>
+
 			<tal:block define="stype here/getSurveyTemplate"
 			           content="structure python:test(stype, stype.render(mode='edit', datamodel={}), 'Error')" />
 
@@ -77,7 +79,8 @@
 			</tal:block>
 
 			<div class="surveySubmit">
-				<input type="submit" value="Submit" i18n:attributes="value" name="addSurveyAnswer:method"/>
+				<input tal:condition="not: my_answer" type="submit" value="Submit" i18n:attributes="value" name="addSurveyAnswer:method"/>
+				<input tal:condition="my_answer" type="submit" value="Change answers" i18n:attributes="value" name="addSurveyAnswer:method"/>
 				<input type="reset" value="Reset" i18n:attributes="value" name="reset"/>
 			</div>
 		</form>
