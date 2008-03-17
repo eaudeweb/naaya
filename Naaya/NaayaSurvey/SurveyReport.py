@@ -172,7 +172,7 @@ class SurveyReport(Folder, LocalPropertyManager):
             if not REQUEST:
                 raise
             err = sys.exc_info()
-            LOG('Products.NaayaSurvey.statistics.manage_addStatistic', DEBUG,
+            LOG('NaayaSurvey.statistics.manage_addStatistic', DEBUG,
                 'Error creating statistic %s for question %s' % (statistic_cls, question.absolute_url()), error=err)
             self.setSessionErrors(['''"%s" can't be used for question "%s"''' % \
                                     (statistic_cls.meta_label, question.title)])
