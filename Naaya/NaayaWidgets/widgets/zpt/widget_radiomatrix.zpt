@@ -27,11 +27,11 @@
 			</tr>
 		</tbody>
 	</table>
-	<span tal:condition="not: checked_choices" class="no-response">
+	<tal:block condition="not: checked_choices">
 		<strong tal:content="here/title" />
 		<br />
-		<span i18n:translate="">No response</span>
-	</span>
+		<span class="no-response" i18n:translate="">No response</span>
+	</tal:block>
 </div>
 
 <!-- Edit mode -->
