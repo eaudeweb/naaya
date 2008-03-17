@@ -51,6 +51,9 @@ class TextAreaWidget(Widget):
     rows = 10
     columns = 50
 
+    def isEmptyDatamodel(self, value):
+        return not bool(value)
+
     def getDatamodel(self, form):
         """Get datamodel from form"""
         return form.get(self.getWidgetId(), None)

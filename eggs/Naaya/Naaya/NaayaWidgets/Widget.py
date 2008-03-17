@@ -142,9 +142,12 @@ class Widget(Folder, LocalPropertyManager):
     #
     # To be implemented or ovewritten (if needed) by widget concrete classes.
     #
+    def isEmptyDatamodel(self, value):
+        return value is None
+
     def validateDatamodel(self, value):
         """Validate datamodel"""
-        if self.required and value is None:
+        if self.required and self.isEmptyDatamodel(value):
             raise WidgetError('Value required for "%s"' % self.title)
 
     def prepare(self, datamodel, **kwargs):

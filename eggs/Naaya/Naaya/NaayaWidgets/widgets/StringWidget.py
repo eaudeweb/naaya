@@ -50,6 +50,9 @@ class StringWidget(Widget):
     width = 50
     size_max = 0
 
+    def isEmptyDatamodel(self, value):
+        return not bool(value)
+
     def getDatamodel(self, form):
         """Get datamodel from form"""
         return form.get(self.getWidgetId(), None)
