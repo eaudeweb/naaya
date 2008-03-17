@@ -219,8 +219,6 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         try:
             if self.expired():
                 raise SurveyQuestionnaireException("The survey has expired")
-            if self.getMyAnswer() is not None:
-                raise SurveyQuestionnaireException("You have already taken this survey")
         except SurveyQuestionnaireException, ex:
             if REQUEST:
                 self.setSessionErrors([ex])
@@ -248,14 +246,14 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
                 self.setSession('err_captcha', 'Incorrect. Try again')
             if errors:
                 self.setSessionErrors(errors)
-            for widget_id, value in datamodel.items():
-                if value is None:
-                    continue
-                if isinstance(value, FileUpload):
-                    continue
-                self.setSession(widget_id, value)
+            self.setSessionAnswer(datamodel)
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
             return
+
+        old_answer = self.getMyAnswer()
+        if old_answer is not None:
+            self._delObject(old_answer.id)
+            LOG('Products.NaayaSurvey.SurveyQuestionnaire', DEBUG, 'Deleted previous answer %s' % (old_answer.absolute_url()))
 
         answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST)
         self._sendNotifications(self._getOb(answer_id))
@@ -325,6 +323,24 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
                               'respondent': respondent}):
             return brain.getObject()
         return None
+
+    security.declarePublic('getMyAnswerDatamodel')
+    def getMyAnswerDatamodel(self):
+        """ """
+        answer = self.getMyAnswer()
+        if answer is None:
+            return {}
+        return answer.getDatamodel()
+
+    security.declareProtected('setSessionAnswer', PERMISSION_ADD_ANSWER)
+    def setSessionAnswer(self, datamodel):
+        """Sets the session with the specified answer"""
+        for widget_id, value in datamodel.items():
+            if value is None:
+                continue
+            if isinstance(value, FileUpload):
+                continue
+            self.setSession(widget_id, value)
 
     security.declareProtected(PERMISSION_VIEW_REPORTS, 'questionnaire_view_report_html')
     def questionnaire_view_report_html(self, report_id, REQUEST):
