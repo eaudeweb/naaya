@@ -8,23 +8,23 @@
 	widget_id here/getWidgetId;">
 
 <!-- View mode -->
-<div tal:condition="python:mode == 'view'" class="widgetViewMode checkboxesWidget"
-     tal:define="checked_choices python:datamodel.get(widget_id, None)">
+<div tal:condition="python:mode == 'view'" class="widgetViewMode checkboxesWidget">
 	<strong tal:content="here/title" />
 	<br />
-	<ul tal:condition="checked_choices">
-		<li tal:repeat="answer python:[here.choices[i] for i in checked_choices]">
+	<ul tal:condition="datamodel">
+		<li tal:repeat="answer python:[here.choices[i] for i in datamodel]">
 			<span tal:replace="answer" />
 		</li>
 	</ul>
-	<span tal:condition="not: checked_choices" i18n:translate="" class="no-response">
+	<span tal:condition="not: datamodel" i18n:translate="" class="no-response">
 		No response
 	</span>
 </div>
 
 <!-- Edit mode -->
 <div tal:condition="python:mode == 'edit'" class="widgetEditMode"
-     tal:define="checked_choices python:here.getSession(widget_id, [])">
+     tal:define="datamodel python:here.getSession(widget_id, datamodel);
+	             datamodel python:test(datamodel is None, [], datamodel)">
 	<label tal:attributes="for widget_id" class="label">
 		<span i18n:translate="" tal:content="here/title" />
 		<span tal:condition="here/required" class="required">*</span>
@@ -37,7 +37,7 @@
 				value choice_idx;
 				name string:${widget_id}:list;
 				id choice_id;
-				checked python:choice_idx in checked_choices"/>
+				checked python:choice_idx in datamodel"/>
 			<label tal:attributes="for choice_id" i18n:translate="" tal:content="choice">Choice</label>
 		</tal:block>
 		<br tal:condition="python:here.display == 'vertical'" />

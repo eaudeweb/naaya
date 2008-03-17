@@ -8,14 +8,13 @@
 	widget_id here/getWidgetId;">
 
 <!-- View mode -->
-<div tal:condition="python:mode == 'view'" class="widgetViewMode checkboxMatrixWidget"
-     tal:define="checked_choices python:datamodel.get(widget_id, None)">
-	<table class="datatable" tal:condition="checked_choices">
+<div tal:condition="python:mode == 'view'" class="widgetViewMode checkboxMatrixWidget">
+	<table class="datatable" tal:condition="datamodel">
 		<caption tal:content="here/title"></caption>
 		<tbody>
 			<tr tal:repeat="row here/rows">
 				<th scope="row" class="scope-row" tal:content="row">row</th>
-				<td tal:define="checked_choices python:checked_choices[repeat['row'].index]">
+				<td tal:define="checked_choices python:datamodel[repeat['row'].index]">
 					<ul tal:condition="checked_choices">
 						<li tal:repeat="choice_idx checked_choices">
 							<span tal:replace="python:here.choices[choice_idx]">answer</span>
@@ -28,7 +27,7 @@
 			</tr>
 		</tbody>
 	</table>
-	<tal:block condition="not: checked_choices">
+	<tal:block condition="not: datamodel">
 		<strong tal:content="here/title" />
 		<br />
 		<span class="no-response" i18n:translate="">No response</span>
@@ -37,7 +36,7 @@
 
 <!-- Edit mode -->
 <div tal:condition="python:mode == 'edit'" class="widgetEditMode"
-     tal:define="checked_choices python:here.getSession(widget_id, [[]]*len(here.rows))">
+     tal:define="datamodel python:here.getSession(widget_id, datamodel);">
 	<label tal:attributes="for widget_id" class="label">
 		<span i18n:translate="" tal:content="here/title" />
 		<span tal:condition="here/required" class="required">*</span>
@@ -60,7 +59,7 @@
 						<td style="text-align: center" tal:define="choice_idx repeat/choice/index">
 							<input type="checkbox" tal:attributes="
 							    name python:'%s_%d:list' % (widget_id, row_idx);
-							    checked python:choice_idx in checked_choices[row_idx];
+							    checked python:datamodel is not None and choice_idx in datamodel[row_idx];
 							    value choice_idx;"/>
 						</td>
 					</tal:block>

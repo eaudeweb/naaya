@@ -154,7 +154,7 @@ class Widget(Folder, LocalPropertyManager):
         """ Prepare value to be stored according with widget type"""
         pass
 
-    def render(self, mode, datamodel, **kwargs):
+    def render(self, mode, datamodel=None, **kwargs):
         """Render widget according with given mode"""
         return self.render_meth(mode=mode, datamodel=datamodel, **kwargs)
 

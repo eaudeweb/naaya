@@ -6,7 +6,6 @@
     mode options/mode|string:view;
     datamodel options/datamodel|nothing;
     widget_id here/getWidgetId;
-    value python:datamodel.get(widget_id, None);
     required python:here.getSession('required', here.getProperty('required', None));
     size_max python:here.getSession('size_max', here.getProperty('size_max', 0));
     width python:here.getSession('width', here.getProperty('width', 50));">
@@ -15,12 +14,12 @@
 <div tal:condition="python:mode == 'view'" class="widgetViewMode fileWidget">
 	<strong i18n:translate="" tal:content="here/title" />
 	<br />
-	<tal:block condition="value">
-		<a tal:attributes="href string:${value/absolute_url}/index_html?as_attachment:int=1"
-		   tal:content="value/title">
+	<tal:block condition="datamodel">
+		<a tal:attributes="href string:${datamodel/absolute_url}/index_html?as_attachment:int=1"
+		   tal:content="datamodel/title">
 		</a>
 	</tal:block>
-	<span tal:condition="not: value" i18n:translate="" class="no-response">
+	<span tal:condition="not: datamodel" i18n:translate="" class="no-response">
 		No response
 	</span>
 </div>

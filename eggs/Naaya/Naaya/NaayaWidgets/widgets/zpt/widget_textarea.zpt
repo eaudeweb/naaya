@@ -5,19 +5,19 @@
 <tal:block define="
     mode options/mode|string:view;
     datamodel options/datamodel|nothing;
-	widget_id here/getWidgetId;
-	value python:datamodel.get(widget_id, '');">
+	widget_id here/getWidgetId;">
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode textareaWidget">
 	<strong tal:content="here/title" />
 	<br />
-	<p tal:content="value" class="textareaWidgetAnswer"/>
+	<p tal:content="datamodel" class="textareaWidgetAnswer"/>
 </div>
 
 <!-- Edit mode -->
 <div tal:condition="python:mode == 'edit'" class="widgetEditMode"
-     tal:define="value python:here.getSession(widget_id, value)">
+     tal:define="datamodel python:here.getSession(widget_id, datamodel);
+                 datamodel python:datamodel or '';">
 	<label tal:attributes="for widget_id" class="label">
 		<span i18n:translate="" tal:content="here/title" />
 		<span tal:condition="here/required" class="required">*</span>
@@ -28,7 +28,7 @@
 		cols here/columns;
 		name string:${widget_id}:utf8:ustring;
 		id widget_id"
-		tal:content="value"></textarea>
+		tal:content="datamodel"></textarea>
 </div>
 
 <!-- Edit widget properties -->
