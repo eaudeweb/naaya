@@ -106,6 +106,12 @@ class SurveyAnswer(Folder):
         manage_addExtFile(self, id, title=attached_file.filename,
                           file=attached_file)
 
+    security.declareProtected(PERMISSION_VIEW_ANSWERS, 'getDatamodel')
+    def getDatamodel(self):
+        """ """
+        return dict([(widget.id, getattr(self.aq_explicit, widget.id, None))
+                                for widget in self.getSurveyTemplate().getSortedWidgets()])
+
     # The special permission PERMISSION_VIEW_ANSWERS is used instead of the
     # regular "view" permission because otherwise, by default, all users
     # (including anonymous ones) can see all answers. Also setting the view
