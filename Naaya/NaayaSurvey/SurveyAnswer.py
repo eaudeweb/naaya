@@ -61,9 +61,6 @@ def manage_addSurveyAnswer(context, datamodel, respondent=None, REQUEST=None):
         if isinstance(value, FileUpload):
             ob.handle_upload(key, value)
 
-    # index the new object
-    catalog_tool = context.getCatalogTool()
-    catalog_tool.catalog_object(ob, path2url(ob.getPhysicalPath()))
 
     return id
 
@@ -111,6 +108,26 @@ class SurveyAnswer(Folder):
         """ """
         return dict([(widget.id, getattr(self.aq_explicit, widget.id, None))
                                 for widget in self.getSurveyTemplate().getSortedWidgets()])
+
+
+    # TODO: Change event handlers after migrating to Zope 2.10
+    security.declarePrivate('manage_afterAdd')
+    def manage_afterAdd(self, item, container):
+        """
+        This method is called, whenever _setObject in ObjectManager gets called.
+        """
+        Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
+        catalog_tool = self.getCatalogTool()
+        catalog_tool.catalog_object(self, path2url(self.getPhysicalPath()))
+
+    security.declarePrivate('manage_beforeDelete')
+    def manage_beforeDelete(self, item, container):
+        """
+        This method is called, when the object is deleted.
+        """
+        Folder.inheritedAttribute('manage_beforeDelete')(self, item, container)
+        catalog_tool = self.getCatalogTool()
+        catalog_tool.uncatalog_object(path2url(self.getPhysicalPath()))
 
     # The special permission PERMISSION_VIEW_ANSWERS is used instead of the
     # regular "view" permission because otherwise, by default, all users
