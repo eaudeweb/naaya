@@ -11,7 +11,10 @@
 <div tal:condition="python:mode == 'view'" class="widgetViewMode textareaWidget">
 	<strong tal:content="here/title" />
 	<br />
-	<p tal:content="datamodel" class="textareaWidgetAnswer"/>
+	<p tal:condition="datamodel" tal:content="datamodel" class="textareaWidgetAnswer"/>
+	<span tal:condition="not: datamodel" i18n:translate="" class="no-response">
+		No response
+	</span>
 </div>
 
 <!-- Edit mode -->
