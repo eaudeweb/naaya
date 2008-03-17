@@ -154,9 +154,9 @@ class Widget(Folder, LocalPropertyManager):
         """ Prepare value to be stored according with widget type"""
         pass
 
-    def render(self, mode, answer, **kwargs):
+    def render(self, mode, datamodel, **kwargs):
         """Render widget according with given mode"""
-        return self.render_meth(mode=mode, answer=answer, **kwargs)
+        return self.render_meth(mode=mode, datamodel=datamodel, **kwargs)
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     edit_html = PageTemplateFile('zpt/edit_widget', globals())

@@ -4,9 +4,9 @@
 
 <tal:block define="
     mode options/mode|string:view;
-    answer options/answer|nothing;
+    datamodel options/datamodel|nothing;
 	widget_id here/getWidgetId;
-	value python:answer.get(widget_id, '');">
+	value python:datamodel.get(widget_id, '');">
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode stringWidget">

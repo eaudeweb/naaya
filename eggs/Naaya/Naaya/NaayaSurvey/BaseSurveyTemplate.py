@@ -252,10 +252,10 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
     # Bulk widgets methods
     #
     security.declareProtected(view, 'render')
-    def render(self, mode='view', answer={}, **kwargs):
+    def render(self, mode='view', datamodel={}, **kwargs):
         """Render widgets"""
         widgets = self.getSortedWidgets()
-        return '\n'.join([widget.render(mode=mode, answer=answer, **kwargs)
+        return '\n'.join([widget.render(mode=mode, datamodel=datamodel, **kwargs)
                           for widget in widgets])
 
     #
