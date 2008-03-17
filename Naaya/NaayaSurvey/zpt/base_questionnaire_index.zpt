@@ -46,7 +46,7 @@
 <p i18n:translate="" tal:condition="python: here.expired() and not here.checkPermissionEditObjects()">Survey expired.</p>
 
 <tal:block condition="python: not here.expired() or here.checkPermissionEditObjects()">
-	<tal:block define="my_answer python:here.getMySurveyAnswer()">
+	<tal:block define="my_answer python:here.getMyAnswer()">
 		<h2 i18n:translate="" tal:condition="python: not here.checkPermissionAddAnswer()">You don't have enough permissions to take this survey!</h2>
 		<h2 i18n:translate="" tal:condition="python: my_answer is not None">You have already taken this survey!</h2>
 		<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
