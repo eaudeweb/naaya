@@ -15,7 +15,7 @@
 #
 # Authors:
 #
-# Alin Voinea, Eau de Web
+# Cristian Ciupitu, Eau de Web
 from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 
