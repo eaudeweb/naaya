@@ -1,0 +1,6 @@
+Hello %(NAME)s,
+
+You have taken the survey %(SURVEY_TITLE)s (%(SURVEY_URL)s).
+You can see your answers at:
+
+%(LINK)s

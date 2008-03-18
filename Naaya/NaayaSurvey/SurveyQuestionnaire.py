@@ -214,7 +214,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     # Answer edit methods
     #
     security.declareProtected(PERMISSION_ADD_ANSWER, 'addSurveyAnswer')
-    def addSurveyAnswer(self, REQUEST=None, **kwargs):
+    def addSurveyAnswer(self, REQUEST=None, notify_respondent=False, **kwargs):
         """Add someone's answer"""
         try:
             if self.expired():
@@ -256,7 +256,10 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG, 'Deleted previous answer %s' % (old_answer.absolute_url()))
 
         answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST)
-        self._sendNotifications(self._getOb(answer_id))
+        answer = self._getOb(answer_id)
+        self.sendNotificationToOwner(answer)
+        if notify_respondent:
+            self.sendNotificationToRespondent(answer)
         self.delSessionKeys(datamodel.keys())
 
         if REQUEST:
@@ -266,39 +269,80 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
         return answer_id
 
-    security.declarePrivate('_sendNotifications')
-    def _sendNotifications(self, answer):
-        """Send email notifications about the newly added answer.
+    #
+    # Email notifications
+    #
 
-                @param answer: the answer object that was added
+    security.declarePrivate('sendNotificationToOwner')
+    def sendNotificationToOwner(self, answer):
+        """Send an email notifications about the newly added answer to the owner of the survey.
+
+            @param answer: the answer object that was added
+            @type answer: SurveyAnswer
         """
         owner = self.getOwner()
+        respondent = self.REQUEST.AUTHENTICATED_USER
         auth_tool = self.getSite().getAuthenticationTool()
-        email_tool = self.getSite().getEmailTool()
-        template = email_tool._getOb('email_survey_answer')
 
-        # compose email
         d = {}
         d['NAME'] = auth_tool.getUserFullName(owner)
-        respondent = self.REQUEST.AUTHENTICATED_USER
         d['RESPONDENT'] = "User %s" % auth_tool.getUserFullName(respondent)
         d['SURVEY_TITLE'] = self.title
         d['SURVEY_URL'] = self.absolute_url()
         d['LINK'] = answer.absolute_url()
-        content = template.body % d
 
-        # send email
+        self._sendEmailNotification('email_survey_answer', d, owner)
+
+    security.declarePrivate('sendNotificationToRespondent')
+    def sendNotificationToRespondent(self, answer):
+        """Send an email notification about the newly added answer to the respondent.
+
+            @param answer: the answer object that was added (unsed for the moment)
+            @type answer: SurveyAnswer
+        """
+        if self.isAnonymousUser():
+            raise Exception("Anonymous users can't receive notifications")
+
+        owner = self.getOwner()
+        respondent = self.REQUEST.AUTHENTICATED_USER
+        auth_tool = self.getSite().getAuthenticationTool()
+
+        d = {}
+        d['NAME'] = auth_tool.getUserFullName(respondent)
+        d['SURVEY_TITLE'] = self.title
+        d['SURVEY_URL'] = self.absolute_url()
+        d['LINK'] = "%s/view_my_answer_html" % self.absolute_url()
+
+        self._sendEmailNotification('email_survey_answer_to_respondent', d, respondent)
+
+    security.declarePrivate('_sendEmailNotification')
+    def _sendEmailNotification(self, template_name, d, recipient):
+        """Send an email notification.
+
+            @param template_name: name of the email template
+            @type template_name: string
+            @param d: dictionary with the values used in the template
+            @type d: dict
+            @param recipient: recipient
+            @type recipient: Zope User
+        """
+        auth_tool = self.getSite().getAuthenticationTool()
+        email_tool = self.getSite().getEmailTool()
+        template = email_tool._getOb(template_name)
         sender_email = self.getNotificationTool().from_email
         try:
-            recp_email = auth_tool.getUserEmail(owner)
-            email_tool.sendEmail(content, recp_email, sender_email, template.title)
+            recp_email = auth_tool.getUserEmail(recipient)
+            email_tool.sendEmail(template.body % d,
+                                 recp_email,
+                                 sender_email,
+                                 template.title)
             LOG('NaayaSurvey.SurveyQuestionnaire', DEBUG, 'Notification sent from %s to %s' % (sender_email, recp_email))
         except:
-            # possible causes - the owner doesn't have email (e.g. regular Zope user)
+            # possible causes - the recipient doesn't have email (e.g. regular Zope user)
             #                 - we can not send the email
             # these aren't fatal errors, so we'll just log the error
             err = sys.exc_info()
-            LOG('NaayaSurvey.SurveyQuestionnaire', ERROR, 'Could not send notifications to the owner of the survey %s' % (self.absolute_url(),), error=err)
+            LOG('NaayaSurvey.SurveyQuestionnaire', ERROR, 'Could not send email notification for survey %s' % (self.absolute_url(),), error=err)
 
     #
     # Answer read methods
@@ -429,7 +473,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         """Display a page with the answer of the current user"""
         answer = self.getMyAnswer()
         if answer is None:
-            raise Exception("HTTP 404") # TODO: replace with a proper exception/error message
+            raise NotFound("You haven't taken this survey") # TODO: replace with a proper exception/error message
         return answer.index_html(REQUEST=REQUEST)
 
     # macros
