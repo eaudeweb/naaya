@@ -31,6 +31,20 @@ class CustomContentUpdater(NaayaContentUpdater):
         self.description = '''Update Naaya Survey Tool.'''
         self.update_meta_type = SurveyTool.meta_type
 
+    def _verify_doc(self, doc):
+        """See super"""
+        if getattr(doc, SurveyTool.portal_id, None) is not None:
+            return doc
+
+    def _list_updates(self):
+        """ Return all portals that need update """
+        utool = self.aq_inner.aq_parent
+        portals = utool.getPortals()
+        for portal in portals:
+            if not self._verify_doc(portal):
+                continue
+            yield getattr(portal, SurveyTool.portal_id)
+
     def _update(self):
         for update in self._list_updates():
             update.manage_configureSite()
