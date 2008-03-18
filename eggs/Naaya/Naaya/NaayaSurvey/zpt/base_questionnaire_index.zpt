@@ -76,6 +76,11 @@
 				<span tal:define="dummy python:here.delSessionKeys(['err_captcha'])"></span>
 			</tal:block>
 
+			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'">
+				<input type="checkbox" name="notify_respondent:bool" id="notify_respondent" />
+				<label for="notify_respondent" i18n:translate="">Send me an email notification</label>
+			</tal:block>
+
 			<div class="surveySubmit">
 				<input tal:condition="not: my_answer" type="submit" value="Submit" i18n:attributes="value" name="addSurveyAnswer:method"/>
 				<input tal:condition="my_answer" type="submit" value="Change answers" i18n:attributes="value" name="addSurveyAnswer:method"/>

@@ -134,7 +134,7 @@ class SurveyTool(Folder):
         zLOG.LOG('NaayaSurvey', zLOG.INFO,
                  'Configuring email notifications on site %s' % (site.absolute_url(1)))
         email_tool = site.getEmailTool()
-        for template, title in [('email_survey_answer.txt', 'Survey answered')]:
+        for template, title in [('email_survey_answer.txt', 'Survey answered'), ('email_survey_answer_to_respondent.txt', 'Survey answered')]:
             id = template[:-4] # without .txt
             f = open(os.path.join(os.path.dirname(__file__),
                                   'templates', template), 'r')
