@@ -298,7 +298,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             #                 - we can not send the email
             # these aren't fatal errors, so we'll just log the error
             err = sys.exc_info()
-            LOG('NaayaSurvey.SurveyQuestionnaire', ERROR, 'Could not send notifications', error=err)
+            LOG('NaayaSurvey.SurveyQuestionnaire', ERROR, 'Could not send notifications to the owner of the survey %s' % (self.absolute_url(),), error=err)
 
     #
     # Answer read methods
