@@ -424,6 +424,14 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     security.declareProtected(PERMISSION_VIEW_ANSWERS, 'view_answers_html')
     view_answers_html = PageTemplateFile('zpt/questionnaire_view_answers', globals())
 
+    security.declarePublic('view_my_answer_html')
+    def view_my_answer_html(self, REQUEST):
+        """Display a page with the answer of the current user"""
+        answer = self.getMyAnswer()
+        if answer is None:
+            raise Exception("HTTP 404") # TODO: replace with a proper exception/error message
+        return answer.index_html(REQUEST=REQUEST)
+
     # macros
     security.declareProtected(view, 'base_index_html')
     base_index_html = PageTemplateFile('zpt/base_questionnaire_index', globals())
