@@ -39,6 +39,12 @@
 	<a tal:condition="here/checkPermissionViewReports" href="view_reports_html" i18n:translate="" class="survey-button">View reports</a>
 </div>
 
+<span style="float: right; clear: both; width: 20%; word-wrap: break-word; padding: 0.5em;">
+  <tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
+    <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+  </tal:block>
+</span>
+
 
 <p tal:condition="python:here.description!=''" 
 	tal:content="structure here/description" />
