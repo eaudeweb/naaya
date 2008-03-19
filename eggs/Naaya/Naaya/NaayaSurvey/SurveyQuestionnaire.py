@@ -376,7 +376,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             return {}
         return answer.getDatamodel()
 
-    security.declareProtected('setSessionAnswer', PERMISSION_ADD_ANSWER)
+    security.declarePrivate('setSessionAnswer')
     def setSessionAnswer(self, datamodel):
         """Sets the session with the specified answer"""
         for widget_id, value in datamodel.items():
