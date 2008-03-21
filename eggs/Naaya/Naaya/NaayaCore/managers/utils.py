@@ -134,7 +134,9 @@ def toAscii(s):
     s = s.replace("\xdf", "ss")
     return s
 
-
+def genRandomId(p_length=10, p_chars=string.digits):
+    """Generate a random numeric id."""
+    return ''.join([choice(p_chars) for i in range(p_length)])
 
 
 class list_utils:
@@ -325,9 +327,9 @@ class utils:
         try: return self.unrestrictedTraverse(path, default)
         except: return None
 
-    def utGenRandomId(self, p_length=10, p_chars=string.digits):
-        """Generate a random numeric id."""
-        return ''.join([choice(p_chars) for i in range(p_length)])
+    def utGenRandomId(self, *args, **kw):
+        """See the genRandomId function"""
+        return genRandomId(*args, **kw)
 
     def utGenerateUID(self, p_string=''):
         """ Generate an UID based on current time and a random string """
