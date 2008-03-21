@@ -26,10 +26,8 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 # Naaya imports
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
                                          PERMISSION_EDIT_OBJECTS
-from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-
-gUtil = utils()
 
 class WidgetError(Exception):
     """Widget error"""
@@ -37,11 +35,10 @@ class WidgetError(Exception):
 
 def manage_addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs):
     """Add widget"""
-    global gUtil
     if not title:
         title = str(klass)
     if not id:
-        id = gUtil.utGenObjectId(title)
+        id = genObjectId(title)
 
     if id=='respondent': # reserved id
         idSuffix = '_w' # TODO: refactor SurveyAnswer and remove this workaround
@@ -49,7 +46,7 @@ def manage_addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs
         idSuffix = ''
     while (id+idSuffix in container.objectIds() or
            getattr(container, id+idSuffix, None) is not None):
-        idSuffix = gUtil.utGenRandomId(p_length=4)
+        idSuffix = genRandomId(p_length=4)
     id = id + idSuffix
 
     # Get selected language
