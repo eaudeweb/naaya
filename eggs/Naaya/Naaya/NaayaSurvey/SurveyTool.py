@@ -166,8 +166,8 @@ class SurveyTool(Folder):
         site.manage_permission(PERMISSION_ADD_QUESTIONNAIRE, ('Manager', 'Administrator', 'Contributor', ), acquire=0)
         site.manage_permission(PERMISSION_ADD_MEGASURVEY, ('Manager', 'Administrator', 'Contributor', ), acquire=0)
 
-        site.manage_permission(PERMISSION_ADD_ANSWER, ('Anonymous', 'Authenticated'), acquire=0)
-        site.manage_permission(PERMISSION_VIEW_REPORTS, ('Anonymous', 'Authenticated'), acquire=0)
+        site.manage_permission(PERMISSION_ADD_ANSWER, ('Anonymous', ), acquire=0)
+        site.manage_permission(PERMISSION_VIEW_REPORTS, ('Anonymous', ), acquire=0)
         site.manage_permission(PERMISSION_VIEW_ANSWERS, ('Manager', 'Administrator', 'Contributor'), acquire=0)
 
     # Add tool specific portlets
