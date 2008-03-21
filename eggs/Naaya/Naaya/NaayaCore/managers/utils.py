@@ -304,13 +304,13 @@ class utils:
         """Constructor"""
         pass
 
-    def utGenObjectId(self, s, num_chars=50):
+    def utGenObjectId(self, *args, **kw):
         """See the genObjectId function"""
-        return genObjectId(s, num_chars)
+        return genObjectId(*args, **kw)
 
-    def toAscii(self, s):
+    def toAscii(self, *args, **kw):
         """See the toAscii function"""
-        return toAscii(s)
+        return toAscii(*args, **kw)
 
     def parse_tags(self, tag_names):
         """ parse comma separated text """
