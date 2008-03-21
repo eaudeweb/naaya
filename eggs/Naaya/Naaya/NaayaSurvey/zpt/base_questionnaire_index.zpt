@@ -73,12 +73,14 @@
 			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
 				<span tal:replace="structure here/showCaptcha" />
 				<span class="errormsg" tal:define="session python:request.SESSION" tal:content="session/err_captcha | nothing" />
-				<span tal:define="dummy python:here.delSessionKeys(['err_captcha'])"></span>
+				<span tal:define="dummy python:here.delSession('err_captcha')"></span>
 			</tal:block>
 
 			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'">
-				<input type="checkbox" name="notify_respondent:bool" id="notify_respondent" />
+				<input type="checkbox" id="notify_respondent" name="notify_respondent:bool"
+				       tal:attributes="checked python:here.getSession('notify_respondent', False)" />
 				<label for="notify_respondent" i18n:translate="">Send me an email notification</label>
+				<span tal:define="dummy python:here.delSession('notify_respondent')"></span>
 			</tal:block>
 
 			<div class="surveySubmit">

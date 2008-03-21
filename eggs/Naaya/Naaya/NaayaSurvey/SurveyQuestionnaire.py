@@ -246,6 +246,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             if errors:
                 self.setSessionErrors(errors)
             self.setSessionAnswer(datamodel)
+            self.setSession('notify_respondent', notify_respondent)
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
             return
 
