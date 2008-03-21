@@ -227,7 +227,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
                 err = sys.exc_info()
                 zLOG.LOG('Naaya Survey Tool', zLOG.ERROR,
                          'Could not delete items', error=err)
-                self.setSessionErrors(['Error while delete data.'])
+                self.setSessionErrors(['Error while deleting data.'])
             else:
                 self.setSessionInfo(['Item(s) deleted.'])
         if REQUEST:
