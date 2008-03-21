@@ -38,12 +38,10 @@ def manage_addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs
     if not title:
         title = str(klass)
     if not id:
-        id = genObjectId(title)
+        # prevent any name clashes by using the 'w_' prefix
+        id = 'w_' + genObjectId(title)
 
-    if id=='respondent': # reserved id
-        idSuffix = '_w' # TODO: refactor SurveyAnswer and remove this workaround
-    else:
-        idSuffix = ''
+    idSuffix = ''
     while (id+idSuffix in container.objectIds() or
            getattr(container, id+idSuffix, None) is not None):
         idSuffix = genRandomId(p_length=4)
