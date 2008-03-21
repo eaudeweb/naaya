@@ -67,33 +67,33 @@ good_chars= '____________AAAAAA' \
 TRANSMAP = string.maketrans(bad_chars, good_chars)
 
 def genObjectId(s, num_chars=50):
-    ''' 
-    Changes, e.g., "Petty theft" to "petty-theft". 
-    This function is the Python equivalent of the javascript function 
-    of the same name in django/contrib/admin/media/js/urlify.js. 
-    It can get invoked for any field that has a prepopulate_from 
-    attribute defined, although it only really makes sense for 
+    '''
+    Changes, e.g., "Petty theft" to "petty-theft".
+    This function is the Python equivalent of the javascript function
+    of the same name in django/contrib/admin/media/js/urlify.js.
+    It can get invoked for any field that has a prepopulate_from
+    attribute defined, although it only really makes sense for
     SlugFields.
-    
-    NOTE: this implementation corresponds to the Python implementation 
-          of the same algorithm in django/contrib/admin/media/js/urlify.js 
-    ''' 
-    # remove all these words from the string before urlifying 
+
+    NOTE: this implementation corresponds to the Python implementation
+          of the same algorithm in django/contrib/admin/media/js/urlify.js
+    '''
+    # remove all these words from the string before urlifying
     s = toAscii(s)
 
-    removelist = ["a", "an", "as", "at", "before", "but", "by", "for", 
-                  "from", "is", "in", "into", "like", "of", "off", "on", 
-                  "onto", "per", "since", "than", "the", "this", "that", 
+    removelist = ["a", "an", "as", "at", "before", "but", "by", "for",
+                  "from", "is", "in", "into", "like", "of", "off", "on",
+                  "onto", "per", "since", "than", "the", "this", "that",
                   "to", "up", "via", "with"]
 
-    ignore_words = '|'.join([r for r in removelist]) 
-    ignore_words_pat = re.compile(r'\b('+ignore_words+r')\b', re.I) 
-    ignore_chars_pat = re.compile(r'[^-A-Z0-9\s]', re.I) 
-    outside_space_pat = re.compile(r'^\s+|\s+$') 
-    inside_space_pat = re.compile(r'[-\s]+') 
-     
-    s = ignore_words_pat.sub('', s)  # remove unimportant words 
-    s = ignore_chars_pat.sub('', s)  # remove unneeded chars 
+    ignore_words = '|'.join([r for r in removelist])
+    ignore_words_pat = re.compile(r'\b('+ignore_words+r')\b', re.I)
+    ignore_chars_pat = re.compile(r'[^-A-Z0-9\s]', re.I)
+    outside_space_pat = re.compile(r'^\s+|\s+$')
+    inside_space_pat = re.compile(r'[-\s]+')
+
+    s = ignore_words_pat.sub('', s)  # remove unimportant words
+    s = ignore_chars_pat.sub('', s)  # remove unneeded chars
     wordlist = s.split()
     s = ''
     for w in wordlist:
@@ -103,8 +103,8 @@ def genObjectId(s, num_chars=50):
         else:
             break
     s = outside_space_pat.sub('', s) # trim leading/trailing spaces
-    s = inside_space_pat.sub('-', s) # convert spaces to hyphens 
-    s = s.lower()                    # convert to lowercase 
+    s = inside_space_pat.sub('-', s) # convert spaces to hyphens
+    s = s.lower()                    # convert to lowercase
     return s
 
 def toAscii(s):
@@ -123,7 +123,7 @@ def toAscii(s):
     latin_chars = latin_chars.encode("ISO-8859-15")
 
     translation_map = string.maketrans(
-        latin_chars, 
+        latin_chars,
         r"""AAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy""")
     s = s.translate(translation_map)
 
@@ -345,7 +345,7 @@ class utils:
 
     def utCleanupProfileId(self, p_id=''):
         """ """
-        if isinstance(p_id, unicode): 
+        if isinstance(p_id, unicode):
             x = p_id.encode('utf-8')
         else:
             x = str(p_id)
@@ -564,8 +564,8 @@ class utils:
         l_tmp = l_tmp.replace('\"', '\\\"')
         return l_tmp
 
-    def ut_content_disposition(self, filename=None): 
-        """Generate a properly escaped Content-Disposition header""" 
+    def ut_content_disposition(self, filename=None):
+        """Generate a properly escaped Content-Disposition header"""
         filename = self.utToUtf8(filename)
         return 'attachment; filename*=%s'% encode_rfc2231(filename, 'utf-8')
 
@@ -890,7 +890,7 @@ class utils:
                 return nd+' December '+ny
         else:
             return nm
-    
+
     # Easy access to urlencode method
     def utUrlLibEncode(self, query, doseq=1):
         return urlencode(query, doseq)
