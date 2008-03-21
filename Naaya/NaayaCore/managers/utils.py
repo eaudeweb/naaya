@@ -66,6 +66,77 @@ good_chars= '____________AAAAAA' \
 
 TRANSMAP = string.maketrans(bad_chars, good_chars)
 
+def genObjectId(s, num_chars=50):
+    ''' 
+    Changes, e.g., "Petty theft" to "petty-theft". 
+    This function is the Python equivalent of the javascript function 
+    of the same name in django/contrib/admin/media/js/urlify.js. 
+    It can get invoked for any field that has a prepopulate_from 
+    attribute defined, although it only really makes sense for 
+    SlugFields.
+    
+    NOTE: this implementation corresponds to the Python implementation 
+          of the same algorithm in django/contrib/admin/media/js/urlify.js 
+    ''' 
+    # remove all these words from the string before urlifying 
+    s = toAscii(s)
+
+    removelist = ["a", "an", "as", "at", "before", "but", "by", "for", 
+                  "from", "is", "in", "into", "like", "of", "off", "on", 
+                  "onto", "per", "since", "than", "the", "this", "that", 
+                  "to", "up", "via", "with"]
+
+    ignore_words = '|'.join([r for r in removelist]) 
+    ignore_words_pat = re.compile(r'\b('+ignore_words+r')\b', re.I) 
+    ignore_chars_pat = re.compile(r'[^-A-Z0-9\s]', re.I) 
+    outside_space_pat = re.compile(r'^\s+|\s+$') 
+    inside_space_pat = re.compile(r'[-\s]+') 
+     
+    s = ignore_words_pat.sub('', s)  # remove unimportant words 
+    s = ignore_chars_pat.sub('', s)  # remove unneeded chars 
+    wordlist = s.split()
+    s = ''
+    for w in wordlist:
+        ns = s + w + ' '
+        if len(ns) <= num_chars:
+            s = ns
+        else:
+            break
+    s = outside_space_pat.sub('', s) # trim leading/trailing spaces
+    s = inside_space_pat.sub('-', s) # convert spaces to hyphens 
+    s = s.lower()                    # convert to lowercase 
+    return s
+
+def toAscii(s):
+    """Change accented and special characters by ASCII characters.
+
+    >>> toAscii('caf\xe9')
+    'cafe'
+    >>> toAscii(u'caf\xe9-\u1234')
+    'cafe-'
+    """
+
+    if isinstance(s, unicode):
+        s = s.encode('iso-8859-15', 'ignore')
+
+    latin_chars = u'\xc0\xc1\xc2\xc3\xc4\xc5\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd1\xd2\xd3\xd4\xd5\xd6\xd8\xd9\xda\xdb\xdc\xdd\xe0\xe1\xe2\xe3\xe4\xe5\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf1\xf2\xf3\xf4\xf5\xf6\xf8\xf9\xfa\xfb\xfc\xfd\xff'
+    latin_chars = latin_chars.encode("ISO-8859-15")
+
+    translation_map = string.maketrans(
+        latin_chars, 
+        r"""AAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy""")
+    s = s.translate(translation_map)
+
+    s = s.replace("\xc6", "AE")
+    s = s.replace("\xe6", "ae")
+    s = s.replace("\xbc", "OE")
+    s = s.replace("\xbd", "oe")
+    s = s.replace("\xdf", "ss")
+    return s
+
+
+
+
 class list_utils:
     """Provides some interface to handle a list of ids: add/remove id from list"""
 
@@ -231,73 +302,13 @@ class utils:
         """Constructor"""
         pass
 
-    def utGenObjectId(self, s, num_chars=50): 
-        ''' 
-        Changes, e.g., "Petty theft" to "petty-theft". 
-        This function is the Python equivalent of the javascript function 
-        of the same name in django/contrib/admin/media/js/urlify.js. 
-        It can get invoked for any field that has a prepopulate_from 
-        attribute defined, although it only really makes sense for 
-        SlugFields.
-        
-        NOTE: this implementation corresponds to the Python implementation 
-              of the same algorithm in django/contrib/admin/media/js/urlify.js 
-        ''' 
-        # remove all these words from the string before urlifying 
-        s = self.toAscii(s)
-
-        removelist = ["a", "an", "as", "at", "before", "but", "by", "for", 
-                      "from", "is", "in", "into", "like", "of", "off", "on", 
-                      "onto", "per", "since", "than", "the", "this", "that", 
-                      "to", "up", "via", "with"]
-
-        ignore_words = '|'.join([r for r in removelist]) 
-        ignore_words_pat = re.compile(r'\b('+ignore_words+r')\b', re.I) 
-        ignore_chars_pat = re.compile(r'[^-A-Z0-9\s]', re.I) 
-        outside_space_pat = re.compile(r'^\s+|\s+$') 
-        inside_space_pat = re.compile(r'[-\s]+') 
-         
-        s = ignore_words_pat.sub('', s)  # remove unimportant words 
-        s = ignore_chars_pat.sub('', s)  # remove unneeded chars 
-        wordlist = s.split()
-        s = ''
-        for w in wordlist:
-            ns = s + w + ' '
-            if len(ns) <= num_chars:
-                s = ns
-            else:
-                break
-        s = outside_space_pat.sub('', s) # trim leading/trailing spaces
-        s = inside_space_pat.sub('-', s) # convert spaces to hyphens 
-        s = s.lower()                    # convert to lowercase 
-        return s
+    def utGenObjectId(self, s, num_chars=50):
+        """See the genObjectId function"""
+        return genObjectId(s, num_chars)
 
     def toAscii(self, s):
-        """Change accented and special characters by ASCII characters.
-
-        >>> toAscii('caf\xe9')
-        'cafe'
-        >>> toAscii(u'caf\xe9-\u1234')
-        'cafe-'
-        """
-
-        if isinstance(s, unicode):
-            s = s.encode('iso-8859-15', 'ignore')
-
-        latin_chars = u'\xc0\xc1\xc2\xc3\xc4\xc5\xc7\xc8\xc9\xca\xcb\xcc\xcd\xce\xcf\xd1\xd2\xd3\xd4\xd5\xd6\xd8\xd9\xda\xdb\xdc\xdd\xe0\xe1\xe2\xe3\xe4\xe5\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf1\xf2\xf3\xf4\xf5\xf6\xf8\xf9\xfa\xfb\xfc\xfd\xff'
-        latin_chars = latin_chars.encode("ISO-8859-15")
-
-        translation_map = string.maketrans(
-            latin_chars, 
-            r"""AAAAAACEEEEIIIINOOOOOOUUUUYaaaaaaceeeeiiiinoooooouuuuyy""")
-        s = s.translate(translation_map)
-
-        s = s.replace("\xc6", "AE")
-        s = s.replace("\xe6", "ae")
-        s = s.replace("\xbc", "OE")
-        s = s.replace("\xbd", "oe")
-        s = s.replace("\xdf", "ss")
-        return s
+        """See the toAscii function"""
+        return toAscii(s)
 
     def parse_tags(self, tag_names):
         """ parse comma separated text """
