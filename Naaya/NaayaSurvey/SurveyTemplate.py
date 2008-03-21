@@ -24,7 +24,7 @@ from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 # Naaya imports
-from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 
 from BaseSurveyTemplate import BaseSurveyTemplate
 from permissions import PERMISSION_MANAGE_SURVEYTEMPLATE
@@ -33,13 +33,12 @@ def manage_addSurveyTemplate(context, id="", title="SurveyTemplate", REQUEST=Non
     """
     ZMI method that creates an object of this type.
     """
-    util = utils()
     if not id:
-        id = util.utGenObjectId(title)
+        id = genObjectId(title)
 
     idSuffix = ''
     while id+idSuffix in context.objectIds():
-        idSuffix = util.utGenRandomId(p_length=4)
+        idSuffix = genRandomId(p_length=4)
     id = id + idSuffix
 
     # Get selected language

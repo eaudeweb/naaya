@@ -34,7 +34,7 @@ from zLOG import LOG, DEBUG
 # Naaya imports
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
                                          PERMISSION_EDIT_OBJECTS
-from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
 import statistics
@@ -42,20 +42,16 @@ from statistics.BaseStatistic import manage_addStatistic
 
 STATISTICS = dict([(statistic.meta_type, statistic) for statistic in statistics.AVAILABLE_STATISTICS])
 
-gUtils = utils()
-
 def manage_addSurveyReport(context, id="", title="", REQUEST=None, **kwargs):
     """
     ZMI method that creates an object of this type.
     """
-    global gUtils
-
     if not id:
-        id = gUtils.utGenObjectId(title)
+        id = genObjectId(title)
 
     idSuffix = ''
     while id+idSuffix in context.objectIds():
-        idSuffix = gUtils.utGenRandomId(p_length=4)
+        idSuffix = genRandomId(p_length=4)
     id = id + idSuffix
 
     # Get selected language
@@ -165,7 +161,7 @@ class SurveyReport(Folder, LocalPropertyManager):
         try:
             return manage_addStatistic(statistic_cls,
                                        self,
-                                       gUtils.utGenObjectId(question.title),
+                                       genObjectId(question.title),
                                        question=question,
                                        REQUEST=REQUEST)
         except TypeError:

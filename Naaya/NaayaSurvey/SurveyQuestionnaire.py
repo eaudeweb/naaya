@@ -43,7 +43,7 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.constants import \
      EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG, \
      MESSAGE_SAVEDCHANGES, PERMISSION_EDIT_OBJECTS
-from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 from Products.NaayaWidgets.Widget import WidgetError
 
 from SurveyAnswer import manage_addSurveyAnswer, SurveyAnswer
@@ -57,15 +57,14 @@ class SurveyQuestionnaireException(Exception):
 
 def manage_addSurveyQuestionnaire(context, id='', title='', lang=None, REQUEST=None, **kwargs):
     """ """
-    util = utils()
     if not title:
         title = 'Survey Instance'
     if not id:
-        id = util.utGenObjectId(title)
+        id = genObjectId(title)
 
     idSuffix = ''
     while id+idSuffix in context.objectIds():
-        idSuffix = util.utGenRandomId(p_length=4)
+        idSuffix = genRandomId(p_length=4)
     id = id + idSuffix
 
     # Get selected language
