@@ -22,21 +22,17 @@ from OFS.SimpleItem import SimpleItem
 
 # Naaya imports
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
-from Products.NaayaCore.managers.utils import utils
-
-gUtil = utils()
+from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 
 def manage_addStatistic(klass, container, id="", question=None, REQUEST=None, **kwargs):
     """Add statistic"""
-    global gUtil
-
     if not id:
-        id = gUtil.utGenRandomId()
+        id = genRandomId()
 
     idSuffix = ''
     while (id+idSuffix in container.objectIds() or
            getattr(container, id+idSuffix, None) is not None):
-        idSuffix = gUtil.utGenRandomId(p_length=4)
+        idSuffix = genRandomId(p_length=4)
     id = id + idSuffix
 
     # Get selected language
