@@ -50,6 +50,10 @@ div.widgetViewMode {
 	margin-bottom: 1.3em;
 }
 
+.widgetViewMode .widget-title {
+	color: #468966;
+}
+
 .widgetViewMode .no-response {
 	color: red;
 }
