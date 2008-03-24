@@ -9,7 +9,7 @@
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode checkboxesWidget">
-	<strong tal:content="here/title" />
+	<strong tal:content="here/title" class="widget-title" />
 	<br />
 	<ul tal:condition="datamodel">
 		<li tal:repeat="answer python:[here.choices[i] for i in datamodel]">

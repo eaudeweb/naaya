@@ -9,7 +9,7 @@
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode comboboxWidget">
-	<strong tal:content="here/title" />
+	<strong tal:content="here/title" class="widget-title" />
 	<br />
 	<span tal:condition="python: datamodel is not None"
 		  tal:content="python: here.choices[datamodel]" />
