@@ -27,7 +27,7 @@
 		</tbody>
 	</table>
 	<tal:block condition="not: datamodel">
-		<strong tal:content="here/title" />
+		<strong tal:content="here/title" class="widget-title" />
 		<br />
 		<span class="no-response" i18n:translate="">No response</span>
 	</tal:block>

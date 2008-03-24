@@ -9,7 +9,7 @@
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode stringWidget">
-	<strong tal:content="here/title" />
+	<strong tal:content="here/title" class="widget-title" />
 	<br />
 	<span tal:condition="datamodel" tal:content="datamodel" />
 	<span tal:condition="not: datamodel" i18n:translate="" class="no-response">
