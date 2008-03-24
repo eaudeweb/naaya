@@ -21,7 +21,7 @@
 <!-- Sort order -->
 <div class="field">
 	<label for="sortorder" i18n:translate="">Sort Order</label>
-	<input type="text" size="10" name="sortorder:int" id="sortorder" tal:attributes="value sortorder"/>
+	<input type="text" size="3" name="sortorder:int" id="sortorder" tal:attributes="value sortorder"/>
 </div>
 <!-- Required -->
 <div class="field">
