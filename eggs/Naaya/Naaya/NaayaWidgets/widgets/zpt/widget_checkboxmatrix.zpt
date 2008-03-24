@@ -81,12 +81,12 @@
 <!-- Choices (columns)-->
 	<div class="field">
 		<label for="choices" i18n:translate="">Choices (columns)</label>
-		<textarea name="choices:lines" cols="50" rows="10" id="choices" tal:content="python:'\n'.join(choices)"></textarea><!-- TODO: fix conversion to lines -->
+		<textarea id="choices" name="choices:lines" cols="50" rows="10" tal:content="python:'\n'.join(choices)"></textarea><!-- TODO: fix conversion to lines -->
 	</div>
 <!-- Rows -->
 	<div class="field">
 		<label for="rows" i18n:translate="">Rows</label>
-		<textarea name="rows:lines" cols="50" rows="10" id="rows" tal:content="python:'\n'.join(rows)"></textarea><!-- TODO: fix conversion to lines -->
+		<textarea id="rows" name="rows:lines" cols="50" rows="10" tal:content="python:'\n'.join(rows)"></textarea><!-- TODO: fix conversion to lines -->
 	</div>
 </metal:block>
 </metal:block>
