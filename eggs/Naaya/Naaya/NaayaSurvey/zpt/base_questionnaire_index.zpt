@@ -78,7 +78,7 @@
 
 			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'">
 				<input type="checkbox" id="notify_respondent" name="notify_respondent:bool"
-				       tal:attributes="checked python:here.getSession('notify_respondent', False)" />
+				       tal:attributes="checked python:here.getSession('notify_respondent', True)" />
 				<label for="notify_respondent" i18n:translate="">Send me an email notification</label>
 				<span tal:define="dummy python:here.delSession('notify_respondent')"></span>
 			</tal:block>
