@@ -7,17 +7,17 @@ To be able to use it in a Naaya portal, enter the ZMI of the portal and add a Na
 
 	Go the folder where you want to create it. Click on the Subobjects button. Make sure that Survey is selected in the list of object types, click "Save changes" and then go back to index. Note: this step needs to be done only once per folder. Now select "Survey" from the "Type to add" combobox and a form for creating a survey will appear.
 
-	On the top of the survey there are buttons for editing the metadata of the survey (e.g. title), attachments, questions and reports.
+	On the top of the survey there are buttons for editing the metadata of the survey (e.g. title, description), attachments, questions and reports.
 
 		Metadata
 		--------
 
-		You can also set a release date and an expiration date. The release date works just like for the rest of the Naaya types. The expiration date is the date after which the survey can't be taken anymore.
+		You can set a release date and an expiration date. The release date works just like for the rest of the Naaya types. The expiration date is the date after which the survey can't be taken anymore.
 
 		Attachments
 		-----------
 
-		When the survey is about some documents (e.g. some directives), the user can upload these documents as attachments. When the respondent will take the survey, the attachments will appear at the top of the page (bellow the description).
+		When the survey is about some documents (e.g. some EU directives), the user can upload these documents as attachments. When the respondent will take the survey, the attachments will appear at the top of the page (bellow the description).
 
 		Questions
 		---------
@@ -48,17 +48,15 @@ To be able to use it in a Naaya portal, enter the ZMI of the portal and add a Na
 
 		To add a new report, choose a title for it and click on "Add report". To change its description click on "Edit". To configure the statistics included in the report click on its title. Now choose the question that will be included in the report and then what kind of statistics would you like. There are 2 major types of statistics: numerical (tabular) and graphical (charts).
 
-		Because adding a statistic, one by one would take too much time for a complex survey with many questions, there is the possibility of creating a complete report with all the question - statistic combinations. To create this report, choose a title a click on the "Generate full report" button.
+		Because adding a statistic one by one would take too much time for a complex survey with many questions, there is the possibility of creating a complete report with all the question - statistic combinations. To create this report, choose a title and click on the "Generate full report" button.
 
 
 	Taking the survey
 	-----------------
 
-	Send the link of the survey to the respondents. When a respondent answers, the owner of the survey will receive a notification email, which includes a link to the newly added answer.
+	Send the link of the survey to the respondents. When a respondent answers, the owner of the survey will receive a notification email, which includes a link to the newly added answer. Authenticated respondents can receive a notification too, if they wish to.
 
 	To prevent spam, captcha is used for anonymous users. Authenticated users are permitted to answer only once, but they can change their answers anytime they wish too (if the survey has not expired).
-
-	When a survey is taken, the owner of the survey will receive a notification about this, containing a link to the new answer. Authenticated respondents can receive a notification, too if they wish to.
 
 
 	Analyzing the results
