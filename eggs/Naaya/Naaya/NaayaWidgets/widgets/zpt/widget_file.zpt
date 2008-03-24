@@ -12,7 +12,7 @@
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode fileWidget">
-	<strong i18n:translate="" tal:content="here/title" />
+	<strong tal:content="here/title" />
 	<br />
 	<tal:block condition="datamodel">
 		<a tal:attributes="href string:${datamodel/absolute_url}/index_html?as_attachment:int=1"
