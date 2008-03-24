@@ -31,6 +31,10 @@
 		<th i18n:translate="">Geographical coverage</th>
 		<td tal:content="here/coverage" />
 	</tr>
+	<tr tal:condition="here/keywords">
+		<th i18n:translate="">Keywords</th>
+		<td tal:content="here/keywords" />
+	</tr>
 	<tr tal:condition="python:here.locator and (here.locator != 'http://')">
 		<th i18n:translate="">URL</th>
 		<td>
