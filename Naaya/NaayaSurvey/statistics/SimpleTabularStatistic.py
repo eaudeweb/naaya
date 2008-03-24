@@ -51,7 +51,7 @@ class SimpleTabularStatistic(BaseStatistic):
         w_id = question.getWidgetId()
         total = answered_count = 0
         for answer in answers:
-            val = getattr(answer, w_id, None)
+            val = getattr(answer.aq_explicit, w_id, None)
             if val is not None:
                 answered_count += 1
             total += 1

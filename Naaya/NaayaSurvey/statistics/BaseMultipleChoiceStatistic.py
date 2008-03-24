@@ -39,7 +39,7 @@ class BaseMultipleChoiceStatistic(BaseStatistic):
         per_choice_count = [0 for i in range(len(question.choices))]
         for answer in answers:
             total += 1
-            choice = getattr(answer, w_id, None)
+            choice = getattr(answer.aq_explicit, w_id, None)
             if choice is None:
                 continue
             if isinstance(choice, int):
