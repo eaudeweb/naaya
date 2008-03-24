@@ -67,7 +67,7 @@
 <!-- Choices-->
 	<div class="field">
 		<label for="choices" i18n:translate="">Choices (one per line)</label>
-		<textarea name="choices:lines" cols="50" rows="10" id="choices" tal:content="python:'\n'.join(choices)"></textarea><!-- TODO: fix conversion to lines -->
+		<textarea id="choices" name="choices:lines" cols="50" rows="10" tal:content="python:'\n'.join(choices)"></textarea><!-- TODO: fix conversion to lines -->
 	</div>
 </metal:block>
 </metal:block>
