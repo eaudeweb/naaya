@@ -352,6 +352,15 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         """Return a list of answers"""
         return self.objectValues(SurveyAnswer.meta_type)
 
+    # this is method is used by the widget manage forms
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'getAnswerCountForQuestion')
+    def getAnswerCountForQuestion(self, question_id, exclude_None=False):
+        """Return the count of answers for question_id, excluding None ones if exclude_None if True."""
+        L = [answer.get(question_id) for answer in self.getAnswers()]
+        if exclude_None:
+            L = [x for x in L if x is not None]
+        return len(L)
+
     security.declarePublic('getMyAnswer')
     def getMyAnswer(self):
         """Return the answer of the current user or None if it doesn't exist.
