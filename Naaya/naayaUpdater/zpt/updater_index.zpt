@@ -1,3 +1,6 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+
 <tal:block metal:use-macro="here/standard_template.pt/macros/page">
 	<tal:block metal:fill-slot="head">
 		<title>Naaya updater</title>
@@ -30,3 +33,5 @@
 </ul>
 	</tal:block>
 </tal:block>
+
+<span tal:replace="structure here/manage_page_footer" />

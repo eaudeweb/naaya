@@ -36,6 +36,7 @@ class NaayaContentUpdater(Folder):
     meta_type = 'Naaya Content Updater'
     icon = 'misc_/naayaUpdater/updater.jpg'
     security = ClassSecurityInfo()
+    bulk_update = True
     
     def manage_options(self):
         """ ZMI tabs """
