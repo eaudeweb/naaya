@@ -83,7 +83,7 @@ div.widgetViewMode {
 	text-align: left;
 }
 
-.widgetEditMode .label{
+.widgetEditMode .widget-title {
 	display: block;
 	font-weight: bold;
 	padding-top: 1em;
