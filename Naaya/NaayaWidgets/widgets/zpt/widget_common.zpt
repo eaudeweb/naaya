@@ -1,41 +1,40 @@
-<metal:block define-macro="manage" tal:define="
-	lang request/lang|here/gl_get_selected_language;
-	title python:here.getSession('title', here.getLocalProperty('title', lang));
-	required python:here.getSession('required', here.getProperty('required', False));
-	tooltips python:here.getSession('tooltips', here.getLocalProperty('tooltips', lang));
-	sortorder python:here.getSession('sortorder', here.getProperty('sortorder', 100));">
+<metal:block define-macro="manage"
+             tal:define="lang request/lang|here/gl_get_selected_language;
+                         title python:here.getSession('title', here.getLocalProperty('title', lang));
+                         required python:here.getSession('required', here.getProperty('required', False));
+                         tooltips python:here.getSession('tooltips', here.getLocalProperty('tooltips', lang));
+                         sortorder python:here.getSession('sortorder', here.getProperty('sortorder', 100));">
+	<metal:block define-slot="common_fields">
+		<!-- Language -->
+		<input type="hidden" name="lang" id="lang" tal:attributes="value lang" />
+		<!-- Title -->
+		<div class="field">
+			<label for="title" i18n:translate="">Title</label>
+			<input type="text" size="50" name="title" id="title" tal:attributes="value title"/>
+		</div>
+		<!-- Tooltips -->
+		<div class="field" tal:define="editor here/getEditorTool">
+			<tal:block replace="structure editor/includeLibs" />
+			<tal:block define="editor here/getEditorTool; curr_lang python:request.get('lang', None) or here.gl_get_selected_language()"
+					   replace="structure python:editor.render('tooltips', curr_lang, image_support=False)" />
+			<label for="tooltips" i18n:translate="">Tooltips</label>
+			<textarea name="tooltips" cols="50" rows="4" id="tooltips" tal:content="tooltips" />
+		</div>
+		<!-- Sort order -->
+		<div class="field">
+			<label for="sortorder" i18n:translate="">Sort Order</label>
+			<input type="text" size="3" name="sortorder:int" id="sortorder" tal:attributes="value sortorder"/>
+		</div>
+		<!-- Required -->
+		<div class="field">
+			<label for="required" i18n:translate="">Required</label>
+			<select name="required:boolean" id="required">
+				<option value="True" tal:attributes="selected required" i18n:translate="">Yes</option>
+				<option value="False" tal:attributes="selected not:required" i18n:translate="">No</option>
+			</select>
+		</div>
+	</metal:block>
 
-<metal:block define-slot="common_fields">
-<!-- Language -->
-<input type="hidden" name="lang" id="lang" tal:attributes="value lang" />
-<!-- Title -->
-<div class="field">
-	<label for="title" i18n:translate="">Title</label>
-	<input type="text" size="50" name="title" id="title" tal:attributes="value title"/>
-</div>
-<!-- Tooltips -->
-<div class="field" tal:define="editor here/getEditorTool">
-	<tal:block replace="structure editor/includeLibs" />
-	<tal:block define="editor here/getEditorTool; curr_lang python:request.get('lang', None) or here.gl_get_selected_language()"
-	           replace="structure python:editor.render('tooltips', curr_lang, image_support=False)" />
-	<label for="tooltips" i18n:translate="">Tooltips</label>
-	<textarea name="tooltips" cols="50" rows="4" id="tooltips" tal:content="tooltips" />
-</div>
-<!-- Sort order -->
-<div class="field">
-	<label for="sortorder" i18n:translate="">Sort Order</label>
-	<input type="text" size="3" name="sortorder:int" id="sortorder" tal:attributes="value sortorder"/>
-</div>
-<!-- Required -->
-<div class="field">
-	<label for="required" i18n:translate="">Required</label>
-	<select name="required:boolean" id="required">
-		<option value="True" tal:attributes="selected required" i18n:translate="">Yes</option>
-		<option value="False" tal:attributes="selected not:required" i18n:translate="">No</option>
-	</select>
-</div>
-</metal:block>
-
-<!-- Custom fields -->
-<metal:block define-slot="custom_fields" />
+	<!-- Custom fields -->
+	<metal:block define-slot="custom_fields" />
 </metal:block>
