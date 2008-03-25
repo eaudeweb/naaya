@@ -39,7 +39,7 @@ class BaseMatrixStatistic(BaseStatistic):
         unanswered_count = [0 for r in question.rows]
         for answer in answers:
             total += 1
-            answer = getattr(answer.aq_explicit, w_id, None)
+            answer = answer.get(w_id)
             if answer is None:
                 for i in range(len(unanswered_count)):
                     unanswered_count[i] += 1

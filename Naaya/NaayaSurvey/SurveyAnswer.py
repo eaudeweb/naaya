@@ -106,9 +106,12 @@ class SurveyAnswer(Folder):
     security.declareProtected(PERMISSION_VIEW_ANSWERS, 'getDatamodel')
     def getDatamodel(self):
         """ """
-        return dict([(widget.id, getattr(self.aq_explicit, widget.id, None))
-                                for widget in self.getSurveyTemplate().getSortedWidgets()])
+        return dict([(widget.id, self.get(widget.id))
+                     for widget in self.getSurveyTemplate().getSortedWidgets()])
 
+    def get(self, widget_id, default=None):
+        """Returns the value for widget_id, else default"""
+        return getattr(self.aq_explicit, widget_id, default)
 
     # TODO: Change event handlers after migrating to Zope 2.10
     security.declarePrivate('manage_afterAdd')
