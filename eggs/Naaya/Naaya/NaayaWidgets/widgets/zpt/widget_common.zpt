@@ -35,7 +35,7 @@
 	</select>
 </div>
 </metal:block>
+
 <!-- Custom fields -->
 <metal:block define-slot="custom_fields" />
-
 </metal:block>
