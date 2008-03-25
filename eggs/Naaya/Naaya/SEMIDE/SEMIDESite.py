@@ -118,8 +118,62 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         linkchecker_ob = self._getOb(ID_LINKCHECKER)
         linkchecker_ob.catalog_name = 'portal_catalog'
         linkchecker_ob.use_catalog = 1
-        linkchecker_ob.manage_addMetaType('Naaya URL')
-        linkchecker_ob.manage_addProperty('Naaya URL', 'locator', 1)
+        
+        # Add Naaya Folder content type to be checked by linkchecker
+        linkchecker_ob.manage_addMetaType('Naaya Folder')
+        linkchecker_ob.manage_addProperty('Naaya Folder', 'description', multilingual=1)
+
+        # Add all installed content types to be checked by linkchecker
+        ctypes = linkchecker_ob.get_pluggable_installed_meta_types()
+        for ctype in ctypes:
+            if ctype == 'Naaya URL':
+                linkchecker_ob.manage_addMetaType(ctype)
+                linkchecker_ob.manage_addProperty('Naaya URL', 'locator',islink=1)
+            elif ctype == 'Naaya Semide Document':
+                linkchecker_ob.manage_addMetaType(ctype)
+                linkchecker_ob.manage_addProperty('Naaya Semide Document', 'source_link', islink=1)
+                linkchecker_ob.manage_addProperty('Naaya Semide Document', 'file_link', islink=1)
+            elif ctype == 'Naaya Country Folder':
+                linkchecker_ob.manage_addMetaType(ctype)
+                linkchecker_ob.manage_addProperty('Naaya Country Folder', 'nfp_url', islink=1)
+                linkchecker_ob.manage_addProperty('Naaya Country Folder', 'link_ins', islink=1)
+                linkchecker_ob.manage_addProperty('Naaya Country Folder', 'link_doc', islink=1)
+                linkchecker_ob.manage_addProperty('Naaya Country Folder', 'link_train', islink=1)
+                linkchecker_ob.manage_addProperty('Naaya Country Folder', 'link_rd', islink=1)
+                linkchecker_ob.manage_addProperty('Naaya Country Folder', 'link_data', islink=1)
+                linkchecker_ob.manage_addProperty('Naaya Country Folder', 'legislation_feed_url', islink=1)
+                linkchecker_ob.manage_addProperty('Naaya Country Folder', 'project_feed_url', islink=1)
+            elif ctype == 'Naaya Semide Multimedia':
+                linkchecker_ob.manage_addMetaType(ctype)
+                linkchecker_ob.manage_addProperty('Naaya Semide Multimedia', 'source_link', islink=1)
+                linkchecker_ob.manage_addProperty('Naaya Semide Multimedia', 'file_link', islink=1)
+            elif ctype == 'Naaya Semide Text of Laws':
+                linkchecker_ob.manage_addMetaType(ctype)
+                linkchecker_ob.manage_addProperty('Naaya Semide Text of Laws', 'source_link', islink=1)
+                linkchecker_ob.manage_addProperty('Naaya Semide Text of Laws', 'file_link', islink=1)
+            elif ctype == 'Naaya Semide Event':
+                linkchecker_ob.manage_addMetaType(ctype)
+                linkchecker_ob.manage_addProperty('Naaya Semide Event', 'source_link', islink=1)
+                linkchecker_ob.manage_addProperty('Naaya Semide Event', 'file_link', islink=1)
+            elif ctype == 'Naaya Extended File':
+                linkchecker_ob.manage_addMetaType(ctype)
+                linkchecker_ob.manage_addProperty('Naaya Extended File', 'url', islink=1)
+            elif ctype == 'Naaya Pointer':
+                linkchecker_ob.manage_addMetaType(ctype)
+                linkchecker_ob.manage_addProperty('Naaya Pointer', 'pointer', islink=1)
+            elif ctype == 'Naaya Semide Project':
+                linkchecker_ob.manage_addMetaType(ctype)
+                linkchecker_ob.manage_addProperty('Naaya Semide Project', 'resourceurl', islink=1)
+            elif ctype == 'Naaya Semide News':
+                linkchecker_ob.manage_addMetaType(ctype)
+                linkchecker_ob.manage_addProperty('Naaya Semide News', 'source_link', islink=1)
+                linkchecker_ob.manage_addProperty('Naaya Semide News', 'file_link', islink=1)
+            elif ctype == 'Naaya Semide Organization':
+                linkchecker_ob.manage_addMetaType(ctype)
+                linkchecker_ob.manage_addProperty('Naaya Semide Organization', 'org_url', islink=1)
+            elif ctype == 'Naaya Semide Publication':
+                linkchecker_ob.manage_addMetaType(ctype)
+                linkchecker_ob.manage_addProperty('Naaya Semide Publication', 'publication_url', islink=1)
 
         try:
             #set NFP private area

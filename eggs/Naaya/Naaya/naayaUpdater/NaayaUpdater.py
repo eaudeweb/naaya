@@ -94,7 +94,7 @@ class NaayaUpdater(Folder):
             if last_run is not None:
                 yield update
 
-    security.declareProtected(view_management_screens, 'get_applied_content_updates')
+    security.declareProtected(view_management_screens, 'run_content_updates')
     def run_content_updates(self, REQUEST=None, **kwargs):
         """ Run content updates"""
         if REQUEST:
