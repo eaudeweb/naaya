@@ -18,7 +18,7 @@
 			<tal:block define="editor here/getEditorTool; curr_lang python:request.get('lang', None) or here.gl_get_selected_language()"
 					   replace="structure python:editor.render('tooltips', curr_lang, image_support=False)" />
 			<label for="tooltips" i18n:translate="">Tooltips</label>
-			<textarea name="tooltips" cols="50" rows="4" id="tooltips" tal:content="tooltips" />
+			<textarea name="tooltips" cols="50" rows="7" id="tooltips" tal:content="tooltips" />
 		</div>
 		<!-- Sort order -->
 		<div class="field">
