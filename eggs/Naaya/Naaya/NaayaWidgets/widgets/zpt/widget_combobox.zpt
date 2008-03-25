@@ -39,22 +39,7 @@
 </div>
 
 <!-- Edit widget properties -->
-<div tal:condition="python:mode == 'manage'" class="widgetManageMode"
-     tal:define="lang request/lang|here/gl_get_selected_language;
-                 required python:here.getSession('required', here.getProperty('required', None));
-                 choices python:here.getSession('choices', here.getLocalProperty('choices', lang));
-                 restricted_mode here/getAnswers;">
-<metal:block use-macro="here/common_render_meth/macros/manage">
-
-<!-- Custom fields -->
-<metal:block fill-slot="custom_fields">
-<!-- Choices -->
-	<div class="field">
-		<label for="choices" i18n:translate="">Choices</label><!-- should i18n be used here? -->
-		<textarea id="choices" name="choices:lines" cols="50" rows="10" tal:content="python:'\n'.join(choices)" tal:attributes="disabled restricted_mode"></textarea><!-- TODO: fix conversion to lines -->
-	</div>
+<metal:block use-macro="here/multiplechoice_render_meth/macros/manage">
 </metal:block>
-</metal:block>
-</div>
 
 </tal:block>
