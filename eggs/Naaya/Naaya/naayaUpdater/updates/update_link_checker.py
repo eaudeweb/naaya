@@ -18,6 +18,7 @@
 # Cristian Ciupitu, Eau de Web
 from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
+from Products.NaayaLinkChecker.LinkChecker import LinkChecker
 
 class CustomContentUpdater(NaayaContentUpdater):
     """Adds the islink setting to Naaya LinkChecker"""
@@ -44,7 +45,8 @@ class CustomContentUpdater(NaayaContentUpdater):
 
     def _verify_doc(self, doc):
         """See super"""
-        if getattr(doc, 'portal_linkchecker', None) is not None:
+        linkcheckers = doc.objectValues(LinkChecker.meta_type)
+        if linkcheckers:
             return doc
 
     def _list_updates(self):
@@ -54,7 +56,8 @@ class CustomContentUpdater(NaayaContentUpdater):
         for portal in portals:
             if not self._verify_doc(portal):
                 continue
-            yield portal.portal_linkchecker
+            for i in portal.objectValues(LinkChecker.meta_type):
+                yield i
 
     def _update(self):
         updates = self._list_updates()
