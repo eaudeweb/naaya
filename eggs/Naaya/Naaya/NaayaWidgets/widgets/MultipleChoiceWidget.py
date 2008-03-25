@@ -7,11 +7,11 @@ from Products.NaayaWidgets.Widget import Widget
 
 class MultipleChoiceWidget(Widget):
     """Abstract class"""
-    pass
 
     # Local properties
     choices = LocalProperty('choices')
 
+    # macros
     multiplechoice_render_meth = PageTemplateFile('zpt/widget_multiplechoice', globals())
 
     def __init__(self, id, lang=None, **kwargs):
