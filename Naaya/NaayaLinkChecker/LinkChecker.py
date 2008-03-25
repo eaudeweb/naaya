@@ -122,9 +122,11 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             REQUEST.RESPONSE.redirect('manage_properties')
 
     security.declareProtected(view_management_screens,'manage_delMetaType')
-    def manage_delMetaType(self, REQUEST=None):
+    def manage_delMetaType(self, REQUEST=None, **kwargs):
         """Delete meta types from list"""
-        delmetatype = REQUEST.get('objectMetaType', [])
+        if REQUEST:
+            kwargs.update(REQUEST.form)
+        delmetatype = kwargs.get('objectMetaType', [])
         for metatype in self.umConvertToList(delmetatype):
             try:
                 del(self.objectMetaType[metatype])

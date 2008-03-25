@@ -90,35 +90,8 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
     def __init__(self, id, portal_uid, title, lang):
         """ """
         NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
-
-    security.declarePrivate('loadDefaultData')
-    def loadDefaultData(self):
-        """ """
-        NySite.__dict__['createPortalTools'](self)
-        NySite.__dict__['loadDefaultData'](self, exclude_meta_types=[METATYPE_NYSEMFIELDSITE, METATYPE_NYSEMFUNDING, METATYPE_NYSEMORGANISATION])
-
-        #load site skeleton - configuration
-        self.getSyndicationTool().manage_delObjects('news_rdf')
-        self.getSyndicationTool().manage_delObjects('lateststories_rdf')
-        self.loadSkeleton(join(SEMIDE_PRODUCT_PATH, 'skel'), exclude_meta_types=[METATYPE_NYSEMFIELDSITE, METATYPE_NYSEMFUNDING, METATYPE_NYSEMORGANISATION])
-        self.getLayoutTool().manage_delObjects('skin')
-
-        #overwrite default subobjects for folders
-        #self.getPropertiesTool().manageSubobjects(subobjects=None, ny_subobjects=[x for x in self.get_meta_types(1) if x not in [METATYPE_NYSEMFIELDSITE, METATYPE_NYSEMFUNDING, METATYPE_NYSEMORGANISATION]])
-        self.getPortletsTool().manage_delObjects('topnav_links')
-
-        manage_addHelpDesk(self, ID_HELPDESKAGENT, TITLE_HELPDESKAGENT, self.getAuthenticationToolPath(1))
-        manage_addNyPhotoFolder(self.documents, ID_PHOTOARCHIVE, TITLE_PHOTOARCHIVE, self.getAuthenticationToolPath(1))
-
-        manage_addRDFCalendar(self, id=ID_RDFCALENDAR, title=TITLE_RDFCALENDAR, week_day_len=1)
-        rdfcalendar_ob = self._getOb(ID_RDFCALENDAR)
-        manage_addRDFSummary(rdfcalendar_ob, 'example', 'Example', 'http://vague.eurecom.fr/portal_syndication/upcomingevents_rdf', '', 'no')
-
-        manage_addLinkChecker(self, ID_LINKCHECKER, TITLE_LINKCHECKER)
-        linkchecker_ob = self._getOb(ID_LINKCHECKER)
-        linkchecker_ob.catalog_name = 'portal_catalog'
-        linkchecker_ob.use_catalog = 1
         
+    def _configure_linkchecker(self, linkchecker_ob):
         # Add Naaya Folder content type to be checked by linkchecker
         linkchecker_ob.manage_addMetaType('Naaya Folder')
         linkchecker_ob.manage_addProperty('Naaya Folder', 'description', multilingual=1)
@@ -175,6 +148,35 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
                 linkchecker_ob.manage_addMetaType(ctype)
                 linkchecker_ob.manage_addProperty('Naaya Semide Publication', 'publication_url', islink=1)
 
+    security.declarePrivate('loadDefaultData')
+    def loadDefaultData(self):
+        """ """
+        NySite.__dict__['createPortalTools'](self)
+        NySite.__dict__['loadDefaultData'](self, exclude_meta_types=[METATYPE_NYSEMFIELDSITE, METATYPE_NYSEMFUNDING, METATYPE_NYSEMORGANISATION])
+
+        #load site skeleton - configuration
+        self.getSyndicationTool().manage_delObjects('news_rdf')
+        self.getSyndicationTool().manage_delObjects('lateststories_rdf')
+        self.loadSkeleton(join(SEMIDE_PRODUCT_PATH, 'skel'), exclude_meta_types=[METATYPE_NYSEMFIELDSITE, METATYPE_NYSEMFUNDING, METATYPE_NYSEMORGANISATION])
+        self.getLayoutTool().manage_delObjects('skin')
+
+        #overwrite default subobjects for folders
+        #self.getPropertiesTool().manageSubobjects(subobjects=None, ny_subobjects=[x for x in self.get_meta_types(1) if x not in [METATYPE_NYSEMFIELDSITE, METATYPE_NYSEMFUNDING, METATYPE_NYSEMORGANISATION]])
+        self.getPortletsTool().manage_delObjects('topnav_links')
+
+        manage_addHelpDesk(self, ID_HELPDESKAGENT, TITLE_HELPDESKAGENT, self.getAuthenticationToolPath(1))
+        manage_addNyPhotoFolder(self.documents, ID_PHOTOARCHIVE, TITLE_PHOTOARCHIVE, self.getAuthenticationToolPath(1))
+
+        manage_addRDFCalendar(self, id=ID_RDFCALENDAR, title=TITLE_RDFCALENDAR, week_day_len=1)
+        rdfcalendar_ob = self._getOb(ID_RDFCALENDAR)
+        manage_addRDFSummary(rdfcalendar_ob, 'example', 'Example', 'http://vague.eurecom.fr/portal_syndication/upcomingevents_rdf', '', 'no')
+
+        manage_addLinkChecker(self, ID_LINKCHECKER, TITLE_LINKCHECKER)
+        linkchecker_ob = self._getOb(ID_LINKCHECKER)
+        linkchecker_ob.catalog_name = 'portal_catalog'
+        linkchecker_ob.use_catalog = 1
+        self._configure_linkchecker(linkchecker_ob)
+        
         try:
             #set NFP private area
             nfp_private = self._getOb('nfp_private')
