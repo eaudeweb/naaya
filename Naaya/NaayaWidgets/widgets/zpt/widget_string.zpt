@@ -21,7 +21,7 @@
 <div tal:condition="python:mode == 'edit'" class="widgetEditMode"
      tal:define="datamodel python:here.getSession(widget_id, datamodel);
                  datamodel python:datamodel or '';">
-	<label tal:attributes="for widget_id" class="label">
+	<label tal:attributes="for widget_id" class="widget-title">
 		<span i18n:translate="" tal:content="here/title" />
 		<span tal:condition="here/required" class="required">*</span>
 	</label>
