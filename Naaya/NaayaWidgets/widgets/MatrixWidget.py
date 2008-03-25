@@ -12,6 +12,7 @@ class MatrixWidget(Widget):
     choices = LocalProperty('choices')
     rows = LocalProperty('rows')
 
+    # macros
     matrix_render_meth = PageTemplateFile('zpt/widget_matrix', globals())
 
     def __init__(self, id, lang=None, **kwargs):
