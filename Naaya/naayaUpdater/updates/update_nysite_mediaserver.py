@@ -21,8 +21,7 @@ from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 
 class CustomContentUpdater(NaayaContentUpdater):
     """ """
-    
-    meta_type = "Naaya Site MediaServer Updater"
+    bulk_update = False
     _properties=({'id':'media_server', 'type': 'string','mode':'w'},)
     
     def manage_options(self):

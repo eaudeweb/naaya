@@ -22,14 +22,12 @@ from Products.ExtFile.ExtFile import ExtFile
 
 class CustomContentUpdater(NaayaContentUpdater):
     """ Move NyExFiles from ZODB to local disk"""
-    meta_type = 'Naaya Extended File Storage Updater'
-    
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya Extended Files storage type'
         self.description = 'Move files from ZODB to disk.'
         self.update_meta_type = 'Naaya Extended File'
-    
+
     def _verify_lang_doc(self, doc):
         """ Verify single file item """
         # Verify ZODB storage
@@ -46,34 +44,34 @@ class CustomContentUpdater(NaayaContentUpdater):
             if not isinstance(version_data, ExtFile):
                 return doc
         return None
-        
+
     def _verify_doc(self, doc):
         """ Check for ZODB storage """
-	if not getattr(doc, 'getFileItems', None):
-	    logger.debug("Invalid NyExFile: %s" % doc)
-	    return None
-	
+        if not getattr(doc, 'getFileItems', None):
+            logger.debug("Invalid NyExFile: %s" % doc)
+            return None
+
         fileitems = doc.getFileItems()
         for ob in fileitems.values():
             if self._verify_lang_doc(ob):
                 return doc
-            
+
         logger.debug('%-20s %s ', 'Skip NyExFile', doc.absolute_url(1))
         return None
-    
+
     def _update_lang_doc(self, doc):
         """ Move doc data from ZODB to disk """
-	if not getattr(doc, 'getFileItems', None):
-	    logger.debug("Invalid NyExFile: %s" % doc)
-	    return None
-	
+        if not getattr(doc, 'getFileItems', None):
+            logger.debug("Invalid NyExFile: %s" % doc)
+            return None
+
         fileitems = doc.getFileItems()
         logger.debug('%-20s %s', 'Update NyExFile', doc.absolute_url(1))
         for ob in fileitems.values():
             ob.update_data(ob.data)
             self._update_lang_doc_versions(ob)
             self._update_lang_doc_working_version(ob)
-    
+
     def _update_lang_doc_versions(self, doc):
         """ Move doc versions data from ZODB to disk """
         versions = doc.getVersions()
@@ -89,7 +87,7 @@ class CustomContentUpdater(NaayaContentUpdater):
         if hasattr(doc, '__ext_file'):
             delattr(doc, '__ext_file')
         doc.setVersions(new_versions)
-    
+
     def _update_lang_doc_working_version(self, doc):
         """ Move doc version data from ZODB to disk """
         if not getattr(doc, 'version', None):
@@ -97,7 +95,7 @@ class CustomContentUpdater(NaayaContentUpdater):
         if not getattr(doc.version, 'data', ''):
             return
         doc.version.update_data(doc.version.data)
-    
+
     def _update(self):
         """ Find files stored in ZODB and move them to disk """
         updates = self._list_updates()

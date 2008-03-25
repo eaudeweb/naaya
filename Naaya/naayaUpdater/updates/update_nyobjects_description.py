@@ -28,13 +28,10 @@ REPLACEMENT = 'root.ew.eea.europa.eu'
 
 class CustomContentUpdater(NaayaContentUpdater):
     """  replace broken links in the description """
-
-    meta_type = "Naaya objects description updater"
-
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya objects description'
-        self.description = 'update description attribute.'
+        self.description = 'Update description attribute.'
         self.update_meta_type = ['Naaya Report Chapter', 'Naaya Report Questionnaire', 'Naaya Report Comment', 'Naaya Study', 'Naaya SMAP Project', \
                                  'Naaya Contact', 'Naaya Report', 'Naaya News', 'Naaya Story', 'Naaya Report Answer', 'Naaya Report Question', 'Naaya Extended File', \
                                  'Naaya Document', 'Naaya Pointer', 'Naaya URL', 'Naaya SMAP Expert', 'Naaya Report Reference', 'Naaya Media File', 'Naaya Event', \

@@ -21,9 +21,6 @@ from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 
 class CustomContentUpdater(NaayaContentUpdater):
     """ Add size-related attributes to Naaya GeoMap Tool"""
-    
-    meta_type = "Naaya GeoMap Tool size updater"
-    
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya GeoMap Tool properties'

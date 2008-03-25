@@ -21,8 +21,6 @@ from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 
 class CustomContentUpdater(NaayaContentUpdater):
     """Add reCAPTCHA keys to Naaya Site if necessarily"""
-
-    meta_type = "Naaya Site reCAPTCHA Updater"
     _properties=({'id':'recaptcha_public_key', 'type': 'string','mode':'w'},
                  {'id':'recaptcha_private_key', 'type': 'string','mode':'w'},)
 
@@ -56,15 +54,12 @@ class CustomContentUpdater(NaayaContentUpdater):
 
     def _update(self):
         updates = self._list_updates()
-        report = []
         for update in updates:
             for i in self._properties:
                 key = i['id']
                 key_val = getattr(self, key)
-                setattr(update, key, key_val)
                 logger.debug('Updated %s: set %s to %s' % (update.absolute_url(1), key, key_val))
-            report.append('<strong>Update site:</strong> ' + update.absolute_url(1))
-        return '<br />'.join(report)
+                setattr(update, key, key_val)
 
 def register(uid):
     return CustomContentUpdater(uid)

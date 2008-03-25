@@ -22,9 +22,6 @@ from Products.ExtFile.ExtFile import ExtFile
 
 class CustomContentUpdater(NaayaContentUpdater):
     """ Move NyFiles from ZODB to local disk"""
-    
-    meta_type = 'Naaya File Storage Updater'
-    
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya Files storage type'

@@ -21,9 +21,6 @@ from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 
 class CustomContentUpdater(NaayaContentUpdater):
     """ Add last login and last post attributes to users"""
-    
-    meta_type = "Naaya users activity logs updater"
-    
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya users properties'

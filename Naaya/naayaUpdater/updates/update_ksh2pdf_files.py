@@ -21,14 +21,10 @@ from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 
 class CustomContentUpdater(NaayaContentUpdater):
     """Update attached pdf files with ksh extension"""
-
-    meta_type = "Naaya attached files fix"
-
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
-        self.title = 'Update Naaya Files and Naaya Extended Files of type \
-        PDF that have .ksh extension'
-        self.description = 'Add frontpicture attribute.'
+        self.title = 'Update Naaya Files and Naaya Extended Files'
+        self.description = 'Fix PDF objects that have .ksh extension'
         self.update_meta_type = ['Naaya File', 'Naaya Extended File']
 
     def _verify_doc(self, doc):

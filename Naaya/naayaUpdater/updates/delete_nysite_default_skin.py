@@ -17,6 +17,7 @@
 #
 # Alexandru Ghica, Eau de Web
 
+from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 
 class CustomContentUpdater(NaayaContentUpdater):
@@ -40,14 +41,12 @@ class CustomContentUpdater(NaayaContentUpdater):
 
     def _update(self):
         updates = self._list_updates()
-        report = []
         for update in updates:
             if update.getLayoutTool().getCurrentSkinId() == 'skin':
-                report.append('<strong>Not deleted, is the current layout:</strong> ' + update.absolute_url(1))
+                logger.debug('Not deleted, is the current layout: %s', update.absolute_url())
             else:
                 update.getLayoutTool().manage_delObjects('skin')
-                report.append('<strong>Deleted:</strong> ' + update.absolute_url(1))
-        return '<br />'.join(report)
+                logger.debug('Deleted: %s', update.absolute_url())
 
 def register(uid):
     return CustomContentUpdater(uid)

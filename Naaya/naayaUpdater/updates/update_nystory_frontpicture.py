@@ -21,9 +21,6 @@ from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 
 class CustomContentUpdater(NaayaContentUpdater):
     """ Add frontpicture attribute to Naaya Stories"""
-    
-    meta_type = "Naaya Story frontpicture Updater"
-    
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya Story properties'

@@ -27,13 +27,12 @@ PATTERN = 'experts.'
 
 class CustomContentUpdater(NaayaContentUpdater):
     """ search """
-
-    meta_type = "Naaya objects search"
-
+    bulk_update = False
+    
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
-        self.title = 'search Naaya objects'
-        self.description = 'search attributes.'
+        self.title = 'Search Naaya objects where attributes match given PATTERN: %s' % PATTERN
+        self.description = ""
         self.update_meta_type = ['Naaya Report Chapter', 'Naaya Report Questionnaire', 'Naaya Report Comment', 'Naaya Study', 'Naaya SMAP Project', \
                                  'Naaya Contact', 'Naaya Report', 'Naaya News', 'Naaya Story', 'Naaya Report Answer', 'Naaya Report Question', 'Naaya Extended File', \
                                  'Naaya Document', 'Naaya Pointer', 'Naaya URL', 'Naaya SMAP Expert', 'Naaya Report Reference', 'Naaya Media File', 'Naaya Event', \
@@ -63,7 +62,7 @@ class CustomContentUpdater(NaayaContentUpdater):
         return None
 
     def _update(self):
-        raise NotImplementedError
+        pass
 
 def register(uid):
     return CustomContentUpdater(uid)
