@@ -1,0 +1,36 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+
+<h3>Available updates</h3>
+<form action="." method="post">
+<div tal:repeat="update here/get_new_content_updates">
+<tal:block tal:define="bulk_update update/bulk_update|python:True">
+  <input type="checkbox" tal:attributes="
+    value update/getId;
+    name string:uids:list;
+    disabled python:test(bulk_update, None, 'disabled')"/>
+  <a tal:attributes="href update/absolute_url" tal:content="update/title_or_id" />
+  <span tal:condition="python:update.description and bulk_update" tal:content="string:(${update/description})" />
+  <span style="color:red" tal:condition="not:bulk_update" tal:content="string:(This update can't be run from here)" />
+</tal:block>
+</div>
+<input class="form-element" type="submit" name="run_content_updates:method" value="Run updates" />
+</form>
+
+<h3>Already applied updates</h3>
+<form action="." method="post">
+<div tal:repeat="update here/get_applied_content_updates">
+<tal:block tal:define="bulk_update update/bulk_update|python:True">
+  <input type="checkbox" tal:attributes="
+    value update/getId;
+    name string:uids:list;
+    disabled python:test(bulk_update, None, 'disabled')"/>
+  <a tal:attributes="href update/absolute_url" tal:content="update/title_or_id" />
+  <span tal:condition="python:update.description and bulk_update" tal:content="string:(${update/description})" />
+  <span style="color:red" tal:condition="not:bulk_update" tal:content="string:(This update can't be run from here)" />
+</tal:block>
+</div>
+<input class="form-element" type="submit" name="run_content_updates:method" value="Re-run updates" />
+</form>
+
+<span tal:replace="structure here/manage_page_footer" />

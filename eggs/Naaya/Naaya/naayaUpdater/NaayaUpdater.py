@@ -19,6 +19,7 @@
 # Cornel Nitu, Eau de Web
 
 #Python imports
+import time
 from os.path import join, isfile
 import os
 from OFS.History import html_diff
@@ -46,8 +47,12 @@ class NaayaUpdater(Folder):
 
     def manage_options(self):
         """ """
-        l_options = (Folder.manage_options[0],)
-        l_options += ({'label': 'View', 'action': 'index_html'},) + Folder.manage_options[3:8]
+        l_options = (
+            {'label':'Content updates', 'action':'content_updates',},
+            {'label': 'Other updates', 'action': 'index_html'},
+            {'label':'Contents', 'action':'manage_main',
+             'help':('OFSP','ObjectManager_Contents.stx')},
+         )
         return l_options
 
     security = ClassSecurityInfo()
@@ -65,7 +70,54 @@ class NaayaUpdater(Folder):
     ######
     security.declareProtected(view_management_screens, 'index_html')
     index_html = PageTemplateFile('zpt/updater_index', globals())
+    
+    security.declareProtected(view_management_screens, 'content_updates')
+    content_updates = PageTemplateFile('zpt/content_updater_index', globals())
+    
+    security.declareProtected(view_management_screens, 'get_new_content_updates')
+    def get_new_content_updates(self):
+        updates = self.objectValues()
+        for update in updates:
+            if update.title_or_id() == 'This object from the naayaUpdater product is broken!':
+                continue
+            last_run = getattr(update, 'last_run', None)
+            if last_run is None:
+                yield update
+    
+    security.declareProtected(view_management_screens, 'get_applied_content_updates')
+    def get_applied_content_updates(self):
+        updates = self.objectValues()
+        for update in updates:
+            if update.title_or_id() == 'This object from the naayaUpdater product is broken!':
+                continue
+            last_run = getattr(update, 'last_run', None)
+            if last_run is not None:
+                yield update
 
+    security.declareProtected(view_management_screens, 'get_applied_content_updates')
+    def run_content_updates(self, REQUEST=None, **kwargs):
+        """ Run content updates"""
+        if REQUEST:
+            kwargs.update(REQUEST.form)
+        uids = kwargs.get('uids', ())
+        start = time.time()
+        for uid in uids:
+            update = getattr(self, uid, None)
+            if update:
+                update.update()
+        stop = time.time()
+        updates_no = len(uids)
+        run_time = int(stop - start)
+        message = 'Run %s update%s in %s second%s' % (
+            updates_no, 
+            updates_no != 1 and 's' or '', 
+            run_time,
+            run_time != 1 and 's' or ''
+        )
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('content_updates?manage_tabs_message=%s' % message)
+        return message
+        
     security.declareProtected(view_management_screens, 'show_html_diff')
     def show_html_diff(self, source, target):
         """ """
@@ -348,7 +400,7 @@ class NaayaUpdater(Folder):
                         return [s.id for s in skin.schemes]
                     else:
                         return [f.id for f in skin.templates]
-	return []
+        return []
 
     security.declarePrivate('list_fs_schemefiles')
     def list_fs_schemefiles(self, metatype, skin_id, scheme_id, ftype='styles'):
