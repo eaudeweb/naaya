@@ -76,9 +76,6 @@ CONTENT_TYPES = [{'id':'text/plain', 'title':'TXT', 'picture':'txt.png'},
 
 class CustomContentUpdater(NaayaContentUpdater):
     """ Add new content types and icons"""
-    
-    meta_type = "Naaya Content types updater"
-    
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya content types'

@@ -22,13 +22,10 @@ from Products.NaayaSurvey.SurveyTool import SurveyTool
 
 class CustomContentUpdater(NaayaContentUpdater):
     """Update Naaya Survey Tool"""
-
-    meta_type = "Naaya Survey Tool Updater"
-
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya Survey Tool'
-        self.description = '''Update Naaya Survey Tool.'''
+        self.description = 'Update Naaya Survey Tool.'
         self.update_meta_type = SurveyTool.meta_type
 
     def _verify_doc(self, doc):

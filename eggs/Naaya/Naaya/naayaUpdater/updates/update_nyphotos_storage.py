@@ -22,9 +22,6 @@ from Products.ExtFile.ExtImage import ExtImage
 
 class CustomContentUpdater(NaayaContentUpdater):
     """ Move NyPhotos from ZODB to local disk"""
-    
-    meta_type = 'Naaya Photo Storage Updater'
-    
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya Photos storage type'

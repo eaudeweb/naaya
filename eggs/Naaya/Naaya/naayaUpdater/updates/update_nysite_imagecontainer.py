@@ -23,9 +23,6 @@ from Products.NaayaBase.NyImageContainer import NyImageContainer
 
 class CustomContentUpdater(NaayaContentUpdater):
     """ Add nyexp_schema attribute to Naaya Site"""
-
-    meta_type = "Naaya Site Image Container Updater"
-
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya Site properties'

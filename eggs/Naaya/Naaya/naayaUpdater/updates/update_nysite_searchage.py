@@ -17,6 +17,7 @@
 #
 # Alin Voinea, Eau de Web
 
+from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 
 class CustomContentUpdater(NaayaContentUpdater):
@@ -40,11 +41,9 @@ class CustomContentUpdater(NaayaContentUpdater):
 
     def _update(self):
         updates = self._list_updates()
-        report = []
         for update in updates:
             setattr(update, 'search_age', 12)
-            report.append('<strong>Update site:</strong> ' + update.absolute_url(1))
-        return '<br />'.join(report)
+            logger.debug('Update site: %s', update.absolute_url())
 
 def register(uid):
     return CustomContentUpdater(uid)

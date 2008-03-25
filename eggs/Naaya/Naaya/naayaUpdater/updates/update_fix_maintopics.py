@@ -23,13 +23,10 @@ from Products.NaayaBase.NyImageContainer import NyImageContainer
 
 class CustomContentUpdater(NaayaContentUpdater):
     """ Update"""
-    
-    meta_type = "Naaya EW maintopics url fix"
-    
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
-        self.title = 'Update EW maintopics'
-        self.description = ''
+        self.title = 'Update Naaya Site attributes'
+        self.description = 'Update Naaya Site maintopics attribute'
         self.update_meta_type = ''
 
     def _verify_doc(self, doc):

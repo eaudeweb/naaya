@@ -23,11 +23,9 @@ from Products.NaayaSurvey.SurveyTool import SurveyTool, manage_addSurveyTool
 class CustomContentUpdater(NaayaContentUpdater):
     """Add Survey Tool to Naaya Site if necessarily"""
 
-    meta_type = "Naaya Site Survey Tool Adder"
-
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
-        self.title = 'Update Naaya Sites'
+        self.title = 'Add Survey Tool to Naaya Site'
         self.description = 'Add Survey Tool if necessarily'
 
     def _verify_doc(self, doc):
@@ -46,12 +44,9 @@ class CustomContentUpdater(NaayaContentUpdater):
 
     def _update(self):
         updates = self._list_updates()
-        report = []
         for update in updates:
-            manage_addSurveyTool(update)
             logger.debug('Added survey tool to %s' % (update.absolute_url(1),))
-            report.append('<strong>Added survey tool to site:</strong> ' + update.absolute_url(1))
-        return '<br />'.join(report)
+            manage_addSurveyTool(update)
 
 def register(uid):
     return CustomContentUpdater(uid)

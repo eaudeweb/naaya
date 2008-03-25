@@ -23,9 +23,6 @@ from Products.NaayaBase.NyImageContainer import NyImageContainer
 
 class CustomContentUpdater(NaayaContentUpdater):
     """ Add frontpicture attribute to Naaya Documents"""
-    
-    meta_type = "Naaya Documents imageContainer Updater"
-    
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya Document properties'

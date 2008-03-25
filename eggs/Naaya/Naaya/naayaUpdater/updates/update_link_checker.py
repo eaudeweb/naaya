@@ -23,8 +23,6 @@ from Products.NaayaLinkChecker.LinkChecker import LinkChecker
 class CustomContentUpdater(NaayaContentUpdater):
     """Adds the islink setting to Naaya LinkChecker"""
 
-    meta_type = "Naaya LinkChecker islink setting Updater"
-
     _properties=({'id':'Naaya URL', 'type': 'tokens', 'mode':'w', },
                  {'id':'Naaya Pointer', 'type': 'tokens', 'mode':'w'},)
 

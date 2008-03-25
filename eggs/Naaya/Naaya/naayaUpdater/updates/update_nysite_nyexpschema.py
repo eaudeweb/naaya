@@ -22,9 +22,7 @@ SCHEMA_URL = 'http://svn.eionet.eu.int/repositories/Zope/trunk/Naaya/NaayaDocume
 
 class CustomContentUpdater(NaayaContentUpdater):
     """ Add nyexp_schema attribute to Naaya Site"""
-    
-    meta_type = "Naaya Site nyexpschema Updater"
-    
+
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya Site properties'
