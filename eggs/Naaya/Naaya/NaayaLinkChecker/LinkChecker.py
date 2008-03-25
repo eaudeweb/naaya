@@ -236,9 +236,10 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                 except:
                     pass #Invalid property
             for value, lang in values:
+                if not value:
+                    continue
                 if islink:
-                    if value:
-                        all_links.append( (value, property, lang) )
+                    all_links.append( (value, property, lang) )
                 else:
                     links1 = self.umConvertToList(get_links_from_text(value))
                     # we'll extract the links from HTML attributes
