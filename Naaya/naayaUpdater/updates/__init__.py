@@ -24,6 +24,7 @@ import sys
 import zLOG
 from Products.naayaUpdater.NaayaUpdater import UPDATERID
 import Globals
+import Products
 
 # Config custom logger
 LOG_ROOT = os.path.join(Globals.INSTANCE_HOME, 'log')
@@ -39,23 +40,40 @@ nyUpdateLogger.setLevel(logging.DEBUG)
 nyUpdateLogger.handlers = [_handler]
 nyUpdateLogger.propagate = 0
 
+def _get_available_products_updates():
+    """ Search in Products for updates scripts"""
+    products = dir(Products)
+    all_updates = []
+    for product in products:
+        try:
+            updates = __import__('Products.%s.updates' % product, globals(), locals(), ['Products',])
+            custom_updates = getattr(updates, 'PRODUCT_UPDATES', [])
+        except ImportError, err:
+            continue
+        else:
+            all_updates.extend(custom_updates)
+    return all_updates
+
 def _get_available_updates():
     """ Return available updates in current dir."""
-    name = __name__.split('.')
     curent_dir = Globals.package_home(globals())
     modules = [i.split('.')[0] for i in glob.glob1(curent_dir, "*.py")]
+    modules.extend(_get_available_products_updates())
+    
     updates = {}
     for mod in modules:
         try:
-            update = __import__(mod, globals(), locals(), name)
+            update = __import__(mod, globals(), locals(), ['Products',])
         except:
             err = sys.exc_info()
             zLOG.LOG('NaayaUpdater', zLOG.WARNING,
                      "Could not import module %s" % mod, error=err)
             continue
+        
         if not hasattr(update, 'register'):
             continue
         updates[mod] = update
+    
     return updates
 
 def registerUpdate(utool, uid, uhandler):
@@ -69,6 +87,7 @@ def registerUpdate(utool, uid, uhandler):
     @param uhandler: update handler to register
     @type uhandler: module or class
     """
+    uid = uid.replace('.', '_').replace(' ', '_')
     if uid in utool.objectIds():
         return
     try:

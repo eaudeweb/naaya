@@ -57,12 +57,16 @@ class NaayaContentUpdater(Folder):
     # Methods to override
     #
     def _update(self):
-        """ Do update"""
+        """ Update all documents returned by _verify_doc"""
         #'Implement it for your content type.
         return "NotImplementedError"
     
     def _verify_doc(self, doc):
-        """ Return None if doc doesn't need updates, doc otherrwise."""
+        """ 
+        @param doc: A Naaya Content Type found using portal_catalog;
+        @type doc: Naaya Content Type;
+        @returns doc if it needs to be updated or None;
+        """
         #'Implement it for your content type.
         return doc
     #
