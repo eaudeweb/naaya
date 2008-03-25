@@ -5,10 +5,10 @@
 	                 choices python:here.getSession('choices', here.getLocalProperty('choices', lang));
 	                 rows python:here.getSession('rows', here.getLocalProperty('rows', lang));
 	                 num_answers python:here.getAnswerCountForQuestion(widget_id, exclude_None=True);">
+		<p tal:condition="num_answers" i18n:translate="">Only a limited set of changes is allowed, because one or more answers were already submitted (<strong tal:content="num_answers"></strong> answer(s)).</p>
 		<metal:block use-macro="here/common_render_meth/macros/manage">
 			<!-- Custom fields -->
 			<metal:block fill-slot="custom_fields">
-				<p tal:condition="num_answers" i18n:translate="">Because <span tal:replace="num_answers"/> answer(s) exist(s), editing of some fields is disabled.</p>
 				<!-- Choices (columns)-->
 				<div class="field">
 					<label for="choices" i18n:translate="">Choices (columns)</label>
