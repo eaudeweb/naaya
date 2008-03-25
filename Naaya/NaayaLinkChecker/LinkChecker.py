@@ -239,6 +239,9 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                 if not value:
                     continue
                 if islink:
+                    # Skip default value for some fields
+                    if value == 'http://':
+                        continue
                     all_links.append( (value, property, lang) )
                 else:
                     links1 = self.umConvertToList(get_links_from_text(value))
