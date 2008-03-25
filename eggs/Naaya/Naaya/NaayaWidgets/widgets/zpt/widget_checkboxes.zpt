@@ -5,7 +5,7 @@
 <tal:block define="
     mode options/mode|string:view;
     datamodel options/datamodel|nothing;
-	widget_id here/getWidgetId;">
+    widget_id here/getWidgetId;">
 
 <!-- View mode -->
 <div tal:condition="python:mode == 'view'" class="widgetViewMode checkboxesWidget">
