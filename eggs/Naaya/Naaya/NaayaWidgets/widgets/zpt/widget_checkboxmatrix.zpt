@@ -74,19 +74,20 @@
      tal:define="lang request/lang|here/gl_get_selected_language;
                  required python:here.getSession('required', here.getProperty('required', None));
                  choices python:here.getSession('choices', here.getLocalProperty('choices', lang));
-                 rows python:here.getSession('rows', here.getLocalProperty('rows', lang));">
+                 rows python:here.getSession('rows', here.getLocalProperty('rows', lang));
+                 restricted_mode here/getAnswers;">
 <metal:block use-macro="here/common_render_meth/macros/manage">
 <!-- Custom fields -->
 <metal:block fill-slot="custom_fields">
 <!-- Choices (columns)-->
 	<div class="field">
 		<label for="choices" i18n:translate="">Choices (columns)</label>
-		<textarea id="choices" name="choices:lines" cols="50" rows="10" tal:content="python:'\n'.join(choices)"></textarea><!-- TODO: fix conversion to lines -->
+		<textarea id="choices" name="choices:lines" cols="50" rows="10" tal:content="python:'\n'.join(choices)" tal:attributes="disabled restricted_mode"></textarea><!-- TODO: fix conversion to lines -->
 	</div>
 <!-- Rows -->
 	<div class="field">
 		<label for="rows" i18n:translate="">Rows</label>
-		<textarea id="rows" name="rows:lines" cols="50" rows="10" tal:content="python:'\n'.join(rows)"></textarea><!-- TODO: fix conversion to lines -->
+		<textarea id="rows" name="rows:lines" cols="50" rows="10" tal:content="python:'\n'.join(rows)" tal:attributes="disabled restricted_mode"></textarea><!-- TODO: fix conversion to lines -->
 	</div>
 </metal:block>
 </metal:block>
