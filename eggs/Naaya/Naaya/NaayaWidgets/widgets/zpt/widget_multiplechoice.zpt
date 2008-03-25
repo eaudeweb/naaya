@@ -9,7 +9,6 @@
 		<metal:block use-macro="here/common_render_meth/macros/manage">
 			<!-- Custom fields -->
 			<metal:block fill-slot="custom_fields">
-				<p tal:condition="num_answers" i18n:translate="">Only a limited set of changes is allowed, because <span tal:replace="num_answers"/> answer(s) were (was) already submitted.</p>
 				<metal:block define-slot="custom_fields">
 				</metal:block>
 				<!-- Choices-->
