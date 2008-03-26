@@ -48,15 +48,6 @@ def manage_addLinkChecker(self, id, title, REQUEST=None):
     if REQUEST:
         return self.manage_main(self,REQUEST)
 
-def html_url_filter(url):
-    if url is None:
-        return False
-    if is_absolute_url(url):
-        return False
-    if url.startswith('mailto:'):
-        return False
-    return True
-
 
 class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     """ Link checker is meant to check the links to remote websites """
@@ -251,10 +242,10 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                     # and exclude the absolute links which we just obtained
                     try:
                         try:
-                            links2 = get_links_from_html_attributes(value, html_url_filter)
+                            links2 = get_links_from_html_attributes(value, is_absolute_url)
                         except UnicodeDecodeError:
                             safe_value = value.encode('ascii', 'ignore')
-                            links2 = get_links_from_html_attributes(safe_value, html_url_filter)
+                            links2 = get_links_from_html_attributes(safe_value, is_absolute_url)
                     except:
                         links2 = [] # tough luck
                     all_links.extend([ (x, property, lang) for x in links1 ]) # TODO: use generator comprehension

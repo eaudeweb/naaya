@@ -17,6 +17,8 @@
 #
 #Contributor(s):
 #  Original Code: Cornel Nitu (Finsiel Romania)
+#    (svn blame): Cristian Ciupitu (Eau de Web)
+
 
 
 import string
@@ -28,27 +30,126 @@ from BeautifulSoup import BeautifulSoup
 
 URL_PROTOCOLS = ("http", "https", "telnet", "gopher", "file", "wais", "ftp")
 
-def _get_url_regex():
-    urls = '(?: %s)' % '|'.join(URL_PROTOCOLS)
-    ltrs = r'\w'
-    gunk = r'/#~:.?+=&%@!\-'
-    punc = r'.:?\-'
-    any = "%(ltrs)s%(gunk)s%(punc)s" % { 'ltrs':ltrs, 'gunk':gunk, 'punc':punc}
-    url = r'\b%(urls)s:[%(any)s]+?(?=[%(punc)s]*(?:   [^%(any)s]|$))' % {'urls':urls, 'any':any, 'punc':punc}
-    url_re = re.compile(url, re.VERBOSE | re.MULTILINE)
-    return url_re
+def _get_absolute_url_regex():
+    # This regex matches as much as possible the absolute URLs
+    # described by RFC 3986 http://www.ietf.org/rfc/rfc3986.txt
+    # Known limitations/issues:
+    # - IPv6 addresses are not supported
+    # - only registered names intended for resolution via the DNS are supported
+    # - invalid URLs might be matched
 
-_url_regex = _get_url_regex()
+    # ALPHA / DIGIT / "-" / "." / "_" / "~"
+    unreserved = r'[\w\-.~]'
 
-def is_absolute_url(url):
-    for proto in URL_PROTOCOLS:
-        if url.startswith(proto+'://'):
-            return True
-    return False
+    # "%" HEXDIG HEXDIG
+    pct_encoded = r'(?:%[\dA-F][\dA-F])'
+
+    #   "!" / "$" / "&" / "'" / "(" / ")"
+    # / "*" / "+" / "," / ";" / "="
+    sub_delims  = r'''[!$&'()*+,;=]'''
+
+    # unreserved / pct-encoded / sub-delims / ":" / "@"
+    pchar = r'(?:%s|%s|%s|@)' % (unreserved, pct_encoded, sub_delims)
+
+    # *( unreserved / pct-encoded / sub-delims )
+    # We are using only DNS registered names. We're restring input with
+    # the following rule (taken from RFC 3696):
+    # The LDH rule, as updated, provides that the labels (words or strings
+    # separated by periods) that make up a domain name must consist of only
+    # the ASCII [ASCII] alphabetic and numeric characters, plus the hyphen.
+    # No other symbols or punctuation characters are permitted, nor is
+    # blank space.  If the hyphen is used, it is not permitted to appear at
+    # either the beginning or end of a label.
+    reg_name = '(?:[a-zA-Z0-9\-.]+)'
+
+    # IPv4 address
+    dec_octet = '(?:\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])'
+    ipv4_address = '(?:%s)' % '.'.join((dec_octet, dec_octet, dec_octet, dec_octet))
+
+
+    #
+    # SCHEME
+    # scheme        = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+    scheme = r'[a-zA-Z][a-zA-Z\d+\-.]*'
+
+
+    #
+    # AUTHORITY
+    #
+
+    # userinfo    = *( unreserved / pct-encoded / sub-delims / ":" )
+    userinfo = '(?:%s)+' % '|'.join((unreserved, pct_encoded, sub_delims, ":"))
+    host = '(?:%s|%s)' % (ipv4_address, reg_name)
+    port = r'\d+'
+    # authority     = [ userinfo "@" ] host [ ":" port ]
+    authority = r"(?:%s@)?%s(?::%s)?" % (userinfo, host, port)
+
+
+    #
+    # PATH ABEMPTY
+    # path-abempty  = *( "/" segment )
+    # segment       = *pchar
+    path_abempty = r'(?:(?:/%s*)*)' % pchar
+
+
+    #
+    # QUERY
+    # query         = *( pchar / "/" / "?" )
+    query = r'(?:(?:%s|[/?])*)' % pchar
+
+
+    #
+    # FRAGMENT
+    # fragment      = *( pchar / "/" / "?" )
+    fragment = r'(?:(?:%s|[/?])*)' % pchar
+
+
+    #
+    # URL
+    #
+    url = r'\b%(scheme)s://%(authority)s%(path_abempty)s(?:\?%(query)s)?(?:#%(fragment)s)?\b' % \
+            {'scheme': scheme,
+             'authority': authority,
+             'path_abempty': path_abempty,
+             'query': query,
+             'fragment': fragment,}
+    return re.compile(url)
+
+_absolute_url_regex = _get_absolute_url_regex()
+
 
 def get_links_from_text(text):
-    """Given a text string, returns all the links we can find in it."""
-    return _url_regex.findall(text)
+    """Extract all absolute URLs from text.
+
+        This functions tries as much as possible to be compliant with RFC 3986 (Uniform Resource Identifier (URI): Generic Syntax).
+
+        >>> get_links_from_text(' http://www.eaudeweb.ro ') == ['http://www.eaudeweb.ro']
+        True
+        >>> get_links_from_text(' http://dorel@www.eaudeweb.ro ') == ['http://dorel@www.eaudeweb.ro']
+        True
+        >>> get_links_from_text(' http://vasile:secret@www.eaudeweb.ro ') == ['http://vasile:secret@www.eaudeweb.ro']
+        True
+        >>> get_links_from_text(' http://vasile:secret@www.eaudeweb.ro?search=xyz ') == ['http://vasile:secret@www.eaudeweb.ro?search=xyz']
+        True
+        >>> get_links_from_text(' http://vasile:secret@www.eaudeweb.ro?search=xyz#section2 ') == ['http://vasile:secret@www.eaudeweb.ro?search=xyz#section2']
+        True
+        >>> get_links_from_text(' www.example.org ') == []
+        True
+        >>> get_links_from_text(' www.example.org/search?num=20 ') == []
+        True
+        >>> get_links_from_text(' www.example.org/search?num=20#last ') == []
+        True
+    """
+    return _absolute_url_regex.findall(text)
+
+
+_is_absolute_url_regex = re.compile(r'^[a-zA-Z][a-zA-Z\d+\-.]*:')
+def is_absolute_url(url):
+    """Quick & dirty way to see if an URL is absolute"""
+    if url is None:
+        return False
+    return bool(_is_absolute_url_regex.match(url))
+
 
 def get_links_from_html_attributes(html, link_filter=True):
     """Return the list of links from HTML attributes, after filtering them.
@@ -75,6 +176,7 @@ def get_links_from_html_attributes(html, link_filter=True):
         tags = soup.findAll(tag, {attr: link_filter})
         links.extend([tag.get(attr) for tag in tags])
     return links
+
 
 
 class UtilsManager:
@@ -142,3 +244,12 @@ class UtilsManager:
                 return '%s...' % obj_title[:size]
         except KeyError:
             return None
+
+
+
+def _test():
+    import doctest, Utils
+    return doctest.testmod(Utils)
+
+if __name__ == '__main__':
+    _test()
