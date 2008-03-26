@@ -1,6 +1,12 @@
 This product checks if the links from a Naaya based site are (still) valid.
 Both external (absolute) and internal links are checked.
 
+Supported protocols:
+- HTTP
+- HTTPS
+- FTP
+- GOPHER
+
 
 Internal links checking
 -----------------------
