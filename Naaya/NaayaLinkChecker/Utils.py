@@ -18,17 +18,12 @@
 #Contributor(s):
 #  Original Code: Cornel Nitu (Finsiel Romania)
 #    (svn blame): Cristian Ciupitu (Eau de Web)
-
-
-
 import string
 from Products.PythonScripts.standard import url_quote
 import re
 from whrandom import choice
 from DateTime import DateTime
 from BeautifulSoup import BeautifulSoup
-
-URL_PROTOCOLS = ("http", "https", "telnet", "gopher", "file", "wais", "ftp")
 
 def _get_absolute_url_regex():
     # This regex matches as much as possible the absolute URLs
