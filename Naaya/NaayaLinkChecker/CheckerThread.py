@@ -15,6 +15,7 @@
 #
 #Contributor(s):
 #  Original Code: Cornel Nitu (Finsiel Romania)
+#    (svn blame): Cristian Ciupitu (Eau de Web)
 
 from httplib import InvalidURL
 from Queue import Empty
