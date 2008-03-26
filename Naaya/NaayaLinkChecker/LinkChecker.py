@@ -17,20 +17,21 @@
 #
 #Contributor(s):
 #  Original Code: Cornel Nitu (Finsiel Romania)
+#    (svn blame): Cristian Ciupitu (Eau de Web)
 
 #Python imports
-from Queue import Queue
+from sets import Set
 import time
 import urlparse
 
 #Zope imports
+from AccessControl import ClassSecurityInfo, Unauthorized
+from AccessControl.Permissions import view_management_screens, view
+from Globals import InitializeClass
+from OFS.FindSupport import FindSupport
 from OFS.ObjectManager import ObjectManager
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from Globals import InitializeClass
-from OFS.FindSupport import FindSupport
-from AccessControl import ClassSecurityInfo, Unauthorized
-from AccessControl.Permissions import view_management_screens, view
 from zLOG import LOG, INFO
 
 #Product's related imports
@@ -289,17 +290,18 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     security.declarePrivate('checkLinks')
     def checkLinks(self, urlsinfo, urlsnumber):
         #build a list with all links
-        external_links = Queue()
+        external_links = Set()
         internal_links = []
         for ob_url, val in urlsinfo.items():
             for v in val:
                 link = v[0]
                 if is_absolute_url(link):
-                    external_links.put_nowait(link)
+                    external_links.add(link)
                 else:
                     url = urlparse.urljoin(ob_url, link)
                     scheme, netloc, path, query, fragment = urlparse.urlsplit(url)
                     internal_links.append((link, path))
+        external_links = iter2Queue(external_links)
         #start threads
         LOG('NaayaLinkChecker', INFO, 'Starting link checking threads')
         logresults = {}
