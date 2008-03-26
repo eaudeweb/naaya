@@ -18,12 +18,17 @@
 #Contributor(s):
 #  Original Code: Cornel Nitu (Finsiel Romania)
 #    (svn blame): Cristian Ciupitu (Eau de Web)
-import string
-from Products.PythonScripts.standard import url_quote
-import re
-from whrandom import choice
-from DateTime import DateTime
+
+# Python imports
 from BeautifulSoup import BeautifulSoup
+from Queue import Queue
+import re
+import string
+from whrandom import choice
+
+# Zope imports
+from DateTime import DateTime
+from Products.PythonScripts.standard import url_quote
 
 def _get_absolute_url_regex():
     # This regex matches as much as possible the absolute URLs
@@ -240,6 +245,13 @@ class UtilsManager:
         except KeyError:
             return None
 
+
+def iter2Queue(iterable):
+    """Returns a Queue from iterable"""
+    q = Queue()
+    for x in iterable:
+        q.put_nowait(x)
+    return q
 
 
 def _test():
