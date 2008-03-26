@@ -39,7 +39,11 @@ class CustomContentUpdater(NaayaContentUpdater):
                            '''
         self.update_meta_type = 'Naaya LinkChecker'
         self.manage_changeProperties(**{'Naaya URL': ('locator',),
-                                        'Naaya Pointer': ('pointer',)})
+                                        'Naaya Pointer': ('pointer',)
+                                        'Naaya Event': ('location_url', 'agenda_url', 'event_url'),
+                                        'Naaya News': ('resourceurl', ),
+                                        'Naaya Story': ('resourceurl', ),
+                                        })
 
     def _verify_doc(self, doc):
         """See super"""
