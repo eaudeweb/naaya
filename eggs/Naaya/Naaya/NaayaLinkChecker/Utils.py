@@ -146,8 +146,6 @@ def get_links_from_text(text):
 _is_absolute_url_regex = re.compile(r'^[a-zA-Z][a-zA-Z\d+\-.]*:')
 def is_absolute_url(url):
     """Quick & dirty way to see if an URL is absolute"""
-    if url is None:
-        return False
     return bool(_is_absolute_url_regex.match(url))
 
 
@@ -161,7 +159,7 @@ def get_links_from_html_attributes(html, link_filter=True):
 
         @param html: html source code
         @type html: string
-        @param link_filter: a link filter.
+        @param link_filter: a link filter
               It can be a regular expression, a list, the special values
             True or None, or a callable that takes the attribute value as
             its argument (note that the value may be None).
