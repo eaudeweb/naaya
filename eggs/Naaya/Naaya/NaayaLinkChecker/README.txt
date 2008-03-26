@@ -20,3 +20,9 @@ The advantage of this kind of checking is speed, but on the other hand
 some possible errors won't be cought. For example if the previous search
 method has a bug and the server returns "500 Internal Server Error", this
 error won't be cought.
+
+
+Tunning for speed
+-----------------
+
+Tune the THREAD_COUNT constant from "LinkChecker.py".
