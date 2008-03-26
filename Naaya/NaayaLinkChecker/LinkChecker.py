@@ -201,6 +201,12 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         links = self.getLinksFromOb(ob, properties)
         return dict((object_checked.absolute_url(1), links)), len(links)
 
+    def _isRelativeUrl(self, url):
+        # used by the getLinksFromOb method
+        if url is None:
+            return False
+        return not is_absolute_url(url)
+
     security.declarePrivate('getLinksFromOb')
     def getLinksFromOb(self, ob, properties=None):
         """Return a list of links contained in the properties of ob.
@@ -243,10 +249,10 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                     # and exclude the absolute links which we just obtained
                     try:
                         try:
-                            links2 = get_links_from_html_attributes(value, is_absolute_url)
+                            links2 = get_links_from_html_attributes(value, self._isRelativeUrl)
                         except UnicodeDecodeError:
                             safe_value = value.encode('ascii', 'ignore')
-                            links2 = get_links_from_html_attributes(safe_value, is_absolute_url)
+                            links2 = get_links_from_html_attributes(safe_value, self._isRelativeUrl)
                     except:
                         links2 = [] # tough luck
                     all_links.extend([ (x, property, lang) for x in links1 ]) # TODO: use generator comprehension
