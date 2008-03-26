@@ -276,7 +276,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         """
         self.verifyIP(REQUEST)
         urlsinfo, total = self.processObjects()
-        log_entries, all_urls = self.check_links(urlsinfo, total)
+        log_entries, all_urls = self.checkLinks(urlsinfo, total)
         self.manage_addLogEntry(self.REQUEST.AUTHENTICATED_USER.getUserName(), time.localtime(), log_entries)
 
     security.declareProtected('Run Manual Check', 'manualCheck')
@@ -285,7 +285,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             verify them and return the results for the broken links found
         """
         urlsinfo, total = self.processObjects()
-        return self.check_links(urlsinfo, total)
+        return self.checkLinks(urlsinfo, total)
 
     security.declareProtected('Run Manual Check', 'manualCheck')
     def objectCheck(self, properties=[], context=''):
@@ -293,10 +293,10 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             verify it and return the results for the broken links found
         """
         urlsinfo, total = self.processObject(properties, context)
-        return self.check_links(urlsinfo, total)
+        return self.checkLinks(urlsinfo, total)
 
-    security.declarePrivate('check_links')
-    def check_links(self, urlsinfo, urlsnumber):
+    security.declarePrivate('checkLinks')
+    def checkLinks(self, urlsinfo, urlsnumber):
         #build a list with all links
         external_links = Queue()
         internal_links = []
@@ -318,14 +318,14 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
             th.setName(thread)
             threads.append(th)
             results = th.start()
-        self.check_internal_links(internal_links, logresults)
+        self.checkInternalLinks(internal_links, logresults)
         for thread in threads:
             thread.join()
         LOG('NaayaLinkChecker', INFO, 'Link checking threads stopped')
         return self.prepareLog(urlsinfo, logresults, urlsnumber, 0)
 
-    security.declarePrivate('check_internal_links')
-    def check_internal_links(self, links, logresults):
+    security.declarePrivate('checkInternalLinks')
+    def checkInternalLinks(self, links, logresults):
         for link, path in links:
             try:
                 doc  = self.unrestrictedTraverse(str(path), None)
