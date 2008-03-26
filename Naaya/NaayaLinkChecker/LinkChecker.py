@@ -327,7 +327,11 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
     security.declarePrivate('check_internal_links')
     def check_internal_links(self, links, logresults):
         for link, path in links:
-            if self.unrestrictedTraverse(str(path), None) is None:
+            try:
+                doc  = self.unrestrictedTraverse(str(path), None)
+            except:
+                doc = None
+            if doc is None:
                 logresults[link] = '404: Not Found'
             else:
                 logresults[link] = 'OK'
