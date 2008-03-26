@@ -24,7 +24,10 @@ class CustomContentUpdater(NaayaContentUpdater):
     """Adds the islink setting to Naaya LinkChecker"""
 
     _properties=({'id':'Naaya URL', 'type': 'tokens', 'mode':'w', },
-                 {'id':'Naaya Pointer', 'type': 'tokens', 'mode':'w'},)
+                 {'id':'Naaya Pointer', 'type': 'tokens', 'mode':'w'},
+                 {'id':'Naaya Event', 'type': 'tokens', 'mode':'w'},
+                 {'id':'Naaya News', 'type': 'tokens', 'mode':'w'},
+                 {'id':'Naaya Story', 'type': 'tokens', 'mode':'w'},)
 
     def manage_options(self):
         """ ZMI tabs """
