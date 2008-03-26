@@ -172,7 +172,7 @@ def get_links_from_html_attributes(html, link_filter=True):
     links = []
     for tag, attr in (('a', 'href'), ('script', 'src'), ('img', 'src')):
         tags = soup.findAll(tag, {attr: link_filter})
-        links.extend([tag.get(attr) for tag in tags])
+        links.extend([tag.get(attr) for tag in tags]) # TODO Python 2.4: generator comprehension
     return links
 
 
