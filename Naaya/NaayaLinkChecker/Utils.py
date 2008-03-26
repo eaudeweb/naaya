@@ -139,6 +139,8 @@ def get_links_from_text(text):
         True
         >>> get_links_from_text(' www.example.org/search?num=20#last ') == []
         True
+        >>> get_links_from_text(' http://www.emag.ro/hdd/seagate/filter/buffer-(mb)-v153,32-i2102/interfata-v149,s-ata-i3814/last/f3f1mn ') == ['http://www.emag.ro/hdd/seagate/filter/buffer-(mb)-v153,32-i2102/interfata-v149,s-ata-i3814/last/f3f1mn']
+        True
     """
     return _absolute_url_regex.findall(text)
 
