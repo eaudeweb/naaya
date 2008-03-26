@@ -303,7 +303,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                     internal_links.append((link, path))
         external_links = iter2Queue(external_links)
         #start threads
-        LOG('NaayaLinkChecker', INFO, 'Starting link checking threads')
+        LOG('NaayaLinkChecker', INFO, 'Starting %u link checking threads' % THREAD_COUNT)
         logresults = {}
         threads = []
         for thread in range(THREAD_COUNT):
