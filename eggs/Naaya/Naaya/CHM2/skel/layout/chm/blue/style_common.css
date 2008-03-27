@@ -502,6 +502,24 @@
 		text-align: right;
 	}
 
+.edit_right_box {
+	clear: both;
+	background-color: #f4fff4;
+	padding: 1em;
+	float: right;
+	border: 1px solid black;
+	width: 200px;
+	text-align: right;
+	margin-bottom: 0.5em;
+}
+
+.edit_right_box p {
+	font-size: 90%;
+	text-align: justify;
+	border-top: 1px dotted #000;
+	padding-top: 0.5em;
+}
+
 	/* styles for forms */
 	.field {
 		margin-top: 1em;
