@@ -1,22 +1,24 @@
 <metal:block define-macro="manage">
-	<div tal:condition="python:mode == 'manage'" class="widgetManageMode"
-	     tal:define="lang request/lang|here/gl_get_selected_language;
-	                 required python:here.getSession('required', here.getProperty('required', None));
-	                 display python:here.getSession('display', here.getProperty('display', 'vertical'));
-	                 choices python:here.getSession('choices', here.getLocalProperty('choices', lang));
-	                 num_answers python:here.getAnswerCountForQuestion(widget_id, exclude_None=True);">
-		<p tal:condition="num_answers" i18n:translate="">Only a limited set of changes is allowed, because one or more answers were already submitted (<strong tal:content="num_answers"></strong> answer(s)).</p>
-		<metal:block use-macro="here/common_render_meth/macros/manage">
-			<!-- Custom fields -->
-			<metal:block fill-slot="custom_fields">
-				<metal:block define-slot="custom_fields">
+	<tal:block condition="python:mode == 'manage'">
+		<div class="widgetManageMode"
+		     tal:define="lang request/lang|here/gl_get_selected_language;
+		                 required python:here.getSession('required', here.getProperty('required', None));
+		                 display python:here.getSession('display', here.getProperty('display', 'vertical'));
+		                 choices python:here.getSession('choices', here.getLocalProperty('choices', lang));
+		                 num_answers python:here.getAnswerCountForQuestion(widget_id, exclude_None=True);">
+			<p tal:condition="num_answers" i18n:translate="">Only a limited set of changes is allowed, because one or more answers were already submitted (<strong tal:content="num_answers"></strong> answer(s)).</p>
+			<metal:block use-macro="here/common_render_meth/macros/manage">
+				<!-- Custom fields -->
+				<metal:block fill-slot="custom_fields">
+					<metal:block define-slot="custom_fields">
+					</metal:block>
+					<!-- Choices-->
+					<div class="field">
+						<label for="choices" i18n:translate="">Choices (one per line)</label>
+						<textarea id="choices" name="choices:lines" cols="50" rows="10" tal:content="python:'\n'.join(choices)" tal:attributes="disabled num_answers"></textarea><!-- TODO: fix conversion to lines -->
+					</div>
 				</metal:block>
-				<!-- Choices-->
-				<div class="field">
-					<label for="choices" i18n:translate="">Choices (one per line)</label>
-					<textarea id="choices" name="choices:lines" cols="50" rows="10" tal:content="python:'\n'.join(choices)" tal:attributes="disabled num_answers"></textarea><!-- TODO: fix conversion to lines -->
-				</div>
 			</metal:block>
-		</metal:block>
-	</div>
+		</div>
+	</tal:block>
 </metal:block>
