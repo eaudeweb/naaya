@@ -32,7 +32,7 @@ from OFS.FindSupport import FindSupport
 from OFS.ObjectManager import ObjectManager
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from zLOG import LOG, INFO
+from zLOG import LOG, INFO, DEBUG
 
 #Product's related imports
 from Products.NaayaLinkChecker.Utils import *
@@ -201,12 +201,6 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         links = self.getLinksFromOb(ob, properties)
         return dict((object_checked.absolute_url(1), links)), len(links)
 
-    def _isRelativeUrl(self, url):
-        # used by the getLinksFromOb method
-        if url is None:
-            return False
-        return not is_absolute_url(url)
-
     security.declarePrivate('getLinksFromOb')
     def getLinksFromOb(self, ob, properties=None):
         """Return a list of links contained in the properties of ob.
@@ -244,19 +238,20 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
                         continue
                     all_links.append( (value, property, lang) )
                 else:
-                    links1 = self.umConvertToList(get_links_from_text(value))
-                    # we'll extract the links from HTML attributes
-                    # and exclude the absolute links which we just obtained
                     try:
                         try:
-                            links2 = get_links_from_html_attributes(value, self._isRelativeUrl)
-                        except UnicodeDecodeError:
-                            safe_value = value.encode('ascii', 'ignore')
-                            links2 = get_links_from_html_attributes(safe_value, self._isRelativeUrl)
-                    except:
-                        links2 = [] # tough luck
-                    all_links.extend([ (x, property, lang) for x in links1 ]) # TODO: use generator comprehension
-                    all_links.extend([ (x, property, lang) for x in links2 ]) # TODO: use generator comprehension
+                            links = list(get_links_from_html(value))
+                        except UnicodeError, err:
+                            LOG('NaayaLinkChecker', DEBUG, 'an exception was raised when parsing property %s (lang %s) of %s : %s' % (property, lang, ob.absolute_url(1), err))
+                            if isinstance(value, str):
+                                safe_value = value.decode('utf-8', 'ignore')
+                            else:
+                                safe_value = value.encode('ascii', 'ignore')
+                            links = list(get_links_from_html(safe_value))
+                    except Exception, err: # invalid html, unicode errors etc.
+                        LOG('NaayaLinkChecker', DEBUG, 'an exception was raised when parsing property %s (lang %s) of %s : %s' % (property, lang, ob.absolute_url(1), err))
+                        links = get_links_from_text(value)
+                    all_links.extend([ (x, property, lang) for x in links ]) # TODO: use generator comprehension
         return all_links
 
     security.declarePrivate('verifyIP')

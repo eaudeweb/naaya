@@ -20,7 +20,7 @@
 #    (svn blame): Cristian Ciupitu (Eau de Web)
 
 # Python imports
-from BeautifulSoup import BeautifulSoup
+from BeautifulSoup import BeautifulSoup, BeautifulStoneSoup, CData
 from Queue import Queue
 import re
 import string
@@ -150,33 +150,26 @@ def is_absolute_url(url):
     """Quick & dirty way to see if an URL is absolute"""
     return bool(_is_absolute_url_regex.match(url))
 
-
-def get_links_from_html_attributes(html, link_filter=True):
-    """Return the list of links from HTML attributes, after filtering them.
+def get_links_from_html(html):
+    """Return the list of links from HTML attributes and text.
 
         The following attributes are checked:
-        - a.href
-        - script.src
-        - img.src
+         - a.href
+         - script.src
+         - img.src
 
         @param html: html source code
         @type html: string
-        @param link_filter: a link filter
-              It can be a regular expression, a list, the special values
-            True or None, or a callable that takes the attribute value as
-            its argument (note that the value may be None).
-              True matches a tag that has any value for the given attribute,
-              and None matches a tag that has no value for the given attribute.
-        @rtype: list
+        @rtype: iterator
         @return: the list of URLs from html after filtering them
     """
-    soup = BeautifulSoup(html)
-    links = []
+    soup = BeautifulSoup(html, convertEntities=BeautifulStoneSoup.XHTML_ENTITIES)
     for tag, attr in (('a', 'href'), ('script', 'src'), ('img', 'src')):
-        tags = soup.findAll(tag, {attr: link_filter})
-        links.extend([tag.get(attr) for tag in tags]) # TODO Python 2.4: generator comprehension
-    return links
-
+        for t in soup.findAll(tag, {attr: True}):
+            yield t.get(attr)
+    for text in soup.findAll(text=lambda x: x is not None and not x.startswith('<!--')):
+        for x in get_links_from_text(text):
+            yield x
 
 
 class UtilsManager:
