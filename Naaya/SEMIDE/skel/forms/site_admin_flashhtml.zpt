@@ -48,23 +48,23 @@
 			<div class="field">
 				<label for="body" i18n:translate="">Body</label>
 				<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('body:utf8:ustring', curr_lang, image_support=True)" />
-				<textarea name="body:utf8:ustring" class="mceEditor" tal:content="python:doc.getLocalProperty('body', curr_lang)" />
-			<div>
+				<textarea id="body" name="body:utf8:ustring" class="mceEditor" rows="25" cols="80" tal:content="python:doc.getLocalProperty('body', curr_lang)" />
+			</div>
 			<div class="field">
 				<input type="submit" value="Save changes" i18n:attributes="value" />
 			</div>
 			<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
-			<tal:block tal:repeat="language languages">
-			<tal:block tal:define="language_name python:here.gl_get_language_name(language)">
-			<strong tal:condition="python:language==curr_lang">
-				<a class="current" tal:content="language_name"
-					tal:attributes="href string:?lang=${language}; title language_name" />
-			</strong>
-			<a tal:condition="python:language!=curr_lang"
-				tal:attributes="href string:?lang=${language}; title language_name"
-				tal:content="language_name" />
-			</tal:block>
-			</tal:block>
+				<tal:block tal:repeat="language languages">
+					<tal:block tal:define="language_name python:here.gl_get_language_name(language)">
+						<strong tal:condition="python:language==curr_lang">
+							<a class="current" tal:content="language_name"
+								tal:attributes="href string:?lang=${language}; title language_name" />
+						</strong>
+						<a tal:condition="python:language!=curr_lang"
+							tal:attributes="href string:?lang=${language}; title language_name"
+							tal:content="language_name" />
+					</tal:block>
+				</tal:block>
 			</div>
 			<input type="hidden" name="lang" tal:attributes="value curr_lang" />
 		</form>
