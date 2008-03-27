@@ -26,6 +26,7 @@ from cStringIO import StringIO
 #Zope imports
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
 from ZPublisher.HTTPRequest import record
@@ -115,6 +116,13 @@ class CHMSite(NySite):
         manage_addGlossaryCentre(self, ID_GLOSSARY_COVERAGE, TITLE_GLOSSARY_COVERAGE)
         self._getOb(ID_GLOSSARY_COVERAGE).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_coverage.xml')))
 
+        #portal_map custom index
+        custom_map_index = self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'map_index.zpt'))
+        portal_map = self.getGeoMapTool()
+        manage_addPageTemplate(portal_map, id='map_index', title='', text='')
+        map_index = portal_map._getOb(id='map_index')
+        map_index.pt_edit(text=custom_map_index, content_type='')
+        
         #set glossary for pick lists
         self.keywords_glossary = ID_GLOSSARY_KEYWORDS
         self.coverage_glossary = ID_GLOSSARY_COVERAGE
