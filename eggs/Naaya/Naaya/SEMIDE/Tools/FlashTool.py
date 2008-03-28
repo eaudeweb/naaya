@@ -208,22 +208,11 @@ class FlashTool(Folder, ProfileMeta, utils):
         """
         return self.getFlashArchive()._getOb('%s_%s' % (self.lastflashdate, type), None)
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getFlashUsers')
-    def getFlashUsers(self, query='', skey=0, rkey=''):
-        """
-            return the users list
-        """
+    security.declarePrivate('_ getFlashUsers')
+    def _getFlashUsers(self, query=''):
         site = self.getSite()
         profiles_tool = site.getProfilesTool()
-        if skey == 'name':  skey = 0
-        elif skey == 'fn':  skey = 1
-        elif skey == 'ln':  skey = 2
-        elif skey == 'email':   skey = 3
-        elif skey == 'instant':  skey = 4
-        elif skey == 'lang':    skey = 5
-        else:   skey = 0
         users = []
-        results= []
         users_a = users.append
         for user in site.getAuthenticationTool().getUsers():
             profile = profiles_tool.getProfile(user.name)
@@ -235,6 +224,21 @@ class FlashTool(Folder, ProfileMeta, utils):
                         users_a((user.name, user.firstname, user.lastname, user.email, sheet_ob.notify, sheet_ob.language))
                 else:
                     users_a((user.name, user.firstname, user.lastname, user.email, sheet_ob.notify, sheet_ob.language))
+        return users
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getFlashUsers')
+    def getFlashUsers(self, query='', skey=0, rkey=''):
+        """
+            return the users list
+        """
+        if skey == 'name':  skey = 0
+        elif skey == 'fn':  skey = 1
+        elif skey == 'ln':  skey = 2
+        elif skey == 'email':   skey = 3
+        elif skey == 'instant':  skey = 4
+        elif skey == 'lang':    skey = 5
+        else:   skey = 0
+        users = self._getFlashUsers(query)
         results = [(x[skey], x) for x in users]
         results.sort()
         if rkey: results.reverse()
@@ -245,7 +249,7 @@ class FlashTool(Folder, ProfileMeta, utils):
         """ """
         data = [('Username', 'Firstname', 'Lastname', 'Email', 'Instant notification', 'Language')]
         data_app = data.append
-        for user in self.getFlashUsers():
+        for user in self._getFlashUsers():
             data_app((user[0], self.utToUtf8(user[1]), self.utToUtf8(user[2]), user[3], user[4], self.gl_get_language_name(user[5])))
         tmp_name = tmpfile(data)
         content = open(str(tmp_name)).read()
