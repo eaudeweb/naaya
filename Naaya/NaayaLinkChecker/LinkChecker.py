@@ -198,7 +198,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         object_checked = self.unrestrictedTraverse(context, None)
         if object_checked is None:
             return {}, 0
-        links = self.getLinksFromOb(ob, properties)
+        links = self.getLinksFromOb(object_checked, properties)
         return dict((object_checked.absolute_url(1), links)), len(links)
 
     security.declarePrivate('getLinksFromOb')
