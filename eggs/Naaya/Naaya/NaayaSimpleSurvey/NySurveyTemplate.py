@@ -50,8 +50,7 @@ class NySurveyTemplate(Folder):
     #constructors
     manage_addNySurveyAnswer_html = manage_addNySurveyAnswer_html
 
-    #addNySurveyAnswer = addNySurveyAnswer
-
+    security.declareProtected(PERMISSION_NYSURVEY_RESPOND, 'addNySurveyAnswer')
     def addNySurveyAnswer(self, REQUEST=None, **kwargs):
         """ """
         if REQUEST:
@@ -194,6 +193,7 @@ class NySurveyTemplate(Folder):
         """
 
         user = REQUEST.AUTHENTICATED_USER.getUserName()
+        if user == 'Anonymous User': return None # don't check for anonymous
         return user in [answer.user for answer in self.get_template_answers()]
 
     def check_template_deadline(self):
@@ -203,6 +203,7 @@ class NySurveyTemplate(Folder):
         today = self.utGetTodayDate()
         return today.lessThanEqualTo(self.utConvertStringToDateTimeObj(self.date))
 
+    security.declareProtected(PERMISSION_NYSURVEY_ADMINISTRATE, 'get_statistics')
     def get_statistics(self):
         """ """
         answer_count = self.count_answers()
@@ -256,6 +257,7 @@ class NySurveyTemplate(Folder):
         count = self.count_attr_value(attr, value)
         return count * 100.0 / (self.count_answers() * 3)
 
+    security.declareProtected(PERMISSION_NYSURVEY_ADMINISTRATE, 'get_statistics_counted')
     def get_statistics_counted(self):
         """ """
         res = {}
