@@ -44,18 +44,18 @@ def initialize(context):
         constructors = SurveyTool.SurveyTool._constructors,
         icon = 'www/SurveyTool.gif'
     )
-    context.registerClass(
-        SurveyTemplate.SurveyTemplate,
-        permission = PERMISSION_ADD_SURVEYTEMPLATE,
-        constructors = SurveyTemplate.SurveyTemplate._constructors,
-        icon = 'www/Survey.gif'
-    )
-    context.registerClass(
-        SurveyQuestionnaire.SurveyQuestionnaire,
-        permission = PERMISSION_ADD_QUESTIONNAIRE,
-        constructors = SurveyQuestionnaire.SurveyQuestionnaire._constructors,
-        icon = 'www/NySurveyQuestionnaire.gif'
-    )
+    #context.registerClass(
+    #    SurveyTemplate.SurveyTemplate,
+    #    permission = PERMISSION_ADD_SURVEYTEMPLATE,
+    #    constructors = SurveyTemplate.SurveyTemplate._constructors,
+    #    icon = 'www/Survey.gif'
+    #)
+    #context.registerClass(
+    #    SurveyQuestionnaire.SurveyQuestionnaire,
+    #    permission = PERMISSION_ADD_QUESTIONNAIRE,
+    #    constructors = SurveyQuestionnaire.SurveyQuestionnaire._constructors,
+    #    icon = 'www/NySurveyQuestionnaire.gif'
+    #)
     context.registerClass(
         MegaSurvey.MegaSurvey,
         permission = PERMISSION_ADD_MEGASURVEY,
@@ -83,13 +83,13 @@ def initialize(context):
     statistics.initialize(context)
 
     # Register as a folder content type
-    register_content(
-        module=SurveyQuestionnaire,
-        klass=SurveyQuestionnaire.SurveyQuestionnaire,
-        module_methods={'manage_addSurveyQuestionnaire': PERMISSION_ADD_QUESTIONNAIRE},
-        klass_methods={'questionnaire_add_html': PERMISSION_ADD_QUESTIONNAIRE},
-        add_method=('questionnaire_add_html', PERMISSION_ADD_QUESTIONNAIRE),
-    )
+    #register_content(
+    #    module=SurveyQuestionnaire,
+    #    klass=SurveyQuestionnaire.SurveyQuestionnaire,
+    #    module_methods={'manage_addSurveyQuestionnaire': PERMISSION_ADD_QUESTIONNAIRE},
+    #    klass_methods={'questionnaire_add_html': PERMISSION_ADD_QUESTIONNAIRE},
+    #    add_method=('questionnaire_add_html', PERMISSION_ADD_QUESTIONNAIRE),
+    #)
     register_content(
         module=MegaSurvey,
         klass=MegaSurvey.MegaSurvey,
