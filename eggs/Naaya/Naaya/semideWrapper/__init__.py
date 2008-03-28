@@ -53,42 +53,22 @@ def basketofapprovals_duplicates_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self}, 'folder_basketofapprovals_duplicates')
 NyFolder.basketofapprovals_duplicates_html = basketofapprovals_duplicates_html
 
-def _getDuplicatesInFolder(self, meta_type, attrs):
-    """Returns a list of duplicates.
-
-        Items with equal attrs are considered duplicated.
-        @param meta_type: meta type of analyzed objects
-        @type meta_type: string or list (the same as for objectValues)
-        @param attrs: sequence of attributes that need to be equal to consider the objects duplicate
-        @type params: sequence of strings
-        @rtype: list
-    """
-    originals = {}
-    duplicates = []
-    for item in self.objectValues(meta_type):
-        marker = tuple([getattr(item, attr) for attr in attrs]) # TODO Python 2.4: generator comprehension
-        if item.id.startswith('xxx'):
-            print 'XXX', 'item.id =', item.id, '| marker =', marker
-        if marker in originals:
-            if item.id.startswith('xxx'):
-                print 'XXX duplicate'
-            duplicates.append(item)
-            continue
-        originals[marker] = item
-    # return both originals and duplicates
-    duplicates.extend(originals.values())
-    return duplicates
-NyFolder._getDuplicatesInFolder = _getDuplicatesInFolder
-
 def getDuplicatesInFolder(self):
-    """Returns a list of duplicate news and events that are potential duplicates.
-
-        - news are duplicates if news.title and news.coverage are identical
-        - events are duplicates if event.start_date and events.coverage are identical
     """
-    L = self._getDuplicatesInFolder(METATYPE_NYSEMNEWS, ('title', 'coverage'))
-    L.extend(self._getDuplicatesInFolder(METATYPE_NYSEMEVENT, ('start_date', 'coverage')))
-    return L
+    Builds a disctionary with objects URLs that are potential duplicates:
+    - news are duplicates if news.title and news.coverage are identical
+    - events are duplicates if event.start_date and events.coverage are identical
+    """
+    seen = {}
+    result = []
+    for item in self.objectValues(METATYPE_NYSEMNEWS):
+        marker = (item.title, item.coverage)
+        if marker in seen:
+            result.append(item)
+            result.append(seen[marker])
+            continue
+        seen[marker] = item
+    return result
 NyFolder.getDuplicatesInFolder = getDuplicatesInFolder
 
 def processDuplicateContent(self, delids=[], REQUEST=None):
