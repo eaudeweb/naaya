@@ -45,9 +45,9 @@
 	<input type="text" name="releasedate" id="releasedate" size="10" tal:attributes="value python:here.utConvertDateTimeObjToString(here.releasedate)" class="vDateField" />
 	<em i18n:translate="">dd/mm/yyyy</em>
 </div>
-<div class="field" tal:define="editor here/getEditorTool">
+<div class="field">
 	<label for="description" i18n:translate="">Description</label>
-	<span tal:replace="structure python:editor.render('description:utf8:ustring', curr_lang, image_support=True)" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description:utf8:ustring', curr_lang, image_support=True)" />
 	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', here.getVersionLocalProperty('description', curr_lang))" />
 </div>
 <div class="field">
