@@ -35,26 +35,16 @@
 </div>
 <div class="field">
 	<label for="releasedate" i18n:translate="">Release date (<em>dd/mm/yyyy</em>)</label>
-	<input type="text" name="releasedate" id="releasedate" size="20" />
+	<input type="text" name="releasedate" id="releasedate" size="20" class="vDateField" />
 </div>
 <div class="field">
 	<label for="description" i18n:translate="">Description</label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description:utf8:ustring', curr_lang, image_support=True)" />
+	<span tal:replace="structure python:editor.render('description:utf8:ustring', curr_lang, image_support=True)" />
 	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', '')"></textarea>
 </div>
 <div class="field-inline">
 	<label for="topitem" i18n:translate="">On front</label>
 	<input type="checkbox" name="topitem" id="topitem" />
-</div>
-<div class="field">
-	<label for="onfrontfrom" i18n:translate="">On front from</label>
-	<input type="text" name="onfrontfrom" id="onfrontfrom" size="10" value="" />
-	<em i18n:translate="">(dd/mm/yyyy)</em>
-</div>
-<div class="field">
-	<label for="onfrontto" i18n:translate="">On front to</label>
-	<input type="text" name="onfrontto" id="onfrontto" size="10" value="" />
-	<em i18n:translate="">(dd/mm/yyyy)</em>
 </div>
 <div class="field">
 	<label for="file" i18n:translate="">Add photo(file)</label>

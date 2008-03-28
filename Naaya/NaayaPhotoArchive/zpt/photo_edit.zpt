@@ -42,7 +42,7 @@
 </div>
 <div class="field">
 	<label for="releasedate" i18n:translate="">Release date</label>
-	<input type="text" name="releasedate" id="releasedate" size="10" tal:attributes="value python:here.utConvertDateTimeObjToString(here.releasedate)" />
+	<input type="text" name="releasedate" id="releasedate" size="10" tal:attributes="value python:here.utConvertDateTimeObjToString(here.releasedate)" class="vDateField" />
 	<em i18n:translate="">dd/mm/yyyy</em>
 </div>
 <div class="field">
@@ -57,16 +57,6 @@
 <div class="field-inline">
 	<label for="topitem" i18n:translate="">On front</label>
 	<input type="checkbox" name="topitem" id="topitem" tal:attributes="checked python:here.topitem==1" />
-</div>
-<div class="field">
-	<label for="onfrontfrom" i18n:translate="">On front from</label>
-	<input type="text" name="onfrontfrom" id="onfrontfrom" size="10" tal:attributes="value python:here.utConvertDateTimeObjToString(here.onfrontfrom)" />
-	<em i18n:translate="">(dd/mm/yyyy)</em>
-</div>
-<div class="field">
-	<label for="onfrontto" i18n:translate="">On front to</label>
-	<input type="text" name="onfrontto" id="onfrontto" size="10" tal:attributes="value python:here.utConvertDateTimeObjToString(here.onfrontto)" />
-	<em i18n:translate="">(dd/mm/yyyy)</em>
 </div>
 <div class="field">
 	<label for="content_type" i18n:translate="">Content type</label>
