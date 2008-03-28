@@ -199,7 +199,7 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         if object_checked is None:
             return {}, 0
         links = self.getLinksFromOb(object_checked, properties)
-        return dict(((object_checked.absolute_url(1), links),)), len(links)
+        return {object_checked.absolute_url(1): links}, len(links)
 
     security.declarePrivate('getLinksFromOb')
     def getLinksFromOb(self, ob, properties=None):
