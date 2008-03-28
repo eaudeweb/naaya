@@ -138,8 +138,12 @@
 		<strong tal:content="paging_total" /><br />
 		<span i18n:translate="" tal:omit-tag="">Page:</span>
 		<span tal:condition="python:paging_prev!=-1">
+			<a tal:define="url python:here.absolute_url"
+				tal:attributes="href string:${url}/external_search_html?start=0&amp;skey=${skey}&amp;rkey=${rkey}&amp;${page_search_querystring}"
+				title="First" i18n:attributes="title">&lt;&lt;</a>
 			<a tal:define="url python:here.absolute_url; start_batch python:(paging_current_page-1)*paging_records_page"
-				tal:attributes="href string:${url}/external_search_html?start=${start_batch}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${page_search_querystring}" i18n:translate="">&lt;&lt;Previous</a>
+				tal:attributes="href string:${url}/external_search_html?start=${start_batch}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${page_search_querystring}"
+				title="Previous" i18n:attributes="title">&lt;</a>
 		</span>
 		<span tal:repeat="page paging_pages">
 			<a class="paging-link-off" tal:condition="python:paging_current_page==page" tal:content="python:page+1"></a>
@@ -149,7 +153,11 @@
 		</span>
 		<span tal:condition="python:paging_next!=-1">
 			<a tal:define="url here/absolute_url; start_batch python:(paging_current_page+1)*paging_records_page"
-				tal:attributes="href string:${url}/external_search_html?start=${start_batch}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${page_search_querystring}" i18n:translate="">Next&gt;&gt;</a>
+				tal:attributes="href string:${url}/external_search_html?start=${start_batch}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${page_search_querystring}"
+				title="Next" i18n:attributes="title">&gt;</a>
+			<a tal:define="url here/absolute_url; end_batch python:(paging_total/paging_records_page)*paging_records_page"
+				tal:attributes="href string:${url}/external_search_html?start=${end_batch}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${page_search_querystring}"
+				title="Last" i18n:attributes="title">&gt;&gt;</a>
 		</span>
 	</div>
 </tal:block>
