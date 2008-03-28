@@ -247,10 +247,11 @@ class FlashTool(Folder, ProfileMeta, utils):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'exportFlashUsers')
     def exportFlashUsers(self, REQUEST=None, RESPONSE=None):
         """ """
+        bool2yesno = lambda x: x and 'Yes' or 'No'
         data = [('Username', 'Firstname', 'Lastname', 'Email', 'Instant notification', 'Monthly e-Flash language', 'Monthly e-Flash')]
         data_app = data.append
         for user in self._getFlashUsers():
-            data_app((user[0], self.utToUtf8(user[1]), self.utToUtf8(user[2]), user[3], user[4], self.gl_get_language_name(user[5]), user[6]))
+            data_app((user[0], self.utToUtf8(user[1]), self.utToUtf8(user[2]), user[3], bool2yesno(user[4]), self.gl_get_language_name(user[5]), bool2yesno(user[6])))
         tmp_name = tmpfile(data)
         content = open(str(tmp_name)).read()
         RESPONSE.setHeader('Content-Type', 'text/csv')
