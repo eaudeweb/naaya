@@ -47,8 +47,8 @@
 </div>
 <div class="field">
 	<label for="description" i18n:translate="">Description</label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description:utf8:ustring', curr_lang, image_support=True)" />
-	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', here.getVersionLocalProperty('description', curr_lang))"></textarea>
+	<span tal:replace="structure python:editor.render('description:utf8:ustring', curr_lang, image_support=True)" />
+	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', here.getVersionLocalProperty('description', curr_lang))" />
 </div>
 <div class="field">
 	<label for="sortorder" i18n:translate="">Sort order</label>
@@ -85,16 +85,8 @@
 </div>
 <input type="hidden" name="lang" id="lang" tal:attributes="value curr_lang" />
 </form>
-<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
-	<tal:block tal:repeat="language languages">
-		<div class="current" tal:condition="python:language['code'] == curr_lang">
-			<span tal:content="python:language['name']" />
-		</div>
-		<a tal:condition="python:language['code'] != curr_lang"
-			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
-			<span tal:content="python:language['name']" />
-		</a>
-	</tal:block>
+<div class="translate">
+	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['translation_bar']" />
 </div>
 <form action="saveUpload" method="post" enctype="multipart/form-data">
 <div class="field">
