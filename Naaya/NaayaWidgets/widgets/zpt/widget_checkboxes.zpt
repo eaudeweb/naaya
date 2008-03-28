@@ -32,13 +32,13 @@
 	<div class="tooltips" tal:content="structure here/tooltips" />
 	<tal:block repeat="choice here/choices">
 		<tal:block define="choice_idx repeat/choice/index;
-		                   choice_id python:'%s_%d' % (widget_id, choice_idx);">
+		                   input_id python:'%s_%d' % (widget_id, choice_idx);">
 			<input type="checkbox" tal:attributes="
 				value choice_idx;
 				name string:${widget_id}:list;
-				id choice_id;
+				id input_id;
 				checked python:choice_idx in datamodel"/>
-			<label tal:attributes="for choice_id" tal:content="choice">Choice</label>
+			<label tal:attributes="for input_id" tal:content="choice">Choice</label>
 		</tal:block>
 		<br tal:condition="python:here.display == 'vertical'" />
 	</tal:block>
