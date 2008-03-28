@@ -61,8 +61,7 @@ def getDuplicatesInFolder(self):
     """
     seen = {}
     result = []
-    seq = self.objectValues(METATYPE_NYSEMNEWS)
-    for item in seq:
+    for item in self.objectValues(METATYPE_NYSEMNEWS):
         marker = (item.title, item.coverage)
         if marker in seen:
             result.append(item)
