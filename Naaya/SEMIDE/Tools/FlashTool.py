@@ -221,9 +221,9 @@ class FlashTool(Folder, ProfileMeta, utils):
                 if query:
                     if self.utToUnicode(user.name).find(query)!=-1 or user.email.find(query)!=-1 or \
                             self.utToUnicode(user.firstname).find(query)!=-1 or self.utToUnicode(user.lastname).find(query)!=-1:
-                        users_a((user.name, user.firstname, user.lastname, user.email, sheet_ob.notify, sheet_ob.language))
+                        users_a((user.name, user.firstname, user.lastname, user.email, sheet_ob.notify, sheet_ob.language, sheet_ob.flash))
                 else:
-                    users_a((user.name, user.firstname, user.lastname, user.email, sheet_ob.notify, sheet_ob.language))
+                    users_a((user.name, user.firstname, user.lastname, user.email, sheet_ob.notify, sheet_ob.language, sheet_ob.flash))
         return users
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getFlashUsers')
@@ -247,10 +247,10 @@ class FlashTool(Folder, ProfileMeta, utils):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'exportFlashUsers')
     def exportFlashUsers(self, REQUEST=None, RESPONSE=None):
         """ """
-        data = [('Username', 'Firstname', 'Lastname', 'Email', 'Instant notification', 'Language')]
+        data = [('Username', 'Firstname', 'Lastname', 'Email', 'Instant notification', 'Language', 'Monthly eFlash')]
         data_app = data.append
         for user in self._getFlashUsers():
-            data_app((user[0], self.utToUtf8(user[1]), self.utToUtf8(user[2]), user[3], user[4], self.gl_get_language_name(user[5])))
+            data_app((user[0], self.utToUtf8(user[1]), self.utToUtf8(user[2]), user[3], user[4], self.gl_get_language_name(user[5]), user[6]))
         tmp_name = tmpfile(data)
         content = open(str(tmp_name)).read()
         RESPONSE.setHeader('Content-Type', 'text/csv')
