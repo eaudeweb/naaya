@@ -15,7 +15,7 @@
 <span tal:replace="structure linkchecker_ob/style_html" tal:omit-tag="" />
 
 <tal:block define=" start python:int(request.get('start', 0));
-                    links_info python:linkchecker_ob.objectCheck([('description', 1)], folder_ob.absolute_url(1));
+                    links_info python:linkchecker_ob.objectCheck([('description', 1, False)], folder_ob.absolute_url(1));
                     result python:linkchecker_ob.page_something(links_info[0], start, p_perpage=linkchecker_ob.batch_size);
                     all_urls python:links_info[1];
                     paging python:result[0];
