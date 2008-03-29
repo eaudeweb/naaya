@@ -56,7 +56,6 @@
 			for (var node = 0; node < parentsChildren.length; node++) {
 				if (parentsChildren.item(node).className) {
 					if (parentsChildren.item(node).className == 'sub_folder') {
-						
 						if (parentsChildren.item(node).style.display != 'none'){parentsChildren.item(node).style.display = 'none'}
 						else {parentsChildren.item(node).style.display = 'block'}
 					}
@@ -64,8 +63,9 @@
 			}
 		}
 		function style_nav(){
-			tree_container =  document.getElementById('left_port');
-			divs = tree_container.getElementsByTagName('div');
+			fs_show();
+			var tree_container = document.getElementById('left_port');
+			var divs = tree_container.getElementsByTagName('div');
 
 			for (var i = 0; i < divs.length; i++) {
 				if (divs.item(i).className == 'sub_folder') {
@@ -76,14 +76,14 @@
 				}
 			}
 			// IE6 fix for menus
-			sfHover = function() {
+			var sfHover = function() {
 				var sfEls = document.getElementById("left_port").getElementsByTagName("LI");
 				add_sfhover(sfEls);
 
-				var sfEls = document.getElementById("topmenu").getElementsByTagName("DIV");
+				var sfEls = document.getElementById("topmenuband").getElementsByTagName("DIV");
 				add_sfhover(sfEls);
 
-				var sfEls = document.getElementById("topmenu").getElementsByTagName("LI");
+				var sfEls = document.getElementById("topmenuband").getElementsByTagName("LI");
 				add_sfhover(sfEls);
 			}
 			if (window.attachEvent) window.attachEvent("onload", sfHover);
@@ -103,97 +103,108 @@
 			{
 				document.body.className="fullscreen";
 				document.getElementById("outer_wrapper").id="outer_wrapper_fs";
+				document.getElementById("middle_right_port").id="middle_right_port_fs";
 			}
 			else {
 				document.body.className="";
 				document.getElementById("outer_wrapper_fs").id="outer_wrapper";
+				document.getElementById("middle_right_port_fs").id="middle_right_port";
 			}
 		}
 		function fs_show() {
-			document.getElementById('fs_hide').id='fs_show'
+			var hlink = document.getElementById('fs_hide');
+			hlink.id='fs_show';
+			hlink.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;';
 		}
 		window.onload=style_nav;
 	</script>
-
 </head>
 <!--[if lt IE 7]>
 	</base>
 <![endif]-->
 <body>
+<div id="outer_wrapper">
+<div id="container">
+
 	<a class="skiplink" href="#contentstart" accesskey="2" i18n:translate="">Skip navigation</a>
 
-	<div id="nav_upper" tal:define="authenticated_user python:request.AUTHENTICATED_USER.getUserName()">
+	<div id="nav_upper">
 		<div id="nav_upper_log">
-			<img tal:attributes="src string:${here/getSkinFilesPath}/ico_login.gif;" align="middle" alt="" />
+			<a href="http://ew.eea.europa.eu" i18n:translate="">Home</a>
+			<a href="http://www.eea.europa.eu" i18n:translate=""><img tal:attributes="src string:${skin_files_path}/eeaicon.gif" alt="" /> EEA</a>
+			<a href="http://www.eionet.europa.eu" i18n:translate="">Eionet</a>
+		</div>
+		<div class="navuplinks" tal:define="authenticated_user python:request.AUTHENTICATED_USER.getUserName(); l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
+			<span><a href="javascript:this.print();" title="Print this page"><img src="misc_/EnviroWindows/printer.gif" alt="print this page" /></a></span>
+			<span><a id="fs_hide" i18n:attributes="title" title="Switch to/from full screen mode" href="javascript:fullScreen()"> </a></span>
+			<span><a tal:attributes="href site_url" i18n:translate="" accesskey="1">Home</a> </span>
 			<tal:block tal:condition="python: authenticated_user != 'Anonymous User'">
-				<span i18n:translate="" tal:omit-tag="">you are logged in as</span>
-				<strong tal:content="authenticated_user" />
-				<a tal:attributes="href string:${site_url}/login_html" i18n:translate="">logout</a>
+				<!-- span i18n:translate="">you are logged in as</span>
+				<strong tal:content="authenticated_user" /-->
+				<a tal:attributes="href string:${site_url}/login_html" i18n:translate="">Logout</a>
 			</tal:block>
 			<tal:block tal:condition="python: authenticated_user == 'Anonymous User'">
-				<span i18n:translate="" tal:omit-tag="">you are not logged in</span>
-				<a tal:attributes="href string:${site_url}/login_html" i18n:translate="">login</a>
+				<!-- span i18n:translate="">you are not logged in</span -->
+				<a tal:attributes="href string:${site_url}/login_html" i18n:translate="">Login</a>
 				<a tal:attributes="href string:${here/absolute_url}/requestrole_html" i18n:translate="">create account</a>
 			</tal:block>
-		</div>
-		<div class="navuplinks" tal:define="l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
-			<span><a tal:attributes="href site_url" i18n:translate="" accesskey="1">Home</a> </span>
 			<tal:block tal:repeat="item l_list">
 			<span tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:translate="" i18n:attributes="title">Title</a> </span>
 			</tal:block>
+			<tal:block replace="structure here/languages_box" />
 		</div>
-		<div class="clearing_div_top" >&nbsp;</div>
 	</div>
 
 	<div class="topban">
 		<div class="topleft"> <img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" alt="" /></div>
 		<div class="topright">
-			<div class="logobis"> <img tal:attributes="src string:${here/getLayoutToolPath}/logobis" alt="" /></div>
+			<div class="logobis"> <img tal:attributes="src string:${here/getLayoutToolPath}/logobis.gif" alt="" /></div>
 			<div class="toptitle">
 				<div class="sitetitle"><span tal:content="here/site_title" /></div>
 				<div class="sitesubtitle" tal:content="here/site_subtitle" />
 			</div>
-			<div style="" class="topmenu" id="topmenu">
-				<div class="toplanguage" > <tal:block replace="structure here/languages_box" /> </div>
-
-				<div tal:repeat="main_categ here/getMainTopics" class="menuitem">
-					<a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/title" tal:content="main_categ/title" tal:condition="main_categ/checkPermissionView" />
-					<tal:block tal:define="sub_items python:main_categ.objectValues('Naaya Folder')">
-						<ul class="topnav_menu" tal:condition="sub_items">
-								<li tal:repeat="sub_item sub_items">
-									<a tal:content="sub_item/title_or_id" tal:attributes="href sub_item/absolute_url" />
-								</li>
-						</ul>
-					</tal:block>
-				</div>
-			</div>
 		</div>
 	</div>
 
-	<div class="clearing_div"> &nbsp; </div>
+	<div id="menunav" class="topmenu" id="topmenuband">
+		<div id="search" tal:condition="isArabic">
+			<form method="get" tal:attributes="action string:${site_url}/search_html">
+				<label accesskey="4" for="query" i18n:translate="">Global search</label>
+				<input id="query" type="text" name="query:utf8:ustring" i18n:attributes="value" value="Type text to search" style="color:#999999" onclick="this.value='';this.style.color='#000000'" size="10" accesskey="4" />
+				<input type="submit" id="go_search" name="go_search" value="Go" i18n:attributes="value" />
+			</form>
+		</div>
+		<div tal:repeat="main_categ here/getMainTopics" class="menuitem">
+			<a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/title" tal:content="main_categ/title" tal:condition="main_categ/checkPermissionView" />
+			<tal:block tal:define="sub_items python:main_categ.objectValues('Naaya Folder')">
+				<ul tal:condition="sub_items" class="topnav_menu">
+					<li tal:repeat="sub_item sub_items">
+						<a tal:content="sub_item/title_or_id" tal:attributes="href sub_item/absolute_url" />
+					</li>
+				</ul>
+			</tal:block>
+		</div>
 
+		<div id="search" tal:condition="python:not isArabic">
+			<form method="get" tal:attributes="action string:${site_url}/search_html">
+				<label accesskey="4" for="query" i18n:translate="">Global search</label>
+				<input id="query" type="text" name="query:utf8:ustring" i18n:attributes="value" value="Type text to search" style="color:#999999" onclick="this.value='';this.style.color='#000000'" size="10" accesskey="4" />
+				<input type="submit" id="go_search" name="go_search" value="Go" i18n:attributes="value" />
+			</form>
+		</div>
+	</div>
 	<div id="main_structure_ie_fixer">
 		<div id="main_structure">
 
-<!-- LEFT SIDE PORTLETS -->
+<!-- Left side portlets -->
 			<div id="left_port">
-			<div id="search_area">
-					<form method="get" tal:attributes="action string:${site_url}/search_html">
-						<label accesskey="4" for="query" i18n:translate="">Global search</label>
-						<input id="query" type="text" name="query" i18n:attributes="value" value="Type text to search" style="color:#999999" onclick="this.value='';this.style.color='#000000'" size="10" />
-						<input type="submit" id="go_search" name="go_search" value="Go" i18n:attributes="value" />
-					</form>
-				</div>
-				<br/>
 				<tal:block tal:repeat="item here/get_left_portlets_objects">
 					<tal:block tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_left_macro'})" />
 				</tal:block>
 			</div>
-<!-- END OF LEFT SIDE PORTLETS -->
+<!-- End of left side portlets -->
 <tal:block condition="isArabic" replace="structure string:<table width='100%'><tr><td>" />
 
-			<div id="middle_right_port">
-			<!-- ******************* -->
 			<div id="bread_crumb_trail">
 					<tal:block repeat="crumb python:here.getBreadCrumbTrail(request)">
 					<a tal:condition="python:crumb.meta_type!='SMAP Site'"
@@ -205,6 +216,7 @@
 					<span tal:condition="not:repeat/crumb/end"> &raquo; </span>
 					</tal:block>
 			</div>
+			<div id="middle_right_port">
 			<!-- ******************* -->
 			<a name="contentstart" id="contentstart"></a>
 			<span tal:replace="structure here/messages_box"/>
@@ -213,6 +225,7 @@
 
 			</div>
 		</div>
+	</div>
 	</div>
 	</body>
 </html>

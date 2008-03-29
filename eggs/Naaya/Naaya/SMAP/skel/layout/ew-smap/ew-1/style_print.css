@@ -2,27 +2,21 @@
 
 body {
 }
-
+	
 .topleft {
 	float: left;
 }
-
 .topleft img {
 	margin-right: 20px;
 }
 .logobis {
-	float: right;
-}
-.logobis img { 
-	margin: 5px;
-	width: 190px; 
-	height: 50px;
+	display: none;
 }
 .sitetitle {
 	font-size: 1.3em;
 	color:#4b7db2;
 	font-weight:bold;
-	}
+}
 .sitesubtitle {
 	font-size: 0.7em;
 	position:relative;
@@ -30,13 +24,11 @@ body {
 	color:#666666;
 	font-weight:bold;
 	padding-bottom: 1em;
-	}
+}
 
-.topmenu {display: none;}
-#nav_upper {display: none;}
+.topmenu, .topsearch {display: none;}
 #bread_crumb_trail {display: none;}
-#admin_this_folder, #toolbar { display: none;}
-
+#admin_this_folder, #toolbar, #menunav { display: none;}
 
 th{
 	background-color:#6dabd0;
@@ -82,9 +74,9 @@ td#left_cell1{
 
 td#left_cell2{
 	}
-#search{
+#search, #right_port {
 	display:none;
-	}
+}
 
 #left_port{
 	display:none;
@@ -115,11 +107,11 @@ td#right_cell2{
 
 #middle_right_port {
 	/*top: 170px;*/
-	}
+}
 
 .middle_port {
 	background-color: white;
-	}
+}
 
 .pbreak {
 	page-break-before: always;
@@ -129,8 +121,7 @@ td#right_cell2{
 
 #right_port {
 	display: none; 
-	}
-
+}
 
 #calendar-container a:visited {
 	color: white;

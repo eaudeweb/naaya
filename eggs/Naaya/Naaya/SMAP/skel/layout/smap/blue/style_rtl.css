@@ -1,5 +1,5 @@
 <span tal:replace="python:request.RESPONSE.setHeader('content-type', 'text/css')"/>
-	
+
 html,div,h1,th,td,li,ul,fieldset,legend { direction:rtl; }
 
 #main_structure { direction:ltr; position:absolute; padding-left:3px; top: 0; }
@@ -14,6 +14,9 @@ body {
 	font-size: 85%;
 	background-color: white;
 	font-family:Verdana, Arial, Helvetica, sans-serif;
+}
+.skiplink {
+	display: none;
 }
 
 th {
@@ -65,7 +68,7 @@ p{
 }
 
 a img {
-	border: 0;
+	border: none;
 }
 
 a {
@@ -98,10 +101,6 @@ legend {
 
 .white_backgrounded {
 	background-color: white;
-}
-
-.skiplink {
-	display: none;
 }
 
 /* ------------ NAV_UPPER ---------- */
@@ -817,4 +816,17 @@ cursor: default;
 	float: right;
 	width: 100%;
 	background: #fff;
+}
+
+/* EW skin */
+.fullscreen #left_port {
+	display: none;
+}
+.fullscreen .middle_port {
+	width: 98.2%;
+	margin-left: 0.8%;
+}
+.fullscreen #nav_upper li #fs_show {
+	background:transparent url(misc_/Naaya/fullscreencollapse_icon.gif) no-repeat scroll left center;
+	padding:3px 0.5em 1px 16px;
 }

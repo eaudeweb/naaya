@@ -48,6 +48,38 @@
 				<image id="sort_desc.gif" title=""/>
 			</scheme>
 		</skin>
+		<skin id="ew-smap" title="EnviroWindows">
+			<template id="site_header" title="Portal standard HTML header"/>
+			<template id="site_footer" title="Portal standard HTML footer"/>
+			<template id="portlet_left_macro" title="Macro for left portlets"/>
+			<template id="portlet_center_macro" title="Macro for center portlets"/>
+			<template id="portlet_right_macro" title="Macro for right portlets"/>
+			<template id="folder_administration_macro" title="Folder administration macro page"/>
+			<template id="folder_impex_macro" title="Folder Import/Export macro page"/>
+			<scheme id="blue" title="Blue">
+				<image id="bck_li.gif" title=""/>
+				<image id="bck_top.jpg" title=""/>
+				<image id="cat_bullet.jpg" title=""/>
+				<image id="dot_bg.gif" title=""/>
+				<image id="eeaicon.gif" title=""/>
+				<image id="ew-header.jpg" title=""/>
+				<image id="ew-header-flipped.jpg" title=""/>
+				<image id="menunav-bg.jpg" title=""/>
+				<image id="menunav-bg-flipped.jpg" title=""/>
+				<image id="rtitle_bullet.gif" title=""/>
+				<image id="rtitle_bullet_ar.gif" title=""/>
+				<image id="titl_bullet.gif" title=""/>
+				<image id="titl_bullet_ar.gif" title=""/>
+				<style id="style" title="Main CSS"/>
+				<style id="style_rtl" title="CSS for RTL languages" />
+				<style id="style_common_rtl" title="CSS for common elements for RTL languages" />
+				<style id="style_common" title="CSS for common elements" />
+				<style id="style_print" title="CSS for media print" />
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="sort_asc.gif" title=""/>
+				<image id="sort_desc.gif" title=""/>
+			</scheme>
+		</skin>
 	</layout>
 	<pluggablecontenttypes>
 		<pluggablecontenttype meta_type="Naaya Media File" action="1"/>
@@ -63,7 +95,7 @@
 		<portlet id="portlet_submit_public" title="Submit Events &amp; News"/>
 		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="portlet_left_side" title="Left-side navigation" />
-		<portlet id="portlet_places" title="Useful links" />
+		<!-- portlet id="portlet_places" title="Useful links" / -->
 		<portlet id="portlet_quick_links" title="Left-side quick links" />
 		<portlet id="portlet_folder_impex" title="Export/Import"/>
 		<linkslist id="menunav_links" title="Menu navigation links" portlet="1">
