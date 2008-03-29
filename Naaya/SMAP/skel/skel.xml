@@ -21,7 +21,7 @@
 	<emails>
 		<emailtemplate id="email_createaccount" title="Create account"/>
 	</emails>
-	<layout default_skin_id="smap" default_scheme_id="blue">
+	<layout default_skin_id="ew-smap" default_scheme_id="ew-1">
 		<skin id="smap" title="SMAP">
 			<template id="site_header" title="Portal standard HTML header"/>
 			<template id="site_footer" title="Portal standard HTML footer"/>
@@ -56,11 +56,11 @@
 			<template id="portlet_right_macro" title="Macro for right portlets"/>
 			<template id="folder_administration_macro" title="Folder administration macro page"/>
 			<template id="folder_impex_macro" title="Folder Import/Export macro page"/>
-			<scheme id="blue" title="Blue">
+			<scheme id="ew-1" title="Blue">
 				<image id="bck_li.gif" title=""/>
 				<image id="bck_top.jpg" title=""/>
 				<image id="cat_bullet.jpg" title=""/>
-				<image id="dot_bg.gif" title=""/>
+				<image id="dot-bg.gif" title=""/>
 				<image id="eeaicon.gif" title=""/>
 				<image id="ew-header.jpg" title=""/>
 				<image id="ew-header-flipped.jpg" title=""/>
@@ -103,7 +103,7 @@
 			<link id="109" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="9"/>
 			<link id="110" title="Administration" description="" url="/admin_centre_html" relative="1" permission="Publish content" order="10"/>
 		</linkslist>
-		<linkslist id="places" title="Places" portlet="1">
+		<linkslist id="places" title="Useful links" portlet="1">
 			<link id="11" title="Europa" description="European Union on-line" url="http://europa.eu/" relative="0" permission="" order="10"/>
 			<link id="12" title="EEA" description="European Environment Agency" url="http://www.eea.europa.eu" relative="0" permission="" order="20"/>
 			<link id="13" title="EIONET" description="EIONET" url="http://www.eionet.europa.eu/" relative="0" permission="" order="30"/>

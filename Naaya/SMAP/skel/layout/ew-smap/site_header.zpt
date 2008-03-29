@@ -130,7 +130,7 @@
 
 	<div id="nav_upper">
 		<div id="nav_upper_log">
-			<a href="http://ew.eea.europa.eu" i18n:translate="">Home</a>
+			<a href="http://ew.eea.europa.eu" i18n:translate="">EnviroWindows</a>
 			<a href="http://www.eea.europa.eu" i18n:translate=""><img tal:attributes="src string:${skin_files_path}/eeaicon.gif" alt="" /> EEA</a>
 			<a href="http://www.eionet.europa.eu" i18n:translate="">Eionet</a>
 		</div>
@@ -185,7 +185,7 @@
 			</tal:block>
 		</div>
 
-		<div id="search" tal:condition="python:not isArabic">
+		<div id="search" tal:condition="not:isArabic">
 			<form method="get" tal:attributes="action string:${site_url}/search_html">
 				<label accesskey="4" for="query" i18n:translate="">Global search</label>
 				<input id="query" type="text" name="query:utf8:ustring" i18n:attributes="value" value="Type text to search" style="color:#999999" onclick="this.value='';this.style.color='#000000'" size="10" accesskey="4" />
