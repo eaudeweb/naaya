@@ -210,7 +210,7 @@ fieldset legend {
 .sitetitle {
 	color: #feffff;
 	padding-right: 25px;
-	padding-top: 20px;
+	padding-top: 10px;
 	font-size: 200%;
 	font-weight: bold;
 	font-variant: small-caps;
@@ -470,7 +470,7 @@ ul.left_side_navigation li:hover ul, ul.left_side_navigation li.sfhover ul { dis
 }
 .middle-portlet {
 	border:1px solid white;
-	/*margin-top: 10px;*/
+	margin-top: 4px;
 }
 .middle-portlet h4 {
 	border-bottom:1px solid #cbcbcb;
@@ -479,8 +479,15 @@ ul.left_side_navigation li:hover ul, ul.left_side_navigation li.sfhover ul { dis
 }
 .middle-portlet ul {
 	list-style: none;
-	margin: 5px 10px 5px 0px;
+	margin: 5px 2px 5px 0px;
 	padding: 0;
+}
+*:first-child+html .middle-portlet li {
+	padding-bottom: 2px;
+	/* RTL hack 
+	position: relative;
+	padding-right: 145px;*/
+	padding-right: 0;
 }
 .middle-portlet li {
 	padding-bottom: 2px;
@@ -488,13 +495,7 @@ ul.left_side_navigation li:hover ul, ul.left_side_navigation li.sfhover ul { dis
 	/* RTL hack 
 	position: relative;
 	padding-right: 145px;*/
-}
-*:first-child+html .middle-portlet li {
-	padding-bottom: 2px;
-	padding-right: 0px;
-	/* RTL hack 
-	position: relative;
-	padding-right: 145px;*/
+	padding-right: 0;
 }
 ul.nostyle {
 	list-style:none;
@@ -826,20 +827,54 @@ cursor: default;
 	width: 100%;
 	background: #fff;
 }
-.middle_port {
-	margin-left: 165px; /* to be changed */
-}
-*:first-child+html .middle_port ul {
-	padding-right: 0px;
-}
-.middle_port ul {
-	padding-right: 14em;
-}
+/* Firefox bug with lists and fieldsets */
 *:first-child+html #middle_right_port ul {
-	padding-right: 0px;
+	padding-right: 0;
 }
-.gecko #middle_right_port fieldset {
-margin-right: 193px;
+* html #middle_right_port ul {
+	padding-right: 0;
+}
+#middle_right_port ul {
+	padding-right: 193px;
+}
+*:first-child+html #middle_right_port_fs ul {
+	padding-right: 0;
+}
+* html #middle_right_port_fs ul {
+	padding-right: 0;
+}
+#middle_right_port_fs ul {
+	padding-right: 193px;
+}
+*:first-child+html #middle_right_port fieldset {
+	padding-right: 0;
+	margin-right: 0;
+}
+* html #middle_right_port fieldset {
+	padding-right: 0;
+	margin-right: 0;
+}
+#middle_right_port fieldset {
+	padding-right: 0;
+	margin-right: 193px;
+}
+*:first-child+html #middle_right_port_fs fieldset {
+	padding-right: 0;
+	margin-right: 0;
+}
+* html #middle_right_port_fs fieldset {
+	padding-right: 0;
+	margin-right: 0;
+}
+#middle_right_port_fs fieldset {
+	padding-right: 0;
+	margin-right: 193px;
+}
+#right_port ul {
+	padding-right: 0;
+}
+.center-portlet-content ul {
+	padding-right: 0;
 }
 
 /*#nav_main {
