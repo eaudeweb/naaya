@@ -1576,17 +1576,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             for lang in langs:
                 rex(self.query_objects_ex(meta_types, query, lang, path, releasedate=releasedate, releasedate_range=releasedate_range))
             r = self.utEliminateDuplicatesByURL(r)
-            batch_obj = batch_utils(self.numberresultsperpage, len(r), start)
+            res = [k for k in r if k.can_be_seen()]
+            batch_obj = batch_utils(self.numberresultsperpage, len(res), start)
             if skey in ['meta_type', 'title', 'bobobase_modification_time']:
                 if skey == 'bobobase_modification_time':
-                    r = self.utSortObjsListByMethod(r, skey, rkey)
+                    res = self.utSortObjsListByMethod(res, skey, rkey)
                 else:
-                    r = self.utSortObjsListByAttr(r, skey, rkey)
+                    res = self.utSortObjsListByAttr(res, skey, rkey)
             if len(r):
                 paging_informations = batch_obj.butGetPagingInformations()
             else:
                 paging_informations = (-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0])
-        return (paging_informations, r[paging_informations[0]:paging_informations[1]])
+        return (paging_informations, res[paging_informations[0]:paging_informations[1]])
 
     security.declareProtected(view, 'process_profile')
     def process_profile(self, firstname='', lastname='', email='', name='', old_pass='', password='',
