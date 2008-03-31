@@ -183,7 +183,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                     ra('%s|%s|mk_%s|%s|%s' % (self.utToUtf8(res.latitude),
                                               self.utToUtf8(res.longitude),
                                               self.utToUtf8(res.id),
-                                              self.utToUtf8(res.title_or_id()),
+                                              self.utToUtf8(self.utJavaScriptEncode(res.title_or_id())),
                                               'mk_%s' % self.utToUtf8(res.geo_type)))
                     t.append(res.marker_html())
         i = ''.join(t)
@@ -199,7 +199,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         ob = self.unrestrictedTraverse('%s' % show)
         if ob:
             if ob.latitude != 0.0 and ob.longitude != 0.0:
-                res = '%s|%s|%s' % (ob.latitude, ob.longitude, ob.title_or_id())
+                res = '%s|%s|%s' % (ob.latitude, ob.longitude, self.utJavaScriptEncode(ob.title_or_id()))
         #self.delSession(MSP_SESSION_KEY)
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
         return res
