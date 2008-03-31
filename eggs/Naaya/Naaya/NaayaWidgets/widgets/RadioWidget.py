@@ -18,12 +18,13 @@
 # Alin Voinea, Eau de Web
 # Cristian Ciupitu, Eau de Web
 
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+# Zope imports
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view
 from Globals import InitializeClass
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.NaayaWidgets.Widget import WidgetError, manage_addWidget
-
 from MultipleChoiceWidget import MultipleChoiceWidget
 
 def addRadioWidget(container, id="", title="Radio Widget", REQUEST=None, **kwargs):
@@ -39,9 +40,12 @@ class RadioWidget(MultipleChoiceWidget):
     meta_sortorder = 100
     icon_filename = 'widgets/www/widget_radiobutton.gif'
 
+    security = ClassSecurityInfo()
+
     _properties = MultipleChoiceWidget._properties + (
         {'id': 'display', 'type': 'selection', 'mode': 'w',
          'select_variable': 'display_modes', 'label': 'Display mode'},
+        {'id':'add_extra_choice', 'type': 'boolean','mode':'w', 'label': 'Required widget'},
         )
 
     # Constructor
@@ -49,17 +53,54 @@ class RadioWidget(MultipleChoiceWidget):
     render_meth = PageTemplateFile('zpt/widget_radio.zpt', globals())
 
     display = 'vertical'
+    add_extra_choice = False
 
     def display_modes(self):
         """ """
         return ['vertical', 'horizontal']
+
+    def getChoices(self, REQUEST=None):
+        """ """
+        if self.add_extra_choice:
+            L = list(self.choices)
+            L.append(self.getPortalTranslations().translate('', 'Other'))
+            return L
+        else:
+            return self.choices
+
+    def getExtraChoiceInputId(self):
+        """ -> the id of the INPUT element used for the extra choice"""
+        return "extra_choice_" + self.id
+
 
     def getDatamodel(self, form):
         """Get datamodel from form"""
         value = form.get(self.getWidgetId(), None)
         if value is None:
             return None
-        return int(value)
+        value = int(value)
+        if not self.add_extra_choice:
+            return value
+        if value != len(self.choices):
+            return (value, None)
+        return (value, form.get(self.getExtraChoiceInputId(), None))
+
+    def getChoiceIdx(self, datamodel, REQUEST=None):
+        """ -> the choice index from datamodel"""
+        if datamodel is None:
+            return None
+        if not self.add_extra_choice:
+            return datamodel
+        return datamodel[0]
+
+    def getChoice(self, datamodel, REQUEST=None):
+        """ -> the exact choice made by the respondent; might be the text of the extra choice"""
+        choiceIdx = self.getChoiceIdx(datamodel)
+        if choiceIdx is None:
+            return None
+        if choiceIdx < len(self.choices):
+            return self.choices[choiceIdx]
+        return datamodel[1]
 
 InitializeClass(RadioWidget)
 

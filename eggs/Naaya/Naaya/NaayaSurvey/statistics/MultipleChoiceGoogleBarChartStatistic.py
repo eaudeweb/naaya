@@ -46,7 +46,7 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
     def render(self, answers):
         """Render statistics as HTML code"""
         total, answered, unanswered, per_choice = self.calculate(self.question, answers)
-        chart = pygooglechart.GroupedHorizontalBarChart(500, 23 + (len(self.question.choices)+1) * 22)
+        chart = pygooglechart.GroupedHorizontalBarChart(500, 23 + (len(self.question.getChoices())+1) * 22)
         chart.set_bar_width(5)
         # data
         data = [i[0] for i in per_choice]
@@ -54,7 +54,7 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
         for x in data:
             chart.add_data([x, 0]) # the 0 is an ugly hack
         # legend
-        legend = list(self.question.choices)
+        legend = list(self.question.getChoices())
         legend.append(self.getPortalTranslations().translate('', 'Not answered'))
         chart.set_legend(legend)
         # axis
@@ -62,8 +62,8 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
         # colors
         colors = []
         h, s, v = 0.01, 0.55, 0.95
-        step = float(1 - h) / (len(self.question.choices) + 1)
-        for i in range(len(self.question.choices) + 1):
+        step = float(1 - h) / (len(self.question.getChoices()) + 1)
+        for i in range(len(self.question.getChoices()) + 1):
             r, g, b = colorsys.hsv_to_rgb(h, s, v)
             color = "%02x%02x%02x" % tuple([int(x*255) for x in h, s, v])
             colors.append(color)

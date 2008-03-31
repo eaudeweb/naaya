@@ -36,12 +36,14 @@ class BaseMultipleChoiceStatistic(BaseStatistic):
         """ -> (total, answered, unanswered, per_choice)"""
         w_id = question.getWidgetId()
         total = answered_count = 0
-        per_choice_count = [0 for i in range(len(question.choices))]
+        per_choice_count = [0 for i in range(len(question.getChoices()))]
         for answer in answers:
             total += 1
             choice = answer.get(w_id)
             if choice is None:
                 continue
+            if isinstance(question, RadioWidget) and question.add_extra_choice:
+                choice = choice[0]
             if isinstance(choice, int):
                 # 1 answer question
                 answered_count += 1

@@ -50,7 +50,7 @@ class MultipleChoicePieChartStatistic(BaseMultipleChoiceStatistic):
         data.append(unanswered[1])
         chart.add_data(data)
         # legend
-        legend = list(self.question.choices)
+        legend = list(self.question.getChoices())
         legend.append(self.getPortalTranslations().translate('', 'Not answered'))
         chart.set_pie_labels(legend)
 

@@ -12,7 +12,7 @@
 	<strong tal:content="here/title" class="widget-title" />
 	<br />
 	<ul tal:condition="datamodel">
-		<li tal:repeat="answer python:[here.choices[i] for i in datamodel]">
+		<li tal:repeat="answer python:[here.getChoices()[i] for i in datamodel]">
 			<span tal:replace="answer" />
 		</li>
 	</ul>
@@ -30,7 +30,7 @@
 		<span tal:condition="here/required" class="required">*</span>
 	</label>
 	<div class="tooltips" tal:content="structure here/tooltips" />
-	<tal:block repeat="choice here/choices">
+	<tal:block repeat="choice here/getChoices">
 		<tal:block define="choice_idx repeat/choice/index;
 		                   input_id python:'%s_%d' % (widget_id, choice_idx);">
 			<input type="checkbox" tal:attributes="
