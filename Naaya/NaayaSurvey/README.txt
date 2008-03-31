@@ -56,7 +56,7 @@ To be able to use it in a Naaya portal, enter the ZMI of the portal and add a Na
 
 	Send the link of the survey to the respondents. When a respondent answers, the owner of the survey will receive a notification email, which includes a link to the newly added answer. Authenticated respondents can receive a notification too, if they wish to.
 
-	To prevent spam, captcha is used for anonymous users. Authenticated users are permitted to answer only once, but they can change their answers anytime they wish too (if the survey has not expired).
+	To prevent spam, captcha is used for anonymous users. Authenticated users are permitted to answer only once, but they can change their answers anytime they wish to (if the survey has not expired).
 
 
 	Analyzing the results
