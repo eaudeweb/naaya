@@ -47,8 +47,8 @@
 
 <tal:block condition="python: not here.expired() or here.checkPermissionEditObjects()">
 	<tal:block define="my_answer python:here.getMyAnswerDatamodel()">
-		<h2 i18n:translate="" tal:condition="not: here/checkPermissionAddAnswer">You don't have enough permissions to take this survey!</h2>
-		<h2 i18n:translate="" tal:condition="my_answer">You have already taken this survey. If you decide to take it again, you will overwrite the previous answers!</h2>
+		<p class="message-information" i18n:translate="" tal:condition="not: here/checkPermissionAddAnswer">You don't have enough permissions to take this survey!</p>
+		<p class="message-information" i18n:translate="" tal:condition="my_answer">You have already taken this survey. If you decide to take it again, you will overwrite the previous answers!</p>
 		<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
 		      tal:condition="here/checkPermissionAddAnswer">
 
