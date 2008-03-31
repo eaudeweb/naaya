@@ -1,6 +1,40 @@
 <tal:block metal:define-macro="submit_form">
 <p i18n:translate="">Fill the properties in the form below and click <strong>Submit</strong>.</p>
+
+
+<script type="text/javascript">
+<!--
+function fPick(glossary_url)
+{
+	var frm = document.frmAdd;
+	var wnd = window.open(glossary_url + '&amp;lang=' + frm.lang[frm.lang.selectedIndex].value, "pickkeyword", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
+	wnd.focus();
+}
+
+function fSet(ctrl, value)
+{
+	var frm = document.frmAdd;
+	var items = frm[ctrl + ':utf8:ustring'];
+	if (value != '')
+	{
+		if (items.value == '')
+			items.value = value;
+		else
+			items.value = items.value + ', ' + value;
+	}
+}
+// -->
+</script>
+
 <form name="frmAdd" method="post" action="." enctype="multipart/form-data">
+	<div class="field-inline" tal:define="selected_language python:here.getSession('lang', here.gl_get_selected_language())">
+		<label i18n:translate="" for="lang">Posting language</label>
+		<select name="lang" id="lang">
+			<option tal:repeat="item here/gl_get_languages_mapping"
+			        tal:attributes="value python:item['code']; selected python:item['code']==selected_language"
+			        tal:content="python:item['name']" />
+		</select>
+	</div>
 	<tal:block metal:define-slot="survey_templates">
 	</tal:block>
 	<div class="field">
