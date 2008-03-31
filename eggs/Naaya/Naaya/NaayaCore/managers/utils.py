@@ -556,6 +556,11 @@ class utils:
         l_tmp = l_tmp.replace('>', '&gt;')
         return l_tmp
 
+    def utJavaScriptEncode(self, s):
+	"""Encode a string for javascript processing"""
+	regex = re.compile(r'([\]/.*+?<>|()[{}\\])')
+	return regex.sub(r'', s)
+
     def utJsEncode(self, p_string):
         """Encode a string for javascript processing"""
         l_tmp = str(p_string)
