@@ -9,7 +9,7 @@
 		<col width="10%" />
 		<col width="90%" />
 		<tbody>
-			<tr tal:repeat="choice question/choices">
+			<tr tal:repeat="choice question/getChoices">
 				<th tal:content="choice">choice</th>
 				<td tal:define="percent python: round(per_choice[repeat['choice'].index][1], 2)"
 				    tal:attributes="title python:'%.2f%%' % (percent, )" class="bar-chart">

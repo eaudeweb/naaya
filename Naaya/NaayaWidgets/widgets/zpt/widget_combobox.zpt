@@ -12,7 +12,7 @@
 	<strong tal:content="here/title" class="widget-title" />
 	<br />
 	<span tal:condition="python: datamodel is not None"
-		  tal:content="python: here.choices[datamodel]" />
+		  tal:content="python: here.getChoices()[datamodel]" />
 	<span tal:condition="python: datamodel is None" i18n:translate="" class="no-response">
 		No response
 	</span>
@@ -27,7 +27,7 @@
 	</label>
 	<div class="tooltips" tal:content="structure here/tooltips" />
 	<select tal:attributes="name string:${widget_id}:int; id widget_id">
-		<tal:block repeat="choice here/choices">
+		<tal:block repeat="choice here/getChoices">
 			<tal:block define="choice_id python:widget_id + choice.strip().replace(' ', '_');">
 				<option tal:attributes="value repeat/choice/index; selected python:repeat['choice'].index==datamodel"
 				        tal:content="choice">

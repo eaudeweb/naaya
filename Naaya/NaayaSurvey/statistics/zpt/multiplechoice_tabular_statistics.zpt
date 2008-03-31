@@ -14,7 +14,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr tal:repeat="choice question/choices">
+			<tr tal:repeat="choice question/getChoices">
 				<th scope="row" class="scope-row" tal:content="choice">choice</th>
 				<td class="number" tal:content="python: per_choice[repeat['choice'].index][0]">count</td>
 				<td class="number" tal:content="python: '%.2f%%' % (round(per_choice[repeat['choice'].index][1], 2), )">percent</td>
