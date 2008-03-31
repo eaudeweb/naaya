@@ -483,10 +483,10 @@ class FlashTool(Folder, ProfileMeta, utils):
                             self.utXmlEncode(obj.getLocalProperty('source', lang)), self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), \
                             self.utXmlEncode(obj.absolute_url(0)), lang, self.is_arabic(lang)))
                         xml_append('<address>%s</address>' % self.utXmlEncode(obj.getLocalProperty('address', lang)))
-                        if mesg_type == 'html':
-                            xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
-                        else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
+#                        if mesg_type == 'html':
+#                            xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
+#                        else:
+#                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
                         xml_append('</event>')
                 xml_append('</section>')
 
@@ -500,10 +500,10 @@ class FlashTool(Folder, ProfileMeta, utils):
                             self.utXmlEncode(obj.getLocalProperty('source', lang)), self.utXmlEncode(obj.source_link), self.utXmlEncode(obj.file_link), \
                             self.utXmlEncode(obj.absolute_url(0)), lang, self.is_arabic(lang)))
                         xml_append('<address>%s</address>' % self.utXmlEncode(obj.getLocalProperty('address', lang)))
-                        if mesg_type == 'html':
-                            xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
-                        else:
-                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
+#                        if mesg_type == 'html':
+#                            xml_append('<description>%s</description>' % self.utXmlEncode(obj.getLocalProperty('description', lang)))
+#                        else:
+#                            xml_append('<description>%s</description>' % self.utXmlEncode(self.utStripAllHtmlTags(obj.getLocalProperty('description', lang))))
                         xml_append('</event>')
                 xml_append('</section>')
 
