@@ -1849,14 +1849,16 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
             except:
                 results = []
             results = self.utEliminateDuplicatesByURL(results)
-            batch_obj = batch_utils(self.numberresultsperpage, len(results), page_search_start)
+	    res = [r for r in results if r.can_be_seen()]
+	    
+            batch_obj = batch_utils(self.numberresultsperpage, len(res), page_search_start)
             if skey != '':
-                results = self.utSortObjsListByAttr(results, skey, rkey)
-            if len(results) > 0:
+                res = self.utSortObjsListByAttr(res, skey, rkey)
+            if len(res) > 0:
                 paging_informations = batch_obj.butGetPagingInformations()
             else:
                 paging_informations = (-1, 0, 0, -1, -1, 0, self.numberresultsperpage, [0])
-            return (paging_informations, results[paging_informations[0]:paging_informations[1]])
+            return (paging_informations, res[paging_informations[0]:paging_informations[1]])
         else:
             return []
 
