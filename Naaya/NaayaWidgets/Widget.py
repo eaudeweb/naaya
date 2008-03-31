@@ -19,6 +19,7 @@
 
 # Zope imports
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view
 from OFS.Folder import Folder
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -152,8 +153,10 @@ class Widget(Folder, LocalPropertyManager):
         """ Prepare value to be stored according with widget type"""
         pass
 
+    security.declareProtected(view, 'render')
     def render(self, mode, datamodel=None, **kwargs):
         """Render widget according with given mode"""
+        assert(mode in ('view', 'edit', 'manage'))
         return self.render_meth(mode=mode, datamodel=datamodel, **kwargs)
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
