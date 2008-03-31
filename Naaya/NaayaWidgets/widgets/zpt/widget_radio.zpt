@@ -68,7 +68,7 @@
 		<!-- Extra choice -->
 		<div class="field" tal:define="add_extra_choice python:here.getSession('add_extra_choice', here.getProperty('add_extra_choice', False));">
 			<label for="add_extra_choice" i18n:translate="">Add an extra choice</label>
-			<select id="add_extra_choice" name="add_extra_choice:boolean">
+			<select id="add_extra_choice" name="add_extra_choice:boolean" tal:attributes="disabled num_answers">
 				<option value="True" tal:attributes="selected add_extra_choice" i18n:translate="">Yes</option>
 				<option value="False" tal:attributes="selected not:add_extra_choice" i18n:translate="">No</option>
 			</select>
