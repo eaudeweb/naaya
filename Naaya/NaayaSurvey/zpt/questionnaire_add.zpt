@@ -10,7 +10,7 @@
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/common_js"></script>
 <tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
 
-<h1 i18n:translate="">Submit Survey</h1>
+<h1 i18n:translate="">Submit Survey Instance</h1>
 
 <!-- No survey templates defined -->
 <tal:block condition="not:stemplates" tal:define="
