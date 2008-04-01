@@ -61,7 +61,7 @@ def manage_addSurveyReport(context, id="", title="", REQUEST=None, **kwargs):
     ob = SurveyReport(id, lang=lang, title=title)
     context.gl_add_languages(ob)
     context._setObject(id, ob)
-    if REQUEST:
+    if REQUEST is not None:
         return context.manage_main(context, REQUEST, update_menu=1)
     return id
 
