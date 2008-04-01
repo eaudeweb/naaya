@@ -216,6 +216,7 @@
 		<pluggablecontenttype meta_type="Naaya Semide Thematic Folder" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Extended File" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Semide Publication" action="1"/>
+		<pluggablecontenttype meta_type="Naaya GeoPoint" action="1"/>
 	</pluggablecontenttypes>
 	<syndication>
 		<namespace id="301" prefix="ut" value="http://www.semide.org/ut/"/>
