@@ -281,7 +281,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
         return sort(self.getReports(), ( (sort_by, 'cmp', 'asc'), ))
 
     security.declarePrivate('addReport')
-    def addReport(self, title='', add_action='', REQUEST=None, **kwargs):
+    def addReport(self, title='', REQUEST=None, **kwargs):
         """Add a new report"""
         if not REQUEST:
             return
