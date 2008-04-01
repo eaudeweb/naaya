@@ -294,23 +294,22 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
             self.setSession('title', title)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
-        self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-        result = manage_addSurveyReport(self, title=title, REQUEST=REQUEST)
+        report_id = manage_addSurveyReport(self, title=title, REQUEST=REQUEST)
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
-        return result
+        return report_id
 
     security.declarePrivate('generateFullReport')
     def generateFullReport(self, title='', REQUEST=None):
         """Generate a full report"""
         if not title:
-            if REQUEST:
-                self.setSessionErrors(('Field title is required',))
-                return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
-            else:
+            if REQUEST is None:
                 raise ValueError('Field title is required')
-        id = manage_addSurveyReport(self, title=title)
-        report = self._getOb(id)
+            self.setSessionErrors(('Field title is required',))
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+        report_id = manage_addSurveyReport(self, title=title)
+        report = self._getOb(report_id)
         sortorder = 1
         for question in self.getSortedWidgets():
             stat_classes = []
@@ -332,9 +331,9 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
                                     question=question,
                                     sortorder=sortorder)
                 sortorder += 1
-        if REQUEST:
-            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
-        return report
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        return report_id
 
     #
     # Attachments

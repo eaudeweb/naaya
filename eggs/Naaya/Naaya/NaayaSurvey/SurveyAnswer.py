@@ -39,8 +39,8 @@ def manage_addSurveyAnswer(context, datamodel, respondent=None, REQUEST=None):
     """ Constructor for SurveyAnswer"""
     global gUtil
 
-    if respondent is None:
-        respondent = REQUEST.AUTHENTICATED_USER.getUserName()
+    if respondent is None and REQUEST is not None:
+            respondent = REQUEST.AUTHENTICATED_USER.getUserName()
 
     # calculate an available id
     while True:

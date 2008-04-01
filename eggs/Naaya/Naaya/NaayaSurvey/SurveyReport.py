@@ -62,7 +62,7 @@ def manage_addSurveyReport(context, id="", title="", REQUEST=None, **kwargs):
     context.gl_add_languages(ob)
     context._setObject(id, ob)
     if REQUEST is not None:
-        return context.manage_main(context, REQUEST, update_menu=1)
+        context.manage_main(context, REQUEST, update_menu=1)
     return id
 
 class SurveyReport(Folder, LocalPropertyManager):
