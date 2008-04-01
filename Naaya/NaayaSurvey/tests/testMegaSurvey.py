@@ -38,7 +38,7 @@ class MegaSurveyTestCase(NaayaTestCase):
             w = self.survey._getOb(id, None)
             self.assertNotEqual(w, None)
             self.assert_(isinstance(w, widget_class))
-            self.assertEqual(w.getLocalProperty('title', self.getPortal().gl_get_selected_language()), title)
+            self.assertEqual(w.getLocalAttribute('title', self.getPortal().gl_get_selected_language()), title)
 
     def testAddReport(self):
         """Add report"""
@@ -47,7 +47,7 @@ class MegaSurveyTestCase(NaayaTestCase):
         report = self.survey._getOb(id, None)
         self.assertNotEqual(report, None)
         self.assert_(isinstance(report, SurveyReport))
-        self.assertEqual(report.getLocalProperty('title', self.getPortal().gl_get_selected_language()), title)
+        self.assertEqual(report.getLocalAttribute('title', self.getPortal().gl_get_selected_language()), title)
 
     def testGenerateFullReport(self):
         """Generate full report"""
@@ -56,7 +56,7 @@ class MegaSurveyTestCase(NaayaTestCase):
         report = self.survey._getOb(id, None)
         self.assertNotEqual(report, None)
         self.assert_(isinstance(report, SurveyReport))
-        self.assertEqual(report.getLocalProperty('title', self.getPortal().gl_get_selected_language()), title)
+        self.assertEqual(report.getLocalAttribute('title', self.getPortal().gl_get_selected_language()), title)
         self.assertEqual(len(report.getStatistics()), 0) # 0 questions -> 0 statistics
 
     def testTakingSurvey(self):
