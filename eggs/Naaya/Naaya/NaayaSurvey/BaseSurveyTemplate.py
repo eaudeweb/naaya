@@ -283,8 +283,6 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
     security.declarePrivate('addReport')
     def addReport(self, title='', REQUEST=None, **kwargs):
         """Add a new report"""
-        if not REQUEST:
-            return
         err = []
         if not title:
             err.append('Field title is required')
