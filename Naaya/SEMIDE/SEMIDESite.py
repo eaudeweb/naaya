@@ -25,6 +25,7 @@ import xmlrpclib
 #Zope imports
 from Globals                                    import InitializeClass
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
+from Products.PageTemplates.ZopePageTemplate 	import manage_addPageTemplate
 from AccessControl                              import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions                  import view_management_screens, view
 from OFS.Image                                  import Image, manage_addImage
@@ -245,6 +246,13 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[en].xml')))
         self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[fr].xml')))
         self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[ar].xml')))
+
+	#portal_map custom index
+	custom_map_index = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'map_index.zpt'))
+	portal_map = self.getGeoMapTool()
+	manage_addPageTemplate(portal_map, id='map_index', title='', text='')
+	map_index = portal_map._getOb(id='map_index')
+	map_index.pt_edit(text=custom_map_index, content_type='')
 
         #set the default thesaurus on picklists
         self.admin_properties(show_releasedate=1, rename_id='', http_proxy='',
@@ -1173,7 +1181,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         except Exception, error:
             err = error
         else:
-            err = ''
+    	    err = ''
         
         # Errors occured
         if err:
