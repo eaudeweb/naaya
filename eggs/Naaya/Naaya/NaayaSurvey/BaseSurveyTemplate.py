@@ -290,13 +290,17 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
             err.append('Field title is required')
 
         if err:
+            if REQUEST is None:
+                raise ValueError('.'.join(err))
             self.setSessionErrors(err)
             self.setSession('title', title)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
         self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-        manage_addSurveyReport(self, title=title, REQUEST=REQUEST)
-        return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        result = manage_addSurveyReport(self, title=title, REQUEST=REQUEST)
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        return result
 
     security.declarePrivate('generateFullReport')
     def generateFullReport(self, title='', REQUEST=None):
