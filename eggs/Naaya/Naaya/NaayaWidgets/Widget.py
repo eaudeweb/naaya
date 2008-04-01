@@ -49,14 +49,17 @@ def manage_addWidget(klass, container, id="", title=None, REQUEST=None, **kwargs
     id = id + idSuffix
 
     # Get selected language
-    lang = REQUEST and REQUEST.form.get('lang', None)
-    lang = lang or kwargs.get('lang', container.gl_get_selected_language())
+    lang = None
+    if REQUEST is not None:
+        lang = REQUEST.form.get('lang', None)
+    if not lang:
+        lang = kwargs.get('lang', container.gl_get_selected_language())
     widget = klass(id, title=title, lang=lang, **kwargs)
 
     container.gl_add_languages(widget)
     container._setObject(id, widget)
     widget = container._getOb(id)
-    if REQUEST:
+    if REQUEST is not None:
         REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
     return id
 
