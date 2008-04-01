@@ -200,11 +200,10 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
         if err:
             if REQUEST is None:
                 raise ValueError('.'.join(err))
-            else:
-                self.setSessionErrors(err)
-                self.setSession('title', title)
-                self.setSession('meta_type', meta_type)
-                return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+            self.setSessionErrors(err)
+            self.setSession('title', title)
+            self.setSession('meta_type', meta_type)
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
         widget_cls = WIDGETS[meta_type]
         return manage_addWidget(widget_cls,
@@ -294,9 +293,9 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
             self.setSessionErrors(err)
             self.setSession('title', title)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
-        else:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            manage_addSurveyReport(self, title=title, REQUEST=REQUEST)
+
+        self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+        manage_addSurveyReport(self, title=title, REQUEST=REQUEST)
         return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declarePrivate('generateFullReport')
