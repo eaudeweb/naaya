@@ -5,14 +5,16 @@ from unittest import TestSuite, makeSuite
 from Testing import ZopeTestCase
 
 # Naaya imports
-from Products.Naaya.tests import NaayaTestCase
+from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
+
+# Survey imports
 from Products.NaayaSurvey.SurveyTool import SurveyTool, manage_addSurveyTool
 
 ZopeTestCase.installProduct('NaayaWidgets')
 ZopeTestCase.installProduct('NaayaSurvey')
 
-class SurveyToolTestCase(NaayaTestCase.NaayaTestCase):
-    """Widgets Test Case"""
+class SurveyToolTestCase(NaayaTestCase):
+    """Survey Tool test cases"""
 
     def afterSetUp(self):
         self.login()
@@ -21,6 +23,7 @@ class SurveyToolTestCase(NaayaTestCase.NaayaTestCase):
         self.logout()
 
     def testAddSurveyTool(self):
+        """Add Survey Tool - manage_addSurveyTool"""
         id = manage_addSurveyTool(self.getPortal())
         self.assertEqual(id, SurveyTool.portal_id)
         ob = self.getPortal()._getOb(id, None)
