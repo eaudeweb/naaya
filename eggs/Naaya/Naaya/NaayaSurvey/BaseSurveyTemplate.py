@@ -186,7 +186,7 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
     # Widget edit methods
     #
     security.declarePrivate('addWidget')
-    def addWidget(self, REQUEST, title='', meta_type=None, **kwargs):
+    def addWidget(self, REQUEST=None, title='', meta_type=None, **kwargs):
         """Add a widget.
 
             @param meta_type: metatype of the widget
@@ -198,10 +198,13 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
             err.append('Field type is required')
 
         if err:
-            self.setSessionErrors(err)
-            self.setSession('title', title)
-            self.setSession('meta_type', meta_type)
-            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+            if REQUEST is None:
+                raise ValueError('.'.join(err))
+            else:
+                self.setSessionErrors(err)
+                self.setSession('title', title)
+                self.setSession('meta_type', meta_type)
+                return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
         widget_cls = WIDGETS[meta_type]
         return manage_addWidget(widget_cls,
