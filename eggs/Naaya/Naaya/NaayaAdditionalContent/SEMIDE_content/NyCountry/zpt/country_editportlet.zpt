@@ -1,5 +1,7 @@
 <tal:block tal:replace="structure here/standard_html_header"/>
 
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+
 <tal:block
 	tal:define="ob_id python:request.get('id', '');
 				ob python:here.getObjectById(ob_id);
