@@ -100,10 +100,10 @@ function toggleSelect()
 					</tal:block>
 				</ul>
 				<div>
-					<input type="hidden" name="geo_type" value="" />
-					<input type="hidden" name="center" tal:attributes="value center" />
-					<input type="hidden" name="zoom" tal:attributes="value zoom" />
-					<input type="hidden" name="path" tal:attributes="value path" />
+					<input type="hidden" id="geo_type" name="geo_type" value="" />
+					<input type="hidden" id="center" name="center" tal:attributes="value center" />
+					<input type="hidden" id="zoom" name="zoom" tal:attributes="value zoom" />
+					<input type="hidden" id="path" name="path" tal:attributes="value path" />
 					<input type="submit" name="submit" value="Show selected" i18n:attributes="value" />
 				</div>
 			</form>
