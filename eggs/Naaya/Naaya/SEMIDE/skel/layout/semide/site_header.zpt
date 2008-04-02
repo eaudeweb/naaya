@@ -12,8 +12,12 @@
 		<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${skin_files_path}/${css_common}" />
 		<link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${skin_files_path}/style_print" />
 		<link rel="stylesheet" type="text/css" media="handheld" tal:attributes="href string:${skin_files_path}/${css_handheld}" />
-		<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${site_url}/glossary_coverage/style_presentation_css" />
-		<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${site_url}/portal_thesaurus/thesaurus_css" />
+		<link tal:condition="python:here.meta_type=='Naaya Glossary'" rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${site_url}/glossary_coverage/style_presentation_css" />
+		<link tal:condition="python:here.meta_type=='Naaya Thesaurus'" rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${site_url}/portal_thesaurus/thesaurus_css" />
+                <link tal:condition="python:here.meta_type=='SEMIDE Site'" rel="stylesheet" type="text/css" tal:attributes="href string:${site_url}/portal_calendar/calendar_style" />
+
+
+
 	<tal:block repeat="channel python:here.getSite().getSyndicationTool().get_script_channels()">
 		<link rel="alternate" type="application/rss+xml" tal:attributes="title channel/title_or_id; href channel/absolute_url" />
 	</tal:block>
