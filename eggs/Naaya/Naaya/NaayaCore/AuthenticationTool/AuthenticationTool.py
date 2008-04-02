@@ -573,9 +573,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         try:
             return user_obj.email
         except AttributeError:
-            # some Zope products use the "mail" attribute, instead of "email"
-            # which means that the LDAP user folder will map the LDAP email
-            # attribute to the Python "mail" attribute
+            # This can happen when the LDAP user folder maps the LDAP
+            # attribute to the "mail" Python attribute, because other
+            # Zope products depend on the "mail"  attribute.
             return user_obj.mail
 
     def getUserHistory(self, user_obj):
