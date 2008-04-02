@@ -8,7 +8,7 @@ function addRowInnerHTML(tblId)
 	var newRow = tblBody.insertRow(-1);
 	var newCell0 = newRow.insertCell(0);
 
-	newCell0.innerHTML = '<div class="consultation_lc">	<label for="adt_comment.page:records" i18n:translate="">page #<' + '/' + 'label> 	<input type="text" name="adt_comment.page:records" size="3" value="" id="adt_comment.page:records" /> 	<label for="adt_comment.line:records" i18n:translate="">line #<' + '/' + 'label> 	<input type="text" name="adt_comment.line:records" id="adt_comment.line:records" size="3" value="" /> 	<label for="adt_comment.comment:records" i18n:translate="">comment<' + '/' + 'label> 	<textarea name="adt_comment.comment:utf8:ustring:records" id="adt_comment.comment:records" rows="4" cols="50">	<' + '/' + 'textarea><' + '/' + 'div>';}
+	newCell0.innerHTML = '<div class="consultation_lc">	<label for="adt_comment.page:records" i18n:translate="">page #<' + '/' + 'label> 	<input type="text" name="adt_comment.page:records" size="3" value="" id="adt_comment.page:records" /> 	<label for="adt_comment.line:records" i18n:translate="">line #<' + '/' + 'label> 	<input type="text" name="adt_comment.line:records" id="adt_comment.line:records" size="3" value="" /> 	<label for="adt_comment.comment:records" i18n:translate="">comment<' + '/' + 'label> 	<textarea name="adt_comment.comment:utf8:ustring:records" id="adt_comment.comment:records" rows="4" cols="50"><' + '/' + 'textarea><' + '/' + 'div>';}
 
 </script>
 
