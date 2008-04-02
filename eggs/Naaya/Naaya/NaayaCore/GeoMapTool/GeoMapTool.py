@@ -226,6 +226,10 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         self.setSession(MSP_SESSION_KEY, xr_key)
         #try to get the coordinates from request
         center_locality = center or self.center_locality
+        if center_locality.startswith("YGeoPoint"):
+            center_locality = 'new ' + center_locality # YGeoPoint object
+        else:
+            center_locality = '"' + center_locality + '"' # Javascript string
         center_zoom = zoom or self.center_zoom
         path = path or '/'
         return TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER % (center_locality, center_zoom, self.default_type, width, height, ",".join(self.map_types), self.xrjs_markers(), self.absolute_url(), xr_key, show, query, path)

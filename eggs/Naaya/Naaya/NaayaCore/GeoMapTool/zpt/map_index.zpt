@@ -55,6 +55,10 @@ function frmFilterMap_onsubmit()
 	var zoom = document.getElementById('zoom');
 	var zoomLevel = map.getZoomLevel();
 	zoom.value = zoomLevel;
+
+	var center = document.getElementById('center');
+	var centerLatLon = map.getCenterLatLon();
+	center.value = "YGeoPoint("+ centerLatLon.Lat + "," + centerLatLon.Lon + ")";
 }
 //-->;
 

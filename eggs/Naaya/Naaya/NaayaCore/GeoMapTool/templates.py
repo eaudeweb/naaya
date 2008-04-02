@@ -25,7 +25,7 @@ TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER = """<script type="text/javascript">
 	<!--
 	var map = null;
 	var mapMarker = null;
-	var mapCenterLoc = "%s", mapCenterZoom = %s;
+	var mapCenterLoc = %s, mapCenterZoom = %s;
 	function handlerLoad() {
 		map = new YMap(document.getElementById("map"), %s, new YSize(%s, %s));
 		// Display the map centered on given address 
