@@ -21,6 +21,7 @@
 This module contains the class that implements the Naaya Gadfly Container.
 Usefull for counters.
 """
+import os
 from OFS.Folder import Folder
 from OFS.Folder import manage_addFolder
 from Products.ZGadflyDA.DA import manage_addZGadflyConnection
@@ -28,8 +29,10 @@ from AccessControl.Permissions import view_management_screens
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from zLOG import LOG, ERROR
+from Products.ZGadflyDA.db import data_dir
 
 CONNECTION_ID = 'connection'
+CONNECTION_STRING = 'demo'
 LOG_KEY = 'NaayaBase.NyGadflyContainer'
 
 def manage_addNyGadflyContainer(self, id='.container', REQUEST=None, **kwargs):
@@ -37,8 +40,18 @@ def manage_addNyGadflyContainer(self, id='.container', REQUEST=None, **kwargs):
     ob = NyGadflyContainer(id)
     self._setObject(id, ob)
     ob = self._getOb(id)
+    
+    # Avoid crashing if gadfly is not initialized
+    dir=os.path.join(data_dir, CONNECTION_STRING)
+    if not os.path.isdir(dir):
+        try:
+            os.makedirs(dir)
+        except OSError, error:
+            LOG(LOG_KEY, ERROR, error)
+            raise
+    # Add gadfly connection
     manage_addZGadflyConnection(ob, id=CONNECTION_ID, title='', 
-                                connection='demo', check=True)
+                                connection=CONNECTION_STRING, check=True)
     ob._init_table(**kwargs)
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
