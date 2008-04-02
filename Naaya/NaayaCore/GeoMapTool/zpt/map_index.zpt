@@ -49,6 +49,13 @@ function toggleSelect()
             if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'geo_type:list') frm.elements[i].checked = false;
         isSelected = false;}
 }
+
+function frmFilterMap_onsubmit()
+{
+	var zoom = document.getElementById('zoom');
+	var zoomLevel = map.getZoomLevel();
+	zoom.value = zoomLevel;
+}
 //-->;
 
 </script>
@@ -80,7 +87,7 @@ function toggleSelect()
 
 		<div class="right_portlet_content content">
 
-			<form action="#mappage" name="frmFilterMap" method="post" id="frmFilterMap">
+			<form action="#mappage" name="frmFilterMap" method="post" id="frmFilterMap" onsubmit="javascript: frmFilterMap_onsubmit()">
 				<ul class="map_legend" id="filter_map">
 					<tal:block repeat="item here/getParentsList">
 					<tal:block define="children python:here.getSymbolChildren(item.id);">
