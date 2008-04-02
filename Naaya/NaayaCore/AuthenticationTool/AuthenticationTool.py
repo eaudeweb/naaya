@@ -52,7 +52,7 @@ def manage_addAuthenticationTool(self, REQUEST=None):
     if REQUEST:
         return self.manage_main(self, REQUEST, update_menu=1)
 
-class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager, 
+class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                          file_utils, plugins_tool, PropertyManager):
 
     meta_type = METATYPE_AUTHENTICATIONTOOL
@@ -66,7 +66,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         {'label': 'Properties', 'action': 'manage_propertiesForm',
          'help': ('OFSP','Properties.stx')},
     )
-    
+
     _properties = (
         {'id': 'title', 'type': 'string', 'mode': 'w',
          'label': 'Title'},
@@ -77,7 +77,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         {'id': 'email_confirmation', 'type': 'boolean', 'mode': 'w',
          'label': 'Ask for email confirmation before add user '},
     )
-    
+
     security = ClassSecurityInfo()
     #
     # Properties
@@ -85,7 +85,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     encrypt_passwords = False
     email_expression = '^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$'
     email_confirmation = False
-    
+
     def __init__(self, id, title):
         self.id = id
         self.title = title
@@ -100,7 +100,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
     security.declarePrivate('_doAddTempUser')
     def _doAddTempUser(self, **kwargs):
-        """Generate a confirmation string, add it to temp users list, 
+        """Generate a confirmation string, add it to temp users list,
            and return it.
         """
         text = object2string(kwargs)
@@ -111,7 +111,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         self._temp_users.append(text)
         self._p_changed = 1
         return text
-        
+
     security.declarePrivate('_doAddUser')
     def _doAddUser(self, name, password, roles, domains, firstname, lastname, email, **kw):
         """Create a new user. The 'password' will be the
@@ -204,10 +204,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             self._temp_users.remove(key)
             self._doAddUser(**res)
             self._p_changed = 1
-        if REQUEST: 
+        if REQUEST:
             REQUEST.RESPONSE.redirect('manage_users_html')
         return res
-        
+
     security.declareProtected(manage_users, 'manage_addUser')
     def manage_addUser(self, name='', password='', confirm='', roles=[], domains=[], firstname='',
         lastname='', email='', strict=0, REQUEST=None, **kwargs):
@@ -253,14 +253,14 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         # Confirm by mail
         #
         if self.emailConfirmationEnabled():
-            user = self._doAddTempUser(name=name, password=password, roles=roles, 
-                                       domains=domains, firstname=firstname, 
+            user = self._doAddTempUser(name=name, password=password, roles=roles,
+                                       domains=domains, firstname=firstname,
                                        lastname=lastname, email=email)
-            
+
         else:
-            user = self._doAddUser(name, password, roles, domains, 
+            user = self._doAddUser(name, password, roles, domains,
                                    firstname, lastname, email)
-        if REQUEST: 
+        if REQUEST:
             REQUEST.RESPONSE.redirect('manage_users_html')
         return user
 
@@ -632,7 +632,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             return self.email_confirmation
         # No email confirmation need if user is not anonymous
         return False
-    
+
     def manageDeleteSource(self, id, REQUEST = None):
         """ """
         try: self._delObject(id)
