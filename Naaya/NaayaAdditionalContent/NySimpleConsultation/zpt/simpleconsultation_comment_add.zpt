@@ -19,7 +19,7 @@
 		
 		<div class="field">
 			<label for="message"><span i18n:translate="">Your comment</span> <span class="mandatory_field">*</span></label>
-			<textarea id="message" name="message:utf8:ustring"></textarea>
+			<textarea id="message" cols="70" rows="5" name="message:utf8:ustring"></textarea>
 		</div>
 		
 		<div class="field">
