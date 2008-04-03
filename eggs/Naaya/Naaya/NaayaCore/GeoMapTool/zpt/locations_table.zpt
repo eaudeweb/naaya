@@ -102,7 +102,11 @@ This macro uses the following variables:
 	</tr>
 	<tr tal:repeat="record records" tal:condition="records">
 		<td tal:condition="edit_mode"><input type="checkbox" name="locations:list" tal:attributes="value python:record.absolute_url(1)"></td>
-		<td><img tal:attributes="src string:${map_url}/getSymbolPicture?id=${record/geo_type}" /></td>
+		<td>
+			<img tal:attributes="src string:${map_url}/getSymbolPicture?id=${record/geo_type};
+			                     alt python:here.getSymbolTitle(record.geo_type);
+			                     title python:here.getSymbolTitle(record.geo_type);" />
+		</td>
 		<td><a tal:attributes="href string:${record/absolute_url}" tal:content="record/title" /></td>
 		<td tal:content="record/address" />
 		<td tal:content="record/latitude" />
