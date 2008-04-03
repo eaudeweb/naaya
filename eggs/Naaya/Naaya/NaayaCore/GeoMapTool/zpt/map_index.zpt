@@ -70,8 +70,8 @@ function frmFilterMap_onsubmit()
 <div id="center_content" style="width: 78%; overflow-x: auto;">
 	<h1 i18n:translate="">Geo map</h1>
 	<noscript>
-		<p i18n:translate="" class=".message-information">You must have Javascript turned on to view all YahooMap features</p>
-	<noscript>
+		<p i18n:translate="" class=".message-information">You must have Javascript turned on to view all YahooMap features.</p>
+	</noscript>
 	<a id="mappage"></a>
 
 	<div id="yahoo_map_section" style="display: none">
