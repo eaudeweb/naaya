@@ -10,7 +10,9 @@ This macro uses the following variables:
        tal:attributes="class python:test(edit_mode, 'admin_table', 'datatable')">
 	<thead>
 		<tr>
-			<th tal:condition="edit_mode" width="1%"><a href="javascript:toggleSelect();" i18n:translate="" title="Select all" i18n:attributes="title">all</a></th>
+			<th tal:condition="edit_mode" width="1%">
+				<input type="checkbox" onclick="xxx(this)" />
+			</th>
 			<th scope="col" class="scope-col" i18n:translate="">Type</th>
 			<tal:block tal:condition="python:skey=='title'">
 				<tal:block tal:condition="python:rkey==''">
@@ -36,14 +38,14 @@ This macro uses the following variables:
 			<tal:block tal:condition="python:skey=='address'">
 				<tal:block tal:condition="python:rkey==''">
 					<th scope="col" class="scope-col">
-						<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=address&amp;rkey=1#address">
+						<a id="address" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=address&amp;rkey=1#address">
 							<span i18n:translate="">Address</span>
 						</a>
 					</th>
 				</tal:block>
 				<tal:block tal:condition="python:rkey=='1'">
 					<th scope="col" class="scope-col">
-						<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=address#address">
+						<a id="address" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=address#address">
 							<span i18n:translate="">Address</span>
 						</a>
 					</th>
@@ -51,20 +53,20 @@ This macro uses the following variables:
 			</tal:block>
 			<tal:block tal:condition="python:skey!='address'">
 				<th scope="col" class="scope-col">
-					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude#latitude" i18n:translate="">Address</a>
+					<a id="address" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=address#address" i18n:translate="">Address</a>
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:skey=='latitude'">
 				<tal:block tal:condition="python:rkey==''">
 					<th scope="col" class="scope-col">
-						<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude&amp;rkey=1#latitude">
+						<a id="latitude" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude&amp;rkey=1#latitude">
 							<span i18n:translate="">Latitude</span>
 						</a>
 					</th>
 				</tal:block>
 				<tal:block tal:condition="python:rkey=='1'">
 					<th scope="col" class="scope-col">
-						<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude#latitude">
+						<a id="latitude" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude#latitude">
 							<span i18n:translate="">Latitude</span>
 						</a>
 					</th>
@@ -72,20 +74,20 @@ This macro uses the following variables:
 			</tal:block>
 			<tal:block tal:condition="python:skey!='latitude'">
 				<th scope="col" class="scope-col">
-					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude#latitude" i18n:translate="">Latitude</a>
+					<a id="latitude" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude#latitude" i18n:translate="">Latitude</a>
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:skey=='longitude'">
 				<tal:block tal:condition="python:rkey==''">
 					<th scope="col" class="scope-col">
-						<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude&amp;rkey=1#longitude">
+						<a id="longitude" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude&amp;rkey=1#longitude">
 							<span i18n:translate="">Longitude</span>
 						</a>
 					</th>
 				</tal:block>
 				<tal:block tal:condition="python:rkey=='1'">
 					<th scope="col" class="scope-col">
-						<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude#longitude">
+						<a id="longitude" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude#longitude">
 							<span i18n:translate="">Longitude</span>
 						</a>
 					</th>
@@ -93,7 +95,7 @@ This macro uses the following variables:
 			</tal:block>
 			<tal:block tal:condition="python:skey!='longitude'">
 				<th scope="col" class="scope-col">
-					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude#longitude" i18n:translate="">Longitude</a>
+					<a id="longitude" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude#longitude" i18n:translate="">Longitude</a>
 				</th>
 			</tal:block>
 			<th tal:condition="edit_mode">&nbsp;</th>
