@@ -1,4 +1,0 @@
-REQUIREMENTS
-------------
-- Python libraries:
-	- BeautifulSoup 3.0.5, http://www.crummy.com/software/BeautifulSoup/#Download
