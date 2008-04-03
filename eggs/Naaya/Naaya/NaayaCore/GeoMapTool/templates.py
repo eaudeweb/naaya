@@ -58,7 +58,7 @@ TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER = """<script type="text/javascript">
 				}
 				return true;
 			} else {
-				alert('There was a problem retrieving the XML data:\\n' + xmlhttp.statusText);
+				alert('Naaya GeoMapTool: there was a problem retrieving the XML data:\\n' + xmlhttp.statusText);
 				return false;
 			}
 		}
@@ -101,7 +101,7 @@ TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER = """<script type="text/javascript">
 				}
 				return true;
 			} else {
-				alert('There was a problem retrieving the XML data:\\n' + xmlhttp.statusText);
+				alert('Naaya GeoMapTool: there was a problem retrieving the XML data:\\n' + xmlhttp.statusText);
 				return false;
 			}
 		}
