@@ -26,6 +26,17 @@
 			tal:attributes="href download_url"><img tal:attributes="src string:getContentTypePicture?id=${content_type}" alt="" /> <span tal:replace="string:${here/downloadfilename} (${content_type_title}, ${size} Kb)"/></a>
 	</td>
 </tr>
+
+<tr tal:condition="python:not here.size()>0">
+	<th i18n:translate="">Download</th>
+	<td>
+		<em><span i18n:translate="">File only available for </span>
+		<span tal:repeat="lang here/gl_get_languages_map">
+			<a tal:content="python:' %s' % lang['title']" tal:condition="python:not lang['selected'] and here.checkExFileLang(lang['id'])" tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+		</span></em>
+	</td>
+</tr>
+
 <tr>
 	<th i18n:translate="">Release date</th>
 	<td tal:content="python:here.utShowDateTime(here.releasedate)" />
