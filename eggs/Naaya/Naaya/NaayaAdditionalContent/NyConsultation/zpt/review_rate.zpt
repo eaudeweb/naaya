@@ -3,7 +3,7 @@
 <tal:block define="perm_edit_object here/checkPermissionManageConsultation">
 
 	<h1><span i18n:translate="">Rate review</span> <span tal:replace="string:${here/id}" /></h1>
-	<div class="floated-buttons"><span class="buttons"><a href="reviews_index_html">Back to questions and answers</a></span></div>
+	<div class="floated-buttons"><span class="buttons"><a tal:attributes="href string:${here/get_consultation_url}/reviews_index_html">Back to questions and answers</a></span></div>
 
 		<div class="rate-this" condition="perm_edit_object">
 				<form name="frmRate" method="post" tal:attributes="action string:${here/absolute_url}/saveRate">

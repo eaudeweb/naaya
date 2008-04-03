@@ -597,6 +597,69 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'comment_image')
     comment_image = ImageFile('www/consultation-comment.gif', globals())
 
+    #Consultation statistics
+
+    security.declareProtected(view, 'getRatingTitles')
+    def getRatingTitles(self):
+        """ """
+        cns_ratings = [x.title for x in self.getRateLists()]
+        return cns_ratings
+    
+    security.declareProtected(view, 'getQuestionsReviews')
+    def getQuestionsReviews(self):
+        """
+        Returns a dictionary with question ids as keys and 
+        a list of reviews that answered to that question as values.
+        {qid: [rating1, rating2, ]}
+        """
+        
+        
+        reviews = self.get_reviews()
+        questions = self.get_questions()
+        qs_rev = {}
+        
+        for qid, q in questions:
+            qs_rev[qid] = []
+            
+        for review in reviews:
+            for qid, answer in review.answers:
+                if answer:
+                    qs_rev[qid].append(review.getId())
+        return qs_rev
+
+    security.declareProtected(view, 'getReviewById')
+    def getReviewById(self, rid):
+        """ """
+        reviews = self.get_reviews()
+        for review in reviews:
+            if review.getId() == rid:
+                return review
+
+    #reviews sorting
+    security.declareProtected(view, 'sort_cns_reviews')
+    def sort_cns_reviews(self, by='Date'):
+        """ Selects whitch method to use for sorting """
+        
+        if by == 'Date':
+            return self.utSortObjsListByMethod(self.get_reviews(), 'get_review_date', 1)
+        else:
+            return self.get_reviews_sorted(by)
+
+    security.declareProtected(view, 'get_reviews_sorted')
+    def get_reviews_sorted(self, rating=''):
+        """ Returns the list of reviews sorted by rating value for the given rating """
+        
+        if rating not in self.getRatingTitles(): return self.sort_reviews_page()
+        reviews = [x for x in self.get_reviews()]
+        reviews.sort(lambda x, y: cmp(int(y.getRatings()[rating]), int(x.getRatings()[rating])))
+        return reviews
+
+    security.declareProtected(view, 'sort_reviews_page')
+    def sort_reviews_page(self, by='Date', REQUEST=None):
+        """ Open the reviews page sorted acording to 'by' """
+        if REQUEST is not None:
+            return REQUEST.RESPONSE.redirect('%s/reviews_index_html?by=%s' % (self.absolute_url(), by))
+
     #site pages
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'question_edit_html')
