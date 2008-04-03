@@ -413,4 +413,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         self._p_changed = 1
         return 'Done'
 
+    # macros
+    security.declareProtected(view, 'location_tables_html')
+    location_tables_html = PageTemplateFile('zpt/location_tables', globals())
+
 InitializeClass(GeoMapTool)
