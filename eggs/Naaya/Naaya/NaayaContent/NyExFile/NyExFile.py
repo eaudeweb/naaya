@@ -533,6 +533,11 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
+    def checkExFileLang(self, lang):
+        """ Checks if there is a file uploaded for the given language. """
+       
+        return self.getFileItem(lang).size > 0
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/exfile_manage_edit', globals())
