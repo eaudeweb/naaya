@@ -10,20 +10,16 @@
 
 <script type="text/javascript">
 <!--
-var isSelected = false;
-function toggleSelect()
-{   var frm = document.frmDeleteLocations;
-    var i;
-    if (isSelected == false)
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'locations:list') frm.elements[i].checked = true;
-        isSelected = true;}
-    else
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'locations:list') frm.elements[i].checked = false;
-        isSelected = false;}}
+	function toggleSelect(caller, name)
+	{
+		var frm = caller.form;
+		for(var i=0; i<frm.elements.length; i++){
+			if (frm.elements[i].name != name)
+				continue;
+			frm.elements[i].checked = caller.checked;
+		}
+	}
 //-->;
-
 </script>
 
 <p i18n:translate="">

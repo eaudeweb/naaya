@@ -11,7 +11,7 @@ This macro uses the following variables:
 	<thead>
 		<tr>
 			<th tal:condition="edit_mode" width="1%">
-				<input type="checkbox" onclick="xxx(this)" />
+				<input type="checkbox" onclick="javascript: toggleSelect(this, 'locations:list')" />
 			</th>
 			<th scope="col" class="scope-col" i18n:translate="">Type</th>
 			<tal:block tal:condition="python:skey=='title'">
