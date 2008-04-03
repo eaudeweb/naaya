@@ -8,113 +8,117 @@ This macro uses the following variables:
 </tal:comment>
 <table metal:define-macro="main" border="0" cellspacing="0" cellpadding="4" width="90%"
        tal:attributes="class python:test(edit_mode, 'admin_table', 'datatable')">
-	<tr>
-		<th tal:condition="edit_mode" width="1%"><a href="javascript:toggleSelect();" i18n:translate="" title="Select all" i18n:attributes="title">all</a></th>
-		<th scope="col" class="scope-col" i18n:translate="">Type</th>
-		<tal:block tal:condition="python:skey=='title'">
-			<tal:block tal:condition="python:rkey==''">
-				<th>
-					<a id="title" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=title&amp;rkey=1#title">
-						<span i18n:translate="">Title</span>
-					</a>
-				</th>
+	<thead>
+		<tr>
+			<th tal:condition="edit_mode" width="1%"><a href="javascript:toggleSelect();" i18n:translate="" title="Select all" i18n:attributes="title">all</a></th>
+			<th scope="col" class="scope-col" i18n:translate="">Type</th>
+			<tal:block tal:condition="python:skey=='title'">
+				<tal:block tal:condition="python:rkey==''">
+					<th>
+						<a id="title" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=title&amp;rkey=1#title">
+							<span i18n:translate="">Title</span>
+						</a>
+					</th>
+				</tal:block>
+				<tal:block tal:condition="python:rkey=='1'">
+					<th>
+						<a id="title" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=title#title">
+							<span i18n:translate="">Title</span>
+						</a>
+					</th>
+				</tal:block>
 			</tal:block>
-			<tal:block tal:condition="python:rkey=='1'">
-				<th>
-					<a id="title" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=title#title">
-						<span i18n:translate="">Title</span>
-					</a>
-				</th>
-			</tal:block>
-		</tal:block>
-		<tal:block tal:condition="python:skey!='title'">
-			<th scope="col" class="scope-col">
-				<a id="title" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=title#title" i18n:translate="">Title</a>
-			</th>
-		</tal:block>
-		<tal:block tal:condition="python:skey=='address'">
-			<tal:block tal:condition="python:rkey==''">
+			<tal:block tal:condition="python:skey!='title'">
 				<th scope="col" class="scope-col">
-					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=address&amp;rkey=1#address">
-						<span i18n:translate="">Address</span>
-					</a>
+					<a id="title" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=title#title" i18n:translate="">Title</a>
 				</th>
 			</tal:block>
-			<tal:block tal:condition="python:rkey=='1'">
+			<tal:block tal:condition="python:skey=='address'">
+				<tal:block tal:condition="python:rkey==''">
+					<th scope="col" class="scope-col">
+						<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=address&amp;rkey=1#address">
+							<span i18n:translate="">Address</span>
+						</a>
+					</th>
+				</tal:block>
+				<tal:block tal:condition="python:rkey=='1'">
+					<th scope="col" class="scope-col">
+						<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=address#address">
+							<span i18n:translate="">Address</span>
+						</a>
+					</th>
+				</tal:block>
+			</tal:block>
+			<tal:block tal:condition="python:skey!='address'">
 				<th scope="col" class="scope-col">
-					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=address#address">
-						<span i18n:translate="">Address</span>
-					</a>
+					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude#latitude" i18n:translate="">Address</a>
 				</th>
 			</tal:block>
-		</tal:block>
-		<tal:block tal:condition="python:skey!='address'">
-			<th scope="col" class="scope-col">
-				<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude#latitude" i18n:translate="">Address</a>
-			</th>
-		</tal:block>
-		<tal:block tal:condition="python:skey=='latitude'">
-			<tal:block tal:condition="python:rkey==''">
+			<tal:block tal:condition="python:skey=='latitude'">
+				<tal:block tal:condition="python:rkey==''">
+					<th scope="col" class="scope-col">
+						<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude&amp;rkey=1#latitude">
+							<span i18n:translate="">Latitude</span>
+						</a>
+					</th>
+				</tal:block>
+				<tal:block tal:condition="python:rkey=='1'">
+					<th scope="col" class="scope-col">
+						<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude#latitude">
+							<span i18n:translate="">Latitude</span>
+						</a>
+					</th>
+				</tal:block>
+			</tal:block>
+			<tal:block tal:condition="python:skey!='latitude'">
 				<th scope="col" class="scope-col">
-					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude&amp;rkey=1#latitude">
-						<span i18n:translate="">Latitude</span>
-					</a>
+					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude#latitude" i18n:translate="">Latitude</a>
 				</th>
 			</tal:block>
-			<tal:block tal:condition="python:rkey=='1'">
+			<tal:block tal:condition="python:skey=='longitude'">
+				<tal:block tal:condition="python:rkey==''">
+					<th scope="col" class="scope-col">
+						<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude&amp;rkey=1#longitude">
+							<span i18n:translate="">Longitude</span>
+						</a>
+					</th>
+				</tal:block>
+				<tal:block tal:condition="python:rkey=='1'">
+					<th scope="col" class="scope-col">
+						<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude#longitude">
+							<span i18n:translate="">Longitude</span>
+						</a>
+					</th>
+				</tal:block>
+			</tal:block>
+			<tal:block tal:condition="python:skey!='longitude'">
 				<th scope="col" class="scope-col">
-					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude#latitude">
-						<span i18n:translate="">Latitude</span>
-					</a>
+					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude#longitude" i18n:translate="">Longitude</a>
 				</th>
 			</tal:block>
-		</tal:block>
-		<tal:block tal:condition="python:skey!='latitude'">
-			<th scope="col" class="scope-col">
-				<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude#latitude" i18n:translate="">Latitude</a>
-			</th>
-		</tal:block>
-		<tal:block tal:condition="python:skey=='longitude'">
-			<tal:block tal:condition="python:rkey==''">
-				<th scope="col" class="scope-col">
-					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude&amp;rkey=1#longitude">
-						<span i18n:translate="">Longitude</span>
-					</a>
-				</th>
-			</tal:block>
-			<tal:block tal:condition="python:rkey=='1'">
-				<th scope="col" class="scope-col">
-					<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude#longitude">
-						<span i18n:translate="">Longitude</span>
-					</a>
-				</th>
-			</tal:block>
-		</tal:block>
-		<tal:block tal:condition="python:skey!='longitude'">
-			<th scope="col" class="scope-col">
-				<a id="parent" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude#longitude" i18n:translate="">Longitude</a>
-			</th>
-		</tal:block>
-		<th tal:condition="edit_mode">&nbsp;</th>
-	</tr>
-	<tr tal:condition="not:records">
-		<td colspan="7" i18n:translate="">No locations found</td>
-	</tr>
-	<tr tal:repeat="record records" tal:condition="records">
-		<td tal:condition="edit_mode"><input type="checkbox" name="locations:list" tal:attributes="value python:record.absolute_url(1)"></td>
-		<td>
-			<img tal:attributes="src string:${map_url}/getSymbolPicture?id=${record/geo_type};
-			                     alt python:here.getSymbolTitle(record.geo_type);
-			                     title python:here.getSymbolTitle(record.geo_type);" />
-		</td>
-		<td><a tal:attributes="href string:${record/absolute_url}" tal:content="record/title" /></td>
-		<td tal:content="record/address" />
-		<td tal:content="record/latitude" />
-		<td tal:content="record/longitude" />
-		<td tal:condition="edit_mode"><a tal:attributes="href string:${record/absolute_url}/edit_html" title="Edit location" i18n:translate="" i18n:attributes="title">edit</a></td>
-	</tr>
-	<tr tal:condition="python: edit_mode and records">
-		<td></td>
-		<td colspan="7"><input type="submit" name="delete" value="Delete" i18n:attributes="value" /></td>
-	</tr>
+			<th tal:condition="edit_mode">&nbsp;</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr tal:condition="not:records">
+			<td colspan="7" i18n:translate="">No locations found</td>
+		</tr>
+		<tr tal:repeat="record records" tal:condition="records">
+			<td tal:condition="edit_mode"><input type="checkbox" name="locations:list" tal:attributes="value python:record.absolute_url(1)"></td>
+			<td>
+				<img tal:attributes="src string:${map_url}/getSymbolPicture?id=${record/geo_type};
+									 alt python:here.getSymbolTitle(record.geo_type);
+									 title python:here.getSymbolTitle(record.geo_type);" />
+			</td>
+			<td><a tal:attributes="href string:${record/absolute_url}" tal:content="record/title" /></td>
+			<td tal:content="record/address" />
+			<td tal:content="record/latitude" />
+			<td tal:content="record/longitude" />
+			<td tal:condition="edit_mode"><a tal:attributes="href string:${record/absolute_url}/edit_html" title="Edit location" i18n:translate="" i18n:attributes="title">edit</a></td>
+		</tr>
+		<tr tal:condition="python: edit_mode and records">
+			<td></td>
+			<td colspan="7"><input type="submit" name="delete" value="Delete" i18n:attributes="value" /></td>
+		</tr>
+	</tbody>
 </table>
