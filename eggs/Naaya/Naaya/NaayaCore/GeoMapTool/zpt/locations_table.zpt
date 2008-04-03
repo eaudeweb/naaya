@@ -104,7 +104,7 @@ This macro uses the following variables:
 			<td colspan="7" i18n:translate="">No locations found</td>
 		</tr>
 		<tr tal:repeat="record records" tal:condition="records">
-			<td tal:condition="edit_mode"><input type="checkbox" name="locations:list" tal:attributes="value python:record.absolute_url(1)"></td>
+			<td tal:condition="edit_mode"><input type="checkbox" name="locations:list" tal:attributes="value python:record.absolute_url(1)" /></td>
 			<td>
 				<img tal:attributes="src string:${map_url}/getSymbolPicture?id=${record/geo_type};
 									 alt python:here.getSymbolTitle(record.geo_type);
