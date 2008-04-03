@@ -42,24 +42,16 @@ TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER = """<script type="text/javascript">
 		loadXMLDoc('%s/xrjs_feed?key=%s&show=%s&query=%s&path=%s', processRequest);
 	}
 	function processRequest() {
-		if (xmlhttp.readyState == 4) {
-			if (xmlhttp.status == 200) {
-				var data = xmlhttp.responseText.split('\\n\\n'), b = '';
-				b = trim(data[1]);
-				if (b != '') document.getElementById('map_markers').innerHTML = b;
-				var arrMarkers = trim(data[0]).split('\\n');
-				for (var i = 0; i < arrMarkers.length; i++) {
-					var b = trim(arrMarkers[i]);
-					if (b != '') {
-						var m = b.split('|');
-						lat=parseFloat(m[0]);lng=parseFloat(m[1]);id=m[2].toString();label=m[3].toString();mapMarker=m[4].toString();
-						mapid = createMarker(map,lat,lng,id,label,eval(mapMarker));
-					}
-				}
-				return true;
-			} else {
-				alert('Naaya GeoMapTool: there was a problem retrieving the XML data:\\n' + xmlhttp.statusText);
-				return false;
+		var data = xmlhttp.responseText.split('\\n\\n'), b = '';
+		b = trim(data[1]);
+		if (b != '') document.getElementById('map_markers').innerHTML = b;
+		var arrMarkers = trim(data[0]).split('\\n');
+		for (var i = 0; i < arrMarkers.length; i++) {
+			var b = trim(arrMarkers[i]);
+			if (b != '') {
+				var m = b.split('|');
+				lat=parseFloat(m[0]);lng=parseFloat(m[1]);id=m[2].toString();label=m[3].toString();mapMarker=m[4].toString();
+				mapid = createMarker(map,lat,lng,id,label,eval(mapMarker));
 			}
 		}
 	}
@@ -87,22 +79,14 @@ TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER = """<script type="text/javascript">
 		loadXMLDoc('%s/xrjs_simple_feed?key=%s&show=%s', processRequest);
 	}
 	function processRequest() {
-		if (xmlhttp.readyState == 4) {
-			if (xmlhttp.status == 200) {
-				var data = xmlhttp.responseText;
-				var arrMarkers = trim(data).split('\\n');
-				for (var i = 0; i < arrMarkers.length; i++) {
-					var b = trim(arrMarkers[i]);
-					if (b != '') {
-						var m = b.split('|');
-						lat=parseFloat(m[0]);lng=parseFloat(m[1]);label=m[2].toString();
-						createSimpleMarker(map,lat,lng,label,mapMarker);
-					}
-				}
-				return true;
-			} else {
-				alert('Naaya GeoMapTool: there was a problem retrieving the XML data:\\n' + xmlhttp.statusText);
-				return false;
+		var data = xmlhttp.responseText;
+		var arrMarkers = trim(data).split('\\n');
+		for (var i = 0; i < arrMarkers.length; i++) {
+			var b = trim(arrMarkers[i]);
+			if (b != '') {
+				var m = b.split('|');
+				lat=parseFloat(m[0]);lng=parseFloat(m[1]);label=m[2].toString();
+				createSimpleMarker(map,lat,lng,label,mapMarker);
 			}
 		}
 	}

@@ -19,9 +19,21 @@ function initXMLdoc() {
 
 function loadXMLDoc(url, handler) {
 	initXMLdoc();
+	function wrapper()
+	{
+		if (xmlhttp.readyState == 4) {
+			if (xmlhttp.status == 200) {
+				handler();
+				return true;
+			} else {
+				alert('Naaya GeoMapTool: there was a problem retrieving the XML data:\n' + xmlhttp.statusText);
+				return false;
+			}
+		}
+	}
 	if (xmlhttp != null)
 	{
-		xmlhttp.onreadystatechange = handler;
+		xmlhttp.onreadystatechange = wrapper;
 		xmlhttp.open("GET", url, true);
 		xmlhttp.send(null);
 	}
