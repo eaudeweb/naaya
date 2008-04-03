@@ -137,7 +137,7 @@ class TranslationsTool(MessageCatalog):
             #sort by message
             default_locale = locale.setlocale(locale.LC_ALL)
             try: locale.setlocale(locale.LC_ALL, 'en')
-            except: locale.setlocale(locale.LC_ALL, 'en_US')
+            except: locale.setlocale(locale.LC_ALL, '')
             t.sort(lambda x, y: locale.strcoll(x[0], y[0]))
             locale.setlocale(locale.LC_ALL, default_locale)
         else:
