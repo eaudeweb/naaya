@@ -1,7 +1,7 @@
 <span tal:replace="structure here/standard_html_header" />
 <h1 i18n:translate="">Manage Consultation Questions</h1>
     <div class="floated-buttons"><span class="buttons">
-        <a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span>
+        <a tal:attributes="href here/absolute_url" i18n:translate="">Back to consultation</a></span>
     </div>
 <tal:block tal:define="selected_language python:here.getSession('lang', here.gl_get_selected_language())">
 <p i18n:translate="">
@@ -13,8 +13,8 @@
 		<legend><span i18n:translate="">Question</span> <span tal:replace="repeat/qs/number" /></legend>
 		<p tal:content="q_body" tal:condition="q_body" />
 		<p tal:condition="not:q_body" i18n:translate="">This question is not translated in the currently selected site language.</p>
-		<a class="consultation-inline-button" tal:attributes="href python:'%s/question_edit_html?qid=%s' % (here.absolute_url(), q_id)" href="#" style="height">Edit</a>
-		<a tal:condition="not:python:here.get_days_left()[0]" class="consultation-inline-button" tal:attributes="href string:${here/absolute_url}/delete_question?qid=${q_id}" style="height">Delete</a>
+		<a class="consultation-inline-button" tal:attributes="href python:'%s/question_edit_html?qid=%s' % (here.absolute_url(), q_id)">Edit</a>
+		<a tal:condition="not:python:here.get_days_left()[0]" class="consultation-inline-button" tal:attributes="href string:${here/absolute_url}/delete_question?qid=${q_id}">Delete</a>
 	</fieldset>
 </tal:block>
 

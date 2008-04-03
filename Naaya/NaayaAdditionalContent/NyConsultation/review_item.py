@@ -80,7 +80,7 @@ class ConsultationReviewItem(NyFSFile):
                 self.ratings[r.title] = REQUEST[r.id]
                 self.votes += 1
         self._p_changed = 1
-        REQUEST.RESPONSE.redirect('%s/reviews_index_html' % self.absolute_url())
+        REQUEST.RESPONSE.redirect('%s/reviews_index_html' % self.get_consultation_url())
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'getRatings')
     def getRatings(self):
@@ -114,6 +114,15 @@ class ConsultationReviewItem(NyFSFile):
     def get_review_date(self):
         """ """
         return self.review_date
+
+    security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'getAnswersDict')
+    def getAnswersDict(self):
+        """ """
+        ans_dict = {}
+        for q in self.answers:
+            qid, ans = q[0], q[1]
+            ans_dict[qid] = ans
+        return ans_dict
 
     review_index_html = PageTemplateFile('zpt/review_index', globals())
     rate_review_html = PageTemplateFile('zpt/review_rate', globals())

@@ -79,7 +79,7 @@
 
 <!-- Submit bar -->
 <div class="submit_bar" metal:fill-slot="submit_buttons">
-	<div class="multicol" style="width:10em;">
+	<div class="multicol">
 		<div class="field">
 			<input type="submit" value="Save changes" i18n:attributes="value" name="saveProperties:method"/>
 		</div>

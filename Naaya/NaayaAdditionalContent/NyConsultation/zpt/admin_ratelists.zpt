@@ -2,7 +2,7 @@
 	<h1 i18n:translate="">Rating categories</h1>
 
 	<div class="floated-buttons"><span class="buttons">
-		<a tal:attributes="href here/get_consultation_url" i18n:translate="">Back to index</a></span>
+		<a tal:attributes="href here/get_consultation_url" i18n:translate="">Back to consultation</a></span>
 	</div>
 
 	<p i18n:translate="">

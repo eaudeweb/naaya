@@ -110,6 +110,10 @@ input.consultation_lc_button {background-color: #E5EFF6; }
 
 }
 
+.consultation-statistics-questions #cs_cleaner {clear: right;}
+.consultation-statistics-questions #cs_ratings {float: right;}
+.consultation-statistics-questions #cs_name {font-weight: bold;}
+
 .consultation-count-number {
 	color: blue;
 	font-weight: bolder;
