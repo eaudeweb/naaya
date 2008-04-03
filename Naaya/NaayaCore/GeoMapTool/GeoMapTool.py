@@ -20,6 +20,7 @@
 #Special thanks to Dragos Chirila (fourhooks.com)
 
 #Python imports
+import os.path
 from cgi import escape
 
 #Zope imports
@@ -30,7 +31,6 @@ from OFS.Folder import Folder
 
 #Product imports
 from constants import *
-from templates import *
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
@@ -41,6 +41,21 @@ from managers.symbols_tool import symbols_tool
 from managers.kml_gen import kml_generator
 from managers.csv_reader import CSVReader
 from managers.geocoding import location_geocode
+
+
+def get_template(name):
+    f = open(os.path.join(os.path.dirname(__file__), 'templates', name))
+    try:
+        content = f.read()
+    finally:
+        f.close()
+    return ''.join(("""<script type="text/javascript">\n<!--\n""", content, """\n// -->\n</script>\n/"""))
+
+TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER = get_template('xmlrpc_locations_map_loader.js')
+TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER = get_template('xmlrpc_simple_map_loader.js')
+TEMPLATE_XMLRPC_ADDPICK_MAP_LOADER = get_template('xmlrpc_addpick_map_loader.js')
+TEMPLATE_XMLRPC_EDITPICK_MAP_LOADER = get_template('xmlrpc_editpick_map_loader.js')
+
 
 def manage_addGeoMapTool(self, languages=None, REQUEST=None):
     """
