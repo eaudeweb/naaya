@@ -1,4 +1,3 @@
-
 function createMarker(map, lat, lng, id, label, icon) {
 	var point = new YGeoPoint(lat, lng);
 	var marker = new YMarker(point, icon);
