@@ -15,10 +15,12 @@ function window_onload() {
 	map.addZoomLong(zp);
 	//markers
 	%s
-	loadXMLDoc('%s/xrjs_feed?key=%s&show=%s&query=%s&path=%s', update_map_request_handler);
+	showSelectedLocations();
 }
 
-function update_map_request_handler() {
+function showSelectedLocations_request_handler()
+{
+	map.removeMarkersAll();
 	var data = xmlhttp.responseText.split('\n\n'), b = '';
 	b = trim(data[1]);
 	if (b != '') document.getElementById('map_markers').innerHTML = b;
@@ -35,6 +37,11 @@ function update_map_request_handler() {
 			mapid = createMarker(map, lat, lng, id, label, eval(mapMarker));
 		}
 	}
+}
+
+function showSelectedLocations()
+{
+	ajaxPost('%s/xrjs_getGeoPoints', showSelectedLocations_request_handler, encodeForm('frmFilterMap'));
 }
 
 window.onload = window_onload;
