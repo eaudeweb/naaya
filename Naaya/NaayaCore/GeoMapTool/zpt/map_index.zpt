@@ -85,6 +85,18 @@ function frmFilterMap_onsubmit()
 		// -->;
 	</script>
 
+	<noscript>
+		<tal:block define="records python:here.getSite().getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=show, path=path);
+		                   skey python:None;
+		                   rkey python:None;
+		                   map_url here/absolute_url;
+						   edit_mode python:False;
+						   sortable python:False;">
+			<table metal:use-macro="here/locations_table_html/macros/main">
+			</table>
+		</tal:block>
+	</noscript>
+
 	<p i18n:translate="">Additionally you can <a tal:attributes="href string:${here/absolute_url}/locations_kml?path=${path}&show=${show}">display map in Google Earth viewer</a> (requires <a href="http://earth.google.com/downloads.html">Google Earth</a> version 4.0 or higher installed).</p>
 
 	<div style="display:none" id="map_markers"></div>

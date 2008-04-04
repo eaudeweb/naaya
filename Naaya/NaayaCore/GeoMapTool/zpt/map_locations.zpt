@@ -44,7 +44,7 @@
 
 
 <form method="post" name="frmDeleteLocations" id="frmDeleteLocations" action="deleteLocations">
-	<tal:block define="records python:here.getLocations(skey, rkey); edit_mode python:True">
+	<tal:block define="records python:here.getLocations(skey, rkey); edit_mode python:True; sortable python:True">
 		<table metal:use-macro="here/locations_table_html/macros/main">
 		</table>
 	</tal:block>

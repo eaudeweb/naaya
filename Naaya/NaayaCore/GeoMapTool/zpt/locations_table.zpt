@@ -5,6 +5,7 @@ This macro uses the following variables:
 - rkey
 - map_url
 - edit_mode: bool - enable/disable delete and edit
+- sortable: add links that sort the table in its header
 </tal:comment>
 <table metal:define-macro="main" border="0" cellspacing="0" cellpadding="4" width="90%"
        tal:attributes="class python:test(edit_mode, 'admin_table', 'datatable')">
@@ -32,7 +33,7 @@ This macro uses the following variables:
 			</tal:block>
 			<tal:block tal:condition="python:skey!='title'">
 				<th scope="col" class="scope-col">
-					<a id="title" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=title#title" i18n:translate="">Title</a>
+					<a tal:omit-tag="not: sortable" id="title" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=title#title" i18n:translate="">Title</a>
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:skey=='address'">
@@ -53,7 +54,7 @@ This macro uses the following variables:
 			</tal:block>
 			<tal:block tal:condition="python:skey!='address'">
 				<th scope="col" class="scope-col">
-					<a id="address" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=address#address" i18n:translate="">Address</a>
+					<a tal:omit-tag="not: sortable" id="address" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=address#address" i18n:translate="">Address</a>
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:skey=='latitude'">
@@ -74,7 +75,7 @@ This macro uses the following variables:
 			</tal:block>
 			<tal:block tal:condition="python:skey!='latitude'">
 				<th scope="col" class="scope-col">
-					<a id="latitude" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude#latitude" i18n:translate="">Latitude</a>
+					<a tal:omit-tag="not: sortable" id="latitude" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=latitude#latitude" i18n:translate="">Latitude</a>
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:skey=='longitude'">
@@ -95,7 +96,7 @@ This macro uses the following variables:
 			</tal:block>
 			<tal:block tal:condition="python:skey!='longitude'">
 				<th scope="col" class="scope-col">
-					<a id="longitude" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude#longitude" i18n:translate="">Longitude</a>
+					<a tal:omit-tag="not: sortable" id="longitude" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=longitude#longitude" i18n:translate="">Longitude</a>
 				</th>
 			</tal:block>
 			<th tal:condition="edit_mode">&nbsp;</th>
