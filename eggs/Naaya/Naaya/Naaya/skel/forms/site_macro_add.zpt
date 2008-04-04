@@ -50,9 +50,9 @@ function fSet(ctrl, value)
     <input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value python:here.getSession('title', '')" />
 </div>
 <div class="field">
-    <label for="description"><span i18n:translate="" tal:omit-tag="">Description</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'description')" class="mandatory_field"> *</span></label>
-    <span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description:utf8:ustring', image_support=True)" />
-    <textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', '')" />
+	<label for="description"><span i18n:translate="" tal:omit-tag="">Description</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'description')" class="mandatory_field"> *</span></label>
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description', image_support=True)" />
+	<textarea id="description" name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', '')" rows="20" cols="72" />
 </div>
 <div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
     <label for="coverage"><span i18n:translate="" tal:omit-tag="">Geographical coverage</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'coverage')" class="mandatory_field"> *</span></label>
