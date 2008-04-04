@@ -182,17 +182,15 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=locations.kml')
         return '\n'.join(output)
 
-    security.declareProtected(view, 'xrjs_feed')
-    def xrjs_feed(self, key, show, query, path, REQUEST):
+    security.declareProtected(view, 'xrjs_getGeoPoints')
+    def xrjs_getGeoPoints(self, REQUEST, path='', geo_types=None):
         """ """
-        r, i = [], ''
+        r = []
         t = []
         ra = r.append
-        #if key == self.getSession(MSP_SESSION_KEY, None):
         portal_ob = self.getSite()
-        if show:
-            show = eval(show)
-            results = portal_ob.getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=show, path=path)
+        if geo_types:
+            results = portal_ob.getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=geo_types, path=path)
             for res in results:
                 if res.latitude != 0.0 and res.longitude != 0.0:
                     ra('%s|%s|mk_%s|%s|%s' % (self.utToUtf8(res.latitude),
@@ -202,14 +200,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                                               'mk_%s' % self.utToUtf8(res.geo_type)))
                     t.append(res.marker_html())
         i = ''.join(t)
-        #self.delSession(MSP_SESSION_KEY)
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
         return '%s\n\n%s' % ('\n'.join(r), i)
 
-    security.declareProtected(view, 'xrjs_getGeoPoints')
-    def xrjs_getGeoPoints(self, geo_types, path, REQUEST):
-        """ """
-        return self.xrjs_feed('', str(geo_types), '', path, REQUEST)
 
     security.declareProtected(view, 'xrjs_simple_feed')
     def xrjs_simple_feed(self, key, show, REQUEST):
