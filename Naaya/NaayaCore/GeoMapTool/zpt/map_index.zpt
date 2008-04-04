@@ -46,21 +46,8 @@ function toggleSelect()
 			frm.elements[i].checked = !isSelected;
 	isSelected = !isSelected;
 }
-
-function frmFilterMap_onsubmit()
-{
-	var zoom = document.getElementById('zoom');
-	var zoomLevel = map.getZoomLevel();
-	zoom.value = zoomLevel;
-
-	var center = document.getElementById('center');
-	var centerLatLon = map.getCenterLatLon();
-	center.value = "YGeoPoint("+ centerLatLon.Lat + "," + centerLatLon.Lon + ")";
-}
 //-->;
-
 </script>
-
 
 <span tal:replace="structure python:here.xrjs_loader(geo_types, query, center, zoom, path, width, height)" />
 
@@ -71,13 +58,13 @@ function frmFilterMap_onsubmit()
 	</noscript>
 	<a id="mappage"></a>
 
-	<div id="yahoo_map_section" style="display: none">
+	<div id="yahoo_map_section_htmlElem" style="display: none">
 		<div id="map"></div>
 		<a href="http://developer.yahoo.com/about/" title="Yahoo.com | About Applications that Use Yahoo! Web Services" i18n:translate="" i18n:attributes="title">Service provided by Yahoo!</a>
 	</div>
 	<script type="text/javascript">
 		<!--
-		yahoo_map_section = document.getElementById("yahoo_map_section");
+		yahoo_map_section = document.getElementById("yahoo_map_section_htmlElem");
 		yahoo_map_section.style.display = "block";
 		// -->;
 	</script>
@@ -106,7 +93,7 @@ function frmFilterMap_onsubmit()
 
 		<div class="right_portlet_content content">
 
-			<form action="#mappage" name="frmFilterMap" method="post" id="frmFilterMap" onsubmit="javascript: frmFilterMap_onsubmit()">
+			<form action="#mappage" name="frmFilterMap" method="post" id="frmFilterMap">
 				<ul class="map_legend" id="filter_map">
 					<tal:block repeat="item here/getParentsList">
 					<tal:block define="children python:here.getSymbolChildren(item.id);">
@@ -129,10 +116,9 @@ function frmFilterMap_onsubmit()
 					<input type="hidden" id="center" name="center" tal:attributes="value center" />
 					<input type="hidden" id="zoom" name="zoom" tal:attributes="value zoom" />
 					<input type="hidden" id="path" name="path" tal:attributes="value path" />
-					<input type="submit" name="submit" value="Show selected" i18n:attributes="value" />
+					<input type="button" value="Show selected" i18n:attributes="value" onclick="javascript: showSelectedLocations()"/>
 				</div>
 			</form>
-
 		</div>
 	</div>
 </div>

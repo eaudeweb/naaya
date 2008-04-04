@@ -206,6 +206,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
         return '%s\n\n%s' % ('\n'.join(r), i)
 
+    security.declareProtected(view, 'xrjs_getGeoPoints')
+    def xrjs_getGeoPoints(self, geo_types, path, REQUEST):
+        """ """
+        return self.xrjs_feed('', str(geo_types), '', path, REQUEST)
+
     security.declareProtected(view, 'xrjs_simple_feed')
     def xrjs_simple_feed(self, key, show, REQUEST):
         """ """
@@ -247,7 +252,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             center_locality = '"' + center_locality + '"' # Javascript string
         center_zoom = zoom or self.center_zoom
         path = path or '/'
-        return TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER % (center_locality, center_zoom, self.default_type, width, height, ",".join(self.map_types), self.xrjs_markers(), self.absolute_url(), xr_key, show, query, path)
+        return TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER % (center_locality, center_zoom, self.default_type, width, height, ",".join(self.map_types), self.xrjs_markers(), self.absolute_url())
 
     def xrjs_simple_loader(self, show):
         #initialize marker loader - location
