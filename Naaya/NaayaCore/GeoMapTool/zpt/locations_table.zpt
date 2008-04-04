@@ -17,14 +17,14 @@ This macro uses the following variables:
 			<th scope="col" class="scope-col" i18n:translate="">Type</th>
 			<tal:block tal:condition="python:skey=='title'">
 				<tal:block tal:condition="python:rkey==''">
-					<th>
+					<th scope="col" class="scope-col">
 						<a id="title" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=title&amp;rkey=1#title">
 							<span i18n:translate="">Title</span>
 						</a>
 					</th>
 				</tal:block>
 				<tal:block tal:condition="python:rkey=='1'">
-					<th>
+					<th scope="col" class="scope-col">
 						<a id="title" tal:attributes="href string:${map_url}/admin_maplocations_html?skey=title#title">
 							<span i18n:translate="">Title</span>
 						</a>
@@ -110,8 +110,8 @@ This macro uses the following variables:
 			<td tal:condition="edit_mode"><input type="checkbox" name="locations:list" tal:attributes="value python:record.absolute_url(1)" /></td>
 			<td>
 				<img tal:attributes="src string:${map_url}/getSymbolPicture?id=${record/geo_type};
-									 alt python:here.getSymbolTitle(record.geo_type);
-									 title python:here.getSymbolTitle(record.geo_type);" />
+				                     alt python:here.getSymbolTitle(record.geo_type);
+				                     title python:here.getSymbolTitle(record.geo_type);" />
 			</td>
 			<td><a tal:attributes="href string:${record/absolute_url}" tal:content="record/title" /></td>
 			<td tal:content="record/address" />
