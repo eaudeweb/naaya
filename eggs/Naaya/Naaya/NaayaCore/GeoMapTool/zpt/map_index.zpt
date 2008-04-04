@@ -2,13 +2,12 @@
 <span tal:replace="structure here/standard_html_header" />
 
 <tal:block tal:define="geo_types python:request.get('geo_types', here.getSymbolsIds()); 
-						query python:request.get('query', '');
-						center python:request.get('center', '');
-						zoom python:request.get('zoom', '');
-						path python:request.get('path', '');
-						width python:request.get('width', here.map_width);
-						height python:request.get('height', here.map_height)">
-
+                       query python:request.get('query', '');
+                       center python:request.get('center', '');
+                       zoom python:request.get('zoom', '');
+                       path python:request.get('path', '');
+                       width python:request.get('width', here.map_width);
+                       height python:request.get('height', here.map_height)">
 
 <style type="text/css">
 div.marker {
@@ -54,7 +53,7 @@ function toggleSelect()
 <div id="center_content" style="width: 78%; overflow-x: auto;">
 	<h1 i18n:translate="">Geo map</h1>
 	<noscript>
-		<p i18n:translate="" class=".message-information">You must have Javascript turned on to view all YahooMap features.</p>
+		<p i18n:translate="" class=".message-information">You must have Javascript turned on to view all the YahooMap features.</p>
 	</noscript>
 	<a id="mappage"></a>
 
@@ -62,20 +61,14 @@ function toggleSelect()
 		<div id="map"></div>
 		<a href="http://developer.yahoo.com/about/" title="Yahoo.com | About Applications that Use Yahoo! Web Services" i18n:translate="" i18n:attributes="title">Service provided by Yahoo!</a>
 	</div>
-	<script type="text/javascript">
-		<!--
-		yahoo_map_section = document.getElementById("yahoo_map_section_htmlElem");
-		yahoo_map_section.style.display = "block";
-		// -->;
-	</script>
 
 	<noscript>
 		<tal:block define="records python:here.getSite().getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=geo_types, path=path);
 		                   skey python:None;
 		                   rkey python:None;
 		                   map_url here/absolute_url;
-						   edit_mode python:False;
-						   sortable python:False;">
+		                   edit_mode python:False;
+		                   sortable python:False;">
 			<table metal:use-macro="here/locations_table_html/macros/main">
 			</table>
 		</tal:block>
@@ -116,12 +109,29 @@ function toggleSelect()
 					<input type="hidden" id="center" name="center" tal:attributes="value center" />
 					<input type="hidden" id="zoom" name="zoom" tal:attributes="value zoom" />
 					<input type="hidden" id="path" name="path" tal:attributes="value path" />
-					<input type="button" value="Show selected" i18n:attributes="value" onclick="javascript: showSelectedLocations()"/>
+					<input type="button" id="btnShowSelected_htmlElem" value="Show selected" i18n:attributes="value"
+					       style="display: none" onclick="javascript: showSelectedLocations()" />
+					<noscript>
+						<input type="submit" value="Show selected" i18n:attributes="value" />
+					</noscript>
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
+
+<script type="text/javascript">
+<!--
+	// show the elements that are used when JavaScript is available
+
+	yahoo_map_section = document.getElementById("yahoo_map_section_htmlElem");
+	yahoo_map_section.style.display = "block";
+
+	btnShowSelected = document.getElementById("btnShowSelected_htmlElem");
+	btnShowSelected.style.display = "inline";
+// -->;
+</script>
+
 
 </tal:block>
 
