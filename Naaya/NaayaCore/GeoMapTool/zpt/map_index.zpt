@@ -1,7 +1,7 @@
 <span tal:replace="python:request.RESPONSE.setHeader('content-type','application/xhtml+xml;charset=utf-8')" />
 <span tal:replace="structure here/standard_html_header" />
 
-<tal:block tal:define="show python:request.get('geo_type', here.getSymbolsIds()); 
+<tal:block tal:define="geo_types python:request.get('geo_types', here.getSymbolsIds()); 
 						query python:request.get('query', '');
 						center python:request.get('center', '');
 						zoom python:request.get('zoom', '');
@@ -42,11 +42,11 @@ function toggleSelect()
     var i;
     if (isSelected == false)
     {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'geo_type:list') frm.elements[i].checked = true;
+            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'geo_types:list') frm.elements[i].checked = true;
         isSelected = true;}
     else
     {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'geo_type:list') frm.elements[i].checked = false;
+            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'geo_types:list') frm.elements[i].checked = false;
         isSelected = false;}
 }
 
@@ -65,7 +65,7 @@ function frmFilterMap_onsubmit()
 </script>
 
 
-<span tal:replace="structure python:here.xrjs_loader(show, query, center, zoom, path, width, height)" />
+<span tal:replace="structure python:here.xrjs_loader(geo_types, query, center, zoom, path, width, height)" />
 
 <div id="center_content" style="width: 78%; overflow-x: auto;">
 	<h1 i18n:translate="">Geo map</h1>
@@ -86,7 +86,7 @@ function frmFilterMap_onsubmit()
 	</script>
 
 	<noscript>
-		<tal:block define="records python:here.getSite().getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=show, path=path);
+		<tal:block define="records python:here.getSite().getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=geo_types, path=path);
 		                   skey python:None;
 		                   rkey python:None;
 		                   map_url here/absolute_url;
@@ -97,7 +97,7 @@ function frmFilterMap_onsubmit()
 		</tal:block>
 	</noscript>
 
-	<p i18n:translate="">Additionally you can <a tal:attributes="href string:${here/absolute_url}/locations_kml?path=${path}&show=${show}">display map in Google Earth viewer</a> (requires <a href="http://earth.google.com/downloads.html">Google Earth</a> version 4.0 or higher installed).</p>
+	<p i18n:translate="">Additionally you can <a tal:attributes="href string:${here/absolute_url}/locations_kml?path=${path}&show=${geo_types}">display map in Google Earth viewer</a> (requires <a href="http://earth.google.com/downloads.html">Google Earth</a> version 4.0 or higher installed).</p>
 
 	<div style="display:none" id="map_markers"></div>
 </div>
@@ -114,13 +114,13 @@ function frmFilterMap_onsubmit()
 					<tal:block repeat="item here/getParentsList">
 					<tal:block define="children python:here.getSymbolChildren(item.id);">
 					<li>
-						<input type="checkbox" name="geo_type:list" tal:attributes="value item/id; id item/id; checked python:item.id in show" />
+						<input type="checkbox" name="geo_types:list" tal:attributes="value item/id; id item/id; checked python:item.id in geo_types" />
 						<img tal:condition="python:item.picture is not None" tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title" />
 						<span i18n:translate="" tal:content="item/title" />
 					</li>
 					<ul tal:condition="children" class="category_child">
 						<li tal:repeat="child children">
-							<input type="checkbox" name="geo_type:list" tal:attributes="value child/id; id child/id; checked python:child.id in show" />
+							<input type="checkbox" name="geo_types:list" tal:attributes="value child/id; id child/id; checked python:child.id in geo_types" />
 							<img tal:condition="python:child.picture is not None" tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title" />
 							<label tal:attributes="for child/id"><span i18n:translate="" tal:content="child/title" /></label>
 						</li>
@@ -129,7 +129,6 @@ function frmFilterMap_onsubmit()
 					</tal:block>
 				</ul>
 				<div>
-					<input type="hidden" id="geo_type" name="geo_type" value="" />
 					<input type="hidden" id="center" name="center" tal:attributes="value center" />
 					<input type="hidden" id="zoom" name="zoom" tal:attributes="value zoom" />
 					<input type="hidden" id="path" name="path" tal:attributes="value path" />
