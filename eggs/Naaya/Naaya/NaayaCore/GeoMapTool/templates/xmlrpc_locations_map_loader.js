@@ -2,7 +2,7 @@ var map = null;
 var mapMarker = null;
 var mapCenterLoc = %s, mapCenterZoom = %s;
 
-function handlerLoad() {
+function window_onload() {
 	map = new YMap(document.getElementById("map"), %s, new YSize(%s, %s));
 	// Display the map centered on given address 
 	map.drawZoomAndCenter(mapCenterLoc, mapCenterZoom);
@@ -15,10 +15,10 @@ function handlerLoad() {
 	map.addZoomLong(zp);
 	//markers
 	%s
-	loadXMLDoc('%s/xrjs_feed?key=%s&show=%s&query=%s&path=%s', processRequest);
+	loadXMLDoc('%s/xrjs_feed?key=%s&show=%s&query=%s&path=%s', update_map_request_handler);
 }
 
-function processRequest() {
+function update_map_request_handler() {
 	var data = xmlhttp.responseText.split('\n\n'), b = '';
 	b = trim(data[1]);
 	if (b != '') document.getElementById('map_markers').innerHTML = b;
@@ -37,4 +37,4 @@ function processRequest() {
 	}
 }
 
-window.onload = handlerLoad;
+window.onload = window_onload;
