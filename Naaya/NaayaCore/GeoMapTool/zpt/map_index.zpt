@@ -38,16 +38,13 @@ div.marker-body h3 {
 <!--
 var isSelected = true;
 function toggleSelect()
-{   var frm = document.frmFilterMap;
+{
+	var frm = document.frmFilterMap;
     var i;
-    if (isSelected == false)
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'geo_types:list') frm.elements[i].checked = true;
-        isSelected = true;}
-    else
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'geo_types:list') frm.elements[i].checked = false;
-        isSelected = false;}
+	for(i=0; i<frm.elements.length; i++)
+		if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'geo_types:list')
+			frm.elements[i].checked = !isSelected;
+	isSelected = !isSelected;
 }
 
 function frmFilterMap_onsubmit()
