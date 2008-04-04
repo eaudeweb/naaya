@@ -49,7 +49,7 @@ def get_template(name):
         content = f.read()
     finally:
         f.close()
-    return ''.join(("""<script type="text/javascript">\n<!--\n""", content, """\n// -->\n</script>\n/"""))
+    return ''.join(("""<script type="text/javascript">\n<!--\n""", content, """\n// -->\n</script>\n"""))
 
 TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER = get_template('xmlrpc_locations_map_loader.js')
 TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER = get_template('xmlrpc_simple_map_loader.js')
