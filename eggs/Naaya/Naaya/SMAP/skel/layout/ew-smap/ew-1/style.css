@@ -7,6 +7,7 @@
 	border-left: 1px solid #666666;
 	border-right: 1px solid #666666;
 	margin: 0;
+	width: 100%;
 }
 #main_structure_ie_fixer{ position: relative; }
 
@@ -255,6 +256,7 @@ fieldset legend {
 	/*border-right: 1px dotted #ffffff;*/
 	color: #feffff;
 	z-index: 11; /* Bug in IE6, IE7 */
+	display: inline; /**/
 }
 #menunav a, #menunav a:visited {
 	display: block;
@@ -264,15 +266,18 @@ fieldset legend {
 	height: 2.3em;
 	line-height: 2.3em;
 	font-weight: bold;
+	display: inline; /**/
 }
 .topmenu .menuitem {
 	float: left;
 	border-left: 1px solid #DFF0C6;
+	display: inline; /**/
 }
 #menunav .menuitem a {
 	color: #FFFFFF;
 	text-decoration: none;
 	padding: 0px 9px 0px 6px;
+	display: inline; /**/
 }
 /* Top drop down menu */
 ul.topnav_menu {
@@ -482,10 +487,11 @@ ul.left_side_navigation li:hover ul, ul.left_side_navigation li.sfhover ul { dis
 #middle_right_port {
 	margin:0px 0px 10px 193px;
 	min-height: 45em;
+	/*width: 100%;*/
 }
 .middle-portlet {
 	border:1px solid white;
-	/*margin-top: 10px;*/
+	margin-top: 2px;
 }
 .middle-portlet h4 {
 	border-bottom:1px solid #cbcbcb;
