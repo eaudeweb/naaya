@@ -77,6 +77,16 @@ function fSet(ctrl, value)
 		<label for="expirationdate" i18n:translate="">Expiration date</label>
 		<input type="text" name="expirationdate" class="vDateField" id="expirationdate" size="20" tal:attributes="value python:here.getSession('expirationdate', here.utConvertDateTimeObjToString(DateTime() + 30))" />
 	</div>
+	<!-- Notify respondents -->
+	<div class="field">
+		<label for="notify_respondents" i18n:translate="">Notify respondents</label>
+		<select id="required" name="notify_respondents:string" tal:define="notify_respondents python:here.getSession('notify_respondents', 'NOTIFY_RESPONDENTS_LET_THEM_CHOOSE_YES')">
+			<option value="ALWAYS" tal:attributes="selected python:notify_respondents == 'ALWAYS'" i18n:translate="">Always</option>
+			<option value="NEVER" tal:attributes="selected python:notify_respondents == 'NEVER'" i18n:translate="">Never</option>
+			<option value="LET_THEM_CHOOSE_YES" tal:attributes="selected python:notify_respondents == 'LET_THEM_CHOOSE_YES'" i18n:translate="">Let them choose (default is yes)</option>
+			<option value="LET_THEM_CHOOSE_NO" tal:attributes="selected python:notify_respondents == 'LET_THEM_CHOOSE_NO'" i18n:translate="">Let them choose (default is no)</option>
+		</select>
+	</div>
 
 	<!-- Submit buttons-->
 	<div class="field">

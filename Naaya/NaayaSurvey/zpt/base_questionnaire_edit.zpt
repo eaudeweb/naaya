@@ -1,8 +1,7 @@
-<tal:block metal:define-macro="page">
+<tal:block metal:define-macro="page" tal:define="stool here/portal_survey">
 	<tal:block metal:use-macro="python:here.getFormsTool().site_macro_edit.macros['page']">
 		<metal:block fill-slot="custom_scripts">
 			<link rel="stylesheet" type="text/css" media="all"
-			      tal:define="stool here/portal_survey;"
 			      tal:attributes="href string:${stool/absolute_url}/css_survey_common" />
 		</metal:block>
 
@@ -22,6 +21,16 @@
 				<input type="text" name="expirationdate" class="vDateField" id="expirationdate" size="10" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.getVersionProperty('expirationdate')))" />
 				<noscript><em i18n:translate="">dd/mm/yyyy</em></noscript>
 			<div class="field">
+			<!-- Notify respondents -->
+			<div class="field">
+				<label for="notify_respondents" i18n:translate="">Notify respondents</label>
+				<select id="required" name="notify_respondents" tal:define="notify_respondents here/notify_respondents">
+					<option value="ALWAYS" tal:attributes="selected python:notify_respondents == 'ALWAYS'" i18n:translate="">Always</option>
+					<option value="NEVER" tal:attributes="selected python:notify_respondents == 'NEVER'" i18n:translate="">Never</option>
+					<option value="LET_THEM_CHOOSE_YES" tal:attributes="selected python:notify_respondents == 'LET_THEM_CHOOSE_YES'" i18n:translate="">Let them choose (default is yes)</option>
+					<option value="LET_THEM_CHOOSE_NO" tal:attributes="selected python:notify_respondents == 'LET_THEM_CHOOSE_NO'" i18n:translate="">Let them choose (default is no)</option>
+				</select>
+			</div>
 		</metal:block>
 	</tal:block>
 </tal:block>
