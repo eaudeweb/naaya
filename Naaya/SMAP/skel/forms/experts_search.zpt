@@ -193,11 +193,11 @@
 					<td><span i18n:translate="">No search criterias</span></td>
 				</tr>
 				<tr tal:condition="python:priority_area!='all'">
-					<td><strong i18n:translate="">Project area</strong></td>
+					<td><strong i18n:translate="">Main topic of expertise</strong></td>
 					<td><span tal:content="python:here.getExpPriorityTitle(priority_area)" i18n:translate="" /></td>
 				</tr>
 				<tr tal:condition="focus">
-					<td><strong i18n:translate="">Focus(es) of the project</strong></td>
+					<td><strong i18n:translate="">Sub-topics of expertise</strong></td>
 					<td>
 					<tal:block repeat="focus_id focus">
 						<div tal:content="python:here.getFocusTitle(focus_id, priority_area)" i18n:translate="" />
