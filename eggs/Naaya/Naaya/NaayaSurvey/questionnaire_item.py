@@ -43,10 +43,12 @@ class questionnaire_item(Implicit, NyProperties):
     def save_properties(self, title='', description='', coverage='', 
                         keywords='', sortorder=100, 
                         releasedate=DateTime(), expirationdate=DateTime(),
+                        notify_respondents='LET_THEM_CHOOSE_YES',
                         lang=None, **kwargs):
         """
         Save item properties.
         """
+        assert(notify_respondents in ('ALWAYS', 'NEVER', 'LET_THEM_CHOOSE_YES', 'LET_THEM_CHOOSE_NO'))
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
         self._setLocalPropValue('coverage', lang, coverage)
@@ -54,3 +56,4 @@ class questionnaire_item(Implicit, NyProperties):
         self.sortorder = sortorder
         self.releasedate = releasedate
         self.expirationdate = expirationdate
+        self.notify_respondents = notify_respondents

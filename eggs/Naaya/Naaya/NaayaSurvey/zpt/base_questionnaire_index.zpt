@@ -77,10 +77,12 @@
 			</tal:block>
 
 			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'">
-				<input type="checkbox" id="notify_respondent" name="notify_respondent:bool"
-				       tal:attributes="checked python:here.getSession('notify_respondent', True)" />
-				<label for="notify_respondent" i18n:translate="">Email me my answers</label>
-				<span tal:define="dummy python:here.delSession('notify_respondent')"></span>
+				<tal:block condition="python:here.notify_respondents.startswith('LET_THEM_CHOOSE')">
+					<input type="checkbox" id="notify_respondent" name="notify_respondent:bool"
+					       tal:attributes="checked python:here.getSession('notify_respondent', here.notify_respondents=='LET_THEM_CHOOSE_YES')" />
+					<label for="notify_respondent" i18n:translate="">Email me my answers</label>
+					<span tal:define="dummy python:here.delSession('notify_respondent')"></span>
+				</tal:block>
 			</tal:block>
 
 			<div class="surveySubmit">
