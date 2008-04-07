@@ -68,10 +68,20 @@ The administrators can change the survey (e.g. title, description), its attachme
 		Because adding a statistic one by one would take too much time for a complex survey with many questions, there is the possibility of creating a complete report with all the question - statistic combinations. To create this report, choose a title and click on the "Generate full report" button.
 
 
+		Email notifications
+		-------------------
+		When a respondent answers, the owner of the survey will receive a notification email, which includes a link to the newly added answer.
+
+		After a survey is taken the authenticated respondents can receive an email notification with their answer by using the "Email me my answer" setting. In some cases, e.g. short surveys, it is desirable to let administrators disable notifications, while in other cases, e.g. large surveys, notifications should always be sent. This is why, the survey has a "notify respondents" setting (for administrators) with the following choices:
+		 * Alway - a notification is alway sent to respondents
+		 * Never -a notification is never sent to respondents
+		 * Let respondents choose (default is yes) - respondents can choose if they wish to receive a notification; the "Email me my answers" setting will be checked
+		 * Let respondents choose (default is no) - respondents can choose if they wish to receive a notification; the "Email me my answers" setting will be unchecked 
+
 
 Taking the survey
 -----------------
-Send the link of the survey to the respondents. When a respondent answers, the owner of the survey will receive a notification email, which includes a link to the newly added answer. Authenticated respondents can receive a notification too, if they wish to.
+Send the link of the survey to the respondents, so that they can take it. 
 
 To prevent spam, captcha is used for anonymous users. Authenticated users are permitted to answer only once, but they can change their answers any time they wish too (if the survey has not expired).
 
