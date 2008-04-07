@@ -45,14 +45,15 @@
 
 <p i18n:translate="" tal:condition="python: here.expired() and not here.checkPermissionEditObjects()">Survey expired.</p>
 
-<tal:block condition="python: not here.expired() or here.checkPermissionEditObjects()">
+<tal:block condition="python: not here.expired() or here.checkPermissionEditObjects()"
+           define="stype here/getSurveyTemplate">
 	<tal:block define="my_answer python:here.getMyAnswerDatamodel()">
 		<p class="message-information" i18n:translate="" tal:condition="not: here/checkPermissionAddAnswer">You don't have enough permissions to take this survey!</p>
 		<p class="message-information" i18n:translate="" tal:condition="my_answer">You have already taken this survey. If you decide to take it again, you will overwrite the previous answers!</p>
 		<form name="frmAdd" method="post" action="." enctype="multipart/form-data"
 		      tal:condition="here/checkPermissionAddAnswer">
 
-			<tal:block tal:define="attachments here/getSortedAttachments" condition="attachments">
+			<tal:block tal:define="attachments stype/getSortedAttachments" condition="attachments">
 				<h2 i18n:translate="">Attachments</h2>
 				<ol>
 					<li tal:repeat="attachment attachments">
@@ -67,8 +68,7 @@
 				</ol>
 			</tal:block>
 
-			<tal:block define="stype here/getSurveyTemplate"
-			           content="structure python:test(stype, stype.render(mode='edit', datamodel=my_answer), 'Error')" />
+			<tal:block tal:content="structure python:test(stype, stype.render(mode='edit', datamodel=my_answer), 'Error')" />
 
 			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
 				<span tal:replace="structure here/showCaptcha" />
