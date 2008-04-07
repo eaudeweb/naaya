@@ -80,10 +80,10 @@
 				var sfEls = document.getElementById("left_port").getElementsByTagName("LI");
 				add_sfhover(sfEls);
 
-				var sfEls = document.getElementById("topmenuband").getElementsByTagName("DIV");
+				var sfEls = document.getElementById("menunav").getElementsByTagName("DIV");
 				add_sfhover(sfEls);
 
-				var sfEls = document.getElementById("topmenuband").getElementsByTagName("LI");
+				var sfEls = document.getElementById("menunav").getElementsByTagName("LI");
 				add_sfhover(sfEls);
 			}
 			if (window.attachEvent) window.attachEvent("onload", sfHover);
@@ -166,7 +166,7 @@
 		</div>
 	</div>
 
-	<div id="menunav" class="topmenu" id="topmenuband">
+	<div id="menunav" class="topmenu">
 		<div id="search" tal:condition="isArabic">
 			<form method="get" tal:attributes="action string:${site_url}/search_html">
 				<label accesskey="4" for="query" i18n:translate="">Global search</label>
