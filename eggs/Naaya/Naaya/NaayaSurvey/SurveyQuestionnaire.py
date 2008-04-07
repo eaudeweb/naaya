@@ -150,11 +150,11 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             kwargs.update(REQUEST.form)
         lang = kwargs.get('lang', self.get_selected_language())
 
-        kwargs.setdefault('title', kwargs.get('title', ''))
-        kwargs.setdefault('description', kwargs.get('description', ''))
-        kwargs.setdefault('keywords', kwargs.get('keywords', ''))
-        kwargs.setdefault('coverage', kwargs.get('coverage', ''))
-        kwargs.setdefault('sortorder', kwargs.get('sortorder', DEFAULT_SORTORDER))
+        kwargs.setdefault('title', '')
+        kwargs.setdefault('description', '')
+        kwargs.setdefault('keywords', '')
+        kwargs.setdefault('coverage', '')
+        kwargs.setdefault('sortorder', DEFAULT_SORTORDER)
 
         releasedate = kwargs.get('releasedate', DateTime())
         releasedate = self.process_releasedate(releasedate)
