@@ -74,7 +74,7 @@ function fSet(ctrl, value)
 		<input type="text" name="releasedate" class="vDateField" id="releasedate" size="20" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" />
 	</div>
 	<div class="field">
-		<label for="releasedate" i18n:translate="">Expiration date</label>
+		<label for="expirationdate" i18n:translate="">Expiration date</label>
 		<input type="text" name="expirationdate" class="vDateField" id="expirationdate" size="20" tal:attributes="value python:here.getSession('expirationdate', here.utConvertDateTimeObjToString(DateTime() + 30))" />
 	</div>
 
