@@ -301,4 +301,7 @@ class SurveyTool(Folder):
     security.declarePublic('base_questionnaire_add_html')
     base_questionnaire_add_html = PageTemplateFile('zpt/base_questionnaire_add', globals())
 
+    security.declarePublic('base_questionnaire_edit_html')
+    base_questionnaire_edit_html = PageTemplateFile('zpt/base_questionnaire_edit', globals())
+
 InitializeClass(SurveyTool)
