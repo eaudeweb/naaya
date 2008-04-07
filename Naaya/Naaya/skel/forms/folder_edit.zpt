@@ -1,4 +1,4 @@
-<tal:block tal:replace="structure here/standard_html_header"/>
+<tal:block tal:replace="structure here/standard_html_header" />
 
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
@@ -87,8 +87,8 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 </div>
 <div class="field" tal:define="editor here/getEditorTool">
 	<label for="description" i18n:translate="">Description</label>
-	<span tal:replace="structure python:editor.render('description:utf8:ustring', curr_lang, image_support=True)" />
-	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', here.getLocalProperty('description', curr_lang))" />
+	<span tal:replace="structure python:editor.render('description', curr_lang, image_support=True)" />
+	<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('description', here.getLocalProperty('description', curr_lang))" />
 </div>
 <div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
 	<label for="coverage" i18n:translate="">Geographical coverage</label>

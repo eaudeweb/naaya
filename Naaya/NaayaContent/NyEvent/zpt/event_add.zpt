@@ -42,8 +42,8 @@
 </div>
 <div class="field" tal:define="editor here/getEditorTool">
 	<label for="details"><span i18n:translate="" tal:omit-tag="">Details (HTML)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'details')" class="mandatory_field"> *</span></label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('details:utf8:ustring', image_support=True)" />
-	<textarea name="details:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('details', '')" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('details', image_support=True)" />
+	<textarea id="details" name="details:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('details', '')" />
 </div>
 <div class="field-inline">
 	<label for="topitem"><span i18n:translate="" tal:omit-tag="">On front</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'topitem')" class="mandatory_field"> *</span></label>

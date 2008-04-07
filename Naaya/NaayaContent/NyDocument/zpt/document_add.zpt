@@ -50,8 +50,8 @@ function fSet(ctrl, value)
 </div>
 <div class="field">
 	<label for="description"><span i18n:translate="" tal:omit-tag="">Description</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'description')" class="mandatory_field"> *</span></label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description:utf8:ustring', image_support=True)" />
-	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', '')" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description', image_support=True)" />
+	<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('description', '')" />
 </div>
 <div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
 	<label for="coverage"><span i18n:translate="" tal:omit-tag="">Geographical coverage</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'coverage')" class="mandatory_field"> *</span></label>
@@ -86,8 +86,8 @@ function fSet(ctrl, value)
 </div>
 <div class="field">
 	<label for="body"><span i18n:translate="" tal:omit-tag="">Body (HTML)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'body')" class="mandatory_field"> *</span></label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('body:utf8:ustring', image_support=True)" />
-	<textarea name="body:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getSession('body', '')" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('body', image_support=True)" />
+	<textarea id="body" name="body:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getSession('body', '')" />
 </div>
 <div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
 	<label tal:attributes="for record/id" i18n:translate=""><span tal:replace="record/name" /></label>

@@ -33,8 +33,8 @@
 </tr>
 <tr tal:define="editor here/getEditorTool">
 	<td valign="top" i18n:translate="">Description (HTML)</td>
-	<span tal:replace="structure python:editor.render('description:utf8:ustring', curr_lang, image_support=True)" />
-	<td><textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getLocalProperty('description', curr_lang)" /></td>
+	<span tal:replace="structure python:editor.render('description', curr_lang, image_support=True)" />
+	<td><textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getLocalProperty('description', curr_lang)" /></td>
 </tr>
 <tr>
 	<td i18n:translate="">Publisher</td>

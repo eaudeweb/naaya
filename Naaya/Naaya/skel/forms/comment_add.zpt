@@ -14,8 +14,8 @@
 </div>
 <div class="field">
 	<label for="body" i18n:translate="">Comment</label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('body:utf8:ustring', image_support=True)" />
-	<textarea name="body:utf8:ustring" class="mceEditor"></textarea>
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('body', image_support=True)" />
+	<textarea id="body" name="body:utf8:ustring" rows="20" cols="72" class="mceEditor"></textarea>
 </div>
 <div class="field">
 	<input type="submit" value="Submit" i18n:attributes="value" />

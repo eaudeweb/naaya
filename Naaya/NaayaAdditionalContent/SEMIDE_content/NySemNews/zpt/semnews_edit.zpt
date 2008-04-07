@@ -162,8 +162,8 @@ function createKey(key)
 <!-- Description -->
 <div class="field">
 	<label for="description"><span i18n:translate="" tal:omit-tag="">Description</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'description')" class="mandatory_field"> *</span></label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description:utf8:ustring', curr_lang, image_support=True)" />
-	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', here.getVersionLocalProperty('description', curr_lang))" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description', curr_lang, image_support=True)" />
+	<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('description', here.getVersionLocalProperty('description', curr_lang))" />
 </div>
 <!-- Link -->
 <div class="field">

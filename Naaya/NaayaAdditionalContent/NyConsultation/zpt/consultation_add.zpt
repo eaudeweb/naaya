@@ -28,8 +28,8 @@
 	
 		<div class="field">
 			<label for="description"><span i18n:translate="" tal:omit-tag="">Description</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'description')" class="mandatory_field"> *</span></label>
-			<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description:utf8:ustring', image_support=True)" />
-			<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', '')" />
+			<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description', image_support=True)" />
+			<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('description', '')" />
 		</div>
 
 		<div class="field">
@@ -43,17 +43,17 @@
 		</div>
 
 		<div class="field-inline">
-			<label for="public_registration" i18n:translate>Allow visitors to register as reviewers for this consultation</label>
+			<label for="public_registration" i18n:translate="">Allow visitors to register as reviewers for this consultation</label>
 			<input type="checkbox" name="public_registration" id="public_registration" value="1" tal:attributes="checked python:here.getSession('public_registration', '') == '1'" />
 		</div>
 
 		<div class="field-inline">
-			<label for="allow_file" i18n:translate>Allow reviewers to upload files when answering</label>
+			<label for="allow_file" i18n:translate="">Allow reviewers to upload files when answering</label>
 			<input type="checkbox" name="allow_file" id="allow_file" value="1" tal:attributes="checked python:here.getSession('allow_file', '') == '1'" />
 		</div>
 
 		<div class="field-inline">
-			<label for="line_comments" i18n:translate>Allow reviewers to post comments on lines in their answers</label>
+			<label for="line_comments" i18n:translate="">Allow reviewers to post comments on lines in their answers</label>
 			<input type="checkbox" name="line_comments" id="line_comments" value="1" tal:attributes="checked python:here.getSession('line_comments', '') == '1'" />
 		</div>
 

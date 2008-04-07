@@ -8,8 +8,8 @@
 			curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
 <div class="field" tal:define="editor here/getEditorTool">
 	<label for="details"><span i18n:translate="" tal:omit-tag="">Details (HTML)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'details')" class="mandatory_field"> *</span></label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('details:utf8:ustring', curr_lang, image_support=True)" />
-	<textarea name="details:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('details', here.getVersionLocalProperty('details', curr_lang))" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('details', curr_lang, image_support=True)" />
+	<textarea id="details" name="details:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('details', here.getVersionLocalProperty('details', curr_lang))" />
 </div>
 <div class="field">
 	<label for="expirationdate"><span i18n:translate="" tal:omit-tag="">Expires <noscript>(<em>dd/mm/yyyy</em>)</noscript></span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'expirationdate')" class="mandatory_field"> *</span></label>
