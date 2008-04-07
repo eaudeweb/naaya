@@ -632,6 +632,14 @@ vertical-align: top;
 		padding:0em;
 	}
 
+	#left_cell2 .portlet_folder{
+		display: block;
+		background-color: #c1c19d; /* #c1c19d*/ /*#ffffff*/ /*#ffffff*/ /*#ffffff*/
+		border-top: 0px solid #ffffff; /*0px solid #ffffff*/ /*0px solid #ffffff*/ /* 3px solid #99cc33*/ /*0px solid #ffffff*/
+		padding: 0em;
+		margin: 3px;
+	}
+
 	.portlet_folder div.portlet_folder_title{
 		background-color:#343434; /*#343434*/ /*#ffcc66*/ /*#abb8c1*/ /*#ff9900*/
 		background-position:100% 5%;
