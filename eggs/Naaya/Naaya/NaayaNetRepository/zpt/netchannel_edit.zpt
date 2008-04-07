@@ -20,8 +20,8 @@
 </div>
 <div class="field">
 	<label for="description" i18n:translate="">Description</label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description:utf8:ustring', curr_lang, image_support=True)" />
-	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', here.getVersionLocalProperty('description', curr_lang))"></textarea>
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description', curr_lang, image_support=True)" />
+	<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('description', here.getVersionLocalProperty('description', curr_lang))"></textarea>
 </div>
 <div class="field">
 	<label for="url" i18n:translate="">RSS/RDF file URL</label>

@@ -41,8 +41,8 @@
 </div>
 <div class="field" tal:define="editor here/getEditorTool">
 	<label for="description" i18n:translate="">Description</label>
-	<span tal:replace="structure python:editor.render('description:utf8:ustring', image_support=True)" />
-	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="description" />
+	<span tal:replace="structure python:editor.render('description', image_support=True)" />
+	<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="description" />
 </div>
 <div class="field">
 	<input type="hidden" name="lang" id="lang" tal:attributes="value lang" />

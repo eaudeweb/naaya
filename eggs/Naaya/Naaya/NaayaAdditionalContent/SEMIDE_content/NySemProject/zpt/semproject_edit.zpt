@@ -41,13 +41,13 @@
 </div>
 <div class="field">
 	<label for="objectives"><span i18n:translate="" tal:omit-tag="">Objectives</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'objectives')" class="mandatory_field"> *</span></label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('objectives:utf8:ustring', curr_lang, image_support=True)" />
-	<textarea name="objectives:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getVersionLocalProperty('objectives', curr_lang)" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('objectives', curr_lang, image_support=True)" />
+	<textarea id="objectives" name="objectives:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getVersionLocalProperty('objectives', curr_lang)" />
 </div>
 <div class="field">
 	<label for="results"><span i18n:translate="" tal:omit-tag="">Results</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'results')" class="mandatory_field"> *</span></label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('results:utf8:ustring', curr_lang, image_support=True)" />
-	<textarea name="results:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getVersionLocalProperty('results', curr_lang)" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('results', curr_lang, image_support=True)" />
+	<textarea id="results" name="results:utf8:ustring" class="mceEditor" cols="125" rows="20" tal:content="python:here.getVersionLocalProperty('results', curr_lang)" />
 </div>
 <div class="field">
 	<label for="start_date">

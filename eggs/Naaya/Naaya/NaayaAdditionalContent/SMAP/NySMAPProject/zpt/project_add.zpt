@@ -3,7 +3,7 @@
 <tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
 <script type="text/javascript" src="misc_/SMAP/simpletreemenu.js">
 /***********************************************
-* Simple Tree Menu- © Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* Simple Tree Menu- (c) Dynamic Drive DHTML code library (www.dynamicdrive.com)
 * This notice MUST stay intact for legal use
 * Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
 ***********************************************/
@@ -30,8 +30,8 @@
 </div>
 <div class="field">
 	<label for="description"><span i18n:translate="" tal:omit-tag="">Description</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'description')" class="mandatory_field"> *</span></label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description:utf8:ustring', image_support=True)" />
-	<textarea name="description:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('description', '')" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description', image_support=True)" />
+	<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('description', '')" />
 </div>
 
 <tal:block tal:define="priorities here/getPrioritiesTypesList;

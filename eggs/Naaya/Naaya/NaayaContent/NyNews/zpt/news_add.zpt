@@ -10,8 +10,8 @@
 <tal:block metal:fill-slot="custom_properties">
 <div class="field" tal:define="editor here/getEditorTool">
 	<label for="details"><span i18n:translate="" tal:omit-tag="">Details (HTML)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'details')" class="mandatory_field"> *</span></label>
-	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('details:utf8:ustring', image_support=True)" />
-	<textarea name="details:utf8:ustring" class="mceEditor" tal:content="python:here.getSession('details', '')" />
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('details', image_support=True)" />
+	<textarea id="details" name="details:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getSession('details', '')" />
 </div>
 <div class="field">
 	<label for="expirationdate"><span i18n:translate="" tal:omit-tag="">Expires</span><noscript>(<em>dd/mm/yyyy</em>)</noscript><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'expirationdate')" class="mandatory_field"> *</span></label>
