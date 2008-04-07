@@ -275,24 +275,32 @@ fieldset legend {
 	float: right;
 	border-right: 1px solid #DFF0C6;
 }
-/* (1) */
-* html .topmenu .menuitem {
-	display: inline !important;
-}
+
 /*#menunav .menuitem {
 	float: left;
 	height: 31px;
 	border-left: 1px solid #DFF0C6;
 }*/
+
 #menunav .menuitem a {
 	color: #FFFFFF;
 	text-decoration: none;
 	padding: 0px 9px 0px 6px;
 }
-/* (2) */
+
 * html #menunav .menuitem a {
-	display: inline !important;
+	display: inline;
+	float: left;
 }
+
+* html #menunav .menuitem .topnav_menu a {
+	float: right;
+}
+
+* html #menunav .menuitem .topnav_menu li {
+	height: 2.3em;
+}
+
 /* Top drop down menu */
 ul.topnav_menu {
 	position: absolute;
