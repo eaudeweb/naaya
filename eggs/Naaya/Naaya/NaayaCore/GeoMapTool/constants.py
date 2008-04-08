@@ -19,12 +19,12 @@
 #        Cornel Nitu (Eau de Web)
 #Special thanks to Dragos Chirila (fourhooks.com)
 
-MAP_CENTER_LOCALITY = 'Stockholm, Sweden'
-MAP_CENTER_ZOOM = 15
+MAP_CENTER_LOCALITY = 'Berlin, Germany'
+MAP_CENTER_ZOOM = 14
 MAP_DETAILED_ZOOM = 6
 
 MAP_WIDTH = 600
-MAP_HEIGHT = 300
+MAP_HEIGHT = 510
 
 MAP_DETAILED_WIDTH = 400
 MAP_DETAILED_HEIGHT = 400
