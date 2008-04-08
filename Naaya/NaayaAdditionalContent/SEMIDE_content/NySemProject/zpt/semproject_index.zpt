@@ -274,7 +274,14 @@
 							<span  tal:condition="python:not(file_link or file_link_local)" tal:omit-tag="">n/a</span>
 						</td>
 					</tr>
-
+					<tr tal:condition="python:item.getSize()>0">
+					    <th i18n:translate="">File link local</th>
+					    <td tal:define="download_url item/getDownloadUrl">
+						<a tal:define="size python:item.utShowSizeKb(item.getSize()); content_type python:item.getContentTypeTitle(item.getContentType())"
+						    tal:attributes="href download_url"><img tal:attributes="src string:getContentTypePicture?id=${item/getContentType}" alt="" />
+						    <span tal:replace="string:${item/downloadfilename} (${content_type}, ${size} Kb)"/></a>
+					    </td>
+					</tr>
 					<tr tal:define="source_link python:item.convertToFullURL(item.source_link)"
 							tal:condition="python:item.source or source_link">
 						<th i18n:translate="">Source of information</th>
