@@ -19,6 +19,8 @@
 #        Cornel Nitu (Eau de Web)
 
 import csv, codecs
+import sys
+from zLOG import LOG, ERROR
 
 class UTF8Recoder:
     """
@@ -80,5 +82,7 @@ class CSVReader:
                         buf[field.encode('utf-8')] = value.encode('utf-8')
                 output.append(buf)
             return (output, '')
-        except Exception, error:
-            return (None, error)
+        except Exception, ex:
+            err = sys.exc_info()
+            LOG('NaayaCore.GeoMapTool.managers.CSVReader', ERROR, 'read error', error=err)
+            return (None, ex)
