@@ -28,6 +28,7 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
+from zLOG import LOG, DEBUG
 
 #Product imports
 from constants import *
@@ -291,6 +292,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if latitude.strip() == '' and longitude.strip() == '':
             coordinates = location_geocode(address)
             if coordinates is None:
+                LOG('NaayaCore.GeoMapTool.GeoMapTool', DEBUG, 'add_location: could not find coordinates for %s' % (address, ))
                 latitude, longitude = (0.0, 0.0)
             else:
                 latitude, longitude = coordinates
