@@ -2,10 +2,12 @@
 <tal:block define="portal_map here/getGeoMapTool">
 <span tal:replace="structure here/standard_html_header" />
 
-<script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${portal_map/mapsapikey}"></script>
-<script type="text/javascript" src="misc_/NaayaCore/remote.js"></script>
-<script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
-<span tal:replace="structure python:portal_map.xrjs_simple_loader(here.absolute_url(1))" />
+<tal:block condition="python: here.longitude is not None and here.latitude is not None">
+	<script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${portal_map/mapsapikey}"></script>
+	<script type="text/javascript" src="misc_/NaayaCore/remote.js"></script>
+	<script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
+	<span tal:replace="structure python:portal_map.xrjs_simple_loader(here.absolute_url(1))" />
+</tal:block>
 
 <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" border="0" /> <span tal:replace="here/title_or_id" />
 		<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
@@ -27,7 +29,7 @@
 </tal:block>
 
 <div style="float:right; width: 400px;">
-	<div id="map" style="width: 400px; height: 275px;"></div>
+	<div id="map" style="width: 400px; height: 275px;" tal:condition="python: here.longitude is not None and here.latitude is not None"></div>
 	<a tal:attributes="href string:${portal_map/absolute_url}/" i18n:translate="">See all locations on the map</a>
 </div>
 
