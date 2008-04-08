@@ -31,21 +31,21 @@
 		<li><a tal:attributes="href string:${map_url}/admin_map_html" i18n:translate="">General settings</a></li>
 		<li><a tal:attributes="href string:${map_url}/admin_maptypes_html" i18n:translate="">Location types</a></li>
 		<li><a tal:attributes="href string:${map_url}/admin_mapupload_html" i18n:translate="">Upload locations</a></li>
-		<li id="currenttab"><a tal:attributes="href string:${map_url}/admin_maplocations_html" i18n:translate="">Manage locations</a></li>
-		<li><a tal:attributes="href string:${map_url}/admin_mapduplicatelocations_html" i18n:translate="">Duplicate locations</a></li>
+		<li><a tal:attributes="href string:${map_url}/admin_maplocations_html" i18n:translate="">Manage locations</a></li>
+		<li id="currenttab"><a tal:attributes="href string:${map_url}/admin_mapduplicatelocations_html" i18n:translate="">Duplicate locations</a></li>
 	</ul>
 </div>
 
 
 <p i18n:translate="">
-	Use this form to edit/delete the locations present in this portal.
+This page lists the locations that could be duplicated. The test for duplicates is made on the following fields: <em>location type</em>, <em>address</em>, <em>longitude</em> and <em>latitude</em>.
 </p>
 
 <br clear="all" />
 
 
 <form method="post" name="frmDeleteLocations" id="frmDeleteLocations" action="deleteLocations">
-	<tal:block define="records python:here.getLocations(skey, rkey); edit_mode python:True; sortable python:True">
+	<tal:block define="records python:here.getDuplicateLocations(skey, rkey); edit_mode python:True; sortable python:True">
 		<table metal:use-macro="here/locations_table_html/macros/main">
 		</table>
 	</tal:block>

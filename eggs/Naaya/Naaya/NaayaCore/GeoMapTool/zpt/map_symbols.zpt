@@ -19,6 +19,7 @@
 		<li id="currenttab"><a tal:attributes="href string:${map_url}/admin_maptypes_html" i18n:translate="">Location types</a></li>
 		<li><a tal:attributes="href string:${map_url}/admin_mapupload_html" i18n:translate="">Upload locations</a></li>
 		<li><a tal:attributes="href string:${map_url}/admin_maplocations_html" i18n:translate="">Manage locations</a></li>
+		<li><a tal:attributes="href string:${map_url}/admin_mapduplicatelocations_html" i18n:translate="">Duplicate locations</a></li>
 	</ul>
 </div>
 

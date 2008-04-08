@@ -34,7 +34,7 @@ from zLOG import LOG, DEBUG
 from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.constants import *
-from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.utils import utils, findDuplicates
 from Products.NaayaCore.managers.session_manager import session_manager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
@@ -355,6 +355,14 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             r = self.utSortObjsListByAttr(r, skey, rkey)
         return r
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getDuplicateLocations')
+    def getDuplicateLocations(self, *args, **kw):
+        """Returns a list of duplicate locations.
+
+            It accepts the same the parameters as getLocations.
+        """
+        return list(findDuplicates(self.getLocations(*args, **kw), ('geo_type', 'address', 'longitude', 'latitude')))
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'deleteLocations')
     def deleteLocations(self, locations, REQUEST=None):
         """ delete locations """
@@ -364,7 +372,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 loc_obj.getParentNode().manage_delObjects([loc_obj.id])
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/admin_maplocations_html' % self.absolute_url())
+            REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminAddSymbol')
     def adminAddSymbol(self, title='', description='', parent='', picture='', REQUEST=None):
@@ -419,6 +427,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_maplocations_html')
     admin_maplocations_html = PageTemplateFile('zpt/map_locations', globals())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_mapduplicatelocations_html')
+    admin_mapduplicatelocations_html = PageTemplateFile('zpt/map_duplicate_locations', globals())
 
     security.declareProtected(view_management_screens, 'update_geomap_27022008')
     def update_geomap_27022008(self):

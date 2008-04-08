@@ -138,6 +138,28 @@ def genRandomId(p_length=10, p_chars=string.digits):
     """Generate a random numeric id."""
     return ''.join([choice(p_chars) for i in range(p_length)])
 
+def findDuplicates(objects, attributes):
+    """Returns an iterator with the duplicate objects.
+
+        Items with equal attributes are considered duplicated.
+        @param objects: objects to test
+        @type objects: iterator or sequence
+        @param attributes: sequence of attributes that need to be equal to consider the objects duplicate
+        @type attributes: sequence of strings
+        @rtype: iterator
+    """
+    all_items = {}
+    for item in objects:
+        marker = tuple([getattr(item, attr) for attr in attributes]) # TODO Python 2.4: generator comprehension
+        L = all_items.get(marker, None)
+        if L is None:
+            L = all_items[marker] = []
+        L.append(item)
+    for items in all_items.values():
+        if len(items) < 2:
+            continue
+        for item in items:
+            yield item
 
 class list_utils:
     """Provides some interface to handle a list of ids: add/remove id from list"""
