@@ -1,12 +1,11 @@
 <span tal:replace="python:request.RESPONSE.setHeader('content-type','application/xhtml+xml;charset=utf-8')" />
+<tal:block define="portal_map here/getGeoMapTool">
 <span tal:replace="structure here/standard_html_header" />
 
-<tal:block define="maps_ob here/getGeoMapTool">
-<script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${maps_ob/mapsapikey}"></script>
+<script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${portal_map/mapsapikey}"></script>
 <script type="text/javascript" src="misc_/NaayaCore/remote.js"></script>
 <script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
-<span tal:replace="structure python:maps_ob.xrjs_simple_loader(here.absolute_url(1))" />
-</tal:block>
+<span tal:replace="structure python:portal_map.xrjs_simple_loader(here.absolute_url(1))" />
 
 <h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_label; alt here/meta_label" border="0" /> <span tal:replace="here/title_or_id" />
 		<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
@@ -26,8 +25,6 @@
 	<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()" i18n:translate="">This item has been checked out by another user</strong>
 </div>
 </tal:block>
-
-<tal:block tal:define="portal_map here/getGeoMapTool;">
 
 <div style="float:right; width: 400px;">
 	<div id="map" style="width: 400px; height: 275px;"></div>
@@ -73,10 +70,9 @@
 	</tr>
 </table>
 
-</tal:block>
-
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
 <span tal:replace="structure here/comments_box" />
 
 <span tal:replace="structure here/standard_html_footer" />
+</tal:block>
