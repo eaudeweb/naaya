@@ -73,9 +73,18 @@ function fSet(ctrl, value)
 		<label for="releasedate" i18n:translate="">Release date</label>
 		<input type="text" name="releasedate" class="vDateField" id="releasedate" size="20" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.utGetTodayDate()))" />
 	</div>
+	<!-- Document expiration date -->
 	<div class="field">
 		<label for="expirationdate" i18n:translate="">Expiration date</label>
 		<input type="text" name="expirationdate" class="vDateField" id="expirationdate" size="20" tal:attributes="value python:here.getSession('expirationdate', here.utConvertDateTimeObjToString(DateTime() + 30))" />
+	</div>
+	<!-- Notify owner -->
+	<div class="field">
+		<label for="notify_owner" i18n:translate="">Notify owner when someone takes the survey</label>
+		<select id="notify_owner" name="notify_owner:boolean" tal:define="notify_owner python:here.getSession('notify_owner', True)">
+			<option value="True" tal:attributes="selected notify_owner" i18n:translate="">Yes</option>
+			<option value="False" tal:attributes="selected not:notify_owner" i18n:translate="">No</option>
+		</select>
 	</div>
 	<!-- Notify respondents -->
 	<div class="field">

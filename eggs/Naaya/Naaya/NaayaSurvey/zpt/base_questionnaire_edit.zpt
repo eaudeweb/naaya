@@ -21,6 +21,14 @@
 				<input type="text" name="expirationdate" class="vDateField" id="expirationdate" size="10" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.getVersionProperty('expirationdate')))" />
 				<noscript><em i18n:translate="">dd/mm/yyyy</em></noscript>
 			<div class="field">
+			<!-- Notify owner -->
+			<div class="field">
+				<label for="notify_owner" i18n:translate="">Notify owner when someone takes the survey</label>
+				<select id="notify_owner" name="notify_owner:boolean" tal:define="notify_owner here/notify_owner">
+					<option value="True" tal:attributes="selected notify_owner" i18n:translate="">Yes</option>
+					<option value="False" tal:attributes="selected not:notify_owner" i18n:translate="">No</option>
+				</select>
+			</div>
 			<!-- Notify respondents -->
 			<div class="field">
 				<label for="notify_respondents" i18n:translate="">Email answer to respondents</label>

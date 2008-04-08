@@ -128,6 +128,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
 
     security = ClassSecurityInfo()
 
+    notify_owner = True
     notify_respondents = 'LET_THEM_CHOOSE_YES'
 
     def __init__(self, id, survey_template, lang=None, **kwargs):
@@ -259,7 +260,8 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
 
         answer_id = manage_addSurveyAnswer(self, datamodel, REQUEST=REQUEST)
         answer = self._getOb(answer_id)
-        self.sendNotificationToOwner(answer)
+        if self.notify_owner:
+            self.sendNotificationToOwner(answer)
         if self.notify_respondents == 'ALWAYS' or \
            self.notify_respondents.startswith('LET_THEM_CHOOSE') and notify_respondent:
             self.sendNotificationToRespondent(answer)

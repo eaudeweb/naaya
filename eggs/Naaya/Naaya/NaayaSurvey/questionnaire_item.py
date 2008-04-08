@@ -43,6 +43,7 @@ class questionnaire_item(Implicit, NyProperties):
     def save_properties(self, title='', description='', coverage='', 
                         keywords='', sortorder=100, 
                         releasedate=DateTime(), expirationdate=DateTime(),
+                        notify_owner=True,
                         notify_respondents='LET_THEM_CHOOSE_YES',
                         lang=None, **kwargs):
         """
@@ -56,4 +57,5 @@ class questionnaire_item(Implicit, NyProperties):
         self.sortorder = sortorder
         self.releasedate = releasedate
         self.expirationdate = expirationdate
+        self.notify_owner = notify_owner
         self.notify_respondents = notify_respondents
