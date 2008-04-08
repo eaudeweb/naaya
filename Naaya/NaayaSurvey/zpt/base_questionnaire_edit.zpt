@@ -24,7 +24,7 @@
 			<!-- Notify respondents -->
 			<div class="field">
 				<label for="notify_respondents" i18n:translate="">Email answer to respondents</label>
-				<select id="required" name="notify_respondents" tal:define="notify_respondents here/notify_respondents">
+				<select id="notify_respondents" name="notify_respondents:string" tal:define="notify_respondents here/notify_respondents">
 					<option value="ALWAYS" tal:attributes="selected python:notify_respondents == 'ALWAYS'" i18n:translate="">Always</option>
 					<option value="NEVER" tal:attributes="selected python:notify_respondents == 'NEVER'" i18n:translate="">Never</option>
 					<option value="LET_THEM_CHOOSE_YES" tal:attributes="selected python:notify_respondents == 'LET_THEM_CHOOSE_YES'" i18n:translate="">Let them choose (default is yes)</option>
