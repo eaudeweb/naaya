@@ -48,7 +48,7 @@ class CookieCrumbler:
 
     def __init__(self):
         pass
-    
+
     security.declarePrivate('delRequestVar')
     def delRequestVar(self, req, name):
         # No errors of any sort may propagate, and we don't care *what*
@@ -288,7 +288,7 @@ class CookieCrumbler:
         """ """
         isAnonymous = self.isAnonymousUser()
         came_from = REQUEST.get('came_from', '')
-        
+
         if isAnonymous:
             url = self.unauthorized()
             return RESPONSE.redirect("%s%s" % (self.auto_login_page,url))

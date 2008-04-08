@@ -46,15 +46,19 @@
 					<div id="nav_upper_log">
 						
 						<img tal:attributes="src string:${here/getSkinFilesPath}/ico_login.gif;" align="middle" alt="" />
-						<tal:block tal:condition="python: authenticated_user != 'Anonymous User'">
+						<tal:block condition="python: authenticated_user != 'Anonymous User'">
 							<span i18n:translate="" tal:omit-tag="">you are logged in as</span>
 							<strong tal:content="authenticated_user" />
 							<a tal:attributes="href string:${site_url}/login_html" i18n:translate="">logout</a>
 						</tal:block>
 
-						<tal:block tal:condition="python: authenticated_user == 'Anonymous User'">
+						<tal:block condition="python: authenticated_user == 'Anonymous User'"
+							    define="proc_came_from python:request.get('URL', '');
+								    proc_query python:request.get('QUERY_STRING');
+								    query python:test(proc_query.startswith('?'), proc_query, '?' + proc_query);
+								    came_from python:test(query, proc_came_from + query, proc_came_from)">
 							<span i18n:translate="" tal:omit-tag="">you are not logged in</span>
-							<a tal:attributes="href string:${site_url}/login_html" i18n:translate="">login</a>
+							<a tal:attributes="href string:${site_url}/login_html?came_from=${came_from}&disable_cookie_login__=1" i18n:translate="">login</a>
 							<a tal:attributes="href string:${site_url}/requestrole_html" i18n:translate="">create account</a>
 						</tal:block>
 						
