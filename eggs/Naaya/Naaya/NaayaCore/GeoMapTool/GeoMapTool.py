@@ -166,7 +166,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         out_app(kml.header())
         out_app(kml.style())
         for loc in site_ob.getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=show, path=path):
-            if loc.latitude != 0.0 and loc.longitude != 0.0:
+            if loc.latitude is not None and loc.longitude is not None:
                 out_app(kml.add_point(self.utToUtf8(loc.id),
                                       self.utXmlEncode(loc.title),
                                       self.utXmlEncode(loc.description),
@@ -193,7 +193,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if geo_types:
             results = portal_ob.getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=geo_types, path=path)
             for res in results:
-                if res.latitude != 0.0 and res.longitude != 0.0:
+                if res.latitude is not None and res.longitude is not None:
                     ra('%s|%s|mk_%s|%s|%s' % (self.utToUtf8(res.latitude),
                                               self.utToUtf8(res.longitude),
                                               self.utToUtf8(res.id),
@@ -212,7 +212,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         res = ''
         ob = self.unrestrictedTraverse('%s' % show)
         if ob:
-            if ob.latitude != 0.0 and ob.longitude != 0.0:
+            if ob.latitude is not None and ob.longitude is not None:
                 res = '%s|%s|%s' % (ob.latitude, ob.longitude, self.utJavaScriptEncode(ob.title_or_id()))
         #self.delSession(MSP_SESSION_KEY)
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
@@ -257,7 +257,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         center_locality, center_zoom = self.center_locality, self.center_zoom
         if ob:
             center_latitude, center_longitude = 0.0, 0.0
-            if ob.latitude != 0.0 and ob.longitude != 0.0:
+            if ob.latitude is not None and ob.longitude is not None:
                 center_latitude, center_longitude, center_zoom = ob.latitude, ob.longitude, self.detailed_zoom
         return TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER % (center_latitude, center_longitude, center_zoom, self.default_type, self.detailed_map_width, self.detailed_map_height, ",".join(self.map_types), self.get_location_marker(ob), self.absolute_url(), xr_key, show)
 
@@ -293,7 +293,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             coordinates = location_geocode(address)
             if coordinates is None:
                 LOG('NaayaCore.GeoMapTool.GeoMapTool', DEBUG, 'add_location: could not find coordinates for %s' % (address, ))
-                latitude, longitude = (0.0, 0.0)
+                latitude, longitude = None, None
             else:
                 latitude, longitude = coordinates
 
