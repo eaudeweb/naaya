@@ -100,6 +100,27 @@ def processDuplicateContent(self, delids=[], REQUEST=None):
         REQUEST.RESPONSE.redirect('%s/basketofapprovals_duplicates_html' % self.absolute_url())
 NyFolder.processDuplicateContent = processDuplicateContent
 
+def getItemDuplicates(self, orig):
+    """ Returns the duplicate(s) of the original found in this context"""
+    data = {METATYPE_NYSEMNEWS: ('title', 'coverage'), METATYPE_NYSEMEVENT: ('start_date', 'coverage')}
+    all_items = {}
+    attrs = data[orig.meta_type]
+    
+    for item in self.objectValues(orig.meta_type):
+	marker = tuple([getattr(item, attr) for attr in attrs])
+	L = all_items.get(marker, None)
+	if L is None:
+	    L = all_items[marker] = []
+	L.append(item)
+    for items in all_items.values():
+	if len(items) < 2:
+	    continue
+	if orig in items:
+	    items.remove(orig)
+	    return items
+    return []
+NyFolder.getItemDuplicates = getItemDuplicates
+
 def processPublishedContent(self, appids=[], delids=[], REQUEST=None):
     """
     Process the published content inside this folder.

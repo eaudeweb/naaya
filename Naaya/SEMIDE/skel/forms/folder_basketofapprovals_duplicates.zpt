@@ -122,6 +122,7 @@
 		</tal:block>
 		<th i18n:translate="">Edit</th>
 		<th i18n:translate="" style="width: 5%;">Delete</th>
+		<th i18n:translate="" style="width: 5%;">Duplicates</th>
 	</tr>
 	<tal:block tal:repeat="item python:paginator.get_page(page)">
 	<tr>
@@ -131,11 +132,18 @@
 		<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(item.contributor)" />
 		<td><a tal:attributes="href string:${item/absolute_url}/edit_html" i18n:translate="">edit</a></td>
 		<td><input type="checkbox" name="delids" tal:attributes="value item/id" /></td>
+		<td tal:define="duplicates_list python:here.getItemDuplicates(item)">
+		    <tal:block condition="duplicates_list" repeat="dpl duplicates_list">
+			<a tal:attributes="href dpl/absolute_url; title dpl/title_or_id"
+			    tal:content="repeat/dpl/number" />
+		    </tal:block>
+		    <span tal:condition="not:duplicates_list">-</span>
+		</td>
 	</tr>
 	</tal:block>
 	<tr>
 		<td></td>
-		<td colspan="6">
+		<td colspan="7">
 			<input type="submit" value="Save changes" i18n:attributes="value" />
 			<input type="reset" value="Reset" i18n:attributes="value" />
 		</td>
