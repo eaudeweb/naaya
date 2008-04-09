@@ -17,9 +17,20 @@
 # Alin Voinea, Eau de Web
 """ Collection of classes and function used to convert media to flash video.
 """
+
+# Python imports
 import os
+from popen2 import popen3 # TODO Python 2.5: use the new subprocess module
 import sys
 from threading import Thread
+
+# Zope imports
+from zLOG import LOG, WARNING
+
+
+class MediaConverterError(Exception):
+    """Media Convertor Error"""
+    pass
 
 class MediaConverter(Thread):
     """ Media Converter
@@ -34,49 +45,79 @@ class MediaConverter(Thread):
         """ Execute fs com
         """
         return os.popen4(com)
-    
+
     def run(self):
         """Converts media to flash video (flv) files"""
         if sys.platform == 'win32':
-            # TODO: Handle conversion on Win Platform
-            return
-        
-        return self.execute("ffmpeg -y -v 0 "
-                            "-benchmark "
-                            "-i %(in)s "
-                            "-ar 22050 -s 320x240 -b 500k -f flv "
-                            "%(out)s &> %(done)s.log "
-                            "&& rm %(in)s "
-                            "&& flvtool2 -U %(out)s >> %(done)s.log "
-                            "&& mv %(out)s %(done)s" % 
+            # TODO: Improve (fix) conversion on Win Platform
+            cmd = "ffmpeg -y -v 0 " \
+                    "-benchmark " \
+                    "-i %(in)s " \
+                    "-ar 22050 -s 320x240 -b 500k -f flv " \
+                    "%(out)s &> %(done)s.log " \
+                    "&& del %(in)s "
+            if _is_flvtool2_available:
+                cmd += "&& flvtool2 -U %(out)s >> %(done)s.log "
+            else:
+                LOG('NaayaContent.NyMediaFile.convertors.MediaConverter', WARNING, 'can not update FLV with an onMetaTag event, because flvtool2 is not available')
+            cmd += "&& rename %(out)s %(done)s"
+        else:
+            cmd = "ffmpeg -y -v 0 " \
+                    "-benchmark " \
+                    "-i %(in)s " \
+                    "-ar 22050 -s 320x240 -b 500k -f flv " \
+                    "%(out)s &> %(done)s.log " \
+                    "&& rm %(in)s "
+            if _is_flvtool2_available:
+                cmd += "&& flvtool2 -U %(out)s >> %(done)s.log "
+            else:
+                LOG('NaayaContent.NyMediaFile.convertors.MediaConverter', WARNING, 'can not update FLV with an onMetaTag event, because flvtool2 is not available')
+            cmd += "&& mv %(out)s %(done)s"
+
+        return self.execute(cmd % \
                             {
                                 "in": self.finput,
                                 "out": self.foutput,
                                 "done": self.fdone
                             })
 
-def check_for_tools():
-    # Check for ffmpeg
-    fin, ferr = os.popen4("ffmpeg")
-    error = ferr.read()
-    error = error.lower()
-    
-    # Check for ffmpeg installation
-    if "ffmpeg: command not found" in error:
-        return "ffmpeg not installed."
-    
-    # Check for mp3 support
+
+def _check_ffmpeg():
+    """Returns True if ffmpeg is installed with the proper options (libmp3lame), False otherwise."""
+    status = os.system("ffmpeg -h")
+    if sys.platform != 'win32' and os.WIFEXITED(status): # TODO: portable way to get the exit code
+        exit_code = os.WEXITSTATUS(status)
+    else:
+        exit_code = status
+    if exit_code:
+        raise MediaConverterError('could not run ffmpeg: "ffmpeg -h" has exited with code %s: %s' % (exit_code, error))
+    child_stdout, child_stdin, child_stderr = popen3("ffmpeg -h")
+    error = child_stderr.read()
     if "--enable-libmp3lame" not in error:
-        return "ffmpeg compile error, you should compile " + \
-            "it with --enable-libmp3lame. E.g: ./configure --enable-libmp3lame"
-    
-    # Check for flvtool2
-    fin, ferr = os.popen4("flvtool2")
-    error = ferr.read()
-    error = error.lower()
-    if "flvtool2: command not found" in error:
-        return "flvtool2 not installed."
-    return ""
+        raise MediaConverterError('ffmpeg was not compiled with --enable-libmp3lame; ffmpeg -h returned: %s' % (error, ))
+
+def _check_flvtool2():
+    """Returns True if flvtool2 is installed, False otherwise."""
+    status = os.system("flvtool2 -H")
+    if sys.platform != 'win32' and os.WIFEXITED(status): # TODO: portable way to get the exit code
+        exit_code = os.WEXITSTATUS(status)
+    else:
+        exit_code = status
+    if exit_code:
+        raise MediaConverterError('could not run flvtool2: "flvtool2 -H" has exited with code %s' % (exit_code, ))
+    return True
+
+_is_ffmepg_available = _is_flvtool2_available = False
+try:
+    _check_ffmpeg()
+    _is_ffmepg_available = True
+    _check_flvtool2()
+    _is_flvtool2_available = True
+except MediaConverterError, ex:
+    LOG('NaayaContent.NyMediaFile.convertors', WARNING, "%s" % (ex, ))
+
+def can_convert():
+    return _is_ffmepg_available
 
 def get_conversion_errors(fpath, suffix=".log"):
     """ Open error file and parse it for errors
@@ -114,9 +155,8 @@ def media2flv(finput, suffix=""):
     """
     fin = finput + suffix
     # Check for available server tools
-    error = check_for_tools()
-    if error:
-        return error
+    if not can_convert():
+        return "Can not convert (are tools available?)"
     
     tcv = finput + ".tcv" # to convert
     cvd = finput + ".cvd" # converted

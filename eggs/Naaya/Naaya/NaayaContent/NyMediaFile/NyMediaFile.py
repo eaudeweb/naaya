@@ -41,7 +41,7 @@ from mediafile_item import mediafile_item
 
 from converters.MediaConverter import \
      media2flv, \
-     check_for_tools, \
+     can_convert, \
      get_conversion_errors
 
 from parsers import DEFAULT_PARSER as SubtitleParser
@@ -69,15 +69,13 @@ PROPERTIES_OBJECT = {
     'subtitle':     (0, '', ''),
 }
 
-# If converters installed file must be video, otherwise must be 
-# flash video (flv)
-error = check_for_tools() or not NyFSContainer.is_ext
-if error:
-    zLOG.LOG("NyMediaFile", zLOG.WARNING, 
-             "%s Video conversion will not be supported." % error)
-    PROPERTIES_OBJECT["file"] = (1, MUST_BE_FLVFILE, "The file must be a valid flash video file (.flv)")
-else:
+# If converters installed file must be video, otherwise must be flash video (flv)
+if can_convert() and NyFSContainer.is_ext:
     PROPERTIES_OBJECT["file"] = (1, MUST_BE_VIDEOFILE, "The file must be a valid video file (e.g. .avi, .mpg, .mp4, etc.)")
+else:
+    zLOG.LOG("NyMediaFile", zLOG.WARNING,
+             "Video conversion will not be supported.")
+    PROPERTIES_OBJECT["file"] = (1, MUST_BE_FLVFILE, "The file must be a valid flash video file (.flv)")
 
 manage_addNyMediaFile_html = PageTemplateFile('zpt/mediafile_manage_add', globals())
 manage_addNyMediaFile_html.kind = METATYPE_OBJECT
