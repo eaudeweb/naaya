@@ -327,19 +327,22 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 errs.append('Invalid headers in file!')
 
         #step 2. add locations
-        for rec in records:
-            if rec:
-                err = self.add_location(self.utToUnicode(rec['name']),
-                                        self.utToUnicode(rec['description']),
-                                        rec['address'],
-                                        rec.get('URL', ''),
-                                        approved,
-                                        parent_folder,
-                                        geo_type,
-                                        rec.get('latitude', ''),
-                                        rec.get('longitude', ''))
-                if err is not None:
-                    errs.append(err)
+        if parent_folder:
+            for rec in records:
+                if rec:
+                    err = self.add_location(self.utToUnicode(rec['name']),
+                                            self.utToUnicode(rec['description']),
+                                            rec['address'],
+                                            rec.get('URL', ''),
+                                            approved,
+                                            parent_folder,
+                                            geo_type,
+                                            rec.get('latitude', ''),
+                                            rec.get('longitude', ''))
+                    if err is not None:
+                        errs.append(err)
+        else:
+            errs.append('The Upload in folder field must have a value')
 
         if errs:
             self.setSessionErrors(errs)
