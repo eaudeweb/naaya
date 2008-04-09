@@ -298,9 +298,12 @@ def addHTMLFlash(text, lang):
 
     #split content
     l_content = text.split('</h1>')
-    l_header =  l_content[0] + '</h1>' #eFlash title
+    l_header = l_content[0] + '</h1>' #eFlash title
     res.extend(convertToList(testDisplaySpace(_addParagraph(l_header, 'Heading1', lang, 0))))
-    l_rest =    l_content[1]
+    
+    l_rest = ''
+    if len(l_content) > 1:
+        l_rest = l_content[1]
 
     l_content = l_rest.split('<!--PDF_GENERATOR_MENU_MARKER-->')
     l_menu = l_content[0] + '</ul>' #eFlash menu
@@ -312,9 +315,11 @@ def addHTMLFlash(text, lang):
 #            res.extend(convertToList(testDisplaySpace(_addParagraph(k, 'Li', lang, 0))))
 #    else:
 #        res.extend(convertToList(testDisplaySpace(_addParagraph(l_items, 'Li', lang, 0))))
-    l_rest = l_content[1]
+    if len(l_content) > 1:
+	l_rest = l_content[1]
 
     l_content = l_rest.split('<h2') #list of paragraphs
+    if l_content == ['']: l_content = []
     for k in l_content:
         k = '<h2' + k
         if list_utils().stripHTMLTags(k).split():
@@ -389,7 +394,8 @@ def testDisplaySpace(pdf_obj, w=PAGE_WIDTH, h=PAGE_HEIGHT):
         elif msg == MSG_WIDTH:
             return pdf_obj.split(200, 12)
         else:
-            return _addParagraph(msg, 'Normal', lang)
+    	    return pdf_obj
+            #return _addParagraph(msg, 'Normal', lang)
 
 def isRTLLanguage(lang):
     #Test if is a RTL language.

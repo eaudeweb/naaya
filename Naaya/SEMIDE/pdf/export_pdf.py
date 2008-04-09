@@ -130,10 +130,13 @@ class export_pdf(pdf_templates):
         if not lang: lang=self.gl_get_selected_language()
         try:
             try:
-                if url.split('/')[-2] == 'eflash': type = 'flash'
-            except:
-                pass
-            obj_container = self.unrestrictedTraverse(url)
-            return self.create_pdf(obj_container, type, lang, REQUEST)
+        	if url.split('/')[-2] == 'eflash': type = 'flash'
+    	    except:
+        	pass
+                
+    	    obj_container = self.unrestrictedTraverse(url)
+    	    return self.create_pdf(obj_container, type, lang, REQUEST)
         except:
-            return 'The PDF document could not be generated.'
+    	    err = ['The PDF document could not be generated.']
+    	    self.setSessionErrors(err)
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
