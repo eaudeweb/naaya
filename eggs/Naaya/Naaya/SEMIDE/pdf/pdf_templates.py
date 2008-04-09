@@ -771,6 +771,9 @@ class pdf_templates:
         add_content(addSpacer(0, 3))
 
         #body
+        flash_marker = '<!--PDF_GENERATOR_FOOTER_MARKER-->'
+        if type == 'flash':
+    	    if not flash_marker in p_obj.body: type = ''
         if type == 'flash':
             #eflash view
             add_content(addHTMLFlash(p_obj.body, lang))
