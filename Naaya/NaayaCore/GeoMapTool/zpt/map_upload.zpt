@@ -20,7 +20,11 @@ function fTreeNodeClick(node_path, node_title, node_description)
 }
 function frmUpload_onsubmit()
 {
-	return document.frmUpload.parent_folder.value != '' || window.confirm("You haven't selected an upload folder.\nDo you still want to upload?");
+	if (document.frmUpload.parent_folder.value == '') {
+		alert('The Upload in folder field must have a value');
+		return false;
+	}
+	return true;
 }
 //-->
 </script>
