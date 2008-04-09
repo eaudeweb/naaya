@@ -90,7 +90,7 @@ def _check_ffmpeg():
     else:
         exit_code = status
     if exit_code:
-        raise MediaConverterError('could not run ffmpeg: "ffmpeg -h" has exited with code %s: %s' % (exit_code, error))
+        raise MediaConverterError('could not run ffmpeg: "ffmpeg -h" has exited with code %s' % (exit_code, ))
     child_stdout, child_stdin, child_stderr = popen3("ffmpeg -h")
     error = child_stderr.read()
     if "--enable-libmp3lame" not in error:
