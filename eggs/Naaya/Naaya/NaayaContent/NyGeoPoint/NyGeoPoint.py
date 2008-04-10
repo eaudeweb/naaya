@@ -119,7 +119,9 @@ def addNyGeoPoint(self, id='', title='', description='', coverage='', keywords='
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
         #redirect if case
-        if REQUEST is not None:
+        if REQUEST is None:
+            return ob
+        else:
             if l_referer == 'geopoint_manage_add' or l_referer.find('geopoint_manage_add') != -1:
                 return self.manage_main(self, REQUEST, update_menu=1)
             elif l_referer == 'geopoint_add_html':

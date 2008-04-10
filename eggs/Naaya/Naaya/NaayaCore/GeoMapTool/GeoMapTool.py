@@ -301,9 +301,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         if meta_type in parent_ob.get_pluggable_installed_meta_types():
             try:
-                addNyGeoPoint(parent_ob, title=title, description=description, coverage='', keywords='', sortorder='', longitude=longitude, latitude=latitude, address=address, geo_type=geo_type, url=URL)
+                return (addNyGeoPoint(parent_ob, title=title, description=description, coverage='', keywords='', sortorder='', longitude=longitude, latitude=latitude, address=address, geo_type=geo_type, url=URL), None)
             except Exception, err:
-                return 'Failed to add %s geo-point! Error: %s' % (title, str(err))
+                return (None, 'Failed to add %s geo-point! Error: %s' % (title, str(err)))
 
     #site actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'uploadLocations')
@@ -327,19 +327,23 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 errs.append('Invalid headers in file!')
 
         #step 2. add locations
+        num_nolocation = 0
         if parent_folder:
             for rec in records:
                 if rec:
-                    err = self.add_location(self.utToUnicode(rec['name']),
-                                            self.utToUnicode(rec['description']),
-                                            rec['address'],
-                                            rec.get('URL', ''),
-                                            approved,
-                                            parent_folder,
-                                            geo_type,
-                                            rec.get('latitude', ''),
-                                            rec.get('longitude', ''))
-                    if err is not None:
+                    ob, err = self.add_location(self.utToUnicode(rec['name']),
+                                                self.utToUnicode(rec['description']),
+                                                rec['address'],
+                                                rec.get('URL', ''),
+                                                approved,
+                                                parent_folder,
+                                                geo_type,
+                                                rec.get('latitude', ''),
+                                                rec.get('longitude', ''))
+                    if err is None:
+                        if ob.longitude is None and ob.latitude is None:
+                            num_nolocation += 1
+                    else:
                         errs.append(err)
         else:
             errs.append('The Upload in folder field must have a value')
@@ -347,7 +351,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if errs:
             self.setSessionErrors(errs)
         else:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            self.setSessionInfo(["%u GeoPoint(s) uploaded. (%s)" % (len(records), self.utGetTodayDate())])
+            self.setSessionErrors(["Could not geolocate %u address(es)." % (num_nolocation,)])
         return REQUEST.RESPONSE.redirect('%s/admin_mapupload_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getLocations')
