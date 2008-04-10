@@ -428,10 +428,14 @@ class utils:
         """Get a list [value1, values...], and returns a string like value1<separator>value2..."""
         return separator.join(self.utConvertToList(something))
 
+    def _ut_getattr(self, obj, attr):
+	""" Custom getattr used for utSortObjsListByAttr """
+	return getattr(obj, attr, None)
+
     def utSortObjsListByAttr(self, p_list, p_attr, p_desc=1):
         """Sort a list of objects by an attribute values"""
         l_len = len(p_list)
-        l_temp = map(None, map(getattr, p_list, (p_attr,)*l_len), xrange(l_len), p_list)
+        l_temp = map(None, map(self._ut_getattr, p_list, (p_attr,)*l_len), xrange(l_len), p_list)
         l_temp.sort()
         if p_desc:
             l_temp.reverse()
