@@ -74,6 +74,29 @@
 				<a tal:attributes="href string:${folder_url}/basketofapprovals_duplicates_html?page=${page}&amp;skey=releasedate" i18n:translate="">Submitted at</a>
 			</th>
 		</tal:block>
+		<tal:block tal:condition="python:skey=='start_date'">
+		    <tal:block tal:condition="python:rkey==''">
+			<th class="sort_asc_th">
+			    <a tal:attributes="href string:${folder_url}/basketofapprovals_duplicates_html?page=${page}&amp;rkey=1&amp;skey=start_date">
+				<span i18n:translate="" tal:omit-tag="">Start date</span>
+				<img src="misc_/Naaya/sort_asc.gif" border="0" align="absmiddle" alt="" />
+			    </a>
+			</th>
+		    </tal:block>
+		    <tal:block tal:condition="python:rkey=='1'">
+			<th class="sort_desc_th">
+			    <a tal:attributes="href string:${folder_url}/basketofapprovals_duplicates_html?page=${page}&amp;skey=start_date">
+				<span i18n:translate="" tal:omit-tag="">Start date</span>
+				<img src="misc_/Naaya/sort_desc.gif" border="0" align="absmiddle" alt="" />
+			    </a>
+			</th>
+		    </tal:block>
+		</tal:block>
+		<tal:block tal:condition="python:skey!='start_date'">
+		    <th class="sort_th">
+			<a tal:attributes="href string:${folder_url}/basketofapprovals_duplicates_html?page=${page}&amp;skey=start_date" i18n:translate="">Start date</a>
+		    </th>
+		</tal:block>
 		<tal:block tal:condition="python:skey=='title'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="sort_asc_th">
@@ -128,6 +151,8 @@
 	<tr>
 		<td width="1%"><img tal:attributes="src python:test(item.approved, item.icon, item.icon_marked); title item/meta_type" border="0" /></td>
 		<td tal:content="python:here.utShowDateTime(item.releasedate)" />
+		<td tal:define="start_date python:here.utShowDateTime(getattr(item, 'start_date', ''))"
+		    tal:content="python:test(start_date, start_date, '-')" />
 		<td><a tal:attributes="href item/absolute_url" tal:content="item/title_or_id"/></td>
 		<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(item.contributor)" />
 		<td><a tal:attributes="href string:${item/absolute_url}/edit_html" i18n:translate="">edit</a></td>
@@ -143,7 +168,7 @@
 	</tal:block>
 	<tr>
 		<td></td>
-		<td colspan="7">
+		<td colspan="8">
 			<input type="submit" value="Save changes" i18n:attributes="value" />
 			<input type="reset" value="Reset" i18n:attributes="value" />
 		</td>
