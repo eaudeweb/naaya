@@ -301,7 +301,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         if meta_type in parent_ob.get_pluggable_installed_meta_types():
             try:
-                return (addNyGeoPoint(parent_ob, title=title, description=description, coverage='', keywords='', sortorder='', longitude=longitude, latitude=latitude, address=address, geo_type=geo_type, url=URL), None)
+                ob = addNyGeoPoint(parent_ob, title=title, description=description, coverage='', keywords='', sortorder='', longitude=longitude, latitude=latitude, address=address, geo_type=geo_type, url=URL)
+                ob.approveThis(approved)
+                return (ob, None)
             except Exception, err:
                 return (None, 'Failed to add %s geo-point! Error: %s' % (title, str(err)))
 
