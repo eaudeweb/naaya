@@ -155,7 +155,7 @@ function frmUpload_onsubmit()
 			</label>
 		</th>
 		<td>
-			<input type="checkbox" name="unapproved" value="1" checked="checked" />
+			<input type="checkbox" id="approved" name="approved:boolean" checked="checked" />
 		</td>
 	</tr>
 	<tr>

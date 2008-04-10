@@ -309,7 +309,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     #site actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'uploadLocations')
-    def uploadLocations(self, file='', dialect='comma', encoding='utf-8', approved=0, parent_folder='', geo_type='', REQUEST=None):
+    def uploadLocations(self, file='', dialect='comma', encoding='utf-8', approved=False, parent_folder='', geo_type='', REQUEST=None):
         """ """
         if file.filename.find('\\') != -1:
             filename = file.filename.split('\\')[-1]
