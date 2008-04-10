@@ -292,7 +292,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if latitude.strip() == '' and longitude.strip() == '':
             coordinates = location_geocode(address)
             if coordinates is None:
-                LOG('NaayaCore.GeoMapTool.GeoMapTool', DEBUG, 'add_location: could not find coordinates for %s' % (address, ))
+                LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG, 'add_location: could not find coordinates for %s' % (address, ))
                 latitude, longitude = None, None
             else:
                 latitude, longitude = coordinates
