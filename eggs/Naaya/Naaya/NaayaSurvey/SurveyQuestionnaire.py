@@ -301,12 +301,13 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     security.declarePrivate('sendNotificationToRespondent')
     def sendNotificationToRespondent(self, answer):
         """Send an email notification about the newly added answer to the respondent.
+            If the respondent is an anonymous user no notification will be sent.
 
             @param answer: the answer object that was added (unsed for the moment)
             @type answer: SurveyAnswer
         """
         if self.isAnonymousUser():
-            raise Exception("Anonymous users can't receive notifications")
+            return
 
         owner = self.getOwner()
         respondent = self.REQUEST.AUTHENTICATED_USER
