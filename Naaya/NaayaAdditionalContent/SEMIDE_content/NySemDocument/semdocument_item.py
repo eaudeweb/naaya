@@ -20,6 +20,7 @@
 #Python imports
 
 #Zope imports
+from OFS.Image import cookId
 
 #Product imports
 from Products.NaayaBase.NyFSContainer import NyFSContainer
@@ -91,4 +92,5 @@ class semdocument_item(NyProperties, NyFSContainer):
         if not filename:
             return
         self.manage_delObjects(self.objectIds())
-        self.manage_addFile(id=filename, file=file)
+        file_id = cookId('', '', file)[0]   #cleanup id
+        self.manage_addFile(id=file_id, file=file)
