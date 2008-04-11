@@ -249,7 +249,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return self.utEliminateDuplicatesByURL(results)
 
     security.declareProtected(view, 'locations_kml')
-    def locations_kml(self, path='', show='', query='', REQUEST=None):
+    def locations_kml(self, path='', show='', geo_query='', REQUEST=None):
         """ """
         path = path or '/'
         show = eval(show)
@@ -260,7 +260,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         kml = kml_generator()
         out_app(kml.header())
         out_app(kml.style())
-        for loc in self.searchGeoPoints(path, show, query):
+        for loc in self.searchGeoPoints(path, show, geo_query):
             if loc.latitude is not None and loc.longitude is not None:
                 out_app(kml.add_point(self.utToUtf8(loc.id),
                                       self.utXmlEncode(loc.title),
@@ -279,14 +279,14 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return '\n'.join(output)
 
     security.declareProtected(view, 'xrjs_getGeoPoints')
-    def xrjs_getGeoPoints(self, REQUEST, path='', geo_types=None, query=None):
+    def xrjs_getGeoPoints(self, REQUEST, path='', geo_types=None, geo_query=None):
         """ """
         r = []
         t = []
         ra = r.append
         portal_ob = self.getSite()
         if geo_types:
-            for res in self.searchGeoPoints(path, geo_types, query, REQUEST):
+            for res in self.searchGeoPoints(path, geo_types, geo_query, REQUEST):
                 if res.latitude is not None and res.longitude is not None:
                     ra('%s|%s|mk_%s|%s|%s' % (self.utToUtf8(res.latitude),
                                               self.utToUtf8(res.longitude),
@@ -327,7 +327,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return '\n'.join(output)
 
     #xmlrpc interface
-    def xrjs_loader(self, show, query, center='', zoom='', path='', width='', height=''):
+    def xrjs_loader(self, show, geo_query, center='', zoom='', path='', width='', height=''):
         #initialize markers loader - locations
         xr_key = self.utGenRandomId(32)
         show = self.utJsEncode(show)
