@@ -223,7 +223,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             @return: all the GeoPoints that match the specified criteria.
             @rtype: list
         """
-        from Products.NaayaContent.NyGeoPoint.NyGeoPoint import NyGeoPoint
+        from Products.NaayaContent.NyGeoPoint.NyGeoPoint import NyGeoPoint # TODO move outside method
         site_ob = self.getSite()
         results = []
         base_kw = {}
@@ -380,7 +380,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declarePrivate('add_location')
     def add_location(self, title, description, address, URL, approved, container, geo_type, latitude, longitude):
         """ add a location in the database """
-        from Products.NaayaContent.NyGeoPoint.NyGeoPoint import addNyGeoPoint
+        from Products.NaayaContent.NyGeoPoint.NyGeoPoint import addNyGeoPoint # TODO move outside method
         meta_type = 'Naaya GeoPoint'
 
         if latitude.strip() == '' and longitude.strip() == '':
