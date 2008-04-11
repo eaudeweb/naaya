@@ -21,7 +21,6 @@
 
 #Python imports
 import os.path
-from cgi import escape
 
 #Zope imports
 from Globals import InitializeClass
