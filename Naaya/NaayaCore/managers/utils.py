@@ -161,6 +161,14 @@ def findDuplicates(objects, attributes):
         for item in items:
             yield item
 
+def convertToList(s):
+    """Convert to list"""
+    if isinstance(s, tuple):
+        s = list(s)
+    elif not isinstance(s, list):
+        s = [s]
+    return s
+
 class list_utils:
     """Provides some interface to handle a list of ids: add/remove id from list"""
 
@@ -382,13 +390,9 @@ class utils:
                 return [str(error)]
         return None
 
-    def utConvertToList(self, s):
-        """Convert to list"""
-        if isinstance(s, tuple):
-            s = list(s)
-        elif not isinstance(s, list):
-            s = [s]
-        return s
+    def utConvertToList(self, *args, **kw):
+        """see the convertToList function"""
+        return convertToList(*args, **kw)
 
     def utConvertListToLines(self, values):
         """Takes a list of values and returns a value for a textarea control"""
