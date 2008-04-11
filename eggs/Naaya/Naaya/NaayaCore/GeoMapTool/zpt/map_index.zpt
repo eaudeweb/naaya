@@ -74,8 +74,6 @@ function toggleSelect()
 		</tal:block>
 	</noscript>
 
-	<p i18n:translate="">Additionally you can <a id="kml_download" tal:attributes="href string:${here/absolute_url}/locations_kml?path=${path}&show=${geo_types}&geo_query=${geo_query}">display map in Google Earth viewer</a> (requires <a href="http://earth.google.com/downloads.html">Google Earth</a> version 4.0 or higher installed).</p>
-
 	<div style="display:none" id="map_markers"></div>
 </div>
 
@@ -86,7 +84,7 @@ function toggleSelect()
 
 		<div class="right_portlet_content content">
 
-			<form action="#mappage" name="frmFilterMap" method="post" id="frmFilterMap">
+			<form action="." name="frmFilterMap" method="post" id="frmFilterMap">
 				<div>
 					<input type="text" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value geo_query" />
 				</div>
@@ -123,8 +121,12 @@ function toggleSelect()
 					<input type="button" id="showSelected" value="Show selected" i18n:attributes="value"
 					       style="display: none" onclick="javascript: showSelectedLocations()" />
 					<noscript>
-						<input type="submit" value="Show selected" i18n:attributes="value" />
+						<input type="submit" value="Show selected" name="index_html:method" i18n:attributes="value" />
 					</noscript>
+					<div>
+						<input type="submit" value="Download Google Earth KML" name="downloadLocationsKml:method" i18n:attributes="value" />
+						<span>(requires <a href="http://earth.google.com/downloads.html">Google Earth</a>)</span>
+					</div>
 				</div>
 			</form>
 		</div>
