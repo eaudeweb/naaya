@@ -162,3 +162,50 @@ security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPublishedContent')
 
 security.apply(NyFolder)
 InitializeClass(NyFolder)
+
+#UPDATES NyCountry (remove empty translations)
+from Products.Localizer.LocalPropertyManager import LocalPropertyManager
+from AccessControl import ClassSecurityInfo
+from Products.NaayaBase.NyItem import NyItem
+from Products.NaayaBase.NyContainer import NyContainer
+from Products.SEMIDE.SEMIDESite import SEMIDESite
+
+security = ClassSecurityInfo()
+
+def del_localproperty(self, name, language):
+    if name not in self._local_properties:
+        return
+    for prop, trans in self._local_properties.items():
+        if prop == name:
+            for k,v in trans.items():
+                if k == language and v[0] == '':
+                    print self.absolute_url()
+                    del self._local_properties[prop][k]
+
+LocalPropertyManager.del_localproperty = del_localproperty
+security.declareProtected('View management screens', 'del_localproperty')
+security.apply(LocalPropertyManager)
+
+def del_title_property(self):
+    """ """
+    self.del_localproperty('title', 'fr')
+    self.del_localproperty('title', 'ar')
+    self._p_changed = 1
+
+NyItem.del_title_property = del_title_property
+security.declareProtected('View management screens', 'del_title_property')
+security.apply(NyItem)
+
+NyContainer.del_title_property = del_title_property
+security.declareProtected('View management screens', 'del_title_property')
+security.apply(NyContainer)
+
+def del_country_title(self):
+    """ """
+    for obj in self.getCatalogTool().query_objects_ex(meta_type=['Naaya Country Folder', 'Naaya Folder']):
+        obj.del_title_property()
+    return 'done'
+
+SEMIDESite.del_country_title = del_country_title
+security.declareProtected('View management screens', 'del_country_title')
+security.apply(SEMIDESite)
