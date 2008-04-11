@@ -252,7 +252,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     def locations_kml(self, path='', show='', geo_query='', REQUEST=None):
         """ """
         path = path or '/'
-        show = eval(show)
+        show = eval(show, {}, {})
 
         output = []
         out_app = output.append
