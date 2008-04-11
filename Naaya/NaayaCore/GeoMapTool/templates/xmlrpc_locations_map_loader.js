@@ -41,7 +41,7 @@ function showSelectedLocations_request_handler()
 
 function showSelectedLocations()
 {
-	ajaxPost('%s/xrjs_getGeoPoints', showSelectedLocations_request_handler, encodeForm('frmFilterMap'));
+	loadXMLDoc('%s/xrjs_getGeoPoints?' + encodeForm('frmFilterMap'), showSelectedLocations_request_handler);
 }
 
 window.onload = window_onload;
