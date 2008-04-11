@@ -969,8 +969,14 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if (hasattr(p_object, 'submitted') and p_object.submitted==1) or not hasattr(p_object, 'submitted'):
             l_emails = self.getMaintainersEmails(p_folder)
             if len(l_emails) > 0:
-                if self.portal_url != '': mail_from = 'notifications@%s' % urlparse(self.portal_url)[1]
-                else: mail_from = 'notifications@%s' % self.REQUEST.SERVER_NAME
+                if self.portal_url != '':
+            	    if not self.portal_url.startswith('http://'):
+            		domain_name = 'http://%s' % self.portal_url
+            	    else:
+            		domain_name = self.portal_url
+            	    mail_from = 'notifications@%s' % urlparse(domain_name)[1]
+                else:
+            	    mail_from = 'notifications@%s' % self.REQUEST.SERVER_NAME
                 self.notifyMaintainerEmail(l_emails, mail_from, p_object, p_folder.absolute_url(), '%s/basketofapprovals_html' % p_folder.absolute_url())
 
     def processDynamicProperties(self, meta_type, REQUEST=None, keywords={}):
