@@ -88,7 +88,7 @@ function toggleSelect()
 
 			<form action="#mappage" name="frmFilterMap" method="post" id="frmFilterMap">
 				<div>
-					<input type="text" id="query" name="query:ustring:utf8" />
+					<input type="text" id="query" name="query:ustring:utf8" tal:attributes="value query" />
 				</div>
 				<ul class="map_legend" id="filter_map">
 					<tal:block repeat="item here/getParentsList">
