@@ -63,7 +63,7 @@ function toggleSelect()
 	</div>
 
 	<noscript>
-		<tal:block define="records python:here.getSite().getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=geo_types, path=path);
+		<tal:block define="records python:here.searchGeoPoints(path, geo_types, query);
 		                   skey python:None;
 		                   rkey python:None;
 		                   map_url here/absolute_url;
