@@ -6,6 +6,7 @@
                        center python:request.get('center', '');
                        zoom python:request.get('zoom', '');
                        path python:request.get('path', '');
+                       records python:here.searchGeoPoints(path, geo_types, geo_query);
                        width python:request.get('width', here.map_width);
                        height python:request.get('height', here.map_height)">
 
@@ -63,8 +64,7 @@ function toggleSelect()
 	</div>
 
 	<noscript>
-		<tal:block define="records python:here.searchGeoPoints(path, geo_types, geo_query);
-		                   skey python:None;
+		<tal:block define="skey python:None;
 		                   rkey python:None;
 		                   map_url here/absolute_url;
 		                   edit_mode python:False;
@@ -73,6 +73,10 @@ function toggleSelect()
 			</table>
 		</tal:block>
 	</noscript>
+
+	<div id="record_counter_message" i18n:translate="">
+		<span id="record_counter" tal:content="python: len(records)"></span> location(s)
+	</div>
 
 	<div style="display:none" id="map_markers"></div>
 </div>

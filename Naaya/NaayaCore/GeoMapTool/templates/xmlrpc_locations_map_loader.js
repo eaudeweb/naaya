@@ -20,11 +20,17 @@ function window_onload() {
 
 function showSelectedLocations_request_handler()
 {
+	// clear map
 	map.removeMarkersAll();
+
+	// set markers (symbol icons)
 	var data = xmlhttp.responseText.split('\n\n'), b = '';
 	b = trim(data[1]);
 	if (b != '') document.getElementById('map_markers').innerHTML = b;
+
+	// put GeoPoints on map
 	var arrMarkers = trim(data[0]).split('\n');
+	var num_records = 0;
 	for (var i = 0; i < arrMarkers.length; i++) {
 		var b = trim(arrMarkers[i]);
 		if (b != '') {
@@ -35,8 +41,12 @@ function showSelectedLocations_request_handler()
 			label = m[3].toString();
 			mapMarker = m[4].toString();
 			mapid = createMarker(map, lat, lng, id, label, eval(mapMarker));
+			num_records++;
 		}
 	}
+
+	// update record counter
+	document.getElementById('record_counter').innerHTML = num_records.toString();
 }
 
 function showSelectedLocations()
