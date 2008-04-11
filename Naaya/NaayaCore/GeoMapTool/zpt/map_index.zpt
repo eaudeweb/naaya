@@ -2,7 +2,7 @@
 <span tal:replace="structure here/standard_html_header" />
 
 <tal:block tal:define="geo_types python:request.get('geo_types', here.getSymbolsIds()); 
-                       query python:request.get('query', '');
+                       geo_query python:request.get('geo_query', '');
                        center python:request.get('center', '');
                        zoom python:request.get('zoom', '');
                        path python:request.get('path', '');
@@ -48,7 +48,7 @@ function toggleSelect()
 //-->;
 </script>
 
-<span tal:replace="structure python:here.xrjs_loader(geo_types, query, center, zoom, path, width, height)" />
+<span tal:replace="structure python:here.xrjs_loader(geo_types, geo_query, center, zoom, path, width, height)" />
 
 <div id="center_content" style="width: 78%; overflow-x: auto;">
 	<h1 i18n:translate="">Geo map</h1>
@@ -63,7 +63,7 @@ function toggleSelect()
 	</div>
 
 	<noscript>
-		<tal:block define="records python:here.searchGeoPoints(path, geo_types, query);
+		<tal:block define="records python:here.searchGeoPoints(path, geo_types, geo_query);
 		                   skey python:None;
 		                   rkey python:None;
 		                   map_url here/absolute_url;
@@ -74,7 +74,7 @@ function toggleSelect()
 		</tal:block>
 	</noscript>
 
-	<p i18n:translate="">Additionally you can <a id="kml_download" tal:attributes="href string:${here/absolute_url}/locations_kml?path=${path}&show=${geo_types}&query=${query}">display map in Google Earth viewer</a> (requires <a href="http://earth.google.com/downloads.html">Google Earth</a> version 4.0 or higher installed).</p>
+	<p i18n:translate="">Additionally you can <a id="kml_download" tal:attributes="href string:${here/absolute_url}/locations_kml?path=${path}&show=${geo_types}&geo_query=${geo_query}">display map in Google Earth viewer</a> (requires <a href="http://earth.google.com/downloads.html">Google Earth</a> version 4.0 or higher installed).</p>
 
 	<div style="display:none" id="map_markers"></div>
 </div>
@@ -88,7 +88,7 @@ function toggleSelect()
 
 			<form action="#mappage" name="frmFilterMap" method="post" id="frmFilterMap">
 				<div>
-					<input type="text" id="query" name="query:ustring:utf8" tal:attributes="value query" />
+					<input type="text" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value geo_query" />
 				</div>
 				<ul class="map_legend" id="filter_map">
 					<tal:block repeat="item here/getParentsList">
