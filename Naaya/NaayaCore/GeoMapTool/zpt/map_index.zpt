@@ -125,7 +125,7 @@ function toggleSelect()
 					</noscript>
 					<div>
 						<input type="submit" value="Download Google Earth KML" name="downloadLocationsKml:method" i18n:attributes="value" />
-						<span>(requires <a href="http://earth.google.com/downloads.html">Google Earth</a>)</span>
+						<span i18n:translate="">(requires <a href="http://earth.google.com/downloads.html">Google Earth</a>)</span>
 					</div>
 				</div>
 			</form>
