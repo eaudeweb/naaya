@@ -28,7 +28,7 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
-from zLOG import LOG, DEBUG
+from zLOG import LOG, DEBUG, INFO, ERROR
 
 #Product imports
 from constants import *
@@ -65,6 +65,8 @@ def manage_addGeoMapTool(self, languages=None, REQUEST=None):
     if languages is None: languages = []
     ob = GeoMapTool(ID_GEOMAPTOOL, TITLE_GEOMAPTOOL)
     self._setObject(ID_GEOMAPTOOL, ob)
+    ob = self._getOb(ID_GEOMAPTOOL)
+    ob.manage_configureSite()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -152,20 +154,113 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect('%s/admin_map_html' % self.absolute_url())
 
+
+    #
+    # Methods for configuring the Naaya Site for GeoMapTool
+    #
+
+    security.declareProtected(PERMISSION_ADMINISTRATE, 'manage_configureCatalog')
+    def manage_configureCatalog(self):
+        """Configure catalog tool:
+            - adds geo_type and address indexes if they don't exist
+              and if not, it reindexes them
+        """
+        catalog_tool = self.getSite().getCatalogTool()
+        LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', INFO,
+            'Configuring catalog %s for GeoMapTool' % catalog_tool.absolute_url(1))
+        new_indexes = []
+        # geo_type
+        if 'geo_type' not in catalog_tool.indexes():
+            LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG,
+                'manage_configureCatalog: adding geo_type index to catalog %s' % catalog_tool.absolute_url(1))
+            catalog_tool.addIndex('geo_type', 'FieldIndex')
+            new_indexes.append('geo_type')
+        else:
+            LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG,
+                'manage_configureCatalog: geo_type index already exists in catalog %s' % catalog_tool.absolute_url(1))
+        # address
+        if 'address' not in catalog_tool.indexes():
+            LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG,
+                'manage_configureCatalog: adding address index to catalog %s' % catalog_tool.absolute_url(1))
+            catalog_tool.addIndex('address', 'TextIndexNG2',
+                                  extra={'default_encoding': 'utf-8',
+                                         'splitter_single_chars': True,
+                                         'splitter_casefolding': True})
+            new_indexes.append('address')
+        else:
+            LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG,
+                'manage_configureCatalog: address index already exists in catalog %s' % catalog_tool.absolute_url(1))
+        # reindexing
+        if new_indexes:
+            LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG,
+                'manage_configureCatalog: reindexing indexes %s of catalog %s' % \
+                        (new_indexes, catalog_tool.absolute_url(1)))
+            catalog_tool.manage_reindexIndex(ids=new_indexes)
+        else:
+            LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG,
+                'manage_configureCatalog: no need to reindex catalog %s because no indexes were added' % catalog_tool.absolute_url(1))
+
+    security.declareProtected(PERMISSION_ADMINISTRATE, 'manage_configureSite')
+    def manage_configureSite(self, REQUEST=None):
+        """Configures the Naaya Site for GeoMapTool"""
+        self.manage_configureCatalog()
+
+
+    security.declareProtected(view, 'searchGeoPoints')
+    def searchGeoPoints(self, path='', geo_types=None, query='', REQUEST=None):
+        """Returns all the GeoPoints that match the specified criteria.
+
+            @param REQUEST: REQUEST
+            @type REQUEST: REQUEST
+            @param path: where to search
+            @type path: string
+            @param geo_types: the list of geo types to search;
+                              if None all geo types are searched
+            @type geo_types: list
+            @param query: the text that's searched in the title, address and keywords fields;
+                          a match of one field is enough
+            @type query: string
+            @return: all the GeoPoints that match the specified criteria.
+            @rtype: list
+        """
+        from Products.NaayaContent.NyGeoPoint.NyGeoPoint import NyGeoPoint
+        site_ob = self.getSite()
+        results = []
+        base_kw = {}
+        if geo_types is not None:
+            base_kw['geo_type'] = geo_types
+        if query:
+            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=NyGeoPoint.meta_type, path=path, title=query, **base_kw))
+            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=NyGeoPoint.meta_type, path=path, address=query, **base_kw))
+            if REQUEST:
+                langs = REQUEST.get('languages', self.gl_get_selected_language())
+            else:
+                langs = self.gl_get_selected_language()
+            langs = self.utConvertToList(langs)
+            for lang in langs:
+                kw = {'objectkeywords_%s' % (lang,) : query}
+                kw.update(base_kw)
+                results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=NyGeoPoint.meta_type, path=path, **kw))
+        else:
+            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=NyGeoPoint.meta_type, path=path, **base_kw))
+        LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG, 'searchGeoPoints%s -> %s' % (
+                        repr((path, geo_types, query, REQUEST)),
+                        repr(results)))
+        return self.utEliminateDuplicatesByURL(results)
+
     security.declareProtected(view, 'locations_kml')
     def locations_kml(self, path='', show='', REQUEST=None):
         """ """
         path = path or '/'
         show = eval(show)
 
-        site_ob = self.getSite()
         output = []
         out_app = output.append
 
         kml = kml_generator()
         out_app(kml.header())
         out_app(kml.style())
-        for loc in site_ob.getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=show, path=path):
+        for loc in self.searchGeoPoints(path, geo_types):
             if loc.latitude is not None and loc.longitude is not None:
                 out_app(kml.add_point(self.utToUtf8(loc.id),
                                       self.utXmlEncode(loc.title),
@@ -184,15 +279,14 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return '\n'.join(output)
 
     security.declareProtected(view, 'xrjs_getGeoPoints')
-    def xrjs_getGeoPoints(self, REQUEST, path='', geo_types=None):
+    def xrjs_getGeoPoints(self, REQUEST, path='', geo_types=None, query=None):
         """ """
         r = []
         t = []
         ra = r.append
         portal_ob = self.getSite()
         if geo_types:
-            results = portal_ob.getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=geo_types, path=path)
-            for res in results:
+            for res in self.searchGeoPoints(path, geo_types, query, REQUEST):
                 if res.latitude is not None and res.longitude is not None:
                     ra('%s|%s|mk_%s|%s|%s' % (self.utToUtf8(res.latitude),
                                               self.utToUtf8(res.longitude),
@@ -360,10 +454,10 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getLocations')
     def getLocations(self, skey='', rkey=''):
         """ return the list of locations """
-        r = self.getCatalogedObjects(meta_type=['Naaya GeoPoint'])
+        locations = self.searchGeoPoints()
         if skey in ['title', 'address', 'latitude', 'longitude']:
-            r = self.utSortObjsListByAttr(r, skey, rkey)
-        return r
+            locations = self.utSortObjsListByAttr(locations, skey, rkey)
+        return locations
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getDuplicateLocations')
     def getDuplicateLocations(self, *args, **kw):
