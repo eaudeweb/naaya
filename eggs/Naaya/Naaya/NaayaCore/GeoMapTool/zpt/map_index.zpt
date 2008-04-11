@@ -84,7 +84,7 @@ function toggleSelect()
 
 		<div class="right_portlet_content content">
 
-			<form action="." name="frmFilterMap" method="post" id="frmFilterMap">
+			<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
 				<div>
 					<input type="text" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value geo_query" />
 				</div>

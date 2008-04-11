@@ -39,29 +39,6 @@ function loadXMLDoc(url, handler) {
 	}
 }
 
-function ajaxPost(url, handler, query) {
-	initXMLdoc();
-	function wrapper()
-	{
-		if (xmlhttp.readyState == 4) {
-			if (xmlhttp.status == 200) {
-				handler();
-				return true;
-			} else {
-				alert('Naaya GeoMapTool: there was a problem retrieving the XML data:\n' + xmlhttp.statusText);
-				return false;
-			}
-		}
-	}
-	if (xmlhttp != null)
-	{
-		xmlhttp.onreadystatechange = wrapper;
-		xmlhttp.open("POST", url, true);
-		xmlhttp.setRequestHeader("Content-Type", 'application/x-www-form-urlencoded; charset=UTF-8');
-		xmlhttp.send(query);
-	}
-}
-
 function processRequest() {
 	if (xmlhttp.readyState == 4) {
 		if (xmlhttp.status == 200) {
