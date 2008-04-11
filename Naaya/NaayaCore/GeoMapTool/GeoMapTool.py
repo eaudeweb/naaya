@@ -260,7 +260,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         kml = kml_generator()
         out_app(kml.header())
         out_app(kml.style())
-        for loc in self.searchGeoPoints(path, geo_types):
+        for loc in self.searchGeoPoints(path, show):
             if loc.latitude is not None and loc.longitude is not None:
                 out_app(kml.add_point(self.utToUtf8(loc.id),
                                       self.utXmlEncode(loc.title),
