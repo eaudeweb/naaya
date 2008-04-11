@@ -523,7 +523,8 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
 
     def convertToFullURL(self, p_URL):
         p_URL = p_URL.strip()
-        p_URL = p_URL.encode('utf-8', 'ignore')
+        try:    p_URL = p_URL.encode('utf-8', 'ignore')
+    	except: pass
         if p_URL=='' or p_URL=='http://' or p_URL=='https://':
             return ''
         try:
