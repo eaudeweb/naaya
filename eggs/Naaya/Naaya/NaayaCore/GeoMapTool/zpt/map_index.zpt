@@ -94,14 +94,22 @@ function toggleSelect()
 					<tal:block repeat="item here/getParentsList">
 					<tal:block define="children python:here.getSymbolChildren(item.id);">
 					<li>
-						<input type="checkbox" name="geo_types:list" tal:attributes="value item/id; id item/id; checked python:item.id in geo_types" />
-						<img tal:condition="python:item.picture is not None" tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title" />
+						<input type="checkbox" name="geo_types:list"
+						       tal:attributes="value item/id;
+						                       id item/id;
+						                       checked python:item.id in geo_types" />
+						<img tal:condition="python:item.picture is not None"
+						     tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title" />
 						<span i18n:translate="" tal:content="item/title" />
 					</li>
 					<ul tal:condition="children" class="category_child">
 						<li tal:repeat="child children">
-							<input type="checkbox" name="geo_types:list" tal:attributes="value child/id; id child/id; checked python:child.id in geo_types" />
-							<img tal:condition="python:child.picture is not None" tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title" />
+							<input type="checkbox" name="geo_types:list"
+							       tal:attributes="value child/id;
+							                       id child/id;
+							                       checked python:child.id in geo_types" />
+							<img tal:condition="python:child.picture is not None"
+							     tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title" />
 							<label tal:attributes="for child/id"><span i18n:translate="" tal:content="child/title" /></label>
 						</li>
 					</ul>
