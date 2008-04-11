@@ -249,7 +249,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return self.utEliminateDuplicatesByURL(results)
 
     security.declareProtected(view, 'locations_kml')
-    def locations_kml(self, path='', show='', REQUEST=None):
+    def locations_kml(self, path='', show='', query='', REQUEST=None):
         """ """
         path = path or '/'
         show = eval(show)
@@ -260,7 +260,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         kml = kml_generator()
         out_app(kml.header())
         out_app(kml.style())
-        for loc in self.searchGeoPoints(path, show):
+        for loc in self.searchGeoPoints(path, show, query):
             if loc.latitude is not None and loc.longitude is not None:
                 out_app(kml.add_point(self.utToUtf8(loc.id),
                                       self.utXmlEncode(loc.title),

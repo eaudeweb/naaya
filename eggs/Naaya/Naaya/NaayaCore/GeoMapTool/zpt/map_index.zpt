@@ -74,7 +74,7 @@ function toggleSelect()
 		</tal:block>
 	</noscript>
 
-	<p i18n:translate="">Additionally you can <a tal:attributes="href string:${here/absolute_url}/locations_kml?path=${path}&show=${geo_types}">display map in Google Earth viewer</a> (requires <a href="http://earth.google.com/downloads.html">Google Earth</a> version 4.0 or higher installed).</p>
+	<p i18n:translate="">Additionally you can <a id="kml_download" tal:attributes="href string:${here/absolute_url}/locations_kml?path=${path}&show=${geo_types}&query=${query}">display map in Google Earth viewer</a> (requires <a href="http://earth.google.com/downloads.html">Google Earth</a> version 4.0 or higher installed).</p>
 
 	<div style="display:none" id="map_markers"></div>
 </div>
