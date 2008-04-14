@@ -3,7 +3,6 @@
 	<forms>
 		<form id="folder_index" title="NyFolder default view" />
 		<form id="site_admin_template" title="Portal administration - macro"/>
-		<form id="site_admin_contacts" title="Portal administration - contacts"/>
 		<form id="site_login" title="Portal login"/>
 		<form id="site_requestrole" title="Portal request role form step 1"/>
 		<form id="site_requestlocations" title="Portal request role form - step 3"/>
@@ -209,6 +208,18 @@
 				<image id="dot-bg.gif" title=""/>
 				<image id="flv-bg.jpg" title=""/>
 			</scheme>
+			<scheme id="EW-skin-17" title="EEA-Microsoft">
+				<style id="style" title="Main CSS"/>
+				<style id="print" title="CSS for media print" />
+				<style id="common" title="common style" />
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="menunav-bg.jpg" title=""/>
+				<image id="ew-header.jpg" title=""/>
+				<image id="eeaicon.gif" title=""/>
+				<image id="dot-bg.gif" title=""/>
+				<image id="flv-bg.jpg" title=""/>
+			</scheme>
+
 		</skin>
 	</layout>
 	<pluggablecontenttypes>
@@ -225,8 +236,6 @@
 		<pluggablecontenttype meta_type="Naaya Document" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Pointer" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Event" action="1"/>
-		<pluggablecontenttype meta_type="Naaya Consultation" action="1"/>
-		<pluggablecontenttype meta_type="Naaya Simple Consultation" action="1"/>
 	</pluggablecontenttypes>
 	<emails>
 		<emailtemplate id="email_ldap_requestrole" title="Request role (LDAP)"/>
