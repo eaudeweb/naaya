@@ -131,8 +131,7 @@
 				<strong style="font-size: 1.4em;" tal:attributes="name item/id; id item/id;" tal:content="item/title_or_id" />
 				<a tal:condition="permission_edit"
 					tal:attributes="href string:${item/absolute_url}/edit_html">
-					<img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" />
-				</a>
+				    <img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" /></a>
 				<div tal:condition="python:item.description!=''" tal:content="structure item/description" />
 				<table border="0" cellspacing="2" cellpadding="2">
 					<tr tal:condition="item/org_coord">
@@ -181,8 +180,7 @@
 				<strong style="font-size: 1.4em;" tal:attributes="name item/id; id item/id;" tal:content="item/title_or_id" />
 				<a tal:condition="permission_edit"
 					tal:attributes="href string:${item/absolute_url}/edit_html">
-					<img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" />
-				</a>
+				    <img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" /></a>
 				<div tal:condition="python:item.description!=''" tal:content="structure item/description" />
 				<table border="0" cellspacing="2" cellpadding="2">
 					<tr tal:condition="item/funding_source">
@@ -213,8 +211,7 @@
 				<strong style="font-size: 1.4em;" tal:attributes="name item/id; id item/id;" tal:content="item/title_or_id" />
 				<a tal:condition="permission_edit"
 					tal:attributes="href string:${item/absolute_url}/edit_html">
-					<img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" />
-				</a>
+				    <img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" /></a>
 				<div tal:condition="python:item.description!=''" tal:content="structure item/description" />
 				<table border="0" cellspacing="2" cellpadding="2">
 					<tr tal:condition="item/coverage">
@@ -241,8 +238,7 @@
 				<strong style="font-size: 1.4em;" tal:attributes="name item/id; id item/id;" tal:content="item/title_or_id" />
 				<a tal:condition="permission_edit"
 					tal:attributes="href string:${item/absolute_url}/edit_html">
-					<img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" />
-				</a>
+				    <img src="misc_/Naaya/edit" border="0" alt="Edit" i18n:attributes="alt" style="margin-left:1em;" /></a>
 				<div tal:condition="python:item.description!=''" tal:content="structure item/description" />
 				<table border="0" cellspacing="2" cellpadding="2">
 					<tr tal:condition="item/publisher">
