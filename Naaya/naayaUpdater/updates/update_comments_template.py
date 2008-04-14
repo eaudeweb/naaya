@@ -19,6 +19,7 @@
 from os.path import join
 from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
+from Products.Naaya.constants import NAAYA_PRODUCT_PATH
 
 class CustomContentUpdater(NaayaContentUpdater):
     """Add email_notifyoncomment template to portal_email if missing"""
@@ -52,7 +53,8 @@ class CustomContentUpdater(NaayaContentUpdater):
         updates = self._list_updates()
         for update in updates:
             logger.debug('Update object %s', update.absolute_url())
-            template_data = self.get_fs_data(join('Products', 'Naaya', 'skel', 'emails', 'email_notifyoncomment.txt'))
+            data_path = join(NAAYA_PRODUCT_PATH, 'skel', 'emails', 'email_notifyoncomment.txt')
+            template_data = update.futRead(data_path, 'r')
             update.manage_addEmailTemplate('email_notifyoncomment', 'Comment notification', template_data)
 
 def register(uid):
