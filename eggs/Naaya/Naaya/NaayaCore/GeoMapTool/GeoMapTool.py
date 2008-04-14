@@ -206,11 +206,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
 
     security.declareProtected(view, 'searchGeoPoints')
-    def searchGeoPoints(self, path='', geo_types=None, query='', REQUEST=None):
+    def searchGeoPoints(self, path='', geo_types=None, query='', approved=True, REQUEST=None):
         """Returns all the GeoPoints that match the specified criteria.
 
-            @param REQUEST: REQUEST
-            @type REQUEST: REQUEST
             @param path: where to search
             @type path: string
             @param geo_types: the list of geo types to search;
@@ -219,13 +217,17 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             @param query: the text that's searched in the title, address and keywords fields;
                           a match of one field is enough
             @type query: string
+            @param approved: if True return only approved items, otherwise return all items
+            @type approved: bool
+            @param REQUEST: REQUEST
+            @type REQUEST: REQUEST
             @return: all the GeoPoints that match the specified criteria.
             @rtype: list
         """
         from Products.NaayaContent.NyGeoPoint.NyGeoPoint import NyGeoPoint # TODO move outside method
         site_ob = self.getSite()
         results = []
-        base_kw = {}
+        base_kw = {'approved': approved}
         if geo_types is not None:
             base_kw['geo_type'] = geo_types
         if query:
@@ -451,7 +453,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getLocations')
     def getLocations(self, skey='', rkey=''):
         """ return the list of locations """
-        locations = self.searchGeoPoints()
+        locations = self.searchGeoPoints(approved=False)
         if skey in ['title', 'address', 'latitude', 'longitude']:
             locations = self.utSortObjsListByAttr(locations, skey, rkey)
         return locations
