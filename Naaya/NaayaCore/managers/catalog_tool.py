@@ -160,7 +160,7 @@ class catalog_tool:
     def getCatalogedObjectsCheckView(self, meta_type=None, approved=0, howmany=-1, sort_on='releasedate', sort_order='reverse', has_local_role=0, **kwargs):
         l_results = []
         l_filter = {'submitted': 1} #only submitted items
-        if approved == 1: l_filter['approved'] = 1
+        if approved: l_filter['approved'] = 1
         if has_local_role == 1: l_filter['has_local_role'] = 1
         if sort_on != '':
             l_filter['sort_on'] = sort_on
