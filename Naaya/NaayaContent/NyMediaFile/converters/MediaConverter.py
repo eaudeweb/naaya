@@ -83,7 +83,11 @@ class MediaConverter(Thread):
 
 
 def _check_ffmpeg():
-    """Returns True if ffmpeg is installed with the proper options (libmp3lame), False otherwise."""
+    """Checks if ffmpeg is available.
+
+        If ffmpeg is not installed with the proper options (libmp3lame)
+        a MediaConverterError exception will be raised.
+    """
     status = os.system("ffmpeg -h")
     if sys.platform != 'win32' and os.WIFEXITED(status): # TODO: portable way to get the exit code
         exit_code = os.WEXITSTATUS(status)
@@ -97,7 +101,10 @@ def _check_ffmpeg():
         raise MediaConverterError('ffmpeg was not compiled with --enable-libmp3lame; ffmpeg -h returned: %s' % (error, ))
 
 def _check_flvtool2():
-    """Returns True if flvtool2 is installed, False otherwise."""
+    """Checks if flvtool2 is available.
+
+        If flvtool2 is not installed a MediaConverterError exception will be raised.
+    """
     status = os.system("flvtool2 -H")
     if sys.platform != 'win32' and os.WIFEXITED(status): # TODO: portable way to get the exit code
         exit_code = os.WEXITSTATUS(status)
