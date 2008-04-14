@@ -256,7 +256,7 @@ class NyComments:
         else: date = self.utGetDate(date)
         ob = self.add_comment_item(id, title, body, author, date)
         self.recatalogNyObject(self)
-        self.notifyFolderMaintainer(self, ob)
+        self.notifyFolderMaintainer(self, ob, p_template="email_notifyoncomment")
         #log post date
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(author)
