@@ -940,6 +940,23 @@ text-decoration: underline;
                     print "css not found for scheme %s" % scheme.id
         return 'done'
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'sendMailToContacts')
+    def sendMailToContacts(self, subject='', content='', REQUEST=None):
+        """ """
+        addresses = [contact.email for contact in self.getCatalogedObjectsCheckView(meta_type=['Naaya Contact'])]
+        
+        for address in addresses:
+            self.getEmailTool().sendEmail(content, address, self.mail_address_from, subject)
+        
+        if REQUEST:
+            self.setSessionInfo(['Mail sent. (%s)' % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_contacts_html' % self.absolute_url())
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_reflists_html')
+    def admin_contacts_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_contacts')
+
 InitializeClass(EnviroWindowsSite)
 
 #
