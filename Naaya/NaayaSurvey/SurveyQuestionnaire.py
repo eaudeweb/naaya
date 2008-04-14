@@ -421,9 +421,9 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     def isValidCaptcha(self, REQUEST):
         """Test is captcha was passed"""
         check_captcha = captcha.submit(REQUEST.get('recaptcha_challenge_field', ''),
-                                                   REQUEST.get('recaptcha_response_field', ''),
-                                                   self.getSite().recaptcha_private_key,
-                                                   REQUEST.get('REMOTE_ADDR', ''))
+                                       REQUEST.get('recaptcha_response_field', ''),
+                                       self.getSite().recaptcha_private_key,
+                                       REQUEST.get('REMOTE_ADDR', ''))
         return check_captcha.is_valid
 
     #
