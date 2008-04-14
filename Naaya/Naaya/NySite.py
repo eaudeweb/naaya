@@ -1341,7 +1341,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 p_username=res.get('name', ''), 
                 p_location_path=self.absolute_url(1),
                 p_location_title=self.site_title,
-                p_comments=res.get('comments', '')
+                p_comments=res.get('comments', ''),
+                p_template = 'email_requestrole'
             )
         self.setSession('title', title)
         self.setSession('body', body)
@@ -2779,7 +2780,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         l_content = l_content.replace('@@TIMEOFREQUEST@@', str(p_error_time))
         self.getEmailTool().sendEmail(l_content, p_to, p_from, l_subject)
 
-    def sendCreateAccountEmail(self, p_to, p_name, p_email, p_organisation, p_username, p_location_path, p_location_title, p_comments):
+    def sendCreateAccountEmail(self, p_to, p_name, p_email, p_organisation, 
+                            p_username, p_location_path,
+                            p_location_title, p_comments, **kwargs):
         #sends a request role email
         email_template = self.getEmailTool()._getOb('email_requestrole')
         l_subject = email_template.title

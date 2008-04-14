@@ -25,7 +25,7 @@ import xmlrpclib
 #Zope imports
 from Globals                                    import InitializeClass
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
-from Products.PageTemplates.ZopePageTemplate 	import manage_addPageTemplate
+from Products.PageTemplates.ZopePageTemplate    import manage_addPageTemplate
 from AccessControl                              import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions                  import view_management_screens, view
 from OFS.Image                                  import Image, manage_addImage
@@ -247,12 +247,12 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[fr].xml')))
         self._getOb(ID_GLOSSARY_RIVER_BASIN).xliff_import(self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'glossary_river_basin[ar].xml')))
 
-	#portal_map custom index
-	custom_map_index = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'map_index.zpt'))
-	portal_map = self.getGeoMapTool()
-	manage_addPageTemplate(portal_map, id='map_index', title='', text='')
-	map_index = portal_map._getOb(id='map_index')
-	map_index.pt_edit(text=custom_map_index, content_type='')
+        #portal_map custom index
+        custom_map_index = self.futRead(join(SEMIDE_PRODUCT_PATH, 'skel', 'others', 'map_index.zpt'))
+        portal_map = self.getGeoMapTool()
+        manage_addPageTemplate(portal_map, id='map_index', title='', text='')
+        map_index = portal_map._getOb(id='map_index')
+        map_index.pt_edit(text=custom_map_index, content_type='')
 
         #set the default thesaurus on picklists
         self.admin_properties(show_releasedate=1, rename_id='', http_proxy='',
@@ -524,7 +524,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
     def convertToFullURL(self, p_URL):
         p_URL = p_URL.strip()
         try:    p_URL = p_URL.encode('utf-8', 'ignore')
-    	except: pass
+        except: pass
         if p_URL=='' or p_URL=='http://' or p_URL=='https://':
             return ''
         try:
@@ -1182,7 +1182,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         except Exception, error:
             err = error
         else:
-    	    err = ''
+            err = ''
         
         # Errors occured
         if err:
@@ -1221,7 +1221,10 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
     def sendCreateAccountEmail(self, p_name, p_to, p_username, 
                                REQUEST=None, **kwargs):
         #sends a confirmation email to the newlly created account's owner
-        email_template = self.getEmailTool()._getOb('email_createaccount')
+        if REQUEST:
+            kwargs.update(REQUEST.form)
+        template = kwargs.get('p_template', 'email_createaccount')
+        email_template = self.getEmailTool()._getOb(template)
         l_subject = email_template.title
         l_content = email_template.body
         l_content = l_content.replace('@@PORTAL_URL@@', self.portal_url)
@@ -1230,6 +1233,9 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         l_content = l_content.replace('@@EMAIL@@', p_to)
         l_content = l_content.replace('@@USERNAME@@', p_username)
         l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
+        l_content = l_content.replace('@@ORGANISATION@@', '')
+        l_content = l_content.replace('@@COMMENTS@@', '')
+        l_content = l_content.replace('@@LOCATION@@', self.site_title)
         mail_from = self.mail_address_from
         self.getEmailTool().sendEmail(l_content, p_to, mail_from, l_subject)
 
@@ -1858,8 +1864,8 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
             except:
                 results = []
             results = self.utEliminateDuplicatesByURL(results)
-	    res = [r for r in results if r.can_be_seen()]
-	    
+            res = [r for r in results if r.can_be_seen()]
+
             batch_obj = batch_utils(self.numberresultsperpage, len(res), page_search_start)
             if skey != '':
                 res = self.utSortObjsListByAttr(res, skey, rkey)
