@@ -242,9 +242,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=NyGeoPoint.meta_type, path=path, **kw))
         else:
             results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=NyGeoPoint.meta_type, path=path, **base_kw))
-        LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG, 'searchGeoPoints%s -> %s' % (
-                        repr((path, geo_types, query, REQUEST)),
-                        repr(results)))
+        #LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG, 'searchGeoPoints%s -> %s' % (
+        #                repr((path, geo_types, query, REQUEST)),
+        #                repr(results)))
         return self.utEliminateDuplicatesByURL(results)
 
     security.declareProtected(view, 'downloadLocationsKml')
