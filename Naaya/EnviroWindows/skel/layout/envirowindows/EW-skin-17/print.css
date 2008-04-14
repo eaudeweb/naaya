@@ -1,0 +1,65 @@
+#center_content { width: 100% !important; overflow-x: visible !important;}
+
+.skiplink {
+	display: none;
+}
+
+#language {
+	display: none;
+}
+
+#header {
+	border: 1px solid #cccccc;
+	position: relative;
+	padding: 10px;
+}
+
+#header img {
+	margin-left: 1%;
+}
+
+#breadcrumbtrail {
+	display: none;
+}
+
+#middle_port {
+	margin: 1% 0%;
+}
+
+#left_port {
+	display: none;
+}
+
+#right_port {
+	display: none;
+}
+
+#footer {
+	display: none;
+}
+
+#toptitle {
+	margin-left: 20%;
+	margin-top: 0.5em;
+}
+	
+#last_modified {
+	margin: 1% 0% 1% 0%;
+}
+
+#topnav {
+	display: none;
+}
+
+#menunav {
+	display: none;
+}
+
+#tabbedmenu {
+	display: none;
+}
+
+.page_title {}
+.page_subtitle {}
+
+.b_download { display: none; }
