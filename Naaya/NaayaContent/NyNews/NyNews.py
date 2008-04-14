@@ -84,6 +84,7 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
     #process parameters
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(title)
+    if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
     if topitem: topitem = 1
     else:       topitem = 0
     try: sortorder =    abs(int(sortorder))

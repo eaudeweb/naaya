@@ -101,7 +101,8 @@ def addNySemThematicDir(self, id='', title='', description='', coverage='', keyw
     """
     #process parameters
     id = self.utCleanupId(id)
-    if not id: id = self.generateItemId(PREFIX_OBJECT)
+    if not id: id = self.generateItemId(title)
+    if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
     if publicinterface: publicinterface = 1
     else: publicinterface = 0
     try: sortorder = abs(int(sortorder))
