@@ -70,11 +70,7 @@
 
 			<tal:block tal:content="structure python:test(stype, stype.render(mode='edit', datamodel=my_answer), 'Error')" />
 
-			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
-				<span tal:replace="structure here/showCaptcha" />
-				<span class="errormsg" tal:content="python:here.getSession('err_captcha', '')" />
-				<span tal:define="dummy python:here.delSession('err_captcha')"></span>
-			</tal:block>
+			<span tal:replace="structure here/showCaptcha" />
 
 			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'">
 				<tal:block condition="python:here.notify_respondents.startswith('LET_THEM_CHOOSE')">

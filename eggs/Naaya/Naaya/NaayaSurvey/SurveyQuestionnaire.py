@@ -18,7 +18,6 @@
 # Alin Voinea, Eau de Web
 
 # Python imports
-import captcha
 import sys
 from urllib import urlencode
 
@@ -44,6 +43,7 @@ from Products.NaayaBase.constants import \
      EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG, \
      MESSAGE_SAVEDCHANGES, PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import genObjectId, genRandomId
+from Products.NaayaCore.managers import recaptcha_utils
 from Products.NaayaWidgets.Widget import WidgetError
 
 from SurveyAnswer import manage_addSurveyAnswer, SurveyAnswer
@@ -241,11 +241,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
                 datamodel[widget.getWidgetId()] = None
                 errors.append(ex)
 
-        captcha_err = self.isAnonymousUser() and not self.isValidCaptcha(REQUEST)
-
-        if errors or captcha_err:
-            if captcha_err:
-                self.setSession('err_captcha', 'Incorrect. Try again')
+        if errors or not recaptcha_utils.is_valid_captcha(self, REQUEST):
             if errors:
                 self.setSessionErrors(errors)
             self.setSessionAnswer(datamodel)
@@ -410,23 +406,6 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         return report.view_report_html(answers=self.getAnswers())
 
     #
-    # captcha
-    #
-    security.declareProtected(view, 'showCaptcha')
-    def showCaptcha(self):
-        """Return HTML code for CAPTCHA"""
-        return captcha.displayhtml(self.getSite().recaptcha_public_key)
-
-    security.declarePrivate('isValidCaptcha')
-    def isValidCaptcha(self, REQUEST):
-        """Test is captcha was passed"""
-        check_captcha = captcha.submit(REQUEST.get('recaptcha_challenge_field', ''),
-                                       REQUEST.get('recaptcha_response_field', ''),
-                                       self.getSite().recaptcha_private_key,
-                                       REQUEST.get('REMOTE_ADDR', ''))
-        return check_captcha.is_valid
-
-    #
     # utils
     #
     security.declareProtected(view, 'expired')
@@ -491,8 +470,15 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
             raise NotFound("You haven't taken this survey") # TODO: replace with a proper exception/error message
         return answer.index_html(REQUEST=REQUEST)
 
-    # macros
+    #
+    # macros & other html snippets
+    #
     security.declareProtected(view, 'base_index_html')
     base_index_html = PageTemplateFile('zpt/base_questionnaire_index', globals())
+
+    security.declareProtected(view, 'showCaptcha')
+    def showCaptcha(self):
+        """Return HTML code for CAPTCHA"""
+        return recaptcha_utils.render_captcha(self)
 
 InitializeClass(SurveyQuestionnaire)
