@@ -447,7 +447,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             self.setSessionErrors(errs)
         else:
             self.setSessionInfo(["%u GeoPoint(s) uploaded. (%s)" % (len(records), self.utGetTodayDate())])
-            self.setSessionErrors(["Could not geolocate %u address(es)." % (num_nolocation,)])
+            if num_nolocation:
+                self.setSessionErrors(["Could not geolocate %u address(es)." % (num_nolocation,)])
         return REQUEST.RESPONSE.redirect('%s/admin_mapupload_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getLocations')
