@@ -378,7 +378,6 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declarePrivate('add_location')
     def add_location(self, title, description, address, URL, approved, container, geo_type, latitude, longitude):
         """ add a location in the database """
-        from Products.NaayaContent.NyGeoPoint.NyGeoPoint import addNyGeoPoint # TODO move outside method
         meta_type = 'Naaya GeoPoint'
 
         if latitude.strip() == '' and longitude.strip() == '':
@@ -393,7 +392,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         if meta_type in parent_ob.get_pluggable_installed_meta_types():
             try:
-                ob = addNyGeoPoint(parent_ob, title=title, description=description, coverage='', keywords='', sortorder='', longitude=longitude, latitude=latitude, address=address, geo_type=geo_type, url=URL)
+                ob = parent_ob.addNyGeoPoint(title=title, description=description, coverage='', keywords='', sortorder='', longitude=longitude, latitude=latitude, address=address, geo_type=geo_type, url=URL)
                 ob.approveThis(approved)
                 return (ob, None)
             except Exception, err:
