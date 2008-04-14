@@ -2804,9 +2804,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     def notifyMaintainerEmail(self, p_to, p_from, p_item, p_container_path, p_container_basketpath, p_template='email_notifyonupload', **kwargs):
         #notify folder maintainer when a new upload is done
+        user = self.REQUEST.AUTHENTICATED_USER
+        user_name = user.getUserName()
+        atool = self.getAuthenticationTool()
+        try:
+            user_email = atool.getUserEmail(user)
+        except:
+            user_email = ''
         email_template = self.getEmailTool()._getOb(p_template)
         l_subject = email_template.title
         l_content = email_template.body
+        l_content = l_content.replace('@@USERNAME@@', user_name)
+        l_content = l_content.replace('@@USEREMAIL@@', user_email)
         l_content = l_content.replace('@@ITEMTITLEORID@@', p_item.title_or_id())
         l_content = l_content.replace('@@CONTAINERPATH@@', p_container_path)
         l_content = l_content.replace('@@UPLOADTIME@@', str(self.utShowFullDateTime(self.utGetTodayDate())))
