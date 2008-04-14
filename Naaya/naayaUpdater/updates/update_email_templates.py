@@ -20,23 +20,23 @@ from os.path import join
 from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 from Products.Naaya.constants import NAAYA_PRODUCT_PATH
-
+EMAIL_TEMPLATES = {
+    'email_notifyoncomment': 'Comment notification',
+    'email_notifyonupload': 'Upload notification',
+}
 class CustomContentUpdater(NaayaContentUpdater):
-    """Add email_notifyoncomment template to portal_email if missing"""
+    """Update email templates"""
 
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
-        self.title = 'Update email_notifyoncomment template'
-        self.description = 'Add email_notifyoncomment template to portal_email if missing.'
+        self.title = 'Update email templates'
+        self.description = 'Update email templates'
     
     def _verify_doc(self, doc):
         """ See super"""
         etool = getattr(doc, 'portal_email', None)
         if not etool:
             logger.debug('Skip site %s, missing portal_email tool.', doc.absolute_url())
-            return None
-        if getattr(etool, 'email_notifyoncomment', None) is not None:
-            logger.debug('Skip site %s, already up-to-date.', doc.absolute_url())
             return None
         return etool
     
@@ -52,10 +52,13 @@ class CustomContentUpdater(NaayaContentUpdater):
     def _update(self):
         updates = self._list_updates()
         for update in updates:
-            logger.debug('Update object %s', update.absolute_url())
-            data_path = join(NAAYA_PRODUCT_PATH, 'skel', 'emails', 'email_notifyoncomment.txt')
-            template_data = update.futRead(data_path, 'r')
-            update.manage_addEmailTemplate('email_notifyoncomment', 'Comment notification', template_data)
+            for template, title in EMAIL_TEMPLATES.items():
+                logger.debug('Update template %s in %s', template, update.absolute_url())
+                data_path = join(NAAYA_PRODUCT_PATH, 'skel', 'emails', template + '.txt')
+                template_data = update.futRead(data_path, 'r')
+                if getattr(update, template, None) is not None:
+                    update.manage_delObjects([template,])
+                update.manage_addEmailTemplate(template, title, template_data)
 
 def register(uid):
     return CustomContentUpdater(uid)
