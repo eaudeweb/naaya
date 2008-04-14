@@ -3,6 +3,7 @@
 	<forms>
 		<form id="folder_index" title="NyFolder default view" />
 		<form id="site_admin_template" title="Portal administration - macro"/>
+		<form id="site_admin_contacts" title="Portal administration - contacts"/>
 		<form id="site_login" title="Portal login"/>
 		<form id="site_requestrole" title="Portal request role form step 1"/>
 		<form id="site_requestlocations" title="Portal request role form - step 3"/>

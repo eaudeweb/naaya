@@ -1,0 +1,43 @@
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+	<h1 metal:fill-slot="title" i18n:translate="">Portal Contacts</h1>
+	
+	<tal:block metal:fill-slot="section">
+		<h2 i18n:translate="">Portal Contacts listing</h2>
+			<table id="contacts_listing" class="datatable">
+				<tr>
+					<th i18n:translate="">Name</th>
+					<th i18n:translate="">Email</th>
+					<th i18n:translate="">View</th>
+					<th i18n:translate="">Edit</th>
+					<th i18n:translate="">Export</th>
+				</tr>
+				<tr tal:repeat="contact python:here.getCatalogedObjectsCheckView(meta_type=['Naaya Contact'])">
+					<td tal:content="string:${contact/firstname} ${contact/lastname}" />
+					<td tal:content="contact/email" />
+					<td><a tal:attributes="href contact/absolute_url">View contact</a></td>
+					<td><a tal:attributes="href string:${contact/absolute_url}/edit_html">Edit contact</a></td>
+					<td><a tal:attributes="href string:${contact/absolute_url}/export_vcard">Export vCard</a></td>
+				</tr>
+			</table>
+		<h2 i18n:translate="">Send mail to all portal contacts</h2>
+			<p i18n:translate="">You can use the form below to send
+			an email to all email addresses from the Naaya Contact 
+			objects throughout this portal.</p>
+		<form method="post" action="sendMailToContacts" tal:define="mail_from here/mail_address_from">
+			<p tal:condition="not:mail_from" i18n:translate="">Please add a valid email address in the "Default from address" field
+			on the <a tal:attributes="href string:${here/absolute_url}/admin_email_html">portal properties page</a>.
+			</p>
+			<div class="field">
+				<label for="subject" i18n:translate="">Mail subject</label>
+				<input id="subject" name="subject" type="text" tal:attributes="disabled not:mail_from" />
+			</div>
+			
+			<div class="field">
+				<label for="content" i18n:translate="">Mail content</label>
+				<textarea id="content" name="content" rows="10" cols="70" tal:attributes="disabled not:mail_from"></textarea>
+			</div>
+			<input type="submit" value="Send mail" i18n:attributes="value" tal:attributes="disabled not:mail_from" />
+		</form>
+		
+	</tal:block>
+</tal:block>
