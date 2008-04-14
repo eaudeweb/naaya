@@ -403,17 +403,21 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     #site actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'uploadLocations')
-    def uploadLocations(self, file='', dialect='comma', encoding='utf-8', approved=False, parent_folder='', geo_type='', REQUEST=None):
+    def uploadLocations(self, file=None, dialect='comma', encoding='utf-8', approved=False, parent_folder='', geo_type='', REQUEST=None):
         """ """
-        if file.filename.find('\\') != -1:
-            filename = file.filename.split('\\')[-1]
-        else:
-            filename = file.filename
-
-        metadata = ['name', 'description', 'address', 'URL', 'latitude', 'longitude']
         errs = []
+        metadata = ['name', 'description', 'address', 'URL', 'latitude', 'longitude']
+
 
         try:
+            if file:
+                if file.filename.find('\\') != -1:
+                    filename = file.filename.split('\\')[-1]
+                else:
+                    filename = file.filename
+            else:
+                raise GeoMapToolUploadError("No file uploaded.")
+
             #step 1. read the CSV file
             csv = CSVReader(file, dialect, encoding)
             records, error = csv.read()
