@@ -32,7 +32,7 @@
 </div>
 <div class="field">
 	<label for="budget"><span i18n:translate="" tal:omit-tag="">Budget</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'budget')" class="mandatory_field"> *</span></label>
-	<input type="text" name="budget" id="budget" tal:attributes="value python:here.getSession('budget', '')" /> &euro;
+	<input type="text" name="budget" id="budget" tal:attributes="value python:here.getSession('budget', '0')" /> &euro;
 </div>
 <div class="field">
 	<label for="programme"><span i18n:translate="" tal:omit-tag="">Programme</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'programme')" class="mandatory_field"> *</span></label>
