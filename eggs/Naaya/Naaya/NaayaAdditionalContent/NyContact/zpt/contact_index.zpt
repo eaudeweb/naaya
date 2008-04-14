@@ -87,6 +87,10 @@
 	<th i18n:translate="">Geographical coverage</th>
 	<td tal:content="here/coverage" />
 </tr>
+<tr>
+	<th i18n:translate="">Export for Outlook</th>
+	<td><a tal:attributes="href string:${here/absolute_url}/export_vcard" i18n:translate="">vCard Format</a>
+</tr>
 </table>
 
 <span tal:replace="structure here/comments_box" />

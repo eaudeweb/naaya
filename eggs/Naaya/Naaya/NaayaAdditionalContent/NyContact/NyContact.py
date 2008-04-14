@@ -243,6 +243,38 @@ class NyContact(NyAttributes, contact_item, NyItem, NyCheckControl):
             ra('<jobtitle lang="%s"><![CDATA[%s]]></jobtitle>' % (l, self.utToUtf8(self.getLocalProperty('jobtitle', l))))
         return ''.join(r)
 
+    security.declareProtected(view, 'export_vcard')
+    def export_vcard(self, REQUEST=None):
+        """ """
+        r = []
+        ra = r.append
+        postaladdress = self.postaladdress
+        postaladdress = postaladdress.replace('\r\n', ' ')
+        ra('BEGIN:VCARD')
+        ra('CHARSET:UTF-8')
+        ra('VERSION:2.1')
+        ra('FN;CHARSET=UTF-8:%s %s %s' % (self.utToUtf8(self.personaltitle), self.utToUtf8(self.firstname), self.utToUtf8(self.lastname)))
+        ra('N;CHARSET=UTF-8:%s;%s;%s;%s;%s' % (self.utToUtf8(self.lastname), self.utToUtf8(self.firstname), '', self.utToUtf8(self.personaltitle), ''))
+        ra('TITLE;CHARSET=UTF-8:%s' % self.utToUtf8(self.jobtitle))
+        ra('ROLE;CHARSET=UTF-8:%s' % self.utToUtf8(self.jobtitle))
+        ra('ORG;CHARSET=UTF-8:%s;%s' % (self.utToUtf8(self.organisation), self.utToUtf8(self.department)))
+        ra('TEL;WORK:%s' % self.utToUtf8(self.phone))
+        ra('TEL;FAX:%s' % self.utToUtf8(self.fax))
+        ra('TEL;CELL:%s' % self.utToUtf8(self.cellphone))
+        ra('ADR;WORK;CHARSET=UTF-8:;;%s;;;;' % self.utToUtf8(postaladdress))
+        ra('EMAIL;INTERNET:%s' % self.utToUtf8(self.email))
+        ra('URL:%s' % self.utToUtf8(self.webpage))
+        ra('NOTE;CHARSET=UTF-8:%s' % self.utToUtf8(self.description))
+        ra('END:VCARD')
+        
+        if REQUEST:
+            response = self.REQUEST.RESPONSE
+            response.setHeader('content-type', 'text/x-vCard')
+            response.setHeader('charset', 'UTF-8')
+            response.setHeader('content-disposition', 'attachment; filename=%s.vcf' % self.id)
+        
+        return '\n'.join(r)
+
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='', keywords='', sortorder='', 
