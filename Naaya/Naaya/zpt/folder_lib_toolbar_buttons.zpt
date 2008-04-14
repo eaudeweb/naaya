@@ -15,6 +15,12 @@ Required variables:
   btn_delete btn_delete|nothing;
   show_toolbar btn_copy|btn_cut|btn_paste|btn_delete;">
 
+<div id="toolbar" tal:condition="python: not show_toolbar and btn_paste">
+  <input type="submit" value="Paste" name="pasteObjects:method"
+    i18n:attributes="value"
+    tal:condition="btn_paste" />
+</div>
+
 <div id="toolbar" tal:condition="show_toolbar">
   <metal:block define-slot="default">
   <input type="submit" value="Copy" name="copyObjects:method"
