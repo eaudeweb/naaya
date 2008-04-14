@@ -56,6 +56,9 @@ TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER = get_template('xmlrpc_simple_map_loader.js')
 TEMPLATE_XMLRPC_ADDPICK_MAP_LOADER = get_template('xmlrpc_addpick_map_loader.js')
 TEMPLATE_XMLRPC_EDITPICK_MAP_LOADER = get_template('xmlrpc_editpick_map_loader.js')
 
+class GeoMapToolUploadError(Exception):
+    """GeoMapTool Upload Error"""
+    pass
 
 def manage_addGeoMapTool(self, languages=None, REQUEST=None):
     """
@@ -390,11 +393,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             else:
                 latitude, longitude = coordinates
 
-        parent_ob = self.utGetObject(container)
-
-        if meta_type in parent_ob.get_pluggable_installed_meta_types():
+        if meta_type in container.get_pluggable_installed_meta_types():
             try:
-                ob = parent_ob.addNyGeoPoint(title=title, description=description, coverage='', keywords='', sortorder='', longitude=longitude, latitude=latitude, address=address, geo_type=geo_type, url=URL)
+                ob = container.addNyGeoPoint(title=title, description=description, coverage='', keywords='', sortorder='', longitude=longitude, latitude=latitude, address=address, geo_type=geo_type, url=URL)
                 ob.approveThis(approved)
                 return (ob, None)
             except Exception, err:
@@ -412,36 +413,43 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         metadata = ['name', 'description', 'address', 'URL', 'latitude', 'longitude']
         errs = []
 
-        #step 1. read the CSV file
-        csv = CSVReader(file, dialect, encoding)
-        records, error = csv.read()
+        try:
+            #step 1. read the CSV file
+            csv = CSVReader(file, dialect, encoding)
+            records, error = csv.read()
 
-        #validate metadata
-        for meta in metadata:
-            if meta not in records[0].keys():
-                errs.append('Invalid headers in file!')
+            #validate metadata
+            for meta in metadata:
+                if meta not in records[0].keys():
+                    raise GeoMapToolUploadError('Invalid headers in file.')
 
-        #step 2. add locations
-        num_nolocation = 0
-        if parent_folder:
+            #step 2. add locations
+            if not parent_folder:
+                raise GeoMapToolUploadError('The Upload in folder field must be an existing folder.')
+            parent_ob = self.utGetObject(parent_folder)
+            if not parent_ob:
+                raise GeoMapToolUploadError('The Upload in folder field must be an existing folder.')
+
+            num_nolocation = 0
             for rec in records:
-                if rec:
-                    ob, err = self.add_location(self.utToUnicode(rec['name']),
-                                                self.utToUnicode(rec['description']),
-                                                rec['address'],
-                                                rec.get('URL', ''),
-                                                approved,
-                                                parent_folder,
-                                                geo_type,
-                                                rec.get('latitude', ''),
-                                                rec.get('longitude', ''))
-                    if err is None:
-                        if ob.longitude is None and ob.latitude is None:
-                            num_nolocation += 1
-                    else:
-                        errs.append(err)
-        else:
-            errs.append('The Upload in folder field must have a value')
+                if not rec:
+                    continue
+                ob, err = self.add_location(self.utToUnicode(rec['name']),
+                                            self.utToUnicode(rec['description']),
+                                            rec['address'],
+                                            rec.get('URL', ''),
+                                            approved,
+                                            parent_folder,
+                                            geo_type,
+                                            rec.get('latitude', ''),
+                                            rec.get('longitude', ''))
+                if err is not None:
+                    errs.append(err)
+                    continue
+                if ob.longitude is None and ob.latitude is None:
+                    num_nolocation += 1
+        except GeoMapToolUploadError, ex:
+            errs.append(str(ex)) # TODO Python 2.5: ex.message
 
         if errs:
             self.setSessionErrors(errs)
