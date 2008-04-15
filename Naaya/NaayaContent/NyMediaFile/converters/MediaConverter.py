@@ -20,7 +20,7 @@
 
 # Python imports
 import os
-from popen2 import popen3 # TODO Python 2.5: use the new subprocess module
+from popen2 import popen3, popen4 # TODO Python 2.5: use the new subprocess module
 import sys
 from threading import Thread
 
@@ -95,8 +95,8 @@ def _check_ffmpeg():
         exit_code = status
     if exit_code:
         raise MediaConverterError('could not run ffmpeg: "ffmpeg -h" has exited with code %s' % (exit_code, ))
-    child_stdout, child_stdin, child_stderr = popen3("ffmpeg -h")
-    error = child_stderr.read()
+    child_stdout_and_stderr, child_stdin = popen4("ffmpeg -h")
+    error = child_stdout_and_stderr.read()
     if "--enable-libmp3lame" not in error:
         raise MediaConverterError('ffmpeg was not compiled with --enable-libmp3lame; ffmpeg -h returned: %s' % (error, ))
 
