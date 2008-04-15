@@ -17,19 +17,32 @@ be able to upload only flash video files ".flv");
 
 2 Install ffmpeg
 ------------------
-- Download it from provided URL and unpack into tmp folder:
-    cd /tmp
-    wget http://ffmpeg.mplayerhq.hu/ffmpeg-checkout-snapshot.tar.bz2
-    tar -xvf ffmpeg-checkout-snapshot.tar.bz2
-    cd <ffmpeg-checkout-extract-folder>
-- Ensure you have installed lame, lame-devel on your machine:
-    (yum user): yum install lame lame-devel
-    (apt user): apt-get install lame lame-devel
-- Install:
-    ./configure --enable-libmp3lame && make && sudo make install
+You need a ffmpeg newer than revision 10703 compiled with mp3lame support.
+Also make sure that the ffmpeg executable is in your PATH.
+
+	2.1 Unix install
+	----------------
+	- Download it from provided URL and unpack into tmp folder:
+	    cd /tmp
+	    wget http://ffmpeg.mplayerhq.hu/ffmpeg-checkout-snapshot.tar.bz2
+	    tar -xvf ffmpeg-checkout-snapshot.tar.bz2
+	    cd <ffmpeg-checkout-extract-folder>
+	- Ensure you have installed lame, lame-devel on your machine:
+	    (yum user): yum install lame lame-devel
+	    (apt user): apt-get install lame lame-devel
+	- Install:
+	    ./configure --enable-libmp3lame && make && sudo make install
+
+	2.2 Windows install
+	-------------------
+	Use ffmpeg from http://ffdshow.faireal.net/mirror/ffmpeg/ffmpeg.rev12665.7z.
+
 
 3 Install flvtool2
 --------------------
+While flvtool2 is optional, it is highly recommended to install it, because 
+without it subtitles (and other features) will not work.
+
 - Download it from provided URL and unpack into tmp folder:
     cd /tmp
     wget http://rubyforge.org/frs/download.php/17497/flvtool2-1.0.6.tgz
