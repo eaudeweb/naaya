@@ -25,7 +25,7 @@ import sys
 from threading import Thread
 
 # Zope imports
-from zLOG import LOG, WARNING
+from zLOG import LOG, WARNING, DEBUG
 
 
 class MediaConverterError(Exception):
@@ -38,13 +38,16 @@ class MediaConverter(Thread):
     def __init__(self, finput, foutput, fdone):
         self.finput = finput
         self.foutput = foutput
-        self.fdone = fdone
+        if sys.platform == 'win32':
+            self.fdone = os.path.basename(fdone)
+        else:
+            self.fdone = fdone
         Thread.__init__(self)
     
-    def execute(self, com):
-        """ Execute fs com
-        """
-        return os.popen4(com)
+    def execute(self, cmd):
+        """ Execute fs cmd"""
+        LOG('NaayaContent.NyMediaFile.convertors.MediaConverter', DEBUG, 'executing command: %s' % cmd)
+        return os.popen4(cmd)
 
     def run(self):
         """Converts media to flash video (flv) files"""
@@ -54,7 +57,7 @@ class MediaConverter(Thread):
                     "-benchmark " \
                     "-i %(in)s " \
                     "-ar 22050 -s 320x240 -b 500k -f flv " \
-                    "%(out)s &> %(done)s.log " \
+                    "%(out)s > %(done)s.log " \
                     "&& del %(in)s "
             if _is_flvtool2_available:
                 cmd += "&& flvtool2 -U %(out)s >> %(done)s.log "
@@ -66,20 +69,17 @@ class MediaConverter(Thread):
                     "-benchmark " \
                     "-i %(in)s " \
                     "-ar 22050 -s 320x240 -b 500k -f flv " \
-                    "%(out)s &> %(done)s.log " \
+                    "%(out)s > %(done)s.log " \
                     "&& rm %(in)s "
             if _is_flvtool2_available:
                 cmd += "&& flvtool2 -U %(out)s >> %(done)s.log "
             else:
                 LOG('NaayaContent.NyMediaFile.convertors.MediaConverter', WARNING, 'can not update FLV with an onMetaTag event, because flvtool2 is not available')
             cmd += "&& mv %(out)s %(done)s"
-
-        return self.execute(cmd % \
-                            {
-                                "in": self.finput,
-                                "out": self.foutput,
-                                "done": self.fdone
-                            })
+        cmd = cmd % {"in": self.finput,
+                     "out": self.foutput,
+                     "done": self.fdone}
+        return self.execute(cmd)
 
 
 def _check_ffmpeg():
