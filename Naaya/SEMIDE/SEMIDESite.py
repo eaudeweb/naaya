@@ -1240,6 +1240,22 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         mail_from = self.mail_address_from
         self.getEmailTool().sendEmail(l_content, p_to, mail_from, l_subject)
 
+    def sendAccountCreatedEmail(self, p_name, p_email, p_username, REQUEST, p_roles=[]):
+	#sends a confirmation email to the newlly created account's owner
+	if isinstance(p_roles, list): p_roles = ', '.join(p_roles)
+	email_template = self.getEmailTool()._getOb('email_createaccount')
+	l_subject = email_template.title
+	l_content = email_template.body
+	l_content = l_content.replace('@@PORTAL_URL@@', self.portal_url)
+	l_content = l_content.replace('@@PORTAL_TITLE@@', self.site_title)
+	l_content = l_content.replace('@@NAME@@', p_name)
+	l_content = l_content.replace('@@USERNAME@@', p_username)
+	l_content = l_content.replace('@@EMAIL@@', p_email)
+	l_content = l_content.replace('@@ROLES@@', p_roles)
+	l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
+	mail_from = self.mail_address_from
+	self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getSemideUsers')
     def getSemideUsers(self, query='', skey=0, rkey=''):
         """ return the portal users """
