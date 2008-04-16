@@ -73,7 +73,7 @@ def addNySemFieldSite(self, id='', title='', description='', coverage='', keywor
     """
     #process parameters
     id = self.utCleanupId(id)
-    if not id: id = self.generateItemId(title)
+    if not id: id = self.utGenObjectId(title)
     if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
