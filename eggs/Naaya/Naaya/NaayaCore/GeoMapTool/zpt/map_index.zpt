@@ -128,8 +128,8 @@ function toggleSelect()
 						<input type="submit" value="Show selected" name="index_html:method" i18n:attributes="value" />
 					</noscript>
 					<div>
-						<input type="submit" value="Download Google Earth KML" name="downloadLocationsKml:method" i18n:attributes="value" />
-						<span i18n:translate="">(requires <a href="http://earth.google.com/downloads.html">Google Earth</a>)</span>
+						<p i18n:translate="">Additionally you can display the map in <a href="http://earth.google.com/downloads.html">Google Earth viewer</a> (version 4.0 or higher).</p>
+						<input type="submit" value="View points in Google Earth" name="downloadLocationsKml:method" i18n:attributes="value" />
 					</div>
 				</div>
 			</form>
