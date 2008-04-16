@@ -43,6 +43,7 @@
 		<form id="site_admin_users" title="Semide users"/>
 		<form id="site_admin_roles" title="Semide users/roles"/>
 		<form id="site_admin_flash_notification" title="Semide notification confirmation"/>
+		<form id="site_messages" title="Portal messages page"/>
 	</forms>
 	<layout default_skin_id="semide" default_scheme_id="blue">
 		<skin id="semide" title="SEMIDE">
