@@ -67,7 +67,7 @@
 </tal:block>
 
 <p tal:condition="python:len(topics)==0">
-	<strong i18n:translate="">[No topics]</strong>
+	<strong i18n:translate="">[No topics available]</strong>
 </p>
 
 </tal:block>
