@@ -10,7 +10,7 @@
                        width python:request.get('width', here.map_width);
                        height python:request.get('height', here.map_height)">
 
-<style type="text/css">
+<style type="text/css" tal:condition="python:not here.isArabicLanguage()">
 div.marker {
 	display: none;
 }
@@ -27,6 +27,80 @@ div.marker-body h3 {
 	margin-top: 0;
 	padding-top: 0;
 	text-transform: uppercase;
+}
+.legend_portlet li {
+	background:#FFFFFF none repeat scroll 0%;
+	border-bottom:1px solid #DDDDDD;
+	border-top:1px solid #FEFEFE;
+	color:#084173;
+	display:block;
+	font-family:Verdana,Arial,Helvetica,sans-serif;
+	font-size:90%;
+	font-weight:bold;
+	line-height:100%;
+	margin:0px;
+	padding:0.3em;
+	vertical-align:bottom;
+}
+.legend_portlet ul {
+	padding: 0.2em;
+	margin: 0.1em;
+}
+#right_portlet {
+	background-color:white;
+	clear:right;
+	float:right;
+	position:relative;
+	top:0px;
+	width:163px;
+}
+</style>
+<style type="text/css" tal:condition="here/isArabicLanguage">
+div.marker {
+	display: none;
+}
+div.marker-body {
+	width: 290px;
+	margin-top: 0;
+}
+div.marker-more {
+	padding: 10px 5px 5px 30px;	/* T   R   B   L */
+}
+div.marker-body h3 {
+	font-weight: bold;
+	font-size: 1em;
+	margin-top: 0;
+	padding-top: 0;
+	text-transform: uppercase;
+}
+.legend_portlet li {
+	background:#FFFFFF none repeat scroll 0%;
+	border-bottom:1px solid #DDDDDD;
+	border-top:1px solid #FEFEFE;
+	color:#084173;
+	display:block;
+	font-family:Verdana,Arial,Helvetica,sans-serif;
+	font-size:90%;
+	font-weight:bold;
+	line-height:100%;
+	margin:0px;
+	padding:0.3em;
+	vertical-align:bottom;
+}
+.legend_portlet ul {
+	padding: 0.2em;
+	margin: 0.1em;
+}
+#right_portlet {
+	background-color:white;
+	clear:left;
+	float:left;
+	position:relative;
+	top:0px;
+	width:163px;
+}
+div#map {
+	margin-right: 13em;
 }
 </style>
 
@@ -51,7 +125,59 @@ function toggleSelect()
 
 <span tal:replace="structure python:here.xrjs_loader(geo_types, geo_query, center, zoom, path, width, height)" />
 
-<div id="center_content" style="width: 78%; overflow-x: auto;">
+<div id="right_port">
+	<div class="legend_portlet">
+		<a style="float:right; margin-right: 0.1em;" href="javascript:toggleSelect();" title="Select all" i18n:translate="" i18n:attributes="title">all</a>
+		<div class="right_portlet_title" i18n:translate="">Filter locations</div>
+		<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
+			<div>
+				<input type="text" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value geo_query" />
+			</div>
+			<ul class="map_legend" id="filter_map">
+				<tal:block repeat="item here/getParentsList">
+				<tal:block define="children python:here.getSymbolChildren(item.id);">
+				<li>
+					<input type="checkbox" name="geo_types:list"
+					       tal:attributes="value item/id;
+					                       id item/id;
+					                       checked python:item.id in geo_types" />
+					<img tal:condition="python:item.picture is not None"
+					     tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title" />
+					<span i18n:translate="" tal:content="item/title" />
+				</li>
+				<ul tal:condition="children" class="category_child">
+					<li tal:repeat="child children">
+						<input type="checkbox" name="geo_types:list"
+						       tal:attributes="value child/id;
+						                       id child/id;
+						                       checked python:child.id in geo_types" />
+						<img tal:condition="python:child.picture is not None"
+						     tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title" />
+						<label tal:attributes="for child/id"><span i18n:translate="" tal:content="child/title" /></label>
+					</li>
+				</ul>
+				</tal:block>
+				</tal:block>
+			</ul>
+			<div>
+				<input type="hidden" id="center" name="center" tal:attributes="value center" />
+				<input type="hidden" id="zoom" name="zoom" tal:attributes="value zoom" />
+				<input type="hidden" id="path" name="path" tal:attributes="value path" />
+				<input type="button" id="showSelected" value="Show selected" i18n:attributes="value"
+				       style="display: none" onclick="javascript: showSelectedLocations()" />
+				<noscript>
+					<input type="submit" value="Show selected" name="index_html:method" i18n:attributes="value" />
+				</noscript>
+				<div>
+					<input type="submit" value="Download Google Earth KML" name="downloadLocationsKml:method" i18n:attributes="value" />
+					<span i18n:translate="">(requires <a href="http://earth.google.com/downloads.html">Google Earth</a>)</span>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="middle_port">
 	<h1 i18n:translate="">Geo map</h1>
 	<noscript>
 		<p i18n:translate="" class=".message-information">You must have Javascript turned on to view all the YahooMap features.</p>
@@ -79,62 +205,18 @@ function toggleSelect()
 	</div>
 
 	<div style="display:none" id="map_markers"></div>
-</div>
 
-<div id="right_port">
-	<div class="right_portlet right_link_portlet">
-		<a style="float:right; margin-right: 0.2em;" href="javascript:toggleSelect();" title="Select all" i18n:translate="" i18n:attributes="title">all</a>
-		<div class="right_portlet_title portlet-title" i18n:translate="">Filter locations</div>
+	<p i18n:translate="">GeoMap is a geographic navigation tool that links some selected information stored in the databases
+	of the Clearing House to their geographic location through the map of the Mediterranean.</p>
 
-		<div class="right_portlet_content content">
+	<p i18n:translate="">You can filter the information displayed on the map by selecting some specific categories of information
+	 objects from the list in the right. After making the choice, click on “Show selected” to update the map according to the new 
+	settings.</p>
 
-			<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
-				<div>
-					<input type="text" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value geo_query" />
-				</div>
-				<ul class="map_legend" id="filter_map">
-					<tal:block repeat="item here/getParentsList">
-					<tal:block define="children python:here.getSymbolChildren(item.id);">
-					<li>
-						<input type="checkbox" name="geo_types:list"
-						       tal:attributes="value item/id;
-						                       id item/id;
-						                       checked python:item.id in geo_types" />
-						<img tal:condition="python:item.picture is not None"
-						     tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title" />
-						<span i18n:translate="" tal:content="item/title" />
-					</li>
-					<ul tal:condition="children" class="category_child">
-						<li tal:repeat="child children">
-							<input type="checkbox" name="geo_types:list"
-							       tal:attributes="value child/id;
-							                       id child/id;
-							                       checked python:child.id in geo_types" />
-							<img tal:condition="python:child.picture is not None"
-							     tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title" />
-							<label tal:attributes="for child/id"><span i18n:translate="" tal:content="child/title" /></label>
-						</li>
-					</ul>
-					</tal:block>
-					</tal:block>
-				</ul>
-				<div>
-					<input type="hidden" id="center" name="center" tal:attributes="value center" />
-					<input type="hidden" id="zoom" name="zoom" tal:attributes="value zoom" />
-					<input type="hidden" id="path" name="path" tal:attributes="value path" />
-					<input type="button" id="showSelected" value="Show selected" i18n:attributes="value"
-					       style="display: none" onclick="javascript: showSelectedLocations()" />
-					<noscript>
-						<input type="submit" value="Show selected" name="index_html:method" i18n:attributes="value" />
-					</noscript>
-					<div>
-						<input type="submit" value="Download Google Earth KML" name="downloadLocationsKml:method" i18n:attributes="value" />
-						<span i18n:translate="">(requires <a href="http://earth.google.com/downloads.html">Google Earth</a>)</span>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
+	<p i18n:translate="">You can pan and zoom the map to discover the objects displayed. By clicking the symbols on the map, the name of the object will display and more details will be provided by clicking  “see more”.</p>
+
+	<p style="color: blue;" i18n:translate="">Important notice: The map service is provided by Yahoo! The Commission, the EEA, the SMAP
+	 RMSU and all the others Clearing House partners accept no responsibility or liability whatsoever with regard to the information provided through this service.</p>
 </div>
 
 <script type="text/javascript">
