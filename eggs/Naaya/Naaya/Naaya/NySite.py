@@ -1952,9 +1952,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 auth_tool = self.getAuthenticationTool()
                 for name in names:
                     try:
-                        email = auth_tool.getUsersEmails([name])[0]
-                        fullname = auth_tool.getUsersFullNames([name])[0]
-                        self.sendAccountCreatedEmail(fullname, email, name, REQUEST)
+            		email = auth_tool.getUsersEmails([name])[0]
+                	fullname = auth_tool.getUsersFullNames([name])[0]
+                	self.sendAccountCreatedEmail(fullname, email, name, REQUEST, roles)
                     except:
                         err = 'Could not send confirmation mail.'
         if REQUEST:
@@ -2743,7 +2743,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                             ).replace('/', '').replace('www.', '')
         etool.sendEmail(mbody, mto, mfrom, msubj)
         
-    def sendAccountCreatedEmail(self, p_name, p_email, p_username, REQUEST):
+    def sendAccountCreatedEmail(self, p_name, p_email, p_username, REQUEST, p_roles=[]):
         #sends a confirmation email to the newlly created account's owner
         email_template = self.getEmailTool()._getOb('email_createaccount')
         l_subject = email_template.title
@@ -2783,6 +2783,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def sendCreateAccountEmail(self, p_to, p_name, p_email, p_organisation, 
                             p_username, p_location_path,
                             p_location_title, p_comments, **kwargs):
+                            
         #sends a request role email
         email_template = self.getEmailTool()._getOb('email_requestrole')
         l_subject = email_template.title
@@ -2792,6 +2793,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         l_content = l_content.replace('@@ORGANISATION@@', p_organisation)
         l_content = l_content.replace('@@USERNAME@@', p_username)
         l_content = l_content.replace('@@LOCATIONPATH@@', p_location_path)
+        
         if p_location_path:
             l_content = l_content.replace('@@LOCATION@@', "the %s folder (%s/%s)" % (p_location_title, self.portal_url, p_location_path))
         else:
