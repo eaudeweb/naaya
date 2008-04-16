@@ -88,6 +88,7 @@ class SurveyAnswer(Folder):
         Folder.__init__(self, id)
         self.add_properties(datamodel)
         self.respondent = respondent
+        self.modification_time = DateTime()
 
     security.declarePrivate('add_properties')
     def add_properties(self, datamodel):
