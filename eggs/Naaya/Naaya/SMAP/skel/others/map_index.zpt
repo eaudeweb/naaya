@@ -130,9 +130,6 @@ function toggleSelect()
 		<a style="float:right; margin-right: 0.1em;" href="javascript:toggleSelect();" title="Select all" i18n:translate="" i18n:attributes="title">all</a>
 		<div class="right_portlet_title" i18n:translate="">Filter locations</div>
 		<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
-			<div>
-				<input type="text" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value geo_query" />
-			</div>
 			<ul class="map_legend" id="filter_map">
 				<tal:block repeat="item here/getParentsList">
 				<tal:block define="children python:here.getSymbolChildren(item.id);">
