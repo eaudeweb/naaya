@@ -1224,13 +1224,14 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         if REQUEST:
             kwargs.update(REQUEST.form)
         template = kwargs.get('p_template', 'email_createaccount')
+        
         email_template = self.getEmailTool()._getOb(template)
         l_subject = email_template.title
         l_content = email_template.body
         l_content = l_content.replace('@@PORTAL_URL@@', self.portal_url)
         l_content = l_content.replace('@@PORTAL_TITLE@@', self.site_title)
         l_content = l_content.replace('@@NAME@@', p_name)
-        l_content = l_content.replace('@@EMAIL@@', p_to)
+        l_content = l_content.replace('@@EMAIL@@', kwargs.get('p_email', ''))
         l_content = l_content.replace('@@USERNAME@@', p_username)
         l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
         l_content = l_content.replace('@@ORGANISATION@@', '')
