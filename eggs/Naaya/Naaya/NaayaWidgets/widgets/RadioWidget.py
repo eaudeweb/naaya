@@ -63,7 +63,8 @@ class RadioWidget(MultipleChoiceWidget):
         """ """
         if self.add_extra_choice:
             L = list(self.choices)
-            L.append(self.getPortalTranslations().translate('', 'Other'))
+            catalog = self.getPortalTranslations()
+            L.append(catalog('Other', lang=self.gl_get_selected_language(), add=True))
             return L
         else:
             return self.choices

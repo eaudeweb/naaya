@@ -50,8 +50,9 @@ class MultipleChoicePieChartStatistic(BaseMultipleChoiceStatistic):
         data.append(unanswered[1])
         chart.add_data(data)
         # legend
+        catalog = self.getPortalTranslations()
         legend = list(self.question.getChoices())
-        legend.append(self.getPortalTranslations().translate('', 'Not answered'))
+        legend.append(catalog('Not answered', lang=self.gl_get_selected_language(), add=True))
         chart.set_pie_labels(legend)
 
         return self.page(question=self.question,

@@ -54,8 +54,9 @@ class MultipleChoiceGoogleBarChartStatistic(BaseMultipleChoiceStatistic):
         for x in data:
             chart.add_data([x, 0]) # the 0 is an ugly hack
         # legend
+        catalog = self.getPortalTranslations()
         legend = list(self.question.getChoices())
-        legend.append(self.getPortalTranslations().translate('', 'Not answered'))
+        legend.append(catalog('Not answered', lang=self.gl_get_selected_language(), add=True))
         chart.set_legend(legend)
         # axis
         chart.set_axis_range(pygooglechart.Axis.BOTTOM, *chart.data_x_range())
