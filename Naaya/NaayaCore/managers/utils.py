@@ -151,10 +151,7 @@ def findDuplicates(objects, attributes):
     all_items = {}
     for item in objects:
         marker = tuple([getattr(item, attr) for attr in attributes]) # TODO Python 2.4: generator comprehension
-        L = all_items.get(marker, None)
-        if L is None:
-            L = all_items[marker] = []
-        L.append(item)
+        all_items.setdefault(marker, []).append(item)
     for items in all_items.values():
         if len(items) < 2:
             continue
