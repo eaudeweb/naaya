@@ -313,7 +313,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         d['NAME'] = auth_tool.getUserFullName(respondent)
         d['SURVEY_TITLE'] = self.title
         d['SURVEY_URL'] = self.absolute_url()
-        d['LINK'] = "%s/view_my_answer_html" % self.absolute_url()
+        d['LINK'] = "%s" % answer.absolute_url()
 
         self._sendEmailNotification('email_survey_answer_to_respondent', d, respondent)
 
