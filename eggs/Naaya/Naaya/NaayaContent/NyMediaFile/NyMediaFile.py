@@ -452,7 +452,7 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if not sortorder: sortorder = DEFAULT_SORTORDER
         if lang is None: lang = self.gl_get_selected_language()
-        
+
         # Update subtitle
         if REQUEST:
             kwargs.update(REQUEST.form)
@@ -487,6 +487,12 @@ class NyMediaFile(NyAttributes, mediafile_item, NyFSContainer, NyCheckControl, N
             self.saveUpload(file=attached_file, lang=lang)
         # Update properties
         sortorder = int(sortorder)
+        # remove parameters that we don't need anymore; TODO: find a cleaner solution
+        for i in 'saveProperties', 'file', 'subtitle_file':
+            kwargs.pop(i, None)
+        # ugly hack for releasedate; TODO: find a cleaner solution
+        releasedate = self.process_releasedate(releasedate)
+        kwargs["releasedate"] = self.process_releasedate(kwargs["releasedate"])
         if not self.hasVersion():
             #this object has not been checked out; save changes directly into the object
             releasedate = self.process_releasedate(releasedate, self.releasedate)
