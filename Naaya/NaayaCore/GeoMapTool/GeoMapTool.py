@@ -125,7 +125,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         Folder.inheritedAttribute("__setstate__") (self, state)
 
     #admin actions
-    security.declareProtected(view_management_screens, 'manageProperties')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'manageProperties')
     def manageProperties(self, mapsapikey='', center_locality='', center_zoom='', detailed_zoom='', map_width='', map_height='', detailed_map_width='', detailed_map_height='', map_types=[], default_type='', REQUEST=None):
         """ """
         try: center_zoom = abs(int(center_zoom))
