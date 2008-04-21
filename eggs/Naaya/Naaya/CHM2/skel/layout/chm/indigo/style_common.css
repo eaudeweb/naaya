@@ -1173,3 +1173,32 @@ div.xmlExportButtons a.xml {
  .vDateField { 
 	 margin-left:4px; 
  }
+/* Map styles */
+div.marker {
+	display: none;
+}
+div.marker-body {
+	width: 290px;
+	margin-top: 0;
+}
+div.marker-more {
+	padding: 10px 5px 5px 30px;	/* T   R   B   L */
+}
+div.marker-body h3 {
+	font-weight: bold;
+	font-size: 1em;
+	margin-top: 0;
+	padding-top: 0;
+	text-transform: uppercase;
+}
+.map-button {
+	font-size: x-small;
+	color: white;
+	border: 1px outset white;
+	background-color: #637785;
+	margin-top: 1em;
+	padding: 0.3em 0.2em;
+}
+#record_counter_message {
+	font-size: x-small;
+}
