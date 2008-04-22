@@ -46,13 +46,13 @@
 <tal:block tal:condition="python:paging_total>0">
 <div>
 	<div>
-		<span i18n:translate="" tal:omit-tag="">Results</span>
+		<span i18n:translate="">Results</span>
 		<strong tal:content="paging_start" /> - <strong tal:content="paging_upper" />
-		<span i18n:translate="" tal:omit-tag="">of</span>
+		<span i18n:translate="">of</span>
 		<strong tal:content="paging_total" />.
 	</div>
 	<div class="pagination">
-		<span i18n:translate="" tal:omit-tag="">Pages</span>
+		<span i18n:translate="">Pages</span>
 		<span tal:condition="python:paging_prev!=-1"><a tal:define="start python:(paging_current_page-1)*paging_records_page" tal:attributes="href string:${site_url}/admin_translations_html?start=${start}&amp;skey=${skey}&amp;rkey=${rkey}&amp;${query_string}" i18n:translate="">&laquo; previous</a></span>
 		<span tal:repeat="page paging_pages">
 			<span tal:condition="python:page==paging_current_page" tal:content="python:page+1" />
