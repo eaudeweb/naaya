@@ -10,7 +10,7 @@
 <p i18n:translate="">
 	Fill the properties in the form below and click <strong>Add</strong>.
 </p>
-<form method="post" tal:attributes="action string:${here/absolute_url}/addNyNetChannel">
+<form method="post" tal:attributes="action string:${here/absolute_url}/addNyNetChannel" tal:define="curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
 <div class="field" tal:define="selected_language here/gl_get_selected_language">
 	<label i18n:translate="" for="lang">Posting language</label>
 	<select name="lang" id="lang">
@@ -33,8 +33,8 @@
 	<input type="text" name="url" id="url" size="50" />
 </div>
 <div class="field">
-	<label for="language" i18n:translate="">Language</label>
-	<select name="language" id="language">
+	<label for="language_field" i18n:translate="">Language</label>
+	<select name="language" id="language_field">
 		<option tal:repeat="item here/gl_get_languages_mapping"
 			tal:attributes="value python:item['code']"
 			tal:content="python:item['name']" />
