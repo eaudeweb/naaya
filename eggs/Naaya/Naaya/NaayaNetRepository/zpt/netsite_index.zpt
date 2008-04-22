@@ -38,7 +38,7 @@ function fDeleteObjects()
 </div>
 <div tal:condition="permission">
 	<div id="toolbar">
-		<a href="javascript:fDeleteObjects();"><span><img src="/misc_/Naaya/delete.gif" border="0" alt="Delete" i18n:attributes="alt" /><span i18n:translate="" tal:omit-tag="">Delete</span></span></a>
+		<input type="submit" onclick="javascript:fDeleteObjects()" value="Delete" i18n:attributes="value" />
 	</div>
 </div>
 <form name="objectItems" method="post" action="">
