@@ -1166,27 +1166,53 @@ table.datatable {
 
 /* Feeds */
 div.xmlExportButtons {
-  padding-top: 1em;
+	padding-top: 1em;
 }
-
 div.xmlExportButtons a {
-  border: 1px outset #ff6600;
-  background: #fff;
-  color: #f60;
-  font: bold 85% 'Lucida Grande', Arial, Helvetica, sans-serif;
-  text-decoration: none;
-  padding: 0.1em 0.5em 0.2em 2em;
-  margin: 0 0.1em 0 0.1em;
+	border: 1px outset #ff6600;
+	background: #fff;
+	color: #f60;
+	font: bold 85% 'Lucida Grande', Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	padding: 0.1em 0.5em 0.2em 2em;
+	margin: 0 0.1em 0 0.1em;
 }
-
 div.xmlExportButtons a.pdf {
-  background-image: url("images/pdf.gif");
-  background-position: left center;
-  background-repeat: no-repeat;
+	/*background-image: url("images/pdf.gif");*/
+	background-position: left center;
+	background-repeat: no-repeat;
 }
-
 div.xmlExportButtons a.xml {
-  background-image: url("misc_/NaayaCore/xml.png");
-  background-position: left center;
-  background-repeat: no-repeat;
+	background-image: url("misc_/NaayaCore/xml.png");
+	background-position: left center;
+	background-repeat: no-repeat;
+}
+/* Map styles */
+div.marker {
+	display: none;
+}
+div.marker-body {
+	width: 290px;
+	margin-top: 0;
+}
+div.marker-more {
+	padding: 10px 5px 5px 30px;	/* T   R   B   L */
+}
+div.marker-body h3 {
+	font-weight: bold;
+	font-size: 1em;
+	margin-top: 0;
+	padding-top: 0;
+	text-transform: uppercase;
+}
+.map-button {
+	font-size: x-small;
+	color: white;
+	border: 1px outset white;
+	background-color: #336699;
+	margin-top: 1em;
+	padding: 0.3em 0.2em;
+}
+#record_counter_message {
+	font-size: x-small;
 }
