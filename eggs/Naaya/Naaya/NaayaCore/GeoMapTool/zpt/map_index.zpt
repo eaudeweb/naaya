@@ -28,6 +28,17 @@ div.marker-body h3 {
 	padding-top: 0;
 	text-transform: uppercase;
 }
+.map-button {
+	font-size: x-small;
+	color: white;
+	border: 1px outset white;
+	background-color: #336699;
+	margin-top: 1em;
+	padding: 0.3em 0.2em;
+}
+#record_counter_message {
+	font-size: x-small;
+}
 </style>
 
 <script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${here/mapsapikey}"></script>
@@ -51,13 +62,17 @@ function toggleSelect()
 
 <span tal:replace="structure python:here.xrjs_loader(geo_types, geo_query, center, zoom, path, width, height)" />
 
+			<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
 <div id="center_content" style="width: 78%; overflow-x: auto;">
 	<h1 i18n:translate="">Geo map</h1>
 	<noscript>
-		<p i18n:translate="" class=".message-information">You must have Javascript turned on to view all the YahooMap features.</p>
+		<p i18n:translate="" class="message-information">You must have Javascript turned on to view all the YahooMap features.</p>
 	</noscript>
 	<a id="mappage"></a>
 
+	<div id="record_counter_message">
+		<span id="record_counter" tal:content="python: len(records)"></span> <span i18n:translate="">location(s)</span>
+	</div>
 	<div id="yahoo_map_section" style="display: none">
 		<div id="map"></div>
 		<a href="http://developer.yahoo.com/about/" title="Yahoo.com | About Applications that Use Yahoo! Web Services" i18n:translate="" i18n:attributes="title">Service provided by Yahoo!</a>
@@ -65,30 +80,27 @@ function toggleSelect()
 
 	<noscript>
 		<tal:block define="skey python:None;
-		                   rkey python:None;
-		                   map_url here/absolute_url;
-		                   edit_mode python:False;
-		                   sortable python:False;">
+							rkey python:None;
+							map_url here/absolute_url;
+							edit_mode python:False;
+							sortable python:False;">
 			<table metal:use-macro="here/locations_table_html/macros/main">
 			</table>
 		</tal:block>
 	</noscript>
 
-	<div id="record_counter_message" i18n:translate="">
-		<span id="record_counter" tal:content="python: len(records)"></span> location(s)
-	</div>
+	<p i18n:translate="">Additionally you can display the points in <a href="http://earth.google.com/downloads.html">Google Earth viewer</a> (version 4.0 or higher) <input type="submit" value="View in Google Earth" name="downloadLocationsKml:method" i18n:attributes="value" class="map-button" /></p>
 
 	<div style="display:none" id="map_markers"></div>
 </div>
 
 <div id="right_port">
-	<div class="right_portlet right_link_portlet">
+	<div class="right_portlet right_link_portlet portlet_right">
 		<a style="float:right; margin-right: 0.2em;" href="javascript:toggleSelect();" title="Select all" i18n:translate="" i18n:attributes="title">all</a>
-		<div class="right_portlet_title portlet-title" i18n:translate="">Filter locations</div>
+		<div class="right_portlet_title portlet_title portlet-title" i18n:translate="">Filter locations</div>
 
-		<div class="right_portlet_content content">
+		<div class="right_portlet_content portlet_content content">
 
-			<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
 				<div>
 					<input type="text" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value geo_query" />
 				</div>
@@ -97,9 +109,7 @@ function toggleSelect()
 					<tal:block define="children python:here.getSymbolChildren(item.id);">
 					<li>
 						<input type="checkbox" name="geo_types:list"
-						       tal:attributes="value item/id;
-						                       id item/id;
-						                       checked python:item.id in geo_types" />
+						       tal:attributes="value item/id; id item/id; checked python:item.id in geo_types" />
 						<img tal:condition="python:item.picture is not None"
 						     tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title" />
 						<span i18n:translate="" tal:content="item/title" />
@@ -107,9 +117,7 @@ function toggleSelect()
 					<ul tal:condition="children" class="category_child">
 						<li tal:repeat="child children">
 							<input type="checkbox" name="geo_types:list"
-							       tal:attributes="value child/id;
-							                       id child/id;
-							                       checked python:child.id in geo_types" />
+							       tal:attributes="value child/id; id child/id; checked python:child.id in geo_types" />
 							<img tal:condition="python:child.picture is not None"
 							     tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title" />
 							<label tal:attributes="for child/id"><span i18n:translate="" tal:content="child/title" /></label>
@@ -122,20 +130,16 @@ function toggleSelect()
 					<input type="hidden" id="center" name="center" tal:attributes="value center" />
 					<input type="hidden" id="zoom" name="zoom" tal:attributes="value zoom" />
 					<input type="hidden" id="path" name="path" tal:attributes="value path" />
-					<input type="button" id="showSelected" value="Show selected" i18n:attributes="value"
+					<input type="button" id="showSelected" class="map-button" value="Show selected" i18n:attributes="value"
 					       style="display: none" onclick="javascript: showSelectedLocations()" />
 					<noscript>
-						<input type="submit" value="Show selected" name="index_html:method" i18n:attributes="value" />
+						<input type="submit" value="Show selected" class="map-button" name="index_html:method" i18n:attributes="value" />
 					</noscript>
-					<div>
-						<p i18n:translate="">Additionally you can display the map in <a href="http://earth.google.com/downloads.html">Google Earth viewer</a> (version 4.0 or higher).</p>
-						<input type="submit" value="View points in Google Earth" name="downloadLocationsKml:method" i18n:attributes="value" />
-					</div>
 				</div>
-			</form>
 		</div>
 	</div>
 </div>
+			</form>
 
 <script type="text/javascript">
 <!--
