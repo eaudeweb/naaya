@@ -122,6 +122,7 @@ class RemoteChannelFacade(RemoteChannel):
                             lang=feed_item.language)
                         ob = location_ob._getOb(id)
                         ob.approveThis(0, None)
+                        self.recatalogNyObject(ob)
             elif self.obtype == 'events':
                 #create event objects
                 for feed_item in self.get_feed_items():
@@ -159,6 +160,7 @@ class RemoteChannelFacade(RemoteChannel):
                             lang=feed_item.language)
                         ob = location_ob._getOb(id)
                         ob.approveThis(0, None)
+                        self.recatalogNyObject(ob)
         else:
             pass
 
