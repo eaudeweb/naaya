@@ -21,6 +21,7 @@
 #Python imports
 
 #Zope imports
+from OFS.Image import cookId
 
 #Product imports
 from Products.Localizer.LocalPropertyManager import LocalProperty
@@ -79,7 +80,7 @@ class file_item(NyProperties, NyFSFile):
         if source=='file':
             if file != '':
                 if hasattr(file, 'filename'):
-                    filename = file.filename
+                    filename = cookId('', '', file)[0]
                     if filename != '':
                         data, size = self._read_data(file)
                         content_type = self._get_content_type(file, data, self.__name__, 'application/octet-stream')
