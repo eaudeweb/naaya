@@ -11,8 +11,7 @@
 		<link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/${css_screen}" />
 		<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${skin_files_path}/${css_common}" />
 		<link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${skin_files_path}/style_print" />
-		<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${site_url}/glossary_coverage/style_presentation_css" />
-		<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${site_url}/portal_thesaurus/thesaurus_css" />
+		<link rel="stylesheet" type="text/css" media="all" tal:condition="here/coverage_glossary" tal:attributes="href string:${site_url}/glossary_coverage/style_presentation_css" />
 	<tal:block repeat="channel python:here.getSite().getSyndicationTool().get_script_channels()">
 		<link rel="alternate" type="application/rss+xml" tal:attributes="title channel/title_or_id; href channel/absolute_url" />
 	</tal:block>
@@ -21,7 +20,6 @@
 	</tal:block>
 		<link rel="home" tal:attributes="href python:request['BASE0']" title="Home" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
-		<meta name="description" tal:attributes="content here/title_or_id" />
 		<!--[if IE]>
 			<style type="text/css">
 			/*<![CDATA[*/ 
@@ -135,7 +133,7 @@
 			<a href="http://www.eionet.europa.eu" i18n:translate="">Eionet</a>
 		</div>
 		<div class="navuplinks" tal:define="authenticated_user python:request.AUTHENTICATED_USER.getUserName(); l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
-			<span><a href="javascript:this.print();" title="Print this page"><img src="misc_/EnviroWindows/printer.gif" alt="print this page" /></a></span>
+			<span><a href="javascript:this.print();" title="Print this page"><img src="misc_/SMAP/printer.gif" alt="print this page" /></a></span>
 			<span><a id="fs_hide" i18n:attributes="title" title="Switch to/from full screen mode" href="javascript:fullScreen()"> </a></span>
 			<span><a tal:attributes="href site_url" i18n:translate="" accesskey="1">Home</a> </span>
 			<tal:block tal:condition="python: authenticated_user != 'Anonymous User'">

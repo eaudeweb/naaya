@@ -62,4 +62,5 @@ misc_ = {
     'simpletreemenu.js':ImageFile('www/simpletreemenu.js', globals()),
     'closed.gif':ImageFile('www/closed.gif', globals()),
     'open.gif':ImageFile('www/open.gif', globals()),
+    'printer.gif':ImageFile('www/printer.gif', globals()),
 }

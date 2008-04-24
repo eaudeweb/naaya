@@ -24,6 +24,7 @@ from Globals                                    import InitializeClass
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
 from AccessControl                              import ClassSecurityInfo
 from AccessControl.Permissions                  import view_management_screens, view
+from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 
 #Product imports
 from constants                                      import *
@@ -123,6 +124,14 @@ class SMAPSite(NySite, ProfileMeta):
         #rdfcal_ob._getOb('events').update()
         country_folder = self._getOb('fol112686')
         country_folder.manage_role('Authenticated', ['Naaya - Add Naaya Contact objects', 'Naaya - Add Naaya Event objects', 'Naaya - Add Naaya Document objects', 'Naaya - Add Naaya Extended File objects', 'Naaya - Add Naaya File objects', 'Naaya - Access administrative area', 'Naaya - Add Naaya Folder objects', 'Naaya - Add Naaya GeoPoint objects', 'Naaya - Add Naaya Media File objects', 'Naaya - Add Naaya News objects', 'Naaya - Add Naaya Pointer objects', 'Naaya - Add Naaya SMAP Expert objects', 'Naaya - Add Naaya SMAP Project objects'])
+
+        #portal_map custom index
+        custom_map_index = self.futRead(join(SMAP_PRODUCT_PATH, 'skel', 'others', 'map_index.zpt'))
+        portal_map = self.getGeoMapTool()
+        manage_addPageTemplate(portal_map, id='map_index', title='', text='')
+        map_index = portal_map._getOb(id='map_index')
+        map_index.pt_edit(text=custom_map_index, content_type='')
+
 
     security.declarePrivate('createSMAPPortalTools')
     def createSMAPPortalTools(self):
