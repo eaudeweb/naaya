@@ -104,10 +104,16 @@ class NyImportExport:
         ra = r.append
         ra('<?xml version="1.0" encoding="utf-8"?>')
         ra('<export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="%s">' % self.nyexp_schema)
-        for x in self.objectValues('Naaya Folder'):
-            ra(x.export_this(folderish=1, all_levels=0))
-            for y in x.objectValues('Naaya Folder'):
+        for x in self.getFolders():
+            ra(x.export_this_tag())
+            ra(x.export_this_body())
+            if x.publicinterface:
+                l_index = x._getOb('index', None)
+                if l_index is not None:
+                    ra('<![CDATA[%s]]>' % l_index.document_src())
+            for y in x.getFolders():
                 ra(y.export_this(folderish=1, all_levels=0))
+            ra('</ob>')
         ra('</export>')
         self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/xml')
         self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=%s.nyexp' % self.id)
