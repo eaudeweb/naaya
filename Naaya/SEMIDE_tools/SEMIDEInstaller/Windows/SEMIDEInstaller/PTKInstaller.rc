@@ -89,7 +89,7 @@ IDD_PTKINSTALLER_DIALOG DIALOGEX 0, 0, 320, 221
 STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "EMWIS Portal Toolkit"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
 BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,210,200,50,14
     PUSHBUTTON      "Finish",ID_WIZFINISH,265,200,50,14
@@ -474,7 +474,7 @@ BEGIN
     IDS_LABEL_EXIT_BUTTON   "Exit"
     IDS_ABORT_WIZARD_MESSAGE 
                             "EMWIS Portal Toolkit Install Wizard cannot continue because you do not have Administrator rights on this computer. Please login as Administrator or arrange these rights otherwise."
-    IDS_AGREEMENT           "I accept to use this software as is and not hold EMWIS or its Contractors liable for any possible damage, direct or indirect, that might be caused by this software.\r\n\r\nSoftware distributed under the Mozilla Public License is distributed on an ""AS IS"" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the license at http://www.mozilla.org/MPL/ for the specific language governing rights and limitations.\r\n\r\nThe Initial Owner of the Original Code is European Environment Agency (EEA) and Euro-Mediterranean Information System on the know-how in the Water sector (EMWIS).  Portions created by Finsiel Romania are Copyright (C) EEA and EMWIS.  All Rights Reserved."
+    IDS_AGREEMENT           "I accept to use this software as is and not hold EMWIS or its Contractors liable for any possible damage, direct or indirect, that might be caused by this software.\r\n\r\nSoftware distributed under the Mozilla Public License is distributed on an ""AS IS"" basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the license at http://www.mozilla.org/MPL/ for the specific language governing rights and limitations.\r\n\r\nThe Initial Owner of the Original Code is European Environment Agency (EEA) and Euro-Mediterranean Information System on the know-how in the Water sector (EMWIS).  Portions created by Finsiel Romania and Eau de Web are Copyright (C) EEA and EMWIS.  All Rights Reserved."
     IDS_ACCEPT_AGREEMENT    "The installation cannot proceed if you cannot accept these terms :-("
     IDS_INSTALLATION_DEFAULT_PATH "C:\\EMWIS"
     IDS_CREATEDIRECTORY_QUESTION 
