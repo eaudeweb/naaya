@@ -54,7 +54,7 @@ PROPERTIES_OBJECT = {
     'sortorder':    (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positive integer.'),
     'releasedate':  (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
     'discussion':   (0, '', ''),
-    'locator':      (0, '', ''),
+    'locator':      (1, MUST_BE_NONEMPTY, 'The URL field must have a value.'),
     'lang':         (0, '', '')
 }
 
