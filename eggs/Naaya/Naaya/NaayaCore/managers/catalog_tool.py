@@ -183,7 +183,7 @@ class catalog_tool:
             l_objects = self.__getObjects(l_temp)
             l_output = []
             l_counter = howmany
-            while len(l_temp) > 0:
+            while len(l_temp) >= 0:
                 l_output.extend([obj for obj in l_objects if getSecurityManager().checkPermission(view, obj)])
                 if len(l_output) >= howmany:
                     return l_output[:howmany]
