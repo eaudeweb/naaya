@@ -2,14 +2,15 @@
 <span tal:replace="structure here/standard_html_header" />
 
 <tal:block tal:define="geo_types python:request.get('geo_types', here.getSymbolsIds()); 
-                       query python:request.get('query', '');
+                       geo_query python:request.get('geo_query', '');
                        center python:request.get('center', '');
                        zoom python:request.get('zoom', '');
                        path python:request.get('path', '');
+                       records python:here.searchGeoPoints(path, geo_types, geo_query);
                        width python:request.get('width', here.map_width);
                        height python:request.get('height', here.map_height)">
 
-<style type="text/css" tal:condition="python:not here.isArabicLanguage()">
+<style type="text/css">
 div.marker {
 	display: none;
 }
@@ -27,78 +28,29 @@ div.marker-body h3 {
 	padding-top: 0;
 	text-transform: uppercase;
 }
-.legend_portlet li {
-	background:#FFFFFF none repeat scroll 0%;
-	border-bottom:1px solid #DDDDDD;
-	border-top:1px solid #FEFEFE;
-	color:#084173;
-	display:block;
-	font-family:Verdana,Arial,Helvetica,sans-serif;
-	font-size:90%;
-	font-weight:bold;
-	line-height:100%;
-	margin:0px;
-	padding:0.3em;
-	vertical-align:bottom;
+.map-button {
+	font-size: x-small;
+	color: white;
+	border: 1px outset white;
+	background-color: #336699;
+	margin-top: 1em;
+	padding: 0.3em 0.2em;
 }
-.legend_portlet ul {
-	padding: 0.2em;
-	margin: 0.1em;
-}
-#right_portlet {
-	background-color:white;
-	clear:right;
-	float:right;
-	position:relative;
-	top:0px;
-	width:163px;
+#record_counter_message {
+	font-size: x-small;
 }
 </style>
+
 <style type="text/css" tal:condition="here/isArabicLanguage">
-div.marker {
-	display: none;
-}
-div.marker-body {
-	width: 290px;
-	margin-top: 0;
-}
-div.marker-more {
-	padding: 10px 5px 5px 30px;	/* T   R   B   L */
-}
-div.marker-body h3 {
-	font-weight: bold;
-	font-size: 1em;
-	margin-top: 0;
-	padding-top: 0;
-	text-transform: uppercase;
-}
-.legend_portlet li {
-	background:#FFFFFF none repeat scroll 0%;
-	border-bottom:1px solid #DDDDDD;
-	border-top:1px solid #FEFEFE;
-	color:#084173;
-	display:block;
-	font-family:Verdana,Arial,Helvetica,sans-serif;
-	font-size:90%;
-	font-weight:bold;
-	line-height:100%;
-	margin:0px;
-	padding:0.3em;
-	vertical-align:bottom;
-}
-.legend_portlet ul {
-	padding: 0.2em;
-	margin: 0.1em;
-}
-#right_portlet {
-	background-color:white;
-	clear:left;
-	float:left;
-	position:relative;
-	top:0px;
-	width:163px;
-}
 #map {
+	margin-right: 12em;
+}
+
+#yahoo_map_section a {
+	margin-right: 12em;
+}
+
+#center_content p {
 	margin-right: 12em;
 }
 </style>
@@ -122,28 +74,35 @@ function toggleSelect()
 //-->;
 </script>
 
-<span tal:replace="structure python:here.xrjs_loader(geo_types, query, center, zoom, path, width, height)" />
+<span tal:replace="structure python:here.xrjs_loader(geo_types, geo_query, center, zoom, path, width, height)" />
 
+			<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
 <div id="right_port">
-	<div class="right_portlet right_link_portlet">
+	<div class="right_portlet right_link_portlet portlet_right">
 		<a style="float:right; margin-right: 0.2em;" href="javascript:toggleSelect();" title="Select all" i18n:translate="" i18n:attributes="title">all</a>
-		<div class="right_portlet_title portlet-title" i18n:translate="">Filter locations</div>
+		<div class="right_portlet_title portlet_title portlet-title" i18n:translate="">Filter locations</div>
 
-		<div class="right_portlet_content content">
+		<div class="right_portlet_content portlet_content content">
 
-			<form action="#mappage" name="frmFilterMap" method="post" id="frmFilterMap">
-				<ul class="map_legend" id="filter_map">
-					<tal:block repeat="item here/getParentsList">
+				<div>
+					<input type="text" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value geo_query" />
+				</div>
+				<ul class="map_legend" id="filter_map" tal:define="parentsList here/getParentsList" tal:condition="parentsList">
+					<tal:block repeat="item parentsList">
 					<tal:block define="children python:here.getSymbolChildren(item.id);">
 					<li>
-						<input type="checkbox" name="geo_types:list" tal:attributes="value item/id; id item/id; checked python:item.id in geo_types" />
-						<img tal:condition="python:item.picture is not None" tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title" />
+						<input type="checkbox" name="geo_types:list"
+						       tal:attributes="value item/id; id item/id; checked python:item.id in geo_types" />
+						<img tal:condition="python:item.picture is not None"
+						     tal:attributes="src string:getSymbolPicture?id=${item/id}; alt item/title" />
 						<span i18n:translate="" tal:content="item/title" />
 					</li>
 					<ul tal:condition="children" class="category_child">
 						<li tal:repeat="child children">
-							<input type="checkbox" name="geo_types:list" tal:attributes="value child/id; id child/id; checked python:child.id in geo_types" />
-							<img tal:condition="python:child.picture is not None" tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title" />
+							<input type="checkbox" name="geo_types:list"
+							       tal:attributes="value child/id; id child/id; checked python:child.id in geo_types" />
+							<img tal:condition="python:child.picture is not None"
+							     tal:attributes="src string:getSymbolPicture?id=${child/id}; alt child/title" />
 							<label tal:attributes="for child/id"><span i18n:translate="" tal:content="child/title" /></label>
 						</li>
 					</ul>
@@ -154,65 +113,56 @@ function toggleSelect()
 					<input type="hidden" id="center" name="center" tal:attributes="value center" />
 					<input type="hidden" id="zoom" name="zoom" tal:attributes="value zoom" />
 					<input type="hidden" id="path" name="path" tal:attributes="value path" />
-					<input type="button" id="btnShowSelected_htmlElem" value="Show selected" i18n:attributes="value"
+					<input type="button" id="showSelected" class="map-button" value="Show selected" i18n:attributes="value"
 					       style="display: none" onclick="javascript: showSelectedLocations()" />
 					<noscript>
-						<input type="submit" value="Show selected" i18n:attributes="value" />
+						<input type="submit" value="Show selected" class="map-button" name="index_html:method" i18n:attributes="value" />
 					</noscript>
 				</div>
-			</form>
 		</div>
 	</div>
 </div>
 
-<div id="middle_port">
+<div id="center_content" style="width: 78%; overflow-x: auto;">
 	<h1 i18n:translate="">Geo map</h1>
 	<noscript>
-		<p i18n:translate="" class=".message-information">You must have Javascript turned on to view all the YahooMap features.</p>
+		<p i18n:translate="" class="message-information">You must have Javascript turned on to view all the YahooMap features.</p>
 	</noscript>
 	<a id="mappage"></a>
 
-	<div id="yahoo_map_section_htmlElem" style="display: none">
+	<div id="record_counter_message">
+		<span id="record_counter" tal:content="python: len(records)"></span> <span i18n:translate="">location(s)</span>
+	</div>
+	<div id="yahoo_map_section" style="display: none">
 		<div id="map"></div>
-		<br />
 		<a href="http://developer.yahoo.com/about/" title="Yahoo.com | About Applications that Use Yahoo! Web Services" i18n:translate="" i18n:attributes="title">Service provided by Yahoo!</a>
 	</div>
 
 	<noscript>
-		<tal:block define="records python:here.getSite().getCatalogedObjectsCheckView(meta_type='Naaya GeoPoint', geo_type=geo_types, path=path);
-		                   skey python:None;
-		                   rkey python:None;
-		                   map_url here/absolute_url;
-		                   edit_mode python:False;
-		                   sortable python:False;">
+		<tal:block define="skey python:None;
+							rkey python:None;
+							map_url here/absolute_url;
+							edit_mode python:False;
+							sortable python:False;">
 			<table metal:use-macro="here/locations_table_html/macros/main">
 			</table>
 		</tal:block>
 	</noscript>
 
-	<br />
-	<p i18n:translate="">Additionally you can <a tal:attributes="href string:${here/absolute_url}/locations_kml?path=${path}&show=${geo_types}">display map in Google Earth viewer</a> (requires <a href="http://earth.google.com/downloads.html">Google Earth</a> version 4.0 or higher installed).</p>
+	<p i18n:translate="">Additionally you can display the points in <a href="http://earth.google.com/downloads.html">Google Earth viewer</a> (version 4.0 or higher) <input type="submit" value="View in Google Earth" name="downloadLocationsKml:method" i18n:attributes="value" class="map-button" /></p>
 
 	<div style="display:none" id="map_markers"></div>
-
-	<p i18n:translate="">You can filter the information displayed on the map by selecting some specific categories of information
-	 objects from the list in the right. After making the choice, click on .Show selected. to update the map according to the new 
-	settings.</p>
-
-	<p i18n:translate="">You can pan and zoom the map to discover the objects displayed. By clicking the symbols on the map, the name of the object will display and more details will be provided by clicking  .see more..</p>
-
-	<p style="color: blue;" i18n:translate="">Important notice: The map service is provided by Yahoo! SEMIDE accepts no responsibility or liability whatsoever with regard to the information provided through this service.</p>
 </div>
+			</form>
 
 <script type="text/javascript">
 <!--
 	// show the elements that are used when JavaScript is available
-
-	yahoo_map_section = document.getElementById("yahoo_map_section_htmlElem");
+	var yahoo_map_section = document.getElementById("yahoo_map_section");
 	yahoo_map_section.style.display = "block";
 
-	btnShowSelected = document.getElementById("btnShowSelected_htmlElem");
-	btnShowSelected.style.display = "inline";
+	var showSelected = document.getElementById("showSelected");
+	showSelected.style.display = "inline";
 // -->;
 </script>
 
@@ -220,4 +170,3 @@ function toggleSelect()
 </tal:block>
 
 <span tal:replace="structure here/standard_html_footer" />
-
