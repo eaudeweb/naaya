@@ -112,7 +112,13 @@ class NyImportExport:
                 if l_index is not None:
                     ra('<![CDATA[%s]]>' % l_index.document_src())
             for y in x.objectValues('Naaya Folder'):
-                ra(y.export_this(folderish=1, all_levels=0))
+            ra(x.export_this_tag())
+            ra(x.export_this_body())
+            if x.publicinterface:
+                l_index = x._getOb('index', None)
+                if l_index is not None:
+                    ra('<![CDATA[%s]]>' % l_index.document_src())
+                ra('</ob>')
             ra('</ob>')
         ra('</export>')
         self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/xml')
