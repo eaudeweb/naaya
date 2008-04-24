@@ -39,7 +39,7 @@ class PortalInit:
     def exit_script(self, error):
         #exit script when an error occured
         print error
-        print 'Configuration script stoped.\n'
+        print 'Configuration script stopped.\n'
         print 'Press any key to continue...'
         msvcrt.getch()
         sys.exit(1)
