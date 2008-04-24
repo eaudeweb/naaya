@@ -236,6 +236,9 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             self.manage_import(source='', file=open(file_path).read(), url='')
         return 'done import'
 
+    # image container for this folder
+    def getUploadedImages(self): return self.objectValues(['Image'])
+
     #overwrite handler
     def manage_beforeDelete(self, item, container):
         """ This method is called, when the object is deleted. """
