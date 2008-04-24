@@ -224,6 +224,7 @@
 		<scriptchannel id="latestnews_rdf" title="Latest news" description="Latest news" language="en" type="News" numberofitems="5" portlet="1"/>
 		<scriptchannel id="upcomingevents_rdf" title="Upcoming events" description="Upcoming events" language="en" type="Events" numberofitems="5" portlet="1"/>
 		<localchannel id="news_rdf" title="News" description="News" language="en" type="News" objmetatype="Naaya Semide News" numberofitems="5"/>
+		<scriptchannel id="latestevents_rdf" title="Latest events" description="Latest events" language="en" type="Events" numberofitems="5" portlet="0"/>
 	</syndication>
 	<portlets left="portlet_maincategories" center="portlet_latestuploads_rdf">
 		<portlet id="portlet_administration" title="Administration"/>
