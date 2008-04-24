@@ -78,7 +78,7 @@ class NyImportExport:
         if REQUEST: REQUEST.RESPONSE.redirect('manage_importexport_html')
 
     security.declareProtected(view_management_screens, 'exportdata')
-    def exportdata(self, all_levels):
+    def exportdata(self, all_levels=1):
         """
         Generetes an XML with the object content.
         @return: a downloadable Naaya XML file
@@ -88,6 +88,26 @@ class NyImportExport:
         ra('<?xml version="1.0" encoding="utf-8"?>')
         ra('<export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="%s">' % self.nyexp_schema)
         ra(self.exportdata_custom(int(all_levels)))
+        ra('</export>')
+        self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/xml')
+        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=%s.nyexp' % self.id)
+        return ''.join(r)
+
+    security.declareProtected(view_management_screens, 'exportnyexp')
+    def exportnyexp(self):
+        """
+        !!ONLY used to generate the nyexp for SMAP
+        Generetes an XML with the object content.
+        @return: a downloadable Naaya XML file
+        """
+        r = []
+        ra = r.append
+        ra('<?xml version="1.0" encoding="utf-8"?>')
+        ra('<export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="%s">' % self.nyexp_schema)
+        for x in self.objectValues('Naaya Folder'):
+            ra(x.export_this(folderish=1, all_levels=0))
+            for y in x.objectValues('Naaya Folder'):
+                ra(y.export_this(folderish=1, all_levels=0))
         ra('</export>')
         self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/xml')
         self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=%s.nyexp' % self.id)
