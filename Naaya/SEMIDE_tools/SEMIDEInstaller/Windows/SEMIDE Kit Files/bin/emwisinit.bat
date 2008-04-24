@@ -3,4 +3,4 @@
 @set SOFTWARE_HOME=@@ZOPE_PATH@@\zope\lib\python
 @set CONFIG_FILE=@@ZOPE_PATH@@\instance\etc\zope.conf
 
-"%PYTHON%" @@BIN_PATH@@\emwisinit.py --install
+"%PYTHON%" "@@BIN_PATH@@\emwisinit.py" --install
