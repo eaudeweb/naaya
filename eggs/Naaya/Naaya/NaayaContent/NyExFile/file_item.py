@@ -66,7 +66,7 @@ class file_item(NyFSFile, NyVersioning):
         if source=='file':
             if file != '':
                 if hasattr(file, 'filename'):
-                    filename = file.filename
+                    filename = cookId('', '', file)[0]
                     if filename != '':
                         data, size = self._read_data(file)
                         content_type = self._get_content_type(file, data, self.__name__, 'application/octet-stream')

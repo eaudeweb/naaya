@@ -28,9 +28,6 @@
 	<span tal:condition="python:test(here.getSession('smallpicture', ''))" tal:content="python:here.getSession('smallpicture', '')" />
 </div>
 <div class="field">
-	<label for="bigpicture"><span i18n:translate="" tal:omit-tag="">Big picture</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'bigpicture')" class="mandatory_field"> *</span></label>
-</div>
-<div class="field">
 	<label for="resourceurl"><span i18n:translate="" tal:omit-tag="">Concerned URL</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'resourceurl')" class="mandatory_field"> *</span></label>
 	<input type="text" name="resourceurl" id="resourceurl" size="50" tal:attributes="value python:here.getSession('resourceurl', 'http://')" />
 </div>
