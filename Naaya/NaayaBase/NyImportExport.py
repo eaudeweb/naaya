@@ -105,9 +105,7 @@ class NyImportExport:
         ra('<?xml version="1.0" encoding="utf-8"?>')
         ra('<export xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="%s">' % self.nyexp_schema)
         for x in self.objectValues('Naaya Folder'):
-            if x.id == 'about':
-                ra(x.export_this(folderish=0, all_levels=0))
-            elif x.id not in ['ptk', 'ptk-cd']:
+            if x.id not in ['ptk', 'ptk-cd']:
                 ra(x.export_this_tag())
                 ra(x.export_this_body())
                 if x.publicinterface:
