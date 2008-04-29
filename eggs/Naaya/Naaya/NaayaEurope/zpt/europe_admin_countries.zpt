@@ -36,7 +36,7 @@
 		<tal:block tal:condition="python:ob_data[0]!='add'" i18n:translate="">Edit country</tal:block>
 	</legend>
 	<form method="post" tal:attributes="action python:test(ob_data[0]=='add', '%s/admin_addcountry' % here.absolute_url(), '%s/admin_editcountry' % here.absolute_url())">
-	<table border="0" cellspacing="2" cellpadding="2" width="100%">
+	<table class="datatable" width="100%">
 		<tr>
 			<td i18n:translate="">Country</td>
 			<td>
