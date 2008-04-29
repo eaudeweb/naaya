@@ -43,6 +43,7 @@
 				<input tal:condition="python:ob_data[0]!='add'" type="hidden" name="country" tal:attributes="value python:ob_data[1]" />
 				<strong tal:condition="python:ob_data[0]!='add'" tal:content="python:here.getEuropeCountryTitle(ob_data[1])" i18n:translate="" />
 				<select name="country" tal:condition="python:ob_data[0]=='add'">
+					<option value=""></option>
 					<option tal:repeat="item here/getEuropeCountriesList"
 						tal:attributes="value item/id; selected python:item.id==ob_data[1]"
 						tal:content="python:here.getEuropeCountryTitle(item.id)" i18n:translate="" />
