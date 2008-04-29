@@ -93,9 +93,12 @@ class SurveyAnswer(Folder):
     security.declarePrivate('add_properties')
     def add_properties(self, datamodel):
         for key, value in datamodel.items():
-            if isinstance(value, FileUpload):
-                continue # Handled somewhere else
-            setattr(self, key, value)
+            self.edit_property(key, value)
+
+    def edit_property(self, key, value):
+        if isinstance(value, FileUpload):
+            return # Handle somewhere else
+        setattr(self, key, value)
 
     security.declarePrivate('handle_upload')
     def handle_upload(self, id, attached_file):
