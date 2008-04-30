@@ -410,7 +410,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     #
     security.declareProtected(view, 'expired')
     def expired(self):
-        """expired() -> true if it's expired, false otherwise"""
+        """expired() -> true if the expiration date has been exceeded, false otherwise"""
         now = DateTime()
         expire_date = DateTime(self.expirationdate)
         return now.greaterThan(expire_date)
@@ -427,7 +427,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     security.declarePublic('checkPermissionViewAnswers')
     def checkPermissionViewAnswers(self):
         """Check if the user has the VIEW_ANSWERS permission"""
-        return self.checkPermission(PERMISSION_VIEW_ANSWERS)
+        return self.checkPermission(PERMISSION_VIEW_ANSWERS) and self.checkPermissionPublishObjects()
 
     security.declarePublic('checkPermissionViewReports')
     def checkPermissionViewReports(self):
