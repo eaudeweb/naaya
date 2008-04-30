@@ -33,7 +33,7 @@
 	<span tal:condition="python:days_left[0] == 0 and days_left[1] > 0" i18n:translate="">
 		<span tal:content="python:days_left[1]" class="survey_day_counter" /> day(s) until this survey starts.
 	</span>
-	<span tal:condition="python:days_left[1] <= 0" i18n:translate="">Survey's deadline has been reached.</span>
+	<span tal:condition="here/expired" i18n:translate="">Survey's deadline has been reached.</span>
 
 	<a tal:condition="here/checkPermissionViewAnswers" href="view_answers_html" i18n:translate="" class="survey-button">View answers</a>
 	<a tal:condition="here/checkPermissionViewReports" href="view_reports_html" i18n:translate="" class="survey-button">View reports</a>
@@ -43,10 +43,10 @@
 <p tal:condition="python:here.description!=''" 
 	tal:content="structure here/description" />
 
-<p i18n:translate="" tal:condition="python: here.expired() and not here.checkPermissionEditObjects()">Survey expired.</p>
+<p i18n:translate="" tal:condition="here/expired">This survey has expired!</p>
 
-<tal:block condition="python: not here.expired() or here.checkPermissionEditObjects()"
-           define="stype here/getSurveyTemplate">
+<tal:block condition="python: not here.expired() or here.checkPermissionPublishObjects()"
+		define="stype here/getSurveyTemplate">
 	<tal:block define="my_answer python:here.getMyAnswerDatamodel()">
 		<p class="message-information" i18n:translate="" tal:condition="not: here/checkPermissionAddAnswer">You don't have enough permissions to take this survey!</p>
 		<p class="message-information" i18n:translate="" tal:condition="my_answer">You have already taken this survey. If you decide to take it again, you will overwrite the previous answers!</p>
@@ -75,7 +75,7 @@
 			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'">
 				<tal:block condition="python:here.notify_respondents.startswith('LET_THEM_CHOOSE')">
 					<input type="checkbox" id="notify_respondent" name="notify_respondent:bool"
-					       tal:attributes="checked python:here.getSession('notify_respondent', here.notify_respondents=='LET_THEM_CHOOSE_YES')" />
+						tal:attributes="checked python:here.getSession('notify_respondent', here.notify_respondents=='LET_THEM_CHOOSE_YES')" />
 					<label for="notify_respondent" i18n:translate="">Email me my answers</label>
 					<span tal:define="dummy python:here.delSession('notify_respondent')"></span>
 				</tal:block>
