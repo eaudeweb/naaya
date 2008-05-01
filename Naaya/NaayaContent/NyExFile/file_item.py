@@ -21,6 +21,7 @@
 #Python imports
 
 #Zope imports
+from OFS.Image import cookId
 from AccessControl import ClassSecurityInfo
 
 #Product imports
