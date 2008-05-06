@@ -39,6 +39,14 @@
 					<option value="LET_THEM_CHOOSE_NO" tal:attributes="selected python:notify_respondents == 'LET_THEM_CHOOSE_NO'" i18n:translate="">Let them choose (default is no)</option>
 				</select>
 			</div>
+			<!-- Allow overtime -->
+			<div class="field">
+				<label for="allow_overtime" i18n:translate="">Allow answer posting after survey expiration date</label>
+				<select id="allow_overtime" name="allow_overtime">
+					<option value="1" tal:attributes="selected here/allow_overtime" i18n:translate="">Yes</option>
+					<option value="0" tal:attributes="selected not:here/allow_overtime" i18n:translate="">No</option>
+				</select>
+			</div>
 		</metal:block>
 	</tal:block>
 </tal:block>

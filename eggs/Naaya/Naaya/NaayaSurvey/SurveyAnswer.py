@@ -30,6 +30,8 @@ from zLOG import LOG, INFO
 from Products.ExtFile.ExtFile import manage_addExtFile
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.managers.utils import utils
+from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED
+from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED_MSG
 
 from permissions import PERMISSION_VIEW_ANSWERS
 
@@ -140,5 +142,18 @@ class SurveyAnswer(Folder):
     # regular "view" permission because otherwise, by default, all users
     # (including anonymous ones) can see all answers. Also setting the view
     # permission for each SurveyAnswer wouldn't be practical.
-    security.declareProtected(PERMISSION_VIEW_ANSWERS, 'index_html')
-    index_html = PageTemplateFile('zpt/surveyanswer_index', globals())
+    
+    _index_html = PageTemplateFile('zpt/surveyanswer_index', globals())
+    def index_html(self,REQUEST=None):
+        """ Return the answer index if the current user 
+        is the respondent or has permission to view answers """
+        
+        if REQUEST:
+            if self.respondent == REQUEST.AUTHENTICATED_USER.getUserName():
+                return self._index_html()
+            
+        if self.checkPermission(PERMISSION_VIEW_ANSWERS):
+            return self._index_html()
+        else:
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+        

@@ -167,6 +167,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         expirationdate = self.process_releasedate(expirationdate)
         kwargs['expirationdate'] = expirationdate
 
+        self.allow_overtime = int(kwargs.get('allow_overtime', '0'))
         self.save_properties(**kwargs)
         self.updatePropertiesFromGlossary(lang)
         self.recatalogNyObject(self)
@@ -410,7 +411,16 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
     #
     security.declareProtected(view, 'expired')
     def expired(self):
-        """expired() -> true if the expiration date has been exceeded, false otherwise"""
+        """
+        expired():
+        -> true if the expiration date has been exceeded, 
+        -> false if the expiration date is still to be reached or 
+        if the survey allows posting after the expiration date.
+        """
+        
+        
+        if self.allow_overtime:
+            return False
         now = DateTime()
         expire_date = DateTime(self.expirationdate)
         return now.greaterThan(expire_date)
