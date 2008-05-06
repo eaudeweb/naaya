@@ -48,7 +48,7 @@ class CustomContentUpdater(NaayaContentUpdater):
         updates = self._list_updates()
         for update in updates:
             logger.debug('%-15s %s', 'Update Survey', update.absolute_url())
-            setattr(update, 'allow_overtime', '0')
+            setattr(update, 'allow_overtime', 0)
 
 def register(uid):
     return CustomContentUpdater(uid)
