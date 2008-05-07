@@ -19,7 +19,7 @@
 <div class="translate" metal:define-macro="translation_bar"  tal:define="
 	languages languages|here/gl_get_languages_mapping;
 	lang python:request.get('lang', None) or here.gl_get_selected_language();">
-	<span i18n:translate="" tal:omit-tag="">Translate in</span>
+	<span i18n:translate="">Translate in</span>
 	<tal:block tal:repeat="language languages">
 	<div class="current" tal:condition="python:language['code'] == lang">
 	<span tal:content="python:language['name']" />
