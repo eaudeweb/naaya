@@ -15,7 +15,7 @@ function toggleSelect(caller){
 <!-- Title -->
 <div>
 	<label for="title">
-		<span i18n:translate="" tal:omit-tag="">Attachment title: </span>
+		<span i18n:translate="">Attachment title: </span>
 		<span class="required"> *</span>
 	</label>
 	<input type="text" id="title" name="title" size="40" tal:attributes="value python:here.getSession('title', '')" />
@@ -33,7 +33,7 @@ function toggleSelect(caller){
 		</div>
 		<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 			<tr>
-				<th class="checkbox" style="width: 4%;" i18n:translate="">
+				<th class="checkbox" style="width: 4%;">
 					<input type="checkbox" onclick="toggleSelect(this)" />
 				</th>
 				<th class="type" style="width: 4%;" i18n:translate="">Type</th>

@@ -22,7 +22,7 @@
 
 <!-- Translation bar on top -->
 <div class="translate" metal:define-macro="translation_bar">
-	<span i18n:translate="" tal:omit-tag="">Translate in</span>
+	<span i18n:translate="">Translate in</span>
 	<tal:block tal:repeat="language languages">
 	<div class="current" tal:condition="python:language['code'] == lang">
 	<span tal:content="python:language['name']" />
@@ -37,8 +37,8 @@
 <form name="frmEdit" method="post" action=".">
 <div class="field">
 	<label for="title">
-		<span i18n:translate="" tal:omit-tag="">Title</span>
-		<span class="mandatory_field" tal:omit-tag=""> *</span>
+		<span i18n:translate="">Title</span>
+		<span class="mandatory_field"> *</span>
 	</label>
 	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value title" />
 </div>

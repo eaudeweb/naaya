@@ -22,8 +22,8 @@ function toggleSelect(caller){
 <div id="admin_this_folder">
 	<form action="." method="post">
 		<label for="title">
-			<span i18n:translate="" tal:omit-tag="">New survey template</span>
-			<span class="mandatory_field" tal:omit-tag=""> *</span>
+			<span i18n:translate="">New survey template</span>
+			<span class="mandatory_field"> *</span>
 		</label>
 		<input type="text" id="title" size="50" name="title" value="" />
 		<input class="surveySubmitButton" type="submit" name="addSurveyTemplate:method" value="Add survey template" i18n:attributes="value" />
@@ -54,7 +54,7 @@ for your visitors to answer.
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 
 <tr>
-	<th class="checkbox" style="width: 4%;" i18n:translate="">
+	<th class="checkbox" style="width: 4%;">
 		<input type="checkbox" onclick="toggleSelect(this)" />
 	</th>
 	<th class="title-column" i18n:translate="">Survey template</th>

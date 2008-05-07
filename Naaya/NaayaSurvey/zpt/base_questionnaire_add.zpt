@@ -49,7 +49,7 @@ function fSet(ctrl, value)
 	<div class="field" tal:define="coverage_glossary here/get_coverage_glossary">
 		<label for="coverage" i18n:translate="">Geographical coverage</label>
 		<tal:block tal:condition="python:coverage_glossary is None">
-			<p><strong i18n:translate="">Tip:</strong> <span tal:omit-tag="" i18n:translate="">in order to specify more values, separate them by commas</span></p>
+			<p><strong i18n:translate="">Tip:</strong> <span i18n:translate="">in order to specify more values, separate them by commas</span></p>
 		</tal:block>
 		<tal:block tal:condition="python:coverage_glossary is not None">
 			<p i18n:translate=""><strong>Tip:</strong> you can type free text in the field below or pick words from the list. In order to specify more values, separate them by commas.</p>
