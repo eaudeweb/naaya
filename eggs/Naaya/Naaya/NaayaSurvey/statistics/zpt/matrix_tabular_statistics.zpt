@@ -7,7 +7,7 @@
 		<caption tal:content="question/title">question</caption>
 		<thead>
 			<tr>
-				<th scope="col" class="scope-col" i18n:translate=""></th>
+				<th scope="col" class="scope-col"></th>
 				<tal:block repeat="choice question/choices">
 					<th scope="col" class="scope-col" tal:content="choice">Choice</th>
 				</tal:block>

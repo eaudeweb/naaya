@@ -17,7 +17,7 @@
 		<metal:block fill-slot="custom_properties">
 			<!-- Document expiration date -->
 			<div class="field">
-				<label for="expirationdate"><span i18n:translate="" tal:omit-tag="">Expiration date</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'releasedate')" class="mandatory_field"> *</span></label>
+				<label for="expirationdate"><span i18n:translate="">Expiration date</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'releasedate')" class="mandatory_field"> *</span></label>
 				<input type="text" name="expirationdate" class="vDateField" id="expirationdate" size="10" tal:attributes="value python:here.getSession('releasedate', here.utConvertDateTimeObjToString(here.getVersionProperty('expirationdate')))" />
 				<noscript><em i18n:translate="">dd/mm/yyyy</em></noscript>
 			<div class="field">
