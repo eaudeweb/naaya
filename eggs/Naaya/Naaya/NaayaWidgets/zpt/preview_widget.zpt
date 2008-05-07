@@ -20,10 +20,10 @@
 </div>
 
 <div>
-	<span i18n:translate="">
-		<strong>Note: </strong>
-		this is the preview of <em tal:content="here/meta_type">widget</em> (<tal:block replace="here/meta_description"/>).
-		Click on the "Edit" button to change its properties.
+	<span>
+		<strong i18n:translate="">Note: </strong>
+		<span i18n:translate="">this is the preview of</span> <em tal:content="here/meta_type">widget</em> (<tal:block replace="here/meta_description"/>).
+		<span i18n:translate="">Click on the "Edit" button to change its properties.</span>
 	</span>
 </div>
 

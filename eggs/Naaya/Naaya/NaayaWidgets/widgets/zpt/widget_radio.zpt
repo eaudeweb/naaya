@@ -59,7 +59,7 @@
 			<label for="display" i18n:translate="">Display mode</label>
 			<select id="display" name="display">
 				<tal:block repeat="mode here/display_modes">
-					<option  i18n:translate="" tal:content="mode"  tal:attributes="
+					<option tal:content="mode" tal:attributes="
 						value mode;
 						selected python:test(mode == here.display, 'selected', None)"/>
 				</tal:block>
