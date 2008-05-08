@@ -422,7 +422,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         if self.allow_overtime:
             return False
         now = DateTime()
-        expire_date = DateTime(self.expirationdate)
+        expire_date = DateTime(self.expirationdate) + 1
         return now.greaterThan(expire_date)
 
     security.declareProtected(view, 'get_days_left')
@@ -430,7 +430,7 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         """ Returns the remaining days for the survey or the number of days before it starts """
         today = self.utGetTodayDate().earliestTime()
         if self.releasedate.lessThanEqualTo(today):
-            return (1, int(str(self.expirationdate - today).split('.')[0]))
+            return (1, int(str((self.expirationdate + 1) - today).split('.')[0]))
         else:
             return (0, int(str(self.releasedate - today).split('.')[0]))
 
