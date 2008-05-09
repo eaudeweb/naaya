@@ -5,10 +5,11 @@ If you want to view the entire answer of the respondent, click on the user displ
 </p>
 
 	<table class="datatable">
+		<caption tal:content="question/title">question</caption>
 		<thead>
 			<th i18n:translate="">User</th>
 			<th i18n:translate="">Date</th>
-			<th i18n:translate="">Comment</th>
+			<th i18n:translate="">Answer</th>
 		</thead>
 		<tbody>
 			<tr tal:repeat="answer answers">
