@@ -26,7 +26,7 @@ function toggleSelect(caller){
 		<label for="question" i18n:translate="">Question</label>
 		<select id="question" name="question">
 			<tal:block repeat="widget python:here.getSortedWidgets()">
-				<option tal:attributes="value widget/getId" tal:content="widget/title"></option>
+				<option tal:attributes="value widget/getId" tal:content="python:widget.title[:100]"></option>
 			</tal:block>
 		</select>
 		<br />
@@ -34,14 +34,15 @@ function toggleSelect(caller){
 		<span i18n:translate="">Statistic type</span><br />
 		<tal:block repeat="statistic here/getAvailableStatistics">
 			<tal:block define="input_id string:meta_type_${repeat/statistic/index}">
+			<div class="field-inline">
 				<input type="radio" name="meta_type"
 				       tal:attributes="id input_id;
 				                       value statistic/meta_type" />
 				<label tal:attributes="for input_id" 
 				       tal:content="statistic/meta_label" />
-				<br />
+			</div>
 				<span tal:content="statistic/meta_description"></span>
-				<br />
+
 			</tal:block>
 		</tal:block>
 		<br />
