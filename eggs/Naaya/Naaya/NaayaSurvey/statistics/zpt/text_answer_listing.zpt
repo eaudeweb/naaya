@@ -1,0 +1,24 @@
+<div tal:define="answers options/data; question options/question" class="statistic">
+
+<p i18n:translate="">
+If you want to view the entire answer of the respondent, click on the user displayed in the first column.
+</p>
+
+	<table class="datatable">
+		<thead>
+			<th i18n:translate="">User</th>
+			<th i18n:translate="">Date</th>
+			<th i18n:translate="">Comment</th>
+		</thead>
+		<tbody>
+			<tr tal:repeat="answer answers">
+				<th><a tal:content="python:answers[answer]['respondent']" tal:attributes="href python:answers[answer]['answer_url']" /></th>
+				<td tal:content="python:answers[answer]['date']" />
+				<td tal:content="python:answers[answer]['answer'] or 'No response.'" />
+			</tr>
+		</tbody>
+	</table>
+	
+	
+	
+</div>

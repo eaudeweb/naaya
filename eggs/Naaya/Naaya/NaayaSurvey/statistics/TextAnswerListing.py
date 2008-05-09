@@ -16,6 +16,7 @@
 # Authors:
 #
 # Cristian Ciupitu, Eau de Web
+# Batranu David, Eau de Web
 
 # Zope imports
 from Globals import InitializeClass
@@ -23,61 +24,50 @@ from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 # Naaya imports
-from Products.NaayaWidgets.widgets.LabelWidget import LabelWidget
+from Products.NaayaWidgets.widgets.StringWidget import StringWidget
+from Products.NaayaWidgets.widgets.TextAreaWidget import TextAreaWidget
 
 from BaseStatistic import BaseStatistic, manage_addStatistic
 
-class SimpleTabularStatistic(BaseStatistic):
+class TextAnswerListing(BaseStatistic):
     """Table with the count and percent of answered and unanswered questions.
     """
 
     security = ClassSecurityInfo()
 
-    _constructors = (lambda *args, **kw: manage_addStatistic(SimpleTabularStatistic, *args, **kw), )
+    _constructors = (lambda *args, **kw: manage_addStatistic(TextAnswerListing, *args, **kw), )
 
-    meta_type = "Naaya Survey - Simple Tabular Statistic"
-    meta_label = "Simple Tabular Statistic"
-    meta_description = """Table with the count and percent of answered and unanswered questions."""
+    meta_type = "Naaya Survey - Text Answer Listing"
+    meta_label = "Text Answer Listing"
+    meta_description = """Listing with answers posted in 'Paragraph text' and 'Single line text'"""
     meta_sortorder = 100
     icon_filename = 'statistics/www/simple_tabular_statistic.gif'
 
     def __init__(self, id, question, lang=None, **kwargs):
-        if isinstance(question, LabelWidget):
+        if not (isinstance(question, StringWidget) or isinstance(question, TextAreaWidget)):
             raise TypeError('Unsupported question type')
         BaseStatistic.__init__(self, id, question, lang=lang, **kwargs)
 
     def calculate(self, question, answers):
-        """ -> (total, answered, unanswered)"""
-        w_id = question.getWidgetId()
-        total = answered_count = 0
+        """ """
+        ret_data = {}
         for answer in answers:
-            val = answer.get(w_id)
-            if val:
-                answered_count += 1
-            total += 1
-
-        unanswered_count = total - answered_count
-        if total:
-            answered_percent = 100.0 * answered_count / total
-            unanswered_percent = 100.0 * unanswered_count / total
-        else:
-            answered_percent = unanswered_percent = 0
-        return (total,
-                (answered_count, answered_percent),
-                (unanswered_count, unanswered_percent))
+            ret_data[answer.id] = {'respondent': answer['respondent'], 
+                                   'date': self.utShowFullDateTime(answer['modification_time']), 
+                                   'answer': answer[question.id],
+                                   'answer_url': answer.absolute_url(),
+                               }
+        return ret_data
 
     security.declarePublic('render')
     def render(self, answers):
         """Render statistics as HTML code"""
-        total, answered, unanswered = self.calculate(self.question, answers)
-        return self.page(question=self.question,
-                         total=total,
-                         answered=answered,
-                         unanswered=unanswered)
+        
+        return self.page(data=self.calculate(self.question, answers), question=self.question)
 
-    page = PageTemplateFile("zpt/simple_tabular_statistics.zpt", globals())
+    page = PageTemplateFile("zpt/text_answer_listing.zpt", globals())
 
-InitializeClass(SimpleTabularStatistic)
+InitializeClass(TextAnswerListing)
 
 def getStatistic():
-    return SimpleTabularStatistic
+    return TextAnswerListing

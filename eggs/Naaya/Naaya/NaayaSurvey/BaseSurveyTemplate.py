@@ -39,6 +39,8 @@ from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
 from Products.NaayaWidgets.widgets.LabelWidget import LabelWidget
 from Products.NaayaWidgets.widgets.MultipleChoiceWidget import MultipleChoiceWidget
 from Products.NaayaWidgets.widgets.MatrixWidget import MatrixWidget
+from Products.NaayaWidgets.widgets.TextAreaWidget import TextAreaWidget
+from Products.NaayaWidgets.widgets.StringWidget import StringWidget
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
 
 # reports
@@ -52,6 +54,7 @@ from statistics.MultipleChoiceGoogleBarChartStatistic import MultipleChoiceGoogl
 from statistics.MultipleChoicePieChartStatistic import MultipleChoicePieChartStatistic
 from statistics.MatrixTabularStatistic import MatrixTabularStatistic
 from statistics.MatrixCssBarChartStatistic import MatrixCssBarChartStatistic
+from statistics.TextAnswerListing import TextAnswerListing
 
 from permissions import PERMISSION_MANAGE_SURVEYTEMPLATE
 
@@ -320,11 +323,17 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
                                      MultipleChoiceCssBarChartStatistic,
                                      MultipleChoiceGoogleBarChartStatistic,
                                      MultipleChoicePieChartStatistic])
+                
             elif isinstance(question, MatrixWidget):
                 stat_classes.extend([MatrixTabularStatistic,
                                      MatrixCssBarChartStatistic])
+                
+            elif isinstance(question, StringWidget) or isinstance(question, TextAreaWidget):
+                stat_classes.extend([TextAnswerListing])
+                
             else:
                 stat_classes.extend([SimpleTabularStatistic])
+                
             for stat_class in stat_classes:
                 manage_addStatistic(stat_class,
                                     report,
