@@ -604,9 +604,7 @@ a#eealink {
 #dropdowns li:hover ul, #dropdowns li.over ul {
 	display: block;
 }
-#dropdowns li:hover ul li, #dropdowns li.over ul li{
-	width: 20em;
-}
+
 /* End EIONET dropdown */
 
 /*   --- EIONET version of menunav and nested uls for dropdowns ---
