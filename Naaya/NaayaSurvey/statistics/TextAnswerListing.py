@@ -48,22 +48,15 @@ class TextAnswerListing(BaseStatistic):
             raise TypeError('Unsupported question type')
         BaseStatistic.__init__(self, id, question, lang=lang, **kwargs)
 
-    def calculate(self, question, answers):
+    def calculate(self, answers):
         """ """
-        ret_data = {}
-        for answer in answers:
-            ret_data[answer.id] = {'respondent': answer['respondent'], 
-                                   'date': self.utShowDateTime(answer['modification_time']), 
-                                   'answer': answer[question.id],
-                                   'answer_url': answer.absolute_url(),
-                               }
-        return ret_data
+        return self.utSortObjsListByAttr(answers, 'modification_time')
 
     security.declarePublic('render')
     def render(self, answers):
         """Render statistics as HTML code"""
         
-        return self.page(data=self.calculate(self.question, answers), question=self.question)
+        return self.page(data=self.calculate(answers), question=self.question)
 
     page = PageTemplateFile("zpt/text_answer_listing.zpt", globals())
 
