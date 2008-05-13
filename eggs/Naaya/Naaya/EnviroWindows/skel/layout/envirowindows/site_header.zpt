@@ -88,10 +88,17 @@
 			<div class="page_subtitle" tal:content="here/site_subtitle" />
 		</div>
 		<div id="menunav">
-			<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('menunav_links').get_links_list()">
-			<tal:block tal:repeat="item l_list">
-				<li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
-			</tal:block>
+			<ul id="dropdowns">
+				<li tal:repeat="main_categ here/getMainTopics">
+					<a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/title" tal:content="main_categ/title" tal:condition="main_categ/checkPermissionView" />
+					<tal:block tal:define="sub_items python:main_categ.objectValues('Naaya Folder')">
+						<ul tal:condition="sub_items">
+							<li tal:repeat="sub_item sub_items">
+								<a tal:content="sub_item/title_or_id" tal:attributes="href sub_item/absolute_url" />
+							</li>
+						</ul>
+					</tal:block>
+				</li>
 			</ul>
 			<form method="get" tal:attributes="action string:${site_url}/search_html">
 				<div id="search"><label for="query"><span i18n:translate="">site search</span></label>
