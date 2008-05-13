@@ -53,7 +53,7 @@ class TextAnswerListing(BaseStatistic):
         ret_data = {}
         for answer in answers:
             ret_data[answer.id] = {'respondent': answer['respondent'], 
-                                   'date': self.utShowFullDateTime(answer['modification_time']), 
+                                   'date': self.utShowDateTime(answer['modification_time']), 
                                    'answer': answer[question.id],
                                    'answer_url': answer.absolute_url(),
                                }
