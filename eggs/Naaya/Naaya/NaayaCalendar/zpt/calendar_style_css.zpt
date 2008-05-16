@@ -43,7 +43,7 @@
 #calendar-container
 	{
 	font-family: <tal:block content="python:here.getCSSProperty('font-family')" />;
-	width: <tal:block content="python:here.getCSSProperty('width')" />px;
+	width: 140px;
 	height: <tal:block content="python:here.getCSSProperty('height')" />px;
 	border: <tal:block content="here/getCSSTableBorder" />;
 	speak-header: always;
@@ -52,6 +52,7 @@
 
 #calendar-title
 	{
+    display: none;
 	text-align: center;
 	border: 2px solid #cccccc;
 	border-bottom: 0px solid #cccccc;
