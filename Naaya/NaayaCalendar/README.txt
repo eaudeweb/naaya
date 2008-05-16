@@ -65,4 +65,4 @@ Naaya Calendar
 		- calendar_template.zpt (only if you really need to change something).
 
 		This files can be found on your file system into Zope's
-		products folder e.g. "..\Products\EventCalendar\zpt" folder.
+		products folder e.g. "..\Products\NaayaCalendar\zpt" folder.

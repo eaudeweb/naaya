@@ -1,8 +1,6 @@
 <!-- ***** Event Calendar Body Begin ***** -->
 <metal:block metal:define-macro="calendar_page">
-	<!-- link rel="stylesheet" type="text/css" tal:attributes="href string:${here/getEventCalendarURL}/calendar_style" / -->
-
+	<link rel="stylesheet" type="text/css" tal:attributes="href string:${here/getEventCalendarURL}/calendar_style">
 	<tal:block metal:define-slot="page_body" />
-
 </metal:block>
 <!-- ***** Event Calendar Body End ***** -->
