@@ -32,6 +32,7 @@
 		<form id="site_admin_userroles" title="View the roles of a user"/>
 		<form id="site_admin_template" title="Portal administration - macro"/>
 		<form id="site_links_group" title="Group of links"/>
+        <form id="site_index" title="Portal home page"/>
 	</forms>
 	<layout default_skin_id="chm" default_scheme_id="indigo">
 		<skin id="chm" title="CHM">
@@ -189,6 +190,7 @@
 	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_meetingsevents_rdf,portlet_whatsnew_rdf,portlet_latestrelevantuploads_rdf,portlet_latestphotos">
 		<portlet id="portlet_administration" title="Administration"/>
 		<portlet id="portlet_latestphotos" title="Photos"/>
+	        <portlet id="portlet_calendar" title="Calendar of Events"/>
 		<portlet id="portlet_maincategories" title="Main sections" />
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
 			<link id="100" title="Biodiversity CHM" description="Global Biodiversity Clearing-House Mechanism (CBD)" url="http://cbd.int/chm" relative="0" permission="" order="10"/>
