@@ -45,6 +45,7 @@ from Products.NaayaPhotoArchive.constants import *
 from Products.NaayaNetRepository.constants import *
 from Products.NaayaHelpDeskAgent.HelpDesk import manage_addHelpDesk
 from Products.NaayaGlossary.constants import *
+from Products.NaayaCalendar.EventCalendar import manage_addEventCalendar
 from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
 from Products.CHM2.managers.captcha_tool import captcha_tool
 
@@ -59,6 +60,12 @@ def manage_addCHMSite(self, id='', title='', lang=None, REQUEST=None):
     self._getOb(id).loadDefaultData()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
+
+class Extra_for_DateRangeIndex:
+    """hack for a bug in DateRangeIndex ---'dict' object has no attribute 'since_field' """
+    def __init__(self, **kw):
+        for key in kw.keys():
+            setattr(self, key, kw[key])
 
 class CHMSite(NySite):
     """ """
@@ -109,7 +116,12 @@ class CHMSite(NySite):
 
         #create helpdesk instance
         manage_addHelpDesk(self, ID_HELPDESKAGENT, TITLE_HELPDESKAGENT, self.getAuthenticationToolPath(1))
-
+        #create NaayaCalendar instance
+        manage_addEventCalendar(self, id="portal_calendar", title='Calendar of Events', description='',
+                            day_len='2', cal_meta_types='Naaya Event', start_day='Monday', catalog=self.getCatalogTool().id, REQUEST=None)
+        #create index for Naaya Calendar
+        extra=Extra_for_DateRangeIndex(since_field='start_date', until_field='end_date')
+        self.getCatalogTool().manage_addIndex("resource_interval", 'DateRangeIndex', extra=extra)
         #create and fill glossaries
         manage_addGlossaryCentre(self, ID_GLOSSARY_KEYWORDS, TITLE_GLOSSARY_KEYWORDS)
         self._getOb(ID_GLOSSARY_KEYWORDS).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_keywords.xml')))

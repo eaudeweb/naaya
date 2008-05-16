@@ -1,0 +1,9 @@
+<tal:block define="cal python:here.objectValues('Naaya Calendar')">
+<tal:block repeat="record cal">
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"><span i18n:translate="" tal:omit-tag="">Events Calendar</span></tal:block>
+<tal:block metal:fill-slot="portlet_content"><span tal:replace="structure record/show_calendar" />
+</tal:block>
+</tal:block>
+</tal:block>
+</tal:block>
