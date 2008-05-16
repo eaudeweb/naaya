@@ -7,8 +7,7 @@
 
 <!-- Download file name -->
 <div class="field">
-	<label for="downloadfilename"><span i18n:translate="" tal:omit-tag="">Filename to download</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'downloadfilename')" class="mandatory_field"> *</span></label>
-	<input type="text" name="downloadfilename" id="downloadfilename" size="40" tal:attributes="value python:here.getSession('downloadfilename', here.getVersionProperty('downloadfilename'))" />
+	<input type="hidden" name="downloadfilename" id="downloadfilename" size="40" tal:attributes="value python:here.getSession('downloadfilename', here.getVersionProperty('downloadfilename'))" />
 </div>
 
 <br />
