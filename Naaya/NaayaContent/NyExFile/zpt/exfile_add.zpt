@@ -22,10 +22,6 @@
 	<input type="text" name="url" id="url" size="40" value="" />
 	<label for="url" class="invisible" i18n:translate="">(remote address)</label>
 </div>
-<div class="field">
-	<label for="downloadfilename"><span i18n:translate="" tal:omit-tag="">Filename to download</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'downloadfilename')" class="mandatory_field"> *</span></label>
-	<input type="text" name="downloadfilename:utf8:ustring" id="downloadfilename" size="40" tal:attributes="value python:here.getSession('downloadfilename', '')" />
-</div>
 </tal:block>
 
 </tal:block>

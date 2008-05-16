@@ -5,10 +5,7 @@
 <!-- Custom fields -->
 <tal:block metal:fill-slot="custom_properties">
 <!-- Download file name -->
-<div class="field">
-	<label for="downloadfilename"><span i18n:translate="" tal:omit-tag="">Filename to download</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'downloadfilename')" class="mandatory_field"> *</span></label>
-	<input type="text" name="downloadfilename:utf8:ustring" id="downloadfilename" size="40" tal:attributes="value python:here.getSession('downloadfilename', here.getVersionLocalProperty('downloadfilename', curr_lang))" />
-</div>
+<input type="hidden" name="downloadfilename:utf8:ustring" id="downloadfilename" size="40" tal:attributes="value python:here.getSession('downloadfilename', here.getVersionLocalProperty('downloadfilename', curr_lang))" />
 <!-- File Upload -->
 <fieldset style="background-color: #F9FCFE" tal:define="req_lang request/lang|nothing">
 <legend>
