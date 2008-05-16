@@ -25,6 +25,14 @@
 	<td class="form-label">Filename to download</td>
 	<td><input type="text" name="downloadfilename" size="40" value="" /></td>
 </tr>
+<tr>
+	<td colspan="2">
+		The <em>Filename to download</em> property allows you to set a certain name that users
+		will download this file with. By default, when you first upload the file, this name
+		is the original filename (e.g. <em>presentation.ppt</em>). If you upload another file,
+		this name is not changed unless you specify it here.
+	</td>
+</tr>
 </tal:block>
 
 </tal:block>

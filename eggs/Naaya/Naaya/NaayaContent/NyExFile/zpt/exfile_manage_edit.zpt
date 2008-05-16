@@ -51,6 +51,13 @@
 		<td><input type="text" name="content_type" size="40" tal:attributes="value here/content_type" /></td>
 	</tr>
 	<tr>
+		<td colspan="2">
+			The <em>Content Type</em> property is automatically set by the system every time you upload a file. For example
+			text files have the content-type set to <em>text/plain</em>. If the system does not find the correct type
+			you can set it here manually. Based on this content-type, a specific icon will be shown next to file.
+		</td>
+	</tr>
+	<tr>
 		<td class="form-optional">Precondition</td>
 		<td><input type="text" name="precondition" size="40" tal:attributes="value here/precondition" /></td>
 	</tr>
@@ -58,9 +65,18 @@
 		<td class="form-optional">File Size</td>
 		<td><span tal:replace="here/size" /> bytes</td>
 	</tr>
+
 	<tr>
 		<td class="form-label">Filename to download</td>
 		<td><input type="text" name="downloadfilename" size="40" tal:attributes="value here/downloadfilename" /></td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			The <em>Filename to download</em> property allows you to set a certain name that users
+			will download this file with. By default, when you first upload the file, this name
+			is the original filename (e.g. <em>presentation.ppt</em>). If you upload another file,
+			this name is not changed unless you specify it here.
+		</td>
 	</tr>
 	<tr><td class="form-label" colspan="2"></td></tr>
 	<tr><td class="form-label" colspan="2">Dynamic properties</td></tr>
