@@ -3,7 +3,7 @@ access to reCAPTCHA.
 """
 
 # Python imports
-import captcha
+import Captcha as captcha
 from xml.sax.saxutils import escape
 
 def render_captcha(context):
