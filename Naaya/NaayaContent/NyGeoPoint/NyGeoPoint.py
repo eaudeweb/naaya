@@ -128,7 +128,6 @@ def addNyGeoPoint(self, id='', title='', description='', coverage='', keywords='
             elif l_referer == 'geopoint_add_html':
                 self.setSession('referer', self.absolute_url())
                 REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
-        else: return ob
     else:
         if REQUEST is not None:
             self.setSessionErrors(r)
