@@ -47,6 +47,7 @@ from Products.NaayaHelpDeskAgent.HelpDesk import manage_addHelpDesk
 from Products.NaayaGlossary.constants import *
 from Products.NaayaCalendar.EventCalendar import manage_addEventCalendar
 from Products.NaayaGlossary.NyGlossary import manage_addGlossaryCentre
+from Products.NaayaForum.NyForum import manage_addNyForum
 from Products.CHM2.managers.captcha_tool import captcha_tool
 
 manage_addCHMSite_html = PageTemplateFile('zpt/site_manage_add', globals())
@@ -139,7 +140,8 @@ class CHMSite(NySite):
         self.keywords_glossary = ID_GLOSSARY_KEYWORDS
         self.coverage_glossary = ID_GLOSSARY_COVERAGE
         self._p_changed = 1
-
+        #add Forum instance
+        manage_addNyForum(self, id='portal_forum', title='CHM Forum', description='', categories='', file_max_size=0, REQUEST=None):
         #add EC CHM to network portals list
         self.admin_addnetworkportal('EC CHM', 'http://biodiversity-chm.eea.europa.eu/')
 
