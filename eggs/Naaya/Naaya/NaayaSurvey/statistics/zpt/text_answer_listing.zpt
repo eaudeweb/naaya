@@ -13,7 +13,7 @@ If you want to view the entire answer of the respondent, click on the user displ
 		</thead>
 		<tbody>
 			<tr tal:repeat="answer answers">
-				<th><a tal:content="python:answer['respondent']" tal:attributes="href python:answer.absolute_url()" /></th>
+				<th><span tal:content="python:answer['respondent']" /></th>
 				<td tal:content="python:here.utShowDateTime(answer['modification_time'])" />
 				<td tal:content="python:answer[question.id] or 'No response.'" />
 			</tr>
