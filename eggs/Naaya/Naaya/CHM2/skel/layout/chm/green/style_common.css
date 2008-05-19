@@ -1208,3 +1208,126 @@ div.marker-body h3 {
 #record_counter_message {
 	font-size: x-small;
 }
+
+/* FORUM STYLES */
+
+
+.forum_message_top a {
+    margin-right: 0px;
+    padding: 0px 2px 0px 3px;
+    text-decoration: none;
+    color: white;
+    background-color: #638FBC;
+    border-top: 1px solid white;
+    border-left: 1px solid white;
+    border-right: 1px solid #416B96;
+    border-bottom: 1px solid #416B96;
+    position: relative;
+}
+
+.forum_message_top a:visited {
+    color: white;
+}
+.message_top_buttons {
+    float: right;
+    margin-top: 2px;
+    position: relative;
+}
+
+.message_top_buttons2 {
+    padding: 2px;
+}
+
+.forum_topic {
+    margin-bottom: 15px;
+    border: 1px solid #eeeeee;
+    padding: 5px;
+    color: #333333;
+}
+/*
+.forum_topic a {
+    color: #006CAD;
+}
+
+.forum_message a:visited {
+    color: #006CAD;
+}
+*/
+.forum_topic_top {
+    background-color: #eeeeee;
+    padding: 2px 5px 6px 2px;
+    font-size: 90%;
+}
+
+.forum_topic_author {
+    padding: 10px 0 5px 4px;
+    border-bottom: 1px dashed #dddddd;
+    font-size: 90%;
+}
+
+.forum_topic_content {
+    margin-top: 10px;
+}
+
+.forum_topic_bottom {
+    padding:5px;
+    border-top: 1px dashed #dddddd;
+    font-size: 90%;
+}
+
+.forum_messages_slot {
+    margin-top: 15px;
+}
+
+.forum_message {
+    margin-bottom:5px;
+    background-color: #F7F7F7;
+}
+/*
+.forum_message a {
+    color: #006CAD;
+}
+
+.forum_message a:visited {
+    color: #006CAD;
+}
+*/
+.forum_message_top {
+    background-color:#E9E9E9;
+    border-bottom: 1px solid #E4E4E4;
+    padding: 2px;
+    font-size: 90%;
+    color: #006CAD;
+    position: relative;
+}
+
+.forum_message_top a {
+    color: white;
+}
+.forum_message_top a:visited {
+    color: white;
+}
+
+.forum_message_top img {
+    margin-right: 3px;
+    border-left: 3px solid #E4E4E4;
+}
+
+.forum_message_author {
+    padding:5px;
+    border-bottom:1px dashed #E4E4E4;
+    font-size: 90%;
+    color: #444444;
+    }
+
+.forum_message_description {
+    padding: 5px;
+    color: #111111;
+}
+
+.forum_message_bottom {
+    padding:5px;
+    border-top:1px dashed #E4E4E4;
+    color: #666666;
+    font-size: 90%;
+}
