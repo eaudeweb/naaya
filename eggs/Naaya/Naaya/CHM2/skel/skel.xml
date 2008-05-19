@@ -177,6 +177,7 @@
 		<pluggablecontenttype meta_type="Naaya Media File" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Consultation" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Simple Consultation" action="1"/>
+        <pluggablecontenttype meta_type="Naaya GeoPoint" action="1"/>
 	</pluggablecontenttypes>
 	<syndication>
 		<channeltype id="Red lists" title="Red lists"/>
