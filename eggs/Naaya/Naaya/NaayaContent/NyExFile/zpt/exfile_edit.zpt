@@ -36,7 +36,7 @@
 	<label for="source-url" i18n:translate="">Get from URL</label>
 	<input type="text" name="url" id="url" value="" size="50" onclick="document.getElementById('source-url').checked='checked'"/>
 </div>
-<div class="field-inline">
+<div style="display: none;" class="field-inline">
 	<input type="checkbox" name="version" id="version" />
 	<label for="version" i18:translate="">Check this to create a new version and maintain the previous one(s)</label>
 </div>
