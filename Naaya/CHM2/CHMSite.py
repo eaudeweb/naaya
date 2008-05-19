@@ -141,7 +141,7 @@ class CHMSite(NySite):
         self.coverage_glossary = ID_GLOSSARY_COVERAGE
         self._p_changed = 1
         #add Forum instance
-        manage_addNyForum(self, id='portal_forum', title='CHM Forum', description='', categories='', file_max_size=0, REQUEST=None):
+        manage_addNyForum(self, id='portal_forum', title='CHM Forum', description='', categories=['CHM', 'Biodiversity', 'Other'], file_max_size=0, REQUEST=None)
         #add EC CHM to network portals list
         self.admin_addnetworkportal('EC CHM', 'http://biodiversity-chm.eea.europa.eu/')
 
