@@ -392,7 +392,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 latitude, longitude = None, None
             else:
                 latitude, longitude = coordinates
-
+        
         if meta_type in container.get_pluggable_installed_meta_types():
             try:
                 ob = container.addNyGeoPoint(title=title, description=description, coverage='', keywords='', sortorder='', longitude=longitude, latitude=latitude, address=address, geo_type=geo_type, url=URL)
@@ -443,10 +443,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                                             rec['address'],
                                             rec.get('URL', ''),
                                             approved,
-                                            parent_folder,
+                                            parent_ob,
                                             geo_type,
                                             rec.get('latitude', ''),
                                             rec.get('longitude', ''))
+
                 if err is not None:
                     errs.append(err)
                     continue
