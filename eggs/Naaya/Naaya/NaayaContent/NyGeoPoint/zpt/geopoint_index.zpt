@@ -66,7 +66,7 @@
 		<th i18n:translate="">URL</th>
 		<td><a tal:attributes="href here/url" rel="external" tal:content="here/url" /></td>
 	</tr>
-	<tr tal:condition="python:here.restrictedTraverse(here.pointer, None)">
+	<tr tal:condition="python:here.pointer and here.restrictedTraverse(here.pointer, None)">
 		<th i18n:translate="">Pointer</th>
 		<td><a tal:attributes="href string:/${here/pointer}" tal:content="python:here.restrictedTraverse(here.pointer).title_or_id()" /></td>
 	</tr>
