@@ -273,7 +273,7 @@ class plugLDAPUserFolder(PlugBase):
     def getUserEmail(self, p_username, acl_folder):
         #return the email of the given user id
         users = acl_folder.findUser(search_param='uid', search_term=p_username)
-        if users>0:
+        if len(users) > 0:
             return unicode(users[0].get('mail', ''), 'iso-8859-1').encode('utf-8')
         else:
             return ''
@@ -281,7 +281,7 @@ class plugLDAPUserFolder(PlugBase):
     def getUserFullName(self, p_username, acl_folder):
         #return the email of the given user id
         users = acl_folder.findUser(search_param='uid', search_term=p_username)
-        if users>0:
+        if len(users) > 0:
             return unicode(users[0].get('cn', ''), 'iso-8859-1').encode('utf-8')
         else:
             return ''
