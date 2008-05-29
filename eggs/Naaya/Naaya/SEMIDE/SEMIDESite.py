@@ -1107,7 +1107,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
     #left navigation related
     def getNavFolders(self, l_folder):
         #sort alphabeticaly if sortorder is the same.
-        l_buff = self.utSortObjsListByAttr([x for x in l_folder.objectValues([METATYPE_FOLDER, METATYPE_NYCOUNTRY, METATYPE_NYPHOTOFOLDER, METATYPE_NYSEMTHEMATICDIR]) if x.submitted==1], "title", 0)
+        l_buff = self.utSortObjsListByAttr([x for x in l_folder.objectValues([METATYPE_FOLDER, METATYPE_NYCOUNTRY, METATYPE_NYPHOTOFOLDER, METATYPE_NYSEMTHEMATICDIR]) if x.submitted==1 and approved==1], "title", 0)
         return self.utSortObjsListByAttr(l_buff, "sortorder", 0)
 
     def _testIsRoot(self, p_location):
