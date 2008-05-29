@@ -75,7 +75,7 @@
 			</div>
 			<div id="left_topnav">
 				<ul>
-					<li><a href="http://www.ewindows.eu.org" title="EnviroWindows" i18n:attributes="title" i18n:translate="">EnviroWindows</a></li>
+					<li><a href="http://www.ew.eea.europa.eu" title="EnviroWindows" i18n:attributes="title" i18n:translate="">EnviroWindows</a></li>
 					<li><a href="http://www.eea.europa.eu" id="eealink">EEA</a></li>
 					<li><a href="http://www.eionet.europa.eu">Eionet</a></li>
 				</ul>
