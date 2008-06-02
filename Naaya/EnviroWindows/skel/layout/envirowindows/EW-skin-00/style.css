@@ -1221,3 +1221,8 @@ text-decoration: underline;
 	padding:3px 0.5em 1px 16px;
 }
 
+#addrole-form {
+        clear: left;
+        padding: 1em;
+}
+
