@@ -520,3 +520,9 @@ h3 {
 	height: 400px;
 }
 .mceStatusbarPathText { visibility: hidden; }
+#addrole-form {
+        clear: left; 
+        padding: 1em;
+}
+
+
