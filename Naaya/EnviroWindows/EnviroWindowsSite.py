@@ -128,6 +128,13 @@ class EnviroWindowsSite(NySite):
         #dynamic properties for consultation objects
         self.addConsultationDynProp()
 
+        #add survey tool
+        try:
+            from Products.NaayaSurvey.SurveyTool import manage_addSurveyTool
+            manage_addSurveyTool(self)
+        except:
+            pass
+
     security.declarePublic('getBreadCrumbTrail')
     def getBreadCrumbTrail(self, REQUEST):
         """ generates the breadcrumb trail """
