@@ -952,7 +952,7 @@ text-decoration: underline;
             self.setSessionInfo(['Mail sent. (%s)' % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_contacts_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_reflists_html')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_contacts_html')
     def admin_contacts_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_contacts')
