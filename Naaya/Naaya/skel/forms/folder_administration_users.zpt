@@ -22,14 +22,8 @@
 		   document.forms['frmUsersRoles'].location.value = '';
 	}
 
-	function pickLocation()
-	{
-	   document.forms['frmUsersRoles'].loc[1].checked = true;
-	}
-
 	function setupWin(url, theWidth, theHeight)
 	{
-	   pickLocation();
 	   wwinn=window.open(url,'wwinn','width='+theWidth+',height='+theHeight+',scrollbars,top=50,left=600');
 	   wwinn.focus();
 	   return true;
@@ -164,6 +158,7 @@
 			<tr>
 				<td>
 					<input type="text" name="location" tal:attributes="value location" size="35" readonly="readonly" />
+					<input type="button" value="Pick" i18n:translate="" tal:define="acl_users_path user_tool/absolute_url" tal:attributes="onclick string:setupWin('${acl_users_path}/sitemap', 300, 500);;" />
 				</td>
 			</tr>
 			</table>
