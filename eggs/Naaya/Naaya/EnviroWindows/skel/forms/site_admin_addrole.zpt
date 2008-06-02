@@ -16,7 +16,7 @@
 </div>
 <br clear="all" />
 
-<form method="post" tal:attributes="action string:${site_url}/admin_addrole">
+<form method="post" id="addrole-form" tal:attributes="action string:${site_url}/admin_addrole">
 <table border="0" width="99%">
 <tr>
 	<td colspan="2" nowrap="nowrap" i18n:translate="">Role name</td>

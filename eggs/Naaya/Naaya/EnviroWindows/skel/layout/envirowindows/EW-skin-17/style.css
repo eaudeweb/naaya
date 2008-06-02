@@ -1222,4 +1222,7 @@ text-decoration: underline;
 .fullscreen #topnav li #fs_show {
 	background:transparent url(misc_/Naaya/fullscreencollapse_icon.gif) no-repeat scroll left center;
 	padding:3px 0.5em 1px 16px;
+}#addrole-form {
+        clear: left;
+        padding: 1em;
 }
