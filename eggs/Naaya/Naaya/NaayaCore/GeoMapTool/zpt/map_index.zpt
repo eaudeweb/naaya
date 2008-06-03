@@ -64,7 +64,7 @@ function toggleSelect()
 
 			<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
 <div id="center_content" style="width: 78%; overflow-x: auto;">
-	<h1 i18n:translate="">Geo map</h1>
+	<h1 tal:content="here/title_or_id" />
 	<noscript>
 		<p i18n:translate="" class="message-information">You must have Javascript turned on to view all the YahooMap features.</p>
 	</noscript>
@@ -101,9 +101,9 @@ function toggleSelect()
 
 		<div class="right_portlet_content portlet_content content">
 
-				<div>
+				<!--div>
 					<input type="text" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value geo_query" />
-				</div>
+				</div-->
 				<ul class="map_legend" id="filter_map" tal:define="parentsList here/getParentsList" tal:condition="parentsList">
 					<tal:block repeat="item parentsList">
 					<tal:block define="children python:here.getSymbolChildren(item.id);">
