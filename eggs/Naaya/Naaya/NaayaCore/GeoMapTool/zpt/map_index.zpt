@@ -82,6 +82,7 @@ function toggleSelect()
 		<tal:block define="skey python:None;
 							rkey python:None;
 							map_url here/absolute_url;
+							map_ob here;
 							edit_mode python:False;
 							sortable python:False;">
 			<table metal:use-macro="here/locations_table_html/macros/main">

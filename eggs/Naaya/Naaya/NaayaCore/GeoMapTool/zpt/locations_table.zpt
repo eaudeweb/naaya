@@ -4,6 +4,7 @@ This macro uses the following variables:
 - skey
 - rkey
 - map_url
+- map_ob
 - edit_mode: bool - enable/disable delete and edit
 - sortable: add links that sort the table in its header
 </tal:comment>
@@ -110,8 +111,8 @@ This macro uses the following variables:
 			<td tal:condition="edit_mode"><input type="checkbox" name="locations:list" tal:attributes="value python:record.absolute_url(1)" /></td>
 			<td>
 				<img tal:attributes="src string:${map_url}/getSymbolPicture?id=${record/geo_type};
-				                     alt python:here.getSymbolTitle(record.geo_type);
-				                     title python:here.getSymbolTitle(record.geo_type);" />
+				                     alt python:map_ob.getSymbolTitle(record.geo_type);
+				                     title python:map_ob.getSymbolTitle(record.geo_type);" />
 			</td>
 			<td><a tal:attributes="href string:${record/absolute_url}" tal:content="record/title" /></td>
 			<td tal:content="record/address" />
