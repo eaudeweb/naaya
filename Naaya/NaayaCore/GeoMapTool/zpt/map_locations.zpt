@@ -4,6 +4,7 @@
 
 <tal:block metal:fill-slot="section" 
 		tal:define="map_url here/getGeoMapToolPath;
+					map_ob here/getGeoMapTool;
 					portal_map here/getGeoMapTool;
 					skey python:request.get('skey', 'title');
 					rkey python:request.get('rkey', '');">
