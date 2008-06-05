@@ -1,0 +1,80 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+	Saved changes. (<span tal:replace="here/ZopeTime" />)<br />
+</div>
+
+<style>
+
+div.form-field label {
+	display: block;
+}
+
+div.form-field {
+	margin-bottom: 1em;
+}
+
+#class-name {
+	width: 30em;
+}
+
+textarea {
+	width: 80%;
+	height: 25em;
+}
+
+div.form-field-declaration {
+	background-color: #F3F3F3;
+	padding-left: 1em;
+]
+</style>
+
+
+<h1>Layout and styles updates</h1>
+
+
+<p>
+	This form allows you to replace CSS declarations inside all CSS files of a certain type. 
+	You can only change the contents of one selector at a time.<br />
+	All fields are <strong>mandatory</strong>.
+</p>
+
+<form action="updateStyle" action="post">
+
+	<div class="form-field">
+		<label for="target-portals">Portal: </label>
+		<select name="target_portals:list" id="target-portals" multiple="multiple">
+			<option value="all_portals" selected="selected">All</option>
+			<option tal:repeat="portal here/getPortals"
+					tal:attributes="value python:portal.absolute_url(1)" 
+					tal:content="python:'%s (%s)' % (portal.title_or_id(),portal.absolute_url(1))" />
+		</select>
+	</div>
+
+	<div class="form-field">
+		<label for="stye-name">Style name (e.g. <em>style</em>, <em>common</em>, <em>print</em>): </label>
+		<input type="text" id="style-name" name="style_name" />
+	</div>
+
+	<div class="form-field">
+		<label for="class-name">Modify class (exact selector, e.g. <em>#breadcrumbtrail a:hover</em>):</label>
+		<input type="text" id="class-name" name="class_name" />
+	</div>
+
+	<div class="form-field-declaration">
+		<label for="style-declaration">New selector style (will replace <strong>all</strong> existing properties in the selector):</label>
+
+		<textarea cols="100" name="style_declaration:lines" id="style-declaration"></textarea>
+		<p>The contents of this field must follow <em>CSS specifications</em>. Properties must be entered <strong>one per line</strong>, property names must be separated from property values through a colon(:) e.g.:
+<pre>
+color: #FBFBFB;
+background-color: pink;
+font-size: 1.3em;
+</pre>
+		</p>
+	</div>
+	<input type="submit" value="Update" />
+</form>
+
+<span tal:replace="structure here/manage_page_footer" />
