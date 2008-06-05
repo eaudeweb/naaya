@@ -17,6 +17,7 @@
 #
 # Alec Ghica, Eau de Web
 # Cornel Nitu, Eau de Web
+# David Batranu, Eau de Web
 
 #Python imports
 import time
@@ -24,6 +25,13 @@ from os.path import join, isfile
 import os
 from OFS.History import html_diff
 import copy
+
+#used for layout updates
+from cssutils.cssparser import CSSParser
+from cssutils.cssstylerule import StyleRule
+from cssutils.cssrule import CSSRule
+from cssutils.cssstyledeclaration import StyleDeclaration
+from cssutils.cssstylesheet import StyleSheet
 
 from OFS.Folder import Folder
 import Globals
@@ -50,6 +58,7 @@ class NaayaUpdater(Folder):
         l_options = (
             {'label':'Content updates', 'action':'content_updates',},
             {'label': 'Other updates', 'action': 'index_html'},
+            {'label': 'Layout updates', 'action': 'layout_updates'},
             {'label':'Contents', 'action':'manage_main',
              'help':('OFSP','ObjectManager_Contents.stx')},
          )
@@ -74,6 +83,9 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'content_updates')
     content_updates = PageTemplateFile('zpt/content_updater_index', globals())
     
+    security.declareProtected(view_management_screens, 'layout_updates')
+    layout_updates = PageTemplateFile('zpt/layout_updates', globals())
+
     security.declareProtected(view_management_screens, 'get_new_content_updates')
     def get_new_content_updates(self):
         updates = self.objectValues()
@@ -843,5 +855,96 @@ class NaayaUpdater(Folder):
             return 'done'
         else:
             return 'portal %s not found' % portal_id
+
+
+
+#layout updates
+    security.declareProtected(view_management_screens, 'updateStyle')
+    def updateStyle(self, target_portals=[], style_name='', class_name='', style_declaration=[], REQUEST=None):
+        """ update specified class name in given style """
+        if 'all_portals' in target_portals:
+            portals = self.getPortals()
+        else:
+            portals = [self.getPortal(portal) for portal in target_portals]
+        
+        for portal in portals:
+            schemes = portal.getLayoutTool().getCurrentSkinSchemes()
+            for scheme in schemes:
+                style_ob = getattr(scheme, style_name)
+                style = style_ob.read()
+                if not style_declaration:
+                    #if no new selector style was submitted, return the first occurence of the given selector
+                    return self.getCSSRuleText(self.makeCSSSheet(style), class_name)
+                #edit style
+                new_style = self.editCSS(style, class_name, style_declaration)
+                #commit changes
+                self.commitCSS(style_ob, new_style._pprint())
+        if REQUEST is not None:
+            return REQUEST.RESPONSE.redirect('%s/layout_updates?save=ok' % (self.absolute_url()))
+
+    security.declareProtected(view_management_screens, 'editCSS')
+    def editCSS(self, style, class_name, style_declaration):
+        """ make changes to the CSSSheet and return it"""
+        ob_sheet = self.makeCSSSheet(style)
+        ob_rule = self.findCSSRule(ob_sheet, class_name)
+        new_dec = self.makeCSSDeclaration(style_declaration)
+        ob_rule.style = new_dec
+        return ob_sheet
+
+    security.declareProtected(view_management_screens, 'commitCSS')
+    def commitCSS(self, ny_style=None, new_style=''):
+        """ write changes to the Naaya Scheme """
+        new_style = new_style.encode('utf-8')
+        ny_style.pt_edit(text=new_style, content_type='text/html')
+
+    security.declareProtected(view_management_screens, 'findCSSRule')
+    def findCSSRule(self, sheet=None, string=''):
+        """ returns the selector object """
+        rules = sheet.getRules()
+        for rl in rules:
+            if isinstance(rl, StyleRule) and rl.selectorText == u'%s' % string:
+                return rl
+
+    security.declareProtected(view_management_screens, 'getCSSRuleText')
+    def getCSSRuleText(self, sheet=None, string=''):
+        """ returns the selector text """
+        return self.findCSSRule(sheet, string).cssText
+
+    security.declareProtected(view_management_screens, 'makeCSSSheet')
+    def makeCSSSheet(self, style=''):
+        """ creates the cssutils css sheet from the given style string """
+        ob = CSSParser()
+        ob.parseString(style)
+        return ob.getStyleSheet()
+
+    security.declareProtected(view_management_screens, 'makeCSSDeclaration')
+    def makeCSSDeclaration(self, style_declaration=[]):
+        """ creates a selector body with the passed properties and values"""
+        dc = StyleDeclaration()
+        for dec in style_declaration:
+            n, v = dec.split(':')
+            n, v = self.cleanCSSValues(n, v)
+            dc.setProperty(n, v)
+        return dc
+
+    security.declareProtected(view_management_screens, 'editCSSProperty')
+    def editCSSProperty(self, rule=None, name='', value=''):
+        """ changes a style property from a selector body """
+        style_dec = rule.style
+        style_dec.setProperty(name, value)
+
+    security.declareProtected(view_management_screens, 'removeCSSProperty')
+    def removeCSSProperty(self, rule=None, name=''):
+        """ removes a style property from a selector body """
+        style_dec = rule.style
+        style_dec.removeProperty(name)
+
+    security.declareProtected(view_management_screens, 'cleanCSSValues')
+    def cleanCSSValues(self, n='', v=''):
+        """ """
+        if n.endswith(' '): n = n[:-1]
+        if v.startswith(' '): v = v[1:]
+        if v.endswith(';'): v = v[:-1]
+        return n, v
 
 Globals.InitializeClass(NaayaUpdater)
