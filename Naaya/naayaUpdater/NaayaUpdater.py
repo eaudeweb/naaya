@@ -913,7 +913,16 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'makeCSSSheet')
     def makeCSSSheet(self, style=''):
         """ creates the cssutils css sheet from the given style string """
-        ob = CSSParser()
+        #disable file debugging
+        import logging
+        log = logging.getLogger('parser')
+        hndl = logging.StreamHandler()
+        formatter = logging.Formatter('%(levelname)s\t%(message)s')
+        hndl.setFormatter(formatter)
+        log.addHandler(hndl)
+        log.setLevel(logging.NOTSET)   #for debugging set to DEBUG
+
+        ob = CSSParser(log=log)
         ob.parseString(style)
         return ob.getStyleSheet()
 
