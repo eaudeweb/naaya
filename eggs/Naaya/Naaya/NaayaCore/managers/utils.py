@@ -692,11 +692,11 @@ class utils:
             ed, em, ey = p_end.day(), p_end.month(), p_end.year()
             if sy == ey:    #same year
                 if sm == em:    #same month
-                    return '%s - %s' % (sd, self.utShowDateTime(p_end))
+                    return '%s - %s %s' % (sd, p_end.strftime('%d %b'), sy)
                 else:
                     return '%s - %s %s' % (p_start.strftime('%d %b'), p_end.strftime('%d %b'), sy)
             else:
-                return '%s - %s' % (self.utShowDateTime(p_start), self.utShowDateTime(p_end))
+                return '%s %s - %s %s' % (p_start.strftime('%d %b'), sy, p_end.strftime('%d %b'), ey)
 
     def utConvertStringToDateTimeObj(self, p_datestring, p_separator='/'):
         """Takes a string that represents a date like 'dd/mm/yyyy' and returns a DateTime object"""
