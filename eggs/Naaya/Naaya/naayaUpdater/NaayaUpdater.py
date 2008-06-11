@@ -860,9 +860,9 @@ class NaayaUpdater(Folder):
 
 #layout updates
     security.declareProtected(view_management_screens, 'updateStyle')
-    def updateStyle(self, target_portals=[], style_name='', class_name='', style_declaration=[], REQUEST=None):
+    def updateStyle(self, target_portals=[], style_name='', class_name='', scheme_ids=[], style_declaration=[], REQUEST=None):
         """ update specified class name in given style """
-        if 'all_portals' in target_portals:
+        if 'all_portals' in target_portals or not target_portals:
             portals = self.getPortals()
         else:
             portals = [self.getPortal(portal) for portal in target_portals]
@@ -870,15 +870,16 @@ class NaayaUpdater(Folder):
         for portal in portals:
             schemes = portal.getLayoutTool().getCurrentSkinSchemes()
             for scheme in schemes:
-                style_ob = getattr(scheme, style_name)
-                style = style_ob.read()
-                if not style_declaration:
-                    #if no new selector style was submitted, return the first occurence of the given selector
-                    return self.getCSSRuleText(self.makeCSSSheet(style), class_name)
-                #edit style
-                new_style = self.editCSS(style, class_name, style_declaration)
-                #commit changes
-                self.commitCSS(style_ob, new_style._pprint())
+                if not scheme_ids or scheme.getId() in scheme_ids:
+                    style_ob = getattr(scheme, style_name)
+                    style = style_ob.read()
+                    if not style_declaration:
+                        #if no new selector style was submitted, return the first occurence of the given selector
+                        return self.getCSSRuleText(self.makeCSSSheet(style), class_name)
+                    #edit style
+                    new_style = self.editCSS(style, class_name, style_declaration)
+                    #commit changes
+                    self.commitCSS(style_ob, new_style._pprint())
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect('%s/layout_updates?save=ok' % (self.absolute_url()))
 

@@ -19,7 +19,7 @@ div.form-field {
 	width: 30em;
 }
 
-textarea {
+div.form-field-declaration textarea {
 	width: 80%;
 	height: 25em;
 }
@@ -27,7 +27,12 @@ textarea {
 div.form-field-declaration {
 	background-color: #F3F3F3;
 	padding-left: 1em;
-]
+}
+
+#scheme-ids {
+	height: 10em;
+}
+
 </style>
 
 
@@ -53,7 +58,12 @@ div.form-field-declaration {
 	</div>
 
 	<div class="form-field">
-		<label for="stye-name">Style name (e.g. <em>style</em>, <em>common</em>, <em>print</em>): </label>
+		<label for="scheme-ids">Scheme id. Input one scheme id per line <em>(e.g. EW-skin-05 - optional - leave empty to modify all schemes.)</em> </label>
+		<textarea type="text" id="scheme-ids" name="scheme_ids:lines"></textarea>
+	</div>
+
+	<div class="form-field">
+		<label for="style-name">Style name (e.g. <em>style</em>, <em>common</em>, <em>print</em>): </label>
 		<input type="text" id="style-name" name="style_name" />
 	</div>
 
