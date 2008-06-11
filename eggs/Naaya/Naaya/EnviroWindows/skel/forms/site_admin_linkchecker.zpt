@@ -3,13 +3,6 @@
 <h1 metal:fill-slot="title" i18n:translate="">URL checker</h1>
 
 <tal:block metal:fill-slot="section" tal:define="site_url here/getSitePath">
-<div  class="tabs_firstlevel">
-<ul>
-	<li><a tal:attributes="href string:${site_url}/admin_urls_html" i18n:translate="">Location of portal URLs</a></li>
-	<li class="currenttab"><a tal:attributes="href string:${site_url}/admin_linkchecker_html" i18n:translate="">URL checker</a></li>
-</ul>
-</div>
-
 <p i18n:translate="">
 	The URL checker runs at regular basis on your system an creates logs with the links found broken at that time. You can consult the last broken links log and manually run the checker now. Manually running the URL checker will not produce a log, just display the results in this page.
 </p>
