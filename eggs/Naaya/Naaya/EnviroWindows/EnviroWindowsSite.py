@@ -40,6 +40,7 @@ from Products.Naaya.constants                       import *
 from Products.NaayaCore.constants                   import *
 from Products.Naaya.NySite                          import NySite
 from Products.NaayaCore.managers.utils              import utils
+from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
 
 
 manage_addEnviroWindowsSite_html = PageTemplateFile('zpt/site_manage_add', globals())
@@ -134,6 +135,24 @@ class EnviroWindowsSite(NySite):
             manage_addSurveyTool(self)
         except:
             pass
+
+        #create and configure LinkChecker instance
+        manage_addLinkChecker(self, ID_LINKCHECKER, TITLE_LINKCHECKER)
+        linkchecker_ob = self._getOb(ID_LINKCHECKER)
+        linkchecker_ob.manage_edit(proxy='', batch_size=10, catalog_name=ID_CATALOGTOOL)
+        linkchecker_ob.manage_addMetaType(METATYPE_NYURL)
+        linkchecker_ob.manage_addProperty(METATYPE_NYURL, 'locator')
+        for k,v in self.get_content_urls().items():
+            linkchecker_ob.manage_addMetaType(k)
+            for p in v:
+                linkchecker_ob.manage_addProperty(k, p)
+
+    #object getters
+    def getLinkChecker(self): return self._getOb(ID_LINKCHECKER, None)
+    def getLinkCheckerLastLog(self):
+        entries = self.utSortObjsListByAttr(self._getOb(ID_LINKCHECKER).objectValues('LogEntry'), 'date_create', p_desc=1)
+        if len(entries) > 0: return entries[0]
+        else: return None
 
     security.declarePublic('getBreadCrumbTrail')
     def getBreadCrumbTrail(self, REQUEST):
@@ -963,6 +982,42 @@ text-decoration: underline;
     def admin_contacts_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_contacts')
+
+
+    def getURLProperties(self):
+        #process the list of all approved items which have URL properties, by location
+        #this requires NyURL pluggable content type to be present
+        url_struct = {}
+        #list urls
+        for x in self.query_objects_ex(meta_type=METATYPE_NYURL):
+            p_value = x.locator
+            if isinstance(p_value, unicode): p_value = p_value.encode('utf-8')
+            if p_value != '':
+                if url_struct.has_key(p_value):
+                    url_struct[p_value].append((x, x.getParentNode()))
+                else:
+                    url_struct[p_value] = [(x, x.getParentNode())]
+        #list other
+        for x in self.query_objects_ex(meta_type=self.get_content_urls().keys()):
+            for y in self.get_content_urls()[x.meta_type]:
+                p_value = getattr(x, y)
+                if isinstance(p_value, unicode): p_value = p_value.encode('utf-8')
+                if p_value != '':
+                    if url_struct.has_key(p_value):
+                        url_struct[p_value].append((x, x.getParentNode()))
+                    else:
+                        url_struct[p_value] = [(x, x.getParentNode())]
+        return url_struct
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkchecker_html')
+    def admin_linkchecker_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_linkchecker')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_urls_html')
+    def admin_urls_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_urls')
 
 InitializeClass(EnviroWindowsSite)
 

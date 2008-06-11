@@ -16,6 +16,7 @@
 # Miruna Badescu
 
 #Python imports
+from os.path import join
 
 #Zope imports
 from ImageFile import ImageFile
@@ -23,6 +24,10 @@ from ImageFile import ImageFile
 #Product imports
 from constants import *
 import EnviroWindowsSite
+from Products.NaayaCore.managers.utils import file_utils
+from managers.config_parser import config_parser
+
+
 def initialize(context):
     """ """
 
@@ -131,3 +136,19 @@ NySite.getTopicList = getTopicList
 NySite.getTopicTitle = getTopicTitle
 NySite.getLocationList = getLocationList
 NySite.getLocationTitle = getLocationTitle
+
+#process config.xml file
+content_urls = {}
+config = config_parser()
+config_handler, error = config_parser().parse(file_utils().futRead(join(ENVIROWINDOWS_PRODUCT_PATH, 'skel', 'config.xml'), 'r'))
+if config_handler is not None:
+    if config_handler.root.urls is not None:
+        for item in config_handler.root.urls.entries:
+            if not content_urls.has_key(item.meta_type):
+                content_urls[item.meta_type] = []
+            content_urls[item.meta_type].append(item.property)
+
+def get_content_urls(self):
+    return content_urls
+
+EnviroWindowsSite.EnviroWindowsSite.get_content_urls = get_content_urls

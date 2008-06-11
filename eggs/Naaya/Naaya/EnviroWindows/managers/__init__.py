@@ -8,30 +8,18 @@
 # implied. See the License for the specific language governing
 # rights and limitations under the License.
 #
+# The Initial Owner of the Original Code is European Environment
+# Agency (EEA).  Portions created by Finsiel Romania and Eau de Web are
+# Copyright (C) European Environment Agency.  All
+# Rights Reserved.
+#
 # Authors:
 #
-# Alexandru Ghica
-# Cornel Nitu
-# Gabriel Agu
-# Miruna Badescu
+# Cornel Nitu, Eau de Web
+# Dragos Chirila
 
 #Python imports
 
 #Zope imports
 
 #Product imports
-import Globals
-
-
-#portal related
-ENVIROWINDOWS_PRODUCT_NAME =    'EnviroWindows'
-ENVIROWINDOWS_PRODUCT_PATH =    Globals.package_home(globals())
-PERMISSION_ADD_EWSITE =         'EnviroWindows - Add EnviroWindows Site objects'
-METATYPE_ENVIROWINDOWSSITE =    'EnviroWindows Site'
-
-#deafault content related
-ID_RDFCALENDAR =        'portal_rdfcalendar'
-TITLE_RDFCALENDAR =     'RDF Calendar'
-
-ID_LINKCHECKER = 'LinkChecker'
-TITLE_LINKCHECKER = 'URL checker'
