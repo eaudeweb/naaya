@@ -29,7 +29,6 @@
 		<form id="site_admin_remotechannels" title="Portal administration - remote channels"/>
 		<form id="site_admin_maintopics" title="Portal administration - main sections"/>
 		<form id="site_admin_remotechportlets" title="Portal administration - remote channels portlets section"/>
-		<form id="sitemap_add" title="Sitemap for picklists"/>
 		<form id="site_admin_remotechannels_sitemap" title=""/>
 		<form id="site_profilesheet" title="SEMIDE profile page"/>
 		<form id="flashtool_profilesheet" title="eFlash profile page"/>
