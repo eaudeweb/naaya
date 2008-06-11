@@ -19,8 +19,23 @@
 """
 import os
 import sys
+import logging
 from threading import Thread
 from Globals import INSTANCE_HOME
+
+# Config custom logger
+LOG_ROOT = os.path.join(INSTANCE_HOME, 'log')
+LOG_FILE = os.path.join(LOG_ROOT, 'packing.log')
+
+logging.basicConfig()
+_handler = logging.FileHandler(LOG_FILE)
+_formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
+_handler.setFormatter(_formatter)
+
+logger = logging.getLogger('naayaHotfix.extfile_pack')
+logger.setLevel(logging.DEBUG)
+logger.handlers = [_handler]
+logger.propagate = 0
 
 class ExtFilePack(Thread):
     """ Media Converter
@@ -32,7 +47,7 @@ class ExtFilePack(Thread):
     def pack(self):
         """ os.walk in path and remove all .undo files"""
         os.path.walk(self._path, _pack, None)
-        
+
     def run(self):
         """ Run pack"""
         return self.pack()
@@ -45,10 +60,14 @@ def _pack(arg, dirname, fnames):
         path = os.path.join(dirname, fname)
         try:
             os.unlink(path)
-        except OSError:
+        except OSError, err:
+            logger.debug('Deleting %-70s [FAILED] %s', path, err)
             continue
+        else:
+            logger.debug('Deleting %-70s [OK]', path)
 
 def pack_disk(path):
+    logger.debug('Disk pack started')
     extpack = ExtFilePack(path)
     extpack.start()
     extpack.join()
