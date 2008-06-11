@@ -13,7 +13,6 @@
 		<form id="folder_zipupload" title="Upload items from zip archive"/>
 		<form id="folder_zipdownload" title="Download items as zip archive"/>
 		<form id="googlesearchinterfaces_html" title="List all GoogleSearchInterfaces"/>
-		<form id="site_admin_urls" title="Portal administration - urls"/>
 		<form id="site_admin_linkchecker" title="Portal administration - URL checker"/>
 	</forms>
 	<layout default_skin_id="envirowindows" default_scheme_id="EW-skin-00">

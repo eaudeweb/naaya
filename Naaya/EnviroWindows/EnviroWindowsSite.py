@@ -983,41 +983,10 @@ text-decoration: underline;
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_contacts')
 
-
-    def getURLProperties(self):
-        #process the list of all approved items which have URL properties, by location
-        #this requires NyURL pluggable content type to be present
-        url_struct = {}
-        #list urls
-        for x in self.query_objects_ex(meta_type=METATYPE_NYURL):
-            p_value = x.locator
-            if isinstance(p_value, unicode): p_value = p_value.encode('utf-8')
-            if p_value != '':
-                if url_struct.has_key(p_value):
-                    url_struct[p_value].append((x, x.getParentNode()))
-                else:
-                    url_struct[p_value] = [(x, x.getParentNode())]
-        #list other
-        for x in self.query_objects_ex(meta_type=self.get_content_urls().keys()):
-            for y in self.get_content_urls()[x.meta_type]:
-                p_value = getattr(x, y)
-                if isinstance(p_value, unicode): p_value = p_value.encode('utf-8')
-                if p_value != '':
-                    if url_struct.has_key(p_value):
-                        url_struct[p_value].append((x, x.getParentNode()))
-                    else:
-                        url_struct[p_value] = [(x, x.getParentNode())]
-        return url_struct
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkchecker_html')
     def admin_linkchecker_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_linkchecker')
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_urls_html')
-    def admin_urls_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return self.getFormsTool().getContent({'here': self}, 'site_admin_urls')
 
 InitializeClass(EnviroWindowsSite)
 
