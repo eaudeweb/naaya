@@ -235,6 +235,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         #load site skeleton - configuration
         skel_handler, error = skel_parser().parse(self.futRead(join(skel_path, 'skel.xml'), 'r'))
+        if error:
+            zLOG.LOG('NySite.loadSkeleton', zLOG.ERROR, error)
         if skel_handler is not None:
             properties_tool = self.getPropertiesTool()
             formstool_ob = self.getFormsTool()
@@ -297,7 +299,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                             image_ob = scheme_ob._getOb(image.id)
                             image_ob.update_data(data=content)
                             image_ob._p_changed=1
-                layouttool_ob.manageLayout(skel_handler.root.layout.default_skin_id, skel_handler.root.layout.default_scheme_id)
+                if skel_handler.root.layout.default_skin_id and skel_handler.root.layout.default_scheme_id:
+                    layouttool_ob.manageLayout(skel_handler.root.layout.default_skin_id, skel_handler.root.layout.default_scheme_id)
                 #load logos
                 content = self.futRead(join(skel_path, 'layout', 'logo.gif'), 'rb')
                 image_ob = layouttool_ob._getOb('logo.gif', None)
@@ -394,8 +397,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                         for property, langs in node.properties.items():
                             for lang in langs:
                                 node_ob._setLocalPropValue(property, lang, langs[lang])
-                portletstool_ob.manage_left_portlets(skel_handler.root.portlets.left.split(','))
-                portletstool_ob.manage_center_portlets(skel_handler.root.portlets.center.split(','))
+                if skel_handler.root.portlets.left:
+                    portletstool_ob.manage_left_portlets(skel_handler.root.portlets.left.split(','))
+                if skel_handler.root.portlets.center:
+                    portletstool_ob.manage_center_portlets(skel_handler.root.portlets.center.split(','))
             #load email templates
             if skel_handler.root.emails is not None:
                 for emailtemplate in skel_handler.root.emails.emailtemplates:
