@@ -272,21 +272,28 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             #load skins
             if skel_handler.root.layout is not None:
                 for skin in skel_handler.root.layout.skins:
-                    layouttool_ob.manage_addSkin(id=skin.id, title=skin.title)
+                    if not layouttool_ob._getOb(skin.id, None):
+                        layouttool_ob.manage_addSkin(id=skin.id, title=skin.title)
                     skin_ob = layouttool_ob._getOb(skin.id)
                     for template in skin.templates:
                         content = self.futRead(join(skel_path, 'layout', skin.id, '%s.zpt' % template.id), 'r')
-                        skin_ob.manage_addTemplate(id=template.id, title=template.title, file='')
+                        if not skin_ob._getOb(template.id, None):
+                            skin_ob.manage_addTemplate(id=template.id, title=template.title, file='')
                         skin_ob._getOb(template.id).pt_edit(text=content, content_type='')
                     for scheme in skin.schemes:
+                        if skin_ob._getOb(scheme.id, None):
+                            skin_ob.manage_delObjects([scheme.id])
                         skin_ob.manage_addScheme(id=scheme.id, title=scheme.title)
                         scheme_ob = skin_ob._getOb(scheme.id)
                         for style in scheme.styles:
                             content = self.futRead(join(skel_path, 'layout', skin.id, scheme.id, '%s.css' % style.id), 'r')
+                            if scheme_ob._getOb(style.id, None):
+                                scheme_ob.manage_delObjects([style.id])
                             scheme_ob.manage_addStyle(id=style.id, title=style.title, file=content)
                         for image in scheme.images:
                             content = self.futRead(join(skel_path, 'layout', skin.id, scheme.id, image.id), 'rb')
-                            scheme_ob.manage_addImage(id=image.id, file='', title=image.title)
+                            if not scheme_ob._getOb(image.id, None):
+                                scheme_ob.manage_addImage(id=image.id, file='', title=image.title)
                             image_ob = scheme_ob._getOb(image.id)
                             image_ob.update_data(data=content)
                             image_ob._p_changed=1
@@ -1952,9 +1959,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 auth_tool = self.getAuthenticationTool()
                 for name in names:
                     try:
-            		email = auth_tool.getUsersEmails([name])[0]
-                	fullname = auth_tool.getUsersFullNames([name])[0]
-                	self.sendAccountCreatedEmail(fullname, email, name, REQUEST, roles)
+                        email = auth_tool.getUsersEmails([name])[0]
+                        fullname = auth_tool.getUsersFullNames([name])[0]
+                        self.sendAccountCreatedEmail(fullname, email, name, REQUEST, roles)
                     except:
                         err = 'Could not send confirmation mail.'
         if REQUEST:
