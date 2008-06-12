@@ -56,7 +56,8 @@ class NaayaUpdater(Folder):
     def manage_options(self):
         """ """
         l_options = (
-            {'label':'Content updates', 'action':'content_updates',},
+            {'label':'Available content updates', 'action':'available_content_updates',},
+            {'label':'Applied content updates', 'action':'applied_content_updates',},
             {'label': 'Other updates', 'action': 'index_html'},
             {'label': 'Layout updates', 'action': 'layout_updates'},
             {'label':'Contents', 'action':'manage_main',
@@ -80,8 +81,11 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'index_html')
     index_html = PageTemplateFile('zpt/updater_index', globals())
     
-    security.declareProtected(view_management_screens, 'content_updates')
-    content_updates = PageTemplateFile('zpt/content_updater_index', globals())
+    security.declareProtected(view_management_screens, 'available_content_updates')
+    available_content_updates = PageTemplateFile('zpt/available_content_updates', globals())
+    
+    security.declareProtected(view_management_screens, 'applied_content_updates')
+    applied_content_updates = PageTemplateFile('zpt/applied_content_updates', globals())
     
     security.declareProtected(view_management_screens, 'layout_updates')
     layout_updates = PageTemplateFile('zpt/layout_updates', globals())
@@ -127,7 +131,7 @@ class NaayaUpdater(Folder):
             run_time != 1 and 's' or ''
         )
         if REQUEST:
-            REQUEST.RESPONSE.redirect('content_updates?manage_tabs_message=%s' % message)
+            REQUEST.RESPONSE.redirect('available_content_updates?manage_tabs_message=%s' % message)
         return message
         
     security.declareProtected(view_management_screens, 'show_html_diff')
