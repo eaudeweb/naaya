@@ -16,7 +16,16 @@
 # Authors:
 #
 # Alin Voinea, Eau de Web
+""" Patch CHMSite
+"""
+from os.path import join
+from Products.CHM2.CHMSite import CHMSite
+from constants import CHM2BE_PRODUCT_PATH
 
-import FormsTool
-import LayoutTool
-import CHMSite
+def wrap_loadDefaultData(method):
+    def loadDefaultData(self):
+        method(self)
+        self.loadSkeleton(join(CHM2BE_PRODUCT_PATH, 'skel'))
+    return loadDefaultData
+
+CHMSite.loadDefaultData = wrap_loadDefaultData(CHMSite.loadDefaultData)
