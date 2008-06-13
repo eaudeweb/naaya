@@ -46,7 +46,10 @@ class CustomContentUpdater(NaayaContentUpdater):
         updates = self._list_updates()
         for update in updates:
             if getattr(update, 'portal_editor', None):
-                update.manage_delObjects(['portal_editor'])
+                try:
+                    update.manage_delObjects(['portal_editor'])
+                except Exception, err:
+                    logger.debug('%-70s [ERROR] %s', update.absolute_url(1), err)
             manage_addEditorTool(update)
             logger.debug('%-70s [UPDATED]', update.absolute_url(1))
 

@@ -16,3 +16,7 @@ Run available updates
 Pack database
 -------------
  * Run Pack in Control Panel -> Database -> main
+
+Update cbd-chm
+--------------
+ * Update language_box with admin_language_box content

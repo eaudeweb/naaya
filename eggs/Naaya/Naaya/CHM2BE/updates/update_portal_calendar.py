@@ -46,7 +46,10 @@ class CustomContentUpdater(NaayaContentUpdater):
         updates = self._list_updates()
         for update in updates:
             if getattr(update, 'portal_calendar', None):
-                update.manage_delObjects(['portal_calendar'])
+                try:
+                    update.manage_delObjects(['portal_calendar'])
+                except Exception, err:
+                    logger.debug('%-70s [ERROR] %s', update.absolute_url(1), err)
             manage_addEventCalendar(update, 'portal_calendar', day_len=1, catalog='portal_catalog')
             logger.debug('%-70s [UPDATED]', update.absolute_url(1))
 

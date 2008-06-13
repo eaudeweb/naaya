@@ -47,6 +47,9 @@ class CustomContentUpdater(NaayaContentUpdater):
             return doc
         if float(version) < float(self.version):
             return doc
+        
+        logger.debug('Skip site %s version: %s self.version: %s',
+                     doc.absolute_url(1), version, self.version)
         return None
     
     def _list_updates(self):
