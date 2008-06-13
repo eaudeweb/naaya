@@ -10,7 +10,7 @@
     name string:uids:list;
     disabled python:test(bulk_update, None, 'disabled')"/>
   <a tal:attributes="href update/absolute_url" tal:content="update/title_or_id" />
-  <span tal:condition="python:update.description and bulk_update" tal:content="string:(${update/description})" />
+  <span tal:condition="python:getattr(update, 'description', None) and bulk_update" tal:content="string:(${update/description})" />
   <span style="color:red" tal:condition="not:bulk_update" tal:content="string:(This update can't be run from here)" />
 </tal:block>
 </div>
