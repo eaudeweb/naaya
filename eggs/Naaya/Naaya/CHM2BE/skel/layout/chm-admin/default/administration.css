@@ -447,10 +447,6 @@ a#top_en,a#bottom_en {
   margin:0 .5em;
 }
 
-#coverage,#keywords {
-  float:left;
-}
-
 #frmEdit label.invisible {
   display:none;
 }
@@ -500,3 +496,14 @@ a#top_en,a#bottom_en {
 #tabbedmenu, .tabs_firstlevel, .hr_invisible,.tabs_admin,
 .edit #leftcolumn, .edit #linkgroups, .edit #search,
 .add #leftcolumn, .add #linkgroups, .add #search {display:none;}
+
+.edit_right_box {
+  position: relative;
+  padding-top: 0px;
+  margin-top: 1em;
+  width: 230px;
+}
+
+.translate_bar_right {
+  position: relative;
+}
