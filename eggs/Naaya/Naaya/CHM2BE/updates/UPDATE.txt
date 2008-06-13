@@ -1,0 +1,18 @@
+CHM-BE Update - Jun 2008
+========================
+
+Update Naaya Forms
+------------------
+ * Run Naaya Forms updater from naaya_updates
+
+Update Naaya Content Types
+--------------------------
+ * Run Naaya Content Types updater from naaya_updates
+
+Run available updates
+---------------------
+ * Run all available update in naaya_updates
+
+Pack database
+-------------
+ * Run Pack in Control Panel -> Database -> main

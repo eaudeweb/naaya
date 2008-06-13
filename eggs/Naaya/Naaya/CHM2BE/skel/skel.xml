@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<skel>
+	<portlets left="" center="">
+		<portlet id="portlet_administration" title="Administration" />
+	</portlets>
+	<forms>
+		<form id="site_admin_template" title="Portal administration - macro"/>
+		<form id="admin_languages_box" title="Portal administration language box"/>
+	</forms>
+	<layout default_skin_id="" default_scheme_id="">
+		<skin id="chm-admin" title="CHM Admin">
+			<template id="site_header" title="Portal standard HTML header"/>
+			<template id="site_footer" title="Portal standard HTML footer"/>
+			<template id="portlet_left_macro" title="Macro for left portlets"/>
+			<template id="portlet_center_macro" title="Macro for center portlets"/>
+			<template id="portlet_right_macro" title="Macro for right portlets"/>
+			<template id="script_dropdownmenus_js" title="Script for dropdown menu"/>
+			<template id="script_expandableportlets_js" title="Script for expandable portlets"/>
+			<scheme id="default" title="Default">
+				<style id="administration" title="Administration CSS"/>
+				<style id="style" title="Main CSS"/>
+				<style id="style_common" title="Common CSS"/>
+				<style id="style_handheld" title="Handheld CSS"/>
+				<style id="style_print" title="CSS for print media"/>
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="bullet.gif" title=""/>
+				<image id="go.gif" title=""/>
+				<image id="path.gif" title=""/>
+				<image id="sign_story.gif" title=""/>
+				<image id="tip.gif" title=""/>
+				<image id="tableft.gif" title=""/>
+				<image id="tableft_on.gif" title=""/>
+				<image id="tabright.gif" title=""/>
+				<image id="tabright_on.gif" title=""/>
+				<image id="translate.gif" title=""/>
+				<image id="banner.jpg" title=""/>
+				<image id="portlet_right_bullet.gif" title=""/>
+				<image id="separ_1.gif" title=""/>
+				<image id="separ_2.gif" title=""/>
+				<image id="portlet-middle-bullet.gif" title=""/>
+				<image id="addcomment.gif" title=""/>
+				<image id="comment.gif" title=""/>
+				<image id="logintoadd.gif" title=""/>
+				<image id="trash.gif" title=""/>
+				<image id="sortdown.gif" title="Sorted downwards"/>
+				<image id="sortnot.gif" title="Not sorted"/>
+				<image id="sortup.gif" title="Sorted upwards"/>
+				<image id="ep_collapse.gif" title="Collapse icon for expandable portlets"/>
+				<image id="ep_expand.gif" title="Expand icon for expandable portlets"/>
+				<image id="ep_none.gif" title="Blank icon for expandable portlets"/>
+			</scheme>
+		</skin>
+	</layout>
+</skel>
