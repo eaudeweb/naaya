@@ -1,0 +1,41 @@
+<span tal:define="global t string:folder" />
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	tal:attributes="xml:lang here/gl_get_selected_language; lang here/gl_get_selected_language"
+	tal:define="site_url here/getSitePath">
+<body id="edit">
+<div id="wrap">
+<div id="content">
+
+<!--SITE_HEADERFOOTER_MARKER-->
+
+
+</div>
+
+<tal:block define="
+	is_site python:here.getSite().getId() == here.getId();
+	is_map python:here.getId() == 'portal_map';
+	is_admin python:is_site or is_map
+">
+
+<div class="backSite-bottom" tal:condition="is_admin">
+<div class="backSite">
+	<a tal:attributes="href here/absolute_url">Back to public site</a>
+</div>
+</div>
+
+<div id="footer" metal:define-macro="footer">
+<div class="floated-buttons bottom" tal:condition="not:is_admin">
+	<a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a>
+</div>
+	<div class="horizlist">
+		<span i18n:translate="">Page last modified:</span>
+		<span tal:replace="python:here.utShowDateTime(here.bobobase_modification_time())" /> |
+		<a tal:attributes="href string:${site_url}/info/copyright" i18n:translate="">Copyright</a> |
+		<a tal:attributes="href string:${site_url}/HelpDesk/" accesskey="9" i18n:translate="">Feedback and helpdesk</a> |
+		<a tal:attributes="href string:${site_url}/info/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>
+	</div>
+</div>
+</tal:block>
+</body>
+</html>
