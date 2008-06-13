@@ -25,10 +25,8 @@ from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 from ZPublisher.HTTPRequest import FileUpload
 
-PATH = __name__.split(".")
-PATH = PATH[:-1]
-PATH.append('www')
-PATH = os.path.join(Globals.INSTANCE_HOME, *PATH)
+PATH = Globals.package_home(globals())
+PATH = os.path.join(PATH, 'www')
 
 CONTENT_TYPES = [{'id':'text/plain', 'title':'TXT', 'picture':'txt.png'}, 
                  {'id':'text/html', 'title':'HTML', 'picture':'html.png'}, 
