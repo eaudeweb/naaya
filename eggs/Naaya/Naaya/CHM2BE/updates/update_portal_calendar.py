@@ -20,6 +20,7 @@
 from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 from Products.NaayaCalendar.EventCalendar import manage_addEventCalendar
+from Products.CHM2.CHMSite import Extra_for_DateRangeIndex
 
 class CustomContentUpdater(NaayaContentUpdater):
     """ """
@@ -42,16 +43,38 @@ class CustomContentUpdater(NaayaContentUpdater):
                 continue
             yield portal
     
+    def _update_catalog(self, portal):
+        ctool = portal.getCatalogTool()
+        if 'resource_interval' not in ctool.indexes():
+            try:
+                extra=Extra_for_DateRangeIndex(since_field='start_date', until_field='end_date')
+                ctool.manage_addIndex("resource_interval", 'DateRangeIndex', extra=extra) 
+                ctool.manage_reindexIndex(ids=['resource_interval'])
+            except Exception, err:
+                logger.debug('Catalog:  %-50s [ERROR] %s', portal.absolute_url(1), err)
+            else:
+                logger.debug('Catalog:  %-50s [UPDATED]', portal.absolute_url(1))
+    
+    def _update_calendar(self, portal):
+        if getattr(portal, 'portal_calendar', None):
+            try:
+                portal.manage_delObjects(['portal_calendar'])
+            except Exception, err:
+                logger.debug('Calendar: %-50s [ERROR] %s', portal.absolute_url(1), err)
+        manage_addEventCalendar(portal, id="portal_calendar",
+                                title='Calendar of Events',
+                                description='', day_len='2',
+                                cal_meta_types='Naaya Event',
+                                start_day='Monday',
+                                catalog=portal.getCatalogTool().getId(),
+                                REQUEST=None)
+        logger.debug('Calendar: %-50s [UPDATED]', portal.absolute_url(1))
+        
     def _update(self):
         updates = self._list_updates()
         for update in updates:
-            if getattr(update, 'portal_calendar', None):
-                try:
-                    update.manage_delObjects(['portal_calendar'])
-                except Exception, err:
-                    logger.debug('%-70s [ERROR] %s', update.absolute_url(1), err)
-            manage_addEventCalendar(update, 'portal_calendar', day_len=1, catalog='portal_catalog')
-            logger.debug('%-70s [UPDATED]', update.absolute_url(1))
+            self._update_catalog(update)
+            self._update_calendar(update)
 
 def register(uid):
     return CustomContentUpdater(uid)
