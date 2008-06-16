@@ -854,6 +854,53 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
             results.extend(l_objects)
         return results
 
+    def _getEventsListing(self, query='', languages=[], et='', gz='', es='', skey='',
+                         rkey=0, sd='', ed='', p_context=None, 
+                         ps_start='', **kwargs):
+        """
+        Returns a list of events
+        """
+        #default data
+        try:    l_archive = self.unrestrictedTraverse(p_context)
+        except: l_archive = None
+
+        #get result
+        if not l_archive:
+            return []
+        
+        if query == '' and et == '' and gz == '' and es == '' and sd == '' and ed == '':
+            #no criteria then returns the 10 more recent
+            return l_archive.getObjects()
+        
+        r = []
+        query = self.utStrEscapeForSearch(query)
+        l_query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSEMEVENT], approved=1, path=\'/\'.join(l_archive.getPhysicalPath())'
+        if et: l_query += ', resource_type=[et]'
+        if es: l_query += ', resource_status=[es]'
+
+        sd = self.utConvertStringToDateTimeObj(sd)
+        ed = self.utConvertStringToDateTimeObj(ed)
+        if sd and ed:
+            l_query += ', resource_date=[sd, ed], resource_date_range=\'minmax\''
+        elif sd:
+            l_query += ', resource_date=sd, resource_date_range=\'min\''
+        elif ed:
+            l_query += ', resource_date=ed, resource_date_range=\'max\''
+
+        if languages: langs = languages
+        else: langs = [self.gl_get_selected_language()]
+        for lang in langs:
+            expr = l_query
+            if gz:
+                lang_name = self.gl_get_language_name(lang)
+                gz_trans = self.getCoverageGlossaryTrans(gz, lang_name)
+                expr += ', coverage_%s=gz_trans' % lang
+            if query: expr += ', objectkeywords_%s=query' % lang
+            expr += ')'
+            r.extend(eval(expr))
+        return r
+
+
     security.declareProtected(view, 'getEventsListing')
     def getEventsListing(self, query='', languages=[], et='', gz='', es='', skey='',
                          rkey=0, sd='', ed='', p_context=None, 
@@ -861,54 +908,22 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         """
         Returns a list of events
         """
-        #default data
-        results = []
         res_per_page = kwargs.get('items', 10) or 10
         try:    ps_start = int(ps_start)
         except: ps_start = 0
-        try:    l_archive = self.unrestrictedTraverse(p_context)
-        except: l_archive = None
-
-        #get result
-        if l_archive:
-            if query == '' and et == '' and gz == '' and es == '' and sd == '' and ed == '':
-                #no criteria then returns the 10 more recent
-                p_objects = l_archive.getObjects()
-                results = self.get_archive_listing(self.sorted_events_listing(p_objects, skey, rkey))
-            else:
-                r = []
-                query = self.utStrEscapeForSearch(query)
-                l_query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSEMEVENT], approved=1, path=\'/\'.join(l_archive.getPhysicalPath())'
-                if et: l_query += ', resource_type=[et]'
-                if es: l_query += ', resource_status=[es]'
-
-                sd = self.utConvertStringToDateTimeObj(sd)
-                ed = self.utConvertStringToDateTimeObj(ed)
-                if sd and ed:
-                    l_query += ', resource_date=[sd, ed], resource_date_range=\'minmax\''
-                elif sd:
-                    l_query += ', resource_date=sd, resource_date_range=\'min\''
-                elif ed:
-                    l_query += ', resource_date=ed, resource_date_range=\'max\''
-
-                if languages: langs = languages
-                else: langs = [self.gl_get_selected_language()]
-                for lang in langs:
-                    expr = l_query
-                    if gz:
-                        lang_name = self.gl_get_language_name(lang)
-                        gz_trans = self.getCoverageGlossaryTrans(gz, lang_name)
-                        expr += ', coverage_%s=gz_trans' % lang
-                    if query: expr += ', objectkeywords_%s=query' % lang
-                    expr += ')'
-                    r.extend(eval(expr))
-                dict = {}
-                for x in r:
-                    dict[x.id] = x
-                results = self.get_archive_listing(self.sorted_events_listing(dict.values(), skey, rkey))
-        else:
-            return []
-
+        
+        gz_list = self.utConvertToList(gz)
+        results = []
+        if not gz_list:
+            gz_list = ['']
+        for gz in gz_list:
+            results.extend(self._getEventsListing(query, languages, et, gz, es,
+                            skey, rkey, sd, ed, p_context, ps_start, **kwargs))
+        
+        dict = {}
+        for x in results:
+            dict[x.id] = x
+        results = self.get_archive_listing(self.sorted_events_listing(dict.values(), skey, rkey))
         #batch related
         batch_obj = batch_utils(res_per_page, len(results[2]), ps_start)
         if len(results[2]) > 0:
@@ -992,6 +1007,69 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
             results.extend(l_objects)
         return results
 
+    def _getProjectsListing(self, query='', so='', languages=[], skey='', rkey=0, 
+                           archive=[], ps_start='', gz='', th='', pr='', **kwargs):
+        """
+        Returns a list of projects
+        """
+        r = []
+        if not (query or so or gz or th or pr):
+            #no criteria then returns the 10 more recent
+            if not archive:
+                p_context = kwargs.get('p_context', None)
+                try:
+                    archive = self.unrestrictedTraverse(p_context).getObjects()
+                except:
+                    return []
+                else:
+                    return archive.getObjects()
+            return archive
+        
+        if languages:
+            langs = languages
+        else:
+            langs = self.gl_get_languages()
+        query_r = []
+        so_r = []
+
+        #search for projects
+        if query or gz or th or pr:
+            query = self.utStrEscapeForSearch(query)
+            l_query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSEMPROJECT], approved=1'
+            if th: l_query += ', resource_subject=th'
+            for lang in langs:
+                expr = l_query
+                if gz:
+                    lang_name = self.gl_get_language_name(lang)
+                    gz_trans = self.getCoverageGlossaryTrans(gz, lang_name)
+                    expr += ', coverage_%s=gz_trans' % lang
+                if pr:    expr += ', programme_%s=pr' % lang
+                if query: expr += ', objectkeywords_%s=query' % lang
+                expr += ')'
+                query_r.extend(eval(expr))
+        #search for organisations
+        if so:
+            org_list = []
+            so_query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSEMORGANISATION], approved=1'
+            for lang in langs:
+                expr = so_query
+                if so: expr += ', objectkeywords_%s=so' % lang
+                expr += ')'
+                org_list.extend(eval(expr))
+            for x in org_list:
+                so_r.append(x.getParentNode())
+
+        #merge the search results of projects and organisations
+        if query and so:
+            so_list = []
+            for x in query_r:
+                if x in so_r and x not in r:
+                    r.append(x)
+        else:
+            r.extend(query_r)
+            r.extend(so_r)
+        return r
+    
     security.declareProtected(view, 'getProjectsListing')
     def getProjectsListing(self, query='', so='', languages=[], skey='', rkey=0, 
                            archive=[], ps_start='', gz='', th='', pr='', **kwargs):
@@ -1001,64 +1079,19 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         #default data
         results = []
         res_per_page = kwargs.get('items', 10) or 10
-        r = []
         dict = {}
         try:    ps_start = int(ps_start)
         except: ps_start = 0
-
-        if query == '' and so == '' and gz == '' and th == '' and pr == '':
-            #no criteria then returns the 10 more recent
-            if not archive:
-                p_context = kwargs.get('p_context', None)
-                try: archive = self.unrestrictedTraverse(p_context).getObjects()
-                except: pass
-            results = self.get_archive_listing(self.sorted_projects_listing(archive, skey, rkey))
-        else:
-            if languages: langs = languages
-            else: langs = self.gl_get_languages()
-            query_r = []
-            so_r = []
-
-            #search for projects
-            if query or gz or th or pr:
-                query = self.utStrEscapeForSearch(query)
-                l_query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSEMPROJECT], approved=1'
-                if th: l_query += ', resource_subject=th'
-                for lang in langs:
-                    expr = l_query
-                    if gz:
-                        lang_name = self.gl_get_language_name(lang)
-                        gz_trans = self.getCoverageGlossaryTrans(gz, lang_name)
-                        expr += ', coverage_%s=gz_trans' % lang
-                    if pr:    expr += ', programme_%s=pr' % lang
-                    if query: expr += ', objectkeywords_%s=query' % lang
-                    expr += ')'
-                    query_r.extend(eval(expr))
-            #search for organisations
-            if so:
-                org_list = []
-                so_query = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSEMORGANISATION], approved=1'
-                for lang in langs:
-                    expr = so_query
-                    if so: expr += ', objectkeywords_%s=so' % lang
-                    expr += ')'
-                    org_list.extend(eval(expr))
-                for x in org_list:
-                    so_r.append(x.getParentNode())
-
-            #merge the search results of projects and organisations
-            if query and so:
-                so_list = []
-                for x in query_r:
-                    if x in so_r and x not in r:
-                        r.append(x)
-            else:
-                r.extend(query_r)
-                r.extend(so_r)
-
-            for x in r:
-                dict[x.id] = x
-            results = self.get_archive_listing(self.sorted_projects_listing(dict.values(), skey, rkey))
+        
+        gz_list = self.utConvertToList(gz)
+        if not gz_list:
+            gz_list = ['']
+        for gz in gz_list:
+            results.extend(self._getProjectsListing(query, so, languages, skey, rkey, 
+                           archive, ps_start, gz, th, pr, **kwargs))
+        for x in results:
+            dict[x.id] = x
+        results = self.get_archive_listing(self.sorted_projects_listing(dict.values(), skey, rkey))
 
         #batch related
         batch_obj = batch_utils(res_per_page, len(results[2]), ps_start)
