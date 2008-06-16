@@ -91,7 +91,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
     def __init__(self, id, portal_uid, title, lang):
         """ """
         NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
-        
+
     def _configure_linkchecker(self, linkchecker_ob):
         # Add Naaya Folder content type to be checked by linkchecker
         linkchecker_ob.manage_addMetaType('Naaya Folder')
@@ -177,7 +177,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         linkchecker_ob.catalog_name = 'portal_catalog'
         linkchecker_ob.use_catalog = 1
         self._configure_linkchecker(linkchecker_ob)
-        
+
         try:
             #set NFP private area
             nfp_private = self._getOb('nfp_private')
@@ -338,7 +338,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         try:
             #set default main topics
             self.getPropertiesTool().manageMainTopics(['about', 'countries',
-                'introduction', 'partners', 'initiatives', 'thematicdirs', 'publications', 'documents', 'nfp_private', 'topics'])
+                                                       'introduction', 'partners', 'initiatives', 'thematicdirs', 'publications', 'documents', 'nfp_private', 'topics'])
         except:
             pass
 
@@ -669,7 +669,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         """ """
         p_objects = p_archive.getObjects()
         p_objects.sort(lambda x,y: cmp(y.releasedate, x.releasedate) \
-            or cmp(x.sortorder, y.sortorder))
+                       or cmp(x.sortorder, y.sortorder))
         return self.get_archive_listing(p_objects)
 
     security.declareProtected(view, 'sorted_news_listing')
@@ -678,7 +678,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         results = []
         if not skey or skey == 'news_date':
             p_objects.sort(lambda x,y: cmp(y.news_date, x.news_date) \
-                or cmp(x.sortorder, y.sortorder))
+                           or cmp(x.sortorder, y.sortorder))
             if not rkey: p_objects.reverse()
             results.extend(p_objects)
         else:
@@ -741,7 +741,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         results = []
         if not skey or skey == 'date':
             p_objects.sort(lambda x,y: cmp(y.releasedate, x.releasedate) \
-                or cmp(x.sortorder, y.sortorder))
+                           or cmp(x.sortorder, y.sortorder))
             if not rkey: p_objects.reverse()
             results.extend(p_objects)
         else:
@@ -845,7 +845,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         results = []
         if not skey or skey == 'start_date':
             p_objects.sort(lambda x,y: cmp(y.start_date, x.start_date) \
-                or cmp(x.sortorder, y.sortorder))
+                           or cmp(x.sortorder, y.sortorder))
             if not rkey: p_objects.reverse()
             results.extend(p_objects)
         else:
@@ -983,7 +983,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         results = []
         if not skey or skey == 'start_date':
             p_objects.sort(lambda x,y: cmp(y.start_date, x.start_date) \
-                or cmp(x.sortorder, y.sortorder))
+                           or cmp(x.sortorder, y.sortorder))
             if not rkey: p_objects.reverse()
             results.extend(p_objects)
         else:
@@ -1178,19 +1178,19 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         acl_tool = self.getAuthenticationTool()
         try:
             userinfo = acl_tool.manage_addUser(username, password, confirm,
-                        [], [], firstname,lastname, email, verify_word=verify_word)
+                                               [], [], firstname,lastname, email, verify_word=verify_word)
         except Exception, error:
             err = error
         else:
             err = ''
-        
+
         # Errors occured
         if err:
             if not REQUEST: return err
             self.setSessionErrors(err)
             self.setCreateAccountSession(username, firstname, lastname, email, password)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
-        
+
         # No error occured
         if acl_tool.emailConfirmationEnabled():
             self.sendConfirmationEmail(firstname + ' ' + lastname, userinfo, email)
@@ -1224,7 +1224,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         if REQUEST:
             kwargs.update(REQUEST.form)
         template = kwargs.get('p_template', 'email_createaccount')
-        
+
         email_template = self.getEmailTool()._getOb(template)
         l_subject = email_template.title
         l_content = email_template.body
@@ -1241,20 +1241,20 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         self.getEmailTool().sendEmail(l_content, p_to, mail_from, l_subject)
 
     def sendAccountCreatedEmail(self, p_name, p_email, p_username, REQUEST, p_roles=[]):
-	#sends a confirmation email to the newlly created account's owner
-	if isinstance(p_roles, list): p_roles = ', '.join(p_roles)
-	email_template = self.getEmailTool()._getOb('email_createaccount')
-	l_subject = email_template.title
-	l_content = email_template.body
-	l_content = l_content.replace('@@PORTAL_URL@@', self.portal_url)
-	l_content = l_content.replace('@@PORTAL_TITLE@@', self.site_title)
-	l_content = l_content.replace('@@NAME@@', p_name)
-	l_content = l_content.replace('@@USERNAME@@', p_username)
-	l_content = l_content.replace('@@EMAIL@@', p_email)
-	l_content = l_content.replace('@@ROLES@@', p_roles)
-	l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
-	mail_from = self.mail_address_from
-	self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
+        #sends a confirmation email to the newlly created account's owner
+        if isinstance(p_roles, list): p_roles = ', '.join(p_roles)
+        email_template = self.getEmailTool()._getOb('email_createaccount')
+        l_subject = email_template.title
+        l_content = email_template.body
+        l_content = l_content.replace('@@PORTAL_URL@@', self.portal_url)
+        l_content = l_content.replace('@@PORTAL_TITLE@@', self.site_title)
+        l_content = l_content.replace('@@NAME@@', p_name)
+        l_content = l_content.replace('@@USERNAME@@', p_username)
+        l_content = l_content.replace('@@EMAIL@@', p_email)
+        l_content = l_content.replace('@@ROLES@@', p_roles)
+        l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
+        mail_from = self.mail_address_from
+        self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getSemideUsers')
     def getSemideUsers(self, query='', skey=0, rkey=''):
@@ -1269,7 +1269,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         for user in site.getAuthenticationTool().getUsers():
             if query:
                 if self.utToUnicode(user.name).find(query)!=-1 or user.email.find(query)!=-1 or \
-                        self.utToUnicode(user.firstname).find(query)!=-1 or self.utToUnicode(user.lastname).find(query)!=-1:
+                   self.utToUnicode(user.firstname).find(query)!=-1 or self.utToUnicode(user.lastname).find(query)!=-1:
                     users_a((user.name, '%s %s' % (user.firstname, user.lastname), user.email, user.created, user.lastupdated, user.lastlogin, user.lastpost))
             else:
                 users_a((user.name, '%s %s' % (user.firstname, user.lastname), user.email, user.created, user.lastupdated, user.lastlogin, user.lastpost))
@@ -1334,20 +1334,20 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_appearance')
     def admin_appearance(self, bckg_left='', bckg_left_ar='', bck_topmenu='', 
-        topmenucolor='', bck_search='', bck_search_ar='', europe='', europe_ar='',
-        rightportletoutline='', entire_site_font='', entire_site_font_ar='', headings_font='', headings_font_ar='',
-        main_navigation_font='', main_navigation_font_ar='', left_second_font='', left_second_font_ar='', left_third_font='',
-        left_third_font_ar='', left_title_font='', left_title_font_ar='', left_title_color='', left_title_bg='',
-        left_title_border='', left_active_bg='', left_active_color='', left_active_size='', right_bg='', right_font='',
-        right_font_ar='', right_color='', right_size='', right_title_font='', right_title_font_ar='', 
-        right_title_color='', right_title_size='',
-        bread_color='', bread_size='', bread_size_ar='', breadbar_bg='', search_bg='', quick_bg='',
-        quick_right_border='', search_left_border='', breadbar_middle_bg='', breadbar_middle_width='',
-        breadbar_upper_border='', breadbar_lower_border='', 
-        search_bgimg=' ', search_bgimg_ar=' ', quick_bgimg=' ', quick_bgimg_ar=' ', 
-        bg_search='', bg_search_ar='', bg_quickaccess='', bg_quickaccess_ar='',
-        breadbar_bgimg=' ', breadbar_bgimg_ar=' ',
-        REQUEST=None):
+                         topmenucolor='', bck_search='', bck_search_ar='', europe='', europe_ar='',
+                         rightportletoutline='', entire_site_font='', entire_site_font_ar='', headings_font='', headings_font_ar='',
+                         main_navigation_font='', main_navigation_font_ar='', left_second_font='', left_second_font_ar='', left_third_font='',
+                         left_third_font_ar='', left_title_font='', left_title_font_ar='', left_title_color='', left_title_bg='',
+                         left_title_border='', left_active_bg='', left_active_color='', left_active_size='', right_bg='', right_font='',
+                         right_font_ar='', right_color='', right_size='', right_title_font='', right_title_font_ar='', 
+                         right_title_color='', right_title_size='',
+                         bread_color='', bread_size='', bread_size_ar='', breadbar_bg='', search_bg='', quick_bg='',
+                         quick_right_border='', search_left_border='', breadbar_middle_bg='', breadbar_middle_width='',
+                         breadbar_upper_border='', breadbar_lower_border='', 
+                         search_bgimg=' ', search_bgimg_ar=' ', quick_bgimg=' ', quick_bgimg_ar=' ', 
+                         bg_search='', bg_search_ar='', bg_quickaccess='', bg_quickaccess_ar='',
+                         breadbar_bgimg=' ', breadbar_bgimg_ar=' ',
+                         REQUEST=None):
         """ """
         scheme = self.getLayoutTool().getCurrentSkinScheme()
         style = scheme._getOb('style')
@@ -1368,285 +1368,285 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
 
         #modify CSS
         r = self.handle_scheme_css(style_src,
-            MARKER_TOPMENUCOLOR_START,
-            MARKER_TOPMENUCOLOR_END,
-            topmenucolor)
+                                   MARKER_TOPMENUCOLOR_START,
+                                   MARKER_TOPMENUCOLOR_END,
+                                   topmenucolor)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_RIGHTPORTLETOUTLINE_START,
-            MARKER_RIGHTPORTLETOUTLINE_END,
-            rightportletoutline)
+                                   MARKER_RIGHTPORTLETOUTLINE_START,
+                                   MARKER_RIGHTPORTLETOUTLINE_END,
+                                   rightportletoutline)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_ENTIRE_SITE_FONT_START,
-            MARKER_ENTIRE_SITE_FONT_END,
-            entire_site_font)
+                                   MARKER_ENTIRE_SITE_FONT_START,
+                                   MARKER_ENTIRE_SITE_FONT_END,
+                                   entire_site_font)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_ENTIRE_SITE_FONT_AR_START,
-            MARKER_ENTIRE_SITE_FONT_AR_END,
-            entire_site_font_ar)
+                                   MARKER_ENTIRE_SITE_FONT_AR_START,
+                                   MARKER_ENTIRE_SITE_FONT_AR_END,
+                                   entire_site_font_ar)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_HEADINGS_FONT_START,
-            MARKER_HEADINGS_FONT_END,
-            headings_font)
+                                   MARKER_HEADINGS_FONT_START,
+                                   MARKER_HEADINGS_FONT_END,
+                                   headings_font)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_HEADINGS_FONT_AR_START,
-            MARKER_HEADINGS_FONT_AR_END,
-            headings_font_ar)
+                                   MARKER_HEADINGS_FONT_AR_START,
+                                   MARKER_HEADINGS_FONT_AR_END,
+                                   headings_font_ar)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_MAIN_NAVIGATION_FONT_START,
-            MARKER_MAIN_NAVIGATION_FONT_END,
-            main_navigation_font)
+                                   MARKER_MAIN_NAVIGATION_FONT_START,
+                                   MARKER_MAIN_NAVIGATION_FONT_END,
+                                   main_navigation_font)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_MAIN_NAVIGATION_FONT_AR_START,
-            MARKER_MAIN_NAVIGATION_FONT_AR_END,
-            main_navigation_font_ar)
+                                   MARKER_MAIN_NAVIGATION_FONT_AR_START,
+                                   MARKER_MAIN_NAVIGATION_FONT_AR_END,
+                                   main_navigation_font_ar)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_LEFT_SECOND_FONT_START,
-            MARKER_LEFT_SECOND_FONT_END,
-            left_second_font)
+                                   MARKER_LEFT_SECOND_FONT_START,
+                                   MARKER_LEFT_SECOND_FONT_END,
+                                   left_second_font)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_LEFT_SECOND_FONT_AR_START,
-            MARKER_LEFT_SECOND_FONT_AR_END,
-            left_second_font_ar)
+                                   MARKER_LEFT_SECOND_FONT_AR_START,
+                                   MARKER_LEFT_SECOND_FONT_AR_END,
+                                   left_second_font_ar)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_LEFT_THIRD_FONT_START,
-            MARKER_LEFT_THIRD_FONT_END,
-            left_third_font)
+                                   MARKER_LEFT_THIRD_FONT_START,
+                                   MARKER_LEFT_THIRD_FONT_END,
+                                   left_third_font)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_LEFT_THIRD_FONT_AR_START,
-            MARKER_LEFT_THIRD_FONT_AR_END,
-            left_third_font_ar)
+                                   MARKER_LEFT_THIRD_FONT_AR_START,
+                                   MARKER_LEFT_THIRD_FONT_AR_END,
+                                   left_third_font_ar)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_LEFT_TITLE_FONT_START,
-            MARKER_LEFT_TITLE_FONT_END,
-            left_title_font)
+                                   MARKER_LEFT_TITLE_FONT_START,
+                                   MARKER_LEFT_TITLE_FONT_END,
+                                   left_title_font)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_LEFT_TITLE_FONT_AR_START,
-            MARKER_LEFT_TITLE_FONT_AR_END,
-            left_title_font_ar)
+                                   MARKER_LEFT_TITLE_FONT_AR_START,
+                                   MARKER_LEFT_TITLE_FONT_AR_END,
+                                   left_title_font_ar)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_LEFT_TITLE_COLOR_START,
-            MARKER_LEFT_TITLE_COLOR_END,
-            left_title_color)
+                                   MARKER_LEFT_TITLE_COLOR_START,
+                                   MARKER_LEFT_TITLE_COLOR_END,
+                                   left_title_color)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_LEFT_TITLE_BG_START,
-            MARKER_LEFT_TITLE_BG_END,
-            left_title_bg)
+                                   MARKER_LEFT_TITLE_BG_START,
+                                   MARKER_LEFT_TITLE_BG_END,
+                                   left_title_bg)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_LEFT_TITLE_BORDER_START,
-            MARKER_LEFT_TITLE_BORDER_END,
-            left_title_border)
+                                   MARKER_LEFT_TITLE_BORDER_START,
+                                   MARKER_LEFT_TITLE_BORDER_END,
+                                   left_title_border)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_LEFT_ACTIVE_BG_START,
-            MARKER_LEFT_ACTIVE_BG_END,
-            left_active_bg)
+                                   MARKER_LEFT_ACTIVE_BG_START,
+                                   MARKER_LEFT_ACTIVE_BG_END,
+                                   left_active_bg)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_LEFT_ACTIVE_COLOR_START,
-            MARKER_LEFT_ACTIVE_COLOR_END,
-            left_active_color)
+                                   MARKER_LEFT_ACTIVE_COLOR_START,
+                                   MARKER_LEFT_ACTIVE_COLOR_END,
+                                   left_active_color)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_LEFT_ACTIVE_SIZE_START,
-            MARKER_LEFT_ACTIVE_SIZE_END,
-            left_active_size)
+                                   MARKER_LEFT_ACTIVE_SIZE_START,
+                                   MARKER_LEFT_ACTIVE_SIZE_END,
+                                   left_active_size)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_RIGHT_BG_START,
-            MARKER_RIGHT_BG_END,
-            right_bg)
+                                   MARKER_RIGHT_BG_START,
+                                   MARKER_RIGHT_BG_END,
+                                   right_bg)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_RIGHT_FONT_START,
-            MARKER_RIGHT_FONT_END,
-            right_font)
+                                   MARKER_RIGHT_FONT_START,
+                                   MARKER_RIGHT_FONT_END,
+                                   right_font)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_RIGHT_FONT_AR_START,
-            MARKER_RIGHT_FONT_AR_END,
-            right_font_ar)
+                                   MARKER_RIGHT_FONT_AR_START,
+                                   MARKER_RIGHT_FONT_AR_END,
+                                   right_font_ar)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_RIGHT_COLOR_START,
-            MARKER_RIGHT_COLOR_END,
-            right_color)
+                                   MARKER_RIGHT_COLOR_START,
+                                   MARKER_RIGHT_COLOR_END,
+                                   right_color)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_RIGHT_SIZE_START,
-            MARKER_RIGHT_SIZE_END,
-            right_size)
+                                   MARKER_RIGHT_SIZE_START,
+                                   MARKER_RIGHT_SIZE_END,
+                                   right_size)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_RIGHT_TITLE_FONT_START,
-            MARKER_RIGHT_TITLE_FONT_END,
-            right_title_font)
+                                   MARKER_RIGHT_TITLE_FONT_START,
+                                   MARKER_RIGHT_TITLE_FONT_END,
+                                   right_title_font)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_RIGHT_TITLE_FONT_AR_START,
-            MARKER_RIGHT_TITLE_FONT_AR_END,
-            right_title_font_ar)
+                                   MARKER_RIGHT_TITLE_FONT_AR_START,
+                                   MARKER_RIGHT_TITLE_FONT_AR_END,
+                                   right_title_font_ar)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_RIGHT_TITLE_COLOR_START,
-            MARKER_RIGHT_TITLE_COLOR_END,
-            right_title_color)
+                                   MARKER_RIGHT_TITLE_COLOR_START,
+                                   MARKER_RIGHT_TITLE_COLOR_END,
+                                   right_title_color)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_RIGHT_TITLE_SIZE_START,
-            MARKER_RIGHT_TITLE_SIZE_END,
-            right_title_size)
+                                   MARKER_RIGHT_TITLE_SIZE_START,
+                                   MARKER_RIGHT_TITLE_SIZE_END,
+                                   right_title_size)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_BREAD_COLOR_START,
-            MARKER_BREAD_COLOR_END,
-            bread_color)
+                                   MARKER_BREAD_COLOR_START,
+                                   MARKER_BREAD_COLOR_END,
+                                   bread_color)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_BREAD_SIZE_START,
-            MARKER_BREAD_SIZE_END,
-            bread_size)
+                                   MARKER_BREAD_SIZE_START,
+                                   MARKER_BREAD_SIZE_END,
+                                   bread_size)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_BREAD_SIZE_AR_START,
-            MARKER_BREAD_SIZE_AR_END,
-            bread_size_ar)
+                                   MARKER_BREAD_SIZE_AR_START,
+                                   MARKER_BREAD_SIZE_AR_END,
+                                   bread_size_ar)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_BREADBAR_BG_START,
-            MARKER_BREADBAR_BG_END,
-            breadbar_bg)
+                                   MARKER_BREADBAR_BG_START,
+                                   MARKER_BREADBAR_BG_END,
+                                   breadbar_bg)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_SEARCH_BG_START,
-            MARKER_SEARCH_BG_END,
-            search_bg)
+                                   MARKER_SEARCH_BG_START,
+                                   MARKER_SEARCH_BG_END,
+                                   search_bg)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_QUICK_BG_START,
-            MARKER_QUICK_BG_END,
-            quick_bg)
+                                   MARKER_QUICK_BG_START,
+                                   MARKER_QUICK_BG_END,
+                                   quick_bg)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_QUICK_RIGHT_BORDER_START,
-            MARKER_QUICK_RIGHT_BORDER_END,
-            quick_right_border)
+                                   MARKER_QUICK_RIGHT_BORDER_START,
+                                   MARKER_QUICK_RIGHT_BORDER_END,
+                                   quick_right_border)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_SEARCH_LEFT_BORDER_START,
-            MARKER_SEARCH_LEFT_BORDER_END,
-            search_left_border)
+                                   MARKER_SEARCH_LEFT_BORDER_START,
+                                   MARKER_SEARCH_LEFT_BORDER_END,
+                                   search_left_border)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_BREADBAR_MIDDLE_BG_START,
-            MARKER_BREADBAR_MIDDLE_BG_END,
-            breadbar_middle_bg)
+                                   MARKER_BREADBAR_MIDDLE_BG_START,
+                                   MARKER_BREADBAR_MIDDLE_BG_END,
+                                   breadbar_middle_bg)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_BREADBAR_MIDDLE_WIDTH_START,
-            MARKER_BREADBAR_MIDDLE_WIDTH_END,
-            breadbar_middle_width)
+                                   MARKER_BREADBAR_MIDDLE_WIDTH_START,
+                                   MARKER_BREADBAR_MIDDLE_WIDTH_END,
+                                   breadbar_middle_width)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_BREADBAR_UPPER_BORDER_START,
-            MARKER_BREADBAR_UPPER_BORDER_END,
-            breadbar_upper_border)
+                                   MARKER_BREADBAR_UPPER_BORDER_START,
+                                   MARKER_BREADBAR_UPPER_BORDER_END,
+                                   breadbar_upper_border)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_BREADBAR_LOWER_BORDER_START,
-            MARKER_BREADBAR_LOWER_BORDER_END,
-            breadbar_lower_border)
+                                   MARKER_BREADBAR_LOWER_BORDER_START,
+                                   MARKER_BREADBAR_LOWER_BORDER_END,
+                                   breadbar_lower_border)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_SEARCH_BGIMG_START,
-            MARKER_SEARCH_BGIMG_END,
-            search_bgimg)
+                                   MARKER_SEARCH_BGIMG_START,
+                                   MARKER_SEARCH_BGIMG_END,
+                                   search_bgimg)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_SEARCH_BGIMG_AR_START,
-            MARKER_SEARCH_BGIMG_AR_END,
-            search_bgimg_ar)
+                                   MARKER_SEARCH_BGIMG_AR_START,
+                                   MARKER_SEARCH_BGIMG_AR_END,
+                                   search_bgimg_ar)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_QUICK_BGIMG_START,
-            MARKER_QUICK_BGIMG_END,
-            quick_bgimg)
+                                   MARKER_QUICK_BGIMG_START,
+                                   MARKER_QUICK_BGIMG_END,
+                                   quick_bgimg)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_QUICK_BGIMG_AR_START,
-            MARKER_QUICK_BGIMG_AR_END,
-            quick_bgimg_ar)
+                                   MARKER_QUICK_BGIMG_AR_START,
+                                   MARKER_QUICK_BGIMG_AR_END,
+                                   quick_bgimg_ar)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_BREADBAR_BGIMG_START,
-            MARKER_BREADBAR_BGIMG_END,
-            breadbar_bgimg)
+                                   MARKER_BREADBAR_BGIMG_START,
+                                   MARKER_BREADBAR_BGIMG_END,
+                                   breadbar_bgimg)
         if r is not None: style_src = r
 
         r = self.handle_scheme_css(style_src,
-            MARKER_BREADBAR_BGIMG_AR_START,
-            MARKER_BREADBAR_BGIMG_AR_END,
-            breadbar_bgimg_ar)
+                                   MARKER_BREADBAR_BGIMG_AR_START,
+                                   MARKER_BREADBAR_BGIMG_AR_END,
+                                   breadbar_bgimg_ar)
         if r is not None: style_src = r
 
         style.pt_edit(text=style_src, content_type='')
@@ -1971,11 +1971,11 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
     #site actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_flash_settings')
     def admin_flash_settings(self, title='', path='', archive_path='', news_sd='', news_ed='', event_sd='', event_ed='', doc_sd='', 
-        doc_ed='', notif_date='', notif_admin='', uploadmetatypes=[], lang=[], REQUEST=None):
+                             doc_ed='', notif_date='', notif_admin='', uploadmetatypes=[], lang=[], REQUEST=None):
         """ edit eflash """
         flash_tool = self.getFlashTool()
         flash_tool.manageSettings(title, path, archive_path, news_sd, news_ed, event_sd, event_ed, doc_sd, doc_ed, 
-                notif_date, notif_admin, uploadmetatypes, lang)
+                                  notif_date, notif_admin, uploadmetatypes, lang)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('admin_flash_settings_html')
@@ -2046,9 +2046,9 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         from Products.NaayaCore.PortletsTool.HTMLPortlet import addHTMLPortlet
         for x in self.countries.objectValues(METATYPE_NYCOUNTRY):
             addHTMLPortlet(x, id=x.get_portlet_indicators_id(),
-                title='Key indicators', lang='en')
+                           title='Key indicators', lang='en')
             addHTMLPortlet(x, id=x.get_portlet_reports_id(),
-                title='Important reports', lang='en')
+                           title='Important reports', lang='en')
 
     security.declareProtected(view_management_screens, 'update_documents')
     def update_documents(self, REQUEST=None):
@@ -2078,8 +2078,8 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         #update subobjects list
         documents_obj = self._getOb('documents')
         ny_subobjects = [METATYPE_FOLDER,METATYPE_NYSEMEVENT,METATYPE_NYSEMNEWS,METATYPE_NYDOCUMENT, \
-            METATYPE_NYFILE, METATYPE_NYURL,METATYPE_NYPOINTER,METATYPE_NYSEMMULTIMEDIA, METATYPE_NYSEMTEXTLAWS, \
-            METATYPE_NYSEMDOCUMENT]
+                         METATYPE_NYFILE, METATYPE_NYURL,METATYPE_NYPOINTER,METATYPE_NYSEMMULTIMEDIA, METATYPE_NYSEMTEXTLAWS, \
+                         METATYPE_NYSEMDOCUMENT]
         documents_obj.folder_meta_types.extend(self.utConvertToList(ny_subobjects))
 
 
@@ -2107,20 +2107,20 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
     def getInitiativesEvents(self, folder=None):
         """returns a list with events related with a folder inside the Initiatives folder"""
         try:
-           search_keywords = u' or '.join((folder.getLocalProperty('keywords', 'en')+' '+folder.getLocalProperty('title', 'en')).split())
-           expr = 'self.getCatalogedObjects(meta_type=\'%s\', approved=1, howmany=5, objectkeywords_%s=search_keywords)' % (METATYPE_NYSEMEVENT, 'en')
-           return eval(expr)
+            search_keywords = u' or '.join((folder.getLocalProperty('keywords', 'en')+' '+folder.getLocalProperty('title', 'en')).split())
+            expr = 'self.getCatalogedObjects(meta_type=\'%s\', approved=1, howmany=5, objectkeywords_%s=search_keywords)' % (METATYPE_NYSEMEVENT, 'en')
+            return eval(expr)
         except:
-           return None
+            return None
 
     def getInitiativesProjects(self, folder=None):
         """returns a list with projects related with a folder inside the Initiatives folder"""
         try:
-           search_keywords = u' or '.join((folder.getLocalProperty('keywords', 'en')+' '+folder.getLocalProperty('title', 'en')).split())
-           expr = 'self.getCatalogedObjects(meta_type=\'%s\', approved=1, objectkeywords_%s=search_keywords)' % (METATYPE_NYSEMPROJECT, 'en')
-           return eval(expr)
+            search_keywords = u' or '.join((folder.getLocalProperty('keywords', 'en')+' '+folder.getLocalProperty('title', 'en')).split())
+            expr = 'self.getCatalogedObjects(meta_type=\'%s\', approved=1, objectkeywords_%s=search_keywords)' % (METATYPE_NYSEMPROJECT, 'en')
+            return eval(expr)
         except:
-           return None
+            return None
 
     #ProfileMeta implementation
     security.declarePrivate('loadProfileMeta')
@@ -2414,7 +2414,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         """ """
         search_mapping = RDF_SEARCH_MAPPING
         search_query_mapping = RDF_SEARCH_QUERY_MAPPING
-        
+
         site = self.getSite()
         form = REQUEST.form
         search_by = form.get('search_by', '')
@@ -2426,21 +2426,21 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
                          search_by, search_method))
             return self.getSyndicationTool().syndicateSomething(
                 self.absolute_url(), [])
-        
+
         # XXX Ugly hack 
         for key, value in search_query_mapping.items():
             req_value = form.get(key, None)
             if not req_value:
                 continue
             form.setdefault(value, req_value)
-        
+
         try:
             results = search_method(**form)
         except TypeError, err:
             zLOG.LOG('SEMIDESite.search_rdf', zLOG.DEBUG, err)
             return self.getSyndicationTool().syndicateSomething(
                 self.absolute_url(), [])
-        
+
         # See getNewsListing or similar search methods
         pag_info, list_results = results
         objects = list_results[2]
@@ -2453,7 +2453,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         """ """
         search_mapping = RDF_SEARCH_MAPPING
         search_query_mapping = RDF_SEARCH_QUERY_MAPPING
-        
+
         site = self.getSite()
         form = REQUEST.form
         search_by = form.get('search_by', '')
@@ -2464,20 +2464,20 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
                      'Unknown search_by: %s => search_method: %s' % (
                          search_by, search_method))
             return self.getSyndicationTool().syndicateAtom(self, [])
-        
+
         # XXX Ugly hack 
         for key, value in search_query_mapping.items():
             req_value = form.get(key, None)
             if not req_value:
                 continue
             form.setdefault(value, req_value)
-        
+
         try:
             results = search_method(**form)
         except TypeError, err:
             zLOG.LOG('SEMIDESite.search_atom', zLOG.DEBUG, err)
             return self.getSyndicationTool().syndicateAtom(self, [])
-        
+
         # See getNewsListing or similar search methods
         pag_info, list_results = results
         objects = list_results[2]
