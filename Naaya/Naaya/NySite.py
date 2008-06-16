@@ -929,11 +929,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         else:
             while 1:
                 if node == self:
-                    l_emails.append(node.administrator_email)
+                    l_emails.extend(node.administrator_email.split(','))
                     break
                 if hasattr(node, 'maintainer_email'):
                     if node.maintainer_email != '' and node.maintainer_email not in l_emails:
-                        l_emails.append(node.maintainer_email)
+                        l_emails.extend(node.maintainer_email.split(','))
                 admins = self.get_administrator(node)
 
                 l_emails.extend(auth_tool.getUsersEmails(admins))
