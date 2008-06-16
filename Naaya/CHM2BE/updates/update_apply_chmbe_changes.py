@@ -67,7 +67,7 @@ class CustomContentUpdater(NaayaContentUpdater):
             update.loadSkeleton(os.path.join(CHM2BE_PRODUCT_PATH, 'skel'))
             update.version = self.version
             self._update_map_index(update)
-            
+            self._update_bch_cbd_site(update)
             logger.debug('%-70s [UPDATED]', update.absolute_url(1))
 
     #
@@ -82,6 +82,22 @@ class CustomContentUpdater(NaayaContentUpdater):
         map_index = portal_map._getOb('map_index')
         map_index.pt_edit(text=custom_map_index, content_type='')
         return map_index.getId()
+    
+    #
+    # Custom cbd-chm site updates
+    #
+    def _update_bch_cbd_site(self, portal):
+        if portal.getId() not in ('bch-cbd',):
+            return None
+        ftool = portal.getFormsTool()
+        for form_id in ['languages_box', 'folder_index', 'site_index']:
+            custom_form = portal.futRead(os.path.join(
+                CHM2BE_PRODUCT_PATH, 'skel', 'others', form_id + '.zpt'))
+            form = ftool._getOb(form_id, None)
+            if not form:
+                ftool.manage_addTemplate(id=form_id, title=form_id, file='')
+                form = ftool._getOb(form_id, None)
+            form.pt_edit(text=custom_form, content_type='')
 
 def register(uid):
     return CustomContentUpdater(uid)
