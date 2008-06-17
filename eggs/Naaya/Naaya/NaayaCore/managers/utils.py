@@ -51,18 +51,18 @@ from stripping_tool import stripping_tool
 
 #constants
 bad_chars = '!@#$%\\/:"*?<>| ,+&;\'()[]{}\xC4\xC5\xC1\xC0\xC2\xC3' \
-    '\xE4\xE5\xE1\xE0\xE2\xE3\xC7\xE7\xC9\xC8\xCA\xCB' \
-    '\xC6\xE9\xE8\xEA\xEB\xE6\xCD\xCC\xCE\xCF\xED\xEC' \
-    '\xEE\xEF\xD1\xF1\xD6\xD3\xD2\xD4\xD5\xD8\xF6\xF3' \
-    '\xF2\xF4\xF5\xF8\x8A\x9A\xDF\xDC\xDA\xD9\xDB\xFC' \
-    '\xFA\xF9\xFB\xDD\x9F\xFD\xFF\x8E\x9E'
+          '\xE4\xE5\xE1\xE0\xE2\xE3\xC7\xE7\xC9\xC8\xCA\xCB' \
+          '\xC6\xE9\xE8\xEA\xEB\xE6\xCD\xCC\xCE\xCF\xED\xEC' \
+          '\xEE\xEF\xD1\xF1\xD6\xD3\xD2\xD4\xD5\xD8\xF6\xF3' \
+          '\xF2\xF4\xF5\xF8\x8A\x9A\xDF\xDC\xDA\xD9\xDB\xFC' \
+          '\xFA\xF9\xFB\xDD\x9F\xFD\xFF\x8E\x9E'
 
 good_chars= '__________________________AAAAAA' \
-    'aaaaaaCcEEEE' \
-    'EeeeeeIIIIii' \
-    'iiNnOOOOOOoo' \
-    'ooooSssUUUUu' \
-    'uuuYYyyZz'
+          'aaaaaaCcEEEE' \
+          'EeeeeeIIIIii' \
+          'iiNnOOOOOOoo' \
+          'ooooSssUUUUu' \
+          'uuuYYyyZz'
 
 TRANSMAP = string.maketrans(bad_chars, good_chars)
 
@@ -256,7 +256,7 @@ class list_utils:
         """ eliminate duplicates from a list of objects """
         dict = {}
         for l_object in p_objects:
-                dict[l_object.absolute_url()] = l_object
+            dict[l_object.absolute_url()] = l_object
         return dict.values()
 
 class file_utils:
@@ -430,8 +430,8 @@ class utils:
         return separator.join(self.utConvertToList(something))
 
     def _ut_getattr(self, obj, attr):
-	""" Custom getattr used for utSortObjsListByAttr """
-	return getattr(obj, attr, None)
+        """ Custom getattr used for utSortObjsListByAttr """
+        return getattr(obj, attr, None)
 
     def utSortObjsListByAttr(self, p_list, p_attr, p_desc=1):
         """Sort a list of objects by an attribute values"""
@@ -537,6 +537,14 @@ class utils:
         """Encode a string using html_quote"""
         return html_quote(p_string)
 
+    
+    def utStringEscape(self, p_string):
+        """ Escape a string/unicode
+        """
+        if isinstance(p_string, unicode):
+            p_string = p_string.encode('unicode_escape')
+        return p_string.encode('string_escape')
+
     def utUrlEncode(self, p_string, qtype=0):
         """Encode a string using url_quote"""
         if qtype:
@@ -584,9 +592,9 @@ class utils:
         return l_tmp
 
     def utJavaScriptEncode(self, s):
-	"""Encode a string for javascript processing"""
-	regex = re.compile(r'([\]/.*+?<>|()[{}\\])')
-	return regex.sub(r'', s)
+        """Encode a string for javascript processing"""
+        regex = re.compile(r'([\]/.*+?<>|()[{}\\])')
+        return regex.sub(r'', s)
 
     def utJsEncode(self, p_string):
         """Encode a string for javascript processing"""
