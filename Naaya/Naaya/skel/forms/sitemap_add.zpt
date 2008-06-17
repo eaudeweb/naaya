@@ -55,7 +55,7 @@ function fTreeClick(expand)
 				</tal:block>
 			</td>
 			<td><img tal:attributes="src python:tree_node[0].icon" alt="" /></td>
-			<td><a tal:define="node_path python:tree_node[0].absolute_url(1); node_title python:tree_node[0].title" 
+			<td><a tal:define="node_path python:tree_node[0].absolute_url(1); node_title python:here.utStringEscape(tree_node[0].title)"
 				tal:attributes="href node_path; onclick string:window.opener.createKey('${node_path}', '${node_title}');; window.close();;" 
 				tal:content="python:tree_node[0].title_or_id()">folder</a></td>
 		</tr>
