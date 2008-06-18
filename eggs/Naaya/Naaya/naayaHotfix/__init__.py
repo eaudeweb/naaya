@@ -33,12 +33,12 @@ from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 
 from Products.Localizer.MessageCatalog import MessageCatalog
 from itools.resources import memory
-from itools.handlers import PO
 from Globals import PersistentMapping
 
 #patch for MessageCatalog
 def po_import(self, lang, data):
     """ """
+    from itools.handlers import PO
     messages = self._messages
 
     resource = memory.File(data)
