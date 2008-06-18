@@ -3,9 +3,17 @@ function createMarker(map, lat, lng, id, label, icon) {
 	var marker = new YMarker(point, icon);
 	marker.setSmartWindowColor("grey");
 	YEvent.Capture(marker, EventsList.MouseClick, function() { marker.openSmartWindow(document.getElementById(id).innerHTML);});
-	map.addOverlay(marker);
 	return marker.id;
 }
+
+function createMarker2(map, lat, lng, id, label, icon) {
+	var point = new YGeoPoint(lat, lng);
+	var marker = new YMarker(point, icon);
+	marker.setSmartWindowColor("grey");
+	YEvent.Capture(marker, EventsList.MouseClick, function() { marker.openSmartWindow(document.getElementById(id).innerHTML);});
+	return marker;
+}
+
 
 function createSimpleMarker(map, lat, lng, label, icon) {
 	var point = new YGeoPoint(lat, lng);
