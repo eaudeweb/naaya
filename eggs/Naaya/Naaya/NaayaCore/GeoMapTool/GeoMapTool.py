@@ -11,11 +11,11 @@
 #The Original Code is "GeoMapTool"
 #
 #The Initial Owner of the Original Code is European Environment
-#Agency (EEA). Portions created by Eau de Web are Copyright (C) 
+#Agency (EEA). Portions created by Eau de Web are Copyright (C)
 #2007 by European Environment Agency. All Rights Reserved.
 #
 #Contributor(s):
-#  Original Code: 
+#  Original Code:
 #        Cornel Nitu (Eau de Web)
 #Special thanks to Dragos Chirila (fourhooks.com)
 
@@ -290,7 +290,14 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         portal_ob = self.getSite()
         if geo_types:
             for res in self.searchGeoPoints(path, geo_types, geo_query, REQUEST):
-                if res.latitude is not None and res.longitude is not None:
+                try:
+                  latitude = float(res.latitude);
+                  longitude = float(res.longitude);
+                except:
+                  latitude = 0;
+                  longitude = 0;
+
+                if (latitude and longitude):
                     ra('%s|%s|mk_%s|%s|%s' % (self.utToUtf8(res.latitude),
                                               self.utToUtf8(res.longitude),
                                               self.utToUtf8(res.id),
@@ -392,7 +399,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 latitude, longitude = None, None
             else:
                 latitude, longitude = coordinates
-        
+
         if meta_type in container.get_pluggable_installed_meta_types():
             try:
                 ob = container.addNyGeoPoint(title=title, description=description, coverage='', keywords='', sortorder='', longitude=longitude, latitude=latitude, address=address, geo_type=geo_type, url=URL)

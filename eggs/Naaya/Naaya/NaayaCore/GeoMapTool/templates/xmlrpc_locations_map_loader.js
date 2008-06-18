@@ -18,16 +18,16 @@ function window_onload() {
 	showSelectedLocations();
 }
 
+var markerHash = new Array();
+
 function showSelectedLocations_request_handler()
 {
-	// clear map
 	map.removeMarkersAll();
 
-	// set markers (symbol icons)
 	var data = xmlhttp.responseText.split('\n\n'), b = '';
 	b = trim(data[1]);
 	if (b != '') document.getElementById('map_markers').innerHTML = b;
-
+	var p = new Array();
 	// put GeoPoints on map
 	var arrMarkers = trim(data[0]).split('\n');
 	var num_records = 0;
@@ -40,13 +40,37 @@ function showSelectedLocations_request_handler()
 			id = m[2].toString();
 			label = m[3].toString();
 			mapMarker = m[4].toString();
-			mapid = createMarker(map, lat, lng, id, label, eval(mapMarker));
+			marker = createMarker2(map, lat, lng, id, label, eval(mapMarker));
+			markerHash[ marker.id ] = mapMarker;
+			p.push(marker);
 			num_records++;
 		}
 	}
-
-	// update record counter
+	for( i = 0; i < p.length; i++)
+		map.addOverlay(p[i]);
 	document.getElementById('record_counter').innerHTML = num_records.toString();
+}
+
+function showCategory( idCategory )
+{
+	var fullCat = 'mk_' + idCategory;
+	var markerArr = map.getMarkerIDs();
+	for( i = 0; i < markerArr.length; i++ )
+	{
+		var marker = map.getMarkerObject(markerArr[ i ]);
+		var markerCat = markerHash[ marker.id ];
+		if( markerCat == fullCat )
+		{
+			if( marker.ishidden() )
+			{
+				marker.unhide();
+			}
+			else 
+			{
+				marker.hide();
+			}
+		}
+	}
 }
 
 function showSelectedLocations()
