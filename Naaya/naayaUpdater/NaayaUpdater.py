@@ -892,6 +892,9 @@ class NaayaUpdater(Folder):
         """ make changes to the CSSSheet and return it"""
         ob_sheet = self.makeCSSSheet(style)
         ob_rule = self.findCSSRule(ob_sheet, class_name)
+        if not ob_rule:
+            ob_rule = self.makeCSSRule(class_name)
+            self.addCSSRuleToSheet(ob_sheet, ob_rule)
         new_dec = self.makeCSSDeclaration(style_declaration)
         ob_rule.style = new_dec
         return ob_sheet
@@ -913,7 +916,11 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'getCSSRuleText')
     def getCSSRuleText(self, sheet=None, string=''):
         """ returns the selector text """
-        return self.findCSSRule(sheet, string).cssText
+        ob_rule = self.findCSSRule(sheet, string)
+        if ob_rule:
+            return ob_rule.cssText
+        else:
+            return 'CSS Rule does not exist in specified style.'
 
     security.declareProtected(view_management_screens, 'makeCSSSheet')
     def makeCSSSheet(self, style=''):
@@ -930,6 +937,20 @@ class NaayaUpdater(Folder):
         ob = CSSParser(log=log)
         ob.parseString(style)
         return ob.getStyleSheet()
+
+    security.declareProtected(view_management_screens, 'makeCSSRule')
+    def makeCSSRule(self, selector=''):
+        """ creates a new CSS Rule with the given selector text """
+        
+        ob_rule = StyleRule()
+        ob_rule.selectorText = selector
+        return ob_rule
+
+    security.declareProtected(view_management_screens, 'addCSSRuleToSheet')
+    def addCSSRuleToSheet(self, sheet=None, rule=None):
+        """ appends the given rule to the specified sheet"""
+        
+        sheet.addRule(rule)
 
     security.declareProtected(view_management_screens, 'makeCSSDeclaration')
     def makeCSSDeclaration(self, style_declaration=[]):

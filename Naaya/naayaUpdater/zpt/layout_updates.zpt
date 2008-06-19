@@ -68,7 +68,7 @@ div.form-field-declaration {
 	</div>
 
 	<div class="form-field">
-		<label for="class-name">Modify class (exact selector, e.g. <em>#breadcrumbtrail a:hover</em>):</label>
+		<label for="class-name">Modify class (exact selector, e.g. <em>#breadcrumbtrail a:hover</em>) - <strong>If the selector specified here does not exist, it will be created</strong>:</label>
 		<input type="text" id="class-name" name="class_name" />
 	</div>
 
