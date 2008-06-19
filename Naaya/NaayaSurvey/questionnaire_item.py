@@ -59,3 +59,4 @@ class questionnaire_item(Implicit, NyProperties):
         self.expirationdate = expirationdate
         self.notify_owner = notify_owner
         self.notify_respondents = notify_respondents
+        self.allow_overtime = int(kwargs.get('allow_overtime', '0'))
