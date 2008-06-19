@@ -167,7 +167,6 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         expirationdate = self.process_releasedate(expirationdate)
         kwargs['expirationdate'] = expirationdate
 
-        self.allow_overtime = int(kwargs.get('allow_overtime', '0'))
         self.save_properties(**kwargs)
         self.updatePropertiesFromGlossary(lang)
         self.recatalogNyObject(self)

@@ -96,7 +96,14 @@ function fSet(ctrl, value)
 			<option value="LET_THEM_CHOOSE_NO" tal:attributes="selected python:notify_respondents == 'LET_THEM_CHOOSE_NO'" i18n:translate="">Let them choose (default is no)</option>
 		</select>
 	</div>
-
+	<!-- Allow overtime -->
+	<div class="field">
+		<label for="allow_overtime" i18n:translate="">Allow posting answers after the survey expiration date</label>
+		<select id="allow_overtime" name="allow_overtime">
+			<option value="0" i18n:translate="">No</option>
+			<option value="1" i18n:translate="">Yes</option>
+		</select>
+	</div>
 	<!-- Submit buttons-->
 	<div class="field">
 		<input type="hidden" name="redirect_url" value="index_html" />
