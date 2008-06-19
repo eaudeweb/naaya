@@ -14,6 +14,7 @@
 		<form id="folder_zipdownload" title="Download items as zip archive"/>
 		<form id="googlesearchinterfaces_html" title="List all GoogleSearchInterfaces"/>
 		<form id="site_admin_linkchecker" title="Portal administration - URL checker"/>
+		<form id="site_admin_addrole" title="Portal administration - add role"/>
 	</forms>
 	<layout default_skin_id="envirowindows" default_scheme_id="EW-skin-00">
 		<skin id="envirowindows" title="EnviroWindows">
