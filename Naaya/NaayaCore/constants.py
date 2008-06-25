@@ -102,6 +102,9 @@ ID_NOTIFICATIONTOOL = 'portal_notification'
 TITLE_NOTIFICATIONTOOL = 'Portal notification'
 ID_PROFILESTOOL = 'portal_profiles'
 TITLE_PROFILESTOOL = 'Portal profiles'
+ID_CONTROLSTOOL = 'portal_control'
+TITLE_CONTROLSTOOL = 'Portal control'
+
 
 PREFIX_PORTLET = 'portlet_'
 PREFIX_SUFIX_LOCALCHANNEL = 'lc%s_%s_rdf'

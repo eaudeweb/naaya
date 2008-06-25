@@ -24,23 +24,22 @@ function showSelectedLocations_request_handler()
 {
 	map.removeMarkersAll();
 
-	var data = xmlhttp.responseText.split('\n\n'), b = '';
-	b = trim(data[1]);
-	if (b != '') document.getElementById('map_markers').innerHTML = b;
+	var data = xmlhttp.responseText;
 	var p = new Array();
 	// put GeoPoints on map
-	var arrMarkers = trim(data[0]).split('\n');
+	var arrMarkers = trim(data).split('$$');
 	var num_records = 0;
 	for (var i = 0; i < arrMarkers.length; i++) {
 		var b = trim(arrMarkers[i]);
 		if (b != '') {
-			var m = b.split('|');
+			var m = b.split('##');
 			lat = parseFloat(m[0]);
 			lng = parseFloat(m[1]);
 			id = m[2].toString();
 			label = m[3].toString();
 			mapMarker = m[4].toString();
-			marker = createMarker2(map, lat, lng, id, label, eval(mapMarker));
+			tooltip = m[5].toString();
+			marker = createMarker2(map, lat, lng, id, label, eval(mapMarker), tooltip);
 			markerHash[ marker.id ] = mapMarker;
 			p.push(marker);
 			num_records++;

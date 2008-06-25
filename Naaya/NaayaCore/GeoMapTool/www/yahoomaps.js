@@ -6,11 +6,11 @@ function createMarker(map, lat, lng, id, label, icon) {
 	return marker.id;
 }
 
-function createMarker2(map, lat, lng, id, label, icon) {
+function createMarker2(map, lat, lng, id, label, icon, tooltip) {
 	var point = new YGeoPoint(lat, lng);
 	var marker = new YMarker(point, icon);
 	marker.setSmartWindowColor("grey");
-	YEvent.Capture(marker, EventsList.MouseClick, function() { marker.openSmartWindow(document.getElementById(id).innerHTML);});
+	YEvent.Capture(marker, EventsList.MouseClick, function() { marker.openSmartWindow(tooltip.toString());});
 	return marker;
 }
 

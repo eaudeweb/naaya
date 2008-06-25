@@ -38,6 +38,8 @@ from LayoutTool import LayoutTool
 from NotificationTool import NotificationTool
 from ProfilesTool import ProfilesTool
 from EditorTool import EditorTool
+from ControlsTool import NyControlSettings
+
 try:
     from GeoMapTool import GeoMapTool
     geo_installed = True
@@ -150,6 +152,15 @@ def initialize(context):
                 ),
         icon = 'EditorTool/www/EditorTool.gif'
         )
+    context.registerClass(
+        NyControlSettings.NyControlSettings,
+        permission = 'Add NyControl',
+        constructors = (
+                NyControlSettings.manage_addNyControlSettings,
+                ),
+        icon = 'ControlsTool/www/ControlsTool.gif'
+        )
+
 
     if geo_installed:
         context.registerClass(
@@ -165,6 +176,7 @@ misc_ = {
     'PropertiesTool.gif':ImageFile('PropertiesTool/www/PropertiesTool.gif', globals()),
     'CatalogTool.gif':ImageFile('CatalogTool/www/CatalogTool.gif', globals()),
     'EmailTool.gif':ImageFile('EmailTool/www/EmailTool.gif', globals()),
+    'ControlsTool.gif':ImageFile('ControlsTool/www/ControlsTool.gif', globals()),
     'EmailTemplate.gif':ImageFile('EmailTool/www/EmailTemplate.gif', globals()),
     'TranslationsTool.gif':ImageFile('TranslationsTool/www/TranslationsTool.gif', globals()),
     'SyndicationTool.gif':ImageFile('SyndicationTool/www/SyndicationTool.gif', globals()),

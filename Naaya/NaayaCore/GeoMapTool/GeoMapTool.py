@@ -228,14 +228,19 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             @rtype: list
         """
         from Products.NaayaContent.NyGeoPoint.NyGeoPoint import NyGeoPoint # TODO move outside method
+
+        meta_list = [NyGeoPoint.meta_type]
+        for meta in self.getControlsTool().settings.keys():
+            meta_list.append(meta)
+
         site_ob = self.getSite()
         results = []
         base_kw = {'approved': approved}
         if geo_types is not None:
             base_kw['geo_type'] = geo_types
         if query:
-            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=NyGeoPoint.meta_type, path=path, title=query, **base_kw))
-            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=NyGeoPoint.meta_type, path=path, address=query, **base_kw))
+            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, title=query, **base_kw))
+            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, address=query, **base_kw))
             if REQUEST:
                 langs = REQUEST.get('languages', self.gl_get_selected_language())
             else:
@@ -244,12 +249,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             for lang in langs:
                 kw = {'objectkeywords_%s' % (lang,) : query}
                 kw.update(base_kw)
-                results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=NyGeoPoint.meta_type, path=path, **kw))
+                results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **kw))
         else:
-            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=NyGeoPoint.meta_type, path=path, **base_kw))
+            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **base_kw))
         #LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG, 'searchGeoPoints%s -> %s' % (
         #                repr((path, geo_types, query, REQUEST)),
         #                repr(results)))
+
         return self.utEliminateDuplicatesByURL(results)
 
     security.declareProtected(view, 'downloadLocationsKml')
@@ -298,16 +304,16 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                   longitude = 0;
 
                 if (latitude and longitude):
-                    ra('%s|%s|mk_%s|%s|%s' % (self.utToUtf8(res.latitude),
+                    ra('%s##%s##mk_%s##%s##%s##%s$$' % (self.utToUtf8(res.latitude),
                                               self.utToUtf8(res.longitude),
                                               self.utToUtf8(res.id),
                                               self.utToUtf8(self.utJavaScriptEncode(res.title_or_id())),
-                                              'mk_%s' % self.utToUtf8(res.geo_type)))
-                    t.append(res.marker_html())
-        i = ''.join(t)
-        REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
-        return '%s\n\n%s' % ('\n'.join(r), i)
+                                              'mk_%s' % self.utToUtf8(res.geo_type),
+                                              res.marker_html()
+                                              ))
 
+        REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
+        return ''.join(r)
 
     security.declareProtected(view, 'xrjs_simple_feed')
     def xrjs_simple_feed(self, key, show, REQUEST):
