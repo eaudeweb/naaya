@@ -66,6 +66,11 @@ function fSet(ctrl, value)
 		<label for="pick-coverage" class="invisible" i18n:translate="">Pick coverage</label><input type="button" value="Pick" id="pick-coverage" tal:attributes="onclick string:javascript:fPick('${coverage_glossary/absolute_url}/GlossMap_html?ctrl=coverage');" />
 	</tal:block>
 </div>
+
+<!-- Map widget -->
+<tal:block condition="python:here.getControlsTool().checkControl(here.meta_type)"
+		   content="structure python:here.map_widget_add_html(kind=here.meta_type)" />
+
 <div class="field" tal:define="keywords_glossary here/get_keywords_glossary">
 	<label for="keywords"><span i18n:translate="" tal:omit-tag="">Keywords</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'keywords')" class="mandatory_field"> *</span></label>
 	<tal:block tal:condition="python:keywords_glossary is not None">
