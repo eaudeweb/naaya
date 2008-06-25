@@ -86,6 +86,10 @@ function fSet(ctrl, value)
     <input type="checkbox" name="discussion" id="discussion" tal:attributes="checked python:test(here.getSession('discussion', ''), 'checked', '')" />
 </div>
 
+<!-- Map widget -->
+<tal:block condition="python:here.getControlsTool().checkControl(kind)"
+		   content="structure python:here.map_widget_add_html(kind=kind)" />
+
 <tal:block metal:define-slot="custom_properties" />
 
 <div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(kind)">
