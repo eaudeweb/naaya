@@ -21,6 +21,7 @@
 # Dragos Chirila, Finsiel Romania
 # Alin Voinea, Eau de Web
 
+
 #Python imports
 import urllib
 from os.path import join, isfile
@@ -67,6 +68,7 @@ from Products.NaayaCore.NotificationTool.NotificationTool import manage_addNotif
 from Products.NaayaCore.ProfilesTool.ProfilesTool import manage_addProfilesTool
 from Products.NaayaCore.EditorTool.EditorTool import manage_addEditorTool
 from Products.NaayaCore.GeoMapTool.GeoMapTool import manage_addGeoMapTool
+from Products.NaayaCore.ControlsTool.NyControlSettings import manage_addNyControlSettings
 from Products.NaayaBase.NyBase import NyBase
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyPermissions import NyPermissions
@@ -220,6 +222,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         manage_addEditorTool(self)
         manage_addGeoMapTool(self)
         manage_addErrorLog(self)
+        manage_addNyControlSettings(self)
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self, exclude_meta_types=[]):
@@ -709,6 +712,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declarePublic('getGeoMapTool')
     def getGeoMapTool(self): return self._getOb(ID_GEOMAPTOOL, None)
 
+    security.declarePublic('getControlsTool')
+    def getControlsTool(self): return self._getOb(ID_CONTROLSTOOL, None)
+
     #objects absolute/relative path getters
     security.declarePublic('getSitePath')
     def getSitePath(self, p=0): return self.absolute_url(p)
@@ -1004,6 +1010,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         for l_prop in self.getDynamicPropertiesTool().getDynamicProperties(meta_type):
             try: keywords[l_prop.id] = REQUEST.get(l_prop.id, '')
             except: keywords[l_prop.id] = ''
+
+        ct = self.getControlsTool()
+        if ct.checkControl(meta_type):
+            for k in ct.getMapControlProps():
+                try: keywords[k] = REQUEST.get(k, '')
+                except: keywords[k] = ''
+
         return keywords
 
     def getItemsAge(self): return self.search_age

@@ -150,6 +150,10 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked python:test(here.getSession('discussion', here.discussion), 'checked', '')" />
 </div>
 
+<!-- Map widget -->
+<tal:block condition="python:here.getControlsTool().checkControl(here.meta_type)"
+		   content="structure here/map_widget_edit_html" />
+
 <!-- Custom properties -->
 <tal:block metal:define-slot="custom_properties" />
 
