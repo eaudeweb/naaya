@@ -37,8 +37,9 @@ from NyBase import NyBase
 from NyPermissions import NyPermissions
 from NyComments import NyComments
 from NyDublinCore import NyDublinCore
+from NyControls import NyMapControl
 
-class NyItem(SimpleItem, NyComments, NyBase, NyPermissions, NyDublinCore):
+class NyItem(SimpleItem, NyComments, NyBase, NyPermissions, NyDublinCore, NyMapControl):
     """
     Class that implements the Naaya simple item type of object.
     """
@@ -56,12 +57,14 @@ class NyItem(SimpleItem, NyComments, NyBase, NyPermissions, NyDublinCore):
         NyBase.__dict__['__init__'](self)
         NyComments.__dict__['__init__'](self)
         NyDublinCore.__dict__['__init__'](self)
+        NyMapControl.__dict__['__init__'](self)
 
     def manage_afterAdd(self, item, container):
         """
         This method is called, whenever _setObject in ObjectManager gets called.
         """
         SimpleItem.inheritedAttribute('manage_afterAdd')(self, item, container)
+        self.setMapValues()
         self.catalogNyObject(self)
 
     def manage_beforeDelete(self, item, container):
