@@ -26,7 +26,7 @@
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <table border="0" cellspacing="2" cellpadding="2">
 <tr tal:condition="here/hasSmallPicture">
-	<td colspan="2"><a tal:condition="here/hasBigPicture" tal:attributes="href string:${here/absolute_url}/picture_html"><img src="getSmallPicture" alt="" /></a>
+	<td colspan="2"><a tal:condition="here/hasBigPicture" tal:attributes="href string:${here/absolute_url}/picture_html"><img src="getSmallPicture" alt="Click here to show large image" i18n:attributes="alt" /></a>
 	<img tal:condition="python:not here.hasBigPicture()" src="getSmallPicture" alt="" /></td>
 </tr>
 <tr tal:condition="python:here.resourceurl and (here.resourceurl !='http://')">
