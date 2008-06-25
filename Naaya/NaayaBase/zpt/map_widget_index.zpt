@@ -1,5 +1,5 @@
 <tal:block define="portal_map here/getGeoMapTool">
-<tal:block condition="python: here.longitude and here.utIsFloat(here.longitude) and here.latitude and here.utIsFloat(here.latitude)">
+<tal:block condition="python: here.longitude and here.utIsFloat(here.longitude, 0) and here.latitude and here.utIsFloat(here.latitude, 0)">
 	<script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${portal_map/mapsapikey}"></script>
 	<script type="text/javascript" src="misc_/NaayaCore/remote.js"></script>
 	<script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
