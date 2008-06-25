@@ -8,6 +8,7 @@
 			</span>
 		</span>
 </h1>
+
 <tal:block tal:condition="python:here.checkPermissionEditObject()">
 <div id="admin_this_folder">
 	<tal:block tal:condition="python: not here.hasVersion()">
@@ -18,6 +19,11 @@
 	<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()" i18n:translate="">This item has been checked out by another user</strong>
 </div>
 </tal:block>
+
+<!-- Map widget -->
+<tal:block condition="python:here.getControlsTool().checkControl(here.meta_type)"
+		   content="structure python:here.map_widget_index_html()" />
+
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
 <table border="0" cellspacing="2" cellpadding="2">
