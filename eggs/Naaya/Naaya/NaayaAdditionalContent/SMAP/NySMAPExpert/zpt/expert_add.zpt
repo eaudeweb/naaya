@@ -103,6 +103,10 @@
 	<tal:block tal:content="structure python:record.render(record.defaultvalue)">dynamic html control</tal:block>
 </div>
 
+<!-- Map widget -->
+<tal:block condition="python:here.getControlsTool().checkControl(kind)"
+		   content="structure python:here.map_widget_add_html(kind=kind)" />
+
 <div class="field">
 	<input type="submit" value="Submit" i18n:attributes="value" />
 </div>
