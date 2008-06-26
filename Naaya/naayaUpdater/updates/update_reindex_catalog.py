@@ -24,37 +24,27 @@ class CustomContentUpdater(NaayaContentUpdater):
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya content types with geocoding properties'
-        self.description = 'Step 2 - Add geocoding properties'
+        self.description = 'Step 1 - Reindex portal catalog'
         self.update_meta_type = 'Naaya Content'
-        self.props = ['longitude', 'latitude', 'address', 'url', 'geo_type']
 
     def _verify_doc(self, doc):
         # Verify ZODB storage
-
-        for prop in self.props:
-            if not hasattr(doc, prop):
-                return doc
-            logger.debug('%-15s %s', 'Content has property %s' % prop, doc.absolute_url())
-        return None
+        return doc
 
     def _list_updates(self):
         """ Return all objects that need update"""
         utool = self.aq_inner.aq_parent
         portals = utool.getPortals()
         for portal in portals:
-            content_types = portal.get_pluggable_installed_meta_types()
-            objects = portal.getCatalogedObjects(meta_type=content_types)
-            for ny_content in objects:
-                if not self._verify_doc(ny_content):
-                    continue
-                yield ny_content
+            if not self._verify_doc(portal):
+                continue
+            yield portal
 
     def _update(self):
         updates = self._list_updates()
         for update in updates:
-            logger.debug('%-15s %s', 'Update content', update.absolute_url())
-            for prop in self.props:
-                setattr(update, prop, '')
+            logger.debug('%-15s %s', 'Reindex catalog', update.absolute_url())
+            update.getCatalogTool().refreshCatalog()
 
 def register(uid):
     return CustomContentUpdater(uid)
