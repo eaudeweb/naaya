@@ -83,13 +83,13 @@ class NyMapControl:
         """ % (self.utToUtf8(self.title_or_id()), self.utToUtf8(self.description), self.absolute_url())
 
     #zmi pages
-    security.declareProtected(view_management_screens, 'map_widget_add_html')
+    security.declareProtected(view, 'map_widget_add_html')
     map_widget_add_html = PageTemplateFile('zpt/map_widget_add', globals())
 
-    security.declareProtected(view_management_screens, 'map_widget_edit_html')
+    security.declareProtected(view, 'map_widget_edit_html')
     map_widget_edit_html = PageTemplateFile('zpt/map_widget_edit', globals())
 
-    security.declareProtected(view_management_screens, 'map_widget_index_html')
+    security.declareProtected(view, 'map_widget_index_html')
     map_widget_index_html = PageTemplateFile('zpt/map_widget_index', globals())
 
 InitializeClass(NyMapControl)
