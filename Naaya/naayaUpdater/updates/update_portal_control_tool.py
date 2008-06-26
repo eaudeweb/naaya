@@ -24,7 +24,7 @@ class CustomContentUpdater(NaayaContentUpdater):
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya content types with geocoding properties'
-        self.description = "Step 3 - Create 'portal_control'"
+        self.description = "Step 1 - Create 'portal_control'"
         self.update_meta_type = 'Naaya Content'
 
     def _verify_doc(self, doc):

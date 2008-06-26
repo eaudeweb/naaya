@@ -24,7 +24,7 @@ class CustomContentUpdater(NaayaContentUpdater):
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya content types with geocoding properties'
-        self.description = 'Step 2 - Add geocoding properties'
+        self.description = 'Step 3 - Add geocoding properties'
         self.update_meta_type = 'Naaya Content'
         self.props = ['longitude', 'latitude', 'address', 'url', 'geo_type']
 
