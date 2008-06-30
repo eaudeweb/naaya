@@ -614,7 +614,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/xml')
             return """<?xml version="1.0" encoding="utf-8"?>
             <tree id="0">
-                <item text="All" id="landscape_all" open="1" im0="tombs.gif" im1="tombs.gif" im2="iconSafe.gif" call="1" select="1">
+                <item text="All" id="cat_all" open="1" im0="tombs.gif" im1="tombs.gif" im2="iconSafe.gif" call="1" select="1">
                 %s
                 </item>
             </tree>
