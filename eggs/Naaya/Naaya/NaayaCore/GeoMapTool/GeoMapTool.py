@@ -608,7 +608,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             r = []
             for symbol in symbols_list:
                 s = """ <item text="%s" id="%s" im0="%s" im1="folderOpen.gif" im2="folderClosed.gif" />""" \
-                  % (self.utXmlEncode(symbol.title), self.utXmlEncode(symbol.id), '%s/getSymbolPicture?id=%s' % ( self.absolute_url(), symbol.id ) )
+                  % (self.utXmlEncode(symbol.title), self.utXmlEncode(symbol.id), 'portal_map/getSymbolPicture?id=%s' % ( symbol.id ) )
                 r.append(s)
 
             self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/xml')
