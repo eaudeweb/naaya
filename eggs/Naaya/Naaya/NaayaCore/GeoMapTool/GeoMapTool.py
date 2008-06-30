@@ -209,7 +209,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
 
     security.declareProtected(view, 'searchGeoPoints')
-    def searchGeoPoints(self, path='', geo_types=None, query='', approved=True, REQUEST=None):
+    def searchGeoPoints(self, path='', geo_types=None, query='', approved=True, landscape_type=[], administrative_level=[], REQUEST=None):
         """Returns all the GeoPoints that match the specified criteria.
 
             @param path: where to search
@@ -235,9 +235,22 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         site_ob = self.getSite()
         results = []
-        base_kw = {'approved': approved}
-        if geo_types is not None:
+
+        if geo_types:
+            base_kw = {'approved': approved}
             base_kw['geo_type'] = geo_types
+            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **base_kw))
+
+        if landscape_type:
+            base_kw = {'approved': approved}
+            base_kw['landscape_type'] = landscape_type
+            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **base_kw))
+
+        if administrative_level:
+            base_kw = {'approved': approved}
+            base_kw['administrative_level' ] = administrative_level
+            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **base_kw))
+
         if query:
             results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, title=query, **base_kw))
             results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, address=query, **base_kw))
@@ -250,8 +263,6 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 kw = {'objectkeywords_%s' % (lang,) : query}
                 kw.update(base_kw)
                 results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **kw))
-        else:
-            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **base_kw))
         #LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG, 'searchGeoPoints%s -> %s' % (
         #                repr((path, geo_types, query, REQUEST)),
         #                repr(results)))
@@ -338,7 +349,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             icon_url = '%s/getSymbolPicture?id=%s' % (self.absolute_url(), symbol.id)
             if icon_url is not None:
                 out_a('mk_%s.src = "%s";' % (symbol.id, icon_url))
-                out_a('mk_%s.size = new YSize(22, 22);' % symbol.id)
+                out_a('mk_%s.size = new YSize(17, 17);' % symbol.id)
                 out_a('mk_%s.offsetSmartWindow = new YCoordPoint(6, 11);' % symbol.id)
         return '\n'.join(output)
 
@@ -535,6 +546,91 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if skey in ['title', 'parent']:
             r = self.utSortObjsListByAttr(r, skey, rkey)
         return r
+
+
+
+#########DESTINET#########
+    security.declareProtected(view, 'search_geopoints_frontpage')
+    def search_geopoints_frontpage(self, arrStakeholders='', arrSupplyChains='', arrAdministrativeLevels='', arrLandscapeTypes='', path='', geo_types=None, geo_query=None, REQUEST=None):
+        """ """
+        arr_geo_types = []
+        arr_geo_types.extend( arrStakeholders.split(',') );
+        arr_geo_types.extend( arrSupplyChains.split(',') );
+
+        landscape_types  = arrLandscapeTypes.split(',');
+        administrative_levels = arrAdministrativeLevels.split(',');
+
+        r = []
+        ra = r.append
+        portal_ob = self.getSite()
+        if arr_geo_types:
+            arr = self.searchGeoPoints(path, arr_geo_types, geo_query, administrative_level=administrative_levels, landscape_type=landscape_types);
+            for res in arr:
+                try:
+                  latitude = float(res.latitude);
+                  longitude = float(res.longitude);
+                except:
+                  latitude = 0;
+                  longitude = 0;
+
+                if (latitude and longitude):
+                    ra('%s##%s##mk_%s##%s##%s##%s$$' % (self.utToUtf8(res.latitude),
+                                              self.utToUtf8(res.longitude),
+                                              self.utToUtf8(res.id),
+                                              self.utToUtf8(self.utJavaScriptEncode(res.title_or_id())),
+                                              'mk_%s' % self.utToUtf8(res.geo_type),
+                                              res.marker_html()
+                                              ))
+
+        REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
+        return ''.join(r)
+
+
+
+    def create_xml_for_tabs(self, symbols_list=None):
+        if symbols_list is not None and len(symbols_list) > 0:
+            r = []
+            for symbol in symbols_list:
+                s = """ <item text="%s" id="%s" im0="%s" im1="folderOpen.gif" im2="folderClosed.gif" />""" \
+                  % (self.utXmlEncode(symbol.title), self.utXmlEncode(symbol.id), '%s/getSymbolPicture?id=%s' % ( self.absolute_url(), symbol.id ) )
+                r.append(s)
+
+            self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/xml')
+            return """<?xml version="1.0" encoding="utf-8"?>
+            <tree id="0">
+                <item text="All" id="landscape_all" open="1" im0="tombs.gif" im1="tombs.gif" im2="iconSafe.gif" call="1" select="1">
+                %s
+                </item>
+            </tree>
+            """ % ''.join(r)
+
+    def get_stakeholders_xml(self):
+        """ """
+        parents = self.getParentsList()
+        if parents and len( parents ) > 1:
+            return self.create_xml_for_tabs( self.getSymbolChildren(parents[0].id) );
+        return """<?xml version="1.0" encoding="utf-8"?><tree id="0"></tree>"""
+
+
+    def get_supplyChain_xml(self):
+        """ """
+        parents = self.getParentsList()
+        if parents and len( parents ) > 1:
+            return self.create_xml_for_tabs( self.getSymbolChildren(parents[1].id) );
+        return """<?xml version="1.0" encoding="utf-8"?><tree id="0"></tree>"""
+
+
+    def get_administrative_xml(self):
+        """ """
+        adminlist = self.getPortletsTool().getRefListById('administrative_level').get_list()
+        return self.create_xml_for_tabs( adminlist );
+
+
+    def get_landscape_xml(self):
+        """ """
+        adminlist = self.getPortletsTool().getRefListById('landscape_type').get_list()
+        return self.create_xml_for_tabs( adminlist );
+
 
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
