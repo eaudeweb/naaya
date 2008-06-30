@@ -229,6 +229,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         """
         from Products.NaayaContent.NyGeoPoint.NyGeoPoint import NyGeoPoint # TODO move outside method
 
+#        print "geo_types=", geo_types
+#        print "landscape_type=", landscape_type
+#        print "administrative_level=", administrative_level
+
+
         meta_list = [NyGeoPoint.meta_type]
         for meta in self.getControlsTool().settings.keys():
             meta_list.append(meta)
@@ -239,17 +244,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if geo_types:
             base_kw = {'approved': approved}
             base_kw['geo_type'] = geo_types
-            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **base_kw))
 
         if landscape_type:
-            base_kw = {'approved': approved}
             base_kw['landscape_type'] = landscape_type
-            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **base_kw))
 
         if administrative_level:
-            base_kw = {'approved': approved}
             base_kw['administrative_level' ] = administrative_level
-            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **base_kw))
+
 
         if query:
             results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, title=query, **base_kw))
@@ -266,6 +267,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         #LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG, 'searchGeoPoints%s -> %s' % (
         #                repr((path, geo_types, query, REQUEST)),
         #                repr(results)))
+        else:
+            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **base_kw))
+#            print "results=", results
 
         return self.utEliminateDuplicatesByURL(results)
 
@@ -554,11 +558,23 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     def search_geopoints_frontpage(self, arrStakeholders='', arrSupplyChains='', arrAdministrativeLevels='', arrLandscapeTypes='', path='', geo_types=None, geo_query=None, REQUEST=None):
         """ """
         arr_geo_types = []
-        arr_geo_types.extend( arrStakeholders.split(',') );
-        arr_geo_types.extend( arrSupplyChains.split(',') );
+        if arrStakeholders:
+            arr_geo_types.extend( arrStakeholders.split(',') );
 
-        landscape_types  = arrLandscapeTypes.split(',');
-        administrative_levels = arrAdministrativeLevels.split(',');
+        if arrSupplyChains:
+            arr_geo_types.extend( arrSupplyChains.split(',') );
+
+        landscape_types = []
+        if arrLandscapeTypes:
+            landscape_types  = arrLandscapeTypes.split(',');
+        else:
+            landscape_types = ['']
+
+        administrative_levels = []
+        if arrAdministrativeLevels:
+            administrative_levels = arrAdministrativeLevels.split(',');
+        else:
+            administrative_levels = ['']
 
         r = []
         ra = r.append
