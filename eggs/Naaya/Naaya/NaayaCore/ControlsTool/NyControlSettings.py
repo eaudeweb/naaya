@@ -47,12 +47,35 @@ class NyControlSettings(Folder):
         self.title = title
         self.settings={}
 
-    def saveSettings(self, enabled_for=[], REQUEST=None):
+    def saveSettings(self, enabled_for=[], add_props=False, REQUEST=None):
         """ """
-        #TODO: to save as values (image src, label)
-        self.settings = {}
-        for k in enabled_for:
-            self.settings[k] = True
+        if add_props: add_props = True
+
+        old_settings = self.settings.keys()
+        new_settings = enabled_for
+
+        to_remove = []
+        to_add = []
+
+        for s in old_settings:
+            if s not in new_settings:
+                to_remove.append(s)
+
+        for s in new_settings:
+            if s not in old_settings:
+                to_add.append(s)
+            elif not self.hasAdditionalProperties(s) and add_props:
+                self.add_additionalProperties(s)
+
+        for s in to_remove:
+            del self.settings[s]
+            if add_props:
+                self.del_additionalProperties(s)
+
+        for s in to_add:
+            self.settings[s] = True
+            if add_props:
+                self.add_additionalProperties(s)
         self._p_changed = 1
 
     def checkControl(self, meta_type=''):
@@ -67,6 +90,53 @@ class NyControlSettings(Folder):
         """ """
         #TODO: this list should be dynamic and defined via ZMI
         return ['longitude', 'latitude', 'address', 'url', 'geo_type']
+
+    def del_additionalProperties(self, name):
+        props = ['landscape_type', 'administrative_level']
+        dp_tool = self.getDynamicPropertiesTool()
+        if hasattr(dp_tool, name):
+            dp_item = dp_tool._getOb(name)
+            try:
+                dp_item.manageDeleteDynamicProperties(props)
+            except KeyError:
+                pass
+
+    def add_additionalProperties(self, name):
+        properties={'landscape_type': {'name': 'Landscape type', 
+                                       'default': 'Coastal', 
+                                       'values': ['Coastal', 'Marine', 'Mountain', 'Protected', 'Rural', 'Urban']
+                                      }, 
+                    'administrative_level': {'name': 'Administrative level', 
+                                             'default': 'Global', 
+                                             'values': ['Global', 'Local', 'National', 'Regional', 'Sub-Global']
+                                            }
+                   }
+        dp_tool = self.getDynamicPropertiesTool()
+        ct_tool = self.getCatalogTool()
+
+        if not hasattr(dp_tool, name):
+            dp_tool.manage_addDynamicPropertiesItem(id=name)
+        dp_item = dp_tool._getOb(name)
+        for prop in properties.keys():
+            dp_item.manageAddDynamicProperty(id=prop,
+                                             name=properties[prop]['name'],
+                                             searchable='1',
+                                             type='selection',
+                                             defaultvalue=properties[prop]['default'],
+                                             values='\r\n'.join(properties[prop]['values']),
+                                             )
+            try:
+                ct_tool.addIndex(prop, 'FieldIndex', prop)
+            except:
+                pass
+            try:
+                ct_tool.manage_reindexIndex(prop)
+            except:
+                pass
+
+    def hasAdditionalProperties(self, name):
+        dp_tool = self.getDynamicPropertiesTool()
+        return name in dp_tool.getDynamicProperties(name)
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_control_generic')
