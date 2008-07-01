@@ -554,6 +554,54 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
 
 #########DESTINET#########
+
+    security.declareProtected(view, 'downloadLocationsKml2')
+    def downloadLocationsKml2(self, arrStakeholders='', arrSupplyChains='', arrAdministrativeLevels='', arrLandscapeTypes='', path='', geo_types=None, geo_query=None, REQUEST=None):
+        """Returns the selected locations as a KML file"""
+        path = path or '/'
+        arr_geo_types = []
+        if arrStakeholders:
+            arr_geo_types.extend( arrStakeholders.split(',') );
+
+        if arrSupplyChains:
+            arr_geo_types.extend( arrSupplyChains.split(',') );
+
+        landscape_types = []
+        if arrLandscapeTypes:
+            landscape_types  = arrLandscapeTypes.split(',');
+        else:
+            landscape_types = ['']
+
+        administrative_levels = []
+        if arrAdministrativeLevels:
+            administrative_levels = arrAdministrativeLevels.split(',');
+        else:
+            administrative_levels = ['']
+
+        output = []
+        out_app = output.append
+
+        kml = kml_generator()
+        out_app(kml.header())
+        out_app(kml.style())
+        for loc in self.searchGeoPoints(path, arr_geo_types, geo_query, administrative_level=administrative_levels, landscape_type=landscape_types):
+            if loc.latitude is not None and loc.longitude is not None:
+                out_app(kml.add_point(self.utToUtf8(loc.id),
+                                      self.utXmlEncode(loc.title),
+                                      self.utXmlEncode(loc.description),
+                                      '%s/getSymbolPicture?id=%s' % (self.absolute_url(), self.utToUtf8(loc.geo_type)),
+                                      self.utToUtf8(loc.longitude),
+                                      self.utToUtf8(loc.latitude),
+                                      self.utXmlEncode(self.getSymbolTitle(loc.geo_type)),
+                                      self.utToUtf8(self.absolute_url()),
+                                      self.utToUtf8(loc.absolute_url()),
+                                      self.utToUtf8(loc.url),
+                                      self.utXmlEncode(loc.address)))
+        out_app(kml.footer())
+        REQUEST.RESPONSE.setHeader('Content-Type', 'application/vnd.google-earth.kml+xml')
+        REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=locations.kml')
+        return '\n'.join(output)
+
     security.declareProtected(view, 'search_geopoints_frontpage')
     def search_geopoints_frontpage(self, arrStakeholders='', arrSupplyChains='', arrAdministrativeLevels='', arrLandscapeTypes='', path='', geo_types=None, geo_query=None, REQUEST=None):
         """ """
