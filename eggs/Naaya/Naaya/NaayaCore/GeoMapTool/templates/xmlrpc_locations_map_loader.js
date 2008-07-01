@@ -22,6 +22,8 @@ var markerHash = new Array();
 
 function showSelectedLocations_request_handler()
 {
+	document.body.style.cursor = "default";
+
 	map.removeMarkersAll();
 
 	var data = xmlhttp.responseText;
