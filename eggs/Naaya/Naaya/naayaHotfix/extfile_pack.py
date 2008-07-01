@@ -57,14 +57,17 @@ def _pack(arg, dirname, fnames):
     for fname in fnames:
         if not fname.endswith(".undo"):
             continue
+        
         path = os.path.join(dirname, fname)
+        new_fname = fname.replace('.undo', '.old')
+        new_path = os.path.join(dirname, new_fname)
         try:
-            os.unlink(path)
-        except OSError, err:
-            logger.debug('Deleting %-70s [FAILED] %s', path, err)
+            os.rename(path, new_path)
+        except Exception, err:
+            logger.debug('[RENAME ERROR] %s %s => %s', err, path, new_path)
             continue
         else:
-            logger.debug('Deleting %-70s [OK]', path)
+            logger.debug('[RENAME OK] %s => %s', path, new_path)
 
 def pack_disk(path):
     logger.debug('Disk pack started')
