@@ -26,13 +26,13 @@ class NyControlSettings(Folder):
     icon = 'misc_/NaayaCore/ControlsTool.gif'
 
     manage_options = (
-        Folder.manage_options[0:1]
+        Folder.manage_options[1:1]
         +
         (
             {'label': 'Properties', 'action': 'manage_control_generic'},
         )
         +
-        Folder.manage_options[3:8]
+        Folder.manage_options[5:6]
     )
 
     all_meta_types = ()

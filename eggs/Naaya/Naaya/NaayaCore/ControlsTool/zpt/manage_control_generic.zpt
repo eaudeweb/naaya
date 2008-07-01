@@ -3,7 +3,7 @@
 
 <h3>Naaya Control Settings</h3>
 
-<p>Please select the Naaya content types to enable geographical support for:</p>
+<p>Please select the Naaya content types for which you want to enable the geographical support:</p>
 
 <form method="post" tal:attributes="action string:${here/absolute_url}/saveSettings">
 
@@ -35,8 +35,10 @@
 	</select>
 	<br />
 	<br />
-	<input type="checkbox" id="add_props" name="add_props" value="1" />
-	<label for="add_props">Also add <em>administrative_level</em> and <em>landscape_type</em> dynamic properties</label>
+    <tal:block condition="python: here.getSite().meta_type == 'EnviroWindows Site'">
+        <input type="checkbox" id="add_props" name="add_props" value="1" />
+        <label for="add_props">Also add <em>administrative_level</em> and <em>landscape_type</em> dynamic properties</label>
+    </tal:block>
 	<br />
 	<br />
 	<input type="submit" name="Select" value="Select" />
