@@ -229,11 +229,6 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         """
         from Products.NaayaContent.NyGeoPoint.NyGeoPoint import NyGeoPoint # TODO move outside method
 
-#        print "geo_types=", geo_types
-#        print "landscape_type=", landscape_type
-#        print "administrative_level=", administrative_level
-
-
         meta_list = [NyGeoPoint.meta_type]
         for meta in self.getControlsTool().settings.keys():
             meta_list.append(meta)
@@ -241,8 +236,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         site_ob = self.getSite()
         results = []
 
+        base_kw = {'approved': approved}
+
         if geo_types:
-            base_kw = {'approved': approved}
             base_kw['geo_type'] = geo_types
 
         if landscape_type:
@@ -269,7 +265,6 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         #                repr(results)))
         else:
             results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **base_kw))
-#            print "results=", results
 
         return self.utEliminateDuplicatesByURL(results)
 
@@ -286,7 +281,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         out_app(kml.style())
         for loc in self.searchGeoPoints(path, geo_types, geo_query):
             if loc.latitude is not None and loc.longitude is not None:
-                out_app(kml.add_point(self.utToUtf8(loc.id),
+                out_app(kml.add_point(self.utToUtf8(loc.getId()),
                                       self.utXmlEncode(loc.title),
                                       self.utXmlEncode(loc.description),
                                       '%s/getSymbolPicture?id=%s' % (self.absolute_url(), self.utToUtf8(loc.geo_type)),
@@ -570,13 +565,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if arrLandscapeTypes:
             landscape_types  = arrLandscapeTypes.split(',');
         else:
-            landscape_types = ['']
+            landscape_types = []
 
         administrative_levels = []
         if arrAdministrativeLevels:
             administrative_levels = arrAdministrativeLevels.split(',');
         else:
-            administrative_levels = ['']
+            administrative_levels = []
 
         output = []
         out_app = output.append
@@ -586,7 +581,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         out_app(kml.style())
         for loc in self.searchGeoPoints(path, arr_geo_types, geo_query, administrative_level=administrative_levels, landscape_type=landscape_types):
             if loc.latitude is not None and loc.longitude is not None:
-                out_app(kml.add_point(self.utToUtf8(loc.id),
+                out_app(kml.add_point(self.utToUtf8(loc.getId()),
                                       self.utXmlEncode(loc.title),
                                       self.utXmlEncode(loc.description),
                                       '%s/getSymbolPicture?id=%s' % (self.absolute_url(), self.utToUtf8(loc.geo_type)),
@@ -616,13 +611,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if arrLandscapeTypes:
             landscape_types  = arrLandscapeTypes.split(',');
         else:
-            landscape_types = ['']
+            landscape_types = []
 
         administrative_levels = []
         if arrAdministrativeLevels:
             administrative_levels = arrAdministrativeLevels.split(',');
         else:
-            administrative_levels = ['']
+            administrative_levels = []
 
         r = []
         ra = r.append
