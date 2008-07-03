@@ -5,7 +5,9 @@
 <tal:block metal:fill-slot="section"
 	tal:define="site_url here/getSitePath;
 				user_tool here/getAuthenticationTool;
-				users python:user_tool.getUserNames()">
+				skey python: request.get('skey', 'name');
+				rkey python: request.get('rkey', 0);
+				users python:here.utSortObjsListByAttr(user_tool.getUsers(), skey, rkey)">
 
 <div id="tabbedmenu">
 <ul>
@@ -25,29 +27,52 @@
 </p>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_deleteusers">
-<table border="0" cellspacing="0" cellpadding="4" width="95%" class="admin_table">
+<table border="0" cellspacing="0" cellpadding="4" width="95%" class="datatable">
 	<tr>
 		<th width="5%" align="left" i18n:translate="">Delete</th>
-		<th width="15%" align="left" i18n:translate="">Username</th>
-		<th width="30%" align="left" i18n:translate="">Name</th>
-		<th width="*" align="left" i18n:translate="">Email address</th>
+		<th width="15%" align="left">
+			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=name" tal:condition="python: (skey == 'name' and rkey) or skey != 'name' and skey">
+				<span i18n:translate="">Username</span>
+			</a>
+			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=name&rkey=1" tal:condition="python: (skey == 'name' and not rkey) or not skey">
+				<span i18n:translate="">Username</span>
+			</a>
+			<img tal:condition="python: (skey == 'name' and not rkey)" src="misc_/Naaya/sort_asc.gif" />
+			<img tal:condition="python: skey == 'name' and rkey" src="misc_/Naaya/sort_desc.gif" />
+		</th>
+		<th width="30%" align="left">
+			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=firstname" tal:condition="python: (skey == 'firstname' and rkey) or skey != 'firstname'" >
+				<span i18n:translate="">Name</span>
+			</a>
+			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=firstname&rkey=1" tal:condition="python: skey == 'firstname' and not rkey" >
+				<span i18n:translate="">Name</span>
+			</a>
+			<img tal:condition="python: skey == 'firstname' and not rkey " src="misc_/Naaya/sort_asc.gif" />
+			<img tal:condition="python: skey == 'firstname' and rkey" src="misc_/Naaya/sort_desc.gif" />
+		</th>
+		<th width="*" align="left">
+			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=email" tal:condition="python: (skey == 'email' and rkey) or skey != 'email'" >
+				<span i18n:translate="">Email address</span>
+			</a>
+			<a tal:attributes="href string:${here/absolute_url}/admin_users_html?skey=email&rkey=1" tal:condition="python: skey == 'email' and not rkey" >
+				<span i18n:translate="">Email address</span>
+			</a>
+			<img tal:condition="python: skey == 'email' and not rkey " src="misc_/Naaya/sort_asc.gif" />
+			<img tal:condition="python: skey == 'email' and rkey" src="misc_/Naaya/sort_desc.gif" />
+		</th>
 	</tr>
 	<tr tal:repeat="user users" tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
-		<tal:block tal:define="user_obj python:user_tool.getUser(user)">
-		<td nowrap="nowrap">
-			<input type="checkbox" name="names" tal:attributes="value python:user_tool.getUserAccount(user_obj)" />
-			<img src="misc_/NaayaCore/User.gif" alt="User" i18n:attributes="alt" />
+		<td nowrap="nowrap" class="center">
+			<input type="checkbox" name="names" tal:attributes="value python:user_tool.getUserAccount(user)" />
 		</td>
-		<td><strong><a tal:define="user python:user_tool.getUserAccount(user_obj);
-									user_quoted python:here.utUrlEncode(user)"
+		<td><strong><a tal:define="user_quoted python:here.utUrlEncode(user)"
 						tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}" tal:content="user">username</a></strong>
-			<span tal:condition="python:user_tool.isNewUser(user_obj)">
+			<span tal:condition="python:user_tool.isNewUser(user)">
 				<img src="misc_/Naaya/star.png" alt="New account" />
 			</span>
 		</td>
-		<td tal:content="python:user_tool.getUserFirstName(user_obj) + ' ' + user_tool.getUserLastName(user_obj)" />
-		<td tal:content="python:user_tool.getUserEmail(user_obj)" />
-		</tal:block>
+		<td tal:content="python:user_tool.getUserFirstName(user) + ' ' + user_tool.getUserLastName(user)" />
+		<td tal:content="python:user_tool.getUserEmail(user)" />
 	</tr>
 	<tr tal:condition="python:len(users) == 0">
 		<td colspan="4" i18n:translate=""> Users' list empty </td>
