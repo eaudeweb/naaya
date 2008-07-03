@@ -13,6 +13,8 @@ function window_onload() {
 	var zp = new YCoordPoint(20,30);
 	zp.translate('right','top');
 	map.addZoomLong(zp);
+	//Disable key controls zoom/pan
+	%s
 	//markers
 	%s
 	showSelectedLocations();

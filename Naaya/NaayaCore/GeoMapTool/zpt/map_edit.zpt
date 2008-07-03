@@ -147,6 +147,14 @@
 	</td>
 </tr>
 <tr>
+	<td>
+		<label for="detailed_map_height" i18n:translate="">Enable Mouse/Keyboard zoom/pan controls</label>
+	</td>
+	<td>
+		<input type="checkbox" name="enableKeyControls" id="enableKeyControls" tal:attributes="checked python:here.enableKeyControls" />
+	</td>
+</tr>
+<tr>
 	<td>&nbsp;</td>
 	<td><input type="submit" value="Save changes" i18n:attributes="value" /></td>
 </tr>

@@ -115,6 +115,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         self.map_types = YAHOO_MAP_TYPES
         self.default_type = 'YAHOO_MAP_REG'
         symbols_tool.__dict__['__init__'](self)
+        self.enableKeyControls = True
 
     def __setstate__(self,state):
         """Updates"""
@@ -122,11 +123,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             self.map_types = YAHOO_MAP_TYPES
         if not hasattr(self, 'default_type'):
             self.default_type = 'YAHOO_MAP_REG'
+        if not hasattr(self, 'enableKeyControls'):
+            self.enableKeyControls = True
         Folder.inheritedAttribute("__setstate__") (self, state)
 
     #admin actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'manageProperties')
-    def manageProperties(self, mapsapikey='', center_locality='', center_zoom='', detailed_zoom='', map_width='', map_height='', detailed_map_width='', detailed_map_height='', map_types=[], default_type='', REQUEST=None):
+    def manageProperties(self, mapsapikey='', center_locality='', center_zoom='', detailed_zoom='', map_width='', map_height='', detailed_map_width='', detailed_map_height='', map_types=[], default_type='', enableKeyControls='', REQUEST=None):
         """ """
         try: center_zoom = abs(int(center_zoom))
         except: center_zoom = MAP_CENTER_ZOOM
@@ -149,6 +152,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         self.detailed_map_width = detailed_map_width
         self.detailed_map_height = detailed_map_height
         self.map_types = self.utConvertToList(map_types)
+        if enableKeyControls: self.enableKeyControls = True
+        else: self.enableKeyControls = False
         if not default_type:
             default_type = 'YAHOO_MAP_REG'
         self.default_type = default_type
@@ -353,7 +358,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return '\n'.join(output)
 
     #xmlrpc interface
-    def xrjs_loader(self, show, geo_query, center='', zoom='', path='', width='', height=''):
+    def xrjs_loader(self, show, geo_query, center='', zoom='', path='', width='', height='', enableKeyControls=True):
         #initialize markers loader - locations
         xr_key = self.utGenRandomId(32)
         show = self.utJsEncode(show)
@@ -366,7 +371,10 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             center_locality = '"' + center_locality + '"' # Javascript string
         center_zoom = zoom or self.center_zoom
         path = path or '/'
-        return TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER % (center_locality, center_zoom, self.default_type, width, height, ",".join(self.map_types), self.xrjs_markers(), self.absolute_url())
+        strKeyControls = ""
+        if not self.enableKeyControls or not enableKeyControls:
+          strKeyControls = "map.disableKeyControls();"
+        return TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER % (center_locality, center_zoom, self.default_type, width, height, ",".join(self.map_types), strKeyControls, self.xrjs_markers(), self.absolute_url())
 
     def xrjs_simple_loader(self, show):
         #initialize marker loader - location
