@@ -331,6 +331,36 @@ class utils:
         """Constructor"""
         pass
 
+    def splitTextByWords(self, text='', words=7):
+        """ Split a text by given words
+
+        Example:
+        >>> text = 'this is a text to split in seven words'
+        >>> print splitTextByWords(text)
+        this is a text to split in ...
+        """
+        list_text = text.split(' ')
+        if len(list_text) <= words:
+            return text
+        return ' '.join(list_text[:words]) + ' ...'
+
+    def word_break(self, text='', insert="<wbr />", nchars=10):
+        """ Insert a string (insert) every space or if a word length is bigger
+        than given chars, every ${chars} characters.
+
+        Example:
+        >>> text = 'this is a bigwordwith_and-and.jpg'
+        >>> print word_break(text)
+        this is a bigwordwit<wbr />h_and-and.<wbr />jpg
+        """
+        list_text = text.split(' ')
+        res = []
+        for word in list_text:
+            word = [word[i:i + nchars] for i in xrange(0, len(word), nchars)]
+            word = insert.join(word)
+            res.append(word)
+        return ' '.join(res)
+
     def utGenObjectId(self, *args, **kw):
         """See the genObjectId function"""
         return genObjectId(*args, **kw)
