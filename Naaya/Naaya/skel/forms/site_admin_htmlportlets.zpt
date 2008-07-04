@@ -65,7 +65,7 @@
 				<span tal:content="python:language['name']" />
 			</div>
 			<a tal:condition="python:language['code'] != curr_lang"
-				tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+				tal:attributes="href string:?id=${ob_id}&amp;lang=${language/code}; title python:language['name']">
 				<span tal:content="python:language['name']" />
 			</a>
 		</tal:block>
