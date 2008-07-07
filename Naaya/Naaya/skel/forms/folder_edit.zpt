@@ -41,7 +41,7 @@ function fSet(ctrl, value)
 
 <form name="frmEdit" method="post" action=".">
 <!-- Translation bar on top -->
-<div class="translate">
+<div class="translate-top translate">
 	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['translation_bar']" />
 </div>
 <tal:comment condition="nothing">
@@ -142,7 +142,7 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 	<input type="submit" value="Save changes" i18n:attributes="value" name="saveProperties:method"/>
 </div>
 <!-- Translation bar on bottom -->
-<div class="translate">
+<div class="translate-bottom translate">
 	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['translation_bar']" />
 </div>
 </form>
