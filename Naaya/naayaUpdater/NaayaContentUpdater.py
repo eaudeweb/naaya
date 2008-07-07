@@ -93,12 +93,18 @@ class NaayaContentUpdater(Folder):
         """ Return all objects that need update"""
         utool = self.aq_inner.aq_parent
         portals = utool.getPortals()
+        ids = ()
+        if self.REQUEST:
+            ids = self.REQUEST.form.get('ids', ())
+        print ids
         for portal in portals:
             query = {'meta_type': portal.utConvertToList(self.update_meta_type)}
             brains = portal.getCatalogTool()(query)
             for brain in brains:
                 doc = brain.getObject()
                 if doc is None:
+                    continue
+                if ids and doc.absolute_url(1) not in ids:
                     continue
                 if not self._verify_doc(doc):
                     continue
