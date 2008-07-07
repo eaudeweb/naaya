@@ -36,6 +36,7 @@ class NaayaContentUpdater(Folder):
     meta_type = 'Naaya Content Updater'
     icon = 'misc_/naayaUpdater/updater.jpg'
     security = ClassSecurityInfo()
+    # Run this update from main screen
     bulk_update = True
     
     def manage_options(self):
@@ -56,6 +57,11 @@ class NaayaContentUpdater(Folder):
     #
     # Methods to override
     #
+    def canSelectUpdates(self):
+        """ Allow users to select objects to be updated.
+        """
+        return False
+    
     def _update(self):
         """ Update all documents returned by _verify_doc"""
         #'Implement it for your content type.
@@ -117,10 +123,10 @@ class NaayaContentUpdater(Folder):
         self._setObject(report_id, tmpExtFile)
         self._getOb(report_id).manage_upload(data, 'text/plain')
         self._reset_log(backup=os.path.join(LOG_ROOT, report_id))
-        
+    
     security.declareProtected(view_management_screens, 'update')
     def update(self, REQUEST=None):
-        """ Update site content. If safe is True nothing will be touched.
+        """ Update site content.
         """
         self._reset_log()
         self._update()

@@ -5,12 +5,24 @@
 <h3 tal:content="here/title|string:" />
 <h4 class="description" tal:content="here/description|string:" />
 
-<form action="." method="post">
-	<div class="submit">
-		<input type="submit" name="index_html:method" value="Show report">
-		<input type="submit" name="update:method" value="Run update">
-	</div>
-</form>
+<script language="javascript" type="text/javascript">
+<!--
+function toggleSelect(caller){
+  var frm = document.objectItems;
+  for(var i=0; i<frm.elements.length; i++){
+    frm.elements[i].checked = caller.checked;
+  }
+}
+//-->
+</script>
+
+<form action="." method="post" name="objectItems" id="objectItems">
+
+<!-- Update actions -->
+<div class="submit">
+	<input type="submit" name="index_html:method" value="Show report">
+	<input type="submit" name="update:method" value="Run update">
+</div>
 
 <!-- Update info -->
 <tal:block tal:condition="not:request/index_html|nothing">
@@ -28,12 +40,20 @@
 </tal:block>
 
 <!-- List objects to update -->
-<table tal:condition="objs" width="100%">
+<tal:block condition="objs">
+<strong>Leave unselected to update all.</strong>
+<table width="100%">
     <tr class="list-header">
+		<th style="width: 2%" tal:condition="here/canSelectUpdates">
+			<input type="checkbox" name="select_all" value="select_all" onclick="toggleSelect(this)"/>
+		</th>
 		<th>Title</th>
 		<th>Portal</th>
 	</tr>
 	<tr tal:repeat="ob objs" class="row-hilite">
+		<td tal:condition="here/canSelectUpdates">
+			<input type="checkbox" name="ids:list" tal:attributes="value python:ob.absolute_url(1)" />
+		</td>
 		<td>
 			<a tal:attributes="href ob/absolute_url" tal:content="python:ob.absolute_url(1)" />
 		</td>
@@ -43,9 +63,13 @@
 		</td>
     </tr>
 </table>
+</tal:block>
+
 <div tal:condition="python:request.get('index_html', '') and not objs">
   Nothing to update.
 </div>
+
+</form>
 
 <h1 tal:replace="structure here/manage_page_footer" />
 </tal:block>
