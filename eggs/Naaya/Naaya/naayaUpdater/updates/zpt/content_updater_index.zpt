@@ -44,14 +44,14 @@ function toggleSelect(caller){
 <strong>Leave unselected to update all.</strong>
 <table width="100%">
     <tr class="list-header">
-		<th style="width: 2%" tal:condition="here/canSelectUpdates">
+		<th style="width: 2%" tal:condition="here/select_updates">
 			<input type="checkbox" name="select_all" value="select_all" onclick="toggleSelect(this)"/>
 		</th>
 		<th>Title</th>
 		<th>Portal</th>
 	</tr>
 	<tr tal:repeat="ob objs" class="row-hilite">
-		<td tal:condition="here/canSelectUpdates">
+		<td tal:condition="here/select_updates">
 			<input type="checkbox" name="ids:list" tal:attributes="value python:ob.absolute_url(1)" />
 		</td>
 		<td>
