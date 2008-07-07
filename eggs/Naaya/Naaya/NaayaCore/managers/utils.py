@@ -988,6 +988,13 @@ class utils:
         s = s.replace('\\xe2\\x80\\xa2', '*')  #dot used for bullet points
         return s
 
+    def utHexColors(self, lang):
+        """ returns a hex color code to be used as language color in edit forms """
+        colors = ['DEE6FF', 'F8FFDE', 'FFE6DE', 'DEFFE0', 'DEF2FF']
+        langs = [x for x in self.gl_get_languages()]
+        l_in = langs.index(lang)%len(colors)
+        return '#%s' % colors[l_in]
+
 #END OF CUSTOM FUNCTIONS
 
 class spreadsheet_file:
