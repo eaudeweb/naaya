@@ -8,6 +8,7 @@
 <tal:block tal:replace="structure here/standard_html_header"/>
 
 <tal:block tal:condition="python:(not here.hasVersion()) or (here.hasVersion() and here.isVersionAuthor())">
+
 <!-- Scripts -->
 <metal:block define-slot="scripts">
 	<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
@@ -43,12 +44,12 @@
   </form>
 </div>
 
+<div class="edit-holder" tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
 <!-- Edit form -->
 <form name="frmEdit" method="post" action="." enctype="multipart/form-data">
 
 <!-- Translation bar on top -->
-<div metal:define-slot="translate_on_top" class="translate">
-	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['update_from_version']" />
+<div metal:define-slot="translate_on_top" class="translate-top translate-bottom translate">
 	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['translation_bar']" />
 </div>
 
@@ -56,6 +57,10 @@
 <tal:comment condition="nothing">
 	XXX Support these features in versions, too.
 </tal:comment>
+
+<!-- Fill fields from language -->
+<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['update_from_version']" />
+
 <!-- Switch content language box -->
 <div style="display:none" i18n:translate="" id="confirmSwMessage">
   This action will move current translation to selected one.
@@ -150,10 +155,6 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked python:test(here.getSession('discussion', here.discussion), 'checked', '')" />
 </div>
 
-<!-- Map widget -->
-<tal:block condition="python:here.getControlsTool().checkControl(here.meta_type)"
-		   content="structure here/map_widget_edit_html" />
-
 <!-- Custom properties -->
 <tal:block metal:define-slot="custom_properties" />
 
@@ -176,7 +177,7 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 </div>
 
 <!-- Translation bar on bottom -->
-<div metal:define-slot="translate_on_bottom" class="translate">
+<div metal:define-slot="translate_on_bottom" class="translate-top translate-bottom translate">
 	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['translation_bar']" />
 </div>
 
@@ -184,7 +185,7 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 <metal:block define-slot="bottom_content" />
 
 </form>
-
+</div>
 </tal:block>
 
 <!-- Object not editable -->
@@ -201,15 +202,20 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 <!-- Macro for translation bar -->
 <metal:block define-macro="translation_bar"  tal:define="
 languages here/get_languages_mapping;
-curr_lang python:request.get('lang', None) or here.gl_get_selected_language();">
+curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
+color python:here.utHexColors(curr_lang);">
+
 <span i18n:translate="" tal:omit-tag="">Translate in</span>
 <tal:block tal:repeat="language languages">
-<div class="current" tal:condition="python:language['code'] == curr_lang">
-<span tal:content="python:language['name']" />
+	<div class="current" tal:condition="python:language['code'] == curr_lang"
+						 tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
+		<span tal:content="python:language['name']" />
 	</div>
 	<a tal:condition="python:language['code'] != curr_lang"
-		tal:attributes="href string:?lang=${language/code}; title python:language['name']">
-	<span tal:content="python:language['name']" />
+		tal:attributes="href string:?lang=${language/code}; 
+						title python:language['name']; 
+						style python:'background-color: %s' % here.utHexColors(language['code'])">
+		<span tal:content="python:language['name']" />
 	</a>
 </tal:block>
 </metal:block>
