@@ -335,32 +335,50 @@ td.title-column a:hover{
 	text-align: center;
 }
 /* Content translation boxes */
+.edit-holder {
+	margin: 1.5em 0 0 0;
+}
+div.translate-top {
+	line-height: 2.29em;
+}
 .translate {
-	padding: 0.5em 0;
-	margin: 0.5em 0;
-	background-color: #def2ff;
+	background: #fff;
 	color: #333;
 	font-size: 95%;
 	font-weight: normal;
-	line-height: 1.8em;
 	font-family:Arial, Helvetica, sans-serif;
+	line-height: 2.3em;
+}
+*html .translate {
+	padding: 0;
+}
+*:first-child+html .translate {
+	padding: 0;
 }
 .translate span {
-	padding: 0 0.5em 0 0.5em;
+	padding: 0.5em;
+}
+*html .translate span {
+	padding: 0;
+}
+*:first-child+html .translate span {
+	padding: 0;
 }
 .translate a {
 	color: #000;
+	background: #def2cc;
 	text-decoration: none;
 	font-weight: bold;
-	padding: 5px 5px;
-	margin: 2px 0;
-	border-right: 1px solid #accbdf;
+	padding: 0.5em;
+	margin: 0 0 0 0.7em;
+
 }
 .translate .current {
-	padding: 5px 7px;
+	margin: 0 0 0 0.7em;
+	padding: 0.5em;
 	display: inline;
-	background: #fff;
-	border: 1px solid #accbdf;
+	background: #def2ff;
+
 }
 .translate .current span {
 	color: #444444;
@@ -368,15 +386,19 @@ td.title-column a:hover{
 	padding: 0 3px 0 3px;
 }
 .translate a:hover {
-	background: #fff;
+	background: #def299;
 	color: #666666;
 }
 .translate_bar_right {
-        display: inline;
-        float: right;
-        width: 30em;
-        text-align: right;
+	display: inline;
+	float: right;
+	width: 30em;
+	text-align: right;
+	position: relative;
+	margin: 1em;
+	font-size: 95%;
 }
+
 .edit_right_box {
 	clear: both;
 	background-color: #f4fff4;
@@ -385,14 +407,23 @@ td.title-column a:hover{
 	border: 1px solid black;
 	width: 200px;
 	text-align: right;
-	margin-bottom: 0.5em;
+	margin: 0.5em 1em 0.5em 0;
 }
+
+.edit_right_box p {
+	font-size: 90%;
+	text-align: justify;
+	border-top: 1px dotted #000;
+	padding-top: 0.5em;
+}
+
 /* styles for forms */
 .field {
-	margin-top: 1em;
+	margin: 1em;
 }
+
 .field-inline {
-	margin-top: 1em;
+	margin: 1em 0 0 1em;
 }
 .field label {
 	display: block;
