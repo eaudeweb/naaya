@@ -14,6 +14,8 @@
 <tal:block define="languages here/get_languages_mapping;
 					curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
 
+<div class="edit-holder" tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
+
 <script type="text/javascript">
 <!--
 function fPick(glossary_url)
@@ -40,13 +42,15 @@ function fSet(ctrl, value)
 <form name="frmEdit" method="post" action=".">
 <!-- Translation bar on top -->
 <div class="translate">
-	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['update_from_version']" />
 	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['translation_bar']" />
 </div>
-
 <tal:comment condition="nothing">
 	XXX Support these features in versions, too.
 </tal:comment>
+
+<!-- Fill fields from language -->
+<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['update_from_version']" />
+
 <!-- Switch content language box -->
 <div style="display:none" i18n:translate="" id="confirmSwMessage">
   This action will move current translation to selected one.
@@ -137,13 +141,12 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 	<input type="hidden" name="lang" tal:attributes="value curr_lang" />
 	<input type="submit" value="Save changes" i18n:attributes="value" name="saveProperties:method"/>
 </div>
-
 <!-- Translation bar on bottom -->
 <div class="translate">
 	<metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['translation_bar']" />
 </div>
 </form>
-
+</div>
 </tal:block>
 
 <span tal:content="python:here.del_pluggable_item_session(here.meta_type)" tal:omit-tag="" />

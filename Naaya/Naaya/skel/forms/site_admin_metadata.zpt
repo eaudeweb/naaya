@@ -16,6 +16,7 @@
 </ul>
 </div>
 
+<div class="edit-holder" tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
 <p i18n:translate="">
 	This form allows you to set the metadata that describe this entire website. This is a subset of the <strong>Dublin Core</strong> element set - see the <a href="http://www.dublincore.org">Dublin Core website</a> for further information about their meaning.
 	The <em>title</em> and <em>subtitle</em> are displayed in the top banner of each page. The <em>description</em> will appear on the homepage. All together, the metadata describes your website to search engines and also goes into the local channels that might be  harvested by others.
@@ -58,19 +59,23 @@
 </tr>
 </table>
 
-<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
+<div class="translate">
+	<span i18n:translate="" tal:omit-tag="">Translate in</span>
 	<tal:block tal:repeat="language languages">
-		<div class="current" tal:condition="python:language['code'] == curr_lang">
+		<div class="current" tal:condition="python:language['code'] == curr_lang"
+							 tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
 			<span tal:content="python:language['name']" />
 		</div>
 		<a tal:condition="python:language['code'] != curr_lang"
-			tal:attributes="href string:?lang=${language/code}; title python:language['name']">
+			tal:attributes="href string:?lang=${language/code}; 
+							title python:language['name']; 
+							style python:'background-color: %s' % here.utHexColors(language['code'])">
 			<span tal:content="python:language['name']" />
 		</a>
 	</tal:block>
 </div>
-
 </form>
+</div>
 </tal:block>
 
 </tal:block>

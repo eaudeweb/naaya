@@ -19,6 +19,7 @@
 	<li><a tal:attributes="href string:${site_url}/admin_specialportlets_html" i18n:translate="">Special</a></li>
 </ul>
 </div>
+
 <p i18n:translate="">
 	This page displays the list of available portlets that contains static HTML. The content of
 	each of them can be modified using an WYSIWYG editor.
@@ -39,8 +40,10 @@
 <p>
 	<a tal:attributes="href string:${site_url}/admin_addhtmlportlet" i18n:translate="">Add new portlet</a>
 </p>
+
 <fieldset tal:condition="python:ob is not None">
 	<legend i18n:translate="">Edit portlet</legend>
+	<div class="edit-holder" tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
 	<form method="post" tal:attributes="action string:${site_url}/admin_edithtmlportlet">
 	<input type="hidden" name="id" tal:attributes="value ob_id" />
 	<table border="0" cellspacing="2" cellpadding="2" width="90%">
@@ -59,18 +62,22 @@
 		</tr>
 	</table>
 	</form>
-	<div class="translate"><span i18n:translate="" tal:omit-tag="">Translate in</span>
+	</div>
+	<div class="translate">
+		<span i18n:translate="">Translate in</span>
 		<tal:block tal:repeat="language languages">
-			<div class="current" tal:condition="python:language['code'] == curr_lang">
+			<div class="current" tal:condition="python:language['code'] == curr_lang"
+								 tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
 				<span tal:content="python:language['name']" />
 			</div>
 			<a tal:condition="python:language['code'] != curr_lang"
-				tal:attributes="href string:?id=${ob_id}&amp;lang=${language/code}; title python:language['name']">
+				tal:attributes="href string:?id=${ob_id}&amp;lang=${language/code}; 
+								title python:language['name']; 
+								style python:'background-color: %s' % here.utHexColors(language['code'])">
 				<span tal:content="python:language['name']" />
 			</a>
 		</tal:block>
 	</div>
-
 </fieldset>
 </tal:block>
 
