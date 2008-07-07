@@ -38,10 +38,20 @@ class NaayaContentUpdater(Folder):
     security = ClassSecurityInfo()
     # Run this update from main screen
     bulk_update = True
+    # Allow users to select objects to be updated
+    select_updates = True
+    
+    _properties=(
+        {'id':'bulk_update', 'type': 'boolean','mode':'w'},
+        {'id':'select_updates', 'type': 'boolean','mode':'w'},
+    )
     
     def manage_options(self):
         """ ZMI tabs """
-        return ({'label': 'Update', 'action': 'index_html'},)
+        return (
+            {'label': 'Update', 'action': 'index_html'},
+            {'label':'Properties', 'action':'manage_propertiesForm'},
+        )
     ###
     #General stuff
     ######
@@ -57,11 +67,6 @@ class NaayaContentUpdater(Folder):
     #
     # Methods to override
     #
-    def canSelectUpdates(self):
-        """ Allow users to select objects to be updated.
-        """
-        return False
-    
     def _update(self):
         """ Update all documents returned by _verify_doc"""
         #'Implement it for your content type.
@@ -96,7 +101,6 @@ class NaayaContentUpdater(Folder):
         ids = ()
         if self.REQUEST:
             ids = self.REQUEST.form.get('ids', ())
-        print ids
         for portal in portals:
             query = {'meta_type': portal.utConvertToList(self.update_meta_type)}
             brains = portal.getCatalogTool()(query)

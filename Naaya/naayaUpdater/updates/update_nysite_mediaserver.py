@@ -22,12 +22,9 @@ from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 class CustomContentUpdater(NaayaContentUpdater):
     """ """
     bulk_update = False
-    _properties=({'id':'media_server', 'type': 'string','mode':'w'},)
-    
-    def manage_options(self):
-        """ ZMI tabs """
-        return ({'label':'Properties', 'action':'manage_propertiesForm'},) + \
-               NaayaContentUpdater.manage_options(self)
+    _properties = (
+        {'id':'media_server', 'type': 'string','mode':'w'},
+        ) + NaayaContentUpdater._properties
     
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
