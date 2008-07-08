@@ -970,6 +970,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             try:
                 ob = self._getOb(id)
                 ob.approveThis()
+                ob.releasedate = self.utGetTodayDate()
                 self.recatalogNyObject(ob)
             except:
                 pass
