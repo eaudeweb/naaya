@@ -42,8 +42,8 @@ class NaayaContentUpdater(Folder):
     select_updates = True
     
     _properties=(
-        {'id':'bulk_update', 'type': 'boolean','mode':'w'},
-        {'id':'select_updates', 'type': 'boolean','mode':'w'},
+        {'id':'bulk_update', 'type': 'boolean','mode':'w', 'label': 'Allow bulk update from main screen'},
+        {'id':'select_updates', 'type': 'boolean','mode':'w', 'label': 'Allow user to select objects to be updated'},
     )
     
     def manage_options(self):
