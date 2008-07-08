@@ -6,7 +6,7 @@
 
 <tal:block metal:fill-slot="custom_properties" tal:define="eventtypes here/getEventTypesList">
 <tr>
-	<td class="form-label">Location</td>
+	<td class="form-label">Event location</td>
 	<td><input type="text" name="location" value="" size="50" /></td>
 </tr>
 <tr>

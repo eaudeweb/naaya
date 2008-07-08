@@ -39,7 +39,7 @@
 	</td>
 </tr>
 <tr tal:condition="here/location">
-	<th i18n:translate="">Location</th>
+	<th i18n:translate="">Event location</th>
 	<td>
 		<tal:block tal:condition="python:here.location_url and (here.location_url != 'http://')">
 		<a tal:attributes="href here/location_url" tal:content="here/location"/> <span tal:replace="here/location_address" />

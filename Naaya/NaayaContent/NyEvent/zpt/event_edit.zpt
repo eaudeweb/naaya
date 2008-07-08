@@ -5,7 +5,7 @@
 
 <tal:block metal:fill-slot="custom_properties" tal:define="eventtypes here/getEventTypesList">
 <div class="field">
-	<label for="location"><span i18n:translate="" tal:omit-tag="">Location</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'location')" class="mandatory_field"> *</span></label>
+	<label for="location"><span i18n:translate="" tal:omit-tag="">Event location</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'location')" class="mandatory_field"> *</span></label>
 	<input type="text" name="location:utf8:ustring" id="location" size="50" tal:attributes="value python:here.getSession('location', here.getVersionLocalProperty('location', curr_lang))" />
 </div>
 <div class="field">
