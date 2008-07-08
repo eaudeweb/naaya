@@ -992,7 +992,10 @@ class utils:
         """ returns a hex color code to be used as language color in edit forms """
         colors = ['DEE6FF', 'F8FFDE', 'FFE6DE', 'DEFFE0', 'DEF2FF']
         langs = [x for x in self.gl_get_languages()]
-        l_in = langs.index(lang)%len(colors)
+        if lang in langs:
+            l_in = langs.index(lang)%len(colors)
+        else:
+            l_in = -1
         return '#%s' % colors[l_in]
 
 #END OF CUSTOM FUNCTIONS
