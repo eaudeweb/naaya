@@ -87,7 +87,7 @@ function fSet(ctrl, value)
 </div>
 <div class="field-inline">
 	<label for="discussion"><span i18n:translate="" tal:omit-tag="">Open for comments</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'discussion')" class="mandatory_field"> *</span></label>
-	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked python:test(here.getSession('discussion', ''), 'checked', '')"/>
+	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked python:test(here.getSession('discussion', ''), 'checked', 'checked')"/>
 </div>
 <div class="field">
 	<label for="body"><span i18n:translate="" tal:omit-tag="">Body (HTML)</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'body')" class="mandatory_field"> *</span></label>
