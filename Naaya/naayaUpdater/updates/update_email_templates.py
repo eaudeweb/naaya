@@ -23,10 +23,17 @@ from Products.Naaya.constants import NAAYA_PRODUCT_PATH
 EMAIL_TEMPLATES = {
     'email_notifyoncomment': 'Comment notification',
     'email_notifyonupload': 'Upload notification',
+    'email_confirmuser': 'New user registration confirmation',
 }
 class CustomContentUpdater(NaayaContentUpdater):
     """Update email templates"""
 
+    _properties = NaayaContentUpdater._properties + (
+        {'id':'overwrite', 'type': 'boolean','mode':'w', 'label': 'Overwrite existing templates'},
+    )
+    
+    overwrite = False
+    
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update email templates'
@@ -53,11 +60,14 @@ class CustomContentUpdater(NaayaContentUpdater):
         updates = self._list_updates()
         for update in updates:
             for template, title in EMAIL_TEMPLATES.items():
-                logger.debug('Update template %s in %s', template, update.absolute_url())
                 data_path = join(NAAYA_PRODUCT_PATH, 'skel', 'emails', template + '.txt')
                 template_data = update.futRead(data_path, 'r')
-                if getattr(update, template, None) is not None:
+                template_ob = update._getOb(template, None)
+                if template_ob:
+                    if not self.overwrite:
+                        continue
                     update.manage_delObjects([template,])
+                logger.debug('Update template %s in %s', template, update.absolute_url())
                 update.manage_addEmailTemplate(template, title, template_data)
 
 def register(uid):
