@@ -48,6 +48,7 @@ from OFS.ObjectManager import checkValidId
 
 #Product imports
 from stripping_tool import stripping_tool
+from Products.NaayaCore.managers.paginator import ObjectPaginator
 
 #constants
 bad_chars = '!@#$%\\/:"*?<>| ,+&;\'()[]{}\xC4\xC5\xC1\xC0\xC2\xC3' \
@@ -360,6 +361,12 @@ class utils:
             word = insert.join(word)
             res.append(word)
         return ' '.join(res)
+    
+    def getObjectPaginator(self, objects_list, num_per_page=50, orphans=-1):
+        """ Returns objects_list in pages."""
+        if orphans == -1:
+            orphans = num_per_page * 20 / 100 # 20 %
+        return ObjectPaginator(objects_list, num_per_page, orphans)
 
     def utGenObjectId(self, *args, **kw):
         """See the genObjectId function"""

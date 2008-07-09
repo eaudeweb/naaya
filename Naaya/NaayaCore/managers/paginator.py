@@ -124,8 +124,20 @@ class ObjectPaginator:
         a template for loop.
         """
         if self._page_range is None:
-            self._page_range = range(1, self._pages + 1)
+            self._page_range = range(0, self._pages)
         return self._page_range
+    
+    def left(self, page, pages=5):
+        left = page - pages
+        if left < 0:
+            return 0
+        return left
+    
+    def right(self, page, pages=5):
+        right = page + pages
+        if right > self.pages:
+            return self.pages
+        return right
 
     hits = property(_get_hits)
     pages = property(_get_pages)
