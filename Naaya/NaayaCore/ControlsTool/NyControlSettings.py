@@ -104,11 +104,11 @@ class NyControlSettings(Folder):
     def add_additionalProperties(self, name):
         properties={'landscape_type': {'name': 'Landscape type', 
                                        'default': 'Coastal', 
-                                       'values': ['Coastal', 'Marine', 'Mountain', 'Protected', 'Rural', 'Urban']
+                                       'values': ['None', 'Coastal', 'Marine', 'Mountain', 'Protected', 'Rural', 'Urban']
                                       }, 
                     'administrative_level': {'name': 'Administrative level', 
                                              'default': 'Global', 
-                                             'values': ['Global', 'Local', 'National', 'Regional', 'Sub-Global']
+                                             'values': ['None', 'Global', 'Local', 'National', 'Regional', 'Sub-Global']
                                             }
                    }
         dp_tool = self.getDynamicPropertiesTool()
