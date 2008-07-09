@@ -50,8 +50,13 @@ class CustomContentUpdater(NaayaContentUpdater):
                         ob.updateDynamicProperties(v, lang)
                     logger.debug('%-15s %s', 'Updated ', ob.absolute_url())
 
-    def index_html(self, path, lt, al):
+    def index_html(self, path=None, lt='', al=''):
         """ """
+        if not path:
+            path = 'stakeholders/knowledge_net/social_partners/national-and-subnational-social-partner-and-ngos'
+            lt = 'None'
+            al = 'National'
+
         self._update(path, lt, al)
         return 'Done'
 
