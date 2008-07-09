@@ -3154,6 +3154,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(view, 'folder_lib_toolbar_buttons')
     folder_lib_toolbar_buttons = PageTemplateFile(
         'zpt/folder_lib_toolbar_buttons', globals())
+    
+    security.declareProtected(view, 'macro_utils')
+    macro_utils = PageTemplateFile('zpt/site_macro_utils', globals())
 
     #--------------------------------------------------------------------------------------------------
     security.declareProtected(view_management_screens, 'update_portal_forms')
