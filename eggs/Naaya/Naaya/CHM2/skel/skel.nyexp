@@ -560,7 +560,7 @@
 		<![CDATA[
 <span tal:replace="structure here/standard_html_header" />
 
-<tal:block define="objects_info python:here.getArchiveListing(here);
+<tal:block define="objects_info python:here.getArchiveListing(here, 'start_date');
 					objects_list python:objects_info[2];
 					objects_delete_all python:objects_info[1];
 					objects_select_all python:objects_info[0]">
@@ -668,7 +668,7 @@
 			<table border="0" cellpadding="0" cellspacing="0" id="folderfile_list">
 				<tr>
 					<th class="checkbox" i18n:translate="" style="width: 5%;" tal:condition="objects_delete_all">Delete</th>
-					<th i18n:translate="" style="width: 10%;">Release date</th>
+					<th i18n:translate="" style="width: 10%;">Start date</th>
 					<th class="title-column" i18n:translate="">Title</th>
 					<th i18n:translate="">Location</th>
 					<th i18n:translate="">Period</th>
@@ -683,8 +683,8 @@
 						<td class="checkbox" tal:condition="del_permission" width="4%" valign="top">
 							<input type="checkbox" name="id" tal:attributes="value object/id" />
 						</td>
-						<td class="releasedate">
-							<span tal:replace="python:object.utShowDateTime(object.releasedate)" />
+						<td class="startdate">
+							<span tal:replace="python:object.utShowDateTime(object.start_date)" />
 						</td>
 						<td class="title-column">
 							<img tal:attributes="src python:test(object.approved, object.icon, object.icon_marked);

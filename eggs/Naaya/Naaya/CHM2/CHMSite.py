@@ -539,11 +539,10 @@ class CHMSite(NySite):
         return (select_all, delete_all, results)
 
     security.declareProtected(view, 'getArchiveListing')
-    def getArchiveListing(self, p_archive):
+    def getArchiveListing(self, p_archive, p_attr='releasedate', p_desc=1):
         """ """
         p_objects = p_archive.getObjects()
-        p_objects.sort(lambda x,y: cmp(x.sortorder, y.sortorder) \
-            or cmp(y.releasedate, x.releasedate))
+        p_objects = self.utSortObjsListByAttr(p_objects, p_attr, p_desc)
         return self.get_archive_listing(p_objects)
 
     security.declareProtected(view, 'processCreateAccountForm')
