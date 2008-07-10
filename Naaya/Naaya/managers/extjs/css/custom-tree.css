@@ -16,6 +16,15 @@
   background-image:url(misc_/Naaya/NyFolder.gif);
 }
 
+/* Naaya Photo Gallery */
+.x-tree-node-collapsed .custom-Naaya-Photo-Gallery {
+  background-image:url(misc_/NaayaPhotoArchive/NyPhotoGallery.gif);
+}
+
+.x-tree-node-expanded .custom-Naaya-Photo-Gallery {
+  background-image:url(misc_/NaayaPhotoArchive/NyPhotoGallery.gif);
+}
+
 /* Naaya Photo Folder */
 .x-tree-node-collapsed .custom-Naaya-Photo-Folder {
   background-image:url(misc_/NaayaPhotoArchive/NyPhotoFolder.gif);

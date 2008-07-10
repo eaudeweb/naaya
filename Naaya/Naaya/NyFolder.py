@@ -477,9 +477,13 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
     def getFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.submitted==1]
     def hasContent(self): return (len(self.getObjects()) > 0) or (len(self.objectValues(METATYPE_FOLDER)) > 0)
 
-    def getPublishedFolders(self): return self.utSortObjsListByAttr([x for x in self.objectValues([METATYPE_FOLDER, 'Naaya Consultation', 'Naaya Simple Consultation']) if x.approved==1 and x.submitted==1], 'sortorder', 0)
+    def getPublishedFolders(self):
+        folders = [x for x in self.objectValues(self.get_naaya_containers_metatypes()) if x.approved == 1 and x.submitted==1]
+        return self.utSortObjsListByAttr(folders, 'sortorder', 0)
+    
     def getPublishedObjects(self, items=0):
-        res = [x for x in self.getObjects() if x.approved==1 and x.submitted==1]
+        doc_metatypes = [m for m in self.get_meta_types() if m not in self.get_naaya_containers_metatypes()]
+        res = [x for x in self.objectValues(doc_metatypes) if x.submitted==1 and x.approved==1]
         if items:
             return res[:items]
         return res
