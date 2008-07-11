@@ -6,12 +6,6 @@
 <script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${portal_map/mapsapikey}"></script>
 <script type="text/javascript" src="misc_/NaayaCore/remote.js"></script>
 <script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
-<!-- Extjs tree libs -->
-<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/tree.css"/>
-<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/custom-tree.css"/>
-<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-base.js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-all.js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-navigation.js.dtml"></script>
 
 <div class="field" tal:define="geo_type python:request.get('geo_type', here.geo_type)">
 	<label for="geo_type">
@@ -67,11 +61,13 @@
 		<span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'pointer')" class="mandatory_field"> *</span>
 	</label>
 	<!-- Extjs tree -->
-	<div id="pointer_tree" class="custom-tree"></div>
+	<div id="pointer_tree" class="extjs_tree custom-tree"></div>
 	<div style="clear: both"></div>
-	<input class="extjs_tree" type="text" name="pointer" id="pointer" size="50" tal:attributes="value python:here.getSession('pointer', request.get('pointer', here.pointer))" />
+	<input class="extjs_target" type="text" name="pointer" id="pointer" size="50" tal:attributes="value python:here.getSession('pointer', request.get('pointer', here.pointer))" />
 </div>
 
+<!-- Ajax tree scripts -->
+<metal:block use-macro="here/macro_utils/macros/ajaxtree" />
 </tal:block>
 
 </tal:block>

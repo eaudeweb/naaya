@@ -56,3 +56,44 @@ Optional:
 </div>
 
 </metal:block>
+
+<tal:comment condition="nothing">
+<!--
+AJAX Tree
+---------
+- Uses Naaya.managers.extjs lib to render an objects tree.
+
+Optional variables:
+- method: site method that returns a JSON dictionary with elements on one level of the tree;
+          default is getNavigationSiteMap defined in Products.Naaya.NySite.NySite;
+- jsfile: Javascript file path to include. This file is supposed to initialize the tree.
+          default is /extjs/ext-navigation.js.dtml
+-->
+</tal:comment>
+
+<metal:block define-macro="ajaxtree">
+<!-- Styles -->
+<metal:block define-slot="styles">
+	<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/tree.css"/>
+	<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/custom-tree.css"/>
+</metal:block>
+
+<!-- Scripts -->
+<metal:block define-slot="scripts">
+	<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-base.js"></script>
+	<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-all.js"></script>
+</metal:block>
+
+<!-- Initialize tree -->
+<metal:block define-slot="treeinit" tal:define="
+	jsfile jsfile|string:${here/absolute_url}/extjs/ext-navigation.js.dtml;
+	tree_method method|string:getNavigationSiteMap;">
+
+<script type="text/javascript" tal:content="string:
+	var tree_loader = '${tree_method}';
+"></script>
+<script type="text/javascript" tal:attributes="src jsfile"></script>
+
+</metal:block>
+
+</metal:block>
