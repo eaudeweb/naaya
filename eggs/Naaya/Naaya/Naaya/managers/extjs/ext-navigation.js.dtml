@@ -12,7 +12,7 @@ function makeTree(div_id){
       autoScroll:true,
       containerScroll: true,
       singleExpand: true,
-      loader: new Tree.TreeLoader({dataUrl:'getNavigationSiteMap'})
+      loader: new Tree.TreeLoader({dataUrl:data_url})
     });
   
   // add a tree sorter in folder mode

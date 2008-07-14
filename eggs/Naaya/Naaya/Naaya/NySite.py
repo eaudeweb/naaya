@@ -1257,7 +1257,62 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 })
         res = ', '.join(res)
         return '[%s]' % res.encode('utf-8')
+    
+    security.declareProtected(view, 'getNavigationPhotos')
+    def getNavigationPhotos(self, REQUEST=None, **kwargs):
+        """ Returns site map with photos only in order to be used with extjs library"""
+        node = REQUEST.form.get('node', '')
+        if not node or node == '__root':
+            node = ''
         
+        items = self.getFolderPublishedContent(node)
+        folders = items[0]
+        documents = [x for x in items[1] if x.meta_type == 'Naaya Photo']
+        res = []
+        for folder in folders:
+            iconCls = 'custom-%s' % folder.meta_type.replace(' ', '-')
+            title = ''
+            folder_localized = getattr(folder.aq_base, 'getLocalProperty', None)
+            if folder_localized:
+                title = folder_localized('title')
+            title = title or folder.title_or_id()
+            title = title.replace('"', "'")
+            res.append("""{
+                "id": "%(id)s",
+                "text": "%(title)s",
+                "leaf": false,
+                "href": "%(href)s",
+                "iconCls": "%(iconCls)s"
+                }""" % {
+                    "id": folder.absolute_url(1),
+                    "title": title,
+                    "href": '',
+                    "iconCls": iconCls,
+                })
+        for document in documents:
+            icon = getattr(document, 'icon', '')
+            icon = icon and '/'.join((self.absolute_url(), icon))
+            title = ''
+            document_localized = getattr(document.aq_base, "getLocalProperty", None)
+            if document_localized:
+                title = document_localized('title')
+            title = title or document.title_or_id()
+            title = title.replace('"', "'")
+            res.append("""{
+                "id": "%(id)s",
+                "text": "%(title)s",
+                "leaf": true,
+                "href": "%(href)s",
+                "icon": "%(icon)s"
+                }""" % {
+                    "id": document.absolute_url(1),
+                    "title": title,
+                    "href": '',
+                    "icon": icon,
+                })
+        res = ', '.join(res)
+        return '[%s]' % res.encode('utf-8')
+
     def getSiteMap(self, expand=[], root=None, showitems=0):
         #returns a list of objects with additional information
         #in order to draw the site map

@@ -16,11 +16,14 @@ function selectNyImage(field_name, url, win, nydocument_url) {
 }
 
 function returnImageUrl(url) {
-	var win = tinyMCE.getWindowArg("window")
-	image_url = win.document.getElementById(tinyMCE.getWindowArg("input"))
-	image_url.value = url
-	win.showPreviewImage(image_url.value)
+	var win = tinyMCE.getWindowArg("window");
+	var inp_src = tinyMCE.getWindowArg("input");
+	var image_url = win.document.getElementById(inp_src);
+	image_url.value = url;
+	win.showPreviewImage(image_url.value);
 	// update image dimensions
-	if (win.getImageData) win.getImageData()
+	if (win.getImageData){
+		win.getImageData()
+	}
 	tinyMCEPopup.close()
 }

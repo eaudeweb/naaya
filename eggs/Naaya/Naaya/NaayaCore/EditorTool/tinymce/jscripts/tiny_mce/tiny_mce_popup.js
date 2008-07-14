@@ -95,8 +95,11 @@ TinyMCE_Popup.prototype = {
 	onLoad : function() {
 		var dir, i, elms, body = document.body;
 
-		if (tinyMCE.getWindowArg('mce_replacevariables', true))
-			body.innerHTML = tinyMCE.applyTemplate(body.innerHTML, tinyMCE.windowArgs);
+		if (tinyMCE.getWindowArg('mce_replacevariables', true)){
+			if(!window.skip_replacevariables){
+				body.innerHTML = tinyMCE.applyTemplate(body.innerHTML, tinyMCE.windowArgs);
+			}
+		}
 
 		dir = tinyMCE.selectedInstance.settings.directionality;
 		if (dir == "rtl" && document.forms && document.forms.length > 0) {
