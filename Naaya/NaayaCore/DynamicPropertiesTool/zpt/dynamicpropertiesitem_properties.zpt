@@ -33,7 +33,7 @@
     <tr>
         <td class="form-label">Type</td>
         <td>
-            <select name="type">
+            <select id="type" name="type" onchange="javascript:show_selection()">
                 <option tal:repeat="item here/getFieldTypesList"
                         tal:attributes="value item; selected python:item==dp_data[4]"
                         tal:content="item">type</option>
@@ -50,7 +50,19 @@
      </tr>
     <tr>
         <td class="form-label" style="vertical-align: top">Values</td>
-        <td><textarea name="values" rows="5" cols="70" tal:content="python:dp_data[7]">values</textarea></td>
+        <td>
+            <div id="sel_list" tal:define="reflists python:here.getPortletsTool().getRefLists()">
+                <p>Populate values from a selection list defined within this portal</p>
+                <em tal:condition="not:reflists">No selection lists defined</em>
+                <select tal:condition="reflists" id="ref_list" name="ref_list" style="display: block" onchange="javascript:toggle_values(this)">
+                    <option value=""></option>
+                    <option tal:repeat="ref reflists"
+                            tal:attributes="value ref/getId"
+                            tal:content="ref/title_or_id" />
+                </select>
+            </div>
+            <textarea id="values" name="values" rows="5" cols="70" tal:content="python:dp_data[7]">values</textarea>
+        </td>
      </tr>
     <tr>
         <td class="form-label">Listing order</td>
@@ -92,5 +104,21 @@
 <br />
 <input type="submit" value="Delete selected properties" />
 </form>
+
+<script language="JavaScript">
+window.onload = function() {show_selection();}
+function show_selection() {
+    var type = document.getElementById('type');
+    var rl = document.getElementById('sel_list');
+    if (type.value != 'selection') rl.style.display = 'none';
+    else rl.style.display = 'block'
+    }
+
+function toggle_values(elem) {
+    var values = document.getElementById('values')
+    if (elem.value != ''){ values.disabled = true }
+    else { values.disabled = false }
+}
+</script>
 
 <span tal:replace="structure here/manage_page_footer"/>

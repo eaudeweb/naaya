@@ -93,7 +93,7 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
 
     security.declareProtected(view_management_screens, 'manageAddDynamicProperty')
     def manageAddDynamicProperty(self, id='', searchable='', name='', type='',
-        required='', defaultvalue='', values='', order='', REQUEST=None):
+        required='', defaultvalue='', values='', order='', ref_list='', REQUEST=None):
         """ """
         lang = self.gl_get_selected_language()
         if searchable: searchable=1
@@ -102,6 +102,12 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
         else: required=0
         try: order = abs(int(order))
         except: order = 0
+        if ref_list:
+            values = []
+            p_tool = self.getPortletsTool()
+            ref = p_tool.getRefListById(ref_list)
+            ref_items = ref.get_list()
+            values = self.utConvertListToLines([x.title for x in ref_items])
         self.addDynamicProperty(id, searchable, name, type, required, defaultvalue, values, order)
         #create objects dynamic properties
         for l_object in self.getCatalogedObjects(self.id):
@@ -111,7 +117,7 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
 
     security.declareProtected(view_management_screens, 'manageUpdateDynamicProperty')
     def manageUpdateDynamicProperty(self, id='', searchable='', name='', type='',
-        required='', defaultvalue='', values='', order='', REQUEST=None):
+        required='', defaultvalue='', values='', order='', ref_list='', REQUEST=None):
         """ """
         lang = self.gl_get_selected_language()
         if searchable: searchable=1
@@ -120,6 +126,12 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
         else: required=0
         try: order = abs(int(order))
         except: order = 0
+        if ref_list:
+            values = []
+            p_tool = self.getPortletsTool()
+            ref = p_tool.getRefListById(ref_list)
+            ref_items = ref.get_list()
+            values = self.utConvertListToLines([x.title for x in ref_items])
         self.updateDynamicProperty(id, searchable, name, type, required, defaultvalue, values, order)
         #update objects dynamic properties
         for l_object in self.getCatalogedObjects(self.id):
