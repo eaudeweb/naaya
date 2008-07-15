@@ -469,7 +469,7 @@
         }
 
 	.translate {
-		background: #fff;
+		background: #fff !important;
 		color: #333;
 		font-size: 95%;
 		font-weight: normal;
