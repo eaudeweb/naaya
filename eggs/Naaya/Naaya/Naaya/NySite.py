@@ -1221,7 +1221,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             if folder_localized:
                 title = folder_localized('title')
             title = title or folder.title_or_id()
-            title = title.replace('"', "'")
+            title = self.utStrEscapeHTMLTags(title)
+            title = title.replace('"', "'").replace('\r', '').replace('\n', ' ')
             res.append("""{
                 "id": "%(id)s",
                 "text": "%(title)s",
@@ -1242,7 +1243,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             if document_localized:
                 title = document_localized('title')
             title = title or document.title_or_id()
-            title = title.replace('"', "'")
+            title = self.utStrEscapeHTMLTags(title)
+            title = title.replace('"', "'").replace('\r', '').replace('\n', ' ')
             res.append("""{
                 "id": "%(id)s",
                 "text": "%(title)s",
@@ -1276,7 +1278,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             if folder_localized:
                 title = folder_localized('title')
             title = title or folder.title_or_id()
-            title = title.replace('"', "'")
+            title = self.utStrEscapeHTMLTags(title)
+            title = title.replace('"', "'").replace('\r', '').replace('\n', ' ')
             res.append("""{
                 "id": "%(id)s",
                 "text": "%(title)s",
@@ -1297,7 +1300,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             if document_localized:
                 title = document_localized('title')
             title = title or document.title_or_id()
-            title = title.replace('"', "'")
+            title = self.utStrEscapeHTMLTags(title)
+            title = title.replace('"', "'").replace('\r', '').replace('\n', ' ')
             res.append("""{
                 "id": "%(id)s",
                 "text": "%(title)s",
