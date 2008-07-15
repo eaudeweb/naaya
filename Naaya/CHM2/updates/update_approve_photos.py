@@ -27,7 +27,7 @@ class CustomContentUpdater(NaayaContentUpdater):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya Photo Folders / Photos'
         self.description = 'Approve/Submit Naaya Photo Folders/Naaya Photos'
-        self.update_meta_type = 'Naaya Photo Folder'
+        self.update_meta_type = ['Naaya Photo Gallery', 'Naaya Photo Folder']
 
     def _verify_doc(self, doc):
         """ See super"""
