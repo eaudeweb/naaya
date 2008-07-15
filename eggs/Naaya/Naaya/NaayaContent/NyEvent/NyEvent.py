@@ -244,7 +244,7 @@ class NyEvent(NyAttributes, event_item, NyItem, NyCheckControl):
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
-        return u' '.join([self._objectkeywords(lang), self.getLocalProperty('details', lang)])
+        return u' '.join([self._objectkeywords(lang), self.getLocalProperty('details', lang), self.event_type, self.getLocalProperty('location_address', lang), self.getLocalProperty('location', lang)])
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
