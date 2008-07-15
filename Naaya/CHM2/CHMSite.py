@@ -410,7 +410,7 @@ class CHMSite(NySite):
     #api
     def getOnFrontPhotos(self):
         #returns a list with the photos marked as on front
-        r = [x for x in self.getPhotoArchive().getObjects() if x.approved==1 and x.topitem==1 and x.submitted==1]
+        r = [x for x in self.getPhotoArchive().getObjects() if x.approved==1 and getattr(x, 'topitem', 0) and x.submitted==1]
         r.sort(lambda x,y: cmp(y.releasedate, x.releasedate) or cmp(x.sortorder, y.sortorder))
         return r
 
