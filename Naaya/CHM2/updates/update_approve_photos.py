@@ -16,7 +16,6 @@
 # Authors:
 #
 # Alin Voinea, Eau de Web
-
 from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 from Products.NaayaCore.EditorTool.EditorTool import manage_addEditorTool
@@ -29,19 +28,29 @@ class CustomContentUpdater(NaayaContentUpdater):
         self.title = 'Update Naaya Photo Folders / Photos'
         self.description = 'Approve/Submit Naaya Photo Folders/Naaya Photos'
         self.update_meta_type = 'Naaya Photo Folder'
-    
+
     def _verify_doc(self, doc):
         """ See super"""
-        if not (getattr(doc, 'sumitted', 0) and getattr(doc, 'approved', 0)):
+        if not (getattr(doc, 'submitted', 0) and getattr(doc, 'approved', 0)):
             return doc
+        for photo in doc.objectValues('Naaya Photo'):
+            if not (getattr(photo, 'submitted', 0) and getattr(photo, 'approved', 0)):
+                return doc
         return None
-    
+
+    def _update_photo(self, photo):
+        photo.submitted = 1
+        photo.approved = 1
+
     def _update(self):
         updates = self._list_updates()
         for update in updates:
             update.submitted = 1
             update.approved = 1
             logger.debug('%-70s [UPDATED]', update.absolute_url(1))
+            for photo in update.objectValues('Naaya Photo'):
+                self._update_photo(photo)
+                logger.debug('%-70s [UPDATED]', photo.absolute_url(1))
 
 def register(uid):
     return CustomContentUpdater(uid)
