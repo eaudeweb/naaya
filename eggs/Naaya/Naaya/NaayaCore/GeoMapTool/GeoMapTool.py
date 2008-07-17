@@ -252,10 +252,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if administrative_level:
             base_kw['administrative_level' ] = administrative_level
 
-
         if query:
-            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, title=query, **base_kw))
-            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, address=query, **base_kw))
+            results.extend(site_ob.getCatalogedMapObjects(meta_type=meta_list, path=path, title=query, **base_kw))
+            results.extend(site_ob.getCatalogedMapObjects(meta_type=meta_list, path=path, address=query, **base_kw))
             if REQUEST:
                 langs = REQUEST.get('languages', self.gl_get_selected_language())
             else:
@@ -264,12 +263,12 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             for lang in langs:
                 kw = {'objectkeywords_%s' % (lang,) : query}
                 kw.update(base_kw)
-                results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **kw))
+                results.extend(site_ob.getCatalogedMapObjects(meta_type=meta_list, path=path, **kw))
         #LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG, 'searchGeoPoints%s -> %s' % (
         #                repr((path, geo_types, query, REQUEST)),
         #                repr(results)))
         else:
-            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **base_kw))
+            results.extend(site_ob.getCatalogedMapObjects(meta_type=meta_list, path=path, **base_kw))
 
         return self.utEliminateDuplicatesByURL(results)
 
