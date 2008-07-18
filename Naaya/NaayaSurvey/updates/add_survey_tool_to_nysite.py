@@ -30,8 +30,8 @@ class CustomContentUpdater(NaayaContentUpdater):
 
     def _verify_doc(self, doc):
         """See super"""
-        if getattr(doc, SurveyTool.portal_id, None) is None:
-            return doc
+        if not doc.__dict__.get(SurveyTool.portal_id, None):
+    	    return doc
 
     def _list_updates(self):
         """ Return all portals that need update """
