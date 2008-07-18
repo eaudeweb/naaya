@@ -44,7 +44,7 @@
 		<th i18n:translate="">URL</th>
 		<td>
 			<a tal:attributes="href here/locator" tal:content="here/locator"/>
-			<small><a tal:attributes="href here/locator" style="display: none" rel="external" i18n:translate=""> - open in new window</a></small>
+			<small class="message-information" i18n:translate="">[Hold down the Shift key when you click on a link to open it in a new window]</small>
 		</td>
 	</tr>
 </table>
