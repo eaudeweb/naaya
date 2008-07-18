@@ -33,7 +33,7 @@
 	<th i18n:translate="">Concerned URL</th>
 	<td>
 		<a tal:attributes="href here/resourceurl" tal:content="here/resourceurl" />
-		<small>[<a tal:attributes="href here/resourceurl" rel="external" i18n:translate="" style="display: none;">open in new window</a>]</small>
+		<small class="message-information" i18n:translate="">[Hold down the Shift key when you click on a link to open it in a new window]</small>
 	</td>
 </tr>
 <tr tal:condition="here/source">
