@@ -1,8 +1,6 @@
 REQUIREMENTS
 ------------
 NaayaSurvey uses the NaayaWidgets product.
-https://svn.eionet.europa.eu/repositories/Naaya/trunk/Naaya/Third-Party%20Products/captcha.py
-needs to be in the Python library path.
 
 CONFIGURATION
 -------------
@@ -15,4 +13,3 @@ MISC
 ----
 Some of the charts are generated using the Google Charts API, so an Internet
 connection is needed (charts won't work in an isolated LAN).
-
