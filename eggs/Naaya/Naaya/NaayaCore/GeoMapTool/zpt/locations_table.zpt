@@ -103,7 +103,7 @@ This macro uses the following variables:
 			<th tal:condition="edit_mode">&nbsp;</th>
 		</tr>
 	</thead>
-	<tbody tal:define="records python:geo_map.searchGeoPoints(path, geo_types, geo_query);">
+	<tbody tal:define="records python:map_ob.searchGeoPoints(path, geo_types, geo_query);">
 		<tr tal:condition="not:records">
 			<td colspan="7" i18n:translate="">No locations found</td>
 		</tr>
