@@ -64,7 +64,7 @@
 	<tr><td class="form-label" colspan="2">Dynamic properties</td></tr>
 	<tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
 		<td class="form-label"><span tal:replace="record/name"/></td>
-		<td tal:content="structure python:record.render(here.getPropertyValue(record.id))">dynamic html control</td>
+		<td tal:content="structure python:record.render(here.getPropertyValue(record.id), here)">dynamic html control</td>
 	</tr>
 	<tr><td></td><td><input type="submit" value="Save changes"></td></tr>
 </table>
