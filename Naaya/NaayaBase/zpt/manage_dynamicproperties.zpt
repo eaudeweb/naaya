@@ -14,7 +14,7 @@
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 <tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(here.meta_type)">
 	<td class="form-label" tal:content="record/name" />
-	<td tal:content="structure python:record.render(here.getPropertyValue(record.id))" />
+	<td tal:content="structure python:record.render(here.getPropertyValue(record.id), here)" />
 </tr>
 </table>
 </form>
