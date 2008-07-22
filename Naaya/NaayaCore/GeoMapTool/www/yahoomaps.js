@@ -48,3 +48,104 @@ function showListEntry(mapid, id) {
 	if (scrOfY > 220) window.scrollTo(0, 220);
 	marker.openSmartWindow(document.getElementById(id).innerHTML);
 }
+
+
+//TODO CLEANUP UPPER CODE
+/**
+ * class YGeoMapTool
+ * Description: Wrapper class around the Yahoo Maps implementation.
+ */
+
+function YGeoMapTool() {
+	this.description = "GeoMap Tool implementation wrapper for Yahoo maps";
+}
+
+/**
+ * Create a marker to be displayed on the map with given attributes.
+ * @param lat Geographical latitude
+ * @param lng Geographical longitude
+ * @param html HTML text that appears in the body of the tooltip ballon
+ * @param title Title that appears in the tooltip baloon (like title HTML tag)
+ * @param icon Icon symbol for the marker
+ * @return Initialized marker
+ */
+YGeoMapTool.prototype.createMarker = function(lat, lng, html, title, icon) {
+	var point = new YGeoPoint(lat, lng);
+	var marker = new YMarker(point, icon);
+	marker.setSmartWindowColor( "grey" );
+	YEvent.Capture(marker, EventsList.MouseClick, function() { 
+		marker.openSmartWindow(tooltip.toString());
+	});
+	return marker;
+}
+
+/**
+ * Clear all the markers (and elements) from the map.
+ */
+YGeoMapTool.prototype.clearMap = function() {
+	map.removeMarkersAll();
+}
+
+
+/**
+ * Create a new symbol (icon) to be displayed for markers.
+ * @param imageURL URL for the image icon
+ * @return an initialized icon symbol.
+ */
+YGeoMapTool.prototype.createIconSymbol = function(imageURL) {
+	icon = new YImage();
+	icon.src = imageURL;
+	icon.size = new YSize(17, 17);
+	icon.offsetSmartWindow = new YCoordPoint(6, 11);
+	return icon;
+}
+
+
+/**
+ * Add a new marker on the map.
+ * @param marker Marker to be added on map (created with createMarker)
+ */
+YGeoMapTool.prototype.addMarkerOnMap = function(marker) {
+	map.addOverlay(marker);
+}
+
+
+/**
+ * Initialize and display the map in the page.
+ * @param center A location (address type) to center the map on, 
+ * ex.: Frankfurt, Germany
+ * @param zoom Zoom factor for the map
+ * @param enableScrollWheelZoom Enable/Disable zooming using mouse scroll wheel
+ * and keyboard controls
+ * @param map_types An array of map types available for the map. 
+ * Possible values in array: {"hybrid", "map", satellite"}
+ */
+YGeoMapTool.prototype.showMap = function(center, zoom, enableScrollWheelZoom, map_types, initial_map_type) {
+	map = new YMap(document.getElementById("map"));
+	map.drawZoomAndCenter(center, zoom);
+	
+	var zp = new YCoordPoint(40,30); zp.translate('right','top');
+	map.addPanControl(zp);
+	var zp = new YCoordPoint(20,30); zp.translate('right','top');
+	map.addZoomLong(zp);
+	
+	init_type = YAHOO_MAP_REG;
+	if( "hybrid" == initial_map_type ) { init_type = YAHOO_MAP_HYB; }
+	if( "satellite" == initial_map_type ) { init_type = YAHOO_MAP_SAT; }
+	map.setMapType( init_type );
+	
+	var arrLayers = [];
+	for( i = 0; i < map_types.length; i++) {
+		if( "hybrid" == map_types[ i ] ) { arrLayers[arrLayers.length] = YAHOO_MAP_HYB; }
+		if( "map" == map_types[ i ] ) { arrLayers[arrLayers.length] = YAHOO_MAP_REG; }
+		if( "satellite" == map_types[ i ] ) { arrLayers[arrLayers.length] = YAHOO_MAP_SAT; }
+	}
+	if( arrLayers.length > 1 ) {
+		map.addTypeControl(mapType=arrLayers);
+	}
+	
+
+	if(!enableScrollWheelZoom) {
+		map.disableKeyControls();
+	}
+}
