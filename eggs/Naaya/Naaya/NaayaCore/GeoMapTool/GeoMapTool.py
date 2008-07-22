@@ -395,8 +395,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         initial_map_type = "map";
         if "YAHOO_MAP_SAT" == default_type: initial_map_type = "satellite";
         if "YAHOO_MAP_HYB" == default_type: initial_map_type = "hybrid";
-        
-        print map_engine;
+                
         return get_template("map_loader.js") % (map_engine, 
                                                 self.jsMarkerIcons(), #Marker icons types
                                                 center, #Center location
