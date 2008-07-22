@@ -18,6 +18,7 @@
 #  Original Code:
 #        Cornel Nitu (Eau de Web)
 #Special thanks to Dragos Chirila (fourhooks.com)
+#Cristian Romanescu (Eau de Web) added support for Google Maps API
 
 #Python imports
 import os.path
@@ -51,10 +52,10 @@ def get_template(name):
         f.close()
     return ''.join(("""<script type="text/javascript">\n<!--\n""", content, """\n// -->\n</script>\n"""))
 
-TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER = get_template('xmlrpc_locations_map_loader.js')
-TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER = get_template('xmlrpc_simple_map_loader.js')
-TEMPLATE_XMLRPC_ADDPICK_MAP_LOADER = get_template('xmlrpc_addpick_map_loader.js')
-TEMPLATE_XMLRPC_EDITPICK_MAP_LOADER = get_template('xmlrpc_editpick_map_loader.js')
+TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER = 'xmlrpc_locations_map_loader.js'
+TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER = 'xmlrpc_simple_map_loader.js'
+TEMPLATE_XMLRPC_ADDPICK_MAP_LOADER = 'xmlrpc_addpick_map_loader.js'
+TEMPLATE_XMLRPC_EDITPICK_MAP_LOADER = 'xmlrpc_editpick_map_loader.js'
 
 class GeoMapToolUploadError(Exception):
     """GeoMapTool Upload Error"""
@@ -104,6 +105,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         self.id = id
         self.title = title
         self.mapsapikey = 'm.6kzBLV34FOaYaMCfIKBRHIIYE8zCf6c6yxcc5rZCWkCilWFPzAhcyQEcRTgYKy5g--'
+        self.googleApiKey = 'ABQIAAAAkblOrSS9iVzkKUfXj3gOFRR26BjrSmLtamIPMRgDuTUxZh8BLxQ2qfb6PUeks1ZMeSmUGC0ZTrNFVg'
+        self.map_engine = 'yahoo'
         #center map in Europe
         self.center_locality = MAP_CENTER_LOCALITY
         self.center_zoom = MAP_CENTER_ZOOM
@@ -121,6 +124,10 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         """Updates"""
         if not hasattr(self, 'map_types'):
             self.map_types = YAHOO_MAP_TYPES
+        if not hasattr(self, 'map_engine'):
+            self.map_engine = 'yahoo'
+        if not hasattr(self, 'googleApiKey'):
+            self.googleApiKey = ''
         if not hasattr(self, 'default_type'):
             self.default_type = 'YAHOO_MAP_REG'
         if not hasattr(self, 'enableKeyControls'):
@@ -129,7 +136,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     #admin actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'manageProperties')
-    def manageProperties(self, mapsapikey='', center_locality='', center_zoom='', detailed_zoom='', map_width='', map_height='', detailed_map_width='', detailed_map_height='', map_types=[], default_type='', enableKeyControls='', REQUEST=None):
+    def manageProperties(self, mapsapikey='', googleApiKey='', map_engine='', center_locality='', center_zoom='', detailed_zoom='', map_width='', map_height='', detailed_map_width='', detailed_map_height='', map_types=[], default_type='', enableKeyControls='', REQUEST=None):
         """ """
         try: center_zoom = abs(int(center_zoom))
         except: center_zoom = MAP_CENTER_ZOOM
@@ -144,6 +151,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         try: detailed_map_height = abs(int(detailed_map_height))
         except: detailed_map_height = MAP_DETAILED_HEIGHT
         self.mapsapikey = mapsapikey
+        self.googleApiKey = googleApiKey
+        self.map_engine = map_engine
         self.center_locality = center_locality
         self.center_zoom = center_zoom
         self.detailed_zoom = detailed_zoom
@@ -253,8 +262,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             base_kw['administrative_level' ] = administrative_level
 
         if query:
-            results.extend(site_ob.getCatalogedMapObjects(meta_type=meta_list, path=path, title=query, **base_kw))
-            results.extend(site_ob.getCatalogedMapObjects(meta_type=meta_list, path=path, address=query, **base_kw))
+            #results.extend(site_ob.getCatalogedMapObjects(meta_type=meta_list, path=path, title=query, **base_kw))
+            #results.extend(site_ob.getCatalogedMapObjects(meta_type=meta_list, path=path, address=query, **base_kw))
+            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, title=query, **base_kw))
+            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, address=query, **base_kw))
+            
             if REQUEST:
                 langs = REQUEST.get('languages', self.gl_get_selected_language())
             else:
@@ -263,12 +275,15 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             for lang in langs:
                 kw = {'objectkeywords_%s' % (lang,) : query}
                 kw.update(base_kw)
-                results.extend(site_ob.getCatalogedMapObjects(meta_type=meta_list, path=path, **kw))
+                #results.extend(site_ob.getCatalogedMapObjects(meta_type=meta_list, path=path, **kw))
+                results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **kw))
+
         #LOG('NaayaCore.GeoMapTool.GeoMapTool.GeoMapTool', DEBUG, 'searchGeoPoints%s -> %s' % (
         #                repr((path, geo_types, query, REQUEST)),
         #                repr(results)))
         else:
-            results.extend(site_ob.getCatalogedMapObjects(meta_type=meta_list, path=path, **base_kw))
+            #results.extend(site_ob.getCatalogedMapObjects(meta_type=meta_list, path=path, **base_kw))
+            results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, **base_kw))
 
         return self.utEliminateDuplicatesByURL(results)
 
@@ -356,6 +371,42 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                 out_a('mk_%s.offsetSmartWindow = new YCoordPoint(6, 11);' % symbol.id)
         return '\n'.join(output)
 
+
+    def jsMarkerIcons(self):
+        #load markers on the map
+        output = []
+        for symbol in self.getSymbolsList():
+            icon_url = '%s/getSymbolPicture?id=%s' % (self.absolute_url(), symbol.id)
+            output.append('"%s":"%s"' % (symbol.id, icon_url))
+        return ",".join(output)
+    
+    def jsMapControl(self, map_engine="yahoo", center="", zoom="", width="", height="", enableKeyControls=False, map_types=[], default_type=""):
+        """
+        Load map control from ZPT template into web page
+        """
+        center_locality = center or self.center_locality
+        center_zoom = zoom or self.center_zoom
+        
+        map_type = [];
+        if "YAHOO_MAP_SAT" in map_types: map_type.append( "satellite" );
+        if "YAHOO_MAP_REG" in map_types: map_type.append( "map" );
+        if "YAHOO_MAP_HYB" in map_types: map_type.append( "hybrid" );
+
+        initial_map_type = "map";
+        if "YAHOO_MAP_SAT" == default_type: initial_map_type = "satellite";
+        if "YAHOO_MAP_HYB" == default_type: initial_map_type = "hybrid";
+        
+        print map_engine;
+        return get_template("map_loader.js") % (map_engine, 
+                                                self.jsMarkerIcons(), #Marker icons types
+                                                center, #Center location
+                                                center_zoom, #Default zoom
+                                                ("%s" % (enableKeyControls,)).lower(), #Enable mouse wheel zoom 
+                                                "[%s];" % ",".join(["\"%s\"" % (k) for k in map_type]), #map types
+                                                initial_map_type,
+                                                self.absolute_url(),) #Absolute url for control
+
+
     #xmlrpc interface
     def xrjs_loader(self, show, geo_query, center='', zoom='', path='', width='', height='', enableKeyControls=True):
         #initialize markers loader - locations
@@ -373,7 +424,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         strKeyControls = ""
         if not self.enableKeyControls or not enableKeyControls:
           strKeyControls = "map.disableKeyControls();"
-        return TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER % (center_locality, center_zoom, self.default_type, width, height, ",".join(self.map_types), strKeyControls, self.xrjs_markers(), self.absolute_url())
+        return get_template(TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER) % (center_locality, center_zoom, self.default_type, width, height, ",".join(self.map_types), strKeyControls, self.xrjs_markers(), self.absolute_url())
 
     def xrjs_simple_loader(self, show):
         #initialize marker loader - location
@@ -386,7 +437,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             center_latitude, center_longitude = 0.0, 0.0
             if ob.latitude is not None and ob.longitude is not None:
                 center_latitude, center_longitude, center_zoom = ob.latitude, ob.longitude, self.detailed_zoom
-        return TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER % (center_latitude, center_longitude, center_zoom, self.default_type, self.detailed_map_width, self.detailed_map_height, ",".join(self.map_types), self.get_location_marker(ob), self.absolute_url(), xr_key, show)
+        return get_template(TEMPLATE_XMLRPC_SIMPLE_MAP_LOADER) % (center_latitude, center_longitude, center_zoom, self.default_type, self.detailed_map_width, self.detailed_map_height, ",".join(self.map_types), self.get_location_marker(ob), self.absolute_url(), xr_key, show)
 
     def xrjs_editpick_loader(self, show):
         #initialize edit pick map
@@ -394,12 +445,12 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         ob = self.unrestrictedTraverse('%s' % show)
         if ob:
             latitude, longitude, zoom = ob.latitude, ob.longitude, self.detailed_zoom
-        return TEMPLATE_XMLRPC_EDITPICK_MAP_LOADER % (latitude, longitude, zoom, self.center_locality, self.center_zoom, self.default_type, self.detailed_map_width, self.detailed_map_height, ",".join(self.map_types))
+        return get_template(TEMPLATE_XMLRPC_EDITPICK_MAP_LOADER) % (latitude, longitude, zoom, self.center_locality, self.center_zoom, self.default_type, self.detailed_map_width, self.detailed_map_height, ",".join(self.map_types))
 
     def xrjs_addpick_loader(self):
         #initialize add pick map
         center_locality, center_zoom = self.center_locality, self.center_zoom + 2
-        return TEMPLATE_XMLRPC_ADDPICK_MAP_LOADER % (center_locality, center_zoom, self.default_type, self.detailed_map_width, self.detailed_map_height, ",".join(self.map_types))
+        return get_template(TEMPLATE_XMLRPC_ADDPICK_MAP_LOADER) % (center_locality, center_zoom, self.default_type, self.detailed_map_width, self.detailed_map_height, ",".join(self.map_types))
 
     def get_location_marker(self, location):
         symbol = self.getSymbol(location.geo_type)
@@ -701,10 +752,13 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        if hasattr(self, 'map_index'):
-            return self._getOb('map_index')({'here': self})
+#        if hasattr(self, 'map_index'):
+#            return self._getOb('map_index')({'here': self})
+#        return self.view_map_html({'here': self})
+        #if hasattr(self, 'map_index'):
+         #   return self._getOb('map_index')({'here': self})
         return self.view_map_html({'here': self})
-
+    
     security.declareProtected(view, 'view_map_html')
     view_map_html = PageTemplateFile('zpt/map_index', globals())
 

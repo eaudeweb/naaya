@@ -42,12 +42,35 @@
 <form method="post" tal:attributes="action string:${map_url}/manageProperties">
 <table border="0" cellspacing="2" cellpadding="2" width="90%">
 <tr>
+  <td i18n:translate="">Default map engine</td>
+  <td>
+    <ul class="maptypes">
+      <li>
+        <label for="google" i18n:translate="">Google Maps</label>
+        <input type="radio" name="map_engine" id="google" value="google" tal:attributes="checked python:'google'==here.map_engine" />
+      </li>
+      <li>
+        <label for="yahoo" i18n:translate="">Yahoo Maps</label>
+        <input type="radio" name="map_engine" id="yahoo" value="yahoo" tal:attributes="checked python:'yahoo'==here.map_engine" />
+      </li>
+    <ul>
+  </td>
+</tr>
+<tr>
 	<td>
 		<label for="mapsapikey" i18n:translate="">Yahoo Maps API Key</label>
 	</td>
 	<td>
 		<input type="text" name="mapsapikey" id="mapsapikey" tal:attributes="value here/mapsapikey" size="50" />
 	</td>
+</tr>
+<tr>
+  <td>
+    <label for="googleApiKey" i18n:translate="">Google Maps API Key</label>
+  </td>
+  <td>
+    <input type="text" name="googleApiKey" id="googleApiKey" tal:attributes="value here/googleApiKey" size="50" />
+  </td>
 </tr>
 <tr>
 	<td>
@@ -132,16 +155,16 @@
 	<td>
 		<ul class="maptypes">
 			<li>
-				<label for="YAHOO_MAP_SAT" i18n:translate="">Satelite</label>
-				<input type="radio" name="default_type" id="YAHOO_MAP_SAT" value="YAHOO_MAP_SAT" tal:attributes="checked python:'YAHOO_MAP_SAT'==here.default_type" />
+				<label for="tYAHOO_MAP_SAT" i18n:translate="">Satelite</label>
+				<input type="radio" name="default_type" id="tYAHOO_MAP_SAT" value="YAHOO_MAP_SAT" tal:attributes="checked python:'YAHOO_MAP_SAT'==here.default_type" />
 			</li>
 			<li>
-				<label for="YAHOO_MAP_HYB" i18n:translate="">Hybrid</label>
-				<input type="radio" name="default_type" id="YAHOO_MAP_HYB" value="YAHOO_MAP_HYB" tal:attributes="checked python:'YAHOO_MAP_HYB'==here.default_type" />
+				<label for="tYAHOO_MAP_HYB" i18n:translate="">Hybrid</label>
+				<input type="radio" name="default_type" id="tYAHOO_MAP_HYB" value="YAHOO_MAP_HYB" tal:attributes="checked python:'YAHOO_MAP_HYB'==here.default_type" />
 			</li>
 			<li>
-				<label for="YAHOO_MAP_REG" i18n:translate="">Map</label>
-				<input type="radio" name="default_type" id="YAHOO_MAP_REG" value="YAHOO_MAP_REG" tal:attributes="checked python:'YAHOO_MAP_REG'==here.default_type" />
+				<label for="tYAHOO_MAP_REG" i18n:translate="">Map</label>
+				<input type="radio" name="default_type" id="tYAHOO_MAP_REG" value="YAHOO_MAP_REG" tal:attributes="checked python:'YAHOO_MAP_REG'==here.default_type" />
 			</li>
 		<ul>
 	</td>
