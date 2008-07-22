@@ -103,11 +103,11 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
         try: order = abs(int(order))
         except: order = 0
         if ref_list:
-            values = []
+            values = {}
             p_tool = self.getPortletsTool()
             ref = p_tool.getRefListById(ref_list)
             ref_items = ref.get_list()
-            values = self.utConvertListToLines([x.title for x in ref_items])
+            values[ref_list] = self.utConvertListToLines([x.title for x in ref_items])
         self.addDynamicProperty(id, searchable, name, type, required, defaultvalue, values, order)
         #create objects dynamic properties
         for l_object in self.getCatalogedObjects(self.id):
@@ -127,15 +127,16 @@ class DynamicPropertiesItem(SimpleItem, utils, dynamic_properties_tool):
         try: order = abs(int(order))
         except: order = 0
         if ref_list:
-            values = []
+            values = {}
             p_tool = self.getPortletsTool()
             ref = p_tool.getRefListById(ref_list)
             ref_items = ref.get_list()
-            values = self.utConvertListToLines([x.title for x in ref_items])
+            values[ref_list] = self.utConvertListToLines([x.title for x in ref_items])
         self.updateDynamicProperty(id, searchable, name, type, required, defaultvalue, values, order)
         #update objects dynamic properties
         for l_object in self.getCatalogedObjects(self.id):
-            l_object.createProperty(id, defaultvalue, lang)
+            previousvalue = l_object.getPropertyValue(id, lang)
+            l_object.createProperty(id, previousvalue, lang)
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_properties_html')
 

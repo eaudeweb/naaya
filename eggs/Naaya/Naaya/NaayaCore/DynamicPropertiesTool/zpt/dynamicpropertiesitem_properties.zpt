@@ -57,7 +57,7 @@
                 <select tal:condition="reflists" id="ref_list" name="ref_list" style="display: block" onchange="javascript:toggle_values(this)">
                     <option value=""></option>
                     <option tal:repeat="ref reflists"
-                            tal:attributes="value ref/getId"
+                            tal:attributes="value ref/getId; selected python: ref.getId() in dp_data[9]"
                             tal:content="ref/title_or_id" />
                 </select>
                 <p>or provide the values in the textarea below, one on a row.</p>
@@ -98,7 +98,7 @@
         <td tal:content="record/type">Type</td>
         <td tal:content="record/required">Required</td>
         <td tal:content="record/defaultvalue">Default value</td>
-        <td tal:content="record/values">Values</td>
+        <td tal:content="record/getvalues">Values</td>
         <td tal:content="record/order">Listing order</td>
     </tr>
 </table>

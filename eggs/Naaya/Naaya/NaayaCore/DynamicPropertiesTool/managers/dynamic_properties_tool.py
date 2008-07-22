@@ -45,7 +45,7 @@ class dynamic_property(utils):
     security = ClassSecurityInfo()
     security.setDefaultAccess("allow")
 
-    def render(self, default=''):
+    def render(self, default='', context=None):
         """ """
         l_html = []
         if self.type == 'string' or self.type == 'date' or self.type == 'integer' or self.type == 'float':
@@ -59,9 +59,16 @@ class dynamic_property(utils):
             l_html.append(self.utHtmlEncode(default))
             l_html.append('</textarea>')
         elif self.type == 'selection':
+            values = self.values
+            if type(self.values) == type({}):
+                try:
+                    ref_list = context.getPortletsTool().getRefListById(self.values.keys()[0]).get_list()
+                    values = self.utConvertListToLines([x.title for x in ref_list])
+                except:
+                    values = self.values.values()[0]
             l_html.append('<select name="%s:utf8:ustring" id="%s">' % (self.utHtmlEncode(self.id), self.utHtmlEncode(self.id)))
             l_html.append('<option value=""></option>')
-            for l_value in self.values.split('\r\n'):
+            for l_value in values.split('\r\n'):
                 if l_value != '':
                     l_html.append('<option value="%s"' % self.utHtmlEncode(l_value))
                     if l_value == default: l_html.append(' selected')
@@ -75,6 +82,13 @@ class dynamic_property(utils):
             return 'FieldIndex'
         else:
             return 'TextIndex'
+
+    def getvalues(self):
+        """ """
+        if type(self.values) == type({}):
+            return self.values.values()[0]
+        else:
+            return self.values
 
 InitializeClass(dynamic_property)
 
@@ -131,6 +145,14 @@ class dynamic_properties_tool:
         """ """
         l_dp = self.getDynamicProperty(p_dp_id)
         if l_dp is not None:
-            return ['update', l_dp.id, l_dp.searchable, l_dp.name, l_dp.type, l_dp.required, l_dp.defaultvalue, l_dp.values, l_dp.order]
+            ref_list = ''
+            values = l_dp.values
+            if type(l_dp.values) == type({}):
+                ref_list = l_dp.values.keys()[0]
+                try:
+                    values = self.utConvertListToLines([i.title for i in self.getPortletsTool().getRefListById(ref_list).get_list()])
+                except:
+                    values = l_dp.values.values()[0]
+            return ['update', l_dp.id, l_dp.searchable, l_dp.name, l_dp.type, l_dp.required, l_dp.defaultvalue, values, l_dp.order, ref_list]
         else:
-            return ['add', '', 0, '', '', 0, '', '', 0]
+            return ['add', '', 0, '', '', 0, '', '', 0, '']
