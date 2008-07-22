@@ -135,6 +135,7 @@
   var showSelected = document.getElementById("showSelected");
   showSelected.style.display = "inline";
   showMap();
+  showMapLocations();
 //-->;
 </script>
 </tal:block>

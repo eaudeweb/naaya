@@ -86,7 +86,7 @@
 		<label for="center_zoom" i18n:translate="">Center zoom</label>
 	</td>
 	<td>
-		<input type="text" name="center_zoom" id="center_zoom" tal:attributes="value here/center_zoom" size="5" />
+		<input type="text" name="center_zoom" id="center_zoom" tal:attributes="value here/center_zoom" size="5" /> (19 to 1 for Google Maps, 1 to 15 for Yahoo Maps)
 	</td>
 </tr>
 <tr>
