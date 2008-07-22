@@ -102,35 +102,28 @@ class NyControlSettings(Folder):
                 pass
 
     def add_additionalProperties(self, name):
-        properties={'landscape_type': {'name': 'Landscape type', 
-                                       'default': 'None', 
-                                       'values': ['None', 'Coastal', 'Marine', 'Mountain', 'Protected', 'Rural', 'Urban']
-                                      }, 
-                    'administrative_level': {'name': 'Administrative level', 
-                                             'default': 'None', 
-                                             'values': ['None', 'Global', 'Local', 'National', 'Regional', 'Sub-Global']
-                                            }
-                   }
+        properties = [('landscape_type', 'Landscape type'), ('administrative_level', 'Administrative level')]
         dp_tool = self.getDynamicPropertiesTool()
         ct_tool = self.getCatalogTool()
 
         if not hasattr(dp_tool, name):
             dp_tool.manage_addDynamicPropertiesItem(id=name)
         dp_item = dp_tool._getOb(name)
-        for prop in properties.keys():
-            dp_item.manageAddDynamicProperty(id=prop,
-                                             name=properties[prop]['name'],
+        for k, v in properties:
+            dp_item.manageAddDynamicProperty(id=k,
+                                             name=v,
                                              searchable='1',
                                              type='selection',
-                                             defaultvalue=properties[prop]['default'],
-                                             values='\r\n'.join(properties[prop]['values']),
+                                             defaultvalue='',
+                                             values='',
+                                             ref_list=k
                                              )
             try:
-                ct_tool.addIndex(prop, 'FieldIndex', prop)
+                ct_tool.addIndex(k, 'FieldIndex', k)
             except:
                 pass
             try:
-                ct_tool.manage_reindexIndex(prop)
+                ct_tool.manage_reindexIndex(k)
             except:
                 pass
 
