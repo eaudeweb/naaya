@@ -214,8 +214,12 @@ misc_ = {
 if geo_installed:
     gmisc_ = {
     'GeoMapTool.gif':ImageFile('GeoMapTool/www/GeoMapTool.gif', globals()),
+    'shadow.png':ImageFile('GeoMapTool/www/shadow.png', globals()),
     'yahoomaps.js':ImageFile('GeoMapTool/www/yahoomaps.js', globals()),
+    'geomaptool.js':ImageFile('GeoMapTool/www/geomaptool.js', globals()),
     'remote.js':ImageFile('GeoMapTool/www/remote.js', globals()),
     'template.csv':ImageFile('GeoMapTool/www/template.csv', globals()),
+    'googlemaps.js':ImageFile('GeoMapTool/www/googlemaps.js', globals()),
+    'xmlhttp.js':ImageFile('GeoMapTool/www/xmlhttp.js', globals()),
     }
     misc_.update(gmisc_)
