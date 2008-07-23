@@ -58,6 +58,7 @@ function showListEntry(mapid, id) {
 
 function YGeoMapTool() {
 	this.description = "GeoMap Tool implementation wrapper for Yahoo maps";
+	this.markerHash = {};
 }
 
 /**
@@ -149,3 +150,22 @@ YGeoMapTool.prototype.showMap = function(center, zoom, enableScrollWheelZoom, ma
 		map.disableKeyControls();
 	}
 }
+
+YGeoMapTool.prototype.showCategory = function(idCategory)
+{
+	var category = 'mk_' + idCategory;
+	if( this.markerHash[ category ] != null ) {
+		markerArr = this.markerHash[ category ];
+		for( i = 0; i < markerArr.length; i++ ) {
+			var marker = markerArr[ i ];
+			if( marker.ishidden() )
+			{
+				marker.unhide();
+			}
+			else 
+			{
+				marker.hide();
+			}
+		}
+	}
+}  

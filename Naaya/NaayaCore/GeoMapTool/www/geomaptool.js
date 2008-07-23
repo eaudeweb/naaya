@@ -49,7 +49,7 @@ function toggleSelect()
  */
 function httpDocumentHandler(req) {
 	checkConfig( "showMapLocations" );
-	try {
+	//try {
 		var data = req.responseText;
 		var arrMarkers = data.split('$$');
 		var num_records = 0;
@@ -64,11 +64,13 @@ function httpDocumentHandler(req) {
 				mapMarker = m[4].toString();
 				tooltip = m[5].toString();
 				var marker = mapTool.createMarker(lat, lng, tooltip, label, symbolIcons[mapMarker]);
+				if( mapTool.markerHash[ mapMarker ] == null ) mapTool.markerHash[ mapMarker ] = new Array();
+				mapTool.markerHash[ mapMarker ].push( marker );
 				mapTool.addMarkerOnMap(marker);
 				num_records++;
 			}
 		}
 		document.getElementById('record_counter').innerHTML = num_records.toString();
-	} catch(e) { alert( "Naaya GeoMapTool: Error drawing markers on map:" + e.message)};
+	//} catch(e) { alert( "Naaya GeoMapTool: Error drawing markers on map:" + e.message)};
 	document.body.style.cursor = "default";
 }
