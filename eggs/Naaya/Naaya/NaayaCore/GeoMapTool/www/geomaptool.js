@@ -86,8 +86,7 @@ function showMapLocations() {
 	checkConfig( "showMapLocations" );
 	mapTool.clearMap();
 	mapTool.markerHash = {};
-	document.body.style.cursor = "wait";
-	alert(encodeForm("frmFilterMap"))
+	document.body.style.cursor = "wait";	
 	doHttpRequest( server_base_url + "/xrjs_getGeoPoints?" + encodeForm("frmFilterMap"), httpDocumentHandler);
 }
 
