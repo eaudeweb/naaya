@@ -835,13 +835,16 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manageSubobjects')
-    def manageSubobjects(self, REQUEST=None):
+    def manageSubobjects(self, REQUEST=None, **kwargs):
         """ """
-        if REQUEST.get('default', ''):
+        if REQUEST:
+            kwargs.update(REQUEST.form)
+
+        if kwargs.get('default', ''):
             self.folder_meta_types = self.adt_meta_types
         else:
-            self.folder_meta_types = self.utConvertToList(REQUEST.get('subobjects', []))
-            self.folder_meta_types.extend(self.utConvertToList(REQUEST.get('ny_subobjects', [])))
+            self.folder_meta_types = self.utConvertToList(kwargs.get('subobjects', []))
+            self.folder_meta_types.extend(self.utConvertToList(kwargs.get('ny_subobjects', [])))
         self._p_changed = 1
         if REQUEST:
             self.setSessionInfo(['Saved changes (%s)' % DateTime()])
