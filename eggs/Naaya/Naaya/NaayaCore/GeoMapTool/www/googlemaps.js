@@ -6,6 +6,7 @@
 function GGeoMapTool() {
 	this.description = "GeoMap Tool implementation wrapper for Yahoo maps";
 	this.geocoder = null;
+	this.markerHash = {};
 }
 
 
@@ -113,3 +114,23 @@ GGeoMapTool.prototype.showMap = function(center, zoom, enableScrollWheelZoom, ma
 		map.enableScrollWheelZoom();
 	}
 }
+
+
+GGeoMapTool.prototype.showCategory = function(idCategory)
+{
+	var category = 'mk_' + idCategory;
+	if( this.markerHash[ category ] != null ) {
+		markerArr = this.markerHash[ category ];
+		for( i = 0; i < markerArr.length; i++ ) {
+			var marker = markerArr[ i ];
+			if( marker.isHidden() )
+			{
+				marker.show();
+			}
+			else 
+			{
+				marker.hide();
+			}
+		}
+	}
+}  
