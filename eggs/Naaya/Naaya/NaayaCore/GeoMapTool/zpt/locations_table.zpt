@@ -8,7 +8,7 @@ This macro uses the following variables:
 - edit_mode: bool - enable/disable delete and edit
 - sortable: add links that sort the table in its header
 </tal:comment>
-<table metal:define-macro="main" border="0" cellspacing="0" cellpadding="4" width="90%"
+<table metal:define-macro="main" width="90%"
        tal:attributes="class python:test(edit_mode, 'admin_table', 'datatable')">
 	<thead>
 		<tr>
@@ -103,7 +103,7 @@ This macro uses the following variables:
 			<th tal:condition="edit_mode">&nbsp;</th>
 		</tr>
 	</thead>
-	<tbody tal:define="records python:map_ob.searchGeoPoints(path, geo_types, geo_query);">
+	<tbody tal:define="records python:map_ob.searchGeoPoints();">
 		<tr tal:condition="not:records">
 			<td colspan="7" i18n:translate="">No locations found</td>
 		</tr>
