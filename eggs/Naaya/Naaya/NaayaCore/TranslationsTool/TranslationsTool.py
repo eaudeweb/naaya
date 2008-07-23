@@ -35,6 +35,7 @@ from urllib import quote
 import locale
 
 #Zope imports
+import zLOG
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.Localizer.MessageCatalog import MessageCatalog
@@ -285,6 +286,10 @@ class TranslationsTool(MessageCatalog):
                 output_app((unicode(msgkey, 'utf-8').encode(encoding), unicode(translations[msgkey], 'utf-8').encode(encoding)))
             except TypeError:
                 output_app((msgkey.encode(encoding), translations[msgkey].encode(encoding)))
+            except UnicodeDecodeError, err:
+                # XXX Fixme !
+                zLOG.LOG('TranslationTool.spreadsheet_export', zLOG.WARNING, err)
+                continue
 
         #generate a temporary file on the filesystem that will be used to return the actual output
         tmp_name = spreadsheet_file(output, dialect)
