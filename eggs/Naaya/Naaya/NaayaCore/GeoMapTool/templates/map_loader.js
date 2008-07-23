@@ -18,16 +18,4 @@ var initial_map_type = "%s";
 var symbolIcons = new Array();
 var map = null;
 var mapTool = null;
-
-
-/**
- * Show on map selected types of locations.
- * Map engine independent.
- * @return Nothing
- */
-function showMapLocations() {
-	checkConfig( "showMapLocations" );
-	mapTool.clearMap();
-	document.body.style.cursor = "wait";
-	doHttpRequest( "%s/xrjs_getGeoPoints?" + encodeForm("frmFilterMap"), httpDocumentHandler);
-}
+var server_base_url = "%s";

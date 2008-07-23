@@ -151,6 +151,29 @@ YGeoMapTool.prototype.showMap = function(center, zoom, enableScrollWheelZoom, ma
 	}
 }
 
+/**
+ * Load category from server doing an XMLHTTPRequest to retrieve the points.
+ */
+YGeoMapTool.prototype.showCategoryServer = function(idCategory, show)
+{
+	var category = 'mk_' + idCategory;
+	// Look first into the cache to see if we didn't already loaded the 
+	// points for this category
+	if( show && this.markerHash[ category ] == null ) {
+		// Cache miss, load points from server
+		document.body.style.cursor = "wait";
+		doHttpRequest( server_base_url + "/xrjs_getGeoPoints?geo_types%3Alist=" + idCategory, httpDocumentHandler);
+	} else {
+		// We have a cache hit, show them
+		this.showCategory(idCategory);
+	}
+}
+
+
+/**
+ * Show a category, client side. Assumes that markers for this category are
+ * already loaded on the client side and are taken directly from marker cache.
+ */
 YGeoMapTool.prototype.showCategory = function(idCategory)
 {
 	var category = 'mk_' + idCategory;
@@ -168,4 +191,20 @@ YGeoMapTool.prototype.showCategory = function(idCategory)
 			}
 		}
 	}
+	this.updateRecordCounter();
 }  
+
+YGeoMapTool.prototype.updateRecordCounter = function () {
+	counter = 0;
+	for( key in mapTool.markerHash) {
+		var markerArr = mapTool.markerHash[ key ];
+		for( i = 0; i < markerArr.length; i++ ) {
+			var marker = markerArr[ i ]; 
+			if( !marker.ishidden() ) counter++;
+		}
+	}
+	setRecordCounter( counter );
+}
+
+
+

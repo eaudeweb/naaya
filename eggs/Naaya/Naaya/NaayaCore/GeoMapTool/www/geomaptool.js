@@ -48,8 +48,8 @@ function toggleSelect()
  * @return Nothing
  */
 function httpDocumentHandler(req) {
-	checkConfig( "showMapLocations" );
-	//try {
+	checkConfig( "httpDocumentHandler" );
+	try {
 		var data = req.responseText;
 		var arrMarkers = data.split('$$');
 		var num_records = 0;
@@ -70,7 +70,27 @@ function httpDocumentHandler(req) {
 				num_records++;
 			}
 		}
-		document.getElementById('record_counter').innerHTML = num_records.toString();
-	//} catch(e) { alert( "Naaya GeoMapTool: Error drawing markers on map:" + e.message)};
+	} catch(e) { 
+		alert( "Naaya GeoMapTool: Error drawing markers on map:" + e.message)
+	};
+	mapTool.updateRecordCounter();
 	document.body.style.cursor = "default";
+}
+
+/**
+ * Show on map selected types of locations.
+ * Map engine independent.
+ * @return Nothing
+ */
+function showMapLocations() {
+	checkConfig( "showMapLocations" );
+	mapTool.clearMap();
+	mapTool.markerHash = {};
+	document.body.style.cursor = "wait";
+	alert(encodeForm("frmFilterMap"))
+	doHttpRequest( server_base_url + "/xrjs_getGeoPoints?" + encodeForm("frmFilterMap"), httpDocumentHandler);
+}
+
+function setRecordCounter( value ) {
+	document.getElementById('record_counter').innerHTML = value.toString();	
 }
