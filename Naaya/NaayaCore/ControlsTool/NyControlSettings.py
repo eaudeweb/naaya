@@ -102,21 +102,23 @@ class NyControlSettings(Folder):
                 pass
 
     def add_additionalProperties(self, name):
-        properties = [('landscape_type', 'Landscape type'), ('administrative_level', 'Administrative level')]
+        properties = [('landscape_type', 'Landscape type', 'Unspecified', '0'), 
+                      ('administrative_level', 'Administrative level', 'National', '10')]
         dp_tool = self.getDynamicPropertiesTool()
         ct_tool = self.getCatalogTool()
 
         if not hasattr(dp_tool, name):
             dp_tool.manage_addDynamicPropertiesItem(id=name)
         dp_item = dp_tool._getOb(name)
-        for k, v in properties:
+        for k, v, x, z in properties:
             dp_item.manageAddDynamicProperty(id=k,
                                              name=v,
                                              searchable='1',
                                              type='selection',
-                                             defaultvalue='',
+                                             defaultvalue=x,
                                              values='',
-                                             ref_list=k
+                                             ref_list=k,
+                                             order=z
                                              )
             try:
                 ct_tool.addIndex(k, 'FieldIndex', k)
