@@ -294,7 +294,10 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
             fileitem = self.getFileItem(lang)
             data = str(fileitem.get_data())
             mimetype, encoding = guess_content_type(self.getId(), data)
-            converter = ConverterRegistry.get(mimetype)
+            try:
+                converter = ConverterRegistry.get(mimetype)
+            except:
+                converter = False
             if converter:
                 try:
                     res, encoding = converter.convert2(data, encoding, mimetype)
