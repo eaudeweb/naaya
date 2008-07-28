@@ -1,0 +1,9 @@
+<tal:block tal:define="lastid options/lastid">
+<div tal:repeat="msg python:here.getSortedMessages(lastid)">
+	<span class="chtid" tal:content="msg/id" />
+	<span class="chtdate" tal:content="msg/get_date" />
+	<span class="chttime" tal:content="msg/get_time" />
+	<span class="chtuser" tal:content="msg/get_posting_user" />
+	<span class="chtmsg" tal:content="msg/get_msg" />
+</div>
+</tal:block>
