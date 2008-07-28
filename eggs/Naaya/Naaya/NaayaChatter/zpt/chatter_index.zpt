@@ -1,0 +1,32 @@
+<span tal:replace="structure here/standard_html_header" />
+<h1 tal:content="here/title_or_id" />
+
+<p>Existing rooms</p>
+<ul>
+	<li tal:repeat="room here/listRooms">
+		<a tal:content="room/title_or_id" tal:attributes="href room/absolute_url" />
+		[<span tal:replace="room/get_friendlyDate" />]
+	</li>
+</ul>
+
+<form method="post" action="addRoom">
+	<div class="field">
+		<label for="title">Room title: </label>
+		<input type="text" name="title" id="title" />
+	</div>
+
+	<div class="field">
+		<label for="user_list">User list: </label>
+		<input type="text" name="user_list" id="user_list" />
+	</div>
+
+	<div class="field">
+		<label for="roles">User roles: </label>
+		<select name="roles" id="roles" multiple="multiple">
+			<option value="populate with portal roles">populate with portal roles</option>
+		</select>
+	</div>
+	<input type="submit" value="Create room" />
+</form>
+
+<span tal:replace="structure here/standard_html_footer" />

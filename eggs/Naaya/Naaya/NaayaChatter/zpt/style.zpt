@@ -1,0 +1,25 @@
+.chtid {display: none;}
+.chtdate {color: pink; display: none;}
+.chttime {color: green;}
+.chtuser {color: red;}
+.chtmsg {color: blue;}
+
+#messages {
+	width: 80%;
+	height: 70%;
+	border: 1px solid black;
+	overflow: auto;
+}
+
+#userlist {
+	width: 18%;
+	height: 70%;
+	border: 1px solid black;
+	float: right;
+}
+
+#message {
+	width: 100%; 
+	height: 20%; 
+	border: 1px solid black;
+}

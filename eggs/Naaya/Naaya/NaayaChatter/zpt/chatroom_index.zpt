@@ -1,0 +1,56 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<style type="text/css" tal:content="here/style_css" ></style>
+
+<h1 tal:content="here/title_or_id" /> 
+
+<div id="userlist">users list</div>
+<div id="messages">
+
+
+</div>
+<div id="message">
+	<textarea type="text" id="msg" name="msg"></textarea>
+	<input type="button" value="Send" id="sendbtn" />
+</div>
+
+
+<script type="text/javascript" src="jquery_js"></script>
+
+
+<script language="JavaScript">
+	$(document).ready(function(){
+		var msgbox = $("#msg");
+		msgbox[0].value = "";
+		msgbox.focus();
+		msgbox.keyup(function (e) { 
+			if (e.which == 13) sendMessage();
+		});
+		$("#sendbtn").click(function() { sendMessage(); });
+		ajaxCall();
+	});
+
+	function getMessages(data, second){ 
+		if (second == true) { $("#messages div:first").before(data); }
+		else $("#messages").html(data);
+		var lastid = $("#messages span:first").html();
+		$("#messages div").css("border", "none");
+		$("#messages div").css("background-color", "#F0F0F0");
+		$("#messages div:first").css("border-bottom", "1px dotted red");
+		$("#messages div:first").css("background-color", "white");
+		setTimeout(function(){ajaxCall(lastid, true)}, 1000)
+		}
+
+	function ajaxCall(lastid, second){
+		if (lastid == undefined) { lastid = '' }
+		$.post("messages_html", { lastid : lastid }, function(data){ getMessages(data, second) });
+	}
+
+	function sendMessage(){
+		var msg = $("#msg")[0].value;
+		$.post("submitMessage", { msg : msg } );
+		$("#msg")[0].value = "";}
+</script>
+
+
+<span tal:replace="structure here/standard_html_footer" />
