@@ -1,0 +1,1 @@
+<span class="onlineuser" tal:repeat= "user here/getOnlineUsers" tal:content="user" />

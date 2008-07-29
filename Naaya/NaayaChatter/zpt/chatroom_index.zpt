@@ -5,10 +5,7 @@
 <h1 tal:content="here/title_or_id" /> 
 
 <div id="userlist">users list</div>
-<div id="messages">
-
-
-</div>
+<div id="messages"></div>
 <div id="message">
 	<textarea type="text" id="msg" name="msg"></textarea>
 	<input type="button" value="Send" id="sendbtn" />
@@ -28,28 +25,39 @@
 		});
 		$("#sendbtn").click(function() { sendMessage(); });
 		ajaxCall();
+		getUsers();
 	});
 
-	function getMessages(data, second){ 
-		if (second == true) { $("#messages div:first").before(data); }
-		else $("#messages").html(data);
+	function getMessages(data){
+		if (data.length > 1) populateMessages(data);
 		var lastid = $("#messages span:first").html();
 		$("#messages div").css("border", "none");
 		$("#messages div").css("background-color", "#F0F0F0");
 		$("#messages div:first").css("border-bottom", "1px dotted red");
 		$("#messages div:first").css("background-color", "white");
-		setTimeout(function(){ajaxCall(lastid, true)}, 1000)
+		setTimeout(function(){ajaxCall(lastid)}, 1000);
+		// get online users
 		}
 
-	function ajaxCall(lastid, second){
+	function ajaxCall(lastid){
 		if (lastid == undefined) { lastid = '' }
-		$.post("messages_html", { lastid : lastid }, function(data){ getMessages(data, second) });
+		$.post("messages_html", { lastid : lastid }, function(data){ getMessages(data) });
+	}
+
+	function getUsers() {
+		$("#userlist").load("online_users_html");
+		setTimeout("getUsers()", 5000);
 	}
 
 	function sendMessage(){
 		var msg = $("#msg")[0].value;
 		$.post("submitMessage", { msg : msg } );
 		$("#msg")[0].value = "";}
+
+	function populateMessages(data) {
+		if ($("#messages")[0].innerHTML.length > 1) $("#messages div:first").before(data);
+		else $("#messages").html(data);
+	}
 </script>
 
 

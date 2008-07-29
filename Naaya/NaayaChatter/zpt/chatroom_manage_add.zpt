@@ -20,8 +20,8 @@
 
 	<div class="field">
 		<label for="roles">User roles: </label>
-		<select name="roles" id="roles" multiple="multiple">
-			<option value="populate with portal roles">populate with portal roles</option>
+		<select name="roles:list" id="roles" multiple="multiple" tal:define="roles python:here.getAuthenticationTool().list_valid_roles()">
+			<option tal:repeat="role roles" tal:content="role" tal:attributes="value role" />
 		</select>
 	</div>
 

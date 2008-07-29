@@ -20,7 +20,7 @@ ut = utils()
 manage_addChatArchive_html = PageTemplateFile('zpt/chatarchive_manage_add', globals())
 def manage_addChatArchive(self, id='', title='', automatic=False, REQUEST=None):
     """ Creates a new ChatArchive instance"""
-    username = self.getUserID(REQUEST)
+    username = self.getUserID()
     if automatic: title = '%s %s' % (ut.utShowFullDateTime(DateTime()), username)
     id = ut.utGenObjectId(title) or ut.utCleanupId(id)
     if not id or self._getOb(id, None): id = CHATTER_ARCHIVE_PREFIX + ut.utGenRandomId(6)
@@ -49,6 +49,12 @@ class ChatArchive(Folder):
     automatic = False
     last_msg_id = 0
 
+    #Class metadata
+    #Zope
+    meta_type = CHATTER_ARCHIVE_META_TYPE
+    security = ClassSecurityInfo()
+    all_meta_types = {}
+
     def __init__(self, id, title, automatic=False):
         self.id = id
         self.title = title
@@ -57,18 +63,23 @@ class ChatArchive(Folder):
         self.automatic = automatic
         self.last_msg_id = 0
 
+
+    security.declareProtected(CHATTER_VIEW_ARCHIVE_PERMISSION, 'getChatArchive')
     def getChatArchive(self):
         """ Returns this Chat Archive instance """
         return self
 
+    security.declareProtected(CHATTER_VIEW_ARCHIVE_PERMISSION, 'get_creation_date')
     def get_creation_date(self):
         """ Returns the creation date of this archive """
         return self.creation_date
 
+    security.declareProtected(CHATTER_VIEW_ARCHIVE_PERMISSION, 'get_closing_date')
     def get_closing_date(self):
         """ Returns the closing date of this archive """
         return self.closing_date
 
+    security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'listMessages')
     def listMessages(self, lastid=''):
         """ Returns a list of contained message objects """
         if lastid and lastid != self.last_msg_id:
@@ -85,11 +96,13 @@ class ChatArchive(Folder):
         if not lastid:
             return self.objectValues(CHATTER_MESSAGE_META_TYPE)
 
+    security.declareProtected(CHATTER_MANAGE_MESSAGE_PERMISSION, 'delMessages')
     def delMessages(self, messagelist=[]):
         """ Deletes a list of messages """
         #make use of manage_delObjects
         raise NotImplementedError
 
+    security.declareProtected(CHATTER_ADD_MESSAGE_PERMISSION, 'addMessage')
     def addMessage(self, user, msg):
         """ Adds a new message in this archive """
         if self.last_msg_id: last_int = int(self.last_msg_id[len(CHATTER_MESSAGE_PREFIX):])
@@ -97,16 +110,12 @@ class ChatArchive(Folder):
         msgid = '%s%s' % (CHATTER_MESSAGE_PREFIX , ( last_int + 1 ))
         self.last_msg_id = addChatMessage(self, msgid, user, msg)
 
+    security.declareProtected(CHATTER_VIEW_ARCHIVE_PERMISSION, 'index_html')
     index_html = PageTemplateFile('zpt/chatarchive_index', globals())
-
-    #Class metadata
-    #Zope
-    meta_type = CHATTER_ARCHIVE_META_TYPE
-    security = ClassSecurityInfo()
-    all_meta_types = {}
 
 
     #Product
+    security.declareProtected(CHATTER_ADD_MESSAGE_PERMISSION, 'addChatMessage')
     addChatMessage = addChatMessage
 
 InitializeClass(ChatArchive)
