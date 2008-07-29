@@ -40,6 +40,12 @@ class message(Folder):
     user = ''
     msg = ''
 
+    #Class metadata
+    #Zope
+    meta_type = CHATTER_MESSAGE_META_TYPE
+    security = ClassSecurityInfo()
+    all_meta_types = {}
+
     def __init__(self, id, title, user, msg):
         self.id = id
         self.title = title
@@ -47,30 +53,29 @@ class message(Folder):
         self.user = user
         self.msg = msg
 
+    security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'get_posting_user')
     def get_posting_user(self):
         """ Returns the posting user id """
         return self.user
 
+    security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'get_posting_time')
     def get_posting_time(self):
         """ Returns the time at whitch the message was posted """
         return self.date_time
 
+    security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'get_msg')
     def get_msg(self):
         """ Returns the posted message"""
         return self.msg
 
+    security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'get_date')
     def get_date(self):
         """ """
         return self.date_time.Date()
 
+    security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'get_time')
     def get_time(self):
         """ """
         return self.date_time.Time()
-
-    #Class metadata
-    #Zope
-    meta_type = CHATTER_MESSAGE_META_TYPE
-    security = ClassSecurityInfo()
-    all_meta_types = {}
 
 InitializeClass(message)

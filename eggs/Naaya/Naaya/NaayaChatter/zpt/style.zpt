@@ -3,17 +3,17 @@
 .chttime {color: green;}
 .chtuser {color: red;}
 .chtmsg {color: blue;}
-
+.onlineuser {color: blue; display: block;}
 #messages {
 	width: 80%;
-	height: 70%;
+	height: 200px;
 	border: 1px solid black;
 	overflow: auto;
 }
 
 #userlist {
 	width: 18%;
-	height: 70%;
+	height: 200px;
 	border: 1px solid black;
 	float: right;
 }
@@ -22,4 +22,18 @@
 	width: 100%; 
 	height: 20%; 
 	border: 1px solid black;
+	float: left;
+	margin-top: 1em;
+}
+
+#msg {
+	width: 90%;
+	height: 50px;
+	float: left;
+}
+
+#sendbtn {
+	float: right;
+	height: 55px;
+	width: 55px;
 }

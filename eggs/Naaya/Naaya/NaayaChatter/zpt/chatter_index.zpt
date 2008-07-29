@@ -1,14 +1,16 @@
 <span tal:replace="structure here/standard_html_header" />
 <h1 tal:content="here/title_or_id" />
 
-<p>Existing rooms</p>
-<ul>
-	<li tal:repeat="room here/listRooms">
-		<a tal:content="room/title_or_id" tal:attributes="href room/absolute_url" />
-		[<span tal:replace="room/get_friendlyDate" />]
-	</li>
-</ul>
-
+<div tal:define="rooms here/listRooms">
+	<p>Existing rooms</p>
+	<ul>
+		<li tal:condition="not:rooms" i18n:translate="">No chat rooms</li>
+		<li tal:repeat="room rooms">
+			<a tal:content="room/title_or_id" tal:attributes="href room/absolute_url" />
+			[<span tal:replace="room/get_friendlyDate" />]
+		</li>
+	</ul>
+</div>
 <form method="post" action="addRoom">
 	<div class="field">
 		<label for="title">Room title: </label>
@@ -22,8 +24,8 @@
 
 	<div class="field">
 		<label for="roles">User roles: </label>
-		<select name="roles" id="roles" multiple="multiple">
-			<option value="populate with portal roles">populate with portal roles</option>
+		<select name="roles:list" id="roles" multiple="multiple" tal:define="roles python:here.getAuthenticationTool().list_valid_roles()">
+			<option tal:repeat="role roles" tal:content="role" tal:attributes="value role" />
 		</select>
 	</div>
 	<input type="submit" value="Create room" />

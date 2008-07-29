@@ -35,42 +35,6 @@ class Chatter(Folder):
     id = ''
     title = ''
 
-    def __init__(self, id, title):
-        self.id = id
-        self.title = title
-
-    def getChatter(self):
-        """ Returns this Chatter instance """
-        return self
-
-    def listRooms(self):
-        """ Returns a list of contained ChatRoom objects """
-        return self.objectValues(CHATTER_ROOM_META_TYPE)
-
-    def delRooms(self, roomlist=[]):
-        """ Deletes a list of chat rooms """
-        #make use of manage_delObjects
-        raise NotImplementedError
-
-    def addRoom(self, id='', title='', roles=[], user_list=[], REQUEST=None):
-        """ Creates a new chat room """
-        manage_addChatRoom(self, id, title, roles, user_list)
-        if REQUEST:
-            self.REQUEST.RESPONSE.redirect(self.absolute_url())
-
-    def getUserID(self, REQUEST):
-        if REQUEST:
-            return REQUEST.AUTHENTICATED_USER.getUserName()
-        else:
-            return 'no-user'
-
-    def getIntFromId(self, id='', prefix=''):
-        return int(id[len(prefix):])
-
-    index_html = PageTemplateFile('zpt/chatter_index', globals())
-    style_css = PageTemplateFile('zpt/style', globals())
-    jquery_js = ImageFile('www/jquery.js', globals())
-
     #Class metadata
     #Zope
     meta_type = CHATTER_META_TYPE
@@ -78,8 +42,54 @@ class Chatter(Folder):
     meta_types = ({'name':CHATTER_ROOM_META_TYPE, 'action':'manage_addChatRoom_html'}, )
     all_meta_types = meta_types
 
+    def __init__(self, id, title):
+        self.id = id
+        self.title = title
+
+    security.declareProtected(CHATTER_VIEW_PERMISSION, 'getChatter')
+    def getChatter(self):
+        """ Returns this Chatter instance """
+        return self
+
+    security.declareProtected(CHATTER_VIEW_PERMISSION, 'getChatter')
+    def listRooms(self):
+        """ Returns a list of contained ChatRoom objects """
+        return self.objectValues(CHATTER_ROOM_META_TYPE)
+
+    security.declareProtected(CHATTER_MANAGE_PERMISSION, 'getChatter')
+    def delRooms(self, roomlist=[]):
+        """ Deletes a list of chat rooms """
+        #make use of manage_delObjects
+        raise NotImplementedError
+
+    security.declareProtected(CHATTER_ADD_ROOM_PERMISSION, 'getChatter')
+    def addRoom(self, id='', title='', roles=[], user_list=[], REQUEST=None):
+        """ Creates a new chat room """
+        manage_addChatRoom(self, id, title, roles, user_list)
+        if REQUEST:
+            self.REQUEST.RESPONSE.redirect(self.absolute_url())
+
+    def getUserObj(self):
+        return self.REQUEST.get('AUTHENTICATED_USER', None)
+
+    def getUserID(self):
+        return self.getUserObj().getUserName()
+
+    def getIntFromId(self, id='', prefix=''):
+        return int(id[len(prefix):])
+
+    security.declareProtected(CHATTER_VIEW_PERMISSION, 'index_html')
+    security.declareProtected(CHATTER_VIEW_PERMISSION, 'style_css')
+    security.declareProtected(CHATTER_VIEW_PERMISSION, 'jquery_js')
+
+    index_html = PageTemplateFile('zpt/chatter_index', globals())
+    style_css = PageTemplateFile('zpt/style', globals())
+    jquery_js = ImageFile('www/jquery.js', globals())
 
     #Product
+    security.declareProtected(CHATTER_ADD_ROOM_PERMISSION, 'manage_addChatRoom')
+    security.declareProtected(CHATTER_ADD_ROOM_PERMISSION, 'manage_addChatRoom_html')
+
     manage_addChatRoom = manage_addChatRoom
     manage_addChatRoom_html = manage_addChatRoom_html
 
