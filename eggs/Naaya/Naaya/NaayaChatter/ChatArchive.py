@@ -1,7 +1,7 @@
 #Python imports
 
 #Zope imports
-from OFS.Folder import Folder
+from Products.BTreeFolder2.BTreeFolder2 import BTreeFolder2
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -31,7 +31,7 @@ def manage_addChatArchive(self, id='', title='', automatic=False, REQUEST=None):
     return ob.getId()
 
 
-class ChatArchive(Folder):
+class ChatArchive(BTreeFolder2):
     """
     Contains message objects
     @param creation_date: log the creation date/time of this archive
@@ -62,6 +62,7 @@ class ChatArchive(Folder):
         self.closing_date = None
         self.automatic = automatic
         self.last_msg_id = 0
+        BTreeFolder2.__init__(self)
 
 
     security.declareProtected(CHATTER_VIEW_ARCHIVE_PERMISSION, 'getChatArchive')
