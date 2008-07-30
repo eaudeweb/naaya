@@ -11,24 +11,26 @@
 		</li>
 	</ul>
 </div>
-<form method="post" action="addRoom">
-	<div class="field">
-		<label for="title">Room title: </label>
-		<input type="text" name="title" id="title" />
-	</div>
+<fieldset>
+	<legend i18n:translate="">Create new chat room</legend>
+	<form method="post" action="addRoom">
+		<div class="field">
+			<label for="title">Room title: </label>
+			<input type="text" name="title" id="title" />
+		</div>
 
-	<div class="field">
-		<label for="user_list">User list: </label>
-		<input type="text" name="user_list" id="user_list" />
-	</div>
+		<div class="field">
+			<label for="user_list" i18n:translate="">User list (separate user ids by space): </label>
+			<input type="text" name="user_list" id="user_list" />
+		</div>
 
-	<div class="field">
-		<label for="roles">User roles: </label>
-		<select name="roles:list" id="roles" multiple="multiple" tal:define="roles python:here.getAuthenticationTool().list_valid_roles()">
-			<option tal:repeat="role roles" tal:content="role" tal:attributes="value role" />
-		</select>
-	</div>
-	<input type="submit" value="Create room" />
-</form>
-
+		<div class="field">
+			<label for="roles">User roles: </label>
+			<select name="roles:list" id="roles" multiple="multiple" tal:define="roles python:here.getAuthenticationTool().list_valid_roles()">
+				<option tal:repeat="role roles" tal:content="role" tal:attributes="value role" />
+			</select>
+		</div>
+		<input type="submit" value="Create room" />
+	</form>
+</fieldset>
 <span tal:replace="structure here/standard_html_footer" />
