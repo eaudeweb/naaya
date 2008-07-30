@@ -168,7 +168,7 @@ class ChatRoom(Folder):
     def getSortedMessages(self, lastid=''):
         """ Returns missing messages starting from lastid """
         latest = self._getOb(self.latest_archive, None)
-        for message in ut.utSortObjsListByAttr(latest.listMessages(lastid), 'date_time'):
+        for message in ut.utSortObjsListByAttr(latest.listMessages(lastid), 'date_time', 0):
             yield message
 
     security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'updateOnlineUsers')
@@ -192,7 +192,7 @@ class ChatRoom(Folder):
     def getOnlineUsers(self):
         """ Get the online user list """
         now = time()
-        return [k for k, v in self.users_online.items() if int(now - v) < 10]
+        return [k for k, v in self.users_online.items() if int(now - v) < 60]
 
     security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'messages')
     security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'index_html')

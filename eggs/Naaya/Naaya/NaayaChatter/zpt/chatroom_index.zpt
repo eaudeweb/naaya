@@ -16,6 +16,8 @@
 
 
 <script language="JavaScript">
+	var window_status = undefined;
+	var doctitle = $(document).attr("title");
 	$(document).ready(function(){
 		var msgbox = $("#msg");
 		msgbox[0].value = "";
@@ -26,15 +28,13 @@
 		$("#sendbtn").click(function() { sendMessage(); });
 		ajaxCall();
 		getUsers();
+		$(window).bind("blur", function(){window_status = 'blured'})
+		$(window).bind("focus", function(){handleFocus()})
 	});
 
 	function getMessages(data){
 		if (data.length > 1) populateMessages(data);
-		var lastid = $("#messages span:first").html();
-		$("#messages div").css("border", "none");
-		$("#messages div").css("background-color", "#F0F0F0");
-		$("#messages div:first").css("border-bottom", "1px dotted red");
-		$("#messages div:first").css("background-color", "white");
+		var lastid = $("#messages div:last").attr("id");
 		setTimeout(function(){ajaxCall(lastid)}, 1000);
 		}
 
@@ -55,10 +55,41 @@
 
 	function populateMessages(data) {
 		if ($("#messages")[0].innerHTML.length > 1) {
-			$("#messages div:first").before(data);
+			$("#messages div:last").after(data);
+			var newmsg = $("#messages div:last").attr("id");
+			scrollMessages(newmsg);
+			if (window_status == "blured") handleBlur();
 		}
-		else $("#messages").html(data);
+		else {
+			$("#messages").html(data);
+			var lastmsg = $("#messages div:last").attr("id");
+			scrollMessages(lastmsg);
+			if (window_status == "blured") handleBlur();
+		}
 	}
+
+	function scrollMessages(id) {
+		var id = "#" + id;
+		$(id)[0].scrollIntoView();
+	}
+
+	var tInterval = undefined;
+	function handleBlur(){
+		tInterval = setInterval("switchTitle()", 1000);
+	}
+
+	function handleFocus(){
+		window_status = 'focused';
+		$(document).attr("title", doctitle);
+		clearInterval(tInterval);
+	}
+
+	function switchTitle(){
+		if ( $(document).attr("title") == doctitle ) { $(document).attr("title", "NEW MESSAGE")}
+		else $(document).attr("title", doctitle);
+	}
+
+
 </script>
 
 

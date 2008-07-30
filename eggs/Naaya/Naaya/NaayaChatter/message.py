@@ -66,7 +66,9 @@ class message(Folder):
     security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'get_msg')
     def get_msg(self):
         """ Returns the posted message"""
-        return self.msg
+        msg = ut.utXmlEncode(self.msg)
+        return msg
+
 
     security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'get_date')
     def get_date(self):
