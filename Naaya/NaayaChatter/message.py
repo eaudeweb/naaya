@@ -67,8 +67,8 @@ class message(Folder):
     def get_msg(self):
         """ Returns the posted message"""
         msg = ut.utXmlEncode(self.msg)
+        msg = self.linkifyURLS(msg)
         return msg
-
 
     security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'get_date')
     def get_date(self):
