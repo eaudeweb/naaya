@@ -1,4 +1,5 @@
 #Python imports
+import re
 
 #Zope imports
 from OFS.Folder import Folder
@@ -77,6 +78,33 @@ class Chatter(Folder):
 
     def getIntFromId(self, id='', prefix=''):
         return int(id[len(prefix):])
+
+    def linkifyURLS(self, string):
+        def replace(match):
+            txt = match.group('uri').replace('&amp;', '&')
+            #if txt.startswith('http://'):
+            if match.group('uri_proto'):
+                uri = txt
+            else:
+                uri = 'http://' + txt
+            return '<a href="%s">%s</a>' % (uri, txt)
+        
+        
+        initial_lookbehind = r'(?<![\d\w\-])'
+        host_component = r'[\w\d\-]+'
+        host_port = r'\:\d+'
+        path = r'/[^\s]*'
+        get_params = r'\?[\w\d\=\%\&\;]*(?<!;)'
+        
+        regexp = r'(?P<uri>' \
+                + initial_lookbehind \
+                + r'((?P<uri_proto>\w+\://)|www\.)' \
+                + host_component + r'(\.' + host_component + r')*' + r'('+ host_port + r')?' \
+                + r'(' + path + r')?' \
+                + r'(' + get_params + r')?' \
+            + r')'
+        
+        return re.sub(regexp, replace, string)
 
     security.declareProtected(CHATTER_VIEW_PERMISSION, 'index_html')
     security.declareProtected(CHATTER_VIEW_PERMISSION, 'style_css')
