@@ -75,6 +75,7 @@
 
 	var tInterval = undefined;
 	function handleBlur(){
+		clearInterval(tInterval);
 		tInterval = setInterval("switchTitle()", 1000);
 	}
 
