@@ -167,6 +167,7 @@ class ChatRoom(Folder):
     security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'getSortedMessages')
     def getSortedMessages(self, lastid=''):
         """ Returns missing messages starting from lastid """
+        if not lastid: self.checkArchives()
         latest = self._getOb(self.latest_archive, None)
         for message in ut.utSortObjsListByAttr(latest.listMessages(lastid), 'date_time', 0):
             yield message

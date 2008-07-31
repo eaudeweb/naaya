@@ -94,7 +94,7 @@ class Chatter(Folder):
         host_component = r'[\w\d\-]+'
         host_port = r'\:\d+'
         path = r'/[^\s]*'
-        get_params = r'\?[\w\d\=\%\&\;]*(?<!;)'
+        get_params = r'\?[\w\d\=\%\&\;\-]*(?<!;)'
         
         regexp = r'(?P<uri>' \
                 + initial_lookbehind \

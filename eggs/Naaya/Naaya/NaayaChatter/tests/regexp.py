@@ -17,7 +17,7 @@ def linkifyURLS(string):
     host_component = r'[\w\d\-]+'
     host_port = r'\:\d+'
     path = r'/[^\s]*'
-    get_params = r'\?[\w\d\=\%\&\;]*(?<!;)'
+    get_params = r'\?[\w\d\=\%\&\;\-]*(?<!;)'
     
     regexp = r'(?P<uri>' \
             + initial_lookbehind \
@@ -58,7 +58,7 @@ class TestLinkify(unittest.TestCase):
         self.failUnlessEqual(linkifyURLS("yarr http://mail.google.com.uk grr"), 'yarr <a href="http://mail.google.com.uk">http://mail.google.com.uk</a> grr')
         self.failUnlessEqual(linkifyURLS("yarr http://mail.google.com?a=lala&amp;b=weewee. grr"), 'yarr <a href="http://mail.google.com?a=lala&b=weewee">http://mail.google.com?a=lala&b=weewee</a>. grr')
         self.failUnlessEqual(linkifyURLS("yarr http://mail.google.com?a=lala&amp;b=weewee, grr"), 'yarr <a href="http://mail.google.com?a=lala&b=weewee">http://mail.google.com?a=lala&b=weewee</a>, grr')
-        self.failUnlessEqual(linkifyURLS("yarr http://mail.google.com?a=lala&amp;b=weewee; grr"), 'yarr <a href="http://mail.google.com?a=lala&b=weewee">http://mail.google.com?a=lala&b=weewee</a>; grr')
+        self.failUnlessEqual(linkifyURLS("yarr http://mail.google.com?a=lala-lala-ere&amp;b=weewee; grr"), 'yarr <a href="http://mail.google.com?a=lala-lala-ere&b=weewee">http://mail.google.com?a=lala-lala-ere&b=weewee</a>; grr')
         #self.failUnlessEqual(linkifyURLS("yarr http://mail.google.com?a=lala&amp;b=weewee;t grr"), 'yarr <a href="http://mail.google.com?a=lala&b=weewee">http://mail.google.com?a=lala&b=weewee</a>;t grr')
 
     def test_with_parantheses(self):
