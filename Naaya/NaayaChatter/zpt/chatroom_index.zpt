@@ -36,7 +36,7 @@
 	});
 
 	function getMessages(data){
-		if (data.length > 1) populateMessages(data);
+		if (data.indexOf('chtid') != -1) populateMessages(data);
 		var lastid = $("#messages div:last").attr("id");
 		setTimeout(function(){ajaxCall(lastid)}, 1000);
 		}
