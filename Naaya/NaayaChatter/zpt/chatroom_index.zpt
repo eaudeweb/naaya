@@ -4,13 +4,16 @@
 
 <h1 tal:content="here/title_or_id" /> 
 
-<div id="userlist">users list</div>
-<div id="messages"></div>
-<div id="message">
-	<textarea type="text" id="msg" name="msg"></textarea>
-	<input type="button" value="Send" id="sendbtn" />
-</div>
+<span id="userlabel">On-line users in this room:</span>
 
+<div id="chatter_wrap">
+	<div id="userlist">users list</div>
+	<div id="messages"></div>
+	<div id="message">
+		<textarea type="text" id="msg" name="msg"></textarea>
+		<input type="button" value="Send" id="sendbtn" />
+	</div>
+</div>
 
 <script type="text/javascript" src="jquery_js"></script>
 
