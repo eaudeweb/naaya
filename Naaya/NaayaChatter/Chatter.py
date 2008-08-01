@@ -107,8 +107,6 @@ class Chatter(Folder):
         return re.sub(regexp, replace, string)
 
     security.declareProtected(CHATTER_VIEW_PERMISSION, 'index_html')
-    security.declareProtected(CHATTER_VIEW_PERMISSION, 'style_css')
-    security.declareProtected(CHATTER_VIEW_PERMISSION, 'jquery_js')
 
     index_html = PageTemplateFile('zpt/chatter_index', globals())
     style_css = PageTemplateFile('zpt/style', globals())
