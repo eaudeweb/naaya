@@ -72,8 +72,10 @@
 	}
 
 	function scrollMessages(id) {
-		var id = "#" + id;
-		$(id)[0].scrollIntoView();
+		if ( id ) {
+			var id = "#" + id;
+			$(id)[0].scrollIntoView();
+		}
 	}
 
 	var tInterval = undefined;
@@ -89,8 +91,10 @@
 	}
 
 	function switchTitle(){
-		if ( $(document).attr("title") == doctitle ) { $(document).attr("title", "NEW MESSAGE")}
-		else $(document).attr("title", doctitle);
+		if (window_status == "blured") {
+			if ( $(document).attr("title") == doctitle ) { $(document).attr("title", "NEW MESSAGE")}
+			else $(document).attr("title", doctitle);
+		}
 	}
 
 
