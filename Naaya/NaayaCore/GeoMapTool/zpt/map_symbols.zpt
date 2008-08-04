@@ -75,6 +75,10 @@
 				<td><img tal:attributes="src string:getSymbolPicture?id=${record_data/id}" /></td>
 			</tr>
 			<tr>
+				<td i18n:translate="">Sort order</td>
+				<td><input id="sortorder" type="text" name="sortorder" size="2" tal:attributes="value python:test(record_data['action']=='add', '100', record_data['sortorder'])" /></td>
+			</tr>
+			<tr>
 				<td><input type="hidden" name="id" tal:attributes="value record_data/id" /></td>
 				<td><input type="submit" i18n:attributes="value" tal:attributes="value python:test(record_data['action']=='add', 'Add', 'Update')" /></td>
 			</tr>
@@ -86,7 +90,7 @@
 </form>
 
 <form method="post" action="adminDeleteSymbols">
-<table border="0" cellspacing="0" cellpadding="4" width="90%" class="admin_table">
+<table class="datatable">
 	<tr>
 		<th width="1%">&nbsp;</th>
 		<th i18n:translate="">Icon</th>
@@ -132,12 +136,34 @@
 				<a id="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=parent#parent" i18n:translate="">Parent</a>
 			</th>
 		</tal:block>
+		<tal:block tal:condition="python:skey=='sortorder'">
+			<tal:block tal:condition="python:rkey==''">
+				<th>
+					<a id="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=sortorder&amp;rkey=1#sortorder">
+						<span i18n:translate="">Sort order</span>
+					</a>
+				</th>
+			</tal:block>
+			<tal:block tal:condition="python:rkey=='1'">
+				<th>
+					<a id="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=sortorder#parent">
+						<span i18n:translate="">Sort order</span>
+					</a>
+				</th>
+			</tal:block>
+		</tal:block>
+		<tal:block tal:condition="python:skey!='sortorder'">
+			<th>
+				<a id="parent" tal:attributes="href string:${map_url}/admin_maptypes_html?skey=sortorder#sortorder" i18n:translate="">Sort order</a>
+			</th>
+		</tal:block>
 	</tr>
 	<tr tal:repeat="record python:here.getSymbolsListOrdered(skey, rkey)">
 		<td><input type="checkbox" name="id" tal:attributes="value record/id"></td>
 		<td><img tal:condition="python:record.picture is not None" tal:attributes="src string:getSymbolPicture?id=${record/id}" /></td>
 		<td><a tal:attributes="href string:admin_maptypes_html?id=${record/id}" tal:content="record/title" /></td>
 		<td tal:content="python:here.getSymbolTitle(record.parent)" />
+		<td tal:content="record/sortorder" />
 	</tr>
 	<tr>
 		<td></td>

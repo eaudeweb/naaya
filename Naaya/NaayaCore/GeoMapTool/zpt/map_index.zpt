@@ -93,9 +93,9 @@
         <!--div>
           <input type="text" id="geo_query" name="geo_query:ustring:utf8" tal:attributes="value geo_query" />
         </div-->
-        <ul class="map_legend" id="filter_map" tal:define="parentsList here/getParentsList" tal:condition="parentsList">
+        <ul class="map_legend" id="filter_map" tal:define="parentsList here/getParentsListOrdered" tal:condition="parentsList">
           <tal:block repeat="item parentsList">
-          <tal:block define="children python:here.getSymbolChildren(item.id);">
+          <tal:block define="children python:here.getSymbolChildrenOrdered(item.id);">
           <li>
             <input type="checkbox" name="geo_types:list"
                    tal:attributes="value item/id; id item/id; checked python:item.id in geo_types" />

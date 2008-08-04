@@ -572,17 +572,17 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminAddSymbol')
-    def adminAddSymbol(self, title='', description='', parent='', picture='', REQUEST=None):
+    def adminAddSymbol(self, title='', description='', parent='', picture='', sortorder='', REQUEST=None):
         """ """
-        self.addSymbol('symbol%s' % self.utGenRandomId(3), title, description, parent, picture)
+        self.addSymbol('symbol%s' % self.utGenRandomId(3), title, description, parent, picture, sortorder)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'adminUpdateSymbol')
-    def adminUpdateSymbol(self, id='', title='', description='', parent='', picture='', REQUEST=None):
+    def adminUpdateSymbol(self, id='', title='', description='', parent='', picture='', sortorder='', REQUEST=None):
         """ """
-        self.updateSymbol(id, title, description, parent, picture)
+        self.updateSymbol(id, title, description, parent, picture, sortorder)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_maptypes_html' % self.absolute_url())
@@ -599,7 +599,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     def getSymbolsListOrdered(self, skey='', rkey=''):
         """ return an ordered lsit of symbols """
         r = self.getSymbolsList()
-        if skey in ['title', 'parent']:
+        if skey in ['title', 'parent', 'sortorder']:
             r = self.utSortObjsListByAttr(r, skey, rkey)
         return r
 
