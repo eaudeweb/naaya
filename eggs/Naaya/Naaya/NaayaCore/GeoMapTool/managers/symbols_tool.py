@@ -35,13 +35,16 @@ from AccessControl import ClassSecurityInfo
 class symbol_item:
     """ """
 
-    def __init__(self, id, title, description, parent, picture):
+    sortorder = '100'
+
+    def __init__(self, id, title, description, parent, picture, sortorder):
         """Constructor"""
         self.id = id
         self.title = title
         self.description = description
         self.parent = parent
         self.picture = picture
+        self.sortorder = sortorder
 
     def setPicture(self, picture):
         """ """
@@ -68,13 +71,13 @@ class symbols_tool:
         """ """
         self.__symbol_collection = {}
 
-    def __addSymbol(self, id, title, description, parent, picture):
+    def __addSymbol(self, id, title, description, parent, picture, sortorder):
         """ """
-        obj = symbol_item(id, title, description, parent, None)
+        obj = symbol_item(id, title, description, parent, None, sortorder)
         obj.setPicture(picture)
         self.__symbol_collection[id] = obj
 
-    def __updateSymbol(self, id, title, description, parent, picture):
+    def __updateSymbol(self, id, title, description, parent, picture, sortorder):
         """ """
         try: obj = self.__symbol_collection[id]
         except: pass
@@ -83,6 +86,7 @@ class symbols_tool:
             obj.description = description
             obj.parent = parent
             obj.setPicture(picture)
+            obj.sortorder = sortorder
             obj._p_changed = 1
 
     def __deleteSymbol(self, id):
@@ -95,10 +99,18 @@ class symbols_tool:
         try: return [ obj for obj in self.__symbol_collection.values() if not obj.parent ]
         except: return []
 
+    def getParentsListOrdered(self):
+        """ Get a list with all parent objects ordered by sortorder """
+        return self.utSortObjsListByAttr(self.getParentsList(), 'sortorder', '1')
+
     def getSymbolChildren(self, parent):
         """Get a list with all the children of a parent object"""
         try: return [ obj for obj in self.__symbol_collection.values() if obj.parent == parent ]
         except: return []
+
+    def getSymbolChildrenOrdered(self, parent):
+        """Get a list with all the children of a parent object ordered by sortorder """
+        return self.utSortObjsListByAttr(self.getSymbolChildren(parent), 'sortorder', '1')
 
     def getSymbolsList(self):
         """Get a list with all objects"""
@@ -120,10 +132,10 @@ class symbols_tool:
         ob = self.getSymbol(id)
         if ob is not None:
             return {'action': 'update', 'id': ob.id, 'title': ob.title,
-                'description': ob.description, 'parent': ob.parent, 'picture': ob.picture}
+                'description': ob.description, 'parent': ob.parent, 'picture': ob.picture, 'sortorder': ob.sortorder}
         else:
             return {'action': 'add', 'id': '', 'title': '',
-                'description': '', 'parent': '', 'picture': None}
+                'description': '', 'parent': '', 'picture': None, 'sortorder': ''}
 
     def getSymbolTitle(self, id):
         """Get title"""
@@ -156,7 +168,7 @@ class symbols_tool:
             if not id.startswith('symbol'):
                 obj = self.__symbol_collection[id]
                 del self.__symbol_collection[id]
-                newobj = symbol_item('symbol%s' % obj.id, obj.title, obj.parent, obj.description, None)
+                newobj = symbol_item('symbol%s' % obj.id, obj.title, obj.parent, obj.description, None, obj.sortorder)
                 newobj.setPicture(obj.picture)
                 self.__symbol_collection['symbol%s' % obj.id] = newobj
         self._p_changed = 1
@@ -167,22 +179,27 @@ class symbols_tool:
         for id in self.getSymbolsIds():
             obj = self.__symbol_collection[id]
             del self.__symbol_collection[id]
-            newobj = symbol_item(obj.id, obj.title, '', obj.description, None)
+            newobj = symbol_item(obj.id, obj.title, '', obj.description, None, obj.sortorder)
             newobj.setPicture(obj.picture)
             self.__symbol_collection[obj.id] = newobj
         self._p_changed = 1
 
-    def addSymbol(self, id, title, description, parent, picture):
+    def addSymbol(self, id, title, description, parent, picture, sortorder):
         """ """
-        self.__addSymbol(id, title, description, parent, picture)
+        self.__addSymbol(id, title, description, parent, picture, sortorder)
         self._p_changed = 1
 
-    def updateSymbol(self, id, title, description, parent, picture):
+    def updateSymbol(self, id, title, description, parent, picture, sortorder):
         """ """
-        self.__updateSymbol(id, title, description, parent, picture)
+        self.__updateSymbol(id, title, description, parent, picture, sortorder)
         self._p_changed = 1
 
     def deleteSymbol(self, ids):
         """ """
         map(self.__deleteSymbol, ids)
         self._p_changed = 1
+
+    security = ClassSecurityInfo()
+    security.setDefaultAccess("allow")
+
+InitializeClass(symbols_tool)
