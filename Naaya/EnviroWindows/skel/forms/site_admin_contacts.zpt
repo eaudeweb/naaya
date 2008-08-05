@@ -11,7 +11,7 @@
 					<th i18n:translate="">Edit</th>
 					<th i18n:translate="">Export</th>
 				</tr>
-				<tr tal:repeat="contact python:here.getCatalogedObjectsCheckView(meta_type=['Naaya Contact'])">
+				<tr tal:repeat="contact python:here.getCatalogedObjects(meta_type=['Naaya Contact'])">
 					<td tal:content="string:${contact/firstname} ${contact/lastname}" />
 					<td tal:content="contact/email" />
 					<td><a tal:attributes="href contact/absolute_url">View contact</a></td>
@@ -19,6 +19,12 @@
 					<td><a tal:attributes="href string:${contact/absolute_url}/export_vcard">Export vCard</a></td>
 				</tr>
 			</table>
+			
+			<p>
+			    <span i18n:translate>You can also choose to</span>
+			    <a href="export_contacts_vcard" i18n:translate="">bulk export all vCard data</a> <span i18n:translate="">as a zip file.</span>
+		    </p>
+			
 		<h2 i18n:translate="">Send mail to all portal contacts</h2>
 			<p i18n:translate="">You can use the form below to send
 			an email to all email addresses from the Naaya Contact 
@@ -29,11 +35,11 @@
 			</div>
 			<div class="field">
 				<label for="subject" i18n:translate="">Mail subject</label>
-				<input id="subject" name="subject" type="text" tal:attributes="disabled not:mail_from" />
+				<input id="subject" name="subject" type="text" size="112" tal:attributes="disabled not:mail_from" />
 			</div>
 			
 			<div class="field">
-				<label for="content" i18n:translate="">Mail content</label>
+				<label for="content" i18n:translate="">Mail content ( plain text )</label>
 				<textarea id="content" name="content" rows="10" cols="70" tal:attributes="disabled not:mail_from"></textarea>
 			</div>
 			<input type="submit" value="Send mail" i18n:attributes="value" tal:attributes="disabled not:mail_from" />
