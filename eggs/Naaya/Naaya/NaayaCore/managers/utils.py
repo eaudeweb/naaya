@@ -1160,3 +1160,15 @@ class CSVReader:
             return (output, '')
         except Exception, error:
             return (None, error)
+
+class vcard_file:
+    """ Container class for vcard data. Needed for zip export """
+    def __init__(self, id, data):
+        self.id = '%s.vcf' % (id, )
+        self.data = data
+
+    def getZipData(self):
+        return self.data
+        
+    def get_size(self):
+        return len(self.data)
