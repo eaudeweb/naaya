@@ -80,6 +80,7 @@ from Products.NaayaCore.managers.urlgrab_tool import urlgrab_tool
 from Products.NaayaCore.managers.search_tool import search_tool
 from Products.NaayaCore.managers.session_manager import session_manager
 from Products.NaayaCore.managers.xmlrpc_tool import XMLRPCConnector
+from Products.NaayaCore.managers.utils import vcard_file
 from Products.NaayaCore.PropertiesTool.managers.contenttypes_tool import contenttypes_tool
 from Products.Localizer.Localizer import manage_addLocalizer
 from Products.Localizer.MessageCatalog import manage_addMessageCatalog
@@ -3083,6 +3084,15 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def admin_delmesg_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_delmessages')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export_contacts_vcard')
+    def export_contacts_vcard(self, REQUEST=None):
+        """ Exports all portal contacts in vCard format contained in a zip file """
+        contacts = self.getCatalogedObjects(meta_type=['Naaya Contact'])
+        files = [vcard_file(contact.id, contact.export_vcard()) for contact in contacts]
+        if REQUEST:
+            return self.utGenerateZip('%s-contacts.zip' % self.id, files, self.REQUEST.RESPONSE)
+        else: return files
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_controlpanel_html')
