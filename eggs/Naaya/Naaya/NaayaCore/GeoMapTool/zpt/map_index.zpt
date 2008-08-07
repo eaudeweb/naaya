@@ -63,7 +63,7 @@
       <span i18n:translate="">location(s)</span>
     </div>
     <br clear="all" style="clear:both"/>
-    <div id="map" tal:attributes="style string:width: ${here/map_width}px;; height: ${here/map_height}px;;"></div>
+    <div id="map" tal:attributes="style string:width: ${width}px;; height: ${height}px;;"></div>
     <br clear="all" style="clear:both"/>
     <noscript>
       <tal:block define="skey python:None;
