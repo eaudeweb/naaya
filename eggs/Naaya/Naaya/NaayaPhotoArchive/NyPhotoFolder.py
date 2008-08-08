@@ -36,50 +36,65 @@ from Products.NaayaBase.NyContainer import NyContainer
 from Products.Naaya.constants import *
 from Products.NaayaCore.managers.utils import batch_utils, ZZipFile
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from photo_archive import photo_archive
 import NyPhoto
+import zLOG
 
-manage_addNyPhotoFolder_html = PageTemplateFile('zpt/photofolder_manage_add', globals())
-def manage_addNyPhotoFolder(self, id='', title='', quality='', discussion='',
-    lang=None, REQUEST=None):
+def manage_addNyPhotoFolder(self, id='', title='', description='', coverage='',
+                            keywords='', sortorder=100, releasedate='', 
+                            lang=None, author='', source='', discussion=0,
+                            file=None, REQUEST=None, **kwargs):
     """
     Create a PhotoFolder type of object.
     """
     #process parameters
-    id = self.utCleanupId(id)
-    if not id: id = PREFIX_NYPHOTOFOLDER + self.utGenRandomId(6)
-    try: quality = abs(int(quality))
-    except: quality = DEFAULT_QUALITY
-    if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
+    id = self.utCleanupId(id) or self.utGenObjectId(title)
+    if not id or self._getOb(id, None):
+        id = PREFIX_NYPHOTOFOLDER + self.utGenRandomId(6)
+
+    releasedate = self.process_releasedate()
+    if lang is None:
+        lang = self.gl_get_selected_language()
     if self.glCheckPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
-    releasedate = self.process_releasedate()
-    if lang is None: lang = self.gl_get_selected_language()
+
     #create object
-    ob = NyPhotoFolder(id, title, quality, approved, approved_by, releasedate, lang)
+    ob = NyPhotoFolder(id, title, lang,
+                       description=description, coverage=coverage,
+                       keywords=keywords, sortorder=sortorder,
+                       releasedate=releasedate, author=author, source=source,
+                       discussion=discussion, 
+                       approved=approved, approved_by=approved_by)
+
     self.gl_add_languages(ob)
     self._setObject(id, ob)
     #extra settings
     ob = self._getOb(id)
+    # file
+    if getattr(file, 'filename', None):
+        ob.uploadPhotoOrZip(file)
+    
     ob.submitThis()
-    if discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
+    
     #redirect if case
     if REQUEST is not None:
-        return self.manage_main(self, REQUEST, update_menu=1)
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
+    return ob.getId()
 
-class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
+class NyPhotoFolder(NyAttributes, photo_archive, NyContainer):
     """ """
 
     meta_type = METATYPE_NYPHOTOFOLDER
+    meta_label = METALABEL_NYPHOTOFOLDER
     icon = 'misc_/NaayaPhotoArchive/NyPhotoFolder.gif'
 
     manage_options = (
         NyContainer.manage_options[0:2]
         +
         (
-            {'label': 'Properties', 'action': 'manage_edit_html'},
             {'label': 'Displays', 'action': 'manage_displays_html'},
         )
         +
@@ -87,30 +102,69 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
     )
 
     meta_types = (
-        {'name': METATYPE_NYPHOTO, 'action': 'manage_addNyPhoto_html'},
+        {'name': METATYPE_NYPHOTO, 'action': 'photo_add_html'},
     )
     all_meta_types = meta_types
 
     security = ClassSecurityInfo()
 
-    security.declareProtected(view_management_screens, 'manage_addNyPhoto_html')
-    manage_addNyPhoto_html = NyPhoto.manage_addNyPhoto_html
-
     security.declareProtected(PERMISSION_ADD_PHOTO, 'addNyPhoto')
     addNyPhoto = NyPhoto.addNyPhoto
 
     title = LocalProperty('title')
+    author = LocalProperty('author')
+    source = LocalProperty('source')
+    cover = ''
+    max_photos = 100
+    photos_per_page = 50
 
-    def __init__(self, id, title, quality, approved, approved_by, releasedate, lang):
-        """ """
+    def __init__(self, id, title, lang, approved=0, approved_by='', **kwargs):
         self.id = id
-        NyContainer.__dict__['__init__'](self)
-        self._setLocalPropValue('title', lang, title)
-        self.quality = quality
+        self.quality = 100
         self.displays = DEFAULT_DISPLAYS.copy()
         self.approved = approved
         self.approved_by = approved_by
-        self.releasedate = releasedate
+        NyContainer.__dict__['__init__'](self)
+        self.save_properties(title, lang, **kwargs)
+        
+    def save_properties(self, title='', lang=None, 
+                        description='', coverage='', keywords='', sortorder=100,
+                        releasedate='', discussion=0, author='', source='',
+                        cover='', max_photos=100, photos_per_page=50, **kwargs):
+        if not lang:
+            lang = self.gl_get_selected_language()
+        
+        self._setPropValue('cover', cover)
+        self._setPropValue('max_photos', max_photos)
+        self._setPropValue('photos_per_page', photos_per_page)
+        self._setLocalPropValue('author', lang, author)
+        self._setLocalPropValue('source', lang, source)
+        photo_archive.save_properties(self, title, description, coverage,
+                                      keywords, sortorder, releasedate, lang)
+        
+        if discussion:
+            self.open_for_comments()
+        else:
+            self.close_for_comments()
+        self._p_changed = 1
+
+    security.declarePrivate('open_for_comments')
+    def open_for_comments(self):
+        """
+        Enable(open) comments.
+        """
+        NyContainer.open_for_comments(self)
+        for photo in self.getObjects():
+            photo.open_for_comments()
+            
+    security.declarePrivate('close_for_comments')
+    def close_for_comments(self):
+        """
+        Disable(close) comments.
+        """
+        NyContainer.close_for_comments(self)
+        for photo in self.getObjects():
+            photo.close_for_comments()
 
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
@@ -135,22 +189,69 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         return None
 
     #api
-    def get_photofolder_object(self): return self
-    def get_photofolder_path(self, p=0): return self.absolute_url(p)
-    def getObjects(self): return [x for x in self.objectValues(METATYPE_NYPHOTO) if x.submitted==1]
-    def getPendingObjects(self): return [x for x in self.getObjects() if x.approved==0 and x.submitted==1]
-    def getPendingContent(self): return self.getPendingObjects()
-    def getPublishedObjects(self): return [x for x in self.getObjects() if x.approved==1 and x.submitted==1]
-    def getPendingFolders(self): return []
-    def getPublishedFolders(self): return []
+    def get_photofolder_object(self):
+        return self
 
-    def getObjectsForValidation(self): return []
-    def count_notok_objects(self): return 0
-    def count_notchecked_objects(self): return 0
+    def get_photofolder_path(self, p=0):
+        return self.absolute_url(p)
+
+    def getObjects(self):
+        return [x for x in self.objectValues(METATYPE_NYPHOTO) if x.submitted==1]
+    
+    def getObjectIds(self):
+        return [x for x, y in self.objectItems(METATYPE_NYPHOTO) if y.submitted==1]
+    
+    def getSortedObjects(self, query=''):
+        if not query:
+            return self.sort_objects(self.getObjects())
+        return self.query_photos(query)[1]
+    
+    def getSortedObjectIds(self):
+        return [x.getId() for x in self.getSortedObjects()]
+
+    def getPendingObjects(self):
+        return [x for x in self.getObjects() if x.approved==0 and x.submitted==1]
+
+    def getPendingContent(self):
+        return self.getPendingObjects()
+
+    def getPublishedObjects(self):
+        return [x for x in self.getObjects() if x.approved==1 and x.submitted==1]
+
+    def getPendingFolders(self):
+        return []
+
+    def getPublishedFolders(self):
+        return []
+
+    def getObjectsForValidation(self):
+        return []
+
+    def count_notok_objects(self):
+        return 0
+
+    def count_notchecked_objects(self):
+        return 0
 
     def checkPermissionAddPhotos(self):
         return self.checkPermission(PERMISSION_ADD_PHOTO)
 
+    security.declareProtected(view, 'get_cover')
+    def get_cover(self):
+        """ Returns photo folder cover image as a string
+        """
+        photos = self.getSortedObjects()
+        # No photo in album, no cover available
+        if not photos:
+            return ''
+        # self.cover is not set, return first photo as default cover
+        if not self.cover:
+            return photos[0].getId()
+        # self.cover is not in album anymore, return first photo as default
+        if self.cover and self.cover not in self.objectIds():
+            return photos[0].getId()
+        return self.cover
+    
     def get_displays_edit(self):
         #returns a list with all dispays minus 'Thumbnail'
         l = self.displays.keys()
@@ -172,11 +273,14 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         else:
             return ''
 
-    def _page_result(self, p_result, p_start):
+    def _page_result(self, p_result, p_start, batch=False):
         #Returns results with paging information
         l_paging_information = (0, 0, 0, -1, -1, 0, NUMBER_OF_RESULTS_PER_PAGE, [0])
         try: p_start = abs(int(p_start))
         except: p_start = 0
+        if not batch:
+            return (l_paging_information, p_result)
+        
         if len(p_result) > 0:
             l_paging_information = batch_utils(NUMBER_OF_RESULTS_PER_PAGE, len(p_result), p_start).butGetPagingInformations()
         if len(p_result) > 0:
@@ -192,6 +296,21 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         if f == '': f = None
         else: f = 1
         return self._page_result(self.query_objects_ex(meta_type=METATYPE_NYPHOTO, q=q, lang=lang, path='/'.join(self.getPhysicalPath()), topitem=f, approved=1, sort_on='releasedate', sort_order='reverse'), p_start)
+
+    def get_archive_listing(self, p_objects):
+        """ """
+        results = []
+        select_all, delete_all, flag = 0, 0, 0
+        for x in p_objects:
+            del_permission = x.checkPermissionDeleteObject()
+            edit_permission = x.checkPermissionEditObject()
+            if del_permission and flag == 0:
+                select_all, delete_all, flag = 1, 1, 1
+            if edit_permission and flag == 0:
+                flag, select_all = 1, 1
+            if ((del_permission or edit_permission) and not x.approved) or x.approved:
+                results.append((del_permission, edit_permission, x))
+        return (select_all, delete_all, results)
 
     def _page_result_admin(self, p_result, p_start):
         #Returns results with paging information
@@ -214,30 +333,6 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         return self._page_result_admin(self.query_objects_ex(meta_type=METATYPE_NYPHOTO, q=q, lang=lang, path='/'.join(self.getPhysicalPath()), topitem=f, approved=1, sort_on='releasedate', sort_order='reverse'), p_start)
 
     #zmi actions
-    security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', quality='', approved='', releasedate='',
-        discussion='', REQUEST=None):
-        """ """
-        try: quality = abs(int(quality))
-        except: quality = DEFAULT_QUALITY
-        if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
-        if approved: approved = 1
-        else: approved = 0
-        releasedate = self.process_releasedate(releasedate, self.releasedate)
-        lang = self.gl_get_selected_language()
-        self._setLocalPropValue('title', lang, title)
-        self.quality = quality
-        if approved != self.approved:
-            self.approved = approved
-            if approved == 0: self.approved_by = None
-            else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        self.releasedate = releasedate
-        self._p_changed = 1
-        if discussion: self.open_for_comments()
-        else: self.close_for_comments()
-        self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
-
     security.declareProtected(view_management_screens, 'manageDisplays')
     def manageDisplays(self, display=None, width=None, height=None, REQUEST=None):
         """ """
@@ -261,44 +356,60 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
 
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
-    def saveProperties(self, title='', quality='', discussion='', lang=None,
-        REQUEST=None):
+    def saveProperties(self, REQUEST=None, **kwargs):
         """ """
-        try: quality = abs(int(quality))
-        except: quality = DEFAULT_QUALITY
-        if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
-        if lang is None: lang = self.gl_get_selected_language()
-        self._setLocalPropValue('title', lang, title)
-        self.quality = quality
-        self._p_changed = 1
-        if discussion: self.open_for_comments()
-        else: self.close_for_comments()
+        if REQUEST:
+            kwargs.update(REQUEST.form)
+        
+        lang = kwargs.setdefault('lang', self.gl_get_selected_language())
+        releasedate = kwargs.get('releasedate', '')
+        kwargs['releasedate'] = self.process_releasedate(releasedate)
+        
+        max_photos = kwargs.setdefault('max_photos', 100)
+        try:
+            max_photos = int(max_photos)
+        except (ValueError, TypeError):
+            max_photos = 100
+        kwargs['max_photos'] = max_photos
+        
+        photos_per_page = kwargs.setdefault('photos_per_page', 50)
+        try:
+            photos_per_page = int(photos_per_page)
+        except (ValueError, TypeError):
+            photos_per_page = 50
+        kwargs['photos_per_page'] = photos_per_page
+        
+        self.save_properties(**kwargs)
         self.recatalogNyObject(self)
+        
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
-    security.declareProtected(view, 'downloadAllObjects')
     def downloadAllObjects(self, REQUEST=None):
-        """
-        Download all pictures in a zip file.
-        """
+        #Download all pictures in a zip file.
         return self.utGenerateZip(
-            name=self.id,
+            name=self.id + '.zip',
             objects=self.getPublishedObjects(),
+            RESPONSE=REQUEST.RESPONSE
+        )
+    
+    def downloadSelectedObjects(self, ids=None, REQUEST=None):
+        # Download photos from ids
+        return self.utGenerateZip(
+            name=self.id + '.zip',
+            objects=map(self._getOb, self.utConvertToList(ids)),
             RESPONSE=REQUEST.RESPONSE
         )
 
     security.declareProtected(view, 'downloadObjects')
-    def downloadObjects(self, ids=None, REQUEST=None):
+    def downloadObjects(self, ids=(), download="all", REQUEST=None, **kwargs):
         """
-        Download selected pictures in a zip file.
+        Download pictures.
         """
-        return self.utGenerateZip(
-            name=self.id,
-            objects=map(self._getOb, self.utConvertToList(ids)),
-            RESPONSE=REQUEST.RESPONSE
-        )
+        if download == 'all':
+            return self.downloadAllObjects(REQUEST)
+        return self.downloadSelectedObjects(ids, REQUEST)
 
     security.declareProtected(PERMISSION_ADD_PHOTO, 'uploadZip')
     def uploadZip(self, file='', REQUEST=None):
@@ -329,7 +440,95 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
                 return REQUEST.RESPONSE.redirect('%s/uploadzip_html' % self.absolute_url())
             else:
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-                return REQUEST.RESPONSE.redirect('%s/admin_html' % self.absolute_url())
+                return REQUEST.RESPONSE.redirect(self.absolute_url())
+        return err
+    
+    def is_full(self):
+        if len(self.objectIds([METATYPE_NYPHOTO])) >= self.max_photos:
+            return True
+        return False
+
+    security.declareProtected(PERMISSION_ADD_PHOTO, 'uploadPhotoOrZip')
+    def uploadPhotoOrZip(self, upload_file=None, REQUEST=None, **kwargs):
+        """ Upload one image or a zipped folder of images
+        """
+        # File not empty
+        filename = getattr(upload_file, 'filename', None)
+        if not filename:
+            err = 'Please select a valid zip or image to upload'
+        else:
+            # Try to upload from zip
+            err = self.uploadZip(upload_file)
+            if err:
+                # Add image
+                zLOG.LOG('NyPhotoFolder', zLOG.DEBUG, err)
+                upload_file.seek(0)
+                is_image = self.isValidImage(upload_file.read())
+                if not is_image:
+                    err = 'Please select a valid zip or image to upload'
+                else:
+                    upload_file.seek(0)
+                    self.addNyPhoto(title=filename, file=upload_file,
+                                    lang=self.gl_get_selected_language())
+                    err = ''
+ 
+        # Return
+        if self.is_full():
+            err = "You've reached the maximum number of photos allowed in this album !"
+        if not REQUEST:
+            return err
+        # Handle errors
+        if err:
+            self.setSessionErrors([err])
+        else:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+        # Redirect
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'setSortOrder')
+    def setSortOrder(self, REQUEST=None, **kwargs):
+        """ Update objects order
+        """
+        if REQUEST:
+            kwargs.update(REQUEST.form)
+        for key, value in kwargs.items():
+            if key not in self.getObjectIds():
+                continue
+            photo = self._getOb(key)
+            try:
+                value = int(value)
+            except (ValueError, TypeError):
+                continue
+            else:
+                photo._setPropValue('sortorder', value)
+        if REQUEST:
+            self.setSessionInfo(['Sort order updated on %s' % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/sortorder_html' % self.absolute_url())
+        return True
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'changeCover')
+    def changeCover(self, cover='', REQUEST=None, **kwargs):
+        """ Update album cover
+        """
+        # Update cover image property
+
+        # Handle invalid cover id
+        err = ''
+        if cover and cover not in self.objectIds(METATYPE_NYPHOTO):
+            err = 'Invalid cover id %s' % cover
+            cover = ''
+        
+        self.cover = cover
+        
+        if not REQUEST:
+            return err
+
+        if err:
+            self.setSessionErrors([err])
+            return REQUEST.RESPONSE.redirect('%s/changecover_html' % self.absolute_url())
+
+        self.setSessionInfo(['Album cover updated on %s' % self.utGetTodayDate()])
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
 
     def isValidImage(self, file):
         """
@@ -337,22 +536,10 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
         """
         try:
             Image.open(StringIO(file))
-            return 1
-        except IOError: # Python Imaging Library doesn't recognize it as an image
+        except: # Python Imaging Library doesn't recognize it as an image
             return 0
-
-    security.declareProtected(PERMISSION_DELETE_OBJECTS, 'deleteObjects')
-    def deleteObjects(self, ids=None, REQUEST=None):
-        """ """
-        if ids is None: ids = []
-        else: ids = self.utConvertToList(ids)
-        try: self.manage_delObjects(ids)
-        except: error = 1
-        else: error = 0
-        if REQUEST:
-            if error: self.setSessionErrors(['Error while delete data.'])
-            else: self.setSessionInfo(['Item(s) deleted.'])
-            REQUEST.RESPONSE.redirect('%s/admin_html' % self.absolute_url())
+        else:
+            return 1
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'setTopPhotoObjects')
     def setTopPhotoObjects(self, REQUEST=None):
@@ -366,7 +553,7 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
                 self.recatalogNyObject(item)
         except: self.setSessionErrors(['Error while updating data.'])
         else: self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-        if REQUEST: REQUEST.RESPONSE.redirect('%s/admin_html' % self.absolute_url())
+        if REQUEST: REQUEST.RESPONSE.redirect(self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPendingContent')
     def processPendingContent(self, appids=[], delids=[], REQUEST=None):
@@ -416,30 +603,70 @@ class NyPhotoFolder(NyAttributes, LocalPropertyManager, NyContainer):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/basketofapprovals_html' % self.absolute_url())
 
-    #zmi pages
-    security.declareProtected(view_management_screens, 'manage_edit_html')
-    manage_edit_html = PageTemplateFile('zpt/photofolder_manage_edit', globals())
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'restrict_html')
+    def restrict_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'folder_restrict')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'setRestrictions')
+    def setRestrictions(self, access='all', roles=[], REQUEST=None):
+        """
+        Restrict access to current folder for given roles.
+        """
+        msg = err = ''
+        if access == 'all':
+            #remove restrictions
+            try:
+                self.manage_permission(view, roles=[], acquire=1)
+            except Exception, error:
+                err = error
+            else:
+                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+        else:
+            #restrict for given roles
+            try:
+                roles = self.utConvertToList(roles)
+                roles.extend(['Manager', 'Administrator'])
+                self.manage_permission(view, roles=roles, acquire=0)
+            except Exception, error:
+                err = error
+            else:
+                msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
+        if REQUEST:
+            if err != '': self.setSessionErrors([err])
+            if msg != '': self.setSessionInfo([msg])
+            REQUEST.RESPONSE.redirect('%s/restrict_html' % self.absolute_url())
+
+    #zmi pages
+    security.declareProtected(PERMISSION_DELETE_OBJECTS, 'deleteObjects')
+    security.declareProtected(PERMISSION_COPY_OBJECTS, 'copyObjects')
+    security.declareProtected(PERMISSION_DELETE_OBJECTS, 'cutObjects')
+    security.declareProtected(view, 'pasteObjects')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'updateSessionFrom')
+    
     security.declareProtected(view_management_screens, 'manage_displays_html')
     manage_displays_html = PageTemplateFile('zpt/photofolder_manage_displays', globals())
 
     #site pages
+    security.declareProtected(PERMISSION_ADD_PHOTOFOLDER, 'photofolder_add_html')
+    photofolder_add_html = PageTemplateFile('zpt/photofolder_add', globals())
+    
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/photofolder_index', globals())
 
-    security.declareProtected(view, 'admin_html')
-    admin_html = PageTemplateFile('zpt/photofolder_admin', globals())
-
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     edit_html = PageTemplateFile('zpt/photofolder_edit', globals())
+    
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'sortorder_html')
+    sortorder_html = PageTemplateFile('zpt/photoarchive_sortorder', globals())
+    
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'changecover_html')
+    changecover_html = PageTemplateFile('zpt/photoarchive_cover', globals())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'basketofapprovals_html')
     basketofapprovals_html = PageTemplateFile('zpt/photofolder_basketofapprovals', globals())
 
     security.declareProtected(PERMISSION_ADD_PHOTO, 'photo_add_html')
     photo_add_html = PageTemplateFile('zpt/photo_add', globals())
-
-    security.declareProtected(PERMISSION_ADD_PHOTO, 'uploadzip_html')
-    uploadzip_html = PageTemplateFile('zpt/photofolder_uploadzip', globals())
 
 InitializeClass(NyPhotoFolder)

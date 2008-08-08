@@ -27,17 +27,22 @@ import Globals
 NAAYAPHOTOARCHIVE_PRODUCT_NAME = 'NaayaPhotoArchive'
 NAAYAPHOTOARCHIVE_PRODUCT_PATH = Globals.package_home(globals())
 
+PERMISSION_ADD_PHOTOGALLERY = 'Naaya - Add Naaya Photo Gallery'
 PERMISSION_ADD_PHOTOFOLDER = 'Naaya - Add Naaya Photo Folder'
 PERMISSION_ADD_PHOTO = 'Naaya - Add Naaya Photo'
 
+METATYPE_NYPHOTOGALLERY = 'Naaya Photo Gallery'
+METALABEL_NYPHOTOGALLERY = 'Photo Gallery'
 METATYPE_NYPHOTOFOLDER = 'Naaya Photo Folder'
+METALABEL_NYPHOTOFOLDER = 'Photo Folder'
 METATYPE_NYPHOTO = 'Naaya Photo'
 
+PREFIX_NYPHOTOGALLERY = 'pgl'
 PREFIX_NYPHOTOFOLDER = 'pfl'
 PREFIX_NYPHOTO = 'pht'
 
 #others
-NUMBER_OF_RESULTS_PER_PAGE = 20
+NUMBER_OF_RESULTS_PER_PAGE = 50
 NUMBER_OF_RESULTS_PER_LINE = 4
 DEFAULT_QUALITY = 100
 DEFAULT_DISPLAYS = {
@@ -48,3 +53,21 @@ DEFAULT_DISPLAYS = {
     'Large': (768,768),
     'XLarge': (1024,1024)
 }
+
+LISTING_DISPLAYS = {
+    'Gallery': 200,
+    'Album': 100,
+}
+
+ARCHIVE_PROPERTIES = (
+    'title',
+    'description',
+    'coverage',
+    'keywords',
+    'sortorder',
+    'releasedate',
+    'discussion',
+    'author',
+    'source',
+    'max_photos',
+)

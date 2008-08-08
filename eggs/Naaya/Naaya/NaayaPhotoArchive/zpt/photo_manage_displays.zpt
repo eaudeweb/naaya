@@ -32,7 +32,7 @@
 </form>
 
 <p class="form-help">
-	bla bla bla
+	Use these buttons to generate or purge the display images for this photo.
 <p>
 <form method="post" action="manageGenerateDisplays" style="display:inline;">
 <input type="submit" value="Generate all" />
