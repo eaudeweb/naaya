@@ -1,42 +1,146 @@
 <span tal:replace="structure here/standard_html_header" />
+<link rel="stylesheet" type="text/css"
+	tal:attributes="href string:${here/absolute_url}/style_css" />
 
-<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/meta_type; alt here/meta_type" /> <span tal:replace="here/title_or_id" /></h1>
-<div id="admin_this_folder" tal:condition="here/checkPermissionEditObject">
-	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
+<h1>
+	<span tal:replace="here/getAlbumTitle" />
+</h1>
+
+<!-- Admin section -->
+<div id="admin_this_folder">
+<div class="floated-buttons">
+	<a tal:attributes="href python:here.getParentNode().absolute_url()">
+		<span i18n:translate="">Back to album</span>
+	</a>
 </div>
-<table border="0" cellspacing="2" cellpadding="2">
-<tr>
-	<th i18n:translate="">Author</th>
-	<td tal:content="here/author"/>
-</tr>
-<tr>
-	<th i18n:translate="">Source</th>
-	<td tal:content="here/source"/>
-</tr>
-<tr>
-	<th i18n:translate="">Released on</th>
-	<td tal:content="python:here.utShowDateTime(here.releasedate)"/>
-</tr>
-<tr>
-	<th i18n:translate="">Download</th>
-	<td>
-		<a tal:define="size python:here.utShowSizeKb(here.size); content_type python:here.getContentTypeTitle(here.content_type)"
-			tal:attributes="href string:${here/absolute_url}/download"><img tal:attributes="src string:getContentTypePicture?id=${here/getContentType}; alt here/title_or_id" /> <span tal:replace="string:${here/id} (${content_type}, ${size} Kb)"/></a>
-	</td>
-</tr>
-</table>
-<p tal:condition="python:here.description!=''" tal:content="structure here/description" />
-<span tal:replace="structure here/get_display_js" />
-<p>
-	<tal:block tal:repeat="item here/get_displays">
-		<a tal:attributes="href string:javascript:img_display('${item}');" tal:content="item" i18n:translate="" />
-	</tal:block>
-	<a tal:attributes="href string:javascript:img_display('');" i18n:translate="">Original</a>
-</p>
-<form tal:define="display python:request.get('display', '')" name="frmDisplay">
-	<img name="imgDisplay" tal:attributes="src string:${here/absolute_url}/view?display=${display}; alt here/title_or_id" />
+
+<div tal:condition="here/checkPermissionEditObject">
+	<a tal:attributes="href string:${here/absolute_url}/edit_html">
+		<span i18n:translate="">Edit</span>
+	</a>
+</div>
+
+<div style="clear: both"></div>
+</div>
+
+<!-- Right boxes -->
+<form action="." class="g-boxes">
+<!-- Downloads box -->
+<div class="g-box">
+	<div class="title">
+		<span i18n:translate="">View photo</span>
+	</div>
+	<div class="body">
+		<dl class="download-left-column">
+		<dd>
+			<input type="radio" name="display" id="xsmall" value="XSmall"/>
+			<label for="xsmall" i18n:translate="">Very small</label>
+		</dd>
+		<dd>
+			<input type="radio" name="display" id="small" value="Small"/>
+			<label for="small" i18n:translate="">Small</label>
+		</dd>
+		<dd>
+			<input type="radio" name="display" id="medium" value="Medium"/>
+			<label for="medium" i18n:translate="">Medium</label>
+		</dd>
+		</dl>
+		<dl class="download-right-column">
+		<dd>
+			<input type="radio" name="display" id="large" value="Large"/>
+			<label for="large" i18n:translate="">Large</label>
+		</dd>
+		<dd>
+			<input type="radio" name="display" id="xlarge" value="XLarge"/>
+			<label for="xlarge" i18n:translate="">Very Large</label>
+		</dd>
+		<dd>
+			<input type="radio" name="display" id="original" value="Original" checked="checked"/>
+			<label for="original" i18n:translate="">Original</label>
+		</dd>
+		</dl>
+		<dl>
+		<dd class="g-box-button">
+		<input type="submit" name="view:method" value="View"
+			i18n:attributes="value"/>
+		</dd>
+		</dl>
+	</div>
+</div>
+<!-- Details box -->
+<div class="photo-details g-box" tal:define="
+	album here/getParentNode;
+	author python:getattr(here, 'author', '') or getattr(album, 'author', '');
+	source python:getattr(here, 'source', '') or getattr(album, 'source', '');
+	keywords python:getattr(here, 'keywords', '') or getattr(album, 'keywords', '');
+	coverage python:getattr(here, 'coverage', '') or getattr(album, 'coverage', '');
+	">
+	<div class="title">
+		<span i18n:translate="">Photo details</span>
+	</div>
+	<div class="body">
+		<dl>
+		<dt tal:condition="author" i18n:translate="">Author</dt>
+		<dd tal:content="author"/>
+		<dt tal:condition="source" i18n:translate="">Source</dt>
+		<dd tal:content="source"/>
+		<dt tal:condition="here/getContentType" i18n:translate="">Image type</dt>
+		<dd tal:content="here/getContentType"/>
+		<dt tal:condition="python:here.get_size(here.getId())" i18n:translate="">Image size</dt>
+		<dd tal:content="python:here.utShowSize(here.get_size(here.getId()))"/>
+		<dt tal:condition="here/releasedate" i18n:translate="">Uploaded on</dt>
+		<dd tal:content="python:here.utShowDateTime(here.releasedate)"></dd>
+		<dt tal:condition="coverage" i18n:translate="">Geographical coverage</dt>
+		<dd tal:content="coverage"/>
+		<dt tal:condition="keywords" i18n:translate="">Keywords</dt>
+		<dd tal:content="keywords"/>
+		</dl>
+	</div>
+</div>
 </form>
 
-<span tal:replace="structure here/comments_box" />
+<!-- Image -->
+<div class="g-main-content-buttons g-main-content-text" tal:define="
+		next here/next;
+		previous here/previous;">
+		<a tal:attributes="href previous" tal:condition="previous" title="Go to previous image" i18n:attributes="title">
+			<img src="misc_/NaayaPhotoArchive/left.gif"
+				alt="Previous" i18n:attributes="alt" />
+		</a>
+		<tal:block condition="here/checkPermissionEditObject">
+		<a tal:attributes="href string:${here/absolute_url}/rotate_left" title="Rotate left" i18n:attributes="title">
+			<img src="misc_/NaayaPhotoArchive/rotate_left.gif" />
+		</a>
+		<a tal:attributes="href string:${here/absolute_url}/rotate_right" title="Rotate right" i18n:attributes="title">
+			<img src="misc_/NaayaPhotoArchive/rotate_right.gif" />
+		</a>
+		<a tal:attributes="href string:${here/absolute_url}/flip_horizontally" title="Flip horizontally" i18n:attributes="title">
+			<img src="misc_/NaayaPhotoArchive/flip_horizontally.gif" />
+		</a>
+		<a tal:attributes="href string:${here/absolute_url}/flip_vertically" title="Flip vertically" i18n:attributes="title">
+			<img src="misc_/NaayaPhotoArchive/flip_vertically.gif" />
+		</a>
+		</tal:block>
+		<a tal:attributes="href next" tal:condition="next" title="Go to next image" i18n:attributes="title">
+			<img src="misc_/NaayaPhotoArchive/right.gif"
+				alt="Next" i18n:attributes="alt" />
+		</a>
+</div>
 
+<div class="g-main-content g-main-content-text">
+	<div class="g-image-holder">
+		<img name="imgDisplay" tal:attributes="
+			src string:${here/absolute_url}/view?display=Medium; 
+			alt here/title_or_id" />
+	</div>
+	<div class="g-image-description">
+		<span tal:content="structure here/title_or_id" />
+	</div>
+</div>
+
+<div class="g-main-content" tal:condition="here/is_open_for_comments">
+	<span tal:replace="structure here/comments_box" />
+</div>
+
+<div style="clear: both"></div>
 <span tal:replace="structure here/standard_html_footer" />

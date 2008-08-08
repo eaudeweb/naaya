@@ -15,125 +15,156 @@
 #
 # Authors:
 #
-# Dragos Chirila, Finsiel Romania
+# Alin Voinea, Eau de Web
 
 #Python imports
+import re
 from cStringIO import StringIO
 import PIL.Image
 
 #Zope imports
-from OFS.Image import Image, cookId
+from OFS.Image import getImageInfo, cookId, Pdata
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from AccessControl.Permissions import view_management_screens, view, ftp_access
-
+from AccessControl.Permissions import view_management_screens, ftp_access
+from AccessControl.Permissions import view as view_permission
 #Product imports
 from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyAttributes import NyAttributes
-from Products.NaayaBase.NyItem import NyItem
+from Products.NaayaBase.NyFSContainer import NyFSContainer
 from Products.Naaya.constants import *
-from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
+from Products.Localizer.LocalPropertyManager import LocalProperty
+from photo_archive import photo_archive
 
-manage_addNyPhoto_html = PageTemplateFile('zpt/photo_manage_add', globals())
-def addNyPhoto(self, id='', title='', author='', source='', description='', sortorder='',
-    topitem='', onfrontfrom='', onfrontto='', file='', precondition='', content_type='',
-    quality='', lang=None, discussion='', releasedate='', REQUEST=None):
+def addNyPhoto(self, id='', title='', description='', coverage='', keywords='',
+               sortorder=100, releasedate='', lang=None, author='', source='',
+               content_type='', discussion=0, file='', REQUEST=None, **kwargs):
     """
     Create a Photo type of object.
     """
+    if self.is_full():
+        return None
+    
     #process parameters
     id, title = cookId(id, title, file)
-    id = self.utCleanupId(id)
-    if not id: id = PREFIX_NYPHOTO + self.utGenRandomId(6)
-    try: sortorder = abs(int(sortorder))
-    except: sortorder = DEFAULT_SORTORDER
-    if topitem: topitem = 1
-    else: topitem = 0
-    onfrontfrom = self.utConvertStringToDateTimeObj(onfrontfrom)
-    onfrontto = self.utConvertStringToDateTimeObj(onfrontto)
-    try: quality = abs(int(quality))
-    except: quality = DEFAULT_QUALITY
-    if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
+    id = self.utCleanupId(id) or self.utGenObjectId(title)
+    if not id or self._getOb(id, None):
+        id = PREFIX_NYPHOTO + self.utGenRandomId(6)
+    try:
+        sortorder = abs(int(sortorder))
+    except:
+        sortorder = DEFAULT_SORTORDER
     displays = self.displays.copy()
     if file != '':
         if hasattr(file, 'filename'):
             if file.filename == '': file = ''
+    releasedate = self.process_releasedate(releasedate)
+    if lang is None:
+        lang = self.gl_get_selected_language()
+
     if self.glCheckPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
-    releasedate = self.process_releasedate(releasedate)
-    if lang is None: lang = self.gl_get_selected_language()
     #create object
-    ob = NyPhoto(id, title, author, source, description, sortorder, topitem,
-        onfrontfrom, onfrontto, precondition, content_type, quality,
-        displays, approved, approved_by, releasedate, lang)
+    
+    # Fallback from album
+    discussion = discussion or getattr(self, 'discussion', 0)
+    
+    ob = NyPhoto(id, title, lang,
+                 description=description, coverage=coverage, keywords=keywords,
+                 sortorder=sortorder, releasedate=releasedate, author=author,
+                 source=source, content_type=content_type, displays=displays,
+                 discussion=discussion, approved=approved, approved_by=approved_by)
+
     self.gl_add_languages(ob)
     self._setObject(id, ob)
     #extra settings
     ob = self._getOb(id)
-    ob.manage_upload(file)
+    ob.update_data(file)
     ob.submitThis()
-    if discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     #redirect if case
     if REQUEST is not None:
-        l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
-        if l_referer == 'manage_addNyPhoto_html' or l_referer.find('manage_addNyPhoto_html') != -1:
-            return self.manage_main(self, REQUEST, update_menu=1)
-        elif l_referer == 'photo_add_html':
-            self.setSession('referer', '%s/admin_html' % self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.getSitePath())
+        REQUEST.RESPONSE.redirect(self.absolute_url())
+    return ob.getId()
 
-class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
+class NyPhoto(NyAttributes, photo_archive, NyFSContainer):
     """ """
 
     meta_type = METATYPE_NYPHOTO
     icon = 'misc_/NaayaPhotoArchive/NyPhoto.gif'
     icon_marked = 'misc_/NaayaPhotoArchive/NyPhoto_marked.gif'
 
-    manage_options = (
-        (
-            {'label': 'Properties', 'action': 'manage_edit_html'},
-            {'label': 'Displays', 'action': 'manage_displays_html'},
-        )
-        +
-        NyItem.manage_options
+    manage_options = ((
+        {'label': 'Displays', 'action': 'manage_displays_html'},
+        ) + NyFSContainer.manage_options
     )
 
     security = ClassSecurityInfo()
 
-    title = LocalProperty('title')
     author = LocalProperty('author')
     source = LocalProperty('source')
-    description = LocalProperty('description')
 
-    def __init__(self, id, title, author, source, description, sortorder,
-        topitem, onfrontfrom, onfrontto, precondition, content_type,
-        quality, displays, approved, approved_by, releasedate, lang):
+    def __init__(self, id, title, lang, approved=0, approved_by='', **kwargs):
         """ """
         #image stuff
-        self.content_type = content_type
-        self.precondition = precondition
         self.id = id
-        NyItem.__dict__['__init__'](self)
-        self._setLocalPropValue('title', lang, title)
-        self._setLocalPropValue('author', lang, author)
-        self._setLocalPropValue('source', lang, source)
-        self._setLocalPropValue('description', lang, description)
-        self.sortorder = sortorder
-        self.topitem = topitem
-        self.onfrontfrom = onfrontfrom
-        self.onfrontto = onfrontto
-        self.quality = quality
-        self.displays = displays
+        self.qulity = 100
+        self.content_type = kwargs.get('content_type', '')
+        self.displays = kwargs.get('displays', {})
         self.approved = approved
         self.approved_by = approved_by
-        self.releasedate = releasedate
-        self.__photos = {}
+        NyFSContainer.__init__(self)
+        self.save_properties(title, lang, **kwargs)
+    
+    def _getDisplayId(self, display='Original'):
+        """ Returns real display object id.
+        """
+        if display == 'Original':
+            return self.getId()
+        return display + '-' + self.getId()
+    
+    def _getDisplay(self, display='Original'):
+        """ Returns display object
+        """
+        if not self.is_generated(display):
+            self.__generate_display(display)
+        display = self._getDisplayId(display)
+        return self._getOb(display, None)
 
+    def width(self, sid='Original'):
+        ob = self._getDisplay(sid)
+        return getattr(ob, 'width', 0)
+    
+    def height(self, sid="Original"):
+        ob = self._getDisplay(sid)
+        return getattr(ob, 'height', 0)
+        
+    def save_properties(self, title='', lang=None, **kwargs):
+        description = kwargs.get('description', '')
+        coverage = kwargs.get('coverage', '')
+        keywords = kwargs.get('keywords', '')
+        sortorder = kwargs.get('sortorder', 100)
+        releasedate = kwargs.get('releasedate', '')
+        discussion = kwargs.get('discussion', 0)
+        if not lang:
+            lang = self.gl_get_selected_language()
+        
+        photo_archive.save_properties(self, title, description, coverage,
+                                      keywords, sortorder, releasedate, lang)
+        
+        self._setLocalPropValue('author', lang, kwargs.get('author', ''))
+        self._setLocalPropValue('source', lang, kwargs.get('source', ''))
+        
+        if discussion:
+            self.open_for_comments()
+        else:
+            self.close_for_comments()
+        self._p_changed = 1
+        
     security.declarePrivate('objectkeywords')
     def objectkeywords(self, lang):
         return u' '.join([self.getLocalProperty('title', lang),
@@ -150,26 +181,59 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
             self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
         file = REQUEST['BODYFILE']
 
-        self.manage_upload(file)
-        self.managePurgeDisplays()
+        self.update_data(file)
 
         RESPONSE.setStatus(204)
         return RESPONSE
 
-    security.declareProtected(ftp_access, 'manage_FTPget')
-    def manage_FTPget(self):
-        """ Handle GET requests. """
-        return NyPhoto.inheritedAttribute('manage_FTPget')(self)
-
-    security.declareProtected(ftp_access, 'manage_FTPstat')
-    def manage_FTPstat(self, REQUEST):
-        """ Handle STAT requests. """
-        return NyPhoto.inheritedAttribute('manage_FTPstat')(self, REQUEST)
+    def update_data(self, data, content_type=None, size=None, filename='Original', purge=True):
+        if purge:
+            self.manage_delObjects(self.objectIds())
+        
+        filename = self.utCleanupId(filename)
+        filename = self._getDisplayId(filename)
+        if filename in self.objectIds():
+            self.manage_delObjects([filename])
+        
+        child_id = self.manage_addFile(filename)
+        child = self._getOb(child_id)
+        if hasattr(data, '__class__') and data.__class__ is Pdata:
+            data = str(data)
+        elif getattr(data, 'index_html', None):
+            data = data.index_html()
+        
+        if not isinstance(data, str):
+            data = data.read()
+        child.content_type, child.width, child.height = getImageInfo(data)
+        
+        child.manage_upload(data, child.content_type)
+        return child.getId()
 
     #core
+    def __get_crop_aspect_ratio_size(self, size):
+        img_width, img_height = self.width(), self.height()
+        if img_width == img_height:
+            return size, size
+        
+        width = height = size
+        sw = float(width) / img_width
+        sh = float(height) / img_height
+        if img_width > img_height:
+            width = int(sh * img_width + 0.5)
+        else:
+            height = int(sw * img_height + 0.5)
+        return width, height
+    
+    def __get_crop_box(self, width, height):
+        if width == height:
+            return 0, 0, width, height
+        elif width > height:
+            return width/2 - height/2, 0, width/2 + height/2, height
+        return 0, height/2 - width/2, width, height/2 + width/2
+        
     def __get_aspect_ratio_size(self, width, height):
         #return proportional dimensions within desired size
-        img_width, img_height = self.width, self.height
+        img_width, img_height = self.width(), self.height()
         sw = float(width) / img_width
         sh = float(height) / img_height
         if sw <= sh: height = int(sw * img_height + 0.5)
@@ -178,24 +242,99 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
 
     def __resize(self, display):
         #resize and resample photo
-        width, height = self.displays.get(display, (self.width, self.height))
-        width, height = self.__get_aspect_ratio_size(width, height)
+        original_id = self._getDisplayId()
+        crop = False
+        width, height = self.displays.get(display, (0, 0))
+        # Calculate image width, size
+        if not (width and height):
+            size = LISTING_DISPLAYS.get(display, self.width())
+            width, height = self.__get_crop_aspect_ratio_size(size)
+            crop = True
+        else:
+            width, height = self.__get_aspect_ratio_size(width, height)
+        
+        # Resize image
         newimg = StringIO()
-        img = PIL.Image.open(StringIO(str(self.data)))
+        img = PIL.Image.open(StringIO(str(self.get_data(original_id))))
         fmt = img.format
         try: img = img.resize((width, height), PIL.Image.ANTIALIAS)
         except AttributeError: img = img.resize((width, height))
+        
+        # Crop if needed
+        if crop:
+            box = self.__get_crop_box(width, height)
+            img = img.crop(box)
+            #img.load()
         img.save(newimg, fmt, quality=self.quality)
         newimg.seek(0)
-        return Image('10', '', newimg)
+        return newimg
 
     def __generate_display(self, display):
         #generates and stores a display
-        self.__photos[display] = self.__resize(display)
-        self._p_changed = 1
+        original_id = self._getDisplayId()
+        self.update_data(self.__resize(display), self.getContentType(original_id),
+                         filename=display, purge=False)
+    
+    # Image edit
+    
+    def _transpose(self, method):
+        original_id = self._getDisplayId()
+        newimg = StringIO()
+        img = PIL.Image.open(StringIO(str(self.get_data(original_id))))
+        fmt = img.format
+        img = img.transpose(method)
+        img.save(newimg, fmt, quality=self.quality)
+        newimg.seek(0)
+        return newimg
+        
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'rotate_left')
+    def rotate_left(self, REQUEST=None):
+        """ Rotate image left.
+        """
+        original_id = self._getDisplayId()
+        img = self._transpose(PIL.Image.ROTATE_90)
+        self.update_data(img, self.getContentType(original_id), filename='Original')
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect(self.absolute_url())
+
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'rotate_right')
+    def rotate_right(self, REQUEST=None):
+        """ Rotate image right.
+        """
+        original_id = self._getDisplayId()
+        img = self._transpose(PIL.Image.ROTATE_270)
+        self.update_data(img, self.getContentType(original_id), filename='Original')
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect(self.absolute_url())
+    
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'flip_horizontally')
+    def flip_horizontally(self, REQUEST=None):
+        """ Flip image left-right.
+        """
+        original_id = self._getDisplayId()
+        img = self._transpose(PIL.Image.FLIP_LEFT_RIGHT)
+        self.update_data(img, self.getContentType(original_id), filename='Original')
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect(self.absolute_url())
+    
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'flip_vertically')
+    def flip_vertically(self, REQUEST=None):
+        """ Flip image top-botton.
+        """
+        original_id = self._getDisplayId()
+        img = self._transpose(PIL.Image.FLIP_TOP_BOTTOM)
+        self.update_data(img, self.getContentType(original_id), filename='Original')
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect(self.absolute_url())
 
     #api
-    def getZipData(self): return str(self.data)
+    def getZipData(self):
+        display = self._getDisplayId()
+        return str(self.get_data(display))
 
     def get_displays(self):
         #returns a list with all dispays minus 'Thumbnail'
@@ -212,13 +351,15 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
 
     def is_generated(self, display):
         #return whether display has been generated
-        return self.__photos.has_key(display)
+        display = self._getDisplayId(display)
+        return display in self.objectIds()
 
     def get_display_info(self, display):
         #returns widht, height, size of the specified display
-        photo = self.__photos.get(display, None)
+        display_id = self._getDisplayId(display)
+        photo = self._getDisplay(display)
         if photo:
-            return (photo.width, photo.height, photo.size)
+            return (photo.width(display), photo.height(display), photo.get_size(display_id))
         else:
             return (None, None, None)
 
@@ -229,57 +370,6 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
         js_data.append('function img_display(display) { document.frmDisplay.imgDisplay.src = "%s" + "/view?display=" + display }' % self.absolute_url())
         js_data.append('// --></script>')
         return '\n'.join(js_data)
-
-    #zmi actions
-    security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', author='', source='', description='',
-        sortorder='', approved='', topitem='', onfrontfrom='', onfrontto='',
-        content_type='', quality='', releasedate='', discussion='', REQUEST=None):
-        """ """
-        if self.wl_isLocked():
-            raise ResourceLockedError, "File is locked via WebDAV"
-        try: sortorder = abs(int(sortorder))
-        except: sortorder = DEFAULT_SORTORDER
-        if approved: approved = 1
-        else: approved = 0
-        if topitem: topitem = 1
-        else: topitem = 0
-        onfrontfrom = self.utConvertStringToDateTimeObj(onfrontfrom)
-        onfrontto = self.utConvertStringToDateTimeObj(onfrontto)
-        try: quality = abs(int(quality))
-        except: quality = DEFAULT_QUALITY
-        if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
-        releasedate = self.process_releasedate(releasedate, self.releasedate)
-        lang = self.gl_get_selected_language()
-        self._setLocalPropValue('title', lang, title)
-        self._setLocalPropValue('author', lang, author)
-        self._setLocalPropValue('source', lang, source)
-        self._setLocalPropValue('description', lang, description)
-        self.sortorder = sortorder
-        self.topitem = topitem
-        self.onfrontfrom = onfrontfrom
-        self.onfrontto = onfrontto
-        self.content_type = content_type
-        self.quality = quality
-        if approved != self.approved:
-            self.approved = approved
-            if approved == 0: self.approved_by = None
-            else: self.approved_by = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        self.releasedate = releasedate
-        self._p_changed = 1
-        if discussion: self.open_for_comments()
-        else: self.close_for_comments()
-        self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
-
-    security.declareProtected(view_management_screens, 'manageUpload')
-    def manageUpload(self, file='', REQUEST=None):
-        """ """
-        if self.wl_isLocked():
-            raise ResourceLockedError, "File is locked via WebDAV"
-        self.manage_upload(file)
-        self.managePurgeDisplays()
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     security.declareProtected(view_management_screens, 'manageDisplays')
     def manageDisplays(self, display=None, width=None, height=None, REQUEST=None):
@@ -293,53 +383,40 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
     security.declareProtected(view_management_screens, 'manageGenerateDisplays')
     def manageGenerateDisplays(self, REQUEST=None):
         """ """
-        self.__photos = {}
+        self.managePurgeDisplays()
         map(lambda x: self.__generate_display(x), self.displays.keys())
-        self._p_changed = 1
+        
         if REQUEST: REQUEST.RESPONSE.redirect('manage_displays_html?save=ok')
 
     security.declareProtected(view_management_screens, 'managePurgeDisplays')
     def managePurgeDisplays(self, REQUEST=None):
         """ """
-        self.__photos = {}
-        self._p_changed = 1
+        original = self._getDisplayId()
+        to_delete = [x for x in self.objectIds() if x != original]
+        self.manage_delObjects(to_delete)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_displays_html?save=ok')
 
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
-    def saveProperties(self, title='', author='', source='', description='',
-        sortorder='', topitem='', onfrontfrom='', onfrontto='', content_type='',
-        quality='', releasedate='', discussion='', lang=None, REQUEST=None):
+    def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if self.wl_isLocked():
             raise ResourceLockedError, "File is locked via WebDAV"
-        try: sortorder = abs(int(sortorder))
-        except: sortorder = DEFAULT_SORTORDER
-        if topitem: topitem = 1
-        else: topitem = 0
-        onfrontfrom = self.utConvertStringToDateTimeObj(onfrontfrom)
-        onfrontto = self.utConvertStringToDateTimeObj(onfrontto)
-        try: quality = abs(int(quality))
-        except: quality = DEFAULT_QUALITY
-        if quality <= 0 or quality > 100: quality = DEFAULT_QUALITY
-        releasedate = self.process_releasedate(releasedate, self.releasedate)
-        if lang is None: lang = self.gl_get_selected_language()
-        self._setLocalPropValue('title', lang, title)
-        self._setLocalPropValue('author', lang, author)
-        self._setLocalPropValue('source', lang, source)
-        self._setLocalPropValue('description', lang, description)
-        self.sortorder = sortorder
-        self.topitem = topitem
-        self.onfrontfrom = onfrontfrom
-        self.onfrontto = onfrontto
-        self.content_type = content_type
-        self.quality = quality
-        self.releasedate = releasedate
-        self._p_changed = 1
-        if discussion: self.open_for_comments()
-        else: self.close_for_comments()
+        
+        if REQUEST:
+            kwargs.update(REQUEST.form)
+        lang = kwargs.setdefault('lang', self.gl_get_selected_language())
+        releasedate = kwargs.get('releasedate', '')
+        kwargs['releasedate'] = self.process_releasedate(releasedate)
+        self.save_properties(**kwargs)
+
+        # upload image
+        attached_file = kwargs.get('file', None)
+        if getattr(attached_file, 'filename', ''):
+            self.saveUpload(attached_file, lang)
+        
         self.recatalogNyObject(self)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
@@ -355,41 +432,81 @@ class NyPhoto(NyAttributes, LocalPropertyManager, NyItem, Image):
         if file != '':
             if hasattr(file, 'filename'):
                 if file.filename != '':
-                    self.manage_upload(file)
-                    self.managePurgeDisplays()
+                    self.update_data(file)
         if lang is None: lang = self.get_default_language()
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
-    #zmi pages
-    security.declareProtected(view_management_screens, 'manage_edit_html')
-    manage_edit_html = PageTemplateFile('zpt/photo_manage_edit', globals())
+    security.declareProtected(view_permission, 'download')
+    def download(self, REQUEST, RESPONSE):
+        """ """
+        display = self._getDisplayId()
+        self.REQUEST.RESPONSE.setHeader('Content-Type', self.content_type)
+        self.REQUEST.RESPONSE.setHeader('Content-Length', self.get_size(display))
+        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.id)
+        return self.view(REQUEST=REQUEST)
 
+    security.declareProtected(view_permission, 'view')
+    def view(self, REQUEST, display='', **kwargs):
+        """ """
+        if not self.displays.has_key(display):
+            if not LISTING_DISPLAYS.has_key(display):
+                display = 'Original'
+        photo = self._getDisplay(display)
+        return photo.index_html(REQUEST=REQUEST)
+    
+    security.declareProtected(view_permission, 'previous')
+    def previous(self):
+        """ Returns previous photo in parent"""
+        album = self.getParentNode()
+        photos = album.getSortedObjectIds()
+        try:
+            index = photos.index(self.getId()) - 1
+            if index < 0:
+                return ''
+            return '/'.join((album.absolute_url(), photos[index]))
+        except (ValueError, IndexError):
+            return ''
+    
+    security.declareProtected(view_permission, 'next')
+    def next(self):
+        """ Returns next photo in parent """
+        album = self.getParentNode()
+        photos = album.getSortedObjectIds()
+        try:
+            index = photos.index(self.getId()) + 1
+            return '/'.join((album.absolute_url(), photos[index]))
+        except (ValueError, IndexError):
+            return ''
+    
+    security.declareProtected(view_permission, 'getAlbum')
+    def getAlbumTitle(self):
+        return self.getParentNode().title_or_id()
+    
+    def _fix_after_cut_copy(self, item):
+        item_id = item.getId()
+        if item_id.startswith('copy') and item_id not in item.objectIds():
+            original_id = re.sub(r'^copy\d*_of_', '', item.getId())
+            item.update_data(item.get_data(original_id))
+        return item
+
+    def manage_afterClone(self, item):
+        self._fix_after_cut_copy(item)
+        return NyPhoto.inheritedAttribute("manage_afterClone")(self, item)
+    
+    def manage_afterAdd(self, item, container):
+        self._fix_after_cut_copy(item)
+        return NyPhoto.inheritedAttribute("manage_afterAdd")(self, item, container)
+    
+    #zmi pages
     security.declareProtected(view_management_screens, 'manage_displays_html')
     manage_displays_html = PageTemplateFile('zpt/photo_manage_displays', globals())
 
     #site pages
-    security.declareProtected(view, 'index_html')
+    security.declareProtected(view_permission, 'index_html')
     index_html = PageTemplateFile('zpt/photo_index', globals())
-
-    security.declareProtected(view, 'download')
-    def download(self, REQUEST, RESPONSE):
-        """ """
-        self.REQUEST.RESPONSE.setHeader('Content-Type', self.content_type)
-        self.REQUEST.RESPONSE.setHeader('Content-Length', self.size)
-        self.REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.id)
-        return NyPhoto.inheritedAttribute('index_html')(self, REQUEST, RESPONSE)
-
-    security.declareProtected(view, 'view')
-    def view(self, REQUEST, RESPONSE, display=None):
-        """ """
-        if display and self.displays.has_key(display):
-            if not self.is_generated(display):
-                self.__generate_display(display)
-            return self.__photos[display].index_html(REQUEST, RESPONSE)
-        return NyPhoto.inheritedAttribute('index_html')(self, REQUEST, RESPONSE)
-
+    
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     edit_html = PageTemplateFile('zpt/photo_edit', globals())
 
