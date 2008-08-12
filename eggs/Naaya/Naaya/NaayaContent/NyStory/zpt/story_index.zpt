@@ -28,38 +28,45 @@
 
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
-<table border="0" cellspacing="2" cellpadding="2">
-<tr>
-	<th  i18n:translate="">Released</th>
-	<td tal:content="python:here.utShowDateTime(here.releasedate)"/>
-</tr>
-<tr>
-	<th i18n:translate="">Contributor</th>
-	<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
-</tr>
-<tr tal:condition="here/coverage">
-	<th i18n:translate="">Geographical coverage</th>
-	<td tal:content="here/coverage" />
-</tr>
-<tr tal:condition="here/keywords">
-	<th i18n:translate="">Keywords</th>
-	<td tal:content="here/keywords" />
-</tr>
-<tr tal:condition="python:here.resourceurl and (here.resourceurl !='http://')">
-	<th i18n:translate="">Concerned URL</th>
-	<td>
-		<a tal:attributes="href here/resourceurl" tal:content="here/resourceurl" />
-		<small class="message-information" i18n:translate="">[Hold down the Shift key when you click on a link to open it in a new window]</small>
-	</td>
-</tr>
-<tr tal:condition="here/source">
-	<th i18n:translate="">Source of information</th>
-	<td tal:content="here/source" />
-</tr>
+<table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
+	<tr>
+		<th  i18n:translate="">Released</th>
+		<td tal:content="python:here.utShowDateTime(here.releasedate)"/>
+	</tr>
+	<tr>
+		<th i18n:translate="">Contributor</th>
+		<td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
+	</tr>
+	<tr tal:condition="here/coverage">
+		<th i18n:translate="">Geographical coverage</th>
+		<td tal:content="here/coverage" />
+	</tr>
+  <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
+                  picture python:portal_map.getSymbolPicture(here.geo_type)">
+    <th i18n:translate="">Type</th>
+    <td>
+      <img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolZPicture?id=${here/geo_type}; alt title; title title" />
+      (<span tal:replace="title" />)
+    </td>
+  </tr>
+	<tr tal:condition="here/keywords">
+		<th i18n:translate="">Keywords</th>
+		<td tal:content="here/keywords" />
+	</tr>
+	<tr tal:condition="python:here.resourceurl and (here.resourceurl !='http://')">
+		<th i18n:translate="">Concerned URL</th>
+		<td>
+			<a tal:attributes="href here/resourceurl" tal:content="here/resourceurl" />
+			<small class="message-information" i18n:translate="">[Hold down the Shift key when you click on a link to open it in a new window]</small>
+		</td>
+	</tr>
+	<tr tal:condition="here/source">
+		<th i18n:translate="">Source of information</th>
+		<td tal:content="here/source" />
+	</tr>
 </table>
 <br />
 <p tal:replace="structure here/body" />
-
 <span tal:replace="structure here/comments_box" />
 
 <span tal:replace="structure here/standard_html_footer" />
