@@ -25,7 +25,7 @@
 
 <p tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
-<table border="0" cellspacing="2" cellpadding="2">
+<table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
 <tr tal:condition="here/personaltitle">
 	<th i18n:translate="">Personal Title</th>
 	<td tal:content="here/personaltitle">personaltitle</td>
@@ -92,6 +92,14 @@
 	<th i18n:translate="">Geographical coverage</th>
 	<td tal:content="here/coverage" />
 </tr>
+  <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
+                  picture python:portal_map.getSymbolPicture(here.geo_type)">
+    <th i18n:translate="">Type</th>
+    <td>
+      <img tal:condition="picture" tal:attributes="src string:${portal_map/absolute_url}/getSymbolZPicture?id=${here/geo_type}; alt title; title title" />
+      (<span tal:replace="title" />)
+    </td>
+  </tr>
 <tr>
 	<th i18n:translate="">Export for Outlook</th>
 	<td><a tal:attributes="href string:${here/absolute_url}/export_vcard" i18n:translate="">vCard Format</a>
