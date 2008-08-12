@@ -46,6 +46,12 @@
 		<th i18n:translate="">Geographical coverage</th>
 		<td tal:content="here/coverage" />
 	</tr>
+	<tr tal:condition="here/geo_type">
+		<th i18n:translate="">Geographical type</th>
+		<tal:block tal:repeat="geo_type_item portal_map/getSymbolsList">
+		<td tal:condition="python: geo_type_item.id == here.geo_type" tal:content="geo_type_item/title" />
+		</tal:block>
+	</tr>
 	<tr tal:condition="here/keywords">
 		<th i18n:translate="">Keywords</th>
 		<td tal:content="here/keywords" />
