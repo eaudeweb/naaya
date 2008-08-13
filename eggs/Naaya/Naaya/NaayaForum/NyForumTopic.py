@@ -37,7 +37,7 @@ from NyForumMessage import manage_addNyForumMessage_html, message_add_html, addN
 manage_addNyForumTopic_html = PageTemplateFile('zpt/topic_manage_add', globals())
 topic_add_html = PageTemplateFile('zpt/topic_add', globals())
 def addNyForumTopic(self, id='', title='', category='', description='',
-    attachment='', notify='', REQUEST=None):
+    attachment='', notify='', sort_reverse=False, REQUEST=None):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_NYFORUMTOPIC + self.utGenRandomId(6)
@@ -46,7 +46,7 @@ def addNyForumTopic(self, id='', title='', category='', description='',
     author, postdate = self.processIdentity()
     #by default a topic is opened, status = 0; when closed status = 1
     status = 0
-    ob = NyForumTopic(id, title, category, description, notify, author, postdate, status)
+    ob = NyForumTopic(id, title, category, description, notify, author, postdate, status, sort_reverse)
     self._setObject(id, ob)
     self.handleAttachmentUpload(self._getOb(id), attachment)
     if REQUEST is not None:
@@ -98,8 +98,11 @@ class NyForumTopic(NyForumBase, Folder):
 
     security.declareProtected(PERMISSION_ADD_FORUMMESSAGE, 'addNyForumMessage')
     addNyForumMessage = addNyForumMessage
-
-    def __init__(self, id, title, category, description, notify, author, postdate, status):
+    
+    sort_reverse = False
+    status = 0
+    
+    def __init__(self, id, title, category, description, notify, author, postdate, status, sort_reverse=False):
         """ """
         self.id = id
         self.title = title
@@ -114,14 +117,7 @@ class NyForumTopic(NyForumBase, Folder):
         self.submitted = 1
         self.approved = 1
         self.releasedate = postdate
-
-    def __setstate__(self,state):
-        """
-        For backwards compatibility.
-        """
-        NyForumTopic.inheritedAttribute("__setstate__") (self, state)
-        if not hasattr(self, 'status'):
-            self.status = 0
+        self.sort_reverse = sort_reverse
 
     #api
     def get_topic_object(self): return self
@@ -186,7 +182,10 @@ class NyForumTopic(NyForumBase, Folder):
         Process all the messages and returns a structure to be displayed as
         a tree.
         """
-        return self.__get_messages_thread(self.objectValues(METATYPE_NYFORUMMESSAGE), None, 1)
+        items = self.objectValues(METATYPE_NYFORUMMESSAGE)
+        if self.sort_reverse:
+            items = self.utSortObjsListByAttr(items, 'postdate')
+        return self.__get_messages_thread(items, None, 1)
 
     security.declarePublic('get_last_message')
     def get_last_message(self):
@@ -231,7 +230,7 @@ class NyForumTopic(NyForumBase, Folder):
     #site actions
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'saveProperties')
     def saveProperties(self, title='', category='', status='', description='',
-        notify='', postdate='', REQUEST=None):
+        notify='', postdate='', sort_reverse=False, REQUEST=None):
         """ """
         try: status = abs(int(status))
         except: status = 0
@@ -242,6 +241,7 @@ class NyForumTopic(NyForumBase, Folder):
         self.status = status
         self.description = description
         self.notify = notify
+        self.sort_reverse = sort_reverse
         self._p_changed = 1
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
