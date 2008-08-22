@@ -40,7 +40,9 @@
 	<div style="clear: both"></div>
 </div>
 
-<div class="thumbnail-layout" id="selection_buttons" tal:condition="objects_list">
+<div class="thumbnail-layout" id="selection_buttons">
+
+	<tal:block condition="objects_list">
 	<input type="checkbox" name="select_all" id="select_all" onclick="toggleSelect(this);"/>
 	<input type="button" style="display: none"
 		name="select_all_label" id="select_all_label" value="Select all"
@@ -49,10 +51,16 @@
 		name="copyObjects:method" value="Copy" i18n:attributes="value" />
 	<input class="action_button" tal:condition="here/checkPermissionDeleteObject" type="submit"
 		name="cutObjects:method" value="Cut" i18n:attributes="value" />
+	</tal:block>
+
 	<input class="action_button" tal:condition="python:here.cb_dataValid() and here.checkPermissionPasteObjects()" type="submit"
 		name="pasteObjects:method" value="Paste" i18n:attributes="value" />
+
+	<tal:block condition="objects_list">
 	<input class="action_button" tal:condition="here/checkPermissionDeleteObject" type="submit"
 		name="deleteObjects:method" value="Delete" i18n:attributes="value" />
+	</tal:block>
+
 </div>
 <div style="clear: both"></div>
 
