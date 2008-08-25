@@ -711,8 +711,14 @@ class EnviroWindowsSite(NySite):
             if doc_name in namelist:
                 doc_name = "%s-%s" % (len(namelist), doc_name)
 
-            doc_data = getattr(doc.getFileItem(), 'data', None)
+            doc_file = doc.getFileItem()
+            doc_data = doc_file.get_data(as_string=False)
             
+            if doc_data.is_broken():
+                continue
+            else:
+                doc_data = doc_file.get_data()
+           
             if not isinstance(doc_data, str):
                 data_buffer = StringIO()
                 while doc_data is not None:
