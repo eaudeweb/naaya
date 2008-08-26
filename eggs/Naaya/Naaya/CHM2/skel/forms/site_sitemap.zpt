@@ -33,17 +33,17 @@ function fTreeClick(expand)
 <a tal:attributes="href string:javascript:fTreeClick('')" i18n:translate="">Collapse all</a>
 <dl>
 	<dt tal:repeat="tree_node tree">
-		<img tal:repeat="i python:range(0, tree_node[2])" src="misc_/Naaya/square.gif" border="0" />
+		<img tal:repeat="i python:range(0, tree_node[2])" src="misc_/Naaya/square.gif" alt="" />
 		<tal:block tal:condition="python:tree_node[1]==-1">
-			<img src="misc_/Naaya/square.gif" border="0" />
+			<img src="misc_/Naaya/square.gif" alt="" />
 		</tal:block>
 		<tal:block tal:condition="python:tree_node[1]==0" tal:define="node_expand python:here.processCollapse(expand_list, tree_node[0].absolute_url(1))">
-			<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/minus.gif" alt="Collapse" border="0" i18n:attributes="alt" /></a>
+			<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/minus.gif" alt="Collapse" i18n:attributes="alt" /></a>
 		</tal:block>
 		<tal:block tal:condition="python:tree_node[1]==1" tal:define="node_expand python:here.processExpand(expand_list, tree_node[0].absolute_url(1))">
-			<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/plus.gif" alt="Expand" border="0" i18n:attributes="alt" /></a>
+			<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')"><img src="misc_/Naaya/plus.gif" alt="Expand" i18n:attributes="alt" /></a>
 		</tal:block>
-		<img border="0" tal:attributes="src python:tree_node[0].icon" />
+		<img tal:attributes="src python:tree_node[0].icon; alt python:tree_node[0].meta_type" />
 		<a tal:define="node_path python:tree_node[0].absolute_url()" tal:attributes="href node_path" tal:content="python:tree_node[0].title_or_id()">folder</a>
 		<tal:block tal:condition="python:tree_node[0].can_be_seen()">
 			<tal:block tal:condition="python:tree_node[0].has_restrictions()" i18n:translate="">

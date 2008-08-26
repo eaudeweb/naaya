@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
 	<forms>
-		<form id="epoz_toolbox" title="Epoz toolbox form"/>
-		<form id="epoz_gallerybox" title="Epoz toolbox for photos archive"/>
 		<form id="site_insertrelativelink" title="Epoz insert relative link form"/>
 		<form id="site_search" title="Portal search"/>
 		<form id="site_external_search" title="External search"/>
@@ -32,7 +30,7 @@
 		<form id="site_admin_userroles" title="View the roles of a user"/>
 		<form id="site_admin_template" title="Portal administration - macro"/>
 		<form id="site_links_group" title="Group of links"/>
-        <form id="site_index" title="Portal home page"/>
+		<form id="site_index" title="Portal home page"/>
 	</forms>
 	<layout default_skin_id="chm" default_scheme_id="indigo">
 		<skin id="chm" title="CHM">
@@ -177,7 +175,7 @@
 		<pluggablecontenttype meta_type="Naaya Media File" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Consultation" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Simple Consultation" action="1"/>
-        <pluggablecontenttype meta_type="Naaya GeoPoint" action="1"/>
+		<pluggablecontenttype meta_type="Naaya GeoPoint" action="1"/>
 	</pluggablecontenttypes>
 	<syndication>
 		<channeltype id="Red lists" title="Red lists"/>
@@ -221,7 +219,7 @@
 			<link id="112" title="Other searches" description="" url="/external_search_html" relative="1" permission="" order="130"/>
 			<link id="109" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="100"/>
 			<link id="108" title="Portal map" description="" url="/portal_map" relative="1" permission="" order="150"/>
-            <link id="108" title="Fora" description="" url="/portal_forum" relative="1" permission="" order="140"/>
+			<link id="108" title="Fora" description="" url="/portal_forum" relative="1" permission="" order="140"/>
 		</linkslist>
 		<linkslist id="menunav_content" title="Content" portlet="">
 			<link id="102" title="News" description="News archive" url="/news/" relative="1" permission="" order="30"/>
