@@ -14,7 +14,7 @@
 			</tal:block>
 			<tal:block tal:condition="python:item.has_key('summary')">
 				<br />
-				<span tal:content="python:item['summary']" />
+				<span tal:content="structure python:item['summary']" />
 			</tal:block>
 		</li>
 	</ul>
