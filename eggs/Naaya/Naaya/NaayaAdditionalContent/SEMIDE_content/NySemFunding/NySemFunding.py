@@ -59,7 +59,7 @@ PROPERTIES_OBJECT = {
     'lang':                (0, '', '')
 }
 
-manage_addNySemFunding_html = PageTemplateFile('zpt/semFunding_manage_add', globals())
+manage_addNySemFunding_html = PageTemplateFile('zpt/semfunding_manage_add', globals())
 manage_addNySemFunding_html.kind = METATYPE_OBJECT
 manage_addNySemFunding_html.action = 'addNySemFunding'
 

@@ -57,7 +57,7 @@ PROPERTIES_OBJECT = {
     'lang':                (0, '', '')
 }
 
-manage_addNySemFieldSite_html = PageTemplateFile('zpt/semFieldSite_manage_add', globals())
+manage_addNySemFieldSite_html = PageTemplateFile('zpt/semfieldsite_manage_add', globals())
 manage_addNySemFieldSite_html.kind = METATYPE_OBJECT
 manage_addNySemFieldSite_html.action = 'addNySemFieldSite'
 
