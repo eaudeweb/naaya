@@ -5098,14 +5098,16 @@ function toggleSelect(caller){
   nt python:request.get('nt', '');
   nd python:request.get('nd', '');
   nc python:request.get('nc', '');
+  gz python:request.get('gz', []);
+  gz_str python:here.utUrlLibEncode({'gz': gz});
   ps_start python:request.get('start', 0);
   skey python:request.get('skey', 'news_date');
   rkey python:request.get('rkey', test(request.has_key('skey'),'','1'));
   rkey_param python:test(rkey, '', '&amp;rkey=1');
   items python:request.get('items', 10);
 
-  page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&nt=${nt}&nc=${nc}&nd=${nd}&items=${items};
-  results python:here.getNewsListing(sq, sl, nt, nd, nc, skey, rkey, here.absolute_url(1), ps_start, items=items);
+  page_search_querystring string:sq=${sq}&skey=${skey}&rkey=${rkey}&nt=${nt}&nc=${nc}&nd=${nd}&${gz_str}&items=${items};
+  results python:here.getNewsListing(sq, sl, nt, nd, nc, skey, rkey, here.absolute_url(1), ps_start, gz=gz, items=items);
 
   list_paging python:results[0];
   paging_start python:list_paging[0]+1;
@@ -5196,6 +5198,32 @@ function toggleSelect(caller){
   ><input type="text" name="nd" id="nd" size="10" tal:attributes="value nd" />
   <em>(dd/mm/yyyy)</em>
 </div>
+
+<div class="clear_float"></div>
+  <div class="field">
+    <label for="gz" i18n:translate="">Countries</label>
+    <select multiple="multiple" size="5" name="gz:list" id="gz" tal:define="langs_list here/getCoverageGlossaryObjects">
+    <tal:block repeat="item langs_list">
+      <tal:block  define="lang_name python:here.gl_get_language_name(here.gl_get_selected_language());
+          translation python:item.get_translation_by_language(lang_name)">
+      <option tal:condition="translation"
+        tal:attributes="value item/id; selected python:item.id in gz"
+        tal:content="translation" />
+      <tal:block  condition="not:translation"
+          define="lang_name python:here.gl_get_language_name(here.gl_get_default_language());
+            def_trans python:item.get_translation_by_language(lang_name)">
+        <option tal:condition="def_trans"
+          tal:attributes="value item/id; selected python:item.id in gz"
+          tal:content="def_trans" />
+        <option tal:condition="not:def_trans"
+          tal:attributes="value item/id; selected python:item.id in gz"
+          i18n:translate="">no translation available</option>
+      </tal:block>
+      </tal:block>
+    </tal:block>
+    </select>
+  </div>
+
 <div class="field">
   <label for="items" i18n:translate="">Items per page</label>
   <input type="text" name="items:int" id="items" size="30" tal:attributes="value items" />
@@ -5283,23 +5311,29 @@ function toggleSelect(caller){
 </form>
 
 <p>
-  Results <strong tal:content="paging_start"/>&nbsp;-&nbsp;<strong tal:content="paging_upper"/>&nbsp;of&nbsp;<strong tal:content="paging_total"/><br />
-  Page <span tal:condition="python:paging_prev!=-1">&nbsp;&nbsp;
-  <a  tal:define="url python:here.absolute_url; start_batch python:(paging_current_page-1)*paging_records_page"
-  tal:attributes="href string:${url}?start=${start_batch}&${page_search_querystring}">&lt;&lt; Previous</a></span>
-  <span   tal:repeat="page paging_pages">
-    <a  class="paging-link-off"
-    tal:condition="python:paging_current_page==page"
-    tal:content="python:page+1" />
-    <a  tal:condition="python:paging_current_page!=page"
-    tal:define="url here/absolute_url; start_batch python:paging_records_page*page"
-    tal:attributes="href string:${url}?start=${start_batch}&${page_search_querystring}"
-    tal:content="python:page+1" />
-  </span>
-  <span   tal:condition="python:paging_next!=-1">&nbsp;&nbsp;
-    <a  tal:define="url here/absolute_url; start_batch python:(paging_current_page+1)*paging_records_page"
-    tal:attributes="href string:${url}?start=${start_batch}&${page_search_querystring}">Next &gt;&gt;</a>
-  </span>
+	Results <strong tal:content="paging_start"/>&nbsp;-&nbsp;<strong tal:content="paging_upper"/>&nbsp;of&nbsp;<strong tal:content="paging_total"/><br />
+	Page <span tal:condition="python:paging_prev!=-1">&nbsp;&nbsp;
+      <a tal:define="url python:here.absolute_url"
+          tal:attributes="href string:${url}?start=0&${page_search_querystring}"
+          title="First" i18n:attributes="title">&lt;&lt;</a>
+	<a	tal:define="url python:here.absolute_url; start_batch python:(paging_current_page-1)*paging_records_page"
+		tal:attributes="href string:${url}?start=${start_batch}&${page_search_querystring}" title="Previous" i18n:attributes="title">&lt;</a></span>
+		<span	tal:repeat="page paging_pages">
+			<a	class="paging-link-off"
+				tal:condition="python:paging_current_page==page"
+				tal:content="python:page+1" />
+			<a	tal:condition="python:paging_current_page!=page"
+				tal:define="url here/absolute_url; start_batch python:paging_records_page*page"
+				tal:attributes="href string:${url}?start=${start_batch}&${page_search_querystring}"
+				tal:content="python:page+1" />
+		</span>
+		<span	tal:condition="python:paging_next!=-1">&nbsp;&nbsp;
+			<a	tal:define="url here/absolute_url; start_batch python:(paging_current_page+1)*paging_records_page"
+				tal:attributes="href string:${url}?start=${start_batch}&${page_search_querystring}" title="Next" i18n:attributes="title">&gt;</a>
+      <a tal:define="url here/absolute_url; end_batch python:(paging_total/paging_records_page)*paging_records_page"
+        tal:attributes="href string:${url}?start=${end_batch}&${page_search_querystring}"
+        title="Last" i18n:attributes="title">&gt;&gt;</a>
+		</span>
 </p>
 
 </tal:block>

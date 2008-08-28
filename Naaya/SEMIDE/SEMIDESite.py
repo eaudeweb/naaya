@@ -696,10 +696,11 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         #default data
         results = []
         res_per_page = kwargs.get('items', 10) or 10
+        gz = kwargs.get('gz', []) #get country list
         try:    ps_start = int(ps_start)
         except: ps_start = 0
 
-        if query == '' and nt == '' and nd == '':
+        if query == '' and nt == '' and nd == '' and gz == '':
             #no criteria then returns the 10 more recent
             try:    p_objects = self.unrestrictedTraverse(p_context).getObjects()
             except: p_objects = []
@@ -712,16 +713,29 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
             nd = self.utConvertStringToDateTimeObj(nd)
             try: nc = int(nc)
             except: nc = 0
+            #build query
+            expr = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSEMNEWS], approved=1, objectkeywords_%s=query'
+            #if date is given
             if nd is not None:
-                if nc:
-                    expr = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSEMNEWS], approved=1, objectkeywords_%s=query, resource_type=[nt], resource_date=nd, resource_date_range=\'min\')'
-                else:
-                    expr = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSEMNEWS], approved=1, objectkeywords_%s=query, resource_type=[nt], resource_date=nd, resource_date_range=\'max\')'
+                expr += ', resource_date=nd'
+                if nc: expr += ', resource_date_range=\'min\''
+                else: expr += ', resource_date_range=\'max\''
+            #if type is given
+            if nt: expr += ', resource_type=[nt]'
+            #search countries in Geographical coverage
+            if gz:
+                for lang in langs:
+                    for g in gz:
+                        lang_name = self.gl_get_language_name(lang)
+                        gz_trans = self.getCoverageGlossaryTrans(g, lang_name)
+                        buf = expr + ', coverage_%s=gz_trans)' % lang
+                        buf = buf % lang
+                        r.extend(eval(buf))
             else:
-                expr = 'self.getCatalogedObjects(meta_type=[METATYPE_NYSEMNEWS], approved=1, objectkeywords_%s=query, resource_type=[nt])'
-            for lang in langs:
-                buf = expr % lang
-                r.extend(eval(buf))
+                if not expr.endswith(')'): expr += ')'
+                for lang in langs:
+                    buf = expr % lang
+                    r.extend(eval(buf))
             dict = {}
             for x in r:
                 dict[x.id] = x
