@@ -224,7 +224,7 @@ class ThemeRelations(SimpleItem, session_manager):
             self.setSessionInfo(['Selected records deleted.', '%s related records were deleted.' % del_count])
             REQUEST.RESPONSE.redirect('theme_relations_html')
 
-    security.declareProtected(view_management_screens, 'getThemeItemData')
+    security.declareProtected(view_management_screens, 'getThRelationItemData')
     def getThRelationItemData(self):
         """ return a theme relation based on its ID """
         if self.isSessionConceptId():
@@ -281,7 +281,7 @@ class ThemeRelations(SimpleItem, session_manager):
     security.declareProtected(view_management_screens, 'properties_html')
     properties_html =       PageTemplateFile("%s/zpt/ThemeRelations/properties" % NAAYATHESAURUS_PATH, globals())
 
-    security.declareProtected(view_management_screens, 'concepts_html')
+    security.declareProtected(view_management_screens, 'theme_relations_html')
     theme_relations_html =   PageTemplateFile("%s/zpt/ThemeRelations/theme_relations" % NAAYATHESAURUS_PATH, globals())
 
     security.declareProtected(view_management_screens, 'statistics_html')

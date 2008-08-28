@@ -105,19 +105,19 @@ def getItemDuplicates(self, orig):
     data = {METATYPE_NYSEMNEWS: ('title', 'coverage'), METATYPE_NYSEMEVENT: ('start_date', 'coverage')}
     all_items = {}
     attrs = data[orig.meta_type]
-    
+
     for item in self.objectValues(orig.meta_type):
-	marker = tuple([getattr(item, attr) for attr in attrs])
-	L = all_items.get(marker, None)
-	if L is None:
-	    L = all_items[marker] = []
-	L.append(item)
+        marker = tuple([getattr(item, attr) for attr in attrs])
+        L = all_items.get(marker, None)
+        if L is None:
+            L = all_items[marker] = []
+        L.append(item)
     for items in all_items.values():
-	if len(items) < 2:
-	    continue
-	if orig in items:
-	    items.remove(orig)
-	    return items
+        if len(items) < 2:
+            continue
+        if orig in items:
+            items.remove(orig)
+            return items
     return []
 NyFolder.getItemDuplicates = getItemDuplicates
 
@@ -156,8 +156,8 @@ NyFolder.getSortedDuplicateContent = getSortedDuplicateContent
 
 security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processDuplicateContent')
 security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getDuplicatesInFolder')
-security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'folder_basketofapprovals_published')
-security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'folder_basketofapprovals_duplicates')
+security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'basketofapprovals_published_html')
+security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'basketofapprovals_duplicates_html')
 security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'processPublishedContent')
 
 security.apply(NyFolder)

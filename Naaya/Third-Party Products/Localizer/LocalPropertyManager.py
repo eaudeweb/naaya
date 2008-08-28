@@ -270,7 +270,7 @@ class LocalPropertyManager(LanguageManager, LocalAttributesBase):
             RESPONSE.redirect(url)
 
 
-    security.declareProtected('Manage properties', 'isObsolete')
+    security.declareProtected('Manage properties', 'is_obsolete')
     def is_obsolete(self, prop, lang):
         default_language = self.get_default_language()
 
@@ -393,7 +393,7 @@ class LocalPropertyManager(LanguageManager, LocalAttributesBase):
 
         return property.get(lang, '')
  
-    security.declareProtected('Manage properties', 'del_localpropvalue')
+    security.declareProtected('Manage properties', 'del_localprop_with_empty_values')
     def del_localprop_with_empty_values(self, id, lang, value):
         """ """
         properties = self._local_properties.copy()

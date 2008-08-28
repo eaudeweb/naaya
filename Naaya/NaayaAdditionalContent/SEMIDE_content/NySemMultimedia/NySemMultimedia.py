@@ -476,7 +476,7 @@ class NySemMultimedia(NyAttributes, semmultimedia_item, NyItem, NyCheckControl):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'semmultimedia_index')
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'semedit_html')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'semmultimedia_edit')
