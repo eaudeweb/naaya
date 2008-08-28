@@ -557,8 +557,8 @@ class NySemThematicDir(NyFolder):
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/semthematicdir_manage_edit', globals())
 
-    security.declareProtected(view_management_screens, 'manage_folder_subobjects_html')
-    manage_folder_subobjects_html = PageTemplateFile('zpt/semthematicdir_manage_subobjects', globals())
+#    security.declareProtected(view_management_screens, 'manage_folder_subobjects_html')
+#    manage_folder_subobjects_html = PageTemplateFile('zpt/semthematicdir_manage_subobjects', globals())
 
     security.declarePrivate('setReleaseDate')
     def setCriteriaDate(self, criteria_date):

@@ -56,7 +56,7 @@ PROPERTIES_OBJECT = {
     'lang':                (0, '', '')
 }
 
-manage_addNySemPublication_html = PageTemplateFile('zpt/semPublication_manage_add', globals())
+manage_addNySemPublication_html = PageTemplateFile('zpt/sempublication_manage_add', globals())
 manage_addNySemPublication_html.kind = METATYPE_OBJECT
 manage_addNySemPublication_html.action = 'addNySemPublication'
 
