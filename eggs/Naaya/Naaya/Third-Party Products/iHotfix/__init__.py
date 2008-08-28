@@ -46,7 +46,6 @@ from zLOG import LOG, ERROR, INFO, PROBLEM, DEBUG
 from ZPublisher import Publish, mapply
 from ZPublisher.HTTPRequest import HTTPRequest
 
-
 # Flag
 patch = False
 Z_DEBUG_MODE = os.environ.get('Z_DEBUG_MODE') == '1'
@@ -327,7 +326,7 @@ else:
     # Puts the mxDateTime module in the '_' variable
     # XXX Perhaps we should put the whole mx module.
     from DocumentTemplate.cDocumentTemplate import TemplateDict
-    TemplateDict.__dict__['mxDateTime'] = DateTime
+    TemplateDict.mxDateTime = DateTime
 
 
 
