@@ -623,6 +623,7 @@ vertical-align: top;
 	.bottom_border {
 		margin-left: 2em;
 		border-bottom: 1px solid #E1E1E1;
+		clear: left;
 	}
 
 	.portlet_folder{
