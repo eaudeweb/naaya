@@ -24,11 +24,11 @@
 		   content="structure python:here.map_widget_index_html()" />
 
 <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
-<tr tal:condition="python:here.size()>0">
+<tr tal:condition="python:here.size()>0" tal:define=" req_lang request/lang|nothing; downloadfilename python:here.getVersionLocalProperty('downloadfilename', req_lang)">
 	<th i18n:translate="">Download</th>
 	<td tal:define="download_url here/getDownloadUrl">
 		<a tal:define="size python:here.utShowSizeKb(here.size()); content_type here/content_type; content_type_title python:here.getContentTypeTitle(content_type)"
-			tal:attributes="href download_url"><img tal:attributes="src string:getContentTypePicture?id=${content_type}" alt="" /> <span tal:replace="string:${here/downloadfilename} (${content_type_title}, ${size} Kb)"/></a>
+			tal:attributes="href download_url"><img tal:attributes="src string:getContentTypePicture?id=${content_type}" alt="" /> <span tal:replace="string:${downloadfilename} (${content_type_title}, ${size} Kb)"/></a>
 	</td>
 </tr>
 
@@ -79,7 +79,7 @@
 <tr tal:repeat="item python:versions.keys()">
 	<td tal:content="python:here.utShowFullDateTime(versions[item][0])">version date</td>
 	<td><span tal:replace="python:versions[item][1]">version user</span></td>
-	<td><a style="display: none" rel="external" tal:attributes="href string:showVersionData?vid=${item}">download</a></td>
+	<td><a rel="external" tal:attributes="href string:showVersionData?vid=${item}" tal:content="python:here.getVersionFilename(item)">download</a></td>
 </tr>
 </table>
 </tal:block>

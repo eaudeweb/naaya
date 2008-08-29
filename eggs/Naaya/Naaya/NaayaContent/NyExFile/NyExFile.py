@@ -331,12 +331,18 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
             if version_data is not None:
                 #show data for file: set content type and return data
                 RESPONSE.setHeader('Content-Type', version_data[1])
-                REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
+                REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.getVersionFilename(vid)))
                 return version_data[0]
             else:
                 return 'Invalid version data!'
         else:
             return 'Invalid version id!'
+
+    security.declarePublic('getVersionFilename')
+    def getVersionFilename(self, vid='', lang=None):
+        """ Returns the filename for the given version id """
+        if lang is None: lang = self.gl_get_selected_language()
+        return self.getFileItem(lang).getVersion(vid)[0].filename[2]
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
@@ -411,6 +417,7 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         self.checkout = 0
         self.checkout_user = None
         self.version = None
+        self.createversion(self.REQUEST.AUTHENTICATED_USER.getUserName(), self.gl_get_selected_language())
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
