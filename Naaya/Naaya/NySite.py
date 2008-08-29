@@ -2867,7 +2867,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         l_content = email_template.body
         l_content = l_content.replace('@@URL@@', p_error_url)
         l_content = l_content.replace('@@ERRORTYPE@@', p_error_type)
-        l_content = l_content.replace('@@ERRORVALUE@@', p_error_value)
+        l_content = l_content.replace('@@ERRORVALUE@@', str(p_error_value))
         l_content = l_content.replace('@@IPADDRESS@@', p_error_ip)
         l_content = l_content.replace('@@USER@@', p_error_user)
         l_content = l_content.replace('@@TIMEOFREQUEST@@', str(p_error_time))
