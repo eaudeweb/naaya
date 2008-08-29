@@ -68,7 +68,7 @@
 <tr tal:repeat="item python:versions.keys()">
 	<td tal:content="python:here.utShowFullDateTime(versions[item][0])">version date</td>
 	<td><span tal:replace="python:versions[item][1]">version user</span></td>
-	<td><a style="display: none" rel="external" tal:attributes="href string:showVersionData?vid=${item}">download</a></td>
+	<td><a rel="external" tal:attributes="href string:showVersionData?vid=${item}" tal:content="python: here.getVersionFilename(item)">download</a></td>
 </tr>
 </table>
 </tal:block>
