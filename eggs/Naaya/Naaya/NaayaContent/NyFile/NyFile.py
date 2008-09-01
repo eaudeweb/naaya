@@ -58,8 +58,6 @@ PROPERTIES_OBJECT = {
     'discussion':       (0, '', ''),
     'file':             (0, '', ''),
     'url':              (0, '', ''),
-    'downloadfilename': (0, '', ''),
-    'content_type':     (0, '', ''),
     'lang':             (0, '', '')
 }
 
@@ -72,7 +70,7 @@ def file_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyFile'}, 'file_add')
 
 def addNyFile(self, id='', title='', description='', coverage='', keywords='', sortorder='',
-    source='file', file='', url='', precondition='', content_type='', downloadfilename='',
+    source='file', file='', url='', precondition='',
     contributor=None, releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
     """
     Create a File type of object.
@@ -82,17 +80,15 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(title)
     if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
-    if downloadfilename == '': downloadfilename = id
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
     #check mandatory fiels
     l_referer = ''
     if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
     if not(l_referer == 'file_manage_add' or l_referer.find('file_manage_add') != -1) and REQUEST:
-        r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
-            description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
-            releasedate=releasedate, discussion=discussion, file=file, url=url, \
-            downloadfilename=downloadfilename)
+        r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title,
+            description=description, coverage=coverage, keywords=keywords, sortorder=sortorder,
+            releasedate=releasedate, discussion=discussion, file=file, url=url)
     else:
         r = []
     if not len(r):
@@ -110,8 +106,8 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
             i += 1
             id = '%s-%u' % (id, i)
         #create object
-        ob = NyFile(id, title, description, coverage, keywords, sortorder, '', precondition, content_type,
-            downloadfilename, contributor, releasedate, lang)
+        ob = NyFile(id, title, description, coverage, keywords, sortorder, '', precondition,
+            contributor, releasedate, lang)
         self.gl_add_languages(ob)
         ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._setObject(id, ob)
@@ -121,7 +117,6 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
         ob.submitThis()
         ob.approveThis(approved, approved_by)
         ob.handleUpload(source, file, url)
-        ob.createVersion(self.REQUEST.AUTHENTICATED_USER.getUserName())
         if discussion: ob.open_for_comments()
         self.recatalogNyObject(ob)
         self.notifyFolderMaintainer(self, ob)
@@ -141,7 +136,7 @@ def addNyFile(self, id='', title='', description='', coverage='', keywords='', s
             self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
                 description=description, coverage=coverage, keywords=keywords, \
                 sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
-                url=url, downloadfilename=downloadfilename, lang=lang)
+                url=url, lang=lang)
             REQUEST.RESPONSE.redirect('%s/file_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)
@@ -164,7 +159,6 @@ def importNyFile(self, param, id, attrs, content, properties, discussion, object
             addNyFile(self, id=id,
                 sortorder=attrs['sortorder'].encode('utf-8'),
                 source='file', file=self.utBase64Decode(attrs['file'].encode('utf-8')),
-                downloadfilename=attrs['downloadfilename'].encode('utf-8'),
                 contributor=self.utEmptyToNone(attrs['contributor'].encode('utf-8')),
                 discussion=abs(int(attrs['discussion'].encode('utf-8'))))
             ob = self._getOb(id)
@@ -195,22 +189,16 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
 
     def manage_options(self):
         """ """
-        l_options = ()
-        if not self.hasVersion():
-            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
-        l_options += file_item.manage_options
-        l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
-        l_options += NyVersioning.manage_options
-        return l_options
+        return file_item.manage_options
 
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, description, coverage, keywords, sortorder, file, precondition,
-        content_type, downloadfilename, contributor, releasedate, lang):
+        contributor, releasedate, lang):
         """ """
         self.id = id
         file_item.__dict__['__init__'](self, id, title, description, coverage, keywords, sortorder, file,
-            precondition, content_type, downloadfilename, releasedate, lang)
+            precondition, releasedate, lang)
         NyValidation.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)
         NyVersioning.__dict__['__init__'](self)
@@ -241,9 +229,9 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
         return 'downloadfilename="%s" file="%s" content_type="%s" precondition="%s" validation_status="%s" validation_date="%s" validation_by="%s" validation_comment="%s"' % \
-            (self.utXmlEncode(self.downloadfilename),
+            (self.utXmlEncode(self.downloadfilename()),
                 self.utBase64Encode(str(self.utNoneToEmpty(self.get_data()))),
-                self.utXmlEncode(self.content_type),
+                self.utXmlEncode(self.getContentType()),
                 self.utXmlEncode(self.precondition),
                 self.utXmlEncode(self.validation_status),
                 self.utXmlEncode(self.validation_date),
@@ -268,7 +256,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
 
     security.declarePrivate('objectDataForVersion')
     def objectDataForVersion(self):
-        return (self.get_data(as_string=False), self.content_type)
+        return (self.get_data(as_string=False), self.getContentType())
 
     security.declarePrivate('objectDataForVersionCompare')
     def objectDataForVersionCompare(self):
@@ -299,14 +287,19 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
             return 'Invalid version id!'
 
     security.declarePublic('getVersionFilename')
-    def getVersionFilename(self, vid=''):
-        if vid: return self.getVersion(vid)[0].filename[2]
+    def getVersionFilename(self, vid):
+        """ Returns version filename"""
+        version = self.getVersion(vid)[0]
+        filename = getattr(version, 'filename', [])
+        if not filename:
+            return ''
+        return filename[-1]
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='',
-        keywords='', sortorder='', approved='', precondition='', content_type='',
-        downloadfilename='', releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
+        keywords='', sortorder='', approved='', precondition='',
+        releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -318,8 +311,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         else: approved = 0
         releasedate = self.process_releasedate(releasedate, self.releasedate)
         if not lang: lang = self.gl_get_selected_language()
-        self.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
-        self.content_type = content_type
+        self.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang)
         self.precondition = precondition
         self.updatePropertiesFromGlossary(lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
@@ -331,23 +323,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         if discussion: self.open_for_comments()
         else: self.close_for_comments()
         self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
-
-    security.declareProtected(view_management_screens, 'manageUpload')
-    def manageUpload(self, source='file', file='', url='', version='', REQUEST=None):
-        """ """
-        if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        if self.wl_isLocked():
-            raise ResourceLockedError, "File is locked via WebDAV"
-        self.handleUpload(source, file, url)
-        if version: self.createVersion(self.REQUEST.AUTHENTICATED_USER.getUserName())
-        if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
-
-    security.declareProtected(view_management_screens, 'manage_upload')
-    def manage_upload(self):
-        """ """
-        raise EXCEPTION_NOTACCESIBLE, 'manage_upload'
+        if REQUEST: REQUEST.RESPONSE.redirect('manage_main?save=ok')
 
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
@@ -360,17 +336,14 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self._local_properties_metadata = deepcopy(self.version._local_properties_metadata)
         self._local_properties = deepcopy(self.version._local_properties)
         self.sortorder = self.version.sortorder
-        self.downloadfilename = self.version.downloadfilename
         self.update_data(self.version.get_data(as_string=False), 
                          self.version.getContentType(), self.version.get_size())
-        self.content_type = self.version.content_type
         self.precondition = self.version.precondition
         self.releasedate = self.version.releasedate
         self.setProperties(deepcopy(self.version.getProperties()))
         self.checkout = 0
         self.checkout_user = None
         self.version = None
-        self.createVersion(self.REQUEST.AUTHENTICATED_USER.getUserName())
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
@@ -385,7 +358,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = file_item(self.id, self.title, self.description, self.coverage, self.keywords,
-            self.sortorder, '', self.precondition, self.content_type, self.downloadfilename,
+            self.sortorder, '', self.precondition,
             self.releasedate, self.gl_get_selected_language())
         self.version.update_data(self.get_data(), self.getContentType(), self.get_size())
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
@@ -403,7 +376,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
     
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', coverage='', keywords='',
-        sortorder='', content_type='', precondition='', downloadfilename='',
+        sortorder='', precondition='',
         releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
@@ -413,16 +386,15 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         #check mandatory fiels
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
-            releasedate=releasedate, discussion=discussion, downloadfilename=downloadfilename)
+            releasedate=releasedate, discussion=discussion)
         # If errors return
         if len(r):
             if not REQUEST:
                 raise Exception, '%s' % ', '.join(r)
             self.setSessionErrors(r)
-            self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, \
-                description=description, coverage=coverage, keywords=keywords, \
-                sortorder=sortorder, releasedate=releasedate, discussion=discussion, \
-                downloadfilename=downloadfilename, content_type=content_type)
+            self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title,
+                description=description, coverage=coverage, keywords=keywords,
+                sortorder=sortorder, releasedate=releasedate, discussion=discussion)
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
             return
         #
@@ -436,17 +408,16 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         if source:
             attached_file = file_form.get('file', '')
             attached_url = file_form.get('url', '')
-            version = file_form.get('version', '')
+            version = file_form.get('version', False)
             self.saveUpload(source=source, file=attached_file, url=attached_url,
-                            version='', lang=lang)
+                            version=version, lang=lang)
         # Update properties
         sortorder = int(sortorder)
         if not self.hasVersion():
             #this object has not been checked out; save changes directly into the object
             releasedate = self.process_releasedate(releasedate, self.releasedate)
-            self.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
+            self.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang)
             self.updatePropertiesFromGlossary(lang)
-            self.content_type = content_type
             self.precondition = precondition
             self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         else:
@@ -454,9 +425,8 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
             releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-            self.version.save_properties(title, description, coverage, keywords, sortorder, downloadfilename, releasedate, lang)
+            self.version.save_properties(title, description, coverage, keywords, sortorder, releasedate, lang)
             self.version.updatePropertiesFromGlossary(lang)
-            self.version.content_type = content_type
             self.version.precondition = precondition
             self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if discussion: self.open_for_comments()
@@ -472,31 +442,44 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveUpload')
-    def saveUpload(self, source='file', file='', url='', version='', lang=None, REQUEST=None):
+    def saveUpload(self, source='file', file='', url='', version=True, lang=None, REQUEST=None):
         """ """
+        if REQUEST:
+            username = REQUEST.AUTHENTICATED_USER.getUserName()
+        else:
+            username = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if self.wl_isLocked():
             raise ResourceLockedError, "File is locked via WebDAV"
-        if lang is None: lang = self.gl_get_selected_language()
+        
+        if lang is None:
+            lang = self.gl_get_selected_language()
+        
+        # Create initial version
+        if not self.getVersions():
+            self.createVersion(username)
+
         if not self.hasVersion():
             #this object has not been checked out; save changes directly into the object
             self.handleUpload(source, file, url)
-            if version: self.createVersion(self.REQUEST.AUTHENTICATED_USER.getUserName())
+            context = self
         else:
             #this object has been checked out; save changes into the version object
-            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
+            if self.checkout_user != username:
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
             self.version.handleUpload(source, file, url)
+            context = self.version
+
+        if version:
+            context.createVersion(username)
         self.recatalogNyObject(self)
+
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
-    #zmi pages
-    security.declareProtected(view_management_screens, 'manage_edit_html')
-    manage_edit_html = PageTemplateFile('zpt/file_manage_edit', globals())
-    
     security.declareProtected(view_management_screens, 'manage_advanced_html')
     manage_advanced_html = PageTemplateFile('zpt/file_manage_advanced', globals())
     
@@ -523,13 +506,24 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         """ """
         return self.getFormsTool().getContent({'here': self}, 'file_edit')
 
+    def downloadfilename(self, version=False):
+        """ Return download file name
+        """
+        context = self
+        if version and self.hasVersion():
+            context = self._getOb('version')
+        filename = context._get_data_name()
+        if not filename:
+            return context.title_or_id()
+        return filename[-1]
+
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
         """ """
         version = REQUEST.get('version', False)
-        RESPONSE.setHeader('Content-Type', self.content_type)
+        RESPONSE.setHeader('Content-Type', self.getContentType())
         RESPONSE.setHeader('Content-Length', self.size)
-        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename))
+        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename()))
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         if version and self.hasVersion():
@@ -539,7 +533,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
     security.declareProtected(view, 'view')
     def view(self, REQUEST, RESPONSE):
         """ """
-        RESPONSE.setHeader('Content-Type', self.content_type)
+        RESPONSE.setHeader('Content-Type', self.getContentType())
         RESPONSE.setHeader('Content-Length', self.size)
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
