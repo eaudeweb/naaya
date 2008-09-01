@@ -11,9 +11,15 @@
 <tal:block tal:condition="python:here.checkPermissionEditObject()">
 <div id="admin_this_folder">
 	<tal:block tal:condition="python: not here.hasVersion()">
-		<a tal:attributes="href string:${here/absolute_url}/startVersion"><span i18n:translate="">Checkout</span></a>
+		<tal:comment condition="nothing">
+			<!-- XXX Checkout makes not sense in this context -->
+			<a tal:attributes="href string:${here/absolute_url}/startVersion"><span i18n:translate="">Checkout</span></a>
+		</tal:comment>
 		<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
 	</tal:block>
+	<tal:comment condition="nothing">
+		<!-- XXX Backward compatible. Remove checkout control in Naaya 2.0 -->
+	</tal:comment>
 	<a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
 	<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()" i18n:translate="">This item has been checked out by another user</strong>
 </div>
@@ -27,7 +33,7 @@
 <tr tal:condition="python:here.size>0">
 	<th i18n:translate="">Download</th>
 	<td tal:define="download_url here/getDownloadUrl">
-		<a tal:define="size python:here.utShowSizeKb(here.size); content_type python:here.getContentTypeTitle(here.content_type)"
+		<a tal:define="size python:here.utShowSizeKb(here.size); content_type python:here.getContentTypeTitle(here.getContentType())"
 			tal:attributes="href download_url"><img tal:attributes="src string:getContentTypePicture?id=${here/getContentType}" alt="" /> <span tal:replace="string:${here/downloadfilename} (${content_type}, ${size} Kb)"/></a>
 	</td>
 </tr>
@@ -68,7 +74,9 @@
 <tr tal:repeat="item python:versions.keys()">
 	<td tal:content="python:here.utShowFullDateTime(versions[item][0])">version date</td>
 	<td><span tal:replace="python:versions[item][1]">version user</span></td>
-	<td><a rel="external" tal:attributes="href string:showVersionData?vid=${item}" tal:content="python: here.getVersionFilename(item)">download</a></td>
+	<td><a style="display: none" rel="external"
+		tal:attributes="href string:showVersionData?vid=${item}"
+		tal:content="python:here.getVersionFilename(item)">download</a></td>
 </tr>
 </table>
 </tal:block>

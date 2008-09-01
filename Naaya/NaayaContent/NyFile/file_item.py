@@ -37,18 +37,18 @@ class file_item(NyProperties, NyFSFile):
     keywords = LocalProperty('keywords')
 
     def __init__(self, id, title, description, coverage, keywords, sortorder,
-        file, precondition, content_type, downloadfilename, releasedate, lang):
+        file, precondition, releasedate, lang):
         """
         Constructor.
         """
-        NyFSFile.__init__(self, id, title, file, content_type, precondition)
+        NyFSFile.__init__(self, id, title, file, '', precondition)
         #"dirty" trick to get rid of the File's title property
         try: del self.title
         except: pass
         try: del self.id
         except: pass
         self.save_properties(title, description, coverage, keywords, sortorder,
-            downloadfilename, releasedate, lang)
+            releasedate, lang)
         NyProperties.__init__(self)
 
     def del_file_title(self):
@@ -61,7 +61,7 @@ class file_item(NyProperties, NyFSFile):
         self._p_changed = 1
 
     def save_properties(self, title, description, coverage, keywords, sortorder,
-        downloadfilename, releasedate, lang):
+        releasedate, lang):
         """
         Save item properties.
         """
@@ -70,9 +70,16 @@ class file_item(NyProperties, NyFSFile):
         self._setLocalPropValue('coverage', lang, coverage)
         self._setLocalPropValue('keywords', lang, keywords)
         self.sortorder = sortorder
-        self.downloadfilename = downloadfilename
         self.releasedate = releasedate
 
+    def getContentType(self):
+        """Returns file content-type"""
+        data = self.get_data(as_string=False)
+        ctype = data.getContentType()
+        if not ctype:
+            return getattr(self, 'content_type', '')
+        return ctype
+        
     def handleUpload(self, source, file, url):
         """
         Upload a file from disk or from a given URL.
