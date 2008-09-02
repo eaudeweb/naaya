@@ -1,7 +1,7 @@
 <span tal:replace="structure here/manage_page_header" />
 <span tal:replace="structure here/manage_tabs" />
 
-<p style="color: red">
+<F7><p style="color: red">
 	You should not use this form if you're not aware about it's consequences 
 </p>
 
@@ -17,8 +17,9 @@
   <th>Filename</th>
   <th>Content-Type</th>
 </tr>
-<tr tal:repeat="lang fileitems/keys">
+<tr tal:repeat="fileitem fileitems">
   <tal:block define="
+        lang python:fileitem[0];
 	data python:here.getFileItemData(lang=lang);
 	filename python:getattr(data, 'filename', []);
 	content_type python:getattr(data, 'content_type', '');">

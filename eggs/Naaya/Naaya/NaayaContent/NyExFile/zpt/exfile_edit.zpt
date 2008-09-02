@@ -4,8 +4,6 @@
 
 <!-- Custom fields -->
 <tal:block metal:fill-slot="custom_properties">
-<!-- Download file name -->
-<input type="hidden" name="downloadfilename:utf8:ustring" id="downloadfilename" size="40" tal:attributes="value python:here.getSession('downloadfilename', here.getVersionLocalProperty('downloadfilename', curr_lang))" />
 <!-- File Upload -->
 <fieldset style="background-color: #F9FCFE" tal:define="req_lang request/lang|nothing">
 <legend>
@@ -17,7 +15,7 @@
 	<input type="radio" name="source" id="source-none" value="" checked="checked" />
 	<label for="source-none" i18n:translate="">Keep</label>
 	<a tal:define="download_url python:here.getEditDownloadUrl(lang=req_lang);
-		downloadfilename python:here.getVersionLocalProperty('downloadfilename', req_lang);
+		downloadfilename python:here.downloadfilename(lang=req_lang, version=True);
 		size python:here.utShowSizeKb(here.size(req_lang));
 		content_type python:here.getVersionContentType(req_lang);
 		content_type_title python:here.getContentTypeTitle(content_type)"
@@ -36,8 +34,8 @@
 	<label for="source-url" i18n:translate="">Get from URL</label>
 	<input type="text" name="url" id="url" value="" size="50" onclick="document.getElementById('source-url').checked='checked'"/>
 </div>
-<div style="display: none;" class="field-inline">
-	<input type="checkbox" name="version" id="version" />
+<div class="field-inline">
+	<input type="checkbox" name="version" id="version" checked="checked"/>
 	<label for="version" i18:translate="">Check this to create a new version and maintain the previous one(s)</label>
 </div>
 </fieldset>
