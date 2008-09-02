@@ -217,8 +217,6 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <a tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}"
-    target="_blank" class="pdf">PDF</a>
 </div>
 <!-- Comments -->
 <tal:block replace="structure here/comments_box" />
