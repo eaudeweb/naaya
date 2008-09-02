@@ -1198,9 +1198,6 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-    <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
 </div>
 
 <span tal:replace="structure here/comments_box" />
@@ -1399,9 +1396,7 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-    <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 
 <span tal:replace="structure here/comments_box" />
@@ -1602,9 +1597,7 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-    <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 
 <span tal:replace="structure here/comments_box" />
@@ -1805,9 +1798,7 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-    <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 <span tal:replace="structure here/comments_box" />
 
@@ -2007,9 +1998,7 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-    <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 
 <span tal:replace="structure here/comments_box" />
@@ -2400,9 +2389,7 @@ function toggleSelect(caller){
   <a class="xml" tal:attributes="href atom_link" target="_blank">ATOM</a>
   <a class="xml" tal:attributes="href rdf_link" target="_blank">RSS</a>
 
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-  <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 
 <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
@@ -2564,9 +2551,7 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-    <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 <span tal:replace="structure here/comments_box" />
 
@@ -2817,9 +2802,7 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-    <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 <span tal:replace="structure here/comments_box" />
 
@@ -3179,9 +3162,7 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-    <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 
 	<p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
@@ -3355,9 +3336,7 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-    <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 <span tal:replace="structure here/comments_box" />
 
@@ -3613,9 +3592,7 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-    <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 <span tal:replace="structure here/comments_box" />
 
@@ -3976,9 +3953,7 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-    <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 
 	<p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
@@ -4152,9 +4127,7 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-    <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 
 <span tal:replace="structure here/comments_box" />
@@ -4516,9 +4489,7 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-    <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 
 	<p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
@@ -4692,9 +4663,7 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-    <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 <span tal:replace="structure here/comments_box" />
 
@@ -5055,9 +5024,7 @@ function toggleSelect(caller){
 <div class="xmlExportButtons">
   <a href="index_atom" target="_blank" class="xml">ATOM</a>
   <a href="index_rdf" target="_blank" class="xml">RSS</a>
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-    <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 
 	<p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
@@ -5351,9 +5318,7 @@ function toggleSelect(caller){
   <a class="xml" tal:attributes="href atom_link" target="_blank">ATOM</a>
   <a class="xml" tal:attributes="href rdf_link" target="_blank">RSS</a>
 
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-  <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 
 <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
@@ -5648,9 +5613,7 @@ function toggleSelect(caller){
   <a class="xml" tal:attributes="href atom_link" target="_blank">ATOM</a>
   <a class="xml" tal:attributes="href rdf_link" target="_blank">RSS</a>
 
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-  <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 
 <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
@@ -6165,9 +6128,7 @@ function MM_findObj(n, d) { //v4.01
   <a class="xml" tal:attributes="href atom_link" target="_blank">ATOM</a>
   <a class="xml" tal:attributes="href rdf_link" target="_blank">RSS</a>
 
-  <tal:block define="fld_url python:here.utUrlEncode(here.absolute_url(1))">
-  <a class="pdf" tal:attributes="href string:${here/absolute_url}/generate_pdf?url=${fld_url}&amp;lang=${here/gl_get_selected_language}" target="_blank">PDF</a>
-  </tal:block>
+
 </div>
 
 <p tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'">
