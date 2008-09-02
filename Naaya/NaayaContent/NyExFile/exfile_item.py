@@ -22,57 +22,60 @@
 from copy import deepcopy
 
 #Zope imports
-from Acquisition import Implicit
+import warnings
+from OFS.Folder import Folder
 
 #Product imports
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.NaayaContent.NyExFile.file_item import file_item
 
-class exfile_item(Implicit, NyProperties):
+class exfile_item(Folder, NyProperties):
     """ """
 
     title = LocalProperty('title')
     description = LocalProperty('description')
     coverage = LocalProperty('coverage')
     keywords = LocalProperty('keywords')
-    downloadfilename = LocalProperty('downloadfilename')
 
-
+    __files = {}
+    
     def __init__(self, id, title, description, coverage, keywords, sortorder,
-        file, precondition, content_type, downloadfilename, releasedate, lang):
+        file, precondition, releasedate, lang):
         """
         Constructor.
         """
-        self.__files = {}
-        self.__files[lang] = file_item(id, title, file, content_type, precondition)
-        self.save_properties(title, description, coverage, keywords, sortorder,
-            downloadfilename, releasedate, lang)
+        self.save_properties(title, description, coverage, keywords, sortorder, 
+                             releasedate, lang)
+        Folder.__init__(self, id)
         NyProperties.__dict__['__init__'](self)
+    
+    # Backward compatible
+    def _get_old_files(self):
+        return self.__files
 
-    def getFileItems(self): return self.__files
-    def setFileItems(self, files):
-        self.__files = files
-        self._p_changed = 1
+    def getFileItems(self):
+        return self.objectItems('File')
 
     def copyFileItems(self, source, target):
         """ """
-        files = {}
-        for k, v in source.getFileItems().items():
-            files[k] = file_item(v.getId(), v.title, '', v.precondition, v.content_type)
-            files[k].update_data(v.get_data(as_string=False))
-            files[k].content_type = v.content_type
-            files[k].precondition = v.precondition
-            files[k].copyVersions(v)
-        target.setFileItems(files)
+        if target.objectIds('File'):
+            target.manage_delObjects(target.objectIds('File'))
+        for lang, item in source.getFileItems():
+            doc = file_item(lang, item.title, '', item.precondition, item.content_type)
+            target._setObject(lang, doc)
+            doc = target._getOb(lang)
+            doc.update_data(item.get_data(as_string=False))
+            doc.copyVersions(item)
 
     def getFileItem(self, lang=None):
         """ """
-        if lang is None: lang = self.gl_get_selected_language()
-        if not self.__files.has_key(lang):
-            self.__files[lang] = file_item('', '', '', '', '')
-            self._p_changed = 1
-        return self.__files[lang]
+        if lang is None:
+            lang = self.gl_get_selected_language()
+        if not lang in self.objectIds():
+            doc = file_item(lang, lang, None, '', '')
+            self._setObject(lang, doc)
+        return self._getOb(lang)
     
     def getFileItemData(self, lang=None, as_string=False):
         fileitem = self.getFileItem(lang)
@@ -92,10 +95,9 @@ class exfile_item(Implicit, NyProperties):
 
     def content_type(self, lang=None):
         """ """
-        if lang is None: lang = self.gl_get_selected_language()
+        if lang is None:
+            lang = self.gl_get_selected_language()
         return self.getFileItem(lang).content_type
-        #try: 
-        #except: return 'application/octet-stream'
 
     def precondition(self, lang=None):
         """ """
@@ -103,18 +105,12 @@ class exfile_item(Implicit, NyProperties):
         try: return self.getFileItem(lang).precondition
         except: return ''
 
-    def set_content_type(self, content_type, lang):
-        """ """
-        try: self.getFileItem(lang).content_type = content_type
-        except: pass
-
     def set_precondition(self, precondition, lang):
         """ """
-        try: self.getFileItem(lang).precondition = precondition
-        except: pass
+        self.getFileItem(lang).precondition = precondition
 
     def save_properties(self, title, description, coverage, keywords, sortorder,
-        downloadfilename, releasedate, lang):
+        releasedate, lang):
         """
         Save item properties.
         """
@@ -122,7 +118,6 @@ class exfile_item(Implicit, NyProperties):
         self._setLocalPropValue('description', lang, description)
         self._setLocalPropValue('coverage', lang, coverage)
         self._setLocalPropValue('keywords', lang, keywords)
-        self._setLocalPropValue('downloadfilename', lang, downloadfilename)
         self.sortorder = sortorder
         self.releasedate = releasedate
 
@@ -137,8 +132,11 @@ class exfile_item(Implicit, NyProperties):
         """
         Creates a version.
         """
-        if lang is None: lang = self.gl_get_selected_language()
-        self.getFileItem(lang).createVersion(username)
+        if lang is None:
+            lang = self.gl_get_selected_language()
+        fileitem = self.getFileItem(lang)
+        if not fileitem.get_data(as_string=False).is_broken():
+            fileitem.createVersion(username)
 
     def getOlderVersions(self, lang=None):
         """
