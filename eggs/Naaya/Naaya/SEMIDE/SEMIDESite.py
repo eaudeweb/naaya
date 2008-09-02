@@ -1036,7 +1036,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
                 except:
                     return []
                 else:
-                    return archive.getObjects()
+                    return archive
             return archive
         
         if languages:
