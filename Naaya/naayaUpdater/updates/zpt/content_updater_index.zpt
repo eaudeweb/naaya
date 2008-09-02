@@ -57,10 +57,12 @@ function toggleSelect(caller){
 		<td>
 			<a tal:attributes="href ob/absolute_url" tal:content="python:ob.absolute_url(1)" />
 		</td>
-		<td tal:define="portal ob/getSite">
-			<a tal:attributes="href portal/absolute_url"
-				tal:content="python:portal.absolute_url(1)" />
-		</td>
+		<tal:block condition="python:hasattr(ob, 'getSite')">
+			<td tal:define="portal ob/getSite">
+				<a tal:attributes="href portal/absolute_url"
+					tal:content="python:portal.absolute_url(1)" />
+			</td>
+		</tal:block>
     </tr>
 </table>
 </tal:block>
