@@ -700,7 +700,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         try:    ps_start = int(ps_start)
         except: ps_start = 0
 
-        if query == '' and nt == '' and nd == '' and gz == '':
+        if query == '' and nt == '' and nd == '' and gz == []:
             #no criteria then returns the 10 more recent
             try:    p_objects = self.unrestrictedTraverse(p_context).getObjects()
             except: p_objects = []
