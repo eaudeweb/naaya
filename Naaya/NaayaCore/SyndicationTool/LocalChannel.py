@@ -21,15 +21,21 @@
 #Python imports
 
 #Zope imports
+from webdav.common import rfc1123_date
+from Acquisition import aq_parent
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.StandardCacheManagers.RAMCacheManager import manage_addRAMCacheManager
+from OFS.Cache import Cacheable
 
 #Product imports
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
+
+_marker = []
 
 manage_addLocalChannelForm = PageTemplateFile('zpt/localchannel_manage_add', globals())
 def manage_addLocalChannel(self, id='', title='', description='', language=None, type='',
@@ -45,10 +51,16 @@ def manage_addLocalChannel(self, id='', title='', description='', language=None,
     self._setObject(id, ob)
     if portlet:
         self.create_portlet_for_localchannel(self._getOb(id))
+
+    # Set cache manager
+    if not 'cache_syndication' in self.objectIds():
+        manage_addRAMCacheManager(self, 'cache_syndication')
+    ob.ZCacheable_setManagerId('cache_syndication')
+
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
-class LocalChannel(SimpleItem, utils):
+class LocalChannel(SimpleItem, Cacheable, utils):
     """ """
 
     meta_type = METATYPE_LOCALCHANNEL
@@ -61,6 +73,8 @@ class LocalChannel(SimpleItem, utils):
         )
         +
         SimpleItem.manage_options
+        +
+        Cacheable.manage_options
     )
 
     security = ClassSecurityInfo()
@@ -130,18 +144,12 @@ class LocalChannel(SimpleItem, utils):
             l_items = self.query_translated_objects(meta_type=self.objmetatype, lang=self.language, approved=1, howmany=l_howmany)
         return l_items
 
-    security.declareProtected(view, 'index_html')
-    def index_html(self, feed='', REQUEST=None, RESPONSE=None):
-        """ """
-        
-        if feed == 'atom':
-            return self.syndicateAtom(self, self.get_objects_for_rdf(), self.language)
-        
+    # XXX Move to syndication tool
+    def syndicateRdf(self, docs=[]):
         s = self.getSite()
         lang = self.language
         if lang == 'auto':
             lang = self.gl_get_selected_language()
-        l_items = self.get_objects_for_rdf()
         r = []
         ra = r.append
         ra('<?xml version="1.0" encoding="utf-8"?>')
@@ -163,8 +171,8 @@ class LocalChannel(SimpleItem, utils):
         ra('<dc:source>%s</dc:source>' % self.utXmlEncode(s.getLocalProperty('publisher', lang)))
         ra('<items>')
         ra('<rdf:Seq>')
-        for i in l_items:
-            ra('<rdf:li resource="%s"/>' % i.absolute_url())
+        for doc in docs:
+            ra('<rdf:li resource="%s"/>' % doc.absolute_url())
         ra('</rdf:Seq>')
         ra('</items>')
         ra('</channel>')
@@ -175,11 +183,57 @@ class LocalChannel(SimpleItem, utils):
             ra('<link>%s</link>' % s.absolute_url())
             ra('<description><![CDATA[%s]]></description>' % self.utToUtf8(self.description))
             ra('</image>')
-        for i in l_items:
-            ra(i.syndicateThis(lang))
+        for doc in docs:
+            ra(doc.syndicateThis(lang))
         ra("</rdf:RDF>")
-        self.REQUEST.RESPONSE.setHeader('content-type', 'text/xml')
-        return ''.join(r)
+        return '\n'.join(r)
+        
+    security.declareProtected(view, 'index_html')
+    def index_html(self, REQUEST, RESPONSE):
+        """ Look in cache:
+              - if item exists in cache:
+                  if If-Modified-Sience in REQUEST headers:
+                    set status 304, Not Modified
+                    return ''
+                  return cached value
+              - else
+                  compute result, cache and return it.
+        """
+        RESPONSE.setHeader('Cache-Control', 'public,max-age=3600')
+        RESPONSE.setHeader('Content-Type', 'text/xml')
+        
+        kwargs = REQUEST.form
+        
+        # Get page from cache if exists
+        keyset = None
+        if self.ZCacheable_isCachingEnabled():
+            # Prepare a cache key.
+            keyset = kwargs.copy()
+            keyset['*'] = ()
+            result = self.ZCacheable_get(keywords=keyset, default=_marker)
+            if result is not _marker:
+                last_mod_req = REQUEST.get_header('If-Modified-Since', None)
+                if not last_mod_req:
+                    # Return from server cache
+                    REQUEST.RESPONSE.setHeader('Last-Modified', rfc1123_date())
+                    return result
+                # Return from client cache
+                RESPONSE.setStatus(304)
+                return ''
+        
+        # Compute feed
+        docs = self.get_objects_for_rdf()
+        feed = kwargs.get('feed', '')
+        if feed == 'atom':
+            result = self.syndicateAtom(self, docs, self.language)
+        else:
+            result = self.syndicateRdf(docs)
+        
+        # Update cache
+        if keyset is not None:
+            self.ZCacheable_set(result, keywords=keyset)
+        REQUEST.RESPONSE.setHeader('Last-Modified', rfc1123_date())
+        return result
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_properties_html')
