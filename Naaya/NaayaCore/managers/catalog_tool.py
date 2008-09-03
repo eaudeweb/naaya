@@ -111,7 +111,7 @@ class catalog_tool:
         self.__clearCatalog()
         self._p_changed = 1
 
-    def getCatalogedObjects(self, meta_type=None, approved=0, howmany=-1, sort_on='releasedate', sort_order='reverse', has_local_role=0, **kwargs):
+    def getCatalogedObjectsBrains(self, meta_type=None, approved=0, howmany=-1, sort_on='releasedate', sort_order='reverse', has_local_role=0, **kwargs):
         l_results = []
         l_filter = {'submitted': 1} #only submitted items
         if approved == 1: l_filter['approved'] = 1
@@ -128,8 +128,11 @@ class catalog_tool:
         l_results = self.__searchCatalog(l_filter)
         if howmany != -1:
             l_results = l_results[:howmany]
-        l_results = self.__getObjects(l_results)
         return l_results
+
+    def getCatalogedObjects(self, meta_type=None, approved=0, howmany=-1, sort_on='releasedate', sort_order='reverse', has_local_role=0, **kwargs):
+        l_results = self.getCatalogedObjectsBrains(meta_type, approved, howmany, sort_on, sort_order, has_local_role, **kwargs)
+        return self.__getObjects(l_results)
 
     # The function getCatalogedObjects did not allow searching for not-approved objects
     # It needs to be replaced with the one below once we'll make sure it doesn't change any behavior
