@@ -21,8 +21,6 @@
 #Python imports
 
 #Zope imports
-from webdav.common import rfc1123_date
-from Acquisition import aq_parent
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -34,6 +32,7 @@ from OFS.Cache import Cacheable
 #Product imports
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.decorators import cachable, content_type_xml
 
 _marker = []
 
@@ -189,51 +188,19 @@ class LocalChannel(SimpleItem, Cacheable, utils):
         return '\n'.join(r)
         
     security.declareProtected(view, 'index_html')
-    def index_html(self, REQUEST, RESPONSE):
-        """ Look in cache:
-              - if item exists in cache:
-                  if If-Modified-Sience in REQUEST headers:
-                    set status 304, Not Modified
-                    return ''
-                  return cached value
-              - else
-                  compute result, cache and return it.
+    # XXX Use decorators in python 2.4+
+    # @content_type_xml
+    # @cachable
+    def index_html(self, REQUEST, RESPONSE, **kwargs):
+        """ Returns an RDF/ATOM feed
         """
-        RESPONSE.setHeader('Cache-Control', 'public,max-age=3600')
-        RESPONSE.setHeader('Content-Type', 'text/xml')
-        
-        kwargs = REQUEST.form
-        
-        # Get page from cache if exists
-        keyset = None
-        if self.ZCacheable_isCachingEnabled():
-            # Prepare a cache key.
-            keyset = kwargs.copy()
-            keyset['*'] = ()
-            result = self.ZCacheable_get(keywords=keyset, default=_marker)
-            if result is not _marker:
-                last_mod_req = REQUEST.get_header('If-Modified-Since', None)
-                if not last_mod_req:
-                    # Return from server cache
-                    REQUEST.RESPONSE.setHeader('Last-Modified', rfc1123_date())
-                    return result
-                # Return from client cache
-                RESPONSE.setStatus(304)
-                return ''
-        
-        # Compute feed
+        kwargs.update(REQUEST.form)
         docs = self.get_objects_for_rdf()
         feed = kwargs.get('feed', '')
         if feed == 'atom':
-            result = self.syndicateAtom(self, docs, self.language)
-        else:
-            result = self.syndicateRdf(docs)
-        
-        # Update cache
-        if keyset is not None:
-            self.ZCacheable_set(result, keywords=keyset)
-        REQUEST.RESPONSE.setHeader('Last-Modified', rfc1123_date())
-        return result
+            return self.syndicateAtom(self, docs, self.language)
+        return self.syndicateRdf(docs)
+    index_html = content_type_xml(cachable(index_html))
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_properties_html')
