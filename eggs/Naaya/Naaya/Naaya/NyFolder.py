@@ -23,18 +23,22 @@
 from copy import copy
 
 #Zope imports
+from OFS.Cache import Cacheable
 from DateTime import DateTime
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view, manage_users
+from Products.StandardCacheManagers.RAMCacheManager import manage_addRAMCacheManager
 import Products
+
 
 #Product imports
 from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.managers.utils import utils, batch_utils
+from Products.NaayaCore.managers.decorators import cachable, content_type_xml
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyAttributes import NyAttributes
@@ -101,6 +105,12 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     #log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
+    
+    # Set cache manager
+    if not FOLDER_CACHE_MANAGER in self.getSite().objectIds():
+        manage_addRAMCacheManager(self, FOLDER_CACHE_MANAGER)
+    ob.ZCacheable_setManagerId(FOLDER_CACHE_MANAGER)
+    
     #redirect if case
     if REQUEST is not None:
         referer = REQUEST['HTTP_REFERER'].split('/')[-1]
@@ -155,7 +165,7 @@ def importNyFolder(self, param, id, attrs, content, properties, discussion, obje
         for object in objects:
             ob.import_data(object)
 
-class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
+class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, Cacheable, utils):
     """ """
 
     meta_type = METATYPE_FOLDER
@@ -176,6 +186,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         NyImportExport.manage_options
         +
         NyContainer.manage_options[3:8]
+        +
+        Cacheable.manage_options
     )
 
     security = ClassSecurityInfo()
@@ -1349,7 +1361,10 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
         return self.getFormsTool().getContent({'here': self}, 'folder_index')
 
     security.declareProtected(view, 'index_rdf')
-    def index_rdf(self, REQUEST=None, RESPONSE=None):
+    # XXX Use decorators in python 2.4+
+    # @content_type_xml
+    # @cacheable
+    def index_rdf(self, REQUEST, RESPONSE, **kwargs):
         """ RDF feed """
         items = REQUEST.get('items', 0)
         rdf_max_items = getattr(self.getSite(), 'rdf_max_items', 0)
@@ -1360,9 +1375,13 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             items = 0
         return self.getSyndicationTool().syndicateSomething(
             self.absolute_url(), self.getPublishedObjects(items=items))
+    index_rdf = content_type_xml(cachable(index_rdf))
 
     security.declareProtected(view, 'index_rdf')
-    def index_atom(self, REQUEST=None, RESPONSE=None):
+    # XXX Use decorators in python 2.4+
+    # @content_type_xml
+    # @cacheable
+    def index_atom(self, REQUEST, RESPONSE, **kwargs):
         """ Atom feed """
         items = REQUEST.get('items', 0)
         lang = REQUEST.get('lang', None)
@@ -1374,7 +1393,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils):
             items = 0
         return self.getSyndicationTool().syndicateAtom(
             context=self, items=self.getPublishedObjects(items=items), lang=lang, REQUEST=REQUEST)
-        
+    index_atom = content_type_xml(cachable(index_atom))
+    
     security.declarePrivate('_getSwitchToLangDenyArgs')
     def _getSwitchToLangDenyArgs(self, meta_type=""):
         """ Return a list of keys to deny according with given meta_type

@@ -23,6 +23,7 @@ from DateTime import DateTime
 import xmlrpclib
 
 #Zope imports
+from OFS.Cache import Cacheable
 from Globals                                    import InitializeClass
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate    import manage_addPageTemplate
@@ -42,6 +43,7 @@ from Products.Naaya.NySite                          import NySite
 from Products.NaayaCore.managers.utils              import utils, tmpfile
 from Products.NaayaCore.managers.utils              import file_utils, batch_utils
 from Products.NaayaCore.managers.search_tool        import ProxiedTransport
+from Products.NaayaCore.managers.decorators         import cachable, content_type_xml
 from Products.NaayaCalendar.EventCalendar           import manage_addEventCalendar
 from Products.NaayaHelpDeskAgent.HelpDesk           import manage_addHelpDesk
 from Products.SEMIDEPhotoArchive.NyPhotoFolder      import manage_addNyPhotoFolder
@@ -76,7 +78,7 @@ def manage_addSEMIDESite(self, id='', title='', lang=None, REQUEST=None):
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
-class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
+class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip, Cacheable):
     """ """
 
     meta_type = METATYPE_SEMIDESITE
@@ -84,6 +86,8 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
 
     manage_options = (
         NySite.manage_options
+        +
+        Cacheable.manage_options
     )
 
     security = ClassSecurityInfo()
@@ -2457,6 +2461,9 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
             REQUEST.RESPONSE.redirect('%s/admin_maintopics_html' % self.absolute_url())
 
     security.declareProtected(view, 'search_rdf')
+    # XXX Use decorators in python 2.4+
+    # @content_type_xml
+    # @cachable
     def search_rdf(self, REQUEST=None, RESPONSE=None):
         """ """
         search_mapping = RDF_SEARCH_MAPPING
@@ -2494,9 +2501,13 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         objects = [x[2] for x in objects]
         return self.getSyndicationTool().syndicateSomething(
             self.absolute_url(), objects)
+    search_rdf = content_type_xml(cachable(search_rdf))
 
     security.declareProtected(view, 'search_atom')
-    def search_atom(self, REQUEST=None, RESPONSE=None):
+    # XXX Use decorators in python 2.4+
+    # @content_type_xml
+    # @cachable
+    def search_atom(self, REQUEST=None, RESPONSE=None, **kwargs):
         """ """
         search_mapping = RDF_SEARCH_MAPPING
         search_query_mapping = RDF_SEARCH_QUERY_MAPPING
@@ -2530,6 +2541,7 @@ class SEMIDESite(NySite, ProfileMeta, SemideVersions, export_pdf, SemideZip):
         objects = list_results[2]
         objects = [x[2] for x in objects]
         return self.getSyndicationTool().syndicateAtom(self, objects)
+    search_atom = content_type_xml(cachable(search_atom))
 
     # Customize Naaya switchToLanguage in order to handle Semide content types
     security.declarePrivate('_getCustomSwitchToLangDenyArgs')
