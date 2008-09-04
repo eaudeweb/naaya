@@ -368,29 +368,40 @@ from Products.ExtFile.Config import REPOSITORY_PATH
 from App.ApplicationManager import ApplicationManager
 from App.ApplicationManager import AltDatabaseManager
 from extfile_pack import pack_disk
+try:
+    import zope.component
+except ImportError:
+    zope_version = 2.7
+else:
+    zope_version = 2.8
+#
+# Patch manage_pack in order to pack remove disk .undo files
+#
+def _get_application_manager(doc):
+    while not isinstance(doc, ApplicationManager):
+        return _get_application_manager(doc.getParentNode())
+    return doc
+        
+def disk_pack(method):
+    def wrapper(self, days=0, REQUEST=None):
+        """ Wrapper to pack disk files
+        """
+        path = os.path.join(INSTANCE_HOME, *REPOSITORY_PATH)
+        pack_disk(path)
+        if zope_version <= 2.7:
+            context = _get_application_manager(self)
+        else:
+            context = self
+        return method(context, days=days, REQUEST=REQUEST)
+    return wrapper
 
-def am_manage_pack(self, days=0, REQUEST=None):
-    """ Override manage pack in order to delete .undo files from disk."""
-    # Run disk packing in separate thread
-    path = os.path.join(INSTANCE_HOME, *REPOSITORY_PATH)
-    pack_disk(path)
-    
-    t = self.__old_manage_pack(days, None)
-
-    if REQUEST is not None:
-        REQUEST['RESPONSE'].redirect(
-            REQUEST['URL1']+'/manage_workspace')
-    return t
-
-LOG('naayaHotfix', INFO, 'Patching ApplicationManager in order to delete .undo files from disk on database pack.')
-LOG('naayaHotfix', INFO, 'Patching AltDatabaseManager in order to delete .undo files from disk on database pack.')
-ApplicationManager.__old_manage_pack = ApplicationManager.manage_pack
-AltDatabaseManager.__old_manage_pack = ApplicationManager.manage_pack
-ApplicationManager.manage_pack = am_manage_pack
-AltDatabaseManager.manage_pack = am_manage_pack
-
-
-
+LOG('naayaHotfix', INFO, 'Decorate ApplicationManager.manage_pack in order to delete .undo files from disk on database pack.')
+LOG('naayaHotfix', INFO, 'Patching AltDatabaseManager.manage_pack in order to delete .undo files from disk on database pack.')
+ApplicationManager.manage_pack = disk_pack(ApplicationManager.manage_pack)
+AltDatabaseManager.manage_pack = disk_pack(AltDatabaseManager.manage_pack)
+#
+# Patch _get_new_ufn
+#
 from Products.ExtFile.Config import *
 
 from os.path import join, isfile
