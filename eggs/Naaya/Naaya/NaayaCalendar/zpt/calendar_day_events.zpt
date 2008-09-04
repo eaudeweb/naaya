@@ -6,12 +6,14 @@
 	<div id="middle_port" style='margin-right:0;'>
 		<h3 id="Event-Title">
 			<!-- TODO: use localized strftime for displaying the date bellow -->
-			<span i18n:translate="">Day events for</span> 
-				<span tal:condition="date" tal:replace="python:date.strftime('%d %B %Y')"/>
-				<em tal:condition="not:date" i18n:translate>invalid date</em>
+			<tal:block condition="date">
+				<span i18n:translate="">Day events for</span> 
+				<span tal:replace="python:date.strftime('%d %B %Y')"/>
+			</tal:block>
+			<em tal:condition="not:date" i18n:translate>invalid date</em>
 		</h3>
 
-		<table id="Event-Container" cellspacing="0" tal:define="daily_events python:here.getDayEvents(date);">
+		<table tal:condition="date" id="Event-Container" cellspacing="0" tal:define="daily_events python:here.getDayEvents(date);">
 			<tr>
 				<th></th>
 				<th i18n:translate="">Event</th>
