@@ -363,187 +363,181 @@ TextIndexNG._index_object = _index_object
 #
 
 #patch ExtFile
-try:
-    from Products.ExtFile.ExtFile import ExtFile
-    extfile_installed = True
-except ImportError:
-    extfile_installed = False
+from Products.ExtFile.ExtFile import ExtFile
+from Products.ExtFile.Config import REPOSITORY_PATH
+from App.ApplicationManager import ApplicationManager
+from App.ApplicationManager import AltDatabaseManager
+from extfile_pack import pack_disk
 
-if extfile_installed:
-    from Products.ExtFile.Config import REPOSITORY_PATH
-    from App.ApplicationManager import ApplicationManager
-    from App.ApplicationManager import AltDatabaseManager
-    from extfile_pack import pack_disk
+def am_manage_pack(self, days=0, REQUEST=None):
+    """ Override manage pack in order to delete .undo files from disk."""
+    # Run disk packing in separate thread
+    path = os.path.join(INSTANCE_HOME, *REPOSITORY_PATH)
+    pack_disk(path)
+    
+    t = self.__old_manage_pack(days, None)
 
-    def am_manage_pack(self, days=0, REQUEST=None):
-        """ Override manage pack in order to delete .undo files from disk."""
-        # Run disk packing in separate thread
-        path = os.path.join(INSTANCE_HOME, *REPOSITORY_PATH)
-        pack_disk(path)
-        
-        t = self.__old_manage_pack(days, None)
+    if REQUEST is not None:
+        REQUEST['RESPONSE'].redirect(
+            REQUEST['URL1']+'/manage_workspace')
+    return t
 
-        if REQUEST is not None:
-            REQUEST['RESPONSE'].redirect(
-                REQUEST['URL1']+'/manage_workspace')
-        return t
-
-    LOG('naayaHotfix', INFO, 'Patching ApplicationManager in order to delete .undo files from disk on database pack.')
-    LOG('naayaHotfix', INFO, 'Patching AltDatabaseManager in order to delete .undo files from disk on database pack.')
-    ApplicationManager.__old_manage_pack = ApplicationManager.manage_pack
-    AltDatabaseManager.__old_manage_pack = ApplicationManager.manage_pack
-    ApplicationManager.manage_pack = am_manage_pack
-    AltDatabaseManager.manage_pack = am_manage_pack
+LOG('naayaHotfix', INFO, 'Patching ApplicationManager in order to delete .undo files from disk on database pack.')
+LOG('naayaHotfix', INFO, 'Patching AltDatabaseManager in order to delete .undo files from disk on database pack.')
+ApplicationManager.__old_manage_pack = ApplicationManager.manage_pack
+AltDatabaseManager.__old_manage_pack = ApplicationManager.manage_pack
+ApplicationManager.manage_pack = am_manage_pack
+AltDatabaseManager.manage_pack = am_manage_pack
 
 
 
-    from Products.ExtFile.Config import *
+from Products.ExtFile.Config import *
 
-    from os.path import join, isfile
-    from mimetypes import guess_extension, guess_all_extensions
-    import re, base64, string, sha
+from os.path import join, isfile
+from mimetypes import guess_extension, guess_all_extensions
+import re, base64, string, sha
 
-    copy_of_re = re.compile('(^(copy[0-9]*_of_)+)')
+copy_of_re = re.compile('(^(copy[0-9]*_of_)+)')
 
-    def _get_new_ufn(self, path=None, content_type=None, lock=1):
-        """ Create a new unique filename """
-        id = self.id
+def _get_new_ufn(self, path=None, content_type=None, lock=1):
+    """ Create a new unique filename """
+    id = self.id
 
-        # hack so the files are not named copy_of_foo
-        if COPY_OF_PROTECTION:
-            match = copy_of_re.match(id)
-            if match is not None:
-                id = id[len(match.group(1)):]
+    # hack so the files are not named copy_of_foo
+    if COPY_OF_PROTECTION:
+        match = copy_of_re.match(id)
+        if match is not None:
+            id = id[len(match.group(1)):]
 
-        # get name and extension components from id
-        pos = string.rfind(id, '.')
-        if (pos+1):
-            id_name = id[:pos]
-            id_ext = id[pos:]
+    # get name and extension components from id
+    pos = string.rfind(id, '.')
+    if (pos+1):
+        id_name = id[:pos]
+        id_ext = id[pos:]
+    else:
+        id_name = id
+        id_ext = ''
+
+    if not content_type:
+        content_type = self.content_type
+
+    if REPOSITORY_EXTENSIONS in (MIMETYPE_APPEND, MIMETYPE_REPLACE):
+        mime_ext = None
+        if self.id:
+            for ext in guess_all_extensions(content_type):
+                if ext == id_ext:
+                    mime_ext = ext
+                    break
         else:
-            id_name = id
-            id_ext = ''
+            mime_ext = guess_extension(content_type)
+        if mime_ext is None:
+            mime_ext = id_ext
+        if mime_ext is not None:
+            if mime_ext in ('.jpeg', '.jpe'): 
+                mime_ext = '.jpg'   # for IE/Win :-(
+            if mime_ext in ('.obj',):
+                mime_ext = '.exe'   # b/w compatibility
+            if mime_ext in ('.tiff',):
+                mime_ext = '.tif'   # b/w compatibility
+            # don't change extensions of unknown binaries
+            if not (content_type == 'application/octet-stream' and id_ext):
+                if REPOSITORY_EXTENSIONS == MIMETYPE_APPEND:
+                    id_name = id_name + id_ext
+                id_ext = mime_ext
+    
+    # generate directory structure
+    if path is not None:
+        rel_url_list = path
+    else:
+        rel_url_list = self._get_zodb_path()
 
-        if not content_type:
-            content_type = self.content_type
-
-        if REPOSITORY_EXTENSIONS in (MIMETYPE_APPEND, MIMETYPE_REPLACE):
-            mime_ext = None
-            if self.id:
-                for ext in guess_all_extensions(content_type):
-                    if ext == id_ext:
-                        mime_ext = ext
-                        break
-            else:
-                mime_ext = guess_extension(content_type)
-            if mime_ext is None:
-                mime_ext = id_ext
-            if mime_ext is not None:
-                if mime_ext in ('.jpeg', '.jpe'): 
-                    mime_ext = '.jpg'   # for IE/Win :-(
-                if mime_ext in ('.obj',):
-                    mime_ext = '.exe'   # b/w compatibility
-                if mime_ext in ('.tiff',):
-                    mime_ext = '.tif'   # b/w compatibility
-                # don't change extensions of unknown binaries
-                if not (content_type == 'application/octet-stream' and id_ext):
-                    if REPOSITORY_EXTENSIONS == MIMETYPE_APPEND:
-                        id_name = id_name + id_ext
-                    id_ext = mime_ext
-        
-        # generate directory structure
-        if path is not None:
-            rel_url_list = path
+    dirs = []
+    if REPOSITORY == SYNC_ZODB: 
+        dirs = rel_url_list
+    elif REPOSITORY in (SLICED, SLICED_REVERSE, SLICED_HASH):
+        if REPOSITORY == SLICED_HASH:
+            # increase distribution by including the path in the hash
+            hashed = ''.join(list(rel_url_list)+[id_name])
+            temp = base64.encodestring(sha.new(hashed).digest())[:-1]
+            temp = temp.replace('/', '_')
+            temp = temp.replace('+', '_')
+        elif REPOSITORY == SLICED_REVERSE: 
+            temp = list(id_name)
+            temp.reverse()
+            temp = ''.join(temp)
         else:
-            rel_url_list = self._get_zodb_path()
-
-        dirs = []
-        if REPOSITORY == SYNC_ZODB: 
-            dirs = rel_url_list
-        elif REPOSITORY in (SLICED, SLICED_REVERSE, SLICED_HASH):
-            if REPOSITORY == SLICED_HASH:
-                # increase distribution by including the path in the hash
-                hashed = ''.join(list(rel_url_list)+[id_name])
-                temp = base64.encodestring(sha.new(hashed).digest())[:-1]
-                temp = temp.replace('/', '_')
-                temp = temp.replace('+', '_')
-            elif REPOSITORY == SLICED_REVERSE: 
-                temp = list(id_name)
-                temp.reverse()
-                temp = ''.join(temp)
+            temp = id_name
+        for i in range(SLICE_DEPTH):
+            if len(temp)<SLICE_WIDTH*(SLICE_DEPTH-i): 
+                dirs.append(SLICE_WIDTH*'_')
             else:
-                temp = id_name
-            for i in range(SLICE_DEPTH):
-                if len(temp)<SLICE_WIDTH*(SLICE_DEPTH-i): 
-                    dirs.append(SLICE_WIDTH*'_')
-                else:
-                    dirs.append(temp[:SLICE_WIDTH])
-                    temp=temp[SLICE_WIDTH:]
-        elif REPOSITORY == CUSTOM:
-            method = aq_acquire(self, CUSTOM_METHOD)
-            dirs = method(rel_url_list, id)
+                dirs.append(temp[:SLICE_WIDTH])
+                temp=temp[SLICE_WIDTH:]
+    elif REPOSITORY == CUSTOM:
+        method = aq_acquire(self, CUSTOM_METHOD)
+        dirs = method(rel_url_list, id)
 
-        if NORMALIZE_CASE == NORMALIZE:
-            dirs = [d.lower() for d in dirs]
-        
-        # make directories
-        dirpath = self._fsname(dirs)
-        if not os.path.isdir(dirpath):
-            mkdir_exc = "Can't create directory: "
-            umask = os.umask(REPOSITORY_UMASK)
-            try:
-                os.makedirs(dirpath)
-                os.umask(umask)
-            except:
-                os.umask(umask)
-                raise mkdir_exc, dirpath
+    if NORMALIZE_CASE == NORMALIZE:
+        dirs = [d.lower() for d in dirs]
+    
+    # make directories
+    dirpath = self._fsname(dirs)
+    if not os.path.isdir(dirpath):
+        mkdir_exc = "Can't create directory: "
+        umask = os.umask(REPOSITORY_UMASK)
+        try:
+            os.makedirs(dirpath)
+            os.umask(umask)
+        except:
+            os.umask(umask)
+            raise mkdir_exc, dirpath
 
-        # generate file name
-        fileformat = FILE_FORMAT
-        # time/counter (%t)
-        if string.find(fileformat, "%t")>=0:
-            fileformat = string.replace(fileformat, "%t", "%c")
-            counter = int(DateTime().strftime('%m%d%H%M%S'))
+    # generate file name
+    fileformat = FILE_FORMAT
+    # time/counter (%t)
+    if string.find(fileformat, "%t")>=0:
+        fileformat = string.replace(fileformat, "%t", "%c")
+        counter = int(DateTime().strftime('%m%d%H%M%S'))
+    else:
+        counter = 0
+    invalid_format_exc = "Invalid file format: "
+    if string.find(fileformat, "%c")==-1:
+        raise invalid_format_exc, FILE_FORMAT
+    # user (%u)
+    if string.find(fileformat, "%u")>=0:
+        if (getattr(self, 'REQUEST', None) is not None and
+           self.REQUEST.has_key('AUTHENTICATED_USER')):
+            user = getSecurityManager().getUser().getUserName()
+            fileformat = string.replace(fileformat, "%u", user)
         else:
-            counter = 0
-        invalid_format_exc = "Invalid file format: "
-        if string.find(fileformat, "%c")==-1:
-            raise invalid_format_exc, FILE_FORMAT
-        # user (%u)
-        if string.find(fileformat, "%u")>=0:
-            if (getattr(self, 'REQUEST', None) is not None and
-               self.REQUEST.has_key('AUTHENTICATED_USER')):
-                user = getSecurityManager().getUser().getUserName()
-                fileformat = string.replace(fileformat, "%u", user)
-            else:
-                fileformat = string.replace(fileformat, "%u", "")
-        # path (%p)
-        if string.find(fileformat, "%p")>=0:
-            temp = string.joinfields(rel_url_list, "_")
-            fileformat = string.replace(fileformat, "%p", temp)
-        # file and extension (%n and %e)
-        if string.find(fileformat,"%n")>=0 or string.find(fileformat,"%e")>=0:
-            fileformat = string.replace(fileformat, "%n", id_name)
-            fileformat = string.replace(fileformat, "%e", id_ext)
+            fileformat = string.replace(fileformat, "%u", "")
+    # path (%p)
+    if string.find(fileformat, "%p")>=0:
+        temp = string.joinfields(rel_url_list, "_")
+        fileformat = string.replace(fileformat, "%p", temp)
+    # file and extension (%n and %e)
+    if string.find(fileformat,"%n")>=0 or string.find(fileformat,"%e")>=0:
+        fileformat = string.replace(fileformat, "%n", id_name)
+        fileformat = string.replace(fileformat, "%e", id_ext)
 
-        # lock the directory
-        if lock: self._dir__lock(dirpath)
+    # lock the directory
+    if lock: self._dir__lock(dirpath)
 
-        # search for unique filename
-        if counter: 
-            fn = join(dirpath, string.replace(fileformat, "%c", ".%s" % counter))
-        else: 
-            fn = join(dirpath, string.replace(fileformat, "%c", ''))
-        while isfile(fn) or isfile(fn+'.undo') or isfile(fn+'.tmp'):
-            counter = counter + 1
-            fn = join(dirpath, string.replace(fileformat, "%c", ".%s" % counter))
-        if counter: 
-            fileformat = string.replace(fileformat, "%c", ".%s" % counter)
-        else: 
-            fileformat = string.replace(fileformat, "%c", '')
+    # search for unique filename
+    if counter: 
+        fn = join(dirpath, string.replace(fileformat, "%c", ".%s" % counter))
+    else: 
+        fn = join(dirpath, string.replace(fileformat, "%c", ''))
+    while isfile(fn) or isfile(fn+'.undo') or isfile(fn+'.tmp'):
+        counter = counter + 1
+        fn = join(dirpath, string.replace(fileformat, "%c", ".%s" % counter))
+    if counter: 
+        fileformat = string.replace(fileformat, "%c", ".%s" % counter)
+    else: 
+        fileformat = string.replace(fileformat, "%c", '')
 
-        dirs.append(fileformat)
-        return dirs
+    dirs.append(fileformat)
+    return dirs
 
-    ExtFile._get_new_ufn = _get_new_ufn
-    LOG('naayaHotfix', DEBUG, 'Patch for ExtFile')
+ExtFile._get_new_ufn = _get_new_ufn
+LOG('naayaHotfix', DEBUG, 'Patch for ExtFile')
