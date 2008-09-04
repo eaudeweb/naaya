@@ -223,6 +223,12 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
                         events.append((event, self.getDate(start_date), self.getDate(end_date)))
 
         return events
+    
+    security.declareProtected(view, 'getDayEvents')
+    def getDayEvents(self, date=''):
+        """Return the events for the given day"""
+        if date: return self.getEvents(date.year(), date.month(), date.day())
+        return []
 
     # this is another implementation of the getEvents method; it's kept for reference
     #security.declareProtected(view, 'getEvents')

@@ -2,16 +2,16 @@
 <span metal:use-macro="here/calendar_template/macros/calendar_page">
 
 <tal:block metal:fill-slot="page_body">
-	<tal:block define="cday python:int(request.get('cday', '').split('/')[0]);
-	                   cmonth python:int(request.get('cday', '').split('/')[1]);
-	                   cyear python:int(request.get('cday', '').split('/')[2]);">
+	<tal:block define="date python:here.utConvertStringToDateTimeObj(request.get('cday', ''))">
 	<div id="middle_port" style='margin-right:0;'>
 		<h3 id="Event-Title">
 			<!-- TODO: use localized strftime for displaying the date bellow -->
-			<span tal:omit-tag="" i18n:translate="">Day events for</span> <span tal:replace="python:str(cday)+' '+here.getMonthName(cmonth)+' '+str(cyear)"/>
+			<span i18n:translate="">Day events for</span> 
+				<span tal:condition="date" tal:replace="python:date.strftime('%d %B %Y')"/>
+				<em tal:condition="not:date" i18n:translate>invalid date</em>
 		</h3>
 
-		<table id="Event-Container" cellspacing="0" tal:define="daily_events python:here.getEvents(cyear, cmonth, cday);">
+		<table id="Event-Container" cellspacing="0" tal:define="daily_events python:here.getDayEvents(date);">
 			<tr>
 				<th></th>
 				<th i18n:translate="">Event</th>
