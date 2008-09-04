@@ -80,7 +80,7 @@ class NyMapControl:
         <a href="%s" i18n:translate="">see more</a>
     </div>
 </div>
-        """ % (self.utToUtf8(self.title_or_id()), self.utToUtf8(self.description), self.absolute_url())
+        """ % (self.utToUtf8(self.title_or_id()), self.utTruncateString(self.utToUtf8(self.description), 130), self.absolute_url())
 
     #zmi pages
     security.declareProtected(view, 'map_widget_add_html')
