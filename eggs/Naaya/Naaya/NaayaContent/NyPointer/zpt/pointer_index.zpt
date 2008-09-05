@@ -29,7 +29,8 @@
 	<th i18n:translate="">Pointer</th>
 	<td>
 		<a tal:define="pointer_path string:${here/getSitePath}/${pointer}" tal:attributes="href pointer_path" tal:content="pointer_path" />
-		[<span i18n:translate="" tal:condition="not:broken">restricted</span><span i18n:translate="" tal:condition="broken">broken link</span>]
+		<span tal:condition="missing">[<span i18n:translate="">The item referred to by this pointer has been moved or deleted</span>]</span>
+		<span tal:condition="restricted">[<span i18n:translate="">restricted</span>]</span>
 	</td>
 </tr>
 </table>

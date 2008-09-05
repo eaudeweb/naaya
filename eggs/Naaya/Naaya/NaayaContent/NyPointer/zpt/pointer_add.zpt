@@ -7,6 +7,10 @@
 </p>
 
 <tal:block metal:fill-slot="custom_properties">
+<div class="field-inline">
+	<label for="redirect"><span i18n:translate="">Automatically redirect to the pointing item</span></label>
+	<input type="checkbox" name="redirect" id="redirect" tal:attributes="checked python:test(here.getSession('redirect', ''), 'checked', 'checked')" />
+</div>
 <div class="field">
 	<script type="text/javascript">
 	<!--
