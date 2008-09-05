@@ -22,18 +22,23 @@ from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 class CustomContentUpdater(NaayaContentUpdater):
     """Add reCAPTCHA keys to Naaya Site if necessarily"""
     _properties=({'id':'recaptcha_public_key', 'type': 'string','mode':'w'},
-                 {'id':'recaptcha_private_key', 'type': 'string','mode':'w'},)
+                 {'id':'recaptcha_private_key', 'type': 'string','mode':'w'},
+                 {'id':'replace_existing_key', 'type': 'boolean', 'mode': 'w'})
 
+    replace_existing_key = ''
+    
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya Site properties'
         self.description = 'Add reCAPTCHA keys if necessarily'
         self.recaptcha_public_key = ''
         self.recaptcha_private_key = ''
+        self.replace_existing_key = ''
 
     def _verify_doc(self, doc):
         """See super"""
-        for i in self._properties:
+        if self.replace_existing_key: return doc
+        for i in [x for x in self._properties if x['id'] != 'replace_existing_key']:
             key = i['id']
             if not getattr(doc, key, ''):
                 return doc
@@ -50,7 +55,7 @@ class CustomContentUpdater(NaayaContentUpdater):
     def _update(self):
         updates = self._list_updates()
         for update in updates:
-            for i in self._properties:
+            for i in [x for x in self._properties if x['id'] != 'replace_existing_key']:
                 key = i['id']
                 key_val = getattr(self, key)
                 logger.debug('Updated %s: set %s to %s' % (update.absolute_url(1), key, key_val))
