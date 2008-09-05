@@ -25,9 +25,11 @@ div.marker {
 div.marker-body {
    width: 290px;
    margin-top: 0;
+   line-height: normal;
 }
 div.marker-more {
    padding: 10px 5px 5px 30px;    /* T   R   B   L */
+   line-height: normal;
 }
 div.marker-body h3 {
    font-weight: bold;
@@ -35,7 +37,13 @@ div.marker-body h3 {
    margin-top: 0;
    padding-top: 0;
    text-transform: uppercase;
+   line-height: normal;
 }
+
+div.marker-body a {
+  line-height: normal;
+}
+
 .map-button {
    font-size: x-small;
    color: white;
