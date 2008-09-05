@@ -34,18 +34,19 @@ class pointer_item(Implicit, NyProperties):
     description = LocalProperty('description')
     coverage = LocalProperty('coverage')
     keywords = LocalProperty('keywords')
+    redirect = '1'
 
     def __init__(self, title, description, coverage, keywords, sortorder,
-        pointer, releasedate, lang):
+        pointer, releasedate, redirect, lang):
         """
         Constructor.
         """
         self.save_properties(title, description, coverage, keywords, sortorder,
-            pointer, releasedate, lang)
+            pointer, releasedate, redirect, lang)
         NyProperties.__dict__['__init__'](self)
 
     def save_properties(self, title, description, coverage, keywords, sortorder,
-        pointer, releasedate, lang):
+        pointer, releasedate, redirect, lang):
         """
         Save item properties.
         """
@@ -56,3 +57,4 @@ class pointer_item(Implicit, NyProperties):
         self.sortorder = sortorder
         self.pointer = pointer
         self.releasedate = releasedate
+        self.redirect = redirect

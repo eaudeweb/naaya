@@ -68,7 +68,7 @@ def pointer_add_html(self, REQUEST=None, RESPONSE=None):
 
 def addNyPointer(self, id='', title='', description='', coverage='', keywords='',
     sortorder='', pointer='', contributor=None, releasedate='', discussion='',
-    lang=None, REQUEST=None, **kwargs):
+    redirect='', lang=None, REQUEST=None, **kwargs):
     """
     Create a Pointer type of object.
     """
@@ -103,7 +103,7 @@ def addNyPointer(self, id='', title='', description='', coverage='', keywords=''
             id = '%s-%u' % (id, i)
         #create object
         ob = NyPointer(id, title, description, coverage, keywords, sortorder, pointer,
-            contributor, releasedate, lang)
+            contributor, releasedate, redirect, lang)
         self.gl_add_languages(ob)
         ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._setObject(id, ob)
@@ -190,10 +190,10 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, description, coverage, keywords, sortorder, pointer,
-        contributor, releasedate, lang):
+        contributor, releasedate, redirect, lang):
         """ """
         self.id = id
-        pointer_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder, pointer, releasedate, lang)
+        pointer_item.__dict__['__init__'](self, title, description, coverage, keywords, sortorder, pointer, releasedate, redirect, lang)
         NyValidation.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
@@ -222,7 +222,7 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
         else: approved = 0
         releasedate = self.process_releasedate(releasedate, self.releasedate)
         if not lang: lang = self.gl_get_selected_language()
-        self.save_properties(title, description, coverage, keywords, sortorder, pointer, releasedate, lang)
+        self.save_properties(title, description, coverage, keywords, sortorder, pointer, releasedate, redirect, lang)
         self.updatePropertiesFromGlossary(lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
@@ -267,7 +267,7 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
         self.version = pointer_item(self.title, self.description, self.coverage, self.keywords, self.sortorder,
-            self.pointer, self.releasedate, self.gl_get_selected_language())
+            self.pointer, self.releasedate, self.redirect, self.gl_get_selected_language())
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
         self.version._local_properties = deepcopy(self._local_properties)
         self.version.setProperties(deepcopy(self.getProperties()))
@@ -277,7 +277,7 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', coverage='', keywords='',
-        sortorder='', pointer='', releasedate='', discussion='', lang=None,
+        sortorder='', pointer='', releasedate='', discussion='', redirect='', lang=None,
         REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
@@ -293,7 +293,7 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
             if not self.hasVersion():
                 #this object has not been checked out; save changes directly into the object
                 releasedate = self.process_releasedate(releasedate, self.releasedate)
-                self.save_properties(title, description, coverage, keywords, sortorder, pointer, releasedate, lang)
+                self.save_properties(title, description, coverage, keywords, sortorder, pointer, releasedate, redirect, lang)
                 self.updatePropertiesFromGlossary(lang)
                 self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
                 if discussion: self.open_for_comments()
@@ -303,7 +303,7 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
                 if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                     raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
                 releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-                self.version.save_properties(title, description, coverage, keywords, sortorder, pointer, releasedate, lang)
+                self.version.save_properties(title, description, coverage, keywords, sortorder, pointer, releasedate, redirect, lang)
                 self.version.updatePropertiesFromGlossary(lang)
                 self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             if discussion: self.open_for_comments()
@@ -337,12 +337,22 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
         from AccessControl import getSecurityManager
+        
         obj = self.getSite().unrestrictedTraverse(self.pointer, None)
-        if obj:
-            if not getSecurityManager().checkPermission(view, obj):
-                return self.getFormsTool().getContent({'here': self, 'broken': 0}, 'pointer_index')
-            REQUEST.RESPONSE.redirect(obj.absolute_url())
-        return self.getFormsTool().getContent({'here': self, 'broken': 1}, 'pointer_index')
+        can_view = getSecurityManager().checkPermission(view, obj)
+        params = {'here': self, 'restricted': 0, 'missing': 0}
+        
+        if obj and self.redirect:
+            if can_view:
+                REQUEST.RESPONSE.redirect(obj.absolute_url())
+            else:
+                params['restricted'] = 1
+                return self.getFormsTool().getContent(params, 'pointer_index')
+        elif not obj:
+            params['missing'] = 1
+            return self.getFormsTool().getContent(params, 'pointer_index')
+        else:
+            return self.getFormsTool().getContent(params, 'pointer_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
