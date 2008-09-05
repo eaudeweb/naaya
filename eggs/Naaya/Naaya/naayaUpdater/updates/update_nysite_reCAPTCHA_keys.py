@@ -24,11 +24,6 @@ class CustomContentUpdater(NaayaContentUpdater):
     _properties=({'id':'recaptcha_public_key', 'type': 'string','mode':'w'},
                  {'id':'recaptcha_private_key', 'type': 'string','mode':'w'},)
 
-    def manage_options(self):
-        """ ZMI tabs """
-        return ({'label':'Properties', 'action':'manage_propertiesForm'},) + \
-                NaayaContentUpdater.manage_options(self)
-
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya Site properties'
