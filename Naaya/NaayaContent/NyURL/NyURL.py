@@ -68,7 +68,7 @@ def url_add_html(self, REQUEST=None, RESPONSE=None):
 
 def addNyURL(self, id='', title='', description='', coverage='', keywords='',
     sortorder='', locator='', contributor=None, releasedate='', discussion='',
-    lang=None, REQUEST=None, **kwargs):
+    redirect='', lang=None, REQUEST=None, **kwargs):
     """
     Create an URL type of object.
     """
@@ -103,7 +103,7 @@ def addNyURL(self, id='', title='', description='', coverage='', keywords='',
             id = '%s-%u' % (id, i)
         #create object
         ob = NyURL(id, title, description, coverage, keywords, sortorder, locator,
-            contributor, releasedate, lang)
+            contributor, releasedate, redirect, lang)
         self.gl_add_languages(ob)
         ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         self._setObject(id, ob)
@@ -190,11 +190,11 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
     security = ClassSecurityInfo()
 
     def __init__(self, id, title, description, coverage, keywords, sortorder,
-        locator, contributor, releasedate, lang):
+        locator, contributor, releasedate, redirect, lang):
         """ """
         self.id = id
         url_item.__dict__['__init__'](self, title, description, coverage,
-            keywords, sortorder, locator, releasedate, lang)
+            keywords, sortorder, locator, releasedate, redirect, lang)
         NyValidation.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
@@ -220,7 +220,7 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='',
         keywords='', sortorder='', approved='', locator='', releasedate='',
-        discussion='', lang='', REQUEST=None, **kwargs):
+        discussion='', lang='', redirect='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
@@ -230,7 +230,7 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
         else: approved = 0
         releasedate = self.process_releasedate(releasedate, self.releasedate)
         if not lang: lang = self.gl_get_selected_language()
-        self.save_properties(title, description, coverage, keywords, sortorder, locator, releasedate, lang)
+        self.save_properties(title, description, coverage, keywords, sortorder, locator, releasedate, redirect, lang)
         self.updatePropertiesFromGlossary(lang)
         self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
         if approved != self.approved:
@@ -283,7 +283,7 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', coverage='', keywords='',
-        sortorder='', locator='', releasedate='', discussion='', lang=None,
+        sortorder='', locator='', releasedate='', discussion='', redirect='', lang=None,
         REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
@@ -299,7 +299,7 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
             if not self.hasVersion():
                 #this object has not been checked out; save changes directly into the object
                 releasedate = self.process_releasedate(releasedate, self.releasedate)
-                self.save_properties(title, description, coverage, keywords, sortorder, locator, releasedate, lang)
+                self.save_properties(title, description, coverage, keywords, sortorder, locator, releasedate, redirect, lang)
                 self.updatePropertiesFromGlossary(lang)
                 self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
             else:
@@ -340,6 +340,7 @@ class NyURL(NyAttributes, url_item, NyItem, NyCheckControl, NyValidation):
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
+        if self.redirect: REQUEST.RESPONSE.redirect(self.locator)
         return self.getFormsTool().getContent({'here': self}, 'url_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')

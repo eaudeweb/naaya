@@ -35,19 +35,20 @@ class url_item(Implicit, NyProperties):
     coverage = LocalProperty('coverage')
     keywords = LocalProperty('keywords')
     locator = LocalProperty('locator')
+    redirect = '1'
 
 
     def __init__(self, title, description, coverage, keywords, sortorder,
-        locator, releasedate, lang):
+        locator, releasedate, redirect, lang):
         """
         Constructor.
         """
         self.save_properties(title, description, coverage, keywords, sortorder,
-            locator, releasedate, lang)
+            locator, releasedate, redirect, lang)
         NyProperties.__dict__['__init__'](self)
 
     def save_properties(self, title, description, coverage, keywords, sortorder,
-        locator, releasedate, lang):
+        locator, releasedate, redirect, lang):
         """
         Save item properties.
         """
@@ -58,3 +59,4 @@ class url_item(Implicit, NyProperties):
         self._setLocalPropValue('locator', lang, locator)
         self.sortorder = sortorder
         self.releasedate = releasedate
+        self.redirect = redirect
