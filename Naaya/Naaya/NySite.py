@@ -1260,7 +1260,68 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 })
         res = ', '.join(res)
         return '[%s]' % res.encode('utf-8')
-    
+
+    security.declareProtected(view, 'getNavigationSiteMap')
+    def getCompleteNavigationSiteMap(self, REQUEST=None, **kwargs):
+        """ Returns site map including unapproved items, 
+        in order to be used with extjs library"""
+        
+        node = REQUEST.form.get('node', '')
+        if not node or node == '__root':
+            node = ''
+        
+        items = self.getFolderContent(node)
+        folders = items[0]
+        documents = items[1]
+        res = []
+        for folder in folders:
+            iconCls = 'custom-%s' % folder.meta_type.replace(' ', '-')
+            if not folder.approved: iconCls += '-marked'
+            title = ''
+            folder_localized = getattr(folder.aq_base, 'getLocalProperty', None)
+            if folder_localized:
+                title = folder_localized('title')
+            title = title or folder.title_or_id()
+            title = self.utStrEscapeHTMLTags(title)
+            title = title.replace('"', "'").replace('\r', '').replace('\n', ' ')
+            res.append("""{
+                "id": "%(id)s",
+                "text": "%(title)s",
+                "leaf": false,
+                "href": "%(href)s",
+                "iconCls": "%(iconCls)s"
+                }""" % {
+                    "id": folder.absolute_url(1),
+                    "title": title,
+                    "href": '',
+                    "iconCls": iconCls,
+                })
+        for document in documents:
+            if document.approved: icon = getattr(document, 'icon', '')
+            else: icon = getattr(document, 'icon_marked', '')
+            icon = icon and '/'.join((self.absolute_url(), icon))
+            title = ''
+            document_localized = getattr(document.aq_base, "getLocalProperty", None)
+            if document_localized:
+                title = document_localized('title')
+            title = title or document.title_or_id()
+            title = self.utStrEscapeHTMLTags(title)
+            title = title.replace('"', "'").replace('\r', '').replace('\n', ' ')
+            res.append("""{
+                "id": "%(id)s",
+                "text": "%(title)s",
+                "leaf": true,
+                "href": "%(href)s",
+                "icon": "%(icon)s"
+                }""" % {
+                    "id": document.absolute_url(1),
+                    "title": title,
+                    "href": '',
+                    "icon": icon,
+                })
+        res = ', '.join(res)
+        return '[%s]' % res.encode('utf-8')
+
     security.declareProtected(view, 'getNavigationPhotos')
     def getNavigationPhotos(self, REQUEST=None, **kwargs):
         """ Returns site map with photos only in order to be used with extjs library"""
@@ -1340,6 +1401,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 ppath = parent.absolute_url(1)
             return folder_ob.getPublishedFolders(), folder_ob.getPublishedObjects(), ppath
         return [x for x in self.objectValues(self.get_naaya_containers_metatypes()) if x.approved == 1 and x.submitted==1], [], ''
+    
+    def getFolderContent(self, folder_path):
+        """ return the content of a folder """
+        if folder_path:
+            folder_ob = self.restrictedTraverse(folder_path)
+            parent = folder_ob.getParentNode()
+            if parent == self:
+                ppath = ''
+            else:
+                ppath = parent.absolute_url(1)
+            return folder_ob.getFolders(), folder_ob.getObjects(), ppath
+        return [x for x in self.objectValues(self.get_naaya_containers_metatypes()) if x.submitted==1], [], ''
 
     def __getSiteMap(self, root, showitems, expand, depth):
         #site map core

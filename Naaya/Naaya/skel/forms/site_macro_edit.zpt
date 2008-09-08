@@ -150,7 +150,7 @@ var swMsg = document.getElementById('confirmSwMessage').innerHTML;
 </div>
 
 <!-- Document discussion -->
-<div class="field" metal:define-slot="doc_discussion">
+<div class="field-inline" metal:define-slot="doc_discussion">
 	<label for="discussion"><span i18n:translate="" tal:omit-tag="">Open for comments</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(here.meta_type, 'discussion')" class="mandatory_field"> *</span></label>
 	<input type="checkbox" name="discussion" id="discussion" tal:attributes="checked python:test(here.getSession('discussion', here.discussion), 'checked', '')" />
 </div>
