@@ -1261,7 +1261,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         res = ', '.join(res)
         return '[%s]' % res.encode('utf-8')
 
-    security.declareProtected(view, 'getNavigationSiteMap')
+    security.declareProtected(view, 'getCompleteNavigationSiteMap')
     def getCompleteNavigationSiteMap(self, REQUEST=None, **kwargs):
         """ Returns site map including unapproved items, 
         in order to be used with extjs library"""
