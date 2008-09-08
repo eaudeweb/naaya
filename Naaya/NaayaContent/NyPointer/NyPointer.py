@@ -212,7 +212,7 @@ class NyPointer(NyAttributes, pointer_item, NyItem, NyCheckControl, NyValidation
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, title='', description='', coverage='',
         keywords='', sortorder='', approved='', pointer='', releasedate='',
-        discussion='', lang='', REQUEST=None, **kwargs):
+        discussion='', lang='', redirect='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
