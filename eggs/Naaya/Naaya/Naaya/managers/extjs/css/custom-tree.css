@@ -7,6 +7,14 @@
   background-image:url(misc_/Naaya/NyFolder.gif);
 }
 
+.x-tree-node-collapsed .x-tree-node-icon-marked{
+  background-image:url(misc_/Naaya/NyFolder_marked.gif);
+}
+
+.x-tree-node-expanded .x-tree-node-icon-marked{
+  background-image:url(misc_/Naaya/NyFolder_marked.gif);
+}
+
 /* Naaya Folder */
 .x-tree-node-collapsed .custom-Naaya-Folder {
   background-image:url(misc_/Naaya/NyFolder.gif);
@@ -14,6 +22,14 @@
 
 .x-tree-node-expanded .custom-Naaya-Folder {
   background-image:url(misc_/Naaya/NyFolder.gif);
+}
+
+.x-tree-node-collapsed .custom-Naaya-Folder-marked {
+  background-image:url(misc_/Naaya/NyFolder_marked.gif);
+}
+
+.x-tree-node-expanded .custom-Naaya-Folder-marked {
+  background-image:url(misc_/Naaya/NyFolder_marked.gif);
 }
 
 /* Naaya Photo Gallery */
@@ -25,6 +41,14 @@
   background-image:url(misc_/NaayaPhotoArchive/NyPhotoGallery.gif);
 }
 
+.x-tree-node-collapsed .custom-Naaya-Photo-Gallery-marked {
+  background-image:url(misc_/NaayaPhotoArchive/NyPhotoGallery_marked.gif);
+}
+
+.x-tree-node-expanded .custom-Naaya-Photo-Gallery-marked {
+  background-image:url(misc_/NaayaPhotoArchive/NyPhotoGallery_marked.gif);
+}
+
 /* Naaya Photo Folder */
 .x-tree-node-collapsed .custom-Naaya-Photo-Folder {
   background-image:url(misc_/NaayaPhotoArchive/NyPhotoFolder.gif);
@@ -32,6 +56,14 @@
 
 .x-tree-node-expanded .custom-Naaya-Photo-Folder {
   background-image:url(misc_/NaayaPhotoArchive/NyPhotoFolder.gif);
+}
+
+.x-tree-node-collapsed .custom-Naaya-Photo-Folder-marked {
+  background-image:url(misc_/NaayaPhotoArchive/NyPhotoFolder_marked.gif);
+}
+
+.x-tree-node-expanded .custom-Naaya-Photo-Folder-marked {
+  background-image:url(misc_/NaayaPhotoArchive/NyPhotoFolder_marked.gif);
 }
 
 /* Naaya Forum */
@@ -43,6 +75,15 @@
   background-image:url(misc_/NaayaForum/NyForum.gif);
 }
 
+.x-tree-node-collapsed .custom-Naaya-Forum-marked {
+  background-image:url(misc_/NaayaForum/NyForum_marked.gif);
+}
+
+.x-tree-node-expanded .custom-Naaya-Forum-marked {
+  background-image:url(misc_/NaayaForum/NyForum_marked.gif);
+}
+
+
 /* Naaya Forum Topic */
 .x-tree-node-collapsed .custom-Naaya-Forum-Topic {
   background-image:url(misc_/NaayaForum/NyForumTopic.gif);
@@ -50,6 +91,14 @@
 
 .x-tree-node-expanded .custom-Naaya-Forum-Topic {
   background-image:url(misc_/NaayaForum/NyForumTopic.gif);
+}
+
+.x-tree-node-collapsed .custom-Naaya-Forum-Topic-marked {
+  background-image:url(misc_/NaayaForum/NyForumTopic_marked.gif);
+}
+
+.x-tree-node-expanded .custom-Naaya-Forum-Topic-marked {
+  background-image:url(misc_/NaayaForum/NyForumTopic_marked.gif);
 }
 
 .custom-tree {
