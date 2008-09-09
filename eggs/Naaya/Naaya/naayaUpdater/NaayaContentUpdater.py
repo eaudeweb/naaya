@@ -29,6 +29,7 @@ from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ExtFile.ExtFile import ExtFile
 from Products.naayaUpdater.updates import LOG_ROOT, LOG_FILE
+from Products.naayaUpdater.updates import nyUpdateLogger as logger
 
 class NaayaContentUpdater(Folder):
     """ Naaya Content Updater abstract class. Subclass it for your content.
@@ -105,8 +106,18 @@ class NaayaContentUpdater(Folder):
             query = {'meta_type': portal.utConvertToList(self.update_meta_type)}
             brains = portal.getCatalogTool()(query)
             for brain in brains:
-                doc = brain.getObject()
+                try:
+                    doc = brain.getObject()
+                except Exception, err:
+                    logger.debug(
+                        'WARNING: brain: %s, brain id: %s, getPath: %s, err: %s',
+                        brain.absolute_url(), brain.data_record_id_,
+                        brain.getPath(), err)
+                    continue
                 if doc is None:
+                    logger.debug('WARNING: Broken brain: %s, id %s, getPath: %s', 
+                                 brain.absolute_url(), brain.data_record_id_,
+                                 brain.getPath())
                     continue
                 if ids and doc.absolute_url(1) not in ids:
                     continue
