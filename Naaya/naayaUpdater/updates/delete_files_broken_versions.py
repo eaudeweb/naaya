@@ -40,10 +40,9 @@ class CustomContentUpdater(NaayaContentUpdater):
                 logger.debug('Update NyFile: %s version: %s', doc.absolute_url(), version_id)
                 try:
                     version = doc.getVersions()[version_id][2][0]
+                    version.manage_beforeDelete(version, doc)
                 except:
                     pass
-                else:
-                    version.manage_beforeDelete(version, doc)
                 doc.setVersions({})
                 doc.setCurrentVersionId(None)
         if doc.meta_type == 'Naaya Extended File':
@@ -56,10 +55,9 @@ class CustomContentUpdater(NaayaContentUpdater):
                                  doc.absolute_url(1), lang, version_id)
                     try:
                         version = item.getVersions()[version_id][2][0]
+                        version.manage_beforeDelete(version, item)
                     except:
                         pass
-                    else:
-                        version.manage_beforeDelete(version, item)
                     item.setVersions({})
                     item.setCurrentVersionId(None)
 
