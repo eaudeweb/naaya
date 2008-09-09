@@ -45,7 +45,7 @@ This page lists the locations that could be duplicated. The test for duplicates 
 
 
 <form method="post" name="frmDeleteLocations" id="frmDeleteLocations" action="deleteLocations">
-	<tal:block define="records python:here.getDuplicateLocations(skey, rkey); edit_mode python:True; sortable python:True">
+	<tal:block define="map_ob portal_map; records python:here.getDuplicateLocations(skey, rkey); edit_mode python:True; sortable python:True">
 		<table metal:use-macro="here/locations_table_html/macros/main">
 		</table>
 	</tal:block>
