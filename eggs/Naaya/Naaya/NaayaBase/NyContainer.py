@@ -162,5 +162,13 @@ class NyContainer(Folder, NyComments, NyBase, NyPermissions, NyDublinCore, NyMap
                 break
         return id
 
+    def HEAD(self, REQUEST=None, RESPONSE=None):
+        """ """
+        modified = self.bobobase_modification_time()
+        self.REQUEST.RESPONSE.setHeader('Last-Modified', modified)
+        if hasattr(self, 'get_size'):
+            self.REQUEST.RESPONSE.setHeader('Content-Length', self.get_size())
+        if hasattr(self, 'content_type'):
+            self.REQUEST.RESPONSE.setHeader('Content-Type', self.content_type)
 
 InitializeClass(NyContainer)
