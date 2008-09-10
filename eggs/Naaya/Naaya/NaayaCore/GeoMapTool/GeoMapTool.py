@@ -751,11 +751,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-#        if hasattr(self, 'map_index'):
-#            return self._getOb('map_index')({'here': self})
-#        return self.view_map_html({'here': self})
-        #if hasattr(self, 'map_index'):
-         #   return self._getOb('map_index')({'here': self})
+        if hasattr(self, 'map_index'):
+            return self._getOb('map_index')({'here': self})
         return self.view_map_html({'here': self})
     
     security.declareProtected(view, 'view_map_html')
