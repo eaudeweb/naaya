@@ -71,8 +71,11 @@
 	<tr tal:condition="python:here.url not in ['', 'http://']">
 		<th i18n:translate="">URL</th>
 		<td>
-			<a tal:attributes="href here/url" rel="external" tal:content="here/url" />
-			<small class="message-information" i18n:translate="">[Hold down the Shift key when you click on a link to open it in a new window]</small>
+			<a tal:attributes="href here/url" 
+			   rel="external" 
+			   tal:content="here/url"
+			   title="[Hold down the Shift key when you click on a link to open it in a new window]"
+			   i18n:attributes="title" />
 		</td>
 	</tr>
 	<tr tal:condition="python:here.pointer and here.restrictedTraverse(here.pointer, None)">

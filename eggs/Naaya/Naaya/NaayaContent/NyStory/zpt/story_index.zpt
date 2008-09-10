@@ -57,8 +57,10 @@
 	<tr tal:condition="python:here.resourceurl and (here.resourceurl !='http://')">
 		<th i18n:translate="">Concerned URL</th>
 		<td>
-			<a tal:attributes="href here/resourceurl" tal:content="here/resourceurl" />
-			<small class="message-information" i18n:translate="">[Hold down the Shift key when you click on a link to open it in a new window]</small>
+			<a tal:attributes="href here/resourceurl" 
+			   tal:content="here/resourceurl"
+			   title="[Hold down the Shift key when you click on a link to open it in a new window]"
+			   i18n:attributes="title" />
 		</td>
 	</tr>
 	<tr tal:condition="here/source">

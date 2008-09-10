@@ -42,8 +42,11 @@
 	<th i18n:translate="">Event location</th>
 	<td>
 		<tal:block tal:condition="python:here.location_url and (here.location_url != 'http://')">
-		<a tal:attributes="href here/location_url" tal:content="here/location"/> <span tal:replace="here/location_address" />
-		<small class="message-information" i18n:translate="">[Hold down the Shift key when you click on a link to open it in a new window]</small>
+		<a tal:attributes="href here/location_url"
+		   tal:content="here/location"
+		   title="[Hold down the Shift key when you click on a link to open it in a new window]"
+		   i18n:attributes="title" /> 
+			<span tal:replace="here/location_address" />
 		</tal:block>
 		<tal:block tal:condition="python:(here.location_url == '') or (here.location_url == 'http://')">
 		<span tal:replace="here/location" /> <span tal:replace="here/location_address" />
@@ -57,15 +60,19 @@
 <tr tal:condition="python:here.agenda_url and (here.agenda_url != 'http://')">
 	<th i18n:translate="">See the agenda</th>
 	<td>
-		<a tal:attributes="href here/agenda_url" tal:content="here/agenda_url">agenda url</a>
-		<small class="message-information" i18n:translate="">[Hold down the Shift key when you click on a link to open it in a new window]</small>
+		<a tal:attributes="href here/agenda_url"
+		   tal:content="here/agenda_url"
+		   title="[Hold down the Shift key when you click on a link to open it in a new window]"
+		   i18n:attributes="title">agenda url</a>
 	</td>
 </tr>
 <tr tal:condition="python:here.event_url and (here.event_url != 'http://')">
 	<th i18n:translate="">Event URL</th>
 	<td>
-		<a tal:attributes="href here/event_url" tal:content="here/event_url" />
-		<small class="message-information" i18n:translate="">[Hold down the Shift key when you click on a link to open it in a new window]</small>
+		<a tal:attributes="href here/event_url"
+		   tal:content="here/event_url"
+		   title="[Hold down the Shift key when you click on a link to open it in a new window]"
+		   i18n:attributes="title"/>
 	</td>
 </tr>
 <tr tal:condition="python:here.contact_person or here.contact_email or here.contact_phone or  here.contact_fax">

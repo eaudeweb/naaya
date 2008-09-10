@@ -49,8 +49,10 @@
 	<tr tal:condition="python:here.locator and (here.locator != 'http://')">
 		<th i18n:translate="">URL</th>
 		<td>
-			<a tal:attributes="href here/locator" tal:content="here/locator"/>
-			<small class="message-information" i18n:translate="">[Hold down the Shift key when you click on a link to open it in a new window]</small>
+			<a tal:attributes="href here/locator"
+			   tal:content="here/locator"
+			   tal:attributes="title"
+			   title="[Hold down the Shift key when you click on a link to open it in a new window]" />
 		</td>
 	</tr>
 </table>
