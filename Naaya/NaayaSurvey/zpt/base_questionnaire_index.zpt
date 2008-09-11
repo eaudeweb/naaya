@@ -11,8 +11,8 @@
 
 <h1>
 	<img tal:attributes="
-		src python:test(here.approved, here.icon, here.icon_marked); 
-		title here/meta_label; 
+		src python:test(here.approved, here.icon, here.icon_marked);
+		title here/meta_label;
 		alt here/meta_label" />
 	<tal:block tal:replace="here/title_or_id" />
 		<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
@@ -40,7 +40,7 @@
 </div>
 
 
-<p tal:condition="python:here.description!=''" 
+<p tal:condition="python:here.description!=''"
 	tal:content="structure here/description" />
 
 <p i18n:translate="" tal:condition="here/expired">This survey has expired!</p>
@@ -70,7 +70,7 @@
 
 			<tal:block tal:content="structure python:test(stype, stype.render(mode='edit', datamodel=my_answer), 'Error')" />
 
-			<span tal:replace="structure here/showCaptcha" />
+			<span tal:condition="not:here/checkPermissionAddAnswer" tal:replace="structure here/showCaptcha" />
 
 			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'">
 				<tal:block condition="python:here.notify_respondents.startswith('LET_THEM_CHOOSE')">
