@@ -326,11 +326,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if geo_types:
             for res in self.searchGeoPoints(path, geo_types, geo_query, REQUEST):
                 try:
-                  latitude = float(res.latitude);
-                  longitude = float(res.longitude);
+                    latitude = float(res.latitude);
+                    longitude = float(res.longitude);
                 except:
-                  latitude = 0;
-                  longitude = 0;
+                    latitude = 0;
+                    longitude = 0;
 
                 if (latitude and longitude):
                     ra('%s##%s##mk_%s##%s##%s##%s$$' % (self.utToUtf8(res.latitude),
@@ -345,12 +345,12 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return ''.join(r)
 
     security.declareProtected(view, 'xrjs_simple_feed')
-    def xrjs_simple_feed(self, key, show, REQUEST):
+    def xrjs_simple_feed(self, key='', show='', REQUEST=None):
         """ """
         #if key == self.getSession(MSP_SESSION_KEY, None):
         res = ''
-        ob = self.unrestrictedTraverse('%s' % show)
-        if ob:
+        ob = self.unrestrictedTraverse('%s' % show, None)
+        if ob and not isinstance(ob, GeoMapTool):
             if ob.latitude is not None and ob.longitude is not None:
                 res = '%s|%s|%s' % (ob.latitude, ob.longitude, self.utJavaScriptEncode(ob.title_or_id()))
         #self.delSession(MSP_SESSION_KEY)
@@ -422,7 +422,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         path = path or '/'
         strKeyControls = ""
         if not self.enableKeyControls or not enableKeyControls:
-          strKeyControls = "map.disableKeyControls();"
+            strKeyControls = "map.disableKeyControls();"
         return get_template(TEMPLATE_XMLRPC_LOCATIONS_MAP_LOADER) % (center_locality, center_zoom, self.default_type, width, height, ",".join(self.map_types), strKeyControls, self.xrjs_markers(), self.absolute_url())
 
     def xrjs_simple_loader(self, show):
@@ -683,11 +683,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             arr = self.searchGeoPoints(path, arr_geo_types, geo_query, administrative_level=administrative_levels, landscape_type=landscape_types);
             for res in arr:
                 try:
-                  latitude = float(res.latitude);
-                  longitude = float(res.longitude);
+                    latitude = float(res.latitude);
+                    longitude = float(res.longitude);
                 except:
-                  latitude = 0;
-                  longitude = 0;
+                    latitude = 0;
+                    longitude = 0;
 
                 if (latitude and longitude):
                     ra('%s##%s##mk_%s##%s##%s##%s$$' % (self.utToUtf8(res.latitude),
