@@ -1,6 +1,6 @@
-#A plugin for reCAPTCHA. Provides a CAPTCHA for Python using the reCAPTCHA service. 
-#Does not require any imaging libraries because the CAPTCHA is served directly from reCAPTCHA. 
-#This library requires one API key from http://recaptcha.net/api/getkey. 
+#A plugin for reCAPTCHA. Provides a CAPTCHA for Python using the reCAPTCHA service.
+#Does not require any imaging libraries because the CAPTCHA is served directly from reCAPTCHA.
+#This library requires one API key from http://recaptcha.net/api/getkey.
 """Small wrappers for Naaya around the captcha Python module which provides
 access to reCAPTCHA.
 """
@@ -14,8 +14,11 @@ API_SERVER="http://api.recaptcha.net"
 VERIFY_SERVER="api-verify.recaptcha.net"
 
 def render_captcha(context):
-    """Return HTML code for CAPTCHA if the current user is anonymous or an empty string otherwise."""
-    if not context.isAnonymousUser():
+    """
+    Return HTML code for CAPTCHA if the current user does not have
+    the SKIP_CAPTCHA permission or an empty string otherwise
+    """
+    if context.checkPermissionSkipCaptcha():
         return ""
     err = context.getSession('err_recaptcha', '')
     context.delSession('err_recaptcha')
