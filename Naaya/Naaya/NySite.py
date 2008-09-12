@@ -166,7 +166,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.mail_server_port = DEFAULT_MAILSERVERPORT
         self.recaptcha_public_key = ''
         self.recaptcha_private_key = ''
-        # The email address (must exist) from which the email tool sends mails 
+        # The email address (must exist) from which the email tool sends mails
         self.mail_address_from = ''
         self.administrator_email = ''
         #holds info about customized folder's contact us page
@@ -592,7 +592,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def get_meta_types(self, folder=0):
         #returns a list with objects metatypes
         res = []
-        if folder==1: 
+        if folder==1:
             res.append(METATYPE_FOLDER)
         # Add Naaya Forum to subobjects list
         try:
@@ -1174,7 +1174,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     manage_addImage(self.getImagesFolder(), '', file)
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s?doc_url=%s' % \
-                                        (REQUEST['HTTP_REFERER'], 
+                                        (REQUEST['HTTP_REFERER'],
                                          self.utUrlEncode(self.absolute_url()))) # TODO update URL
 
     security.declareProtected(view, 'process_file_upload')
@@ -1210,7 +1210,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         node = REQUEST.form.get('node', '')
         if not node or node == '__root':
             node = ''
-        
+
         items = self.getFolderPublishedContent(node)
         folders = items[0]
         documents = items[1]
@@ -1263,13 +1263,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(view, 'getCompleteNavigationSiteMap')
     def getCompleteNavigationSiteMap(self, REQUEST=None, **kwargs):
-        """ Returns site map including unapproved items, 
+        """ Returns site map including unapproved items,
         in order to be used with extjs library"""
-        
+
         node = REQUEST.form.get('node', '')
         if not node or node == '__root':
             node = ''
-        
+
         items = self.getFolderContent(node)
         folders = items[0]
         documents = items[1]
@@ -1328,7 +1328,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         node = REQUEST.form.get('node', '')
         if not node or node == '__root':
             node = ''
-        
+
         items = self.getFolderPublishedContent(node)
         folders = items[0]
         documents = [x for x in items[1] if x.meta_type == 'Naaya Photo']
@@ -1401,7 +1401,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 ppath = parent.absolute_url(1)
             return folder_ob.getPublishedFolders(), folder_ob.getPublishedObjects(), ppath
         return [x for x in self.objectValues(self.get_naaya_containers_metatypes()) if x.approved == 1 and x.submitted==1], [], ''
-    
+
     def getFolderContent(self, folder_path):
         """ return the content of a folder """
         if folder_path:
@@ -1502,9 +1502,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.sendCreateAccountEmail(
                 p_to=self.administrator_email,
                 p_name=res.get('firstname', '') + ' ' + res.get('lastname', ''),
-                p_email=res.get('email', ''), 
-                p_organisation=res.get('organisation', ''), 
-                p_username=res.get('name', ''), 
+                p_email=res.get('email', ''),
+                p_organisation=res.get('organisation', ''),
+                p_username=res.get('name', ''),
                 p_location_path=self.absolute_url(1),
                 p_location_title=self.site_title,
                 p_comments=res.get('comments', ''),
@@ -1513,7 +1513,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.setSession('title', title)
         self.setSession('body', body)
         REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
-        
+
     security.declareProtected(view, 'processRequestRoleForm')
     def processRequestRoleForm(self, username='', password='', confirm='',
                                firstname='', lastname='', email='',
@@ -1522,7 +1522,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """
         Sends notification email(s) to the administrators when people apply
         for a role. If the role is requested at portal level, the addresses
-        from the 'administrator_email' property get it. If the role is 
+        from the 'administrator_email' property get it. If the role is
         requested at folder level, all 'maintainer_email' of the parent folders
         get it and eventually the portal 'administrator_email' gets it if there
         is no 'maintainer_email'
@@ -1557,26 +1557,26 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                                        password, organisation, comments,
                                        location)
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
-        
+
         if acl_tool.emailConfirmationEnabled():
             self.sendConfirmationEmail(firstname + ' ' + lastname, userinfo, email)
             message_body = 'Plase follow the link in your email in order to complete registration.'
         else:
             self.sendCreateAccountEmail(
-                p_to=location_maintainer_email, 
-                p_name=firstname + ' ' + lastname, 
+                p_to=location_maintainer_email,
+                p_name=firstname + ' ' + lastname,
                 p_email=email,
                 p_organisation=organisation,
-                p_username=username, 
+                p_username=username,
                 p_location_path=location_path,
-                p_location_title=location_title, 
+                p_location_title=location_title,
                 p_comments=comments)
             message_body = 'An account has been created for you. \
             The administrator will be informed of your request and may \
             or may not grant your account with the approriate role.'
         if not REQUEST:
             return message_body
-        
+
         self.setSession('title', 'Thank you for registering')
         self.setSession('body', message_body)
         return REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
@@ -1874,7 +1874,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_logos')
     def admin_logos(self, logo='', logobis='', del_leftlogo='', del_rightlogo='', REQUEST=None):
         """ Allows changing and deleting the left and right logos for a Naaya site.
-            Left and right logos are independent of the layout chosen and are images called 
+            Left and right logos are independent of the layout chosen and are images called
             'logo.gif' and 'logobis.gif' (or, for older versions of Naaya, 'logo' and 'logobis'
         """
         left_logo_ob = self.getLayoutTool()._getOb('logo.gif', None)
@@ -1912,8 +1912,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
     def admin_properties(self, REQUEST=None, **kwargs):
-        """ Update portal properties. 
-        
+        """ Update portal properties.
+
         The following properties are accepted:
         - show_releasedate: bool;
         - rename_id: bool;
@@ -1928,7 +1928,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """
         if REQUEST:
             kwargs.update(getattr(REQUEST, 'form', {}))
-        
+
         # Update portal properties
         self.rdf_max_items          = kwargs.get('rdf_max_items', 10)
         self.show_releasedate       = kwargs.get('show_releasedate', 0) and 1 or 0
@@ -1942,7 +1942,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.recaptcha_public_key   = kwargs.get('recaptcha_public_key', '')
         self.recaptcha_private_key  = kwargs.get('recaptcha_private_key', '')
         self.switch_language        = kwargs.get('switch_language', 0)
-        
+
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_properties_html' % self.absolute_url())
@@ -2034,7 +2034,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         msg = err = ''
         try:
-            userinfo = self.getAuthenticationTool().manage_addUser(name, 
+            userinfo = self.getAuthenticationTool().manage_addUser(name,
                             password, confirm, [], [], firstname, lastname,
                             email, strict)
         except Exception, error:
@@ -2043,7 +2043,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
         if not REQUEST:
             return userinfo
-        
+
         if err != '':
             self.setSessionErrors([err])
             self.setUserSession(name, [], [], firstname, lastname, email, '')
@@ -2051,7 +2051,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if msg != '':
             self.setSessionInfo([msg])
             REQUEST.RESPONSE.redirect('%s/admin_users_html' % self.absolute_url())
-                
+
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edituser')
     def admin_edituser(self, firstname='', lastname='', email='', name='', password='',
@@ -2344,7 +2344,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addmaintopics')
     def admin_addmaintopics(self, title='', lang=None, REQUEST=None):
         """ """
-        id = PREFIX_FOLDER + self.utGenRandomId(6)
+        id = self.utGenObjectId(title)
         addNyFolder(self, id=id, title=title, lang=lang)
         folder_ob = self.utGetObject(id)
         self.maintopics.append(folder_ob.absolute_url(1))
@@ -2388,16 +2388,16 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         for id in ids:
             try: self.maintopics.remove(id)
             except: pass
-            
+
             if not delref: continue
             doc = self.unrestrictedTraverse(id)
             if not doc: continue
-            
+
             parent = doc.aq_inner.aq_parent
             if not parent: continue
             try: parent.manage_delObjects([doc.getId(),])
             except: pass
-        
+
         self._p_changed = 1
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
@@ -2457,7 +2457,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def admin_addremotechannels_aggregator(self, title='', channels=[], portlet='', description='', REQUEST=None):
         """ """
         self.getSyndicationTool().manage_addChannelAggregator('', title, channels, portlet, description)
-        
+
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_remotechannels_aggregators_html' % self.absolute_url())
@@ -2890,7 +2890,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     #sending emails
     def sendConfirmationEmail(self, name, confirm_key, mto):
-        # Send confirmation email 
+        # Send confirmation email
         param = urllib.urlencode({'key': confirm_key})
         portal_url = self.portal_url or self.absolute_url()
         link = portal_url + '/confirm_user?' + param
@@ -2908,7 +2908,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
               'no-reply@' + portal_url.replace('http:', '', 1
                             ).replace('/', '').replace('www.', '')
         etool.sendEmail(mbody, mto, mfrom, msubj)
-        
+
     def sendAccountCreatedEmail(self, p_name, p_email, p_username, REQUEST, p_roles=[]):
         #sends a confirmation email to the newlly created account's owner
         email_template = self.getEmailTool()._getOb('email_createaccount')
@@ -2946,10 +2946,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         l_content = l_content.replace('@@TIMEOFREQUEST@@', str(p_error_time))
         self.getEmailTool().sendEmail(l_content, p_to, p_from, l_subject)
 
-    def sendCreateAccountEmail(self, p_to, p_name, p_email, p_organisation, 
+    def sendCreateAccountEmail(self, p_to, p_name, p_email, p_organisation,
                             p_username, p_location_path,
                             p_location_title, p_comments, **kwargs):
-                            
+
         #sends a request role email
         email_template = self.getEmailTool()._getOb('email_requestrole')
         l_subject = email_template.title
@@ -2959,7 +2959,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         l_content = l_content.replace('@@ORGANISATION@@', p_organisation)
         l_content = l_content.replace('@@USERNAME@@', p_username)
         l_content = l_content.replace('@@LOCATIONPATH@@', p_location_path)
-        
+
         if p_location_path:
             l_content = l_content.replace('@@LOCATION@@', "the %s folder (%s/%s)" % (p_location_title, self.portal_url, p_location_path))
         else:
@@ -3286,7 +3286,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(view, 'datetime_js')
     datetime_js = DTMLFile('zpt/calendar/datetime_js', globals())
-    
+
     #common javascript
     security.declareProtected(view, 'common_js')
     common_js = DTMLFile('zpt/common_js', globals())
@@ -3296,7 +3296,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(view, 'folder_lib_toolbar_buttons')
     folder_lib_toolbar_buttons = PageTemplateFile(
         'zpt/folder_lib_toolbar_buttons', globals())
-    
+
     security.declareProtected(view, 'macro_utils')
     macro_utils = PageTemplateFile('zpt/site_macro_utils', globals())
 
