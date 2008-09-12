@@ -150,6 +150,17 @@ class NyPermissions:
         """
         return self.checkPermission(PERMISSION_DELETE_OBJECTS)
 
+    def checkPermissionSkipCaptcha(self):
+        """
+        Check the permission to skip Captcha testing
+        """
+        return self.checkPermission(PERMISSION_SKIP_CAPTCHA)
+
+    security.declareProtected(PERMISSION_SKIP_CAPTCHA, 'skip_captcha')
+    def skip_captcha(self):
+        #bogus function used to register the SKIP_CAPTCHA permission
+        pass
+
     def checkPermissionEditObject(self):
         """
         Check the permissions to edit a single object. The user must have

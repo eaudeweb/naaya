@@ -41,6 +41,7 @@ PERMISSION_TRANSLATE_PAGES = 'Naaya - Translate pages'
 PERMISSION_VALIDATE_OBJECTS = 'Naaya - Validate content'
 PERMISSION_COMMENTS_ADD = 'Naaya - Add comments for content'
 PERMISSION_COMMENTS_MANAGE = 'Naaya - Manage comments for content'
+PERMISSION_SKIP_CAPTCHA = 'Naaya - Skip Captcha'
 
 # Exceptions
 EXCEPTION_NOTIMPLEMENTED = 'NotImplemented'
