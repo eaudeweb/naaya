@@ -35,7 +35,7 @@ from NyPhotoFolder import manage_addNyPhotoFolder as m_addNyPhotoFolder
 from photo_archive import photo_archive
 
 def manage_addNyPhotoGallery(self, id='', title='Photo Gallery', description='',
-                             coverage='', keywords='', sortorder=100, releasedate='', 
+                             coverage='', keywords='', sortorder=100, releasedate='',
                             lang=None, discussion=0, REQUEST=None, **kwargs):
     """
     Create a Photo Gallery.
@@ -43,14 +43,14 @@ def manage_addNyPhotoGallery(self, id='', title='Photo Gallery', description='',
     gallery_id = self.utCleanupId(id) or self.utGenObjectId(title)
     if not gallery_id:
         gallery_id = PREFIX_NYPHOTOGALLERY + self.utGenRandomId(6)
-    
+
     releasedate = self.process_releasedate()
     lang = lang or self.gl_get_selected_language()
     if self.glCheckPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
-    
+
     ob = NyPhotoGallery(gallery_id, title, lang,
                         description=description, coverage=coverage,
                         keywords=keywords, sortorder=sortorder,
@@ -59,10 +59,10 @@ def manage_addNyPhotoGallery(self, id='', title='Photo Gallery', description='',
     self.gl_add_languages(ob)
     self._setObject(gallery_id, ob)
     ob = self._getOb(gallery_id)
-    
+
     ob.submitThis()
     self.recatalogNyObject(ob)
-    
+
     #redirect if case
     if REQUEST is not None:
         return REQUEST.RESPONSE.redirect(self.absolute_url())
@@ -81,10 +81,10 @@ class NyPhotoGallery(NyAttributes, photo_archive, NyContainer):
     all_meta_types = (
         {'name': METATYPE_NYPHOTOFOLDER, 'action': 'photofolder_add_html'},
     )
-    
+
     security = ClassSecurityInfo()
     title = LocalProperty('title')
-    
+
     def __init__(self, id, title, lang, approved=0, approved_by='', **kwargs):
         self.id = id
         self.approved = approved
@@ -92,15 +92,19 @@ class NyPhotoGallery(NyAttributes, photo_archive, NyContainer):
         NyContainer.__init__(self)
         self.save_properties(title, lang, **kwargs)
 
+    def getObjectsForValidation(self): return [x for x in self.objectValues(self.get_pluggable_metatypes_validation()) if x.submitted==1]
+    def count_notok_objects(self): return len([x for x in self.getObjectsForValidation() if x.validation_status==-1 and x.submitted==1])
+    def count_notchecked_objects(self): return len([x for x in self.getObjectsForValidation() if x.validation_status==0 and x.submitted==1])
+
     def save_properties(self, title='', lang=None, description='', coverage='',
                         keywords='', sortorder=100, releasedate='',
                         discussion=0, **kwargs):
         if not lang:
             lang = self.gl_get_selected_language()
-        
+
         photo_archive.save_properties(self, title, description, coverage,
                                       keywords, sortorder, releasedate, lang)
-        
+
         if discussion:
             self.open_for_comments()
         else:
@@ -112,13 +116,13 @@ class NyPhotoGallery(NyAttributes, photo_archive, NyContainer):
         """ """
         if REQUEST:
             kwargs.update(REQUEST.form)
-        
+
         lang = kwargs.setdefault('lang', self.gl_get_selected_language())
         releasedate = kwargs.get('releasedate', '')
         kwargs['releasedate'] = self.process_releasedate(releasedate)
         self.save_properties(**kwargs)
         self.recatalogNyObject(self)\
-        
+
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
@@ -127,21 +131,21 @@ class NyPhotoGallery(NyAttributes, photo_archive, NyContainer):
     def getObjects(self):
         # Returns albums
         return [x for x in self.objectValues(METATYPE_NYPHOTOFOLDER) if x.checkPermissionView()]
-    
+
     def getPublishedObjects(self):
         return []
 
     def getPublishedFolders(self):
         return self.getObjects()
-    
+
     def getSortedObjects(self):
         return self.sort_objects(self.getObjects())
-    
+
     def sort_objects(self, sort_list=(), sort_by='sortorder', reverse=0):
         """ Sort a list of objects by given sort_by attr
         """
         return self.utSortObjsListByAttr(sort_list, sort_by, reverse)
-    
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'setSortOrder')
     def setSortOrder(self, REQUEST=None, **kwargs):
         """ Update objects order
@@ -196,7 +200,7 @@ class NyPhotoGallery(NyAttributes, photo_archive, NyContainer):
             if err != '': self.setSessionErrors([err])
             if msg != '': self.setSessionInfo([msg])
             REQUEST.RESPONSE.redirect('%s/restrict_html' % self.absolute_url())
-    
+
     security.declareProtected(PERMISSION_DELETE_OBJECTS, 'deleteObjects')
     security.declareProtected(PERMISSION_COPY_OBJECTS, 'copyObjects')
     security.declareProtected(PERMISSION_DELETE_OBJECTS, 'cutObjects')
@@ -205,22 +209,22 @@ class NyPhotoGallery(NyAttributes, photo_archive, NyContainer):
 
     security.declareProtected(PERMISSION_ADD_PHOTOFOLDER, 'manage_addNyPhotoFolder')
     manage_addNyPhotoFolder = m_addNyPhotoFolder
-    
+
     security.declareProtected(PERMISSION_ADD_PHOTOFOLDER, 'addNyPhotoFolder')
     addNyPhotoFolder = m_addNyPhotoFolder
-    
+
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/photogallery_index', globals())
-    
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     edit_html = PageTemplateFile('zpt/photogallery_edit', globals())
-    
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'sortorder_html')
     sortorder_html = PageTemplateFile('zpt/photoarchive_sortorder', globals())
-    
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'gallery_add_html')
     gallery_add_html = PageTemplateFile('zpt/photogallery_add', globals())
-    
+
     security.declareProtected(PERMISSION_ADD_PHOTOFOLDER, 'photofolder_add_html')
     photofolder_add_html = PageTemplateFile('zpt/photofolder_add', globals())
 
