@@ -70,7 +70,7 @@
 
 			<tal:block tal:content="structure python:test(stype, stype.render(mode='edit', datamodel=my_answer), 'Error')" />
 
-			<span tal:condition="not:here/checkPermissionAddAnswer" tal:replace="structure here/showCaptcha" />
+			<span tal:replace="structure here/showCaptcha" />
 
 			<tal:block condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'">
 				<tal:block condition="python:here.notify_respondents.startswith('LET_THEM_CHOOSE')">
