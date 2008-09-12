@@ -105,12 +105,12 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     #log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
-    
+
     # Set cache manager
     if not FOLDER_CACHE_MANAGER in self.getSite().objectIds():
         manage_addRAMCacheManager(self, FOLDER_CACHE_MANAGER)
     ob.ZCacheable_setManagerId(FOLDER_CACHE_MANAGER)
-    
+
     #redirect if case
     if REQUEST is not None:
         referer = REQUEST['HTTP_REFERER'].split('/')[-1]
@@ -202,7 +202,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, Cacheabl
     description = LocalProperty('description')
     coverage = LocalProperty('coverage')
     keywords = LocalProperty('keywords')
-    
+
     _dynamic_content_types = {}
 
     def all_meta_types(self, interfaces=None):
@@ -340,7 +340,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, Cacheabl
             exec(c)
         else:
             self.import_data_custom(self, object)
-    
+
     security.declarePublic('get_meta_type_label')
     def get_meta_type_label(self, meta_type=None):
         # Return label from meta_type
@@ -365,7 +365,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, Cacheabl
     def get_meta_types(self, folder=0):
         #returns a list with objects metatypes
         res = []
-        if folder==1: 
+        if folder==1:
             res.append(METATYPE_FOLDER)
         # Add Naaya Forum to subobjects list
         res.extend(self._dynamic_content_types.keys())
@@ -492,14 +492,14 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, Cacheabl
     def getPublishedFolders(self):
         folders = [x for x in self.objectValues(self.get_naaya_containers_metatypes()) if x.approved == 1 and x.submitted==1]
         return self.utSortObjsListByAttr(folders, 'sortorder', 0)
-    
+
     def getPublishedObjects(self, items=0):
         doc_metatypes = [m for m in self.get_meta_types() if m not in self.get_naaya_containers_metatypes()]
         res = [x for x in self.objectValues(doc_metatypes) if x.submitted==1 and x.approved==1]
         if items:
             return res[:items]
         return res
-    
+
     def getPublishedContent(self):
         r = self.getPublishedFolders()
         r.extend(self.getPublishedObjects())
@@ -618,7 +618,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, Cacheabl
                 return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
         else:
             self.getEmailTool().sendFeedbackEmail(l_to, username, email, comments)
-        if REQUEST: 
+        if REQUEST:
             self.setSession('title', 'Thank you for your feedback')
             self.setSession('body', 'The administrator will process your comments and get back to you.')
             return REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
@@ -686,7 +686,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, Cacheabl
             return fn, ln, em, acc, pwd, roles, created, updated
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_saveuser_credentials')
-    def admin_saveuser_credentials(self, name='', password='', confirm='', roles=[], domains=[], firstname='', 
+    def admin_saveuser_credentials(self, name='', password='', confirm='', roles=[], domains=[], firstname='',
         lastname='', email='', lastupdated='', REQUEST=None, RESPONSE=None):
         """ """
         self.setUserSession(name, '', '', firstname, lastname, email, '')
@@ -846,7 +846,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, Cacheabl
         self.createPublicInterface()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
-    security.declareProtected(view_management_screens, 'manageSubobjects')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'manageSubobjects')
     def manageSubobjects(self, REQUEST=None, **kwargs):
         """ """
         if REQUEST:
@@ -863,7 +863,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, Cacheabl
             redirect = REQUEST.get('redirect_url', 'manage_folder_subobjects_html')
             redirect += '?save=ok'
             REQUEST.RESPONSE.redirect(redirect)
-    
+
     security.declareProtected(view_management_screens, 'setMaintainer')
     def setMaintainer(self, maintainer_email):
         """ """
@@ -1307,17 +1307,17 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, Cacheabl
     security.declareProtected(view, 'check_item_title')
     def check_item_title(self, object, obj_title=''):
         """
-        Checks if the object has no display title and if it 
+        Checks if the object has no display title and if it
         has a title in at least one of the portal languages
         """
-        
+
         if isinstance(object, str): return 0
-        
+
         if obj_title == '':
             for lang in self.gl_get_languages():
                 if object.getLocalProperty('title', lang):
                     return 1
-                
+
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
@@ -1394,19 +1394,19 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, Cacheabl
         return self.getSyndicationTool().syndicateAtom(
             context=self, items=self.getPublishedObjects(items=items), lang=lang, REQUEST=REQUEST)
     index_atom = content_type_xml(cachable(index_atom))
-    
+
     security.declarePrivate('_getSwitchToLangDenyArgs')
     def _getSwitchToLangDenyArgs(self, meta_type=""):
         """ Return a list of keys to deny according with given meta_type
         """
-        deny_args = ('switch_to', 'from_lang', 'switchToLanguage', 
+        deny_args = ('switch_to', 'from_lang', 'switchToLanguage',
                      'file', 'source', 'subtitle_file', 'url',
                  )
         if meta_type in ('Naaya GeoPoint',):
             deny_args = tuple([x for x in deny_args if x != 'url'])
         if meta_type in ('Naaya Story', 'Naaya News'):
             deny_args = tuple([x for x in deny_args if x != 'source'])
-        
+
         # Custom filter by site
         site = self.getSite()
         custom_meth = getattr(site, '_getCustomSwitchToLangDenyArgs', None)
@@ -1431,22 +1431,22 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, Cacheabl
         lang = kwargs.get('lang', None)
         doc.manageProperties(lang=lang, approved=1)
         new_lang = kwargs.get('switch_to', None)
-        
+
         # Update attached files
         if doc.meta_type in ('Naaya Extended File',):
             files = doc.getFileItems()
             files[new_lang] = doc.getFileItem(lang)
             files = dict([(key, value) for key, value in files.items() if key != lang])
             doc.setFileItems(files)
-        
+
         # Create new translation
         kwargs['lang'] = new_lang
         deny_args = self._getSwitchToLangDenyArgs(doc.meta_type)
         kwargs = dict([(key, value) for key, value in kwargs.items()
                        if key not in deny_args])
-        
+
         doc.manageProperties(**kwargs)
-        
+
         # Return
         REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (doc.absolute_url(), new_lang))
 
@@ -1459,14 +1459,14 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, Cacheabl
         parents = REQUEST.get('PARENTS', None)
         if not parents:
             return
-        
+
         doc = parents[0]
         form = getattr(REQUEST, 'form', {})
         kwargs.update(form)
         # Update session info
         from_lang = kwargs.get('from_lang', None)
         lang = kwargs.get('lang', None)
-        
+
         version = getattr(doc, 'hasVersion', None) and doc.hasVersion()
         context = version and doc.version or doc
         for key, value in kwargs.items():
@@ -1481,7 +1481,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, Cacheabl
     def subobjects_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'folder_subobjects')
-    
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
