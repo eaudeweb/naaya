@@ -74,8 +74,8 @@ YGeoMapTool.prototype.createMarker = function(lat, lng, html, title, icon) {
 	var point = new YGeoPoint(lat, lng);
 	var marker = new YMarker(point, icon);
 	marker.setSmartWindowColor( "grey" );
-	YEvent.Capture(marker, EventsList.MouseClick, function() { 
-		marker.openSmartWindow(tooltip.toString());
+	YEvent.Capture(marker, EventsList.MouseClick, function() {
+		marker.openSmartWindow(html);
 	});
 	return marker;
 }
@@ -113,28 +113,28 @@ YGeoMapTool.prototype.addMarkerOnMap = function(marker) {
 
 /**
  * Initialize and display the map in the page.
- * @param center A location (address type) to center the map on, 
+ * @param center A location (address type) to center the map on,
  * ex.: Frankfurt, Germany
  * @param zoom Zoom factor for the map
  * @param enableScrollWheelZoom Enable/Disable zooming using mouse scroll wheel
  * and keyboard controls
- * @param map_types An array of map types available for the map. 
+ * @param map_types An array of map types available for the map.
  * Possible values in array: {"hybrid", "map", satellite"}
  */
 YGeoMapTool.prototype.showMap = function(center, zoom, enableScrollWheelZoom, map_types, initial_map_type) {
 	map = new YMap(document.getElementById("map"));
 	map.drawZoomAndCenter(center, zoom);
-	
+
 	var zp = new YCoordPoint(40,30); zp.translate('right','top');
 	map.addPanControl(zp);
 	var zp = new YCoordPoint(20,30); zp.translate('right','top');
 	map.addZoomLong(zp);
-	
+
 	init_type = YAHOO_MAP_REG;
 	if( "hybrid" == initial_map_type ) { init_type = YAHOO_MAP_HYB; }
 	if( "satellite" == initial_map_type ) { init_type = YAHOO_MAP_SAT; }
 	map.setMapType( init_type );
-	
+
 	var arrLayers = [];
 	for( i = 0; i < map_types.length; i++) {
 		if( "hybrid" == map_types[ i ] ) { arrLayers[arrLayers.length] = YAHOO_MAP_HYB; }
@@ -144,7 +144,7 @@ YGeoMapTool.prototype.showMap = function(center, zoom, enableScrollWheelZoom, ma
 	if( arrLayers.length > 1 ) {
 		map.addTypeControl(mapType=arrLayers);
 	}
-	
+
 
 	if(!enableScrollWheelZoom) {
 		map.disableKeyControls();
@@ -157,7 +157,7 @@ YGeoMapTool.prototype.showMap = function(center, zoom, enableScrollWheelZoom, ma
 YGeoMapTool.prototype.showCategoryServer = function(idCategory, show)
 {
 	var category = 'mk_' + idCategory;
-	// Look first into the cache to see if we didn't already loaded the 
+	// Look first into the cache to see if we didn't already loaded the
 	// points for this category
 	if( show && this.markerHash[ category ] == null ) {
 		// Cache miss, load points from server
@@ -185,21 +185,21 @@ YGeoMapTool.prototype.showCategory = function(idCategory)
 			{
 				marker.unhide();
 			}
-			else 
+			else
 			{
 				marker.hide();
 			}
 		}
 	}
 	this.updateRecordCounter();
-}  
+}
 
 YGeoMapTool.prototype.updateRecordCounter = function () {
 	counter = 0;
 	for( key in mapTool.markerHash) {
 		var markerArr = mapTool.markerHash[ key ];
 		for( i = 0; i < markerArr.length; i++ ) {
-			var marker = markerArr[ i ]; 
+			var marker = markerArr[ i ];
 			if( !marker.ishidden() ) counter++;
 		}
 	}
