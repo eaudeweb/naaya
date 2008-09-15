@@ -29,7 +29,7 @@ class CustomContentUpdater(NaayaContentUpdater):
 
     def _verify_doc(self, doc):
         # Verify ZODB storage
-        if not hasattr(doc, 'portal_control'):
+        if 'portal_control' not in doc.__dict__.keys():
             return doc
         logger.debug('%-15s %s', 'portal_control exists' , doc.absolute_url())
         return None
