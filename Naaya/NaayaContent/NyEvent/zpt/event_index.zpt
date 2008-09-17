@@ -16,7 +16,7 @@
 		<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit</span></a>
 	</tal:block>
 	<a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
-	<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()" i18n:translate="">This item has been checked out by another user</strong>
+	<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()" i18n:translate="">This item has been checked out by another user</strong> (<strong tal:content="here/checkout_user" />)
 </div>
 </tal:block>
 
@@ -45,12 +45,12 @@
 		<a tal:attributes="href here/location_url"
 		   tal:content="here/location"
 		   title="[Hold down the Shift key when you click on a link to open it in a new window]"
-		   i18n:attributes="title" /> 
+		   i18n:attributes="title" />
 			<span tal:replace="here/location_address" />
 		</tal:block>
 		<tal:block tal:condition="python:(here.location_url == '') or (here.location_url == 'http://')">
 		<span tal:replace="here/location" /> <span tal:replace="here/location_address" />
-		</tal:block> 
+		</tal:block>
 	</td>
 </tr>
 <tr tal:condition="here/host">

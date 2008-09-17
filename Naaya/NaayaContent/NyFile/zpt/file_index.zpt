@@ -21,7 +21,7 @@
 		<!-- XXX Backward compatible. Remove checkout control in Naaya 2.0 -->
 	</tal:comment>
 	<a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Version control</span></a>
-	<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()" i18n:translate="">This item has been checked out by another user</strong>
+	<strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()" i18n:translate="">This item has been checked out by another user</strong> (<strong tal:content="here/checkout_user" />)
 </div>
 </tal:block>
 
