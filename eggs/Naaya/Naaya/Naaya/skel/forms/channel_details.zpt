@@ -22,7 +22,7 @@
 
 <tal:block tal:condition="not:python:hasattr(ob_channel, 'url')">
 <h1 i18n:translate=""><span tal:content="python:ob_channel.title_or_id()" /></h1>
-<span i18n:translate="">RDF channels: </span> 
+<span i18n:translate="">RDF channels: </span>
 <ul>
 <li tal:repeat="channels python:ob_channel.get_channels()"><a tal:attributes="href channels/url"><span tal:content="channels/url" /></a></li>
 
@@ -35,7 +35,7 @@
 				[<span i18n:translate="">released on: </span> <span tal:content="item_date" />]<br />
 			</tal:block>
 			<tal:block define="item_summary item/summary|nothing" tal:condition="item_summary">
-				<span tal:content="item_summary" /><br />
+				<span tal:content="structure item_summary" /><br />
 			</tal:block>
 		</li>
 	</tal:block>
