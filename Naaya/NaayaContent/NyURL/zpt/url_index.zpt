@@ -51,7 +51,7 @@
 		<td>
 			<a tal:attributes="href here/locator"
 			   tal:content="here/locator"
-			   tal:attributes="title"
+			   i18n:attributes="title"
 			   title="[Hold down the Shift key when you click on a link to open it in a new window]" />
 		</td>
 	</tr>
