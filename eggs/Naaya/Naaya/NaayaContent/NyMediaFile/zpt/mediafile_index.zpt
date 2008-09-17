@@ -1,8 +1,8 @@
 <span tal:replace="structure here/standard_html_header" />
 
 <h1>
-  <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); 
-                       title here/meta_label; 
+  <img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
+                       title here/meta_label;
                        alt here/meta_label" />
   <span tal:replace="here/title_or_id" />
 		<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
@@ -21,11 +21,11 @@
     <a tal:attributes="href string:${here/absolute_url}/edit_html">
     <span i18n:translate="">Edit</span></a>
     </tal:block>
-    <a tal:condition="python:here.hasVersion() and here.isVersionAuthor()" 
+    <a tal:condition="python:here.hasVersion() and here.isVersionAuthor()"
     tal:attributes="href string:${here/absolute_url}/edit_html">
     <span i18n:translate="">Version control</span></a>
     <strong tal:condition="python:here.hasVersion() and not here.isVersionAuthor()"
-      i18n:translate="">This item has been checked out by another user</strong>
+      i18n:translate="">This item has been checked out by another user</strong> (<strong tal:content="here/checkout_user" />)
   </div>
 </tal:block>
 
@@ -60,10 +60,10 @@
   </tr>
 </table>
 
-<p tal:condition="python:here.description!=''" 
+<p tal:condition="python:here.description!=''"
    tal:content="structure here/description" />
 
-<tal:block 
+<tal:block
   tal:define="ready here/mediaReady">
     <div class="flvPlayer" tal:condition="ready"
       tal:define="here_url here/absolute_url;
@@ -76,13 +76,13 @@
     <object width="450" height="410"
       type="application/x-shockwave-flash"
       tal:attributes="data string:${player}?streamScript=${streamScript}&amp;flvpath=${flvpath}&amp;seekat=${seekat}&amp;subtitle=${subtitle}&amp;chapters=${chapters}">
-      <param name="movie" 
+      <param name="movie"
         tal:attributes="value string:${player}?streamScript=${streamScript}&amp;flvpath=${flvpath}&amp;seekat=${seekat}&amp;subtitle=${subtitle}&amp;chapters=${chapters}"/>
       <param name="quality" value="high" />
       <param name="bgcolor" value="#ffffff" />
       <param name="allowScriptAccess" value="sameDomain" />
       <div class="flashPlayerNotInstalled" i18n:translate="">
-        You must have Flash 9 or greater installed to watch this video. 
+        You must have Flash 9 or greater installed to watch this video.
         <a href="http://www.adobe.com/go/getflashplayer">Get Flash.</a>
       </div>
     </object>
@@ -99,7 +99,7 @@
     </div>
     <br /><br />
   </div>
-  
+
   <div tal:condition="not:ready"
     tal:define="broken here/mediaBroken">
     <div tal:condition="broken" class="flvPlayerBroken">
