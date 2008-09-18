@@ -218,7 +218,7 @@
 			<link id="110" title="Glossary" description="" url="/glossary_keywords" relative="1" permission="" order="110"/>
 			<link id="112" title="Other searches" description="" url="/external_search_html" relative="1" permission="" order="130"/>
 			<link id="109" title="Administration" description="" url="/admin_centre_html" relative="1" permission="" order="100"/>
-			<link id="108" title="Portal map" description="" url="/portal_map" relative="1" permission="" order="150"/>
+			<link id="113" title="Portal map" description="" url="/portal_map" relative="1" permission="" order="150"/>
 			<link id="108" title="Fora" description="" url="/portal_forum" relative="1" permission="" order="140"/>
 		</linkslist>
 		<linkslist id="menunav_content" title="Content" portlet="">
