@@ -17,12 +17,21 @@
 #
 # Alin Voinea, Eau de Web
 
+
+try:
+    import transaction
+    get_transaction = transaction.get
+except ImportError:
+    pass
+
 import time
-import transaction
+import os
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import base
 from Products.Naaya.NySite import manage_addNySite
 from AccessControl.SecurityManagement import newSecurityManager, noSecurityManager
+from StringIO import StringIO
+from Globals import package_home
 
 portal_name = 'portal'
 from Testing.ZopeTestCase import user_name
@@ -84,7 +93,7 @@ class DummyMessageCatalog:
 #-------------------------------------------------------------------------------
 class NaayaInstaller:
     def __init__(self, app, quiet=0):
-        if not quiet: 
+        if not quiet:
             ZopeTestCase._print('Adding Naaya Site ... ')
         self.app = app
         self._start = time.time()
@@ -126,9 +135,9 @@ class NaayaInstaller:
 
     def logout(self):
         noSecurityManager()
-        transaction.get().commit()
-        if not self._quiet: 
-            ZopeTestCase._print('done (%.3fs)\n' 
+        get_transaction().commit()
+        if not self._quiet:
+            ZopeTestCase._print('done (%.3fs)\n'
                 % (time.time() - self._start,))
 
 def setupPortal(PortalInstaller=NaayaInstaller):
@@ -144,6 +153,7 @@ class NaayaTestCase(base.TestCase):
     '''Base test case for testing Naaya portals'''
 
     _configure_portal = 1
+    home = package_home(globals())
 
     def setUp(self):
         '''Sets up the fixture. Do not override,
@@ -178,6 +188,13 @@ class NaayaTestCase(base.TestCase):
         '''
         return getattr(self.app, portal_name)
 
+    def loadFile(self, filename):
+        """ load a file"""
+        filename = os.path.sep.join([self.home, filename])
+        data = StringIO(open(filename, 'r').read())
+        data.filename = os.path.basename(filename)
+        return data
+
     def login(self, name=user_name):
         '''Logs in.'''
         uf = self.portal.acl_users
@@ -186,7 +203,7 @@ class NaayaTestCase(base.TestCase):
             user = user.__of__(uf)
         self.portal.REQUEST.AUTHENTICATED_USER = user
         newSecurityManager(None, user)
-        
+
     def logout(self):
         '''Logs out.'''
         noSecurityManager()
