@@ -18,6 +18,7 @@
 # Alin Voinea, Eau de Web
 
 import time
+import transaction
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import base
 from Products.Naaya.NySite import manage_addNySite
@@ -125,7 +126,7 @@ class NaayaInstaller:
 
     def logout(self):
         noSecurityManager()
-        get_transaction().commit()
+        transaction.get().commit()
         if not self._quiet: 
             ZopeTestCase._print('done (%.3fs)\n' 
                 % (time.time() - self._start,))
