@@ -59,7 +59,6 @@ def getCaseStudies(self, keywords='', topic='', scope='', coverage=''):
     results_objects = []
     btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate = 0, 0, 0, 0, 0, 0
     btn_paste = self.cb_dataValid() and self.checkPermissionPasteObjects()
-    print '/%s' % self.absolute_url(1)
 
     if keywords == '' and topic == '' and scope == '' and coverage == '':
         objects = self.getObjects()
