@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
 	<forms>
-		<form id="folder_index" title="NyFolder default view" />
-		<form id="site_index" title="Portal home page" />
-		<form id="site_login" title="Portal login" />
-		<form id="site_search" title="Search page" />
+		<form id="folder_index" title="NyFolder default view"/>
+		<form id="site_index" title="Portal home page"/>
+		<form id="site_login" title="Portal login"/>
+		<form id="site_search" title="Search page"/>
 		<form id="site_feedback" title="Portal feedback"/>
 		<form id="site_admin_updates" title="Portal administration - update/commit"/>
-		<form id="folder_menusubmissions" title="Menu submissions for folder" />
+		<form id="folder_menusubmissions" title="Menu submissions for folder"/>
 		<form id="projects_search" title="Search projects by country"/>
 		<form id="experts_search" title="Search experts by country"/>
 		<form id="languages_box" title="Box for changing the language on pages"/>
@@ -39,10 +39,10 @@
 				<image id="titl_bullet.gif" title=""/>
 				<image id="titl_bullet_ar.gif" title=""/>
 				<style id="style" title="Main CSS"/>
-				<style id="style_rtl" title="CSS for RTL languages" />
-				<style id="style_common_rtl" title="CSS for common elements for RTL languages" />
-				<style id="style_common" title="CSS for common elements" />
-				<style id="style_print" title="CSS for media print" />
+				<style id="style_rtl" title="CSS for RTL languages"/>
+				<style id="style_common_rtl" title="CSS for common elements for RTL languages"/>
+				<style id="style_common" title="CSS for common elements"/>
+				<style id="style_print" title="CSS for media print"/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="sort_asc.gif" title=""/>
 				<image id="sort_desc.gif" title=""/>
@@ -71,10 +71,10 @@
 				<image id="titl_bullet.gif" title=""/>
 				<image id="titl_bullet_ar.gif" title=""/>
 				<style id="style" title="Main CSS"/>
-				<style id="style_rtl" title="CSS for RTL languages" />
-				<style id="style_common_rtl" title="CSS for common elements for RTL languages" />
-				<style id="style_common" title="CSS for common elements" />
-				<style id="style_print" title="CSS for media print" />
+				<style id="style_rtl" title="CSS for RTL languages"/>
+				<style id="style_common_rtl" title="CSS for common elements for RTL languages"/>
+				<style id="style_common" title="CSS for common elements"/>
+				<style id="style_print" title="CSS for media print"/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
 				<image id="sort_asc.gif" title=""/>
 				<image id="sort_desc.gif" title=""/>
@@ -93,10 +93,10 @@
 	<portlets left="portlet_quick_links,portlet_places,portlet_left_side" center="portlet_latestuploads_rdf">
 		<portlet id="portlet_rdfcalendar" title="RDF Calendar"/>
 		<portlet id="portlet_submit_public" title="Submit Events &amp; News"/>
-		<portlet id="portlet_administration" title="Administration" />
-		<portlet id="portlet_left_side" title="Left-side navigation" />
+		<portlet id="portlet_administration" title="Administration"/>
+		<portlet id="portlet_left_side" title="Left-side navigation"/>
 		<!-- portlet id="portlet_places" title="Useful links" / -->
-		<portlet id="portlet_quick_links" title="Left-side quick links" />
+		<portlet id="portlet_quick_links" title="Left-side quick links"/>
 		<portlet id="portlet_folder_impex" title="Export/Import"/>
 		<linkslist id="menunav_links" title="Menu navigation links" portlet="1">
 			<link id="108" title="About us" description="" url="/about" relative="1" permission="" order="9"/>
@@ -335,8 +335,8 @@
 		</reflist>
 	</portlets>
 	<properties>
-		<language code="ar" />
-		<language code="fr" />
+		<language code="ar"/>
+		<language code="fr"/>
 	</properties>
 	<security>
 		<grouppermissions name="Add content" description="Create Naaya objects. Editing, publishing and deleting them are not granted as a part of thisprivilege."
