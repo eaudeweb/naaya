@@ -73,7 +73,7 @@ manage_addNySimpleConsultation_html.action = 'addNySimpleConsultation'
 
 simpleconsultation_add_html = PageTemplateFile('zpt/simpleconsultation_add', globals())
 
-def addNySimpleConsultation(self, id='', title='', description='', sortorder='', start_date='', end_date='', public_registration='', 
+def addNySimpleConsultation(self, id='', title='', description='', sortorder='', start_date='', end_date='', public_registration='',
                             allow_file='', contributor=None, releasedate='', lang=None, REQUEST=None, **kwargs):
     """
     Create a Naaya Simple Consultation type of object.
@@ -115,6 +115,7 @@ def addNySimpleConsultation(self, id='', title='', description='', sortorder='',
         #extra settings
         ob = self._getOb(id)
         ob.submitThis()
+        ob.approveThis(approved, approved_by)
         ob.updateRequestRoleStatus(public_registration, lang)
         ob.checkReviewerRole()
         self.recatalogNyObject(ob)
@@ -133,7 +134,7 @@ def addNySimpleConsultation(self, id='', title='', description='', sortorder='',
         if REQUEST is not None:
             self.setSessionErrors(r)
             self.set_pluggable_item_session(METATYPE_OBJECT, id=id, title=title, description=description, \
-                sortorder=sortorder, releasedate=releasedate, start_date=start_date, end_date=end_date, 
+                sortorder=sortorder, releasedate=releasedate, start_date=start_date, end_date=end_date,
                 allow_file=allow_file, public_registration=public_registration, lang=lang)
             REQUEST.RESPONSE.redirect('%s/simpleconsultation_add_html' % self.absolute_url())
         else:
@@ -171,24 +172,26 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
 
     security.declarePrivate('save_properties')
     def save_properties(self, title, description, sortorder, start_date, end_date, public_registration, allow_file, releasedate, lang):
-        
+
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('description', lang, description)
-        
+
         if not hasattr(self, 'imageContainer'):
             self.imageContainer = NyImageContainer(self, True)
-        
+
         if start_date:
             self.start_date = self.utConvertStringToDateTimeObj(start_date)
         else:
             self.start_date = self.utGetTodayDate()
-            
+
         if end_date:
             self.end_date = self.utConvertStringToDateTimeObj(end_date)
         else:
             self.end_date = self.utGetTodayDate()
-            
-        self.sortorder = sortorder
+
+        try: self.sortorder = abs(int(sortorder))
+        except: self.sortorder = DEFAULT_SORTORDER
+
         self.releasedate = releasedate
         self.public_registration = public_registration
         self.allow_file = allow_file
@@ -197,53 +200,57 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     def saveProperties(self, title='', description='', sortorder='', start_date='', end_date='',
                        public_registration='', allow_file='', file='', lang='', REQUEST=None):
         """ """
-        
+
         if not title:
             self.setSession('title', title)
             self.setSession('description', description)
             self.setSessionErrors(['The Title field must have a value.'])
-            return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
-        
+            if REQUEST:
+                return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+            else:
+                raise ValueError('The title field must have a value.')
+
         if file and not file.read():
             self.setSession('title', title)
             self.setSession('description', description)
             self.setSessionErrors(['File must not be empty'])
             return REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
-        
+
         exfile = self.get_exfile()
-        
+
         if file and exfile:
             exfile.saveUpload(file=file, lang=lang)
             downloadfilename=file.filename
             exfile._setLocalPropValue('downloadfilename', lang, downloadfilename)
         elif file and not exfile:
             addNyExFile(self, title=title, file=file, lang=lang, source='file')
-            
+
         releasedate = self.releasedate
         self.updateRequestRoleStatus(public_registration, lang)
         self.save_properties(title, description, sortorder, start_date, end_date, public_registration, allow_file, releasedate, lang)
-            
+
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
-    security.declareProtected(PERMISSION_MANAGE_SIMPLECONSULTATION, 'updateRequestRoleStatus')    
+    security.declareProtected(PERMISSION_MANAGE_SIMPLECONSULTATION, 'updateRequestRoleStatus')
     def updateRequestRoleStatus(self, public_registration, lang):
+        """ Allow public registration for this consultation """
         if public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, {'show_contributor_request_role': 'on'}), lang)
         if not public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, {'show_contributor_request_role': ''}), lang)
 
     security.declareProtected(PERMISSION_MANAGE_SIMPLECONSULTATION, 'checkReviewerRole')
     def checkReviewerRole(self):
         """
-        Checks if the 'Reviewer' role exists, 
+        Checks if the 'Reviewer' role exists,
         creates and adds review permissions if it doesn't exist
         """
-        
-        
+
+
         auth_tool = self.getAuthenticationTool()
         roles = auth_tool.list_all_roles()
         PERMISSION_GROUP = 'Review content'
-        
+
         if PERMISSION_GROUP not in auth_tool.listPermissions().keys():
             auth_tool.addPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', [PERMISSION_REVIEW_SIMPLECONSULTATION])
         else:
@@ -251,7 +258,7 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
             if PERMISSION_REVIEW_SIMPLECONSULTATION not in permissions:
                 permissions.append(PERMISSION_REVIEW_SIMPLECONSULTATION)
                 auth_tool.editPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', permissions)
-        
+
         if 'Reviewer' not in roles:
             auth_tool.addRole('Reviewer', [PERMISSION_GROUP])
         else:
@@ -259,7 +266,7 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
             if PERMISSION_GROUP not in role_permissions:
                 role_permissions.append(PERMISSION_GROUP)
                 auth_tool.editRole('Reviewer', role_permissions)
-                
+
         #give permissions to administrators
         admin_permissions = self.permissionsOfRole('Administrator')
         site = self.getSite()
@@ -270,46 +277,46 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     security.declareProtected(view, 'get_exfile')
     def get_exfile(self):
         """ Returns the first ExFile in the Simple Consultation, there should be only one. """
-        
+
         try:
             exfile = self.objectValues(['Naaya Extended File'])[0]
         except IndexError:
             exfile = None
-            
+
         return exfile
 
     security.declareProtected(view, 'check_exfile_for_lang')
     def check_exfile_for_lang(self, lang):
         """ Checks if there is a file uploaded for the given language. """
-       
+
         return self.get_exfile().getFileItem(lang).size > 0
 
     security.declareProtected(view, 'get_exfile_langs')
     def get_exfile_langs(self):
         """ Returns the languages for witch NyExFile contains files. """
-        
+
         return [language for language in self.getSite().gl_get_languages_map() if self.check_exfile_for_lang(language['id'])]
 
     security.declareProtected(view, 'get_start_date')
     def get_start_date(self):
         """ Returns the start date in dd/mm/yyyy string format. """
-        
+
         return self.utConvertDateTimeObjToString(self.start_date)
 
     security.declareProtected(view, 'get_end_date')
     def get_end_date(self):
         """ Returns the end date in dd/mm/yyyy string format. """
-        
+
         return self.utConvertDateTimeObjToString(self.end_date)
-    
+
     security.declareProtected(view, 'get_days_left')
     def get_days_left(self):
         """ Returns the remaining days for the consultation or the number of days before it starts """
-        
+
         today = self.utGetTodayDate().earliestTime()
         if not self.start_date or not self.end_date:
             return (1, 0)
-        
+
         if self.start_date.lessThanEqualTo(today):
             return (1, int(str(self.end_date - today).split('.')[0]))
         else:
@@ -318,7 +325,7 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     security.declareProtected(view_management_screens, 'manage_options')
     def manage_options(self):
         """ """
-        
+
         l_options = (NyContainer.manage_options[0],)
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
         return l_options
@@ -326,27 +333,27 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     security.declareProtected(view, 'check_contributor_comment')
     def check_contributor_comment(self, contributor='', REQUEST=None):
         """ Returns True if user already posted a comment """
-        
+
         if not contributor and REQUEST:
             contributor = REQUEST.AUTHENTICATED_USER.getUserName()
-            
+
         return contributor in [comment.contributor for comment in self.objectValues(['Simple Consultation Comment'])]
-        
+
     security.declareProtected(PERMISSION_REVIEW_SIMPLECONSULTATION, 'addComment')
     def addComment(self, title='', contributor_name='', message='', file='', REQUEST=None):
         """ """
-        
+
         if not title or not contributor_name or not message:
             self.setSession('title', title)
             self.setSession('contributor_name', contributor_name)
             self.setSession('message', message)
             self.setSessionErrors(['Fill in all mandatory fields.'])
             return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_simpleconsultation_comment')
-        
+
         contributor = REQUEST.AUTHENTICATED_USER.getUserName()
         if not self.allow_file: file = ''
         days = self.get_days_left()
-        
+
         if days[0] == 1 and days[1] > 0:
             if not self.check_contributor_comment(contributor):
                 addSimpleConsultationComment(self, title, contributor, contributor_name, message, file, REQUEST)
@@ -360,12 +367,12 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     def checkSimpleConsultationUser(self):
         """
         Checks if the user is logged in and has reviewer rights:
-        0 if user is anonymous, 
+        0 if user is anonymous,
         1 if user has reviewer role
         2 if user doesn't have reviewer role
         """
         review_check = self.checkPermissionReviewSimpleConsultation()
-        
+
         if self.isAnonymousUser(): return 0
         elif review_check: return 1
         elif not review_check: return 2
@@ -390,10 +397,10 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     #site pages
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/simpleconsultation_index', globals())
-    
+
     security.declareProtected(PERMISSION_MANAGE_SIMPLECONSULTATION, 'edit_html')
     edit_html = PageTemplateFile('zpt/simpleconsultation_edit', globals())
-    
+
     security.declareProtected(PERMISSION_REVIEW_SIMPLECONSULTATION, 'add_simpleconsultation_comment')
     add_simpleconsultation_comment = PageTemplateFile('zpt/simpleconsultation_comment_add', globals())
 
