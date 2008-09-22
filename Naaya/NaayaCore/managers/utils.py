@@ -292,6 +292,8 @@ class batch_utils:
 
     def __getCurrentPage(self):
         """ """
+        if self.nbr_row == 0:
+            return 0
         l_current_page, l_remainder = divmod(self.cur_position * self.__getNumberOfPages(), self.nbr_row)
         return l_current_page
 
