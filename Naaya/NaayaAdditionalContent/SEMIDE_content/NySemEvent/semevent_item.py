@@ -43,7 +43,7 @@ class semevent_item(NyProperties, NyFSContainer):
     duration =          LocalProperty('duration')
     file_link =         LocalProperty('file_link')
     file_link_copy =    LocalProperty('file_link_copy')
-    
+
     def __init__(self, title, description, coverage, keywords, sortorder,
         creator, creator_email, topitem, event_type, source, source_link,
         file_link, file_link_copy, subject, relation, organizer, duration,
@@ -67,6 +67,10 @@ class semevent_item(NyProperties, NyFSContainer):
             geozone, address, start_date, end_date, event_status, contact_person,
             contact_email, contact_phone, working_langs, releasedate, lang)
         NyProperties.__dict__['__init__'](self)
+
+        # XXX Fix NyMapControler HAACK !
+        if not isinstance(self.address, LocalProperty):
+            delattr(self, 'address')
 
     def save_properties(self, title, description, coverage, keywords, sortorder,
         creator, creator_email, topitem, event_type, source,
