@@ -261,13 +261,13 @@ class NySemEvent(NyAttributes, semevent_item, NyItem, NyCheckControl):
         contact_phone, working_langs, contributor, releasedate, lang, file=None):
         """ """
         self.id = id
+        NyCheckControl.__dict__['__init__'](self)
+        NyItem.__dict__['__init__'](self)
         semevent_item.__dict__['__init__'](self, title, description, coverage, keywords,
             sortorder, creator, creator_email, topitem, event_type, source,
             source_link, file_link, file_link_copy, subject, relation, organizer,
             duration, geozone, address, start_date, end_date, event_status,
             contact_person, contact_email, contact_phone, working_langs, releasedate, lang, file=file)
-        NyCheckControl.__dict__['__init__'](self)
-        NyItem.__dict__['__init__'](self)
         self.contributor = contributor
 
     security.declareProtected(view, 'resource_type')
@@ -384,7 +384,7 @@ class NySemEvent(NyAttributes, semevent_item, NyItem, NyCheckControl):
     def manageProperties(self, title='', description='', coverage='', keywords='',
         sortorder='', approved='', creator='', creator_email='', topitem='',
         event_type='', source='', source_link='', file_link='', file_link_copy='',
-        subject=[], relation='', organizer='', duration='', geozone='', address='', 
+        subject=[], relation='', organizer='', duration='', geozone='', address='',
         start_date='', end_date='', event_status='', contact_person='',
         contact_email='', contact_phone='', working_langs=[], releasedate='',
         discussion='', lang='', REQUEST=None, **kwargs):
@@ -446,7 +446,7 @@ class NySemEvent(NyAttributes, semevent_item, NyItem, NyCheckControl):
         self.event_status =     self.version.event_status
         self.releasedate =      self.version.releasedate
         self.releasedate =      self.version.releasedate
-        self.update_data(self.version.get_data(as_string=False), 
+        self.update_data(self.version.get_data(as_string=False),
                          self.version.getContentType(), self.version.get_size(),
                          self.downloadfilename(version=True))
         self.setProperties(deepcopy(self.version.getProperties()))
@@ -538,7 +538,7 @@ class NySemEvent(NyAttributes, semevent_item, NyItem, NyCheckControl):
             if self.hasVersion():
                 context = self.version
             context.handleUpload(attached_file)
-            
+
         # Update properties
         start_date = self.utConvertStringToDateTimeObj(start_date)
         end_date = self.utConvertStringToDateTimeObj(end_date)
@@ -627,7 +627,7 @@ class NySemEvent(NyAttributes, semevent_item, NyItem, NyCheckControl):
             return self.absolute_url() + '/download'
         file_path = (media_server,) + tuple(file_path)
         return '/'.join(file_path)
-    
+
     security.declarePublic('getEditDownloadUrl')
     def getEditDownloadUrl(self):
         """ """
