@@ -23,6 +23,8 @@
 from copy import copy
 
 #Zope imports
+import zLOG
+from zExceptions import BadRequest
 from OFS.Cache import Cacheable
 from DateTime import DateTime
 from Globals import InitializeClass
@@ -107,8 +109,11 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
     auth_tool.changeLastPost(contributor)
 
     # Set cache manager
-    if not FOLDER_CACHE_MANAGER in self.getSite().objectIds():
-        manage_addRAMCacheManager(self, FOLDER_CACHE_MANAGER)
+    if not FOLDER_CACHE_MANAGER in site.objectIds():
+        try:
+            manage_addRAMCacheManager(site, FOLDER_CACHE_MANAGER)
+        except BadRequest, err:
+            zLOG.LOG('Naaya.NyFolder.addNyFolder', zLOG.ERROR, err)
     ob.ZCacheable_setManagerId(FOLDER_CACHE_MANAGER)
 
     #redirect if case
