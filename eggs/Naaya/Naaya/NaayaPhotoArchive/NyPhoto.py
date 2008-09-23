@@ -67,7 +67,7 @@ def addNyPhoto(self, id='', title='', description='', coverage='', keywords='',
     if self.glCheckPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
-        approved, approved_by = 0, None
+        approved, approved_by = 1, None
     #create object
     
     # Fallback from album
@@ -108,7 +108,7 @@ class NyPhoto(NyAttributes, photo_archive, NyFSContainer):
     author = LocalProperty('author')
     source = LocalProperty('source')
 
-    def __init__(self, id, title, lang, approved=0, approved_by='', **kwargs):
+    def __init__(self, id, title, lang, approved=1, approved_by='', **kwargs):
         """ """
         #image stuff
         self.id = id
