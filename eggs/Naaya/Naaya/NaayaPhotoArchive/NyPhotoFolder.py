@@ -58,7 +58,7 @@ def manage_addNyPhotoFolder(self, id='', title='', description='', coverage='',
     if self.glCheckPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
-        approved, approved_by = 0, None
+        approved, approved_by = 1, None
 
     #create object
     ob = NyPhotoFolder(id, title, lang,
@@ -118,7 +118,7 @@ class NyPhotoFolder(NyAttributes, photo_archive, NyContainer):
     max_photos = 100
     photos_per_page = 50
 
-    def __init__(self, id, title, lang, approved=0, approved_by='', **kwargs):
+    def __init__(self, id, title, lang, approved=1, approved_by='', **kwargs):
         self.id = id
         self.quality = 100
         self.displays = DEFAULT_DISPLAYS.copy()
@@ -177,7 +177,7 @@ class NyPhotoFolder(NyAttributes, photo_archive, NyContainer):
             if self.glCheckPermissionPublishObjects():
                 approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
             else:
-                approved, approved_by = 0, None
+                approved, approved_by = 1, None
             ob = NyPhoto.NyPhoto(name, '', '', '', '', DEFAULT_SORTORDER, 0,
                 None, None, '', typ, DEFAULT_QUALITY,
                 self.displays.copy(), approved, approved_by,
