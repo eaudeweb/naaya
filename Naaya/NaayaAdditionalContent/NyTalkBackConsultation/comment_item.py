@@ -26,6 +26,7 @@ from DateTime import DateTime
 #Product imports
 from Products.NaayaBase.NyFSFile import NyFSFile
 
+
 def addComment(self, title='', contributor='', contributor_name='', message='', file='', REQUEST=None):
     """ """
 

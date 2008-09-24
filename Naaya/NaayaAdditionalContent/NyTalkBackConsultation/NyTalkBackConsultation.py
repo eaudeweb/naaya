@@ -38,14 +38,13 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
+from constants import *
 
 #Chapter
 from Chapter import addChapter
 from Chapter import addChapter_html
 
 #module constants
-PERMISSION_REVIEW_SIMPLECONSULTATION = 'Naaya - Review TalkBack Consultation'
-PERMISSION_MANAGE_SIMPLECONSULTATION = 'Naaya - Manage TalkBack Consultation'
 
 METATYPE_OBJECT = 'Naaya TalkBack Consultation'
 LABEL_OBJECT = 'TalkBack Consultation'
@@ -404,30 +403,30 @@ class NyTalkBackConsultation(NyAttributes,
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
         return l_options
 
-    security.declareProtected(PERMISSION_REVIEW_SIMPLECONSULTATION, 'addComment')
-    def addComment(self, title='', contributor_name='', message='', file='', REQUEST=None):
-        """ """
+    #security.declareProtected(PERMISSION_REVIEW_SIMPLECONSULTATION, 'addComment')
+    #def addComment(self, title='', contributor_name='', message='', file='', REQUEST=None):
+        #""" """
 
-        if not title or not contributor_name or not message:
-            self.setSession('title', title)
-            self.setSession('contributor_name', contributor_name)
-            self.setSession('message', message)
-            self.setSessionErrors(['Fill in all mandatory fields.'])
-            return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_talkbackconsultation_comment')
+        #if not title or not contributor_name or not message:
+            #self.setSession('title', title)
+            #self.setSession('contributor_name', contributor_name)
+            #self.setSession('message', message)
+            #self.setSessionErrors(['Fill in all mandatory fields.'])
+            #return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_talkbackconsultation_comment')
 
-        contributor = REQUEST.AUTHENTICATED_USER.getUserName()
-        if not self.allow_file: file = ''
-        days = self.get_days_left()
+        #contributor = REQUEST.AUTHENTICATED_USER.getUserName()
+        #if not self.allow_file: file = ''
+        #days = self.get_days_left()
 
-        if days[0] == 1 and days[1] > 0:
-            if not self.check_contributor_comment(contributor):
-                addTalkBackConsultationComment(self, title, contributor, contributor_name, message, file, REQUEST)
-            else:
-                return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_talkbackconsultation_comment?status=failed')
-        elif days[0] ==1 and days[1] <= 0:
-            return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_talkbackconsultation_comment?status=late')
-        elif days[0] <= 0:
-            return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_talkbackconsultation_comment?status=soon')
+        #if days[0] == 1 and days[1] > 0:
+            #if not self.check_contributor_comment(contributor):
+                #addTalkBackConsultationComment(self, title, contributor, contributor_name, message, file, REQUEST)
+            #else:
+                #return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_talkbackconsultation_comment?status=failed')
+        #elif days[0] ==1 and days[1] <= 0:
+            #return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_talkbackconsultation_comment?status=late')
+        #elif days[0] <= 0:
+            #return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_talkbackconsultation_comment?status=soon')
 
     def checkTalkBackConsultationUser(self):
         """
