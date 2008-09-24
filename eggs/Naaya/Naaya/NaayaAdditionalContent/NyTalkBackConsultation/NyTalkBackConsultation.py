@@ -38,7 +38,6 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
-from Products.NaayaContent.NyExFile.NyExFile import addNyExFile
 
 #Chapter
 from Chapter import addChapter

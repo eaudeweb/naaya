@@ -9,7 +9,6 @@ from Acquisition import Implicit
 #Product imports
 from comment_item import addComment
 
-addSection_html = PageTemplateFile('zpt/section_add', globals())
 
 def addSection(self, id='', title='', body='', REQUEST=None):
     id = self.utCleanupId(id)
