@@ -1,0 +1,5 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 i18n:translate="">Edit Chapter</h1>
+
+<span tal:replace="structure here/standard_html_footer" />
