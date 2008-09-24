@@ -8,6 +8,7 @@ from Acquisition import Implicit
 
 #Product imports
 from comment_item import addComment
+from constants import *
 
 
 def addSection(self, id='', title='', body='', REQUEST=None):
@@ -20,8 +21,19 @@ def addSection(self, id='', title='', body='', REQUEST=None):
 class Section(Folder):
 
     meta_type = 'TalkBack Section'
-    #all_meta_types = ()
+
     security = ClassSecurityInfo()
+
+    def all_meta_types( self, interfaces=None ):
+        """
+        Called by Zope to determine what
+        kind of object the envelope can contain
+        """
+        return [{'name': 'TalkBack Consultation Comment',
+              'action': 'addComment',
+              'permission': PERMISSION_REVIEW_SIMPLECONSULTATION}
+             ]
+
 
     def __init__(self, id, title, body):
         self.id =  id
@@ -52,6 +64,7 @@ class Section(Folder):
 
         self.get_chapter().manage_delObjects([next_section.id])
 
+    security.declareProtected(PERMISSION_REVIEW_SIMPLECONSULTATION, 'addComment')
     addComment = addComment
 
     #forms
