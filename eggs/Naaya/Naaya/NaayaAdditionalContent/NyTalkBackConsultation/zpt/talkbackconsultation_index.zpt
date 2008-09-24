@@ -1,0 +1,26 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<tal:block tal:define="lang python:test(request.get('lang'),request.get('lang'), here.gl_get_selected_language())">
+
+<h1 tal:content="here/title_or_id" />
+
+<div id="admin_this_folder" tal:condition="python:here.checkPermissionEditObject()">
+	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit TalkBack Consultation</span></a>
+	<a tal:attributes="href string:${here/absolute_url}/chapter_add_html"><span i18n:translate="">Add Chapter</span></a>
+</div>
+
+<p tal:content="structure python:here.getLocalProperty('description', lang)" />
+
+<tal:block repeat="chapter here/list_chapters">
+	<div>
+		<span tal:content="chapter/title_or_id" />
+		<a tal:attributes="href chapter/absolute_url" i18n:translate="">View</a>
+		<a tal:attributes="href string:${chapter/absolute_url}/edit_html" i18n:translate="">Edit</a>
+	</div>
+
+</tal:block>
+
+
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer" />

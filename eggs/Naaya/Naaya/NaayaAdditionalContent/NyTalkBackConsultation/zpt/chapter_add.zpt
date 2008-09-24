@@ -1,0 +1,24 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+
+<h1 i18n:translate="">Add TalkBack Consultation Chapter</h1>
+
+<form method="post" action="add_chapter">
+
+<div class="field">
+<label for="title" i18n:translate="">Title</label>
+<input type="text" id="title" name="title" />
+</div>
+
+<div class="field">
+	<label for="body" i18n:translate="">Body</label>
+	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('body', image_support=True)" />
+	<textarea id="body" name="body:utf8:ustring" rows="20" cols="72" class="mceEditor"></textarea>
+</div>
+
+<input type="submit" i18n:attributes="value" value="Add Chapter" />
+</form>
+
+
+<span tal:replace="structure here/standard_html_footer" />
