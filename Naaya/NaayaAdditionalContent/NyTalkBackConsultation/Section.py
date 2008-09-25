@@ -1,3 +1,23 @@
+# The contents of this file are subject to the Mozilla Public
+# License Version 1.1 (the "License"); you may not use this file
+# except in compliance with the License. You may obtain a copy of
+# the License at http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS
+# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+# implied. See the License for the specific language governing
+# rights and limitations under the License.
+#
+# The Initial Owner of the Original Code is European Environment
+# Agency (EEA).  Portions created by Eau de Web are
+# Copyright (C) European Environment Agency.  All
+# Rights Reserved.
+#
+# Authors:
+#
+# David Batranu, Eau de Web
+# Alex Morega, Eau de Web
+
 #Zope imports
 from OFS.Folder import Folder
 from Globals import InitializeClass
@@ -20,7 +40,7 @@ def addSection(self, id='', title='', body='', REQUEST=None):
 
 class Section(Folder):
 
-    meta_type = 'TalkBack Section'
+    meta_type = METATYPE_TALKBACKCONSULTATION_SECTION
 
     security = ClassSecurityInfo()
 
@@ -29,9 +49,9 @@ class Section(Folder):
         Called by Zope to determine what
         kind of object the envelope can contain
         """
-        return [{'name': 'TalkBack Consultation Comment',
+        return [{'name': METATYPE_TALKBACKCONSULTATION_COMMENT,
               'action': 'addComment',
-              'permission': PERMISSION_REVIEW_SIMPLECONSULTATION}
+              'permission': PERMISSION_REVIEW_TALKBACKCONSULTATION}
              ]
 
 
@@ -44,7 +64,7 @@ class Section(Folder):
         return 'naaaya-talkback-section-%s' % self.id
 
     def get_comments(self):
-        return self.objectValues(['TalkBack Consultation Comment'])
+        return self.objectValues([METATYPE_TALKBACKCONSULTATION_COMMENT])
 
     def merge_down(self):
         """ """
@@ -64,7 +84,7 @@ class Section(Folder):
 
         self.get_chapter().manage_delObjects([next_section.id])
 
-    security.declareProtected(PERMISSION_REVIEW_SIMPLECONSULTATION, 'addComment')
+    security.declareProtected(PERMISSION_REVIEW_TALKBACKCONSULTATION, 'addComment')
     addComment = addComment
 
     #forms

@@ -9,7 +9,7 @@
 # rights and limitations under the License.
 #
 # The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania and Eau de Web are
+# Agency (EEA).  Portions created by Eau de Web are
 # Copyright (C) European Environment Agency.  All
 # Rights Reserved.
 #
@@ -46,7 +46,7 @@ from Chapter import addChapter_html
 
 #module constants
 
-METATYPE_OBJECT = 'Naaya TalkBack Consultation'
+METATYPE_OBJECT = METATYPE_TALKBACKCONSULTATION
 LABEL_OBJECT = 'TalkBack Consultation'
 PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya TalkBack Consultation objects'
 OBJECT_FORMS = []
@@ -87,7 +87,7 @@ PROPERTIES_OBJECT = {
 manage_addNyTalkBackConsultation_html = PageTemplateFile(
     'zpt/talkbackconsultation_manage_add', globals()
 )
-manage_addNyTalkBackConsultation_html.kind = METATYPE_OBJECT
+manage_addNyTalkBackConsultation_html.kind = METATYPE_TALKBACKCONSULTATION
 manage_addNyTalkBackConsultation_html.action = 'addNyTalkBackConsultation'
 
 talkbackconsultation_add_html = PageTemplateFile(
@@ -124,7 +124,7 @@ def addNyTalkBackConsultation(self,
            l_referer.find('talkbackconsultation_manage_add') != -1) and REQUEST:
         r = self.getSite().\
           check_pluggable_item_properties(
-              METATYPE_OBJECT,
+              METATYPE_TALKBACKCONSULTATION,
               id=id,
               title=title,
               sortorder=sortorder,
@@ -161,7 +161,7 @@ def addNyTalkBackConsultation(self,
                                     releasedate, lang)
         self.gl_add_languages(ob)
         ob.createDynamicProperties(
-            self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs),
+            self.processDynamicProperties(METATYPE_TALKBACKCONSULTATION, REQUEST, kwargs),
             lang)
         self._setObject(id, ob)
         #extra settings
@@ -189,7 +189,7 @@ def addNyTalkBackConsultation(self,
         if REQUEST is not None:
             self.setSessionErrors(r)
             self.set_pluggable_item_session(
-                METATYPE_OBJECT,
+                METATYPE_TALKBACKCONSULTATION,
                 id=id,
                 title=title,
                 description=description,
@@ -216,7 +216,7 @@ class NyTalkBackConsultation(NyAttributes,
                              utils):
     """ """
 
-    meta_type = METATYPE_OBJECT
+    meta_type = METATYPE_TALKBACKCONSULTATION
     meta_label = LABEL_OBJECT
 
     all_meta_types = ()
@@ -297,7 +297,7 @@ class NyTalkBackConsultation(NyAttributes,
         self.public_registration = public_registration
         self.allow_file = allow_file
 
-    security.declareProtected(PERMISSION_MANAGE_SIMPLECONSULTATION,
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
                               'saveProperties')
     def saveProperties(self,
                        title='',
@@ -329,13 +329,13 @@ class NyTalkBackConsultation(NyAttributes,
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
-    security.declareProtected(PERMISSION_MANAGE_SIMPLECONSULTATION, 'updateRequestRoleStatus')
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'updateRequestRoleStatus')
     def updateRequestRoleStatus(self, public_registration, lang):
         """ Allow public registration for this consultation """
-        if public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, {'show_contributor_request_role': 'on'}), lang)
-        if not public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, {'show_contributor_request_role': ''}), lang)
+        if public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_TALKBACKCONSULTATION, {'show_contributor_request_role': 'on'}), lang)
+        if not public_registration: self.updateDynamicProperties(self.processDynamicProperties(METATYPE_TALKBACKCONSULTATION, {'show_contributor_request_role': ''}), lang)
 
-    security.declareProtected(PERMISSION_MANAGE_SIMPLECONSULTATION, 'checkReviewerRole')
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'checkReviewerRole')
     def checkReviewerRole(self):
         """
         Checks if the 'Reviewer' role exists,
@@ -348,11 +348,11 @@ class NyTalkBackConsultation(NyAttributes,
         PERMISSION_GROUP = 'Review content'
 
         if PERMISSION_GROUP not in auth_tool.listPermissions().keys():
-            auth_tool.addPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', [PERMISSION_REVIEW_SIMPLECONSULTATION])
+            auth_tool.addPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', [PERMISSION_REVIEW_TALKBACKCONSULTATION])
         else:
             permissions = auth_tool.getPermission(PERMISSION_GROUP).get('permissions', [])
-            if PERMISSION_REVIEW_SIMPLECONSULTATION not in permissions:
-                permissions.append(PERMISSION_REVIEW_SIMPLECONSULTATION)
+            if PERMISSION_REVIEW_TALKBACKCONSULTATION not in permissions:
+                permissions.append(PERMISSION_REVIEW_TALKBACKCONSULTATION)
                 auth_tool.editPermission(PERMISSION_GROUP, 'Allow posting reviews/comments to consultation objects.', permissions)
 
         if 'Reviewer' not in roles:
@@ -366,9 +366,9 @@ class NyTalkBackConsultation(NyAttributes,
         #give permissions to administrators
         admin_permissions = self.permissionsOfRole('Administrator')
         site = self.getSite()
-        if PERMISSION_MANAGE_SIMPLECONSULTATION not in admin_permissions:
-            site.manage_permission(PERMISSION_MANAGE_SIMPLECONSULTATION, ('Administrator', ), acquire=1)
-            site.manage_permission(PERMISSION_REVIEW_SIMPLECONSULTATION, ('Administrator', ), acquire=1)
+        if PERMISSION_MANAGE_TALKBACKCONSULTATION not in admin_permissions:
+            site.manage_permission(PERMISSION_MANAGE_TALKBACKCONSULTATION, ('Administrator', ), acquire=1)
+            site.manage_permission(PERMISSION_REVIEW_TALKBACKCONSULTATION, ('Administrator', ), acquire=1)
 
     security.declareProtected(view, 'get_start_date')
     def get_start_date(self):
@@ -403,7 +403,7 @@ class NyTalkBackConsultation(NyAttributes,
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
         return l_options
 
-    #security.declareProtected(PERMISSION_REVIEW_SIMPLECONSULTATION, 'addComment')
+    #security.declareProtected(PERMISSION_REVIEW_TALKBACKCONSULTATION, 'addComment')
     #def addComment(self, title='', contributor_name='', message='', file='', REQUEST=None):
         #""" """
 
@@ -446,13 +446,13 @@ class NyTalkBackConsultation(NyAttributes,
         """
         Check for reviewing the TalkBack Consultation.
         """
-        return self.checkPermission(PERMISSION_REVIEW_SIMPLECONSULTATION)
+        return self.checkPermission(PERMISSION_REVIEW_TALKBACKCONSULTATION)
 
     def checkPermissionManageTalkBackConsultation(self):
         """
         Check for managing the TalkBack Consultation.
         """
-        return self.checkPermission(PERMISSION_MANAGE_SIMPLECONSULTATION)
+        return self.checkPermission(PERMISSION_MANAGE_TALKBACKCONSULTATION)
 
 
 
@@ -477,7 +477,7 @@ class NyTalkBackConsultation(NyAttributes,
 
     def list_chapters(self):
         """ """
-        return self.objectValues(['TalkBack Chapter'])
+        return self.objectValues([METATYPE_TALKBACKCONSULTATION_CHAPTER])
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
@@ -487,10 +487,10 @@ class NyTalkBackConsultation(NyAttributes,
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/talkbackconsultation_index', globals())
 
-    security.declareProtected(PERMISSION_MANAGE_SIMPLECONSULTATION, 'edit_html')
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
     edit_html = PageTemplateFile('zpt/talkbackconsultation_edit', globals())
 
-    security.declareProtected(PERMISSION_MANAGE_SIMPLECONSULTATION, 'chapter_add_html')
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'chapter_add_html')
     chapter_add_html = addChapter_html
 
 InitializeClass(NyTalkBackConsultation)
