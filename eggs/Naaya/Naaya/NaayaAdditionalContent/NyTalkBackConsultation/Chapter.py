@@ -43,7 +43,6 @@ def addChapter(self, id='', title='', body='', REQUEST=None):
 
 
 class Chapter(Folder):
-
     meta_type = METATYPE_TALKBACKCONSULTATION_CHAPTER
     all_meta_types = ()
     security = ClassSecurityInfo()
@@ -53,9 +52,11 @@ class Chapter(Folder):
         self.title = title
         self.body = body
 
+    security.declareProtected(view, 'get_sections')
     def get_sections(self):
         return self.objectValues([METATYPE_TALKBACKCONSULTATION_SECTION])
 
+    security.declarePrivate('parseBody')
     def parseBody(self):
         output = parse(self.body)
         i = 0
@@ -64,10 +65,14 @@ class Chapter(Folder):
             addSection(self, id, body=section)
             i += 1
 
+    security.declareProtected(view, 'get_chapter')
     def get_chapter(self):
         return self
 
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
     edit_html = PageTemplateFile('zpt/chapter_edit', globals())
+
+    security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/chapter_index', globals())
 
 
