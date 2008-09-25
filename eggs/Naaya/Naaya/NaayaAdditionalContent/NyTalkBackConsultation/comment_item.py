@@ -9,7 +9,7 @@
 # rights and limitations under the License.
 #
 # The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania and Eau de Web are
+# Agency (EEA).  Portions created by Eau de Web are
 # Copyright (C) European Environment Agency.  All
 # Rights Reserved.
 #
@@ -25,6 +25,7 @@ from DateTime import DateTime
 
 #Product imports
 from Products.NaayaBase.NyFSFile import NyFSFile
+from constants import *
 
 
 def addComment(self, title='', contributor='', contributor_name='', message='', file='', REQUEST=None):
@@ -46,7 +47,7 @@ def addComment(self, title='', contributor='', contributor_name='', message='', 
 class TalkBackConsultationComment(NyFSFile):
     """ """
 
-    meta_type = 'TalkBack Consultation Comment'
+    meta_type = METATYPE_TALKBACKCONSULTATION_COMMENT
 
     manage_options = ()
 
