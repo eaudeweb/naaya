@@ -21,6 +21,7 @@
 #Zope imports
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens, view
 from DateTime import DateTime
 
 #Product imports
@@ -60,6 +61,7 @@ class TalkBackConsultationComment(NyFSFile):
         self.comment_date = DateTime()
         NyFSFile.__init__(self, id, title, file)
 
+    security.declareProtected(PERMISSION_REVIEW_TALKBACKCONSULTATION, 'handleUpload')
     def handleUpload(self, file=None):
         if not file: return
         self.filename = file.filename
@@ -67,6 +69,7 @@ class TalkBackConsultationComment(NyFSFile):
         content_type = self._get_content_type(file, data, self.__name__, 'application/octet-stream')
         self.update_data(data, content_type, size, file.filename)
 
+    security.declareProtected(view, 'get_talkback_file')
     def get_talkback_file(self, REQUEST, RESPONSE):
         """Download the attached file"""
 
@@ -77,9 +80,11 @@ class TalkBackConsultationComment(NyFSFile):
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         return self.index_html()
 
+    security.declareProtected(view, 'check_file')
     def check_file(self):
         return hasattr(self, 'filename')
 
+    security.declareProtected(view, 'get_comment_date')
     def get_comment_date(self):
         """ """
         return self.comment_date

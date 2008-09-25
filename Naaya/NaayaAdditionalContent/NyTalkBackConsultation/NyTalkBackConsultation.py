@@ -469,12 +469,14 @@ class NyTalkBackConsultation(NyAttributes,
 ###################################
 
 
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'add_chapter')
     def add_chapter(self, title='', body='',  REQUEST=None):
         """ """
         addChapter(self, title=title, body=body)
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
 
+    security.declareProtected(view, 'list_chapters')
     def list_chapters(self):
         """ """
         return self.objectValues([METATYPE_TALKBACKCONSULTATION_CHAPTER])
