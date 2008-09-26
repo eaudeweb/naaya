@@ -1,8 +1,0 @@
-<span tal:replace="structure here/standard_html_header" />
-
-    <h1 i18n:translate="">Comment added</h1>
-
-    <span i18n:translate="">Comment successfully added.</span>
-    <a tal:attributes="href python:here.get_chapter().absolute_url()+ '#' + here.get_anchor()" i18n:translate>Go Back.</a>
-
-<span tal:replace="structure here/standard_html_footer" />

@@ -9,6 +9,18 @@
 </div>
 
 <h1 tal:content="here/title_or_id" />
+
+<div id="admin_this_folder" tal:condition="python:here.checkPermissionEditObject()">
+	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit Chapter</span></a>
+</div>
+
+<div class="floated-buttons">
+	<span class="buttons">
+		<a tal:attributes="href python:here.get_consultation().absolute_url()" i18n:translate="">Back to consultation index</a>
+	</span>
+</div>
+<div class="cleaner" />
+
 <div class="talkback-chapter">
     <tal:block repeat="section here/get_sections">
         <a tal:attributes="name section/get_anchor" />

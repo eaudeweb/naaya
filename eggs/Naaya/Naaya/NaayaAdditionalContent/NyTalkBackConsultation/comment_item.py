@@ -20,6 +20,7 @@
 
 #Zope imports
 from Globals import InitializeClass
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from DateTime import DateTime
@@ -29,28 +30,61 @@ from Products.NaayaBase.NyFSFile import NyFSFile
 from constants import *
 
 
-def addComment(self, title='', contributor='', contributor_name='', message='', file='', REQUEST=None):
+def addComment(self,
+               title='',
+               contributor='',
+               contributor_name='',
+               message='',
+               file='',
+               REQUEST=None):
     """ """
 
-    id = 'scc' + self.utGenRandomId(6)
+    errors = []
+    if not contributor_name: errors.append('Please input your name.')
+    if not message: errors.append('The comment field cannot be empty.')
+    if errors:
+        self.setSessionErrors(errors)
+        if REQUEST is not None:
+            self.setSession('username', contributor_name)
+            self.setSession('message', message)
+            self.REQUEST.RESPONSE.redirect(self.absolute_url())
+        return
+    self.delSession('username')
+    self.delSession('message')
+
     if REQUEST and not contributor:
         contributor = REQUEST.AUTHENTICATED_USER.getUserName()
 
-    ob = TalkBackConsultationComment(id, title, contributor, contributor_name, message, file)
+    id = 'tb%s-%s' % (contributor, self.utGenRandomId(6))
+    title = '%s(%s)' % (contributor_name, contributor)
+
+    ob = TalkBackConsultationComment(id,
+                                     title,
+                                     contributor,
+                                     contributor_name,
+                                     message,
+                                     file)
     self._setObject(id, ob)
 
     ob = self._getOb(id)
     ob.handleUpload(file)
 
     if REQUEST is not None:
-        return REQUEST.RESPONSE.redirect(self.absolute_url() + '/comment_added')
+        anchor = self.get_anchor()
+        chapter = self.get_chapter()
+        ret_url = '%s/index_html#%s' % (chapter.absolute_url(), anchor)
+
+        return REQUEST.RESPONSE.redirect(ret_url)
 
 class TalkBackConsultationComment(NyFSFile):
     """ """
 
     meta_type = METATYPE_TALKBACKCONSULTATION_COMMENT
 
-    manage_options = ()
+    manage_options = ( { 'label' : 'View'
+                       , 'action' : 'manage_workspace'
+                       },
+                     ) + (NyFSFile.manage_options[0], )
 
     security = ClassSecurityInfo()
 
@@ -61,12 +95,14 @@ class TalkBackConsultationComment(NyFSFile):
         self.comment_date = DateTime()
         NyFSFile.__init__(self, id, title, file)
 
-    security.declareProtected(PERMISSION_REVIEW_TALKBACKCONSULTATION, 'handleUpload')
+    security.declareProtected(
+        PERMISSION_REVIEW_TALKBACKCONSULTATION, 'handleUpload')
     def handleUpload(self, file=None):
         if not file: return
         self.filename = file.filename
         data, size = self._read_data(file)
-        content_type = self._get_content_type(file, data, self.__name__, 'application/octet-stream')
+        content_type = self._get_content_type(
+            file, data, self.__name__, 'application/octet-stream')
         self.update_data(data, content_type, size, file.filename)
 
     security.declareProtected(view, 'get_talkback_file')
@@ -75,7 +111,9 @@ class TalkBackConsultationComment(NyFSFile):
 
         RESPONSE.setHeader('Content-Type', self.content_type)
         RESPONSE.setHeader('Content-Length', self.size)
-        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.filename))
+        RESPONSE.setHeader('Content-Disposition',
+                           'attachment;filename=' + self.utToUtf8(self.filename)
+                           )
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         return self.index_html()
@@ -88,5 +126,7 @@ class TalkBackConsultationComment(NyFSFile):
     def get_comment_date(self):
         """ """
         return self.comment_date
+
+    manage_workspace = PageTemplateFile('zpt/manage_comment', globals())
 
 InitializeClass(TalkBackConsultationComment)

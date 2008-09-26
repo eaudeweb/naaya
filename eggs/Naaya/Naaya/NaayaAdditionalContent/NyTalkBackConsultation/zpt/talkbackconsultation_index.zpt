@@ -9,17 +9,34 @@
 	<a tal:attributes="href string:${here/absolute_url}/chapter_add_html"><span i18n:translate="">Add Chapter</span></a>
 </div>
 
+<div class="consultation_right_box" tal:define="days_left python:here.get_days_left()">
+	<tal:block tal:condition="python:days_left[0] == 1 and days_left[1] > 0"><span tal:content="python:days_left[1]" class="consultation_day_counter" /> <span i18n:translate="">day(s) left for this consultation.</span></tal:block>
+	<tal:block tal:condition="python:days_left[0] == 0 and days_left[1] > 0"><span tal:content="python:days_left[1]" class="consultation_day_counter" /> <span i18n:translate="">day(s) until this consultation starts.</span></tal:block>
+	<span tal:condition="python:days_left[1] <= 0" class="consultation_day_counter" i18n:translate="">Consultation deadline has been reached.</span>
+	<a class="consultation-special-button" tal:condition="python:here.checkTalkBackConsultationUser() == 2 and here.public_registration" tal:attributes="href string:${here/absolute_url}/add_simpleconsultation_comment">Apply for reviewer rights</a>
+	<p tal:condition="python:days_left[1] <= 0" i18n:translate="">Comments are disabled since the deadline for this consultation has passed.</p>
+</div>
+
+<div class="cleaner" />
+
 <p tal:content="structure python:here.getLocalProperty('description', lang)" />
 
-<tal:block repeat="chapter here/list_chapters">
-	<div>
-		<span tal:content="chapter/title_or_id" />
-		<a tal:attributes="href chapter/absolute_url" i18n:translate="">View</a>
-		<a tal:attributes="href string:${chapter/absolute_url}/edit_html" i18n:translate="">Edit</a>
-	</div>
-
-</tal:block>
-
+<table class="datatable">
+<thead>
+	<tr>
+		<th i8n:translate="">Chapter title</th>
+		<th i8n:translate="">View</th>
+		<th i8n:translate="">Edit</th>
+	</tr>
+</thead>
+<tbody>
+	<tr tal:repeat="chapter here/list_chapters">
+		<td tal:content="chapter/title_or_id"></td>
+		<td><a tal:attributes="href chapter/absolute_url" i18n:translate="">View</a></td>
+		<td><a tal:attributes="href string:${chapter/absolute_url}/edit_html" i18n:translate="">Edit</a></td>
+	</tr>
+</tbody>
+</table>
 
 </tal:block>
 

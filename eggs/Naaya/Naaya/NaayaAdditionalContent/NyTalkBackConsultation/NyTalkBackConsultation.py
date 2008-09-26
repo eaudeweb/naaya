@@ -56,7 +56,8 @@ OBJECT_CONSTRUCTORS = ['manage_addNyTalkBackConsultation_html',
 OBJECT_ADD_FORM = 'talkbackconsultation_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya TalkBack Consultation type.'
 PREFIX_OBJECT = 'tbcns'
-ADDITIONAL_STYLE = PageTemplateFile('zpt/talkbackconsultation_style', globals()).read()
+ADDITIONAL_STYLE = PageTemplateFile('zpt/talkbackconsultation_style',
+                                    globals()).read()
 PROPERTIES_OBJECT = {
     'id':                  (0, '', ''),
     'title':               (1,
@@ -363,12 +364,28 @@ class NyTalkBackConsultation(NyAttributes,
                 role_permissions.append(PERMISSION_GROUP)
                 auth_tool.editRole('Reviewer', role_permissions)
 
-        #give permissions to administrators
+        #give permissions to administrators and reviewers
         admin_permissions = self.permissionsOfRole('Administrator')
         site = self.getSite()
         if PERMISSION_MANAGE_TALKBACKCONSULTATION not in admin_permissions:
             site.manage_permission(PERMISSION_MANAGE_TALKBACKCONSULTATION, ('Administrator', ), acquire=1)
-            site.manage_permission(PERMISSION_REVIEW_TALKBACKCONSULTATION, ('Administrator', ), acquire=1)
+            site.manage_permission(PERMISSION_REVIEW_TALKBACKCONSULTATION, ('Administrator', 'Reviewer', ), acquire=1)
+
+    security.declareProtected(view, 'get_consultation')
+    def get_consultation(self):
+        return self
+
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'add_chapter')
+    def add_chapter(self, title='', body='',  REQUEST=None):
+        """ """
+        addChapter(self, title=title, body=body)
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+
+    security.declareProtected(view, 'list_chapters')
+    def list_chapters(self):
+        """ """
+        return self.objectValues([METATYPE_TALKBACKCONSULTATION_CHAPTER])
 
     security.declareProtected(view, 'get_start_date')
     def get_start_date(self):
@@ -400,33 +417,14 @@ class NyTalkBackConsultation(NyAttributes,
         """ """
 
         l_options = (NyContainer.manage_options[0],)
-        l_options += ({'label': 'View', 'action': 'index_html'},) + NyContainer.manage_options[3:8]
+        l_options += ({'label': 'View', 'action': 'index_html'},) + \
+                  NyContainer.manage_options[3:8]
         return l_options
 
-    #security.declareProtected(PERMISSION_REVIEW_TALKBACKCONSULTATION, 'addComment')
-    #def addComment(self, title='', contributor_name='', message='', file='', REQUEST=None):
-        #""" """
-
-        #if not title or not contributor_name or not message:
-            #self.setSession('title', title)
-            #self.setSession('contributor_name', contributor_name)
-            #self.setSession('message', message)
-            #self.setSessionErrors(['Fill in all mandatory fields.'])
-            #return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_talkbackconsultation_comment')
-
-        #contributor = REQUEST.AUTHENTICATED_USER.getUserName()
-        #if not self.allow_file: file = ''
-        #days = self.get_days_left()
-
-        #if days[0] == 1 and days[1] > 0:
-            #if not self.check_contributor_comment(contributor):
-                #addTalkBackConsultationComment(self, title, contributor, contributor_name, message, file, REQUEST)
-            #else:
-                #return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_talkbackconsultation_comment?status=failed')
-        #elif days[0] ==1 and days[1] <= 0:
-            #return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_talkbackconsultation_comment?status=late')
-        #elif days[0] <= 0:
-            #return REQUEST.RESPONSE.redirect(self.absolute_url() + '/add_talkbackconsultation_comment?status=soon')
+    def get_user_name(self):
+        return self.getAuthenticationTool().getUserFullName(
+            self.REQUEST.AUTHENTICATED_USER
+        )
 
     def checkTalkBackConsultationUser(self):
         """
@@ -453,33 +451,6 @@ class NyTalkBackConsultation(NyAttributes,
         Check for managing the TalkBack Consultation.
         """
         return self.checkPermission(PERMISSION_MANAGE_TALKBACKCONSULTATION)
-
-
-
-
-
-
-
-
-
-
-
-###################################
-######TalkBack section, move to top
-###################################
-
-
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'add_chapter')
-    def add_chapter(self, title='', body='',  REQUEST=None):
-        """ """
-        addChapter(self, title=title, body=body)
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
-
-    security.declareProtected(view, 'list_chapters')
-    def list_chapters(self):
-        """ """
-        return self.objectValues([METATYPE_TALKBACKCONSULTATION_CHAPTER])
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
