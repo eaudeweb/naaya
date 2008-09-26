@@ -110,8 +110,7 @@ class Section(Folder):
     addComment = addComment
 
     #forms
-    security.declareProtected(
-        PERMISSION_REVIEW_TALKBACKCONSULTATION, 'index_html')
+    security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/section_index', globals())
 
 InitializeClass(Section)

@@ -2,6 +2,8 @@
 
 <div tal:content="structure here/body" />
 
+<tal:block define="cannot_comment here/check_cannot_comment">
+
 <div class="talkback-comments_list" tal:define="comments here/get_comments">
     <h2 i18n:translate="" tal:condition="comments">Comments</h2>
     <fieldset tal:repeat="comment comments">
@@ -11,7 +13,7 @@
     </fieldset>
 </div>
 
-<div class="talkback-add_comment_form">
+<div class="talkback-add_comment_form" tal:condition="not:cannot_comment">
         <h2 i18n:translate="">Add a comment</h2>
 
         <p><span i18n:translate="">Fill the properties in the form below and click</span> <strong i18n:translate="">Add comment</strong>. <span i18n:translate="">Fields marked with</span> <span class="mandatory_field">*</span> <span i18n:translate="">are mandatory.</span></p>
@@ -38,5 +40,15 @@
                 <input type="submit" value="Add comment" />
         </form>
 </div>
+
+
+<div tal:condition="python:cannot_comment">
+        <p>
+        You cannont post comments to this consultation because <span tal:content="cannot_comment" i18n:translate="" />
+        </p>
+        <a tal:attributes="href python:here.get_chapter().absolute_url()" i18n:translate="">Return to chapter</a>
+</div>
+
+</tal:block>
 
 <span tal:replace="structure here/standard_html_footer" />

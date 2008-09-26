@@ -35,12 +35,32 @@ from constants import *
 
 addChapter_html = PageTemplateFile('zpt/chapter_add', globals())
 def addChapter(self, id='', title='', body='', REQUEST=None):
+    """ """
+
+    errors = []
+    if not title:
+        errors.append('The title field must have a value')
+    if not body:
+        errors.append('The chapter must have a body')
+    if errors:
+        self.setSessionErrors(errors)
+        if REQUEST is not None:
+            self.setSession('title', title)
+            self.setSession('body', body)
+            self.REQUEST.RESPONSE.redirect(self.absolute_url() +
+                                           '/chapter_add_html')
+        return
+    self.delSession('title')
+    self.delSession('body')
+
     id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(title)
+    if not id: id = '%s-%s' % (self.utGenObjectId(title), self.utGenRandomId(6))
     ob = Chapter(id, title, body)
     self._setObject(id, ob)
     ob = self._getOb(id)
     ob.parseBody()
+    if REQUEST is not None:
+        self.REQUEST.RESPONSE.redirect(self.absolute_url())
 
 
 class Chapter(Folder):
