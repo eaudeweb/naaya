@@ -1,4 +1,6 @@
 <span tal:replace="structure here/standard_html_header" />
+
+<div class="talkback-add_comment_form">
         <h1 i18n:translate="">Add a comment</h1>
 
         <p><span i18n:translate="">Fill the properties in the form below and click</span> <strong i18n:translate="">Add comment</strong>. <span i18n:translate="">Fields marked with</span> <span class="mandatory_field">*</span> <span i18n:translate="">are mandatory.</span></p>
@@ -23,4 +25,6 @@
                 <br />
                 <input type="submit" value="Add comment" />
         </form>
+</div>
+
 <span tal:replace="structure here/standard_html_footer" />

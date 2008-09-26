@@ -13,16 +13,14 @@
     <tal:block repeat="section here/get_sections">
         <a tal:attributes="name section/get_anchor" />
             <span tal:replace="structure section/body" />
-            <fieldset tal:repeat="comment section/get_comments">
-                <legend><span tal:replace="comment/contributor"/> (<span tal:replace="comment/contributor_name"/>) <span tal:replace="python:here.utShowFullDateTime(comment.comment_date)"/></legend>
-                <p class="tb-comment-message" tal:content="comment/message" />
-                <a tal:attributes="href string:${comment/absolute_url}/get_talkback_file" i18n:translate="" tal:condition="comment/check_file">Download attached file</a>
-            </fieldset>
-            <a i18n:translate="" tal:attributes="href string:${section/absolute_url}/index_html">Add Comment</a>
-            <a i18n:translate=""
-                tal:attributes="href string:${section/absolute_url}/merge_down"
-                tal:condition="python:here.checkPermissionManageTalkBackConsultation() and not repeat['section'].end"
-                >Merge with next section</a>
+            <div tal:attributes="id python:'talkback-comments_for-%s' % section.id">
+                <fieldset tal:repeat="comment section/get_comments">
+                    <legend><span tal:replace="comment/contributor"/> (<span tal:replace="comment/contributor_name"/>) <span tal:replace="python:here.utShowFullDateTime(comment.comment_date)"/></legend>
+                    <p class="tb-comment-message" tal:content="comment/message" />
+                    <a tal:attributes="href string:${comment/absolute_url}/get_talkback_file" i18n:translate="" tal:condition="comment/check_file">Download attached file</a>
+                </fieldset>
+                <a i18n:translate="" tal:attributes="href string:${section/absolute_url}" class="talkback-add_comment">Add Comment</a>
+            </div>
     </tal:block>
 </div>
 <span tal:replace="structure here/standard_html_footer" />
