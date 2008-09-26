@@ -53,6 +53,10 @@ class Chapter(Folder):
         self.title = title
         self.body = body
 
+    security.declareProtected(view, 'get_chapter')
+    def get_chapter(self):
+        return self
+
     security.declareProtected(view, 'get_sections')
     def get_sections(self):
         return self.objectValues([METATYPE_TALKBACKCONSULTATION_SECTION])
@@ -65,10 +69,6 @@ class Chapter(Folder):
             id = '%03d' % i
             addSection(self, id, body=section)
             i += 1
-
-    security.declareProtected(view, 'get_chapter')
-    def get_chapter(self):
-        return self
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
     edit_html = PageTemplateFile('zpt/chapter_edit', globals())

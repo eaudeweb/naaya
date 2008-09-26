@@ -60,6 +60,10 @@ class Section(Folder):
         self.title = title
         self.body = body
 
+    security.declareProtected(view, 'get_section')
+    def get_section(self):
+        return self
+
     security.declareProtected(view, 'get_anchor')
     def get_anchor(self):
         return 'naaaya-talkback-section-%s' % self.id
@@ -68,7 +72,8 @@ class Section(Folder):
     def get_comments(self):
         return self.objectValues([METATYPE_TALKBACKCONSULTATION_COMMENT])
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'merge_down')
+    security.declareProtected(
+        PERMISSION_MANAGE_TALKBACKCONSULTATION, 'merge_down')
     def merge_down(self, REQUEST):
         """ """
 
@@ -88,7 +93,8 @@ class Section(Folder):
         # merge the sections - body and comments
         self.body += next_section.body
 
-        comment_ids = [comment.getId() for comment in next_section.get_comments()]
+        comment_ids = [comment.getId() for comment in \
+                       next_section.get_comments()]
         objs = next_section.manage_copyObjects(comment_ids)
         self.manage_pasteObjects(objs)
 
@@ -96,16 +102,16 @@ class Section(Folder):
         self.get_chapter().manage_delObjects([next_section.id])
 
         # refresh the chapter page
-        REQUEST.RESPONSE.redirect( "%s#%s" % (self.get_chapter().absolute_url(), self.get_anchor()) )
+        REQUEST.RESPONSE.redirect( "%s#%s" % (self.get_chapter().absolute_url(),
+                                              self.get_anchor()) )
 
-    security.declareProtected(PERMISSION_REVIEW_TALKBACKCONSULTATION, 'addComment')
+    security.declareProtected(
+        PERMISSION_REVIEW_TALKBACKCONSULTATION, 'addComment')
     addComment = addComment
 
     #forms
-    security.declareProtected(PERMISSION_REVIEW_TALKBACKCONSULTATION, 'index_html')
+    security.declareProtected(
+        PERMISSION_REVIEW_TALKBACKCONSULTATION, 'index_html')
     index_html = PageTemplateFile('zpt/section_index', globals())
-
-    security.declareProtected(view, 'comment_added')
-    comment_added = PageTemplateFile('zpt/comment_added', globals())
 
 InitializeClass(Section)
