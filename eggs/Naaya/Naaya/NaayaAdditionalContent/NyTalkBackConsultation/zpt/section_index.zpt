@@ -1,9 +1,18 @@
 <span tal:replace="structure here/standard_html_header" />
 
-<div class="talkback-add_comment_form">
-        <h1 i18n:translate="">Add a comment</h1>
+<div tal:content="structure here/body" />
 
-        <div tal:content="structure here/body" />
+<div class="talkback-comments_list" tal:define="comments here/get_comments">
+    <h2 i18n:translate="" tal:condition="comments">Comments</h2>
+    <fieldset tal:repeat="comment comments">
+        <legend><span tal:replace="comment/contributor"/> (<span tal:replace="comment/contributor_name"/>) <span tal:replace="python:here.utShowFullDateTime(comment.comment_date)"/></legend>
+        <p class="tb-comment-message" tal:content="comment/message" />
+        <a tal:attributes="href string:${comment/absolute_url}/get_talkback_file" i18n:translate="" tal:condition="comment/check_file">Download attached file</a>
+    </fieldset>
+</div>
+
+<div class="talkback-add_comment_form">
+        <h2 i18n:translate="">Add a comment</h2>
 
         <p><span i18n:translate="">Fill the properties in the form below and click</span> <strong i18n:translate="">Add comment</strong>. <span i18n:translate="">Fields marked with</span> <span class="mandatory_field">*</span> <span i18n:translate="">are mandatory.</span></p>
 
