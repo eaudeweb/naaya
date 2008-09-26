@@ -1,5 +1,13 @@
 <span tal:replace="structure here/standard_html_header" />
 
+<script src="jquery_js" type="text/javascript"></script>
+<script src="chapter_js" type="text/javascript" charset="utf-8"></script>
+
+<div class="talkback-show_hide_comments" style="display:none; float:right;">
+    <a href="javascript:;" class="talkback-show_comments" style="display: none;"><span i18n:translate="">Show comments</span></a>
+    <a href="javascript:;" class="talkback-hide_comments" style="display: none;"><span i18n:translate="">Hide comments</span></a>
+</div>
+
 <h1 tal:content="here/title_or_id" />
 <div class="talkback-chapter">
     <tal:block repeat="section here/get_sections">

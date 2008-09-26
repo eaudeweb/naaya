@@ -24,6 +24,7 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from App.ImageFile import ImageFile
 from Acquisition import Implicit
 
 #Product imports
@@ -75,5 +76,10 @@ class Chapter(Folder):
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/chapter_index', globals())
 
+    security.declareProtected(view, 'jquery_js')
+    jquery_js = ImageFile('www/jquery.js', globals())
+
+    security.declareProtected(view, 'chapter_js')
+    chapter_js = ImageFile('www/chapter.js', globals())
 
 InitializeClass(Chapter)
