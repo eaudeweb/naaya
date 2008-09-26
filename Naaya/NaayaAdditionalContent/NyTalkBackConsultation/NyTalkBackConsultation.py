@@ -25,6 +25,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
+from App.ImageFile import ImageFile
 from OFS.Image import cookId
 
 #Product imports
@@ -56,8 +57,8 @@ OBJECT_CONSTRUCTORS = ['manage_addNyTalkBackConsultation_html',
 OBJECT_ADD_FORM = 'talkbackconsultation_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya TalkBack Consultation type.'
 PREFIX_OBJECT = 'tbcns'
-ADDITIONAL_STYLE = PageTemplateFile('zpt/talkbackconsultation_style',
-                                    globals()).read()
+ADDITIONAL_STYLE = open(ImageFile(
+    'www/talkbackconsultation_style.css', globals()).path).read()
 PROPERTIES_OBJECT = {
     'id':                  (0, '', ''),
     'title':               (1,
