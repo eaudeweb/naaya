@@ -375,13 +375,6 @@ class NyTalkBackConsultation(NyAttributes,
     def get_consultation(self):
         return self
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'add_chapter')
-    def add_chapter(self, title='', body='',  REQUEST=None):
-        """ """
-        addChapter(self, title=title, body=body)
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
-
     security.declareProtected(view, 'list_chapters')
     def list_chapters(self):
         """ """
@@ -439,6 +432,15 @@ class NyTalkBackConsultation(NyAttributes,
         elif review_check: return 1
         elif not review_check: return 2
 
+    def check_cannot_comment(self):
+        """ """
+
+        if not self.checkPermissionReviewTalkBackConsultation():
+            return 'you do not have the required permission.'
+
+        if self.get_days_left()[1] <= 0:
+            return 'the deadline for this consultation has been reached.'
+
     #permissions
     def checkPermissionReviewTalkBackConsultation(self):
         """
@@ -451,6 +453,8 @@ class NyTalkBackConsultation(NyAttributes,
         Check for managing the TalkBack Consultation.
         """
         return self.checkPermission(PERMISSION_MANAGE_TALKBACKCONSULTATION)
+
+    addChapter = addChapter
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')

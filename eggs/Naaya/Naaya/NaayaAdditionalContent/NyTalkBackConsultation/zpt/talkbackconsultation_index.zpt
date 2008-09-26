@@ -17,8 +17,6 @@
 	<p tal:condition="python:days_left[1] <= 0" i18n:translate="">Comments are disabled since the deadline for this consultation has passed.</p>
 </div>
 
-<div class="cleaner" />
-
 <p tal:content="structure python:here.getLocalProperty('description', lang)" />
 
 <table class="datatable">
