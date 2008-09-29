@@ -66,3 +66,7 @@ div.talkback-js_comment_window {
 	width: 600px;
 	max-height: 500px;
 }
+
+p.talkback-cannot_comment {
+	margin-top: 1.5em;
+}

@@ -18,7 +18,7 @@
 	<textarea id="body" name="body:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="body"></textarea>
 </div>
 
-<input type="submit" i18n:attributes="value" value="Add Paragraph" />
+<input type="submit" i18n:attributes="value" value="Add Section" />
 </form>
 
 
