@@ -1,4 +1,4 @@
-This is an automatically generated message to inform you that an account has been created 
+This is an automatically generated message to inform you that an account has been created
 on the portal @@PORTAL_TITLE@@ (@@PORTAL_URL@@) with the following credentials:
 
 Name: @@NAME@@
@@ -8,8 +8,7 @@ Organisation: @@ORGANISATION@@
 Comments: @@COMMENTS@@
 
 
-As a portal admnistrator, you are requested to grant this account with content
-contibution rights for @@LOCATION@@.
+As a portal admnistrator, you are requested to grant this account with @@ROLE@@ rights for @@LOCATION@@.
 
 Enter the "Users' management" section at @@PORTAL_URL@@/admin_roles_html
 to assign this user the necessary role.
