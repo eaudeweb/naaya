@@ -54,7 +54,7 @@ class NyBase:
     security = ClassSecurityInfo()
 
     #test for subclasses
-    security.declarePrivate('isVersionable')
+    security.declareProtected(view, 'isVersionable')
     def isVersionable(self):
         """
         Test if the current object is instance of the B{NyCheckControl} class.
