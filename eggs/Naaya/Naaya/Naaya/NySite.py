@@ -804,12 +804,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declarePublic('get_containers_metatypes')
     def get_containers_metatypes(self):
         #this method is used to display local roles, called from getUserRoles methods
-        return [METATYPE_FOLDER, 'Folder', 'Naaya Photo Gallery', 'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic', 'Naaya Consultation', 'Naaya Simple Consultation', 'Naaya Survey Questionnaire']
+        return [METATYPE_FOLDER, 'Folder', 'Naaya Photo Gallery', 'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic', 'Naaya Consultation', 'Naaya Simple Consultation', 'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire']
 
     security.declarePublic('get_naaya_containers_metatypes')
     def get_naaya_containers_metatypes(self):
         """ this method is used to display local roles, called from getUserRoles methods """
-        return [METATYPE_FOLDER, 'Naaya Photo Gallery', 'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic', 'Naaya Consultation', 'Naaya Simple Consultation', 'Naaya Survey Questionnaire']
+        return [METATYPE_FOLDER, 'Naaya Photo Gallery', 'Naaya Photo Folder', 'Naaya Forum', 'Naaya Forum Topic', 'Naaya Consultation', 'Naaya Simple Consultation', 'Naaya TalkBack Consultation', 'Naaya Survey Questionnaire']
 
     #layer over selection lists
     security.declarePublic('getEventTypesList')
@@ -1518,7 +1518,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def processRequestRoleForm(self, username='', password='', confirm='',
                                firstname='', lastname='', email='',
                                organisation='', location='',
-                               comments='', REQUEST=None):
+                               comments='', apply_role='', REQUEST=None):
         """
         Sends notification email(s) to the administrators when people apply
         for a role. If the role is requested at portal level, the addresses
@@ -1529,6 +1529,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """
         location_path = 'unspecified'
         location_title = 'unspecified'
+        acl_tool = self.getAuthenticationTool()
         if location == '':
             location_path = ''
             location_title = self.site_title
@@ -1539,29 +1540,56 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 location_path = obj.absolute_url(1)
                 location_title = obj.title
                 location_maintainer_email = self.getMaintainersEmails(obj)
-        #create an account without role
-        acl_tool = self.getAuthenticationTool()
-        try:
-            userinfo = acl_tool.manage_addUser(name=username, password=password,
-                       confirm=confirm, roles=[], domains=[], firstname=firstname,
-                       lastname=lastname, email=email, strict=0)
-        except Exception, error:
-            err = error
-        else:
-            err = ''
-        if err:
-            if not REQUEST:
-                return err
-            self.setSessionErrors(err)
-            self.setRequestRoleSession(username, firstname, lastname, email,
-                                       password, organisation, comments,
-                                       location)
-            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        #if given role is 'contributor', proceed with default behaviour
+        if apply_role == 'contributor':
+            #create an account without role
+            try:
+                userinfo = acl_tool.manage_addUser(name=username, password=password,
+                           confirm=confirm, roles=[], domains=[], firstname=firstname,
+                           lastname=lastname, email=email, strict=0)
+            except Exception, error:
+                err = error
+            else:
+                err = ''
+            if err:
+                if not REQUEST:
+                    return err
+                self.setSessionErrors(err)
+                self.setRequestRoleSession(username, firstname, lastname, email,
+                                           password, organisation, comments,
+                                           location)
+                return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
-        if acl_tool.emailConfirmationEnabled():
-            self.sendConfirmationEmail(firstname + ' ' + lastname, userinfo, email)
-            message_body = 'Plase follow the link in your email in order to complete registration.'
-        else:
+            if acl_tool.emailConfirmationEnabled():
+                self.sendConfirmationEmail(firstname + ' ' + lastname, userinfo, email)
+                message_body = 'Plase follow the link in your email in order to complete registration.'
+            else:
+                self.sendCreateAccountEmail(
+                    p_to=location_maintainer_email,
+                    p_name=firstname + ' ' + lastname,
+                    p_email=email,
+                    p_organisation=organisation,
+                    p_username=username,
+                    p_location_path=location_path,
+                    p_location_title=location_title,
+                    p_comments=comments,
+                    role=apply_role)
+                message_body = 'An account has been created for you. \
+                The administrator will be informed of your request and may \
+                or may not grant your account with the approriate role.'
+            if not REQUEST:
+                return message_body
+
+        #if given role differs from 'contributor'
+        #proceed with customised behaviour
+        elif apply_role != 'contributor':
+            #get data from user object
+            user = acl_tool.getUser(username)
+            firstname = acl_tool.getUserFirstName(user)
+            lastname = acl_tool.getUserLastName(user)
+            email = acl_tool.getUserEmail(user)
+
+            #send administrator email
             self.sendCreateAccountEmail(
                 p_to=location_maintainer_email,
                 p_name=firstname + ' ' + lastname,
@@ -1570,10 +1598,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 p_username=username,
                 p_location_path=location_path,
                 p_location_title=location_title,
-                p_comments=comments)
-            message_body = 'An account has been created for you. \
-            The administrator will be informed of your request and may \
-            or may not grant your account with the approriate role.'
+                p_comments=comments,
+                role=apply_role)
+            message_body = 'The administrator will be informed of your request '
+            'and may or may not grant your account with the approriate role.'
         if not REQUEST:
             return message_body
 
@@ -2950,6 +2978,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                             p_username, p_location_path,
                             p_location_title, p_comments, **kwargs):
 
+        role = kwargs.get('role')
         #sends a request role email
         email_template = self.getEmailTool()._getOb('email_requestrole')
         l_subject = email_template.title
@@ -2959,6 +2988,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         l_content = l_content.replace('@@ORGANISATION@@', p_organisation)
         l_content = l_content.replace('@@USERNAME@@', p_username)
         l_content = l_content.replace('@@LOCATIONPATH@@', p_location_path)
+        l_content = l_content.replace('@@ROLE@@', role)
 
         if p_location_path:
             l_content = l_content.replace('@@LOCATION@@', "the %s folder (%s/%s)" % (p_location_title, self.portal_url, p_location_path))
