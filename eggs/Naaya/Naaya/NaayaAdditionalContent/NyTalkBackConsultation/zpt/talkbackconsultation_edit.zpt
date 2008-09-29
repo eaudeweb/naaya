@@ -1,6 +1,6 @@
 <metal:block use-macro="python:here.getFormsTool().site_macro_edit.macros['page']">
 
-<h1 metal:fill-slot="title" i18n:translate="">Edit Naaya Simple Consultation</h1>
+<h1 metal:fill-slot="title" i18n:translate="">Edit Naaya TalkBack Consultation</h1>
 
 <!-- Remove unused fields -->
 <div metal:fill-slot="custom_scripts" />

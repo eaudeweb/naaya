@@ -18,52 +18,60 @@
 // Alex Morega, Eau de Web
 
 function comment_add(comment_link) {
-    $.get(comment_link.href, function(data){
-        $('div.talkback-comment_floating_box').remove();
+    $('div.talkback-comment_floating_box').remove();
 
-        var top = $(comment_link).attr('offsetTop') - 5;
-        var left = $(comment_link).attr('offsetLeft') + 150;
+    var top = $(comment_link).attr('offsetTop') - 5;
+    var left = $(comment_link).attr('offsetLeft') + 150;
 
-        var comment_box = $('<div class="talkback-comment_floating_box"></div>').css({
-            position: 'absolute',
-            top: String(top) + 'px',
-            left: String(left) + 'px',
-            width: '600px',
-            height: '400px',
-            overflow: 'hidden',
+    var comment_box = $('<div class="talkback-comment_floating_box"></div>').css({
+        position: 'absolute',
+        top: String(top) + 'px',
+        left: String(left) + 'px',
+        width: '600px',
+        height: '500px',
+        overflow: 'hidden',
+        'background-color': 'white',
+        border: '2px solid green',
+        padding: '10px'
+    });
+
+    function close_comment_box() {
+        try { comment_box.remove(); }
+        catch(e) {} return false;
+    }
+
+    var comment_form_box = $('<div>Loading...</div>');
+
+    comment_box.append(
+        $('<a href="javascript:;">[close]</a>').click(close_comment_box).css({
+            'text-decoration': 'none',
+            'position': 'absolute',
+            'top': '0',
+            'right': '20px',
             'background-color': 'white',
-            border: '2px solid green',
-            padding: '10px'
-        });
+            'padding': '3px'
+        }),
+        $('<div></div>').append(
+            //$('div.talkback-comments_list', data),
+            comment_form_box,
+            $('fieldset', $(comment_link).parent()).clone().css({display: 'block'})
+        ).css({
+            overflow: 'auto',
+            width: '600px',
+            height: '500px'
+        })
+    );
 
-        function close_comment_box() {
-            try { comment_box.remove(); }
-            catch(e) {} return false;
-        }
+    comment_box.insertAfter(comment_link);
 
-        comment_box.append(
-            $('<a href="javascript:;">[close]</a>').click(close_comment_box).css({
-                'position': 'absolute',
-                'top': '0',
-                'right': '20px',
-                'background-color': 'white',
-                'padding': '3px'
-            }),
-            $('<div></div>').append(
-                $('div.talkback-comments_list', data),
-                $('div.talkback-add_comment_form', data)
-            ).css({
-                overflow: 'auto',
-                width: '600px',
-                height: '400px'
-            })
+    $.get(comment_link.href, function(data){
+        comment_form_box.empty().append(
+            $('p.talkback-cannot_comment', data),
+            $('div.talkback-add_comment_form', data)
         );
-
-        $('form', comment_box).append(
-            $('<input type="submit" value="cancel" />').click(close_comment_box)
+        $('form', comment_form_box).append(
+            $('<input type="submit" value="Cancel" />').click(close_comment_box)
         ).attr('action', $(comment_link).attr('href') + '/' + $('form', comment_box).attr('action'));
-
-        comment_box.insertAfter(comment_link);
     });
 }
 
@@ -74,12 +82,12 @@ function comment_buttons_display(comments_visible) {
 
 function show_comments() {
     comment_buttons_display(true);
-    $('div.talkback-chapter fieldset').css({display: 'block'});
+    $('div.talkback-comments_list > fieldset').css({display: 'block'});
 }
 
 function hide_comments() {
     comment_buttons_display(false);
-    $('div.talkback-chapter fieldset').css({display: 'none'});
+    $('div.talkback-comments_list > fieldset').css({display: 'none'});
 }
 
 $(document).ready(function() {setTimeout(function(){
@@ -99,7 +107,7 @@ $(document).ready(function() {setTimeout(function(){
     $('a.talkback-add_comment').each(function() {
         var n_comments = String($('fieldset', $(this).parent()).length);
         var text = (n_comments == 1 ? 'comment' : 'comments');
-        $(this).text(n_comments + ' ' + text);
+        //$(this).text(n_comments + ' ' + text);
     }).click(function() {
         try { comment_add(this); }
         catch(e) {} return false;

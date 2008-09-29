@@ -6,7 +6,7 @@
 
 <div id="admin_this_folder" tal:condition="python:here.checkPermissionEditObject()">
 	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit TalkBack Consultation</span></a>
-	<a tal:attributes="href string:${here/absolute_url}/chapter_add_html"><span i18n:translate="">Add Chapter</span></a>
+	<a tal:attributes="href string:${here/absolute_url}/chapter_add_html"><span i18n:translate="">Add Section</span></a>
 </div>
 
 <div class="consultation_right_box" tal:define="days_left python:here.get_days_left()">
@@ -22,15 +22,13 @@
 <table class="datatable">
 <thead>
 	<tr>
-		<th i8n:translate="">Chapter title</th>
-		<th i8n:translate="">View</th>
+		<th i8n:translate="">Section</th>
 		<th i8n:translate="">Edit</th>
 	</tr>
 </thead>
 <tbody>
 	<tr tal:repeat="chapter here/list_chapters">
-		<td tal:content="chapter/title_or_id"></td>
-		<td><a tal:attributes="href chapter/absolute_url" i18n:translate="">View</a></td>
+		<td><a tal:attributes="href chapter/absolute_url" tal:content="chapter/title_or_id" /></td>
 		<td><a tal:attributes="href string:${chapter/absolute_url}/edit_html" i18n:translate="">Edit</a></td>
 	</tr>
 </tbody>

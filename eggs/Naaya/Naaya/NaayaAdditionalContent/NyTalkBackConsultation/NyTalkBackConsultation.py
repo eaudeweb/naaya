@@ -34,8 +34,6 @@ from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
-from Products.NaayaBase.NyCheckControl import NyCheckControl
-from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
@@ -213,8 +211,6 @@ class NyTalkBackConsultation(NyAttributes,
                              Implicit,
                              NyProperties,
                              NyContainer,
-                             NyCheckControl,
-                             NyValidation,
                              utils):
     """ """
 
@@ -248,8 +244,6 @@ class NyTalkBackConsultation(NyAttributes,
 
         self.id = id
         self.contributor = contributor
-        NyValidation.__dict__['__init__'](self)
-        NyCheckControl.__dict__['__init__'](self)
         NyContainer.__dict__['__init__'](self)
         self.save_properties(title,
                              description,
