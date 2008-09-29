@@ -8,7 +8,7 @@
 <h1 i18n:translate="">Add Naaya TalkBack Consultation</h1>
 
 <p i18n:translate="">
-	Create a new consultation by filling out the fields below. Afterwards, add one or more sections for reviewers to comment on. Users need to have the <em>Reviewer</em> role in order to post comments.
+	Create a new consultation by filling out the fields below. Afterwards, add one or more paragraphs for reviewers to comment on. Users need to have the <em>Reviewer</em> role in order to post comments.
 </p>
 
 <form method="post" action="addNyTalkBackConsultation">

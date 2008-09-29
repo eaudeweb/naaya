@@ -4,15 +4,16 @@
 
 <h1 tal:content="here/title_or_id" />
 
-<div id="admin_this_folder" tal:condition="python:here.checkPermissionEditObject()">
+<div id="admin_this_folder" tal:condition="python:here.checkPermissionManageTalkBackConsultation()">
 	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit TalkBack Consultation</span></a>
-	<a tal:attributes="href string:${here/absolute_url}/chapter_add_html"><span i18n:translate="">Add Section</span></a>
+	<a tal:attributes="href string:${here/absolute_url}/section_add_html"><span i18n:translate="">Add Paragraph</span></a>
 </div>
 
 <div class="consultation_right_box" tal:define="days_left python:here.get_days_left()">
 	<tal:block tal:condition="python:days_left[0] == 1 and days_left[1] > 0"><span tal:content="python:days_left[1]" class="consultation_day_counter" /> <span i18n:translate="">day(s) left for this consultation.</span></tal:block>
 	<tal:block tal:condition="python:days_left[0] == 0 and days_left[1] > 0"><span tal:content="python:days_left[1]" class="consultation_day_counter" /> <span i18n:translate="">day(s) until this consultation starts.</span></tal:block>
 	<span tal:condition="python:days_left[1] <= 0" class="consultation_day_counter" i18n:translate="">Consultation deadline has been reached.</span>
+	<a class="consultation-special-button" tal:condition="not:here/checkTalkBackConsultationUser" tal:attributes="href string:${here/absolute_url}/add_simpleconsultation_comment">Log in to comment</a>
 	<a class="consultation-special-button" tal:condition="python:here.checkTalkBackConsultationUser() == 2 and here.public_registration" tal:attributes="href string:${here/absolute_url}/add_simpleconsultation_comment">Apply for reviewer rights</a>
 	<p tal:condition="python:days_left[1] <= 0" i18n:translate="">Comments are disabled since the deadline for this consultation has passed.</p>
 </div>
@@ -23,13 +24,13 @@
 <thead>
 	<tr>
 		<th i8n:translate="">Section</th>
-		<th i8n:translate="">Edit</th>
+		<th tal:condition="here/checkPermissionManageTalkBackConsultation" i8n:translate="">Edit</th>
 	</tr>
 </thead>
 <tbody>
-	<tr tal:repeat="chapter here/list_chapters">
-		<td><a tal:attributes="href chapter/absolute_url" tal:content="chapter/title_or_id" /></td>
-		<td><a tal:attributes="href string:${chapter/absolute_url}/edit_html" i18n:translate="">Edit</a></td>
+	<tr tal:repeat="section here/list_sections">
+		<td><a tal:attributes="href section/absolute_url" tal:content="section/title_or_id" /></td>
+		<td tal:condition="here/checkPermissionManageTalkBackConsultation"><a tal:attributes="href string:${section/absolute_url}/edit_html" i18n:translate="">Edit</a></td>
 	</tr>
 </tbody>
 </table>

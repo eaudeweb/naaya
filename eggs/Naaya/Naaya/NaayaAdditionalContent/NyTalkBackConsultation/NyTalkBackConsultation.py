@@ -39,9 +39,9 @@ from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
 from constants import *
 
-#Chapter
-from Chapter import addChapter
-from Chapter import addChapter_html
+#Section
+from Section import addSection
+from Section import addSection_html
 
 #module constants
 
@@ -370,10 +370,10 @@ class NyTalkBackConsultation(NyAttributes,
     def get_consultation(self):
         return self
 
-    security.declareProtected(view, 'list_chapters')
-    def list_chapters(self):
+    security.declareProtected(view, 'list_sections')
+    def list_sections(self):
         """ """
-        return self.objectValues([METATYPE_TALKBACKCONSULTATION_CHAPTER])
+        return self.objectValues([METATYPE_TALKBACKCONSULTATION_SECTION])
 
     security.declareProtected(view, 'get_start_date')
     def get_start_date(self):
@@ -449,7 +449,7 @@ class NyTalkBackConsultation(NyAttributes,
         """
         return self.checkPermission(PERMISSION_MANAGE_TALKBACKCONSULTATION)
 
-    addChapter = addChapter
+    addSection = addSection
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
@@ -462,7 +462,7 @@ class NyTalkBackConsultation(NyAttributes,
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
     edit_html = PageTemplateFile('zpt/talkbackconsultation_edit', globals())
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'chapter_add_html')
-    chapter_add_html = addChapter_html
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'section_add_html')
+    section_add_html = addSection_html
 
 InitializeClass(NyTalkBackConsultation)

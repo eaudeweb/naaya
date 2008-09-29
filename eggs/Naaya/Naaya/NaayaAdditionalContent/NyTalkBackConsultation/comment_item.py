@@ -71,8 +71,8 @@ def addComment(self,
 
     if REQUEST is not None:
         anchor = self.get_anchor()
-        chapter = self.get_chapter()
-        ret_url = '%s/index_html#%s' % (chapter.absolute_url(), anchor)
+        section = self.get_section()
+        ret_url = '%s/index_html#%s' % (section.absolute_url(), anchor)
 
         return REQUEST.RESPONSE.redirect(ret_url)
 
