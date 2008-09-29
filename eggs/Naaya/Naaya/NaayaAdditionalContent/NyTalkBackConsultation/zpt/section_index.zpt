@@ -1,10 +1,9 @@
 <span tal:replace="structure here/standard_html_header" />
 
 <script src="jquery_js" type="text/javascript"></script>
-<script src="chapter_js" type="text/javascript" charset="utf-8"></script>
+<script src="section_js" type="text/javascript" charset="utf-8"></script>
 
 <tal:block define="show_comments python:request.get('comments') != 'off'">
-<!--div tal:content="python:" /-->
 
 <div class="talkback-show_hide_comments" style="float:right;">
     <a href="" class="talkback-show_comments"

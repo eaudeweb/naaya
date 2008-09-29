@@ -17,22 +17,23 @@
 
 // Alex Morega, Eau de Web
 
+(function() {
+
+var comments_visible = true;
+
 function comment_add(comment_link) {
+    // if this comment box is already open, don't re-open it
+    if($('div.talkback-comment_floating_box', $(comment_link).parent()).length)
+        return;
+    
     $('div.talkback-comment_floating_box').remove();
 
     var top = $(comment_link).attr('offsetTop') - 5;
     var left = $(comment_link).attr('offsetLeft') + 150;
 
     var comment_box = $('<div class="talkback-comment_floating_box"></div>').css({
-        position: 'absolute',
         top: String(top) + 'px',
-        left: String(left) + 'px',
-        width: '600px',
-        height: '500px',
-        overflow: 'hidden',
-        'background-color': 'white',
-        border: '2px solid green',
-        padding: '10px'
+        left: String(left) + 'px'
     });
 
     function close_comment_box() {
@@ -41,25 +42,17 @@ function comment_add(comment_link) {
     }
 
     var comment_form_box = $('<div>Loading...</div>');
-
+    var comment_list = $('fieldset', $(comment_link).parent()).clone().css({display: 'block'});
+    
     comment_box.append(
-        $('<a href="javascript:;">[close]</a>').click(close_comment_box).css({
-            'text-decoration': 'none',
-            'position': 'absolute',
-            'top': '0',
-            'right': '20px',
-            'background-color': 'white',
-            'padding': '3px'
-        }),
-        $('<div></div>').append(
-            //$('div.talkback-comments_list', data),
+        $('<a href="javascript:;" class="talkback-comment_close_box">[close]</a>').click(close_comment_box),
+        $('<div class="talkback-js_comment_window"></div>').append(
             comment_form_box,
-            $('fieldset', $(comment_link).parent()).clone().css({display: 'block'})
-        ).css({
-            overflow: 'auto',
-            width: '600px',
-            height: '500px'
-        })
+            $('<div class="comments_list">').append(
+                $('<h2>Previous comments</h2>').css({display: (comment_list.length ? 'block' : 'none')}),
+                comment_list
+            ).css({display: (comments_visible ? 'none' : 'block')})
+        )
     );
 
     comment_box.insertAfter(comment_link);
@@ -83,11 +76,17 @@ function comment_buttons_display(comments_visible) {
 function show_comments() {
     comment_buttons_display(true);
     $('div.talkback-comments_list > fieldset').css({display: 'block'});
+    $('div.talkback-js_comment_window > div.comments_list').css({display: 'none'});
+    $('a.talkback-add_comment').text('Add comment');
+    comments_visible = true;
 }
 
 function hide_comments() {
     comment_buttons_display(false);
     $('div.talkback-comments_list > fieldset').css({display: 'none'});
+    $('div.talkback-js_comment_window > div.comments_list').css({display: 'block'});
+    $('a.talkback-add_comment').text('Comments');
+    comments_visible = false;
 }
 
 $(document).ready(function() {setTimeout(function(){
@@ -113,4 +112,6 @@ $(document).ready(function() {setTimeout(function(){
         catch(e) {} return false;
     });
 }, 0); });
+
+})();
 

@@ -32,6 +32,7 @@ from OFS.Image import cookId
 from Products.NaayaContent.constants import *
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import *
+from Products.NaayaBase.NyNonCheckControl import NyNonCheckControl
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyImageContainer import NyImageContainer
@@ -211,6 +212,7 @@ class NyTalkBackConsultation(NyAttributes,
                              Implicit,
                              NyProperties,
                              NyContainer,
+                             NyNonCheckControl,
                              utils):
     """ """
 

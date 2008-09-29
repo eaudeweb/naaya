@@ -41,3 +41,28 @@ span.consultation_day_counter {
 	color: blue;
 	font-weight: bold;
 }
+
+div.talkback-comment_floating_box {
+	position: absolute;
+	width: 600px;
+	max-height: 500px;
+	overflow: hidden;
+	background-color: white;
+	border: 2px solid green;
+	padding: 10px;
+}
+
+a.talkback-comment_close_box {
+	text-decoration: none;
+	position: absolute;
+	top: 0;
+	right: 20px;
+	background-color: white;
+	padding: 3px;
+}
+
+div.talkback-js_comment_window {
+	overflow: auto;
+	width: 600px;
+	max-height: 500px;
+}
