@@ -99,7 +99,7 @@ class Section(Folder):
     security.declareProtected(view, 'jquery_js')
     jquery_js = ImageFile('www/jquery.js', globals())
 
-    security.declareProtected(view, 'chapter_js')
-    chapter_js = ImageFile('www/chapter.js', globals())
+    security.declareProtected(view, 'section_js')
+    section_js = ImageFile('www/section.js', globals())
 
 InitializeClass(Section)

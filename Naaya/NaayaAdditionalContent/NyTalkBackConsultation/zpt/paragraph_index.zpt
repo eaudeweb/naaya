@@ -47,7 +47,7 @@
         <p class="talkback-cannot_comment">
         You cannont post comments to this consultation because <span tal:content="cannot_comment" i18n:translate="" />
         </p>
-        <a tal:attributes="href python:here.get_chapter().absolute_url()" i18n:translate="">Return to chapter</a>
+        <a tal:attributes="href python:here.get_section().absolute_url()" i18n:translate="">Return to chapter</a>
 </div>
 
 </tal:block>
