@@ -17,7 +17,7 @@
 <h1 tal:content="here/title_or_id" />
 
 <div id="admin_this_folder" tal:condition="python:here.checkPermissionEditObject()">
-	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit Paragraph</span></a>
+	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit Section</span></a>
 </div>
 
 <div class="floated-buttons">
@@ -30,7 +30,7 @@
 <div class="talkback-section">
     <tal:block repeat="paragraph here/get_paragraphs">
         <a tal:attributes="name paragraph/get_anchor" />
-        <span tal:replace="structure paragraph/body" />
+        <div tal:content="structure paragraph/body" />
         <div class="talkback-comments_list" id="string:talkback-comments_list_for-${paragraph/id}">
             <fieldset tal:condition="show_comments" tal:repeat="comment paragraph/get_comments">
                 <legend><span tal:replace="comment/contributor"/> (<span tal:replace="comment/contributor_name"/>) <span tal:replace="python:here.utShowFullDateTime(comment.comment_date)"/></legend>
