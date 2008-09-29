@@ -25,6 +25,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
+from DateTime import DateTime
 
 #Product imports
 from comment_item import addComment
@@ -86,7 +87,8 @@ class Paragraph(Folder):
             next_paragraph = paragraphs[paragraphs.index(self.id)+1]
             next_paragraph = self.get_section()._getOb(next_paragraph)
         except IndexError:
-            self.setSessionErrors(['Bad paragraph index while merging paragraphs'])
+            self.setSessionErrors([
+                'Bad paragraph index while merging paragraphs'])
             REQUEST.RESPONSE.redirect(self.get_section().absolute_url())
             return
 
@@ -102,15 +104,29 @@ class Paragraph(Folder):
         self.get_section().manage_delObjects([next_paragraph.id])
 
         # refresh the section page
-        REQUEST.RESPONSE.redirect( "%s/edit_html#%s" % (self.get_section().absolute_url(),
-                                              self.get_anchor()) )
+        REQUEST.RESPONSE.redirect( "%s/edit_html#%s" %
+                                   (self.get_section().absolute_url(),
+                                    self.get_anchor()) )
 
     security.declareProtected(
         PERMISSION_REVIEW_TALKBACKCONSULTATION, 'addComment')
     addComment = addComment
 
+    security.declareProtected(
+        PERMISSION_MANAGE_TALKBACKCONSULTATION, 'save_modifications')
+    def save_modifications(self, body, REQUEST=None):
+        """ Save body edits """
+        self.body = body
+        if REQUEST is not None:
+            self.setSessionInfo(['Saved changes (%s)' % DateTime()])
+            self.REQUEST.RESPONSE.redirect(self.absolute_url() + '/edit_html')
+
     #forms
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/paragraph_index', globals())
+
+    security.declareProtected(
+        PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
+    edit_html = PageTemplateFile('zpt/paragraph_edit', globals())
 
 InitializeClass(Paragraph)

@@ -429,6 +429,7 @@ class NyTalkBackConsultation(NyAttributes,
         elif review_check: return 1
         elif not review_check: return 2
 
+    security.declareProtected(view, 'check_cannot_comment')
     def check_cannot_comment(self):
         """ """
 
@@ -437,6 +438,13 @@ class NyTalkBackConsultation(NyAttributes,
 
         if self.get_days_left()[1] <= 0:
             return 'the deadline for this consultation has been reached.'
+
+    security.declareProtected(
+        PERMISSION_COMMENTS_ADD, 'log_in_authenticated')
+    def log_in_authenticated(self, REQUEST=None):
+        """ Log in user and redirect to TalkBack Consultation index """
+        if REQUEST is not None:
+            self.REQUEST.RESPONSE.redirect(self.absolute_url())
 
     #permissions
     def checkPermissionReviewTalkBackConsultation(self):
