@@ -29,7 +29,7 @@ heading_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7']
 block_level_tags = big_tags + heading_tags + \
                  ['p', 'div', 'ol', 'ul', 'dl', 'table', 'blockquote', 'pre']
 
-class Section(object):
+class Paragraph(object):
     def __init__(self, content, is_blank, is_heading=False):
         self.content = content
         self.is_blank = is_blank
@@ -60,36 +60,36 @@ def parse(content):
     output = []
 
     soup = BeautifulSoup(content)
-    current_section = ''
+    current_paragraph = ''
 
-    def add_section(content):
+    def add_paragraph(content):
         output.append(
-            Section(unicode(content),
+            Paragraph(unicode(content),
                     check_blank(content),
                     check_heading(content)))
 
     # iterate over all top-level elements in document
     for current_element in soup:
-        # if the element is a block-level tag, it (usually) gets its own section
+        # if the element is a block-level tag, it (usually) gets its own paragraph
         if isinstance(current_element, Tag) and \
            current_element.name in block_level_tags:
 
-            # but first, make a section from any plain text above here
-            if current_section:
-                add_section(current_section)
-                current_section = ''
+            # but first, make a paragraph from any plain text above here
+            if current_paragraph:
+                add_paragraph(current_paragraph)
+                current_paragraph = ''
 
-            add_section(current_element)
+            add_paragraph(current_element)
 
         else:
             # this is not a tag, so it must be plain text; store it.
-            current_section += unicode(current_element)
+            current_paragraph += unicode(current_element)
 
     # make sure we don't miss text at the end of the document
-    if current_section:
-        add_section(current_section)
+    if current_paragraph:
+        add_paragraph(current_paragraph)
 
-    # merge down all whitespace sections
+    # merge down all whitespace paragraphs
     i = 0
     while i+1 < len(output):
         if output[i].is_blank:
@@ -98,7 +98,7 @@ def parse(content):
         else:
             i += 1
 
-    # merge down all heading sections
+    # merge down all heading paragraphs
     i = 0
     while i+1 < len(output):
         if output[i].is_heading:
@@ -112,5 +112,5 @@ def parse(content):
         output[-2].content += output[-1].content
         del(output[-1])
 
-    return [section.content for section in output]
+    return [paragraph.content for paragraph in output]
 
