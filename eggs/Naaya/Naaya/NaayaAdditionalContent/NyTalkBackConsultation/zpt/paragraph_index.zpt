@@ -45,7 +45,10 @@
 
 <div tal:condition="python:cannot_comment">
         <p class="talkback-cannot_comment">
-        You cannont post comments to this consultation because <span tal:content="cannot_comment" i18n:translate="" />
+                <span i18n:translate="">You cannot post comments to this consultation because</span>
+                <span tal:condition="python:cannot_comment == 'no-permission'" i18n:translate="">you do not have the required permission.</span>
+                <span tal:condition="python:cannot_comment == 'deadline-reached'" i18n:translate="">the deadline for this consultation has been reached.</span>
+                You can <a tal:attributes="href string:${here/absolute_url}/log_in_authenticated">login</a> or <a tal:attributes="href python: here.get_consultation().absolute_url() + '/requestrole_html'">request reviewer rights</a> at the <a tal:attributes="href python:here.get_consultation().absolute_url()">consultation index</a>.
         </p>
         <a tal:attributes="href python:here.get_section().absolute_url()" i18n:translate="">Return to chapter</a>
 </div>

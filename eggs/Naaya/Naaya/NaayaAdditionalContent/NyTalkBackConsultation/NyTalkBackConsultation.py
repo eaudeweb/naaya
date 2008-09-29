@@ -434,10 +434,10 @@ class NyTalkBackConsultation(NyAttributes,
         """ """
 
         if not self.checkPermissionReviewTalkBackConsultation():
-            return 'you do not have the required permission.'
+            return 'no-permission'
 
         if self.get_days_left()[1] <= 0:
-            return 'the deadline for this consultation has been reached.'
+            return 'deadline-reached'
 
     security.declareProtected(
         PERMISSION_COMMENTS_ADD, 'log_in_authenticated')
