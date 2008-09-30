@@ -973,25 +973,26 @@ text-decoration: underline;
                     print "css not found for scheme %s" % scheme.id
         return 'done'
 
-    security.declareProtected(view, 'update_news_link')
-    def update_news_link(self, list_name='Submit'):
-        """
-        Get today date and extract month and year, update the News link
-        to point to the current moonth and year when adding News.
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'submit_news')
+    def submit_news(self, REQUEST):
+        """ Redirects to the appropiate news folder """
 
-        Creates missing directories.
-        """
-        p_tool = self.getPortletsTool()
         today = self.utGetTodayDate()
         month = str(today.month())
         year = str(today.year())
+        month_name= today.Month()
 
-        #get News folder, create it if it doesn't exist
         try:
+            #try to get the 'News' folder
             news_folder = self._getOb('News')
         except AttributeError:
-            addNyFolder(self, id='News', title='News')
-            news_folder = self._getOb('News')
+            try:
+                #if it's not there, try with 'news'
+                news_folder = self._getOb('news')
+            except AttributeError:
+                #if 'news' doesn't work either, create 'News'
+                addNyFolder(self, id='news', title='News Bulletin')
+                news_folder = self._getOb('news')
 
         #get year folder, create it if it doesn't exist
         try:
@@ -1004,25 +1005,13 @@ text-decoration: underline;
         try:
             year_folder._getOb(month)
         except AttributeError:
-            addNyFolder(year_folder, id=month, title=month)
+            addNyFolder(year_folder, id=month, title=month_name)
 
-        new_url = '/News/%s/%s/news_add_html' % (year, month)
-        links = p_tool.getLinksLists()
-
-        #find the LinksList matching 'list_name' parameter
-        matched = [link for link in links if link.title == list_name][0]
-
-        #find child link matching News
-        child = [c for c in matched.get_links_list() if c.title == 'News'][0]
-
-        #edit child with updated url path
-        matched.update_link_item(id=child.id,
-                                 title=child.title,
-                                 description=child.description,
-                                 url=new_url,
-                                 relative=child.relative,
-                                 permission=child.permission,
-                                 order=child.order)
+        news_url = '%s/%s/%s/%s/news_add_html' % (self.absolute_url(),
+                                                  news_folder.getId(),
+                                                  year,
+                                                  month)
+        self.REQUEST.RESPONSE.redirect(news_url)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'sendMailToContacts')
     def sendMailToContacts(self, subject='', content='', REQUEST=None):
