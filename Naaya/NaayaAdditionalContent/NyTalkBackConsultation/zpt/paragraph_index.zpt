@@ -2,7 +2,7 @@
 
 <h1 i18n:translate="">Comment on this paragraph</h1>
 
-<div tal:content="structure here/body" />
+<div tal:content="structure here/body" class="talkback-section"/>
 
 <tal:block define="cannot_comment here/check_cannot_comment">
 
