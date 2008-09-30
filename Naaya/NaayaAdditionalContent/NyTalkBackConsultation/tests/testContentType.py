@@ -16,54 +16,178 @@
 # Authors:
 #
 # David Batranu, Eau de Web
-# Alin Voinea, Eau de Web
+# Alex Morega, Eau de Web
 
 from unittest import TestSuite, makeSuite
-from Products.NaayaContent.NyURL.NyURL import addNyURL
+from Products.NaayaContent.NyTalkBackConsultation.\
+     NyTalkBackConsultation import addNyTalkBackConsultation
+from Products.Naaya.NyFolder import addNyFolder
 from Products.Naaya.tests import NaayaTestCase
+from Products.NaayaContent.NyTalkBackConsultation.parser import parse
+
+try:
+    set()
+except:
+    from sets import Set as set
 
 class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
     """ TestCase for NaayaContent object
     """
     def afterSetUp(self):
         self.login()
-        
+
+        #plug TalkBack Consultation content type
+        self.portal.manage_install_pluggableitem(
+            meta_type='Naaya TalkBack Consultation'
+        )
+
+        #add the test folder
+        addNyFolder(self.portal, id='test_folder')
+        self.test_folder = self.portal._getOb('test_folder')
+
     def beforeTearDown(self):
         self.logout()
 
     def test_main(self):
-        """ Add, Find, Edit and Delete Naaya URLs """
-        #add NyURL
-        addNyURL(self._portal().info, id='url1', title='url1', lang='en')
-        addNyURL(self._portal().info, id='url1_fr', title='url1_fr', lang='fr')
-        
-        meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya URL'])
-        
-        #get added NyURL
+        """ Add, Edit and Delete Naaya TalkBack Consultation """
+        #add NyConsultation
+        addNyTalkBackConsultation(self.test_folder,
+                                id='sc1',
+                                title='sc1',
+                                lang='en')
+
+        addNyTalkBackConsultation(self.test_folder,
+                                id='sc1_fr',
+                                title='sc1_fr',
+                                lang='fr')
+
+        meta = self.test_folder.objectValues(['Naaya TalkBack Consultation'])
+
+        #get added Consultation
         for x in meta:
-            if x.getLocalProperty('title', 'en') == 'url1':
+            if x.getLocalProperty('title', 'en') == 'sc1':
                 meta = x
-            if x.getLocalProperty('title', 'fr') == 'url1_fr':
+            if x.getLocalProperty('title', 'fr') == 'sc1_fr':
                 meta_fr = x
-        
-        self.assertEqual(meta.getLocalProperty('title', 'en'), 'url1')
-        self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'url1_fr')
-        
-        #change NyURL title
-        meta.saveProperties(title='url1_edited', lang='en')
-        meta_fr.saveProperties(title='url1_fr_edited', lang='fr')
-        
-        self.assertEqual(meta.getLocalProperty('title', 'en'), 'url1_edited')
-        self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'url1_fr_edited')
-        
-        #delete NyURL
-        self._portal().info.manage_delObjects([meta.id])
-        self._portal().info.manage_delObjects([meta_fr.id])
-        
-        meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya URL'])
+
+        self.assertEqual(meta.getLocalProperty('title', 'en'), 'sc1')
+        self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'sc1_fr')
+
+        #change Consultation title
+        meta.saveProperties(title='sc1_edited', lang='en')
+        meta_fr.saveProperties(title='sc1_fr_edited', lang='fr')
+
+        self.assertEqual(meta.getLocalProperty('title', 'en'),
+                         'sc1_edited')
+
+        self.assertEqual(meta_fr.getLocalProperty('title', 'fr'),
+                         'sc1_fr_edited')
+
+        #delete Consultation
+        self.test_folder.manage_delObjects([meta.getId(), meta_fr.getId()])
+
+        meta = self.test_folder.objectValues(['Naaya TalkBack Consultation'])
         self.assertEqual(meta, [])
+
+class TestSimpleParsing(NaayaTestCase.NaayaTestCase):
+    def do_content_test(self, input_text, expected_output):
+        output = parse(''.join(input_text))
+        self.failUnless(isinstance(output, list))
+        self.failUnlessEqual(len(expected_output), len(output))
+        self.failUnlessEqual(set(expected_output), set(output))
+
+    def test_two_paragraphs(self):
+        self.do_content_test(
+            '<p>This is the first paragraph.</p>\n'
+            '<p>This is the second one.</p>\n',
+            [
+                '<p>This is the first paragraph.</p>',
+                '\n<p>This is the second one.</p>\n',
+            ]
+        )
+
+    def test_grouping(self):
+        self.do_content_test(
+            '<p>This is the first paragraph.</p>\nblabla\n'
+            '<p>This is the second one.</p> and some more stuff\n',
+            [
+                '<p>This is the first paragraph.</p>',
+                '\nblabla\n',
+                '<p>This is the second one.</p>',
+                ' and some more stuff\n',
+            ]
+        )
+
+    def test_empty_paragraph(self):
+        self.do_content_test(
+            '<p>&nbsp;</p>'
+            'blah',
+            [
+                '<p>&nbsp;</p>blah',
+            ]
+        )
+
+        self.do_content_test(
+            '<p> <span>some text</span></p>'
+            'etc',
+            [
+                '<p> <span>some text</span></p>',
+                'etc',
+            ]
+        )
+
+    def test_toplevel_elements(self):
+        #self.do_content_test(
+            #'<img src="blabla" />'
+            #'and some other stuff',
+            #[
+                #'<img src="blabla" />',
+                #'and some other stuff',
+            #]
+        #)
+
+        #self.do_content_test(
+            #'some stuff'
+            #'<b>and some other stuff</b>'
+            #'some final stuff',
+            #[
+                #'some stuff<b>and some other stuff</b>some final stuff',
+            #]
+        #)
+
+        self.do_content_test(
+            '<p align="center">&nbsp;</p><br />'
+            '<p align="center"><strong>Annex</strong></p>',
+            [
+                '<p align="center">&nbsp;</p><br /><p align="center"><strong>Annex</strong></p>',
+            ]
+        )
+
+
+    def test_headings(self):
+        self.do_content_test(
+            'blah blah'
+            '<h2>the heading</h2>'
+            'and next content',
+            [
+                'blah blah',
+                '<h2>the heading</h2>and next content',
+            ]
+        )
+
+        self.do_content_test(
+            '<p><strong>t</strong></p>'
+            '<h3>Achievements</h3>'
+            '<p>&nbsp;</p>'
+            '<p>x</p>',
+            [
+                '<p><strong>t</strong></p>',
+                '<h3>Achievements</h3><p>&nbsp;</p><p>x</p>',
+            ]
+        )
 
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(NaayaContentTestCase))
+    suite.addTest(makeSuite(TestSimpleParsing))
     return suite
