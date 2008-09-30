@@ -973,7 +973,7 @@ text-decoration: underline;
                     print "css not found for scheme %s" % scheme.id
         return 'done'
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'submit_news')
+    security.declareProtected('Naaya - Add Naaya News objects', 'submit_news')
     def submit_news(self, REQUEST):
         """ Redirects to the appropiate news folder """
 
