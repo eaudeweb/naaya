@@ -363,7 +363,7 @@ class utils:
             word = insert.join(word)
             res.append(word)
         return ' '.join(res)
-    
+
     def getObjectPaginator(self, objects_list, num_per_page=50, orphans=-1):
         """ Returns objects_list in pages."""
         if orphans == -1:
@@ -576,7 +576,33 @@ class utils:
         """Encode a string using html_quote"""
         return html_quote(p_string)
 
-    
+    def utLinkifyURLs(self, string):
+        def replace(match):
+            txt = match.group('uri').replace('&amp;', '&')
+            #if txt.startswith('http://'):
+            if match.group('uri_proto'):
+                uri = txt
+            else:
+                uri = 'http://' + txt
+            return '<a href="%s">%s</a>' % (uri, txt)
+
+
+        initial_lookbehind = r'(?<![\d\w\-])'
+        host_component = r'[\w\d\-]+'
+        host_port = r'\:\d+'
+        path = r'/[^\s]*'
+        get_params = r'\?[\w\d\=\%\&\;\-]*(?<!;)'
+
+        regexp = r'(?P<uri>' \
+                + initial_lookbehind \
+                + r'((?P<uri_proto>\w+\://)|www\.)' \
+                + host_component + r'(\.' + host_component + r')*' + r'('+ host_port + r')?' \
+                + r'(' + path + r')?' \
+                + r'(' + get_params + r')?' \
+            + r')'
+
+        return re.sub(regexp, replace, string)
+
     def utStringEscape(self, p_string):
         """ Escape a string/unicode
         """
@@ -1171,6 +1197,6 @@ class vcard_file:
 
     def getZipData(self):
         return self.data
-        
+
     def get_size(self):
         return len(self.data)
