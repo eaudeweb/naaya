@@ -41,6 +41,7 @@ from Products.NaayaCore.constants                   import *
 from Products.Naaya.NySite                          import NySite
 from Products.NaayaCore.managers.utils              import utils
 from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
+from Products.Naaya.NyFolder import addNyFolder
 
 
 manage_addEnviroWindowsSite_html = PageTemplateFile('zpt/site_manage_add', globals())
@@ -81,7 +82,7 @@ class EnviroWindowsSite(NySite):
         try:
             dynprop_tool.manage_addDynamicPropertiesItem(id=METATYPE_NYCONSULTATION, title=METATYPE_NYCONSULTATION)
             dynprop_tool._getOb(METATYPE_NYCONSULTATION).manageAddDynamicProperty(id='show_contributor_request_role', name='Allow visitors to register as reviewers for this consultation', type='boolean')
-            
+
             dynprop_tool.manage_addDynamicPropertiesItem(id=METATYPE_NYSIMPLECONSULTATION, title=METATYPE_NYSIMPLECONSULTATION)
             dynprop_tool._getOb(METATYPE_NYSIMPLECONSULTATION).manageAddDynamicProperty(id='show_contributor_request_role', name='Allow visitors to register as reviewers for this consultation', type='boolean')
         except: pass
@@ -125,7 +126,7 @@ class EnviroWindowsSite(NySite):
         dynprop_tool = self.getDynamicPropertiesTool()
         dynprop_tool.manage_addDynamicPropertiesItem(id=METATYPE_FOLDER, title=METATYPE_FOLDER)
         dynprop_tool._getOb(METATYPE_FOLDER).manageAddDynamicProperty(id='show_contributor_request_role', name='Allow users enrolment here?', type='boolean')
-        
+
         #dynamic properties for consultation objects
         self.addConsultationDynProp()
 
@@ -338,7 +339,7 @@ class EnviroWindowsSite(NySite):
 
     #---------- session objects ------
     #manage users
-    def setContributorSession(self, name, roles, firstname, lastname, email, password='', 
+    def setContributorSession(self, name, roles, firstname, lastname, email, password='',
         organisation='', comments='', address='', phone='', title='', description='', fax='', website=''):
         """ put the user information on session """
         self.setSession('contr_firstname', firstname)
@@ -551,7 +552,7 @@ class EnviroWindowsSite(NySite):
 
     security.declareProtected(view, 'processRequestLocation')
     def processRequestLocation(self, role='', comments='', locationslist=[], REQUEST=None, RESPONSE=None):
-        """ Sends notification email(s) to the administrators when people apply for a role 
+        """ Sends notification email(s) to the administrators when people apply for a role
         """
         if REQUEST.has_key('cancel'):
             if REQUEST.has_key('return_path'):
@@ -633,19 +634,19 @@ class EnviroWindowsSite(NySite):
         folder = self.getObjectByPath(path)
         if not folder: return []
         return folder.objectValues(meta_type)
-    
+
     security.declareProtected(view, 'getObjectByPath')
     def getObjectByPath(self, path):
         """ Returns object at given path
         """
         res = self.unrestrictedTraverse(path, None)
         return res
-    
+
     security.declareProtected(view, 'zip_upload_html')
     def zip_upload_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'folder_zipupload')
-    
+
     security.declareProtected(view, 'zip_download_html')
     def zip_download_html(self, REQUEST=None, RESPONSE=None):
         """ """
@@ -659,18 +660,18 @@ class EnviroWindowsSite(NySite):
             errors = [errors]
         if not RESPONSE:
             return errors
-        
+
         if errors:
             self.setSessionErrors(errors)
         RESPONSE.redirect(path)
-    
+
     security.declareProtected(view, 'zipDownloadDocuments')
     def zipDownloadDocuments(self, REQUEST=None, RESPONSE=None):
         """ Return a zip archive content as a session response.
         """
         if not (REQUEST and RESPONSE):
             return ""
-        
+
         path = REQUEST.form.get('path', '')
         doc_ids = REQUEST.form.get('ids', [])
         folder = self.getObjectByPath(path)
@@ -681,83 +682,83 @@ class EnviroWindowsSite(NySite):
                 self.zip_redirect(path, "Restricted access", RESPONSE)
 
         RESPONSE.setHeader('Content-Type', 'application/x-zip-compressed')
-        RESPONSE.setHeader('Content-Disposition', 
+        RESPONSE.setHeader('Content-Disposition',
                            'attachment; filename=%s.zip' % folder.getId())
         return self._zipDownloadDocuments(path, doc_ids)
-    
+
     security.declarePrivate('_zipDownloadDocuments')
     def _zipDownloadDocuments(self, path, doc_ids):
-        """ Create and return a zip archive from folder items defined by 
+        """ Create and return a zip archive from folder items defined by
         doc_ids.
-        
+
         @path: folder relative path
         @doc_ids: folder items
         returns a zip archive content
         """
         zip_buffer = StringIO()
         zip_file = ZipFile(zip_buffer, 'w', ZIP_DEFLATED)
-        
+
         for doc_id in doc_ids:
             doc = self.getObjectByPath(path + "/" + doc_id)
-            if not doc: 
+            if not doc:
                 continue
-            
+
             doc_name = getattr(doc, 'downloadfilename', "")
             #TODO: Extend toAscii for other charsets
             doc_name = self.toAscii(doc_name)
             doc_name = doc_name.strip() or self.toAscii(doc_id)
-            
+
             namelist = zip_file.namelist()
             if doc_name in namelist:
                 doc_name = "%s-%s" % (len(namelist), doc_name)
 
             doc_file = doc.getFileItem()
             doc_data = doc_file.get_data(as_string=False)
-            
+
             if doc_data.is_broken():
                 continue
             else:
                 doc_data = doc_file.get_data()
-           
+
             if not isinstance(doc_data, str):
                 data_buffer = StringIO()
                 while doc_data is not None:
                     data_buffer.write(doc_data.data)
                     doc_data = doc_data.next
                 doc_data = data_buffer.getvalue()
-                
+
             if not doc_data:
                 continue
             zip_file.writestr(doc_name, doc_data)
-        
+
         zip_file.close()
         return zip_buffer.getvalue()
-    
+
     security.declareProtected(view, 'zipUploadDocuments')
     def zipUploadDocuments(self, REQUEST=None, RESPONSE=None):
         """ Call zip importer and redirect to folder index.
         """
         if not (REQUEST and RESPONSE):
             return ""
-        
+
         path = REQUEST.form.get('path', '')
         upload_file = REQUEST.form.get('upload_file', None)
-        
+
         folder = self.getObjectByPath(path)
         if not folder:
             self.zip_redirect(path, "Invalid folder path", RESPONSE)
-        
+
         try:
             errors = self._zipUploadDocuments(folder, upload_file)
         except ZipUploadError, error:
             self.zip_redirect(path, error, RESPONSE)
         else:
             self.zip_redirect(path, errors, RESPONSE)
-    
+
     security.declarePrivate("_zipUploadDocuments")
     def _zipUploadDocuments(self, folder, upload_file):
         """ Create objects in given folder from upload_file zip archive.
-        
+
         @folder: a NyFolder instance;
         @upload_file: a FileUpload instance;
         returns occured errors.
@@ -770,13 +771,13 @@ class EnviroWindowsSite(NySite):
             raise ZipUploadError("Invalid archive: %s" % error)
         except Exception, error:
             raise ZipUploadError(error)
-        
+
         namelist = zip_file.namelist()
         folderish = [name for name in namelist if '/' in name]
-        if folderish: 
+        if folderish:
             raise ZipUploadError("Invalid archive: folderish "
                                  "structure not supported.")
-        
+
         errors = []
         for zinfo in zip_file.filelist:
             filename = zinfo.filename
@@ -787,10 +788,10 @@ class EnviroWindowsSite(NySite):
             except BadZipfile, error:
                 errors.append("Could not add file %s: %s" % (filename, error))
                 continue
-            
+
             headers = {'content-length': filesize}
             file_buffer = StringIO(file_data)
-            
+
             filename = filename.decode("utf-8")
             filename = self.toAscii(filename)
             fs = SimpleFieldStorage(file_buffer, filename, headers)
@@ -800,7 +801,7 @@ class EnviroWindowsSite(NySite):
             except BadRequest, error:
                 errors.append("Could not add file %s: %s" % (filename, error))
                 continue
-        
+
         return errors
 
     security.declareProtected(view_management_screens, 'update_email_templates')
@@ -869,7 +870,7 @@ class EnviroWindowsSite(NySite):
 	padding-bottom: 1em;
 	background: #fff;
 }
-.request_role h2 {	
+.request_role h2 {
 	color: #669933;
 	font-weight: bold;
 	margin: 0;
@@ -878,7 +879,7 @@ class EnviroWindowsSite(NySite):
 .request_role div p {
 	border: 1px solid #ddd;
 	padding: 0.5em;
-}	
+}
 .request_role .input_submit {
 	padding: 0.2em 0.5em;
 	border: 1px solid #ccc;
@@ -887,7 +888,7 @@ class EnviroWindowsSite(NySite):
 * html .request_role .input_submit {
 	padding: 0 !important;
 }
-.request_role h3 {	
+.request_role h3 {
 	color: #000;
 	font-weight: bold;
 	font-size: 1em;
@@ -972,14 +973,65 @@ text-decoration: underline;
                     print "css not found for scheme %s" % scheme.id
         return 'done'
 
+    security.declareProtected(view, 'update_news_link')
+    def update_news_link(self, list_name='Submit'):
+        """
+        Get today date and extract month and year, update the News link
+        to point to the current moonth and year when adding News.
+
+        Creates missing directories.
+        """
+        p_tool = self.getPortletsTool()
+        today = self.utGetTodayDate()
+        month = str(today.month())
+        year = str(today.year())
+
+        #get News folder, create it if it doesn't exist
+        try:
+            news_folder = self._getOb('News')
+        except AttributeError:
+            addNyFolder(self, id='News', title='News')
+            news_folder = self._getOb('News')
+
+        #get year folder, create it if it doesn't exist
+        try:
+            year_folder = news_folder._getOb(year)
+        except AttributeError:
+            addNyFolder(news_folder, id=year, title=year)
+            year_folder = news_folder._getOb(year)
+
+        #get month folder, create it if it doesn't exist
+        try:
+            year_folder._getOb(month)
+        except AttributeError:
+            addNyFolder(year_folder, id=month, title=month)
+
+        new_url = '/News/%s/%s/news_add_html' % (year, month)
+        links = p_tool.getLinksLists()
+
+        #find the LinksList matching 'list_name' parameter
+        matched = [link for link in links if link.title == list_name][0]
+
+        #find child link matching News
+        child = [c for c in matched.get_links_list() if c.title == 'News'][0]
+
+        #edit child with updated url path
+        matched.update_link_item(id=child.id,
+                                 title=child.title,
+                                 description=child.description,
+                                 url=new_url,
+                                 relative=child.relative,
+                                 permission=child.permission,
+                                 order=child.order)
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'sendMailToContacts')
     def sendMailToContacts(self, subject='', content='', REQUEST=None):
         """ """
         addresses = [contact.email for contact in self.getCatalogedObjectsCheckView(meta_type=['Naaya Contact'])]
-        
+
         for address in addresses:
             self.getEmailTool().sendEmail(content, address, self.mail_address_from, subject)
-        
+
         if REQUEST:
             self.setSessionInfo(['Mail sent. (%s)' % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_contacts_html' % self.absolute_url())
@@ -997,7 +1049,7 @@ text-decoration: underline;
 InitializeClass(EnviroWindowsSite)
 
 #
-# Zip utils  
+# Zip utils
 #
 class ZipUploadError(Exception):
     pass
