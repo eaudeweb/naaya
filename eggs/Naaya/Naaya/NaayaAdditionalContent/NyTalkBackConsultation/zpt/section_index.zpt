@@ -25,7 +25,7 @@
 		<a tal:attributes="href python:here.get_consultation().absolute_url()" i18n:translate="">Back to consultation index</a>
 	</span>
 </div>
-<div class="cleaner" />
+<div class="cleaner" ></div>
 
 <div class="talkback-section">
     <tal:block repeat="paragraph here/get_paragraphs">

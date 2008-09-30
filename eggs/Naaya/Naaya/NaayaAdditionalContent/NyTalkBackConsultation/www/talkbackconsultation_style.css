@@ -70,3 +70,48 @@ div.talkback-js_comment_window {
 p.talkback-cannot_comment {
 	margin-top: 1.5em;
 }
+.talkback-section *{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	vertical-align: baseline;
+	background: transparent;
+	list-style: none;
+	line-height: 1.3;
+	clear: both;
+}
+.talkback-section h2 {
+	font-size: 130%;
+	margin: 1em 0;
+	font-weight: bold;
+}
+.talkback-section h3 {
+	font-size: 110%;
+	margin: 1em 0;
+	font-weight: bold;
+}
+.talkback-section div {
+	margin: 0.5em 0;
+}
+.talkback-section input, .talkback-section textarea {
+	border: 1px solid #ccc;
+}
+.talkback-add_comment_form input,.talkback-add_comment_form textarea {
+	border: 1px solid #ccc;
+}
+.talkback-comments_list {
+	margin: 0.5em 0;
+}
+.talkback-add_comment, .button_sect_edit{
+	margin: 0.5em 0;
+	padding: 3px;
+	border: 1px solid #ccc;
+	font-size: 85%;
+	color: #000;
+	text-decoration: none;
+	background: #eee;
+}
+.talkback-add_comment:hover, .button_sect_edit:hover {
+	border: 1px solid #eee;
+}
