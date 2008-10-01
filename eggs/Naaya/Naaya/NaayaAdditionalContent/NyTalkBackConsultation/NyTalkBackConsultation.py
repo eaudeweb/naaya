@@ -169,6 +169,7 @@ def addNyTalkBackConsultation(self,
         ob = self._getOb(id)
         ob.submitThis()
         ob.approveThis(approved, approved_by)
+        ob.addDynProp()
         ob.updateRequestRoleStatus(public_registration, lang)
         ob.checkReviewerRole()
         self.recatalogNyObject(ob)
@@ -326,6 +327,14 @@ class NyTalkBackConsultation(NyAttributes,
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+
+    security.declarePrivate('addDynProp')
+    def addDynProp(self):
+        """ """
+        dynprop_tool = self.getDynamicPropertiesTool()
+        if not hasattr(dynprop_tool, METATYPE_OBJECT):
+            dynprop_tool.manage_addDynamicPropertiesItem(id=METATYPE_OBJECT, title=METATYPE_OBJECT)
+            dynprop_tool._getOb(METATYPE_OBJECT).manageAddDynamicProperty(id='show_contributor_request_role', name='Allow visitors to register as reviewers for this consultation', type='boolean')
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'updateRequestRoleStatus')
     def updateRequestRoleStatus(self, public_registration, lang):
