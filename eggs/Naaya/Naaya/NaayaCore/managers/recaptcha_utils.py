@@ -29,7 +29,7 @@ def render_captcha(context):
 
 def is_valid_captcha(context, REQUEST):
     """Test if captcha was passed or return True if the user is not anonymous."""
-    if not context.isAnonymousUser():
+    if context.checkPermissionSkipCaptcha():
         return True
     is_valid = submit(REQUEST.get('recaptcha_challenge_field', ''),
                       REQUEST.get('recaptcha_response_field', ''),
