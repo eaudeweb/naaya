@@ -74,14 +74,7 @@
 	<label for="contact_fax"><span i18n:translate="" tal:omit-tag="">Contact fax</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'contact_fax')" class="mandatory_field"> *</span></label>
 	<input type="text" name="contact_fax:utf8:ustring" size="50" id="contact_fax" tal:attributes="value python:here.getSession('contact_fax', '')" />
 </div>
-<div class="field">
-	<img tal:attributes="src string:${here/getSitePath}/getCaptcha" alt="" />
-</div>
-<div class="field">
-	<label for="contact_word"><span i18n:translate="" tal:omit-tag="">Word verification</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'contact_word')" class="mandatory_field"> *</span></label>
-	<input type="text" name="contact_word" size="50" id="contact_word" value="" />(required)<br />
-	<em i18n:translate="">please type the word you see in the above picture.</em>
-</div>
+<span tal:replace="structure python:here.show_recaptcha(here)" />
 </tal:block>
 
 </tal:block>

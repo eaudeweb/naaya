@@ -62,7 +62,6 @@ PROPERTIES_OBJECT = {
     'del_bigpicture':   (0, '', ''),
     'resourceurl':      (0, '', ''),
     'source':           (0, '', ''),
-    'contact_word':     (0, MUST_BE_CAPTCHA, 'The word you typed does not match with the one shown in the image. Please try again.'),
     'lang':             (0, '', '')
 }
 
@@ -77,7 +76,7 @@ def news_add_html(self, REQUEST=None, RESPONSE=None):
 def addNyNews(self, id='', title='', description='', coverage='', keywords='',
     sortorder='', details='', expirationdate='', topitem='', smallpicture='',
     bigpicture='', resourceurl='', source='', contributor=None, releasedate='',
-    discussion='', contact_word='', lang=None, REQUEST=None, **kwargs):
+    discussion='', lang=None, REQUEST=None, **kwargs):
     """
     Create a News type of object.
     """
@@ -92,15 +91,20 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
     #check mandatory fiels
     l_referer = ''
     if REQUEST is not None: l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
+
     if not(l_referer == 'news_manage_add' or l_referer.find('news_manage_add') != -1) and REQUEST:
         r = self.getSite().check_pluggable_item_properties(METATYPE_OBJECT, id=id, title=title, \
             description=description, coverage=coverage, keywords=keywords, sortorder=sortorder, \
             releasedate=releasedate, discussion=discussion, details=details, expirationdate=expirationdate, \
             topitem=topitem, smallpicture=smallpicture, bigpicture=bigpicture, resourceurl=resourceurl, \
-            source=source, contact_word=contact_word)
+            source=source)
     else:
         r = []
-    self.delSession('captcha')
+
+    #check reCaptcha
+    if not self.is_valid_recaptcha(self, REQUEST):
+        r.append('Verification words do not match the ones in the picture.')
+
     if not len(r):
         #process parameters
         if lang is None: lang = self.gl_get_selected_language()

@@ -68,7 +68,6 @@ PROPERTIES_OBJECT = {
     'contact_email':    (0, '', ''),
     'contact_phone':    (0, '', ''),
     'contact_fax':      (0, '', ''),
-    'contact_word':     (0, MUST_BE_CAPTCHA, 'The word you typed does not match with the one shown in the image. Please try again.'),
     'lang':             (0, '', '')
 }
 
@@ -85,7 +84,7 @@ def addNyEvent(self, id='', title='', description='', coverage='',
     start_date='', end_date='', host='', agenda_url='', event_url='', details='',
     topitem='', event_type='', contact_person='', contact_email='',
     contact_phone='', contact_fax='', contributor=None, releasedate='',
-    discussion='', contact_word='', lang=None, REQUEST=None, **kwargs):
+    discussion='', lang=None, REQUEST=None, **kwargs):
     """
     Create an Event type of object.
     """
@@ -107,10 +106,14 @@ def addNyEvent(self, id='', title='', description='', coverage='',
             location_url=location_url, start_date=start_date, end_date=end_date, \
             host=host, agenda_url=agenda_url, event_url=event_url, details=details, \
             topitem=topitem, contact_person=contact_person, contact_email=contact_email, \
-            contact_phone=contact_phone, contact_fax=contact_fax, contact_word=contact_word, event_type=event_type)
+            contact_phone=contact_phone, contact_fax=contact_fax, event_type=event_type)
     else:
         r = []
-    self.delSession('captcha')
+
+    #check reCaptcha
+    if not self.is_valid_recaptcha(self, REQUEST):
+        r.append('Verification words do not match the ones in the picture.')
+
     if not len(r):
         #process parameters
         if lang is None: lang = self.gl_get_selected_language()
