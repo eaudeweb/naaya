@@ -52,7 +52,7 @@ class CustomContentUpdater(NaayaContentUpdater):
             return None
 
         fileitems = doc.getFileItems()
-        for ob in fileitems.values():
+        for lang, ob in fileitems:
             if self._verify_lang_doc(ob):
                 return doc
 
@@ -67,7 +67,7 @@ class CustomContentUpdater(NaayaContentUpdater):
 
         fileitems = doc.getFileItems()
         logger.debug('%-20s %s', 'Update NyExFile', doc.absolute_url(1))
-        for ob in fileitems.values():
+        for lang, ob in fileitems:
             ob.update_data(ob.data)
             self._update_lang_doc_versions(ob)
             self._update_lang_doc_working_version(ob)
