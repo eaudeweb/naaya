@@ -1518,7 +1518,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def processRequestRoleForm(self, username='', password='', confirm='',
                                firstname='', lastname='', email='',
                                organisation='', location='',
-                               comments='', apply_role='', REQUEST=None):
+                               comments='', apply_role='contributor', REQUEST=None):
         """
         Sends notification email(s) to the administrators when people apply
         for a role. If the role is requested at portal level, the addresses
