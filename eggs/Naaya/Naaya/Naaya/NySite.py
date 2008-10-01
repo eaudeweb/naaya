@@ -91,6 +91,9 @@ from Products.NaayaBase.managers.import_parser import import_parser
 from NyVersions import NyVersions
 from NyFolder import NyFolder, addNyFolder, importNyFolder
 
+#reCaptcha
+from Products.NaayaCore.managers import recaptcha_utils
+
 #constructor
 manage_addNySite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addNySite(self, id='', title='', lang=None, default_content=True, REQUEST=None):
@@ -3196,6 +3199,16 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if REQUEST:
             return self.utGenerateZip('%s-contacts.zip' % self.id, files, self.REQUEST.RESPONSE)
         else: return files
+
+    security.declareProtected(view, 'showCaptcha')
+    def show_recaptcha(self, context):
+        """Return HTML code for CAPTCHA"""
+        return recaptcha_utils.render_captcha(context)
+
+    security.declareProtected(view, 'is_valid_recaptcha')
+    def is_valid_recaptcha(self, context, REQUEST):
+        """Test if captcha was passed or return True if the user is not anonymous."""
+        return recaptcha_utils.is_valid_captcha(context, REQUEST)
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_controlpanel_html')
