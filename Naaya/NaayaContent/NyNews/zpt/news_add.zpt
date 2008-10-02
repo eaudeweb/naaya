@@ -35,7 +35,20 @@
 	<label for="source"><span i18n:translate="" tal:omit-tag="">Source</span><span tal:condition="python:here.get_pluggable_item_property_mandatory(kind, 'source')" class="mandatory_field"> *</span></label>
 	<input type="text" name="source:utf8:ustring" id="source" size="50" tal:attributes="value python:here.getSession('source', '')" />
 </div>
-<span tal:replace="structure python:here.show_recaptcha(here)" />
+
+<span tal:condition="here/recaptcha_is_present" tal:replace="structure python:here.show_recaptcha(here)" />
+<tal:block condition="not:here/recaptcha_is_present">
+  <div class="field">
+     <img tal:attributes="src string:${here/getSitePath}/getCaptcha" alt="" />
+  </div>
+
+  <div class="field">
+    <label for="contact_word"><span i18n:translate="">Word verification</span>
+    <input type="text" name="contact_word" size="50" id="contact_word" value="" />(required)<br />
+    <em i18n:translate="">please type the word you see in the above picture.</em>
+  </div>
+</tal:block>
+
 </tal:block>
 
 </tal:block>

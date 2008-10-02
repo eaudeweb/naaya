@@ -80,6 +80,9 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
     """
     Create a News type of object.
     """
+    form = kwargs.copy()
+    if REQUEST:
+        form.update(REQUEST.form)
     #process parameters
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(title)
@@ -101,9 +104,16 @@ def addNyNews(self, id='', title='', description='', coverage='', keywords='',
     else:
         r = []
 
-    #check reCaptcha
-    if not self.is_valid_recaptcha(self, REQUEST):
-        r.append('Verification words do not match the ones in the picture.')
+    #check Captcha/reCaptcha
+    if self.recaptcha_is_present():
+        if not self.is_valid_recaptcha(self, REQUEST):
+            r.append('Verification words do not match the ones in the picture.')
+    else:
+        contact_word = form.get('contact_word', '')
+        if contact_word != self.getSession('captcha', ''):
+            r.append('The word you typed does not match with the one shown in the image. Please try again.')
+
+    self.delSession('captcha')
 
     if not len(r):
         #process parameters
