@@ -3200,14 +3200,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             return self.utGenerateZip('%s-contacts.zip' % self.id, files, self.REQUEST.RESPONSE)
         else: return files
 
+    security.declareProtected(view, 'recaptcha_is_present')
+    def recaptcha_is_present(self):
+        return self.recaptcha_private_key and self.recaptcha_public_key
+
     security.declareProtected(view, 'showCaptcha')
     def show_recaptcha(self, context):
-        """Return HTML code for CAPTCHA"""
+        """ Returns HTML code for reCAPTCHA """
         return recaptcha_utils.render_captcha(context)
 
     security.declareProtected(view, 'is_valid_recaptcha')
     def is_valid_recaptcha(self, context, REQUEST):
-        """Test if captcha was passed or return True if the user is not anonymous."""
+        """ Test if reCaptcha is valid. """
         return recaptcha_utils.is_valid_captcha(context, REQUEST)
 
     #zmi pages
