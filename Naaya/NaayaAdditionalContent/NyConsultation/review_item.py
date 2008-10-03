@@ -69,7 +69,7 @@ class ConsultationReviewItem(NyFSFile):
         self.answers = [(key, value) for key, value in kwargs.items() if key.startswith('q')]
         
         #store line comments
-        self.linecomments = kwargs['adt_comment']
+        self.linecomments = kwargs.get('adt_comment', '')
 
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'saveRate')
     def saveRate(self, REQUEST=None):
