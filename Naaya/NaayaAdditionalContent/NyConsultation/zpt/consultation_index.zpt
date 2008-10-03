@@ -23,6 +23,7 @@
 		</tal:block>
 	
 		<a class="consultation-special-button" tal:condition="python:days_left[0] == 1 and days_left[1] > 0 and not here.check_contributor_review(REQUEST=request) and here.checkConsultationUser() == 1" tal:attributes="href string:${here/absolute_url}/review_add_html" i18n:translate="">Review</a>
+		<a class="consultation-special-button" tal:condition="python:days_left[0] == 1 and days_left[1] > 0 and here.check_contributor_review(REQUEST=request) and here.checkConsultationUser() == 1" tal:attributes="href string:${here/absolute_url}/edit_review" i18n:translate="">Edit Review</a>
 		<a class="consultation-special-button" tal:condition="not:here/checkConsultationUser" tal:attributes="href string:${here/absolute_url}/review_add_html">Log in to review</a>
 		<a class="consultation-special-button" tal:condition="python:here.checkConsultationUser() == 2 and here.public_registration" tal:attributes="href string:${here/absolute_url}/requestrole_html">Apply for reviewer rights</a>
 		<p tal:condition="python:days_left[1] <= 0" i18n:translate="">Reviews are disabled since the deadline for this consultation has passed.</p>
