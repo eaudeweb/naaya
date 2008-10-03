@@ -3204,7 +3204,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def recaptcha_is_present(self):
         return self.recaptcha_private_key and self.recaptcha_public_key
 
-    security.declareProtected(view, 'showCaptcha')
+    security.declareProtected(view, 'show_recaptcha')
     def show_recaptcha(self, context):
         """ Returns HTML code for reCAPTCHA """
         return recaptcha_utils.render_captcha(context)
