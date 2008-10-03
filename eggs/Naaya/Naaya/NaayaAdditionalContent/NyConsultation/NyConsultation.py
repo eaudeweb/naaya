@@ -662,6 +662,16 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
     #site pages
 
+    security.declareProtected(PERMISSION_REVIEW_CONSULTATION, 'edit_review')
+    def edit_review(self):
+        """ """
+        auth_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        for review in self.objectValues(['Consultation Review']):
+            if review.contributor == auth_user:
+                return self.REQUEST.RESPONSE.redirect('%s/edit_html' % review.absolute_url())
+        self.setSessionErrors(['You cannot edit that Review.'])
+        return self.REQUEST.RESPONSE.redirect(self.absolute_url() + '/index_html')
+
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'question_edit_html')
     question_edit_html = PageTemplateFile('zpt/question_edit', globals())
 

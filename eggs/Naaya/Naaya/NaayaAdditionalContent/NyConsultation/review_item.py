@@ -82,6 +82,20 @@ class ConsultationReviewItem(NyFSFile):
         self._p_changed = 1
         REQUEST.RESPONSE.redirect('%s/reviews_index_html' % self.get_consultation_url())
 
+    security.declareProtected(PERMISSION_REVIEW_CONSULTATION, 'save_properties')
+    def save_properties(self, REQUEST=None, **kwargs):
+        """ """
+        if REQUEST:
+            kwargs.update(REQUEST.form)
+        if self.REQUEST.AUTHENTICATED_USER.getUserName() == self.contributor:
+            self.store_kwargs(kwargs)
+            self.handleUpload(kwargs.get('file', ''))
+            self.setSessionInfo(['Saved changes.'])
+        else:
+            self.setSessionErrors(['You are not the owner of this Review'])
+
+        self.REQUEST.RESPONSE.redirect(self.absolute_url() + '/edit_html')
+
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'getRatings')
     def getRatings(self):
         output = {}
@@ -115,6 +129,12 @@ class ConsultationReviewItem(NyFSFile):
         """ """
         return self.review_date
 
+    security.declareProtected(PERMISSION_REVIEW_CONSULTATION, 'get_question_answer')
+    def get_question_answer(self, qid):
+        for k,v in self.answers:
+            if k == qid:
+                return v
+
     security.declareProtected(PERMISSION_MANAGE_CONSULTATION, 'getAnswersDict')
     def getAnswersDict(self):
         """ """
@@ -124,7 +144,11 @@ class ConsultationReviewItem(NyFSFile):
             ans_dict[qid] = ans
         return ans_dict
 
+    security.declareProtected(PERMISSION_REVIEW_CONSULTATION, 'review_index_html')
+    security.declareProtected(PERMISSION_REVIEW_CONSULTATION, 'edit_html')
+
     review_index_html = PageTemplateFile('zpt/review_index', globals())
+    edit_html = PageTemplateFile('zpt/review_edit', globals())
     rate_review_html = PageTemplateFile('zpt/review_rate', globals())
 
 InitializeClass(ConsultationReviewItem)
