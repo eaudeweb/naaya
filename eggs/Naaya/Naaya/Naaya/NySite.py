@@ -3214,6 +3214,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ Test if reCaptcha is valid. """
         return recaptcha_utils.is_valid_captcha(context, REQUEST)
 
+    security.declareProtected(view, 'HEAD')
+    def HEAD(self, REQUEST=None):
+        """ """
+        modified = self.bobobase_modification_time()
+        return self.REQUEST.RESPONSE.setHeader('Last-Modified', modified)
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_controlpanel_html')
     manage_controlpanel_html = PageTemplateFile('zpt/site_manage_controlpanel', globals())
