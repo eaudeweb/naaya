@@ -64,11 +64,12 @@ class Chatter(Folder):
         raise NotImplementedError
 
     security.declareProtected(CHATTER_ADD_ROOM_PERMISSION, 'getChatter')
-    def addRoom(self, id='', title='', roles=[], user_list=[], REQUEST=None):
+    def addRoom(self, id='', title='', roles=[], user_list=[], private=0, REQUEST=None):
         """ Creates a new chat room """
-        manage_addChatRoom(self, id, title, roles, user_list)
+        r_id = manage_addChatRoom(self, id, title, roles, user_list, private)
         if REQUEST:
-            self.REQUEST.RESPONSE.redirect(self.absolute_url())
+            return self.REQUEST.RESPONSE.redirect(self.absolute_url())
+        return r_id
 
     def getUserObj(self):
         return self.REQUEST.get('AUTHENTICATED_USER', None)
@@ -111,6 +112,7 @@ class Chatter(Folder):
     index_html = PageTemplateFile('zpt/chatter_index', globals())
     style_css = PageTemplateFile('zpt/style', globals())
     jquery_js = ImageFile('www/jquery.js', globals())
+    room_js = ImageFile('www/room.js', globals())
 
     #Product
     security.declareProtected(CHATTER_ADD_ROOM_PERMISSION, 'manage_addChatRoom')

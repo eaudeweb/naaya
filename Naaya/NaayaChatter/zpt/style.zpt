@@ -4,6 +4,7 @@
 .chtuser {color: red;}
 .chtmsg {color: blue;}
 .onlineuser {color: blue; display: block;}
+.pm-invite {float: right;}
 
 #userlabel {
 	float: right;

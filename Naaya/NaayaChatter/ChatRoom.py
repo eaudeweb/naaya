@@ -1,4 +1,6 @@
 #Python imports
+import hmac
+import time
 
 #Zope imports
 from OFS.Folder import Folder
@@ -19,21 +21,21 @@ from Products.NaayaCore.managers.utils import utils
 
 ut = utils()
 manage_addChatRoom_html = PageTemplateFile('zpt/chatroom_manage_add', globals())
-def manage_addChatRoom(self, id='', title='', roles='', user_list='', REQUEST=None):
+def manage_addChatRoom(self, id='', title='', roles='', user_list='', private=0, REQUEST=None):
     """ Creates a new ChatRoom instance"""
     creator = self.getUserID()
     user_list = user_list.split(' ')
-    id = ut.utGenObjectId(title) or ut.utCleanupId(id)
+    if not id: id = ut.utGenObjectId(title) or ut.utCleanupId(id)
     if not id or self._getOb(id, None):
         id = CHATTER_ROOM_PREFIX + ut.utGenRandomId(6)
-    ob = ChatRoom(id, title, roles, user_list, creator)
+    ob = ChatRoom(id, title, roles, user_list, creator, private)
     self._setObject(id, ob)
     ob = self._getOb(id)
     ob.setRoomRoles()
     ob.addArchive(automatic=True)
     if REQUEST:
         return self.manage_main(self, REQUEST, update_menu=1)
-
+    return ob.getId()
 
 class ChatRoom(Folder):
     """
@@ -54,6 +56,8 @@ class ChatRoom(Folder):
     releasedate = ''
     creator = ''
     users_online = None
+    invites = {}
+    private = 0
 
     #Class metadata
     #Zope
@@ -62,7 +66,7 @@ class ChatRoom(Folder):
     meta_types = ({'name':CHATTER_ARCHIVE_META_TYPE, 'action':'manage_addChatArchive_html'}, )
     all_meta_types = meta_types
 
-    def __init__(self, id, title, roles, user_list, creator):
+    def __init__(self, id, title, roles, user_list, creator, private):
         self.id = id
         self.title = title
         self.roles = roles
@@ -72,6 +76,8 @@ class ChatRoom(Folder):
         self.releasedate = DateTime()
         self.creator = creator
         self.users_online = None
+        self.invites = {}
+        self.private = private
 
     security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'getChatRoom')
     def getChatRoom(self):
@@ -194,6 +200,35 @@ class ChatRoom(Folder):
         """ Get the online user list """
         now = time()
         return [k for k, v in self.users_online.items() if int(now - v) < 60]
+
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'pm_invite')
+    def pm_invite(self, from_user, to_user):
+        """ """
+        #create private room
+        room_id = hmac.new('%s%s%s' % (time(), from_user, to_user), 'sha1').hexdigest()
+        room_title = 'Private room for %s and %s' % (from_user, to_user)
+        room_users = ' '.join([from_user, to_user])
+
+        if not self.invites.has_key(to_user):
+            self.invites[to_user] = {}
+        if from_user not in self.invites[to_user].keys():
+            r_id = self.addRoom(id=room_id, title=room_title, user_list=room_users, private=1)
+            room_url = '%s/%s' % (self.getChatter().absolute_url(), r_id)
+            self.invites[to_user][from_user] = room_url
+        return self.invites[to_user][from_user]
+
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'get_user_invites')
+    def get_user_invites(self, user):
+        """ """
+        if self.invites.has_key(user):
+            return self.invites[user]
+
+    def accept_invite(self, this_user, from_user):
+        """ """
+        invs = self.invites[this_user]
+        for k, v in invs.items():
+            if from_user == k:
+                invs.pop(k)
 
     security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'messages')
     security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'index_html')
