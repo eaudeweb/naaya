@@ -1,3 +1,22 @@
+# The contents of this file are subject to the Mozilla Public
+# License Version 1.1 (the "License"); you may not use this file
+# except in compliance with the License. You may obtain a copy of
+# the License at http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS
+# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+# implied. See the License for the specific language governing
+# rights and limitations under the License.
+#
+# The Initial Owner of the Original Code is European Environment
+# Agency (EEA). Portions created by Eau de Web are
+# Copyright (C) European Environment Agency. All Rights Reserved.
+#
+# Authors:
+#
+# David Batranu, Eau de Web
+
+
 #Python imports
 import hmac
 import time
@@ -57,6 +76,7 @@ class ChatRoom(Folder):
     creator = ''
     users_online = None
     invites = {}
+    pending_invites = {}
     private = 0
 
     #Class metadata
@@ -77,6 +97,7 @@ class ChatRoom(Folder):
         self.creator = creator
         self.users_online = None
         self.invites = {}
+        self.pending_invites = {}
         self.private = private
 
     security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'getChatRoom')
@@ -215,7 +236,16 @@ class ChatRoom(Folder):
             r_id = self.addRoom(id=room_id, title=room_title, user_list=room_users, private=1)
             room_url = '%s/%s' % (self.getChatter().absolute_url(), r_id)
             self.invites[to_user][from_user] = room_url
+            self.update_pending_invites(from_user, to_user)
         return self.invites[to_user][from_user]
+
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'update_pending_invites')
+    def update_pending_invites(from_user, to_user):
+        """ """
+        pinv = self.pending_invites
+        if not pinv.has_key(from_user):
+            pinv[from_user] = []
+        pinv[from_user].append(to_user)
 
     security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'get_user_invites')
     def get_user_invites(self, user):
@@ -223,6 +253,7 @@ class ChatRoom(Folder):
         if self.invites.has_key(user):
             return self.invites[user]
 
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'accept_invite')
     def accept_invite(self, this_user, from_user):
         """ """
         invs = self.invites[this_user]
