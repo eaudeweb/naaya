@@ -236,16 +236,21 @@ class ChatRoom(Folder):
             r_id = self.addRoom(id=room_id, title=room_title, user_list=room_users, private=1)
             room_url = '%s/%s' % (self.getChatter().absolute_url(), r_id)
             self.invites[to_user][from_user] = room_url
-            self.update_pending_invites(from_user, to_user)
+            self.update_pending_invites(from_user, to_user, room_url)
         return self.invites[to_user][from_user]
 
     security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'update_pending_invites')
-    def update_pending_invites(from_user, to_user):
+    def update_pending_invites(self, from_user, to_user, room_url):
         """ """
         pinv = self.pending_invites
         if not pinv.has_key(from_user):
-            pinv[from_user] = []
-        pinv[from_user].append(to_user)
+            pinv[from_user] = {}
+        pinv[from_user][to_user] = [room_url, 0] #0 - not accepted
+
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'get_pending_invites')
+    def get_pending_invites(self, user):
+        """ """
+        return self.pending_invites.get(user, {})
 
     security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'get_user_invites')
     def get_user_invites(self, user):
@@ -260,6 +265,11 @@ class ChatRoom(Folder):
         for k, v in invs.items():
             if from_user == k:
                 invs.pop(k)
+        self.pending_invites[from_user][this_user][1] = 1 #accept invitation
+
+    def del_my_invite(self, this_user, user):
+        """ """
+        return self.pending_invites[this_user].pop(user)
 
     security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'messages')
     security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'index_html')

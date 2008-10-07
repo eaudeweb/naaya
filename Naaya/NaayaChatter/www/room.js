@@ -11,6 +11,7 @@
 		ajaxCall();
 		getUsers();
 		getInvites();
+		getPendingInvites();
 		$(window).bind("blur", function(){window_status = 'blured'})
 		$(window).bind("focus", function(){handleFocus()})
 	});
@@ -79,14 +80,7 @@
 
 	function pmInvite(elem){
 		var user = elem.id;
-		$.post("pm_invite", {"from_user": this_user, "to_user": user}, 
-			function (data) {
-				if ($("#private_label").html() == '') {
-					$("#private_label").append("You have invited people in the following chat rooms:");
-				}
-				
-				$("#private_rooms").append('<li><a href="' + data + '" target="_blank"> Chat with ' + user + '</a></li>');
-			});
+		$.post("pm_invite", {"from_user": this_user, "to_user": user});
 	}
 
 	function getInvites(){
@@ -105,6 +99,39 @@
 		if (!data){
 			$("#invites").html = '';
 		}
+	}
+
+	function getPendingInvites(){
+		$.post("get_pending_invites", {"user" : this_user}, handlePendingInvites, "json");
+		setTimeout('getPendingInvites()', 5000);
+	}
+
+	var pl = '';
+	function handlePendingInvites(data) {
+		pl = '';
+		if (data){
+			$("#private_label").html('<p>You have invited people in the following chat rooms:</p>');
+			$.each(data, write_pending);
+			$("#private_rooms").html(pl);
+		}
+		if (!data){
+			$("#private_label").html = '';
+			$("#private_rooms").html = '';
+		}
+	}
+
+	function write_pending(user, values){
+		var url = values[0];
+		var accepted = values[1];
+		item = '<li><a href="' + url + '" target="_blank" id="'+ user +'">Private chat with ' + user + '</a>';
+		if (accepted == 0) {
+			item = item + ' <span class="unaccepted_invite">[UNACCEPTED]</span></li>'
+		}
+		
+		if (accepted == 1) {
+			item = item + ' <span class="accepted_invite">[ACCEPTED]</span></li>'
+		}
+		pl = pl + item;
 	}
 
 	function write_invites(user, url){
