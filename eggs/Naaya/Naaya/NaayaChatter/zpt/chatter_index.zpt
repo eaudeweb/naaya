@@ -1,4 +1,7 @@
 <span tal:replace="structure here/standard_html_header" />
+
+<style type="text/css" tal:content="here/style_css" ></style>
+
 <h1 tal:content="here/title_or_id" />
 
 <div tal:define="rooms here/listRooms">
