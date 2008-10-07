@@ -125,7 +125,7 @@
 		var accepted = values[1];
 		item = '<li><a href="' + url + '" target="_blank" id="'+ user +'">Private chat with ' + user + '</a>';
 		if (accepted == 0) {
-			item = item + ' <span class="unaccepted_invite">[UNACCEPTED]</span></li>'
+			item = item + ' <span class="unaccepted_invite">[PENDING]</span></li>'
 		}
 		
 		if (accepted == 1) {
