@@ -116,6 +116,8 @@
 }
 .chatter ul li {
 	margin: 0 0 0.3em 0;
+	background: url(room) no-repeat;
+	padding:  0 0 0 20px;
 }
 .chatter fieldset {
 	border: 1px solid #CCC;

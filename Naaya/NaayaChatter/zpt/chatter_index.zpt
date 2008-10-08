@@ -8,8 +8,8 @@
 	
 <div tal:define="rooms here/listRooms">
 	<p>Existing rooms</p>
+	<p tal:condition="not:rooms" i18n:translate="">No chat rooms</p>
 	<ul>
-		<li tal:condition="not:rooms" i18n:translate="">No chat rooms</li>
 		<tal:block repeat="room rooms">
 			<li tal:condition="not:room/private">
 				<a tal:content="room/title_or_id" tal:attributes="href room/absolute_url" />
