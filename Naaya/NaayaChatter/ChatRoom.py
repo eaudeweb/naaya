@@ -105,7 +105,7 @@ class ChatRoom(Folder):
         """ Returns this Chat Room instance """
         return self
 
-    security.declareProtected(CHATTER_MANAGE_ROOM_PERMISSION, 'setRoomRoles')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'setRoomRoles')
     def setRoomRoles(self):
         """ Give the owner local role to the user_list and assign view permissions to that role """
         roles = self.roles
@@ -131,7 +131,7 @@ class ChatRoom(Folder):
         """ Returns the previous archive object """
         return self._getOb(self.previous_archive)
 
-    security.declareProtected(CHATTER_MANAGE_ROOM_PERMISSION, 'update_latest_previous')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'update_latest_previous')
     def update_latest_previous(self, id=''):
         """ Update the latest and previous archive properties """
         if id:
@@ -148,7 +148,7 @@ class ChatRoom(Folder):
         """ Deletes a list of archives """
         raise NotImplementedError
 
-    security.declareProtected(CHATTER_MANAGE_ROOM_PERMISSION, 'addArchive')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'addArchive')
     def addArchive(self, title='', automatic=False, REQUEST=None):
         """ Creates a new chat archive """
         #TODO: allow users to create own archives

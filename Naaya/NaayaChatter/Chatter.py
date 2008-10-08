@@ -71,18 +71,18 @@ class Chatter(Folder):
         """ Returns this Chatter instance """
         return self
 
-    security.declareProtected(CHATTER_VIEW_PERMISSION, 'getChatter')
+    security.declareProtected(CHATTER_VIEW_PERMISSION, 'listRooms')
     def listRooms(self):
         """ Returns a list of contained ChatRoom objects """
         return self.objectValues(CHATTER_ROOM_META_TYPE)
 
-    security.declareProtected(CHATTER_MANAGE_PERMISSION, 'getChatter')
+    security.declareProtected(CHATTER_MANAGE_PERMISSION, 'delRooms')
     def delRooms(self, roomlist=[]):
         """ Deletes a list of chat rooms """
         #make use of manage_delObjects
         raise NotImplementedError
 
-    security.declareProtected(CHATTER_ADD_ROOM_PERMISSION, 'getChatter')
+    security.declareProtected(CHATTER_ADD_ROOM_PERMISSION, 'addRoom')
     def addRoom(self, id='', title='', roles=[], user_list=[], private=0, REQUEST=None):
         """ Creates a new chat room """
         r_id = manage_addChatRoom(self, id, title, roles, user_list, private)
