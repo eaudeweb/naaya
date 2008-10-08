@@ -227,7 +227,7 @@ class ChatRoom(Folder):
         """ """
         #create private room
         room_id = hmac.new('%s%s%s' % (time(), from_user, to_user), 'sha1').hexdigest()
-        room_title = 'Private room for %s and %s' % (from_user, to_user)
+        room_title = 'Private chatroom for %s and %s' % (from_user, to_user)
         room_users = ' '.join([from_user, to_user])
 
         if not self.invites.has_key(to_user):
