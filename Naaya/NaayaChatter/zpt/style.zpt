@@ -32,6 +32,9 @@
 .jarchive-listings {
 	margin: 0 0 0 1em;
 }
+.jarchive-listings div {
+	margin: 0.3em 0 0 0;
+}
 .pm-invite {
 	float: right;
 	background: url(invite) no-repeat;
@@ -64,6 +67,7 @@
 	background:#f4f4f4;
 	border: 1px solid #ccc;
 	padding: 0.5em;
+	margin: 0 0 1em 0;
 }
 #private_label p {
 	padding:0;
@@ -115,6 +119,7 @@
 .chatter fieldset {
 	border: 1px solid #CCC;
 	background: url(bg_chat) #fff bottom repeat-x;
+	margin: 0 0 1em 0;
 }
 .chatter legend {
 	padding: 0 0.5em;
@@ -145,7 +150,6 @@
 #message {
 	width: 100%; 
 	height: 20%; 
-	float: left;
 	margin: 1em 0 0 0;
 }
 
@@ -155,6 +159,7 @@
 	float: left;
 	border: 1px solid #6D9E9F;
 	padding: 2px;
+	margin:0;
 }
 
 #sendbtn {

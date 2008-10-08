@@ -2,7 +2,7 @@
 
 <h1 tal:content="here/get_friendly_title"></h1>
 
-<a tal:attributes="href python:here.getChatRoom().absolute_url() + '/room_archive_html'" i18n:translate="" class="chattera">Return to chatroom archive</a>
+<a tal:attributes="href python:here.getChatRoom().absolute_url() + '/room_archive_html'" i18n:translate="" class="chattera" style="float:right;">Return to chatroom archive</a>
 
 <style type="text/css" tal:content="here/style_css" ></style>
 <br /><br />
