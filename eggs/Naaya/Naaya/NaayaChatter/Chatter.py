@@ -139,6 +139,7 @@ class Chatter(Folder):
     bg_userlist = ImageFile('www/bg_userlist.jpg', globals())
     bg_btn = ImageFile('www/bg_btn.jpg', globals())
     info = ImageFile('www/info.gif', globals())
+    room = ImageFile('www/room.gif', globals())
 
     #Product
     security.declareProtected(CHATTER_ADD_ROOM_PERMISSION, 'manage_addChatRoom')
