@@ -12,8 +12,9 @@
         getUsers();
         getInvites();
         getPendingInvites();
-        $(window).bind("blur", function(){window_status = 'blured'})
-        $(window).bind("focus", function(){handleFocus()})
+        $(window).bind("blur", function(){window_status = 'blured'});
+        $(window).bind("focus", function(){handleFocus()});
+        $("#private").css({display: "none"});
     });
 
     function getMessages(data){
@@ -110,6 +111,7 @@
     function handlePendingInvites(data) {
         pl = '';
         if (data){
+            $("#private").css({display: "block"})
             $("#private_label").html('<p>You have invited people in the following chat rooms:</p>');
             $.each(data, write_pending);
             $("#private_rooms").html(pl);
