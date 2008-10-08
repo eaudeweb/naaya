@@ -14,6 +14,7 @@
 			<li tal:condition="not:room/private">
 				<a tal:content="room/title_or_id" tal:attributes="href room/absolute_url" />
 				[<span tal:replace="room/get_friendlyDate" />]
+				[<small><a tal:attributes="href string:${room/absolute_url}/room_archive_html" i18n:translate="">View room archive</a></small>]
 			</li>
 		</tal:block>
 	</ul>
@@ -23,12 +24,12 @@
 	<form method="post" action="addRoom">
 		<div class="field">
 			<label for="title">Room title: </label>
-			<input type="text" name="title" id="title" />
+			<input type="text" name="title" id="title" size="70" />
 		</div>
 
 		<div class="field">
 			<label for="user_list" i18n:translate="">User list (separate user ids by space): </label>
-			<input type="text" name="user_list" id="user_list" />
+			<input type="text" name="user_list" id="user_list" size="70" />
 		</div>
 
 		<div class="field">

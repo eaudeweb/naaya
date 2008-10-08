@@ -119,7 +119,7 @@ class ChatRoom(Folder):
 
     security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'get_friendlyDate')
     def get_friendlyDate(self):
-        return ut.utShowFullDateTime(self.releasedate)
+        return ut.utGetDate(self.releasedate).strftime('%d %b %Y %H:%M')
 
     security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'get_latest_archive')
     def get_latest_archive(self):
