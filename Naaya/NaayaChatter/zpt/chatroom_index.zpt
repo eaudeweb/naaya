@@ -21,9 +21,10 @@
 	</div>
 	<div class="cleaner"></div>
 </div>
-
-<div id="private_label"></div>
-<ul id="private_rooms"></ul>
+<div id="private">
+	<div id="private_label"></div>
+	<ul id="private_rooms"></ul>
+</div>
 
 <script type="text/javascript" src="jquery_js"></script>
 

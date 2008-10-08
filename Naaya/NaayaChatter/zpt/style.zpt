@@ -8,16 +8,16 @@
 	background: url(user_icon_over) no-repeat #C8DCF2;
 }
 .chattera, .chattera:visited {
-	text-align: center;
+	text-align: center !important;
 	padding: 0.5em;
 	margin: 0.5em 0.3em;
-	color: #fff;
-	text-decoration: none;
-	background: url(bg_btn) repeat-x center #C8DCF2;
-	border: 1px solid #6D9E9F;
+	color: #fff !important;
+	text-decoration: none !important;
+	background: url(bg_btn) repeat-x center #C8DCF2 !important;
+	border: 1px solid #6D9E9F !important;
 }
 .chattera:hover {
-	color: #000;
+	color: #000 !important;
 }
 #archivelist {
 	list-style: none;
@@ -43,6 +43,7 @@
 #invites {
 	list-style: none;
 	margin:1.5em 0 0 0;
+	padding:0;
 }
 #invites li {
 	padding: 1em 1em 1em 3.5em;
@@ -52,17 +53,29 @@
 	font-size: 120%;
 }
 #invites li a{
-	color: #6D9E9F;
+	color: #222;
 	text-decoration: none;
 	font-weight: bold;
 }
 #invites li a:hover {
-	color: #222;
+	color: #6D9E9F;
+}
+#private {
+	background:#f4f4f4;
+	border: 1px solid #ccc;
+	padding: 0.5em;
+}
+#private_label p {
+	padding:0;
+	margin:0;
 }
 #private_rooms {
-	list-style: none
+	list-style: none;
+	padding: 0;
+	margin:0.5em 0 0 0.5em;
 }
 #private_rooms li {
+	padding: 0;
 	margin: 0 0 0.3em 0;
 }
 #private_rooms a, #private_rooms a:visited {
@@ -72,11 +85,40 @@
 #private_rooms a:hover {
 	text-decoration: none;
 }
+.unaccepted_invite {
+	font-weight: bold;
+}
 #userlabel {
 	float: right;
 	width: 17%;
 }
-
+.chatter ul{
+	list-style: none;
+	font-size: 110%;
+	padding:0;
+	margin: 1em;
+}
+.chatter a {
+	color: #6D9E9F;
+	text-decoration: none;
+	font-weight: bold;
+	font-size: 110%;
+}
+.chatter p {
+	margin:0;
+	padding: 0;
+	font-size: 120%;
+}
+.chatter ul li {
+	margin: 0 0 0.3em 0;
+}
+.chatter fieldset {
+	border: 1px solid #CCC;
+	background: url(bg_chat) #fff bottom repeat-x;
+}
+.chatter legend {
+	padding: 0 0.5em;
+}
 #chatter_wrap {
 	margin: 2em;
 	clear: both;
@@ -85,7 +127,7 @@
 #messages {
 	width: 80%;
 	height: 200px;
-	border: 1px solid #eaeaea;
+	border: 1px solid #C8DCF2;
 	overflow: auto;
 	padding: 0.5em 0.5em 0 0.5em;
 	background: url(bg_chat) #fff bottom repeat-x;

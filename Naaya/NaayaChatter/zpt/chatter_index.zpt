@@ -37,7 +37,7 @@
 				<option tal:repeat="role roles" tal:content="role" tal:attributes="value role" />
 			</select>
 		</div>
-		<input type="submit" value="Create room" />
+		<input type="submit" value="Create room" class="chattera"/>
 	</form>
 </fieldset>
 
