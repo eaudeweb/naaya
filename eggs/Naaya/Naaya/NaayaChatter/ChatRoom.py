@@ -278,6 +278,7 @@ class ChatRoom(Folder):
     messages = PageTemplateFile('zpt/messages_html', globals())
     index_html = PageTemplateFile('zpt/chatroom_index', globals())
     online_users_html = PageTemplateFile('zpt/online_users_html', globals())
+    room_archive_html = PageTemplateFile('zpt/chatroom_archive', globals())
 
     #Product
     security.declareProtected(CHATTER_ADD_ARCHIVE_PERMISSION, 'manage_addChatArchive')

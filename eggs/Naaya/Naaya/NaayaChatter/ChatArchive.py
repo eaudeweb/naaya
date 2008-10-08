@@ -89,6 +89,12 @@ class ChatArchive(BTreeFolder2):
         """ Returns this Chat Archive instance """
         return self
 
+    security.declareProtected(CHATTER_VIEW_ARCHIVE_PERMISSION, 'get_firendly_title')
+    def get_friendly_title(self):
+        """ """
+        if self.automatic: return ' '.join(self.title.split(' ')[:3])
+        else: return self.title
+
     security.declareProtected(CHATTER_VIEW_ARCHIVE_PERMISSION, 'get_creation_date')
     def get_creation_date(self):
         """ Returns the creation date of this archive """
@@ -115,6 +121,12 @@ class ChatArchive(BTreeFolder2):
             return []
         if not lastid:
             return self.objectValues(CHATTER_MESSAGE_META_TYPE)
+
+    security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'getSortedMessages')
+    def getSortedMessages(self):
+        """ returns all archive messages in order of submission """
+        for message in ut.utSortObjsListByAttr(self.listMessages(), 'date_time', 0):
+            yield message
 
     security.declareProtected(CHATTER_MANAGE_MESSAGE_PERMISSION, 'delMessages')
     def delMessages(self, messagelist=[]):

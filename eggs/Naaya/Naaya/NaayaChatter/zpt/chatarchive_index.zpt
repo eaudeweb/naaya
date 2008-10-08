@@ -1,0 +1,16 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 tal:content="here/get_friendly_title"></h1>
+
+<a tal:attributes="href python:here.getChatRoom().absolute_url() + '/room_archive_html'" i18n:translate="">Return to chatroom archive</a>
+
+<style type="text/css" tal:content="here/style_css" ></style>
+
+<div tal:repeat="msg here/getSortedMessages" tal:attributes="id msg/id" >
+	<span class="chtdate" tal:content="msg/get_date" />
+	<span class="chttime" tal:content="msg/get_time" />
+	<span class="chtuser" tal:content="msg/get_posting_user" />
+	<span class="chtmsg" tal:content="structure msg/get_msg" />
+</div>
+
+<span tal:replace="structure here/standard_html_footer" />
