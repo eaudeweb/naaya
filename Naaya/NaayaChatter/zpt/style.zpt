@@ -21,6 +21,7 @@
 }
 #archivelist {
 	list-style: none;
+	float: left;
 }
 #archivelist li {
 	margin: 0 0 0.5em 0;
