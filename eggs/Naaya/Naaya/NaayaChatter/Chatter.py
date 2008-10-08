@@ -132,6 +132,13 @@ class Chatter(Folder):
     style_css = PageTemplateFile('zpt/style', globals())
     jquery_js = ImageFile('www/jquery.js', globals())
     room_js = ImageFile('www/room.js', globals())
+    bg_chat = ImageFile('www/bg_chat.jpg', globals())
+    user_icon = ImageFile('www/user_icon.gif', globals())
+    user_icon_over = ImageFile('www/user_icon_over.gif', globals())
+    invite = ImageFile('www/invite.gif', globals())
+    bg_userlist = ImageFile('www/bg_userlist.jpg', globals())
+    bg_btn = ImageFile('www/bg_btn.jpg', globals())
+    info = ImageFile('www/info.gif', globals())
 
     #Product
     security.declareProtected(CHATTER_ADD_ROOM_PERMISSION, 'manage_addChatRoom')

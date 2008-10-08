@@ -4,6 +4,8 @@
 
 <h1 tal:content="here/title_or_id" />
 
+<div class="chatter">
+	
 <div tal:define="rooms here/listRooms">
 	<p>Existing rooms</p>
 	<ul>
@@ -38,4 +40,7 @@
 		<input type="submit" value="Create room" />
 	</form>
 </fieldset>
+
+</div>
+
 <span tal:replace="structure here/standard_html_footer" />
