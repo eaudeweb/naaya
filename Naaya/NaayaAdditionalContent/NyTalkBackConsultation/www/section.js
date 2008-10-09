@@ -25,7 +25,7 @@ function comment_add(comment_link) {
     // if this comment box is already open, don't re-open it
     if($('div.talkback-comment_floating_box', $(comment_link).parent()).length)
         return;
-    
+
     $('div.talkback-comment_floating_box').remove();
 
     var top = $(comment_link).attr('offsetTop') - 5;
@@ -43,7 +43,7 @@ function comment_add(comment_link) {
 
     var comment_form_box = $('<div>Loading...</div>');
     var comment_list = $('fieldset', $(comment_link).parent()).clone().css({display: 'block'});
-    
+
     comment_box.append(
         $('<a href="javascript:;" class="talkback-comment_close_box">[close]</a>').click(close_comment_box),
         $('<div class="talkback-js_comment_window"></div>').append(
@@ -75,7 +75,7 @@ function comment_buttons_display(comments_visible) {
 
 function show_comments() {
     comment_buttons_display(true);
-    $('div.talkback-comments_list > fieldset').css({display: 'block'});
+    $('div.talkback-comments_list > fieldset').show();
     $('div.talkback-js_comment_window > div.comments_list').css({display: 'none'});
     $('a.talkback-add_comment').text('Add comment');
     comments_visible = true;
@@ -83,11 +83,13 @@ function show_comments() {
 
 function hide_comments() {
     comment_buttons_display(false);
-    $('div.talkback-comments_list > fieldset').css({display: 'none'});
+    $('div.talkback-comments_list > fieldset').hide();
     $('div.talkback-js_comment_window > div.comments_list').css({display: 'block'});
     $('a.talkback-add_comment').text('Comments');
     comments_visible = false;
 }
+
+var button_bg = 'none'
 
 $(document).ready(function() {setTimeout(function(){
     // if the comments are already hidden, don't apply any javascript
@@ -110,6 +112,23 @@ $(document).ready(function() {setTimeout(function(){
     }).click(function() {
         try { comment_add(this); }
         catch(e) {} return false;
+    });
+
+    $('a.talkback-add_comment').mouseover(function() {
+        var elem_url = this.href.split('/');
+        var elem_paragraph = $("#" + elem_url[elem_url.length - 1]);
+        // save previous background value
+        button_bg = $(this).css("background");
+        // highlight background
+        elem_paragraph.css({"background": "#eee"});
+        $(this).css({"background": "#eee"});
+    });
+
+    $('a.talkback-add_comment').mouseout(function() {
+        var elem_url = this.href.split('/');
+        var elem_paragraph = $("#" + elem_url[elem_url.length - 1]);
+        elem_paragraph.css({"background": 'transparent'});
+        $(this).css({"background": button_bg});
     });
 }, 0); });
 

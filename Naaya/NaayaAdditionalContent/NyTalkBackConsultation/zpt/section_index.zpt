@@ -29,8 +29,8 @@
 
 <div class="talkback-section">
     <tal:block repeat="paragraph here/get_paragraphs">
-        <a tal:attributes="name paragraph/get_anchor" />
-        <div tal:content="structure paragraph/body" />
+        <a tal:attributes="name paragraph/get_anchor"></a>
+        <div tal:content="structure paragraph/body" tal:attributes="id paragraph/getId" />
         <div class="talkback-comments_list" tal:attributes="id string:talkback-comments_list_for-${paragraph/id}">
             <fieldset tal:condition="show_comments" tal:repeat="comment paragraph/get_comments">
                 <legend><span tal:replace="comment/contributor"/> (<span tal:replace="comment/contributor_name"/>) <span tal:replace="python:here.utShowFullDateTime(comment.comment_date)"/></legend>
