@@ -81,6 +81,12 @@ p.talkback-cannot_comment {
 	line-height: 1.3;
 	clear: both;
 }
+
+#middle_port div.talkback-section div h1 {
+	background: transparent;
+	border: none;
+}
+
 .talkback-section h2 {
 	font-size: 130%;
 	margin: 1em 0;
@@ -103,6 +109,23 @@ p.talkback-cannot_comment {
 .talkback-comments_list {
 	margin: 0.5em 0;
 }
+.talkback-comments_list fieldset legend {
+	border: 1px solid #ccc;
+	padding: 0 0.5em;
+	background: white;
+	position: absolute;
+	top: -1em;
+	left: .2em;
+}
+.talkback-comments_list fieldset {
+	padding: 0.5em;
+	margin-top: 2em;
+	margin-bottom: 0.3em;
+	border: 1px solid #ccc;
+	background: #E5E5E5;
+	position: relative;
+}
+
 .talkback-add_comment, .button_sect_edit{
 	margin: 0.5em 0;
 	padding: 3px;
