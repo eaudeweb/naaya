@@ -90,6 +90,9 @@ class NyFeed:
         self._p_changed = 1
 
     #api
+    def get_feed_feed(self):
+        """ Getter for __feed_feed """
+        return self.__feed_feed
     def get_feed_gone(self):
         """ Getter for I{__feed_gone}. """
         return self.__feed_gone
