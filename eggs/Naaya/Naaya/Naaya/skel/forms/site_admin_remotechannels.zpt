@@ -64,6 +64,10 @@
 				<span i18n:translate="" tal:omit-tag="">(0 for all items)</span>
 			</td>
 		</tr>
+		<tr>
+			<td i18n:translate="">Filter feed content by language when displaying</td>
+			<td><input type="checkbox" name="filter_by_language" tal:attributes="checked python:ob_data[6]" /></td>
+		</tr>
 		<tr tal:condition="python:ob_data[0]=='add'">
 			<td i18n:translate="">Create a portlet</td>
 			<td><input type="checkbox" name="portlet" checked="checked" /></td>
