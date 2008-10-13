@@ -33,13 +33,13 @@ from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.NyFeed import NyFeed
 
 manage_addRemoteChannelForm = PageTemplateFile('zpt/remotechannel_manage_add', globals())
-def manage_addRemoteChannel(self, id='', title='', url='', numbershownitems='', portlet='', REQUEST=None):
+def manage_addRemoteChannel(self, id='', title='', url='', numbershownitems='', portlet='', filter_by_language='', REQUEST=None):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_SUFIX_REMOTECHANNEL % self.utGenRandomId(6)
     try: numbershownitems = abs(int(numbershownitems))
     except: numbershownitems = 0
-    ob = RemoteChannel(id, title, url, numbershownitems)
+    ob = RemoteChannel(id, title, url, numbershownitems, filter_by_language)
     self._setObject(id, ob)
     if portlet:
         self.create_portlet_for_remotechannel(self._getOb(id))
@@ -64,12 +64,15 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, url, numbershownitems):
+    filter_by_language = ''
+
+    def __init__(self, id, title, url, numbershownitems, filter_by_language):
         """ """
         self.id = id
         self.title = title
         self.url = url
         self.numbershownitems = numbershownitems
+        self.filter_by_language = filter_by_language
         NyFeed.__dict__['__init__'](self)
 
     def manage_beforeDelete(self, item, container):
@@ -87,9 +90,41 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
         self.url = new_url
         self._p_changed = 1
 
+
+    def getFilteredChannelItems(self):
+        #returns a list of dictionaries containing channel item information
+        #if the item corresponds to the current selected site language
+        lang = self.gl_get_selected_language().lower()
+        L = self._getAllChannelItems({'summary_detail': 'summary_detail',
+                                      'summary': 'summary',
+                                      'date': 'modified'})
+        try:
+            f_lang = self.get_feed_feed()['language'].lower()
+        except KeyError:
+            f_lang = None
+        ret = []
+        for item in L:
+            try:
+                s_lang = item['summary_detail']
+            except KeyError:
+                s_lang = None
+            if (s_lang != None and s_lang == lang) or f_lang == lang:
+                ret.append(item)
+        if len(ret) == 0:
+            more_url = '%s/channel_details_html?id_channel=%s' % \
+                     (self.getSite().absolute_url(), self.id)
+            ret.append({'link': more_url,
+                        'title': 'Data in this feed doesn\'t ' \
+                                 'match the selected language'})
+        if self.numbershownitems > 0: return ret[:self.numbershownitems]
+        else: return ret
+
     def getChannelItems(self):
         #returns a list of dictionaries, where a dictionary stores the link and the title of the item
-        L = self.getAllChannelItems()
+        if self.filter_by_language:
+            L = self.getFilteredChannelItems()
+        else:
+            L = self.getAllChannelItems()
         if self.numbershownitems > 0: return L[:self.numbershownitems]
         else: return L
 
@@ -142,13 +177,14 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', url='', numbershownitems='', REQUEST=None):
+    def manageProperties(self, title='', url='', numbershownitems='', filter_by_language='', REQUEST=None):
         """ """
         try: numbershownitems = abs(int(numbershownitems))
         except: numbershownitems = self.numbershownitems
         self.title = title
         self.url = url
         self.numbershownitems = numbershownitems
+        self.filter_by_language = filter_by_language
         self._p_changed = 1
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_properties_html')
