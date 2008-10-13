@@ -2436,21 +2436,21 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addremotechannel')
     def admin_addremotechannel(self, title='', url='', numbershownitems='', portlet='',
-        saveit='', providername='', location='', obtype='', REQUEST=None):
+        saveit='', providername='', location='', obtype='', filter_by_language='', REQUEST=None):
         """ """
         if saveit:
             self.getSyndicationTool().manage_addRemoteChannelFacade('', title, url, providername,
                 location, obtype, numbershownitems, portlet)
         else:
-            self.getSyndicationTool().manage_addRemoteChannel('', title, url, numbershownitems, portlet)
+            self.getSyndicationTool().manage_addRemoteChannel('', title, url, numbershownitems, portlet, filter_by_language)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_editremotechannel')
-    def admin_editremotechannel(self, id='', title='', url='', numbershownitems='', REQUEST=None):
+    def admin_editremotechannel(self, id='', title='', url='', numbershownitems='', filter_by_language='', REQUEST=None):
         """ """
-        self.getSyndicationTool().get_channel(id).manageProperties(title, url, numbershownitems)
+        self.getSyndicationTool().get_channel(id).manageProperties(title, url, numbershownitems, filter_by_language)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())
