@@ -110,12 +110,6 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
                 s_lang = None
             if (s_lang != None and s_lang == lang) or f_lang == lang:
                 ret.append(item)
-        if len(ret) == 0:
-            more_url = '%s/channel_details_html?id_channel=%s' % \
-                     (self.getSite().absolute_url(), self.id)
-            ret.append({'link': more_url,
-                        'title': 'Data in this feed doesn\'t ' \
-                                 'match the selected language'})
         if self.numbershownitems > 0: return ret[:self.numbershownitems]
         else: return ret
 
@@ -130,7 +124,10 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
 
     def getChannelItems_complete(self):
         #returns a list of dictionaries, where a dictionary stores the link and the title of the item
-        L = self._getAllChannelItems({'summary': 'summary', 'date': 'modified'})
+        if self.filter_by_language:
+            L = self.getFilteredChannelItems()
+        else:
+            L = self._getAllChannelItems({'summary': 'summary', 'date': 'modified'})
         if self.numbershownitems > 0: return L[:self.numbershownitems]
         else: return L
 
