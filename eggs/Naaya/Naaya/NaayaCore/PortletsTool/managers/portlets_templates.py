@@ -69,11 +69,14 @@ LINKSLIST_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayou
 </tal:block>
 </tal:block>'''
 
-REMOTECHANNEL_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
-<tal:block metal:fill-slot="portlet_title"><span i18n:translate="" tal:content="python:here.getSyndicationTool().PORTLET_REMOTECHANNEL_ID.title_or_id()" /></tal:block>
+REMOTECHANNEL_PORTLET_TEMPLATE = '''<tal:block define="title python:here.getSyndicationTool()['PORTLET_REMOTECHANNEL_ID'].title_or_id();
+		   items python:here.getSyndicationTool()['PORTLET_REMOTECHANNEL_ID'].getChannelItems()"
+		   condition="items">
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"><span tal:content="title" /></tal:block>
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
-		<li tal:repeat="item python:here.getSyndicationTool().PORTLET_REMOTECHANNEL_ID.getChannelItems()">
+		<li tal:repeat="item items">
 			<a tal:attributes="href python:test(item.has_key('link'), item['link'], '')" tal:content="python:item['title']" />
 		</li>
 	</ul>
@@ -82,6 +85,7 @@ REMOTECHANNEL_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getL
 		<span i18n:translate="">More...</span>
 	</a>
 	</div>
+</tal:block>
 </tal:block>
 </tal:block>'''
 
@@ -123,11 +127,14 @@ SCRIPTCHANNEL_PORTLET_TEMPLATE = '''<tal:block tal:define="channel python:here.g
 </tal:block>
 </tal:block>'''
 
-CHANNEL_AGGREGATOR_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
-<tal:block metal:fill-slot="portlet_title"><span tal:content="python:here.getSyndicationTool().PORTLET_AGGREGATOR_ID.title_or_id()" /></tal:block>
+CHANNEL_AGGREGATOR_PORTLET_TEMPLATE = '''<tal:block define="title python:here.getSyndicationTool()['PORTLET_AGGREGATOR_ID'].title_or_id();
+		   items python:here.getSyndicationTool()['PORTLET_AGGREGATOR_ID'].getRemoteChannelsItems()"
+		   condition="not:python:items == [[], []]">
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"><span tal:content="title" /></tal:block>
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
-		<tal:block tal:repeat="channel python:here.getSyndicationTool().PORTLET_AGGREGATOR_ID.getRemoteChannelsItems()">
+		<tal:block tal:repeat="channel items">
 			<li tal:repeat="item channel" ><a tal:attributes="href python:test(item.has_key('link'), item['link'], '')" tal:content="python:item['title']" /></li>
 		</tal:block>
 	</ul>
@@ -136,6 +143,7 @@ CHANNEL_AGGREGATOR_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here
 		<span i18n:translate="">More...</span>
 	</a>
 	</div>
+</tal:block>
 </tal:block>
 </tal:block>'''
 
