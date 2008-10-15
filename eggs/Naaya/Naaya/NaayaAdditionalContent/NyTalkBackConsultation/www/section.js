@@ -69,8 +69,8 @@ function comment_add(comment_link) {
 }
 
 function comment_buttons_display(comments_visible) {
-    $('a.talkback-show_comments').css({display: (comments_visible ? 'none' : 'block')});
-    $('a.talkback-hide_comments').css({display: (comments_visible ? 'block' : 'none')});
+    $('a.talkback-show_comments').css({display: (comments_visible ? 'none' : 'inline')});
+    $('a.talkback-hide_comments').css({display: (comments_visible ? 'inline' : 'none')});
 }
 
 function show_comments() {

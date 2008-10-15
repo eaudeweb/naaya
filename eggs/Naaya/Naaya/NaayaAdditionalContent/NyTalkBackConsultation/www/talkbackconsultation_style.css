@@ -138,3 +138,10 @@ p.talkback-cannot_comment {
 .talkback-add_comment:hover, .button_sect_edit:hover {
 	border: 1px solid #eee;
 }
+
+.talkback-show_hide_comments a {
+	padding: 0.3em;
+	border: 1px solid #ccc;
+	background: #eee;
+	text-decoration: none;
+}
