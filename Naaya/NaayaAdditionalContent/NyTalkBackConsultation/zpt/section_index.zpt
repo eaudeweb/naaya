@@ -5,15 +5,6 @@
 
 <tal:block define="show_comments python:request.get('comments') != 'off'">
 
-<div class="talkback-show_hide_comments" style="float:right;">
-    <a href="" class="talkback-show_comments"
-            tal:attributes="style python:'display: %s' % test(show_comments, 'none', 'inline')"
-            ><span i18n:translate="">Show comments</span></a>
-    <a href="?comments=off" class="talkback-hide_comments"
-            tal:attributes="style python:'display: %s' % test(show_comments, 'inline', 'none')"
-            ><span i18n:translate="">Hide comments</span></a>
-</div>
-
 <h1 tal:content="here/title_or_id" />
 
 <div id="admin_this_folder" tal:condition="python:here.checkPermissionEditObject()">
@@ -26,6 +17,15 @@
 	</span>
 </div>
 <div class="cleaner" ></div>
+
+<div class="talkback-show_hide_comments">
+    <a href="" class="talkback-show_comments"
+            tal:attributes="style python:'display: %s' % test(show_comments, 'none', 'inline')"
+            ><span i18n:translate="">Show comments</span></a>
+    <a href="?comments=off" class="talkback-hide_comments"
+            tal:attributes="style python:'display: %s' % test(show_comments, 'inline', 'none')"
+            ><span i18n:translate="">Hide comments</span></a>
+</div>
 
 <div class="talkback-section">
     <tal:block repeat="paragraph here/get_paragraphs">
