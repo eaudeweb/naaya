@@ -76,7 +76,7 @@ class CustomContentUpdater(NaayaContentUpdater):
         self.description = 'Update remote channel portlets'
 
     def _get_channel_id(self, channel):
-        return channel.split('id_channel=')[1].split('">')[0]
+        return channel.split('getSyndicationTool().')[1].split('.title_or_id')[0]
 
     def _verify_doc(self, doc):
         """ See super"""
