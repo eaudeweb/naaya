@@ -523,7 +523,9 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         version = REQUEST.get('version', False)
         RESPONSE.setHeader('Content-Type', self.getContentType())
         RESPONSE.setHeader('Content-Length', self.size)
-        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.downloadfilename()))
+        filename = self.utToUtf8(self.downloadfilename())
+        filename = self.utCleanupId(filename)
+        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + filename)
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         if version and self.hasVersion():

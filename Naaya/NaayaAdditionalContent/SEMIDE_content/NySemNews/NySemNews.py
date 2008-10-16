@@ -124,7 +124,7 @@ def addNySemNews(self, id='', creator='', creator_email='', contact_person='', c
             id = '%s-%u' % (id, i)
         #create object
         ob = NySemNews(id, creator, creator_email, contact_person, contact_email,
-            contact_phone, rights, title, news_type, file_link, file_link_local, 
+            contact_phone, rights, title, news_type, file_link, file_link_local,
             source, source_link, keywords, description, subject, relation, coverage, news_date,
             working_langs, sortorder, contributor, releasedate, lang)
         self.gl_add_languages(ob)
@@ -231,7 +231,7 @@ class NySemNews(NyAttributes, semnews_item, NyItem, NyCheckControl):
     security = ClassSecurityInfo()
 
     def __init__(self, id, creator, creator_email, contact_person, contact_email,
-        contact_phone, rights, title, news_type, file_link, file_link_local, 
+        contact_phone, rights, title, news_type, file_link, file_link_local,
         source, source_link, keywords, description, subject, relation, coverage, news_date,
         working_langs, sortorder, contributor, releasedate, lang, file=None):
         """ """
@@ -530,7 +530,7 @@ class NySemNews(NyAttributes, semnews_item, NyItem, NyCheckControl):
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'semnews_edit')
-    
+
     security.declarePublic('downloadfilename')
     def downloadfilename(self, version=False):
         """ """
@@ -542,14 +542,16 @@ class NySemNews(NyAttributes, semnews_item, NyItem, NyCheckControl):
         if not filename:
             return self.title_or_id()
         return filename[-1]
-        
+
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
         """ """
         version = REQUEST.get('version', False)
         RESPONSE.setHeader('Content-Type', self.getContentType())
         RESPONSE.setHeader('Content-Length', self.getSize())
-        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.downloadfilename(version=version))
+        filename = self.downloadfilename(version=version)
+        filename = self.utCleanupId(filename)
+        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + filename)
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         if version and self.hasVersion():
@@ -566,7 +568,7 @@ class NySemNews(NyAttributes, semnews_item, NyItem, NyCheckControl):
             return self.absolute_url() + '/download'
         file_path = (media_server,) + tuple(file_path)
         return '/'.join(file_path)
-    
+
     security.declarePublic('getEditDownloadUrl')
     def getEditDownloadUrl(self):
         """ """

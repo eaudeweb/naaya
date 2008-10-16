@@ -117,8 +117,8 @@ def addNySemDocument(self, id='', title='', description='', coverage='', keyword
             i += 1
             id = '%s-%u' % (id, i)
         #create object
-        ob = NySemDocument(id, title, description, coverage, keywords, sortorder, creator, 
-            creator_email, rights, document_type, source, source_link, subject, relation, 
+        ob = NySemDocument(id, title, description, coverage, keywords, sortorder, creator,
+            creator_email, rights, document_type, source, source_link, subject, relation,
             publisher, file_link, file_link_local, contributor, releasedate, lang)
         self.gl_add_languages(ob)
         ob.createDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
@@ -220,13 +220,13 @@ class NySemDocument(NyAttributes, semdocument_item, NyItem, NyCheckControl):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, description, coverage, keywords, sortorder, creator, 
-        creator_email, rights, document_type, source, source_link, subject, relation, 
+    def __init__(self, id, title, description, coverage, keywords, sortorder, creator,
+        creator_email, rights, document_type, source, source_link, subject, relation,
         publisher, file_link, file_link_local, contributor, releasedate, lang, file=None):
         """ """
         self.id = id
-        semdocument_item.__dict__['__init__'](self, title, description, coverage, keywords, 
-            sortorder, creator, creator_email, rights, document_type, source, source_link, 
+        semdocument_item.__dict__['__init__'](self, title, description, coverage, keywords,
+            sortorder, creator, creator_email, rights, document_type, source, source_link,
             subject, relation, publisher, file_link, file_link_local, releasedate, lang, file=file)
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
@@ -309,8 +309,8 @@ class NySemDocument(NyAttributes, semdocument_item, NyItem, NyCheckControl):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', coverage='', keywords='', sortorder='', creator='', 
-            creator_email='', rights='', document_type='', source='', source_link='', subject='', relation='', 
+    def manageProperties(self, title='', description='', coverage='', keywords='', sortorder='', creator='',
+            creator_email='', rights='', document_type='', source='', source_link='', subject='', relation='',
             publisher='', file_link='', file_link_local='', approved='', releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
@@ -362,7 +362,7 @@ class NySemDocument(NyAttributes, semdocument_item, NyItem, NyCheckControl):
         self.rights =           self.version.rights
         self.publisher =        self.version.publisher
         self.releasedate =      self.version.releasedate
-        self.update_data(self.version.get_data(as_string=False), 
+        self.update_data(self.version.get_data(as_string=False),
                          self.version.getContentType(), self.version.get_size(),
                          self.downloadfilename(version=True))
         self.setProperties(deepcopy(self.version.getProperties()))
@@ -382,9 +382,9 @@ class NySemDocument(NyAttributes, semdocument_item, NyItem, NyCheckControl):
             raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        self.version = semdocument_item(self.title, self.description, self.coverage, self.keywords, 
-            self.sortorder, self.creator, self.creator_email, self.rights, self.document_type, 
-            self.source, self.source_link, self.subject, self.relation, self.publisher, 
+        self.version = semdocument_item(self.title, self.description, self.coverage, self.keywords,
+            self.sortorder, self.creator, self.creator_email, self.rights, self.document_type,
+            self.source, self.source_link, self.subject, self.relation, self.publisher,
             self.file_link, self.file_link_local, self.releasedate, self.gl_get_selected_language(), self.get_data(as_string=False))
         self.version.update_data(self.get_data(), self.getContentType(), self.get_size(), self.downloadfilename())
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
@@ -395,9 +395,9 @@ class NySemDocument(NyAttributes, semdocument_item, NyItem, NyCheckControl):
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
-    def saveProperties(self, title='', description='', coverage='', keywords='', sortorder='', creator='', 
-            creator_email='', rights='', document_type='', source='', source_link='', subject='', relation='', 
-            publisher='', file_link='', file_link_local='', approved='', releasedate='', discussion='', 
+    def saveProperties(self, title='', description='', coverage='', keywords='', sortorder='', creator='',
+            creator_email='', rights='', document_type='', source='', source_link='', subject='', relation='',
+            publisher='', file_link='', file_link_local='', approved='', releasedate='', discussion='',
             lang=None, REQUEST=None, RESPONSE=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
@@ -438,14 +438,14 @@ class NySemDocument(NyAttributes, semdocument_item, NyItem, NyCheckControl):
             if self.hasVersion():
                 context = self.version
             context.handleUpload(attached_file)
-        
+
         # Update properties
         sortorder = int(sortorder)
         if not self.hasVersion():
             #this object has not been checked out; save changes directly into the object
             releasedate = self.process_releasedate(releasedate, self.releasedate)
-            self.save_properties(title, description, coverage, keywords, sortorder, creator, 
-                    creator_email, rights, document_type, source, source_link, subject, relation, 
+            self.save_properties(title, description, coverage, keywords, sortorder, creator,
+                    creator_email, rights, document_type, source, source_link, subject, relation,
                     publisher, file_link, file_link_local, releasedate, lang)
             self.updatePropertiesFromGlossary(lang)
             self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
@@ -454,8 +454,8 @@ class NySemDocument(NyAttributes, semdocument_item, NyItem, NyCheckControl):
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
             releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-            self.version.save_properties(title, description, coverage, keywords, sortorder, creator, 
-                    creator_email, rights, document_type, source, source_link, subject, relation, 
+            self.version.save_properties(title, description, coverage, keywords, sortorder, creator,
+                    creator_email, rights, document_type, source, source_link, subject, relation,
                     publisher, file_link, file_link_local, releasedate, lang)
             self.version.updatePropertiesFromGlossary(lang)
             self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
@@ -489,7 +489,7 @@ class NySemDocument(NyAttributes, semdocument_item, NyItem, NyCheckControl):
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'semdocument_edit')
-    
+
     security.declarePublic('downloadfilename')
     def downloadfilename(self, version=False):
         """ """
@@ -501,14 +501,16 @@ class NySemDocument(NyAttributes, semdocument_item, NyItem, NyCheckControl):
         if not filename:
             return self.title_or_id()
         return filename[-1]
-        
+
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
         """ """
         version = REQUEST.get('version', False)
         RESPONSE.setHeader('Content-Type', self.getContentType())
         RESPONSE.setHeader('Content-Length', self.getSize())
-        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.downloadfilename(version=version))
+        filename = self.downloadfilename(version=version)
+        filename = self.utCleanupId(filename)
+        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + filename)
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         if version and self.hasVersion():
@@ -525,7 +527,7 @@ class NySemDocument(NyAttributes, semdocument_item, NyItem, NyCheckControl):
             return self.absolute_url() + '/download'
         file_path = (media_server,) + tuple(file_path)
         return '/'.join(file_path)
-    
+
     security.declarePublic('getEditDownloadUrl')
     def getEditDownloadUrl(self):
         """ """

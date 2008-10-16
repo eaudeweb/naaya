@@ -231,9 +231,9 @@ class NySemTextLaws(NyAttributes, semtextlaws_item, NyItem, NyCheckControl):
         original_language, statute, contributor, releasedate, lang, file=None):
         """ """
         self.id = id
-        semtextlaws_item.__dict__['__init__'](self, title, description, coverage, keywords, 
-            sortorder, source, source_link, subject, relation, geozone, file_link, 
-            file_link_local, official_journal_ref, type_law, original_language, statute, 
+        semtextlaws_item.__dict__['__init__'](self, title, description, coverage, keywords,
+            sortorder, source, source_link, subject, relation, geozone, file_link,
+            file_link_local, official_journal_ref, type_law, original_language, statute,
             releasedate, lang, file)
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
@@ -314,9 +314,9 @@ class NySemTextLaws(NyAttributes, semtextlaws_item, NyItem, NyCheckControl):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', coverage='', keywords='', 
-            sortorder='', approved='', source='', source_link='', subject='', relation='', geozone='', file_link='', 
-            file_link_local='', official_journal_ref='', type_law='', original_language='', statute='', 
+    def manageProperties(self, title='', description='', coverage='', keywords='',
+            sortorder='', approved='', source='', source_link='', subject='', relation='', geozone='', file_link='',
+            file_link_local='', official_journal_ref='', type_law='', original_language='', statute='',
             releasedate='', discussion='', lang='', REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
@@ -387,9 +387,9 @@ class NySemTextLaws(NyAttributes, semtextlaws_item, NyItem, NyCheckControl):
             raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
         self.checkout = 1
         self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        self.version = semtextlaws_item(self.title, self.description, self.coverage, self.keywords, 
-            self.sortorder, self.source, self.source_link, self.subject, self.relation, self.geozone, self.file_link, 
-            self.file_link_local, self.official_journal_ref, self.type_law, self.original_language, self.statute, 
+        self.version = semtextlaws_item(self.title, self.description, self.coverage, self.keywords,
+            self.sortorder, self.source, self.source_link, self.subject, self.relation, self.geozone, self.file_link,
+            self.file_link_local, self.official_journal_ref, self.type_law, self.original_language, self.statute,
             self.releasedate, self.gl_get_selected_language(), self.get_data(as_string=False))
         self.version.update_data(self.get_data(), self.getContentType(), self.get_size(), self.downloadfilename())
         self.version._local_properties_metadata = deepcopy(self._local_properties_metadata)
@@ -400,8 +400,8 @@ class NySemTextLaws(NyAttributes, semtextlaws_item, NyItem, NyCheckControl):
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
-    def saveProperties(self, title='', description='', coverage='', keywords='', 
-            sortorder='', approved='', source='', source_link='', subject='', relation='', geozone='', file_link='', 
+    def saveProperties(self, title='', description='', coverage='', keywords='',
+            sortorder='', approved='', source='', source_link='', subject='', relation='', geozone='', file_link='',
             file_link_local='', official_journal_ref='', type_law='', original_language='', statute='', releasedate='',
             discussion='', lang=None, REQUEST=None, RESPONSE=None, **kwargs):
         """ """
@@ -450,8 +450,8 @@ class NySemTextLaws(NyAttributes, semtextlaws_item, NyItem, NyCheckControl):
         if not self.hasVersion():
             #this object has not been checked out; save changes directly into the object
             releasedate = self.process_releasedate(releasedate, self.releasedate)
-            self.save_properties(title, description, coverage, keywords, sortorder, source, 
-                    source_link, subject, relation, geozone, file_link, file_link_local, 
+            self.save_properties(title, description, coverage, keywords, sortorder, source,
+                    source_link, subject, relation, geozone, file_link, file_link_local,
                     official_journal_ref, type_law, original_language, statute, releasedate, lang)
             self.updatePropertiesFromGlossary(lang)
             self.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
@@ -460,8 +460,8 @@ class NySemTextLaws(NyAttributes, semtextlaws_item, NyItem, NyCheckControl):
             if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
             releasedate = self.process_releasedate(releasedate, self.version.releasedate)
-            self.version.save_properties(title, description, coverage, keywords, sortorder, source, 
-                    source_link, subject, relation, geozone, file_link, file_link_local, official_journal_ref, 
+            self.version.save_properties(title, description, coverage, keywords, sortorder, source,
+                    source_link, subject, relation, geozone, file_link, file_link_local, official_journal_ref,
                     type_law, original_language, statute, releasedate, lang)
             self.version.updatePropertiesFromGlossary(lang)
             self.version.updateDynamicProperties(self.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang)
@@ -503,14 +503,16 @@ class NySemTextLaws(NyAttributes, semtextlaws_item, NyItem, NyCheckControl):
         if not filename:
             return self.title_or_id()
         return filename[-1]
-        
+
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
         """ """
         version = REQUEST.get('version', False)
         RESPONSE.setHeader('Content-Type', self.getContentType())
         RESPONSE.setHeader('Content-Length', self.getSize())
-        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.downloadfilename(version=version))
+        filename = self.downloadfilename(version=version)
+        filename = self.utCleanupId(filename)
+        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + filename)
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         if version and self.hasVersion():
@@ -527,7 +529,7 @@ class NySemTextLaws(NyAttributes, semtextlaws_item, NyItem, NyCheckControl):
             return self.absolute_url() + '/download'
         file_path = (media_server,) + tuple(file_path)
         return '/'.join(file_path)
-    
+
     security.declarePublic('getEditDownloadUrl')
     def getEditDownloadUrl(self):
         """ """
