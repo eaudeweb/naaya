@@ -496,19 +496,19 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
             username = REQUEST.AUTHENTICATED_USER.getUserName()
         else:
             username = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        
+
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if self.wl_isLocked():
             raise ResourceLockedError, "File is locked via WebDAV"
-        
+
         if lang is None:
             lang = self.gl_get_selected_language()
-        
+
         # Create initial version
         if not self.getFileItem(lang).getVersions():
             self.createversion(username, lang)
-        
+
         if not self.hasVersion():
             self.handleUpload(source, file, url, lang)
             context = self
@@ -519,32 +519,32 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
             version_ob.handleUpload(source, file, url, lang)
             context = version_ob
-        
+
         # Create version
         if version:
             context.createversion(username, lang)
-        
+
         self.recatalogNyObject(self)
-        
+
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
 
     def checkExFileLang(self, lang):
         """ Checks if there is a file uploaded for the given language. """
-       
+
         return self.getFileItem(lang).size > 0
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_advanced_html')
     manage_advanced_html = PageTemplateFile('zpt/exfile_manage_advanced', globals())
-    
+
     security.declareProtected(view_management_screens, 'manageAdvancedProperties')
     def manageAdvancedProperties(self, REQUEST=None, **kwargs):
         """ """
         if REQUEST:
             kwargs.update(REQUEST.form)
-        
+
         langs = kwargs.get('langs', [])
         for lang in langs:
             filename = kwargs.get('filename_%s' % lang, '')
@@ -580,7 +580,7 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         if not filename:
             return context.title_or_id()
         return filename[-1]
-    
+
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE):
         """ """
@@ -588,7 +588,9 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         version = REQUEST.get('version', False)
         RESPONSE.setHeader('Content-Type', self.content_type(lang))
         RESPONSE.setHeader('Content-Length', self.size())
-        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.downloadfilename(lang, version=False))
+        filename = self.downloadfilename(lang, version=False)
+        filename = self.utCleanupId(filename)
+        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + filename)
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         if version and self.hasVersion():
@@ -608,7 +610,7 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         RESPONSE.setHeader('Content-Disposition', 'inline; filename=%s' % self.downloadfilename(lang, version=False))
         fileitem = self.getFileItem(lang)
         return fileitem.get_data()
-    
+
     security.declarePublic('getDownloadUrl')
     def getDownloadUrl(self):
         """ """
@@ -616,14 +618,14 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         fileitem = self.getFileItem(self.gl_get_selected_language())
         if not fileitem:
             return self.absolute_url() + '/download'
-        
+
         file_path = fileitem._get_data_name()
         media_server = getattr(site, 'media_server', '').strip()
         if not (media_server and file_path):
             return self.absolute_url() + '/download'
         file_path = (media_server, ) + tuple(file_path)
         return '/'.join(file_path)
-    
+
     security.declarePublic('getEditDownloadUrl')
     def getEditDownloadUrl(self, lang=None):
         """ """
@@ -632,7 +634,7 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         fileitem = self.getFileItem(lang)
         if not fileitem:
             return self.absolute_url() + '/download?lang=%s&amp;version=1' % lang
-        
+
         file_path = fileitem._get_data_name()
         media_server = getattr(site, 'media_server', '').strip()
         if not (media_server and file_path):
