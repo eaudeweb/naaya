@@ -1620,7 +1620,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             error_ip = self.utGetRefererIp(REQUEST)
             error_user = REQUEST.AUTHENTICATED_USER.getUserName()
             error_time = self.utGetTodayDate()
-            if self.portal_url != '': mail_from = 'error@%s' % self.portal_url
+            if self.portal_url != '': 
+        	domain_name = self.portal_url.replace('http://', '').replace('https://','')
+        	mail_from = 'error@%s' % domain_name
             else: mail_from = 'error@%s' % REQUEST.SERVER_NAME
             self.notifyOnErrorsEmail(self.administrator_email, mail_from,
                                      error_url, error_ip, error_type,
