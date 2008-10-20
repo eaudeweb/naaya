@@ -43,8 +43,9 @@ class CustomContentUpdater(NaayaContentUpdater):
         portals = utool.getPortals()
         for portal in portals:
             content_types = portal.get_pluggable_installed_meta_types()
-            objects = portal.getCatalogedObjects(meta_type=content_types)
-            for ny_content in objects:
+            brains = portal.getCatalogTool()({'meta_type': content_types})
+            for brain in brains:
+                ny_content = brain.getObject()
                 if not self._verify_doc(ny_content):
                     continue
                 yield ny_content
