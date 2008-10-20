@@ -35,6 +35,11 @@ class contact_item(Implicit, NyProperties):
     keywords = LocalProperty('keywords')
     personaltitle = LocalProperty('personaltitle')
     jobtitle = LocalProperty('jobtitle')
+    firstname = LocalProperty('firstname')
+    lastname = LocalProperty('lastname')
+    department = LocalProperty('department')
+    organisation = LocalProperty('organisation')
+    postaladdress = LocalProperty('postaladdress')
 
     def __init__(self, title, description, coverage, keywords, sortorder, personaltitle, 
             firstname, lastname, jobtitle, department, organisation, postaladdress, phone, 
@@ -59,11 +64,11 @@ class contact_item(Implicit, NyProperties):
         self._setLocalPropValue('keywords', lang, keywords)
         self._setLocalPropValue('personaltitle', lang, personaltitle)
         self._setLocalPropValue('jobtitle', lang, jobtitle)
-        self.firstname = firstname
-        self.lastname = lastname
-        self.department = department
-        self.organisation = organisation
-        self.postaladdress = postaladdress
+        self._setLocalPropValue('firstname', lang, firstname)
+        self._setLocalPropValue('lastname', lang, lastname)
+        self._setLocalPropValue('department', lang, department)
+        self._setLocalPropValue('organisation', lang, organisation)
+        self._setLocalPropValue('postaladdress', lang, postaladdress)
         self.phone = phone
         self.fax = fax
         self.cellphone = cellphone
