@@ -80,13 +80,13 @@ class NaayaUpdater(Folder):
     ######
     security.declareProtected(view_management_screens, 'index_html')
     index_html = PageTemplateFile('zpt/updater_index', globals())
-    
+
     security.declareProtected(view_management_screens, 'available_content_updates')
     available_content_updates = PageTemplateFile('zpt/available_content_updates', globals())
-    
+
     security.declareProtected(view_management_screens, 'applied_content_updates')
     applied_content_updates = PageTemplateFile('zpt/applied_content_updates', globals())
-    
+
     security.declareProtected(view_management_screens, 'layout_updates')
     layout_updates = PageTemplateFile('zpt/layout_updates', globals())
 
@@ -99,7 +99,7 @@ class NaayaUpdater(Folder):
             last_run = getattr(update, 'last_run', None)
             if last_run is None:
                 yield update
-    
+
     security.declareProtected(view_management_screens, 'get_applied_content_updates')
     def get_applied_content_updates(self):
         updates = self.objectValues()
@@ -125,15 +125,15 @@ class NaayaUpdater(Folder):
         updates_no = len(uids)
         run_time = int(stop - start)
         message = 'Run %s update%s in %s second%s' % (
-            updates_no, 
-            updates_no != 1 and 's' or '', 
+            updates_no,
+            updates_no != 1 and 's' or '',
             run_time,
             run_time != 1 and 's' or ''
         )
         if REQUEST:
             REQUEST.RESPONSE.redirect('available_content_updates?manage_tabs_message=%s' % message)
         return message
-        
+
     security.declareProtected(view_management_screens, 'show_html_diff')
     def show_html_diff(self, source, target):
         """ """
@@ -239,6 +239,9 @@ class NaayaUpdater(Folder):
             portal = self.getPortal(ppath)
             if not portal.id in portals_custom:
                 report[portal.id] = self.reloadMetaTypesForms(portal, contenttypes, ct_action)
+
+        if not REQUEST:
+            return report
 
         REQUEST.SESSION.set('report', report)
         return REQUEST.RESPONSE.redirect('%s/reinstall_contenttypes_html' % self.absolute_url())
@@ -467,7 +470,7 @@ class NaayaUpdater(Folder):
 
     security.declarePrivate('get_modified_forms')
     def get_modified_forms(self, portal):
-        """ 
+        """
             return the list of modified forms inside this portal ?????
         """
         EXCLUSION_FORMS_LIST = ['site_admin_comments', 'site_admin_network', 'site_external_search', 'site_admin_properties']
@@ -486,7 +489,7 @@ class NaayaUpdater(Folder):
 
     security.declarePrivate('get_portal_path')
     def get_portal_path(self, metatype):
-        """ 
+        """
             return the portal path given the metatype
         """
         ppath = NAAYAUPDATER_PRODUCT_PATH.split(os.sep)[:-1]
@@ -521,7 +524,7 @@ class NaayaUpdater(Folder):
 
     security.declarePrivate('list_zmi_templates')
     def list_zmi_templates(self, portal):
-        """ 
+        """
             return the list of the ZMI templates
         """
         return portal.getFormsTool().objectValues("Naaya Template")
@@ -551,8 +554,8 @@ class NaayaUpdater(Folder):
 
     security.declarePrivate('get_fs_template')
     def get_fs_template(self, id, portal):
-        """ 
-            return a filesystem template object given the id 
+        """
+            return a filesystem template object given the id
         """
         NAAYA_METATYPE = 'Naaya Site'
 
@@ -564,8 +567,8 @@ class NaayaUpdater(Folder):
 
     security.declarePrivate('get_fs_forms')
     def get_fs_forms(self, portal):
-        """ 
-            return a filesystem template object given the id 
+        """
+            return a filesystem template object given the id
         """
         flist = {}
         NAAYA_METATYPE = 'Naaya Site'
@@ -595,8 +598,8 @@ class NaayaUpdater(Folder):
 
     security.declarePrivate('get_zmi_template')
     def get_zmi_template(self, path):
-        """ 
-            return a ZMI template object given the path 
+        """
+            return a ZMI template object given the path
         """
         root = self.getPhysicalRoot()
         return root.unrestrictedTraverse(path, None)
@@ -605,7 +608,7 @@ class NaayaUpdater(Folder):
     security.declarePrivate('get_template_content')
     def get_template_content(self, form):
         """
-            return a template content given the object 
+            return a template content given the object
         """
         try:
             return form._text
@@ -623,7 +626,7 @@ class NaayaUpdater(Folder):
 
     security.declareProtected(view_management_screens, 'getPortals')
     def getPortals(self, context=None, meta_types=None):
-        """ 
+        """
             return the portals list
         """
         if context is None:
@@ -644,7 +647,7 @@ class NaayaUpdater(Folder):
 
     security.declareProtected(view_management_screens, 'generateFTCreationDate')
     def generateFTCreationDate(self, portal):
-        """ 
+        """
             generate creation date
         """
         flist = [(f.bobobase_modification_time(), f) for f in self.list_zmi_templates(portal)]
@@ -661,7 +664,7 @@ class NaayaUpdater(Folder):
 
     security.declareProtected(view_management_screens, 'setFTCreationDate')
     def setFTCreationDate(self, portal):
-        """ 
+        """
             set PortalForms creation date
         """
         forms_tool = portal.getFormsTool()
@@ -870,7 +873,7 @@ class NaayaUpdater(Folder):
             portals = self.getPortals()
         else:
             portals = [self.getPortal(portal) for portal in target_portals]
-        
+
         for portal in portals:
             schemes = portal.getLayoutTool().getCurrentSkinSchemes()
             for scheme in schemes:
@@ -941,7 +944,7 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'makeCSSRule')
     def makeCSSRule(self, selector=''):
         """ creates a new CSS Rule with the given selector text """
-        
+
         ob_rule = StyleRule()
         ob_rule.selectorText = selector
         return ob_rule
@@ -949,7 +952,7 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'addCSSRuleToSheet')
     def addCSSRuleToSheet(self, sheet=None, rule=None):
         """ appends the given rule to the specified sheet"""
-        
+
         sheet.addRule(rule)
 
     security.declareProtected(view_management_screens, 'makeCSSDeclaration')

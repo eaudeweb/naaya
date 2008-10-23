@@ -25,10 +25,10 @@ from OFS.Image import cookId
 from AccessControl import ClassSecurityInfo
 
 #Product imports
-from Products.NaayaBase.NyVersioning import NyVersioning
+from Products.NaayaBase.NyFolderishVersioning import NyFolderishVersioning
 from Products.NaayaBase.NyFSFile import NyFSFile
 
-class file_item(NyFSFile, NyVersioning):
+class file_item(NyFSFile, NyFolderishVersioning):
     """ """
 
     def __init__(self, id, title, file, precondition, content_type):
@@ -39,31 +39,14 @@ class file_item(NyFSFile, NyVersioning):
         #"dirty" trick to get rid of the File's title property
         try: del self.id
         except: pass
-        NyVersioning.__dict__['__init__'](self)
+        NyFolderishVersioning.__dict__['__init__'](self)
 
     security = ClassSecurityInfo()
 
-    security.declarePrivate('objectDataForVersion')
-    def objectDataForVersion(self):
-        return (self.get_data(as_string=False), self.content_type)
+    def getContentType(self):
+        return self.get_data(as_string=False).getContentType()
 
-    security.declarePrivate('objectDataForVersionCompare')
-    def objectDataForVersionCompare(self):
-        return self.get_data(as_string=False)
-
-    security.declarePrivate('objectVersionDataForVersionCompare')
-    def objectVersionDataForVersionCompare(self, p_version_data):
-        return p_version_data[0]
-
-    security.declarePrivate('versionForObjectData')
-    def versionForObjectData(self, p_version_data=None):
-        self.update_data(p_version_data[0], p_version_data[1], len(p_version_data[0]))
-        self._p_changed = 1
-
-    def handleUpload(self, source, file, url, parent):
-        """
-        Upload a file from disk or from a given URL.
-        """
+    def _get_upload_file(self, source, file, url, parent):
         if source=='file':
             if file != '':
                 if hasattr(file, 'filename'):
@@ -71,13 +54,19 @@ class file_item(NyFSFile, NyVersioning):
                     if filename != '':
                         data, size = self._read_data(file)
                         content_type = self._get_content_type(file, data, self.__name__, 'application/octet-stream')
-                        self.update_data(data, content_type, size, filename)
+                        return data, content_type, size, filename
                 else:
-                    self.update_data(file)
+                    return file, '', None, ''
         elif source=='url':
             if url != '':
                 l_data, l_ctype = parent.grabFromUrl(url)
                 if l_data is not None:
-                    self.update_data(l_data, l_ctype)
-                    self.content_type = l_ctype
-        self._p_changed = 1
+                    return l_data, l_ctype, None, ''
+        return '', '', None, ''
+
+    def handleUpload(self, source, file, url, parent):
+        """
+        Upload a file from disk or from a given URL.
+        """
+        data, ctype, size, filename = self._get_upload_file(source, file, url, parent)
+        self.update_data(data, ctype, size, filename)

@@ -64,19 +64,19 @@
 </tr>
 </table>
 
-<tal:block define="versions here/getOlderVersions" condition="python:len(versions) > 0">
+<tal:block define="versions here/getVersions" condition="python:len(versions) > 0">
 <h2 i18n:translate="">Older versions</h2>
 <table border="0" cellspacing="2" cellpadding="2">
 <tr>
 <th i18n:translate="">Date</th>
 <th i18n:translate="">Created by</th>
 <th i18n:translate="">Download file</th></tr>
-<tr tal:repeat="item python:versions.keys()">
-	<td tal:content="python:here.utShowFullDateTime(versions[item][0])">version date</td>
-	<td><span tal:replace="python:versions[item][1]">version user</span></td>
-	<td><a style="display: none" rel="external"
-		tal:attributes="href string:showVersionData?vid=${item}"
-		tal:content="python:here.getVersionFilename(item)">download</a></td>
+<tr tal:repeat="item python:versions">
+	<td tal:content="python:here.utShowFullDateTime(getattr(versions, 'modification_time', context.utGetTodayDate()))">version date</td>
+	<td><span tal:replace="python:getattr(item, 'username', '')">version user</span></td>
+	<td><a rel="external"
+		tal:attributes="href string:showVersionData?vid=${item/getId}"
+		tal:content="python:here.getVersionFilename(item.getId())">download</a></td>
 </tr>
 </table>
 </tal:block>
