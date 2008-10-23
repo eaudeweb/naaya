@@ -79,10 +79,10 @@ class file_item(NyProperties, NyFSFile):
         if not ctype:
             return getattr(self, 'content_type', '')
         return ctype
-        
-    def handleUpload(self, source, file, url):
-        """
-        Upload a file from disk or from a given URL.
+
+    def _get_upload_file(self, source, file, url):
+        """ grab file from disk or from a given url.
+        Returns data, content_type, size, filename
         """
         if source=='file':
             if file != '':
@@ -90,14 +90,21 @@ class file_item(NyProperties, NyFSFile):
                     filename = cookId('', '', file)[0]
                     if filename != '':
                         data, size = self._read_data(file)
-                        content_type = self._get_content_type(file, data, self.__name__, 'application/octet-stream')
-                        self.update_data(data, content_type, size, filename)
+                        content_type = self._get_content_type(file, data,
+                            self.__name__, 'application/octet-stream')
+                        return data, content_type, size, filename
                 else:
-                    self.update_data(file)
+                    return file, '', None, ''
         elif source=='url':
             if url != '':
                 l_data, l_ctype = self.grabFromUrl(url)
                 if l_data is not None:
-                    self.update_data(l_data, l_ctype)
-                    self.content_type = l_ctype
-        self._p_changed = 1
+                    return l_data, l_ctype, None, ''
+        return '', '', None, ''
+
+    def handleUpload(self, source, file, url):
+        """
+        Upload a file from disk or from a given URL.
+        """
+        data, ctype, size, filename = self._get_upload_file(source, file, url)
+        self.update_data(data, ctype, size, filename)

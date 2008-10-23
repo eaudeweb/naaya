@@ -35,7 +35,7 @@ from Products.NaayaBase.NyItem import NyItem
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
-from Products.NaayaBase.NyVersioning import NyVersioning
+from Products.NaayaBase.NyFolderishVersioning import NyFolderishVersioning
 from file_item import file_item
 
 #module constants
@@ -179,7 +179,7 @@ def importNyFile(self, param, id, attrs, content, properties, discussion, object
             ob.import_comments(discussion)
             self.recatalogNyObject(ob)
 
-class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyValidation):
+class NyFile(NyAttributes, file_item, NyItem, NyFolderishVersioning, NyCheckControl, NyValidation):
     """ """
 
     meta_type = METATYPE_OBJECT
@@ -201,7 +201,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
             precondition, releasedate, lang)
         NyValidation.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)
-        NyVersioning.__dict__['__init__'](self)
+        NyFolderishVersioning.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
 
@@ -220,10 +220,9 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         NyFile.inheritedAttribute('manage_beforeDelete')(self, item, container)
         # Apply manage_beforeDelete to versions, too
         versions = self.getVersions()
-        for version in versions.keys():
-            vdata = self.getVersion(version)[0]
-            if hasattr(vdata, 'manage_beforeDelete'):
-                vdata.manage_beforeDelete(vdata, self)
+        for version in versions:
+            if hasattr(version, 'manage_beforeDelete'):
+                version.manage_beforeDelete(version, self.versions)
         self.uncatalogNyObject(self)
 
     security.declarePrivate('export_this_tag_custom')
@@ -254,23 +253,6 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         ra(self.syndicateThisFooter())
         return ''.join(r)
 
-    security.declarePrivate('objectDataForVersion')
-    def objectDataForVersion(self):
-        return (self.get_data(as_string=False), self.getContentType())
-
-    security.declarePrivate('objectDataForVersionCompare')
-    def objectDataForVersionCompare(self):
-        return self.get_data(as_string=False)
-
-    security.declarePrivate('objectVersionDataForVersionCompare')
-    def objectVersionDataForVersionCompare(self, p_version_data):
-        return p_version_data[0]
-
-    security.declarePrivate('versionForObjectData')
-    def versionForObjectData(self, p_version_data=None):
-        self.update_data(p_version_data[0], p_version_data[1], len(p_version_data[0]))
-        self._p_changed = 1
-
     security.declarePublic('showVersionData')
     def showVersionData(self, vid=None, REQUEST=None, RESPONSE=None):
         """ """
@@ -278,9 +260,9 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
             version_data = self.getVersion(vid)
             if version_data is not None:
                 #show data for file: set content type and return data
-                RESPONSE.setHeader('Content-Type', version_data[1])
+                RESPONSE.setHeader('Content-Type', version_data.getContentType())
                 REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.getVersionFilename(vid)))
-                return version_data[0]
+                return version_data.index_html()
             else:
                 return 'Invalid version data!'
         else:
@@ -289,7 +271,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
     security.declarePublic('getVersionFilename')
     def getVersionFilename(self, vid):
         """ Returns version filename"""
-        version = self.getVersion(vid)[0]
+        version = self.getVersion(vid)
         filename = getattr(version, 'filename', [])
         if not filename:
             return ''
@@ -336,7 +318,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self._local_properties_metadata = deepcopy(self.version._local_properties_metadata)
         self._local_properties = deepcopy(self.version._local_properties)
         self.sortorder = self.version.sortorder
-        self.update_data(self.version.get_data(as_string=False), 
+        self.update_data(self.version.get_data(as_string=False),
                          self.version.getContentType(), self.version.get_size())
         self.precondition = self.version.precondition
         self.releasedate = self.version.releasedate
@@ -367,13 +349,13 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
-    
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'discardVersion')
     def discardVersion(self, REQUEST=None):
         """ """
         self.version.manage_beforeUpdate()
         NyFile.inheritedAttribute('discardVersion')(self, REQUEST)
-    
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, title='', description='', coverage='', keywords='',
         sortorder='', precondition='',
@@ -448,32 +430,30 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
             username = REQUEST.AUTHENTICATED_USER.getUserName()
         else:
             username = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        
+
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
         if self.wl_isLocked():
             raise ResourceLockedError, "File is locked via WebDAV"
-        
+
         if lang is None:
             lang = self.gl_get_selected_language()
-        
-        # Create initial version
-        if not self.getVersions():
-            self.createVersion(username)
 
         if not self.hasVersion():
             #this object has not been checked out; save changes directly into the object
-            self.handleUpload(source, file, url)
             context = self
         else:
             #this object has been checked out; save changes into the version object
             if self.checkout_user != username:
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-            self.version.handleUpload(source, file, url)
             context = self.version
 
         if version:
-            context.createVersion(username)
+            newdata = self._get_upload_file(source, file, url)[0]
+            context.createVersion(self.get_data(as_string=False),
+                newdata, username=username, modification_time=self.utGetTodayDate())
+
+        context.handleUpload(source, file, url)
         self.recatalogNyObject(self)
 
         if REQUEST:
@@ -482,7 +462,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
 
     security.declareProtected(view_management_screens, 'manage_advanced_html')
     manage_advanced_html = PageTemplateFile('zpt/file_manage_advanced', globals())
-    
+
     security.declareProtected(view_management_screens, 'manageAdvancedProperties')
     def manageAdvancedProperties(self, REQUEST=None, **kwargs):
         """ """
@@ -540,7 +520,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         return file_item.index_html(self, REQUEST, RESPONSE)
-    
+
     security.declarePublic('getDownloadUrl')
     def getDownloadUrl(self):
         """ """
@@ -551,7 +531,7 @@ class NyFile(NyAttributes, file_item, NyItem, NyVersioning, NyCheckControl, NyVa
             return self.absolute_url() + '/download'
         file_path = (media_server,) + tuple(file_path)
         return '/'.join(file_path)
-    
+
     security.declarePublic('getEditDownloadUrl')
     def getEditDownloadUrl(self):
         """ """

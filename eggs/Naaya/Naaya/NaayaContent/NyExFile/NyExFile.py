@@ -226,10 +226,9 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
             fileitem.manage_beforeDelete(fileitem, self)
             # Apply manage_beforeDelete to versions, too
             versions = fileitem.getVersions()
-            for version in versions.keys():
-                vdata = fileitem.getVersion(version)[0]
+            for vdata in versions:
                 if hasattr(vdata, 'manage_beforeDelete'):
-                    vdata.manage_beforeDelete(vdata, fileitem)
+                    vdata.manage_beforeDelete(vdata, fileitem.versions)
         NyExFile.inheritedAttribute('manage_beforeDelete')(self, item, container)
         self.uncatalogNyObject(self)
 
@@ -313,9 +312,9 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
             version_data = self.getFileItem(lang).getVersion(vid)
             if version_data is not None:
                 #show data for file: set content type and return data
-                RESPONSE.setHeader('Content-Type', version_data[1])
+                RESPONSE.setHeader('Content-Type', version_data.getContentType())
                 REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + self.utToUtf8(self.getVersionFilename(vid)))
-                return version_data[0]
+                return version_data.index_html()
             else:
                 return 'Invalid version data!'
         else:
@@ -326,7 +325,7 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         """ Returns the filename for the given version id """
         if lang is None:
             lang = self.gl_get_selected_language()
-        version = self.getFileItem(lang).getVersion(vid)[0]
+        version = self.getFileItem(lang).getVersion(vid)
         filename = getattr(version, 'filename', [])
         if not filename:
             return ''
@@ -381,7 +380,6 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         self.checkout_user = None
         if 'version' in self.objectIds():
             self.manage_delObjects(['version'])
-        self.createversion(self.REQUEST.AUTHENTICATED_USER.getUserName(), self.gl_get_selected_language())
         self._p_changed = 1
         self.recatalogNyObject(self)
         if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
@@ -505,27 +503,23 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         if lang is None:
             lang = self.gl_get_selected_language()
 
-        # Create initial version
-        if not self.getFileItem(lang).getVersions():
-            self.createversion(username, lang)
-
         if not self.hasVersion():
-            self.handleUpload(source, file, url, lang)
             context = self
         else:
             version_ob = self._getOb('version')
             #this object has been checked out; save changes into the version object
             if self.checkout_user != username:
                 raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-            version_ob.handleUpload(source, file, url, lang)
             context = version_ob
 
         # Create version
         if version:
-            context.createversion(username, lang)
+            newdata = self.getFileItem(lang)._get_upload_file(source, file, url, self)[0]
+            context.createversion(newdata, lang, username=username,
+                                  modification_time=self.utGetTodayDate())
 
+        context.handleUpload(source, file, url, lang)
         self.recatalogNyObject(self)
-
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))

@@ -39,17 +39,17 @@ class exfile_item(Folder, NyProperties):
     keywords = LocalProperty('keywords')
 
     __files = {}
-    
+
     def __init__(self, id, title, description, coverage, keywords, sortorder,
         file, precondition, releasedate, lang):
         """
         Constructor.
         """
-        self.save_properties(title, description, coverage, keywords, sortorder, 
+        self.save_properties(title, description, coverage, keywords, sortorder,
                              releasedate, lang)
         Folder.__init__(self, id)
         NyProperties.__dict__['__init__'](self)
-    
+
     # Backward compatible
     def _get_old_files(self):
         return self.__files
@@ -62,11 +62,11 @@ class exfile_item(Folder, NyProperties):
         if target.objectIds('File'):
             target.manage_delObjects(target.objectIds('File'))
         for lang, item in source.getFileItems():
-            doc = file_item(lang, item.title, '', item.precondition, item.content_type)
+            doc = file_item(lang, item.title, '', item.precondition, item.getContentType())
             target._setObject(lang, doc)
             doc = target._getOb(lang)
             doc.update_data(item.get_data(as_string=False))
-            doc.copyVersions(item)
+            #doc.copyVersions(item)
 
     def getFileItem(self, lang=None):
         """ """
@@ -76,7 +76,7 @@ class exfile_item(Folder, NyProperties):
             doc = file_item(lang, lang, None, '', '')
             self._setObject(lang, doc)
         return self._getOb(lang)
-    
+
     def getFileItemData(self, lang=None, as_string=False):
         fileitem = self.getFileItem(lang)
         return fileitem.get_data(as_string=as_string)
@@ -97,7 +97,7 @@ class exfile_item(Folder, NyProperties):
         """ """
         if lang is None:
             lang = self.gl_get_selected_language()
-        return self.getFileItem(lang).content_type
+        return self.getFileItem(lang).getContentType()
 
     def precondition(self, lang=None):
         """ """
@@ -128,22 +128,25 @@ class exfile_item(Folder, NyProperties):
         if lang is None: lang = self.gl_get_selected_language()
         self.getFileItem(lang).handleUpload(source, file, url, self)
 
-    def createversion(self, username, lang=None):
+    def createversion(self, newdata, lang=None, **kwargs):
         """
         Creates a version.
         """
         if lang is None:
             lang = self.gl_get_selected_language()
         fileitem = self.getFileItem(lang)
-        if not fileitem.get_data(as_string=False).is_broken():
-            fileitem.createVersion(username)
+        vdata = fileitem.get_data(as_string=False)
+        if vdata.is_broken():
+            return
+        fileitem.createVersion(vdata, newdata, **kwargs)
 
-    def getOlderVersions(self, lang=None):
+    def getVersions(self, lang=None):
         """
         Returns the dictionary of older versions. This means that current
         version is removed because it cointains the current content of the
         object.
         """
-        if lang is None: lang = self.gl_get_selected_language()
-        try: return self.getFileItem(lang).getOlderVersions()
-        except: return []
+        if lang is None:
+            lang = self.gl_get_selected_language()
+        fileitem = self.getFileItem(lang)
+        return fileitem.getVersions()
