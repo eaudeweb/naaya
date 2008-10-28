@@ -71,11 +71,13 @@ class CustomContentUpdater(NaayaContentUpdater):
                 data_ctype = value[2][1]
                 while data_id in versions.objectIds():
                     data_id = '.' + data_id
+                data_id = doc.utCleanupId(data_id)
                 data_id = manage_addExtFile(versions, data_id)
                 version = versions._getOb(data_id)
                 version.manage_upload(data, data_ctype)
             else:
                 ext_id = data.getId()
+                ext_id = doc.utCleanupId(ext_id)
                 if ext_id not in versions.objectIds():
                     versions._setObject(ext_id, data)
                 version = versions._getOb(ext_id)

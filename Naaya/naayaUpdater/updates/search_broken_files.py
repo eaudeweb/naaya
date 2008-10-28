@@ -71,11 +71,12 @@ class CustomContentUpdater(NaayaContentUpdater):
                     doc_broken = True
             
     	    if getattr(doc, 'getVersions', None):
-    	        for key, version in doc.getVersions().items():
+    	        for version in doc.getVersions():
     	            try:
-    	                data = version[2][0]
+    	                data = version
     	            except:
     	                continue
+    	            key = data.getId()
     	            if not getattr(data, 'filename', []):
     	                continue
     	            if data.is_broken():
