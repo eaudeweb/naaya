@@ -111,26 +111,19 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     def getSurveyTemplateId(self):
         """Return survey template id; used by the catalog tool."""
         return None
-    
+
     security.declareProtected(view, 'download')
     def download(self, REQUEST=None, RESPONSE=None):
         """returns all the answers in a csv file"""
-        tmp_list = []
-        for w in self.getWidgets():
-            tmp_list.append(self.utToUtf8(w.title_or_id()))
-        data=[tuple(tmp_list)]
-        for answer in self.getAnswers():
-            one_answer=[]
-            for w in self.getWidgets():
-                #answer's property is widget's id
-                value = getattr(answer, w.id)
-                one_answer.append(self.utToUtf8(value))
-            data.append(tuple(one_answer))
-        tmp_name = tmpfile(data)
-        content = open(str(tmp_name)).read()
         RESPONSE.setHeader('Content-Type', 'text/csv')
         RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s.csv' % self.id)
-        return content
+        answers = self.getAnswers()
+        widgets = self.getSortedWidgets()
+        res = '"Respondent",'
+        res += ','.join(['"%s"' % widget.title_or_id() for widget in widgets])
+        res = [res,]
+        res.extend([answer.index_csv() for answer in answers])
+        return '\n'.join(res)
     #
     # Site pages
     #

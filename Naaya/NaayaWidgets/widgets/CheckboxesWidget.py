@@ -66,6 +66,17 @@ class CheckboxesWidget(MultipleChoiceWidget):
         if self.required and not value:
             raise WidgetError('Value required for "%s"' % self.title)
 
+    def render_csv(self, datamodel=None, **kwargs):
+        """ Customize render_csv for this widget type """
+        if not datamodel:
+            return self._render_default_csv()
+
+        res = []
+        for answer in datamodel:
+            res.append(self.choices[answer])
+        res = ', '.join(res)
+        return self._escape(res)
+
 InitializeClass(CheckboxesWidget)
 
 def register():

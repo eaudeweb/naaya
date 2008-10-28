@@ -28,6 +28,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES, \
                                          PERMISSION_EDIT_OBJECTS
 from Products.NaayaCore.managers.utils import genObjectId, genRandomId
+from Products.NaayaCore.managers.utils import utils
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 
 class WidgetError(Exception):
@@ -141,6 +142,14 @@ class Widget(Folder, LocalPropertyManager):
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
+    def _escape(self, value=''):
+        if '"' in value:
+            value = value.replace('"', '""')
+        ut = utils()
+        return '"%s"' % ut.utToUtf8(value)
+
+    def _render_default_csv(self, **kwargs):
+        return '"No response"'
     #
     # To be implemented or ovewritten (if needed) by widget concrete classes.
     #
@@ -161,6 +170,11 @@ class Widget(Folder, LocalPropertyManager):
         """Render widget according with given mode"""
         assert(mode in ('view', 'edit', 'manage'))
         return self.render_meth(mode=mode, datamodel=datamodel, **kwargs)
+
+    security.declareProtected(view, 'render_csv')
+    def render_csv(self, datamodel=None, **kwargs):
+        """ Render datamodel property as csv """
+        return '""'
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     edit_html = PageTemplateFile('zpt/edit_widget', globals())
