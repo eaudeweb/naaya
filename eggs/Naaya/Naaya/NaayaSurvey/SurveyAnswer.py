@@ -142,18 +142,30 @@ class SurveyAnswer(Folder):
     # regular "view" permission because otherwise, by default, all users
     # (including anonymous ones) can see all answers. Also setting the view
     # permission for each SurveyAnswer wouldn't be practical.
-    
+
     _index_html = PageTemplateFile('zpt/surveyanswer_index', globals())
     def index_html(self,REQUEST=None):
-        """ Return the answer index if the current user 
+        """ Return the answer index if the current user
         is the respondent or has permission to view answers """
-        
+
         if REQUEST:
             if self.respondent == REQUEST.AUTHENTICATED_USER.getUserName():
                 return self._index_html()
-            
+
         if self.checkPermission(PERMISSION_VIEW_ANSWERS):
             return self._index_html()
         else:
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        
+
+    def index_csv(self, REQUEST=None, **kwargs):
+        """ Return values formated as csv.
+        """
+        datamodel=self.getDatamodel()
+        widgets = self.getSortedWidgets()
+        atool = self.getSite().getAuthenticationTool()
+        respondent = atool.getUserFullNameByID(self.respondent)
+        res = ['"%s"' % respondent]
+        for widget in widgets:
+            res.append(widget.render_csv(
+                datamodel=datamodel.get(widget.id, None), **kwargs))
+        return ','.join(res)

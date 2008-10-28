@@ -262,7 +262,6 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
         widgets = self.getSortedWidgets()
         return '\n'.join([widget.render(mode=mode, datamodel=datamodel.get(widget.id, None), **kwargs)
                           for widget in widgets])
-
     #
     # Reports
     #
@@ -323,17 +322,17 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
                                      MultipleChoiceCssBarChartStatistic,
                                      MultipleChoiceGoogleBarChartStatistic,
                                      MultipleChoicePieChartStatistic])
-                
+
             elif isinstance(question, MatrixWidget):
                 stat_classes.extend([MatrixTabularStatistic,
                                      MatrixCssBarChartStatistic])
-                
+
             elif isinstance(question, StringWidget) or isinstance(question, TextAreaWidget):
                 stat_classes.extend([TextAnswerListing])
-                
+
             else:
                 stat_classes.extend([SimpleTabularStatistic])
-                
+
             for stat_class in stat_classes:
                 manage_addStatistic(stat_class,
                                     report,

@@ -65,6 +65,25 @@ class CheckboxMatrixWidget(MatrixWidget):
         if unanswered:
             raise WidgetError('Value required for "%s"' % self.title)
 
+    def render_csv(self, datamodel=None, **kwargs):
+        """ Customize render_csv for this widget type """
+        if datamodel is None:
+            return self._render_default_csv()
+
+        res = []
+        for index, row_answers in enumerate(datamodel):
+            title = self.rows[index]
+            value = []
+            if not row_answers:
+                res.append('%s: No response' % title)
+                continue
+            for answer in row_answers:
+                value.append(self.choices[answer])
+            value = ', '.join(value)
+            res.append('%s: %s' % (title, value))
+        res = '\n'.join(res)
+        return self._escape(res)
+
 InitializeClass(CheckboxMatrixWidget)
 
 def register():

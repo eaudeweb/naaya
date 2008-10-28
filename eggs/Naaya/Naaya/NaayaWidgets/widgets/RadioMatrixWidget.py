@@ -66,6 +66,21 @@ class RadioMatrixWidget(MatrixWidget):
         if unanswered:
             raise WidgetError('Value required for "%s"' % self.title)
 
+    def render_csv(self, datamodel=None, **kwargs):
+        """ Customize render_csv for this widget type """
+        if datamodel is None:
+            return self._render_default_csv()
+
+        res = []
+        for index, answer in enumerate(datamodel):
+            if answer is None:
+                data = '%s: No response' % self.rows[index]
+            else:
+                data = '%s: %s' % (self.rows[index], self.choices[answer])
+            res.append(data)
+        res = '\n'.join(res)
+        return self._escape(res)
+
 InitializeClass(RadioMatrixWidget)
 
 def register():

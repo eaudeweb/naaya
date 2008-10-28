@@ -58,6 +58,12 @@ class TextAreaWidget(Widget):
         """Get datamodel from form"""
         return form.get(self.getWidgetId(), None)
 
+    def render_csv(self, datamodel=None, **kwargs):
+        """ Customize render_csv for this widget type """
+        if datamodel is None:
+            return self._render_default_csv()
+        return "%s" % self._escape(datamodel)
+
 InitializeClass(TextAreaWidget)
 
 def register():

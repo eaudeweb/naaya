@@ -58,6 +58,12 @@ class DateWidget(Widget):
             raise WidgetError('Invalid date string for "%s"' % self.title)
         return value
 
+    def render_csv(self, datamodel=None, **kwargs):
+        """ Customize render_csv for this widget type """
+        if datamodel is None:
+            return self._render_default_csv()
+        return '"%s"' % datamodel
+
 InitializeClass(DateWidget)
 
 def register():

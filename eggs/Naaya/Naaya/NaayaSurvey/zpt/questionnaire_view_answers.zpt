@@ -10,8 +10,8 @@
 
 <h1>
 	<img tal:attributes="
-		src python:test(here.approved, here.icon, here.icon_marked); 
-		title here/meta_label; 
+		src python:test(here.approved, here.icon, here.icon_marked);
+		title here/meta_label;
 		alt here/meta_label" />
 	<tal:block tal:replace="here/title_or_id" />
 		<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
@@ -22,8 +22,13 @@
 		</span>
 </h1>
 
-<p tal:condition="python:here.description!=''" 
+<p tal:condition="python:here.description!=''"
 	tal:content="structure here/description" />
+
+<div class="buttons" tal:condition="here/checkPermissionViewAnswers">
+	<a tal:attributes="href string:${here/absolute_url}/download" i18n:translate="">Download as CSV</a>
+</div>
+
 
 <tal:block define="answers python:here.getAnswers()">
 	<tal:block condition="answers">
