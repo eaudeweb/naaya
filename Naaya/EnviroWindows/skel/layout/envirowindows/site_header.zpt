@@ -100,7 +100,7 @@
 			<ul id="dropdowns">
 				<li tal:repeat="main_categ here/getMainTopics">
 					<a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/title" tal:content="main_categ/title" tal:condition="main_categ/checkPermissionView" />
-					<tal:block tal:define="sub_items python:main_categ.objectValues(['Naaya Folder', 'Naaya Pointer'])">
+					<tal:block tal:define="sub_items python:[x for x in main_categ.objectValues(['Naaya Folder', 'Naaya Pointer']) if x.approved]">
 						<ul tal:condition="sub_items">
 							<li tal:repeat="sub_item sub_items">
 								<a tal:content="sub_item/title_or_id" tal:attributes="href sub_item/absolute_url" />
