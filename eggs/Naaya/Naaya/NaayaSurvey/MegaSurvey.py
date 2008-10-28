@@ -27,7 +27,7 @@ from zLOG import LOG, ERROR, DEBUG
 
 # Product imports
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
-from Products.NaayaCore.managers.utils import genObjectId, genRandomId
+from Products.NaayaCore.managers.utils import genObjectId, genRandomId, tmpfile
 
 from BaseSurveyTemplate import BaseSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
@@ -111,7 +111,26 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
     def getSurveyTemplateId(self):
         """Return survey template id; used by the catalog tool."""
         return None
-
+    
+    security.declareProtected(view, 'download')
+    def download(self, REQUEST=None, RESPONSE=None):
+        """returns all the answers in a csv file"""
+        tmp_list = []
+        for w in self.getWidgets():
+            tmp_list.append(self.utToUtf8(w.title_or_id()))
+        data=[tuple(tmp_list)]
+        for answer in self.getAnswers():
+            one_answer=[]
+            for w in self.getWidgets():
+                #answer's property is widget's id
+                value = getattr(answer, w.id)
+                one_answer.append(self.utToUtf8(value))
+            data.append(tuple(one_answer))
+        tmp_name = tmpfile(data)
+        content = open(str(tmp_name)).read()
+        RESPONSE.setHeader('Content-Type', 'text/csv')
+        RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s.csv' % self.id)
+        return content
     #
     # Site pages
     #
