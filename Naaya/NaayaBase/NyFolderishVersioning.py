@@ -56,6 +56,8 @@ class NyFolderishVersioning:
         """ Returns version by given v(id) or None if not exists.
         If v(id) is not provided returns a list of all versions.
         """
+        if not 'versions' in self.__dict__.keys():
+            self.versions = Folder('versions')
         if not vid:
             return self.versions.objectValues()
         return self.versions._getOb(vid, None)
