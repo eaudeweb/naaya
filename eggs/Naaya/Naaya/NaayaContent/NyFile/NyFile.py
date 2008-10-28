@@ -211,6 +211,10 @@ class NyFile(NyAttributes, file_item, NyItem, NyFolderishVersioning, NyCheckCont
         This method is called, whenever _setObject in ObjectManager gets called.
         """
         NyFile.inheritedAttribute('manage_afterAdd')(self, item, container)
+        versions = self.getVersions()
+        for version in versions:
+            if hasattr(version, 'manage_afterAdd'):
+                version.manage_afterAdd(version, self.versions)
         self.catalogNyObject(self)
 
     def manage_beforeDelete(self, item, container):
@@ -218,12 +222,20 @@ class NyFile(NyAttributes, file_item, NyItem, NyFolderishVersioning, NyCheckCont
         This method is called, when the object is deleted.
         """
         NyFile.inheritedAttribute('manage_beforeDelete')(self, item, container)
-        # Apply manage_beforeDelete to versions, too
         versions = self.getVersions()
         for version in versions:
             if hasattr(version, 'manage_beforeDelete'):
                 version.manage_beforeDelete(version, self.versions)
         self.uncatalogNyObject(self)
+
+    def manage_afterClone(self, item):
+        """ This method is called when you copy/paste object.
+        """
+        NyFile.inheritedAttribute('manage_afterClone')(self, item)
+        versions = self.getVersions()
+        for version in versions:
+            if hasattr(version, 'manage_afterClone'):
+                version.manage_afterClone(version)
 
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):

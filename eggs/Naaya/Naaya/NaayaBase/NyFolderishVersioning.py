@@ -36,9 +36,11 @@ class NyFolderishVersioning:
         """
         vid = vdata.getId()
         if vid not in self.versions.objectIds():
-            vid = manage_addExtFile(self.versions, vid)
+            self.versions._setObject(vid, vdata)
+        else:
+            version = self.versions._getOb(vid)
+            version.manage_upload(vdata.index_html(), vdata.getContentType())
         version = self.versions._getOb(vid)
-        version.manage_upload(vdata.index_html(), vdata.getContentType())
         for key, value in kwargs.items():
             setattr(version, key, value)
 
@@ -69,6 +71,10 @@ class NyFolderishVersioning:
             vdata1 = vdata1.index_html()
         if getattr(vdata2, 'index_html', None):
             vdata2 = vdata2.index_html()
+        if not isinstance(vdata1, str):
+            vdata1 = str(vdata1)
+        if not isinstance(vdata2, str):
+            vdata2 = str(vdata2)
         return crc32(vdata1) != crc32(vdata2)
     #
     # Public interface

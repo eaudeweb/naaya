@@ -42,6 +42,37 @@ class file_item(NyFSFile, NyFolderishVersioning):
         NyFolderishVersioning.__dict__['__init__'](self)
 
     security = ClassSecurityInfo()
+    #
+    #override handlers
+    #
+    def manage_afterAdd(self, item, container):
+        """
+        This method is called, whenever _setObject in ObjectManager gets called.
+        """
+        file_item.inheritedAttribute('manage_afterAdd')(self, item, container)
+        versions = self.getVersions()
+        for version in versions:
+            if hasattr(version, 'manage_afterAdd'):
+                version.manage_afterAdd(version, self.versions)
+
+    def manage_beforeDelete(self, item, container):
+        """
+        This method is called, when the object is deleted.
+        """
+        file_item.inheritedAttribute('manage_beforeDelete')(self, item, container)
+        versions = self.getVersions()
+        for version in versions:
+            if hasattr(version, 'manage_beforeDelete'):
+                version.manage_beforeDelete(version, self.versions)
+
+    def manage_afterClone(self, item):
+        """ This method is called when you copy/paste object.
+        """
+        file_item.inheritedAttribute('manage_afterClone')(self, item)
+        versions = self.getVersions()
+        for version in versions:
+            if hasattr(version, 'manage_afterClone'):
+                version.manage_afterClone(version)
 
     def getContentType(self):
         return self.get_data(as_string=False).getContentType()

@@ -222,13 +222,6 @@ class NyExFile(NyAttributes, exfile_item, NyItem, NyCheckControl, NyValidation):
         """
         This method is called, when the object is deleted.
         """
-        for lang, fileitem in self.getFileItems():
-            fileitem.manage_beforeDelete(fileitem, self)
-            # Apply manage_beforeDelete to versions, too
-            versions = fileitem.getVersions()
-            for vdata in versions:
-                if hasattr(vdata, 'manage_beforeDelete'):
-                    vdata.manage_beforeDelete(vdata, fileitem.versions)
         NyExFile.inheritedAttribute('manage_beforeDelete')(self, item, container)
         self.uncatalogNyObject(self)
 
