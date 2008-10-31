@@ -91,6 +91,14 @@
 	</label>
 	<input type="text" name="webpage:utf8:ustring" id="webpage" size="70" tal:attributes="value python:here.getSession('webpage', '')" />
 </div>
+
+<span tal:condition="here/recaptcha_is_present" tal:replace="structure python:here.show_recaptcha(here)" />
+<tal:block condition="not:here/recaptcha_is_present">
+  <div class="field">
+     <img tal:attributes="src string:${here/getSitePath}/getCaptcha" alt="" />
+  </div>
+</tal:block>
+
 </tal:block>
 
 </tal:block>
