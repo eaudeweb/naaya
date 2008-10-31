@@ -98,6 +98,12 @@ def addNyContact(self, id='', title='', description='', coverage='', keywords=''
             postaladdress=postaladdress, phone=phone, fax=fax, cellphone=cellphone, email=email, webpage=webpage)
     else:
         r = []
+
+    #check reCaptcha
+    if self.recaptcha_is_present():
+        if not self.is_valid_recaptcha(self, REQUEST):
+            r.append('Verification words do not match the ones in the picture.')
+
     if not len(r):
         #process parameters
         if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
