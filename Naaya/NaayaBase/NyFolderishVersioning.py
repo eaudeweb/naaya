@@ -22,9 +22,10 @@ This module contains the class that handles versioning for a single object.
 
 from binascii import crc32
 from OFS.Folder import Folder
-from Products.ExtFile.ExtFile import manage_addExtFile
 
 class NyFolderishVersioning:
+    """ File versioning
+    """
     def __init__(self):
         self.versions = Folder('versions')
     #
@@ -35,12 +36,13 @@ class NyFolderishVersioning:
         given (v)data and keywords
         """
         vid = vdata.getId()
-        if vid not in self.versions.objectIds():
-            self.versions._setObject(vid, vdata)
+        versions = self._get_versions_container()
+        if vid not in versions.objectIds():
+            versions._setObject(vid, vdata)
         else:
-            version = self.versions._getOb(vid)
+            version = versions._getOb(vid)
             version.manage_upload(vdata.index_html(), vdata.getContentType())
-        version = self.versions._getOb(vid)
+        version = versions._getOb(vid)
         for key, value in kwargs.items():
             setattr(version, key, value)
 
@@ -48,21 +50,28 @@ class NyFolderishVersioning:
         """ Delete version by given version id (vid).
         If vid is not provided delete all versions.
         """
+        versions = self._get_versions_container()
         if not vid:
             # Delete all
-            self.versions.manage_delObjects(self.versions.objectIds())
-        if vid in self.versions:
-            self.versions.manage_delObjects([vid,])
+            versions.manage_delObjects(versions.objectIds())
+        if vid in versions.objectIds():
+            versions.manage_delObjects([vid, ])
+
+    def _get_versions_container(self):
+        """ If versions container not exists create and return it
+        """
+        if not 'versions' in self.__dict__.keys():
+            self.versions = Folder('versions')
+        return self.versions
 
     def _get_version(self, vid=None):
         """ Returns version by given v(id) or None if not exists.
         If v(id) is not provided returns a list of all versions.
         """
-        if not 'versions' in self.__dict__.keys():
-            self.versions = Folder('versions')
+        versions = self._get_versions_container()
         if not vid:
-            return self.versions.objectValues()
-        return self.versions._getOb(vid, None)
+            return versions.objectValues()
+        return versions._getOb(vid, None)
 
     def _compare_versions(self, vdata1, vdata2):
         """ Compare 2 versions data.
@@ -86,6 +95,11 @@ class NyFolderishVersioning:
         if not self._compare_versions(vdata, newdata):
             return
         self._add_version(vdata, **kwargs)
+
+    def getVersionsContainer(self):
+        """ If versions container not exists create and return it
+        """
+        return self._get_versions_container()
 
     def getVersion(self, version_id):
         """ Return version by given id
