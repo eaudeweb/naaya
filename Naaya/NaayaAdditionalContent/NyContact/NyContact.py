@@ -149,6 +149,7 @@ def addNyContact(self, id='', title='', description='', coverage='', keywords=''
             REQUEST.RESPONSE.redirect('%s/contact_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)
+    return ob.getId()
 
 def importNyContact(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
