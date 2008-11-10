@@ -40,8 +40,10 @@ from Products.Naaya.constants                       import *
 from Products.NaayaCore.constants                   import *
 from Products.Naaya.NySite                          import NySite
 from Products.NaayaCore.managers.utils              import utils
+from Products.NaayaCore.managers.utils              import CSVReader
 from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
 from Products.Naaya.NyFolder import addNyFolder
+from Products.NaayaContent.NyContact.NyContact import addNyContact
 
 
 manage_addEnviroWindowsSite_html = PageTemplateFile('zpt/site_manage_add', globals())
@@ -1024,6 +1026,100 @@ text-decoration: underline;
         if REQUEST:
             self.setSessionInfo(['Mail sent. (%s)' % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_contacts_html' % self.absolute_url())
+
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'import_contacts_from_csv')
+    def import_contacts_from_csv(self, file=None, dialect='comma', encoding='utf-8', location='', REQUEST=None):
+        """Bulk import of Naaya Contacts from a CSV file"""
+        e = []
+        if not location:
+            e.append('You must specify a location.')
+        if file:
+            content = CSVReader(file=file, dialect=dialect, encoding=encoding)
+        else:
+            e.append('You must specify a file.')
+        if e and REQUEST is not None:
+            self.setSessionErrors(e)
+            return self.REQUEST.RESPONSE.redirect('%s/admin_contacts_html' % self.absolute_url())
+
+        content = content.read()[0]
+        contact_meta = 'Naaya Contact'
+        portal_control = self.getControlsTool()
+        portal_dynprop = self.getDynamicPropertiesTool()
+        dynprops = portal_dynprop.getDynamicProperties(contact_meta)
+        dynprops = [x.id for x in dynprops]
+        lang = self.gl_get_selected_language()
+        
+        location = self.unrestrictedTraverse(location)
+        for contact in content:
+            #contact base data
+            title = '%s %s' % (contact.get('first name', ''), contact.get('last name', ''))
+            description = contact.get('description', '')
+            coverage = contact.get('coverage', '')
+            keywords = contact.get('keywords', '')
+            personaltitle = contact.get('personal title', '')
+            firstname = contact.get('first name', '')
+            lastname = contact.get('last name', '')
+            jobtitle = contact.get('job title', '')
+            department = contact.get('department', '')
+            organisation = contact.get('organisation', '')
+            postaladdress = contact.get('postal address', '')
+            phone = contact.get('phone', '')
+            fax = contact.get('fax', '')
+            cellphone = contact.get('cell phone', '')
+            email = contact.get('email', '')
+            webpage = contact.get('webpage', '')
+
+            contact_id = addNyContact(location,
+                                      title=title,
+                                      description=description,
+                                      coverage=coverage,
+                                      keywords=keywords,
+                                      personaltitle=personaltitle,
+                                      firstname=firstname,
+                                      lastname=lastname,
+                                      jobtitle=jobtitle,
+                                      department=department,
+                                      organisation=organisation,
+                                      postaladdress=postaladdress,
+                                      phone=phone,
+                                      fax=fax,
+                                      cellphone=cellphone,
+                                      email=email,
+                                      webpage=webpage)
+
+            #contact geographical data
+            if portal_control and portal_control.checkControl(contact_meta):
+                geo_type = contact['geographical_type']
+                latitude = contact['latitude']
+                longitude = contact['longitude']
+                landscape_type = contact.get('landscape_type', '')
+                administrative_level = contact.get('administrative_level', '')
+
+                contact_ob = location._getOb(contact_id)
+                contact_ob.geo_type = geo_type
+                contact_ob.longitude = float(longitude.replace(',', '.'))
+                contact_ob.latitude = float(latitude.replace(',', '.'))
+
+                if 'landscape_type' in dynprops \
+                   and 'administrative_level' in dynprops:
+                    kwrds = {'landscape_type': landscape_type,
+                             'administrative_level': administrative_level}
+                    contact_ob.updateDynamicProperties(kwrds, lang)
+        if REQUEST is not None:
+            self.setSessionInfo(['Contacts successfully imported.'])
+            return self.REQUEST.RESPONSE.redirect('%s/admin_contacts_html' % self.absolute_url())
+
+    security.declareProtected(view, 'contacts_csv_template')
+    def contacts_csv_template(self, REQUEST=None):
+        """Return the CSV template to use for bulk Naaya Contacts upload"""
+        if REQUEST is not None:
+            self.REQUEST.RESPONSE.setHeader("Content-Type", "text/csv", 0)
+            self.REQUEST.RESPONSE.setHeader("Content-Disposition","attachment;filename=template.txt")
+            return 'description,coverage,keywords,personal title,job title,'\
+                   'first name,last name,department,organisation,postal address'\
+                   ',phone,fax,cell phone,email,webpage,geographical_type,'\
+                   'landscape_type,administrative_level,latitude,longitude'
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_contacts_html')
     def admin_contacts_html(self, REQUEST=None, RESPONSE=None):
