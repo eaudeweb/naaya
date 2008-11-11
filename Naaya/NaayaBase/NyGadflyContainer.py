@@ -149,8 +149,10 @@ class NyGadflyContainer(Folder):
                                columns=columns, conditions=conditions)
 
         # Return
-        return res.dictionaries()
-    
+        if res:
+            return res.dictionaries()
+        return []
+
     security.declareProtected(view_management_screens, 'set')
     def set(self, key, value, **conditions):
         """ UPDATE TABLE SET key = value WHERE conditions
