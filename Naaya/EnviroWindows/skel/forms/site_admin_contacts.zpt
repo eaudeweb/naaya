@@ -25,7 +25,7 @@
 		a comma separated file. In case your Naaya portal has enabled geolocation for Contacts,
 		fill in the <em>Latitude</em>, <em>Longitude</em> , <em>Location URL</em> and <em>Location type</em>.
 		If the latitude and longitude are not provided, the system will try to find these coordinates from the
-		<em>Postal address</em> field. The <em>Location type</em> must be one of those <a href="/admin_portal_map_html"> defined in the portal</a>.
+		<em>Postal address</em> field. The <em>Location type</em> must be one of those <a tal:attributes="href python:'%s/admin_maptypes_html' % here.getGeoMapTool().absolute_url()"> defined in the portal</a>.
 		</p>
 		<a href="contacts_csv_template" i18n:translate="">Download template</a>
 
