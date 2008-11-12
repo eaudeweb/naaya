@@ -1,10 +1,27 @@
-<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']" tal:define="xxx string:aaa">
 
-	<h1 metal:fill-slot="title" i18n:translate="">Portal contacts</h1>
+	<tal:block metal:fill-slot="title" />
 
-	<tal:block metal:fill-slot="section">
-		<h2 i18n:translate="">Bulk import</h2>
+	<tal:block metal:fill-slot="section" tal:define="section python:request.get('section', '')">
 
+	<h1 i18n:translate="" tal:condition="python:section == 'import'">Contacts - Bulk import</h1>
+	<h1 i18n:translate="" tal:condition="python:section == 'mail'">Contacts - Send mail</h1>
+	<h1 i18n:translate="" tal:condition="python:section == 'listing' or not section">Contacts - listing</h1>
+
+	<div id="tabbedmenu">
+	<ul>
+		<li id="currenttab" tal:condition="python:section == 'listing' or not section"><a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=listing">Contacts - listing</a></li>
+		<li tal:condition="python:section != 'listing' and section != ''"><a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=listing">Contacts - listing</a></li>
+		<li id="currenttab" tal:condition="python:section == 'import'"><a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=import" >Contacts - bulk import</a></li>
+		<li tal:condition="python:section != 'import'"><a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=import" >Contacts - bulk import</a></li>
+		<li id="currenttab" tal:condition="python:section == 'mail'"><a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=mail">Contacts - send mail</a></li>
+		<li tal:condition="python:section != 'mail'"><a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=mail">Contacts - send mail</a></li>
+	</ul>
+	</div>
+		<tal:block condition="python:section == 'import'">
+
+
+		<p i18n:translate>This form allows you to upload multiple <em>Contact</em> items with geolocation information.</p>
 		<a href="contacts_csv_template" i18n:translate="">Download template</a>
 
 		<form action="import_contacts_from_csv" method="post" enctype="multipart/form-data">
@@ -33,8 +50,10 @@
 			</div>
 				<input type="submit" value="Import contacts" i18n:attributes="value" />
 		</form>
+		</tal:block>
 
-		<h2 i18n:translate="">Send mail to all portal contacts</h2>
+		<tal:block condition="python:section == 'mail'">
+
 			<p i18n:translate="">You can use the form below to send
 			an email to all email addresses from the Naaya Contact
 			objects throughout this portal.</p>
@@ -44,7 +63,7 @@
 			</div>
 			<div class="field">
 				<label for="subject" i18n:translate="">Mail subject</label>
-				<input id="subject" name="subject" type="text" size="112" tal:attributes="disabled not:mail_from" />
+				<input id="subject" name="subject" type="text" size="100" tal:attributes="disabled not:mail_from" />
 			</div>
 
 			<div class="field">
@@ -53,8 +72,10 @@
 			</div>
 			<input type="submit" value="Send mail" i18n:attributes="value" tal:attributes="disabled not:mail_from" />
 		</form>
+		</tal:block>
 
-		<h2 i18n:translate="">Portal contacts listing</h2>
+		<tal:block condition="python:section == 'listing' or not section" define="contacts python:here.getCatalogedObjects(meta_type=['Naaya Contact'])">
+			<tal:block condition="contacts">
 			<table id="contacts_listing" class="datatable">
 				<tr>
 					<th i18n:translate="">Name</th>
@@ -63,7 +84,7 @@
 					<th i18n:translate="">Edit</th>
 					<th i18n:translate="">Export</th>
 				</tr>
-				<tr tal:repeat="contact python:here.getCatalogedObjects(meta_type=['Naaya Contact'])">
+				<tr tal:repeat="contact contacts">
 					<td tal:content="string:${contact/firstname} ${contact/lastname}" />
 					<td tal:content="contact/email" />
 					<td><a tal:attributes="href contact/absolute_url">View contact</a></td>
@@ -76,6 +97,9 @@
 				<span i18n:translate>You can also choose to</span>
 				<a href="export_contacts_vcard" i18n:translate="">bulk export all vCard data</a> <span i18n:translate="">as a zip file.</span>
 			</p>
+			</tal:block>
+			<span tal:condition="not:contacts" i18n:translate="">This portal contains no <em>Contact</em> items</span>
+		</tal:block>
 
 		<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/tree.css"/>
 		<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/custom-tree.css"/>
