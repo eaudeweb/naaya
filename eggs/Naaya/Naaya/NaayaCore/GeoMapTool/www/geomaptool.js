@@ -70,7 +70,7 @@ function httpDocumentHandler(req) {
 				num_records++;
 			}
 		}
-	} catch(e) { 
+	} catch(e) {
 		alert( "Naaya GeoMapTool: Error drawing markers on map:" + e.message)
 	};
 	mapTool.updateRecordCounter();
@@ -82,14 +82,22 @@ function httpDocumentHandler(req) {
  * Map engine independent.
  * @return Nothing
  */
-function showMapLocations() {
+
+function showMapLocationsHandler(){
 	checkConfig( "showMapLocations" );
 	mapTool.clearMap();
 	mapTool.markerHash = {};
-	document.body.style.cursor = "wait";	
+	document.body.style.cursor = "wait";
 	doHttpRequest( server_base_url + "/xrjs_getGeoPoints?" + encodeForm("frmFilterMap"), httpDocumentHandler);
 }
 
 function setRecordCounter( value ) {
-	document.getElementById('record_counter').innerHTML = value.toString();	
+	document.getElementById('record_counter').innerHTML = value.toString();
+}
+
+function findAddress() {
+	mapCenterLoc = document.getElementById('address').value;
+	if (mapCenterLoc != '') {
+		mapTool.drawZoomAndCenter(mapCenterLoc);
+	}
 }
