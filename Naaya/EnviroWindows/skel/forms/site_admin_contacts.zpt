@@ -21,7 +21,12 @@
 		<tal:block condition="python:section == 'import'">
 
 
-		<p i18n:translate>This form allows you to upload multiple <em>Contact</em> items with geolocation information.</p>
+		<p i18n:translate>This form allows you to upload multiple <em>Contact</em> items from
+		a comma separated file. In case your Naaya portal has enabled geolocation for Contacts,
+		fill in the <em>Latitude</em>, <em>Longitude</em> , <em>Location URL</em> and <em>Location type</em>.
+		If the latitude and longitude are not provided, the system will try to find these coordinates from the
+		<em>Postal address</em> field. The <em>Location type</em> must be one of those <a href="/admin_portal_map_html"> defined in the portal</a>.
+		</p>
 		<a href="contacts_csv_template" i18n:translate="">Download template</a>
 
 		<form action="import_contacts_from_csv" method="post" enctype="multipart/form-data">
