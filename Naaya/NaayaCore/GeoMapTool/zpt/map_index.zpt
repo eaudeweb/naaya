@@ -122,7 +122,7 @@
           <input type="hidden" id="zoom" name="zoom" tal:attributes="value zoom" />
           <input type="hidden" id="path" name="path" tal:attributes="value path" />
           <input type="button" id="showSelected" class="map-button" value="Show selected" i18n:attributes="value"
-                   style="display: none" onclick="javascript: showMapLocations()" />
+                   style="display: none" onclick="javascript: showMapLocationsHandler()" />
           <noscript>
             <input type="submit" value="Show selected" class="map-button" name="index_html:method" i18n:attributes="value" />
           </noscript>
