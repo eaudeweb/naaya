@@ -151,6 +151,16 @@ YGeoMapTool.prototype.showMap = function(center, zoom, enableScrollWheelZoom, ma
 	}
 }
 
+YGeoMapTool.prototype.showMapLocations = function(){
+	YEvent.Capture(map, 'endMapDraw', showMapLocationsHandler);
+}
+/**
+ * Center map on other location and zoom it
+ */
+YGeoMapTool.prototype.drawZoomAndCenter = function(center){
+	map.drawZoomAndCenter(center, 3);
+}
+
 /**
  * Load category from server doing an XMLHTTPRequest to retrieve the points.
  */

@@ -78,6 +78,22 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     Class that implements the tool.
     """
 
+    mapsapikey = 'm.6kzBLV34FOaYaMCfIKBRHIIYE8zCf6c6yxcc5rZCWkCilWFPzAhcyQEcRTgYKy5g--'
+    googleApiKey = 'ABQIAAAAkblOrSS9iVzkKUfXj3gOFRR26BjrSmLtamIPMRgDuTUxZh8BLxQ2qfb6PUeks1ZMeSmUGC0ZTrNFVg'
+    map_engine = 'yahoo'
+    #center map in Europe
+    center_locality = MAP_CENTER_LOCALITY
+    center_zoom = MAP_CENTER_ZOOM
+    detailed_zoom = MAP_DETAILED_ZOOM
+    map_width = MAP_WIDTH
+    map_height = MAP_HEIGHT
+    detailed_map_width = MAP_DETAILED_WIDTH
+    detailed_map_height = MAP_DETAILED_HEIGHT
+    map_types = YAHOO_MAP_TYPES
+    default_type = 'YAHOO_MAP_REG'
+    enableKeyControls = True
+
+
     meta_type = METATYPE_GEOMAPTOOL
     icon = 'misc_/NaayaCore/GeoMapTool.gif'
 
@@ -266,7 +282,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             #results.extend(site_ob.getCatalogedMapObjects(meta_type=meta_list, path=path, address=query, **base_kw))
             results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, title=query, **base_kw))
             results.extend(site_ob.getCatalogedObjectsCheckView(meta_type=meta_list, path=path, address=query, **base_kw))
-            
+
             if REQUEST:
                 langs = REQUEST.get('languages', self.gl_get_selected_language())
             else:
@@ -333,7 +349,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                     longitude = 0;
 
                 if (latitude and longitude):
-                    ra('%s##%s##mk_%s##%s##%s##%s$$' % (self.utToUtf8(res.latitude),
+                    ra('%s##%s##mk_%s##%s##%s##%s' % (self.utToUtf8(res.latitude),
                                               self.utToUtf8(res.longitude),
                                               self.utToUtf8(res.id),
                                               self.utToUtf8(self.utJavaScriptEncode(res.title_or_id())),
@@ -342,7 +358,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                                               ))
 
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
-        return ''.join(r)
+        return '$$'.join(r)
 
     security.declareProtected(view, 'xrjs_simple_feed')
     def xrjs_simple_feed(self, key='', show='', REQUEST=None):
@@ -379,14 +395,14 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             icon_url = '%s/getSymbolPicture?id=%s' % (self.absolute_url(), symbol.id)
             output.append('"%s":"%s"' % (symbol.id, icon_url))
         return ",".join(output)
-    
+
     def jsMapControl(self, map_engine="yahoo", center="", zoom="", width="", height="", enableKeyControls=False, map_types=[], default_type=""):
         """
         Load map control from ZPT template into web page
         """
         center_locality = center or self.center_locality
         center_zoom = zoom or self.center_zoom
-        
+
         map_type = [];
         if "YAHOO_MAP_SAT" in map_types: map_type.append( "satellite" );
         if "YAHOO_MAP_REG" in map_types: map_type.append( "map" );
@@ -395,12 +411,12 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         initial_map_type = "map";
         if "YAHOO_MAP_SAT" == default_type: initial_map_type = "satellite";
         if "YAHOO_MAP_HYB" == default_type: initial_map_type = "hybrid";
-                
-        return get_template("map_loader.js") % (map_engine, 
+
+        return get_template("map_loader.js") % (map_engine,
                                                 self.jsMarkerIcons(), #Marker icons types
                                                 center, #Center location
                                                 center_zoom, #Default zoom
-                                                ("%s" % (enableKeyControls,)).lower(), #Enable mouse wheel zoom 
+                                                ("%s" % (enableKeyControls,)).lower(), #Enable mouse wheel zoom
                                                 "[%s];" % ",".join(["\"%s\"" % (k) for k in map_type]), #map types
                                                 initial_map_type,
                                                 self.absolute_url(),) #Absolute url for control
@@ -690,7 +706,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                     longitude = 0;
 
                 if (latitude and longitude):
-                    ra('%s##%s##mk_%s##%s##%s##%s$$' % (self.utToUtf8(res.latitude),
+                    ra('%s##%s##mk_%s##%s##%s##%s' % (self.utToUtf8(res.latitude),
                                               self.utToUtf8(res.longitude),
                                               self.utToUtf8(res.id),
                                               self.utToUtf8(self.utJavaScriptEncode(res.title_or_id())),
@@ -699,7 +715,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                                               ))
 
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
-        return ''.join(r)
+        return '$$'.join(r)
 
 
 
@@ -754,7 +770,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         if hasattr(self, 'map_index'):
             return self._getOb('map_index')({'here': self})
         return self.view_map_html({'here': self})
-    
+
     security.declareProtected(view, 'view_map_html')
     view_map_html = PageTemplateFile('zpt/map_index', globals())
 

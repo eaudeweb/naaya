@@ -77,12 +77,12 @@ GGeoMapTool.prototype.getGeocoder = function() {
 
 /**
  * Initialize and display the map in the page.
- * @param center A location (address type) to center the map on, 
+ * @param center A location (address type) to center the map on,
  * ex.: Frankfurt, Germany
  * @param zoom Zoom factor for the map
  * @param enableScrollWheelZoom Enable/Disable zooming using mouse scroll wheel
  * and keyboard controls
- * @param map_types An array of map types available for the map. 
+ * @param map_types An array of map types available for the map.
  * Possible values in array: {"hybrid", "map", satellite"}
  */
 GGeoMapTool.prototype.showMap = function(center, zoom, enableScrollWheelZoom, map_types, initial_map_type) {
@@ -115,13 +115,25 @@ GGeoMapTool.prototype.showMap = function(center, zoom, enableScrollWheelZoom, ma
 	}
 }
 
+GGeoMapTool.prototype.showMapLocations = function(){
+	GEvent.addListener(map, 'load', showMapLocationsHandler);
+}
+
+GGeoMapTool.prototype.drawZoomAndCenter = function(center){
+	var coord = this.getGeocoder().getLatLng(center, function(point) {
+		if(point) {
+			map.setCenter(point, 15);
+		}
+	});
+}
+
 /**
  * Load category from server doing an XMLHTTPRequest to retrieve the points.
  */
 GGeoMapTool.prototype.showCategoryServer = function(idCategory, show)
 {
 	var category = 'mk_' + idCategory;
-	// Look first into the cache to see if we didn't already loaded the 
+	// Look first into the cache to see if we didn't already loaded the
 	// points for this category
 	if( show && this.markerHash[ category ] == null ) {
 		// Cache miss, load points from server
@@ -149,21 +161,21 @@ GGeoMapTool.prototype.showCategory = function(idCategory)
 			{
 				marker.show();
 			}
-			else 
+			else
 			{
 				marker.hide();
 			}
 		}
 	}
 	this.updateRecordCounter();
-}  
+}
 
 GGeoMapTool.prototype.updateRecordCounter = function () {
 	counter = 0;
 	for( key in mapTool.markerHash) {
 		var markerArr = mapTool.markerHash[ key ];
 		for( i = 0; i < markerArr.length; i++ ) {
-			var marker = markerArr[ i ]; 
+			var marker = markerArr[ i ];
 			if( !marker.isHidden() ) counter++;
 		}
 	}
