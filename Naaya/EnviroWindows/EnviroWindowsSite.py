@@ -44,6 +44,7 @@ from Products.NaayaCore.managers.utils              import CSVReader
 from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaContent.NyContact.NyContact import addNyContact
+from Products.NaayaCore.GeoMapTool.managers.geocoding import location_geocode
 
 
 manage_addEnviroWindowsSite_html = PageTemplateFile('zpt/site_manage_add', globals())
@@ -1049,26 +1050,31 @@ text-decoration: underline;
         dynprops = portal_dynprop.getDynamicProperties(contact_meta)
         dynprops = [x.id for x in dynprops]
         lang = self.gl_get_selected_language()
-        
+
         location = self.unrestrictedTraverse(location)
         for contact in content:
             #contact base data
-            title = '%s %s' % (contact.get('first name', ''), contact.get('last name', ''))
-            description = contact.get('description', '')
-            coverage = contact.get('coverage', '')
-            keywords = contact.get('keywords', '')
-            personaltitle = contact.get('personal title', '')
-            firstname = contact.get('first name', '')
-            lastname = contact.get('last name', '')
-            jobtitle = contact.get('job title', '')
-            department = contact.get('department', '')
-            organisation = contact.get('organisation', '')
-            postaladdress = contact.get('postal address', '')
-            phone = contact.get('phone', '')
-            fax = contact.get('fax', '')
-            cellphone = contact.get('cell phone', '')
-            email = contact.get('email', '')
-            webpage = contact.get('webpage', '')
+            first_name = contact.get('First name', '')
+            last_name = contact.get('Last name', '')
+            if first_name or last_name:
+                title = '%s %s' % (first_name, last_name)
+            else:
+                title = title = self.utGenRandomId(6)
+            description = contact.get('Description', '')
+            coverage = contact.get('Coverage', '')
+            keywords = contact.get('Keywords', '')
+            personaltitle = contact.get('Personal title', '')
+            firstname = contact.get('First name', '')
+            lastname = contact.get('Last name', '')
+            jobtitle = contact.get('Job title', '')
+            department = contact.get('Department', '')
+            organisation = contact.get('Organisation', '')
+            postaladdress = contact.get('Postal address', '')
+            phone = contact.get('Phone', '')
+            fax = contact.get('Fax', '')
+            cellphone = contact.get('Cell phone', '')
+            email = contact.get('Email', '')
+            webpage = contact.get('Webpage', '')
 
             contact_id = addNyContact(location,
                                       title=title,
@@ -1090,22 +1096,30 @@ text-decoration: underline;
 
             #contact geographical data
             if portal_control and portal_control.checkControl(contact_meta):
-                geo_type = contact['geographical_type']
-                latitude = contact['latitude']
-                longitude = contact['longitude']
-                landscape_type = contact.get('landscape_type', '')
-                administrative_level = contact.get('administrative_level', '')
+                geo_type = contact.get('Geographical type', '')
+                latitude = contact.get('Latitude', '')
+                longitude = contact.get('Longitude', '')
+                url = contact.get('Location url', '')
+                #landscape_type = contact.get('landscape_type', '')
+                #administrative_level = contact.get('administrative_level', '')
 
                 contact_ob = location._getOb(contact_id)
                 contact_ob.geo_type = geo_type
-                contact_ob.longitude = float(longitude.replace(',', '.'))
-                contact_ob.latitude = float(latitude.replace(',', '.'))
+                contact_ob.address = postaladdress
+                contact_ob.url = url
+                if latitude and longitude:
+                    contact_ob.longitude = float(longitude.replace(',', '.'))
+                    contact_ob.latitude = float(latitude.replace(',', '.'))
+                elif postaladdress:
+                    geo_location = location_geocode(postaladdress)
+                    if geo_location:
+                        contact_ob.latitude, contact_ob.longitude = geo_location
 
-                if 'landscape_type' in dynprops \
-                   and 'administrative_level' in dynprops:
-                    kwrds = {'landscape_type': landscape_type,
-                             'administrative_level': administrative_level}
-                    contact_ob.updateDynamicProperties(kwrds, lang)
+                #if 'landscape_type' in dynprops \
+                   #and 'administrative_level' in dynprops:
+                    #kwrds = {'landscape_type': landscape_type,
+                             #'administrative_level': administrative_level}
+                    #contact_ob.updateDynamicProperties(kwrds, lang)
         if REQUEST is not None:
             self.setSessionInfo(['Contacts successfully imported.'])
             return self.REQUEST.RESPONSE.redirect('%s/admin_contacts_html' % self.absolute_url())
@@ -1115,11 +1129,11 @@ text-decoration: underline;
         """Return the CSV template to use for bulk Naaya Contacts upload"""
         if REQUEST is not None:
             self.REQUEST.RESPONSE.setHeader("Content-Type", "text/csv", 0)
-            self.REQUEST.RESPONSE.setHeader("Content-Disposition","attachment;filename=template.txt")
-            return 'description,coverage,keywords,personal title,job title,'\
-                   'first name,last name,department,organisation,postal address'\
-                   ',phone,fax,cell phone,email,webpage,geographical_type,'\
-                   'landscape_type,administrative_level,latitude,longitude'
+            self.REQUEST.RESPONSE.setHeader("Content-Disposition","attachment;filename=contacts_template.csv")
+            return 'Description,Coverage,Keywords,Personal title,Job title,'\
+                   'First name,Last name,Department,Organisation,'\
+                   'Postal address,Phone,Fax,Cell phone,Email,Webpage,'\
+                   'Location url,Geographical type,Latitude,Longitude'
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_contacts_html')
     def admin_contacts_html(self, REQUEST=None, RESPONSE=None):
