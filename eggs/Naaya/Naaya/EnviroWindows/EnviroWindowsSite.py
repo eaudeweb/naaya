@@ -1054,12 +1054,14 @@ text-decoration: underline;
         location = self.unrestrictedTraverse(location)
         for contact in content:
             #contact base data
+            title = contact.get('Title', '')
             first_name = contact.get('First name', '')
             last_name = contact.get('Last name', '')
-            if first_name or last_name:
-                title = '%s %s' % (first_name, last_name)
-            else:
-                title = title = self.utGenRandomId(6)
+            if not title:
+                if first_name or last_name:
+                    title = '%s %s' % (first_name, last_name)
+                else:
+                    title = title = self.utGenRandomId(6)
             description = contact.get('Description', '')
             coverage = contact.get('Coverage', '')
             keywords = contact.get('Keywords', '')
@@ -1130,7 +1132,7 @@ text-decoration: underline;
         if REQUEST is not None:
             self.REQUEST.RESPONSE.setHeader("Content-Type", "text/csv", 0)
             self.REQUEST.RESPONSE.setHeader("Content-Disposition","attachment;filename=contacts_template.csv")
-            return 'Description,Coverage,Keywords,Personal title,Job title,'\
+            return 'Title,Description,Coverage,Keywords,Personal title,Job title,'\
                    'First name,Last name,Department,Organisation,'\
                    'Postal address,Phone,Fax,Cell phone,Email,Webpage,'\
                    'Location url,Geographical type,Latitude,Longitude'
