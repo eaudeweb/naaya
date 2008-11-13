@@ -131,6 +131,7 @@ class Chatter(Folder):
     index_html = PageTemplateFile('zpt/chatter_index', globals())
     style_css = PageTemplateFile('zpt/style', globals())
     jquery_js = ImageFile('www/jquery.js', globals())
+    jquery_sound_js = ImageFile('www/jquery.sound.js', globals())
     room_js = ImageFile('www/room.js', globals())
     bg_chat = ImageFile('www/bg_chat.jpg', globals())
     user_icon = ImageFile('www/user_icon.gif', globals())
@@ -140,6 +141,7 @@ class Chatter(Folder):
     bg_btn = ImageFile('www/bg_btn.jpg', globals())
     info = ImageFile('www/info.gif', globals())
     room = ImageFile('www/room.gif', globals())
+    alert_wav = ImageFile('www/pause.wav', globals())
 
     #Product
     security.declareProtected(CHATTER_ADD_ROOM_PERMISSION, 'manage_addChatRoom')
