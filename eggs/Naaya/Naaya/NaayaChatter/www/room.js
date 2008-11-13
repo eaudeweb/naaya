@@ -4,7 +4,7 @@
         var msgbox = $("#msg");
         msgbox[0].value = "";
         msgbox.focus();
-        msgbox.keyup(function (e) { 
+        msgbox.keyup(function (e) {
             if (e.which == 13) sendMessage();
         });
         $("#sendbtn").click(function() { sendMessage(); });
@@ -62,6 +62,7 @@
 
     var tInterval = undefined;
     function handleBlur(){
+        playSound();
         clearInterval(tInterval);
         tInterval = setInterval("switchTitle()", 1000);
     }
@@ -129,7 +130,7 @@
         if (accepted == 0) {
             item = item + ' <span class="unaccepted_invite">[PENDING]</span></li>'
         }
-        
+
         if (accepted == 1) {
             item = item + ' <span class="accepted_invite">[ACCEPTED]</span></li>'
         }
@@ -146,3 +147,7 @@
         li.parentNode.removeChild(li);
     }
 
+    function playSound() {
+        $.sound.enabled = true;
+        $.sound.play('alert_wav')
+    }
