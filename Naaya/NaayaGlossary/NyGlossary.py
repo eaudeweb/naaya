@@ -468,6 +468,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         """ get object codes """
         return [brain.id for brain in self.cu_get_codes_by_name([NAAYAGLOSSARY_ELEMENT_METATYPE], names)]
 
+    def getObjectByCode(self, id='', REQUEST=None):
+        """ get object by code """
+        return self.cu_search_catalog_by_id(id)
+
     def searchGlossary(self, query='', size=10000, language='English', definition='*', REQUEST=None):
         """ search glossary """
         if not size: size = 10000
