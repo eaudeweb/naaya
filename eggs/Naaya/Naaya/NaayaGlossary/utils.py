@@ -322,11 +322,11 @@ class catalog_utils:
 
     def cu_search_catalog_by_id(self, id=''):
         """ search catalog """
-        catalog = self.getGlossaryCatalog()
-        id = self.StrEscapeForSearch(id)
-        command= "catalog(meta_type=[NAAYAGLOSSARY_ELEMENT_METATYPE,], id=id)"
-        results = eval(command)
-        return self.__get_objects(results)
+        filter = {}
+        filter['id'] = id
+        filter['meta_type'] = NAAYAGLOSSARY_ELEMENT_METATYPE
+        res = self.__searchCatalog(filter)
+        return res
 
     def StrEscapeForSearch(self, p_string):
         """ escape some characters"""
