@@ -463,6 +463,11 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     ######################################
     # GLOSSARY FUNCTIONALITIES FUNCTIONS #
     ######################################
+
+    def getObjectCodes(self, names=[], REQUEST=None):
+        """ get object codes """
+        return self.cu_search_catalog([NAAYAGLOSSARY_ELEMENT_METATYPE], names)
+
     def searchGlossary(self, query='', size=10000, language='English', definition='*', REQUEST=None):
         """ search glossary """
         if not size: size = 10000
@@ -588,19 +593,15 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     ##########################
     def __getStructMap(self, root, showitems, expand, depth):
         l_tree = []
-        if root is self:
-            l_folders = root.getGlossaryObTree()
-        else:
-            l_folders = root.getGlossaryObTree()
-
+        l_folders = root.getGlossaryObTree()
         for l_folder in l_folders:
-            if l_folder.hasGlossFolders() or (l_folder.hasGlossElems() and showitems==0):
+            if l_folder.hasGlossFolders() or (l_folder.hasGlossElems() and showitems==1):
                 if l_folder.absolute_url(1) in expand or 'all' in expand:
                     l_tree.append((l_folder, 0, depth))
+                    l_tree.extend(self.__getStructMap(l_folder, 1, expand, depth+1))
                     if showitems:
                         for l_item in l_folder.getGlossElems():
                             l_tree.append((l_item, -1, depth+1))
-                    l_tree.extend(self.__getStructMap(l_folder, 1, expand, depth+1))
                 else:
                     l_tree.append((l_folder, 1, depth))
             else:
