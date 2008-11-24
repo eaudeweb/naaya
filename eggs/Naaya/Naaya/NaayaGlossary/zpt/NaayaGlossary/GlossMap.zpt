@@ -35,9 +35,9 @@
 	<br /><br />
 
 	<tal:block tal:define="	expand python:request.get('expand', '');
-							tree python:here.getStructMap(here.splitToList(expand), None, 0);
-							expand python:here.getSiteMapTrail(expand, tree);
-							expand_list python:here.splitToList(expand)">
+				tree python:here.getStructMap(here.splitToList(expand), None, 1);
+				expand python:here.getSiteMapTrail(expand, tree);
+				expand_list python:here.splitToList(expand)">
 
 	<form name="frmGlossMap" method="post" action="">
 	<table border="0" cellspacing="1" cellpadding="1" width="100%">

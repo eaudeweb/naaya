@@ -68,7 +68,15 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
                 {'label':'Undo',                'action':'manage_UndoForm'},)
                 )
 
-    meta_types = ({'name': NAAYAGLOSSARY_ELEMENT_METATYPE, 'action': 'manage_addGlossaryElement_html', 'product': NAAYAGLOSSARY_PRODUCT_NAME},)
+    meta_types = (
+        {'name': NAAYAGLOSSARY_ELEMENT_METATYPE, 
+        'action': 'manage_addGlossaryElement_html', 
+        'product': NAAYAGLOSSARY_PRODUCT_NAME
+        },
+        {'name': NAAYAGLOSSARY_FOLDER_METATYPE, 
+        'action': 'manage_addGlossaryFolder_html', 
+        'product': NAAYAGLOSSARY_PRODUCT_NAME
+        },)
 
     security = ClassSecurityInfo()
 
@@ -87,6 +95,8 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
     manage_addGlossaryElement_html = NyGlossaryElement.manage_addGlossaryElement_html
     manage_addGlossaryElement = NyGlossaryElement.manage_addGlossaryElement
 
+    manage_addGlossaryFolder_html = manage_addGlossaryFolder_html
+    manage_addGlossaryFolder = manage_addGlossaryFolder
 
     #######################
     #   DISPLAY FUNCTIONS #
@@ -214,7 +224,7 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
     def getGlossaryObTree(self):
         """ """
         results = []
-        for item in self.objectValues([NAAYAGLOSSARY_ELEMENT_METATYPE]):
+        for item in self.objectValues([NAAYAGLOSSARY_FOLDER_METATYPE]):
             if item.is_published(): results.append(item)
         return self.utSortObjsListByAttr(results, self.get_language_by_code(self.getSelectedLang()), 0)
 

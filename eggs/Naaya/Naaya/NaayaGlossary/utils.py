@@ -301,6 +301,16 @@ class catalog_utils:
             dict[l_object.id] = l_object
         return dict.values()
 
+    def cu_get_codes_by_name(self, meta_type=None, name=None):
+        """ retrieve objects codes given the name """
+        catalog = self.getGlossaryCatalog()
+        filter = {}
+        if meta_type:
+            filter['meta_type'] = self.utConvertToList(meta_type)
+        if name:
+            filter['name'] = self.utConvertToList(name)
+        return self.__searchCatalog(filter)
+
     def cu_search_catalog(self, meta_type=None, query='', size=10000, language='English', definition=''):
         """ search catalog """
         catalog = self.getGlossaryCatalog()
