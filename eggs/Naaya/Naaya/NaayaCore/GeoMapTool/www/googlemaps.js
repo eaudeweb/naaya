@@ -122,7 +122,7 @@ GGeoMapTool.prototype.showMapLocations = function(){
 GGeoMapTool.prototype.drawZoomAndCenter = function(center){
 	var coord = this.getGeocoder().getLatLng(center, function(point) {
 		if(point) {
-			map.setCenter(point, 15);
+			map.setCenter(point, 12);
 		}
 	});
 }
