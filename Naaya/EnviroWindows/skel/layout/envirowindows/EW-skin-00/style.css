@@ -229,7 +229,7 @@ a:visited {
 	margin: 0px;
 	border-top: 1px solid #fefefe;
 	border-bottom: 1px solid #ddd;
-	display: inline-block; /* fix for IE peek-a-boo bug */
+	display: block; /* fix for IE peek-a-boo bug */
 }
 .left_portlet ul li:hover { 
 	background: #f2f2f2;
