@@ -246,9 +246,6 @@
 	<pluggablecontenttypes>
 		<pluggablecontenttype meta_type="Naaya Media File" action="1"/>
 		<pluggablecontenttype meta_type="Naaya File" action="1"/>
-		<pluggablecontenttype meta_type="Naaya Extended File" action="1"/>
-		<pluggablecontenttype meta_type="Naaya SMAP Project" action="1"/>
-		<pluggablecontenttype meta_type="Naaya SMAP Expert" action="1"/>
 		<pluggablecontenttype meta_type="Naaya GeoPoint" action="1"/>
 		<pluggablecontenttype meta_type="Naaya Contact" action="1"/>
 		<pluggablecontenttype meta_type="Naaya News" action="1"/>
