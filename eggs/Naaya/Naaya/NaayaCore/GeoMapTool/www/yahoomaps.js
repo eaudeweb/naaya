@@ -158,7 +158,9 @@ YGeoMapTool.prototype.showMapLocations = function(){
  * Center map on other location and zoom it
  */
 YGeoMapTool.prototype.drawZoomAndCenter = function(center){
-	map.drawZoomAndCenter(center, 6);
+	doHttpRequest( server_base_url + "/xrjs_getZoomLevel?address=" + center, function(resp){
+		map.drawZoomAndCenter(center, resp.responseText);
+	});
 }
 
 /**

@@ -42,7 +42,7 @@ from managers.symbols_tool import symbols_tool
 from managers.kml_gen import kml_generator
 from managers.csv_reader import CSVReader
 from managers.geocoding import location_geocode
-
+from managers.yahoo import Yahoo
 
 def get_template(name):
     f = open(os.path.join(os.path.dirname(__file__), 'templates', name))
@@ -331,6 +331,16 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         REQUEST.RESPONSE.setHeader('Content-Type', 'application/vnd.google-earth.kml+xml')
         REQUEST.RESPONSE.setHeader('Content-Disposition', 'attachment;filename=locations.kml')
         return '\n'.join(output)
+
+    security.declareProtected(view, 'xrjs_getZoomLevel')
+    def xrjs_getZoomLevel(self, REQUEST=None, **kwargs):
+        """ """
+        if REQUEST:
+            kwargs.update(REQUEST.form)
+        address = kwargs.get('address', '')
+        if not address:
+            return 6
+        return Yahoo(self.mapsapikey).get_zoom_level(address)
 
     security.declareProtected(view, 'xrjs_getGeoPoints')
     def xrjs_getGeoPoints(self, REQUEST, path='', geo_types=None, geo_query=None):
