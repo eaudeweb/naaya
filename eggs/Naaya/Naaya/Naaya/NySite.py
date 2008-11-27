@@ -3111,6 +3111,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         data_path = join(self.get_data_path(), 'skel', 'forms')
         if meta_type is not None:
             pitem = self.get_pluggable_item(meta_type)
+            if pitem == None:
+                raise ValueError('Missing pluggable content type "%s"' % meta_type)
             #load pluggable item's data
             formstool_ob = self.getFormsTool()
             for frm in pitem['forms']:
