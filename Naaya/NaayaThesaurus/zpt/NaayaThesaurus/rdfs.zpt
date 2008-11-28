@@ -62,7 +62,7 @@
 					<p>
 						<span>Choose language</span>
 						<select name="rdf_lang">
-							<option	tal:repeat="item here/gl_get_languages"
+							<option	tal:repeat="item here/getLanguages"
 									tal:content="python:here.gl_get_language_name(item)"
 									tal:attributes="value item"/>
 						</select>

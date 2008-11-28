@@ -364,19 +364,24 @@ class NyThesaurus(Folder):
         query = [('meta_type',CONCEPT_ITEM_METATYPE)]
         return th_utils().utSortObjsListByAttr(self.catalog.searchCatalog(query), 'concept_id', 0)
 
-    security.declarePublic('getConceptByID')
+    security.declarePublic('getConceptRelations')
     def getConceptRelations(self, concept_id=''):
         """ """
         query = [('meta_type',CONCEPT_RELATION_ITEM_METATYPE),
                  ('concept_id',concept_id)]
         return self.catalog.searchCatalog(query)
 
-    security.declarePublic('getTermByID')
+    security.declarePublic('getTranslations')
     def getTranslations(self, concept_id=''):
         """ """
         query = [('meta_type',TERM_ITEM_METATYPE),
                  ('concept_id',concept_id)]
         return self.catalog.searchCatalog(query)
+
+    security.declarePublic('getLanguages')
+    def getLanguages(self):
+        """ """
+        return self.catalog.uniqueValuesFor('langcode')
 
     security.declarePublic('getThemesList')
     def getThemesList(self, lang=''):
