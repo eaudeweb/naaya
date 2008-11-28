@@ -35,7 +35,7 @@ for concept in all_concepts:
     print '<rdf:Description rdf:about="%s/concept/%s">' % (thesaurus_url, concept_id)
 
     for theme in themes:
-        if theme != '':
+        if theme:
             print '<thesaurus:theme rdf:resource="%s/theme/%s" />' % (thesaurus_url, theme.theme_id)
 
     print '</rdf:Description>'

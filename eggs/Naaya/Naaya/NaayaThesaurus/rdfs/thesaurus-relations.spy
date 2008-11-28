@@ -45,15 +45,15 @@ for concept in all_concepts:
     print '<skos:Concept rdf:about="%s/concept/%s">' % (thesaurus_url, concept_id)
 
     for broader in broader_list:
-        if broader != '':
+        if broader:
             print '<skos:broader rdf:resource="%s/concept/%s" />' % (thesaurus_url, broader.relation_id)
 
     for narrower in narrower_list:
-        if narrower != '':
+        if narrower:
             print '<skos:narrower rdf:resource="%s/concept/%s" />' % (thesaurus_url, narrower.relation_id)
 
     for related in related_list:
-        if related != '':
+        if related:
             print '<skos:related rdf:resource="%s/concept/%s" />' % (thesaurus_url, related.relation_id)
 
     print '</skos:Concept>'
