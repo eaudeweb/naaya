@@ -213,6 +213,12 @@ class utils:
             pass
         return res
 
+    def utIsElement(self):
+        """ check if the object is a element """
+        if self.parent_anchors:
+            return True
+        else:
+            return self.meta_type==NAAYAGLOSSARY_ELEMENT_METATYPE
 
 class catalog_utils:
 
