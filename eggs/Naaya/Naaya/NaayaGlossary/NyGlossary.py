@@ -746,13 +746,6 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             self.__build_alphabets_cache_for_lang(lang)
         return self.__alphabets_cache[lang]
 
-    def utIsElement(self):
-        """ check if the object is a element """
-        if self.parent_anchors:
-            return True
-        else:
-            return self.meta_type==NAAYAGLOSSARY_ELEMENT_METATYPE
-
     #####################
     #   MANAGEMENT TABS #
     #####################
