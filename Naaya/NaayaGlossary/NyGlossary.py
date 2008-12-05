@@ -51,9 +51,9 @@ from Products.NaayaGlossary.parsers.import_parsers      import glossary_export
 LABEL_OBJECT = 'Glossary'
 
 manage_addGlossaryCentre_html = PageTemplateFile('zpt/NaayaGlossary/add', globals())
-def manage_addGlossaryCentre(self, id, title='', REQUEST=None):
+def manage_addGlossaryCentre(self, id, title='', parent_anchors=False, REQUEST=None):
     """ Adds a new NaayaGlossary object """
-    ob = NyGlossary(id, title)
+    ob = NyGlossary(id, title, parent_anchors)
     self._setObject(id, ob)
     obj = self._getOb(id)
     obj.loadProperties()
@@ -98,10 +98,12 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         NyGlossary.inheritedAttribute('__setstate__')(self, state)
         if not hasattr(self, '__alphabets_cache'):
             self.__alphabets_cache = {}
+        if not hasattr(self, 'parent_anchors'):
+            self.parent_anchors = False
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title):
+    def __init__(self, id, title, parent_anchors):
         """ constructor """
         self.id =                   id
         self.title =                title
@@ -110,6 +112,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         self.subjects_list =        []
         self.approved =             1
         self.__alphabets_cache =    {}
+        self.parent_anchors =       parent_anchors
         utils.__dict__['__init__'](self)
         glossary_export.__dict__['__init__'](self)
 
@@ -218,10 +221,11 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         """ return the glossary catalog object """
         return self._getOb(NAAYAGLOSSARY_CATALOG_NAME)
 
-    def manageBasicProperties(self, title='', approved=0, REQUEST=None):
+    def manageBasicProperties(self, title='', approved=0, parent_anchors=0, REQUEST=None):
         """ manage basic properties for NyGlossary """
         self.title =        title
         self.approved =     approved
+        self.parent_anchors = parent_anchors
         self._p_changed =   1
         if REQUEST: return REQUEST.RESPONSE.redirect('properties_html?save=ok')
 
@@ -741,6 +745,13 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         if not self.__alphabets_cache.has_key(lang):
             self.__build_alphabets_cache_for_lang(lang)
         return self.__alphabets_cache[lang]
+
+    def utIsElement(self):
+        """ check if the object is a element """
+        if self.parent_anchors:
+            return True
+        else:
+            return self.meta_type==NAAYAGLOSSARY_ELEMENT_METATYPE
 
     #####################
     #   MANAGEMENT TABS #
