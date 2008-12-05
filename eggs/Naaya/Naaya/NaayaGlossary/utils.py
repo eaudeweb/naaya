@@ -93,10 +93,6 @@ class utils:
             if obj.name == p_name:
                 return obj
 
-    def utIsElement(self):
-        """ check if the object is a element """
-        return self.meta_type==NAAYAGLOSSARY_ELEMENT_METATYPE
-
     def utAddObjectAction(self, REQUEST=None):
         """ check if adding an object """
         res = 0
@@ -327,6 +323,16 @@ class catalog_utils:
         filter['meta_type'] = NAAYAGLOSSARY_ELEMENT_METATYPE
         res = self.__searchCatalog(filter)
         return res
+
+    def cu_get_folder_by_id(self, id=''):
+        """ return folder object given the id """
+        filter = {}
+        if id:
+            filter['id'] = id
+            filter['meta_type'] = NAAYAGLOSSARY_FOLDER_METATYPE
+            results = self.__searchCatalog(filter)
+            return self.__get_objects(results)
+        return []
 
     def StrEscapeForSearch(self, p_string):
         """ escape some characters"""

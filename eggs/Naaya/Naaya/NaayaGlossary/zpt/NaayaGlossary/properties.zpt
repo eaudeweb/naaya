@@ -22,6 +22,10 @@
 				<td><input type="checkbox" name="approved" tal:attributes="checked here/approved" /></td>
 			</tr>
 			<tr>
+				<th align="left"><strong>Parents selectable</strong></th>
+				<td><input type="checkbox" name="parent_anchors" tal:attributes="checked here/parent_anchors" /></td>
+			</tr>
+			<tr>
 				<td>&nbsp;</td>
 				<td align="left"><input type="submit" name="save" value=" Save Changes ">
 			</tr>
