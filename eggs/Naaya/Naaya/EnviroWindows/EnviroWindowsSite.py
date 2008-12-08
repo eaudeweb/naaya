@@ -1037,13 +1037,16 @@ text-decoration: underline;
             e.append('You must specify a location.')
         if file:
             content = CSVReader(file=file, dialect=dialect, encoding=encoding)
-        else:
+            content = content.read()[0]
+            if content == None:
+                self.setSessionErrors(["File encoding doesn't match selected encoding."])
+                return self.REQUEST.RESPONSE.redirect('%s/admin_contacts_html?section=import' % self.absolute_url())
+        if not file:
             e.append('You must specify a file.')
         if e and REQUEST is not None:
             self.setSessionErrors(e)
-            return self.REQUEST.RESPONSE.redirect('%s/admin_contacts_html' % self.absolute_url())
+            return self.REQUEST.RESPONSE.redirect('%s/admin_contacts_html?section=import' % self.absolute_url())
 
-        content = content.read()[0]
         contact_meta = 'Naaya Contact'
         portal_control = self.getControlsTool()
         portal_dynprop = self.getDynamicPropertiesTool()
