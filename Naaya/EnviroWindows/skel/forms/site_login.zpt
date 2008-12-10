@@ -1,7 +1,7 @@
 <span tal:replace="structure here/standard_html_header"/>
 
 <tal:block define="came_from python:request.get('came_from', '');
-                action_url python:came_from or 'logged_in'">
+                action_url string:logged_in">
 
 <tal:block define="user python:request.AUTHENTICATED_USER.getUserName();
                                 auth_tool python:here.getAuthenticationTool();
