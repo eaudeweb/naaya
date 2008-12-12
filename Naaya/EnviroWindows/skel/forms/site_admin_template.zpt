@@ -6,7 +6,7 @@
 	<h1 metal:define-slot="title" i18n:translate="">Portal administration page</h1>
 	<tal:block metal:define-slot="section">Section</tal:block>
 </div>
-<div id="right_port">
+<div id="right_port" tal:condition="here/is_logged">
 <span tal:replace="structure python:here.get_portlet_object('portlet_administration')({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
 </div>
 <span tal:replace="structure here/standard_html_footer" />

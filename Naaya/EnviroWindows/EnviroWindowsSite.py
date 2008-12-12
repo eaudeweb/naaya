@@ -432,11 +432,6 @@ class EnviroWindowsSite(NySite):
                     return True
         return False
 
-    security.declareProtected(view, 'is_logged')
-    def is_logged(self, REQUEST):
-        """ """
-        return REQUEST.AUTHENTICATED_USER.getUserName() != 'Anonymous User'
-
     #---------- request account & role ------
     security.declareProtected(view, 'sendRequestRoleEmail')
     def sendRequestRoleEmail(self, p_email_data, p_username, p_fullname, p_source, p_role, p_comments):
