@@ -41,7 +41,10 @@ function addRowInnerHTML(tblId)
 
 	<tal:block tal:condition="here/line_comments">
 	<!-- Comment on line -->
-	<p i18n:translate="">Additionally, you can enter specific comments to the text using the form below. 
+	<p i18n:translate="" tal:condition="here/get_questions">Additionally, you can enter specific comments to the text using the form below.
+	For each comment make clear reference to the page and line numbers as they appear in the consultation file.</p>
+
+	<p i18n:translate="" tal:condition="not:here/get_questions">You can enter specific comments to the text using the form below.
 	For each comment make clear reference to the page and line numbers as they appear in the consultation file.</p>
 	<table id="tblInnerHTML">
 		<thead>
@@ -60,7 +63,7 @@ function addRowInnerHTML(tblId)
 		<label for="adt_comment.line:records">line #</label>
 		<input type="text" name="adt_comment.line:records" id="adt_comment.line:records" size="3" value="" />
 
-		<label for="adt_comment.comment:records">comment</label> 
+		<label for="adt_comment.comment:records">comment</label>
 		<textarea name="adt_comment.comment:utf8:ustring:records" id="adt_comment.comment:records" rows="4" cols="50"></textarea>
 </div>
 
