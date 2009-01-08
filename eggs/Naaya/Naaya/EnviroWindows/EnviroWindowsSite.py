@@ -993,16 +993,14 @@ text-decoration: underline;
                 news_folder = self._getOb('news')
 
         #get year folder, create it if it doesn't exist
-        try:
+        if hasattr(news_folder, year):
             year_folder = news_folder._getOb(year)
-        except AttributeError:
+        else:
             addNyFolder(news_folder, id=year, title=year)
             year_folder = news_folder._getOb(year)
 
-        #get month folder, create it if it doesn't exist
-        try:
-            year_folder._getOb(month)
-        except AttributeError:
+        #create month folder if it doesn't exist
+        if not hasattr(year_folder, month):
             addNyFolder(year_folder, id=month, title=month_name)
 
         news_url = '%s/%s/%s/%s/news_add_html' % (self.absolute_url(),
