@@ -123,7 +123,7 @@ GGeoMapTool.prototype.drawZoomAndCenterHandler = function(response){
 	if(response.Status.code != 200) return;
 	var place = response.Placemark[0];
 	var point = new GLatLng(place.Point.coordinates[1], place.Point.coordinates[0]);
-	var zoom_level = [3, 6, 8, 10, 12, 14, 16, 17, 18, 19];
+	var zoom_level = [3, 6, 8, 10, 12, 14, 15, 16, 17, 18];
 	map.setCenter(point, zoom_level[place.AddressDetails.Accuracy]);
 }
 
