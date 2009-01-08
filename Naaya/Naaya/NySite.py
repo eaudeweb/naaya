@@ -1565,7 +1565,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
             if acl_tool.emailConfirmationEnabled():
                 self.sendConfirmationEmail(firstname + ' ' + lastname, userinfo, email)
-                message_body = 'Plase follow the link in your email in order to complete registration.'
+                message_body = 'Please follow the link in your email in order to complete registration.'
             else:
                 self.sendCreateAccountEmail(
                     p_to=location_maintainer_email,
