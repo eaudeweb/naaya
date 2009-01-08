@@ -215,7 +215,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         # Verify captcha
         captcha_gen_word = self.getSession('captcha', '')
         captcha_prov_word = kwargs.get('verify_word', captcha_gen_word)
-        name_expr = re.compile('^[a-z0-9]*$')
+        name_expr = re.compile('^[a-zA-Z0-9]*$')
         if not re.match(name_expr, name):
             raise Exception, 'Username: only lowercase letters and numbers allowed'
         if captcha_prov_word != captcha_gen_word:
