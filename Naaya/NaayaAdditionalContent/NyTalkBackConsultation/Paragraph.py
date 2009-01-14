@@ -28,7 +28,7 @@ from Acquisition import Implicit
 from DateTime import DateTime
 
 #Product imports
-from comment_item import addComment
+from comment_item import addComment, TalkBackConsultationComment
 from constants import *
 
 
@@ -72,6 +72,21 @@ class Paragraph(Folder):
     security.declareProtected(view, 'get_comments')
     def get_comments(self):
         return self.objectValues([METATYPE_TALKBACKCONSULTATION_COMMENT])
+
+    _delete_comment_confirmation = PageTemplateFile('zpt/paragraph_delete_comment', globals())
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'delete_comment')
+    def delete_comment(self, comment_id, REQUEST=None):
+        """ """
+        if not isinstance(self[comment_id], TalkBackConsultationComment):
+            raise ValueError('Member object with id="%s" is not a TalkBackConsultationComment instance' % comment_id)
+        
+        if REQUEST and REQUEST.REQUEST_METHOD != 'POST':
+            # the client should POST to delete the comment
+            return self._delete_comment_confirmation(self, REQUEST, comment=self[comment_id])
+        
+        self.manage_delObjects([comment_id])
+        if REQUEST:
+            REQUEST.RESPONSE.redirect(self.get_section().absolute_url())
 
     security.declareProtected(
         PERMISSION_MANAGE_TALKBACKCONSULTATION, 'merge_down')
@@ -128,5 +143,8 @@ class Paragraph(Folder):
     security.declareProtected(
         PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
     edit_html = PageTemplateFile('zpt/paragraph_edit', globals())
+
+    security.declareProtected(view, 'comments_html')
+    comments_html = PageTemplateFile('zpt/paragraph_comments', globals())
 
 InitializeClass(Paragraph)

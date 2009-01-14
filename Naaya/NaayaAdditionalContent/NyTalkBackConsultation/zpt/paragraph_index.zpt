@@ -33,13 +33,9 @@
 </div>
 
 
-<div class="talkback-comments_list" tal:define="comments here/get_comments">
-    <h2 i18n:translate="" tal:condition="comments">Previous comments</h2>
-    <fieldset tal:repeat="comment comments">
-        <legend><span tal:replace="comment/contributor"/> (<span tal:replace="comment/contributor_name"/>) <span tal:replace="python:here.utShowFullDateTime(comment.comment_date)"/></legend>
-        <p class="tb-comment-message" tal:content="comment/message" />
-        <a tal:attributes="href string:${comment/absolute_url}/get_talkback_file" i18n:translate="" tal:condition="comment/check_file">Download attached file</a>
-    </fieldset>
+<div class="talkback-comments_list">
+    <h2 i18n:translate="" tal:condition="here/get_comments">Previous comments</h2>
+    <tal:block replace="structure here/comments_html" />
 </div>
 
 

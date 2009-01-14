@@ -56,7 +56,7 @@ def addComment(self,
         contributor = REQUEST.AUTHENTICATED_USER.getUserName()
 
     id = 'tb%s-%s' % (contributor, self.utGenRandomId(6))
-    title = '%s(%s)' % (contributor_name, contributor)
+    title = 'Comment by %s (%s)' % (contributor_name, contributor)
 
     ob = TalkBackConsultationComment(id,
                                      title,
@@ -127,6 +127,19 @@ class TalkBackConsultationComment(NyFSFile):
         """ """
         return self.comment_date
 
-    manage_workspace = PageTemplateFile('zpt/manage_comment', globals())
+    security.declareProtected(
+        PERMISSION_MANAGE_TALKBACKCONSULTATION, 'save_modifications')
+    def save_modifications(self, message, REQUEST=None):
+        """ Save body edits """
+        self.message = message
+        if REQUEST is not None:
+            self.setSessionInfo(['Saved changes (%s)' % DateTime()])
+            self.REQUEST.RESPONSE.redirect(self.absolute_url() + '/edit_html')
+
+    security.declareProtected(view_management_screens, 'manage_workspace')
+    manage_workspace = PageTemplateFile('zpt/comment_manage', globals())
+
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
+    edit_html = PageTemplateFile('zpt/comment_edit', globals())
 
 InitializeClass(TalkBackConsultationComment)
