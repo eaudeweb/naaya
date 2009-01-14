@@ -29,6 +29,12 @@
 
 <div class="cleaner" ></div>
 
+<ul class="talkback-section_index_sidebar" tal:define="consultation_sections python:here.get_consultation().list_sections()">
+    <li tal:repeat="section consultation_sections" tal:attributes="class python:test(section==here, 'talkback-current_section', '')">
+        <a tal:attributes="href section/absolute_url" tal:content="section/title" />
+    </li>
+</ul>
+
 <h1 tal:content="here/title_or_id" />
 
 <div id="admin_this_folder" tal:condition="python:here.checkPermissionEditObject()">
