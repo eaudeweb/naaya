@@ -48,11 +48,7 @@
         <a tal:attributes="name paragraph/get_anchor"></a>
         <div tal:content="structure paragraph/body" tal:attributes="id paragraph/getId" />
         <div class="talkback-comments_list" tal:attributes="id string:talkback-comments_list_for-${paragraph/id}">
-            <fieldset tal:condition="show_comments" tal:repeat="comment paragraph/get_comments">
-                <legend><span tal:replace="comment/contributor"/> (<span tal:replace="comment/contributor_name"/>) <span tal:replace="python:here.utShowFullDateTime(comment.comment_date)"/></legend>
-                <p class="tb-comment-message" tal:content="comment/message" />
-                <a tal:attributes="href string:${comment/absolute_url}/get_talkback_file" i18n:translate="" tal:condition="comment/check_file">Download attached file</a>
-            </fieldset>
+            <tal:block replace="structure paragraph/comments_html" />
             <a i18n:translate="" tal:attributes="href string:${paragraph/absolute_url}" class="talkback-add_comment" rel="nofollow">Add comment</a>
         </div>
     </tal:block>

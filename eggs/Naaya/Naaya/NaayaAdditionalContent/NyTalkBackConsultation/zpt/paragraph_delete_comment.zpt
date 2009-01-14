@@ -1,0 +1,12 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 tal:content="here/title_or_id" />
+
+<form method="post" tal:attributes="action string:${here/absolute_url}/delete_comment">
+    <p>Are you sure you want to delete "<tal:block content="options/comment/title_or_id" />?</p>
+    <input type="hidden" name="comment_id" tal:attributes="value options/comment/id" />
+    <input type="submit" i18n:attributes="value" value="Delete" />
+    <a tal:attributes="href python:here.get_section().absolute_url()" i18n:translate="">Cancel</a>
+</form>
+
+<span tal:replace="structure here/standard_html_footer" />
