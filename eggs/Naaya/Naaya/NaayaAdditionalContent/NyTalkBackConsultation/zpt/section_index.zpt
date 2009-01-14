@@ -5,26 +5,36 @@
 
 <tal:block define="show_comments python:request.get('comments') != 'off'">
 
+<div class="floated-buttons">
+    <span class="buttons talkback-show_hide_comments">
+        <a href="" class="talkback-show_comments"
+                tal:attributes="style python:'display: %s' % test(show_comments, 'none', 'inline')"
+                ><span i18n:translate="">Show comments</span></a>
+        <a href="?comments=off" class="talkback-hide_comments"
+                tal:attributes="style python:'display: %s' % test(show_comments, 'inline', 'none')"
+                ><span i18n:translate="">Hide comments</span></a>
+    </span>
+    
+    <span class="buttons">
+        <a tal:attributes="href python:here.get_consultation().absolute_url()" i18n:translate="">Back to consultation index</a>
+    </span>
+</div>
+
+<div>
+    <span tal:define="previous_section here/get_previous_section" tal:condition="previous_section">
+        <span i18n:translate="">Previous section</span>:
+        <a tal:attributes="href previous_section/absolute_url" tal:content="previous_section/title" />
+    </span>
+</div>
+
+<div class="cleaner" ></div>
+
 <h1 tal:content="here/title_or_id" />
 
 <div id="admin_this_folder" tal:condition="python:here.checkPermissionEditObject()">
-	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit Section</span></a>
-</div>
-
-<div class="floated-buttons">
-	<span class="buttons">
-		<a tal:attributes="href python:here.get_consultation().absolute_url()" i18n:translate="">Back to consultation index</a>
-	</span>
-</div>
-<div class="cleaner" ></div>
-
-<div class="talkback-show_hide_comments">
-    <a href="" class="talkback-show_comments"
-            tal:attributes="style python:'display: %s' % test(show_comments, 'none', 'inline')"
-            ><span i18n:translate="">Show comments</span></a>
-    <a href="?comments=off" class="talkback-hide_comments"
-            tal:attributes="style python:'display: %s' % test(show_comments, 'inline', 'none')"
-            ><span i18n:translate="">Hide comments</span></a>
+    <span class="buttons" tal:condition="python:here.checkPermissionEditObject()">
+        <a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit Section</span></a>
+    </span>
 </div>
 
 <div class="talkback-section">
@@ -40,6 +50,13 @@
             <a i18n:translate="" tal:attributes="href string:${paragraph/absolute_url}" class="talkback-add_comment" rel="nofollow">Add comment</a>
         </div>
     </tal:block>
+</div>
+
+<div>
+    <span tal:define="next_section here/get_next_section" tal:condition="next_section">
+        <span i18n:translate="">Next section</span>:
+        <a tal:attributes="href next_section/absolute_url" tal:content="next_section/title" />
+    </span>
 </div>
 
 </tal:block>
