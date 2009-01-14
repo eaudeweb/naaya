@@ -32,11 +32,20 @@ from comment_item import addComment, TalkBackConsultationComment
 from constants import *
 
 
-def addParagraph(self, id='', title='', body='', REQUEST=None):
+def addParagraph(self, id='', title='', body='', sort_index=None, REQUEST=None):
     id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(title)
+    if not id:
+        id = self.make_paragraph_id()
     ob = Paragraph(id, title, body)
     self._setObject(id, ob)
+    ob = self._getOb(id)
+
+    self._ensure_paragraph_ids()
+    if sort_index != None:
+        self.paragraph_ids.insert(sort_index, id)
+    else:
+        self.paragraph_ids.append(id)
+    self._p_changed = 1
 
 
 class Paragraph(Folder):
@@ -77,16 +86,35 @@ class Paragraph(Folder):
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'delete_comment')
     def delete_comment(self, comment_id, REQUEST=None):
         """ """
-        if not isinstance(self[comment_id], TalkBackConsultationComment):
+        if not isinstance(self._getOb(comment_id), TalkBackConsultationComment):
             raise ValueError('Member object with id="%s" is not a TalkBackConsultationComment instance' % comment_id)
         
         if REQUEST and REQUEST.REQUEST_METHOD != 'POST':
             # the client should POST to delete the comment
-            return self._delete_comment_confirmation(self, REQUEST, comment=self[comment_id])
+            return self._delete_comment_confirmation(self, REQUEST, comment=self._getOb(comment_id))
         
         self.manage_delObjects([comment_id])
         if REQUEST:
             REQUEST.RESPONSE.redirect(self.get_section().absolute_url())
+
+    _split_content_html = PageTemplateFile('zpt/paragraph_split', globals())
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'split_body')
+    def split_body(self, body_0=None, body_1=None, REQUEST=None):
+        """ """
+        if REQUEST and REQUEST.REQUEST_METHOD != 'POST':
+            return self._split_content_html(self, REQUEST)
+
+        if body_0 is None or body_1 is None:
+            raise ValueError('Missing body_0 or body_1 while trying to split paragraph "%s"' % self.id)
+
+        section = self.get_section()
+        section._ensure_paragraph_ids()
+        my_index = section.paragraph_ids.index(self.id)
+        addParagraph(section, body=body_1, sort_index=my_index+1)
+        self.body = body_0
+
+        if REQUEST:
+            REQUEST.RESPONSE.redirect(section.absolute_url())
 
     security.declareProtected(
         PERMISSION_MANAGE_TALKBACKCONSULTATION, 'merge_down')
@@ -94,8 +122,9 @@ class Paragraph(Folder):
         """ """
 
         # get a list of paragraphs
-        paragraphs = [paragraph.id for paragraph in self.get_paragraphs()]
-        paragraphs.sort()
+        section = self.get_section()
+        section._ensure_paragraph_ids()
+        paragraphs = section.paragraph_ids
 
         # get the paragraph following this one
         try:
@@ -116,7 +145,7 @@ class Paragraph(Folder):
         self.manage_pasteObjects(objs)
 
         # remove the old paragraph
-        self.get_section().manage_delObjects([next_paragraph.id])
+        self.get_section().remove_paragraph(next_paragraph.id)
 
         # refresh the section page
         REQUEST.RESPONSE.redirect( "%s/edit_html#%s" %

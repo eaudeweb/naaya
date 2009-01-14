@@ -72,14 +72,45 @@ class Section(Folder):
         self.id =  id
         self.title = title
         self.body = body
+        self.next_available_id = 0 # some legacy Section instances might not have this attribute
+        self.paragraph_ids = [] # some legacy Section instances might not have this attribute
+
+    def _ensure_paragraph_ids(self):
+        """
+        Make sure this Section instance has the paragraph_ids list
+        attached to it (some legacy objects don't have it)
+        """
+        if getattr(self, 'paragraph_ids', None) is None:
+            self.paragraph_ids = [p.id for p in  self.objectValues(
+                    [METATYPE_TALKBACKCONSULTATION_PARAGRAPH])]
+            self._p_changed = 1
 
     security.declareProtected(view, 'get_section')
     def get_section(self):
         return self
 
+    security.declarePrivate('make_paragraph_id')
+    def make_paragraph_id(self):
+        next_id = getattr(self, 'next_available_id', None)
+        if next_id is None:
+            # this must be an old Section instance
+            self._ensure_paragraph_ids()
+            next_id = int( list(self.paragraph_ids)[-1] ) + 1
+        self.next_available_id = next_id + 1
+        return '%03d' % next_id
+
+    security.declarePrivate('remove_paragraph')
+    def remove_paragraph(self, paragraph_id):
+        self._ensure_paragraph_ids()
+        self.manage_delObjects([paragraph_id])
+        self.paragraph_ids.remove(paragraph_id)
+        self._p_changed = 1
+
     security.declareProtected(view, 'get_paragraphs')
     def get_paragraphs(self):
-        return self.objectValues([METATYPE_TALKBACKCONSULTATION_PARAGRAPH])
+        self._ensure_paragraph_ids()
+        for p in self.paragraph_ids:
+            yield self._getOb(p)
 
     security.declareProtected(view, 'get_previous_section')
     def get_previous_section(self):
@@ -102,11 +133,8 @@ class Section(Folder):
     security.declarePrivate('parseBody')
     def parseBody(self):
         output = parse(self.body)
-        i = 0
         for paragraph in output:
-            id = '%03d' % i
-            addParagraph(self, id, body=paragraph)
-            i += 1
+            addParagraph(self, body=paragraph)
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
     edit_html = PageTemplateFile('zpt/section_edit', globals())
