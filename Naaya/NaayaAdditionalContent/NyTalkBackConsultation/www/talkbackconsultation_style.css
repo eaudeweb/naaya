@@ -80,7 +80,7 @@ p.talkback-cannot_comment {
 	background: transparent;
 	list-style: none;
 	line-height: 1.3;
-	clear: both;
+	/*clear: both;*/
 }
 
 #middle_port div.talkback-section div h1 {
@@ -145,4 +145,22 @@ p.talkback-cannot_comment {
 	border: 1px solid #ccc;
 	background: #eee;
 	text-decoration: none;
+}
+
+ul.talkback-section_index_sidebar {
+	list-style: none;
+	width: 14em;
+	float:right;
+	clear: right;
+	padding: .5em 1em .5em 1em;
+	border: 1px solid #ccc;
+	background-color: #eee;
+}
+
+ul.talkback-section_index_sidebar li {
+	padding: .1em .5em .1em .5em;
+}
+
+li.talkback-current_section a {
+	background-color: #ccc;
 }
