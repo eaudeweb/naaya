@@ -81,6 +81,24 @@ class Section(Folder):
     def get_paragraphs(self):
         return self.objectValues([METATYPE_TALKBACKCONSULTATION_PARAGRAPH])
 
+    security.declareProtected(view, 'get_previous_section')
+    def get_previous_section(self):
+        sections = self.list_sections()
+        i = sections.index(self)
+        if i > 0:
+            return sections[i-1]
+        else:
+            return None
+
+    security.declareProtected(view, 'get_next_section')
+    def get_next_section(self):
+        sections = self.list_sections()
+        i = sections.index(self)
+        if i+1 < len(sections):
+            return sections[i+1]
+        else:
+            return None
+
     security.declarePrivate('parseBody')
     def parseBody(self):
         output = parse(self.body)
