@@ -153,6 +153,7 @@ div.talkback-section_toc {
 	width: 14em;
 	border: 1px solid #ccc;
 	background-color: #eee;
+    margin: 1em 0 1em 1em;
 }
 
 div.talkback-section_toc h6 {
