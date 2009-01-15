@@ -2,7 +2,7 @@
 
 <tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
 
-<h1 tal:content="here/title_or_id"></h1>
+<h1 i18n:translate="">Split paragraph</h1>
 
 <div class="floated-buttons">
     <span class="buttons">
@@ -12,6 +12,8 @@
 <div class="cleaner" />
 
 <form method="post" action="split_body" tal:define="body here/body; editor here/getEditorTool" >
+
+<p>Move some of the text from <em>Original paragraph</em> to the <em>New paragraph</em> which will be created. All comments will remain attached to the original paragraph.</p>
 
 <div class="field">
 	<label for="body_0" i18n:translate="">Original paragraph</label>

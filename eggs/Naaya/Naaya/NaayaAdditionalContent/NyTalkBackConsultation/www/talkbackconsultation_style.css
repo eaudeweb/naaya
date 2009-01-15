@@ -147,20 +147,45 @@ p.talkback-cannot_comment {
 	text-decoration: none;
 }
 
-ul.talkback-section_index_sidebar {
-	list-style: none;
-	width: 14em;
+div.talkback-section_toc {
 	float:right;
 	clear: right;
-	padding: .5em 1em .5em 1em;
+	width: 14em;
 	border: 1px solid #ccc;
 	background-color: #eee;
 }
 
-ul.talkback-section_index_sidebar li {
+div.talkback-section_toc h6 {
+    font-size: 1em;
+    margin: .6em 1em .6em 1em;
+    padding: 0;
+    text-align: center;
+}
+
+div.talkback-section_toc ul {
+	list-style: none;
+    margin: .6em 1em .6em 1em;
+    padding: 0;
+}
+
+div.talkback-section_toc ul li {
 	padding: .1em .5em .1em .5em;
 }
 
 li.talkback-current_section a {
 	background-color: #ccc;
 }
+
+table.talkback-section_list .talkback-section_list-edit_column {
+    width: 4em;
+    text-align: center;
+}
+
+table.talkback-section_list {
+    width: 70%;
+}
+
+p.talkback-section_next_prev span {
+    margin: 0 1em 0 1em;
+}
+

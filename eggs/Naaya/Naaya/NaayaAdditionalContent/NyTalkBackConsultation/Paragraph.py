@@ -114,7 +114,9 @@ class Paragraph(Folder):
         self.body = body_0
 
         if REQUEST:
-            REQUEST.RESPONSE.redirect(section.absolute_url())
+            REQUEST.RESPONSE.redirect(section.absolute_url() + '/edit_html')
+            REQUEST.RESPONSE.redirect( "%s/edit_html#%s" %
+                    (section.absolute_url(), self.get_anchor()) )
 
     security.declareProtected(
         PERMISSION_MANAGE_TALKBACKCONSULTATION, 'merge_down')
