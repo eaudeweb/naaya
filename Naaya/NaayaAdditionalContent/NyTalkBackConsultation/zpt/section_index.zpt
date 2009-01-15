@@ -20,20 +20,29 @@
     </span>
 </div>
 
-<div>
+<p class="talkback-section_next_prev">
     <span tal:define="previous_section here/get_previous_section" tal:condition="previous_section">
-        <span i18n:translate="">Previous section</span>:
-        <a tal:attributes="href previous_section/absolute_url" tal:content="previous_section/title" />
+        &larr;
+        <a tal:attributes="href previous_section/absolute_url; title previous_section/title"
+            i18n:translate="">Previous section</a>
     </span>
-</div>
+    <span tal:define="next_section here/get_next_section" tal:condition="next_section">
+        <a tal:attributes="href next_section/absolute_url; title next_section/title"
+            i18n:translate="">Next section</a>
+        &rarr;
+    </span>
+</p>
 
 <div class="cleaner" ></div>
 
-<ul class="talkback-section_index_sidebar" tal:define="consultation_sections python:here.get_consultation().list_sections()">
-    <li tal:repeat="section consultation_sections" tal:attributes="class python:test(section==here, 'talkback-current_section', '')">
-        <a tal:attributes="href section/absolute_url" tal:content="section/title" />
-    </li>
-</ul>
+<div class="talkback-section_toc">
+    <h6>Table of contents</h6>
+    <ul tal:define="consultation_sections python:here.get_consultation().list_sections()">
+        <li tal:repeat="section consultation_sections" tal:attributes="class python:test(section==here, 'talkback-current_section', '')">
+            <a tal:attributes="href section/absolute_url" tal:content="section/title" />
+        </li>
+    </ul>
+</div>
 
 <h1 tal:content="here/title_or_id" />
 
@@ -54,12 +63,18 @@
     </tal:block>
 </div>
 
-<div>
-    <span tal:define="next_section here/get_next_section" tal:condition="next_section">
-        <span i18n:translate="">Next section</span>:
-        <a tal:attributes="href next_section/absolute_url" tal:content="next_section/title" />
+<p class="talkback-section_next_prev">
+    <span tal:define="previous_section here/get_previous_section" tal:condition="previous_section">
+        &larr;
+        <a tal:attributes="href previous_section/absolute_url; title previous_section/title"
+            i18n:translate="">Previous section</a>
     </span>
-</div>
+    <span tal:define="next_section here/get_next_section" tal:condition="next_section">
+        <a tal:attributes="href next_section/absolute_url; title next_section/title"
+            i18n:translate="">Next section</a>
+        &rarr;
+    </span>
+</p>
 
 </tal:block>
 

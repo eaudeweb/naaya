@@ -1,6 +1,6 @@
 <span tal:replace="structure here/standard_html_header" />
 
-<h1 i18n:translate="">Edit Section</h1>
+<h1 i18n:translate="">Edit section</h1>
 
 <div class="floated-buttons">
     <span class="buttons">
@@ -8,6 +8,8 @@
     </span>
 </div>
 <div class="cleaner" />
+
+<p>Users can comment on each <em>paragraph</em>. To join two consecutive paragraphs, select <em>Merge with next paragraph</em> from the first one. To split a paragraph in two, or insert a new one, select <em>Split paragraph</em>.</p>
 
 <div class="talkback-section">
     <tal:block repeat="paragraph here/get_paragraphs">

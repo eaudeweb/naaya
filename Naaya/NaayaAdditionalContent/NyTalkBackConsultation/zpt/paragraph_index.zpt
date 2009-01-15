@@ -1,6 +1,6 @@
 <span tal:replace="structure here/standard_html_header" />
 
-<h1 i18n:translate="">Comment on this paragraph</h1>
+<h1 i18n:translate="">Post a comment on the text below</h1>
 
 <div tal:content="structure here/body" class="talkback-section"/>
 

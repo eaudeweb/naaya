@@ -20,17 +20,19 @@
 
 <p tal:content="structure python:here.getLocalProperty('description', lang)" />
 
-<table class="datatable" tal:condition="here/list_sections">
+<table class="datatable talkback-section_list" tal:condition="here/list_sections">
 <thead>
 	<tr>
 		<th i8n:translate="">Section</th>
-		<th tal:condition="here/checkPermissionManageTalkBackConsultation" i8n:translate="">Edit</th>
+		<th class="talkback-section_list-edit_column" tal:condition="here/checkPermissionManageTalkBackConsultation" i8n:translate="" />
 	</tr>
 </thead>
 <tbody>
 	<tr tal:repeat="section here/list_sections">
 		<td><a tal:attributes="href section/absolute_url" tal:content="section/title_or_id" /></td>
-		<td tal:condition="here/checkPermissionManageTalkBackConsultation"><a tal:attributes="href string:${section/absolute_url}/edit_html" i18n:translate="" rel="nofollow">Edit</a></td>
+		<td class="talkback-section_list-edit_column" tal:condition="here/checkPermissionManageTalkBackConsultation">
+			<a tal:attributes="href string:${section/absolute_url}/edit_html" i18n:translate="" rel="nofollow">Edit</a>
+		</td>
 	</tr>
 </tbody>
 </table>
