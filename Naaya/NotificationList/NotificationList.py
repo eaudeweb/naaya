@@ -80,7 +80,7 @@ class NotificationList(NyItem):
     security.declarePrivate('get_user_info')
     def get_user_info(self, user_name, ldap_user_data=None):
         auth_tool = self.getAuthenticationTool()
-        parent_acl_users = self.getSite().getParentNode().acl_users
+        parent_acl_users = self.restrictedTraverse('/').acl_users
 
         user_obj = auth_tool.getUser(user_name)
         if user_obj is not None:
@@ -195,7 +195,7 @@ class NotificationList(NyItem):
         potential_users = {}
 
         # go through site's acl_users
-        parent_acl_users = self.getSite().getParentNode().acl_users
+        parent_acl_users = self.restrictedTraverse('/').acl_users
         if parent_acl_users.meta_type == 'LDAPUserFolder':
             # LDAP search is case-insensitive, but we must
             # search each attribute individually.
@@ -220,9 +220,10 @@ class NotificationList(NyItem):
         return output
 
     security.declarePrivate('notify_subscribers')
-    def notify_subscribers(self, obj, upload_user):
+    def notify_subscribers(self, event):
         """ Notify our subscribers that an item has been uploaded """
 
+        upload_user = event['user']
         auth_tool = self.getAuthenticationTool()
         try:
             upload_user_mail = auth_tool.getUserEmail(upload_user)
@@ -231,21 +232,34 @@ class NotificationList(NyItem):
 
         from_address = 'notifications@' + getSiteDomainName(self.getSite())
         upload_time = str(self.utShowFullDateTime(self.utGetTodayDate()))
-        obj_title = obj.title_or_id()
-        mail_subject = NOTIFICATION_LIST_MAIL_SUBJECT_TEMPLATE % obj_title
+
+        if event['type'] == 'forum message':
+            obj_title = event['object'].get_forum_object().title_or_id()
+            mail_subject = NOTIFICATION_LIST_MAIL_SUBJECT_TEMPLATE_UPLOAD % obj_title
+            mail_template = NOTIFICATION_LIST_MAIL_BODY_TEMPLATE_FORUM_MESSAGE
+            mail_template = mail_template.replace('@@FORUMTITLE@@', obj_title)
+
+        elif event['type'] == 'file upload':
+            obj_title = event['object'].title_or_id()
+            mail_subject = NOTIFICATION_LIST_MAIL_SUBJECT_TEMPLATE_FORUM_MESSAGE % obj_title
+            mail_template = NOTIFICATION_LIST_MAIL_BODY_TEMPLATE_UPLOAD
+            mail_template = mail_template.replace('@@ITEMTITLEORID@@', obj_title)
+            mail_template = mail_template.replace('@@CONTAINERPATH@@', self.getParentNode().absolute_url())
+
+        else:
+            raise ValueError('Unknown event type %s' % event['type'])
+
+        mail_template = mail_template.replace('@@USERNAME@@', upload_user.getUserName())
+        mail_template = mail_template.replace('@@USEREMAIL@@', upload_user_mail)
+        mail_template = mail_template.replace('@@UPLOADTIME@@', upload_time)
+
 
         for user in self.list_subscribers():
             if user['email'] is None:
                 # this is a broken user object; skip it
                 continue
-            mail_body = NOTIFICATION_LIST_MAIL_BODY_TEMPLATE
-            mail_body = mail_body.replace('@@USERNAME@@', upload_user.getUserName())
-            mail_body = mail_body.replace('@@USEREMAIL@@', upload_user_mail)
-            mail_body = mail_body.replace('@@ITEMTITLEORID@@', obj_title)
-            mail_body = mail_body.replace('@@CONTAINERPATH@@', self.getParentNode().absolute_url())
-            mail_body = mail_body.replace('@@UPLOADTIME@@', upload_time)
 
-            self.getEmailTool().sendEmail(mail_body, user['email'], from_address, mail_subject)
+            self.getEmailTool().sendEmail(mail_template, user['email'], from_address, mail_subject)
 
     security.declareProtected(PERMISSION_MANAGE_NOTIFICATION_LIST, 'manage_main')
     manage_main = PageTemplateFile('zpt/notificationList_manage', globals())

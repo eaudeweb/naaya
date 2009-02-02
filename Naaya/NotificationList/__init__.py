@@ -19,37 +19,67 @@
 
 import sys
 
-from Products.Naaya.NySite import NySite
-from Products.Naaya.NyFolder import NyFolder
 import NotificationList
 from constants import *
 
-def notifyInterestGroups(site, obj, upload_user):
-    # walk down the tree towards the NySite instance
+def invokeNotificationLists(site, obj, event):
+    """ Walk down the object tree and invoke all NotificationList objects """
     folder = obj
     while True:
         folder = folder.getParentNode()
 
         if NOTIFICATION_LIST_DEFAULT_ID in folder.objectIds(spec=METATYPE_NOTIFICATION_LIST):
             # we found a subscriber list; notify the subscribers
-            folder._getOb(NOTIFICATION_LIST_DEFAULT_ID).notify_subscribers(obj, upload_user)
+            folder._getOb(NOTIFICATION_LIST_DEFAULT_ID).notify_subscribers(event)
 
         if folder == site:
             # we've reached the site level; bail out
             return
 
-# patch notifyFolderMaintainer method of NySite
-old_notifyFolderMaintainer = NySite.notifyFolderMaintainer
-def new_notifyFolderMaintainer(self, folder, obj, **kwargs):
-    old_notifyFolderMaintainer(self, folder, obj, **kwargs)
+def patch_NySite():
+    """ patch notifyFolderMaintainer method of NySite """
+
+    from Products.Naaya.NySite import NySite
+
+    old_notifyFolderMaintainer = NySite.notifyFolderMaintainer
+    def new_notifyFolderMaintainer(self, folder, obj, **kwargs):
+        old_notifyFolderMaintainer(self, folder, obj, **kwargs)
+
+        try:
+            invokeNotificationLists(self, obj, {
+                'user': self.REQUEST.AUTHENTICATED_USER,
+                'object': obj,
+                'type': 'file upload',
+            })
+        except:
+            # we catch the error and log it ourselves; we don't want our patch
+            # to bring down any innocent site because of some bug
+            self.error_log.raising(sys.exc_info())
+    NySite.notifyFolderMaintainer = new_notifyFolderMaintainer
+
+def patch_NyForum():
+    """ hook on to events from NyForum """
 
     try:
-       notifyInterestGroups(self, obj, self.REQUEST.AUTHENTICATED_USER)
-    except:
-        # we catch the error and log it ourselves; we don't want our patch
-        # to bring down any innocent site because of some bug
-        self.error_log.raising(sys.exc_info())
-NySite.notifyFolderMaintainer = new_notifyFolderMaintainer
+        from Products.NaayaForum import NyForumTopic, NyForumMessage
+    except ImportError:
+        # NaayaForum is not installed; nothing to patch here
+        return
+
+    def event_hook(ob):
+        try:
+            invokeNotificationLists(ob.getSite(), ob, {
+                'user': ob.REQUEST.AUTHENTICATED_USER,
+                'object': ob,
+                'type': 'forum message',
+            })
+        except:
+            # we catch the error and log it ourselves; we don't want our patch
+            # to bring down any innocent site because of some bug
+            ob.getSite().error_log.raising(sys.exc_info())
+
+    NyForumTopic.NyForumTopic_creation_hooks.append(event_hook)
+    NyForumMessage.NyForumMessage_creation_hooks.append(event_hook)
 
 def initialize(context):
     # register NotificationList
@@ -60,5 +90,9 @@ def initialize(context):
         icon='www/notification_list.gif',
     )
 
-# TODO: manage_addNotificationList should not be manually injected (should work by itself)
-NyFolder.manage_addNotificationList = NotificationList.manage_addNotificationList
+    patch_NyForum()
+    patch_NySite()
+
+    # TODO: manage_addNotificationList should not be manually injected (should work by itself)
+    from Products.Naaya.NyFolder import NyFolder
+    NyFolder.manage_addNotificationList = NotificationList.manage_addNotificationList
