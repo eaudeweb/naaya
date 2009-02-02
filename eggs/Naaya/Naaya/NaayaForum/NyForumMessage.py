@@ -33,6 +33,8 @@ from constants import *
 from NyForumBase import NyForumBase
 from Products.NaayaBase.constants import *
 
+NyForumMessage_creation_hooks = []
+
 manage_addNyForumMessage_html = PageTemplateFile('zpt/message_manage_add', globals())
 message_add_html = PageTemplateFile('zpt/message_add', globals())
 def addNyForumMessage(self, id='', inreplyto='', title='', description='', attachment='',
@@ -50,6 +52,8 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
         ob = self._getOb(id)
         self.handleAttachmentUpload(ob, attachment)
         self.notifyOnMessage(ob)
+        for hook in NyForumMessage_creation_hooks:
+            hook(ob)
         if REQUEST is not None:
             referer = REQUEST['HTTP_REFERER'].split('/')[-1]
             if referer == 'manage_addNyForumMessage_html' or \

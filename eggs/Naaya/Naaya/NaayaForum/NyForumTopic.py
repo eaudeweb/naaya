@@ -34,6 +34,8 @@ from NyForumBase import NyForumBase
 from Products.NaayaBase.constants import *
 from NyForumMessage import manage_addNyForumMessage_html, message_add_html, addNyForumMessage
 
+NyForumTopic_creation_hooks = []
+
 manage_addNyForumTopic_html = PageTemplateFile('zpt/topic_manage_add', globals())
 topic_add_html = PageTemplateFile('zpt/topic_add', globals())
 def addNyForumTopic(self, id='', title='', category='', description='',
@@ -48,7 +50,10 @@ def addNyForumTopic(self, id='', title='', category='', description='',
     status = 0
     ob = NyForumTopic(id, title, category, description, notify, author, postdate, status, sort_reverse)
     self._setObject(id, ob)
-    self.handleAttachmentUpload(self._getOb(id), attachment)
+    ob = self._getOb(id)
+    self.handleAttachmentUpload(ob, attachment)
+    for hook in NyForumTopic_creation_hooks:
+        hook(ob)
     if REQUEST is not None:
         referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if referer == 'manage_addNyForumTopic_html' or \
