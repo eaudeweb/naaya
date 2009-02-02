@@ -1,5 +1,11 @@
 <span tal:replace="structure here/standard_html_header" />
 
+<span style="float: right; width: 20%; word-wrap: break-word;">
+  <tal:block tal:repeat="item python:here.get_right_portlets_locations_objects(here)">
+    <span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
+  </tal:block>
+</span>
+
 <h1><img tal:attributes="src here/icon; title here/meta_label; alt here/meta_label" /> <span tal:replace="here/title_or_id" /></h1>
 <p tal:content="structure here/description" />
 
