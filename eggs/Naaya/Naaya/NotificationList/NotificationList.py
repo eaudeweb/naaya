@@ -232,19 +232,20 @@ class NotificationList(NyItem):
 
         from_address = 'notifications@' + getSiteDomainName(self.getSite())
         upload_time = str(self.utShowFullDateTime(self.utGetTodayDate()))
+        container_title = self.getParentNode().title_or_id()
 
         if event['type'] == 'forum message':
-            obj_title = event['object'].get_forum_object().title_or_id()
-            mail_subject = NOTIFICATION_LIST_MAIL_SUBJECT_TEMPLATE_UPLOAD % obj_title
+            mail_subject = NOTIFICATION_LIST_MAIL_SUBJECT_TEMPLATE_UPLOAD % container_title
             mail_template = NOTIFICATION_LIST_MAIL_BODY_TEMPLATE_FORUM_MESSAGE
-            mail_template = mail_template.replace('@@FORUMTITLE@@', obj_title)
+            mail_template = mail_template.replace('@@GROUPTITLE@@', container_title)
+            mail_template = mail_template.replace('@@ITEMURL@@', event['object'].absolute_url())
 
         elif event['type'] == 'file upload':
-            obj_title = event['object'].title_or_id()
-            mail_subject = NOTIFICATION_LIST_MAIL_SUBJECT_TEMPLATE_FORUM_MESSAGE % obj_title
+            mail_subject = NOTIFICATION_LIST_MAIL_SUBJECT_TEMPLATE_FORUM_MESSAGE % container_title
             mail_template = NOTIFICATION_LIST_MAIL_BODY_TEMPLATE_UPLOAD
-            mail_template = mail_template.replace('@@ITEMTITLEORID@@', obj_title)
-            mail_template = mail_template.replace('@@CONTAINERPATH@@', self.getParentNode().absolute_url())
+            mail_template = mail_template.replace('@@ITEM@@', event['object'].title_or_id())
+            mail_template = mail_template.replace('@@GROUPTITLE@@', container_title)
+            mail_template = mail_template.replace('@@ITEMURL@@', event['object'].absolute_url())
 
         else:
             raise ValueError('Unknown event type %s' % event['type'])
