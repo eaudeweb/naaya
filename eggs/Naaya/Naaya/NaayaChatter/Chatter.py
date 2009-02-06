@@ -83,7 +83,7 @@ class Chatter(Folder):
         raise NotImplementedError
 
     security.declareProtected(CHATTER_ADD_ROOM_PERMISSION, 'addRoom')
-    def addRoom(self, id='', title='', roles=[], user_list=[], private=0, REQUEST=None):
+    def addRoom(self, id='', title='', roles=[], user_list='', private=0, REQUEST=None):
         """ Creates a new chat room """
         r_id = manage_addChatRoom(self, id, title, roles, user_list, private)
         if REQUEST:
