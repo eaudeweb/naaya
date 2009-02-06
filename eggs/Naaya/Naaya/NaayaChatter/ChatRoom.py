@@ -117,7 +117,6 @@ class ChatRoom(Folder):
         self.manage_permission(CHATTER_VIEW_MESSAGE_PERMISSION, roles)
         self.manage_permission(CHATTER_ADD_MESSAGE_PERMISSION, roles)
 
-    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'get_friendlyDate')
     def get_friendlyDate(self):
         return ut.utGetDate(self.releasedate).strftime('%d %b %Y %H:%M')
 
