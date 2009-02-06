@@ -26,7 +26,7 @@
 		<!-- List roles for Zope user here -->
 	</div>
 	<tal:block tal:condition="python:len(roles) and user_obj is not None">
-		You have the following rights in this portal:<br />
+		<span i18n:translate="">You have the following rights in this portal:</span><br />
 		<ul>
 			<li tal:repeat="item roles">
 				<span tal:replace="python:', '.join(item[0])" />
