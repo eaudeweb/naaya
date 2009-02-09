@@ -51,7 +51,7 @@ ZopeTestCase.installProduct('PythonScripts')
 # The folowing are patches needed because Localizer doesn't work
 # well within ZTC
 # This one is needed by ProxyTool.
-def get_selected_language(self):
+def get_selected_language(self, *args, **kwargs):
     """ """
     return 'en'
 
