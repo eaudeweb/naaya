@@ -402,8 +402,10 @@ AltDatabaseManager.manage_pack = disk_pack(AltDatabaseManager.manage_pack)
 #
 # Patch _get_new_ufn
 #
+from Products.ExtFile import ExtFile, Config as ExtFileConfig
+ExtFile.REPOSITORY = ExtFileConfig.REPOSITORY = ExtFileConfig.SYNC_ZODB
+ExtFile.ZODB_PATH = ExtFileConfig.ZODB_PATH = ExtFileConfig.PHYSICAL
 from Products.ExtFile.Config import *
-REPOSITORY = SYNC_ZODB
 
 from os.path import join, isfile
 from mimetypes import guess_extension, guess_all_extensions
