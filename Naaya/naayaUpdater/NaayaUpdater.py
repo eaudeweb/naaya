@@ -26,13 +26,6 @@ import os
 from OFS.History import html_diff
 import copy
 
-#used for layout updates
-from cssutils.cssparser import CSSParser
-from cssutils.cssstylerule import StyleRule
-from cssutils.cssrule import CSSRule
-from cssutils.cssstyledeclaration import StyleDeclaration
-from cssutils.cssstylesheet import StyleSheet
-
 from OFS.Folder import Folder
 import Globals
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -911,6 +904,7 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'findCSSRule')
     def findCSSRule(self, sheet=None, string=''):
         """ returns the selector object """
+        from cssutils.cssstylerule import StyleRule
         rules = sheet.getRules()
         for rl in rules:
             if isinstance(rl, StyleRule) and rl.selectorText == u'%s' % string:
@@ -930,6 +924,7 @@ class NaayaUpdater(Folder):
         """ creates the cssutils css sheet from the given style string """
         #disable file debugging
         import logging
+        from cssutils.cssparser import CSSParser
         log = logging.getLogger('parser')
         hndl = logging.StreamHandler()
         formatter = logging.Formatter('%(levelname)s\t%(message)s')
@@ -945,6 +940,7 @@ class NaayaUpdater(Folder):
     def makeCSSRule(self, selector=''):
         """ creates a new CSS Rule with the given selector text """
 
+        from cssutils.cssstylerule import StyleRule
         ob_rule = StyleRule()
         ob_rule.selectorText = selector
         return ob_rule
@@ -958,6 +954,7 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'makeCSSDeclaration')
     def makeCSSDeclaration(self, style_declaration=[]):
         """ creates a selector body with the passed properties and values"""
+        from cssutils.cssstyledeclaration import StyleDeclaration
         dc = StyleDeclaration()
         for dec in style_declaration:
             n, v = dec.split(':')
