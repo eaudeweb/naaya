@@ -3028,6 +3028,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             l_content = self.utRemoveLineInString('@@CONTAINERBASKETPATH@@', l_content)
         self.getEmailTool().sendEmail(l_content, p_to, p_from, l_subject)
 
+    def log_current_error(self):
+        """ Log the current error (from sys.exc_info) into the site's error_log """
+        import sys
+        self.error_log.raising(sys.exc_info())
+
     #pluggable content
     def get_pluggable_content(self):
         #information about the available types
