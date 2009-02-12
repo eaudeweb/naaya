@@ -911,3 +911,26 @@ table.datatable {
 
 .tip_item {padding:0.3em 0.3em 0.3em 0pt;}
 
+/* styles for the main sections page */
+ul.boxy {
+	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
+	width: 30em;
+}
+ul.boxy li {
+	cursor:move;
+	padding: 4px;
+	border: 1px solid #ccc;
+	background-color: #eee;
+}
+#maintopicslist {
+	margin-bottom: 1em;
+}
+#maintopicslist li {
+	margin-bottom: 0px;
+	margin-top: 4px;
+}
+#maintopicslist .chk {
+	margin: 0px;
+}
