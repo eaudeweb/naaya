@@ -11,7 +11,7 @@
 	tab python:request.get('tab', 'them');
 	theme_id python:request.get('theme_id', '');
 	document python:here.restrictedTraverse(request['document']);
-	imageContainer document/imageContainer;
+	imageContainer document/imageContainer/storage;
 	images imageContainer/getImages;
 ">
 
@@ -78,7 +78,7 @@ or <strong>upload</strong> new ones from <strong>Upload image</strong> tab.
 Click on an image to insert it in your text.
 Also you can select images for deletion.
 </p>
-<form method="post" tal:attributes="action string:${document/absolute_url}/imageContainer/deleteImages">
+<form method="post" tal:attributes="action string:${imageContainer/absolute_url}/deleteImages">
 	<input tal:condition="python:len(images)>5" type="submit" value="Delete selected images" i18n:attributes="value" />
 	<ul style="list-style:none;">
 		<li tal:repeat="item images">
@@ -106,7 +106,7 @@ No images available. In order to insert an image in your text please
 <div class="panel pick_pop_up" id="upload_panel" style="height: auto">
 
 <!-- Upload -->
-<form method="post" tal:attributes="action string:${document/absolute_url}/imageContainer/uploadImage" enctype="multipart/form-data">
+<form method="post" tal:attributes="action string:${imageContainer/absolute_url}/uploadImage" enctype="multipart/form-data">
 	<a name="upload"></a>
 	<strong i18n:translate="">Upload an image</strong><br /><br />
 	<input type="file" name="file" />
