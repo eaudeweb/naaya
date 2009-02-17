@@ -536,6 +536,21 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """
         pass
 
+    def get_archive_listing(self, p_objects):
+        """ """
+        results = []
+        select_all, delete_all, flag = 0, 0, 0
+        for x in p_objects:
+            del_permission = x.checkPermissionDeleteObject()
+            edit_permission = x.checkPermissionEditObject()
+            if del_permission and flag == 0:
+                select_all, delete_all, flag = 1, 1, 1
+            if edit_permission and flag == 0:
+                flag, select_all = 1, 1
+            if ((del_permission or edit_permission) and not x.approved) or x.approved:
+                results.append((del_permission, edit_permission, x))
+        return (select_all, delete_all, results)
+
     security.declareProtected(view, 'getArchiveListing')
     def getArchiveListing(self, p_archive, p_attr='releasedate', p_desc=1):
         """ Returns a list of objects sorted by an attribute such as the 'releasedate'
