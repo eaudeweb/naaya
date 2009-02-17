@@ -47,8 +47,8 @@ def addChatMessage(self, id, user='', msg=''):
 
 class message(Folder):
     """
-    The chat message, stores a chat line 
-    
+    The chat message, stores a chat line
+
     @param date_time: date and time posted
     @param user: the user id who sent this message
     @param msg: the submitted text message

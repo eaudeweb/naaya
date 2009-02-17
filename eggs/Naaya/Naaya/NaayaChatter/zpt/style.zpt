@@ -114,7 +114,7 @@
 	padding: 0;
 	font-size: 120%;
 }
-.chatter ul li {
+.chatter .room-title {
 	margin: 0 0 0.3em 0;
 	background: url(room) no-repeat;
 	padding:  0 0 0 20px;
@@ -151,8 +151,8 @@
 }
 
 #message {
-	width: 100%; 
-	height: 20%; 
+	width: 100%;
+	height: 20%;
 	margin: 1em 0 0 0;
 }
 
@@ -177,4 +177,25 @@
 	margin: 0 0 0 0.5em;
 	position: relative;
 	top: 1px;
+}
+
+.chatter .room-info {
+    list-style-type: none;
+    background: transparent;
+    background-image: none;
+    font-size: 100%;
+}
+
+.chatter .room-info a {
+    font-weight: normal;
+}
+
+.chatter .room {
+    border: 1px solid #9AB4AD;
+    padding: 0.3em;
+    margin: 0.5em;
+}
+
+.chatter .room:hover {
+    background-color: #CAE1D7;
 }

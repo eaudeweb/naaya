@@ -59,7 +59,7 @@ def manage_addChatRoom(self, id='', title='', roles='', user_list='', private=0,
 class ChatRoom(Folder):
     """
     Contains chat archives
-    
+
     @param roles: the list of user roles that are allowed in the chat room
     @param user_list: the list of users that are allowd in the chat room
     @param previous_archive: log the previously created archive
@@ -116,6 +116,36 @@ class ChatRoom(Folder):
         self.manage_permission(CHATTER_VIEW_ARCHIVE_PERMISSION, roles)
         self.manage_permission(CHATTER_VIEW_MESSAGE_PERMISSION, roles)
         self.manage_permission(CHATTER_ADD_MESSAGE_PERMISSION, roles)
+
+    def user_can_view_archive(self):
+        #check if the current user has view permission on this room's archive
+        return self.checkPermission(CHATTER_VIEW_ARCHIVE_PERMISSION) or self.getUserObj().has_role("Owner", self)
+
+    def user_can_access_room(self):
+        #check if the current user has CHATTER_VIEW_ROOM_PERMISSION or the Owner role for this room
+        return self.checkPermission(CHATTER_VIEW_ROOM_PERMISSION) or self.getUserObj().has_role("Owner", self)
+
+    def get_last_activity(self):
+        last_arch = self.get_latest_archive()
+        last_msg = last_arch.last_msg_id
+        if last_msg:
+            return last_arch[last_msg].get_posting_time().strftime("%d %b %Y %H:%M")
+        else:
+            return "never"
+
+    def get_room_creator(self):
+        if self.creator == self.getUserID():
+            return "Yourself"
+        else:
+            return self.getAuthenticationTool().getUserFullNameByID(self.creator)
+
+    def users_with_access(self):
+        users = [x for x in self.user_list if x]
+        users.append(self.creator)
+        return ", ".join(users) or "-"
+
+    def roles_with_access(self):
+        return ", ".join([x for x in self.roles if x != "Owner"]) or "-"
 
     def get_friendlyDate(self):
         return ut.utGetDate(self.releasedate).strftime('%d %b %Y %H:%M')

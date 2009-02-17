@@ -36,7 +36,6 @@ from constants import *
 from Products.NaayaCore.managers.utils import utils
 
 
-
 ut = utils()
 manage_addChatter_html = PageTemplateFile('zpt/chatter_manage_add', globals())
 def manage_addChatter(self, id='', title='', REQUEST=None):
@@ -96,6 +95,9 @@ class Chatter(Folder):
     def getUserID(self):
         return self.getUserObj().getUserName()
 
+    def getUserName(self):
+        return getUserFullName(self.getUserObj())
+
     def getIntFromId(self, id='', prefix=''):
         return int(id[len(prefix):])
 
@@ -108,14 +110,14 @@ class Chatter(Folder):
             else:
                 uri = 'http://' + txt
             return '<a href="%s">%s</a>' % (uri, txt)
-        
-        
+
+
         initial_lookbehind = r'(?<![\d\w\-])'
         host_component = r'[\w\d\-]+'
         host_port = r'\:\d+'
         path = r'/[^\s]*'
         get_params = r'\?[\w\d\=\%\&\;\-]*(?<!;)'
-        
+
         regexp = r'(?P<uri>' \
                 + initial_lookbehind \
                 + r'((?P<uri_proto>\w+\://)|www\.)' \
@@ -123,7 +125,7 @@ class Chatter(Folder):
                 + r'(' + path + r')?' \
                 + r'(' + get_params + r')?' \
             + r')'
-        
+
         return re.sub(regexp, replace, string)
 
     security.declareProtected(CHATTER_VIEW_PERMISSION, 'index_html')
