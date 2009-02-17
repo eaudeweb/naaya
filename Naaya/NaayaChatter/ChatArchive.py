@@ -55,7 +55,7 @@ class ChatArchive(BTreeFolder2):
     Contains message objects
     @param creation_date: log the creation date/time of this archive
     @param closing_date: log the closing date/time for this archive
-    
+
     #TODO: log creation_date
     #TODO: log closing_date
     #TODO: automate the creation of daily archives
