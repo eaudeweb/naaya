@@ -72,29 +72,29 @@ class message(Folder):
         self.user = user
         self.msg = msg
 
-    security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'get_posting_user')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'get_posting_user')
     def get_posting_user(self):
         """ Returns the posting user id """
         return self.user
 
-    security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'get_posting_time')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'get_posting_time')
     def get_posting_time(self):
         """ Returns the time at whitch the message was posted """
         return self.date_time
 
-    security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'get_msg')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'get_msg')
     def get_msg(self):
         """ Returns the posted message"""
         msg = ut.utXmlEncode(self.msg)
         msg = self.linkifyURLS(msg)
         return msg
 
-    security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'get_date')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'get_date')
     def get_date(self):
         """ """
         return self.date_time.Date()
 
-    security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'get_time')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'get_time')
     def get_time(self):
         """ """
         return self.date_time.Time()

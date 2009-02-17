@@ -17,11 +17,10 @@
                                  <span tal:condition="not:can_access_room" tal:replace="room/title_or_id" />
                 </span>
                     <ul class="room-info">
-                        <li>Creation date: <span tal:replace="room/get_friendlyDate" /></li>
-                        <li>Created by: <span tal:replace="room/get_room_creator" /></li>
+                        <li>Creation on: <span tal:replace="room/get_friendlyDate" />, by <strong tal:content="room/get_room_creator" /></li>
                         <li>Last activity: <span tal:replace="room/get_last_activity" /></li>
-                        <li>Roles with access: <span tal:replace="room/roles_with_access"/></li>
-                        <li>Users with access: <span tal:replace="room/users_with_access"/></li>
+                        <!--li>Roles with access: <span tal:replace="room/roles_with_access"/></li-->
+                        <!--li>Users with access: <span tal:replace="room/users_with_access"/></li-->
                         <li tal:condition="not:can_access_room"><strong>You cannot access this room.</strong></li>
                         <li tal:condition="can_view_archive"><a tal:attributes="href string:${room/absolute_url}/room_archive_html" i18n:translate="">View room archive</a></li>
                     </ul>
