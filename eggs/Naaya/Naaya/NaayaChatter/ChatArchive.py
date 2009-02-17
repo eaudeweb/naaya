@@ -105,7 +105,7 @@ class ChatArchive(BTreeFolder2):
         """ Returns the closing date of this archive """
         return self.closing_date
 
-    security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'listMessages')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'listMessages')
     def listMessages(self, lastid=''):
         """ Returns a list of contained message objects """
         if lastid and lastid != self.last_msg_id:
@@ -122,19 +122,19 @@ class ChatArchive(BTreeFolder2):
         if not lastid:
             return self.objectValues(CHATTER_MESSAGE_META_TYPE)
 
-    security.declareProtected(CHATTER_VIEW_MESSAGE_PERMISSION, 'getSortedMessages')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'getSortedMessages')
     def getSortedMessages(self):
         """ returns all archive messages in order of submission """
         for message in ut.utSortObjsListByAttr(self.listMessages(), 'date_time', 0):
             yield message
 
-    security.declareProtected(CHATTER_MANAGE_MESSAGE_PERMISSION, 'delMessages')
+    security.declareProtected(CHATTER_MANAGE_ROOM_PERMISSION, 'delMessages')
     def delMessages(self, messagelist=[]):
         """ Deletes a list of messages """
         #make use of manage_delObjects
         raise NotImplementedError
 
-    security.declareProtected(CHATTER_ADD_MESSAGE_PERMISSION, 'addMessage')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'addMessage')
     def addMessage(self, user, msg):
         """ Adds a new message in this archive """
         if self.last_msg_id: last_int = int(self.last_msg_id[len(CHATTER_MESSAGE_PREFIX):])
@@ -147,7 +147,7 @@ class ChatArchive(BTreeFolder2):
 
 
     #Product
-    security.declareProtected(CHATTER_ADD_MESSAGE_PERMISSION, 'addChatMessage')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'addChatMessage')
     addChatMessage = addChatMessage
 
 InitializeClass(ChatArchive)

@@ -114,8 +114,6 @@ class ChatRoom(Folder):
             self.manage_setLocalRoles(userid, ['Owner'])
         self.manage_permission(CHATTER_VIEW_ROOM_PERMISSION, roles)
         self.manage_permission(CHATTER_VIEW_ARCHIVE_PERMISSION, roles)
-        self.manage_permission(CHATTER_VIEW_MESSAGE_PERMISSION, roles)
-        self.manage_permission(CHATTER_ADD_MESSAGE_PERMISSION, roles)
 
     def user_can_view_archive(self):
         #check if the current user has view permission on this room's archive
@@ -123,7 +121,11 @@ class ChatRoom(Folder):
 
     def user_can_access_room(self):
         #check if the current user has CHATTER_VIEW_ROOM_PERMISSION or the Owner role for this room
-        return self.checkPermission(CHATTER_VIEW_ROOM_PERMISSION) or self.getUserObj().has_role("Owner", self)
+        if self.checkPermission(CHATTER_VIEW_ROOM_PERMISSION) or self.getUserObj().has_role("Owner", self):
+            return 1
+        for role in self.getUserObj().roles:
+            if role in self.roles:
+                return 1
 
     def get_last_activity(self):
         last_arch = self.get_latest_archive()
@@ -131,7 +133,7 @@ class ChatRoom(Folder):
         if last_msg:
             return last_arch[last_msg].get_posting_time().strftime("%d %b %Y %H:%M")
         else:
-            return "never"
+            return last_arch.get_creation_date().strftime("%d %b %Y %H:%M")
 
     def get_room_creator(self):
         if self.creator == self.getUserID():
@@ -213,7 +215,7 @@ class ChatRoom(Folder):
             self.addArchive(automatic=True)
             return self.get_latest_archive()
 
-    security.declareProtected(CHATTER_ADD_MESSAGE_PERMISSION, 'submitMessage')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'submitMessage')
     def submitMessage(self, msg=''):
         """ Submits the chat message to the latest archive for handling """
         if msg:
