@@ -536,6 +536,15 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """
         pass
 
+    security.declareProtected(view, 'getArchiveListing')
+    def getArchiveListing(self, p_archive, p_attr='releasedate', p_desc=1):
+        """ Returns a list of objects sorted by an attribute such as the 'releasedate'
+            Used by custom folder indexes
+        """
+        p_objects = p_archive.getObjects()
+        p_objects = self.utSortObjsListByAttr(p_objects, p_attr, p_desc)
+        return self.get_archive_listing(p_objects)
+
     security.declarePrivate('setSearchableContent')
     def setSearchableContent(self, p_meta_types):
         """
