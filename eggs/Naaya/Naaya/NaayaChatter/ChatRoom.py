@@ -25,7 +25,7 @@ import time
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view_management_screens, view
 from DateTime import DateTime
 from time import time
@@ -113,19 +113,10 @@ class ChatRoom(Folder):
         for userid in self.user_list:
             self.manage_setLocalRoles(userid, ['Owner'])
         self.manage_permission(CHATTER_VIEW_ROOM_PERMISSION, roles)
-        self.manage_permission(CHATTER_VIEW_ARCHIVE_PERMISSION, roles)
 
-    def user_can_view_archive(self):
-        #check if the current user has view permission on this room's archive
-        return self.checkPermission(CHATTER_VIEW_ARCHIVE_PERMISSION) or self.getUserObj().has_role("Owner", self)
-
-    def user_can_access_room(self):
-        #check if the current user has CHATTER_VIEW_ROOM_PERMISSION or the Owner role for this room
-        if self.checkPermission(CHATTER_VIEW_ROOM_PERMISSION) or self.getUserObj().has_role("Owner", self):
-            return 1
-        for role in self.getUserObj().roles:
-            if role in self.roles:
-                return 1
+    def checkRoomAccess(self):
+        """ """
+        return getSecurityManager().checkPermission(CHATTER_VIEW_ROOM_PERMISSION, self)
 
     def get_last_activity(self):
         last_arch = self.get_latest_archive()
