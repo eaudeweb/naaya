@@ -84,23 +84,23 @@ class ChatArchive(BTreeFolder2):
         BTreeFolder2.__init__(self)
 
 
-    security.declareProtected(CHATTER_VIEW_ARCHIVE_PERMISSION, 'getChatArchive')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'getChatArchive')
     def getChatArchive(self):
         """ Returns this Chat Archive instance """
         return self
 
-    security.declareProtected(CHATTER_VIEW_ARCHIVE_PERMISSION, 'get_firendly_title')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'get_firendly_title')
     def get_friendly_title(self):
         """ """
         if self.automatic: return ' '.join(self.title.split(' ')[:3])
         else: return self.title
 
-    security.declareProtected(CHATTER_VIEW_ARCHIVE_PERMISSION, 'get_creation_date')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'get_creation_date')
     def get_creation_date(self):
         """ Returns the creation date of this archive """
         return self.creation_date
 
-    security.declareProtected(CHATTER_VIEW_ARCHIVE_PERMISSION, 'get_closing_date')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'get_closing_date')
     def get_closing_date(self):
         """ Returns the closing date of this archive """
         return self.closing_date
@@ -142,7 +142,7 @@ class ChatArchive(BTreeFolder2):
         msgid = '%s%s' % (CHATTER_MESSAGE_PREFIX , ( last_int + 1 ))
         self.last_msg_id = addChatMessage(self, msgid, user, msg)
 
-    security.declareProtected(CHATTER_VIEW_ARCHIVE_PERMISSION, 'index_html')
+    security.declareProtected(CHATTER_VIEW_ROOM_PERMISSION, 'index_html')
     index_html = PageTemplateFile('zpt/chatarchive_index', globals())
 
 
