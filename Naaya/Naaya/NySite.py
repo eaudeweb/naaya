@@ -1644,7 +1644,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             error_ip = self.utGetRefererIp(REQUEST)
             error_user = REQUEST.AUTHENTICATED_USER.getUserName()
             error_time = self.utGetTodayDate()
-            if self.portal_url != '': 
+            if self.portal_url != '':
         	domain_name = self.portal_url.replace('http://', '').replace('https://','')
         	mail_from = 'error@%s' % domain_name
             else: mail_from = 'error@%s' % REQUEST.SERVER_NAME
@@ -3175,6 +3175,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html' % self.absolute_url())
 
+    security.declareProtected(view, 'is_logged')
+    def is_logged(self, REQUEST=None):
+        """ """
+        if not REQUEST:
+            REQUEST = self.REQUEST
+        return REQUEST.AUTHENTICATED_USER.getUserName() != 'Anonymous User'
+
     #methods to be runned by OS scheduler - crond
     def updateRemoteChannels(self, uid):
         """
@@ -3403,3 +3410,4 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         return 'done'
 
 InitializeClass(NySite)
+
