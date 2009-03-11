@@ -2157,7 +2157,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             REQUEST.RESPONSE.redirect('%s/admin_roles_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addroles')
-    def admin_addroles(self, names=[], roles=[], loc='allsite', location='', REQUEST=None):
+    def admin_addroles(self, names=[], roles=[], loc='allsite', location='', send_mail='', REQUEST=None):
         """ """
         msg = err = ''
         names = self.utConvertToList(names)
@@ -2171,13 +2171,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 err = error
             else:
                 msg = MESSAGE_SAVEDCHANGES % self.utGetTodayDate()
-            if not err:
+            if not err and send_mail:
                 auth_tool = self.getAuthenticationTool()
                 for name in names:
                     try:
                         email = auth_tool.getUsersEmails([name])[0]
                         fullname = auth_tool.getUsersFullNames([name])[0]
-                        self.sendAccountCreatedEmail(fullname, email, name, REQUEST, roles)
+                        self.sendAccountModifiedEmail(email, roles, loc, location)
                     except:
                         err = 'Could not send confirmation mail.'
         if REQUEST:
@@ -2979,6 +2979,36 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         l_content = l_content.replace('@@TIMEOFPOST@@', str(self.utGetTodayDate()))
         mail_from = self.mail_address_from
         self.getEmailTool().sendEmail(l_content, p_email, mail_from, l_subject)
+
+    def sendAccountModifiedEmail(self, email, roles, loc, location):
+        #sends an email informing the user about the modifications to its account
+        emailtool_ob = self.getEmailTool()
+        email_template = emailtool_ob._getOb('email_modifyaccount', None)
+        #if the needed email template doesn't exist, create it from the filesystem
+        if not email_template:
+            try:
+                content = self.futRead(join(NAAYA_PRODUCT_PATH, 'skel', 'emails', 'email_modifyaccount.txt'), 'r')
+                emailtool_ob.manage_addEmailTemplate('email_modifyaccount', 'Account modified notification', content)
+            except: return
+        email_template = emailtool_ob._getOb('email_modifyaccount', None)
+
+        #make sure roles is a list
+        if type(roles) != type([]): roles = [roles]
+        roles = ', '.join(roles)
+        #append roles location
+        if loc == "other": roles = "%s locally in %s." % (roles, location)
+        if loc == "allsite": roles = "%s for the entire portal." % roles
+
+        #construct mail
+        subject = email_template.title
+        content = email_template.body
+        content = content.replace('@@PORTAL_TITLE@@', self.site_title)
+        content = content.replace('@@PORTAL_URL@@', self.portal_url)
+        content = content.replace('@@ROLES@@', roles)
+
+        #send mail
+        mail_from = self.mail_address_from
+        self.getEmailTool().sendEmail(content, email, mail_from, subject)
 
     def sendFeedbackEmail(self, p_to, p_username, p_email, p_comments):
         #sends a feedback email
