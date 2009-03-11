@@ -23,9 +23,9 @@
 		</h1>
 		<div class="entry-metadata">
 			<span class="entry-comments"><strong><span i18n:translate="">Comments</span>:</strong> <a href="#comments" tal:content="here/count_comments" /></span>
-			<span tal:replace="python:here.utShowDateTime(here.releasedate)" class="postdate" /> - <a tal:define="author python:here.getAuthenticationTool().getUserFullNameByID(here.contributor); parent here/getParentNode" 
-					tal:attributes="href string:${parent/absolute_url}?author=${here/contributor}" tal:content="author" class="postauthor" /> 
-				
+			<span tal:replace="python:here.utShowDateTime(here.releasedate)" class="postdate" /><tal:block condition="here/display_contributor"> - <a tal:define="author python:here.getAuthenticationTool().getUserFullNameByID(here.contributor); parent here/getParentNode"
+					tal:attributes="href string:${parent/absolute_url}?author=${here/contributor}" tal:content="author" class="postauthor" /></tal:block>
+
 			<br />
 			<span class="entry-tags" tal:condition="here/keywords"><strong><span i18n:translate="">Tags</span>:</strong> <tal:block repeat="k here/keywords"><a tal:define="parent here/getParentNode" tal:attributes="href string:${parent/absolute_url}?tag=${k}" tal:content="k" /> </tal:block></span><br />
 		</div>
