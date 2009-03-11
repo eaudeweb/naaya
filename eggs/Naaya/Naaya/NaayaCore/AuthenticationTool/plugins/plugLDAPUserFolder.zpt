@@ -10,18 +10,18 @@ function setupWin(url, theWidth, theHeight)
 }
 
 function emptyLocation()
-{    if (document.userRoles.loc[0].checked == true) document.userRoles.location.value = '';}
+{	if (document.userRoles.loc[0].checked == true) document.userRoles.location.value = '';}
 
 function pickLocation()
-{    document.userRoles.loc[1].checked = true;}
+{	document.userRoles.loc[1].checked = true;}
 
 function createKey(key)
-{    document.userRoles.location.value = key;}
+{	document.userRoles.location.value = key;}
 
 function fPickRoles(url)
 {
-    var wnd = window.open(url, "pickroles", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
-    wnd.focus();
+	var wnd = window.open(url, "pickroles", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
+	wnd.focus();
 }
 
 function fSetRoles(role, dn)
@@ -30,15 +30,15 @@ function fSetRoles(role, dn)
 var isSelected = false;
 function toggleSelect()
 {   var frm = document.frmRevoke;
-    var i;
-    if (isSelected == false)
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'roles') frm.elements[i].checked = true;
-        isSelected = true;}
-    else
-    {   for(i=0; i<frm.elements.length; i++)
-            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'roles') frm.elements[i].checked = false;
-        isSelected = false;}
+	var i;
+	if (isSelected == false)
+	{   for(i=0; i<frm.elements.length; i++)
+			if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'roles') frm.elements[i].checked = true;
+		isSelected = true;}
+	else
+	{   for(i=0; i<frm.elements.length; i++)
+			if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'roles') frm.elements[i].checked = false;
+		isSelected = false;}
 }
 //-->
 </script>
@@ -62,7 +62,7 @@ function toggleSelect()
 	vertical-align: middle;
 	/*display: block; margin-top: 30px;	border: 1px solid red; background-color: #e8e8e8;*/
 
-	
+
 	padding: 3px;
 }
 
@@ -75,11 +75,11 @@ function toggleSelect()
 
 
 <tal:block define="user_folder python:here.getUserFolder();
-		    skey python:request.get('skey', 'user');
-		    rkey python:request.get('rkey', 0);
-		    id python:request.get('id', 0);
-		    site_path python:here.getSitePath();
-		    source_id python:request.get('id', '')">
+			skey python:request.get('skey', 'user');
+			rkey python:request.get('rkey', 0);
+			id python:request.get('id', 0);
+			site_path python:here.getSitePath();
+			source_id python:request.get('id', '')">
 
 <string tal:replace="python:here.deleteCache(user_folder)" />
 <p>
@@ -91,69 +91,69 @@ function toggleSelect()
 <form method="post" tal:attributes="action string:${here/absolute_url}/revokeUserRoles" name="frmRevoke">
 <table border="0" cellspacing="2" cellpadding="2" class="admin_table">
 	<tr>
-	    <tal:block tal:condition="python:skey=='user'">
+		<tal:block tal:condition="python:skey=='user'">
 		<th width="10%">
-		    <a title="Sorted - Click to reverse" rel="nofollow" style="color:white;"
+			<a title="Sorted - Click to reverse" rel="nofollow" style="color:white;"
 			tal:attributes="href python:test(rkey==0, '%s/admin_sources_html?id=%s&skey=user&rkey=1' % (site_path, id), '%s/admin_sources_html?id=%s&skey=user' % (site_path, id))">User</a>
 		</th>
-	    </tal:block>
-	    <tal:block tal:condition="python:skey!='user'">
+		</tal:block>
+		<tal:block tal:condition="python:skey!='user'">
 		<th width="10%">
-		    <a title="Sortable" rel="nofollow" style="color:white;"
+			<a title="Sortable" rel="nofollow" style="color:white;"
 			tal:attributes="href string:${site_path}/admin_sources_html?id=${id}&skey=user">User</a>
 		</th>
-	    </tal:block>
-	    <tal:block tal:condition="python:skey=='cn'">
+		</tal:block>
+		<tal:block tal:condition="python:skey=='cn'">
 		<th width="20%">
-		    <a title="Sorted - Click to reverse" rel="nofollow" style="color:white;"
+			<a title="Sorted - Click to reverse" rel="nofollow" style="color:white;"
 			tal:attributes="href python:test(rkey==0, '%s/admin_sources_html?id=%s&skey=cn&rkey=1' % (site_path, id), '%s/admin_sources_html?id=%s&skey=cn' % (site_path, id))">Canonical Name</a>
 		</th>
-	    </tal:block>
-	    <tal:block tal:condition="python:skey!='cn'">
+		</tal:block>
+		<tal:block tal:condition="python:skey!='cn'">
 		<th width="20%">
-		    <a title="Sortable" rel="nofollow" style="color:white;"
+			<a title="Sortable" rel="nofollow" style="color:white;"
 			tal:attributes="href string:${site_path}/admin_sources_html?id=${id}&skey=cn">Canonical Name</a>
 		</th>
-	    </tal:block>
-	    <tal:block tal:condition="python:skey=='group'">
+		</tal:block>
+		<tal:block tal:condition="python:skey=='group'">
 		<th width="20%">
-		    <a title="Sorted - Click to reverse" rel="nofollow" style="color:white;"
+			<a title="Sorted - Click to reverse" rel="nofollow" style="color:white;"
 			tal:attributes="href python:test(rkey==0, '%s/admin_sources_html?id=%s&skey=group&rkey=1' % (site_path, id), '%s/admin_sources_html?id=%s&skey=group' % (site_path, id))">Group</a>
 		</th>
-	    </tal:block>
-	    <tal:block tal:condition="python:skey!='group'">
+		</tal:block>
+		<tal:block tal:condition="python:skey!='group'">
 		<th width="20%">
-		    <a title="Sortable" rel="nofollow" style="color:white;"
+			<a title="Sortable" rel="nofollow" style="color:white;"
 			tal:attributes="href string:${site_path}/admin_sources_html?id=${id}&skey=group">Group</a>
 		</th>
-	    </tal:block>
-	    <th width="35%"><input type="checkbox" name="select_all" onclick="javascript:toggleSelect();" title="Select/Deselect All" /> Roles</th>
-	    <th width="*">Location</th>
+		</tal:block>
+		<th width="35%"><input type="checkbox" name="select_all" onclick="javascript:toggleSelect();" title="Select/Deselect All" /> Roles</th>
+		<th width="*">Location</th>
 	</tr>
 	<tr tal:define="users_roles python:here.getSortedUserRoles(skey, rkey)"
-		tal:repeat="user python:users_roles" 
+		tal:repeat="user python:users_roles"
 		tal:attributes="class python:test(path('repeat/user/odd'), 'odd', 'even')">
 		<td style="vertical-align: top" tal:content="python:user[0]" />
 		<td style="vertical-align: top" tal:content="python:user[1]" />
 		<td style="vertical-align: top" tal:content="python:user[2]" />
 		<td colspan="2" style="vertical-align: top">
-		    <table border="0" cellspacing="0" cellpadding="0" tal:define="roles python:user[3]">
+			<table border="0" cellspacing="0" cellpadding="0" tal:define="roles python:user[3]">
 			<tr tal:repeat="role roles">
-			    <td style="vertical-align: top" width="2%" tal:condition="python:role[0] != []">
+				<td style="vertical-align: top" width="2%" tal:condition="python:role[0] != []">
 				<input type="checkbox" name="roles" tal:attributes="value python:'%s||%s' % (user[0],role[1])" />
-			    </td>
-			    <td width="75%" tal:condition="python:role[0] != []">
+				</td>
+				<td width="75%" tal:condition="python:role[0] != []">
 				<span tal:replace="python:here.utJoinToString(role[0], ', ')">roles</span>
-			    </td>
-			    <td width="*" tal:condition="python:role[0] != []">
+				</td>
+				<td width="*" tal:condition="python:role[0] != []">
 				<span tal:condition="python:role[1] == ''">Zope</span>
 				<span tal:condition="python:role[1] != ''" tal:define="obj_title python:here.utGetObject(role[1]).title_or_id()">
-				    <a tal:attributes="href python:here.utGetObject(role[1]).absolute_url()" tal:content="obj_title"/>
+					<a tal:attributes="href python:here.utGetObject(role[1]).absolute_url()" tal:content="obj_title"/>
 				</span>
-			    </td>
+				</td>
 			</tr>
-		    </table>
-		</td>		
+			</table>
+		</td>
 	</tr>
 </table>
 <p><input type="submit" value="Revoke selected roles" /></p>
@@ -251,6 +251,10 @@ function toggleSelect()
 			<input type=text name="location" size="50" onclick="pickLocation();" value="" />
 			<input type="button" value="Pick" tal:attributes="onclick string:javascript:setupWin('${here/getAuthenticationToolPath}/sitemap', 400, 500);" />
 		</td>
+	</tr>
+	<tr>
+		<td><label for="send_mail" i18n:translate="">Send notification email to selected user(s)</label></td>
+		<td><input type="checkbox" id="send_mail" name="send_mail" checked="checked" /></td>
 	</tr>
 </table>
 <p>

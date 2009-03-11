@@ -91,7 +91,7 @@ class PlugBase(SimpleItem):
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
-    def addUserRoles(self, name='', roles='', loc='allsite', location='', user_location='', REQUEST=None):
+    def addUserRoles(self, name='', roles='', loc='allsite', location='', user_location='', send_mail='', REQUEST=None):
         """ """
         site = self.getSite()
         auth_tool = site.getAuthenticationTool()
@@ -105,12 +105,13 @@ class PlugBase(SimpleItem):
         #assing roles
         for n in name:
             location.manage_setLocalRoles(n, roles)
-            try:
-                email = auth_tool.getUsersEmails([n])[0]
-                fullname = auth_tool.getUsersFullNames([n])[0]
-                site.sendAccountCreatedEmail(fullname, email, n, REQUEST)
-            except:
-                pass
+            if send_mail:
+                try:
+                    email = auth_tool.getUsersEmails([n])[0]
+                    fullname = auth_tool.getUsersFullNames([n])[0]
+                    site.sendAccountModifiedEmail(email, roles, loc, location)
+                except:
+                    pass
             try:
                 self.setUserLocation(n, user_location)
                 self.setUserCanonicalName(n, self.buffer[n])
