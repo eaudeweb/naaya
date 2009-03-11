@@ -2996,8 +2996,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if type(roles) != type([]): roles = [roles]
         roles = ', '.join(roles)
         #append roles location
-        if loc == "other": roles = "%s locally in %s." % (roles, location)
-        if loc == "allsite": roles = "%s for the entire portal." % roles
+        if loc == "other" and location:
+            roles = "%s locally in %s." % (roles, location)
+        else:
+            roles = "%s for the entire portal." % roles
 
         #construct mail
         subject = email_template.title
