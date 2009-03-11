@@ -46,7 +46,7 @@ function createKey(key)
 
 <p class="page-description" i18n:translate="">
 	This page displays the existing users in the portal and their corresponding roles.
-	You can revoke a role prior assigned to a user by ticking in the appropiate check box 
+	You can revoke a role prior assigned to a user by ticking in the appropiate check box
 	and clicking on the Revoke selected roles button.
 </p>
 
@@ -56,7 +56,7 @@ function createKey(key)
 	<th width="20%" i18n:translate="">User</th>
 	<th width="35%" i18n:translate="">Roles/Location</th>
 </tr>
-<tr tal:define="users_roles user_tool/getUsersRoles" tal:repeat="user python:users_roles.keys()" 
+<tr tal:define="users_roles user_tool/getUsersRoles" tal:repeat="user python:users_roles.keys()"
 	tal:attributes="class python:test(path('repeat/user/odd'), 'row-odd', 'row-even')">
 	<td valign="top" tal:content="user">user</td>
 	<td colspan="2" valign="top">
@@ -121,6 +121,10 @@ function createKey(key)
 		<input type=text name="location" size="40" onclick="pickLocation();" value="" />
 		<input type="button" value="Pick" i18n:translate="" tal:define="acl_users_path user_tool/absolute_url" tal:attributes="onclick string:setupWin('${acl_users_path}/sitemap', 300, 500);;" />
 	</td>
+</tr>
+<tr>
+    <td><label for="send_mail" i18n:translate="">Send notification email to selected user(s)</label></td>
+    <td><input type="checkbox" id="send_mail" name="send_mail" checked="checked" /></td>
 </tr>
 </table>
 <p>
