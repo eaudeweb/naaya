@@ -120,6 +120,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     portlets_manager,
     networkportals_manager):
     """ """
+    display_contributor = "on"
 
     meta_type = METATYPE_NYSITE
     icon = 'misc_/Naaya/Site.gif'
@@ -169,6 +170,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.mail_server_port = DEFAULT_MAILSERVERPORT
         self.recaptcha_public_key = ''
         self.recaptcha_private_key = ''
+        self.display_contributor = "on"
         # The email address (must exist) from which the email tool sends mails
         self.mail_address_from = ''
         self.administrator_email = ''
@@ -1999,6 +2001,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         self.recaptcha_public_key   = kwargs.get('recaptcha_public_key', '')
         self.recaptcha_private_key  = kwargs.get('recaptcha_private_key', '')
         self.switch_language        = kwargs.get('switch_language', 0)
+        self.display_contributor    = kwargs.get('display_contributor', '')
 
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
