@@ -32,7 +32,7 @@ function init() {
 
 	document.forms[0].href.value = tinyMCE.getWindowArg('href');
 	document.forms[0].linktitle.value = tinyMCE.getWindowArg('title');
-	document.forms[0].insert.value = tinyMCE.getLang('lang_' + tinyMCE.getWindowArg('action'), 'Insert', true); 
+	document.forms[0].insert.value = tinyMCE.getLang('lang_' + tinyMCE.getWindowArg('action'), 'Insert', true);
 
 	addClassesToList('styleSelect', 'theme_advanced_link_styles');
 	selectByValue(formObj, 'styleSelect', tinyMCE.getWindowArg('className'), true);
@@ -69,6 +69,11 @@ function insertLink() {
 	var title = document.forms[0].linktitle.value;
 	var style_class = document.forms[0].styleSelect ? document.forms[0].styleSelect.value : "";
 	var dummy;
+
+	var server_url = tinyMCE.getParam('server_url');
+	if (href.indexOf(server_url) == 0) {
+			href = href.slice(server_url.length)
+		}
 
 	if (target == '_self')
 		target = '';

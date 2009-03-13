@@ -11,11 +11,11 @@
 #The Original Code is "GeoMapTool"
 #
 #The Initial Owner of the Original Code is European Environment
-#Agency (EEA). Portions created by Eau de Web are Copyright (C) 
+#Agency (EEA). Portions created by Eau de Web are Copyright (C)
 #2007 by European Environment Agency. All Rights Reserved.
 #
 #Contributor(s):
-#  Original Code: 
+#  Original Code:
 #        Cornel Nitu (Eau de Web)
 
 """
@@ -134,6 +134,7 @@ class EditorTool(Folder):
         params = []
         params.append('elements:"%s"' % element)
         params.append('language:"%s"' % lang)
+        params.append('server_url:"%s"' % self.REQUEST.get('BASE0', ''))
         if self.isRTL(lang):
             params.append('directionality:"rtl"')
         # TODO for Python 2.4: use generator comprehension
