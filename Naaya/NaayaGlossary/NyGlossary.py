@@ -47,6 +47,9 @@ from Products.NaayaGlossary.parsers.subjects_parser     import subjects_parser
 from Products.NaayaGlossary.parsers.stop_words_parser   import stop_words_parser
 from Products.NaayaGlossary.parsers.import_parsers      import glossary_export
 
+#Naaya imports
+from Products.NaayaCore.managers.utils import genObjectId
+
 #constants
 LABEL_OBJECT = 'Glossary'
 
@@ -72,6 +75,8 @@ def manage_addGlossaryCentre(self, id, title='', parent_anchors=False, REQUEST=N
 class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     """ NyGlossary """
 
+    __alphabets_cache = {}
+    parent_anchors = False
     meta_type =     NAAYAGLOSSARY_CENTRE_METATYPE
     meta_label = LABEL_OBJECT
     product_name =  NAAYAGLOSSARY_PRODUCT_NAME
@@ -93,13 +98,6 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 #Map alphabetical,              'action':'map_alphabetical_html'
 #Map structural,                'action':'map_structural_html'
 
-    def __setstate__(self,state):
-        """ """
-        NyGlossary.inheritedAttribute('__setstate__')(self, state)
-        if not hasattr(self, '__alphabets_cache'):
-            self.__alphabets_cache = {}
-        if not hasattr(self, 'parent_anchors'):
-            self.parent_anchors = False
 
     security = ClassSecurityInfo()
 
@@ -247,6 +245,13 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             if subj_info['code'] == code:
                 self.subjects_list.remove(subj_info)
 
+    def update_subject_in_list(self, old_code, code, name):
+        """ finds the subject with the given code and updates its data """
+        for subj in self.subjects_list:
+            if subj['code'] == old_code:
+                subj['code'] = code
+                subj['name'] = name
+
     def get_subject_by_name(self, names):
         """ return corresponding codes """
         results = []
@@ -298,6 +303,53 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 self.del_subject_from_list(subj)
             self._p_changed = 1
         if REQUEST: return REQUEST.RESPONSE.redirect('themes_html?tab=0&amp;save=ok')
+
+    def addTheme(self, code='', name=''):
+        """ Add a new theme with the given code and name """
+        code, name = string.strip(code), string.strip(name)
+        if not name:
+            return self.REQUEST.RESPONSE.redirect('index_html')
+        if not code:
+            code = genObjectId(name)
+        if not code in [subj['code'] for subj in self.subjects_list]:
+            self.set_subjects_list(code, name)
+            self._p_changed = 1
+            self.setSessionInfo(['Theme added.'])
+        else:
+            self.setSessionErrors(["Code already exists."])
+        return self.REQUEST.RESPONSE.redirect('index_html')
+
+    def deleteThemes(self, ids=[]):
+        """ Delete the themes with the given ids """
+        if not ids or len(ids) == 0:
+            return self.REQUEST.RESPONSE.redirect('index_html')
+        for subj in self.utConvertToList(ids):
+            self.del_subject_from_list(subj)
+        self._p_changed = 1
+        self.setSessionInfo(['Themes deleted.'])
+        return self.REQUEST.RESPONSE.redirect('index_html')
+
+    def updateTheme(self, old_code='', code='', name='', lang_codes=[], translations=[]):
+        """ Change theme name or code """
+        code, name = string.strip(code), string.strip(name)
+        if not code or not name:
+            return self.REQUEST.RESPONSE.redirect('index_html')
+        if code == old_code:
+            self.update_subject_in_list(old_code, code, name)
+            self._p_changed = 1
+            for lang in lang_codes:
+                self.manageDefinitionTranslations(code, lang, translations[lang_codes.index(lang)])
+            self.setSessionInfo(['Saved changes.'])
+        elif code != old_code and not code in [subj['code'] for subj in self.subjects_list]:
+            self.update_subject_in_list(old_code, code, name)
+            self._p_changed = 1
+            for lang in lang_codes:
+                self.manageDefinitionTranslations(code, lang, translations[lang_codes.index(lang)])
+            self.setSessionInfo(['Saved changes.'])
+        else:
+            self.setSessionErrors(["Code already exists."])
+            return self.REQUEST.RESPONSE.redirect('index_html?code=%s' % old_code)
+        return self.REQUEST.RESPONSE.redirect('index_html')
 
     #########################
     #   THEME TRANSLATIONS  #
@@ -498,7 +550,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     def get_all_objects(self, path=''):
         """ return sorted objects by name """
         return self.cu_get_cataloged_objects(meta_type=[NAAYAGLOSSARY_ELEMENT_METATYPE], sort_on='id', sort_order='', path=path)
-        
+
     def get_all_elements(self):
         """ return sorted objects by name """
         return self.cu_get_cataloged_objects(meta_type=[NAAYAGLOSSARY_ELEMENT_METATYPE,], sort_on='id', sort_order='')
@@ -635,7 +687,6 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     ######################
     def __getGlossMap(self, root, showitems, expand, depth):
         """ returns the site map tree """
-        #print showitems
         l_tree = []
         if root is self:
             l_folders = root.folder_list_sorted()
@@ -787,7 +838,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     main_search_html =      PageTemplateFile('zpt/NaayaGlossary/main_search', globals())
     search_html =           PageTemplateFile('zpt/NaayaGlossary/search_box', globals())
     search_help_html =      PageTemplateFile('zpt/NaayaGlossary/search_help', globals())
-    index_html =            PageTemplateFile('zpt/NaayaGlossary/map_structural', globals())
+    index_html =            PageTemplateFile('zpt/NaayaGlossary/index', globals())
 
     #maps pages
     GlossMap_html =         PageTemplateFile("zpt/NaayaGlossary/GlossMap", globals())
