@@ -48,6 +48,7 @@ def manage_addGlossaryFolder(self, id, title='', subjects=[], source='', contrib
     fld_obj = self._getOb(id)
     fld_obj.subjects = self.get_subject_by_codes(subjects)
     fld_obj.load_translations_list()
+    fld_obj.set_default_translation()
 
     if REQUEST: return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -69,12 +70,12 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
                 )
 
     meta_types = (
-        {'name': NAAYAGLOSSARY_ELEMENT_METATYPE, 
-        'action': 'manage_addGlossaryElement_html', 
+        {'name': NAAYAGLOSSARY_ELEMENT_METATYPE,
+        'action': 'manage_addGlossaryElement_html',
         'product': NAAYAGLOSSARY_PRODUCT_NAME
         },
-        {'name': NAAYAGLOSSARY_FOLDER_METATYPE, 
-        'action': 'manage_addGlossaryFolder_html', 
+        {'name': NAAYAGLOSSARY_FOLDER_METATYPE,
+        'action': 'manage_addGlossaryFolder_html',
         'product': NAAYAGLOSSARY_PRODUCT_NAME
         },)
 
@@ -180,10 +181,17 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
         """ set the languages """
         setattr(self, language, translation)
 
-    def load_translations_list (self):
+    def load_translations_list(self):
         """ load languages """
         for lang in self.get_english_names():
             setattr(self, lang, '')
+
+    def set_default_translation(self):
+        current_language = self.gl_get_selected_language()
+        language_name = self.gl_get_language_name(current_language)
+        glossary_languages = self.get_english_names()
+        if language_name in glossary_languages:
+            self.set_translations_list(language_name, self.title)
 
     def manageFolderTranslations(self, lang_code='', translation='', REQUEST=None):
         """ save translation for a language """

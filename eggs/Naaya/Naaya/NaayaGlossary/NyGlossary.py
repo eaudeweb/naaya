@@ -219,6 +219,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         """ return the glossary catalog object """
         return self._getOb(NAAYAGLOSSARY_CATALOG_NAME)
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'manageBasicProperties')
     def manageBasicProperties(self, title='', approved=0, parent_anchors=0, REQUEST=None):
         """ manage basic properties for NyGlossary """
         self.title =        title
@@ -235,16 +236,19 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         self.utSortListOfDictionariesByKey(self.subjects_list, 'code')
         return self.subjects_list
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'set_subjects_list')
     def set_subjects_list(self, code, name):
         """ set the subjects """
         self.subjects_list.append({'code':code, 'name':name})
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'del_subject_from_list')
     def del_subject_from_list(self, code):
         """ remove a subjects from list """
         for subj_info in self.subjects_list:
             if subj_info['code'] == code:
                 self.subjects_list.remove(subj_info)
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'update_subject_in_list')
     def update_subject_in_list(self, old_code, code, name):
         """ finds the subject with the given code and updates its data """
         for subj in self.subjects_list:
@@ -278,6 +282,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 ret = 0
         return ret
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'manageThemesProperties')
     def manageThemesProperties(self, ids=[], old_code='', code='', name='', REQUEST=None):
         """ manage subjects for NyGlossary """
         if self.utAddObjectAction(REQUEST):
@@ -304,11 +309,12 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             self._p_changed = 1
         if REQUEST: return REQUEST.RESPONSE.redirect('themes_html?tab=0&amp;save=ok')
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'addTheme')
     def addTheme(self, code='', name=''):
         """ Add a new theme with the given code and name """
         code, name = string.strip(code), string.strip(name)
         if not name:
-            return self.REQUEST.RESPONSE.redirect('index_html')
+            return self.REQUEST.RESPONSE.redirect('index_themes_html')
         if not code:
             code = genObjectId(name)
         if not code in [subj['code'] for subj in self.subjects_list]:
@@ -317,23 +323,25 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             self.setSessionInfo(['Theme added.'])
         else:
             self.setSessionErrors(["Code already exists."])
-        return self.REQUEST.RESPONSE.redirect('index_html')
+        return self.REQUEST.RESPONSE.redirect('index_themes_html')
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'deleteThemes')
     def deleteThemes(self, ids=[]):
         """ Delete the themes with the given ids """
         if not ids or len(ids) == 0:
-            return self.REQUEST.RESPONSE.redirect('index_html')
+            return self.REQUEST.RESPONSE.redirect('index_themes_html')
         for subj in self.utConvertToList(ids):
             self.del_subject_from_list(subj)
         self._p_changed = 1
         self.setSessionInfo(['Themes deleted.'])
-        return self.REQUEST.RESPONSE.redirect('index_html')
+        return self.REQUEST.RESPONSE.redirect('index_themes_html')
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'updateTheme')
     def updateTheme(self, old_code='', code='', name='', lang_codes=[], translations=[]):
         """ Change theme name or code """
         code, name = string.strip(code), string.strip(name)
         if not code or not name:
-            return self.REQUEST.RESPONSE.redirect('index_html')
+            return self.REQUEST.RESPONSE.redirect('index_themes_html')
         if code == old_code:
             self.update_subject_in_list(old_code, code, name)
             self._p_changed = 1
@@ -348,8 +356,9 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             self.setSessionInfo(['Saved changes.'])
         else:
             self.setSessionErrors(["Code already exists."])
-            return self.REQUEST.RESPONSE.redirect('index_html?code=%s' % old_code)
-        return self.REQUEST.RESPONSE.redirect('index_html')
+            return self.REQUEST.RESPONSE.redirect('index_themes_html?code=%s' % old_code)
+        return self.REQUEST.RESPONSE.redirect('index_themes_html')
+
 
     #########################
     #   THEME TRANSLATIONS  #
@@ -497,6 +506,41 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             self._p_changed = 1
         if REQUEST: return REQUEST.RESPONSE.redirect('languages_html?save=ok')
 
+    def addLanguage(self, english_name='', lang=''):
+        """ """
+        if string.strip(lang)=='' or string.strip(english_name)=='':
+            self.setSessionErrors(["Please specify language name and code."])
+            return self.REQUEST.RESPONSE.redirect('index_languages_html')
+        else:
+            if self.check_language_exists(english_name):
+                self.set_languages_list(lang, english_name)
+                self.updateObjectsByLang(english_name)
+
+                try:
+                    catalog_obj = self.getGlossaryCatalog()
+                    index_extra = record()
+                    index_extra.default_encoding = 'utf-8'
+                    try:    catalog_obj.manage_addIndex(self.cookCatalogIndex(english_name), 'TextIndexNG2',index_extra)
+                    except: pass
+                except: pass
+
+                self._p_changed = 1
+            else:
+                self.setSessionErrors(["Language already exists."])
+                return self.REQUEST.RESPONSE.redirect('index_languages_html')
+        self.setSessionInfo(['Saved changes.'])
+        return self.REQUEST.RESPONSE.redirect('index_languages_html')
+
+    def deleteLanguages(self, ids=[]):
+        """ """
+        if not ids or len(ids) == 0:
+            return self.REQUEST.RESPONSE.redirect('index_languages_html')
+        for english_name in self.utConvertToList(ids):
+            self.del_language_from_list(english_name)
+        self._p_changed = 1
+        return self.REQUEST.RESPONSE.redirect('index_languages_html')
+
+
     ######################################
     # GLOSSARY ADMINISTRATION FUNCTIONS  #
     ######################################
@@ -515,6 +559,9 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         for obj in self.cu_get_cataloged_objects(meta_type=[NAAYAGLOSSARY_ELEMENT_METATYPE], sort_on='id', sort_order='', path=path):
             if obj.is_published(): append(obj)
         return lst_published
+
+    def checkPermissionManageGlossary(self):
+        return self.checkPermission(PERMISSION_MANAGE_NAAYAGLOSSARY)
 
     ######################################
     # GLOSSARY FUNCTIONALITIES FUNCTIONS #
@@ -624,6 +671,23 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                             elem_ob.cu_recatalog_object(elem_ob)
             obj.emptyObject()
         if REQUEST: return REQUEST.RESPONSE.redirect('import_html')
+
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'terms_import')
+    def terms_import(self, format='', file=None):
+        """ """
+        if format == 'xliff':
+            self.xliff_import(file, self.REQUEST)
+        elif format == 'tmx':
+            self.tmx_import(file, self.REQUEST)
+
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'terms_export')
+    def terms_export(self, format='', language='', published=0):
+        """ """
+        if format == 'xliff':
+            return self.xliff_export(language=language, published=published, REQUEST=self.REQUEST)
+        elif format == 'tmx':
+            return self.tmx_export(published=published, REQUEST=self.REQUEST)
+
 
     #####################
     #   SKOS Functions  #
@@ -838,13 +902,26 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     main_search_html =      PageTemplateFile('zpt/NaayaGlossary/main_search', globals())
     search_html =           PageTemplateFile('zpt/NaayaGlossary/search_box', globals())
     search_help_html =      PageTemplateFile('zpt/NaayaGlossary/search_help', globals())
-    index_html =            PageTemplateFile('zpt/NaayaGlossary/index', globals())
 
     #maps pages
     GlossMap_html =         PageTemplateFile("zpt/NaayaGlossary/GlossMap", globals())
     map_structural_html =   PageTemplateFile("zpt/NaayaGlossary/map_structural", globals())
     GlossMapAlph_html =     PageTemplateFile("zpt/NaayaGlossary/GlossMapAlph", globals())
     map_alphabetical_html = PageTemplateFile("zpt/NaayaGlossary/map_alphabetical", globals())
+
+    #unified index
+    index_html =            PageTemplateFile('zpt/NaayaGlossary/index', globals())
+    index_themes_html =     PageTemplateFile('zpt/NaayaGlossary/index_themes', globals())
+    index_languages_html =  PageTemplateFile('zpt/NaayaGlossary/index_languages', globals())
+    index_approvals_html =  PageTemplateFile('zpt/NaayaGlossary/index_approvals', globals())
+    index_impexp_html =     PageTemplateFile('zpt/NaayaGlossary/index_import_export', globals())
+    index_properties_html = PageTemplateFile('zpt/NaayaGlossary/index_properties', globals())
+
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'index_themes_html')
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'index_languages_html')
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'index_approvals_html')
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'index_impexp_html')
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'index_properties_html')
 
 InitializeClass(NyGlossary)
 
