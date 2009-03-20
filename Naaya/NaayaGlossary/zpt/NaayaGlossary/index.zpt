@@ -1,83 +1,94 @@
 <span tal:replace="structure here/standard_html_header"/>
-<tal:block define="current_tab python:here.utConvertToInt(request.get('tab', '0'))">
-	<h1>Themes management</h1>
+<script language="JavaScript">
+function fTreeClick(expand)
+{
+    document.frmGlossMap.action = '';
+    document.frmGlossMap.expand.value = expand;
+    document.frmGlossMap.submit();
+}
+</script>
+<div id="tabbedmenu" tal:condition="here/checkPermissionManageGlossary">
+<ul>
+    <li id="currenttab"><a tal:attributes="href here/absolute_url">View</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_properties_html">Properties</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_languages_html">Languages</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_themes_html">Themes</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_impexp_html">Import/Export</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_approvals_html">Basket of approvals</a></li>
+</ul>
+</div>
+<div class="cleaner"/>
+<h1 tal:content="here/title_or_id"/>
 
-    <p>You can click a theme code to edit its properties and translations.</p>
-    <tal:block define=" record_code python:request.get('code', ''); subjects here/get_subjects_list">
-        <form name="frmSubjectsDelete" action="deleteThemes" method="post">
-            <input type="submit" name="delete" value="Delete"/>
-            <table class="datatable">
-                <tr>
-                    <th width="1%"/>
-                    <th width="30%">Code</th>
-                    <th>Name</th>
-                </tr>
+<tal:block define="	selected_lang python:request.get('lang', here.getSelectedLang());
+					isArabic here/isArabicLanguage;
+					noArabic not:isArabic;
+					skin_path python:here.getLayoutTool().getSkinFilesPath();
+					ctrl python:request.get('ctrl', '')">
 
-                <tal:block repeat="item subjects">
-                    <tr>
-                        <td> <input type="checkbox" name="ids" tal:attributes="value python:item['code']"> </td>
-                        <td> <a tal:content=" python:item['code']"
-                                tal:define="item_code  python:item['code']"
-                                tal:attributes="href string:index_html?code=${item_code}" /> </td>
-                        <td tal:content=" python:item['name']" />
-                    </tr>
-                </tal:block>
+	<a href="javascript:fTreeClick('all')">Expand all</a>
+	<a href="javascript:fTreeClick('')">Collapse all</a>
+	<br /><br />
 
-                <tr tal:condition="python:not len(subjects)">
-                    <td colspan="3"><strong>No themes defined</strong></td>
-                </tr>
-            </table>
-        </form>
+	<tal:block tal:define="expand python:request.get('expand', '');
+				tree python:here.getStructMap(here.splitToList(expand), None, 1);
+				expand python:here.getSiteMapTrail(expand, tree);
+				expand_list python:here.splitToList(expand)">
 
-        <form name="frmSubjectsAdd" action="addTheme" method="post">
-            <fieldset tal:condition="python:record_code == ''">
-                <legend>Add theme</legend>
-                    <label for="theme_name">Name</label>
-                    <input type="text" id="theme_name" name="name" size="50"/>
-                    <input type="submit" name="add" value="Add"/>
-            </fieldset>
-        </form>
+	<form name="frmGlossMap" method="post" action="">
+	<table>
+		<tr tal:repeat="tree_node tree">
+			<td tal:define="lang python:here.get_language_by_code(selected_lang); item python:tree_node[0]; translation python:item.get_translation_by_language(lang); translation_java python:item.get_translation_by_language(lang).replace('\'', '\\\'')">
+				<table>
+					<tr>
+						<td>
+							<img tal:repeat="i python:range(0, tree_node[2])"
+								 src="misc_/NaayaGlossary/square.gif" alt="Square" title="Square" />
+							<tal:block tal:condition="python:tree_node[1]==-1">
+								<img src="misc_/NaayaGlossary/square.gif" alt="Square" title="Square" />
+							</tal:block>
+							<tal:block
+								tal:define="node_expand python:here.structCollapse(expand_list, item.absolute_url(1))"
+								tal:condition="python:tree_node[1]==0">
+								<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')">
+									<img src="misc_/NaayaGlossary/minus.gif" alt="Collapse" title="Collapse" />
+								</a>
+							</tal:block>
+							<tal:block
+								tal:define="node_expand python:here.structExpand(expand_list, item.absolute_url(1))"
+								tal:condition="python:tree_node[1]==1">
+								<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')">
+									<img src="misc_/NaayaGlossary/plus.gif" alt="Expand" title="Expand" />
+								</a>
+							</tal:block>
+						</td>
 
-            <tal:block tal:condition="python:record_code">
-                <fieldset tal:define="record python:here.getThemeByCode(record_code)">
-                    <legend>Update theme</legend>
-                    <form name="frmSubjectsUpdate" action="updateTheme" method="post">
-                        <input type="hidden" name="old_code" tal:attributes="value python:record['code']"/>
-                        <div class="field">
-                            <label for="theme_code">Code</label>
-                            <input type="text" id="theme_code" name="code" size="50" tal:attributes="value python:record['code']"/>
-                        </div>
-                        <div class="field">
-                            <label for="theme_name">Name</label>
-                            <input type="text" id="theme_name" name="name" size="50" tal:attributes="value python:record['name']"/>
-                        </div>
-                        <table class="datatable">
-                            <tr>
-                                <th>Language</th>
-                                <th>Translation</th>
-                                <th>Change translation</th>
-                            </tr>
+						<td>
+							<img tal:attributes="src python:item.icon;
+															alt python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type);
+															title python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type)" />
+						</td>
+						<td>
+							<a	tal:condition="python:item.utIsElement() and translation"
+								tal:define="node_path python:item.absolute_url()"
+								tal:attributes="href string:javascript:window.opener.fSet('${ctrl}', '${translation_java}');"
+								tal:content="translation" />
+							<span	tal:condition="python:not item.utIsElement() and translation"
+									tal:content="translation" />
+							<em	tal:condition="python:not translation" i18n:translate="" tal:content="string:${item/title_or_id} (no translation available)" />
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+	<input type="hidden" name="expand" tal:attributes="value expand" />
+	<input type="hidden" name="ctrl" tal:attributes="value ctrl" />
+	<input type="hidden" name="lang" tal:attributes="value selected_lang" />
+	</form>
 
-                            <tal:block repeat="language here/get_english_names">
-                                <tr tal:define="translation python:here.get_theme_trans_by_language(record['code'], language)">
-                                    <td>
-                                        <div>
-                                            <label tal:attributes="for string:cb-${language}" tal:content="language" />
-                                        </div>
-                                    </td>
-                                    <td tal:content="python:translation or '-'"> </td>
-                                    <td>
-                                        <input	type="text" name="translations:utf8:ustring:list" size="36" tal:attributes="value translation" />
-                                        <input	name="lang_codes:list" type="hidden" tal:attributes="value language" />
-                                        <input	name="th_code" type="hidden" tal:attributes="value record/code" />
-                                    </td>
-                                </tr>
-                            </tal:block>
-                        </table>
-                        <input type="submit" name="update" value="Update"/>
-                    </form>
-                </fieldset>
-            </tal:block>
-    </tal:block>
+	</tal:block>
+
 </tal:block>
+
 <span tal:replace="structure here/standard_html_footer"/>

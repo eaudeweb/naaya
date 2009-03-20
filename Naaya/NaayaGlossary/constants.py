@@ -28,6 +28,7 @@ NAAYAGLOSSARY_PATH =                Globals.package_home(globals())
 
 #permissions
 PERMISSION_ADD_NAAYAGLOSSARY =      'Add Naaya Glossary'
+PERMISSION_MANAGE_NAAYAGLOSSARY =   'Manage Naaya Glossary'
 
 #meta types
 NAAYAGLOSSARY_CENTRE_METATYPE =     'Naaya Glossary'

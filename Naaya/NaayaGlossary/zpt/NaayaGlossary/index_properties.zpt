@@ -1,0 +1,34 @@
+<span tal:replace="structure here/standard_html_header"/>
+<div id="tabbedmenu">
+<ul>
+    <li><a tal:attributes="href here/absolute_url">View</a></li>
+    <li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/index_properties_html">Properties</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_languages_html">Languages</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_themes_html">Themes</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_impexp_html">Import/Export</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_approvals_html">Basket of approvals</a></li>
+</ul>
+</div>
+<div class="cleaner"/>
+<h1>Glossary properties</h1>
+
+<form name="frmBasicProperties" action="manageBasicProperties" method="post">
+        <div class="field">
+            <label for="title">Title</label>
+            <input type="text" name="title:utf8:ustring" id="title" tal:attributes="value here/title" size="50" />
+        </div>
+
+        <div class="field">
+            <label for="approved">Approved</label>
+            <input type="checkbox" name="approved" id="approved" tal:attributes="checked here/approved" />
+        </div>
+
+        <div class="field">
+            <label for="selectable">Folders selectable</label>
+            <input type="checkbox" name="parent_anchors" id="selectable" tal:attributes="checked here/parent_anchors" />
+        </div>
+
+        <input type="submit" name="save" value="Save Changes">
+</form>
+
+<span tal:replace="structure here/standard_html_footer"/>

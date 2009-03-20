@@ -1,0 +1,35 @@
+<span tal:replace="structure here/standard_html_header"/>
+<div id="tabbedmenu">
+<ul>
+    <li><a tal:attributes="href here/absolute_url">View</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_properties_html">Properties</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_languages_html">Languages</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_themes_html">Themes</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_impexp_html">Import/Export</a></li>
+    <li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/index_approvals_html">Basket of approvals</a></li>
+</ul>
+</div>
+<div class="cleaner"/>
+<h1>Glossary basket of approvals</h1>
+
+<table class="datatable" tal:define="not_approved_list here/get_not_approved;
+                         selected_lang here/getSelectedLang;
+                         lang python:here.get_language_by_code(selected_lang)">
+	<tr>
+		<th>Name</th>
+		<th>Last modification</th>
+	</tr>
+
+	<tr tal:repeat="item not_approved_list"
+		tal:attributes='class python:test(path("repeat/item/odd"), "cellodd", "celleven")'>
+		<td tal:define="translation python:item.get_translation_by_language(lang)">
+            <a tal:attributes="href string:${item/absolute_url}/manage_workspace; title translation" tal:content="translation" />
+		</td>
+		<td> <span tal:replace="item/bobobase_modification_time" /> </td>
+	</tr>
+
+	<tr tal:condition="python:not not_approved_list">
+		<td colspan="2"><strong>No pending terms available</strong></td>
+	</tr>
+</table>
+<span tal:replace="structure here/standard_html_footer"/>
