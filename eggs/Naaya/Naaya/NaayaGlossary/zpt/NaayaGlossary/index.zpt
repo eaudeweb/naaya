@@ -1,15 +1,35 @@
 <span tal:replace="structure here/standard_html_header"/>
 <script language="JavaScript">
-function fTreeClick(expand)
-{
-    document.frmGlossMap.action = '';
-    document.frmGlossMap.expand.value = expand;
-    document.frmGlossMap.submit();
-}
+	function fTreeClick(expand) {
+	    document.frmGlossMap.action = '';
+
+		document.frmGlossMap.expand.value = expand;
+	    document.frmGlossMap.submit();
+	}
+
+	function show_folder_index(folder_url) {
+		document.frmGlossMap.item.value = folder_url;
+		document.frmGlossMap.submit();s
+	}
+
 </script>
+
+<style type="text/css">
+	#item_properties {
+		width: 50%;
+		float: right;
+		border: 1px solid black;
+	}
+
+	#glossary_mapping {
+		float: left;
+	}
+
+</style>
+
 <div id="tabbedmenu" tal:condition="here/checkPermissionManageGlossary">
 <ul>
-    <li id="currenttab"><a tal:attributes="href here/absolute_url">View</a></li>
+    <li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/index_html">View</a></li>
     <li><a tal:attributes="href string:${here/absolute_url}/index_properties_html">Properties</a></li>
     <li><a tal:attributes="href string:${here/absolute_url}/index_languages_html">Languages</a></li>
     <li><a tal:attributes="href string:${here/absolute_url}/index_themes_html">Themes</a></li>
@@ -24,70 +44,135 @@ function fTreeClick(expand)
 					isArabic here/isArabicLanguage;
 					noArabic not:isArabic;
 					skin_path python:here.getLayoutTool().getSkinFilesPath();
-					ctrl python:request.get('ctrl', '')">
-
-	<a href="javascript:fTreeClick('all')">Expand all</a>
-	<a href="javascript:fTreeClick('')">Collapse all</a>
-	<br /><br />
-
+					ctrl python:request.get('ctrl', '');
+					selected_item python:here.getGlossaryChild(request.get('item', ''))">
+	<p>
+		<a href="javascript:fTreeClick('all')">Expand all</a>
+		<a href="javascript:fTreeClick('')">Collapse all</a>
+	</p>
 	<tal:block tal:define="expand python:request.get('expand', '');
 				tree python:here.getStructMap(here.splitToList(expand), None, 1);
 				expand python:here.getSiteMapTrail(expand, tree);
-				expand_list python:here.splitToList(expand)">
+				expand_list python:here.splitToList(expand);">
 
-	<form name="frmGlossMap" method="post" action="">
-	<table>
-		<tr tal:repeat="tree_node tree">
-			<td tal:define="lang python:here.get_language_by_code(selected_lang); item python:tree_node[0]; translation python:item.get_translation_by_language(lang); translation_java python:item.get_translation_by_language(lang).replace('\'', '\\\'')">
-				<table>
-					<tr>
-						<td>
-							<img tal:repeat="i python:range(0, tree_node[2])"
-								 src="misc_/NaayaGlossary/square.gif" alt="Square" title="Square" />
-							<tal:block tal:condition="python:tree_node[1]==-1">
-								<img src="misc_/NaayaGlossary/square.gif" alt="Square" title="Square" />
-							</tal:block>
-							<tal:block
-								tal:define="node_expand python:here.structCollapse(expand_list, item.absolute_url(1))"
-								tal:condition="python:tree_node[1]==0">
-								<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')">
-									<img src="misc_/NaayaGlossary/minus.gif" alt="Collapse" title="Collapse" />
-								</a>
-							</tal:block>
-							<tal:block
-								tal:define="node_expand python:here.structExpand(expand_list, item.absolute_url(1))"
-								tal:condition="python:tree_node[1]==1">
-								<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')">
-									<img src="misc_/NaayaGlossary/plus.gif" alt="Expand" title="Expand" />
-								</a>
-							</tal:block>
-						</td>
 
-						<td>
-							<img tal:attributes="src python:item.icon;
-															alt python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type);
-															title python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type)" />
-						</td>
-						<td>
-							<a	tal:condition="python:item.utIsElement() and translation"
-								tal:define="node_path python:item.absolute_url()"
-								tal:attributes="href string:javascript:window.opener.fSet('${ctrl}', '${translation_java}');"
-								tal:content="translation" />
-							<span	tal:condition="python:not item.utIsElement() and translation"
-									tal:content="translation" />
-							<em	tal:condition="python:not translation" i18n:translate="" tal:content="string:${item/title_or_id} (no translation available)" />
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-	</table>
-	<input type="hidden" name="expand" tal:attributes="value expand" />
-	<input type="hidden" name="ctrl" tal:attributes="value ctrl" />
-	<input type="hidden" name="lang" tal:attributes="value selected_lang" />
+	<form id="glossary_mapping" name="frmGlossMap" method="get" action="">
+		<table>
+			<tr tal:repeat="tree_node tree">
+				<td tal:define="lang python:here.get_language_by_code(selected_lang); item python:tree_node[0]; translation python:item.get_translation_by_language(lang); translation_java python:item.get_translation_by_language(lang).replace('\'', '\\\'')">
+					<table>
+						<tr>
+							<td>
+								<img tal:repeat="i python:range(0, tree_node[2])" src="misc_/NaayaGlossary/square.gif" alt="Square" title="Square" />
+								<tal:block tal:condition="python:tree_node[1]==-1">
+									<img src="misc_/NaayaGlossary/square.gif" alt="Square" title="Square" />
+								</tal:block>
+								<tal:block
+									tal:define="node_expand python:here.structCollapse(expand_list, item.absolute_url(1))"
+									tal:condition="python:tree_node[1]==0">
+									<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')">
+										<img src="misc_/NaayaGlossary/minus.gif" alt="Collapse" title="Collapse" />
+									</a>
+								</tal:block>
+								<tal:block
+									tal:define="node_expand python:here.structExpand(expand_list, item.absolute_url(1))"
+									tal:condition="python:tree_node[1]==1">
+									<a tal:attributes="onclick string:javascript:fTreeClick('${node_expand}')">
+										<img src="misc_/NaayaGlossary/plus.gif" alt="Expand" title="Expand" />
+									</a>
+								</tal:block>
+							</td>
+
+							<td>
+								<img tal:attributes="src python:item.icon;
+													 alt python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type);
+													 title python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type)" />
+							</td>
+							<td>
+								<a	tal:define="node_path python:item.absolute_url()"
+									tal:attributes="href python:'javascript:show_folder_index(\'%s\')' % item.absolute_url(1)">
+
+									<span tal:condition="translation" tal:content="translation"></span>
+									<span tal:condition="python:not item.utIsElement() and translation" tal:content="translation" />
+									<em tal:condition="python:not translation" i18n:translate="" tal:content="string:${item/title_or_id}"/></a>
+								<em tal:condition="python:not translation" i18n:translate="">(no translation available)</em>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<input type="hidden" name="expand" tal:attributes="value expand" />
+		<input type="hidden" name="ctrl" tal:attributes="value ctrl" />
+		<input type="hidden" name="lang" tal:attributes="value selected_lang" />
+		<input type="hidden" name="item" />
 	</form>
 
 	</tal:block>
+
+	<form	id="item_properties" action="updateGlossaryItem" method="post"
+			tal:condition="python:selected_item and here.checkPermissionManageGlossary()">
+
+		<h2><span tal:replace="selected_item/title_or_id"/> properties</h2>
+
+		<div class="field">
+			<label for="item_title">Title</label>
+			<input type="text" name="item_title" tal:attributes="value selected_item/title"/>
+		</div>
+		<div class="field">
+			<label for="item_themes">Themes</label>
+			<tal:block tal:define="theme_list here/get_subjects_list">
+				<span tal:condition="python:not theme_list">no themes defined</span>
+				<select name="item_subjects" multiple size="5" tal:condition="theme_list">
+					<option	tal:repeat="record theme_list"
+							tal:attributes="value python:record['code'];
+											selected python:test(selected_item.code_in_subjects(record['code']), 'selected', '')"
+							tal:content="python:record['name']" />
+				</select>
+			</tal:block>
+		</div>
+		<div class="field">
+			<label for="item_source">Source</label>
+			<input type="text" id="item_source" name="item_source:utf8:ustring" size="35" tal:attributes="value selected_item/source" />
+		</div>
+		<div class="field">
+			<label for="item_contributor">Contributor</label>
+			<input type="text" id="item_contributor" name="item_contributor:utf8:ustring" size="35" tal:attributes="value selected_item/contributor" />
+		</div>
+		<div class="field">
+			<label for="item_approved">Approved</label>
+			<input type="checkbox" id="item_approved" name="item_approved" tal:attributes="checked python:test(selected_item.approved, 'checked', '')" />
+		</div>
+
+		<h2>Translations</h2>
+
+		<div class="field">
+	    <table class="datatable">
+	        <tr>
+				<th>Language</th>
+				<th>Translation</th>
+				<th>Translate</th>
+	        </tr>
+	        <tal:block repeat="language selected_item/get_english_names">
+	            <tr tal:attributes='class python:test(path("repeat/language/odd"), "cellodd", "celleven")' tal:define="translation python:selected_item.get_translation_by_language(language)">
+	                <td>
+	                    <div>
+	                        <label tal:attributes="for string:cb-${language}" tal:content="language" />
+	                    </div>
+	                </td>
+	                <td tal:content="python:test(translation, translation, '-')"/>
+	                <td>
+						<input type="text" name="item_translation:utf8:ustring:list" tal:attributes="value translation" />
+						<input name="item_lang_code:list" type="hidden" tal:attributes="value language" />
+	                </td>
+	            </tr>
+	        </tal:block>
+	    </table>
+		</div>
+		<input type="hidden" name="item_meta_type" tal:attributes="value selected_item/meta_type"/>
+		<input type="hidden" name="item_url" tal:attributes="value python:selected_item.absolute_url(1)"/>
+		<input type="submit" value="update" />
+	</form>
 
 </tal:block>
 
