@@ -359,6 +359,36 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             return self.REQUEST.RESPONSE.redirect('index_themes_html?code=%s' % old_code)
         return self.REQUEST.RESPONSE.redirect('index_themes_html')
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'updateGlossaryItem')
+    def updateGlossaryItem(self, item_title='', item_subjects='', item_source='',
+                           item_contributor='', item_approved='', item_translation=[],
+                           item_meta_type='', item_lang_code=[], item_url=''):
+        """ """
+
+        #do folder update
+        if item_meta_type == "Naaya Glossary Folder":
+            #update properties
+            folder = self.getGlossaryChild(item_url)
+            if folder:
+                folder.manage_folder_properties(item_title, item_subjects,
+                                                item_source, item_contributor,
+                                                item_approved)
+                #update translations
+                for translation in item_translation:
+                    lang_code = item_lang_code[item_translation.index(translation)]
+                    folder.manageFolderTranslations(lang_code, translation)
+            return self.REQUEST.RESPONSE.redirect('index_html?item=%s' % item_url)
+
+        elif item_meta_type == "Naaya Glossary Element":
+            #do element update
+            element = self.getGlossaryChild(item_url)
+            if element:
+                element.manageBasicProperties(item_title, item_source,
+                                              item_subjects, item_contributor,
+                                              item_approved)
+                for translation in item_translation:
+                    lang_code = item_lang_code[item_translation.index(translation)]
+                    folder.manageNameTranslations(lang_code, translation)
 
     #########################
     #   THEME TRANSLATIONS  #
@@ -559,6 +589,10 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         for obj in self.cu_get_cataloged_objects(meta_type=[NAAYAGLOSSARY_ELEMENT_METATYPE], sort_on='id', sort_order='', path=path):
             if obj.is_published(): append(obj)
         return lst_published
+
+    def getGlossaryChild(self, path):
+        if path:
+            return self.restrictedTraverse(path, None)
 
     def checkPermissionManageGlossary(self):
         return self.checkPermission(PERMISSION_MANAGE_NAAYAGLOSSARY)
