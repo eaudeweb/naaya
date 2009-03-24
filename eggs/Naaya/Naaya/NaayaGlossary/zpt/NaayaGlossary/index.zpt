@@ -6,12 +6,6 @@
 		document.frmGlossMap.expand.value = expand;
 	    document.frmGlossMap.submit();
 	}
-
-	function show_folder_index(folder_url) {
-		document.frmGlossMap.item.value = folder_url;
-		document.frmGlossMap.submit();s
-	}
-
 </script>
 
 <style type="text/css">
@@ -31,7 +25,6 @@
 <ul>
     <li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/index_html">View</a></li>
     <li><a tal:attributes="href string:${here/absolute_url}/index_properties_html">Properties</a></li>
-    <li><a tal:attributes="href string:${here/absolute_url}/index_languages_html">Languages</a></li>
     <li><a tal:attributes="href string:${here/absolute_url}/index_themes_html">Themes</a></li>
     <li><a tal:attributes="href string:${here/absolute_url}/index_impexp_html">Import/Export</a></li>
     <li><a tal:attributes="href string:${here/absolute_url}/index_approvals_html">Basket of approvals</a></li>
@@ -89,13 +82,12 @@
 													 title python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type)" />
 							</td>
 							<td>
-								<a	tal:define="node_path python:item.absolute_url()"
-									tal:attributes="href python:'javascript:show_folder_index(\'%s\')' % item.absolute_url(1)">
-
-									<span tal:condition="translation" tal:content="translation"></span>
-									<span tal:condition="python:not item.utIsElement() and translation" tal:content="translation" />
-									<em tal:condition="python:not translation" i18n:translate="" tal:content="string:${item/title_or_id}"/></a>
+								<a tal:attributes="href item/absolute_url">
+									<span tal:condition="translation" tal:replace="translation"/><em tal:condition="python:not translation" i18n:translate="" tal:content="string:${item/title_or_id}"/></a>
 								<em tal:condition="python:not translation" i18n:translate="">(no translation available)</em>
+								<tal:block condition="here/checkPermissionManageGlossary">
+									[ <a tal:attributes="href python:'%s/index_html?item=%s' % (here.absolute_url(), item.absolute_url(1))">edit</a> ]
+								</tal:block>
 							</td>
 						</tr>
 					</table>
@@ -110,70 +102,70 @@
 
 	</tal:block>
 
-	<form	id="item_properties" action="updateGlossaryItem" method="post"
-			tal:condition="python:selected_item and here.checkPermissionManageGlossary()">
+    <div id="item_properties" tal:condition="python:selected_item and here.checkPermissionManageGlossary()">
+        <form action="updateGlossaryItem" method="post">
+            <h2><span tal:replace="selected_item/title_or_id"/> properties</h2>
 
-		<h2><span tal:replace="selected_item/title_or_id"/> properties</h2>
+            <div class="field">
+                <label for="item_title">Title</label>
+                <input type="text" name="item_title" tal:attributes="value selected_item/title"/>
+            </div>
+            <div class="field">
+                <label for="item_themes">Themes</label>
+                <tal:block tal:define="theme_list here/get_subjects_list">
+                    <span tal:condition="python:not theme_list">no themes defined</span>
+                    <select name="item_subjects" multiple size="5" tal:condition="theme_list">
+                        <option	tal:repeat="record theme_list"
+                                tal:attributes="value python:record['code'];
+                                                selected python:test(selected_item.code_in_subjects(record['code']), 'selected', '')"
+                                tal:content="python:record['name']" />
+                    </select>
+                </tal:block>
+            </div>
+            <div class="field">
+                <label for="item_source">Source</label>
+                <input type="text" id="item_source" name="item_source:utf8:ustring" size="35" tal:attributes="value selected_item/source" />
+            </div>
+            <div class="field">
+                <label for="item_contributor">Contributor</label>
+                <input type="text" id="item_contributor" name="item_contributor:utf8:ustring" size="35" tal:attributes="value selected_item/contributor" />
+            </div>
+            <div class="field">
+                <label for="item_approved">Approved</label>
+                <input type="checkbox" id="item_approved" name="item_approved" tal:attributes="checked python:test(selected_item.approved, 'checked', '')" />
+            </div>
 
-		<div class="field">
-			<label for="item_title">Title</label>
-			<input type="text" name="item_title" tal:attributes="value selected_item/title"/>
-		</div>
-		<div class="field">
-			<label for="item_themes">Themes</label>
-			<tal:block tal:define="theme_list here/get_subjects_list">
-				<span tal:condition="python:not theme_list">no themes defined</span>
-				<select name="item_subjects" multiple size="5" tal:condition="theme_list">
-					<option	tal:repeat="record theme_list"
-							tal:attributes="value python:record['code'];
-											selected python:test(selected_item.code_in_subjects(record['code']), 'selected', '')"
-							tal:content="python:record['name']" />
-				</select>
-			</tal:block>
-		</div>
-		<div class="field">
-			<label for="item_source">Source</label>
-			<input type="text" id="item_source" name="item_source:utf8:ustring" size="35" tal:attributes="value selected_item/source" />
-		</div>
-		<div class="field">
-			<label for="item_contributor">Contributor</label>
-			<input type="text" id="item_contributor" name="item_contributor:utf8:ustring" size="35" tal:attributes="value selected_item/contributor" />
-		</div>
-		<div class="field">
-			<label for="item_approved">Approved</label>
-			<input type="checkbox" id="item_approved" name="item_approved" tal:attributes="checked python:test(selected_item.approved, 'checked', '')" />
-		</div>
+            <h2>Translations</h2>
 
-		<h2>Translations</h2>
-
-		<div class="field">
-	    <table class="datatable">
-	        <tr>
-				<th>Language</th>
-				<th>Translation</th>
-				<th>Translate</th>
-	        </tr>
-	        <tal:block repeat="language selected_item/get_english_names">
-	            <tr tal:attributes='class python:test(path("repeat/language/odd"), "cellodd", "celleven")' tal:define="translation python:selected_item.get_translation_by_language(language)">
-	                <td>
-	                    <div>
-	                        <label tal:attributes="for string:cb-${language}" tal:content="language" />
-	                    </div>
-	                </td>
-	                <td tal:content="python:test(translation, translation, '-')"/>
-	                <td>
-						<input type="text" name="item_translation:utf8:ustring:list" tal:attributes="value translation" />
-						<input name="item_lang_code:list" type="hidden" tal:attributes="value language" />
-	                </td>
-	            </tr>
-	        </tal:block>
-	    </table>
-		</div>
-		<input type="hidden" name="item_meta_type" tal:attributes="value selected_item/meta_type"/>
-		<input type="hidden" name="item_url" tal:attributes="value python:selected_item.absolute_url(1)"/>
-		<input type="submit" value="update" />
-	</form>
-
+            <div class="field">
+            <table class="datatable">
+                <tr>
+                    <th>Language</th>
+                    <th>Translation</th>
+                    <th>Translate</th>
+                </tr>
+                <tal:block repeat="language selected_item/get_english_names">
+                    <tr tal:attributes='class python:test(path("repeat/language/odd"), "cellodd", "celleven")' tal:define="translation python:selected_item.get_translation_by_language(language)">
+                        <td>
+                            <div>
+                                <label tal:attributes="for string:cb-${language}" tal:content="language" />
+                            </div>
+                        </td>
+                        <td tal:content="python:test(translation, translation, '-')"/>
+                        <td>
+                            <input type="text" name="item_translation:utf8:ustring:list" tal:attributes="value translation" />
+                            <input name="item_lang_code:list" type="hidden" tal:attributes="value language" />
+                        </td>
+                    </tr>
+                </tal:block>
+            </table>
+            </div>
+            <input type="hidden" name="item_meta_type" tal:attributes="value selected_item/meta_type"/>
+            <input type="hidden" name="item_url" tal:attributes="value python:selected_item.absolute_url(1)"/>
+            <input type="submit" value="update" />
+        </form>
+    </div>
 </tal:block>
 
 <span tal:replace="structure here/standard_html_footer"/>
+
