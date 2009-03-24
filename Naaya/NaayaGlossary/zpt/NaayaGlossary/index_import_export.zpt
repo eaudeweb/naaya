@@ -3,7 +3,6 @@
 <ul>
     <li><a tal:attributes="href here/absolute_url">View</a></li>
     <li><a tal:attributes="href string:${here/absolute_url}/index_properties_html">Properties</a></li>
-    <li><a tal:attributes="href string:${here/absolute_url}/index_languages_html">Languages</a></li>
     <li><a tal:attributes="href string:${here/absolute_url}/index_themes_html">Themes</a></li>
     <li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/index_impexp_html">Import/Export</a></li>
     <li><a tal:attributes="href string:${here/absolute_url}/index_approvals_html">Basket of approvals</a></li>

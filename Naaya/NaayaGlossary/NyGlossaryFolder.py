@@ -128,6 +128,7 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
         """ return meta_types list  """
         return [x['name'] for x in Products.meta_types]
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'manage_folder_properties')
     def manage_folder_properties(self, title='', subjects=[], source='', contributor='', approved=0, REQUEST=None):
         """ folder properties """
         self.title =        title
@@ -137,11 +138,13 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
         self.approved =     approved
         if REQUEST: REQUEST.RESPONSE.redirect('properties_html?save=ok')
 
+    security.declarePrivate("manage_afterAdd")
     def manage_afterAdd(self, item, container):
         """ this method is called, whenever _setObject in ObjectManager gets called """
         Folder.inheritedAttribute('manage_afterAdd')(self, item, container)
         self.cu_catalog_object(self)
 
+    security.declarePrivate("manage_beforeDelete")
     def manage_beforeDelete(self, item, container):
         """ this method is called, when the object is deleted """
         Folder.inheritedAttribute('manage_beforeDelete')(self, item, container)
@@ -177,6 +180,7 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
             if getattr(self, lang) != '': return 1
         return 0
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'set_translations_list')
     def set_translations_list(self, language, translation):
         """ set the languages """
         setattr(self, language, translation)
@@ -186,6 +190,7 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
         for lang in self.get_english_names():
             setattr(self, lang, '')
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'set_default_translation')
     def set_default_translation(self):
         current_language = self.gl_get_selected_language()
         language_name = self.gl_get_language_name(current_language)
@@ -193,6 +198,7 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
         if language_name in glossary_languages:
             self.set_translations_list(language_name, self.title)
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'manageFolderTranslations')
     def manageFolderTranslations(self, lang_code='', translation='', REQUEST=None):
         """ save translation for a language """
         self.set_translations_list(lang_code, translation)
@@ -214,11 +220,13 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
         self.utSortListOfDictionariesByKey(self.subjects, 'code')
         return self.subjects
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'set_subjects')
     def set_subjects(self, code, name):
         """ set the languages """
         append = self.subjects.append
         append({'code':code, 'name':name})
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'del_subject')
     def del_subject(self, code):
         """ remove a language from list """
         for subj_info in self.subjects:

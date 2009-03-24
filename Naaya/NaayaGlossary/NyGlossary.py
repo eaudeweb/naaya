@@ -159,7 +159,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         try: catalog_obj.addIndex('title', 'TextIndex')
         except: pass
 
-       #create metadata
+        #create metadata
         try: catalog_obj.addColumn('id')
         except: pass
         try: catalog_obj.addColumn('title')
@@ -286,23 +286,24 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     def manageThemesProperties(self, ids=[], old_code='', code='', name='', REQUEST=None):
         """ manage subjects for NyGlossary """
         if self.utAddObjectAction(REQUEST):
-            if string.strip(code) == '' or string.strip(name) == '':
+            if string.strip(code) == '' or string.strip(name) == '' and REQUEST:
                 return REQUEST.RESPONSE.redirect('themes_html?tab=0')
             else:
                 if self.check_subjects_exists(code):
                     self.set_subjects_list(code, name)
                     self._p_changed = 1
                 else:
-                    return REQUEST.RESPONSE.redirect('themes_html?tab=0')
+                    if REQUEST:
+                        return REQUEST.RESPONSE.redirect('themes_html?tab=0')
         elif self.utUpdateObjectAction(REQUEST):
-            if string.strip(code) == '' or string.strip(name) == '':
+            if string.strip(code) == '' or string.strip(name) == '' and REQUEST:
                 return REQUEST.RESPONSE.redirect('themes_html?tab=0')
             else:
                 self.del_subject_from_list(old_code)
                 self.set_subjects_list(code, name)
                 self._p_changed = 1
         elif self.utDeleteObjectAction(REQUEST):
-            if not ids or len(ids) == 0:
+            if not ids or len(ids) == 0 and REQUEST:
                 return REQUEST.RESPONSE.redirect('themes_html?tab=0')
             for subj in self.utConvertToList(ids):
                 self.del_subject_from_list(subj)
@@ -310,11 +311,11 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         if REQUEST: return REQUEST.RESPONSE.redirect('themes_html?tab=0&amp;save=ok')
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'addTheme')
-    def addTheme(self, code='', name=''):
+    def addTheme(self, code='', name='', REQUEST=None):
         """ Add a new theme with the given code and name """
         code, name = string.strip(code), string.strip(name)
-        if not name:
-            return self.REQUEST.RESPONSE.redirect('index_themes_html')
+        if not name and REQUEST:
+            return REQUEST.RESPONSE.redirect('index_themes_html')
         if not code:
             code = genObjectId(name)
         if not code in [subj['code'] for subj in self.subjects_list]:
@@ -323,25 +324,27 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             self.setSessionInfo(['Theme added.'])
         else:
             self.setSessionErrors(["Code already exists."])
-        return self.REQUEST.RESPONSE.redirect('index_themes_html')
+        if REQUEST:
+            return REQUEST.RESPONSE.redirect('index_themes_html')
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'deleteThemes')
-    def deleteThemes(self, ids=[]):
+    def deleteThemes(self, ids=[], REQUEST=None):
         """ Delete the themes with the given ids """
-        if not ids or len(ids) == 0:
-            return self.REQUEST.RESPONSE.redirect('index_themes_html')
+        if not ids or len(ids) == 0 and REQUEST:
+            return REQUEST.RESPONSE.redirect('index_themes_html')
         for subj in self.utConvertToList(ids):
             self.del_subject_from_list(subj)
         self._p_changed = 1
         self.setSessionInfo(['Themes deleted.'])
-        return self.REQUEST.RESPONSE.redirect('index_themes_html')
+        if REQUEST:
+            return REQUEST.RESPONSE.redirect('index_themes_html')
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'updateTheme')
-    def updateTheme(self, old_code='', code='', name='', lang_codes=[], translations=[]):
+    def updateTheme(self, old_code='', code='', name='', lang_codes=[], translations=[], REQUEST=None):
         """ Change theme name or code """
         code, name = string.strip(code), string.strip(name)
-        if not code or not name:
-            return self.REQUEST.RESPONSE.redirect('index_themes_html')
+        if not code or not name and REQUEST:
+            return REQUEST.RESPONSE.redirect('index_themes_html')
         if code == old_code:
             self.update_subject_in_list(old_code, code, name)
             self._p_changed = 1
@@ -356,13 +359,15 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
             self.setSessionInfo(['Saved changes.'])
         else:
             self.setSessionErrors(["Code already exists."])
-            return self.REQUEST.RESPONSE.redirect('index_themes_html?code=%s' % old_code)
-        return self.REQUEST.RESPONSE.redirect('index_themes_html')
+            if REQUEST:
+                return REQUEST.RESPONSE.redirect('index_themes_html?code=%s' % old_code)
+        if REQUEST:
+            return REQUEST.RESPONSE.redirect('index_themes_html')
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'updateGlossaryItem')
     def updateGlossaryItem(self, item_title='', item_subjects='', item_source='',
                            item_contributor='', item_approved='', item_translation=[],
-                           item_meta_type='', item_lang_code=[], item_url=''):
+                           item_meta_type='', item_lang_code=[], item_url='', REQUEST=None):
         """ """
 
         #do folder update
@@ -377,7 +382,6 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 for translation in item_translation:
                     lang_code = item_lang_code[item_translation.index(translation)]
                     folder.manageFolderTranslations(lang_code, translation)
-            return self.REQUEST.RESPONSE.redirect('index_html?item=%s' % item_url)
 
         elif item_meta_type == "Naaya Glossary Element":
             #do element update
@@ -389,6 +393,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 for translation in item_translation:
                     lang_code = item_lang_code[item_translation.index(translation)]
                     folder.manageNameTranslations(lang_code, translation)
+        if REQUEST:
+            return REQUEST.RESPONSE.redirect('index_html?item=%s' % item_url)
 
     #########################
     #   THEME TRANSLATIONS  #
@@ -511,7 +517,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         """ manage languages for NyGlossary """
         if self.utAddObjectAction(REQUEST):
             if string.strip(lang)=='' or string.strip(english_name)=='':
-                return REQUEST.RESPONSE.redirect('languages_html')
+                if REQUEST:
+                    return REQUEST.RESPONSE.redirect('languages_html')
             else:
                 if self.check_language_exists(english_name):
                     self.set_languages_list(lang, english_name)
@@ -527,20 +534,23 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
                     self._p_changed = 1
                 else:
-                    return REQUEST.RESPONSE.redirect('languages_html')
+                    if REQUEST:
+                        return REQUEST.RESPONSE.redirect('languages_html')
         elif self.utDeleteObjectAction(REQUEST):
-            if not ids or len(ids) == 0:
+            if not ids or len(ids) == 0 and REQUEST:
                 return REQUEST.RESPONSE.redirect('languages_html')
             for english_name in self.utConvertToList(ids):
                 self.del_language_from_list(english_name)
             self._p_changed = 1
-        if REQUEST: return REQUEST.RESPONSE.redirect('languages_html?save=ok')
+        if REQUEST:
+            return REQUEST.RESPONSE.redirect('languages_html?save=ok')
 
-    def addLanguage(self, english_name='', lang=''):
+    def addLanguage(self, english_name='', lang='', REQUEST=None):
         """ """
         if string.strip(lang)=='' or string.strip(english_name)=='':
             self.setSessionErrors(["Please specify language name and code."])
-            return self.REQUEST.RESPONSE.redirect('index_languages_html')
+            if REQUEST:
+                return REQUEST.RESPONSE.redirect('index_properties_html')
         else:
             if self.check_language_exists(english_name):
                 self.set_languages_list(lang, english_name)
@@ -557,19 +567,30 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 self._p_changed = 1
             else:
                 self.setSessionErrors(["Language already exists."])
-                return self.REQUEST.RESPONSE.redirect('index_languages_html')
+                if REQUEST:
+                    return REQUEST.RESPONSE.redirect('index_properties_html')
         self.setSessionInfo(['Saved changes.'])
-        return self.REQUEST.RESPONSE.redirect('index_languages_html')
+        if REQUEST:
+            return REQUEST.RESPONSE.redirect('index_properties_html')
 
-    def deleteLanguages(self, ids=[]):
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'deleteLanguages')
+    def deleteLanguages(self, ids=[], REQUEST=None):
         """ """
-        if not ids or len(ids) == 0:
-            return self.REQUEST.RESPONSE.redirect('index_languages_html')
+        if not ids or len(ids) == 0 and REQUEST:
+            return REQUEST.RESPONSE.redirect('index_properties_html')
         for english_name in self.utConvertToList(ids):
             self.del_language_from_list(english_name)
         self._p_changed = 1
-        return self.REQUEST.RESPONSE.redirect('index_languages_html')
 
+        if REQUEST:
+            return REQUEST.RESPONSE.redirect('index_properties_html')
+
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'updateGlossaryProperties')
+    def updateGlossaryProperties(self, title='', approved='', parent_anchors='', REQUEST=None):
+        """ """
+        self.manageBasicProperties(title, approved, parent_anchors)
+        if REQUEST:
+            return REQUEST.RESPONSE.redirect('index_properties_html')
 
     ######################################
     # GLOSSARY ADMINISTRATION FUNCTIONS  #
@@ -946,13 +967,11 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     #unified index
     index_html =            PageTemplateFile('zpt/NaayaGlossary/index', globals())
     index_themes_html =     PageTemplateFile('zpt/NaayaGlossary/index_themes', globals())
-    index_languages_html =  PageTemplateFile('zpt/NaayaGlossary/index_languages', globals())
     index_approvals_html =  PageTemplateFile('zpt/NaayaGlossary/index_approvals', globals())
     index_impexp_html =     PageTemplateFile('zpt/NaayaGlossary/index_import_export', globals())
     index_properties_html = PageTemplateFile('zpt/NaayaGlossary/index_properties', globals())
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'index_themes_html')
-    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'index_languages_html')
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'index_approvals_html')
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'index_impexp_html')
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'index_properties_html')
