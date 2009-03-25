@@ -54,6 +54,8 @@ def manage_addGlossaryElement(self, id='', title='', source='', subjects=[], con
     element_obj = self._getOb(id)
     element_obj.subjects = self.get_subject_by_codes(subjects)
     element_obj.load_translations_list()
+    from NyGlossary import set_default_translation #imported here to avoid cross-import errors
+    set_default_translation(element_obj)
 
     if REQUEST: return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -108,6 +110,13 @@ class NyGlossaryElement(SimpleItem, ElementBasic, utils, catalog_utils):
         """ this method is called, when the object is deleted """
         SimpleItem.inheritedAttribute('manage_beforeDelete')(self, item, container)
         self.cu_uncatalog_object(self)
+
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'approveElement')
+    def approveElement(self, REQUEST=None):
+        """ used for approval link in basket of approvals"""
+        self.approved = 1
+        if REQUEST:
+            return REQUEST.RESPONSE.redirect('index_approvals_html')
 
     #########################
     #     THEME FUNCTIONS   #

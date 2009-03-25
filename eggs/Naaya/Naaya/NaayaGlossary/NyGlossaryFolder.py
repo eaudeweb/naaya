@@ -48,7 +48,8 @@ def manage_addGlossaryFolder(self, id, title='', subjects=[], source='', contrib
     fld_obj = self._getOb(id)
     fld_obj.subjects = self.get_subject_by_codes(subjects)
     fld_obj.load_translations_list()
-    fld_obj.set_default_translation()
+    from NyGlossary import set_default_translation #imported here to avoid cross-import errors
+    set_default_translation(fld_obj)
 
     if REQUEST: return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -189,14 +190,6 @@ class NyGlossaryFolder(Folder, utils, glossary_export, catalog_utils):
         """ load languages """
         for lang in self.get_english_names():
             setattr(self, lang, '')
-
-    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'set_default_translation')
-    def set_default_translation(self):
-        current_language = self.gl_get_selected_language()
-        language_name = self.gl_get_language_name(current_language)
-        glossary_languages = self.get_english_names()
-        if language_name in glossary_languages:
-            self.set_translations_list(language_name, self.title)
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'manageFolderTranslations')
     def manageFolderTranslations(self, lang_code='', translation='', REQUEST=None):
