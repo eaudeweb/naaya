@@ -9,7 +9,7 @@
 </script>
 
 <style type="text/css">
-	#item_properties {
+	.management_div {
 		width: 50%;
 		float: right;
 		border: 1px solid black;
@@ -19,6 +19,26 @@
 		float: left;
 	}
 
+    a.button {
+        text-decoration: none;
+        background-color: #fff;
+        color: #000;
+        line-height: 2em;
+        border-left:1px solid #bbb;
+        border-top:1px solid #bbb;
+        border-bottom:1px solid #666;
+        border-right:1px solid #666;
+        padding:2px 2px;
+        font-size: 90%;
+        }
+
+    a.button:hover {
+        background: #ccc;
+        border-left:1px solid #6791c3;
+        border-top:1px solid #6791c3;
+        border-bottom:1px solid #34649b;
+        border-right:1px solid #34649b;
+    }
 </style>
 
 <div id="tabbedmenu" tal:condition="here/checkPermissionManageGlossary">
@@ -38,7 +58,9 @@
 					noArabic not:isArabic;
 					skin_path python:here.getLayoutTool().getSkinFilesPath();
 					ctrl python:request.get('ctrl', '');
-					selected_item python:here.getGlossaryChild(request.get('item', ''))">
+					selected_item python:here.getGlossaryChild(request.get('item', ''));
+                    insert_after  python:here.getGlossaryChild(request.get('insert', ''));
+                    is_manager here/checkPermissionManageGlossary">
 	<p>
 		<a href="javascript:fTreeClick('all')">Expand all</a>
 		<a href="javascript:fTreeClick('')">Collapse all</a>
@@ -52,9 +74,12 @@
 	<form id="glossary_mapping" name="frmGlossMap" method="get" action="">
 		<table>
 			<tr tal:repeat="tree_node tree">
-				<td tal:define="lang python:here.get_language_by_code(selected_lang); item python:tree_node[0]; translation python:item.get_translation_by_language(lang); translation_java python:item.get_translation_by_language(lang).replace('\'', '\\\'')">
+				<td tal:define="lang python:here.get_language_by_code(selected_lang);
+                                item python:tree_node[0];
+                                translation python:item.get_translation_by_language(lang);
+                                translation_java python:item.get_translation_by_language(lang).replace('\'', '\\\'')">
 					<table>
-						<tr>
+						<tr tal:condition="python:item.approved or is_manager">
 							<td>
 								<img tal:repeat="i python:range(0, tree_node[2])" src="misc_/NaayaGlossary/square.gif" alt="Square" title="Square" />
 								<tal:block tal:condition="python:tree_node[1]==-1">
@@ -85,8 +110,11 @@
 								<a tal:attributes="href item/absolute_url">
 									<span tal:condition="translation" tal:replace="translation"/><em tal:condition="python:not translation" i18n:translate="" tal:content="string:${item/title_or_id}"/></a>
 								<em tal:condition="python:not translation" i18n:translate="">(no translation available)</em>
-								<tal:block condition="here/checkPermissionManageGlossary">
-									[ <a tal:attributes="href python:'%s/index_html?item=%s' % (here.absolute_url(), item.absolute_url(1))">edit</a> ]
+								<tal:block condition="is_manager">
+                                    <a class="button" tal:attributes="href python:'%s/index_html?item=%s' % (here.absolute_url(), item.absolute_url(1))">edit</a>
+									<tal:block condition="python:item.meta_type=='Naaya Glossary Folder'">
+                                        <a class="button" tal:attributes="href python:'%s/index_html?insert=%s' % (here.absolute_url(), item.absolute_url(1))">insert</a>
+                                    </tal:block>
 								</tal:block>
 							</td>
 						</tr>
@@ -94,6 +122,9 @@
 				</td>
 			</tr>
 		</table>
+        <tal:block condition="is_manager">
+            <a class="button" tal:attributes="href python:'%s/index_html?insert=%s' % (here.absolute_url(), here.absolute_url(1))">Add Glossary Folder</a>
+        </tal:block>
 		<input type="hidden" name="expand" tal:attributes="value expand" />
 		<input type="hidden" name="ctrl" tal:attributes="value ctrl" />
 		<input type="hidden" name="lang" tal:attributes="value selected_lang" />
@@ -102,7 +133,8 @@
 
 	</tal:block>
 
-    <div id="item_properties" tal:condition="python:selected_item and here.checkPermissionManageGlossary()">
+    <tal:block tal:condition="is_manager">
+    <div class="management_div" tal:condition="python:selected_item and is_manager">
         <form action="updateGlossaryItem" method="post">
             <h2><span tal:replace="selected_item/title_or_id"/> properties</h2>
 
@@ -162,9 +194,50 @@
             </div>
             <input type="hidden" name="item_meta_type" tal:attributes="value selected_item/meta_type"/>
             <input type="hidden" name="item_url" tal:attributes="value python:selected_item.absolute_url(1)"/>
-            <input type="submit" value="update" />
+            <div class="field">
+                <input type="submit" value="update" />
+            </div>
         </form>
     </div>
+
+    <div class="management_div" tal:condition="insert_after">
+        <h2>Add entry</h2>
+        <form action="addGlossaryEntry" method="post" tal:define="theme_list insert_after/get_subjects_list ">
+            <div class="field">
+                <label for="entry_title">Title</label>
+                <input type="text" name="entry_title" id="entry_title"/>
+            </div>
+            <div class="field">
+                <label for="entry_subjects">Themes</label>
+                <select multiple="multiple" name="entry_subjects" id="entry_subjects" tal:condition="theme_list">
+                    <option	tal:repeat="record theme_list"
+                            tal:attributes="value python:record['code']"
+                            tal:content="python:record['name']"/>
+                </select>
+            </div>
+            <div class="field">
+                <label for="entry_source">Source</label>
+                <input type="text" name="entry_source" id="entry_source"/>
+            </div>
+            <div class="field">
+                <label for="entry_contributor">Contributor</label>
+                <input type="text" name="entry_contributor" id="entry_contributor"/>
+            </div>
+                <input type="hidden" name="entry_parent" tal:attributes="value python:insert_after.absolute_url(1)"/>
+            <div class="field">
+                <label for="entry_type">Type</label>
+                <select name="entry_type">
+                    <option value="folder">Glossary Folder</option>
+                    <option value="element" tal:condition="python:insert_after.meta_type != 'Naaya Glossary'">Glossary Element</option>
+                </select>
+            </div>
+            <div class="field">
+                <input type="submit" value="insert" />
+            </div>
+        </form>
+    </div>
+
+</tal:block>
 </tal:block>
 
 <span tal:replace="structure here/standard_html_footer"/>

@@ -18,6 +18,7 @@
 # Authors:
 #
 # Ghica Alexandru, Finsiel Romania
+# David Batranu, Eau de Web
 
 
 #Python imports
@@ -30,7 +31,7 @@ import Products
 import AccessControl.User
 from OFS.Folder                                 import Folder
 from ZPublisher.HTTPRequest                     import record
-from AccessControl                              import ClassSecurityInfo
+from AccessControl                              import ClassSecurityInfo, getSecurityManager
 from Products.ZCatalog.ZCatalog                 import ZCatalog
 from Globals                                    import MessageDialog, InitializeClass
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
@@ -70,6 +71,18 @@ def manage_addGlossaryCentre(self, id, title='', parent_anchors=False, REQUEST=N
 
     obj._p_changed = 1
     if REQUEST: return self.manage_main(self, REQUEST, update_menu=1)
+
+
+def set_default_translation(item):
+    current_language = item.gl_get_selected_language()
+    language_name = item.gl_get_language_name(current_language)
+    glossary_languages = item.get_english_names()
+    if language_name in glossary_languages:
+        item.set_translations_list(language_name, item.title)
+    else:
+        language_name = item.gl_get_language_name(item.gl_get_default_language())
+        if language_name in glossary_languages:
+            item.set_translations_list(language_name, item.title)
 
 
 class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
@@ -392,7 +405,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                                               item_approved)
                 for translation in item_translation:
                     lang_code = item_lang_code[item_translation.index(translation)]
-                    folder.manageNameTranslations(lang_code, translation)
+                    element.manageNameTranslations(lang_code, translation)
         if REQUEST:
             return REQUEST.RESPONSE.redirect('index_html?item=%s' % item_url)
 
@@ -615,12 +628,31 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         if path:
             return self.restrictedTraverse(path, None)
 
+    security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'addGlossaryEntry')
+    def addGlossaryEntry(self, entry_title='', entry_subjects='',
+                         entry_source='', entry_contributor='',
+                         entry_parent='', entry_type='', REQUEST=None):
+        """ """
+        parent = self.getGlossaryChild(entry_parent)
+        if not parent: return
+        id = genObjectId(entry_title)
+        if entry_type == "folder":
+            parent.manage_addGlossaryFolder(id, entry_title, entry_subjects, entry_source, entry_contributor)
+        if entry_type == "element":
+            parent.manage_addGlossaryElement(id, entry_title, entry_subjects, entry_source, entry_contributor)
+        if REQUEST:
+            return REQUEST.RESPONSE.redirect('index_html')
+
     def checkPermissionManageGlossary(self):
-        return self.checkPermission(PERMISSION_MANAGE_NAAYAGLOSSARY)
+        return getSecurityManager().checkPermission(PERMISSION_MANAGE_NAAYAGLOSSARY, self)
 
     ######################################
     # GLOSSARY FUNCTIONALITIES FUNCTIONS #
     ######################################
+
+    def getPrettyDateTime(self, date=None):
+        if date:
+            return date.strftime('%d %b %Y %H:%M')
 
     def getObjectCodes(self, names=[], REQUEST=None):
         """ get object codes """
