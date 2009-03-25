@@ -174,14 +174,20 @@ class ExtFileRenamer(object):
         for f in self.new_files:
             logger.debug("Update ExtFile paths: removing \"%s\"", f)
             if not self.dry_run:
-                os.unlink(f)
+                try:
+                    os.unlink(f)
+                except Exception, e:
+                    logger.debug("Update ExtFile paths: could not remove file: %s", str(e))
 
     def commit(self):
         logger.debug("Update ExtFile paths: operation successful; cleaning up old files")
         for f in self.old_files:
             logger.debug("Update ExtFile paths: removing \"%s\"", f)
             if not self.dry_run:
-                os.unlink(f)
+                try:
+                    os.unlink(f)
+                except Exception, e:
+                    logger.debug("Update ExtFile paths: could not remove file: %s", str(e))
 
 def register(uid):
     return CustomContentUpdater(uid)
