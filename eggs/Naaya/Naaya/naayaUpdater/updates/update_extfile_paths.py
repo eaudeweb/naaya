@@ -142,6 +142,7 @@ class ExtFileRenamer(object):
                 if not self.skip_missing_files:
                     raise ValueError("Missing filesystem file for ExtFile object (%s)" % old_fsname)
                 self.missing_files.append(old_fsname)
+                return
 
             logger.debug("Update ExtFile paths: copying \"%s\" to \"%s\"", old_fsname, new_fsname)
             if not self.dry_run:
@@ -159,7 +160,7 @@ class ExtFileRenamer(object):
             # avoid copying - do a filesystem hard link (only works on unix)
             import os.link
             os.link(src, dst)
-        except:
+        except ImportError:
             # we can't hardlink; do a copy instead
             import shutil
             shutil.copyfile(src, dst)
