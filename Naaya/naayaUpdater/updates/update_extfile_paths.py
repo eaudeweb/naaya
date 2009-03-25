@@ -49,7 +49,7 @@ class CustomContentUpdater(NaayaContentUpdater):
 
     def _update(self):
         """ Iterate over all files in need of updating """
-        renamer = ExtFileRenamer()
+        renamer = ExtFileRenamer(skip_missing=True)
 
         try:
             for ob in self._list_updates():
@@ -65,6 +65,8 @@ class CustomContentUpdater(NaayaContentUpdater):
 
         else:
             renamer.commit()
+
+        renamer.log_missing()
 
     def _list_updatable_extfiles(self, ob):
         """ List all ExtFile instances that need updating """
@@ -117,10 +119,12 @@ class CustomContentUpdater(NaayaContentUpdater):
             yield fsfile
 
 class ExtFileRenamer(object):
-    def __init__(self, dry_run=False):
+    def __init__(self, dry_run=False, skip_missing=False):
         self.old_files = []
         self.new_files = []
+        self.missing_files = []
         self.dry_run = dry_run
+        self.skip_missing_files = skip_missing
 
     def update(self, extfile):
         try:
@@ -135,7 +139,9 @@ class ExtFileRenamer(object):
             elif os.path.isfile(old_fsname + '.tmp'):
                 old_fsname += '.tmp'
             else:
-                raise ValueError("Missing filesystem file for ExtFile object (%s)" % old_fsname)
+                if not self.skip_missing_files:
+                    raise ValueError("Missing filesystem file for ExtFile object (%s)" % old_fsname)
+                self.missing_files.append(old_fsname)
 
             logger.debug("Update ExtFile paths: copying \"%s\" to \"%s\"", old_fsname, new_fsname)
             if not self.dry_run:
@@ -157,6 +163,10 @@ class ExtFileRenamer(object):
             # we can't hardlink; do a copy instead
             import shutil
             shutil.copyfile(src, dst)
+
+    def log_missing(self):
+        for missing_file in self.missing_files:
+            logger.debug("Update ExtFile paths: missing file \"%s\"", missing_file)
 
     def rollback(self):
         logger.debug("Update ExtFile paths: an error occurred; rolling back changes")
