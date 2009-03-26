@@ -184,4 +184,10 @@ class NyPermissions:
         """
         return self.checkPermissionCopyObjects()
 
+    def checkPermissionBulkDownload(self):
+        """
+        Check if the user can access the bulk download functionality
+        """
+        return self.checkPermission(PERMISSION_BULK_DOWNLOAD)
+
 InitializeClass(NyPermissions)

@@ -42,6 +42,7 @@ PERMISSION_VALIDATE_OBJECTS = 'Naaya - Validate content'
 PERMISSION_COMMENTS_ADD = 'Naaya - Add comments for content'
 PERMISSION_COMMENTS_MANAGE = 'Naaya - Manage comments for content'
 PERMISSION_SKIP_CAPTCHA = 'Naaya - Skip Captcha'
+PERMISSION_BULK_DOWNLOAD = 'Naaya - Bulk download'
 
 # Exceptions
 EXCEPTION_NOTIMPLEMENTED = 'NotImplemented'
