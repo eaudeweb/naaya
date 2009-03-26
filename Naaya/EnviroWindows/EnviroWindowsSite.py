@@ -624,6 +624,11 @@ class EnviroWindowsSite(NySite):
     #
     # Upload/download folder items from/to zip archive
     #
+
+    def showBulkDownloadButton(self):
+        """ """
+        return self.checkPermissionBulkDownload() and self.getDocuments
+
     security.declareProtected(view, 'getDocuments')
     def getDocuments(self, path, meta_type=''):
         """ Returns object values of given meta_type in given path.
@@ -645,7 +650,7 @@ class EnviroWindowsSite(NySite):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'folder_zipupload')
 
-    security.declareProtected(view, 'zip_download_html')
+    security.declareProtected(PERMISSION_BULK_DOWNLOAD, 'zip_download_html')
     def zip_download_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'folder_zipdownload')
@@ -663,7 +668,7 @@ class EnviroWindowsSite(NySite):
             self.setSessionErrors(errors)
         RESPONSE.redirect(path)
 
-    security.declareProtected(view, 'zipDownloadDocuments')
+    security.declareProtected(PERMISSION_BULK_DOWNLOAD, 'zipDownloadDocuments')
     def zipDownloadDocuments(self, REQUEST=None, RESPONSE=None):
         """ Return a zip archive content as a session response.
         """
@@ -702,6 +707,8 @@ class EnviroWindowsSite(NySite):
                 continue
 
             doc_name = getattr(doc, 'downloadfilename', "")
+            if callable(doc_name):
+                doc_name = doc_name()
             #TODO: Extend toAscii for other charsets
             doc_name = self.toAscii(doc_name)
             doc_name = doc_name.strip() or self.toAscii(doc_id)
