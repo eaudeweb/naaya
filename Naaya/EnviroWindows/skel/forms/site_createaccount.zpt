@@ -40,15 +40,18 @@
 	</tr>
 	<tr>
 		<td valign="top" i18n:translate="">Location<br />the privileges should apply</td>
-		<td><input type="radio" name="location" 
-			tal:attributes="value python:here.absolute_url(1); checked python:here.getSessionUserLocation()== here.absolute_url(1)" /> <span i18n:translate="" tal:omit-tag="">This section</span> -- <em tal:content="here/title_or_id" /></td>
+		<td><input type="radio" name="location" value="" tal:attributes="checked python:here.getSessionUserLocation()== ''"/>		<span i18n:translate="" tal:omit-tag="">Entire portal</span>
+		</td>
 	</tr>
-	<tr>
+	<tr tal:condition="python:not here == here.getSite()">
 		<td></td>
-		<td><input type="radio" name="location" value="" tal:attributes="checked python:here.getSessionUserLocation()== ''"/> <span i18n:translate="" tal:omit-tag="">Entire portal</span></td>
+		<td><input type="radio" name="location" 
+			tal:attributes="value python:here.absolute_url(1); checked python:here.getSessionUserLocation()== here.absolute_url(1)" />
+			<span i18n:translate="" tal:omit-tag="">This section</span> -- <em tal:content="here/title_or_id" />
+		</td>
 	</tr>
 	<tr>
-		<td valign="top" i18n:translate="">Comments<br />(if any)</td>
+		<td valign="top" i18n:translate="">Comments</td>
 		<td><textarea name="comments:utf8:ustring" rows="10" cols="50" tal:content="here/getSessionUserComments"></textarea></td>
 	</tr>
 	<tr>
