@@ -507,7 +507,7 @@
 		<grouppermissions name="Manage Users" description="Create/modify/delete users in the portal"
 			permissions="Naaya - Access administrative area,Manage users"/>
 		<role name="Anonymous" grouppermissions="Browse content" permissions=""/>
-		<role name="Authenticated" grouppermissions="Add comments" permissions="Naaya - Bulk download"/>
+		<role name="Authenticated" grouppermissions="Add comments" permissions="Naaya - Bulk download,Naaya - Skip Captcha"/>
 		<role name="Contributor" grouppermissions="Add content" permissions=""/>
 		<role name="Administrator" grouppermissions="Browse content,Add content,Add comments,Edit content,Copy content,Publish content,Delete content,Validate content,Translate pages,Manage Users" permissions=""/>
 	</security>
