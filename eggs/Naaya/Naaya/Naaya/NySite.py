@@ -3289,6 +3289,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ Test if reCaptcha is valid. """
         return recaptcha_utils.is_valid_captcha(context, REQUEST)
 
+    security.declareProtected(view, 'validateCaptcha')
+    def validateCaptcha(self, contact_word, REQUEST):
+        """ Validates captcha or recaptcha, returns errors if invalid """
+
+        if self.recaptcha_is_present():
+            if not self.is_valid_recaptcha(self, REQUEST):
+                return ['Verification words do not match the ones in the picture.']
+        else:
+            if contact_word != self.getSession('captcha', ''):
+                self.delSession('captcha')
+                return ['The word you typed does not match with the one shown in the image. Please try again.']
+
     security.declareProtected(view, 'HEAD')
     def HEAD(self, REQUEST=None):
         """ """
