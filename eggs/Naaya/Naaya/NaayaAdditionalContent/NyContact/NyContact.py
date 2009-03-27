@@ -78,7 +78,7 @@ def contact_add_html(self, REQUEST=None, RESPONSE=None):
 def addNyContact(self, id='', title='', description='', coverage='', keywords='',
     sortorder='', personaltitle='', firstname='', lastname='', jobtitle='', department='', 
     organisation='', postaladdress='', phone='', fax='', cellphone='', email='', webpage='', 
-    contributor=None, releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
+    contributor=None, releasedate='', discussion='', contact_word='', lang=None, REQUEST=None, **kwargs):
     """
     Create an Contact type of object.
     """
@@ -99,10 +99,11 @@ def addNyContact(self, id='', title='', description='', coverage='', keywords=''
     else:
         r = []
 
-    #check reCaptcha
-    if self.recaptcha_is_present():
-        if not self.is_valid_recaptcha(self, REQUEST):
-            r.append('Verification words do not match the ones in the picture.')
+    #check Captcha/reCaptcha
+    if not self.checkPermissionSkipCaptcha():
+        captcha_validator = self.validateCaptcha(contact_word, REQUEST)
+        if captcha_validator:
+            r.extend(captcha_validator)
 
     if not len(r):
         #process parameters
@@ -146,7 +147,7 @@ def addNyContact(self, id='', title='', description='', coverage='', keywords=''
                 keywords=keywords, sortorder=sortorder, releasedate=releasedate, discussion=discussion, personaltitle=personaltitle, \
                 firstname=firstname, lastname=lastname, jobtitle=jobtitle, department=department, organisation=organisation, \
                 postaladdress=postaladdress, phone=phone, fax=fax, cellphone=cellphone, email=email, webpage=webpage, lang=lang)
-            REQUEST.RESPONSE.redirect('%s/contact_add_html' % self.absolute_url())
+            return REQUEST.RESPONSE.redirect('%s/contact_add_html' % self.absolute_url())
         else:
             raise Exception, '%s' % ', '.join(r)
     return ob.getId()
