@@ -29,7 +29,7 @@
         border-bottom:1px solid #666;
         border-right:1px solid #666;
         padding:2px 2px;
-        font-size: 70%;
+        font-size: 75%;
         }
 
     a.button:hover {
