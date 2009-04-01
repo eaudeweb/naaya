@@ -68,13 +68,13 @@
 		<tal:block tal:repeat="language languages">
 			<div class="current" tal:condition="python:language['code'] == curr_lang"
 								 tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
-				<span tal:content="python:language['name']" />
+				<span i18n:translate="" tal:content="python:language['name']" />
 			</div>
 			<a tal:condition="python:language['code'] != curr_lang"
-				tal:attributes="href string:?id=${ob_id}&amp;lang=${language/code}; 
-								title python:language['name']; 
+				tal:attributes="href string:?id=${ob_id}&amp;lang=${language/code};
+								title python:language['name'];
 								style python:'background-color: %s' % here.utHexColors(language['code'])">
-				<span tal:content="python:language['name']" />
+				<span i18n:translate="" tal:content="python:language['name']" />
 			</a>
 		</tal:block>
 	</div>
