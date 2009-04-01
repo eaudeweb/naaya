@@ -2407,6 +2407,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         id = self.utGenObjectId(title)
         addNyFolder(self, id=id, title=title, lang=lang)
         folder_ob = self.utGetObject(id)
+        folder_ob.approveThis()
         self.maintopics.append(folder_ob.absolute_url(1))
         self._p_changed = 1
         if REQUEST:
