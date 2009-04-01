@@ -37,7 +37,7 @@
 </h2>
 <fieldset tal:define="ag_id python:request.get('id', '')">
 	<legend>
-		<tal:block tal:condition="not:python:ag_id" i18n:translate="">Add new aggregator</tal:block>
+		<tal:block tal:condition="not:python:ag_id" i18n:translate="">Add new remote channels aggregator</tal:block>
 		<tal:block tal:condition="python:ag_id" i18n:translate="">Edit aggregator</tal:block>
 	</legend>
 	<form method="post" tal:attributes="action python:test(not ag_id, '%s/admin_addremotechannels_aggregator' % site_url, '%s/admin_editremotechannels_aggregator' % site_url)" tal:define="ag_obj python:syndication_tool.get_channel(ag_id)">
