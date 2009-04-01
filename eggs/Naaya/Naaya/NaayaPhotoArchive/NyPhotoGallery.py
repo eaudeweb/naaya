@@ -102,6 +102,10 @@ class NyPhotoGallery(NyAttributes, photo_archive, NyContainer):
         if not lang:
             lang = self.gl_get_selected_language()
 
+        if sortorder:
+            try: sortorder = abs(int(sortorder))
+            except: sortorder = DEFAULT_SORTORDER
+
         photo_archive.save_properties(self, title, description, coverage,
                                       keywords, sortorder, releasedate, lang)
 
