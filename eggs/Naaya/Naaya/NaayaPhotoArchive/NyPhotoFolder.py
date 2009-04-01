@@ -134,6 +134,10 @@ class NyPhotoFolder(NyAttributes, photo_archive, NyContainer):
         if not lang:
             lang = self.gl_get_selected_language()
         
+        if sortorder:
+            try: sortorder = abs(int(sortorder))
+            except: sortorder = DEFAULT_SORTORDER
+        
         self._setPropValue('cover', cover)
         self._setPropValue('max_photos', max_photos)
         self._setPropValue('photos_per_page', photos_per_page)
