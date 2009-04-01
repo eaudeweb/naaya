@@ -15,13 +15,6 @@
 		<tr>
 		<td valign="top" class="main-cell">
 
-		<!-- Note -->
-		<div class="note">
-			<img src="/misc_/NaayaGlossary/spacer.gif" alt="" width="1" height="20" align="right" />
-			<p><span tal:omit-tag="" i18n:translate="">Here you see the list of terms found in the folder</span> <strong tal:content="translation" />.<br />
-			<span tal:omit-tag="" i18n:translate="">Click on the term to see the details like definition, translations etc...</span></p>
-		</div>
-
 		<!-- Containing elements list -->
 		<table	cellspacing="7" class="table_list"
 				tal:define="obj_list here/get_object_list">
