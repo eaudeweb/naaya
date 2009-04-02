@@ -7,7 +7,7 @@
 		<h3 id="Event-Title">
 			<!-- TODO: use localized strftime for displaying the date bellow -->
 			<tal:block condition="date">
-				<span i18n:translate="">Day events for</span> 
+				<span i18n:translate="">Items for</span> 
 				<span tal:replace="python:date.strftime('%d %B %Y')"/>
 			</tal:block>
 			<em tal:condition="not:date" i18n:translate>invalid date</em>
@@ -19,7 +19,7 @@
 				<th i18n:translate="">Event</th>
 			</tr>
 			<tr tal:condition="not: daily_events">
-				<td colspan="3" id="Event-None" i18n:translate="">No events this day</td>
+				<td colspan="3" id="Event-None" i18n:translate="">No items available this day</td>
 			</tr>
 			<tr tal:repeat="obj python:daily_events">
 				<td><img tal:attributes="src python:obj[0].icon; title python:obj[0].meta_type; alt python:obj[0].meta_type;" /></td>

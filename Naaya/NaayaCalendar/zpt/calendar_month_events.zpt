@@ -4,18 +4,17 @@
 <tal:block metal:fill-slot="page_body">
 	<!-- TODO: make Zope do the conversion of parameters to int -->
 	<tal:block define="cmonth python:int(request.get('cmonth', here.getCurrentMonth()));
-	                   cyear python:int(request.get('cyear', here.getCurrentYear()));
-
-	                   next_date python:here.getNextDate(cmonth, cyear);
-	                   prev_date python:here.getPrevDate(cmonth, cyear);
-	                   forw_month python:next_date[0];
-	                   forw_year python:next_date[1];
-	                   back_month python:prev_date[0];
-	                   back_year python:prev_date[1];">
+						cyear python:int(request.get('cyear', here.getCurrentYear()));
+						next_date python:here.getNextDate(cmonth, cyear);
+						prev_date python:here.getPrevDate(cmonth, cyear);
+						forw_month python:next_date[0];
+						forw_year python:next_date[1];
+						back_month python:prev_date[0];
+						back_year python:prev_date[1];">
 <div id="middle_port" style="margin-right:0;">
 		<h3 id="Event-Title">
 			<a tal:attributes="href string:${here/getArrowURL}cmonth=${back_month}&cyear=${back_year};" title="Previous month" i18n:attributes="title"><img tal:attributes="src string:${here/getEventCalendarURL}/left_arrow" title="Previous month" alt="Previous month" i18n:attributes="title alt" /></a>
-			<span tal:omit-tag="" i18n:translate="">Month events for</span> <span tal:replace="python:here.getMonthName(cmonth)+' '+str(cyear)" />
+			<span tal:omit-tag="" i18n:translate="">Items for</span> <span tal:replace="python:here.getMonthName(cmonth)+' '+str(cyear)" />
 			<a tal:attributes="href string:${here/getArrowURL}cmonth=${forw_month}&cyear=${forw_year};" title="Next month" i18n:attributes="title"><img tal:attributes="src string:${here/getEventCalendarURL}/right_arrow" title="Next month" alt="Next month" i18n:attributes="title alt" /></a>
 		</h3>
 
@@ -27,7 +26,7 @@
 				<th i18n:translate="">End date</th>
 			</tr>
 			<tr tal:condition="not: obj_list">
-				<td id="Event-None" i18n:translate="">No events this month</td>
+				<td id="Event-None" i18n:translate="">No items available this month</td>
 			</tr>
 			<tr tal:condition="obj_list" tal:repeat="obj obj_list">
 				<td><img tal:attributes="src python:obj[0].icon; title python:obj[0].meta_type; alt python:obj[0].meta_type;" /></td>
