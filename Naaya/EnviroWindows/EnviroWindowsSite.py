@@ -96,6 +96,12 @@ class EnviroWindowsSite(NySite):
         #set default 'Naaya' configuration
         NySite.__dict__['createPortalTools'](self)
         NySite.__dict__['loadDefaultData'](self)
+        try:
+            from Products.NaayaCore.SchemaTool.SchemaTool import manage_addSchemaTool
+            manage_addSchemaTool(self)
+        except ImportError:
+            # this version of Naaya doesn't use Schemas; we can safely move on
+            pass
 
         #load site skeleton - configuration
         self.loadSkeleton(join(ENVIROWINDOWS_PRODUCT_PATH, 'skel'))
