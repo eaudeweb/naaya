@@ -11,7 +11,7 @@
 <form tal:condition="python: current_user and current_user['subscribed']" method="post"
     tal:attributes="action string:${here/absolute_url}/unsubscribe_self">
     <p>
-        <tal:block i18n:translate="">You are subscribed to notifications of changes in</tal:block>
+        <tal:block i18n:translate="">You are subscribed to notifications of uploads in</tal:block>
         <em tal:content="here/aq_parent/title_or_id" /> as
         <strong tal:content="current_user/full_name" /> &lt;<tal:block content="current_user/email" />&gt;.
     </p>
@@ -21,7 +21,7 @@
 <form tal:condition="python: current_user and not current_user['subscribed']" method="post"
     tal:attributes="action string:${here/absolute_url}/subscribe_self">
     <p>
-        <tal:block i18n:translate="">You are not subscribed to notifications of changes in</tal:block>
+        <tal:block i18n:translate="">You are not subscribed to notifications of uploads in</tal:block>
         <em tal:content="here/aq_parent/title_or_id" />.
         <tal:block i18n:translate="">You could subscribe as</tal:block>
         <strong tal:content="current_user/full_name" /> &lt;<tal:block content="current_user/email" />&gt;.
@@ -30,7 +30,7 @@
 </form>
 
 <p tal:condition="not: current_user">
-    <tal:block i18n:translate="">You are not subscribed to notifications of changes in</tal:block>
+    <tal:block i18n:translate="">You are not subscribed to notifications of uploads in</tal:block>
     <em tal:content="here/aq_parent/title_or_id" />.
     <tal:block i18n:translate="">You need to <em>log in</em> before subscribing.</tal:block>
 </p>
