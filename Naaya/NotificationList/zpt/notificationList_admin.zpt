@@ -1,6 +1,10 @@
 <span tal:replace="structure here/standard_html_header" />
 
-<h1 i18n:translate="">Naaya Folder Notification List (administration)</h1>
+<h1 i18n:translate="">Notification list for <em tal:content="here/aq_parent/title_or_id" /> (administration)</h1>
+
+<div class="floated-buttons"><span class="buttons">
+    <a tal:attributes="href here/aq_parent/absolute_url" i18n:translate="">Back to <tal:block content="here/aq_parent/title_or_id" /></a>
+</span></div>
 
 <form tal:attributes="action string:${here/absolute_url}/unsubscribe_user_list" method="post"
     tal:define="subscribed_users here/list_subscribers">
@@ -10,7 +14,7 @@
 <input type="submit" value="Unsubscribe" />
 </form>
 
-<h2 i18n:translate="">Add users to notification list</h2>
+<h2><tal:block i18n:translate="">Add users to notification list for</tal:block> <tal:block content="here/aq_parent/title_or_id" /></h2>
 
 <form method="get" action="">
 <input type="text" name="search_new_users" />

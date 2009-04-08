@@ -1,13 +1,18 @@
 <span tal:replace="structure here/standard_html_header" />
 
-<h1 i18n:translate="">Naaya Folder Notification List</h1>
+<h1 i18n:translate="">Notification list for <em tal:content="here/aq_parent/title_or_id" /></h1>
+
+<div class="floated-buttons"><span class="buttons">
+    <a tal:attributes="href here/aq_parent/absolute_url" i18n:translate="">Back to <tal:block content="here/aq_parent/title_or_id" /></a>
+</span></div>
 
 <tal:block define="global current_user python:here.get_current_user(request)" />
 
 <form tal:condition="python: current_user and current_user['subscribed']" method="post"
     tal:attributes="action string:${here/absolute_url}/unsubscribe_self">
     <p>
-        <tal:block i18n:translate="">You are subscribed to this notification list as</tal:block>
+        <tal:block i18n:translate="">You are subscribed to notifications of changes in</tal:block>
+        <em tal:content="here/aq_parent/title_or_id" /> as
         <strong tal:content="current_user/full_name" /> &lt;<tal:block content="current_user/email" />&gt;.
     </p>
     <input type="submit" value="Unsubscribe" />
@@ -16,15 +21,19 @@
 <form tal:condition="python: current_user and not current_user['subscribed']" method="post"
     tal:attributes="action string:${here/absolute_url}/subscribe_self">
     <p>
-        <tal:block i18n:translate="">You are not subscribed to this notification list.
-            You could subscribe as</tal:block>
+        <tal:block i18n:translate="">You are not subscribed to notifications of changes in</tal:block>
+        <em tal:content="here/aq_parent/title_or_id" />.
+        <tal:block i18n:translate="">You could subscribe as</tal:block>
         <strong tal:content="current_user/full_name" /> &lt;<tal:block content="current_user/email" />&gt;.
     </p>
     <input type="submit" value="Subscribe" />
 </form>
 
-<p tal:condition="not: current_user" i18n:translate="">You are not subscribed to this notification list.
-    You need to <em>log in</em> before subscribing.</p>
+<p tal:condition="not: current_user">
+    <tal:block i18n:translate="">You are not subscribed to notifications of changes in</tal:block>
+    <em tal:content="here/aq_parent/title_or_id" />.
+    <tal:block i18n:translate="">You need to <em>log in</em> before subscribing.</tal:block>
+</p>
 
 <p tal:condition="python: current_user and current_user['can_admin']" i18n:translate="">
     Manage user subscriptions on the
