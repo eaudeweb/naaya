@@ -17,6 +17,9 @@
 #
 # Alex Morega, Eau de Web
 
+#Python imports
+from urlparse import urlparse
+
 #Zope imports
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -235,13 +238,13 @@ class NotificationList(NyItem):
         container_title = self.getParentNode().title_or_id()
 
         if event['type'] == 'forum message':
-            mail_subject = NOTIFICATION_LIST_MAIL_SUBJECT_TEMPLATE_UPLOAD % container_title
+            mail_subject = NOTIFICATION_LIST_MAIL_SUBJECT_TEMPLATE_FORUM_MESSAGE % container_title
             mail_template = NOTIFICATION_LIST_MAIL_BODY_TEMPLATE_FORUM_MESSAGE
             mail_template = mail_template.replace('@@GROUPTITLE@@', container_title)
             mail_template = mail_template.replace('@@ITEMURL@@', event['object'].absolute_url())
 
         elif event['type'] == 'file upload':
-            mail_subject = NOTIFICATION_LIST_MAIL_SUBJECT_TEMPLATE_FORUM_MESSAGE % container_title
+            mail_subject = NOTIFICATION_LIST_MAIL_SUBJECT_TEMPLATE_UPLOAD % container_title
             mail_template = NOTIFICATION_LIST_MAIL_BODY_TEMPLATE_UPLOAD
             mail_template = mail_template.replace('@@ITEM@@', event['object'].title_or_id())
             mail_template = mail_template.replace('@@GROUPTITLE@@', container_title)
