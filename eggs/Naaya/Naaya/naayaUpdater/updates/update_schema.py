@@ -22,11 +22,12 @@ from os.path import join
 from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 
+from Products.NaayaCore.constants import METATYPE_SCHEMA
 from Products.NaayaCore.SchemaTool.SchemaTool import manage_addSchemaTool
 from Products.Naaya.NySite import NAAYA_PRODUCT_PATH
 
 class CustomContentUpdater(NaayaContentUpdater):
-    """ Add nyexp_schema attribute to Naaya Site"""
+    """ Update sites to use the new SchemaTool """
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Update Naaya site to use Schemas'
@@ -42,12 +43,27 @@ class CustomContentUpdater(NaayaContentUpdater):
     def _update(self):
         updates = self._list_updates()
         for update in updates:
+            logger.debug('Updating site: %s', update.absolute_url())
             self._update_portal(update)
-            logger.debug('Update site: %s', update.absolute_url())
+            logger.debug('--- done ---')
 
     def _update_portal(self, portal):
         # step 1: add schema tool
         manage_addSchemaTool(portal)
+        logger.debug("Created portal_schemas")
+        logger.debug("NOTE: add/edit forms need to be updated, e.g. by reinstalling content types")
+        logger.debug("NOTE: the 'admin_properties_html' form needs to be updated")
+
+        # step 1.1: set keywords and coverage glossaries
+        schema_tool = portal.portal_schemas
+        if portal.keywords_glossary:
+            for schema in schema_tool.objectValues([METATYPE_SCHEMA]):
+                schema._getOb('keywords-property').glossary_id = portal.keywords_glossary
+            logger.debug("Set keywords glossary_id to \"%s\"", portal.keywords_glossary)
+        if portal.coverage_glossary:
+            for schema in schema_tool.objectValues([METATYPE_SCHEMA]):
+                schema._getOb('coverage-property').glossary_id = portal.coverage_glossary
+            logger.debug("Set coverage glossary_id to \"%s\"", portal.coverage_glossary)
 
         # step 2: add new forms
         new_forms = {
