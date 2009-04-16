@@ -218,7 +218,7 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         self.failUnlessEqual(exfile(), None)
 
         #add exfile
-        exf = self.loadFile('test.txt')
+        exf = NaayaTestCase.load_test_file('test.txt', globals())
         self.failUnlessRaises(ValueError, scs.saveProperties, file=exfile)
         scs.saveProperties(title='scs', file=exf, lang='en')
 
