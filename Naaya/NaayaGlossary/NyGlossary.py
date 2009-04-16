@@ -156,7 +156,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         for lang in self.get_english_names():
             index_extra = record()
             index_extra.default_encoding = 'utf-8'
-            try:    catalog_obj.manage_addIndex(self.cookCatalogIndex(lang), 'TextIndexNG2',index_extra)
+            try:    catalog_obj.manage_addIndex(self.cookCatalogIndex(lang), 'TextIndexNG3',index_extra)
             except:    pass
 
         try: catalog_obj.addIndex('approved', 'FieldIndex')
@@ -169,7 +169,9 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
         except: pass
         try: catalog_obj.addIndex('path', 'PathIndex')
         except: pass
-        try: catalog_obj.addIndex('title', 'TextIndex')
+        title_index_extra = record()
+        title_index_extra.default_encoding = 'utf-8'
+        try: catalog_obj.addIndex('title', 'TextIndexNG3', title_index_extra)
         except: pass
 
         #create metadata
@@ -541,7 +543,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                         catalog_obj = self.getGlossaryCatalog()
                         index_extra = record()
                         index_extra.default_encoding = 'utf-8'
-                        try:    catalog_obj.manage_addIndex(self.cookCatalogIndex(english_name), 'TextIndexNG2',index_extra)
+                        try:    catalog_obj.manage_addIndex(self.cookCatalogIndex(english_name), 'TextIndexNG3',index_extra)
                         except: pass
                     except: pass
 
@@ -573,7 +575,7 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                     catalog_obj = self.getGlossaryCatalog()
                     index_extra = record()
                     index_extra.default_encoding = 'utf-8'
-                    try:    catalog_obj.manage_addIndex(self.cookCatalogIndex(english_name), 'TextIndexNG2',index_extra)
+                    try:    catalog_obj.manage_addIndex(self.cookCatalogIndex(english_name), 'TextIndexNG3',index_extra)
                     except: pass
                 except: pass
 
