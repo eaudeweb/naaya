@@ -144,10 +144,8 @@ class ConsultationReviewItem(NyFSFile):
             ans_dict[qid] = ans
         return ans_dict
 
-    security.declareProtected(PERMISSION_REVIEW_CONSULTATION, 'review_index_html')
     security.declareProtected(PERMISSION_REVIEW_CONSULTATION, 'edit_html')
 
-    review_index_html = PageTemplateFile('zpt/review_index', globals())
     edit_html = PageTemplateFile('zpt/review_edit', globals())
     rate_review_html = PageTemplateFile('zpt/review_rate', globals())
 
