@@ -18,7 +18,7 @@
 
 __version__='$Revision: 1.6 $'[11:-2]
 
-from ImageFile import ImageFile
+from App.ImageFile import ImageFile
 
 import EventCalendar
 from DateFunctions import DateFunctions
