@@ -22,7 +22,7 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from ImageFile import ImageFile
+from App.ImageFile import ImageFile
 from Acquisition import Implicit
 from OFS.Image import cookId
 
