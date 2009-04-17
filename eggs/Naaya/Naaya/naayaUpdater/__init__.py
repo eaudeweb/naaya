@@ -18,7 +18,7 @@
 # Alec Ghica, Eau de Web
 # Cornel Nitu, Eau de Web
 
-from ImageFile import ImageFile
+from App.ImageFile import ImageFile
 import NaayaUpdater
 import NaayaContentUpdater
 import updates
