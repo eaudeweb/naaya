@@ -21,6 +21,7 @@
 import re
 from cStringIO import StringIO
 import PIL.Image
+import sys
 
 #Zope imports
 from OFS.Image import getImageInfo, cookId, Pdata
@@ -132,6 +133,12 @@ class NyPhoto(NyAttributes, photo_archive, NyFSContainer):
         """
         if not self.is_generated(display):
             self.__generate_display(display)
+            if sys.platform == 'win32':
+                # commit the transaction here, so ExtFile has a chance to rename
+                # the file; otherwise an iterator will stream the image to the
+                # client while holding an open filehandle, which will make
+                # the ExtFile rename operation fail with an OSError.
+                get_transaction.commit(0)
         display = self._getDisplayId(display)
         return self._getOb(display, None)
 
