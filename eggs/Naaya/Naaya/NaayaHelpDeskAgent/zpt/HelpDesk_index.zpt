@@ -99,10 +99,6 @@
 	<ul>
 		<li i18n:translate="">
 			insert your problem (issue) using the <strong>Post issue</strong> form.
-			Use <em>quick issue</em> if you just want to notify the Issue 
-			Administrator about a problem and you don't need follow-ups to it;
-			in this case you will not be asked to insert your personal details.
-			Otherwise, use the <em>Post issue</em> form<br /><br />
 		</li>
 		<li i18n:translate="">
 			you will receive a confirmation e-mail when adding an issue and one
