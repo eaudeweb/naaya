@@ -55,7 +55,7 @@ def addComment(self,
     if REQUEST and not contributor:
         contributor = REQUEST.AUTHENTICATED_USER.getUserName()
 
-    id = 'tb%s-%s' % (contributor, self.utGenRandomId(6))
+    id = str('tb%s-%s' % (contributor, self.utGenRandomId(6)))
     title = 'Comment by %s (%s)' % (contributor_name, contributor)
 
     ob = TalkBackConsultationComment(id,
