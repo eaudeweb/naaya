@@ -1,11 +1,11 @@
 <fieldset tal:repeat="comment here/get_comments">
-    <legend><span tal:replace="comment/contributor"/> (<span tal:replace="comment/contributor_name"/>) <span tal:replace="python:here.utShowFullDateTime(comment.comment_date)"/></legend>
-    [<a tal:condition="python:comment.checkPermissionEditObject()"
-        tal:attributes="href string:${comment/absolute_url}/edit_html"
-        i18n:translate="">Edit comment</a>]
-    [<a tal:condition="python:comment.checkPermissionEditObject()"
-        tal:attributes="href string:${here/absolute_url}/delete_comment?comment_id=${comment/id}"
-        i18n:translate="">Delete comment</a>]
-    <p class="tb-comment-message" tal:content="comment/message" />
-    <a tal:attributes="href string:${comment/absolute_url}/get_talkback_file" i18n:translate="" tal:condition="comment/check_file">Download attached file</a>
+	<legend><span tal:replace="comment/contributor"/> (<span tal:replace="comment/contributor_name"/>) <span tal:replace="python:here.utShowFullDateTime(comment.comment_date)"/></legend>
+	<tal:block condition="python:comment.checkPermissionEditObject()">
+		[<a tal:attributes="href string:${comment/absolute_url}/edit_html"
+			i18n:translate="">Edit comment</a>]
+		[<a tal:attributes="href string:${here/absolute_url}/delete_comment?comment_id=${comment/id}"
+			i18n:translate="">Delete comment</a>]
+	</tal:block>
+	<p class="tb-comment-message" tal:content="comment/message" />
+	<a tal:attributes="href string:${comment/absolute_url}/get_talkback_file" i18n:translate="" tal:condition="comment/check_file">Download attached file</a>
 </fieldset>
