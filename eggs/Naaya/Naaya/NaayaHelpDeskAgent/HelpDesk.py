@@ -1116,7 +1116,7 @@ class HelpDesk(Folder, EmailSender):
                 map(getattr, issues, (sortby,)*len(issues)),
                 xrange(len(issues)),
                 issues)
-        buf.sort()
+        buf.sort(lambda x,y: cmp(unicode(x), unicode(y)))
         if how == '1':
             buf.reverse()
         return map(operator.getitem, buf, (-1,)*len(buf))
