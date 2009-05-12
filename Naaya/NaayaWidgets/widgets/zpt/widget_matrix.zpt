@@ -20,6 +20,7 @@
 						<label for="rows" i18n:translate="">Rows</label>
 						<textarea id="rows" name="rows:lines" cols="50" rows="10" tal:content="python:'\n'.join(rows)" tal:attributes="disabled num_answers"></textarea><!-- TODO: fix conversion to lines -->
 					</div>
+                    <metal:block define-slot="extra_fields" />
 				</metal:block>
 			</metal:block>
 		</div>

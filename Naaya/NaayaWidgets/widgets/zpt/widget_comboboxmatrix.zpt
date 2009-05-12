@@ -1,0 +1,84 @@
+<tal:comment condition="nothing">
+<!-- mode can be: view, edit or manage -->
+</tal:comment>
+
+<tal:block define="
+    mode options/mode|string:view;
+    datamodel options/datamodel|nothing;
+	widget_id here/getWidgetId;">
+
+<!-- View mode -->
+<div tal:condition="python:mode == 'view'" class="widgetViewMode checkboxMatrixWidget">
+	<table class="datatable" tal:condition="datamodel">
+		<caption tal:content="here/title"></caption>
+		<tbody>
+			<tr tal:repeat="row here/rows">
+				<th scope="row" class="scope-row" tal:content="row">row</th>
+				<td tal:define="checked_choices python:datamodel[repeat['row'].index]">
+					<ul tal:condition="checked_choices">
+						<li tal:repeat="choice_idx checked_choices" style="background: none;">
+							<tal:block content="python:here.choices[choice_idx]" />:
+							<tal:block content="python:here.values[checked_choices[choice_idx]]" />
+						</li>
+					</ul>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<tal:block condition="not: datamodel">
+		<strong tal:content="here/title" class="widget-title" />
+		<br />
+		<span class="no-response" i18n:translate="">No response</span>
+	</tal:block>
+</div>
+
+<!-- Edit mode -->
+<div tal:condition="python:mode == 'edit'" class="widgetEditMode"
+	tal:define="datamodel python:here.getSession(widget_id, datamodel);">
+	<label tal:attributes="for widget_id" class="widget-title">
+		<span tal:content="here/title" />
+		<span tal:condition="here/required" class="required">*</span>
+	</label>
+	<div class="tooltips" tal:content="structure here/tooltips" />
+	<table>
+		<thead>
+			<tr>
+				<th></th>
+				<tal:block repeat="choice here/choices">
+					<th style="text-align: center" tal:content="choice">Choice</th>
+				</tal:block>
+			</tr>
+		</thead>
+		<tbody>
+			<tal:block repeat="row here/rows">
+				<tr tal:define="row_idx repeat/row/index">
+					<th tal:content="row">Row</th>
+					<tal:block repeat="choice here/choices">
+						<td style="text-align: center" tal:define="choice_idx repeat/choice/index">
+							<select tal:attributes="name string:${widget_id}_${row_idx}_${choice_idx}:int; id widget_id">
+								<tal:block repeat="value here/values">
+									<option tal:define="value_idx repeat/value/index"
+										tal:content="value" tal:attributes="value value_idx;
+										selected python:datamodel is not None and datamodel[row_idx][choice_idx] == value_idx" />
+								</tal:block>
+							</select>
+						</td>
+					</tal:block>
+				</tr>
+			</tal:block>
+		</tbody>
+	</table>
+</div>
+
+<!-- Edit widget properties -->
+<metal:block use-macro="here/matrix_render_meth/macros/manage">
+	<!-- Rows -->
+	<div class="field" metal:fill-slot="extra_fields" tal:define="
+        lang request/lang|here/gl_get_selected_language;
+        values python:here.getSession('values', here.getLocalProperty('values', lang))">
+		<label for="values" i18n:translate="">Values</label>
+		<textarea id="values" name="values:lines" cols="50" rows="10" tal:content="python:'\n'.join(values)" tal:attributes="disabled num_answers"></textarea><!-- TODO: fix conversion to lines -->
+	</div>
+</metal:block>
+
+</tal:block>
