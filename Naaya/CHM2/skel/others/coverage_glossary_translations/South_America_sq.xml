@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff SYSTEM "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="gentmx.py" product-name="NaayaGlossary" product-version="1.1.x" datatype="plaintext" source-language="English" date="2007-11-28T15:42:24Z" target-language="Albanian">
+    <body>
+      <trans-unit approved="1" id="Argentina">
+        <source>Argentina</source>
+        <target>Argjentinë</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Bolivia">
+        <source>Bolivia</source>
+        <target>Bolivi</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Chile">
+        <source>Chile</source>
+        <target>Kili</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Colombia">
+        <source>Colombia</source>
+        <target>Kolumbi</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Ecuador">
+        <source>Ecuador</source>
+        <target>Ekuator</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Guyana">
+        <source>Guyana</source>
+        <target>Guajana</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Paraguay">
+        <source>Paraguay</source>
+        <target>Paraguaj</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Uruguay">
+        <source>Uruguay</source>
+        <target>Uruguaj</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Venezuela">
+        <source>Venezuela</source>
+        <target>Venezuelë</target>
+        <context-group name="South_America"/>
+        <note/>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

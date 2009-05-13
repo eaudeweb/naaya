@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff SYSTEM "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="gentmx.py" product-name="NaayaGlossary" product-version="1.1.x" datatype="plaintext" source-language="English" date="2007-11-28T15:42:24Z" target-language="Arabic">
+    <body>
+      <trans-unit approved="1" id="Antigua_and_Barbuda">
+        <source>Antigua and Barbuda</source>
+        <target>انتيغوا وبربودا</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Anguilla">
+        <source>Anguilla</source>
+        <target>البانيا</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Barbados">
+        <source>Barbados</source>
+        <target>بربادوس</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Belize">
+        <source>Belize</source>
+        <target>بليز</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Costa_Rica">
+        <source>Costa Rica</source>
+        <target>كوستاريكا</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Cuba">
+        <source>Cuba</source>
+        <target>كوبا</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Dominica">
+        <source>Dominica</source>
+        <target>دومينيكا</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Dominican_Republic">
+        <source>Dominican Republic</source>
+        <target>الجمهورية الدومينيكية</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Grenada">
+        <source>Grenada</source>
+        <target>غرينادا</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Guatemala">
+        <source>Guatemala</source>
+        <target>غواتيمالا</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Honduras">
+        <source>Honduras</source>
+        <target>هندوراس</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Haiti">
+        <source>Haiti</source>
+        <target>هايتي</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Jamaica">
+        <source>Jamaica</source>
+        <target>جامايكا</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Saint_Kitts_and_Nevis">
+        <source>Saint Kitts and Nevis</source>
+        <target>سانت كيتس ونيفيس</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Saint_Lucia">
+        <source>Saint Lucia</source>
+        <target>سانت لوسيا</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Nicaragua">
+        <source>Nicaragua</source>
+        <target>نيكاراغوا</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Panama">
+        <source>Panama</source>
+        <target>بنما</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="El_Salvador">
+        <source>El Salvador</source>
+        <target>السلفادور</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Trinidad_and_Tobago">
+        <source>Trinidad and Tobago</source>
+        <target>ترينيداد وتوباغو</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Saint_Vincent_and_the_Grenadines">
+        <source>Saint Vincent and the Grenadines</source>
+        <target>سانت فنسنت وجزر غرينادين</target>
+        <context-group name="Central_America"/>
+        <note/>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

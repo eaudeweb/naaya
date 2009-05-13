@@ -19,6 +19,7 @@
 # Dragos Chirila
 
 #Python imports
+import os
 from urlparse import urlparse
 from copy import copy
 from cStringIO import StringIO
@@ -126,8 +127,7 @@ class CHMSite(NySite):
         #create and fill glossaries
         manage_addGlossaryCentre(self, ID_GLOSSARY_KEYWORDS, TITLE_GLOSSARY_KEYWORDS)
         self._getOb(ID_GLOSSARY_KEYWORDS).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_keywords.xml')))
-        manage_addGlossaryCentre(self, ID_GLOSSARY_COVERAGE, TITLE_GLOSSARY_COVERAGE)
-        self._getOb(ID_GLOSSARY_COVERAGE).xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'glossary_coverage.xml')))
+        self.add_glossary_coverage()
 
         #portal_map custom index
         custom_map_index = self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'map_index.zpt'))
@@ -148,6 +148,29 @@ class CHMSite(NySite):
     def get_data_path(self):
         """ """
         return CHM2_PRODUCT_PATH
+
+    def add_glossary_coverage(self):
+        manage_addGlossaryCentre(self, ID_GLOSSARY_COVERAGE, TITLE_GLOSSARY_COVERAGE)
+        glossary = self._getOb(ID_GLOSSARY_COVERAGE)
+        glossary_languages = [
+                ('Arabic', 'ar'), ('Bulgarian', 'bg'), ('Catalan', 'ca'),
+                ('Czech', 'cs'), ('Danish', 'da'), ('German', 'de'),
+                ('Greek', 'el'), ('English', 'en'), ('Esperanto', 'eo'),
+                ('Spanish', 'es'), ('Estonian', 'et'), ('Basque', 'eu'),
+                ('Finnish', 'fi'), ('Faeroese', 'fo'), ('French', 'fr'),
+                ('Irish', 'ga'), ('Croatian', 'hr'), ('Hungarian', 'hu'),
+                ('Armenian', 'hy'), ('Islandic', 'is'), ('Italian', 'it'),
+                ('Lithuanian', 'lt'), ('Latvian', 'lv'), ('Macedonian', 'mk'),
+                ('Maltese', 'mt'), ('Dutch', 'nl'), ('Polish', 'pl'),
+                ('Portuguese', 'pt'), ('Romanian', 'ro'), ('Russian', 'ru'),
+                ('Slovak', 'sk'), ('Slovenian', 'sl'), ('Albanian', 'sq'),
+                ('Serbian', 'sr'), ('Swedish', 'sv'), ('Turkish', 'tr'),
+                ('Ukrainian', 'uk'),
+            ]
+        for name, code in glossary_languages:
+            glossary.addLanguage(name, code)
+        for file in [file for file in os.listdir(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'coverage_glossary_translations')) if file.endswith('.xml')]:
+            glossary.xliff_import(self.futRead(join(CHM2_PRODUCT_PATH, 'skel', 'others', 'coverage_glossary_translations', file)))
 
     #objects getters
     def getLinkChecker(self): return self._getOb(ID_LINKCHECKER, None)
@@ -960,7 +983,6 @@ class CHMSite(NySite):
     security.declareProtected(view_management_screens, 'dumpFormsLayout')
     def dumpFormsLayout(self):
         """ """
-        import os
         path = join(CLIENT_HOME, self.id)
         path_forms = join(path, 'forms')
         if not os.path.isdir(path):
