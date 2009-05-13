@@ -3,10 +3,10 @@
 <tal:block metal:fill-slot="toolbar">
 	<tal:block condition="here/checkPermissionEditObjects">
 		<div class="buttons">
-			<a tal:attributes="href here/edit_html/absolute_url" i18n:translate="">Edit</a>
-			<a tal:attributes="href here/edit_attachments_html/absolute_url" i18n:translate="">Edit Attachments</a>
-			<a tal:attributes="href here/edit_questions_html/absolute_url" i18n:translate="">Edit Questions</a>
-			<a tal:attributes="href here/edit_reports_html/absolute_url" i18n:translate="">Edit Reports</a>
+			<a tal:attributes="href string:${here/absolute_url}/edit_html" i18n:translate="">Edit</a>
+			<a tal:attributes="href string:${here/absolute_url}/edit_attachments_html" i18n:translate="">Edit Attachments</a>
+			<a tal:attributes="href string:${here/absolute_url}/edit_questions_html" i18n:translate="">Edit Questions</a>
+			<a tal:attributes="href string:${here/absolute_url}/edit_reports_html" i18n:translate="">Edit Reports</a>
 		</div>
 	</tal:block>
 </tal:block>
