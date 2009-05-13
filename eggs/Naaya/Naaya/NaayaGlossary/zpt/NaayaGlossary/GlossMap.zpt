@@ -80,9 +80,11 @@
 								tal:define="node_path python:item.absolute_url()"
 								tal:attributes="href string:javascript:window.opener.fSet('${ctrl}', '${translation_java}');"
 								tal:content="translation" />
-							<span	tal:condition="python:not item.utIsElement() and translation"
-									tal:content="translation" />
-							<em	tal:condition="python:not translation" i18n:translate="">no translation available</em>
+							<span tal:condition="python:not item.utIsElement()">
+								<span tal:condition="translation" tal:content="translation"/>
+								<em tal:condition="not:translation" tal:content="item/title_or_id"/>
+								<em><small tal:condition="not:translation" i18n:translate="">(no translation available)</small></em>
+							</span>
 						</td>
 					</tr>
 				</table>

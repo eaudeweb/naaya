@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff SYSTEM "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="gentmx.py" product-name="NaayaGlossary" product-version="1.1.x" datatype="plaintext" source-language="English" date="2007-11-28T15:42:24Z" target-language="Croatian">
+    <body>
+      <trans-unit approved="1" id="Angola">
+        <source>Angola</source>
+        <target>Angola</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Burkina_Faso">
+        <source>Burkina Faso</source>
+        <target>Burkina Faso</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Burundi">
+        <source>Burundi</source>
+        <target>Burundi</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Benin">
+        <source>Benin</source>
+        <target>Benin</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Brunei">
+        <source>Brunei</source>
+        <target>Brunei Darussalam</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Bouvet_Island">
+        <source>Bouvet Island</source>
+        <target>Otok Bouvet</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Botswana">
+        <source>Botswana</source>
+        <target>Bocvana</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Democratic_Republic_of_the_Congo">
+        <source>Democratic Republic of the Congo</source>
+        <target>Kongo, Demokratska Republika</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Central_African_Republic">
+        <source>Central African Republic</source>
+        <target>Srednjoafrička Republika</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Congo">
+        <source>Congo</source>
+        <target>Kongo</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Côte_d’Ivoire">
+        <source>Côte d’Ivoire</source>
+        <target>Obala Bjelokosti</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Cameroon">
+        <source>Cameroon</source>
+        <target>Kamerun</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Cape_Verde">
+        <source>Cape Verde</source>
+        <target>Zeleni Rt</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Djibouti">
+        <source>Djibouti</source>
+        <target>Džibuti</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Algeria">
+        <source>Algeria</source>
+        <target>Alžir</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Egypt">
+        <source>Egypt</source>
+        <target>Egipat</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Western_Sahara">
+        <source>Western Sahara</source>
+        <target>Zapadna Sahara</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Eritrea">
+        <source>Eritrea</source>
+        <target>Eritreja</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Ethiopia">
+        <source>Ethiopia</source>
+        <target>Etiopija</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Gabon">
+        <source>Gabon</source>
+        <target>Gabon</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Ghana">
+        <source>Ghana</source>
+        <target>Gana</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Gambia">
+        <source>Gambia</source>
+        <target>Gambija</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Guinea">
+        <source>Guinea</source>
+        <target>Gvineja</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Equatorial_Guinea">
+        <source>Equatorial Guinea</source>
+        <target>Ekvatorska Gvineja</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Guinea-Bissau">
+        <source>Guinea-Bissau</source>
+        <target>Gvineja Bisau</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Kenya">
+        <source>Kenya</source>
+        <target>Kenija</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Comoros">
+        <source>Comoros</source>
+        <target>Komori</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Liberia">
+        <source>Liberia</source>
+        <target>Liberija</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Lesotho">
+        <source>Lesotho</source>
+        <target>Lesoto</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Morocco">
+        <source>Morocco</source>
+        <target>Maroko</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Libya">
+        <source>Libya</source>
+        <target>Libijska Arapska Džamahirija</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Madagascar">
+        <source>Madagascar</source>
+        <target>Madagaskar</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Mali">
+        <source>Mali</source>
+        <target>Mali</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Mauritania">
+        <source>Mauritania</source>
+        <target>Mauritanija</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Mauritius">
+        <source>Mauritius</source>
+        <target>Mauricijus</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Malawi">
+        <source>Malawi</source>
+        <target>Malavi</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Mozambique">
+        <source>Mozambique</source>
+        <target>Mozambik</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Namibia">
+        <source>Namibia</source>
+        <target>Namibija</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Niger">
+        <source>Niger</source>
+        <target>Niger</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Nigeria">
+        <source>Nigeria</source>
+        <target>Nigerija</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Réunion">
+        <source>Réunion</source>
+        <target>Reunion</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Rwanda">
+        <source>Rwanda</source>
+        <target>Ruanda</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Seychelles">
+        <source>Seychelles</source>
+        <target>Sejšeli</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Sudan">
+        <source>Sudan</source>
+        <target>Sudan</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Saint_Helena">
+        <source>Saint Helena</source>
+        <target>Sveta Helena</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Sierra_Leone">
+        <source>Sierra Leone</source>
+        <target>Sijera Leone</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Senegal">
+        <source>Senegal</source>
+        <target>Senegal</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Somalia">
+        <source>Somalia</source>
+        <target>Somalija</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Serbia">
+        <source>Serbia</source>
+        <target>Serbia</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Sao_Tome_and_Principe">
+        <source>Sao Tome and Principe</source>
+        <target>Sveti Toma i Prinsipe</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Swaziland">
+        <source>Swaziland</source>
+        <target>Svazi</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Chad">
+        <source>Chad</source>
+        <target>Čad</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Togo">
+        <source>Togo</source>
+        <target>Togo</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Tunisia">
+        <source>Tunisia</source>
+        <target>Tunis</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Tanzania">
+        <source>Tanzania</source>
+        <target>Tanzanija</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Uganda">
+        <source>Uganda</source>
+        <target>Uganda</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Mayotte">
+        <source>Mayotte</source>
+        <target>Majote</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="South_Africa">
+        <source>South Africa</source>
+        <target>Južna Afrika</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Zambia">
+        <source>Zambia</source>
+        <target>Zambija</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+      <trans-unit approved="1" id="Zimbabwe">
+        <source>Zimbabwe</source>
+        <target>Zimbabve</target>
+        <context-group name="Africa"/>
+        <note/>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
