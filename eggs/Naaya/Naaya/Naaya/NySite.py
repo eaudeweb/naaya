@@ -919,6 +919,25 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 d[url][1].append((x, c))
         return d
 
+    security.declarePublic('getFoldersWithUntranslatedContent')
+    def getFoldersWithTranslatableContent(self, lang):
+        """
+        returns a list with all folders that contain objects that
+        have not yet been translated in the specified language
+        """
+        translatable = {}
+        for folder in self.getCatalogedObjects(METATYPE_FOLDER):
+            main_parent = self.getFolderMainParent(folder)
+            main_parent_url = main_parent.absolute_url(1)
+            translatable.setdefault(main_parent_url, {})
+            translatable[main_parent_url]['obj'] = main_parent
+            translatable[main_parent_url].setdefault('content', [])
+            translatable[main_parent_url]['content'].extend(folder.getTranslatableContent(lang))
+        #if there are no un-translated items for the given language, return an empty dictionary
+        if not [object for object in translatable.values() if object['content']]:
+            return {}
+        return translatable
+
     security.declarePublic('getLatestUploads')
     def getLatestUploads(self, howmany=None):
         """
@@ -2810,6 +2829,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def admin_basket_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_basket')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_basket_translations_html')
+    def admin_basket_translations_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return PageTemplateFile('skel/forms/site_admin_basket_translations', globals()).__of__(self)()
 
     security.declareProtected(PERMISSION_VALIDATE_OBJECTS, 'admin_validation_html')
     def admin_validation_html(self, REQUEST=None, RESPONSE=None):
