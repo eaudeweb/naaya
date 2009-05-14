@@ -517,6 +517,13 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, Cacheabl
         r.extend(self.getPendingObjects())
         return r
 
+    def getTranslatableFolders(self, lang): return [x for x in self.objectValues(METATYPE_FOLDER) if not x.getLocalProperty('title', lang)]
+    def getTranslatableObjects(self, lang): return [x for x in self.getObjects() if not x.getLocalProperty('title', lang)]
+    def getTranslatableContent(self, lang):
+        r = self.getTranslatableFolders(lang)
+        r.extend(self.getTranslatableObjects(lang))
+        return r
+
     def countPendingContent(self):  return len(self.getPendingContent())
     def hasPendingContent(self):    return len(self.getPendingContent()) > 0
     def getSubfoldersWithPendingItems(self):
