@@ -4,7 +4,7 @@
 
 <tal:block metal:fill-slot="section" tal:define="show python:request.get('show', ''); lang python:request.get('lang', here.gl_get_selected_language())">
 <p i18n:translate="" tal:omit-tag="">
-	This page lists the folders from this portal (grouped by top-level containing folder) that contain items whitch have not yet been translated in the specified language. Click on "Show items" to expand the list of un-translated content. Click on each link to edit and translate the item.
+	This page lists the folders from this portal (grouped by top-level containing folder) that contain items which have not yet been translated in the specified language. Click on "Show items" to expand the list of un-translated content. Click on each link to edit and translate the item.
 </p>
 <br/><br/>
 <form method="get" action="">

@@ -15,6 +15,7 @@
     <li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_notifications_html" title="Notifications" i18n:attributes="title" i18n:translate="">Notifications</a></li>	    
 	<li><strong i18n:translate="">Content management</strong></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_basket_html" title="Centralized basket of approvals" i18n:attributes="title" i18n:translate="">Basket of approvals</a></li>
+	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_basket_translations_html" title="Centralized basket of content that has not yet been translated" i18n:attributes="title" i18n:translate="">Basket of translations</a></li>
 	<li tal:condition="canValidate"><a tal:attributes="href string:${site_url}/admin_validation_html" title="Centralized basket of validation" i18n:attributes="title" i18n:translate="">Basket of validation</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_versioncontrol_html" title="Version control" i18n:attributes="title" i18n:translate="">Version control</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_maintopics_html" title="Define the list of main sections" i18n:attributes="title" i18n:translate="">Main sections</a></li>
