@@ -31,7 +31,7 @@
 </form>
 
 <form metdho="post" tal:attributes="action string:${site_url}/admin_delworkgroup">
-<table id="folderfile_list" class="sortable" width="70%">
+	<table id="folderfile_list" class="sortable" width="70%">
 	<thead>
 		<tr>
 			<tal:block tal:repeat="item sortdata">
@@ -39,14 +39,14 @@
 				<tal:block tal:condition="item/sortable">
 					<tal:block tal:condition="python:skey==item['key']">
 						<th tal:condition="python:rkey==''" class="sorted" scope="col">
-							<a title="Sorted A..Z - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_workgroups_html?skey=${item/key}&amp;rkey=1" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortup.gif" width="12" height="12" alt="" border="0" /></a>
+							<a title="Sorted A..Z - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_workgroups_html?skey=${item/key}&amp;rkey=1" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortup.gif" style="width: 12px; height: 12px; border: 0" alt="" /></a>
 						</th>
 						<th tal:condition="python:rkey!=''" class="sorted" scope="col">
-							<a title="Sorted Z..A - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_workgroups_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortdown.gif" width="12" height="12" alt="" border="0" /></a>
+							<a title="Sorted Z..A - Click to reverse" rel="nofollow" tal:attributes="href string:${site_url}/admin_workgroups_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortdown.gif" style="width: 12px; height: 12px; border: 0" alt="" /></a>
 						</th>
 					</tal:block>
 					<th tal:condition="python:skey!=item['key']" scope="col">
-						<a title="Sortable" rel="nofollow" tal:attributes="href string:${site_url}/admin_workgroups_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortnot.gif" width="12" height="12" alt="" border="0" /></a>
+						<a title="Sortable" rel="nofollow" tal:attributes="href string:${site_url}/admin_workgroups_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img tal:attributes="src string:${skin_files_path}/sortnot.gif" style="width: 12px; height: 12px; border: 0" alt="" /></a>
 					</th>
 				</tal:block>
 			</tal:block>
@@ -57,11 +57,14 @@
 			<td><input type="checkbox" name="ids" tal:attributes="value python:wg[0]" /></td>
 			<td tal:define="id python:wg[0]"><a tal:attributes="href string:${site_url}/admin_workgroup_html?w=${id}" tal:content="python:wg[1]" /></td>
 			<td tal:content="python:wg[3]" />
-			<td tal:define="location python:here.utGetObject(wg[2])"><a tal:attributes="href location/absolute_url" tal:content="location/title_or_id" /></td>
+			<td tal:define="location_url python:wg[2]; location python:here.utGetObject(location_url)">
+				<a tal:condition="location" tal:attributes="href location/absolute_url" tal:content="location/title_or_id" />
+				<em tal:condition="not:location" style="color: red" tal:content="string:Location deleted (${location_url})" />
+			</td>
 		</tr>
 	</tbody>
-</table>
-<input type="submit" value="Delete workgroups" i18n:attributes="value" class="submission_button" />
+	</table>
+	<input type="submit" value="Delete workgroups" i18n:attributes="value" class="submission_button" />
 </form>
 
 </tal:block>
