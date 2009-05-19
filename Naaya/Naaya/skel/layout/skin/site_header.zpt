@@ -47,7 +47,14 @@
 		</ul>
 	</div>
 	<div>
-		<a href="/" style="float: left;"><img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif" alt="Logo" i18n:attributes="alt" tal:condition="here/hasLeftLogo" /></a>
+		<a href="/" style="float: left;">
+			<tal:block define="logo_url python:test(here.hasLeftLogo(), here.leftLogoUrl(), here.defaultLeftLogoUrl())">
+				<img tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
+			</tal:block>
+		</a>
+		<tal:block define="logo_url python:test(here.hasRightLogo(), here.rightLogoUrl(), here.defaultRightLogoUrl())">
+			<img style="float: right; clear: right;" tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
+		</tal:block>
 		<div id="toptitle">
 			<span class="page_title" tal:content="here/site_title" /><br />
 			<span class="page_subtitle" tal:content="here/site_subtitle" />
