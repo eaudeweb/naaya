@@ -25,7 +25,7 @@ class CustomContentUpdater(NaayaContentUpdater):
       {'id': 'update_meta_type', 'label': 'Search meta types', 
        'type': 'lines', 'mode': 'w'},
     )
-    
+
     def __init__(self, id):
         NaayaContentUpdater.__init__(self, id)
         self.title = 'Search broken ExtFiles'
@@ -56,28 +56,28 @@ class CustomContentUpdater(NaayaContentUpdater):
             if getattr(doc, 'hasVersion', None) and doc.hasVersion() and doc.version != doc:
                 if self._verify_doc(doc.version):
                     doc_broken = True
-	
+
         elif getattr(doc, 'get_data', None):
             filename = doc._get_data_name()
             if filename:
                 data = doc.get_data(as_string=False)
                 if data.is_broken():
                     logger.debug('Broken %s: %s, filename: %s', doc.meta_type, doc.absolute_url(1), filename)
-        	    doc_broken = True
+                doc_broken = True
             if getattr(doc, 'hasVersion', None) and doc.hasVersion() and doc.version != doc:
                 if self._verify_doc(doc.version):
                     doc_broken = True
-            
-    	    if getattr(doc, 'getVersions', None):
-    	        for version in doc.getVersions():
+
+            if getattr(doc, 'getVersions', None):
+                for version in doc.getVersions():
                     data = version
-    	            key = data.getId()
-    	            if not getattr(data, 'filename', []):
-    	                continue
-    	            if data.is_broken():
-    	                logger.debug('Broken version %s: %s, version id: %s, version filename: %s',
-    	                doc.meta_type, doc.absolute_url(1), key, getattr(data, 'filename', []))
-    	                doc_broken = True
+                    key = data.getId()
+                    if not getattr(data, 'filename', []):
+                        continue
+                    if data.is_broken():
+                        logger.debug('Broken version %s: %s, version id: %s, version filename: %s',
+                        doc.meta_type, doc.absolute_url(1), key, getattr(data, 'filename', []))
+                        doc_broken = True
         if doc_broken:
             return doc
         return None
