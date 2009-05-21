@@ -154,6 +154,16 @@ class NyGlossaryElement(SimpleItem, ElementBasic, utils, catalog_utils):
         try:    return getattr(self, language)
         except: return ''
 
+    def get_translation_by_language_for_js(self, language):
+        """ get translation by language for the javascript code"""
+        try:
+            translation = getattr(self, language)
+            if not translation:
+                translation = self.title_or_id()
+        except AttributeError:
+            translation = self.title_or_id()
+        return translation.replace('_', ' ')
+
     def check_if_no_translations(self):
         """ check if translation """
         for lang in self.get_english_names():

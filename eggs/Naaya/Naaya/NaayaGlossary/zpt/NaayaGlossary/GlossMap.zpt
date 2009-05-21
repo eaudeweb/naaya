@@ -45,7 +45,7 @@
 			<td tal:define="	lang python:here.get_language_by_code(selected_lang);
 								item python:tree_node[0];
 								translation python:item.get_translation_by_language(lang);
-								translation_java python:item.get_translation_by_language(lang).replace('\'', '\\\'')">
+								translation_java python:item.get_translation_by_language_for_js(lang).replace('\'', '\\\'')">
 				<table border="0" cellspacing="1" cellpadding="1">
 					<tr>
 						<td>
@@ -76,15 +76,10 @@
 															title python:test(hasattr(item, 'meta_label'), item.meta_label, item.meta_type)" />
 						</td>
 						<td>
-							<a	tal:condition="python:item.utIsElement() and translation"
-								tal:define="node_path python:item.absolute_url()"
+							<a	tal:define="node_path python:item.absolute_url()"
 								tal:attributes="href string:javascript:window.opener.fSet('${ctrl}', '${translation_java}');"
-								tal:content="translation" />
-							<span tal:condition="python:not item.utIsElement()">
-								<span tal:condition="translation" tal:content="translation"/>
-								<em tal:condition="not:translation" tal:content="item/title_or_id"/>
-								<em><small tal:condition="not:translation" i18n:translate="">(no translation available)</small></em>
-							</span>
+								tal:content="python:translation or item.title_or_id()" />
+							<em><small tal:condition="not:translation" i18n:translate="">(no translation available)</small></em>
 						</td>
 					</tr>
 				</table>
