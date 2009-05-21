@@ -563,8 +563,8 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
     def addLanguage(self, english_name='', lang='', REQUEST=None):
         """ """
         if string.strip(lang)=='' or string.strip(english_name)=='':
-            self.setSessionErrors(["Please specify language name and code."])
             if REQUEST:
+                self.setSessionErrors(["Please specify language name and code."])
                 return REQUEST.RESPONSE.redirect('index_properties_html')
         else:
             if self.check_language_exists(english_name):
@@ -581,11 +581,11 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
 
                 self._p_changed = 1
             else:
-                self.setSessionErrors(["Language already exists."])
                 if REQUEST:
+                    self.setSessionErrors(["Language already exists."])
                     return REQUEST.RESPONSE.redirect('index_properties_html')
-        self.setSessionInfo(['Saved changes.'])
         if REQUEST:
+            self.setSessionInfo(['Saved changes.'])
             return REQUEST.RESPONSE.redirect('index_properties_html')
 
     security.declareProtected(PERMISSION_MANAGE_NAAYAGLOSSARY, 'deleteLanguages')
