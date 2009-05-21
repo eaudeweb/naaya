@@ -57,11 +57,11 @@
 
 <div id="banner_logo">
 	<div id="banner">
-	<div id="logo">
-		<img tal:attributes="src string:${here/getLayoutToolPath}/logo.gif; alt string:${here/site_title}" />
+	<div id="logo" tal:define="logo_url python:test(here.hasLeftLogo(), here.leftLogoUrl(), here.defaultLeftLogoUrl())">
+		<img tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
 	</div>
-		<div id="banner_image">
-			<img tal:attributes="src string:${here/getLayoutToolPath}/logobis.gif; alt string:${here/site_title} secondary logo" />
+		<div id="banner_image" tal:define="logo_url python:test(here.hasRightLogo(), here.rightLogoUrl(), here.defaultRightLogoUrl())">
+			<img tal:attributes="src logo_url; alt here/site_title" i18n:attributes="alt" tal:condition="logo_url"/>
 		</div>
 		<div id="site-title">
 			<div id="title_content" tal:content="here/site_title" />
