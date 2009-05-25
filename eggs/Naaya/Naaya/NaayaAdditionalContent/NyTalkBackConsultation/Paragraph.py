@@ -54,16 +54,10 @@ class Paragraph(Folder):
 
     security = ClassSecurityInfo()
 
-    def all_meta_types( self, interfaces=None ):
-        """
-        Called by Zope to determine what
-        kind of object the envelope can contain
-        """
-        return [{'name': METATYPE_TALKBACKCONSULTATION_COMMENT,
-              'action': 'addComment',
-              'permission': PERMISSION_REVIEW_TALKBACKCONSULTATION}
-             ]
-
+    all_meta_types = [
+        {'name': METATYPE_TALKBACKCONSULTATION_COMMENT, 'action': 'addComment',
+            'permission': PERMISSION_REVIEW_TALKBACKCONSULTATION},
+    ]
 
     def __init__(self, id, title, body):
         self.id =  id
@@ -148,6 +142,31 @@ class Paragraph(Folder):
 
         # remove the old paragraph
         self.get_section().remove_paragraph(next_paragraph.id)
+
+        # refresh the section page
+        REQUEST.RESPONSE.redirect( "%s/edit_html#%s" %
+                                   (self.get_section().absolute_url(),
+                                    self.get_anchor()) )
+
+    security.declareProtected(
+        PERMISSION_MANAGE_TALKBACKCONSULTATION, 'move_down')
+    def move_down(self, REQUEST):
+        """ """
+
+        # get a list of paragraphs
+        section = self.get_section()
+        section._ensure_paragraph_ids()
+        paragraphs = section.paragraph_ids
+        index = paragraphs.index(self.id)
+        if index + 1 >= len(paragraphs):
+            self.setSessionErrors([
+                'Bad paragraph index while merging paragraphs'])
+            REQUEST.RESPONSE.redirect(self.get_section().absolute_url())
+            return
+
+        # swap the paragraphs
+        paragraphs[index], paragraphs[index+1] = paragraphs[index+1], paragraphs[index]
+        section._p_changed = 1
 
         # refresh the section page
         REQUEST.RESPONSE.redirect( "%s/edit_html#%s" %
