@@ -388,7 +388,9 @@ class NyTalkBackConsultation(NyAttributes,
     security.declareProtected(view, 'list_sections')
     def list_sections(self):
         """ """
-        return self.objectValues([METATYPE_TALKBACKCONSULTATION_SECTION])
+        sections = self.objectValues([METATYPE_TALKBACKCONSULTATION_SECTION])
+        sections.sort(cmp=lambda x,y: cmp(x.title, y.title))
+        return sections
 
     security.declareProtected(view, 'get_start_date')
     def get_start_date(self):
