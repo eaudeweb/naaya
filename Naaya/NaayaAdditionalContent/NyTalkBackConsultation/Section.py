@@ -68,6 +68,11 @@ class Section(Folder):
     all_meta_types = ()
     security = ClassSecurityInfo()
 
+    all_meta_types = [
+        {'name': METATYPE_TALKBACKCONSULTATION_PARAGRAPH, 'action': 'addParagraph',
+            'permission': PERMISSION_MANAGE_TALKBACKCONSULTATION},
+    ]
+
     def __init__(self, id, title, body):
         self.id =  id
         self.title = title
@@ -135,6 +140,13 @@ class Section(Folder):
         output = parse(self.body)
         for paragraph in output:
             addParagraph(self, body=paragraph)
+
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'saveProperties')
+    def saveProperties(self, title, REQUEST=None):
+        """ """
+        self.title = title
+        if REQUEST is not None:
+            REQUEST.RESPONSE.redirect(self.absolute_url() + '/edit_html')
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
     edit_html = PageTemplateFile('zpt/section_edit', globals())

@@ -220,7 +220,11 @@ class NyTalkBackConsultation(NyAttributes,
     meta_type = METATYPE_TALKBACKCONSULTATION
     meta_label = LABEL_OBJECT
 
-    all_meta_types = ()
+    all_meta_types = [
+        {'name': METATYPE_TALKBACKCONSULTATION_SECTION, 'action': 'addSection',
+            'permission': PERMISSION_MANAGE_TALKBACKCONSULTATION},
+    ]
+
 
     icon = 'misc_/NaayaContent/NyTalkBackConsultation.gif'
     icon_marked = 'misc_/NaayaContent/NyTalkBackConsultation_marked.gif'
