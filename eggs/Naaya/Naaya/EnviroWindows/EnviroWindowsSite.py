@@ -808,7 +808,7 @@ class EnviroWindowsSite(NySite):
             fs = SimpleFieldStorage(file_buffer, filename, headers)
             file_obj = FileUpload(fs)
             try:
-                folder.addNyExFile(title=filename, file=file_obj)
+                folder.addNyExFile(title=filename, file=file_obj, sortorder=100)
             except BadRequest, error:
                 errors.append("Could not add file %s: %s" % (filename, error))
                 continue
