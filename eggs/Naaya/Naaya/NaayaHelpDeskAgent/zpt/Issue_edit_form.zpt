@@ -30,7 +30,7 @@
 					<option value=""></option>
 					<option tal:repeat="item here/getListIssueCategory"
 						tal:attributes="value item/id; selected python:item.id==here.category"
-						tal:content="item/title" />
+						tal:content="item/title" i18n:translate=""/>
 				</select>
 			</td>
 		</tr>
@@ -41,7 +41,7 @@
 					<option value=""></option>
 					<option tal:repeat="item here/getListIssuePriority"
 						tal:attributes="value item/id; selected python:item.id==here.priority"
-						tal:content="item/title" />
+						tal:content="item/title" i18n:translate=""/>
 				</select>
 			</td>
 		</tr>
@@ -50,7 +50,7 @@
 			<td>
 				<tal:block tal:repeat="item here/getListIssueStatus">
 				<input type="radio" name="status" tal:attributes="value item/id; checked python:item.id==here.status" />
-				<span tal:replace="item/title" />
+				<span tal:replace="item/title" i18n:translate=""/>
 				</tal:block>
 			</td>
 		</tr>

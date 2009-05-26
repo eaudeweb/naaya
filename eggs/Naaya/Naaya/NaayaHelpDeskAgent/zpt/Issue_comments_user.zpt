@@ -4,7 +4,7 @@
 
 <h1>
 	<img tal:attributes="src here/icon;alt here/meta_type" border="0" />
-	<span tal:omit-tag="" i18n:translate="">Add comment</span>
+	<span i18n:translate="">Add comment</span>
 </h1>
 
 

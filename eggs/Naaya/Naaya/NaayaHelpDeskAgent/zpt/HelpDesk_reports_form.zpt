@@ -1,5 +1,5 @@
 <p>
-	<span i18n:translate="" tal:omit-tag="">Total number of issues</span>
+	<span i18n:translate="">Total number of issues</span>
 	<strong tal:content="python:len(here.getAllIssues())" />.
 </p>
 
@@ -16,7 +16,7 @@
 	<tbody>
 	<tal:block repeat="item here/getListIssueCategory">
 		<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
-			<td tal:condition="item/title" tal:attributes="class cellclass" tal:content="item/title"></td>
+			<td tal:condition="item/title" tal:attributes="class cellclass" tal:content="item/title" i18n:translate=""></td>
 			<td tal:condition="not:item/title" tal:attributes="class cellclass">-</td>
 			<td tal:attributes="class cellclass" tal:content="python:len(here.SearchSortIssues('', '', '', '', category=item.id))"></td>
 		</tr>
@@ -39,7 +39,7 @@
 	<tbody>
 		<tal:block repeat="item python:here.utSortObjsListByAttr(here.getListIssuePriority(),'title')">
 			<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
-				<td tal:attributes="class cellclass" tal:content="python: test(item.title,item.title,'-')"></td>
+				<td tal:attributes="class cellclass" tal:content="python: test(item.title,item.title,'-')" i18n:translate=""></td>
 				<td tal:attributes="class cellclass" tal:content="python: len(here.SearchSortIssues('', '', '', '', priority=item.id))"></td>
 			</tr>
 		</tal:block>
@@ -61,7 +61,7 @@
 	<tbody>
 		<tal:block repeat="item python:here.utSortObjsListByAttr(here.getListIssueStatus(),'order')">
 			<tr tal:define="cellclass python:test(path('repeat/item/odd'), 'cellodd', 'celleven')">
-				<td tal:attributes="class cellclass" tal:content="python: test(item.title,item.title,'-')"></td>
+				<td tal:attributes="class cellclass" tal:content="python: test(item.title,item.title,'-')" i18n:translate=""></td>
 				<td tal:attributes="class cellclass" tal:content="python: len(here.SearchSortIssues('', '', '', '', status=item.id))"></td>
 			</tr>
 		</tal:block>

@@ -15,14 +15,14 @@
 				<tal:block tal:condition="item/sortable">
 					<tal:block tal:condition="python:skey==item['key']">
 						<th tal:condition="python:rkey==''" class="sorted" scope="col">
-							<a title="Sorted A..Z - Click to reverse" rel="nofollow" tal:attributes="href string:${here/absolute_url}/history_user_html?skey=${item/key}&amp;rkey=1" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortup.gif" width="12" height="12" alt="" border="0" /></a>
+							<a title="Sorted A..Z - Click to reverse" rel="nofollow" tal:attributes="href string:${here/absolute_url}/history_user_html?skey=${item/key}&amp;rkey=1" i18n:attributes="title"><span i18n:translate="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortup.gif" width="12" height="12" alt="" border="0" /></a>
 						</th>
 						<th tal:condition="python:rkey!=''" class="sorted" scope="col">
-							<a title="Sorted Z..A - Click to reverse" rel="nofollow" tal:attributes="href string:${here/absolute_url}/history_user_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortdown.gif" width="12" height="12" alt="" border="0" /></a>
+							<a title="Sorted Z..A - Click to reverse" rel="nofollow" tal:attributes="href string:${here/absolute_url}/history_user_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortdown.gif" width="12" height="12" alt="" border="0" /></a>
 						</th>
 					</tal:block>
 					<th tal:condition="python:skey!=item['key']" scope="col">
-						<a title="Sortable" rel="nofollow" tal:attributes="href string:${here/absolute_url}/history_user_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:omit-tag="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortnot.gif" width="12" height="12" alt="" border="0" /></a>
+						<a title="Sortable" rel="nofollow" tal:attributes="href string:${here/absolute_url}/history_user_html?skey=${item/key}" i18n:attributes="title"><span i18n:translate="" tal:content="item/label" /><img src="misc_/NaayaHelpDeskAgent/sortnot.gif" width="12" height="12" alt="" border="0" /></a>
 					</th>
 				</tal:block>
 			</tal:block>

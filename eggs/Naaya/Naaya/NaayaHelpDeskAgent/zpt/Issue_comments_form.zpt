@@ -44,9 +44,9 @@
 			<th i18n:translate="">Content type</th>
 			<td>
 				<input type="radio" name="content_type" value="1" checked="checked" />
-				<span i18n:translate="" tal:omit-tag="">Plain text</span>
+				<span i18n:translate="">Plain text</span>
 				<input type="radio" name="content_type" value="0" />
-				<span i18n:translate="" tal:omit-tag="">HTML</span>
+				<span i18n:translate="">HTML</span>
 			</td>
 		</tr>
 		<tr>
@@ -69,12 +69,12 @@
 <div class="hd_comment">
 	<div class="hd_comment_header">
 		<div class="hd_comment_date">
-			<span tal:omit-tag="" i18n:translate="">Date:</span>
+			<span i18n:translate="">Date:</span>
 			<span tal:content="python:here.FormatDate(comment.date)" />
 		</div>
 		<div>
 			<input tal:condition="python:hasRoleHelpDeskAdministrator or here.consultant==here.getAuthenticatedUser()" type="checkbox" name="ids" tal:attributes="value comment/id" />
-			<span tal:omit-tag="" i18n:translate="">User:</span>
+			<span i18n:translate="">User:</span>
 			<span tal:content="comment/username" />
 		</div>
 	</div>
@@ -84,7 +84,7 @@
 	</div>
 	<div class="hd_comment_footer" tal:condition="attobj" tal:define="res python:here.getAttachmentForComment(comment.id); attobj python:res[0]; attFileName python:res[1]">
 		<div class="hd_comment_attach">
-			<span tal:omit-tag="" i18n:translate="">Attachment:</span>
+			<span i18n:translate="">Attachment:</span>
 			<tal:block tal:condition="attobj">
 				<a tal:attributes="href attobj/absolute_url" target="_blank" tal:content="attFileName" />
 			</tal:block>
