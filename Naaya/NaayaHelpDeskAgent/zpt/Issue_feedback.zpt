@@ -52,9 +52,9 @@
 			<th i18n:translate="">Content type</th>
 			<td>
 				<input type="radio" name="content_type" value="1" checked="checked" />
-				<span i18n:translate="" tal:omit-tag="">Plain text</span>
+				<span i18n:translate="">Plain text</span>
 				<input type="radio" name="content_type" value="0" />
-				<span i18n:translate="" tal:omit-tag="">HTML</span>
+				<span i18n:translate="">HTML</span>
 			</td>
 		</tr>
 		<tr>

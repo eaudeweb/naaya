@@ -4,7 +4,7 @@
 
 <h1>
 	<img tal:attributes="src here/icon;alt here/meta_type" border="0" />
-	<span tal:omit-tag="" i18n:translate="">Add an issue</span>
+	<span i18n:translate="">Add an issue</span>
 </h1>
 
 <span tal:replace="structure python:here.menu_html(pagetab=1)" />
@@ -37,7 +37,7 @@
 			<th><label for="subject" i18n:translate="">Subject/Title</label></th>
 			<td>
 				<input type="text" name="subject:utf8:ustring" id="subject" size="50" tal:attributes="value req_subject" />
-				<span style="color:#FF0000;">* <span tal:condition="python:request.has_key('FORM_ERROR_subject')" tal:content="python:request['FORM_ERROR_subject']" i18n:translate="" tal:omit-tag="" />
+				<span style="color:#FF0000;">* <span tal:condition="python:request.has_key('FORM_ERROR_subject')" tal:content="python:request['FORM_ERROR_subject']" i18n:translate=""/>
 			</td>
 		</tr>
 		<tr>
@@ -47,9 +47,9 @@
 					<option value=""></option>
 					<option tal:repeat="item here/getListIssueCategory"
 						tal:attributes="value item/id; selected python:item.id==req_category"
-						tal:content="item/title" />
+						tal:content="item/title" i18n:translate=""/>
 				</select>
-				<span style="color:#FF0000;">* <span tal:condition="python:request.has_key('FORM_ERROR_category')" tal:content="python:request['FORM_ERROR_category']" i18n:translate="" tal:omit-tag="" />
+				<span style="color:#FF0000;">* <span tal:condition="python:request.has_key('FORM_ERROR_category')" tal:content="python:request['FORM_ERROR_category']" i18n:translate=""/>
 			</td>
 		</tr>
 		<tr tal:condition="python:not here.default_priority">
@@ -67,7 +67,7 @@
 			<th valign="top"><label for="description" i18n:translate="">Description</label></th>
 			<td>
 				<textarea name="description:utf8:ustring" id="description" rows="10" cols="70" tal:content="req_description" style="vertical-align:top;"></textarea>
-				<span style="color:#FF0000;">* <span tal:condition="python:request.has_key('FORM_ERROR_description')" tal:content="python:request['FORM_ERROR_description']" i18n:translate="" tal:omit-tag="" />
+				<span style="color:#FF0000;">* <span tal:condition="python:request.has_key('FORM_ERROR_description')" tal:content="python:request['FORM_ERROR_description']" i18n:translate=""/>
 			</td>
 		</tr>
 		<tr tal:condition="here/isSecurityFlagPublic">
