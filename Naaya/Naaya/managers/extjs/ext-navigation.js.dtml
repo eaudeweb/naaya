@@ -1,6 +1,7 @@
 <dtml-call "REQUEST.RESPONSE.setHeader( 'Content-Type', 'text/javascript' )">
 <dtml-let the_site="getSite()">
-<dtml-let the_site_title="the_site.getLocalProperty('title') or the_site.title_or_id()">
+<dtml-let the_site_title="the_site.utToUtf8(the_site.getLocalProperty('title') or the_site.title_or_id())">
+<dtml-let the_site_title="the_site.utJsEncode(the_site_title)">
 <dtml-let the_site_icon="the_site.absolute_url() + '/misc_/Naaya/NyFolder.gif' ">
 
 function makeTree(div_id){
@@ -63,6 +64,7 @@ Ext.EventManager.onDocumentReady(function(){
     }
   }
 });
+</dtml-let>
 </dtml-let>
 </dtml-let>
 </dtml-let>
