@@ -16,19 +16,9 @@
 	</ul>
 </div>
 
-<hr class="hr_invisible" />
 
 <div class="second_tab_set">
 
-<div class="tabs_admin">
-	<ul>
-		<li><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Assign roles</a></li>
-		<li><a tal:attributes="href string:${site_url}/admin_usersassigned_html" i18n:translate="">Privileged users</a></li>
-		<li><a tal:attributes="href string:${site_url}/admin_usersunnassigned_html" i18n:translate="">Registered users</a></li>
-	</ul>
-</div>
-
-<hr class="hr_invisible" />
 <h2 i18n:translate="">Add user</h2>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_adduser">

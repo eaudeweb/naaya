@@ -7,6 +7,8 @@
                 user_tool here/getAuthenticationTool;
                 skey python:request.get('skey', 'username');
                 rkey python:request.get('rkey', '');
+                skin_files_path python:here.getLayoutTool().getSkinFilesPath();
+                show_section python:request.get('show_section', '');
                 sortdata python:({'sortable': 0, 'key': '', 'label': ''}, {'sortable': 1, 'key': 'username', 'label': 'Username'}, {'sortable': 1, 'key': 'name', 'label': 'Name'}, {'sortable': 1, 'key': 'email', 'label': 'Email'}, {'sortable': 0, 'key': '', 'label': 'Roles'});
                 query python:request.get('query', '')">
 
@@ -18,18 +20,6 @@
         </li>
         <li><a tal:attributes="href string:${site_url}/admin_workgroups_html" i18n:translate="">WorkGroups</a></li>
         <li><a tal:attributes="href string:${site_url}/admin_roles_html" i18n:translate="">Roles</a></li>
-    </ul>
-</div>
-
-<hr class="hr_invisible" />
-
-<div class="second_tab_set">
-
-<div class="tabs_admin">
-    <ul>
-        <li class="currenttab"><a tal:attributes="href string:${site_url}/admin_users_html" i18n:translate="">Assign roles</a></li>
-        <li><a tal:attributes="href string:${site_url}/admin_usersassigned_html" i18n:translate="">Privileged users</a></li>
-        <li><a tal:attributes="href string:${site_url}/admin_usersunnassigned_html" i18n:translate="">Registered users</a></li>
     </ul>
 </div>
 
@@ -157,5 +147,94 @@ function createKey(key)
 </tal:block>
 </form>
 
+<br />
+
+<h2 i18n:translate="" style="clear: left;">
+    Users' listing
+</h2>
+
+<form action="" method="post" style="float: right; width=15em; margin-right:0.3em;">
+    <label for="show_section">Show</label>
+    <select name="show_section" id="show_section">
+        <option value="assigned" i18n:translate="" tal:attributes="selected python:show_section == 'assigned'">Users with roles</option>
+        <option value="unnassigned" i18n:translate="" tal:attributes="selected python:show_section == 'unnassigned'">Users with no roles</option>
+        <option value="all" i18n:translate="" tal:attributes="selected python:show_section == 'all'">All users</option>
+    </select>
+    <input type="submit" value="Show" i18n:attributes="value"/>
+</form>
+
+<span tal:condition="python:show_section in ['assigned', '']" tal:replace="structure here/admin_usersassigned_html"/>
+<span tal:condition="python:show_section == 'unnassigned'" tal:replace="structure here/admin_usersunnassigned_html"/>
+
+<form action="admin_adduser_html" tal:condition="python:show_section == 'all'">
+    <input type="submit" value="Add user" i18n:attributes="value" class="submission_button" />
+</form>
+<form method="post" tal:attributes="action string:${site_url}/admin_deleteusers" tal:condition="python:show_section == 'all'">
+<input type="hidden" name="page_url" id="page_url" value="admin_users_html?show_section=all" />
+<table width="100%" class="sortable" id="folderfile_list"
+	tal:define="site_url here/getSitePath;
+				user_tool here/getAuthenticationTool;
+				skey python: request.get('skey', 'name');
+				rkey python: request.get('rkey', 0);
+				users python:here.utSortObjsListByAttr(user_tool.getUsers(), skey, rkey)">
+    <thead>
+	<tr>
+		<th/>
+		<th class="sorted">
+			<a title="Sorted Z..A - Click to reverse" rel="nofollow"
+				tal:attributes="href string:${here/absolute_url}/admin_users_html?show_section=all&amp;skey=name"
+				tal:condition="python: (skey == 'name' and rkey) or skey != 'name' and skey" i18n:translate="">
+				Username <img width="12" height="12" border="0" tal:condition="python: skey == 'name' and rkey" src="misc_/Naaya/sort_desc.gif" />
+			</a>
+			<a title="Sorted A..Z - Click to reverse" rel="nofollow"
+				tal:attributes="href string:${here/absolute_url}/admin_users_html?show_section=all&amp;skey=name&rkey=1"
+				tal:condition="python: (skey == 'name' and not rkey) or not skey" i18n:translate="">
+				Username <img width="12" height="12" border="0" tal:condition="python: (skey == 'name' and not rkey)" src="misc_/Naaya/sort_asc.gif" />
+			</a>
+		</th>
+		<th>
+			<a title="Sorted Z..A - Click to reverse" rel="nofollow"
+				tal:attributes="href string:${here/absolute_url}/admin_users_html?show_section=all&amp;skey=firstname"
+				tal:condition="python: (skey == 'firstname' and rkey) or skey != 'firstname'" i18n:translate="">
+				Name <img width="12" height="12" border="0" tal:condition="python: skey == 'firstname' and rkey" src="misc_/Naaya/sort_desc.gif" />
+			</a>
+			<a title="Sorted A..Z - Click to reverse" rel="nofollow"
+				tal:attributes="href string:${here/absolute_url}/admin_users_html?show_section=all&amp;skey=firstname&rkey=1"
+				tal:condition="python: skey == 'firstname' and not rkey" i18n:translate="">
+				Name <img width="12" height="12" border="0" tal:condition="python: skey == 'firstname' and not rkey " src="misc_/Naaya/sort_asc.gif" />
+			</a>
+		</th>
+		<th>
+			<a title="Sorted Z..A - Click to reverse" rel="nofollow"
+				tal:attributes="href string:${here/absolute_url}/admin_users_html?show_section=all&amp;skey=email"
+				tal:condition="python: (skey == 'email' and rkey) or skey != 'email'" i18n:translate="">
+				Email <img width="12" height="12" border="0" tal:condition="python: skey == 'email' and rkey" src="misc_/Naaya/sort_desc.gif" />
+			</a>
+			<a title="Sorted A..Z - Click to reverse" rel="nofollow"
+				tal:attributes="href string:${here/absolute_url}/admin_users_html?show_section=all&amp;skey=email&rkey=1"
+				tal:condition="python: skey == 'email' and not rkey" i18n:translate="">
+				Email <img width="12" height="12" border="0" tal:condition="python: skey == 'email' and not rkey " src="misc_/Naaya/sort_asc.gif" />
+			</a>
+		</th>
+	</tr>
+    </thead>
+    <tbody>
+	<tr tal:repeat="user users" tal:attributes="style python:test(path('repeat/user/odd'), 'background-color: #ccc;;', '')">
+		<td nowrap="nowrap" class="center">
+			<input type="checkbox" name="names" tal:attributes="value python:user_tool.getUserAccount(user)" />
+		</td>
+		<td><a tal:define="user_quoted python:here.utUrlEncode(user)"
+						tal:attributes="href string:${site_url}/admin_edituser_html?name=${user_quoted}" tal:content="user">username</a>
+		</td>
+		<td tal:content="python:user_tool.getUserFirstName(user) + ' ' + user_tool.getUserLastName(user)" />
+		<td tal:content="python:user_tool.getUserEmail(user)" />
+	</tr>
+	<tr tal:condition="python:len(users) == 0">
+		<td colspan="4" i18n:translate=""> Users' list empty </td>
+	</tr>
+    </tbody>
+</table>
+<input type="submit" value="Delete user"  i18n:attributes="value" class="submission_button" />
+</form>
 </tal:block>
 </tal:block>
