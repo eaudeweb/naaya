@@ -1274,6 +1274,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             title = title or folder.title_or_id()
             title = self.utStrEscapeHTMLTags(title)
             title = title.replace('"', "'").replace('\r', '').replace('\n', ' ')
+            title = self.utToUtf8(title)
+            title = self.utJsEncode(title)
             res.append("""{
                 "id": "%(id)s",
                 "text": "%(title)s",
@@ -1296,6 +1298,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             title = title or document.title_or_id()
             title = self.utStrEscapeHTMLTags(title)
             title = title.replace('"', "'").replace('\r', '').replace('\n', ' ')
+            title = self.utToUtf8(title)
+            title = self.utJsEncode(title)
             res.append("""{
                 "id": "%(id)s",
                 "text": "%(title)s",
