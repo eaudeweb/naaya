@@ -50,7 +50,7 @@
 			<td>
 				<tal:block tal:repeat="item here/getListIssueStatus">
 				<input type="radio" name="status" tal:attributes="value item/id; checked python:item.id==here.status" />
-				<span tal:replace="item/title" i18n:translate=""/>
+				<span tal:content="item/title" i18n:translate=""/>
 				</tal:block>
 			</td>
 		</tr>
