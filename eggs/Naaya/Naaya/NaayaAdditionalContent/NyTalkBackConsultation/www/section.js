@@ -60,6 +60,7 @@ function comment_add(comment_link) {
     $.get(comment_link.href, function(data){
         comment_form_box.empty().append(
             $('p.talkback-cannot_comment', data),
+            $('div.talkback-section', data),
             $('div.talkback-add_comment_form', data)
         );
         $('form', comment_form_box).append(

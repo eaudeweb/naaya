@@ -35,7 +35,7 @@
 
 <div class="cleaner" ></div>
 
-<div class="talkback-section_toc" style="margin: 1em 0 1em 1em;"><!-- note: used inline style to avoid restarting Zope; please remove on next commit. -->
+<div class="talkback-section_toc">
     <h6>Table of contents</h6>
     <ul tal:define="consultation_sections python:here.get_consultation().list_sections()">
         <li tal:repeat="section consultation_sections" tal:attributes="class python:test(section==here, 'talkback-current_section', '')">
