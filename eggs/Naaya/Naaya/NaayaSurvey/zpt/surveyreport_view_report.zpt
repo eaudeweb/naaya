@@ -26,7 +26,7 @@
    tal:content="structure here/description" />
 
 <tal:block define="answers options/answers">
-	<p><span tal:replace="python:len(answers)">NNN</span> answers were analyzed.</p>
+	<p><span tal:replace="python:len(answers)">NNN</span> <span i18n:translate="">answers were analyzed.</span></p>
 	<tal:block repeat="statistic python:here.getSortedStatistics()">
 		<span tal:replace="structure python:statistic.render(answers)">widget statistics</span>
 	</tal:block>
