@@ -153,7 +153,7 @@ function createKey(key)
     Users' listing
 </h2>
 
-<form action="" method="post" style="float: right; width=15em; margin-right:0.3em;">
+<form action="" method="post" style="float: right; width: 15em; margin-right: 0.3em;">
     <label for="show_section">Show</label>
     <select name="show_section" id="show_section">
         <option value="assigned" i18n:translate="" tal:attributes="selected python:show_section == 'assigned'">Users with roles</option>
