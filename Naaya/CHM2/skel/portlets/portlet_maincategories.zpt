@@ -16,9 +16,9 @@
             <a tal:attributes="href fold/absolute_url" tal:content="fold/title_or_id" />
 		</tal:block>
 		<tal:block metal:fill-slot="portlet_content">
-            <div class="sublinks1" tal:attributes="id string:${fold/id}">
-			<ul>
-				<li tal:repeat="sub_fold fold/getPublishedFolders">
+            <div class="sublinks1" tal:attributes="id string:${fold/id}" tal:define="pub_folders fold/getPublishedFolders">
+			<ul tal:condition="pub_folders">
+				<li tal:repeat="sub_fold pub_folders">
 					<a tal:attributes="href sub_fold/absolute_url" tal:content="sub_fold/title_or_id" />
 				</li>
 			</ul>

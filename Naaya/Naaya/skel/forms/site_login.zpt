@@ -37,7 +37,7 @@
 			</li>
 		</ul>
 	</tal:block>
-	<tal:block tal:condition="python:not len(roles)">
+	<tal:block tal:condition="python:not len(roles)" i18n:translate="">
 		You have no special rights in this portal.
 	</tal:block>
 </tal:block>
@@ -80,7 +80,7 @@
 
 <h2 i18n:translate="">New user</h2>
 
-<p i18n:translate="">First <a href="requestrole_html">create an account</a> on this server and then return to this page to log in. The newly created user will have no role on this portal, <a href="feedback_html">contact the Webmaster</a> if you need one.</p>
+<p><span i18n:translate="">First</span> <a href="requestrole_html" i18n:translate="">create an account</a> <span i18n:translate="">on this server and then return to this page to log in. The newly created user will have no role on this portal,</span> <a href="feedback_html" i18n:translate="">contact the Webmaster</a> <span i18n:translate="">if you need one.</span></p>
 
 <div class="tips_box">
 	<div class="tips_box_title" i18n:translate="">Tips</div>
