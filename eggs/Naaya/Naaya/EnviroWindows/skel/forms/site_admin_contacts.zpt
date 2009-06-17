@@ -102,8 +102,10 @@
 			</table>
 
 			<p>
-				<span i18n:translate>You can also choose to</span>
-				<a href="export_contacts_vcard" i18n:translate="">bulk export all vCard data</a> <span i18n:translate="">as a zip file.</span>
+				<span i18n:translate>You can also bulk export contacts as</span>
+				<a href="export_contacts_vcard" i18n:translate="">zipped vCard files</a>
+				<span i18n:translate>or</span>
+				<a tal:attributes="href python:here.getSite().absolute_url() + '/csv_export/export?meta_type=Naaya%20Contact&as_attachment=y'" i18n:translate="">csv</a>.
 			</p>
 			</tal:block>
 			<span tal:condition="not:contacts" i18n:translate="">This portal contains no <em>Contact</em> items</span>
