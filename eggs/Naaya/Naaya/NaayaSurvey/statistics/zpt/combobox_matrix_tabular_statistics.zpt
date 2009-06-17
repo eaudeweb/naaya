@@ -1,0 +1,36 @@
+<div tal:define="question options/question;
+                 total options/total;
+                 unanswered options/unanswered;
+                 per_row_and_choice options/per_row_and_choice"
+     class="statistic">
+	<table class="datatable">
+		<caption tal:content="question/title">question</caption>
+		<thead>
+			<tr>
+				<th scope="col" class="scope-col"><em>row</em></th>
+				<th scope="col" class="scope-col"><em>choice</em></th>
+				<tal:block repeat="value question/values">
+					<th scope="col" class="scope-col" tal:content="value" />
+				</tal:block>
+				<th scope="col" class="scope-col" i18n:translate="">Not answered</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tal:block repeat="row question/rows">
+			<tal:block repeat="choice question/choices">
+            <tr tal:define="r python:repeat['row'].index; c python:repeat['choice'].index">
+				<th tal:condition="python: c==0" tal:content="row"
+                    tal:attributes="rowspan python:len(question.choices)" />
+                <td tal:content="python: question.choices[c]"/>
+				<tal:block repeat="statistics python: per_row_and_choice[r][c]">
+					<td class="number" tal:content="python: '%u (%.2f%%)' % (statistics[0], round(statistics[1], 2))" />
+				</tal:block>
+				<tal:block define="statistics python: unanswered[r][c]">
+					<td class="number" tal:content="python: '%u (%.2f%%)' % (statistics[0], round(statistics[1], 2))" />
+				</tal:block>
+			</tr>
+            </tal:block>
+            </tal:block>
+		</tbody>
+	</table>
+</div>
