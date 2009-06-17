@@ -38,6 +38,7 @@ from Products.NaayaWidgets.widgets import AVAILABLE_WIDGETS
 from Products.NaayaWidgets.Widget import Widget, WidgetError, manage_addWidget
 from Products.NaayaWidgets.widgets.LabelWidget import LabelWidget
 from Products.NaayaWidgets.widgets.MultipleChoiceWidget import MultipleChoiceWidget
+from Products.NaayaWidgets.widgets.ComboboxMatrixWidget import ComboboxMatrixWidget
 from Products.NaayaWidgets.widgets.MatrixWidget import MatrixWidget
 from Products.NaayaWidgets.widgets.TextAreaWidget import TextAreaWidget
 from Products.NaayaWidgets.widgets.StringWidget import StringWidget
@@ -54,6 +55,7 @@ from statistics.MultipleChoiceGoogleBarChartStatistic import MultipleChoiceGoogl
 from statistics.MultipleChoicePieChartStatistic import MultipleChoicePieChartStatistic
 from statistics.MatrixTabularStatistic import MatrixTabularStatistic
 from statistics.MatrixCssBarChartStatistic import MatrixCssBarChartStatistic
+from statistics.ComboboxMatrixTabularStatistic import ComboboxMatrixTabularStatistic
 from statistics.TextAnswerListing import TextAnswerListing
 
 from permissions import PERMISSION_MANAGE_SURVEYTEMPLATE
@@ -323,6 +325,8 @@ class BaseSurveyTemplate(Folder, LocalPropertyManager):
                                      MultipleChoiceGoogleBarChartStatistic,
                                      MultipleChoicePieChartStatistic])
 
+            elif isinstance(question, ComboboxMatrixWidget):
+                stat_classes.extend([ComboboxMatrixTabularStatistic])
             elif isinstance(question, MatrixWidget):
                 stat_classes.extend([MatrixTabularStatistic,
                                      MatrixCssBarChartStatistic])
