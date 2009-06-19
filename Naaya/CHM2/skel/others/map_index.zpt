@@ -132,7 +132,7 @@
 	var showSelected = document.getElementById("showSelected");
 	showSelected.style.display = "inline";
 	showMap();
-	showMapLocations();
+	mapTool.showMapLocations();
 //-->;
 </script>
 </tal:block>
