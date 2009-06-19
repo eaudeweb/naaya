@@ -15,6 +15,7 @@
 	<li><a tal:attributes="href string:${here/absolute_url}/overwritte_forms_html" title="">Update Naaya forms</a></li>
 	<li><a tal:attributes="href string:${here/absolute_url}/reinstall_contenttypes_html" title="">Reinstall Naaya content types</a></li>	
 	<li><a tal:attributes="href string:${here/absolute_url}/update_layout_html" title="">Update portal layout</a></li>
+	<li><a tal:attributes="href string:${here/absolute_url}/content_languages" title="">Content languages</a></li>
 </ul>
 
 <hr />

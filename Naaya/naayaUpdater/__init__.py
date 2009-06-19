@@ -51,4 +51,5 @@ def initialize(context):
 
 misc_ = {
     "updater.jpg":  ImageFile("www/updater.jpg", globals()),
+    "jquery-1.3.2.min.js": ImageFile("www/jquery-1.3.2.min.js", globals()),
 }
