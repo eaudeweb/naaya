@@ -42,7 +42,8 @@
     <th i18n:translate="">Contributor</th>
     <td tal:content="python:here.getAuthenticationTool().getUserFullNameByID(here.contributor)"/>
   </tr>
-  <tr tal:condition="here/coverage">    <th i18n:translate="">Geographical coverage</th>
+  <tr tal:condition="here/coverage">
+    <th i18n:translate="">Geographical coverage</th>
     <td tal:content="here/coverage" />
   </tr>
   <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
@@ -60,7 +61,7 @@
   </tr>
 </table>
 
-<p tal:condition="python:here.description!=''"
+<div tal:condition="python:here.description!=''"
    tal:content="structure here/description" />
 
 <tal:block

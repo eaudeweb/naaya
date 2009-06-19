@@ -57,7 +57,7 @@
 		</td>
 	</tr>
 </table>
-<p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+<div tal:condition="python:here.description!=''" tal:content="structure here/description" />
 
 <span tal:replace="structure here/comments_box" />
 

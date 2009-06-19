@@ -23,7 +23,7 @@
 <tal:block condition="python:here.getControlsTool().checkControl(here.meta_type)"
 		   content="structure python:here.map_widget_index_html()" />
 
-<p tal:condition="python:here.description!=''" tal:content="structure here/description" />
+<div tal:condition="python:here.description!=''" tal:content="structure here/description" />
 <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
 <tr tal:condition="here/hasSmallPicture">
 	<td colspan="2"><a tal:condition="here/hasBigPicture" tal:attributes="href string:${here/absolute_url}/picture_html"><img src="getSmallPicture" alt="Click here to show large image" i18n:attributes="alt" /></a>
