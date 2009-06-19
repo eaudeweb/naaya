@@ -356,30 +356,42 @@ class Factsheet(CatalogAware, Folder):
     security.declarePrivate('assign_password_notification')
     def assign_password_notification(self, email, password):
         """ send an email with the password"""
-        mailhost = self.get_mailhost()
-        if mailhost:
-            values = {'password': password, 
-                      'administrator_email': email,
-                      'model_view_link': '%s' % self.absolute_url(),
-                      'model_edit_link': '%s/edit_html' % self.absolute_url()
-                     }
-            self.send_mail(msg_to=email, msg_subject='%s - Model access' % self.title, msg_body=ASSIGN_PASSWORD_TEMPLATE % values)
+#        mailhost = self.get_mailhost()
+#        if mailhost:
+        values = {'password': password, 
+                  'administrator_email': email,
+                  'model_view_link': '%s' % self.absolute_url(),
+                  'model_edit_link': '%s/edit_html' % self.absolute_url()
+                 }
+        self.send_mail(msg_to=email,
+                        msg_subject='%s - Model access' % self.title,
+                        msg_body=ASSIGN_PASSWORD_TEMPLATE % values,
+                        msg_body_text=ASSIGN_PASSWORD_TEMPLATE_TEXT % values
+                        )
 
     security.declarePrivate('model_add_edit_notification')
     def model_add_edit_notification(self, email):
-        """ send a notification when a model is added / edited / commented"""
-        mailhost = self.get_mailhost()
-        if mailhost:
-            values = {'model_view_link': '%s' % self.absolute_url()}
-            self.send_mail(msg_to=email, msg_subject='%s - Model added / edited / commented' % self.title, msg_body=MODEL_ADD_EDIT_TEMPLATE % values)
+        """ send a notification when a folder is added / edited / commented"""
+#        mailhost = self.get_mailhost()
+#        if mailhost:
+        values = {'model_view_link': '%s' % self.absolute_url()}
+        self.send_mail(msg_to=email,
+                        msg_subject='%s - Model added / edited' % self.title,
+                        msg_body=MODEL_ADD_EDIT_TEMPLATE % values,
+                        msg_body_text=MODEL_ADD_EDIT_TEMPLATE_TEXT % values
+                        )
 
     security.declarePrivate('model_add_comment_notification')
     def model_add_comment_notification(self, email, page, comment_id):
         """ send a notification when a comment is added to a model """
-        mailhost = self.get_mailhost()
-        if mailhost:
-            values = {'model_view_link': '%s?page=%s#Comment-%s' % (self.absolute_url(), page, comment_id)}
-            self.send_mail(msg_to=email, msg_subject='A comment was added for the model %s' % self.title, msg_body=MODEL_ADD_COMMENT_TEMPLATE % values)
+#        mailhost = self.get_mailhost()
+#        if mailhost:
+        values = {'model_view_link': '%s?page=%s#Comment-%s' % (self.absolute_url(), page, comment_id)}
+        self.send_mail(msg_to=email,
+                        msg_subject='A comment was added for the model %s' % self.title,
+                        msg_body=MODEL_ADD_COMMENT_TEMPLATE % values,
+                        msg_body_text=MODEL_ADD_COMMENT_TEMPLATE_TEXT % values
+                        )
 
     def is_entitled(self, REQUEST):
         session = REQUEST.SESSION

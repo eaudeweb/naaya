@@ -96,13 +96,20 @@ class ConfigurationError(Exception):
 
 class FactsheetFolder(Folder):
     def __init__(self, id, title, administrator_email,
-                    introduction='Introduction text', instructions='Instructions text'):
+                    introduction = 'Introduction text',
+                    instructions = 'Instructions text',
+                    sender_email = 'no-reply@ew.eea.europa.eu',
+                    smtp = 'localhost',
+                    smtp_port = '25'):
         """ constructor """
         self.id = id
         self.title = title
         self.administrator_email = administrator_email
         self.introduction =introduction
         self.instructions = instructions
+        self.sender_email = sender_email
+        self.smtp = smtp
+        self.smtp_port = smtp_port
 
     meta_type = "OMI Factsheet Folder"
     security = ClassSecurityInfo()
@@ -123,7 +130,10 @@ class FactsheetFolder(Folder):
             self.administrator_email = REQUEST.form.get('administrator_email')
             self.introduction = REQUEST.form.get('introduction')
             self.instructions = REQUEST.form.get('instructions')
-            self.model_add_edit_notification(self.administrator_email)
+            self.sender_email = REQUEST.form.get('sender_email')
+            self.smtp = REQUEST.form.get('smtp')
+            self.smtp_port = REQUEST.form.get('smtp_port')
+            self.folder_add_edit_notification(self.administrator_email)
             REQUEST.RESPONSE.redirect('index_html')
         return self._edit_html(REQUEST)
 
@@ -188,18 +198,49 @@ class FactsheetFolder(Folder):
             '"MailHost". Please create one.')
 
     security.declarePrivate('send_mail')
-    def send_mail(self, msg_to, msg_subject, msg_body):
-        mailhost = self.get_mailhost()
-        
+    def send_mail(self, msg_to, msg_subject, msg_body, msg_body_text):
+#        mailhost = self.get_mailhost()
+#        
+#        from email.MIMEText import MIMEText
+#        from email.MIMEMessage import MIMEMessage
+#        
+#        msg = MIMEMessage(MIMEText(msg_body.encode('utf-8'), _charset='utf-8'))
+#        msg['Subject'] = msg_subject
+#        msg['From'] = self.administrator_email
+#        msg['To'] = msg_to
+#        
+#        mailhost.send(msg.as_string())
+        import smtplib
+
+        from email.MIMEMultipart import MIMEMultipart
         from email.MIMEText import MIMEText
-        from email.MIMEMessage import MIMEMessage
-        
-        msg = MIMEMessage(MIMEText(msg_body.encode('utf-8'), _charset='utf-8'))
+
+        # Create message container - the correct MIME type is multipart/alternative.
+        msg = MIMEMultipart('alternative')
         msg['Subject'] = msg_subject
-        msg['From'] = self.administrator_email
+        msg['From'] = self.sender_email
         msg['To'] = msg_to
-        
-        mailhost.send(msg.as_string())
+
+        # Create the body of the message (a plain-text and an HTML version).
+        text = msg_body_text
+        html = msg_body
+
+        # Record the MIME types of both parts - text/plain and text/html.
+        part1 = MIMEText(text, 'plain')
+        part2 = MIMEText(html, 'html')
+
+        # Attach parts into message container.
+        # According to RFC 2046, the last part of a multipart message, in this case
+        # the HTML message, is best and preferred.
+        msg.attach(part1)
+        msg.attach(part2)
+
+        # Send the message via local SMTP server.
+        s = smtplib.SMTP(self.smtp, self.smtp_port)
+        # sendmail function takes 3 arguments: sender's address, recipient's address
+        # and message to send - here it is sent as one string.
+        s.sendmail(self.sender_email, msg_to, msg.as_string())
+        s.quit()
 
     security.declarePrivate('getCatalogedObjects')
     def getCatalogedObjects(self, meta_type=None, approved=0, howmany=-1, sort_on='releasedate', sort_order='reverse', has_local_role=0, **kwargs):
@@ -223,12 +264,16 @@ class FactsheetFolder(Folder):
         return results
 
     security.declarePrivate('folder_add_edit_notification')
-    def model_add_edit_notification(self, email):
+    def folder_add_edit_notification(self, email):
         """ send a notification when a folder is added / edited / commented"""
-        mailhost = self.get_mailhost()
-        if mailhost:
-            values = {'folder_view_link': '%s' % self.absolute_url()}
-            self.send_mail(msg_to=email, msg_subject='%s - Folder added / edited' % self.title, msg_body=FOLDER_ADD_EDIT_TEMPLATE % values)
+#        mailhost = self.get_mailhost()
+#        if mailhost:
+        values = {'folder_view_link': '%s' % self.absolute_url()}
+        self.send_mail(msg_to=email,
+                        msg_subject='%s - Folder added / edited' % self.title,
+                        msg_body=FOLDER_ADD_EDIT_TEMPLATE % values,
+                        msg_body_text=FOLDER_ADD_EDIT_TEMPLATE_TEXT % values
+                        )
 
     def generate_password(self, email, passwordLength = 8):
         import sys
