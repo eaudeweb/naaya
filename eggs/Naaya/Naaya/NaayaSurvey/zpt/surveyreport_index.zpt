@@ -39,9 +39,10 @@ function toggleSelect(caller){
 				       tal:attributes="id input_id;
 				                       value statistic/meta_type" />
 				<label tal:attributes="for input_id" 
-				       tal:content="statistic/meta_label" />
+				       tal:content="statistic/meta_label"
+				       i18n:translate="" />
 			</div>
-				<span tal:content="statistic/meta_description"></span>
+				<span tal:content="statistic/meta_description" i18n:translate=""></span>
 
 			</tal:block>
 		</tal:block>

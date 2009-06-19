@@ -13,7 +13,8 @@
 	<img tal:attributes="
 		src python:test(here.approved, here.icon, here.icon_marked);
 		title here/meta_label;
-		alt here/meta_label" />
+		alt here/meta_label"
+		i18n:attributes="title alt"/>
 	<tal:block tal:replace="here/title_or_id" />
 		<span class="available_langs" tal:condition="python:here.check_item_title(here, here.title)">
 			<span i18n:translate="">Item only translated in </span>

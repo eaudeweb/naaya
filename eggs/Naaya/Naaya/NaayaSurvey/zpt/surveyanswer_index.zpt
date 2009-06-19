@@ -12,7 +12,8 @@
 	<img tal:attributes="
 		src python:test(here.approved, here.icon, here.icon_marked); 
 		title here/meta_label; 
-		alt here/meta_label" />
+		alt here/meta_label"
+		i18n:attributes="title alt" />
 	<tal:block tal:replace="here/title_or_id" />
 </h1>
 
