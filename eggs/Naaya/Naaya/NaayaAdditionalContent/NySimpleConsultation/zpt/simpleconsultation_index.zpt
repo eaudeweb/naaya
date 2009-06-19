@@ -33,7 +33,7 @@
 	<a tal:attributes="href string:${here/absolute_url}/edit_html"><span i18n:translate="">Edit Simple Consultation</span></a>
 </div>
 
-<p tal:content="structure python:here.getLocalProperty('description', lang)" />
+<div tal:content="structure python:here.getLocalProperty('description', lang)" />
 
 
 <!----------- List comments ----------->
