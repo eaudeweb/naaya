@@ -29,7 +29,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ZCatalog.ZCatalog import manage_addZCatalog
-from Products.MailHost.MailHost import MailHost, manage_addMailHost
+#from Products.MailHost.MailHost import MailHost, manage_addMailHost
 #from Products.ZTinyMCE.TinyMCE import manage_addZTinyMCE       --- no longer needed (served from zip)
 # Product
 from constants import *
@@ -75,9 +75,9 @@ def manage_addFactsheetFolder(self, title, administrator_email, REQUEST=None):
     loadCatalogueMetadata(catalogue)
 
     #Check for and add a MailHost object
-    ob = getattr(folder, MAILHOST, None)
-    if not ob:
-        manage_addMailHost(self, id=MAILHOST, title=MAILHOST, smtp_host='localhost', smtp_port=25)
+    #ob = getattr(folder, MAILHOST, None)
+    #if not ob:
+        #manage_addMailHost(self, id=MAILHOST, title=MAILHOST, smtp_host='localhost', smtp_port=25)
 
     # Alternative way to create a TinyMCE object and to set the configuration
     #manage_addZTinyMCE(folder, id='TinyMCE')
@@ -185,17 +185,17 @@ class FactsheetFolder(Folder):
         self.add_message('Model successfully deleted!')
         REQUEST.RESPONSE.redirect('index_html')
 
-    security.declarePrivate('get_mailhost')
-    def get_mailhost(self):
-        """ """
-        try:
-            ob = getattr(self, MAILHOST, None)
-            if isinstance(ob, MailHost):
-                return ob
-        except:
-            pass
-        raise ConfigurationError('Expected a MailHost object named '
-            '"MailHost". Please create one.')
+#    security.declarePrivate('get_mailhost')
+#    def get_mailhost(self):
+#        """ """
+#        try:
+#            ob = getattr(self, MAILHOST, None)
+#            if isinstance(ob, MailHost):
+#                return ob
+#        except:
+#            pass
+#        raise ConfigurationError('Expected a MailHost object named '
+#            '"MailHost". Please create one.')
 
     security.declarePrivate('send_mail')
     def send_mail(self, msg_to, msg_subject, msg_body, msg_body_text):
