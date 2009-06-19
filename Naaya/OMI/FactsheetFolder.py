@@ -30,7 +30,7 @@ from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.ZCatalog.ZCatalog import manage_addZCatalog
 from Products.MailHost.MailHost import MailHost, manage_addMailHost
-from Products.ZTinyMCE.TinyMCE import manage_addZTinyMCE
+#from Products.ZTinyMCE.TinyMCE import manage_addZTinyMCE       --- no longer needed (served from zip)
 # Product
 from constants import *
 from utilities import *
