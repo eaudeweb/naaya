@@ -382,11 +382,13 @@ class Factsheet(CatalogAware, Folder):
                         )
 
     security.declarePrivate('model_add_comment_notification')
-    def model_add_comment_notification(self, email, page, comment_id):
+    def model_add_comment_notification(self, email, page, comment_id, comment_author):
         """ send a notification when a comment is added to a model """
 #        mailhost = self.get_mailhost()
 #        if mailhost:
-        values = {'model_view_link': '%s?page=%s#Comment-%s' % (self.absolute_url(), page, comment_id)}
+        values = {'model_view_link': '%s?page=%s#Comment-%s' % (self.absolute_url(), page, comment_id),
+                    'comment_author': comment_author
+                    }
         self.send_mail(msg_to=email,
                         msg_subject='A comment was added for the model %s' % self.title,
                         msg_body=MODEL_ADD_COMMENT_TEMPLATE % values,

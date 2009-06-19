@@ -38,8 +38,8 @@ def manage_addComment(self, parent_name, data):
     self._setObject(id, newComment)
     comment = self._getOb(id)
     comment.edit(data)
-    self.model_add_comment_notification(self.contact_email, 4, id)
-    self.model_add_comment_notification(self.administrator_email, 4, id) #4 is page where the comment resides
+    self.model_add_comment_notification(self.contact_email, 4, comment.id, comment.author)
+    self.model_add_comment_notification(self.administrator_email, 4, comment.id, comment.author) #4 is page where the comment resides
 
 class FactsheetComment(CatalogAware, SimpleItem):
     """Class that implements a blog commentary."""
