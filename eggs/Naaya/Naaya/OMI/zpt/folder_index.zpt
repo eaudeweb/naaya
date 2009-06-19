@@ -5,8 +5,9 @@
 		<div class="centerbox">
 			<tal:block condition="python:not request.SESSION.get('message')"
 				content="structure here/introduction"/>
+			<tal:block condition="python:request.SESSION.get('message')"
+				content="here/show_message"/>
 		</div>
-		<tal:block condition="python:request.SESSION.get('message')" replace="here/show_message"/>
 
 	</tal:block>
 
