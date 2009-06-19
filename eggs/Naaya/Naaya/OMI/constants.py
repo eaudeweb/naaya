@@ -199,7 +199,7 @@ MODEL_ADD_COMMENT_TEMPLATE = """\
             Hello,
         <p/>
         <p>
-            A comment was added in the "Online Management Inventory" for the following model:
+            A comment was added by <strong>%(comment_author)s</strong> in the "Online Management Inventory" for the following model:
         <p/>
         <p>
             <a href="%(model_view_link)s">%(model_view_link)s</a>
@@ -216,7 +216,7 @@ MODEL_ADD_COMMENT_TEMPLATE = """\
 
 MODEL_ADD_COMMENT_TEMPLATE_TEXT = """Hello, 
 
-A comment was added in the "Online Management Inventory" for the following model:
+A comment was added by %(comment_author)s in the "Online Management Inventory" for the following model:
 
 %(model_view_link)s
 
