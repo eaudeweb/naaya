@@ -91,13 +91,53 @@ theme_advanced_resizing : true
 """
 
 #Template for assigning password
-ASSIGN_PASSWORD_TEMPLATE = """Hello, 
+ASSIGN_PASSWORD_TEMPLATE = """\
+<html>
+    <head/>
+    <body>
+        <p>
+            Hello,
+        <p/>
+        <p>
+            You have created the following model in the "Online Management Inventory":
+        <p/>
+        <p>
+            <a href="%(model_view_link)s">%(model_view_link)s</a>
+        <p/>
+        <p>
+            You can edit this model by authenticating yourself with your email address and the password <strong>%(password)s</strong> at the following address:
+        <p/>
+        <p>
+            <a href="%(model_edit_link)s">%(model_edit_link)s</a>
+        <p/>
+        <p>
+            ---
+        <p/>
+        <p>
+            If you believe you are using the correct information and cannot edit the model, report the problem at <a href="mailto:%(administrator_email)s">%(administrator_email)s</a>.<br/>
+            This is an automatic message. Replies to this message will not be read or responded to.
+        </p>
+        <p>
+            ---
+        </p>
+        <p>
+            Best Regards,<br/>
+            Online Management Inventory team
+        </p>
+    </body>
+</html>"""
+
+ASSIGN_PASSWORD_TEMPLATE_TEXT = """Hello, 
 
 You have created the following model in the "Online Management Inventory":
 
 %(model_view_link)s
 
-You can edit this model by authenticating yourself with your email address and the password %(password)s at the following address:
+You can edit this model by authenticating yourself with your email address and the password
+
+%(password)s
+
+at the following address:
 
 %(model_edit_link)s
 
@@ -110,20 +150,71 @@ Best Regards,
 Online Management Inventory team"""
 
 #Template for administrative allert
-MODEL_ADD_EDIT_TEMPLATE = """Hello, 
+MODEL_ADD_EDIT_TEMPLATE = """\
+<html>
+    <head/>
+    <body>
+        <p>
+            Hello,
+        <p/>
+        <p>
+            The following model was created / edited in the "Online Management Inventory":
+        <p/>
+        <p>
+            <a href="%(model_view_link)s">%(model_view_link)s</a>
+        <p/>
+        <p>
+            You are registered as the administrator of this folder.
+        </p>
+        <p>
+            ---
+        </p>
+        <p>
+            Best Regards,<br/>
+            Online Management Inventory team
+        </p>
+    </body>
+</html>"""
+
+MODEL_ADD_EDIT_TEMPLATE_TEXT = """Hello, 
 
 This email is registered as the administrative address for the "Online Management Inventory".
 
-The following model was created / edited / commented in the "Online Management Inventory":
+The following model was created / edited in the "Online Management Inventory":
 
 %(model_view_link)s
+
+You are registered as the administrator of this folder.
 
 ---
 Best Regards,
 Online Management Inventory team"""
 
 #Template for comment notification
-MODEL_ADD_COMMENT_TEMPLATE = """Hello, 
+MODEL_ADD_COMMENT_TEMPLATE = """\
+<html>
+    <head/>
+    <body>
+        <p>
+            Hello,
+        <p/>
+        <p>
+            A comment was added in the "Online Management Inventory" for the following model:
+        <p/>
+        <p>
+            <a href="%(model_view_link)s">%(model_view_link)s</a>
+        <p/>
+        <p>
+            ---
+        </p>
+        <p>
+            Best Regards,<br/>
+            Online Management Inventory team
+        </p>
+    </body>
+</html>"""
+
+MODEL_ADD_COMMENT_TEMPLATE_TEXT = """Hello, 
 
 A comment was added in the "Online Management Inventory" for the following model:
 
@@ -134,7 +225,33 @@ Best Regards,
 Online Management Inventory team"""
 
 #Template for administrative allert
-FOLDER_ADD_EDIT_TEMPLATE = """Hello, 
+FOLDER_ADD_EDIT_TEMPLATE = """\
+<html>
+    <head/>
+    <body>
+        <p>
+            Hello,
+        <p/>
+        <p>
+            The following factsheet folder was created / edited in the "Online Management Inventory":
+        <p/>
+        <p>
+            <a href="%(folder_view_link)s">%(folder_view_link)s</a>
+        <p/>
+        <p>
+            You are registered as the administrator of this folder.
+        </p>
+        <p>
+            ---
+        </p>
+        <p>
+            Best Regards,<br/>
+            Online Management Inventory team
+        </p>
+    </body>
+</html>"""
+
+FOLDER_ADD_EDIT_TEMPLATE_TEXT = """Hello, 
 
 The following factsheet folder was created / edited in the "Online Management Inventory":
 

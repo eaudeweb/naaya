@@ -53,6 +53,27 @@
 			type="text" size="50" tal:attributes="value here/administrator_email"/>
 		</div>
 		<div class="label">
+			<label for="smtp">SMTP server</label>
+		</div>
+		<div>
+			<input id="smtp" name="smtp"
+			type="text" size="50" tal:attributes="value here/smtp"/>
+		</div>
+		<div class="label">
+			<label for="smtp_port">Port</label>
+		</div>
+		<div>
+			<input id="smtp_port" name="smtp_port"
+			type="text" size="50" tal:attributes="value here/smtp_port"/>
+		</div>
+		<div class="label">
+			<label for="sender_email">Sender email</label>
+		</div>
+		<div>
+			<input id="sender_email" name="sender_email:utf8:ustring"
+			type="text" size="50" tal:attributes="value here/sender_email"/>
+		</div>
+		<div class="label">
 			<label for="introduction">Introduction</label>
 		</div>
 		<textarea class="tinymce" id="introduction" name="introduction:utf8:ustring" rows="" cols=""

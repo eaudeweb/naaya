@@ -344,7 +344,8 @@
 							<div class="message-error" tal:content="missing_data"
 								tal:condition="python: not here.restrictions"/>
 							<hr class="hr_addcomment" style="margin-top: 15px"/>
-							<a class="addcomment" id="restrictions" title="Add comment" tal:condition="python:comment != 'restrictions'"
+							<a class="addcomment" id="restrictions" title="Add comment"
+								tal:condition="python:comment != 'restrictions'"
 								tal:attributes="href string:${here/absolute_url}?page=4&comment=restrictions#restrictions">
 								Add comment
 							</a>
@@ -363,7 +364,8 @@
 							<div class="message-error" tal:content="missing_data"
 								tal:condition="python: not here.links"/>
 							<hr class="hr_addcomment" style="margin-top: 15px"/>
-							<a class="addcomment" id="links" title="Add comment" tal:condition="python:comment != 'links'"
+							<a class="addcomment" id="links" title="Add comment"
+								tal:condition="python:comment != 'links'"
 								tal:attributes="href string:${here/absolute_url}?page=4&comment=links#links">
 								Add comment
 							</a>
@@ -382,11 +384,12 @@
 							<div class="message-error" tal:content="missing_data"
 								tal:condition="python: not here.participative_processes"/>
 							<hr class="hr_addcomment" style="margin-top: 15px"/>
-							<a class="addcomment" id="participative_processes" title="Add comment" tal:condition="python:comment != 'comment_usage'"
-								tal:attributes="href string:${here/absolute_url}?page=4&comment=usage#participative_processes">
+							<a class="addcomment" id="participative_processes" title="Add comment"
+								tal:condition="python:comment != 'participative_processes'"
+								tal:attributes="href string:${here/absolute_url}?page=4&comment=participative_processes#participative_processes">
 								Add comment
 							</a>
-							<tal:block condition="python:comment == 'usage'" define="parent_name string:participative_processes">
+							<tal:block condition="python:comment == 'participative_processes'" define="parent_name string:participative_processes">
 								<metal:block use-macro="here/comment_form/macros/form"/>
 							</tal:block>
 							<tal:block repeat="comment python:here.getComments('participative_processes')">
@@ -401,11 +404,12 @@
 							<div class="message-error" tal:content="missing_data"
 								tal:condition="python: not here.other_comments"/>
 							<hr class="hr_addcomment" style="margin-top: 15px"/>
-							<a class="addcomment" id="other_comments" title="Add comment" tal:condition="python:comment != 'comment_other'"
-								tal:attributes="href string:${here/absolute_url}?page=4&comment=other#other_comments">
+							<a class="addcomment" id="other_comments" title="Add comment"
+								tal:condition="python:comment != 'other_comments'"
+								tal:attributes="href string:${here/absolute_url}?page=4&comment=other_comments#other_comments">
 								Add comment
 							</a>
-							<tal:block condition="python:comment == 'other'" define="parent_name string:other_comments">
+							<tal:block condition="python:comment == 'other_comments'" define="parent_name string:other_comments">
 								<metal:block use-macro="here/comment_form/macros/form"/>
 							</tal:block>
 							<tal:block repeat="comment python:here.getComments('other_comments')">
