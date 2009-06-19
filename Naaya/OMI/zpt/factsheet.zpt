@@ -48,7 +48,7 @@
 						</label>
 					</div>
 					<div>
-						<input id="authentication_password" name="authentication_password:utf8:ustring"
+						<input type="password" id="authentication_password" name="authentication_password:utf8:ustring"
 							value="" type="text" size="50"/>
 					</div>
 					<div tal:condition="python:request.has_key('authentication_password_error')" class="message-error">
