@@ -36,10 +36,10 @@ function toggleSelect(caller){
 					    value widget_type/meta_type;
 						id input_id;" />
 					<label tal:attributes="for input_id">
-						<strong tal:content="widget_type/meta_label" />
+						<strong tal:content="widget_type/meta_label" i18n:translate="" />
 					</label>
 					<br />
-					<span tal:content="widget_type/meta_description"></span>
+					<span tal:content="widget_type/meta_description" i18n:translate=""></span>
 				</tal:block>
 			</td>
 			<td tal:repeat="dummy python:range(len(row), cols)">
