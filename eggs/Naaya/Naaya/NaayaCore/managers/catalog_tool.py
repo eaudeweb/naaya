@@ -42,18 +42,26 @@ class catalog_tool:
 
     def __getObjects(self, p_brains):
         """ """
-        try:
-            #return map(lambda x: x.getObject(), p_brains)
-            return map(self.portal_catalog.getobject, map(getattr, p_brains, ('data_record_id_',)*len(p_brains)))
-        except:
-            return []
+        output = []
+        for brain in p_brains:
+            try:
+                ob = self.portal_catalog.getobject(brain.data_record_id_)
+            except:
+                self.log_current_error()
+            output.append(ob)
+        return output
 
     def __getObjectsAndScore(self, p_brains):
         """ """
-        try:
-            return map(lambda x: (x.getObject(), x.data_record_score_), p_brains)
-        except:
-            return []
+        output = []
+        for brain in p_brains:
+            try:
+                ob = brain.getObject()
+                drs = brain.data_record_score_
+            except:
+                self.log_current_error()
+            output.append( (ob, drs) )
+        return output
 
     def __eliminateDuplicates(self, p_objects):
         """Eliminate duplicates from a list of objects (with ids)"""
@@ -67,11 +75,11 @@ class catalog_tool:
     #################################
     def catalogNyObject(self, p_ob):
         try: self.getCatalogTool().catalog_object(p_ob, self.__buildCatalogPath(p_ob))
-        except: pass
+        except: self.log_current_error()
 
     def uncatalogNyObject(self, p_ob):
         try: self.getCatalogTool().uncatalog_object(self.__buildCatalogPath(p_ob))
-        except: pass
+        except: self.log_current_error()
 
     def recatalogNyObject(self, p_ob):
         try:
@@ -80,7 +88,7 @@ class catalog_tool:
             catalog_tool.uncatalog_object(l_ob_path)
             catalog_tool.catalog_object(p_ob, l_ob_path)
         except:
-            pass
+            self.log_current_error()
 
     def findCatalogedObjects(self, p_query, p_path, lang):
         l_result = []
