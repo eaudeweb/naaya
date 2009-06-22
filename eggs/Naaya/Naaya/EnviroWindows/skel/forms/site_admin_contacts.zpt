@@ -4,23 +4,38 @@
 
 	<tal:block metal:fill-slot="section" tal:define="section python:request.get('section', '')">
 
-	<h1 i18n:translate="" tal:condition="python:section == 'import'">Contacts - Bulk import</h1>
-	<h1 i18n:translate="" tal:condition="python:section == 'mail'">Contacts - Send mail</h1>
-	<h1 i18n:translate="" tal:condition="python:section == 'listing' or not section">Contacts - listing</h1>
+	<h1 i18n:translate="" tal:condition="python:not section">Contact listing</h1>
+	<h1 i18n:translate="" tal:condition="python:section == 'vcard'">Bulk vCard</h1>
+	<h1 i18n:translate="" tal:condition="python:section == 'csv'">Bulk CSV</h1>
+	<h1 i18n:translate="" tal:condition="python:section == 'mail'">Send mail</h1>
 
 	<div id="tabbedmenu">
 	<ul>
-		<li id="currenttab" tal:condition="python:section == 'listing' or not section"><a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=listing">Contacts - listing</a></li>
-		<li tal:condition="python:section != 'listing' and section != ''"><a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=listing">Contacts - listing</a></li>
-		<li id="currenttab" tal:condition="python:section == 'import'"><a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=import" >Contacts - bulk import</a></li>
-		<li tal:condition="python:section != 'import'"><a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=import" >Contacts - bulk import</a></li>
-		<li id="currenttab" tal:condition="python:section == 'mail'"><a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=mail">Contacts - send mail</a></li>
-		<li tal:condition="python:section != 'mail'"><a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=mail">Contacts - send mail</a></li>
+		<li tal:attributes="id python:test(not section, 'currenttab', None)">
+			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html">Contacts listing</a>
+		</li>
+		<li tal:attributes="id python:test(section=='vcard', 'currenttab', None)">
+			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=vcard" >Bulk vCard</a>
+		</li>
+		<li tal:attributes="id python:test(section=='csv', 'currenttab', None)">
+			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=csv" >Bulk CSV</a>
+		</li>
+		<li tal:attributes="id python:test(section=='mail', 'currenttab', None)">
+			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=mail">Send mail</a>
+		</li>
 	</ul>
 	</div>
-		<tal:block condition="python:section == 'import'">
+		<tal:block condition="python:section == 'csv'">
 
+		<h2>Export</h2>
+		<p>
+			<span i18n:translate="">Export contacts as</span>
+			<a tal:attributes="href python:here.getSite().absolute_url() +
+				'/csv_export/export?meta_type=Naaya%20Contact&as_attachment=y'"
+				i18n:translate="">CSV file</a>.
+		</p>
 
+		<h2>Import</h2>
 		<p i18n:translate="">This form allows you to upload multiple <em>Contact</em> items from
 		a comma separated file. In case your Naaya portal has enabled geolocation for Contacts,
 		fill in the <em>Latitude</em>, <em>Longitude</em> , <em>Location URL</em> and <em>Location type</em>.
@@ -58,6 +73,31 @@
 			</div>
 				<input type="submit" value="Import contacts" i18n:attributes="value" />
 		</form>
+
+		</tal:block>
+
+		<tal:block condition="python:section == 'vcard'">
+
+		<h2>Export</h2>
+		<p>
+			<span i18n:translate="">Export contacts as</span>
+			<a href="export_contacts_vcard" i18n:translate="">Zip archive of vCard files</a>.
+		</p>
+
+		<h2>Import</h2>
+		<form action="import_contacts_vcard" method="post" enctype="multipart/form-data">
+			<div class="field">
+				<label for="vcard_zipfile" i18n:translate="">vCard ZIP file</label>
+				<input type="file" id="vcard_zipfile" name="vcard_zipfile"/>
+			</div>
+			<div class="field">
+				<div id="location_tree" class="extjs_tree custom-tree"></div>
+				<input class="extjs_target" type="text" name="location" id="location" size="50"
+					tal:attributes="value python:options.get('location', None)" />
+			</div>
+			<input type="submit" value="Upload contacts" />
+		</form>
+
 		</tal:block>
 
 		<tal:block condition="python:section == 'mail'">
@@ -101,12 +141,6 @@
 				</tr>
 			</table>
 
-			<p>
-				<span i18n:translate>You can also bulk export contacts as</span>
-				<a href="export_contacts_vcard" i18n:translate="">zipped vCard files</a>
-				<span i18n:translate>or</span>
-				<a tal:attributes="href python:here.getSite().absolute_url() + '/csv_export/export?meta_type=Naaya%20Contact&as_attachment=y'" i18n:translate="">csv</a>.
-			</p>
 			</tal:block>
 			<span tal:condition="not:contacts" i18n:translate="">This portal contains no <em>Contact</em> items</span>
 		</tal:block>
