@@ -12,6 +12,7 @@
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_linkslists_html" title="Manage lists of lists" i18n:attributes="title" i18n:translate="">Lists of links</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_reflists_html" title="Manage selection lists" i18n:attributes="title" i18n:translate="">Selection lists</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_contacts_html" title="Manage portal contacts" i18n:attributes="title" i18n:translate="">Portal contacts</a></li>
+	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_bulk_mail_html" title="Send bulk mail" i18n:attributes="title" i18n:translate="">Bulk mail</a></li>
 	<li><strong i18n:translate="">Map management</strong></li>
 		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_map_html" title="Map general settings" i18n:attributes="title" i18n:translate="">General settings</a></li>
 		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_maptypes_html" title="Map location types" i18n:attributes="title" i18n:translate="">Location types</a></li>
