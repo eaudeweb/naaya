@@ -38,6 +38,9 @@ from Products.Naaya.NySite import NySite as NySite_module
 from Products.Naaya.managers.skel_parser import skel_parser
 from Products.naayaUpdater.utils import *
 from Products.NaayaContent.constants import NAAYACONTENT_PRODUCT_PATH
+from Products.NaayaCore.constants import ID_SCHEMATOOL
+from Products.NaayaContent.__init__ import get_pluggable_content
+from Products.NaayaCore.SchemaTool.widgets.Widget import widgetid_from_propname
 
 UPDATERID = 'naaya_updates'
 UPDATERTITLE = 'Update scripts for Naaya'
@@ -263,6 +266,95 @@ class NaayaUpdater(Folder):
 #            creation_date = minDate(form.bobobase_modification_time(), creation_date)
 #        return creation_date
 
+
+    ###
+    #Update portal schemas
+    ######
+    security.declareProtected(view_management_screens, 'update_schemas_html')
+    update_schemas_html = PageTemplateFile('zpt/update_schemas', globals())
+
+    security.declareProtected(view_management_screens, 'find_schema_differences')
+    def find_schema_differences(self):
+        """
+        Searches for schema properties that differ
+        from their definition in their content code
+        """
+        content_types = get_pluggable_content().values()
+        portals = self.getPortals()
+        missing_properties = {}
+        modified_properties = {}
+        for portal in portals:
+            schema = portal._getOb(ID_SCHEMATOOL, None)
+            if schema:
+                 modified_properties[portal] = self.find_modified_schema_properties(content_types, schema)
+                 missing_properties[portal] = self.find_missing_schema_properties(content_types, schema)
+        return {'missing_properties': missing_properties, 'modified_properties': modified_properties}
+
+    security.declareProtected(view_management_screens, 'find_missing_schema_properties')
+    def find_missing_schema_properties(self, content_types, schema):
+        result = {}
+        for content_type in content_types:
+            content_schema = getattr(content_type['_module'], 'DEFAULT_SCHEMA', {})
+            if content_schema:
+                for property in content_schema.keys():
+                    try:
+                        schema.getSchemaForMetatype(content_type['meta_type']).getWidget(property)
+                    except KeyError:
+                        result.setdefault(content_type['meta_type'], []).append(property)
+        return result
+
+    security.declareProtected(view_management_screens, 'find_modified_schema_properties')
+    def find_modified_schema_properties(self, content_types, schema):
+        result = {}
+        for content_type in content_types:
+            content_schema = getattr(content_type['_module'], 'DEFAULT_SCHEMA', {})
+            if content_schema:
+                for property in content_schema.keys():
+                    fs_widget_type = content_schema[property]['widget_type']
+                    try:
+                        portal_widget_type = schema.getSchemaForMetatype(content_type['meta_type']).getWidget(property).get_widget_type()
+                    except KeyError:
+                        continue
+                    if fs_widget_type != portal_widget_type:
+                        result.setdefault(content_type['meta_type'], {})[property] = {'fs': fs_widget_type, 'site': portal_widget_type}
+        return result
+
+    security.declareProtected(view_management_screens, 'add_missing_schema_property')
+    def add_missing_schema_property(self, property_data, REQUEST=None):
+        """ """
+        for prop in property_data:
+            location = prop.split('||')
+            portal = location[0]
+            content_type = location[1]
+            property = location[2]
+            property_schema = get_pluggable_content()[content_type]['default_schema'][property]
+
+            portal = self.unrestrictedTraverse(portal, None)
+            schema_tool = portal._getOb(ID_SCHEMATOOL, None)
+            schema = schema_tool.getSchemaForMetatype(content_type)
+            schema.addWidget(property, **property_schema)
+
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/update_schemas_html?find=true' % self.absolute_url())
+
+    security.declareProtected(view_management_screens, 'update_modified_schema_property')
+    def update_modified_schema_property(self, property_data, REQUEST=None):
+        """ """
+        for prop in property_data:
+            location = prop.split('||')
+            portal = location[0]
+            content_type = location[1]
+            property = location[2]
+            property_schema = get_pluggable_content()[content_type]['default_schema'][property]
+
+            portal = self.unrestrictedTraverse(portal, None)
+            schema_tool = portal._getOb(ID_SCHEMATOOL, None)
+            schema = schema_tool.getSchemaForMetatype(content_type)
+            schema.manage_delObjects([widgetid_from_propname(property)])
+            schema.addWidget(property, **property_schema)
+
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/update_schemas_html?find=true' % self.absolute_url())
 
     ###
     #Update Portal layout
