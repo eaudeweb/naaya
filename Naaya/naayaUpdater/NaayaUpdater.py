@@ -23,8 +23,10 @@
 import time
 from os.path import join, isfile
 import os
+import sys
 from OFS.History import html_diff
 import copy
+import types
 
 from OFS.Folder import Folder
 import Globals
@@ -32,6 +34,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl.Permissions import view_management_screens
 from AccessControl import ClassSecurityInfo
 
+from Products.Naaya.NySite import NySite as NySite_module
 from Products.Naaya.managers.skel_parser import skel_parser
 from Products.naayaUpdater.utils import *
 from Products.NaayaContent.constants import NAAYACONTENT_PRODUCT_PATH
@@ -300,7 +303,6 @@ class NaayaUpdater(Folder):
         """ reload Naaya portal layout files"""
         report = {}
         portal_path = portal.absolute_url(1)
-        portal_meta = portal.meta_type
         file_custom = []
         for fid in file_id.split(','):
             file_custom.append(fid.strip())
@@ -309,52 +311,52 @@ class NaayaUpdater(Folder):
             for file_id in file_custom:
                 if locator == 'skin':
                     form_path = '%s/portal_layout/%s/%s' % (portal_path, skin_id, file_id)
-                    form_fs = self.get_fs_layout_content(portal_meta, skin_id, '', file_id)
+                    form_fs = self.get_fs_layout_content(portal, skin_id, '', file_id)
                     form_zmi = self.get_zmi_template(form_path)
                     report['../portal_layout/%s/%s' % (skin_id, file_id)] = 'updated'
                     self.update_layout_file(portal, file_id, form_fs, form_zmi, skin_id, '', 'template')
                 else:
-                    for scheme_id in self.list_fs_skinfiles(portal_meta, skin_id, True):
+                    for scheme_id in self.list_fs_skinfiles(portal, skin_id, True):
                         rtype = 'r'
                         file_type = 'style'
                         form_path = '%s/portal_layout/%s/%s/%s' % (portal_path, skin_id, scheme_id, file_id)
                         file_type = self.get_scheme_filetype(file_id)
                         if file_type == 'image': rtype = 'rb'
-                        form_fs = self.get_fs_layout_content(portal_meta, skin_id, scheme_id, file_id, rtype)
+                        form_fs = self.get_fs_layout_content(portal, skin_id, scheme_id, file_id, rtype)
                         form_zmi = self.get_zmi_template(form_path)
                         report['../portal_layout/%s/%s/%s' % (skin_id, scheme_id, file_id)] = 'updated'
                         self.update_layout_file(portal, file_id, form_fs, form_zmi, skin_id, scheme_id, file_type)
         else:
             if locator == 'skin':
-                for file_id in self.list_fs_skinfiles(portal_meta, skin_id, False):
+                for file_id in self.list_fs_skinfiles(portal, skin_id, False):
                     do_update = True
                     if f_action == 'ef':
                         if file_id in file_custom: do_update = False
                     if do_update:
                         form_path = '%s/portal_layout/%s/%s' % (portal_path, skin_id, file_id)
-                        form_fs = self.get_fs_layout_content(portal_meta, skin_id, '', file_id)
+                        form_fs = self.get_fs_layout_content(portal, skin_id, '', file_id)
                         form_zmi = self.get_zmi_template(form_path)
                         report['../portal_layout/%s/%s' % (skin_id, file_id)] = 'updated'
                         self.update_layout_file(portal, file_id, form_fs, form_zmi, skin_id, '', 'template')
             else:
-                for scheme_id in self.list_fs_skinfiles(portal_meta, skin_id, True):
-                    for file_id in self.list_fs_schemefiles(portal_meta, skin_id, scheme_id, ftype='styles'):
+                for scheme_id in self.list_fs_skinfiles(portal, skin_id, True):
+                    for file_id in self.list_fs_schemefiles(portal, skin_id, scheme_id, ftype='styles'):
                         do_update = True
                         if f_action == 'ef':
                             if file_id in file_custom: do_update = False
                         if do_update:
                             form_path = '%s/portal_layout/%s/%s/%s' % (portal_path, skin_id, scheme_id, file_id)
-                            form_fs = self.get_fs_layout_content(portal_meta, skin_id, scheme_id, file_id)
+                            form_fs = self.get_fs_layout_content(portal, skin_id, scheme_id, file_id)
                             form_zmi = self.get_zmi_template(form_path)
                             report['../portal_layout/%s/%s/%s' % (skin_id, scheme_id, file_id)] = 'updated'
                             self.update_layout_file(portal, file_id, form_fs, form_zmi, skin_id, scheme_id, 'style')
-                    for file_id in self.list_fs_schemefiles(portal_meta, skin_id, scheme_id, ftype='images'):
+                    for file_id in self.list_fs_schemefiles(portal, skin_id, scheme_id, ftype='images'):
                         do_update = True
                         if f_action == 'ef':
                             if file_id in file_custom: do_update = False
                         if do_update:
                             form_path = '%s/portal_layout/%s/%s/%s' % (portal_path, skin_id, scheme_id, file_id)
-                            form_fs = self.get_fs_layout_content(portal_meta, skin_id, scheme_id, file_id, 'rb')
+                            form_fs = self.get_fs_layout_content(portal, skin_id, scheme_id, file_id, 'rb')
                             form_zmi = self.get_zmi_template(form_path)
                             report['../portal_layout/%s/%s/%s' % (skin_id, scheme_id, file_id)] = 'updated'
                             self.update_layout_file(portal, file_id, form_fs, form_zmi, skin_id, scheme_id, 'image')
@@ -399,11 +401,11 @@ class NaayaUpdater(Folder):
                 print error
 
     security.declarePrivate('list_fs_skinfiles')
-    def list_fs_skinfiles(self, metatype, skin_id, schemes=False):
+    def list_fs_skinfiles(self, portal, skin_id, schemes=False):
         """
             return the list of the filesystem templates
         """
-        portal_path = self.get_portal_path(metatype)
+        portal_path = self.get_portal_path(portal)
         skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
         if skel_handler.root.layout is not None:
             for skin in skel_handler.root.layout.skins:
@@ -415,11 +417,11 @@ class NaayaUpdater(Folder):
         return []
 
     security.declarePrivate('list_fs_schemefiles')
-    def list_fs_schemefiles(self, metatype, skin_id, scheme_id, ftype='styles'):
+    def list_fs_schemefiles(self, portal, skin_id, scheme_id, ftype='styles'):
         """
             return the list of the filesystem templates
         """
-        portal_path = self.get_portal_path(metatype)
+        portal_path = self.get_portal_path(portal)
         skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
         if skel_handler.root.layout is not None:
             for skin in skel_handler.root.layout.skins:
@@ -432,11 +434,11 @@ class NaayaUpdater(Folder):
                                 return [i.id for i in scheme.images]
 
     security.declarePrivate('get_fs_layout_content')
-    def get_fs_layout_content(self, metatype, skin_id, scheme_id, file_id, rtype='r'):
+    def get_fs_layout_content(self, portal, skin_id, scheme_id, file_id, rtype='r'):
         """
             return the content of the filesystem layout file
         """
-        portal_path = self.get_portal_path(metatype)
+        portal_path = self.get_portal_path(portal)
         skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
         if skel_handler.root.layout is not None:
             if scheme_id:
@@ -481,10 +483,16 @@ class NaayaUpdater(Folder):
         return modified, unmodified, list_diff
 
     security.declarePrivate('get_portal_path')
-    def get_portal_path(self, metatype):
+    def get_portal_path(self, portal):
         """
             return the portal path given the metatype
         """
+        if not isinstance(portal, type):
+            portal = portal.__class__
+        m = sys.modules[portal.__module__]
+        return os.path.dirname(m.__file__)
+
+        metatype = portal.meta_type
         ppath = NAAYAUPDATER_PRODUCT_PATH.split(os.sep)[:-1]
         pname = metatype.split(' ')[0]
         if pname.lower() == 'chm': pname = 'CHM2'
@@ -497,7 +505,7 @@ class NaayaUpdater(Folder):
         """
             return the content of the filesystem content-type template
         """
-        portal_path = self.get_portal_path(portal.meta_type)
+        portal_path = self.get_portal_path(portal)
         data_path = join(portal_path, 'skel', 'forms')
 
         for meta_type in portal.get_pluggable_metatypes():
@@ -524,22 +532,22 @@ class NaayaUpdater(Folder):
 
 
     security.declarePrivate('list_fs_templates')
-    def list_fs_templates(self, metatype):
+    def list_fs_templates(self, portal):
         """
             return the list of the filesystem templates
         """
-        portal_path = self.get_portal_path(metatype)
+        portal_path = self.get_portal_path(portal)
         skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
         if skel_handler.root.forms is not None:
             return [f.id for f in skel_handler.root.forms.forms]
 
 
     security.declarePrivate('get_fs_template_content')
-    def get_fs_template_content(self, id, metatype):
+    def get_fs_template_content(self, id, portal):
         """
             return the content of the filesystem template
         """
-        portal_path = self.get_portal_path(metatype)
+        portal_path = self.get_portal_path(portal)
         skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
         if skel_handler.root.forms is not None:
             return readFile(join(portal_path, 'skel', 'forms', '%s.zpt' % id), 'r')
@@ -550,12 +558,10 @@ class NaayaUpdater(Folder):
         """
             return a filesystem template object given the id
         """
-        NAAYA_METATYPE = 'Naaya Site'
-
-        if id in self.list_fs_templates(portal.meta_type):
-            return self.get_fs_template_content(id, portal.meta_type)
-        elif id in self.list_fs_templates(NAAYA_METATYPE):   #fall back to Naaya filesytem templates
-            return self.get_fs_template_content(id, NAAYA_METATYPE)
+        if id in self.list_fs_templates(portal):
+            return self.get_fs_template_content(id, portal)
+        elif id in self.list_fs_templates(NySite_module):   #fall back to Naaya filesytem templates
+            return self.get_fs_template_content(id, NySite_module)
         return self.get_contenttype_content(id, portal) #fall back to Naaya pluggable content types
 
     security.declarePrivate('get_fs_forms')
@@ -564,8 +570,6 @@ class NaayaUpdater(Folder):
             return a filesystem template object given the id
         """
         flist = {}
-        NAAYA_METATYPE = 'Naaya Site'
-
         #load contenttype forms
         for meta_type in portal.get_pluggable_metatypes():
             #chech if the meta_type is installed
@@ -575,17 +579,17 @@ class NaayaUpdater(Folder):
                     flist[f] = '%s/portal_forms/%s' % (portal.absolute_url(1), f)
 
         #load portal forms
-        for f in self.list_fs_templates(NAAYA_METATYPE):
+        for f in self.list_fs_templates(NySite_module):
             flist[f] = '%s/portal_forms/%s' % (portal.absolute_url(1), f)
-        for f in self.list_fs_templates(portal.meta_type):
+        for f in self.list_fs_templates(portal):
             flist[f] = '%s/portal_forms/%s' % (portal.absolute_url(1), f)
 
         return flist
 
-#        if id in self.list_fs_templates(portal.meta_type):
-#            return self.get_fs_template_content(id, portal.meta_type)
-#        elif id in self.list_fs_templates(NAAYA_METATYPE):   #fall back to Naaya filesytem templates
-#            return self.get_fs_template_content(id, NAAYA_METATYPE)
+#        if id in self.list_fs_templates(portal):
+#            return self.get_fs_template_content(id, portal)
+#        elif id in self.list_fs_templates(NySite_module):   #fall back to Naaya filesytem templates
+#            return self.get_fs_template_content(id, NySite_module)
 #        return self.get_contenttype_content(id, portal) #fall back to Naaya pluggable content types
 
 
