@@ -37,9 +37,8 @@ from AccessControl import ClassSecurityInfo
 from Products.Naaya.NySite import NySite as NySite_module
 from Products.Naaya.managers.skel_parser import skel_parser
 from Products.naayaUpdater.utils import *
-from Products.NaayaContent.constants import NAAYACONTENT_PRODUCT_PATH
 from Products.NaayaCore.constants import ID_SCHEMATOOL
-from Products.NaayaContent.__init__ import get_pluggable_content
+from Products.NaayaContent.discover import get_pluggable_content
 from Products.NaayaCore.SchemaTool.widgets.Widget import widgetid_from_propname
 
 UPDATERID = 'naaya_updates'
@@ -634,7 +633,7 @@ class NaayaUpdater(Folder):
                         return readFile(join(data_path, frm_name), 'r')
                     else:
                         #load form from the pluggable meta type folder
-                        return readFile(join(NAAYACONTENT_PRODUCT_PATH, pitem['module'], 'zpt', frm_name), 'r')
+                        return readFile(join(pitem['package_path'], 'zpt', frm_name), 'r')
                     break
 
 
