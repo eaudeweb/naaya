@@ -9,7 +9,6 @@
 							fpath python:request.get('fpath', '');
 							diff python:here.diffTemplates(fmod, fpath, ppath)">
 			<h1>File ID: <span tal:content="fmod" /></h1>
-			<p>With + are marked the differences from the filesystem version.</p>
 			<span tal:replace="structure diff" />
 		</tal:block>
 	</tal:block>
