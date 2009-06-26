@@ -133,10 +133,33 @@ class NaayaUpdater(Folder):
             REQUEST.RESPONSE.redirect('available_content_updates?manage_tabs_message=%s' % message)
         return message
 
+    def _normalize_template(self, src):
+        return (src.strip().replace('\r', '')+'\n').encode('utf-8')
+
     security.declareProtected(view_management_screens, 'show_html_diff')
     def show_html_diff(self, source, target):
         """ """
-        return html_diff(source, target)
+        #return html_diff(source, target)
+        import difflib
+        from cStringIO import StringIO
+        lines = lambda s: StringIO(self._normalize_template(s)).readlines()
+        htmlquote = lambda s: s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+        output = StringIO()
+        output.write('<div style="font-family: monospace;">')
+        for line in difflib.unified_diff(lines(source), lines(target)):
+            if line.startswith('+'):
+                cls = 'line_added'
+            elif line.startswith('-'):
+                cls = 'line_removed'
+            elif line.startswith('@@'):
+                cls = 'line_heading'
+            else:
+                cls = 'line_normal'
+            output.write('<div class="%s">%s</div>\n' % (cls, htmlquote(line)))
+        output.write('</div>')
+        return output.getvalue()
+        #return ''.join(htmlquote(s)+'<br/>' for s in difflib.unified_diff(lines(source), lines(target)))
+        #return difflib.HtmlDiff().make_table(lines(source), lines(target))
 
     security.declareProtected(view_management_screens, 'get_fs_data')
     def get_fs_data(self, fpath):
@@ -849,84 +872,67 @@ class NaayaUpdater(Folder):
         return REQUEST.RESPONSE.redirect('%s/overwritte_forms_html?ppath=%s&show_report=1' % (self.absolute_url(), ppath))
 
     security.declareProtected(view_management_screens, 'getReportQuickModifiedForms')
-    def getReportQuickModifiedForms(self, forms, portals='', p_action='', REQUEST=None):
+    def getReportQuickModifiedForms(self, forms, all_forms=False, portals='', p_action='', REQUEST=None):
         """ """
-        if REQUEST.has_key('show_report'):
-            report = {}
-            forms_list = convertLinesToList(forms)
-            portals_list = self.getPortals()
-            portals_custom = []
-            for portal_id in portals.split(','):
-                portals_custom.append(portal_id.strip())
+        if not REQUEST.has_key('show_report'):
+            return
 
-            for portal in portals_list:
-                res = []
-                do_update = False
-                if p_action == 'ep':
-                    if not portal.id in portals_custom: do_update = True
-                else:
-                    if portal.id in portals_custom: do_update = True
-                if do_update:
-                    portal_path = portal.absolute_url(1)
-                    for form_id in forms_list:
-                        form_path = '%s/portal_forms/%s' % (portal_path, form_id)
-                        form_fs = self.get_fs_template(form_id, portal)
-                        form_zmi_ob = self.get_zmi_template(form_path)
-                        if form_fs and form_zmi_ob:
-                            if not create_signature(form_fs) == create_signature(self.get_template_content(form_zmi_ob)):
-                                res.append((form_zmi_ob, 'edit'))
-                        if form_fs and not form_zmi_ob:
-                            res.append((form_id, 'add'))
-                if len(res) > 0: report[portal_path] = res
-            if not report:
-                report = {'all': 'unchanged'}
-            return report
+        report = {}
+        forms_list = convertLinesToList(forms)
+        portals_list = self.getPortals()
+        portals_custom = []
+
+        for portal_id in portals.split(','):
+            portals_custom.append(portal_id.strip())
+
+        for portal in portals_list:
+            if p_action == 'ep' and portal.id in portals_custom: continue
+            elif p_action != 'ep' and portal.id not in portals_custom: continue
+
+            res = []
+            portal_path = portal.absolute_url(1)
+            if all_forms:
+                forms_list = portal.portal_forms.objectIds()
+
+            for form_id in forms_list:
+                form_path = '%s/portal_forms/%s' % (portal_path, form_id)
+                form_fs = self.get_fs_template(form_id, portal)
+                form_zmi_ob = self.get_zmi_template(form_path)
+                if form_fs and form_zmi_ob:
+                    t1 = self._normalize_template(form_fs)
+                    t2 = self._normalize_template(self.get_template_content(form_zmi_ob))
+                    if t1 != t2:
+                        res.append((form_zmi_ob, 'edit'))
+                if form_fs and not form_zmi_ob:
+                    res.append((form_id, 'add'))
+            if len(res) > 0: report[portal_path] = res
+        return report
 
     security.declareProtected(view_management_screens, 'reloadQuickPortalForms')
-    def reloadQuickPortalForms(self, all=False, fmod=[], forms='', REQUEST=None):
+    def reloadQuickPortalForms(self, fmod=[], fdel=[], forms='', REQUEST=None):
         """ reload portal forms """
         fmod = convertToList(fmod)
+        fdel = convertToList(fdel)
         forms_list = convertLinesToList(forms)
-        if all:
-            forms_list = convertLinesToList(forms)
-            portals_list = self.getPortals()
-            for portal in portals_list:
-                portal_path = portal.absolute_url(1)
-                for form_id in forms_list:
-                    form_path = '%s/portal_forms/%s' % (portal_path, form_id)
-                    form_fs = self.get_fs_template(form_id, portal)
-                    form_zmi_ob = self.get_zmi_template(form_path)
-                    if form_fs and form_zmi_ob:
-                        if not create_signature(form_fs) == create_signature(self.get_template_content(form_zmi_ob)):
-                            try:
-                                form_zmi_ob.pt_edit(text=form_fs, content_type='')
-                                form_zmi_ob._p_changed = 1
-                            except Exception, error:
-                                print error
-                    if form_fs and not form_zmi_ob:
-                        try:
-                            formstool_ob = portal.getFormsTool()
-                            formstool_ob.manage_addTemplate(id=form_id, title='', file='')
-                            form_ob = formstool_ob._getOb(form_id, None)
-                            form_ob.pt_edit(text=form_fs, content_type='')
-                            form_ob._p_changed = 1
-                        except Exception, error:
-                            print error
-        else:
-            for form_path in fmod:
-                portal = self.getPortal(form_path[:form_path.find('portal_forms')])
-                form_id = form_path[form_path.find('portal_forms')+13:]
-                form_ob = self.get_zmi_template(form_path)
-                fs_content = self.get_fs_template(form_id, portal)
-                try:
-                    if form_ob is None:
-                        formstool_ob = portal.getFormsTool()
-                        formstool_ob.manage_addTemplate(id=form_id, title='', file='')
-                        form_ob = formstool_ob._getOb(form_id, None)
-                    form_ob.pt_edit(text=fs_content, content_type='')
-                    form_ob._p_changed = 1
-                except Exception, error:
-                    print error
+        for form_path in fmod:
+            portal = self.getPortal(form_path[:form_path.find('portal_forms')])
+            form_id = form_path[form_path.find('portal_forms')+13:]
+            form_ob = self.get_zmi_template(form_path)
+            fs_content = self.get_fs_template(form_id, portal)
+            try:
+                if form_ob is None:
+                    formstool_ob = portal.getFormsTool()
+                    formstool_ob.manage_addTemplate(id=form_id, title='', file='')
+                    form_ob = formstool_ob._getOb(form_id, None)
+                form_ob.pt_edit(text=fs_content, content_type='')
+                form_ob._p_changed = 1
+            except Exception, error:
+                print error
+        for form_path in fdel:
+            portal = self.getPortal(form_path[:form_path.find('portal_forms')])
+            form_id = form_path[form_path.find('portal_forms')+13:]
+            form_ob = self.get_zmi_template(form_path)
+            form_ob.aq_parent.manage_delObjects([form_id])
         return REQUEST.RESPONSE.redirect('%s/quick_overwritte_forms_html' % (self.absolute_url()))
 
     security.declareProtected(view_management_screens, 'generateFormPath')
