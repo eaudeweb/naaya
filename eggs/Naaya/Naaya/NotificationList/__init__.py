@@ -26,15 +26,19 @@ def invokeNotificationLists(site, obj, event):
     """ Walk down the object tree and invoke all NotificationList objects """
     folder = obj
     while True:
-        folder = folder.getParentNode()
-
-        if NOTIFICATION_LIST_DEFAULT_ID in folder.objectIds(spec=METATYPE_NOTIFICATION_LIST):
-            # we found a subscriber list; notify the subscribers
-            folder._getOb(NOTIFICATION_LIST_DEFAULT_ID).notify_subscribers(event)
+        try:
+            folder = folder.aq_parent
+        except:
+            # nowhere to go; bail out
+            return
 
         if folder == site:
             # we've reached the site level; bail out
             return
+
+        if NOTIFICATION_LIST_DEFAULT_ID in folder.objectIds(spec=METATYPE_NOTIFICATION_LIST):
+            # we found a subscriber list; notify the subscribers
+            folder._getOb(NOTIFICATION_LIST_DEFAULT_ID).notify_subscribers(event)
 
 def patch_NySite():
     """ patch notifyFolderMaintainer method of NySite """
