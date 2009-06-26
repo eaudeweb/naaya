@@ -55,9 +55,9 @@ class NaayaUpdater(Folder):
     def manage_options(self):
         """ """
         l_options = (
+            {'label': 'Updates', 'action': 'index_html'},
             {'label':'Available content updates', 'action':'available_content_updates',},
             {'label':'Applied content updates', 'action':'applied_content_updates',},
-            {'label': 'Other updates', 'action': 'index_html'},
             {'label': 'Layout updates', 'action': 'layout_updates'},
             {'label':'Contents', 'action':'manage_main',
              'help':('OFSP','ObjectManager_Contents.stx')},
