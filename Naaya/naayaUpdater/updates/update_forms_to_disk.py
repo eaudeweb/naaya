@@ -31,7 +31,6 @@ from Globals import InitializeClass
 from Products.Naaya.managers.skel_parser import skel_parser
 from difflib import ndiff, IS_CHARACTER_JUNK, IS_LINE_JUNK
 from Products.Naaya.constants import *
-from Products.NaayaContent.constants import NAAYACONTENT_PRODUCT_PATH
 try:
     from Products.EnviroWindows.constants import ENVIROWINDOWS_PRODUCT_PATH
 except ImportError: pass
@@ -304,7 +303,7 @@ class CustomContentUpdater(NaayaContentUpdater):
                             if isfile(join(data_path, frm)):
                                 f_path = join(data_path, "%s.zpt" % frm)
                             else:
-                                f_path = join(NAAYACONTENT_PRODUCT_PATH, pitem['module'], 'zpt', "%s.zpt" % frm)
+                                f_path = join(pitem['package_path'], 'zpt', "%s.zpt" % frm)
                             content = open(f_path).read()
                             self.forms_on_disk[ frm ] = content
                             self.forms_paths[ frm ] = f_path
