@@ -7,9 +7,14 @@
 	<title tal:content="here/title_or_id" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="home" tal:attributes="href python:request['BASE0']" title="Home" i18n:attributes="title" />
-	<link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/style" />
-	<link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/common" />
-	<link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${skin_files_path}/print" />
+
+	<!--The stylesheets 'style', 'common' and 'print' are common to all schemes and are opened as imagefiles.
+	The stylesheet 'scheme_style' carries all the differences between schemes.-->
+	<link rel="stylesheet" type="text/css" media="screen" href="portal_layout/ew_style_css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="portal_layout/ew_common_css" />
+	<link rel="stylesheet" type="text/css" media="print" href="portal_layout/ew_print_css" />
+	<link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/scheme_style" />
+
 	<tal:block repeat="channel python:here.getSite().getSyndicationTool().get_script_channels()">
 		<link rel="alternate" type="application/atom+xml" tal:attributes="title string:${channel/title_or_id} in Atom format; href string:${channel/absolute_url}?feed=atom" />
 		<link rel="alternate" type="application/rss+xml" tal:attributes="title string:${channel/title_or_id} in RDF format; href channel/absolute_url" />
