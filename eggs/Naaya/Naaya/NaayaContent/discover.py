@@ -1,0 +1,1 @@
+from Products.NaayaContent import *
