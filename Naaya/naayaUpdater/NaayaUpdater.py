@@ -37,9 +37,7 @@ from AccessControl import ClassSecurityInfo
 from Products.Naaya.NySite import NySite as NySite_module
 from Products.Naaya.managers.skel_parser import skel_parser
 from Products.naayaUpdater.utils import *
-from Products.NaayaCore.constants import ID_SCHEMATOOL
 from Products.NaayaContent.discover import get_pluggable_content
-from Products.NaayaCore.SchemaTool.widgets.Widget import widgetid_from_propname
 
 from Products.naayaUpdater import update_scripts
 
