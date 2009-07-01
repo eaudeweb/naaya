@@ -27,6 +27,7 @@ from Globals                                    import InitializeClass
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
 from AccessControl                              import ClassSecurityInfo
 from AccessControl.Permissions                  import view_management_screens, view
+from App.ImageFile import ImageFile
 
 #Zope imports
 from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
@@ -1175,6 +1176,10 @@ text-decoration: underline;
     def admin_linkchecker_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_linkchecker')
+
+    ew_common_css = ImageFile('www/ew_common.css', globals())
+    ew_print_css = ImageFile('www/ew_print.css', globals())
+    ew_style_css = ImageFile('www/ew_style.css', globals())
 
 InitializeClass(EnviroWindowsSite)
 
