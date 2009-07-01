@@ -48,6 +48,7 @@ def initialize(context):
         updater = getattr(app, UpdaterID)
     assert updater is not None
 
+    updater.refresh_updates_dict()
 
 misc_ = {
     "updater.jpg":  ImageFile("www/updater.jpg", globals()),

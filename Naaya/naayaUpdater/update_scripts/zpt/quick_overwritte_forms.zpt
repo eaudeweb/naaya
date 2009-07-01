@@ -1,0 +1,151 @@
+<tal:block content="structure here/manage_page_header"/>
+<tal:block content="structure here/manage_tabs"/>
+
+<script type="text/javascript">
+<!--
+var isSelected = false;
+function toggleSelect()
+{   var frm = document.frmQuickReloadForms;
+    var i;
+    if (isSelected == false)
+    {   for(i=0; i<frm.elements.length; i++)
+            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'fmod') frm.elements[i].checked = true;
+        isSelected = true;}
+    else
+    {   for(i=0; i<frm.elements.length; i++)
+            if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'fmod') frm.elements[i].checked = false;
+        isSelected = false;}}
+
+//-->
+</script>
+
+<tal:block define="
+    forms python:request.get('forms', '');
+    all_forms python:request.get('all_forms', False);
+    portals python:request.get('portals', '');
+    p_action python:request.get('p_action', 'ep');
+    upload_ok python:request.get('u', 0);
+    report python:here.getReportQuickModifiedForms(forms, all_forms, portals, p_action, request)">
+<h2>Quick update Naaya forms</h2>
+
+<form method="post" name="frmQuickModForms">
+    <label for="exclude">Form IDs (one per row)</label><br />
+    <textarea name="forms" id="forms" cols="50" rows="5" tal:content="forms"></textarea>
+    <br />
+    <label><input type="checkbox" name="all_forms:boolean" tal:attributes="checked all_forms" />
+        All forms in portal_forms</label>
+    <br /><br />
+
+    <label for="portals">Portal IDs (comma-separated)</label><br />
+    <textarea name="portals" id="portals" cols="50" rows="5" tal:content="portals"></textarea>
+    <br />
+
+    <label>
+        <input type="radio" name="p_action" value="ep"
+          tal:attributes="checked python:test(p_action=='ep','checked','')" />
+        exclude listed portals
+    </label>
+
+    <label>
+        <input type="radio" name="p_action" value="ip"
+          tal:attributes="checked python:test(p_action=='ip','checked','')" />
+        update only listed portals
+    </label>
+
+    <br /><br />
+    <input type="submit" name="show_report" value="Show report" />
+</form>
+
+<tal:block condition="python:report is not None">
+    <h2>Report</h2>
+
+    <style>
+        li.form_item div.diff { display: none; }
+        li.form_item.show_diff div.diff { display: block; margin-left: 3em; }
+        div.diff .line_added { background-color: #cfc; }
+        div.diff .line_removed { background-color: #fcc; }
+        div.diff .line_heading { background-color: #bdf; }
+        div.diff .line_normal { background-color: #ddd; }
+    </style>
+    <script src="misc_/naayaUpdater/jquery-1.3.2.min.js"></script>
+    <script>
+        $(function(){
+            $('li.form_item').each(function() {
+                var li = this;
+                $('a.see_diff', li).click(function() {
+                    $(li).toggleClass('show_diff');
+                });
+            });
+            $('span.buttons').append(
+                $('<'+'a>[overwrite all]<'+'/a>').click(function() {
+                    $('li.form_item input[type=checkbox][name=fmod]').attr('checked', 'checked');
+                }), ' ',
+                $('<'+'a>[remove all]<'+'/a>').click(function() {
+                    $('li.form_item input[type=checkbox][name=fdel]').attr('checked', 'checked');
+                }), ' ',
+                $('<'+'a>[reset checkboxes]<'+'/a>').click(function() {
+                    $('li.form_item input[type=checkbox][name=fmod]').attr('checked', null);
+                    $('li.form_item input[type=checkbox][name=fdel]').attr('checked', null);
+                }), ' ',
+                $('<'+'a>[expand all diffs]<'+'/a>').click(function() {
+                    $('li.form_item').addClass('show_diff');
+                }), ' ',
+                $('<'+'a>[collapse all diffs]<'+'/a>').click(function() {
+                    $('li.form_item').removeClass('show_diff');
+                })
+            );
+        });
+    </script>
+
+    <em tal:condition="python: len(report) == 0">No forms found</em>
+    <form tal:condition="report" method="post" name="frmQuickReloadForms"
+      tal:attributes="action string:${here/absolute_url}/reloadQuickPortalForms">
+        <div class="diff">
+            <div class="line_added">+ content from portal_forms</div>
+            <div class="line_removed">- content from skel</div>
+        </div>
+
+        <span class="buttons"></span>
+        <tal:block repeat="portal_report python:report.items()">
+        <div tal:define="portal_path python:portal_report[0];
+                         portal python:here.getPortal(portal_path);
+                         report python:portal_report[1]">
+
+            <h3>
+                <tal:block content="portal/meta_type" /> at <tal:block content="portal_path" />
+                (<tal:block content="portal/title_or_id" />)
+            </h3>
+
+            <ul>
+                <li class="form_item" tal:repeat="rep report">
+                    <tal:block define="action_type python:rep[1];
+                                        fmod python:rep[0]">
+                        <tal:block condition="python:action_type=='edit'">
+                            <tal:block define="fpath python:fmod.absolute_url(1)">
+                            <label><input type="checkbox" name="fmod" tal:attributes="value fpath" /> overwrite</label>
+                            <label><input type="checkbox" name="fdel" tal:attributes="value fpath" /> remove</label>
+                            [<a class="see_diff">diff</a>]
+                            [<a tal:attributes="href string:${fmod/absolute_url}/pt_editForm; title fmod/title_or_id">edit</a>]
+                            <span tal:content="fmod/id" />
+                            <div class="diff" tal:content="structure python:here.diffTemplates(fmod.id, fpath, portal_path)" />
+                            </tal:block>
+                        </tal:block>
+                        <tal:block condition="python:action_type=='add'">
+                            <input type="checkbox" name="fmod" tal:attributes="value python:here.generateFormPath(fmod, portal)" />
+                            <em tal:content="fmod" /> missing from ZMI (form will be added)
+                        </tal:block>
+                    </tal:block>
+                </li>
+            </ul>
+
+        </div>
+        </tal:block>
+
+        <br /><br />
+        <input type="hidden" name="forms" id="forms" tal:attributes="value forms" />
+        <input type="submit" name="reload" value="Update forms" />
+    </form>
+</tal:block>
+</tal:block>
+
+<tal:block content="structure here/manage_page_footer"/>

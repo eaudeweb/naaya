@@ -10,29 +10,16 @@
 
 <h3>Naaya updater</h3>
 
-<ul>
-	<li><a tal:attributes="href string:${here/absolute_url}/quick_overwritte_forms_html" title="">Quick update Naaya forms</a></li>
-	<li><a tal:attributes="href string:${here/absolute_url}/overwritte_forms_html" title="">Update Naaya forms</a></li>
-	<li><a tal:attributes="href string:${here/absolute_url}/reinstall_contenttypes_html" title="">Reinstall Naaya content types</a></li>	
-	<li><a tal:attributes="href string:${here/absolute_url}/update_layout_html" title="">Update portal layout</a></li>
-	<li><a tal:attributes="href string:${here/absolute_url}/content_languages" title="">Content languages</a></li>
-	<li><a tal:attributes="href string:${here/absolute_url}/update_schemas_html" title="">Update portal schemas</a></li>
+
+<ul tal:define="updates here/get_updates">
+    <li tal:repeat="update updates">
+        <a tal:attributes="href python:here.get_update_script_url(update)"
+             tal:content="python:here.get_update_script_title(update)"/>
+    </li>
 </ul>
 
 <hr />
 
-<h3>Naaya updater TODOs</h3>
-
-<ul>
-	<li><a tal:attributes="href string:${here/absolute_url}/show_alldiff_html" title="">See all modified data</a>&nbsp;<small>(its safe to run this first)</small>  <span style="color:red; font-size:0.8em">old - do not use it</span></li>
-
-	<li>Naaya portal_layout: show diff <span style="color:red; font-size:0.8em">not yet implemented</span></li>
-	<li>Naaya content_types: bulk install/uninstall <span style="color:red; font-size:0.8em">not yet implemented</span></li>
-	<li>Naaya portal_properties and Site/properties <span style="color:red; font-size:0.8em">not yet implemented</span></li>
-	<li>Naaya portal_syndication <span style="color:red; font-size:0.8em">not yet implemented</span></li>
-	<li>Naaya portal_portlets <span style="color:red; font-size:0.8em">not yet implemented</span></li>
-	<li>Naaya portal_email <span style="color:red; font-size:0.8em">not yet implemented</span></li>
-</ul>
 	</tal:block>
 </tal:block>
 
