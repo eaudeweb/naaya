@@ -28,8 +28,13 @@ from AccessControl.Permissions import view_management_screens
 
 #Naaya imports
 from Products.naayaUpdater.update_scripts import UpdateScript
-from Products.NaayaContent.discover import get_pluggable_content
-from Products.NaayaCore.constants import ID_SCHEMATOOL
+
+try:
+    from Products.NaayaContent.discover import get_pluggable_content
+    from Products.NaayaCore.constants import ID_SCHEMATOOL
+except ImportError:
+    # we're probably on an old Naaya version with no Schema code
+    pass
 
 class UpdatePortalSchemas(UpdateScript):
     """ Update portal schemas script """

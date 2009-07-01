@@ -22,8 +22,6 @@ from os.path import join
 from Products.naayaUpdater.updates import nyUpdateLogger as logger
 from Products.naayaUpdater.NaayaContentUpdater import NaayaContentUpdater
 
-from Products.NaayaCore.constants import METATYPE_SCHEMA
-from Products.NaayaCore.SchemaTool.SchemaTool import manage_addSchemaTool
 from Products.Naaya.NySite import NAAYA_PRODUCT_PATH
 
 class CustomContentUpdater(NaayaContentUpdater):
@@ -48,6 +46,8 @@ class CustomContentUpdater(NaayaContentUpdater):
             logger.debug('--- done ---')
 
     def _update_portal(self, portal):
+        from Products.NaayaCore.constants import METATYPE_SCHEMA
+        from Products.NaayaCore.SchemaTool.SchemaTool import manage_addSchemaTool
         # step 1: add schema tool
         manage_addSchemaTool(portal)
         logger.debug("Created portal_schemas")
