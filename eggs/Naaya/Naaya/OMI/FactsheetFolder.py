@@ -98,7 +98,7 @@ class FactsheetFolder(Folder):
     def __init__(self, id, title, administrator_email,
                     introduction = 'Introduction text',
                     instructions = 'Instructions text',
-                    sender_email = 'no-reply@ew.eea.europa.eu',
+                    sender_email = 'no-reply@eea.europa.eu',
                     smtp = 'localhost',
                     smtp_port = '25'):
         """ constructor """
