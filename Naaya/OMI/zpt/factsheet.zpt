@@ -106,6 +106,8 @@
 		<form tal:condition="python: not is_editing or entitled" class="Factsheet" id="Factsheet"
 			action="" tal:attributes="onsubmit string:javascript:dosubmit(${page});; return 0;"
 			method="post" style="padding: 1ex" enctype="multipart/form-data">
+			<script type="text/javascript" src="/misc_/OMI/factsheet.js"></script>
+			<script type="text/javascript" src="/misc_/OMI/AjaxRequest.js"></script>
 			<div class="message-error" tal:condition="python:request.get('request_error',None)">
 				Please fill in all the mandatory fields!
 			</div>
