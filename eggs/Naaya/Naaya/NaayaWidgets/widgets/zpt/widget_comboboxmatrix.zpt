@@ -11,17 +11,17 @@
 <div tal:condition="python:mode == 'view'" class="widgetViewMode checkboxMatrixWidget">
 	<table class="datatable" tal:condition="datamodel">
 		<caption tal:content="here/title"></caption>
+		<thead><tr><td></td><td tal:repeat="choice here/choices" tal:content="choice" /></tr></thead>
 		<tbody>
 			<tr tal:repeat="row here/rows">
 				<th scope="row" class="scope-row" tal:content="row">row</th>
-				<td tal:define="checked_choices python:datamodel[repeat['row'].index]">
-					<ul tal:condition="checked_choices">
-						<li tal:repeat="choice_idx checked_choices" style="background: none;">
-							<tal:block content="python:here.choices[choice_idx]" />:
-							<tal:block content="python:here.values[checked_choices[choice_idx]]" />
-						</li>
-					</ul>
-				</td>
+				<tal:block tal:define="checked_choices python:datamodel[repeat['row'].index]">
+				<tal:block tal:condition="checked_choices">
+					<tal:block tal:repeat="choice_idx python:range(len(here.choices))">
+						<td tal:content="python:here.values[checked_choices[choice_idx]]" />
+					</tal:block>
+				</tal:block>
+				</tal:block>
 			</tr>
 		</tbody>
 	</table>
