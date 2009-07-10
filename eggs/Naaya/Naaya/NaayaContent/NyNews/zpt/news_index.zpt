@@ -68,7 +68,7 @@
 	<td tal:content="here/keywords" />
 </tr>
 </table>
-<p tal:content="structure here/details" />
+<div tal:content="structure here/details" />
 
 <span tal:replace="structure here/comments_box" />
 
