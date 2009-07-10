@@ -20,10 +20,15 @@
 
 #Python imports
 import os
+from cStringIO import StringIO
 
 #Zope imports
 import Acquisition
+import transaction
 from OFS.SimpleItem import Item
+from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Naaya imports
 
@@ -31,6 +36,41 @@ class UpdateScript(Item, Acquisition.Implicit):
     """ """
     update_id = 'UpdateScript'
     title = 'Main class for update scripts'
+    meta_type = 'Naaya Update Script'
+
+    manage_options = (
+        {'label': 'Update', 'action': 'manage_update'},
+    )
+
+    security = ClassSecurityInfo()
+
+    security.declareProtected(view_management_screens, 'manage_update')
+    def manage_update(self, REQUEST):
+        """ perform this update """
+        report = ''
+        if REQUEST.REQUEST_METHOD == 'POST':
+            report_file = StringIO()
+
+            report_only = (REQUEST.form.get('action') != 'Run update')
+            if report_only:
+                print>>report_file, '<h3>Dry-run</h3>'
+            else:
+                transaction.get().note('running update script "%s"' % self.title)
+
+            for portal_path in REQUEST.form.get("portal_paths", []):
+                portal = self.unrestrictedTraverse(portal_path)
+                self._do_update_on_portal(portal, report_file, report_only)
+
+            report = report_file.getvalue()
+
+        return self.update_template(REQUEST, report=report, form=REQUEST.form)
+
+    security.declareProtected(view_management_screens, 'update_template')
+    update_template = PageTemplateFile('zpt/update_template', globals())
+
+    def index_html(self, REQUEST):
+        """ redirect to manage_workspace """
+        REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_workspace')
 
 
 def register_scripts(updater):
@@ -42,4 +82,3 @@ def register_scripts(updater):
             if (isinstance(obj, type) and issubclass(obj, UpdateScript) and
                     obj not in (UpdateScript, )):
                 updater.register_update_script(obj.update_id, obj)
-

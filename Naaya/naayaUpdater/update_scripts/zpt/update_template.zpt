@@ -1,0 +1,39 @@
+<metal:block define-macro="page">
+<tal:block content="structure here/manage_page_header"/>
+<tal:block content="structure here/manage_tabs"/>
+
+<style>
+    div.report { color: #555; }
+    div.report a { font-family: inherit; font-size: 100%; color: #009; }
+    div.report span.path { color: #009; }
+    div.report span.action_skip { color: #aa2; }
+    div.report span.action_ok { color: #5c5; }
+</style>
+
+<h2 metal:define-slot="title" tal:content="here/title_or_id" />
+
+<metal:block define-slot="body">
+<form method="post">
+    <ul>
+        <tal:block repeat="portal here/getPortals">
+        <li tal:define="portal_path python:'/'.join(portal.getPhysicalPath());
+          form_portal_paths python:options.get('form', {}).get('portal_paths', [])">
+            <label>
+            <input type="checkbox" name="portal_paths:list"
+              tal:attributes="value portal_path;
+              checked python:portal_path in form_portal_paths" />
+            <tal:block content="portal_path" />
+            </label>
+        </li>
+        </tal:block>
+    </ul>
+
+    <input type="submit" name="action" value="Run update" />
+    <input type="submit" name="action" value="Show report" />
+</form>
+
+<div class="report" tal:content="structure options/report|nothing" />
+</metal:block>
+
+<tal:block content="structure here/manage_page_footer"/>
+</metal:block>

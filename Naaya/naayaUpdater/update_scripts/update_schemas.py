@@ -28,6 +28,7 @@ from AccessControl.Permissions import view_management_screens
 
 #Naaya imports
 from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.NaayaCore.SchemaTool.widgets.Widget import widgetid_from_propname
 
 try:
     from Products.NaayaContent.discover import get_pluggable_content
