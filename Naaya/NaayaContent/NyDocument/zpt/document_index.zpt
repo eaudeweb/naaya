@@ -53,7 +53,7 @@
 </tr>
 </table>
 <br />
-<p tal:replace="structure here/body" />
+<div tal:replace="structure here/body" />
 
 <span tal:replace="structure here/comments_box" />
 
