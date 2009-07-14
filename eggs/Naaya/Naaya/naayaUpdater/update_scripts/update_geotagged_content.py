@@ -28,6 +28,12 @@ from Products.Localizer.LocalAttributes import LocalAttribute
 from Products.naayaUpdater.update_scripts import UpdateScript
 from Products.NaayaBase.NyContentType import NyContentType
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
+try:
+    import Products.TextIndexNG3
+    txng_version = 2
+except ImportError:
+    txng_version = 0
+
 
 class UpdateGeotaggedContent(UpdateScript):
     """ Update reinstall content types script  """
@@ -40,6 +46,8 @@ class UpdateGeotaggedContent(UpdateScript):
         schema_tool = portal.portal_schemas
         self._update_schemas(schema_tool, report_file, report_only)
         catalog = portal.portal_catalog
+        add_indexes(catalog, report_file, report_only)
+        enable_geotagged_content(portal, report_file, report_only)
         for brain in catalog():
             ob = brain.getObject()
             if isinstance(ob, NyContentType):
@@ -126,13 +134,13 @@ class UpdateGeotaggedContent(UpdateScript):
 
         if found_lat:
             try:
-                Decimal(lat)
+                Decimal(str(lat))
             except:
                 lat = ''
 
         if found_lon:
             try:
-                Decimal(lon)
+                Decimal(str(lon))
             except:
                 lon = ''
 
@@ -182,3 +190,46 @@ def fetch_and_remove(ob, prop_name, report_only):
         prop_value = ''
         
     return found, prop_value
+
+def add_indexes(catalog, report_file, report_only):
+    indexes = catalog.indexes()
+    if 'geo_location' not in indexes:
+        if report_only:
+            print>>report_file, span('action_ok', 'adding index'), 'geo_location', '<br/>'
+        else:
+            try: catalog.addIndex('geo_location', 'FieldIndex')
+            except: pass
+    else:
+        print>>report_file, span('action_skip', 'skipping index (already in catalog)'), 'geo_location', '<br/>'
+
+    if 'geo_address' not in indexes:
+        if report_only:
+            print>>report_file, span('action_ok', 'adding index'), 'geo_address', '<br/>'
+        else:
+            if txng_version == 2:
+                try: catalog.addIndex('geo_address', 'TextIndexNG3', extra={'default_encoding': 'utf-8'})
+                except: pass
+            else:
+                try: catalog.addIndex('geo_address', 'TextIndex')
+                except: pass
+    else:
+        print>>report_file, span('action_skip', 'skipping index (already in catalog)'), 'geo_address', '<br/>'
+
+def enable_geotagged_content(portal, report_file, report_only):
+    portal_control = portal.portal_control
+    portal_map = portal.portal_map
+    geotaggable_objects = [x['id'] for x in portal_map.list_geotaggable_types() if x['enabled']]
+    portal_control_enabled = portal_control.settings.keys()
+    if portal_control_enabled:
+        for content_type in portal_control_enabled:
+            class_name = portal.get_pluggable_item(content_type)['_class'].__name__
+            if class_name not in geotaggable_objects:
+                geotaggable_objects.append(class_name)
+        if report_only:
+            print>>report_file, span('action_ok', 'Setting geocodable content'), geotaggable_objects, '<br/>'
+        else:
+            portal_control.saveSettings(enabled_for=[]) #clear portal_control
+            portal_map.admin_set_contenttypes(geotag=geotaggable_objects)
+            print>>report_file, span('action_ok', 'Setting geocodable content'), geotaggable_objects, '<br/>'
+    else:
+        print>>report_file, span('action_skip', 'No geocodable content defined in portal control'), '', '<br/>'
