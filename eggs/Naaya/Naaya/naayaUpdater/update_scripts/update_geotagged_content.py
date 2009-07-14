@@ -19,6 +19,7 @@
 
 
 #Python imports
+from decimal import Decimal
 
 #Zope imports
 from Products.Localizer.LocalAttributes import LocalAttribute
@@ -123,6 +124,18 @@ class UpdateGeotaggedContent(UpdateScript):
         found_lon, lon = fetch_and_remove(ob, 'longitude', report_only)
         found_address, address = fetch_and_remove(ob, 'address', report_only)
 
+        if found_lat:
+            try:
+                Decimal(lat)
+            except:
+                lat = ''
+
+        if found_lon:
+            try:
+                Decimal(lon)
+            except:
+                lon = ''
+
         if not (found_lat or found_lon or found_address):
             print>>report_file, span('action_skip',
                 'skipping (no old-style geo data)'), '<br/>'
@@ -134,6 +147,7 @@ class UpdateGeotaggedContent(UpdateScript):
 
         if not report_only:
             ob.geo_location = geo
+            ob.recatalogNyObject(ob)
 
         print>>report_file, span('action_ok', 'saving value'), repr(geo), '<br/>'
 
@@ -166,5 +180,5 @@ def fetch_and_remove(ob, prop_name, report_only):
         # if prop_value is still a LocalAttribute, we found nothing in
         # _local_properties; let's assign it a blank value and move on.
         prop_value = ''
-
+        
     return found, prop_value
