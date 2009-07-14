@@ -51,7 +51,7 @@ class UpdateGeotaggedContent(UpdateScript):
         for brain in catalog():
             ob = brain.getObject()
             if isinstance(ob, NyContentType):
-                self._update_ob(ob, schema_tool, report_file, report_only)
+                self._update_ob(portal, ob, schema_tool, report_file, report_only)
 
     def _update_schemas(self, schema_tool, report_file, report_only):
         from Products.NaayaCore.SchemaTool.widgets.GeoTypeWidget import GeoTypeWidget
@@ -103,7 +103,7 @@ class UpdateGeotaggedContent(UpdateScript):
                     if not report_only:
                         schema.addWidget('geo_type', **default)
 
-    def _update_ob(self, ob, schema_tool, report_file, report_only):
+    def _update_ob(self, portal, ob, schema_tool, report_file, report_only):
         ob_link = '<a href="%(ob_path)s/manage_workspace">%(ob_path)s</a>' % {
             'ob_path': '/'.join(ob.getPhysicalPath())}
         print>>report_file, span('path', ob_link)
@@ -155,7 +155,7 @@ class UpdateGeotaggedContent(UpdateScript):
 
         if not report_only:
             ob.geo_location = geo
-            ob.recatalogNyObject(ob)
+            portal.catalogNyObject(ob)
 
         print>>report_file, span('action_ok', 'saving value'), repr(geo), '<br/>'
 
