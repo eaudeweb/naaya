@@ -192,16 +192,10 @@ def fetch_and_remove(ob, prop_name, report_only):
     return found, prop_value
 
 def add_indexes(catalog, report_file, report_only):
-    indexes = catalog.indexes()
-    if 'geo_location' not in indexes:
-        if report_only:
-            print>>report_file, span('action_ok', 'adding index'), 'geo_location', '<br/>'
-        else:
-            try: catalog.addIndex('geo_location', 'FieldIndex')
-            except: pass
-    else:
-        print>>report_file, span('action_skip', 'skipping index (already in catalog)'), 'geo_location', '<br/>'
+    add_field_index(catalog, report_file, report_only, 'geo_latitude')
+    add_field_index(catalog, report_file, report_only, 'geo_longitude')
 
+    indexes = catalog.indexes()
     if 'geo_address' not in indexes:
         if report_only:
             print>>report_file, span('action_ok', 'adding index'), 'geo_address', '<br/>'
@@ -214,6 +208,17 @@ def add_indexes(catalog, report_file, report_only):
                 except: pass
     else:
         print>>report_file, span('action_skip', 'skipping index (already in catalog)'), 'geo_address', '<br/>'
+
+def add_field_index(catalog, report_file, report_only, id):
+    indexes = catalog.indexes()
+    if id not in indexes:
+        if report_only:
+            print>>report_file, span('action_ok', 'adding index'), id, '<br/>'
+        else:
+            try: catalog.addIndex(id, 'FieldIndex')
+            except: pass
+    else:
+        print>>report_file, span('action_skip', 'skipping index (already in catalog)'), id, '<br/>'
 
 def enable_geotagged_content(portal, report_file, report_only):
     portal_control = portal.portal_control
