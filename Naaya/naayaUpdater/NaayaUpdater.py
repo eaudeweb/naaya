@@ -158,7 +158,10 @@ class NaayaUpdater(Folder):
         return message
 
     def _normalize_template(self, src):
-        return (src.strip().replace('\r', '')+'\n').encode('utf-8')
+        src = (src.strip().replace('\r', '')+'\n')
+        if isinstance(src, unicode):
+            src = src.encode('utf-8')
+        return src
 
     security.declareProtected(view_management_screens, 'show_html_diff')
     def show_html_diff(self, source, target):
