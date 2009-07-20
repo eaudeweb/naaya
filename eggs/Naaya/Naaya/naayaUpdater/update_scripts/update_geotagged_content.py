@@ -131,33 +131,38 @@ class UpdateGeotaggedContent(UpdateScript):
         found_lat, lat = fetch_and_remove(ob, 'latitude', report_only)
         found_lon, lon = fetch_and_remove(ob, 'longitude', report_only)
         found_address, address = fetch_and_remove(ob, 'address', report_only)
+        found_geo_location = ('geo_location' in ob.__dict__)
+
+        if found_geo_location:
+            print>>report_file, span('action_skip',
+                'skipping (already has geo_location value)'), '<br/>'
+            return
 
         if found_lat:
             try:
                 Decimal(str(lat))
             except:
-                lat = ''
+                lat = None
 
         if found_lon:
             try:
                 Decimal(str(lon))
             except:
-                lon = ''
+                lon = None
 
         if not (found_lat or found_lon or found_address):
             print>>report_file, span('action_skip',
                 'skipping (no old-style geo data)'), '<br/>'
             return
 
-        geo = Geo(str(lat), str(lon), address)
+        geo = Geo(lat, lon, address)
         if geo == Geo(0, 0):
             geo = None
 
+        print>>report_file, span('action_ok', 'saving value'), repr(geo), '<br/>'
         if not report_only:
             ob.geo_location = geo
             portal.catalogNyObject(ob)
-
-        print>>report_file, span('action_ok', 'saving value'), repr(geo), '<br/>'
 
 def span(cls, txt):
     return '<span class="%s">%s</span>' % (cls, txt)
@@ -188,7 +193,7 @@ def fetch_and_remove(ob, prop_name, report_only):
         # if prop_value is still a LocalAttribute, we found nothing in
         # _local_properties; let's assign it a blank value and move on.
         prop_value = ''
-        
+
     return found, prop_value
 
 def add_indexes(catalog, report_file, report_only):
@@ -212,11 +217,9 @@ def add_indexes(catalog, report_file, report_only):
 def add_field_index(catalog, report_file, report_only, id):
     indexes = catalog.indexes()
     if id not in indexes:
-        if report_only:
-            print>>report_file, span('action_ok', 'adding index'), id, '<br/>'
-        else:
-            try: catalog.addIndex(id, 'FieldIndex')
-            except: pass
+        print>>report_file, span('action_ok', 'adding index'), id, '<br/>'
+        if not report_only:
+            catalog.addIndex(id, 'FieldIndex')
     else:
         print>>report_file, span('action_skip', 'skipping index (already in catalog)'), id, '<br/>'
 
