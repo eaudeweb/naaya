@@ -138,17 +138,28 @@ class UpdateGeotaggedContent(UpdateScript):
                 'skipping (already has geo_location value)'), '<br/>'
             return
 
-        if found_lat:
-            try:
-                Decimal(str(lat))
-            except:
-                lat = None
+        def normalize_coord(found, value):
+            if not found:
+                return None
+            elif isinstance(value, float):
+                if value:
+                    return str(value)
+                else:
+                    return None
+            elif isinstance(value, str):
+                try:
+                    if Decimal(value):
+                        return value
+                    else:
+                        return None
+                except:
+                    return None
+            else:
+                return None
 
-        if found_lon:
-            try:
-                Decimal(str(lon))
-            except:
-                lon = None
+        lat = normalize_coord(found_lat, lat)
+        lon = normalize_coord(found_lon, lon)
+
 
         if not (found_lat or found_lon or found_address):
             print>>report_file, span('action_skip',
@@ -156,7 +167,7 @@ class UpdateGeotaggedContent(UpdateScript):
             return
 
         geo = Geo(lat, lon, address)
-        if geo == Geo(0, 0):
+        if geo in (Geo(0, 0), Geo()):
             geo = None
 
         print>>report_file, span('action_ok', 'saving value'), repr(geo), '<br/>'
