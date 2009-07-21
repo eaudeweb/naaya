@@ -34,6 +34,7 @@ class UpdateReinstallContenttypes(UpdateScript):
     """ Update reinstall content types script  """
     update_id = 'reinstall_contenttypes_html'
     title = 'Reinstall Naaya content types'
+    id = update_id
 
     security = ClassSecurityInfo()
 
@@ -89,7 +90,7 @@ class UpdateReinstallContenttypes(UpdateScript):
             return report
 
         REQUEST.SESSION.set('report', report)
-        return REQUEST.RESPONSE.redirect('%s/reinstall_contenttypes_html' % self.absolute_url())
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
 
 
 
