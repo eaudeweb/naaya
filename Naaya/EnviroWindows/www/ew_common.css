@@ -435,6 +435,15 @@ div.translate-top {
 .field-inline .invisible {
 	display: none;
 }
+.form-field label {
+    display: block;
+    width: 20%;
+    float: left;
+}
+.form-fieldset {
+    margin-top: 1em;
+    border: 1px solid #ccc;
+}
 /*  Comment box form */
 .comment_box {
 	background-color:#FAFAFA; 
