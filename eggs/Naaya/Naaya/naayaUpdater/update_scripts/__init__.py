@@ -51,15 +51,15 @@ class UpdateScript(Item, Acquisition.Implicit):
         if REQUEST.REQUEST_METHOD == 'POST':
             report_file = StringIO()
 
-            report_only = (REQUEST.form.get('action') != 'Run update')
-            if report_only:
+            dry_run = (REQUEST.form.get('action') != 'Run update')
+            if dry_run:
                 print>>report_file, '<h3>Dry-run</h3>'
             else:
                 transaction.get().note('running update script "%s"' % self.title)
 
             for portal_path in REQUEST.form.get("portal_paths", []):
                 portal = self.unrestrictedTraverse(portal_path)
-                self._do_update_on_portal(portal, report_file, report_only)
+                self._do_update_on_portal(portal, report_file, dry_run)
 
             report = report_file.getvalue()
 

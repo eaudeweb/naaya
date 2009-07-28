@@ -41,19 +41,19 @@ class UpdateGeotaggedContent(UpdateScript):
     update_id = 'update_geotagged_content'
     title = 'Update geotagged content'
 
-    def _do_update_on_portal(self, portal, report_file, report_only):
+    def _do_update_on_portal(self, portal, report_file, dry_run):
         print>>report_file, '<h4>%s</h4>' % '/'.join(portal.getPhysicalPath())
         schema_tool = portal.portal_schemas
-        self._update_schemas(schema_tool, report_file, report_only)
+        self._update_schemas(schema_tool, report_file, dry_run)
         catalog = portal.portal_catalog
-        add_indexes(catalog, report_file, report_only)
-        enable_geotagged_content(portal, report_file, report_only)
+        add_indexes(catalog, report_file, dry_run)
+        enable_geotagged_content(portal, report_file, dry_run)
         for brain in catalog():
             ob = brain.getObject()
             if isinstance(ob, NyContentType):
-                self._update_ob(portal, ob, schema_tool, report_file, report_only)
+                self._update_ob(portal, ob, schema_tool, report_file, dry_run)
 
-    def _update_schemas(self, schema_tool, report_file, report_only):
+    def _update_schemas(self, schema_tool, report_file, dry_run):
         from Products.NaayaCore.SchemaTool.widgets.GeoTypeWidget import GeoTypeWidget
         for schema in schema_tool.objectValues():
             defaults = schema.getDefaultDefinition()
@@ -69,30 +69,30 @@ class UpdateGeotaggedContent(UpdateScript):
                 if ('geo_type-property' in schema.objectIds()
                   and not isinstance(schema['geo_type-property'], GeoTypeWidget)):
                     print_schema_report('Replacing geo_type property')
-                    if not report_only:
+                    if not dry_run:
                         schema.manage_delObjects(['geo_type-property'])
 
                 # also remove longitude, latitude, address properties
                 if 'longitude-property' in schema.objectIds():
                     print_schema_report('Removing longitude property')
-                    if not report_only:
+                    if not dry_run:
                         schema.manage_delObjects(['longitude-property'])
 
                 if 'latitude-property' in schema.objectIds():
                     print_schema_report('Removing latitude property')
-                    if not report_only:
+                    if not dry_run:
                         schema.manage_delObjects(['latitude-property'])
 
                 if 'address-property' in schema.objectIds():
                     print_schema_report('Removing address property')
-                    if not report_only:
+                    if not dry_run:
                         schema.manage_delObjects(['address-property'])
 
             if 'geo_location-property' not in schema.objectIds():
                 if 'geo_location' in defaults:
                     default = defaults['geo_location']
                     print_schema_report('Adding geo_location property')
-                    if not report_only:
+                    if not dry_run:
                         schema.addWidget('geo_location', **default)
 
             if 'geo_type-property' not in schema.objectIds():
@@ -100,10 +100,10 @@ class UpdateGeotaggedContent(UpdateScript):
                 if 'geo_type' in defaults:
                     default = defaults['geo_type']
                     print_schema_report('Adding geo_type property')
-                    if not report_only:
+                    if not dry_run:
                         schema.addWidget('geo_type', **default)
 
-    def _update_ob(self, portal, ob, schema_tool, report_file, report_only):
+    def _update_ob(self, portal, ob, schema_tool, report_file, dry_run):
         ob_link = '<a href="%(ob_path)s/manage_workspace">%(ob_path)s</a>' % {
             'ob_path': '/'.join(ob.getPhysicalPath())}
         print>>report_file, span('path', ob_link)
@@ -115,9 +115,9 @@ class UpdateGeotaggedContent(UpdateScript):
                 'skipping (no schema)'), '<br/>'
             return
 
-        if not report_only and 'geo_location-property' in schema.objectIds():
+        if not dry_run and 'geo_location-property' in schema.objectIds():
             missing_schema_prop = False
-        elif report_only and 'geo_location' in (schema.getDefaultDefinition() or {}):
+        elif dry_run and 'geo_location' in (schema.getDefaultDefinition() or {}):
             missing_schema_prop = False
         else:
             missing_schema_prop = True
@@ -128,9 +128,9 @@ class UpdateGeotaggedContent(UpdateScript):
             return
 
 
-        found_lat, lat = fetch_and_remove(ob, 'latitude', report_only)
-        found_lon, lon = fetch_and_remove(ob, 'longitude', report_only)
-        found_address, address = fetch_and_remove(ob, 'address', report_only)
+        found_lat, lat = fetch_and_remove(ob, 'latitude', dry_run)
+        found_lon, lon = fetch_and_remove(ob, 'longitude', dry_run)
+        found_address, address = fetch_and_remove(ob, 'address', dry_run)
         found_geo_location = ('geo_location' in ob.__dict__)
 
         if found_geo_location:
@@ -171,21 +171,21 @@ class UpdateGeotaggedContent(UpdateScript):
             geo = None
 
         print>>report_file, span('action_ok', 'saving value'), repr(geo), '<br/>'
-        if not report_only:
+        if not dry_run:
             ob.geo_location = geo
             portal.catalogNyObject(ob)
 
 def span(cls, txt):
     return '<span class="%s">%s</span>' % (cls, txt)
 
-def fetch_and_remove(ob, prop_name, report_only):
+def fetch_and_remove(ob, prop_name, dry_run):
     found = False
     prop_value = None
 
     if prop_name in ob.__dict__:
         found = True
         prop_value = ob.__dict__[prop_name]
-        if not report_only:
+        if not dry_run:
             del ob.__dict__[prop_name]
 
     if isinstance(prop_value, LocalAttribute):
@@ -196,7 +196,7 @@ def fetch_and_remove(ob, prop_name, report_only):
             for value, timestamp in local_props[prop_name].values():
                 if value:
                     prop_value = value
-            if not report_only:
+            if not dry_run:
                 del local_props[prop_name]
                 ob._p_changed = 1
 
@@ -207,13 +207,13 @@ def fetch_and_remove(ob, prop_name, report_only):
 
     return found, prop_value
 
-def add_indexes(catalog, report_file, report_only):
-    add_field_index(catalog, report_file, report_only, 'geo_latitude')
-    add_field_index(catalog, report_file, report_only, 'geo_longitude')
+def add_indexes(catalog, report_file, dry_run):
+    add_field_index(catalog, report_file, dry_run, 'geo_latitude')
+    add_field_index(catalog, report_file, dry_run, 'geo_longitude')
 
     indexes = catalog.indexes()
     if 'geo_address' not in indexes:
-        if report_only:
+        if dry_run:
             print>>report_file, span('action_ok', 'adding index'), 'geo_address', '<br/>'
         else:
             if txng_version == 2:
@@ -225,16 +225,16 @@ def add_indexes(catalog, report_file, report_only):
     else:
         print>>report_file, span('action_skip', 'skipping index (already in catalog)'), 'geo_address', '<br/>'
 
-def add_field_index(catalog, report_file, report_only, id):
+def add_field_index(catalog, report_file, dry_run, id):
     indexes = catalog.indexes()
     if id not in indexes:
         print>>report_file, span('action_ok', 'adding index'), id, '<br/>'
-        if not report_only:
+        if not dry_run:
             catalog.addIndex(id, 'FieldIndex')
     else:
         print>>report_file, span('action_skip', 'skipping index (already in catalog)'), id, '<br/>'
 
-def enable_geotagged_content(portal, report_file, report_only):
+def enable_geotagged_content(portal, report_file, dry_run):
     portal_control = portal.portal_control
     portal_map = portal.portal_map
     geotaggable_objects = [x['id'] for x in portal_map.list_geotaggable_types() if x['enabled']]
@@ -244,7 +244,7 @@ def enable_geotagged_content(portal, report_file, report_only):
             class_name = portal.get_pluggable_item(content_type)['_class'].__name__
             if class_name not in geotaggable_objects:
                 geotaggable_objects.append(class_name)
-        if report_only:
+        if dry_run:
             print>>report_file, span('action_ok', 'Setting geocodable content'), geotaggable_objects, '<br/>'
         else:
             portal_control.saveSettings(enabled_for=[]) #clear portal_control
