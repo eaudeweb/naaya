@@ -74,7 +74,7 @@
 					 global came_from python:test(query, proc_came_from + query, proc_came_from)">
 </tal:block>
 <div id="outer_wrapper">
-	<div id="container" tal:attributes="style python:test(len(here.get_right_portlets_locations_objects(here)) or here.meta_type == here.get_constant('METATYPE_FOLDER'), '', 'background: none')">
+	<div id="container" tal:attributes="style python:test(len(here.portal_portlets.get_portlets_for_obj(here, 'right')) or here.meta_type == here.get_constant('METATYPE_FOLDER'), '', 'background: none')">
 		<div id="toolribbon">
 			<div id="topnav">
 				<div id="language">
@@ -137,7 +137,7 @@
 			</tal:block>
 		</div>
 		<div id="left_port">
-			<tal:block tal:repeat="item here/get_left_portlets_objects">
+			<tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'left')">
 				<tal:block tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_left_macro'})" />
 			</tal:block>
 		</div>

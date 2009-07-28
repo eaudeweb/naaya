@@ -21,7 +21,6 @@
 		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_mapduplicatelocations_html" title="Duplicate locations" i18n:attributes="title" i18n:translate="">Duplicate locations</a></li>
 	<li><strong i18n:translate="">Content management</strong></li>
 		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_schemas/admin_html" title="Content type property definitions" i18n:attributes="title" i18n:translate="">Content types</a></li>
-		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/csv_import" title="Upload Naaya objects using CSV files" i18n:attributes="title" i18n:translate="">Bulk upload</a></li>
 		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_basket_html" title="Centralized basket of approvals" i18n:attributes="title" i18n:translate="">Basket of approvals</a></li>
 		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_versioncontrol_html" title="Version control" i18n:attributes="title" i18n:translate="">Version control</a></li>
 		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_maintopics_html" title="Define the list of main sections" i18n:attributes="title" i18n:translate="">Main sections</a></li>
