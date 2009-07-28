@@ -3,372 +3,181 @@
 <tal:block metal:fill-slot="portlet_title"></tal:block>
 <tal:block metal:fill-slot="portlet_content">
 <tal:block tal:define="geo_map here/getGeoMapTool;
-       geo_types python:request.get('geo_types', geo_map.getSymbolsIds());
-       geo_query python:request.get('geo_query', '');
-       center python:request.get('center', '');
-       zoom python:request.get('zoom', '');
-       path python:request.get('path', '');
-       records python:geo_map.searchGeoPoints(path, geo_types, geo_query);
-       width python:request.get('width', geo_map.map_width);
-       height python:request.get('height', geo_map.map_height)">
-
-       <link rel="stylesheet" href="destinav/tabs.css" type="text/css" media="all" />
-       <script src="destinav/prototype.js" type="text/javascript"></script>
-       <script type="text/javascript" src="destinav/tabs.js"></script>
-   <script  src="destinav/tree/dhtmlxcommon.js"></script>
-   <script  src="destinav/tree/dhtmlxtree.js"></script>
+		geo_types python:request.get('geo_types', geo_map.getSymbolsIds()); 
+		geo_query python:request.get('geo_query', '');
+		center python:request.get('center', '');
+		zoom python:request.get('zoom', '');
+		path python:request.get('path', '');
+		records python:geo_map.search_geo_objects(path=path, geo_types=geo_types, query=geo_query);
+		width python:request.get('width', geo_map.map_width);
+		height python:request.get('height', geo_map.map_height);
+		google_api_key python:geo_map.googleApiKey;
+		">
 
 <style type="text/css">
 div.marker {
-   display: none;
+	display: none;
 }
 div.marker-body {
-   width: 290px;
-   margin-top: 0;
-   line-height: normal;
+	width: 290px;
+	margin-top: 0;
+	line-height: normal;
+}
+div.marker-body a {
+	line-height: normal;
 }
 div.marker-more {
-   padding: 10px 5px 5px 30px;    /* T   R   B   L */
-   line-height: normal;
+	padding: 10px 5px 5px 30px;	/* T   R   B   L */
 }
 div.marker-body h3 {
-   font-weight: bold;
-   font-size: 1em;
-   margin-top: 0;
-   padding-top: 0;
-   text-transform: uppercase;
-   line-height: normal;
+	font-weight: bold;
+	font-size: 1em;
+	margin-top: 0;
+	padding-top: 0;
+	text-transform: uppercase;
+	line-height: normal;
 }
-
-div.marker-body a {
-  line-height: normal;
-}
-
 .map-button {
-   font-size: x-small;
-   color: white;
-   border: 1px outset white;
-   background-color: #336699;
-   margin-top: 1em;
-   padding: 0.3em 0.2em;
+	font-size: x-small;
+	color: white;
+	border: 1px outset white;
+	background-color: #336699;
+	margin-top: 1em;
+	padding: 0.3em 0.2em;
 }
 #record_counter_message {
-   font-size: x-small;
+	font-size: x-small;
 }
 .destinet-front {
-   font-size: 80%;
+	font-size: 80%;
 }
 .destinet-front ul {
-   list-style-type: none;
-   list-style-position: outside;
+	list-style-type: none;
+	list-style-position: outside;
 }
 .middle_box {
-   text-align: left;
-   background-color: #dde9ed;
-   color: black;
-   border: 1px solid #afb2b4;
-   margin: 0.5em 0 0.6em 0;
-   padding: 0.2em 0 0.5em 0;
-   width: 21em;
+	text-align: left;
+	background-color: #dde9ed;
+	color: black;
+	border: 1px solid #afb2b4;
+	margin: 0.5em 0 0.6em -2.4em;
+	padding: 0.2em 0 0.5em 0;
+	width: 28em;
 }
 .middle_box a:visited {
-   color: black;
-   text-decoration: none;
+	color: black;
+	text-decoration: none;
 }
 .middle_box a {
-   color: black !important;
-   text-decoration: none;
+	color: black !important;
+	text-decoration: none;
 }
 .middle_box a:hover {
-   color: black;
-   text-decoration: underline;
-}
-
-#frmFilterGeopoints {
-  display: none;
+	color: black;
+	text-decoration: underline;
 }
 </style>
 
-<script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${geo_map/mapsapikey}"></script>
-<script type="text/javascript" src="misc_/NaayaCore/remote.js"></script>
-<script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
+<span tal:condition="python: geo_map.map_engine == 'google'">
+  <script type="text/javascript" tal:attributes="src string:http://maps.google.com/maps?file=api&amp;v=2&amp;key=${geo_map/googleApiKey}"></script>
+  <script type="text/javascript" src="misc_/NaayaCore/googlemaps.js"></script>
+</span>
+<span tal:condition="python:geo_map.map_engine == 'yahoo'">
+  <script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${geo_map/mapsapikey}"></script>
+  <script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
+</span>
+<script type="text/javascript" src="misc_/NaayaCore/xmlhttp.js"></script>
+<script type="text/javascript" src="misc_/NaayaCore/geomaptool.js"></script>
+<span tal:replace="structure python:geo_map.jsMapControl(geo_map.map_engine, geo_map.center_locality, zoom, width, height, geo_map.enableKeyControls, geo_map.map_types, geo_map.default_type)" />
 
-<script type="text/javascript">
-<!--
-var isSelected = true;
-function toggleSelect()
-{
-   var frm = document.frmFilterMap;
-   var i;
-   for(i=0; i<frm.elements.length; i++)
-       if (frm.elements[i].type == "checkbox" && frm.elements[i].name == 'geo_types:list')
-           frm.elements[i].checked = !isSelected;
-   isSelected = !isSelected;
-}
-//-->;
-</script>
 
-<span tal:replace="structure python:geo_map.xrjs_loader(geo_types, geo_query, center, zoom, path, width, height, False)" />
-
+<form action="." name="frmFilterMap" method="get" id="frmFilterMap">
 <div id="center_content">
-  <form action="." name="frmFilterMap" method="get" id="frmFilterMap">
-   <!-- h1 i18n:translate="">Stakeholders</h1 -->
-   <noscript>
-       <p i18n:translate="" class="message-information">You must have Javascript turned on to view all the YahooMap features.</p>
-   </noscript>
-   <a id="mappage"></a>
+	<noscript>
+		<p i18n:translate="" class="message-information">You must have Javascript turned on to view all the YahooMap features.</p>
+	</noscript>
+	<a id="mappage"></a>
 
-   <div id="yahoo_map_section" style="display: none">
-       <div style="text-align: center; font-weight: bold; margin: 0; width: 600px">Stakeholders</div>
-       <div style="padding: 3px; border: 2px solid #dde9ed; width: 600px"><div id="map"></div></div>
-   </div>
-   <div id="record_counter_message">
-       <span style="margin-left: 3em;" id="record_counter" tal:content="python: len(records)"></span> <span i18n:translate="">location(s)</span>
-       <!-- a style="font-size: 90%" href="http://developer.yahoo.com/about/" title="Yahoo.com | About Applications that Use Yahoo! Web Services" i18n:translate="" i18n:attributes="title">Service provided by Yahoo!</a -->
-   </div>
+	<div id="yahoo_map_section" style="display: none">
+		<!-- div style="text-align: center; font-weight: bold; margin: 0; width: 600px">Stakeholders</div -->
+		<div style="padding: 3px; border: 2px solid #dde9ed; width: 600px; height: 350px;"><div id="map" tal:attributes="style python:'width:%spx;; height:%spx' % (width, height)"></div></div>
+	</div>
+	<div id="record_counter_message" style="display: none;">
+		<span style="margin-left: 3em;" id="record_counter">0</span> <span i18n:translate="">location(s)</span>
+		<!-- a style="font-size: 90%" href="http://developer.yahoo.com/about/" title="Yahoo.com | About Applications that Use Yahoo! Web Services" i18n:translate="" i18n:attributes="title">Service provided by Yahoo!</a -->
+	</div>
 
-   <noscript>
-       <tal:block define="skey python:None;
-               rkey python:None;
-               map_url geo_map/absolute_url;
-               map_ob geo_map;
-               edit_mode python:False;
-               sortable python:False;">
-           <table metal:use-macro="geo_map/locations_table_html/macros/main">
-           </table>
-       </tal:block>
-       <p i18n:translate="">You can also use <a href="http://earth.google.com/downloads.html">Google Earth viewer</a> (version 4.0 or higher)
-       <input type="submit" value="View in Google Earth" name="portal_map/downloadLocationsKml2:method" i18n:attributes="value" class="map-button" /></p>
-   </noscript>
-    </form>
+	<noscript>
+		<tal:block define="sort_on python:None;
+				sort_order python:None;
+				map_url geo_map/absolute_url;
+				map_ob geo_map;
+				edit_mode python:False;
+				sortable python:False;">
+			<table metal:use-macro="geo_map/locations_table_html/macros/main">
+			</table>
+		</tal:block>
+	</noscript>
 
-  <!-- Filtering area -->
-    <form id="frmFilterGeopoints" name="frmFilterGeopoints" method="get" action=".">
-      <h3 id="sel_desc" i18n:translate="">Start by making your selection from the choices below</h3>
-      <div id="sel_detailed">
-        <span i18n:translate>Your selection:</span>
-        <div id="desc1"><span  tal:content="python:'Step 1 - %s: ' % here.portal_map.getParentsList()[0].title"/><span id="step1d" class="sel_step"></span></div>
-        <div id="desc2"><span  tal:content="python:'Step 2 - %s: ' % here.portal_map.getParentsList()[1].title"/><span id="step2d" class="sel_step"></span></div>
-        <div id="desc3">Step 3 - Administrative level: <span id="step3d" class="sel_step"></span></div>
-        <div id="desc4">Step 4 - Landscape type: <span id="step4d" class="sel_step"></span></div>
-      </div>
-      <div id="mainmenu">
-        <ul id="tabs">
-          <li><a href="#tab1" tal:content="structure python:'Step 1 <br /> %s' % here.portal_map.getParentsList()[0].title"></a></li>
-          <li><a href="#tab2" tal:content="structure python:'Step 2 <br /> %s' % here.portal_map.getParentsList()[1].title"></a></li>
-          <li><a href="#tab3">Step 3  <br /> Administrative level</a></li>
-          <li><a href="#tab4">Step 4  <br /> Landscape type</a></li>
-        </ul>
-      </div>
-      <div class="panel" id="tab1">
-        <div id="treebox1"></div>
-      </div>
-      <div class="panel" id="tab2">
-        <div id="treebox2"></div>
-      </div>
-      <div class="panel" id="tab3">
-        <div id="treebox3"></div>
-      </div>
-      <div class="panel" id="tab4">
-        <div id="treebox4"></div>
-      </div>
-       <br clear="all"/>
-       <input type="button" id="sbt" value="Click here to display your choices on the map" onclick="javascript:onSearch(); return false" />
-       <input type="hidden" id="arrStakeholders" name="arrStakeholders" value="" />
-       <input type="hidden" id="arrSupplyChains" name="arrSupplyChains" value="" />
-       <input type="hidden" id="arrAdministrativeLevels" name="arrAdministrativeLevels" value="" />
-       <input type="hidden" id="arrLandscapeTypes" name="arrLandscapeTypes" value="" />
+	<div class="destinet-front">
+		<ul tal:define="parentsList geo_map/getParentsListOrdered" tal:condition="parentsList">
+			<tal:block repeat="item parentsList">
+			<tal:block define="children python:geo_map.getSymbolChildrenOrdered(item.id); c_index repeat/item/index">
+			<li style="float: left; width: 28em; margin: 0 0.4em;">
+				<div style="text-align: center; font-weight: bold; background-color: #dde099; border: 1px solid #828372; padding: 1em 0 0.2em 0; margin: 1em 0 0.3em 0"><span i18n:translate="" style="text-decoration: none; color: black" tal:content="item/title" /></div>
+			<ul tal:condition="children">
+				<li tal:repeat="child children" class="middle_box">
+					<input type="checkbox" name="geo_types:list"
+						tal:attributes="value child/id; id child/id; 
+								onclick string:javascript:startMapRefresh();" style="float: left; width: 2em;" />
+					<div style="text-align: center;"><label tal:attributes="for child/id" i18n:translate="" style="padding: 0.5em 0;">
+						<img tal:condition="python:child.picture is not None" style="zoom: 85%"
+						tal:attributes="src string:portal_map/getSymbolPicture?id=${child/id}; alt child/title" /> 
+						<span tal:content="child/title" /></label>
+					</div>
+				</li>
+			</ul>
+			</li>
+			</tal:block>
+			</tal:block>
+		</ul>
+		<div>
+			<input type="hidden" id="center" name="center" tal:attributes="value center" />
+			<input type="hidden" id="zoom" name="zoom" tal:attributes="value zoom" />
+			<input type="hidden" id="path" name="path" tal:attributes="value path" />
+			<input type="hidden" id="geo_query" name="geo_query" value=""/>
+			<noscript>
+				<input type="submit" value="Show selected" class="map-button" name="index_html:method" i18n:attributes="value" />
+			</noscript>
+		</div>
+	</div>
 
-       <p i18n:translate="">You can also use <a href="http://earth.google.com/downloads.html">Google Earth viewer</a> (version 4.0 or higher)
-       <input type="submit" value="View in Google Earth" name="portal_map/downloadLocationsKml:method" i18n:attributes="value" class="map-button" /></p>
-     </form>
-     <br />
-
-
-     <script type="text/javascript" language="JavaScript">
-
-        var c =  document.getElementById( "frmFilterGeopoints" );
-        c.style.display = "block";
-
-        var g_url = "";
-        var s1 = 0 ; var s2 = 0; var s3 = 0; var s4 = 0;
-        tree1=new dhtmlXTreeObject("treebox1","100%","100%",0);
-        tree1.setImagePath("destinav/tree/imgs/csh_bluebooks/");
-        tree1.enableCheckBoxes( true );
-        tree1.enableThreeStateCheckboxes(true);
-        tree1.enableActiveImages(1);
-        tree1.attachEvent( "onCheck", onNodeSelect );
-        tree1.attachEvent( "onClick", function(id, id_prev){ if (s1 != 0){tree1.setCheck(id, !tree1.isItemChecked(id)); onNodeSelect(id, id_prev);} else s1++; } );
-        tree1.loadXML("portal_map/get_stakeholders_xml");
-
-        tree2=new dhtmlXTreeObject("treebox2","100%","100%",0);
-        tree2.setImagePath("destinav/tree/imgs/csh_bluebooks/");
-        tree2.enableCheckBoxes( true );
-        tree2.enableThreeStateCheckboxes(true);
-        tree2.enableActiveImages(1);
-        tree2.attachEvent( "onCheck", onNodeSelect );
-        tree2.attachEvent( "onClick", function(id, id_prev){ if (s2 != 0){tree2.setCheck(id, !tree2.isItemChecked(id)); onNodeSelect(id, id_prev);} else s2++; } );
-        tree2.loadXML("portal_map/get_supplyChain_xml");
-
-        tree3=new dhtmlXTreeObject("treebox3","100%","100%",0);
-        tree3.setImagePath("destinav/tree/imgs/csh_bluebooks/");
-        tree3.enableCheckBoxes( true );
-        tree3.enableThreeStateCheckboxes(true);
-        tree3.enableActiveImages(1);
-        tree3.attachEvent( "onCheck", onNodeSelect );
-        tree3.attachEvent( "onClick", function(id, id_prev){ if (s3 != 0){tree3.setCheck(id, !tree3.isItemChecked(id)); onNodeSelect(id, id_prev);} else s3++; } );
-        tree3.loadXML("portal_map/get_administrative_xml");
-        tree3.enableIEImageFix(true);
-        tree3.enableTreeImages(0);
-
-        tree4=new dhtmlXTreeObject("treebox4","100%","100%",0);
-        tree4.setImagePath("destinav/tree/imgs/csh_bluebooks/");
-        tree4.enableCheckBoxes( true );
-        tree4.enableThreeStateCheckboxes(true);
-        tree4.enableActiveImages(1);
-        tree4.attachEvent( "onCheck", onNodeSelect );
-        tree4.attachEvent( "onClick", function(id, id_prev){ if (s4 != 0){tree4.setCheck(id, !tree4.isItemChecked(id)); onNodeSelect(id, id_prev);} else s4++; } );
-        tree4.loadXML("portal_map/get_landscape_xml");
-        tree4.enableIEImageFix(true);
-        tree4.enableTreeImages(0);
-
-        function onNodeSelect( id, id_prev ) {
-          var step_one = document.getElementById( 'step1d' );
-          var step_two = document.getElementById( 'step2d' );
-          var step_three = document.getElementById( 'step3d' );
-          var step_four = document.getElementById( 'step4d' );
-          var text = "";
-          var str = "";
-
-          str = tree1.getAllChecked();
-          text = ""
-          if (str.length > 0) {
-            var nodes = tree1.getAllChecked().split(",");
-            for( var i = 0; i < nodes.length; i++ )
-            {
-              if( nodes[ i ] != 'cat_all' ) {
-                text += tree1.getItemText( nodes[ i ] );
-                if( i < nodes.length - 1 ) {
-                  text += ", ";
-                }
-              }
-            }
-          }
-          step_one.innerHTML = text;
-
-          str = tree2.getAllChecked();
-          text = ""
-          if (str.length > 0) {
-            var nodes = tree2.getAllChecked().split(",");
-            for( var i = 0; i < nodes.length; i++ )
-            {
-              if( nodes[ i ] != 'cat_all' ) {
-                text += tree2.getItemText( nodes[ i ] );
-                if( i < nodes.length - 1 ) {
-                  text += ", ";
-                }
-              }
-            }
-          }
-          step_two.innerHTML = text;
-
-          str = tree3.getAllChecked();
-          text = ""
-          if (str.length > 0) {
-            var nodes = tree3.getAllChecked().split(",");
-            for( var i = 0; i < nodes.length; i++ )
-            {
-              if( nodes[ i ] != 'cat_all' ) {
-                text += tree3.getItemText( nodes[ i ] );
-                if( i < nodes.length - 1 ) {
-                  text += ", ";
-                }
-              }
-            }
-          }
-          step_three.innerHTML = text;
-
-          str = tree4.getAllChecked();
-          text = ""
-          if (str.length > 0) {
-            var nodes = tree4.getAllChecked().split(",");
-            for( var i = 0; i < nodes.length; i++ )
-            {
-              if( nodes[ i ] != 'cat_all' ) {
-                text += tree4.getItemText( nodes[ i ] );
-                if( i < nodes.length - 1 ) {
-                  text += ", ";
-                }
-              }
-            }
-          }
-          step_four.innerHTML = text;
-        }
-
-        //TODO: on page close release tree memory, call tree.destructor()
-        //Do the XML-RPC call for searching
-
-        function onSearch() {
-          var strStakeholders = tree1.getAllChecked();
-          var strSupplyChains = tree2.getAllChecked();
-          var strAdministrativeLevels = tree3.getAllChecked();
-          var strLandscapeTypes = tree4.getAllChecked();
-
-          var ctrl_arrStakeholders = document.getElementById( "arrStakeholders" );
-          ctrl_arrStakeholders.value = strStakeholders;
-
-          var ctrl_arrSupplyChains = document.getElementById( "arrSupplyChains" );
-          ctrl_arrSupplyChains.value = strSupplyChains;
-
-          var ctrl_arrAdministrativeLevels = document.getElementById( "arrAdministrativeLevels" );
-          ctrl_arrAdministrativeLevels.value = strAdministrativeLevels;
-
-          var ctrl_arrLandscapeTypes = document.getElementById( "arrLandscapeTypes" );
-          ctrl_arrLandscapeTypes.value = strLandscapeTypes;
-
-          arr1 = strStakeholders.split(",");
-          if( arr1.length == 1 && arr1[ 0 ] == "" ) arr1 = [];
-          arr2 = strSupplyChains.split(",");
-          if( arr2.length == 1 && arr2[ 0 ] == "" ) arr2 = [];
-          arr3 = strAdministrativeLevels.split(",");
-          if( arr3.length == 1 && arr3[ 0 ] == "" ) arr3 = [];
-          arr4 = strLandscapeTypes.split(",");
-          if( arr4.length == 1 && arr4[ 0 ] == "" ) arr4 = [];
-
-          if( ( arr1.length > 0 || arr2.length > 0 ) && arr3.length > 0 && arr4.length > 0 )
-          {
-            document.body.style.cursor="wait";
-            var url = 'portal_map/search_geopoints_frontpage?' + encodeForm('frmFilterGeopoints');
-            g_url = url;
-            loadXMLDoc(url, showSelectedLocations_request_handler);
-          } else {
-            alert( "Please make a selection for the Tourism sector, Administrative level and Landscape type!" );
-          }
-          return false;
-       }
-    </script>
+	<div style="display:none" id="map_markers"></div>
 </div>
-
-
+	<p i18n:translate="" style="font-size: 90%; margin-top: 0;">You can also use <a href="http://earth.google.com/downloads.html">Google Earth viewer</a> (version 4.0 or higher) 
+	<input type="submit" value="View in Google Earth" name="portal_map/downloadLocationsKml:method" i18n:attributes="value" class="map-button" /></p>
+</form>
+<form id="list_locations_form" action="list_locations" method="get" style="display:none">
+	<input type="hidden" name="lat_min" />
+	<input type="hidden" name="lat_max" />
+	<input type="hidden" name="lon_min" />
+	<input type="hidden" name="lon_max" />
+	<input type="hidden" name="symbols" />
+	<input type="hidden" name="geo_query" />
+<a id="view_as_list"/><a id="download_georss"/><a id="view_in_google_earth"/>
+<input type="hidden" id="filter_map"/>
+</form>
 <script type="text/javascript">
 <!--
-   // show the elements that are used when JavaScript is available
-   var yahoo_map_section = document.getElementById("yahoo_map_section");
-   yahoo_map_section.style.display = "block";
-
-            var arr_ck = tree1.getAllChecked().split(",");
-        for( var i = 0; i < arr_ck.length; i++)
-        {
-          tree1.setCheck(arr_ck[ i ],false);
-        }
-
+	// show the elements that are used when JavaScript is available
+	var yahoo_map_section = document.getElementById("yahoo_map_section");
+	yahoo_map_section.style.display = "block";
+	showMap();
+	document.getElementById('record_counter_message').style.display="block";
 // -->;
 </script>
 
 
 </tal:block>
-
-
-
 
 </tal:block></tal:block>
