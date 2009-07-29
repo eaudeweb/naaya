@@ -13,12 +13,7 @@
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_reflists_html" title="Manage selection lists" i18n:attributes="title" i18n:translate="">Selection lists</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_contacts_html" title="Manage portal contacts" i18n:attributes="title" i18n:translate="">Portal contacts</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_bulk_mail_html" title="Send bulk mail" i18n:attributes="title" i18n:translate="">Bulk mail</a></li>
-	<li><strong i18n:translate="">Map management</strong></li>
-		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_map_html" title="Map general settings" i18n:attributes="title" i18n:translate="">General settings</a></li>
-		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_maptypes_html" title="Map location categories" i18n:attributes="title" i18n:translate="">Location categories</a></li>
-		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_mapupload_html" title="Map upload locations" i18n:attributes="title" i18n:translate="">Upload locations</a></li>
-		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_maplocations_html" title="Map manage locations" i18n:attributes="title" i18n:translate="">Manage locations</a></li>
-		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_mapduplicatelocations_html" title="Duplicate locations" i18n:attributes="title" i18n:translate="">Duplicate locations</a></li>
+	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_map_html" title="Map settings" i18n:attributes="title" i18n:translate="">Map management</a></li>
 	<li><strong i18n:translate="">Content management</strong></li>
 		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_schemas/admin_html" title="Content type property definitions" i18n:attributes="title" i18n:translate="">Content types</a></li>
 		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_basket_html" title="Centralized basket of approvals" i18n:attributes="title" i18n:translate="">Basket of approvals</a></li>
