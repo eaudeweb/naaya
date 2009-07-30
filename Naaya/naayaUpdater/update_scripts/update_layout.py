@@ -31,8 +31,9 @@ from Products.naayaUpdater.update_scripts import UpdateScript
 
 class UpdateLayout(UpdateScript):
     """ Update Portal layout script  """
-    update_id = 'update_layout_html'
+    id = 'update_layout_html'
     title = 'Update portal layout'
+    authors = ['Alec Ghica']
 
     security = ClassSecurityInfo()
 

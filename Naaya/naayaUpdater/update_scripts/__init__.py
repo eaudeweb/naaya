@@ -23,6 +23,7 @@ import os
 from cStringIO import StringIO
 
 #Zope imports
+from DateTime import DateTime
 import Acquisition
 import transaction
 from OFS.SimpleItem import Item
@@ -32,17 +33,37 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Naaya imports
 
+
+_PRIORITIES = ['CRITICAL', 'HIGH', 'LOW']
+PRIORITY = dict([(_PRIORITIES[i], i) for i in range(len(_PRIORITIES))])
+
 class UpdateScript(Item, Acquisition.Implicit):
     """ """
-    update_id = 'UpdateScript'
+    id = 'UpdateScript'
     title = 'Main class for update scripts'
     meta_type = 'Naaya Update Script'
+    creation_date = None
+    authors = ['John Doe']
+    priority = PRIORITY['LOW']
+    description = 'No description'
+    dependencies = []
+    categories = []
 
     manage_options = (
         {'label': 'Update', 'action': 'manage_update'},
     )
 
     security = ClassSecurityInfo()
+
+    security.declareProtected(view_management_screens, 'get_authors_string')
+    def get_authors_string(self):
+        if len(self.authors) == 0:
+            return ''
+        return reduce(lambda x, y: x + ', ' + y, self.authors)
+
+    security.declareProtected(view_management_screens, 'get_priority_string')
+    def get_priority_string(self):
+        return _PRIORITIES[self.priority]
 
     security.declareProtected(view_management_screens, 'manage_update')
     def manage_update(self, REQUEST):
@@ -81,4 +102,4 @@ def register_scripts(updater):
         for key, obj in objects.__dict__.iteritems():
             if (isinstance(obj, type) and issubclass(obj, UpdateScript) and
                     obj not in (UpdateScript, )):
-                updater.register_update_script(obj.update_id, obj)
+                updater.register_update_script(obj.id, obj)

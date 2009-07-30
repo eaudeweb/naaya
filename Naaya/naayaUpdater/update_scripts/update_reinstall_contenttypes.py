@@ -32,9 +32,9 @@ from Products.naayaUpdater.update_scripts import UpdateScript
 
 class UpdateReinstallContenttypes(UpdateScript):
     """ Update reinstall content types script  """
-    update_id = 'reinstall_contenttypes_html'
+    id = 'reinstall_contenttypes_html'
     title = 'Reinstall Naaya content types'
-    id = update_id
+    authors = ['Alec Ghica', 'Cornel Nitu']
 
     security = ClassSecurityInfo()
 
