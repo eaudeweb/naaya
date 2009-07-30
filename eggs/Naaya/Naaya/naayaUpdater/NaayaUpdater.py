@@ -90,11 +90,11 @@ class NaayaUpdater(Folder):
     def get_updates(self):
         return NaayaUpdater.update_scripts
 
-    security.declareProtected(view_management_screens, 'get_update_url')
+    security.declareProtected(view_management_screens, 'get_update_script_url')
     def get_update_script_url(self, key):
         return self.absolute_url() + '/' + key
 
-    security.declareProtected(view_management_screens, 'get_update_description')
+    security.declareProtected(view_management_screens, 'get_update_script_title')
     def get_update_script_title(self, key):
         return NaayaUpdater.update_scripts[key].title
 

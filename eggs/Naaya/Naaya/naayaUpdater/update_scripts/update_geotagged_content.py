@@ -22,6 +22,7 @@
 from decimal import Decimal
 
 #Zope imports
+from DateTime import DateTime
 from Products.Localizer.LocalAttributes import LocalAttribute
 
 #Naaya imports
@@ -38,8 +39,10 @@ except ImportError:
 class UpdateGeotaggedContent(UpdateScript):
     """ Update reinstall content types script  """
     id = 'update_geotagged_content'
-    update_id = 'update_geotagged_content'
     title = 'Update geotagged content'
+    creation_date = DateTime('Jul 10, 2009')
+    authors = ['Alex Morega']
+    description = 'Converts geo data storage'
 
     def _do_update_on_portal(self, portal, report_file, dry_run):
         print>>report_file, '<h4>%s</h4>' % '/'.join(portal.getPhysicalPath())

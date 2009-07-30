@@ -33,8 +33,9 @@ from Products.naayaUpdater.utils import *
 
 class UpdateNaayaForms(UpdateScript):
     """ Update Naaya forms script  """
-    update_id = 'overwritte_forms_html'
+    id = 'overwritte_forms_html'
     title = 'Update Naaya forms'
+    authors = ['Cornel Nitu']
 
     security = ClassSecurityInfo()
 

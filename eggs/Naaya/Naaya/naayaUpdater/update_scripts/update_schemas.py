@@ -39,8 +39,9 @@ except ImportError:
 
 class UpdatePortalSchemas(UpdateScript):
     """ Update portal schemas script """
-    update_id = 'update_schemas_html'
+    id = 'update_schemas_html'
     title = 'Update portal schemas'
+    authors = ['David Batranu']
  
     security = ClassSecurityInfo()
 

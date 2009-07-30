@@ -30,7 +30,7 @@ from Products.naayaUpdater.update_scripts import UpdateScript
 
 class UpdateQuickNaayaForms(UpdateScript):
     """ Quick update Naaya forms script  """
-    update_id = 'quick_overwritte_forms_html'
+    id = 'quick_overwritte_forms_html'
     title = 'Quick update Naaya forms'
 
     security = ClassSecurityInfo()

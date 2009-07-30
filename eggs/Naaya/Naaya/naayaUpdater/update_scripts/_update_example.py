@@ -21,20 +21,26 @@
 #Python imports
 
 #Zope imports
+from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 
 #Naaya imports
-from Products.naayaUpdater.update_scripts import UpdateScript
+from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
 
 class UpdateExample(UpdateScript):
     """ Update example script  """
-    update_id = 'update_example'
+    id = 'update_example'
     title = 'Example of update script'
+    #meta_type = 'Naaya Update Script'
+    creation_date = DateTime('Aug 1, 2009')
+    authors = ['Jane Doe']
+    #priority = PRIORITY['LOW']
+    description = 'This is an example, change this description when implementing an update.'
+    #dependencies = []
+    #categories = []
 
     security = ClassSecurityInfo()
 
-    security.declareProtected(view_management_screens, 'index_html')
-    index_html = PageTemplateFile('zpt/update_example', globals())
 
