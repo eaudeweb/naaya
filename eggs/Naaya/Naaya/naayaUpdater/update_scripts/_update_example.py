@@ -25,6 +25,7 @@ from DateTime import DateTime
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
+from OFS.Folder import Folder
 
 #Naaya imports
 from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
@@ -42,5 +43,11 @@ class UpdateExample(UpdateScript):
     #categories = []
 
     security = ClassSecurityInfo()
+
+    security.declarePrivate('_update')
+    def _update(self, portal):
+        portal._setObject('ExampleFolder', Folder('ExampleFolder'))
+        self.log.debug('Added the ExampleFolder to the portal')
+        return True
 
 

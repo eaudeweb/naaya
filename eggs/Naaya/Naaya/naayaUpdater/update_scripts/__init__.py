@@ -20,6 +20,7 @@
 
 #Python imports
 import os
+import logging
 from cStringIO import StringIO
 
 #Zope imports
@@ -32,10 +33,12 @@ from AccessControl.Permissions import view_management_screens
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Naaya imports
-
+from Products.ExtFile.ExtFile import ExtFile
 
 _PRIORITIES = ['CRITICAL', 'HIGH', 'LOW']
 PRIORITY = dict([(_PRIORITIES[i], i) for i in range(len(_PRIORITIES))])
+
+LOGS_FOLDERNAME = 'update_logs'
 
 class UpdateScript(Item, Acquisition.Implicit):
     """ """
@@ -55,6 +58,7 @@ class UpdateScript(Item, Acquisition.Implicit):
 
     security = ClassSecurityInfo()
 
+    # default implementations
     security.declareProtected(view_management_screens, 'get_authors_string')
     def get_authors_string(self):
         if len(self.authors) == 0:
@@ -65,6 +69,59 @@ class UpdateScript(Item, Acquisition.Implicit):
     def get_priority_string(self):
         return _PRIORITIES[self.priority]
 
+    # implemented only by the subclasses
+    security.declarePrivate('_update')
+    def _update(self, portal):
+        raise NotImplementedError
+
+    security.declarePrivate('_setup_logger')
+    def _setup_logger(self):
+        self.log_output = StringIO()
+
+        handler = logging.StreamHandler(self.log_output)
+        handler.setLevel(logging.DEBUG)
+
+        formatter = logging.Formatter('[%(levelname)s][%(asctime)s]  %(message)s')
+        handler.setFormatter(formatter)
+
+        self.log = logging.getLogger('naayaUpdater.' + self.id)
+        self.log.setLevel(logging.DEBUG)
+        self.log.addHandler(handler)
+
+    security.declarePrivate('_save_log')
+    def _save_log(self, data):
+        logs_folder = getattr(self, LOGS_FOLDERNAME)
+
+        log_filename = '%s-%s' % (DateTime().strftime('%Y.%m.%d_%H.%M.%S'), self.id)
+        logs_folder._setObject(log_filename, ExtFile(log_filename, log_filename))
+        ob = logs_folder._getOb(log_filename)
+        ob.manage_upload(data, 'text/plain')
+
+    security.declareProtected(view_management_screens, 'update')
+    def update(self, portal, do_dry_run):
+        self._setup_logger()
+
+        transaction.begin()
+        try:
+            success = self._update(portal)
+
+            transaction.get().note('Update "%s" on Naaya site "%s"' %
+                (self.id, portal.absolute_url(1)))
+
+            if do_dry_run:
+                transaction.abort()
+            else:
+                transaction.commit()
+
+        except Exception, e:
+            self.log.error('Update script failed - "%s"' % str(e))
+            transaction.abort()
+            success = False
+
+        log_data = self.log_output.getvalue()
+        self._save_log(log_data)
+        return success, log_data
+
     security.declareProtected(view_management_screens, 'manage_update')
     def manage_update(self, REQUEST):
         """ perform this update """
@@ -72,17 +129,23 @@ class UpdateScript(Item, Acquisition.Implicit):
         if REQUEST.REQUEST_METHOD == 'POST':
             report_file = StringIO()
 
-            dry_run = (REQUEST.form.get('action') != 'Run update')
-            if dry_run:
+            do_dry_run = (REQUEST.form.get('action') != 'Run update')
+            if do_dry_run:
                 print>>report_file, '<h3>Dry-run</h3>'
             else:
                 transaction.get().note('running update script "%s"' % self.title)
 
             for portal_path in REQUEST.form.get("portal_paths", []):
                 portal = self.unrestrictedTraverse(portal_path)
-                self._do_update_on_portal(portal, report_file, dry_run)
+                success, log_data = self.update(portal, do_dry_run)
 
-            report = report_file.getvalue()
+                report += '<br/><br/>'
+                report += '<h4>'+portal_path+'</h4>'
+                if success:
+                    report += '<h4>SUCCESS</h4>'
+                else:
+                    report += '<h4>FAILED</h4>'
+                report += log_data
 
         return self.update_template(REQUEST, report=report, form=REQUEST.form)
 

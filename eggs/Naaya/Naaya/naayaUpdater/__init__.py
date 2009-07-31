@@ -18,10 +18,12 @@
 # Alec Ghica, Eau de Web
 # Cornel Nitu, Eau de Web
 
+from OFS import Folder
 from App.ImageFile import ImageFile
 import NaayaUpdater
 import NaayaContentUpdater
 import updates
+from update_scripts import LOGS_FOLDERNAME
 
 UpdaterID = NaayaUpdater.UPDATERID
 
@@ -47,6 +49,9 @@ def initialize(context):
             pass
         updater = getattr(app, UpdaterID)
     assert updater is not None
+
+    if not hasattr(app, LOGS_FOLDERNAME):
+        Folder.manage_addFolder(app, LOGS_FOLDERNAME)
 
     updater.refresh_updates_dict()
 

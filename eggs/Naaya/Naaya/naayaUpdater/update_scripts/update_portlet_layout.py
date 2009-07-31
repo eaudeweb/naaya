@@ -32,63 +32,55 @@ class UpdateGeotaggedContent(UpdateScript):
     title = 'Update portlet layout'
     authors = ['Alex Morega']
 
-    def _do_update_on_portal(self, portal, report_file, dry_run):
-        print>>report_file, '<h4>%s</h4>' % '/'.join(portal.getPhysicalPath())
+    def _update(self, portal):
+        self.log.debug('/'.join(portal.getPhysicalPath()))
 
-        update_portlets_data(portal, report_file, dry_run)
+        update_portlets_data(portal, self.log)
 
         for ob_path, delta_list in zpt_patches.iteritems():
             obj = portal.unrestrictedTraverse(ob_path)
-            update_zpt(obj, delta_list, report_file, dry_run)
+            update_zpt(obj, delta_list, self.log)
 
         header = portal.portal_layout.getCurrentSkin().site_header
-        update_zpt(header, site_header_patches, report_file, dry_run)
+        update_zpt(header, site_header_patches, self.log)
+        return True
 
 
-def update_portlets_data(portal, report_file, dry_run):
+def update_portlets_data(portal, log):
     site_prefix = '/'.join(portal.getPhysicalPath()[1:]) + '/'
     portal_portlets = portal._getOb('portal_portlets')
 
     repr(portal_portlets) # force ZODB to load the __dict__ of portal_portlets
 
     if '_portlet_layout' not in portal_portlets.__dict__:
-        print>>report_file, 'no _portlet_layout dictionary; creating it <br />'
-        if not dry_run:
-            portal_portlets._portlet_layout = {}
+        log.debug('no _portlet_layout dictionary; creating it')
+        portal_portlets._portlet_layout = {}
 
     for portlet_id in portal.__dict__.get(
       '_portlets_manager__center_portlets_ids', []):
-        print>>report_file, 'center portlet ', span('action_ok', \
-            '"%s"' % portlet_id), 'at', span('path', '""'), 'no inherit<br />'
-        if not dry_run:
-            portal_portlets.assign_portlet('', 'center', portlet_id, False)
+        log.debug('center portlet "%s" at "" no inherit' % portlet_id)
+        portal_portlets.assign_portlet('', 'center', portlet_id, False)
 
     for portlet_id in portal.__dict__.get(
       '_portlets_manager__left_portlets_ids', []):
-        print>>report_file, 'left portlet', span('action_ok', '"%s"' % portlet_id), \
-            'at', span('path', '""'), '<br />'
-        if not dry_run:
-            portal_portlets.assign_portlet('', 'left', portlet_id, True)
+        log.debug('left portlet "%s" at ""' % portlet_id)
+        portal_portlets.assign_portlet('', 'left', portlet_id, True)
 
     for folder_path, portlet_ids in portal.__dict__.get(
       '_portlets_manager__right_portlets_locations', {}).iteritems():
         if folder_path.startswith(site_prefix):
             fixed_folder_path = folder_path[len(site_prefix):]
-            print>>report_file, 'location', span('path', '"%s"' % folder_path), \
-                'starts with site prefix; changing to ', \
-                span('path', '"%s"' % fixed_folder_path), '<br />'
+            log.debug('location "%s" starts with site prefix; changing to  "%s"'
+                    % (folder_path, fixed_folder_path))
             folder_path = fixed_folder_path
         for portlet_id in portlet_ids:
-            print>>report_file, 'right portlet', span('action_ok', '"%s"' % portlet_id), \
-                'at', span('path', '"%s"' % folder_path), '<br />'
-            if not dry_run:
-                portal_portlets.assign_portlet(folder_path, 'right', portlet_id, True)
+            log.debug('right portlet "%s" at "%s"' % (portlet_id, folder_path))
+            portal_portlets.assign_portlet(folder_path, 'right', portlet_id, True)
 
-    if not dry_run:
-        portal.__dict__['_portlets_manager__left_portlets_ids'] = []
-        portal.__dict__['_portlets_manager__center_portlets_ids'] = []
-        portal.__dict__['_portlets_manager__right_portlets_locations'] = {}
-        portal._p_changed = 1
+    portal.__dict__['_portlets_manager__left_portlets_ids'] = []
+    portal.__dict__['_portlets_manager__center_portlets_ids'] = []
+    portal.__dict__['_portlets_manager__right_portlets_locations'] = {}
+    portal._p_changed = 1
 
 zpt_patches = {
     'portal_portlets/portlet_administration': [{
@@ -137,7 +129,7 @@ site_header_patches = [{
             'portal_portlets.get_portlets_for_obj(here, \'left\')">'),
     }]
 
-def update_zpt(obj, delta_list, report_file, dry_run):
+def update_zpt(obj, delta_list, log):
     obj_path = '/'.join(obj.getPhysicalPath())
 
     new_text = obj._text
@@ -145,12 +137,8 @@ def update_zpt(obj, delta_list, report_file, dry_run):
         new_text = new_text.replace(delta['removed'], delta['added'])
 
     if new_text == obj._text:
-        #print>>report_file, 'no need to update', span('path', '"%s"' % obj_path), '<br />'
         return
 
-    print>>report_file, 'updating', span('path', '"%s"' % obj_path), '<br />'
-    if not dry_run:
-        obj.pt_edit(text=new_text.encode('utf-8'), content_type='')
+    log.debug('updating "%s"' % obj_path)
+    obj.pt_edit(text=new_text.encode('utf-8'), content_type='')
 
-def span(cls, txt):
-    return '<span class="%s">%s</span>' % (cls, txt)
