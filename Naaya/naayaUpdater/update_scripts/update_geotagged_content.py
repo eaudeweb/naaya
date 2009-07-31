@@ -44,19 +44,20 @@ class UpdateGeotaggedContent(UpdateScript):
     authors = ['Alex Morega']
     description = 'Converts geo data storage'
 
-    def _do_update_on_portal(self, portal, report_file, dry_run):
-        print>>report_file, '<h4>%s</h4>' % '/'.join(portal.getPhysicalPath())
+    def _update(self, portal):
+        self.log.debug('/'.join(portal.getPhysicalPath()))
         schema_tool = portal.portal_schemas
-        self._update_schemas(schema_tool, report_file, dry_run)
+        self._update_schemas(schema_tool)
         catalog = portal.portal_catalog
-        add_indexes(catalog, report_file, dry_run)
-        enable_geotagged_content(portal, report_file, dry_run)
+        add_indexes(catalog, self.log)
+        enable_geotagged_content(portal, self.log)
         for brain in catalog():
             ob = brain.getObject()
             if isinstance(ob, NyContentType):
-                self._update_ob(portal, ob, schema_tool, report_file, dry_run)
+                self._update_ob(portal, ob, schema_tool)
+        return True
 
-    def _update_schemas(self, schema_tool, report_file, dry_run):
+    def _update_schemas(self, schema_tool):
         from Products.NaayaCore.SchemaTool.widgets.GeoTypeWidget import GeoTypeWidget
         for schema in schema_tool.objectValues():
             defaults = schema.getDefaultDefinition()
@@ -64,81 +65,67 @@ class UpdateGeotaggedContent(UpdateScript):
                 continue
 
             def print_schema_report(msg):
-                print>>report_file, msg, '(%s schema at %s)<br />' % (schema.id, 
-                    '/'.join(schema.getPhysicalPath()))
+                self.log.debug(msg + ' (%s schema at %s)' % (schema.id, 
+                    '/'.join(schema.getPhysicalPath())))
 
             if schema.id == 'NyGeoPoint':
                 # if NyGeoPoint has geo_type widget of type StringWidget, we must replace it.
                 if ('geo_type-property' in schema.objectIds()
                   and not isinstance(schema['geo_type-property'], GeoTypeWidget)):
                     print_schema_report('Replacing geo_type property')
-                    if not dry_run:
-                        schema.manage_delObjects(['geo_type-property'])
+                    schema.manage_delObjects(['geo_type-property'])
 
                 # also remove longitude, latitude, address properties
                 if 'longitude-property' in schema.objectIds():
                     print_schema_report('Removing longitude property')
-                    if not dry_run:
-                        schema.manage_delObjects(['longitude-property'])
+                    schema.manage_delObjects(['longitude-property'])
 
                 if 'latitude-property' in schema.objectIds():
                     print_schema_report('Removing latitude property')
-                    if not dry_run:
-                        schema.manage_delObjects(['latitude-property'])
+                    schema.manage_delObjects(['latitude-property'])
 
                 if 'address-property' in schema.objectIds():
                     print_schema_report('Removing address property')
-                    if not dry_run:
-                        schema.manage_delObjects(['address-property'])
+                    schema.manage_delObjects(['address-property'])
 
             if 'geo_location-property' not in schema.objectIds():
                 if 'geo_location' in defaults:
                     default = defaults['geo_location']
                     print_schema_report('Adding geo_location property')
-                    if not dry_run:
-                        schema.addWidget('geo_location', **default)
+                    schema.addWidget('geo_location', **default)
 
             if 'geo_type-property' not in schema.objectIds():
                 defaults = schema.getDefaultDefinition()
                 if 'geo_type' in defaults:
                     default = defaults['geo_type']
                     print_schema_report('Adding geo_type property')
-                    if not dry_run:
-                        schema.addWidget('geo_type', **default)
+                    schema.addWidget('geo_type', **default)
 
-    def _update_ob(self, portal, ob, schema_tool, report_file, dry_run):
-        ob_link = '<a href="%(ob_path)s/manage_workspace">%(ob_path)s</a>' % {
-            'ob_path': '/'.join(ob.getPhysicalPath())}
-        print>>report_file, span('path', ob_link)
-        print>>report_file, '(%s)' % ob.__class__.__name__
+    def _update_ob(self, portal, ob, schema_tool):
+        ob_info = '(%s)' % ob.__class__.__name__ + '/'.join(ob.getPhysicalPath())
 
         schema = schema_tool.getSchemaForMetatype(ob.meta_type)
         if schema is None:
-            print>>report_file, span('action_skip',
-                'skipping (no schema)'), '<br/>'
+            self.log.debug(ob_info + ' skipping (no schema)')
             return
 
-        if not dry_run and 'geo_location-property' in schema.objectIds():
-            missing_schema_prop = False
-        elif dry_run and 'geo_location' in (schema.getDefaultDefinition() or {}):
+        if 'geo_location-property' in schema.objectIds():
             missing_schema_prop = False
         else:
             missing_schema_prop = True
 
         if missing_schema_prop:
-            print>>report_file, span('action_skip',
-                'skipping (geo_location not in schema)'), '<br/>'
+            self.log.debug(ob_info + ' skipping (geo_location not in schema)')
             return
 
 
-        found_lat, lat = fetch_and_remove(ob, 'latitude', dry_run)
-        found_lon, lon = fetch_and_remove(ob, 'longitude', dry_run)
-        found_address, address = fetch_and_remove(ob, 'address', dry_run)
+        found_lat, lat = fetch_and_remove(ob, 'latitude')
+        found_lon, lon = fetch_and_remove(ob, 'longitude')
+        found_address, address = fetch_and_remove(ob, 'address')
         found_geo_location = ('geo_location' in ob.__dict__)
 
         if found_geo_location:
-            print>>report_file, span('action_skip',
-                'skipping (already has geo_location value)'), '<br/>'
+            self.log.debug(ob_info + ' skipping (already has geo_location value)')
             return
 
         def normalize_coord(found, value):
@@ -165,31 +152,25 @@ class UpdateGeotaggedContent(UpdateScript):
 
 
         if not (found_lat or found_lon or found_address):
-            print>>report_file, span('action_skip',
-                'skipping (no old-style geo data)'), '<br/>'
+            self.log.debug(ob_info + ' skipping (no old-style geo data)')
             return
 
         geo = Geo(lat, lon, address)
         if geo in (Geo(0, 0), Geo()):
             geo = None
 
-        print>>report_file, span('action_ok', 'saving value'), repr(geo), '<br/>'
-        if not dry_run:
-            ob.geo_location = geo
-            portal.catalogNyObject(ob)
+        self.log.debug(ob_info + ' saving value ' + repr(geo))
+        ob.geo_location = geo
+        portal.catalogNyObject(ob)
 
-def span(cls, txt):
-    return '<span class="%s">%s</span>' % (cls, txt)
-
-def fetch_and_remove(ob, prop_name, dry_run):
+def fetch_and_remove(ob, prop_name):
     found = False
     prop_value = None
 
     if prop_name in ob.__dict__:
         found = True
         prop_value = ob.__dict__[prop_name]
-        if not dry_run:
-            del ob.__dict__[prop_name]
+        del ob.__dict__[prop_name]
 
     if isinstance(prop_value, LocalAttribute):
         # for some reason, prop_value may be a LocalAttribute instance;
@@ -199,9 +180,8 @@ def fetch_and_remove(ob, prop_name, dry_run):
             for value, timestamp in local_props[prop_name].values():
                 if value:
                     prop_value = value
-            if not dry_run:
-                del local_props[prop_name]
-                ob._p_changed = 1
+            del local_props[prop_name]
+            ob._p_changed = 1
 
     if isinstance(prop_value, LocalAttribute):
         # if prop_value is still a LocalAttribute, we found nothing in
@@ -210,34 +190,30 @@ def fetch_and_remove(ob, prop_name, dry_run):
 
     return found, prop_value
 
-def add_indexes(catalog, report_file, dry_run):
-    add_field_index(catalog, report_file, dry_run, 'geo_latitude')
-    add_field_index(catalog, report_file, dry_run, 'geo_longitude')
+def add_indexes(catalog, log):
+    add_field_index(catalog, 'geo_latitude', log)
+    add_field_index(catalog, 'geo_longitude', log)
 
     indexes = catalog.indexes()
     if 'geo_address' not in indexes:
-        if dry_run:
-            print>>report_file, span('action_ok', 'adding index'), 'geo_address', '<br/>'
+        if txng_version == 2:
+            try: catalog.addIndex('geo_address', 'TextIndexNG3', extra={'default_encoding': 'utf-8'})
+            except: pass
         else:
-            if txng_version == 2:
-                try: catalog.addIndex('geo_address', 'TextIndexNG3', extra={'default_encoding': 'utf-8'})
-                except: pass
-            else:
-                try: catalog.addIndex('geo_address', 'TextIndex')
-                except: pass
+            try: catalog.addIndex('geo_address', 'TextIndex')
+            except: pass
     else:
-        print>>report_file, span('action_skip', 'skipping index (already in catalog)'), 'geo_address', '<br/>'
+        log.debug('skipping index (already in catalog) geo_address')
 
-def add_field_index(catalog, report_file, dry_run, id):
+def add_field_index(catalog, id, log):
     indexes = catalog.indexes()
     if id not in indexes:
-        print>>report_file, span('action_ok', 'adding index'), id, '<br/>'
-        if not dry_run:
-            catalog.addIndex(id, 'FieldIndex')
+        log.debug('adding index' + id)
+        catalog.addIndex(id, 'FieldIndex')
     else:
-        print>>report_file, span('action_skip', 'skipping index (already in catalog)'), id, '<br/>'
+        log.debug('skipping index (already in catalog) ' + id)
 
-def enable_geotagged_content(portal, report_file, dry_run):
+def enable_geotagged_content(portal, log):
     portal_control = portal.portal_control
     portal_map = portal.portal_map
     geotaggable_objects = [x['id'] for x in portal_map.list_geotaggable_types() if x['enabled']]
@@ -247,11 +223,8 @@ def enable_geotagged_content(portal, report_file, dry_run):
             class_name = portal.get_pluggable_item(content_type)['_class'].__name__
             if class_name not in geotaggable_objects:
                 geotaggable_objects.append(class_name)
-        if dry_run:
-            print>>report_file, span('action_ok', 'Setting geocodable content'), geotaggable_objects, '<br/>'
-        else:
-            portal_control.saveSettings(enabled_for=[]) #clear portal_control
-            portal_map.admin_set_contenttypes(geotag=geotaggable_objects)
-            print>>report_file, span('action_ok', 'Setting geocodable content'), geotaggable_objects, '<br/>'
+        portal_control.saveSettings(enabled_for=[]) #clear portal_control
+        portal_map.admin_set_contenttypes(geotag=geotaggable_objects)
+        log.debug('Setting geocodable content' + geotaggable_objects)
     else:
-        print>>report_file, span('action_skip', 'No geocodable content defined in portal control'), '', '<br/>'
+        log.debug('No geocodable content defined in portal control')
