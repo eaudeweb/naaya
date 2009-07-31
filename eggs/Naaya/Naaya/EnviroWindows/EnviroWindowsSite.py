@@ -1070,7 +1070,6 @@ text-decoration: underline;
             return self.REQUEST.RESPONSE.redirect('%s/admin_contacts_html?section=import' % self.absolute_url())
 
         contact_meta = 'Naaya Contact'
-        portal_control = self.getControlsTool()
         portal_dynprop = self.getDynamicPropertiesTool()
         dynprops = portal_dynprop.getDynamicProperties(contact_meta)
         dynprops = [x.id for x in dynprops]
@@ -1121,32 +1120,6 @@ text-decoration: underline;
                                       email=email,
                                       webpage=webpage)
 
-            #contact geographical data
-            if portal_control and portal_control.checkControl(contact_meta):
-                geo_type = contact.get('Geographical type', '')
-                latitude = contact.get('Latitude', '')
-                longitude = contact.get('Longitude', '')
-                url = contact.get('Location url', '')
-                #landscape_type = contact.get('landscape_type', '')
-                #administrative_level = contact.get('administrative_level', '')
-
-                contact_ob = location._getOb(contact_id)
-                contact_ob.geo_type = geo_type
-                contact_ob.address = postaladdress
-                contact_ob.url = url
-                if latitude and longitude:
-                    contact_ob.longitude = float(longitude.replace(',', '.'))
-                    contact_ob.latitude = float(latitude.replace(',', '.'))
-                elif postaladdress:
-                    geo_location = location_geocode(postaladdress)
-                    if geo_location:
-                        contact_ob.latitude, contact_ob.longitude = geo_location
-
-                #if 'landscape_type' in dynprops \
-                   #and 'administrative_level' in dynprops:
-                    #kwrds = {'landscape_type': landscape_type,
-                             #'administrative_level': administrative_level}
-                    #contact_ob.updateDynamicProperties(kwrds, lang)
         if REQUEST is not None:
             self.setSessionInfo(['Contacts successfully imported.'])
             return self.REQUEST.RESPONSE.redirect('%s/admin_contacts_html' % self.absolute_url())
