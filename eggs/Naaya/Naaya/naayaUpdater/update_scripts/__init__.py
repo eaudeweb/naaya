@@ -89,13 +89,16 @@ class UpdateScript(Item, Acquisition.Implicit):
         self.log.addHandler(handler)
 
     security.declarePrivate('_save_log')
-    def _save_log(self, data):
+    def _save_log(self, data, portal):
         logs_folder = getattr(self, LOGS_FOLDERNAME)
 
-        log_filename = '%s-%s' % (DateTime().strftime('%Y.%m.%d_%H.%M.%S'), self.id)
+        log_filename = '%s-%s-%s' % (DateTime().strftime('%Y.%m.%d_%H.%M.%S'), self.id, str(portal.title_or_id()))
+
+        transaction.begin()
         logs_folder._setObject(log_filename, ExtFile(log_filename, log_filename))
         ob = logs_folder._getOb(log_filename)
         ob.manage_upload(data, 'text/plain')
+        transaction.commit()
 
     security.declareProtected(view_management_screens, 'update')
     def update(self, portal, do_dry_run):
@@ -119,7 +122,7 @@ class UpdateScript(Item, Acquisition.Implicit):
             success = False
 
         log_data = self.log_output.getvalue()
-        self._save_log(log_data)
+        self._save_log(log_data, portal)
         return success, log_data
 
     security.declareProtected(view_management_screens, 'manage_update')
