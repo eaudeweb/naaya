@@ -98,6 +98,7 @@ class UpdateScript(Item, Acquisition.Implicit):
         logs_folder._setObject(log_filename, ExtFile(log_filename, log_filename))
         ob = logs_folder._getOb(log_filename)
         ob.manage_upload(data, 'text/plain')
+        transaction.get().note('Saved log file for update "%s" on portal "%s"' % (self.id, portal.title_or_id()))
         transaction.commit()
 
     security.declareProtected(view_management_screens, 'update')
