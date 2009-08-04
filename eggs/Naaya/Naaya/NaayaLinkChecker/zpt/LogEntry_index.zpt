@@ -93,6 +93,15 @@
                         (<span tal:replace="python:here.gl_get_language_name(lang)" />)
                     </div>
                 </div>
+                <div class="form_row">
+                    <div class="row_label">
+                        <div i18n:translate="">Error rate</div>
+                    </div>
+                    <div class="row_field">
+                        <span tal:content="python:here.getFailPercentage(linkhref)">90</span>%
+                        <span i18n:translate="">in the latest 5 logs.</span>
+                    </div>
+                </div>
             </div>
             </tal:block>
         </td>

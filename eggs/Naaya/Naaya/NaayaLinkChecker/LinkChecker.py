@@ -388,6 +388,24 @@ class LinkChecker(ObjectManager, SimpleItem, UtilsManager):
         """Returns a list with all 'LogEntry' objects"""
         return self.objectValues('LogEntry')
 
+    security.declareProtected(view, 'getFailPercentage')
+    def getFailPercentage(self, link):
+        """Returns the link fail percentage based on the last 5 logs"""
+        logs = self.getLogEntries()
+        logs.sort(lambda x, y: cmp(y.bobobase_modification_time(), x.bobobase_modification_time()))
+        logs = logs[:5]
+        failed = 0
+        for log in logs:
+            for entry in log.url_list:
+                for url in entry[4]:
+                    if url[0] == link:
+                        failed += 1
+        rate = int(((failed * 1.0) / len(logs)) * 100)
+        if rate > 100:
+            return 100
+        return rate
+
+
     manage_addLogEntry = LogEntry.manage_addLogEntry
 
     #zmi pages
