@@ -26,7 +26,11 @@ from cStringIO import StringIO
 #Zope imports
 from DateTime import DateTime
 import Acquisition
-import transaction
+# import transaction throws exception on Zope 2.7
+try:
+    import transaction
+except ImportError:
+    transaction = get_transaction()
 from OFS.SimpleItem import Item
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
@@ -165,8 +169,12 @@ def register_scripts(updater):
     for filename in os.listdir(os.path.dirname(__file__)):
         if not (filename.startswith('update_') and filename.endswith('.py')):
             continue
-        objects = __import__(filename[:-3], globals(), None, ['*'])
-        for key, obj in objects.__dict__.iteritems():
-            if (isinstance(obj, type) and issubclass(obj, UpdateScript) and
-                    obj not in (UpdateScript, )):
-                updater.register_update_script(obj.id, obj)
+        # script imports might throw exception on different versions of Zope
+        try:
+            objects = __import__(filename[:-3], globals(), None, ['*'])
+            for key, obj in objects.__dict__.iteritems():
+                if (isinstance(obj, type) and issubclass(obj, UpdateScript) and
+                        obj not in (UpdateScript, )):
+                    updater.register_update_script(obj.id, obj)
+        except ImportError:
+            pass
