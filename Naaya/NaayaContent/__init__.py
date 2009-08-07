@@ -19,6 +19,7 @@
 # Dragos Chirila
 
 #Python imports
+import os
 from os import listdir
 from os.path import join, isdir
 from copy import copy
@@ -47,11 +48,13 @@ for x in dirs:
     try:
         module = __import__('%s.%s' % (x, x), globals(), locals())
         module = getattr(module, x) # the top-level package (the name up till the first dot) was returned
+        module_path = os.path.dirname(module.__file__)
         content_class = getattr(module, x)
         m = module.METATYPE_OBJECT
         content[m] = {}
         content[m]['product'] = NAAYACONTENT_PRODUCT_NAME
         content[m]['module'] = x
+        content[m]['package_path'] = module_path
         content[m]['meta_type'] = m
         content[m]['label'] = module.LABEL_OBJECT
         content[m]['permission'] = module.PERMISSION_ADD_OBJECT
