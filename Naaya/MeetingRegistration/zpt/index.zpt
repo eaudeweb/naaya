@@ -1,9 +1,10 @@
 <tal:block replace="structure here/standard_html_header"/>
 	<div>
-		<a tal:attributes="href string:${here/absolute_url}/edit_index_html">Edit this content</a>
+		<h1 tal:content="here/index_title"/>
 	</div>
-	<div>
-		<h2 tal:content="here/index_title"/>
+	<div id="admin_this_folder">
+		<a tal:attributes="href string:${here/absolute_url}/index_edit_html">Edit meeting properties</a>
+		<a tal:attributes="href string:${here/absolute_url}/form_edit_html">Edit registration form</a>
 	</div>
 	<div>
 		<span tal:content="structure python:here.newlineToBr(here.introduction)"/>
