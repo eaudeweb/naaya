@@ -1,0 +1,11 @@
+<tal:block replace="structure here/standard_html_header"/>
+	<div>
+		<a tal:attributes="href string:${here/absolute_url}/edit_index_html">Edit this content</a>
+	</div>
+	<div>
+		<h2 tal:content="here/index_title"/>
+	</div>
+	<div>
+		<span tal:content="structure python:here.newlineToBr(here.introduction)"/>
+	</div>
+<tal:block replace="structure here/standard_html_footer"/>
