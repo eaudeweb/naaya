@@ -34,7 +34,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl.Permissions import view_management_screens
 from AccessControl import ClassSecurityInfo
 
-from Products.Naaya.NySite import NySite as NySite_module
+from Products.Naaya import NySite as NySite_module
 from Products.Naaya.managers.skel_parser import skel_parser
 from Products.naayaUpdater.utils import *
 from Products.NaayaContent.discover import get_pluggable_content
@@ -291,9 +291,12 @@ class NaayaUpdater(Folder):
         """
             return the portal path given the metatype
         """
-        if not isinstance(portal, type):
-            portal = portal.__class__
-        m = sys.modules[portal.__module__]
+        if isinstance(portal, types.ModuleType):
+            m = portal
+        else:
+            if isinstance(portal, NySite_module.NySite):
+                portal = portal.__class__
+            m = sys.modules[portal.__module__]
         return os.path.dirname(m.__file__)
 
         metatype = portal.meta_type
