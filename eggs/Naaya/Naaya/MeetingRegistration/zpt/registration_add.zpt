@@ -1,0 +1,11 @@
+<tal:block replace="structure here/standard_html_header"/>
+
+<h1>Registration Form</h1>
+
+<form id="RegistrationForm" name="RegistrationForm" action="manage_addRegistration" method="post">
+	<div><label for="title">Form title *</label></div>
+	<div><input id="title" name="title:utf8:ustring" type="text" size="50"/><div/>
+	<div><input type="submit" value="Add form"/></div>
+</form>
+
+<tal:block replace="structure here/standard_html_footer"/>

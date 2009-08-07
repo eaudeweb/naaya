@@ -1,0 +1,65 @@
+<tal:block replace="structure here/standard_html_header"/>
+	<script type="text/javascript" src="/misc_/OMI/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+	<script type="text/javascript">
+		function myFileBrowser (field_name, url, type, win) {
+			tinyMCE.activeEditor.windowManager.open({
+				file: files_page,
+				title: 'My File Browser',
+				width: 420,
+				height: 400,
+				resizable: "yes",
+				inline: "yes",  // This parameter only has an effect if you use the inlinepopups plugin!
+				close_previous: "no"
+			}, {
+				window: win,
+				input: field_name
+			});
+			return false;
+		}
+		tinyMCE.init({
+					language : "en",
+					mode : "textareas",
+					theme : "advanced",
+					plugins : "directionality, fullscreen, paste, preview",
+					theme_advanced_buttons1: "bold, italic, underline, strikethrough, separator, justifyleft, justifycenter, justifyright, justifyfull, separator, bullist, numlist, separator, link, unlink, hr, removeformat, sub, sup, pastetext, pasteword, separator, preview, fullscreen, code",
+					theme_advanced_buttons2: "",
+					theme_advanced_buttons3 : "",
+					theme_advanced_toolbar_location : "top",
+					theme_advanced_toolbar_align : "left",
+					theme_advanced_path_location : "bottom",
+					plugin_insertdate_dateFormat : "%Y-%m-%d",
+					plugin_insertdate_timeFormat : "%H:%M:%S",
+					extended_valid_elements : "hr[class|width|size|noshade],font[face|size|color|style],span[class|align|style]",
+					theme_advanced_blockformats : "p,div,h2,h3,h4,h5,h6,blockquote",
+					theme_advanced_resize_horizontal : false,
+					theme_advanced_resizing : true
+					});
+	</script>
+	<form method="post" action="save_index">
+		<div>
+			<label for="index_title" i18n:translate="">Form name</label>
+			<input id="index_title" name="index_title:utf8:ustring" type="text" size="50"
+			tal:attributes="value here/index_title"/>
+		</div>
+		<div>
+			<label i18n:translate="">Registration period</label>
+		</div>
+		<div>
+			<label i18n:translate="">Start date</label>
+			<input id="start_date" name="start_date:utf8:ustring" type="text" size="50"
+			tal:attributes="value here/start_date"/>
+		</div>
+		<div>
+			<label i18n:translate="">End date</label>
+			<input id="end_date" name="end_date:utf8:ustring" type="text" size="50"
+			tal:attributes="value here/end_date"/>
+		</div>
+		<div><label for="introduction" i18n:translate="">Introductory text</label></div>
+		<div><textarea class="tinymce" id="introduction" name="introduction:utf8:ustring" rows="" cols=""
+			tal:content="here/introduction"></textarea></div>
+		<div style="font-size: x-small;font-style: italic;padding-top: 1ex" i18n:translate="">
+			When pasting from word documents, use the "paste from word" button.
+		</div>
+		<div class="button"><input type="submit" name="save" value="Save changes"/></div>
+	</form>
+<tal:block replace="structure here/standard_html_footer"/>

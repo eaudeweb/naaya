@@ -1,0 +1,1 @@
+field_types = ['text', 'textarea', 'date', 'time']
