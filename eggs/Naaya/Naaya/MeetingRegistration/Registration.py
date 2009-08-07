@@ -51,7 +51,7 @@ def manage_addRegistration(self, title='', REQUEST=None):
     except:
         u = REQUEST['URL1']
     u = "%s/%s" % (u, quote(id))
-#    return ob.edit_form_html(REQUEST, field_types = field_types)
+#    return ob.form_edit_html(REQUEST, field_types = field_types)
     REQUEST.RESPONSE.redirect(u+'/index_html')
 
 class Registration(Folder):
@@ -68,15 +68,15 @@ class Registration(Folder):
         self.end_date = ''
 
     index_html = PageTemplateFile('zpt/index', globals())
-    edit_index_html = PageTemplateFile('zpt/index_edit', globals())
-    edit_form_html = PageTemplateFile('zpt/edit_form', globals())
+    index_edit_html = PageTemplateFile('zpt/index_edit', globals())
 
     def save_index(self, REQUEST):
         """ method for saving the content of the index """
-        self.index_title = REQUEST.get('index_title')
-        self.start_date = REQUEST.get('start_date')
-        self.end_date = REQUEST.get('end_date')
-        self.introduction = REQUEST.get('introduction')
+        request = REQUEST.form.get
+        self.index_title = request('index_title')
+        self.start_date = request('start_date')
+        self.end_date = request('end_date')
+        self.introduction = request('introduction')
         REQUEST.RESPONSE.redirect('index_html')
 
     def newlineToBr(self, text):
@@ -85,8 +85,17 @@ class Registration(Folder):
         if text.find('\n') >= 0: text = '<br />'.join(text.split('\n'))
         return text
 
-    def add_field(self, REQUEST):
-        field_type = REQUEST.get('field_type')
-        for field in field_types:
-            if field == field_type:
-                return
+    def manage_addField(self, REQUEST):
+        """ """
+        request = REQUEST.form.get
+        id = request('id')
+        label = request('label')
+        field_type = request('field_type')
+        self.registration.manage_addField (id, label, field_type)
+        self.registration._getOb(id).manage_edit(REQUEST)
+        REQUEST.RESPONSE.redirect('index_html')
+
+    _form_edit_html = PageTemplateFile('zpt/form_edit', globals())
+    def form_edit_html(self, REQUEST):
+        """ """
+        return self._form_edit_html(REQUEST, field_types = field_types)

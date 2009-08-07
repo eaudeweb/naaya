@@ -33,5 +33,5 @@ def initialize(context):
                           )
 
 misc_ = {
-    'tinymce': StaticServeFromZip('', 'www/tinymce_3_2_4_1.zip', globals()),
+    'tinymce': StaticServeFromZip('', 'www/tinymce_3_2_5.zip', globals()),
 }
