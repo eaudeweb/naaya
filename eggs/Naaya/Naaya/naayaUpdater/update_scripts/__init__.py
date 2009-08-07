@@ -26,15 +26,17 @@ from cStringIO import StringIO
 #Zope imports
 from DateTime import DateTime
 import Acquisition
-# import transaction throws exception on Zope 2.7
-try:
-    import transaction
-except ImportError:
-    transaction = get_transaction()
 from OFS.SimpleItem import Item
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+# this is for compatibility with older versions of Zope (< 2.9)
+try:
+    import transaction
+    begin_transaction = transaction.begin
+    get_transaction = transaction.get
+except:
+    begin_transaction = get_transaction().begin
 
 #Naaya imports
 from Products.ExtFile.ExtFile import ExtFile
@@ -98,22 +100,24 @@ class UpdateScript(Item, Acquisition.Implicit):
 
         log_filename = '%s-%s-%s' % (DateTime().strftime('%Y.%m.%d_%H.%M.%S'), self.id, str(portal.title_or_id()))
 
-        transaction.begin()
+        begin_transaction()
+        transaction = get_transaction()
         logs_folder._setObject(log_filename, ExtFile(log_filename, log_filename))
         ob = logs_folder._getOb(log_filename)
         ob.manage_upload(data, 'text/plain')
-        transaction.get().note('Saved log file for update "%s" on portal "%s"' % (self.id, portal.title_or_id()))
+        transaction.note('Saved log file for update "%s" on portal "%s"' % (self.id, portal.title_or_id()))
         transaction.commit()
 
     security.declareProtected(view_management_screens, 'update')
     def update(self, portal, do_dry_run):
         self._setup_logger()
 
-        transaction.begin()
+        begin_transaction()
+        transaction = get_transaction()
         try:
             success = self._update(portal)
 
-            transaction.get().note('Update "%s" on Naaya site "%s"' %
+            transaction.note('Update "%s" on Naaya site "%s"' %
                 (self.id, portal.absolute_url(1)))
 
             if do_dry_run:
@@ -138,11 +142,6 @@ class UpdateScript(Item, Acquisition.Implicit):
             report_file = StringIO()
 
             do_dry_run = (REQUEST.form.get('action') != 'Run update')
-            if do_dry_run:
-                print>>report_file, '<h3>Dry-run</h3>'
-            else:
-                transaction.get().note('running update script "%s"' % self.title)
-
             for portal_path in REQUEST.form.get("portal_paths", []):
                 portal = self.unrestrictedTraverse(portal_path)
                 success, log_data = self.update(portal, do_dry_run)
@@ -166,15 +165,19 @@ class UpdateScript(Item, Acquisition.Implicit):
 
 
 def register_scripts(updater):
+    update_filenames = []
     for filename in os.listdir(os.path.dirname(__file__)):
         if not (filename.startswith('update_') and filename.endswith('.py')):
             continue
-        # script imports might throw exception on different versions of Zope
+        update_filenames.append(filename)
+
+    for filename in update_filenames:
+        # script imports might throw exception on different versions of Zope and python
         try:
             objects = __import__(filename[:-3], globals(), None, ['*'])
             for key, obj in objects.__dict__.iteritems():
-                if (isinstance(obj, type) and issubclass(obj, UpdateScript) and
+                if (isinstance(obj, UpdateScript.__class__) and issubclass(obj, UpdateScript) and
                         obj not in (UpdateScript, )):
                     updater.register_update_script(obj.id, obj)
-        except ImportError:
+        except ImportError, e:
             pass
