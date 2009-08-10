@@ -733,14 +733,18 @@ class CHMSite(NySite):
             return REQUEST.RESPONSE.redirect('%s/admin_userroles_html?name=%s' % (self.absolute_url(), name))
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addusersroles')
-    def admin_addusersroles(self, names='', roles=[], loc='allsite', location='', REQUEST=None):
+    def admin_addusersroles(self, names='', roles=[], loc='allsite', location='', send_mail='', REQUEST=None):
         """
         Add roles for an user.
         """
         msg = err = ''
+        auth_tool = self.getAuthenticationTool()
         try:
             for name in self.utConvertToList(names):
-                self.getAuthenticationTool().manage_addUsersRoles(name, roles, loc, location)
+                auth_tool.manage_addUsersRoles(name, roles, loc, location)
+                if send_mail:
+                    email = auth_tool.getUsersEmails([name])[0]
+                    self.sendAccountModifiedEmail(email, roles, loc, location)
         except Exception, error:
             err = error
         else:
@@ -751,13 +755,17 @@ class CHMSite(NySite):
             return REQUEST.RESPONSE.redirect('%s/admin_users_html' % self.absolute_url())
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduserroles')
-    def admin_adduserroles(self, name='', roles=[], loc='allsite', location='', REQUEST=None):
+    def admin_adduserroles(self, name='', roles=[], loc='allsite', location='', send_mail='', REQUEST=None):
         """
         Add roles for an user.
         """
         msg = err = ''
+        auth_tool = self.getAuthenticationTool()
         try:
-            self.getAuthenticationTool().manage_addUsersRoles(name, roles, loc, location)
+            auth_tool.manage_addUsersRoles(name, roles, loc, location)
+            if send_mail:
+                email = auth_tool.getUsersEmails([name])[0]
+                self.sendAccountModifiedEmail(email, roles, loc, location)
         except Exception, error:
             err = error
         else:

@@ -111,6 +111,10 @@
             <input type="button" value="Pick" tal:attributes="onclick string:setupWin('${user_tool/absolute_url}/sitemap', 300, 500);;" class="submission_button" />
         </td>
     </tr>
+    <tr>
+        <td><label for="send_mail" i18n:translate="">Send notification email to selected user(s)</label></td>
+        <td><input type="checkbox" id="send_mail" name="send_mail" checked="checked" /></td>
+    </tr>
 </table>
 <p>
     <input type="hidden" name="destination" value="manage_userRoles_html" />

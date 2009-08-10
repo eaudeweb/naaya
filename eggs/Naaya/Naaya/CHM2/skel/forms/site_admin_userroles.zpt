@@ -131,6 +131,10 @@ function createKey(key)
 		<input type="button" value="Pick" i18n:translate="" tal:define="acl_users_path user_tool/absolute_url" tal:attributes="onclick string:setupWin('${acl_users_path}/sitemap', 300, 500);;" />
 	</td>
 </tr>
+<tr>
+    <td><label for="send_mail" i18n:translate="">Send notification email to user</label></td>
+    <td><input type="checkbox" id="send_mail" name="send_mail" checked="checked" /></td>
+</tr>
 </table>
 <input type="hidden" name="name" tal:attributes="value name" />
 <input type="submit" value="Assign" i18n:attributes="value" class="submission_button" />
