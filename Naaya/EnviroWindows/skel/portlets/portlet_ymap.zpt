@@ -102,7 +102,7 @@ div.marker-body h3 {
 		<!-- div style="text-align: center; font-weight: bold; margin: 0; width: 600px">Stakeholders</div -->
 		<div style="padding: 3px; border: 2px solid #dde9ed; width: 600px; height: 350px;"><div id="map" tal:attributes="style python:'width:%spx;; height:%spx' % (width, height)"></div></div>
 	</div>
-	<div id="record_counter_message" style="display: none;">
+	<div id="record_counter_message">
 		<span style="margin-left: 3em;" id="record_counter">0</span> <span i18n:translate="">location(s)</span>
 		<!-- a style="font-size: 90%" href="http://developer.yahoo.com/about/" title="Yahoo.com | About Applications that Use Yahoo! Web Services" i18n:translate="" i18n:attributes="title">Service provided by Yahoo!</a -->
 	</div>
@@ -113,7 +113,8 @@ div.marker-body h3 {
 				map_url geo_map/absolute_url;
 				map_ob geo_map;
 				edit_mode python:False;
-				sortable python:False;">
+				sortable python:False;
+				base_link_url string:${geo_map/absolute_url}?">
 			<table metal:use-macro="geo_map/locations_table_html/macros/main">
 			</table>
 		</tal:block>
@@ -173,7 +174,6 @@ div.marker-body h3 {
 	var yahoo_map_section = document.getElementById("yahoo_map_section");
 	yahoo_map_section.style.display = "block";
 	showMap();
-	document.getElementById('record_counter_message').style.display="block";
 // -->;
 </script>
 
