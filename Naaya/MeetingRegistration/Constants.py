@@ -1,0 +1,1 @@
+mandatory_fields_registration = ['title', 'start_date', 'end_date']
