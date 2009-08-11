@@ -1,1 +1,0 @@
-field_types = ['CheckBoxField', 'DateTimeField', 'EmailField', 'LabelField', 'StringField', 'TextAreaField']

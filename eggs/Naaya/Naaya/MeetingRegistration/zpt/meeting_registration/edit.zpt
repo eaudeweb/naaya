@@ -1,5 +1,5 @@
 <tal:block replace="structure here/standard_html_header"/>
-	<script type="text/javascript" src="/misc_/OMI/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+	<script type="text/javascript" src="/misc_/MeetingRegistration/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 	<script type="text/javascript">
 		function myFileBrowser (field_name, url, type, win) {
 			tinyMCE.activeEditor.windowManager.open({
