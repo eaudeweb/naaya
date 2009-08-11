@@ -23,6 +23,7 @@ from App.ImageFile import ImageFile
 
 from Products.Naaya import register_content
 import MeetingRegistration
+from utilities.StaticServe import StaticServeFromZip
 
 ADD_PERMISSION = 'Add Meeting Registration'
 
@@ -45,3 +46,7 @@ def initialize(context):
                                     MeetingRegistration.manage_add_registration),
                           icon='www/MeetingRegistration.gif',
                           )
+
+misc_ = {
+    'tinymce': StaticServeFromZip('', 'www/tinymce_3_2_5.zip', globals()),
+}

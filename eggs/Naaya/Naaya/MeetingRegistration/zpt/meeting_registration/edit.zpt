@@ -37,31 +37,34 @@
 					theme_advanced_resizing : true
 					});
 	</script>
-	<form method="post" action="save_index">
-		<div>
-			<label for="index_title" i18n:translate="">Form name</label>
-			<input id="index_title" name="index_title:utf8:ustring" type="text" size="50"
-			tal:attributes="value here/index_title"/>
+	<form id="frmRegistrationForm" name="frmRegistrationForm" action="manage_edit_registration" method="post">
+		<div class="field">
+			<label for="id" i18n:translate="">Id</label>
+			<input type="text" name="id" tal:attributes="value here/id" />
 		</div>
-		<div>
+		<div class="field">
+			<label for="title" i18n:translate="">Title</label>
+			<input type="text" name="title" tal:attributes="value here/title" />
+		</div>
+		<div class="field">
 			<label i18n:translate="">Registration period</label>
+			<label for="start_date" i18n:translate="">Start date</label>
+			<input type="text" name="start_date" tal:attributes="value here/start_date" />
 		</div>
-		<div>
-			<label i18n:translate="">Start date</label>
-			<input id="start_date" name="start_date:utf8:ustring" type="text" size="50"
-			tal:attributes="value here/start_date"/>
+		<div class="field">
+			<label for="end_date" i18n:translate="">End date</label>
+			<input type="text" name="end_date" tal:attributes="value here/end_date" />
 		</div>
-		<div>
-			<label i18n:translate="">End date</label>
-			<input id="end_date" name="end_date:utf8:ustring" type="text" size="50"
-			tal:attributes="value here/end_date"/>
+		<div class="field">
+			<label for="introduction" i18n:translate="">Introductory text</label>
+			<textarea id="introduction" name="introduction:utf8:ustring" rows="" cols=""
+			tal:content="here/introduction"/>
 		</div>
-		<div><label for="introduction" i18n:translate="">Introductory text</label></div>
-		<div><textarea class="tinymce" id="introduction" name="introduction:utf8:ustring" rows="" cols=""
-			tal:content="here/introduction"></textarea></div>
-		<div style="font-size: x-small;font-style: italic;padding-top: 1ex" i18n:translate="">
-			When pasting from word documents, use the "paste from word" button.
+		<div style="font-size: x-small;font-style: italic;padding-left: 3ex" i18n:translate="">
+			When pasting from word documents, please use the "Paste from Word" button.
 		</div>
-		<div class="button"><input type="submit" name="save" value="Save changes"/></div>
+		<div class="field">
+			<input type="submit" value="Save changes" i18n:attributes="value" />
+		</div>
 	</form>
 <tal:block replace="structure here/standard_html_footer"/>
