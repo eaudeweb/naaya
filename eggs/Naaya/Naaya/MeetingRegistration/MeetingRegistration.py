@@ -19,6 +19,7 @@
 # Cornel Nitu, Eau de Web
 # Valentin Dumitru, Eau de Web
 
+import re
 from OFS.Folder import Folder
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -26,17 +27,39 @@ from AccessControl.Permissions import view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from utilities.Slugify import slugify
+from Constants import *
+
 
 add_registration = PageTemplateFile('zpt/meeting_registration/add', globals())
 def manage_add_registration(self, id='', title='', start_date='', end_date='', introduction='', REQUEST=None):
     """ """
-    if not id:
-        id = slugify(title)
-    ob = MeetingRegistration(id, title, start_date, end_date, introduction)
-    self._setObject(id, ob)
-    ob = self._getOb(id)
-    if REQUEST:
-        REQUEST.RESPONSE.redirect(self.absolute_url())
+    if form_validation(mandatory_fields_registration, REQUEST, **REQUEST.form):
+        if not id:
+            id = slugify(title)
+        ob = MeetingRegistration(id, title, start_date, end_date, introduction)
+        self._setObject(id, ob)
+        ob = self._getOb(id)
+        if REQUEST:
+            REQUEST.RESPONSE.redirect(self.absolute_url())
+    else:
+        return add_registration.__of__(self)(REQUEST)
+
+email_expr = re.compile(r'^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$', re.IGNORECASE)
+
+def form_validation (mandatory_fields, REQUEST, **kwargs):
+    has_errors = False
+    for k,v in kwargs.items():
+        if k in mandatory_fields:
+            if (k == 'email') and v:
+                if not email_expr.match(v):
+                    REQUEST.set('%s_notvalid' % k, True)
+                    has_errors = True
+            if not v:
+                REQUEST.set('%s_error' % k, True)
+                has_errors = True
+    if has_errors:
+        REQUEST.set('request_error', True)
+    return not has_errors
 
 class MeetingRegistration(Folder):
     """ """
@@ -61,11 +84,14 @@ class MeetingRegistration(Folder):
     edit = PageTemplateFile('zpt/meeting_registration/edit', globals())
     def manage_edit_registration(self, id='', title='', start_date='', end_date='', introduction='', REQUEST=None):
         """ """
-        self.title = title
-        self.start_date = start_date
-        self.end_date = end_date
-        self.introduction = introduction
-        if REQUEST:
-            REQUEST.RESPONSE.redirect(self.absolute_url())
+        if form_validation(mandatory_fields_registration, REQUEST, **REQUEST.form):
+            self.title = title
+            self.start_date = start_date
+            self.end_date = end_date
+            self.introduction = introduction
+            if REQUEST:
+                REQUEST.RESPONSE.redirect(self.absolute_url())
+        else:
+            return self.edit(REQUEST)
 
 InitializeClass(MeetingRegistration)

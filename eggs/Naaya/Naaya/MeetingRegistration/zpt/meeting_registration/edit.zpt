@@ -37,28 +37,50 @@
 					theme_advanced_resizing : true
 					});
 	</script>
-	<form id="frmRegistrationForm" name="frmRegistrationForm" action="manage_edit_registration" method="post">
+	<script type="text/javascript" src="http://localhost:8080/Naaya_CSS/core_js"></script>
+	<script type="text/javascript" src="http://localhost:8080/Naaya_CSS/calendar_js"></script>
+	<script type="text/javascript" src="http://localhost:8080/Naaya_CSS/datetime_js"></script>
+
+	<form id="frmRegistrationForm" name="frmRegistrationForm" action="manage_edit_registration" method="post"
+		tal:define="request_error python:request.get('request_error')">
 		<div class="field">
-			<label for="id" i18n:translate="">Id</label>
-			<input type="text" name="id" tal:attributes="value here/id" />
+			<label i18n:translate="">Fields marked with * are mandatory.</label>
+		</div>
+		<div class="message-error" tal:condition="request_error">
+			<fieldset>
+				<legend i18:translate="">Errors</legend>
+				<div class="fieldset_div">
+					<ul>
+						<li i18:translate="">This form contains errors. Please fill all mandatory fields correctly and try again.</li>
+					</ul>
+				</div>
+			</fieldset>
 		</div>
 		<div class="field">
 			<label for="title" i18n:translate="">Title</label>
-			<input type="text" name="title" tal:attributes="value here/title" />
+			<div class="message-error" tal:condition="python:request.get('title_error')" i18:translate="">
+			The title is mandatory. Please enter the title of the registration form.</div>
+			<input type="text" name="title" tal:attributes="value python:request.get('title', here.title)" />
 		</div>
 		<div class="field">
 			<label i18n:translate="">Registration period</label>
 			<label for="start_date" i18n:translate="">Start date</label>
-			<input type="text" name="start_date" tal:attributes="value here/start_date" />
+			<div class="message-error" tal:condition="python:request.get('start_date_error')" i18:translate="">
+			The start date is mandatory. Please enter the start of the registration period.</div>
+			<input type="text" class="vDateField" size="10" maxlength="10" name="start_date"
+			value="" id="start_date" tal:attributes="value python:request.get('start_date', here.start_date)" />
 		</div>
 		<div class="field">
 			<label for="end_date" i18n:translate="">End date</label>
-			<input type="text" name="end_date" tal:attributes="value here/end_date" />
+			<div class="message-error" tal:condition="python:request.get('end_date_error')" i18:translate="">
+			The end date is mandatory. Please enter the end of the registration period.</div>
+			<input type="text" class="vDateField" size="10" maxlength="10" name="end_date"
+			value="" id="end_date" tal:attributes="value python:request.get('end_date', here.end_date)" />
 		</div>
 		<div class="field">
 			<label for="introduction" i18n:translate="">Introductory text</label>
 			<textarea id="introduction" name="introduction:utf8:ustring" rows="" cols=""
-			tal:content="here/introduction"/>
+			tal:content="python:request.get('introduction', here.introduction)"/>
 		</div>
 		<div style="font-size: x-small;font-style: italic;padding-left: 3ex" i18n:translate="">
 			When pasting from word documents, please use the "Paste from Word" button.
