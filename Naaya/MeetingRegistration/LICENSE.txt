@@ -18,15 +18,3 @@
 # Alex Morega, Eau de Web
 # Cornel Nitu, Eau de Web
 # Valentin Dumitru, Eau de Web
-
-from App.ImageFile import ImageFile
-
-import MeetingRegistration
-
-def initialize(context):
-    context.registerClass(
-                          MeetingRegistration.MeetingRegistration,
-                          constructors=(MeetingRegistration.manage_addRegistration_html,
-                          MeetingRegistration.manage_addRegistration),
-                          icon='www/MeetingRegistration.gif',
-                          )
