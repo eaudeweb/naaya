@@ -1,11 +1,19 @@
 <tal:block replace="structure here/standard_html_header"/>
 
-<h1>Registration Form</h1>
+<h1 i18n:translate="">Meeting Registration</h1>
 
-<form id="RegistrationForm" name="RegistrationForm" action="manage_addRegistration" method="post">
-	<div><label for="title">Form title *</label></div>
-	<div><input id="title" name="title:utf8:ustring" type="text" size="50"/><div/>
-	<div><input type="submit" value="Add form"/></div>
+<form id="frmRegistrationForm" name="frmRegistrationForm" action="manage_add_registration" method="post">
+    <div class="field">
+        <label for="id" i18n:translate="">Id</label>
+        <input type="text" name="id" value="" />
+    </div>
+    <div class="field">
+        <label for="title" i18n:translate="">Title</label>
+        <input type="text" name="title" value="" />
+    </div>
+    <div class="field">
+        <input type="submit" value="Submit" i18n:attributes="value" />
+    </div>
 </form>
 
 <tal:block replace="structure here/standard_html_footer"/>
