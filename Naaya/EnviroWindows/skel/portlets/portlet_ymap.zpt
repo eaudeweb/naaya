@@ -60,7 +60,7 @@ div.marker-body h3 {
 	background-color: #dde9ed;
 	color: black;
 	border: 1px solid #afb2b4;
-	margin: 0.5em 0 0.6em -2.4em;
+	margin: 0.5em 0 0.6em -0.1em;
 	padding: 0.2em 0 0.5em 0;
 	width: 28em;
 }
@@ -79,11 +79,11 @@ div.marker-body h3 {
 </style>
 
 <span tal:condition="python: geo_map.map_engine == 'google'">
-  <script type="text/javascript" tal:attributes="src string:http://maps.google.com/maps?file=api&amp;v=2&amp;key=${geo_map/googleApiKey}"></script>
+  <script type="text/javascript" tal:attributes="src string:http://maps.google.com/maps?file=api&amp;v=2&amp;key=${geo_map/get_googleApiKey}"></script>
   <script type="text/javascript" src="misc_/NaayaCore/googlemaps.js"></script>
 </span>
 <span tal:condition="python:geo_map.map_engine == 'yahoo'">
-  <script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${geo_map/mapsapikey}"></script>
+  <script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${geo_map/get_mapsapikey}"></script>
   <script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
 </span>
 <script type="text/javascript" src="misc_/NaayaCore/xmlhttp.js"></script>
@@ -98,7 +98,7 @@ div.marker-body h3 {
 	</noscript>
 	<a id="mappage"></a>
 
-	<div id="yahoo_map_section" style="display: none">
+	<div id="yahoo_map_section" style="display: none; width:600px; margin: 0 auto;">
 		<!-- div style="text-align: center; font-weight: bold; margin: 0; width: 600px">Stakeholders</div -->
 		<div style="padding: 3px; border: 2px solid #dde9ed; width: 600px; height: 350px;"><div id="map" tal:attributes="style python:'width:%spx;; height:%spx' % (width, height)"></div></div>
 	</div>
