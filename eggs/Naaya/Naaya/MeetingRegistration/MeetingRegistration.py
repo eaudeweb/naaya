@@ -27,8 +27,8 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from utilities.Slugify import slugify
 
-manage_addRegistration_html = PageTemplateFile('zpt/meeting_registration/add', globals())
-def manage_addRegistration(self, id='', title='', REQUEST=None):
+add_registration = PageTemplateFile('zpt/meeting_registration/add', globals())
+def manage_add_registration(self, id='', title='', REQUEST=None):
     """ """
     if not id:
         id = slugify(title)

@@ -21,12 +21,27 @@
 
 from App.ImageFile import ImageFile
 
+from Products.Naaya import register_content
 import MeetingRegistration
+
+ADD_PERMISSION = 'Add Meeting Registration'
+
+# Register as a folder content type
+register_content(
+    module=MeetingRegistration,
+    klass=MeetingRegistration.MeetingRegistration,
+    module_methods={'manage_add_registration': ADD_PERMISSION, 'add_registration': ADD_PERMISSION},
+    klass_methods={},
+    add_method=('add_registration', ADD_PERMISSION),
+)
+
 
 def initialize(context):
     context.registerClass(
                           MeetingRegistration.MeetingRegistration,
-                          constructors=(MeetingRegistration.manage_addRegistration_html,
-                          MeetingRegistration.manage_addRegistration),
+                          permission = ADD_PERMISSION,
+                          constructors=(
+                                    MeetingRegistration.add_registration,
+                                    MeetingRegistration.manage_add_registration),
                           icon='www/MeetingRegistration.gif',
                           )
