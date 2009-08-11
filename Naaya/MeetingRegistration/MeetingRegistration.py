@@ -28,11 +28,11 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from utilities.Slugify import slugify
 
 add_registration = PageTemplateFile('zpt/meeting_registration/add', globals())
-def manage_add_registration(self, id='', title='', REQUEST=None):
+def manage_add_registration(self, id='', title='', start_date='', end_date='', introduction='', REQUEST=None):
     """ """
     if not id:
         id = slugify(title)
-    ob = MeetingRegistration(id, title)
+    ob = MeetingRegistration(id, title, start_date, end_date, introduction)
     self._setObject(id, ob)
     ob = self._getOb(id)
     if REQUEST:
@@ -46,15 +46,26 @@ class MeetingRegistration(Folder):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title):
+    def __init__(self, id, title, start_date, end_date, introduction):
         """ constructor """
         self.id = id
         self.title = title
+        self.start_date = start_date
+        self.end_date = end_date
+        self.introduction = introduction
 
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/meeting_registration/index', globals())
 
     security.declareProtected(view, 'edit_html')
     edit = PageTemplateFile('zpt/meeting_registration/edit', globals())
+    def manage_edit_registration(self, id='', title='', start_date='', end_date='', introduction='', REQUEST=None):
+        """ """
+        self.title = title
+        self.start_date = start_date
+        self.end_date = end_date
+        self.introduction = introduction
+        if REQUEST:
+            REQUEST.RESPONSE.redirect(self.absolute_url())
 
 InitializeClass(MeetingRegistration)

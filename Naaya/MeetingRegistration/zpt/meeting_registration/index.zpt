@@ -6,7 +6,7 @@
 		<a tal:attributes="href string:${here/absolute_url}/edit">Edit meeting properties</a>
 		<a tal:attributes="href string:${here/absolute_url}/edit">Edit registration form</a>
 	</div>
-	<!--<div>
-		<span tal:content="structure python:here.newlineToBr(here.introduction)"/>
-	</div>-->
+	<div>
+		<span tal:content="structure here/introduction"/>
+	</div>
 <tal:block replace="structure here/standard_html_footer"/>
