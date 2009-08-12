@@ -22,6 +22,7 @@
 import os
 import logging
 from cStringIO import StringIO
+import traceback
 
 #Zope imports
 from DateTime import DateTime
@@ -127,6 +128,7 @@ class UpdateScript(Item, Acquisition.Implicit):
 
         except Exception, e:
             self.log.error('Update script failed - "%s"' % str(e))
+            self.log.error(traceback.format_exc())
             transaction.abort()
             success = False
 
