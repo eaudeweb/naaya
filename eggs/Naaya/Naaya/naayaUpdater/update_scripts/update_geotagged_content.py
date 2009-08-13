@@ -136,7 +136,7 @@ class UpdateGeotaggedContent(UpdateScript):
                     return str(value)
                 else:
                     return None
-            elif isinstance(value, str):
+            elif isinstance(value, basestring):
                 try:
                     if Decimal(value):
                         return value
