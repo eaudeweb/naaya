@@ -50,7 +50,9 @@ class UpdateGeotaggedContent(UpdateScript):
         self._update_schemas(schema_tool)
         catalog = portal.portal_catalog
         add_indexes(catalog, self.log)
-        enable_geotagged_content(portal, self.log)
+        if hasattr(portal, 'portal_control') and \
+           "Broken" not in portal['portal_control'].meta_type:
+            enable_geotagged_content(portal, self.log)
         for brain in catalog():
             ob = brain.getObject()
             if isinstance(ob, NyContentType):
