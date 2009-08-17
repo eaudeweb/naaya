@@ -67,6 +67,8 @@
 			<label for="start_date" i18n:translate="">Start date</label>
 			<div class="message-error" tal:condition="python:request.get('start_date_error')" i18:translate="">
 			The start date is mandatory. Please enter the start of the registration period.</div>
+			<div class="message-error" tal:condition="python:request.get('start_date_invalid')" i18:translate="">
+			Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).</div>
 			<input type="text" class="vDateField" size="10" maxlength="10" name="start_date"
 			value="" id="start_date" tal:attributes="value python:request.get('start_date', here.start_date)" />
 		</div>
@@ -74,6 +76,8 @@
 			<label for="end_date" i18n:translate="">End date</label>
 			<div class="message-error" tal:condition="python:request.get('end_date_error')" i18:translate="">
 			The end date is mandatory. Please enter the end of the registration period.</div>
+			<div class="message-error" tal:condition="python:request.get('end_date_invalid')" i18:translate="">
+			Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).</div>
 			<input type="text" class="vDateField" size="10" maxlength="10" name="end_date"
 			value="" id="end_date" tal:attributes="value python:request.get('end_date', here.end_date)" />
 		</div>
