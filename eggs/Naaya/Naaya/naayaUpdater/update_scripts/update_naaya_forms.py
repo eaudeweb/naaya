@@ -121,7 +121,7 @@ class UpdateNaayaForms(UpdateScript):
             modified, unmodified, list_diff = self.get_modified_forms(portal)
             all_forms = self.get_fs_forms(portal)
             for form_id, form_path in all_forms.items():
-                if form_path not in [m.absolute_url(1) for m in modified]:
+                if form_path not in [physical_path(m) for m in modified]:
                     fs_content = self.get_fs_template(form_id, portal)
                     form_ob = self.get_zmi_template(form_path)
                     try:
