@@ -22,10 +22,9 @@
 				theme : "advanced",
 				editor_deselector : "mceNoEditor",
 				plugins : "safari,spellchecker,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
-				theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,styleselect,formatselect,fontselect,fontsizeselect",
+				theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,fontselect,fontsizeselect",
 				theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
-				theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,advhr,|,print,|,ltr,rtl,|,fullscreen",
-				theme_advanced_buttons4 : "styleprops,spellchecker,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking",
+				theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,|,sub,sup,|,charmap,iespell,advhr,|,ltr,rtl,|,fullscreen,styleprops,cite",
 				theme_advanced_toolbar_location : "top",
 				theme_advanced_toolbar_align : "left",
 				theme_advanced_statusbar_location : "bottom",
@@ -41,56 +40,113 @@
 <script type="text/javascript" src="http://localhost:8080/Naaya_CSS/core_js"></script>
 <script type="text/javascript" src="http://localhost:8080/Naaya_CSS/calendar_js"></script>
 <script type="text/javascript" src="http://localhost:8080/Naaya_CSS/datetime_js"></script>
+<script type="text/javascript">
+function ShowHide(theSelect){
+	if(theSelect.options[theSelect.options.selectedIndex].value == ''){
+		document.getElementById('div_body_text').style.display = 'none';
+		document.getElementById('div_selection_values').style.display = 'none';
+		document.getElementById('div_mandatory').style.display = 'none';
+	}
+	if(theSelect.options[theSelect.options.selectedIndex].value == 'string_field'){
+		document.getElementById('div_body_text').style.display = 'none';
+		document.getElementById('div_selection_values').style.display = 'none';
+		document.getElementById('div_mandatory').style.display = 'block';
+	}
+	if(theSelect.options[theSelect.options.selectedIndex].value == 'text_field'){
+		document.getElementById('div_body_text').style.display = 'none';
+		document.getElementById('div_selection_values').style.display = 'none';
+		document.getElementById('div_mandatory').style.display = 'block';
+	}
+	if(theSelect.options[theSelect.options.selectedIndex].value == 'email_field'){
+		document.getElementById('div_body_text').style.display = 'none';
+		document.getElementById('div_selection_values').style.display = 'none';
+		document.getElementById('div_mandatory').style.display = 'block';
+	}
+	if(theSelect.options[theSelect.options.selectedIndex].value == 'date_field'){
+		document.getElementById('div_body_text').style.display = 'none';
+		document.getElementById('div_selection_values').style.display = 'none';
+		document.getElementById('div_mandatory').style.display = 'block';
+	}
+	if(theSelect.options[theSelect.options.selectedIndex].value == 'checkbox_field'){
+		document.getElementById('div_body_text').style.display = 'none';
+		document.getElementById('div_selection_values').style.display = 'none';
+		document.getElementById('div_mandatory').style.display = 'block';
+	}
+	if(theSelect.options[theSelect.options.selectedIndex].value == 'selection_field'){
+		document.getElementById('div_body_text').style.display = 'none';
+		document.getElementById('div_selection_values').style.display = 'block';
+		document.getElementById('div_mandatory').style.display = 'block';
+	}
+	if(theSelect.options[theSelect.options.selectedIndex].value == 'body_text'){
+		document.getElementById('div_body_text').style.display = 'block';
+		document.getElementById('div_selection_values').style.display = 'none';
+		document.getElementById('div_mandatory').style.display = 'none';
+	}
+}
+</script>
 
-<h1>Registration Form</h1>
-
-<form id="AddFields" name="AddFields" action="manage_addField" method="post"
-	tal:define="request_error python:request.get('request_error', '')">
-	<div class="message-error" tal:condition="request_error">
-		<fieldset>
-			<legend i18:translate="">Errors</legend>
-			<div class="fieldset_div">
-				<ul>
-					<li i18:translate="">This form contains errors. Please fill all mandatory fields correctly and try again.</li>
-				</ul>
+<h1 tal:content="here/title">Registration Form</h1>
+<fieldset>
+	<legend i18:translate="">Add / Edit field</legend>
+	<div class="fieldset_div">
+		<form id="AddFields" name="AddFields" action="manage_addField" method="post"
+			tal:define="request_error python:request.get('request_error', '')">
+			<div class="message-error" tal:condition="request_error">
+				<fieldset>
+					<legend i18:translate="">Errors</legend>
+					<div class="fieldset_div">
+						<ul>
+							<li i18:translate="">This form contains errors. Please fill all mandatory fields correctly and try again.</li>
+						</ul>
+					</div>
+				</fieldset>
 			</div>
-		</fieldset>
+			<input type="hidden" id="field_id" name="field_id" type="text" size="50"
+				tal:attributes="value python:request.get('field_id', '')" />
+			<div class="field">
+				<label style="display:inline" for="field_type" i18n:translate="">Field type</label>
+				<div class="message-error" tal:condition="python:request.get('field_type_error')" i18:translate="">
+				The field type is mandatory. Please chose from the available field types.</div>
+				<select onChange="ShowHide(this);" name="field_type" tal:attributes="value python:request.get('field_type', '')" >
+					<tal:block repeat="item options/field_types"
+					define="type python:request.get('field_type', '')">
+						<option tal:content="item" tal:attributes="value item;selected python:test(item == type, 'selected', None)"/>
+					</tal:block>
+				</select>
+			</div>
+			<div class="field">
+				<label for="field_label" i18n:translate="">Label</label>
+				<div class="message-error" tal:condition="python:request.get('field_label_error')" i18:translate="">
+				The label is mandatory.</div>
+				<input id="field_label" name="field_label:utf8:ustring" type="text" size="50"
+				tal:attributes="value python:request.get('field_label', '')" />
+			</div>
+			<div class="field" id="div_body_text" style="display: none">
+				<label for="field_content" i18n:translate="">Body text</label>
+				<div class="message-error" tal:condition="python:request.get('body_text_error')" i18:translate="">
+				The text content is mandatory.</div>
+				<textarea id="field_content" name="field_content:utf8:ustring" rows="" cols=""
+				tal:content="python:request.get('field_content', '')" ></textarea>
+			</div>
+			<div class="field" id="div_selection_values" style="display: none">
+				<label for="selection_values" i18n:translate="">Selection values - please enter one value per line</label>
+				<div class="message-error" tal:condition="python:request.get('body_text_error')" i18:translate="">
+				At least two selection values are required.</div>
+				<textarea class="mceNoEditor" id="selection_values" name="selection_values:lines" rows="5" cols="100"
+				tal:content="python:request.get('selection_values', '')" ></textarea>
+			</div>
+			<div class="field" id="div_mandatory" style="display: none">
+				<label style="display:inline" for="mandatory" i18n:translate="">Will the field be required?</label>
+				<input id="mandatory" name="mandatory:boolean" type="checkbox"/>
+			</div>
+			<input type="hidden" id="position" name="position" type="text" size="50"
+				tal:attributes="value python:request.get('position', '')" />
+			<input type="submit" name="add_field" value="Add field" class="button"/>
+		</form>
 	</div>
-	<input type="hidden" id="field_id" name="field_id" type="text" size="50"
-		tal:attributes="value python:request.get('field_id', '')" />
-	<div class="field">
-		<label style="display:inline" for="field_type" i18n:translate="">Field type</label>
-		<div class="message-error" tal:condition="python:request.get('field_type_error')" i18:translate="">
-		The field type is mandatory. Please chose from the available field types.</div>
-		<select name="field_type" tal:attributes="value python:request.get('field_type', '')" >
-			<tal:block repeat="item options/field_types"
-			define="type python:request.get('field_type', '')">
-				<option tal:content="item" tal:attributes="value item;selected python:test(item == type, 'selected', None)"/>
-			</tal:block>
-		</select>
-	</div>
-	<div class="field">
-		<label for="field_label" i18n:translate="">Label</label>
-		<div class="message-error" tal:condition="python:request.get('field_label_error')" i18:translate="">
-		The label is mandatory.</div>
-		<input id="field_label" name="field_label:utf8:ustring" type="text" size="50"
-		tal:attributes="value python:request.get('field_label', '')" />
-	</div>
-	<div class="field">
-		<label for="field_content" i18n:translate="">Body text</label>
-		<textarea id="field_content" name="field_content:utf8:ustring" rows="" cols=""
-		tal:content="python:request.get('field_content', '')" ></textarea>
-	</div>
-	<div class="field">
-		<label style="display:inline" for="mandatory" i18n:translate="">Will the field be required?</label>
-		<input id="mandatory" name="mandatory:boolean" type="checkbox"/>
-	</div>
-	<input type="hidden" id="position" name="position" type="text" size="50"
-		tal:attributes="value python:request.get('position', '')" />
-	<input type="submit" name="add_field" value="Add field" class="button"/>
-</form>
-<hr/>
-<h2 i18n:translate="">Form preview</h2>
+</fieldset>
+<br/>
+<h2 i18n:translate="">Registration form preview</h2>
 	<div class="message-error" tal:define="delete_field_id python:request.get('delete_field_id', '')"
 	tal:condition="delete_field_id">
 		<fieldset>
@@ -100,7 +156,10 @@
 					<li i18:translate=""
 					tal:content="string:Do you really want to delete the field ${field_label}?" />
 				</ul>
-				<a tal:attributes="href string:${here/absolute_url}/delete_field?id=${delete_field_id}">Delete</a> | <a tal:attributes="href string:${here/absolute_url}/form_edit">Cancel</a>
+				<span class="buttons">
+				<a tal:attributes="href string:${here/absolute_url}/delete_field?id=${delete_field_id}">
+				Delete</a> | <a tal:attributes="href string:${here/absolute_url}/form_edit">Cancel</a>
+				</span>
 			</div>
 		</fieldset>
 	</div>
@@ -116,7 +175,7 @@
 	</div>
 <div class="field">
 	<table>
-		<tal:block replace="structure here/render_fields"/>
+		<tal:block replace="structure python:here.render_fields('is_editing')"/>
 	</table>
 </div>
 <tal:block replace="structure here/standard_html_footer"/>
