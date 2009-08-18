@@ -582,7 +582,7 @@ class NaayaUpdater(Folder):
             elif p_action != 'ep' and portal.id not in portals_custom: continue
 
             res = []
-            portal_path = portal.absolute_url(1)
+            portal_path = '/'.join(portal.getPhysicalPath()[1:])
             if all_forms:
                 forms_list = portal.portal_forms.objectIds()
 
