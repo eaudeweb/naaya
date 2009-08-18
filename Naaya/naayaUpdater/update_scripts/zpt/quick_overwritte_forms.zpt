@@ -121,7 +121,7 @@ function toggleSelect()
                     <tal:block define="action_type python:rep[1];
                                         fmod python:rep[0]">
                         <tal:block condition="python:action_type=='edit'">
-                            <tal:block define="fpath python:fmod.absolute_url(1)">
+                            <tal:block define="fpath python:'/'.join(fmod.getPhysicalPath()[1:])">
                             <label><input type="checkbox" name="fmod" tal:attributes="value fpath" /> overwrite</label>
                             <label><input type="checkbox" name="fdel" tal:attributes="value fpath" /> remove</label>
                             [<a class="see_diff">diff</a>]

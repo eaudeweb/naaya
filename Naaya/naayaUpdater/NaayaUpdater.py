@@ -383,13 +383,13 @@ class NaayaUpdater(Folder):
             if portal.is_pluggable_item_installed(meta_type):
                 item = portal.get_pluggable_item(meta_type)
                 for f in item['forms']:
-                    flist[f] = '%s/portal_forms/%s' % (portal.absolute_url(1), f)
+                    flist[f] = '%s/portal_forms/%s' % (physical_path(portal), f)
 
         #load portal forms
         for f in self.list_fs_templates(NySite_module):
-            flist[f] = '%s/portal_forms/%s' % (portal.absolute_url(1), f)
+            flist[f] = '%s/portal_forms/%s' % (physical_path(portal), f)
         for f in self.list_fs_templates(portal):
-            flist[f] = '%s/portal_forms/%s' % (portal.absolute_url(1), f)
+            flist[f] = '%s/portal_forms/%s' % (physical_path(portal), f)
 
         return flist
 
@@ -487,6 +487,7 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'diffTemplates')
     def diffTemplates(self, id, fpath, ppath):
         """ return the differences between the ZMI and the filesytem versions of the template"""
+        print fpath
         portal = self.getPortal(ppath)
         fs = self.get_fs_template(id, portal)
         zmi = self.get_zmi_template(fpath)
@@ -533,7 +534,7 @@ class NaayaUpdater(Folder):
             modified, unmodified, list_diff = self.get_modified_forms(portal)
             all_forms = self.get_fs_forms(portal)
             for form_id, form_path in all_forms.items():
-                if form_path not in [m.absolute_url(1) for m in modified]:
+                if form_path not in [physical_path(m) for m in modified]:
                     fs_content = self.get_fs_template(form_id, portal)
                     form_ob = self.get_zmi_template(form_path)
                     try:
@@ -630,7 +631,7 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'generateFormPath')
     def generateFormPath(self, form_id, portal):
         """ """
-        return '%s/portal_forms/%s' % (portal.absolute_url(1), form_id)
+        return '%s/portal_forms/%s' % (physical_path(portal), form_id)
 
     security.declareProtected(view_management_screens, 'generateFormPath')
     def updateBrokenDescription(self, portal_id='hazred'):
@@ -778,4 +779,3 @@ class NaayaUpdater(Folder):
 
 
 Globals.InitializeClass(NaayaUpdater)
-

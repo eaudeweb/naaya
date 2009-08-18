@@ -30,9 +30,9 @@
 			<label for="ppath">Portal</label>
 			<select name="ppath" id="ppath">
 				<option tal:repeat="portal here/getPortals"
-						tal:attributes="selected python:test(ppath==portal.absolute_url(1), 'selected', ''); 
-										value python:portal.absolute_url(1)" 
-						tal:content="python:'%s (%s)' % (portal.title_or_id(),portal.absolute_url(1))" />
+						tal:attributes="selected python:test(ppath=='/'.join(portal.getPhysicalPath()[1:]), 'selected', ''); 
+										value python:'/'.join(portal.getPhysicalPath()[1:])" 
+						tal:content="python:'%s (%s)' % (portal.title_or_id(),'/'.join(portal.getPhysicalPath()[1:]))" />
 			</select>
 			<br /><br />
 
@@ -63,7 +63,7 @@
 
 				<ol>
 					<tal:block repeat="fmod out_modified">
-					<li tal:define="fpath python:fmod.absolute_url(1)">
+					<li tal:define="fpath python:'/'.join(fmod.getPhysicalPath()[1:])">
 						<input type="checkbox" name="fmod" tal:attributes="value fpath" />
 						<a tal:attributes="id fpath" />
 						[<a tal:attributes="onclick string:javascript:fOpen('${here/absolute_url}/diff_forms_html?f=${fmod/id}&fpath=${fpath}&p=${ppath}'); href string:#${fpath}">see diff</a>]&nbsp;

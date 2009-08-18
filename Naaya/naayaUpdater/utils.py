@@ -75,3 +75,6 @@ def html_decode(s):
     buf = buf.replace('&apos;', '\'')
     buf = buf.replace('&gt;', '>')
     return buf
+
+def physical_path(ob):
+    return '/'.join(ob.getPhysicalPath()[1:])
