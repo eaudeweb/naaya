@@ -60,8 +60,6 @@
 				<label style="display:inline" for="mandatory" i18n:translate="">Will the field be required?</label>
 				<input id="mandatory" name="mandatory:boolean" type="checkbox"/>
 			</div>
-			<input type="hidden" id="position" name="position" type="text" size="50"
-				tal:attributes="value python:request.get('position', '')" />
 			<input type="submit" name="add_field" value="Add field" class="button"/>
 		</form>
 	</div>

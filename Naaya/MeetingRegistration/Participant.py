@@ -27,7 +27,8 @@ def addParticipant(self, REQUEST):
     """ Adds a participant's profile"""
     from random import randrange
     #validation
-    newParticipant = Participant(self.registration_form.keys(), **REQUEST.form)
+    form_fields = [field.id for field in self.registration_form]
+    newParticipant = Participant(form_fields, **REQUEST.form)
     id = str(randrange(1000000,9999999))
     self._setObject(id, newParticipant)
     #Redirect to confirmation / print
@@ -38,8 +39,6 @@ class Participant(SimpleItem):
     based on the fields of the meeting registration form"""
     def __init__(self, form_fields, **kwargs):
         """ """
-        print kwargs
-        print form_fields
         for k in form_fields:
             if kwargs.has_key(k):
                 setattr(self, k, kwargs[k])
