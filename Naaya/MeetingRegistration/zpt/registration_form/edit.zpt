@@ -94,7 +94,8 @@
 	</div>
 <div class="field">
 	<table>
-		<tal:block replace="structure python:here.render_fields('is_editing')"/>
+		<tal:block define="list_name python:request.get('list_name', '')"
+		replace="structure python:here.render_fields(list_name, 'is_editing')"/>
 	</table>
 </div>
 <tal:block replace="structure here/standard_html_footer"/>
