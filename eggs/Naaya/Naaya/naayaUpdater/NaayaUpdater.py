@@ -487,7 +487,6 @@ class NaayaUpdater(Folder):
     security.declareProtected(view_management_screens, 'diffTemplates')
     def diffTemplates(self, id, fpath, ppath):
         """ return the differences between the ZMI and the filesytem versions of the template"""
-        print fpath
         portal = self.getPortal(ppath)
         fs = self.get_fs_template(id, portal)
         zmi = self.get_zmi_template(fpath)
