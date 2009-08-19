@@ -24,7 +24,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from DateTime import DateTime
 
 def addParticipant(self, REQUEST):
-    """ """
+    """ Adds a participant's profile"""
     from random import randrange
     #validation
     newParticipant = Participant(self.registration_form.keys(), **REQUEST.form)
@@ -34,7 +34,8 @@ def addParticipant(self, REQUEST):
 
 
 class Participant(SimpleItem):
-    """ """
+    """ Defines the profile of a registered participant,
+    based on the fields of the meeting registration form"""
     def __init__(self, form_fields, **kwargs):
         """ """
         print kwargs
