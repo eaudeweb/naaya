@@ -23,7 +23,6 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from DateTime import DateTime
-from persistent.dict import PersistentDict
 from persistent.list import PersistentList
 from Globals import Persistent
 from operator import attrgetter
@@ -88,7 +87,8 @@ class MeetingRegistration(Folder):
         self.start_date = start_date
         self.end_date = end_date
         self.introduction = introduction
-        self.registration_form = PersistentDict()
+        self.registration_form = PersistentList()
+        self.registration_form_press = PersistentList()
 
     security.declareProtected(ACCESS_MEETING_REGISTRATION, 'addParticipant')
     addParticipant = Participant.addParticipant
@@ -126,7 +126,6 @@ class MeetingRegistration(Folder):
             REQUEST.set('field_label', field.field_label)
             REQUEST.set('field_content', field.field_content)
             REQUEST.set('mandatory', field.mandatory)
-            REQUEST.set('position', field.position)
         return self._form_edit(REQUEST, field_types = field_types)
 
     security.declareProtected(EDIT_MEETING_REGISTRATION, 'manage_addField')
@@ -144,11 +143,11 @@ class MeetingRegistration(Folder):
             field_content = request('field_content', '')
             selection_values = request('selection_values', '')
             mandatory = request('mandatory', False)
-            if request('position'):
-                position = int(request('position'))
+            field_index = self.return_index(self.registration_form, id)
+            if field_index is not None:
+                self.registration_form[field_index] = FormField(id, field_type, field_label, field_content, selection_values, mandatory)
             else:
-                position = len(self.registration_form.keys()) + 1
-            self.registration_form[id] = FormField(id, field_type, field_label, field_content, selection_values, mandatory, position)
+                self.registration_form.append(FormField(id, field_type, field_label, field_content, selection_values, mandatory))
             if REQUEST:
                 REQUEST.RESPONSE.redirect(self.absolute_url()+'/form_edit')
                 #return self.form_edit(None)
@@ -157,12 +156,18 @@ class MeetingRegistration(Folder):
 
     def get_field_label(self, id):
         """ Returns the field label based on the field id """
-        return self.registration_form[id].field_label
+        return self.registration_form[self.return_index(self.registration_form, id)].field_label
+
+    def return_index(self, list, id):
+        for field in list:
+            if field.id == id:
+                return list.index(field)
+        return None
 
     security.declareProtected(EDIT_MEETING_REGISTRATION, 'delete_field')
     def delete_field(self, id, REQUEST):
         """ deletes selected (id) field """
-        del self.registration_form[id]
+        del self.registration_form[self.return_index(self.registration_form, id)]
         #return REQUEST.RESPONSE.redirect(self.absolute_url()+'/form_edit')
         REQUEST.set('delete_field_id', '')
         REQUEST.set('field_deleted', True)
@@ -171,32 +176,24 @@ class MeetingRegistration(Folder):
     security.declareProtected(EDIT_MEETING_REGISTRATION, 'move_up_field')
     def move_up_field(self, id, REQUEST):
         """ Moves the selected field up in the display order """
-        fields = sorted(self.registration_form.itervalues(), key = attrgetter('position'))
-        current_field = self.registration_form[id]
-        if current_field == fields[0]:
+        field_index  = self.return_index(self.registration_form, id)
+        if field_index == 0:
             return
-        for list_index in range(len(fields)):
-            if fields[list_index] == current_field:
-                p = current_field.position
-                current_field.position = fields[list_index - 1].position
-                fields[list_index - 1].position = p
-                return REQUEST.RESPONSE.redirect(self.absolute_url()+'/form_edit')
-        return self.form_edit(REQUEST)
+        temp_field = self.registration_form[field_index]
+        self.registration_form[field_index] = self.registration_form[field_index - 1]
+        self.registration_form[field_index - 1] = temp_field
+        return REQUEST.RESPONSE.redirect(self.absolute_url()+'/form_edit')
 
     security.declareProtected(EDIT_MEETING_REGISTRATION, 'move_down_field')
     def move_down_field(self, id, REQUEST):
         """ Moves the selected field down in the display order """
-        fields = sorted(self.registration_form.itervalues(), key = attrgetter('position'))
-        current_field = self.registration_form[id]
-        if current_field == fields[-1]:
+        field_index = self.return_index(self.registration_form, id)
+        if field_index == len(self.registration_form) - 1:
             return
-        for list_index in range(len(fields)):
-            if fields[list_index] == current_field:
-                p = current_field.position
-                current_field.position = fields[list_index + 1].position
-                fields[list_index + 1].position = p
-                return REQUEST.RESPONSE.redirect(self.absolute_url()+'/form_edit')
-        return self.form_edit(REQUEST)
+        temp_field = self.registration_form[field_index]
+        self.registration_form[field_index] = self.registration_form[field_index + 1]
+        self.registration_form[field_index + 1] = temp_field
+        return REQUEST.RESPONSE.redirect(self.absolute_url()+'/form_edit')
 
     security.declareProtected(ACCESS_MEETING_REGISTRATION, 'field_validation')
     def field_validation(self, mandatory_fields, REQUEST):
@@ -217,8 +214,7 @@ class MeetingRegistration(Folder):
     def render_fields(self, is_editing = False):
         """ Renders the fields of the registration form """
         html_code = ''
-        fields = sorted(self.registration_form.itervalues(), key = attrgetter('position'))
-        for field in fields:
+        for field in self.registration_form:
             edit_link = self.absolute_url()+'/form_edit?edit_field_id='+field.id
             delete_link  = self.absolute_url()+'/form_edit?delete_field_id='+field.id
             move_up_link  = self.absolute_url()+'/move_up_field?id='+field.id
@@ -238,11 +234,11 @@ class MeetingRegistration(Folder):
             textarea = '<td><textarea class="mceNoEditor" id="%s" name="%s:utf8:ustring" type="text" rows="5" cols="50" ></textarea></td>' % (field.id, field.id)
             body_text = '<td colspan="2">%s</td>' % field.field_content
             if is_editing:
-                if len(fields) == 1:
+                if len(self.registration_form) == 1:
                     buttons = '<td><span class="buttons"><a href="%s">Edit</a></span></td><td><span class="buttons"><a href="%s">Delete</a></span></td>' % (edit_link, delete_link)
-                elif field == fields[0]:
+                elif field == self.registration_form[0]:
                     buttons = '<td><span class="buttons"><a href="%s">Edit</a></span></td><td><span class="buttons"><a href="%s">Delete</a></span></td><td></td><td><span class="buttons"><a href="%s">Move down</a></span></td>' % (edit_link, delete_link, move_down_link)
-                elif field == fields[-1]:
+                elif field == self.registration_form[-1]:
                     buttons = '<td><span class="buttons"><a href="%s">Edit</a></span></td><td><span class="buttons"><a href="%s">Delete</a></span></td><td><span class="buttons"><a href="%s">Move up</a></span></td></td><td>' % (edit_link, delete_link, move_up_link)
                 else:
                     buttons = '<td><span class="buttons"><a href="%s">Edit</a></span></td><td><span class="buttons"><a href="%s">Delete</a></span></td><td><span class="buttons"><a href="%s">Move up</a></span></td><td><span class="buttons"><a href="%s">Move down</a></span></td>' % (edit_link, delete_link, move_up_link, move_down_link)
@@ -271,13 +267,12 @@ InitializeClass(MeetingRegistration)
 
 class FormField(Persistent):
     ''' Defines the properties of a meeting registration field'''
-    def __init__(self, id, field_type, field_label, field_content, selection_values, mandatory, position):
+    def __init__(self, id, field_type, field_label, field_content, selection_values, mandatory):
         self.id = id
         self.field_type = field_type
         self.field_label = field_label
         self.field_content = field_content
         self.mandatory = mandatory
-        self.position = position
         self.selection_values = selection_values
 
 InitializeClass(FormField)
