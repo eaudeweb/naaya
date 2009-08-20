@@ -108,16 +108,8 @@ div.marker-body h3 {
 	</div>
 
 	<noscript>
-		<tal:block define="sort_on python:None;
-				sort_order python:None;
-				map_url geo_map/absolute_url;
-				map_ob geo_map;
-				edit_mode python:False;
-				sortable python:False;
-				base_link_url string:${geo_map/absolute_url}?">
-			<table metal:use-macro="geo_map/locations_table_html/macros/main">
-			</table>
-		</tal:block>
+                <a tal:define="geo_types_params python:','.join(geo_types)"
+                   tal:attributes="href string:${here/absolute_url}/portal_map/list_locations?geo_types=${geo_types_params}">You can view the locations in a list</a>
 	</noscript>
 
 	<div class="destinet-front">
