@@ -5,7 +5,8 @@
 <h1 tal:content="here/title">Registration Form</h1>
 
 <form id="addParticipant" name="addParticipant" action="addParticipant" method="post"
-	tal:define="request_error python:request.get('request_error', '')">
+	tal:define="request_error python:request.get('request_error', '');
+		global list_name options/list_name">
 	<div class="message-error" tal:condition="request_error">
 		<fieldset>
 			<legend i18:translate="">Errors</legend>
@@ -18,9 +19,11 @@
 	</div>
 	<div class="field">
 		<table>
-			<tal:block replace="structure here/render_fields"/>
+			<tal:block replace="structure python:here.render_fields(list_name)"/>
 		</table>
 	</div>
+	<input type="hidden" id="list_name" name="list_name" type="text" size="50"
+		tal:attributes="value list_name" />
 	<input type="submit" name="submit" value="Submit" class="button"/>
 </form>
 <tal:block replace="structure here/standard_html_footer"/>

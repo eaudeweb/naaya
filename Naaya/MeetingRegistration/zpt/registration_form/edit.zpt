@@ -11,7 +11,8 @@
 	<legend i18:translate="">Add / Edit field</legend>
 	<div class="fieldset_div">
 		<form id="AddFields" name="AddFields" action="manage_addField" method="post"
-			tal:define="request_error python:request.get('request_error', '')">
+			tal:define="request_error python:request.get('request_error', '');
+			global list_name python:request.get('list_name', '')">
 			<div class="message-error" tal:condition="request_error">
 				<fieldset>
 					<legend i18:translate="">Errors</legend>
@@ -22,6 +23,8 @@
 					</div>
 				</fieldset>
 			</div>
+			<input type="hidden" id="list_name" name="list_name" type="text" size="50"
+				tal:attributes="value list_name" />
 			<input type="hidden" id="field_id" name="field_id" type="text" size="50"
 				tal:attributes="value python:request.get('field_id', '')" />
 			<div class="field">
@@ -30,8 +33,8 @@
 				The field type is mandatory. Please chose from the available field types.</div>
 				<select onChange="ShowHide(this);" name="field_type" tal:attributes="value python:request.get('field_type', '')" >
 					<tal:block repeat="item options/field_types"
-					define="type python:request.get('field_type', '')">
-						<option tal:content="item" tal:attributes="value item;selected python:test(item == type, 'selected', None)"/>
+					define="global field_type python:request.get('field_type', '')">
+						<option tal:content="item" tal:attributes="value item;selected python:test(item == field_type, 'selected', None)"/>
 					</tal:block>
 				</select>
 			</div>
@@ -42,21 +45,24 @@
 				<input id="field_label" name="field_label:utf8:ustring" type="text" size="50"
 				tal:attributes="value python:request.get('field_label', '')" />
 			</div>
-			<div class="field" id="div_body_text" style="display: none">
+			<div class="field" id="div_body_text" style="display: none"
+				tal:attributes="style python:test(field_type=='body_text','display: block', 'display: none')">
 				<label for="field_content" i18n:translate="">Body text</label>
 				<div class="message-error" tal:condition="python:request.get('body_text_error')" i18:translate="">
 				The text content is mandatory.</div>
 				<textarea id="field_content" name="field_content:utf8:ustring" rows="" cols=""
 				tal:content="python:request.get('field_content', '')" ></textarea>
 			</div>
-			<div class="field" id="div_selection_values" style="display: none">
+			<div class="field" id="div_selection_values"
+				tal:attributes="style python:test(field_type=='selection_field','display: block', 'display: none')">
 				<label for="selection_values" i18n:translate="">Selection values - please enter one value per line</label>
-				<div class="message-error" tal:condition="python:request.get('body_text_error')" i18:translate="">
+				<div class="message-error" tal:condition="python:request.get('selection_field_error')" i18:translate="">
 				At least two selection values are required.</div>
 				<textarea class="mceNoEditor" id="selection_values" name="selection_values:lines" rows="5" cols="100"
-				tal:content="python:request.get('selection_values', '')" ></textarea>
+				tal:content="python:request.get('selection_values', None)" ></textarea>
 			</div>
-			<div class="field" id="div_mandatory" style="display: none">
+			<div class="field" id="div_mandatory"
+				tal:attributes="style python:test(field_type=='body_text', 'display: none','display: block')">
 				<label style="display:inline" for="mandatory" i18n:translate="">Will the field be required?</label>
 				<input id="mandatory" name="mandatory:boolean" type="checkbox"/>
 			</div>
@@ -70,14 +76,14 @@
 	tal:condition="delete_field_id">
 		<fieldset>
 			<legend i18:translate="">Confirm field delete</legend>
-			<div class="fieldset_div" tal:define="field_label python:here.get_field_label(delete_field_id)">
+			<div class="fieldset_div" tal:define="field_label python:here.get_field_label(list_name, delete_field_id)">
 				<ul>
 					<li i18:translate=""
 					tal:content="string:Do you really want to delete the field ${field_label}?" />
 				</ul>
 				<span class="buttons">
-				<a tal:attributes="href string:${here/absolute_url}/delete_field?id=${delete_field_id}">
-				Delete</a> | <a tal:attributes="href string:${here/absolute_url}/form_edit">Cancel</a>
+				<a tal:attributes="href string:${here/absolute_url}/delete_field?list_name=${list_name}&id=${delete_field_id}">
+				Delete</a> | <a tal:attributes="href string:${here/absolute_url}/${list_name}">Cancel</a>
 				</span>
 			</div>
 		</fieldset>
