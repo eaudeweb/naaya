@@ -26,13 +26,32 @@ from DateTime import DateTime
 def addParticipant(self, REQUEST):
     """ Adds a participant's profile"""
     from random import randrange
-    #validation
-    form_fields = [field.id for field in self.registration_form]
+    
+    list_name = REQUEST.form.get('list_name')
+    form_list = self.get_list_by_name(list_name)
+    profile_type = (list_name == 'form_edit_participants') and 'participant_' or 'press_'
+    mandatory_fields = []
+    for field in form_list:
+        if field.mandatory:
+            mandatory_fields.append(field.id)
+    if not new_registration_validation(self, list_name, mandatory_fields, REQUEST):
+        return (list_name == 'form_edit_participants') and self.registration_participants() or self.registration_press()
+    form_fields = [field.id for field in form_list]
     newParticipant = Participant(form_fields, **REQUEST.form)
-    id = str(randrange(1000000,9999999))
+    id = profile_type + str(randrange(1000000,9999999))
     self._setObject(id, newParticipant)
     #Redirect to confirmation / print
 
+def new_registration_validation(self, list_name, mandatory_fields, REQUEST):
+    """ """
+    has_errors = False
+    for id in mandatory_fields:
+        if id not in REQUEST.form or not REQUEST.form.get(id):
+            REQUEST.set('%s_error' % id, True)
+            has_errors = True
+    if has_errors:
+        REQUEST.set('request_error', True)
+    return not has_errors
 
 class Participant(SimpleItem):
     """ Defines the profile of a registered participant,

@@ -118,12 +118,12 @@ class MeetingRegistration(Folder):
     security.declareProtected(EDIT_MEETING_REGISTRATION, 'form_edit_participants')
     def form_edit_participants(self, REQUEST):
         """ Call the edit form for participants"""
-        return self.form_edit('registration_form_participants', REQUEST)
+        return self.form_edit('form_edit_participants', REQUEST)
 
     security.declareProtected(EDIT_MEETING_REGISTRATION, 'form_edit_press')
     def form_edit_press(self, REQUEST):
         """ Call the edit form for press"""
-        return self.form_edit('registration_form_press', REQUEST)
+        return self.form_edit('form_edit_press', REQUEST)
 
     security.declareProtected(EDIT_MEETING_REGISTRATION, 'form_edit')
     def form_edit(self, list_name, REQUEST):
@@ -142,17 +142,18 @@ class MeetingRegistration(Folder):
         return self._form_edit(REQUEST, field_types = field_types)
 
     def get_list_by_name(self, list_name):
-        if list_name == 'registration_form_participants':
+        if list_name == 'form_edit_participants':
             return self.registration_form_participants
-        if list_name == 'registration_form_press':
+        if list_name == 'form_edit_press':
             return self.registration_form_press
         raise ValueError ('Unknown list name "%s"' % list_name)
 
     security.declareProtected(EDIT_MEETING_REGISTRATION, 'manage_addField')
-    def manage_addField(self, form_list, REQUEST):
+    def manage_addField(self, REQUEST):
         """ Adds a new field to the registration form """
+        list_name = REQUEST.form.get('list_name', '')
+        form_list = self.get_list_by_name(list_name)
         from random import randrange
-        
         if self.field_validation(mandatory_fields_field, REQUEST):
             request = REQUEST.form.get
             id = request('field_id', '')
@@ -169,13 +170,14 @@ class MeetingRegistration(Folder):
             else:
                 form_list.append(FormField(id, field_type, field_label, field_content, selection_values, mandatory))
             if REQUEST:
-                REQUEST.RESPONSE.redirect(self.absolute_url()+'/form_edit')
+                REQUEST.RESPONSE.redirect(self.absolute_url()+'/%s' % list_name)
                 #return self.form_edit(None)
         else:
-            return self.form_edit(REQUEST)
+            return self.form_edit(list_name, REQUEST)
 
-    def get_field_label(self, form_list, id):
+    def get_field_label(self, list_name, id):
         """ Returns the field label based on the field id """
+        form_list = self.get_list_by_name(list_name)
         return form_list[self.return_index(form_list, id)].field_label
 
     def return_index(self, form_list, id):
@@ -185,35 +187,41 @@ class MeetingRegistration(Folder):
         return None
 
     security.declareProtected(EDIT_MEETING_REGISTRATION, 'delete_field')
-    def delete_field(self, form_list, id, REQUEST):
+    def delete_field(self, id, REQUEST):
         """ deletes selected (id) field """
+        list_name = REQUEST.form.get('list_name', '')
+        form_list = self.get_list_by_name(list_name)
         del form_list[self.return_index(form_list, id)]
         #return REQUEST.RESPONSE.redirect(self.absolute_url()+'/form_edit')
         REQUEST.set('delete_field_id', '')
         REQUEST.set('field_deleted', True)
-        return REQUEST.RESPONSE.redirect(self.absolute_url()+'/form_edit')
+        return REQUEST.RESPONSE.redirect(self.absolute_url()+'/%s' % list_name)
 
     security.declareProtected(EDIT_MEETING_REGISTRATION, 'move_up_field')
-    def move_up_field(self, form_list, id, REQUEST):
+    def move_up_field(self, id, REQUEST):
         """ Moves the selected field up in the display order """
+        list_name = REQUEST.form.get('list_name', '')
+        form_list = self.get_list_by_name(list_name)
         field_index  = self.return_index(form_list, id)
         if field_index == 0:
             return
         temp_field = form_list[field_index]
         form_list[field_index] = form_list[field_index - 1]
         form_list[field_index - 1] = temp_field
-        return REQUEST.RESPONSE.redirect(self.absolute_url()+'/form_edit')
+        return REQUEST.RESPONSE.redirect(self.absolute_url()+'/%s' % list_name)
 
     security.declareProtected(EDIT_MEETING_REGISTRATION, 'move_down_field')
-    def move_down_field(self, form_list, id, REQUEST):
+    def move_down_field(self, id, REQUEST):
         """ Moves the selected field down in the display order """
+        list_name = REQUEST.form.get('list_name', '')
+        form_list = self.get_list_by_name(list_name)
         field_index = self.return_index(form_list, id)
         if field_index == len(form_list) - 1:
             return
         temp_field = form_list[field_index]
         form_list[field_index] = form_list[field_index + 1]
         form_list[field_index + 1] = temp_field
-        return REQUEST.RESPONSE.redirect(self.absolute_url()+'/form_edit')
+        return REQUEST.RESPONSE.redirect(self.absolute_url()+'/%s' % list_name)
 
     security.declareProtected(ACCESS_MEETING_REGISTRATION, 'field_validation')
     def field_validation(self, mandatory_fields, REQUEST):
@@ -226,6 +234,9 @@ class MeetingRegistration(Folder):
             if REQUEST.form.get('field_type') == 'body_text' and not REQUEST.form.get('field_content'):
                 REQUEST.set('body_text_error', True)
                 has_errors = True
+            if REQUEST.form.get('field_type') == 'selection_field' and not REQUEST.form.get('selection_values'):
+                REQUEST.set('selection_field_error', True)
+                has_errors = True
         if has_errors:
             REQUEST.set('request_error', True)
         return not has_errors
@@ -236,10 +247,10 @@ class MeetingRegistration(Folder):
         form_list = self.get_list_by_name(list_name)
         html_code = ''
         for field in form_list:
-            edit_link = self.absolute_url()+'/form_edit?edit_field_id='+field.id
-            delete_link  = self.absolute_url()+'/form_edit?delete_field_id='+field.id
-            move_up_link  = self.absolute_url()+'/move_up_field?id='+field.id
-            move_down_link  = self.absolute_url()+'/move_down_field?id='+field.id
+            edit_link = self.absolute_url()+'/%s?edit_field_id=' % list_name +field.id
+            delete_link  = self.absolute_url()+'/%s?delete_field_id=' % list_name +field.id
+            move_up_link  = self.absolute_url()+'/move_up_field?list_name=%s&id=%s'% (list_name, field.id)
+            move_down_link  = self.absolute_url()+'/move_down_field?list_name=%s&id=%s'% (list_name, field.id)
             if field.mandatory:
                 label = '<td><label for="%s" i18n:translate="" style="color: #f40000">%s</label></td>' % (field.id, field.field_label)
             else:
@@ -283,6 +294,14 @@ class MeetingRegistration(Folder):
         return html_code
 
     new_registration = PageTemplateFile('zpt/registration_form/index', globals())
+
+    def registration_participants(self):
+        """ """
+        return self.new_registration(list_name = 'form_edit_participants')
+    
+    def registration_press(self):
+        """ """
+        return self.new_registration(list_name = 'form_edit_press')
 
 InitializeClass(MeetingRegistration)
 
