@@ -4,7 +4,7 @@
 <script type="text/javascript" src="http://localhost:8080/Naaya_CSS/datetime_js"></script>
 <h1 tal:content="here/title">Registration Form</h1>
 
-<form id="addParticipant" name="addParticipant" action="addParticipant" method="post"
+<form id="addParticipant" name="addParticipant" method="post"
 	tal:define="request_error python:request.get('request_error', '');
 		global list_name options/list_name">
 	<div class="message-error" tal:condition="request_error">

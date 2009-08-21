@@ -35,12 +35,12 @@ import Participant
 
 add_registration = PageTemplateFile('zpt/meeting_registration/add', globals())
 
-def manage_add_registration(self, id='', title='', start_date='', end_date='', introduction='', REQUEST=None):
+def manage_add_registration(self, id='', title='', administrative_email ='', start_date='', end_date='', introduction='', REQUEST=None):
     """ Adds a meeting registration instance"""
     if registration_validation(mandatory_fields_registration, REQUEST, **REQUEST.form):
         if not id:
             id = slugify(title)
-        ob = MeetingRegistration(id, title, start_date, end_date, introduction)
+        ob = MeetingRegistration(id, title, administrative_email, start_date, end_date, introduction)
         self._setObject(id, ob)
         ob = self._getOb(id)
         if REQUEST:
@@ -55,9 +55,9 @@ def registration_validation(mandatory_fields, REQUEST, **kwargs):
     has_errors = False
     for k,v in kwargs.items():
         if k in mandatory_fields:
-            if (k == 'email') and v:
+            if (k == 'administrative_email') and v:
                 if not email_expr.match(v):
-                    REQUEST.set('%s_notvalid' % k, True)
+                    REQUEST.set('%s_invalid' % k, True)
                     has_errors = True
             if k == (('start_date') or (k == 'end_date')) and v:
                 try:
@@ -80,18 +80,26 @@ class MeetingRegistration(Folder):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, start_date, end_date, introduction):
+    def __init__(self, id, title, administrative_email, start_date, end_date, introduction):
         """ constructor """
         self.id = id
         self.title = title
+        self.administrative_email = administrative_email
         self.start_date = start_date
         self.end_date = end_date
         self.introduction = introduction
         self.registration_form_participants = PersistentList()
         self.registration_form_press = PersistentList()
 
-    security.declareProtected(ACCESS_MEETING_REGISTRATION, 'addParticipant')
-    addParticipant = Participant.addParticipant
+    security.declareProtected(ACCESS_MEETING_REGISTRATION, 'registration_participants')
+    def registration_participants(self, REQUEST):
+        """ """
+        return Participant.registration(self, 'form_edit_participants', REQUEST)
+
+    security.declareProtected(ACCESS_MEETING_REGISTRATION, 'registration_press')
+    def registration_press(self, REQUEST):
+        """ """
+        return Participant.registration(self, 'form_edit_press', REQUEST)
 
     security.declareProtected(ACCESS_MEETING_REGISTRATION, 'index_html')
     index_html = PageTemplateFile('zpt/meeting_registration/index', globals())
@@ -258,6 +266,8 @@ class MeetingRegistration(Folder):
             input_field = '<td><input id="%s" name="%s:utf8:ustring" type="text" size="50" /></td>' % (field.id, field.id)
             input_date = '''<td><input id="%s" name="%s" class="vDateField" type="text" size="10" maxlength="10" />
             <noscript><em class="tooltips">(dd/mm/yyyy)</em></noscript></td>''' % (field.id, field.id)
+            input_time = '''<td><input id="%s" name="%s" type="text" size="10" maxlength="5" />
+            <noscript><em class="tooltips">(HH:MM)</em></noscript></td>''' % (field.id, field.id)
             input_checkbox = '<td><input id="%s" name="%s" type="checkbox" /></td>' % (field.id, field.id)
             input_selection_values = ''
             for value in field.selection_values:
@@ -285,6 +295,8 @@ class MeetingRegistration(Folder):
                 html_code = html_code + '<tr>' + label + input_field + buttons + '</tr>'
             if field.field_type == 'date_field':
                 html_code = html_code + '<tr>' + label + input_date + buttons + '</tr>'
+            if field.field_type == 'time_field':
+                html_code = html_code + '<tr>' + label + input_time + buttons + '</tr>'
             if field.field_type == 'checkbox_field':
                 html_code = html_code + '<tr>' + label + input_checkbox + buttons + '</tr>'
             if field.field_type == 'body_text':
@@ -292,16 +304,6 @@ class MeetingRegistration(Folder):
             if field.field_type == 'selection_field':
                 html_code = html_code + '<tr>' + label + input_selection + buttons + '</tr>'
         return html_code
-
-    new_registration = PageTemplateFile('zpt/registration_form/index', globals())
-
-    def registration_participants(self):
-        """ """
-        return self.new_registration(list_name = 'form_edit_participants')
-    
-    def registration_press(self):
-        """ """
-        return self.new_registration(list_name = 'form_edit_press')
 
 InitializeClass(MeetingRegistration)
 

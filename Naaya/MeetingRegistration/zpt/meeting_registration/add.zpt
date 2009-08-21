@@ -34,6 +34,14 @@
 		<input type="text" name="title" tal:attributes="value python:request.get('title', '')" />
 	</div>
 	<div class="field">
+		<label for="title" i18n:translate="">Administrative email *</label>
+		<div class="message-error" tal:condition="python:request.get('administrative_email_error')" i18:translate="">
+		The administrative email address is mandatory. Please enter a valid email address.</div>
+		<div class="message-error" tal:condition="python:request.get('administrative_email_invalid')" i18:translate="">
+		Please enter a valid email address.</div>
+		<input type="text" name="administrative_email" tal:attributes="value python:request.get('administrative_email', '')" />
+	</div>
+	<div class="field">
 		<label i18n:translate="">Registration period</label>
 		<label for="start_date" i18n:translate="">Start date *</label>
 		<div class="message-error" tal:condition="python:request.get('start_date_error')" i18:translate="">
