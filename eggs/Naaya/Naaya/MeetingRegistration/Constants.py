@@ -17,8 +17,8 @@
 #
 # Valentin Dumitru, Eau de Web
 
-mandatory_fields_registration = ['title', 'start_date', 'end_date']
+mandatory_fields_registration = ['title', 'administrative_email', 'start_date', 'end_date']
 mandatory_fields_field = ['field_type', 'field_label']
-field_types = ['', 'string_field', 'text_field', 'email_field', 'date_field', 'checkbox_field', 'selection_field', 'body_text']
+field_types = ['', 'string_field', 'text_field', 'email_field', 'date_field', 'time_field', 'checkbox_field', 'selection_field', 'body_text']
 EDIT_MEETING_REGISTRATION = 'Manage meeting registration'
 ACCESS_MEETING_REGISTRATION = 'Access meeting registration'
