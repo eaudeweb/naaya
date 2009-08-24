@@ -595,6 +595,8 @@ class NaayaUpdater(Folder):
                     t2 = self._normalize_template(self.get_template_content(form_zmi_ob))
                     if t1 != t2:
                         res.append((form_zmi_ob, 'edit'))
+                    if t1 == t2:
+                        res.append((form_zmi_ob, 'remove'))
                 if form_fs and not form_zmi_ob:
                     res.append((form_id, 'add'))
             if len(res) > 0: report[portal_path] = res
