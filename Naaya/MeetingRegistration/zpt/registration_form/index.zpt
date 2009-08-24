@@ -17,11 +17,19 @@
 			</div>
 		</fieldset>
 	</div>
-	<div class="field">
-		<table>
-			<tal:block replace="structure python:here.render_fields(list_name)"/>
-		</table>
-	</div>
+	<table>
+		<tal:block repeat="id python:here.field_ids(list_name)">
+			<div class="message-error" tal:define='field_error string:${id}_error'
+			tal:condition="python:request.get(field_error)" i18:translate=""
+			tal:replace="structure python:here.error_message(list_name, id, 'error')"/>
+			<div class="message-error" tal:define='field_error string:${id}_invalid'
+			tal:condition="python:request.get(field_error)" i18:translate=""
+			tal:replace="structure python:here.error_message(list_name, id, 'invalid')"/>
+			<div class="field">
+					<tal:block content="structure python:here.render_fields(request, list_name, id)"/>
+			</div>
+		</tal:block>
+	</table>
 	<input type="hidden" id="list_name" name="list_name" type="text" size="50"
 		tal:attributes="value list_name" />
 	<input type="submit" name="submit" value="Submit" class="button"/>

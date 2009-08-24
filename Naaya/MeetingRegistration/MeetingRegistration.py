@@ -91,6 +91,20 @@ class MeetingRegistration(Folder):
         self.registration_form_participants = PersistentList()
         self.registration_form_press = PersistentList()
 
+    security.declareProtected(ACCESS_MEETING_REGISTRATION, 'view_participant')
+    def view_participant(self, REQUEST):
+        """ """
+        participant_id = REQUEST.get('participant_id', '')
+        return Participant.view_participant(self, participant_id)
+
+    security.declareProtected(ACCESS_MEETING_REGISTRATION, 'get_participant')
+    def get_participant(self, participant_id):
+        """ """
+        for participant in self.objectValues('Participant Profile'):
+            if participant.id == participant_id:
+                return participant
+        return None
+
     security.declareProtected(ACCESS_MEETING_REGISTRATION, 'registration_participants')
     def registration_participants(self, REQUEST):
         """ """
@@ -146,6 +160,7 @@ class MeetingRegistration(Folder):
             REQUEST.set('field_label', field.field_label)
             REQUEST.set('field_content', field.field_content)
             REQUEST.set('mandatory', field.mandatory)
+            REQUEST.set('overview', field.overview)
         REQUEST.set('list_name', list_name)
         return self._form_edit(REQUEST, field_types = field_types)
 
@@ -155,6 +170,12 @@ class MeetingRegistration(Folder):
         if list_name == 'form_edit_press':
             return self.registration_form_press
         raise ValueError ('Unknown list name "%s"' % list_name)
+
+    def get_field_by_id(self, list_name, id):
+        form_list = self.get_list_by_name(list_name)
+        for item in form_list:
+            if item.id == id: return item
+        raise ValueError ('Inexistent id "%s" ' % id)
 
     security.declareProtected(EDIT_MEETING_REGISTRATION, 'manage_addField')
     def manage_addField(self, REQUEST):
@@ -172,11 +193,12 @@ class MeetingRegistration(Folder):
             field_content = request('field_content', '')
             selection_values = request('selection_values', '')
             mandatory = request('mandatory', False)
+            overview = request('overview', False)
             field_index = self.return_index(form_list, id)
             if field_index is not None:
-                form_list[field_index] = FormField(id, field_type, field_label, field_content, selection_values, mandatory)
+                form_list[field_index] = FormField(id, field_type, field_label, field_content, selection_values, mandatory, overview)
             else:
-                form_list.append(FormField(id, field_type, field_label, field_content, selection_values, mandatory))
+                form_list.append(FormField(id, field_type, field_label, field_content, selection_values, mandatory, overview))
             if REQUEST:
                 REQUEST.RESPONSE.redirect(self.absolute_url()+'/%s' % list_name)
                 #return self.form_edit(None)
@@ -249,72 +271,116 @@ class MeetingRegistration(Folder):
             REQUEST.set('request_error', True)
         return not has_errors
 
+    security.declareProtected(ACCESS_MEETING_REGISTRATION, 'field_ids')
+    def field_ids(self, list_name='', participant_id=''):
+        """ returns a list with the field ids, based on the list name or on the participant's id"""
+        if not list_name:
+            if not participant_id:
+                raise ValueError ('field_ids function called with no list name and no participant id')
+            if participant_id.split('_')[0] == 'participant':
+                list_name = 'form_edit_participants'
+            else:
+                list_name = 'form_edit_press'
+        form_list = self.get_list_by_name(list_name)
+        return [field.id for field in form_list]
+
+    security.declareProtected(ACCESS_MEETING_REGISTRATION, 'error_message')
+    def error_message(self, list_name, id, type):
+        """ Renders the error message if a field is not validated """
+        field = self.get_field_by_id(list_name, id)
+        if type == 'error':
+            return '<tr><td colspan="4">The field %s is mandatory!</td></tr>' % field.field_label
+        if type == 'invalid':
+            return '<tr><td colspan="4">Please fill the field %s correctly!</td></tr>' % field.field_label
+        return ''
+
     security.declareProtected(ACCESS_MEETING_REGISTRATION, 'render_fields')
-    def render_fields(self, list_name, is_editing = False):
+    def render_profile(self, id):
+        """ Displays the data in a registrated profile """
+        participant = self.get_participant(id)
+        html_code = ''
+        if id.split('_')[0] == 'participant':
+            list_name = 'form_edit_participants'
+        else:
+            list_name = 'form_edit_press'
+        form_list = self.get_list_by_name(list_name)
+        for field in form_list:
+            html_code += '<dt i18n:translate="">%s</dt><dd>%s</dd>' % (field.field_label, getattr(participant, field.id, ''))
+        return html_code
+
+    def render_fields(self, REQUEST, list_name, id, is_editing = False):
         """ Renders the fields of the registration form """
         form_list = self.get_list_by_name(list_name)
+        field = self.get_field_by_id(list_name, id)
         html_code = ''
-        for field in form_list:
-            edit_link = self.absolute_url()+'/%s?edit_field_id=' % list_name +field.id
-            delete_link  = self.absolute_url()+'/%s?delete_field_id=' % list_name +field.id
-            move_up_link  = self.absolute_url()+'/move_up_field?list_name=%s&id=%s'% (list_name, field.id)
-            move_down_link  = self.absolute_url()+'/move_down_field?list_name=%s&id=%s'% (list_name, field.id)
-            if field.mandatory:
-                label = '<td><label for="%s" i18n:translate="" style="color: #f40000">%s</label></td>' % (field.id, field.field_label)
-            else:
-                label = '<td><label for="%s" i18n:translate="">%s</label></td>' % (field.id, field.field_label)
-            input_field = '<td><input id="%s" name="%s:utf8:ustring" type="text" size="50" /></td>' % (field.id, field.id)
-            input_date = '''<td><input id="%s" name="%s" class="vDateField" type="text" size="10" maxlength="10" />
-            <noscript><em class="tooltips">(dd/mm/yyyy)</em></noscript></td>''' % (field.id, field.id)
-            input_time = '''<td><input id="%s" name="%s" type="text" size="10" maxlength="5" />
-            <noscript><em class="tooltips">(HH:MM)</em></noscript></td>''' % (field.id, field.id)
-            input_checkbox = '<td><input id="%s" name="%s" type="checkbox" /></td>' % (field.id, field.id)
-            input_selection_values = ''
-            for value in field.selection_values:
-                input_selection_values += '<input type="radio" name="%s" value="%s"/>%s<br/>' % (field.id, value, value)
-            input_selection = '<td>' + input_selection_values + '</td>'
-            textarea = '<td><textarea class="mceNoEditor" id="%s" name="%s:utf8:ustring" type="text" rows="5" cols="50" ></textarea></td>' % (field.id, field.id)
-            body_text = '<td colspan="2">%s</td>' % field.field_content
-            if is_editing:
-                if len(form_list) == 1:
-                    buttons = '<td><span class="buttons"><a href="%s">Edit</a></span></td><td><span class="buttons"><a href="%s">Delete</a></span></td>' % (edit_link, delete_link)
-                elif field == form_list[0]:
-                    buttons = '<td><span class="buttons"><a href="%s">Edit</a></span></td><td><span class="buttons"><a href="%s">Delete</a></span></td><td></td><td><span class="buttons"><a href="%s">Move down</a></span></td>' % (edit_link, delete_link, move_down_link)
-                elif field == form_list[-1]:
-                    buttons = '<td><span class="buttons"><a href="%s">Edit</a></span></td><td><span class="buttons"><a href="%s">Delete</a></span></td><td><span class="buttons"><a href="%s">Move up</a></span></td></td><td>' % (edit_link, delete_link, move_up_link)
-                else:
-                    buttons = '<td><span class="buttons"><a href="%s">Edit</a></span></td><td><span class="buttons"><a href="%s">Delete</a></span></td><td><span class="buttons"><a href="%s">Move up</a></span></td><td><span class="buttons"><a href="%s">Move down</a></span></td>' % (edit_link, delete_link, move_up_link, move_down_link)
-            else:
-                buttons = ''
 
-            if field.field_type == 'string_field':
-                html_code = html_code + '<tr>' + label + input_field + buttons +'</tr>'
-            if field.field_type == 'text_field':
-                html_code = html_code + '<tr>' + label + textarea + buttons + '</tr>'
-            if field.field_type == 'email_field':
-                html_code = html_code + '<tr>' + label + input_field + buttons + '</tr>'
-            if field.field_type == 'date_field':
-                html_code = html_code + '<tr>' + label + input_date + buttons + '</tr>'
-            if field.field_type == 'time_field':
-                html_code = html_code + '<tr>' + label + input_time + buttons + '</tr>'
-            if field.field_type == 'checkbox_field':
-                html_code = html_code + '<tr>' + label + input_checkbox + buttons + '</tr>'
-            if field.field_type == 'body_text':
-                html_code = html_code + '<tr>' + body_text + buttons + '</tr>'
-            if field.field_type == 'selection_field':
-                html_code = html_code + '<tr>' + label + input_selection + buttons + '</tr>'
+        #Buttons
+        edit_link = self.absolute_url()+'/%s?edit_field_id=' % list_name +field.id
+        delete_link  = self.absolute_url()+'/%s?delete_field_id=' % list_name +field.id
+        move_up_link  = self.absolute_url()+'/move_up_field?list_name=%s&id=%s'% (list_name, field.id)
+        move_down_link  = self.absolute_url()+'/move_down_field?list_name=%s&id=%s'% (list_name, field.id)
+
+        #Label, red for mandatory fields
+        if field.mandatory:
+            label = '<td><label for="%s" i18n:translate="" style="color: #f40000">%s</label></td>' % (field.id, field.field_label)
+        else:
+            label = '<td><label for="%s" i18n:translate="">%s</label></td>' % (field.id, field.field_label)
+
+        #Render the different types of fields
+        input_field = '<td><input id="%s" name="%s:utf8:ustring" type="text" size="50" value="%s"/></td>' % (field.id, field.id, REQUEST.get(field.id, ''))
+        input_date = '''<td><input id="%s" name="%s" class="vDateField" type="text" size="10" maxlength="10" value="%s"/>
+        <noscript><em class="tooltips">(dd/mm/yyyy)</em></noscript></td>''' % (field.id, field.id, REQUEST.get(field.id, ''))
+        input_time = '''<td><input id="%s" name="%s" type="text" size="10" maxlength="5" value="%s"/>
+        <noscript><em class="tooltips">(HH:MM)</em></noscript></td>''' % (field.id, field.id, REQUEST.get(field.id, ''))
+        input_checkbox = '<td><input id="%s" name="%s" type="checkbox" value="%s"/></td>' % (field.id, field.id, REQUEST.get(field.id, ''))
+        input_selection_values = ''
+        for value in field.selection_values:
+            input_selection_values += '<input type="radio" name="%s" value="%s"/>%s<br/>' % (field.id, value, value)
+        input_selection = '<td>' + input_selection_values + '</td>'
+        textarea = '<td><textarea class="mceNoEditor" id="%s" name="%s:utf8:ustring" type="text" rows="5" cols="50" >%s</textarea></td>' % (field.id, field.id, REQUEST.get(field.id, ''))
+        body_text = '<td colspan="2">%s</td>' % field.field_content
+
+        if is_editing:
+            if len(form_list) == 1:
+                buttons = '<td><span class="buttons"><a href="%s">Edit</a></span></td><td><span class="buttons"><a href="%s">Delete</a></span></td>' % (edit_link, delete_link)
+            elif field == form_list[0]:
+                buttons = '<td><span class="buttons"><a href="%s">Edit</a></span></td><td><span class="buttons"><a href="%s">Delete</a></span></td><td></td><td><span class="buttons"><a href="%s">Move down</a></span></td>' % (edit_link, delete_link, move_down_link)
+            elif field == form_list[-1]:
+                buttons = '<td><span class="buttons"><a href="%s">Edit</a></span></td><td><span class="buttons"><a href="%s">Delete</a></span></td><td><span class="buttons"><a href="%s">Move up</a></span></td></td><td>' % (edit_link, delete_link, move_up_link)
+            else:
+                buttons = '<td><span class="buttons"><a href="%s">Edit</a></span></td><td><span class="buttons"><a href="%s">Delete</a></span></td><td><span class="buttons"><a href="%s">Move up</a></span></td><td><span class="buttons"><a href="%s">Move down</a></span></td>' % (edit_link, delete_link, move_up_link, move_down_link)
+        else:
+            buttons = ''
+
+        if field.field_type == 'string_field':
+            html_code = html_code + '<tr>' + label + input_field + buttons +'</tr>'
+        if field.field_type == 'text_field':
+            html_code = html_code + '<tr>' + label + textarea + buttons + '</tr>'
+        if field.field_type == 'email_field':
+            html_code = html_code + '<tr>' + label + input_field + buttons + '</tr>'
+        if field.field_type == 'date_field':
+            html_code = html_code + '<tr>' + label + input_date + buttons + '</tr>'
+        if field.field_type == 'time_field':
+            html_code = html_code + '<tr>' + label + input_time + buttons + '</tr>'
+        if field.field_type == 'checkbox_field':
+            html_code = html_code + '<tr>' + label + input_checkbox + buttons + '</tr>'
+        if field.field_type == 'body_text':
+            html_code = html_code + '<tr>' + body_text + buttons + '</tr>'
+        if field.field_type == 'selection_field':
+            html_code = html_code + '<tr>' + label + input_selection + buttons + '</tr>'
         return html_code
 
 InitializeClass(MeetingRegistration)
 
 class FormField(Persistent):
     ''' Defines the properties of a meeting registration field'''
-    def __init__(self, id, field_type, field_label, field_content, selection_values, mandatory):
+    def __init__(self, id, field_type, field_label, field_content, selection_values, mandatory, overview):
         self.id = id
         self.field_type = field_type
         self.field_label = field_label
         self.field_content = field_content
         self.mandatory = mandatory
+        self.overview = overview
         self.selection_values = selection_values
 
 InitializeClass(FormField)
