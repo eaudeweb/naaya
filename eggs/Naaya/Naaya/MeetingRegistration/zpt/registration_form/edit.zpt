@@ -66,42 +66,49 @@
 				<label style="display:inline" for="mandatory" i18n:translate="">Will the field be required?</label>
 				<input id="mandatory" name="mandatory:boolean" type="checkbox"/>
 			</div>
+			<div class="field" id="div_overview"
+				tal:attributes="style python:test(field_type=='body_text', 'display: none','display: block')">
+				<label style="display:inline" for="overview" i18n:translate="">Will the field appear in overview table?</label>
+				<input id="overview" name="overview:boolean" type="checkbox"/>
+			</div>
 			<input type="submit" name="add_field" value="Add field" class="button"/>
 		</form>
 	</div>
 </fieldset>
 <br/>
 <h2 i18n:translate="">Registration form preview</h2>
-	<div class="message-error" tal:define="delete_field_id python:request.get('delete_field_id', '')"
-	tal:condition="delete_field_id">
-		<fieldset>
-			<legend i18:translate="">Confirm field delete</legend>
-			<div class="fieldset_div" tal:define="field_label python:here.get_field_label(list_name, delete_field_id)">
-				<ul>
-					<li i18:translate=""
-					tal:content="string:Do you really want to delete the field ${field_label}?" />
-				</ul>
-				<span class="buttons">
-				<a tal:attributes="href string:${here/absolute_url}/delete_field?list_name=${list_name}&id=${delete_field_id}">
-				Delete</a> | <a tal:attributes="href string:${here/absolute_url}/${list_name}">Cancel</a>
-				</span>
-			</div>
-		</fieldset>
-	</div>
-	<div class="message-error" tal:condition="python:request.get('field_deleted')">
-		<fieldset>
-			<legend i18:translate="">Field deleted</legend>
-			<div class="fieldset_div">
-				<ul>
-					<li i18:translate="">Field successfully deleted!</li>
-				</ul>
-			</div>
-		</fieldset>
-	</div>
-<div class="field">
-	<table>
-		<tal:block define="list_name python:request.get('list_name', '')"
-		replace="structure python:here.render_fields(list_name, 'is_editing')"/>
-	</table>
+<div class="message-error" tal:define="delete_field_id python:request.get('delete_field_id', '')"
+tal:condition="delete_field_id">
+	<fieldset>
+		<legend i18:translate="">Confirm field delete</legend>
+		<div class="fieldset_div" tal:define="field_label python:here.get_field_label(list_name, delete_field_id)">
+			<ul>
+				<li i18:translate=""
+				tal:content="string:Do you really want to delete the field ${field_label}?" />
+			</ul>
+			<span class="buttons">
+			<a tal:attributes="href string:${here/absolute_url}/delete_field?list_name=${list_name}&id=${delete_field_id}">
+			Delete</a> | <a tal:attributes="href string:${here/absolute_url}/${list_name}">Cancel</a>
+			</span>
+		</div>
+	</fieldset>
 </div>
+<div class="message-error" tal:condition="python:request.get('field_deleted')">
+	<fieldset>
+		<legend i18:translate="">Field deleted</legend>
+		<div class="fieldset_div">
+			<ul>
+				<li i18:translate="">Field successfully deleted!</li>
+			</ul>
+		</div>
+	</fieldset>
+</div>
+<table>
+	<tal:block repeat="id python:here.field_ids(list_name)">
+		<div class="field">
+				<tal:block define="list_name python:request.get('list_name', '')"
+				replace="structure python:here.render_fields(request, list_name, id, 'is_editing')"/>
+		</div>
+	</tal:block>
+</table>
 <tal:block replace="structure here/standard_html_footer"/>

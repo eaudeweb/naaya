@@ -22,15 +22,21 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import time
+import re
 
 new_registration = PageTemplateFile('zpt/registration_form/index', globals())
+view = PageTemplateFile('zpt/registration_form/view', globals())
+
+def view_participant(self, participant_id):
+    return view.__of__(self)(participant_id=participant_id)
 
 def registration(self, list_name, REQUEST):
     if REQUEST.REQUEST_METHOD == "POST":
         form_list = self.get_list_by_name(list_name)
         if new_registration_validation(form_list, REQUEST):
-            addParticipant(self, list_name, REQUEST)
-            return #redirect, confirmation mail, etc.
+            participant_id = addParticipant(self, list_name, REQUEST)
+            REQUEST.RESPONSE.redirect(self.absolute_url()+'/view_participant?participant_id=%s' % participant_id)
+            #return view_participant(self, participant_id)
     return new_registration.__of__(self)(REQUEST, list_name=list_name)
 
 def addParticipant(self, list_name, REQUEST):
@@ -40,10 +46,12 @@ def addParticipant(self, list_name, REQUEST):
     form_list = self.get_list_by_name(list_name)
     profile_type = (list_name == 'form_edit_participants') and 'participant_' or 'press_'
     form_fields = [field.id for field in form_list]
-    newParticipant = Participant(form_fields, **REQUEST.form)
     id = profile_type + str(randrange(1000000,9999999))
+    newParticipant = Participant(id, form_fields, **REQUEST.form)
     self._setObject(id, newParticipant)
-    return
+    return id
+
+email_expr = re.compile(r'^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$', re.IGNORECASE)
 
 def new_registration_validation(form_list, REQUEST):
     """ """
@@ -57,19 +65,24 @@ def new_registration_validation(form_list, REQUEST):
             REQUEST.set('%s_error' % id, True)
             has_errors = True
     for field in form_list:
+        if field.field_type == 'email_field':
+            value = REQUEST.form.get(field.id)
+            if not email_expr.match(value):
+                REQUEST.set('%s_invalid' % field.id, True)
+                has_errors = True
         if field.field_type == 'date_field':
             value = REQUEST.form.get(field.id)
             try:
                 value and time.strptime(value, "%d/%m/%Y")
             except:
-                REQUEST.set('%s_format' % field.id, True)
+                REQUEST.set('%s_invalid' % field.id, True)
                 has_errors = True
         if field.field_type == 'time_field':
             value = REQUEST.form.get(field.id)
             try:
                 value and time.strptime(value, "%H:%M")
             except:
-                REQUEST.set('%s_format' % field.id, True)
+                REQUEST.set('%s_invalid' % field.id, True)
                 has_errors = True
     if has_errors:
         REQUEST.set('request_error', True)
@@ -78,8 +91,12 @@ def new_registration_validation(form_list, REQUEST):
 class Participant(SimpleItem):
     """ Defines the profile of a registered participant,
     based on the fields of the meeting registration form"""
-    def __init__(self, form_fields, **kwargs):
+
+    meta_type = 'Participant Profile'
+
+    def __init__(self, id, form_fields, **kwargs):
         """ """
+        self.id = id
         for k in form_fields:
             if kwargs.has_key(k):
                 setattr(self, k, kwargs[k])
