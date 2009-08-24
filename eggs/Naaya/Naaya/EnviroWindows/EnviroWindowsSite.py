@@ -72,10 +72,12 @@ class EnviroWindowsSite(NySite):
     product_paths = NySite.product_paths + [ENVIROWINDOWS_PRODUCT_PATH]
 
     security = ClassSecurityInfo()
+    display_subobject_count = "on"
 
     def __init__(self, id, portal_uid, title, lang):
         """ """
         NySite.__dict__['__init__'](self, id, portal_uid, title, lang)
+        self.display_subobject_count = "on"
 
 ###
 # Default 'Naaya' configuration
