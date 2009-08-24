@@ -83,6 +83,9 @@ function toggleSelect()
                 $('<'+'a>[remove all]<'+'/a>').click(function() {
                     $('li.form_item input[type=checkbox][name=fdel]').attr('checked', 'checked');
                 }), ' ',
+                $('<'+'a>[remove identical]<'+'/a>').click(function() {
+                    $('li.form_item input[type=checkbox][name=fdel][class=identical]').attr('checked', 'checked');
+                }), ' ',
                 $('<'+'a>[reset checkboxes]<'+'/a>').click(function() {
                     $('li.form_item input[type=checkbox][name=fmod]').attr('checked', null);
                     $('li.form_item input[type=checkbox][name=fdel]').attr('checked', null);
@@ -130,9 +133,12 @@ function toggleSelect()
                             <div class="diff" tal:content="structure python:here.diffTemplates(fmod.id, fpath, portal_path)" />
                             </tal:block>
                         </tal:block>
-                        <tal:block condition="python:action_type=='add'">
-                            <input type="checkbox" name="fmod" tal:attributes="value python:here.generateFormPath(fmod, portal)" />
-                            <em tal:content="fmod" /> missing from ZMI (form will be added)
+                        <tal:block condition="python:action_type=='remove'">
+                            <tal:block define="fpath python:'/'.join(fmod.getPhysicalPath()[1:])">
+                                <label><input type="checkbox" name="fdel" class="identical" tal:attributes="value fpath" />
+                                    <em tal:content="fmod/id" /> remove customization (form is identical to skel)
+                                </label>
+                            </tal:block>
                         </tal:block>
                     </tal:block>
                 </li>
