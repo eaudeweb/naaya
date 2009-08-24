@@ -1,4 +1,4 @@
-<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']" tal:define="xxx string:aaa">
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']" tal:define="xxx string:aaa">
 
 	<tal:block metal:fill-slot="title" />
 

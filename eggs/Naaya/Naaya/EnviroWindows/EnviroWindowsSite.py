@@ -69,6 +69,7 @@ class EnviroWindowsSite(NySite):
     manage_options = (
         NySite.manage_options
     )
+    product_paths = NySite.product_paths + [ENVIROWINDOWS_PRODUCT_PATH]
 
     security = ClassSecurityInfo()
 
@@ -856,8 +857,7 @@ class EnviroWindowsSite(NySite):
             content = self.futRead(join(skel_path, 'forms', '%s.zpt' % k), 'r')
             form_ob = formstool_ob._getOb(k, None)
             if form_ob is None:
-                formstool_ob.manage_addTemplate(id=k, title=v, file='')
-                form_ob = formstool_ob._getOb(k, None)
+                continue
             form_ob.pt_edit(text=content, content_type='')
 
         skel_path = join(ENVIROWINDOWS_PRODUCT_PATH, 'skel')
@@ -867,8 +867,7 @@ class EnviroWindowsSite(NySite):
             content = self.futRead(join(skel_path, 'forms', '%s.zpt' % k), 'r')
             form_ob = formstool_ob._getOb(k, None)
             if form_ob is None:
-                formstool_ob.manage_addTemplate(id=k, title=v, file='')
-                form_ob = formstool_ob._getOb(k, None)
+                continue
             form_ob.pt_edit(text=content, content_type='')
         return 'done'
 
