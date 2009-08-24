@@ -106,8 +106,7 @@ class EnviroWindowsSite(NySite):
             pass
 
         #load site skeleton - configuration
-        from os.path import join
-        self.loadSkeleton(join(ENVIROWINDOWS_PRODUCT_PATH, 'skel'))
+        self.loadSkeleton(ENVIROWINDOWS_PRODUCT_PATH)
 
         #custom indexes
         try:    self.getCatalogTool().manage_addIndex('resource_area', 'TextIndexNG2', extra={'default_encoding': 'utf-8', 'splitter_single_chars': 1})
