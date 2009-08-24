@@ -132,6 +132,16 @@ function fRenameObjects()
     </div>
 </div>
 
+<div tal:define="lenfol python:len(folders_list); lenobj python:len(objects_list); lenall python:lenfol + lenobj">
+    <span tal:condition="lenall" tal:content="python:lenall">27</span>
+    <span tal:condition="python: lenall > 1" i18n:translate="">Objects</span>
+    <span tal:condition="python: lenall == 1" i18n:translate="">Object</span>
+    <span tal:condition="python: lenall == 0" i18n:translate="">Folder is empty</span>
+    <tal:block condition="python:lenfol and lenobj">
+	(<span tal:content="python:lenfol">10</span> <span tal:condition="python:lenfol > 1" i18n:translate="">Folders</span><span tal:condition="python:lenfol == 1" i18n:translate="">Folder</span>, 
+        <span tal:content="python:lenobj">17</span> <span tal:condition="python:lenobj > 1" i18n:translate="">Items</span><span tal:condition="python:lenobj == 1" i18n:translate="">Item</span>)
+    </tal:block>
+</div>
 <form name="objectItems" method="post" action="">
 <table border="0" cellpadding="0" cellspacing="0" id="folderfile_list" width="95%">
 <tr tal:condition="can_operate">
