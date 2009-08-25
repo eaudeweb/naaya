@@ -38,7 +38,7 @@ class SemideParticipant(BaseParticipant):
 
     meta_type = 'Semide Participant'
     product_name = 'SemideRegistration'
-    icon = 'www/SemideRegistration.gif'
+    icon = 'misc_/SemideRegistration/SemideParticipant.png'
 
     security = ClassSecurityInfo()
 
@@ -60,6 +60,7 @@ class SemidePress(BaseParticipant):
 
     meta_type = 'Semide Press Participant'
     product_name = 'SemideRegistration'
+    icon = 'misc_/SemideRegistration/SemidePress.gif'
 
     security = ClassSecurityInfo()
 

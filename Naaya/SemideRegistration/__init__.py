@@ -15,7 +15,6 @@ register_content(
     add_method=('add_registration', ADD_PERMISSION),
 )
 
-
 def initialize(context):
     context.registerClass(
                           SemideRegistration.SemideRegistration,
@@ -29,4 +28,6 @@ def initialize(context):
 misc_ = {
     'tinymce': StaticServeFromZip('', 'www/tinymce_3_2_5.zip', globals()),
     'tinymceconfig.js': ImageFile('www/tinymceconfig.js', globals()),
+    'SemideParticipant.png': ImageFile('www/SemideParticipant.png', globals()),
+    'SemidePress.gif': ImageFile('www/SemidePress.gif', globals()),
     }
