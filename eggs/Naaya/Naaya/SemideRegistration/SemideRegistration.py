@@ -7,9 +7,10 @@ import re
 import time
 
 from Products.NaayaCore.managers import utils as naaya_utils
-import SemideParticipant
+from SemideParticipant import SemideParticipant
+from SemidePress import SemidePress
 from utilities.Slugify import slugify
-
+import constants
 
 add_registration = PageTemplateFile('zpt/registration/add', globals())
 def manage_add_registration(self, id='', title='', administrative_email ='', start_date='', end_date='', introduction='', REQUEST=None):
@@ -116,15 +117,15 @@ class SemideRegistration(Folder):
         """ registration form """
         submit =  REQUEST.form.get('submit', '')
         if submit:
-            form_valid = form_validation(SemideParticipant.PART_MANDATORY_FIELDS,
-                                            SemideParticipant.DATE_FIELDS,
-                                            SemideParticipant.TIME_FIELDS,
+            form_valid = form_validation(constants.PART_MANDATORY_FIELDS,
+                                            constants.DATE_FIELDS,
+                                            constants.TIME_FIELDS,
                                             REQUEST)
             if form_valid:
                 registration_no = naaya_utils.genRandomId(10)
                 cleaned_data = REQUEST.form
                 del cleaned_data['submit']
-                ob = SemideParticipant.SemideParticipant(registration_no, **cleaned_data)
+                ob = SemideParticipant(registration_no, **cleaned_data)
                 self._setObject(registration_no, ob)
                 return REQUEST.RESPONSE.redirect(self.absolute_url())
         return self._registration_html(REQUEST)
@@ -134,15 +135,15 @@ class SemideRegistration(Folder):
         """ registration form """
         submit =  REQUEST.form.get('submit', '')
         if submit:
-            form_valid = form_validation(SemideParticipant.PRESS_MANDATORY_FIELDS,
-                                            SemideParticipant.DATE_FIELDS,
-                                            SemideParticipant.TIME_FIELDS,
+            form_valid = form_validation(constantsPRESS_MANDATORY_FIELDS,
+                                            constants.DATE_FIELDS,
+                                            constants.TIME_FIELDS,
                                             REQUEST)
             if form_valid:
                 registration_no = naaya_utils.genRandomId(10)
                 cleaned_data = REQUEST.form
                 del cleaned_data['submit']
-                ob = SemideParticipant.SemidePress(registration_no, **cleaned_data)
+                ob = SemidePress(registration_no, **cleaned_data)
                 self._setObject(registration_no, ob)
                 return REQUEST.RESPONSE.redirect(self.absolute_url())
         return self._registration_press_html(REQUEST)

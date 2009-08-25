@@ -1,0 +1,18 @@
+<tal:block replace="structure here/standard_html_header"/>
+
+<h1 i18n:translate="">Contribution of local and regional authorities to the Union for the
+						Mediterranean in the water sector</h1>
+<h2 i18n:translate="">Lyon, 23-24 November 2009</h2>
+
+
+<form action="" name="frm_login" method="post">
+	<table class="datatable">
+		<tr>
+			<th i18n:translate="">Registration number</th>
+			<td><input type="text" name="registration_no" value="" /></td>
+		</tr>
+	</table>
+	<input type="submit" name="authenticate" id="authenticate" value="Edit profile" i18n:attributes="value" />
+</form>
+
+<tal:block replace="structure here/standard_html_footer"/>

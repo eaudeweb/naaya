@@ -35,6 +35,10 @@
 	<td tal:content="here/email" />
 </tr>
 <tr>
+	<th i18n:translate="">Organisation</th>
+	<td tal:content="here/organisation" />
+</tr>
+<tr>
 	<th i18n:translate="">Passport number</th>
 	<td tal:content="here/passport_no" />
 </tr>
