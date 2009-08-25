@@ -1,9 +1,9 @@
 <tal:block replace="structure here/standard_html_header"/>
 <script type="text/javascript" src="/misc_/MeetingRegistration/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript" src="/misc_/MeetingRegistration/tinymceconfig.js"></script>
-<script type="text/javascript" src="http://localhost:8080/Naaya_CSS/core_js"></script>
-<script type="text/javascript" src="http://localhost:8080/Naaya_CSS/calendar_js"></script>
-<script type="text/javascript" src="http://localhost:8080/Naaya_CSS/datetime_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
 
 <form id="frmRegistrationForm" name="frmRegistrationForm" action="manage_edit_registration" method="post"
 	tal:define="request_error python:request.get('request_error')">
