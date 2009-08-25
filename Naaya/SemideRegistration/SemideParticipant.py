@@ -39,5 +39,3 @@ class SemideParticipant(BaseParticipant):
         return BaseParticipant.__dict__['edit_html'](self, constants.PART_MANDATORY_FIELDS, REQUEST)
 
 InitializeClass(SemideParticipant)
-
-
