@@ -173,18 +173,20 @@ class MeetingRegistration(Folder):
             REQUEST.set('overview', field.overview)
         REQUEST.set('list_name', list_name)
         return self._form_edit(REQUEST, field_types = field_types)
+
     #interface API
     def list_fields(self, list_name):
-    """ returns fields list """
-    form_list = self.get_list_by_name(list_name)
-    return [ field for field in form_list if field.overview]
+        """ returns fields list """
+        form_list = self.get_list_by_name(list_name)
+        return [ field for field in form_list if field.overview]
 
     def list_participants(self, ptype="participant"):
-    """ returns the participants list """
-    return [ p for p in self.objectValues('Participant Profile') if p.id.startswith(ptype) ]
+        """ returns the participants list """
+        return [ p for p in self.objectValues('Participant Profile') if p.id.startswith(ptype) ]
+
     def getFieldValue(self, ob, id):
-    """ returns the field value for a given object and field """
-    return getattr(ob , id, '')
+        """ returns the field value for a given object and field """
+        return getattr(ob , id, '')
 
     def get_list_by_name(self, list_name):
         if list_name == 'form_edit_participants':
