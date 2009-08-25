@@ -47,7 +47,7 @@ REGISTRATION_ADD_EDIT_TEMPLATE = """\
         </p>
         <p>
             Best Regards,<br/>
-            %(email_sender)s
+            %(website_team)s
         </p>
     </body>
 </html>"""
@@ -62,4 +62,39 @@ You are registered as the administrator of this folder.
 
 ---
 Best Regards,
-%(email_sender)s"""
+%(website_team)s"""
+
+NEW_REGISTRATION_ADD_EDIT_TEMPLATE = """\
+<html>
+    <head/>
+    <body>
+        <p>
+            Hello,
+        <p/>
+        <p>
+            A new registration was received for the "%(registration_event)s". You can review the submitted information by following the link:
+        <p/>
+        <p>
+            <a href="%(registration_edit_link)s">%(registration_edit_link)s</a>
+        <p/>
+        <p>
+            ---
+        </p>
+        <p>
+            Best Regards,<br/>
+            %(website_team)s
+        </p>
+    </body>
+</html>"""
+
+NEW_REGISTRATION_ADD_EDIT_TEMPLATE_TEXT = """Hello, 
+
+A new registration was received for the "%(registration_event)s". You can review the submitted information by following the link:
+
+%(registration_edit_link)s
+
+You are registered as the administrator of this folder.
+
+---
+Best Regards,
+%(website_team)s"""
