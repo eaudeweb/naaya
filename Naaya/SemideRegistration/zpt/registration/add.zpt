@@ -1,9 +1,10 @@
 <tal:block replace="structure here/standard_html_header"/>
+<link rel="stylesheet" type="text/css" media="screen" href="/misc_/SemideRegistration/style.css"/>
 <script type="text/javascript" src="/misc_/SemideRegistration/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript" src="/misc_/SemideRegistration/tinymceconfig.js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+<script type="text/javascript" src="/misc_/SemideRegistration/core.js"></script>
+<script type="text/javascript" src="/misc_/SemideRegistration/calendar.js"></script>
+<script type="text/javascript" src="/misc_/SemideRegistration/datetime.js"></script>
 
 <h1 i18n:translate="">Add Semide Registration</h1>
 

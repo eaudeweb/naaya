@@ -144,7 +144,7 @@ class SemideRegistration(Folder):
                 ob = SemideParticipant.SemidePress(registration_no, **cleaned_data)
                 self._setObject(registration_no, ob)
                 return REQUEST.RESPONSE.redirect(self.absolute_url())
-        return self._registration_html(REQUEST)
+        return self._registration_press_html(REQUEST)
 
     def formatDate(self, sdate):
         return sdate.strftime('%d %b %Y')

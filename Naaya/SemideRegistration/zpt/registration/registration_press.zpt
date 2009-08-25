@@ -1,7 +1,8 @@
 <tal:block replace="structure here/standard_html_header"/>
-<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
-<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="/misc_/SemideRegistration/style.css"/>
+<script type="text/javascript" src="/misc_/SemideRegistration/core.js"></script>
+<script type="text/javascript" src="/misc_/SemideRegistration/calendar.js"></script>
+<script type="text/javascript" src="/misc_/SemideRegistration/datetime.js"></script>
 <h1 i18n:translate="">Contribution of local authorities and regional authorities to
 						the Union for the Mediterranean in the water sector</h1>
 <h2 i18n:translate="">Lyon, 23-24 November 2009</h2>
@@ -63,7 +64,8 @@
 	</div>
 	<div class="field">
 		<label class="mandatory" for="passport_expire" i18n:translate="">Expiry date of the passport *</label>
-		<input type="text" name="passport_expire" tal:attributes="value python:request.get('passport_expire')" />
+		<input type="text" name="passport_expire" class="vDateField" size="10" maxlength="10"
+		tal:attributes="value python:request.get('passport_expire')" />
 	</div>
 	<div tal:condition="python:request.has_key('phone_number_error')" class="message-error" i18n:translate="">
 		Phone number is mandatory!
