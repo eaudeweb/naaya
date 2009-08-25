@@ -103,5 +103,7 @@
 	<td tal:content="python:here.formatDate(here.registration_date)" />
 </tr>
 </table>
-
+<a title="Print" href="javascript:print()">
+	<img alt="Print" src="misc_/SemideRegistration/print.gif" />
+</a>
 <tal:block replace="structure here/standard_html_footer"/>
