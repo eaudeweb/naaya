@@ -34,4 +34,5 @@ misc_ = {
     'style.css': ImageFile('www/style.css', globals()),
     'SemideParticipant.png': ImageFile('www/SemideParticipant.png', globals()),
     'SemidePress.gif': ImageFile('www/SemidePress.gif', globals()),
+    'print.gif': ImageFile('www/print.gif', globals()),
     }
