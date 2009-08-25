@@ -34,7 +34,7 @@
 	</div>
 	<div class="field">
 		<label for="media_description" i18n:translate="">Description of equipment used</label>
-		<input type="text" name="media_description" value="" />
+		<input type="textarea" name="media_description" value="" />
 	</div>
 	<div class="field">
 		<label for="media_position" i18n:translate="">Your position</label>
