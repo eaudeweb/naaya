@@ -103,7 +103,18 @@ class SemideRegistration(Folder, LocalPropertyManager):
                 self._setObject(registration_no, ob)
                 participant = self._getOb(registration_no, None)
                 if participant:
-                    self.send_registration_notification(participant.email, 'Event registration', participant.absolute_url())
+                    lang = self.gl_get_selected_language()
+                    values = {'registration_edit_link': participant.absolute_url(),
+                                'registration_event': self.getPropertyValue('title', lang),
+                                'website_team': self.getPropertyValue('site_title', 'en')}
+                    self.send_registration_notification(participant.email,
+                        'Event registration',
+                        constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
+                        constants.REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
+                    self.send_registration_notification(self.administrative_email,
+                        'Event registration',
+                        constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE % values,
+                        constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
                     return REQUEST.RESPONSE.redirect(participant.absolute_url())
         return self._registration_html(REQUEST)
 
@@ -131,16 +142,13 @@ class SemideRegistration(Folder, LocalPropertyManager):
     index_html = PageTemplateFile('zpt/registration/index', globals())
 
     security.declarePrivate('send_registration_notification')
-    def send_registration_notification(self, email, title, url):
+    def send_registration_notification(self, email, title, email_html, email_txt):
         """ send a notification when a folder is added / edited / commented"""
-        values = {'registration_edit_link': url,
-                    'registration_event': self.registration_event,
-                    'email_sender': self.administrative_email}
         send_mail(msg_from=self.administrative_email,
                     msg_to=email,
                     msg_subject='%s - Registration added / edited' % title,
-                    msg_body=constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
-                    msg_body_text=constants.REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values,
+                    msg_body=email_html,
+                    msg_body_text=email_txt,
                     smtp_host = constants.SMTP_HOST,
                     smtp_port = constants.SMTP_PORT
                     )
