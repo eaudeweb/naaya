@@ -58,7 +58,10 @@ class SemideRegistration(Folder):
                 del cleaned_data['submit']
                 ob = SemideParticipant(registration_no, **cleaned_data)
                 self._setObject(registration_no, ob)
-                return REQUEST.RESPONSE.redirect(self.absolute_url())
+                import pdb; pdb.set_trace()
+                participant = self._getOb(registration_no, None)
+                if participant:
+                    return REQUEST.RESPONSE.redirect(participant.absolute_url())
         return self._registration_html(REQUEST)
 
     _registration_press_html = PageTemplateFile('zpt/registration/registration_press', globals())
@@ -76,7 +79,9 @@ class SemideRegistration(Folder):
                 del cleaned_data['submit']
                 ob = SemidePress(registration_no, **cleaned_data)
                 self._setObject(registration_no, ob)
-                return REQUEST.RESPONSE.redirect(self.absolute_url())
+                press = self._getOb(registration_no, None)
+                if press:
+                    return REQUEST.RESPONSE.redirect(press.absolute_url())
         return self._registration_press_html(REQUEST)
 
     def formatDate(self, sdate):
