@@ -1,3 +1,4 @@
+from DateTime import DateTime
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -31,6 +32,12 @@ class BaseParticipant(SimpleItem):
         self.departure_time = departure_time
         self.is_journalist = is_journalist
         self.hotel_reservation = hotel_reservation
+        self.registration_date = DateTime()
+
+    #@todo: remove
+    def set_registration_date(self):
+        """ """
+        self.registration_date = DateTime()
 
 InitializeClass(BaseParticipant)
 

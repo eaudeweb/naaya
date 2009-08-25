@@ -114,7 +114,22 @@ class SemideRegistration(Folder):
                 return REQUEST.RESPONSE.redirect(self.absolute_url())
         return self._registration_html(REQUEST)
 
+    def formatDate(self, sdate):
+        return sdate.strftime('%d %b %Y')
+
+    #@todo: security
+    def getParticipants(self, skey, rkey):
+        """ Returns the list of participants """
+        participants = [ (getattr(p, skey), p) for p in self.objectValues('Semide Participant') if p.is_journalist is False ]
+        participants.sort()
+        if rkey:
+            participants.reverse()
+        return [p for (key, p) in participants]
+
     _registration_html = PageTemplateFile('zpt/registration/registration', globals())
+    #@todo: security
+    participants = PageTemplateFile('zpt/registration/participants', globals())
+
     #registration_press_html = PageTemplateFile('zpt/registration/registration_press', globals())
 
 
