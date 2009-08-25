@@ -25,35 +25,6 @@ def manage_add_registration(self, id='', title='', administrative_email ='', sta
     else:
         return add_registration.__of__(self)(REQUEST)
 
-email_expr = re.compile(r'^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$', re.IGNORECASE)
-def form_validation (mandatory_fields, date_fields, time_fields, REQUEST):
-    has_errors = False
-    #@TODO reverse cycling oder mandatory_fields --> REQUEST.form
-    for k,v in REQUEST.form.items():
-        if k in mandatory_fields:
-            if k == 'email' and v:
-                if not email_expr.match(v):
-                    REQUEST.set('%s_notvalid' % k, True)
-                    has_errors = True
-            if not v:
-                REQUEST.set('%s_error' % k, True)
-                has_errors = True
-        if k in date_fields and v:
-            try:
-                temp = time.strptime(v, "%d/%m/%Y")
-            except:
-                REQUEST.set('%s_notvalid' % k, True)
-                has_errors = True
-        if k in time_fields and v:
-            try:
-                temp = time.strptime(v, "%H:%M")
-            except:
-                REQUEST.set('%s_notvalid' % k, True)
-                has_errors = True
-    if has_errors:
-        REQUEST.set('request_error', True)
-    return not has_errors
-
 def registration_validation(REQUEST):
     """ Validates the new meeting registration fields """
     has_errors = False
@@ -94,7 +65,34 @@ def registration_validation(REQUEST):
         REQUEST.set('request_error', True)
     return not has_errors
 
-
+email_expr = re.compile(r'^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$', re.IGNORECASE)
+def form_validation (mandatory_fields, date_fields, time_fields, REQUEST):
+    has_errors = False
+    #@TODO reverse cycling oder mandatory_fields --> REQUEST.form
+    for k,v in REQUEST.form.items():
+        if k in mandatory_fields:
+            if k == 'email' and v:
+                if not email_expr.match(v):
+                    REQUEST.set('%s_notvalid' % k, True)
+                    has_errors = True
+            if not v:
+                REQUEST.set('%s_error' % k, True)
+                has_errors = True
+        if k in date_fields and v:
+            try:
+                temp = time.strptime(v, "%d/%m/%Y")
+            except:
+                REQUEST.set('%s_notvalid' % k, True)
+                has_errors = True
+        if k in time_fields and v:
+            try:
+                temp = time.strptime(v, "%H:%M")
+            except:
+                REQUEST.set('%s_notvalid' % k, True)
+                has_errors = True
+    if has_errors:
+        REQUEST.set('request_error', True)
+    return not has_errors
 
 class SemideRegistration(Folder):
     """ Main class of the meeting registration"""
@@ -136,7 +134,10 @@ class SemideRegistration(Folder):
         """ registration form """
         submit =  REQUEST.form.get('submit', '')
         if submit:
-            form_valid = form_validation(SemideParticipant.PRESS_MANDATORY_FIELDS, REQUEST)
+            form_valid = form_validation(SemideParticipant.PRESS_MANDATORY_FIELDS,
+                                            SemideParticipant.DATE_FIELDS,
+                                            SemideParticipant.TIME_FIELDS,
+                                            REQUEST)
             if form_valid:
                 registration_no = naaya_utils.genRandomId(10)
                 cleaned_data = REQUEST.form

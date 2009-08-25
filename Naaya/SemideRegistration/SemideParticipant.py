@@ -14,7 +14,7 @@ class BaseParticipant(SimpleItem):
 
     def __init__(self, registration_no, first_name, last_name, email, country, passport_no, \
                 passport_expire, phone_number, fax_number, arrival_date, arrival_from, \
-                arrival_flight, arrival_time, departure_date, departure_flight, departure_time, hotel_reservation, is_journalist):
+                arrival_flight, arrival_time, departure_date, departure_flight, departure_time, is_journalist):
         """ constructor """
         self.registration_no = registration_no
         self.first_name = first_name
@@ -33,7 +33,6 @@ class BaseParticipant(SimpleItem):
         self.departure_flight = departure_flight
         self.departure_time = departure_time
         self.is_journalist = is_journalist
-        self.hotel_reservation = hotel_reservation
         self.registration_date = DateTime()
 
     index_html = PageTemplateFile('zpt/participant/index', globals())
@@ -55,9 +54,10 @@ class SemideParticipant(BaseParticipant):
         """ constructor """
         self.organisation = organisation
         self.official_title = official_title
+        self.hotel_reservation = hotel_reservation
         BaseParticipant.__dict__['__init__'](self, registration_no, first_name, last_name, email, country, \
                         passport_no, passport_expire, phone_number, fax_number, arrival_date, arrival_from, \
-                        arrival_flight, arrival_time, departure_date, departure_flight, departure_time, hotel_reservation, is_journalist=False)
+                        arrival_flight, arrival_time, departure_date, departure_flight, departure_time, is_journalist=False)
 
 InitializeClass(SemideParticipant)
 
@@ -73,7 +73,7 @@ class SemidePress(BaseParticipant):
 
     def __init__(self, registration_no, first_name, last_name, email, country, media_name, media_type, \
                 media_description, media_position, passport_no, passport_expire, phone_number, mobile_number, \
-               fax_number, arrival_date, arrival_from, arrival_flight, arrival_time, departure_date, departure_flight, departure_time, hotel_reservation):
+               fax_number, arrival_date, arrival_from, arrival_flight, arrival_time, departure_date, departure_flight, departure_time):
         """ constructor """
         self.media_name = media_name
         self.media_type = media_type
@@ -82,6 +82,6 @@ class SemidePress(BaseParticipant):
         self.mobile_number = mobile_number
         BaseParticipant.__dict__['__init__'](self, registration_no, first_name, last_name, email, country, \
                         passport_no, passport_expire, phone_number, fax_number, arrival_date, arrival_from, \
-                        arrival_flight, arrival_time, departure_date, departure_flight, departure_time, hotel_reservation, is_journalist=True)
+                        arrival_flight, arrival_time, departure_date, departure_flight, departure_time, is_journalist=True)
 
 InitializeClass(SemidePress)

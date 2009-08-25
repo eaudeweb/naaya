@@ -11,20 +11,28 @@
 	<td tal:content="here/registration_no" />
 </tr>
 <tr>
-	<th i18n:translate="">First name</th>
-	<td tal:content="here/first_name" />
-</tr>
-<tr>
 	<th i18n:translate="">Name</th>
 	<td tal:content="here/last_name" />
 </tr>
 <tr>
-	<th i18n:translate="">Email</th>
-	<td tal:content="here/email" />
+	<th i18n:translate="">First name</th>
+	<td tal:content="here/first_name" />
 </tr>
-<tr>
+<tr tal:condition="not:here/is_journalist">
 	<th i18n:translate="">Country</th>
 	<td tal:content="here/country" />
+</tr>
+<tr tal:condition="not:here/is_journalist">
+	<th i18n:translate="">Official title</th>
+	<td tal:content="here/official_title" />
+</tr>
+<tr tal:condition="here/is_journalist">
+	<th i18n:translate="">Media name</th>
+	<td tal:content="here/media_name" />
+</tr>
+<tr>
+	<th i18n:translate="">Email</th>
+	<td tal:content="here/email" />
 </tr>
 <tr>
 	<th i18n:translate="">Passport number</th>

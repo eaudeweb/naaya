@@ -43,7 +43,7 @@
 	</div>
 	<div class="field">
 		<label for="media_description" i18n:translate="">Description of equipment used</label>
-		<input type="textarea" name="media_description" size="50" tal:attributes="value python:request.get('media_description')" />
+		<textarea name="media_description" rows="5" cols="50" tal:content="structure python:request.get('media_description')" />
 	</div>
 	<div class="field">
 		<label for="media_position" i18n:translate="">Your position</label>
@@ -142,7 +142,7 @@
 	<p i18n:translate="">* For UE representatives, passport details can be replaced by ID card details</p>
 
 	<div class="field">
-		<input type="submit" value="Submit and print" i18n:attributes="value" />
+		<input type="submit" name="submit" value="Submit and print" i18n:attributes="value" />
 	</div>
 </form>
 <p i18n:translate="">IMPORTANT: If you do not receive a confirmation within 72 hours, please contact:
