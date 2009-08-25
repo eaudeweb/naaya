@@ -1,0 +1,39 @@
+<tal:block replace="structure here/standard_html_header"/>
+
+<h1 i18n:translate="">Contribution of local and regional authorities to the Union for the
+						Mediterranean in the water sector</h1>
+<h2 i18n:translate="">Lyon, 23-24 November 2009</h2>
+
+
+<table class="datatable">
+<tr>
+	<th i18n:translate="">Registration number</th>
+	<td tal:content="here/registration_no" />
+</tr>
+<tr>
+	<th i18n:translate="">First name</th>
+	<td tal:content="here/first_name" />
+</tr>
+<tr>
+	<th i18n:translate="">Name</th>
+	<td tal:content="here/last_name" />
+</tr>
+<tr>
+	<th i18n:translate="">Email</th>
+	<td tal:content="here/email" />
+</tr>
+<tr>
+	<th i18n:translate="">Country</th>
+	<td tal:content="here/country" />
+</tr>
+<tr>
+	<th i18n:translate="">Passport number</th>
+	<td tal:content="here/passport_no" />
+</tr>
+<tr>
+	<th i18n:translate="">Registration date</th>
+	<td tal:content="python:here.formatDate(here.registration_date)" />
+</tr>
+</table>
+
+<tal:block replace="structure here/standard_html_footer"/>

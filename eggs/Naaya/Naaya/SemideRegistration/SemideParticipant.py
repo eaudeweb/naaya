@@ -34,10 +34,7 @@ class BaseParticipant(SimpleItem):
         self.hotel_reservation = hotel_reservation
         self.registration_date = DateTime()
 
-    #@todo: remove
-    def set_registration_date(self):
-        """ """
-        self.registration_date = DateTime()
+    index_html = PageTemplateFile('zpt/participant/index', globals())
 
 InitializeClass(BaseParticipant)
 
