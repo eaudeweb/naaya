@@ -23,6 +23,10 @@
 	<td tal:content="here/country" />
 </tr>
 <tr tal:condition="not:here/is_journalist">
+	<th i18n:translate="">Organisation</th>
+	<td tal:content="here/organisation" />
+</tr>
+<tr tal:condition="not:here/is_journalist">
 	<th i18n:translate="">Official title</th>
 	<td tal:content="here/official_title" />
 </tr>
@@ -30,17 +34,69 @@
 	<th i18n:translate="">Media name</th>
 	<td tal:content="here/media_name" />
 </tr>
-<tr>
-	<th i18n:translate="">Email</th>
-	<td tal:content="here/email" />
+<tr tal:condition="here/is_journalist">
+	<th i18n:translate="">Type of media</th>
+	<td tal:content="here/media_type" />
 </tr>
-<tr>
-	<th i18n:translate="">Organisation</th>
-	<td tal:content="here/organisation" />
+<tr tal:condition="here/is_journalist">
+	<th i18n:translate="">Description of equipment used</th>
+	<td tal:content="here/media_description" />
+</tr>
+<tr tal:condition="here/is_journalist">
+	<th i18n:translate="">Your position</th>
+	<td tal:content="here/media_position" />
 </tr>
 <tr>
 	<th i18n:translate="">Passport number</th>
 	<td tal:content="here/passport_no" />
+</tr>
+<tr>
+	<th i18n:translate="">Expiry date of the passport</th>
+	<td tal:content="here/passport_expire" />
+</tr>
+<tr>
+	<th i18n:translate="">Phone number</th>
+	<td tal:content="here/phone_number" />
+</tr>
+<tr>
+	<th i18n:translate="">Email</th>
+	<td tal:content="here/email" />
+</tr>
+<tr tal:condition="here/is_journalist">
+	<th i18n:translate="">Mobile phone</th>
+	<td tal:content="here/mobile_number" />
+</tr>
+<tr>
+	<th i18n:translate="">Fax number</th>
+	<td tal:content="here/fax_number" />
+</tr>
+<tr>
+	<th i18n:translate="">Date of arrival</th>
+	<td tal:content="here/arrival_date" />
+</tr>
+<tr>
+	<th i18n:translate="">Arriving from</th>
+	<td tal:content="here/arrival_from" />
+</tr>
+<tr>
+	<th i18n:translate="">Flight number</th>
+	<td tal:content="here/arrival_flight" />
+</tr>
+<tr>
+	<th i18n:translate="">Time of arrival</th>
+	<td tal:content="here/arrival_time" />
+</tr>
+<tr>
+	<th i18n:translate="">Date of departure</th>
+	<td tal:content="here/departure_date" />
+</tr>
+<tr>
+	<th i18n:translate="">Flight number</th>
+	<td tal:content="here/departure_flight" />
+</tr>
+<tr>
+	<th i18n:translate="">Time of departure</th>
+	<td tal:content="here/departure_time" />
 </tr>
 <tr>
 	<th i18n:translate="">Registration date</th>
