@@ -102,7 +102,21 @@
 	<th i18n:translate="">Registration date</th>
 	<td tal:content="python:here.formatDate(here.registration_date)" />
 </tr>
+<tr>
+	<th i18n:translate="">Hotel reservation</th>
+	<td>
+		<span tal:condition="python:here.hotel_reservation=='1'">
+			I am part of one of the following delegations: (2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro,
+			Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon, Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey.
+			My accommodation is covered by the French Government.
+		</span>
+		<span tal:condition="python:here.hotel_reservation=='2'">
+			I pay my own accommodation. So please book your hotel room, click here to get hotels contacts and special rates.
+		</span>
+	</td>
+</tr>
 </table>
+
 <a title="Print" href="javascript:print()">
 	<img alt="Print" src="misc_/SemideRegistration/print.gif" />
 </a>
