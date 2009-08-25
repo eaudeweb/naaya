@@ -179,7 +179,7 @@
 		<td tal:content="participant/country" />
 		<td tal:content="participant/organisation" />
 		<td tal:content="participant/arrival_date" />
-		<td><a tal:attributes="href string:${here/absolute_url}/${participant/registration_no}" tal:content="participant/registration_no" /></td>
+		<td><a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/id" /></td>
 	</tr>
 </tbody>
 </table>

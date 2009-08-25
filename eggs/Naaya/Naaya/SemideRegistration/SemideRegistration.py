@@ -9,7 +9,9 @@ from SemideParticipant import SemideParticipant
 from SemidePress import SemidePress
 from utilities.Slugify import slugify
 from utilities.validators import form_validation, registration_validation
+from utilities import tmpfile
 import constants
+
 
 add_registration = PageTemplateFile('zpt/registration/add', globals())
 def manage_add_registration(self, id='', title='', administrative_email ='', start_date='', end_date='', introduction='', REQUEST=None):
@@ -88,7 +90,34 @@ class SemideRegistration(Folder):
         return sdate.strftime('%d %b %Y')
 
     #@todo: security
+    def exportParticipants(self, REQUEST=None, RESPONSE=None):
+        """ exports the participants list in CSV format """
+        data = [('Registration date', 'First name', 'Name', 'Country', 'Organisation', 'Arriving date', 'Registration number')]
+        data_app = data.append
+        for part in self.getParticipants(skey='registration_date', rkey=1):
+            data_app((part.registration_date, part.first_name, part.last_name, part.country, part.organisation, part.arrival_date, part.id))
+        return self.create_csv(data, filename='participants.csv', RESPONSE=REQUEST.RESPONSE)
+
+    #@todo: security
+    def exportPress(self, REQUEST=None, RESPONSE=None):
+        """ exports the press participants list in CSV format """
+        data = [('Registration date', 'First name', 'Name', 'Country', 'Media name', 'Arriving date', 'Registration number')]
+        data_app = data.append
+        for part in self.getParticipants(skey='registration_date', rkey=1):
+            data_app((part.registration_date, part.first_name, part.last_name, part.country, part.media_name, part.arrival_date, part.id))
+        return self.create_csv(data, filename='press.csv', RESPONSE=REQUEST.RESPONSE)
+
+    security.declarePrivate('create_csv')
+    def create_csv(self, data, filename, RESPONSE):
+        tmp_name = tmpfile(data)
+        content = open(str(tmp_name)).read()
+        RESPONSE.setHeader('Content-Type', 'text/csv')
+        RESPONSE.setHeader('Content-Disposition', 'attachment; filename=participants.csv')
+        return content
+
+    #@todo: security
     participants = PageTemplateFile('zpt/registration/participants', globals())
+
     #@todo: security
     def getParticipants(self, skey, rkey):
         """ Returns the list of participants """
