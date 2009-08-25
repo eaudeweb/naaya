@@ -1,10 +1,25 @@
 <tal:block replace="structure here/standard_html_header"/>
 <h1 tal:content="here/title">Registration Form</h1>
 
-<tal:block define="global participant_id python:request.get('participant_id', None)"
-	condition="python:here.get_participant(participant_id=participant_id)">
-	<table>
-		<tal:block replace="structure python:here.render_profile(participant_id)"/>
-	</table>
+<tal:block define="form_fields python:here.list_fields('form_edit_participants')">
+<table class="datatable">
+    <thead>
+    <tr>
+        <tal:block repeat="field form_fields">
+            <th tal:content="field/field_label" />
+        </tal:block>
+    </tr>
+    </thead>
+    <tbody tal:define="participants here/list_participants">
+        <tal:block repeat="p participants">
+        <tr>
+            <tal:block repeat="field form_fields">
+            <td tal:content="python:here.getFieldValue(p, field.id)" />
+            </tal:block>
+        </tr>
+        </tal:block>
+    </tbody>
+</table>
 </tal:block>
+
 <tal:block replace="structure here/standard_html_footer"/>
