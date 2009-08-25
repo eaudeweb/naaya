@@ -19,12 +19,15 @@
 # Valentin Dumitru, Eau de Web
 
 import re
+from DateTime import DateTime
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.Folder import Folder
 
 from Products.NaayaCore.managers import utils as naaya_utils
+from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from SemideParticipant import SemideParticipant
 from SemidePress import SemidePress
 from utilities.Slugify import slugify
@@ -35,12 +38,14 @@ import constants
 
 
 add_registration = PageTemplateFile('zpt/registration/add', globals())
-def manage_add_registration(self, id='', title='', administrative_email ='', start_date='', end_date='', introduction='', registration_event='', email_sender='', REQUEST=None):
+def manage_add_registration(self, id='', title='', conference_details='', administrative_email ='', start_date='', end_date='', introduction='', lang='', REQUEST=None):
     """ Adds a Semide registration instance"""
     if registration_validation(REQUEST):
         if not id:
             id = slugify(title)
-        ob = SemideRegistration(id, title, administrative_email, start_date, end_date, introduction, registration_event, email_sender)
+        if lang is None: 
+            lang = self.gl_get_selected_language()
+        ob = SemideRegistration(id, title, conference_details, administrative_email, start_date, end_date, introduction, lang)
         self._setObject(id, ob)
         ob = self._getOb(id)
         if REQUEST:
@@ -49,7 +54,7 @@ def manage_add_registration(self, id='', title='', administrative_email ='', sta
         return add_registration.__of__(self)(REQUEST)
 
 
-class SemideRegistration(Folder):
+class SemideRegistration(Folder, LocalPropertyManager):
     """ Main class of the meeting registration"""
 
     meta_type = 'Semide Registration'
@@ -57,16 +62,29 @@ class SemideRegistration(Folder):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, administrative_email, start_date, end_date, introduction, registration_event, email_sender):
+    title = LocalProperty('title')
+    conference_details = LocalProperty('conference_details')
+    introduction = LocalProperty('introduction')
+
+    def __init__(self, id, title, conference_details, administrative_email, start_date, end_date, introduction, lang):
         """ constructor """
         self.id = id
-        self.title = title
+        self.save_properties(title, conference_details, administrative_email, start_date, end_date, introduction, lang)
+
+    #@todo: security
+    def save_properties(self, title, conference_details, administrative_email, start_date, end_date, introduction, lang):
+        """ save properties """
+        self._setLocalPropValue('title', lang, title)
+        self._setLocalPropValue('conference_details', lang, conference_details)
+        self._setLocalPropValue('introduction', lang, introduction)
         self.administrative_email = administrative_email
-        self.start_date = start_date
-        self.end_date = end_date
-        self.introduction = introduction
-        self.registration_event = registration_event 
-        self.email_sender = email_sender
+        self.start_date = DateTime(start_date)
+        self.end_date = DateTime(end_date)
+
+    def getPropertyValue(self, id, lang=None):
+        """ Returns a property value in the specified language. """
+        if lang is None: lang = self.gl_get_selected_language()
+        return self.getLocalProperty(id, lang)
 
     _registration_html = PageTemplateFile('zpt/registration/registration', globals())
     def registration_html(self, REQUEST):
@@ -85,7 +103,7 @@ class SemideRegistration(Folder):
                 self._setObject(registration_no, ob)
                 participant = self._getOb(registration_no, None)
                 if participant:
-                    self.send_registration_notification(self.administrative_email, participant.email, 'Event registration', participant.absolute_url())
+                    self.send_registration_notification(participant.email, 'Event registration', participant.absolute_url())
                     return REQUEST.RESPONSE.redirect(participant.absolute_url())
         return self._registration_html(REQUEST)
 
@@ -109,13 +127,16 @@ class SemideRegistration(Folder):
                     return REQUEST.RESPONSE.redirect(press.absolute_url())
         return self._registration_press_html(REQUEST)
 
-    #security.declarePrivate('send_registration_notification')
-    def send_registration_notification(self, sender_email, email, title, url):
+    security.declareProtected(view, 'index_html')
+    index_html = PageTemplateFile('zpt/registration/index', globals())
+
+    security.declarePrivate('send_registration_notification')
+    def send_registration_notification(self, email, title, url):
         """ send a notification when a folder is added / edited / commented"""
         values = {'registration_edit_link': url,
                     'registration_event': self.registration_event,
-                    'email_sender': self.email_sender}
-        send_mail(msg_from=sender_email,
+                    'email_sender': self.administrative_email}
+        send_mail(msg_from=self.administrative_email,
                     msg_to=email,
                     msg_subject='%s - Registration added / edited' % title,
                     msg_body=constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,

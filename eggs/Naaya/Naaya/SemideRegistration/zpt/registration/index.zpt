@@ -1,0 +1,13 @@
+<tal:block replace="structure here/standard_html_header"/>
+
+<h1 tal:content="here/title_or_id" i18n:translate="" />
+<h2><span tal:replace="python:here.formatDate(here.start_date)" /> - <span tal:replace="python:here.formatDate(here.end_date)" /></h2>
+
+<div id="admin_this_folder">
+	<a tal:attributes="href string:${here/absolute_url}/edit_html">Edit properties</a>
+	<a tal:attributes="href string:${here/absolute_url}/participants">View participants</a>
+</div>
+
+<span tal:replace="structure here/introduction" />
+
+<tal:block replace="structure here/standard_html_footer"/>
