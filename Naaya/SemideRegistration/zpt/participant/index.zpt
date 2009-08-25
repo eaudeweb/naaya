@@ -8,7 +8,7 @@
 <table class="datatable">
 <tr>
 	<th i18n:translate="">Registration number</th>
-	<td tal:content="here/registration_no" />
+	<td tal:content="here/id" />
 </tr>
 <tr>
 	<th i18n:translate="">Name</th>

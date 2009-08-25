@@ -13,7 +13,7 @@ class BaseParticipant(SimpleItem):
                 passport_expire, phone_number, fax_number, arrival_date, arrival_from, \
                 arrival_flight, arrival_time, departure_date, departure_flight, departure_time, is_journalist):
         """ constructor """
-        self.registration_no = registration_no
+        self.id = registration_no
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
