@@ -1,10 +1,10 @@
 <tal:block replace="structure here/standard_html_header"/>
 
 <h1 i18n:translate="">Add Semide Registration</h1>
-<h2 i18n:translate="">Contribution of local and regional authorities to the Union for the
-						Mediterranean in the water sector</h2>
+<h2 i18n:translate="">Contribution of local authorities and regional authorities to
+						the Union for the Mediterranean in the water sector</h2>
 <h2 i18n:translate="">Lyon, 23-24 November 2009</h2>
-<h2 i18n:translate="">Participants registration</h2>
+<h2 i18n:translate="">Press registration</h2>
 
 <p>Please fill the form below and click <strong>Submit</strong>.
 	Fields in <span style="color: #f40000">red</span> are mandatory.
@@ -25,14 +25,22 @@
 		<input type="text" name="country" value="" />
 	</div>
 	<div class="field">
-		<label for="organisation" i18n:translate="">Organisation</label>
-		<input type="text" name="organisation" value="" />
+		<label for="media_name" i18n:translate="">Media name</label>
+		<input type="text" name="media_name" value="" />
 	</div>
 	<div class="field">
-		<label for="official_title" i18n:translate="">Official title</label>
-		<input type="text" name="official_title" value="" />
+		<label for="media_type" i18n:translate="">Type of media</label>
+		<input type="text" name="media_type" value="" />
 	</div>
 	<div class="field">
+		<label for="media_description" i18n:translate="">Description of equipment used</label>
+		<input type="text" name="media_description" value="" />
+	</div>
+	<div class="field">
+		<label for="media_position" i18n:translate="">Your position</label>
+		<input type="text" name="media_position" value="" />
+	</div>
+		<div class="field">
 		<label class="mandatory" for="passport_no" i18n:translate="">Passport number *</label>
 		<input type="text" name="passport_no" value="" />
 	</div>
@@ -40,13 +48,17 @@
 		<label class="mandatory" for="passport_expire" i18n:translate="">Expiry date of the passport *</label>
 		<input type="text" name="passport_expire" value="" />
 	</div>
-	<div class="field">
+<div class="field">
 		<label class="mandatory" for="phone_number" i18n:translate="">Phone number</label>
 		<input type="text" name="phone_number" value="" />
 	</div>
 	<div class="field">
 		<label class="mandatory" for="email" i18n:translate="">Email</label>
 		<input type="text" name="email" value="" />
+	</div>
+	<div class="field">
+		<label for="mobile_number" i18n:translate="">Mobile phone</label>
+		<input type="text" name="mobile_number" value="" />
 	</div>
 	<div class="field">
 		<label for="fax_number" i18n:translate="">Fax number</label>
@@ -83,22 +95,7 @@
 
 	<h3>HOTEL RESERVATION</h3>
 
-	<div class="field">
-		<input type="radio" name="hotel_reservation" value="I am part of one of the following delegations:
-		(2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro,
-		Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon,
-		Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey.
-		My accommodation is covered by the French Government."/>
-		I am part of one of the following delegations:
-		(2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro,
-		Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon,
-		Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey.
-		My accommodation is covered by the French Government.<br/>
-		<input type="radio" name="hotel_reservation" value="I pay my own accommodation.
-		So please book your hotel room, click here to get hotels contacts and special rates"/>
-		I pay my own accommodation. So please book your hotel room,
-		click here to get hotels contacts and special rates<br/>
-	</div>
+	<p>Please book your hotel room, click here to get hotels contacts and special rates</p>
 
 	<p>* For UE representatives, passport details can be replaced by ID card details</p>
 
