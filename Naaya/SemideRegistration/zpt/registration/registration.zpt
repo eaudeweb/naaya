@@ -1,0 +1,111 @@
+<tal:block replace="structure here/standard_html_header"/>
+
+<h1 i18n:translate="">Add Semide Registration</h1>
+<h2 i18n:translate="">Contribution of local and regional authorities to the Union for the
+						Mediterranean in the water sector</h2>
+<h2 i18n:translate="">Lyon, 23-24 November 2009</h2>
+<h2 i18n:translate="">Participants registration </h2>
+
+<p>Please fill the form below and click <strong>Submit</strong>.
+	Fields in <span style="color: #f40000">red</span> are mandatory.
+	You can update your registration form later with your family name and
+	the registration number that will be given to you when you submit the form.</p>
+<p>Date format: dd/mm/yyyy or dd/mm/yy.</p>
+<form action="" method="post">
+	<div class="field">
+		<label class="mandatory" for="last_name" i18n:translate="">Name</label>
+		<input type="text" name="last_name" value="" />
+	</div>
+	<div class="field">
+		<label for="first_name" i18n:translate="">First name</label>
+		<input type="text" name="first_name" value="" />
+	</div>
+	<div class="field">
+		<label class="mandatory" for="country" i18n:translate="">Country</label>
+		<input type="text" name="country" value="" />
+	</div>
+	<div class="field">
+		<label for="organisation" i18n:translate="">Organisation</label>
+		<input type="text" name="organisation" value="" />
+	</div>
+	<div class="field">
+		<label for="official_title" i18n:translate="">Official title</label>
+		<input type="text" name="official_title" value="" />
+	</div>
+	<div class="field">
+		<label class="mandatory" for="passport_no" i18n:translate="">Passport number *</label>
+		<input type="text" name="passport_no" value="" />
+	</div>
+	<div class="field">
+		<label class="mandatory" for="passport_expire" i18n:translate="">Expiry date of the passport *</label>
+		<input type="text" name="passport_no" value="" />
+	</div>
+	<div class="field">
+		<label class="mandatory" for="phone_number" i18n:translate="">Phone number</label>
+		<input type="text" name="phone_number" value="" />
+	</div>
+	<div class="field">
+		<label class="mandatory" for="email" i18n:translate="">Email</label>
+		<input type="text" name="email" value="" />
+	</div>
+	<div class="field">
+		<label for="fax_number" i18n:translate="">Fax number</label>
+		<input type="text" name="fax_number" value="" />
+	</div>
+	<div class="field">
+		<label for="arrival_date" i18n:translate="">Date of arrival</label>
+		<input type="text" name="arrival_date" value="" />
+	</div>
+	<div class="field">
+		<label for="arrival_from" i18n:translate="">Arrival from</label>
+		<input type="text" name="arrival_from" value="" />
+	</div>
+	<div class="field">
+		<label for="arrival_flight" i18n:translate="">Flight number</label>
+		<input type="text" name="arrival_flight" value="" />
+	</div>
+	<div class="field">
+		<label for="arrival_time" i18n:translate="">Time of arrival</label>
+		<input type="text" name="arrival_time" value="" />
+	</div>
+	<div class="field">
+		<label for="departure_date" i18n:translate="">Date of departure</label>
+		<input type="text" name="departure_date" value="" />
+	</div>
+	<div class="field">
+		<label for="departure_flight" i18n:translate="">Flight number</label>
+		<input type="text" name="departure_flight" value="" />
+	</div>
+	<div class="field">
+		<label for="departure_time" i18n:translate="">Time of departure</label>
+		<input type="text" name="departure_time" value="" />
+	</div>
+
+	<h3>HOTEL RESERVATION</h3>
+
+	<div class="field">
+		<input type="radio" name="hotel_reservation" value="I am part of one of the following delegations:
+		(2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro,
+		Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon,
+		Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey.
+		My accommodation is covered by the French Government."/>
+		I am part of one of the following delegations:
+		(2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro,
+		Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon,
+		Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey.
+		My accommodation is covered by the French Government.<br/>
+		<input type="radio" name="hotel_reservation" value="I pay my own accommodation.
+		So please book your hotel room, click here to get hotels contacts and special rates"/>
+		I pay my own accommodation. So please book your hotel room,
+		click here to get hotels contacts and special rates<br/>
+	</div>
+
+	<p>* For UE representatives, passport details can be replaced by ID card details</p>
+
+	<div class="field">
+		<input type="submit" value="Submit and print" i18n:attributes="value" />
+	</div>
+</form>
+<p>IMPORTANT: If you do not receive a confirmation within 72 hours, please contact:
+Andrea MATUSAKOVA <a href="mailto:matusakova@pseau.org">matusakova@pseau.org</a></p>
+<tal:block replace="structure here/standard_html_footer"/>

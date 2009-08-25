@@ -24,5 +24,8 @@ class SemideRegistration(Folder):
         self.id = id
         self.title = title
 
+    registration = PageTemplateFile('zpt/registration/registration', globals())
+    registration_press = PageTemplateFile('zpt/registration/registration_press', globals())
+
 
 InitializeClass(SemideRegistration)
