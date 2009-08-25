@@ -28,10 +28,14 @@
 		<input type="text" name="id" tal:attributes="value python:request.get('id', '')" />
 	</div>
 	<div class="field">
-		<label for="title" i18n:translate="">Title *</label>
+		<label for="title" i18n:translate="">Conference name *</label>
 		<div class="message-error" tal:condition="python:request.get('title_error')" i18:translate="">
-		The title is mandatory. Please enter the title of the registration form.</div>
+		The conference name is mandatory.</div>
 		<input type="text" name="title" tal:attributes="value python:request.get('title', '')" />
+	</div>
+	<div class="field">
+		<label for="title" i18n:translate="">Conference details</label>
+		<input type="text" name="conference_details" tal:attributes="value python:request.get('conference_details', '')" />
 	</div>
 	<div class="field">
 		<label for="title" i18n:translate="">Administrative email *</label>
@@ -61,16 +65,6 @@
 		<input type="text" class="vDateField" size="10" maxlength="10" name="end_date" id="end_date"
 		tal:attributes="value python:request.get('end_date', '')"/>
 		<noscript><em class="tooltips">(dd/mm/yyyy)</em></noscript>
-	</div>
-	<div class="field">
-		<label for="registration_event" i18n:translate="">Title of the event</label>
-		<input type="text" size="200" name="registration_event" id="registration_event"
-		tal:attributes="value python:request.get('registration_event', '')"/>
-	</div>
-	<div class="field">
-		<label for="email_sender" i18n:translate="">Sender for emails (for the signature)</label>
-		<input type="text" size="200" name="email_sender" id="email_sender"
-		tal:attributes="value python:request.get('email_sender', '')"/>
 	</div>
 	<div class="field">
 		<label for="introduction" i18n:translate="">Introductory text</label>

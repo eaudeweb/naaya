@@ -1,0 +1,5 @@
+<tal:block replace="structure here/standard_html_header"/>
+
+<tal:block define="languages here/get_languages_mapping;
+					
+<tal:block replace="structure here/standard_html_footer"/>
