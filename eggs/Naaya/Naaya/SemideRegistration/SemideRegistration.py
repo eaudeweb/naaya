@@ -141,6 +141,9 @@ class SemideRegistration(Folder, LocalPropertyManager):
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/registration/index', globals())
 
+    security.declareProtected(view_management_screens, 'edit_html')
+    edit_html = PageTemplateFile('zpt/registration/edit', globals())
+
     security.declarePrivate('send_registration_notification')
     def send_registration_notification(self, email, title, email_html, email_txt):
         """ send a notification when a folder is added / edited / commented"""
