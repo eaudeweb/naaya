@@ -4,6 +4,7 @@ from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.SimpleItem import SimpleItem
 
+from utilities.validators import form_validation
 import constants
 
 class BaseParticipant(SimpleItem):
@@ -54,8 +55,9 @@ class BaseParticipant(SimpleItem):
         self.hotel_reservation = hotel_reservation
         self_p_changed = 1
 
-    def is_entitled(self, REQUEST):
-        return REQUEST.SESSION.get('registration_no','') == self.registration_no
+    def isEntitled(self, REQUEST):
+        """ check if current user has the right to modify this object """
+        return REQUEST.SESSION.get('authentication_token','') == str(self.id)
 
     #@todo: security
     index_html = PageTemplateFile('zpt/participant/index', globals())
@@ -63,21 +65,26 @@ class BaseParticipant(SimpleItem):
     #@todo: security
     _edit_html = PageTemplateFile('zpt/participant/edit', globals())
     #@todo: security
-    def edit_html(self, REQUEST):
-        """ edit participant properties """
+    def edit_html(self, mandatory_fields, REQUEST=None):
+        """ edit base participant properties """
         session = REQUEST.SESSION
         submit =  REQUEST.form.get('submit', '')
         if REQUEST.form.has_key('authenticate'):
-            REQUEST.set('authentication_try', False)
             #if the user has submitted a valid registration number, this is saved on the session
-            if form_validation(constants.AUTH_MANDATORY_FIELDS, REQUEST):
-                REQUEST.set('registration_no', REQUEST.get('registration_no'))
-                REQUEST.set('authentication_try', True)
+            if form_validation(mandatory_fields=constants.AUTH_MANDATORY_FIELDS, 
+                                date_fields=constants.DATE_FIELDS,
+                                time_fields=constants.TIME_FIELDS,
+                                REQUEST=REQUEST):
+                REQUEST.SESSION.set('authentication_token', REQUEST.get('registration_no'))
         if submit:
-            if form_validation(mandatory_fields_model, REQUEST):
+            if form_validation(mandatory_fields=mandatory_fields, 
+                                date_fields=constants.DATE_FIELDS,
+                                time_fields=constants.TIME_FIELDS,
+                                REQUEST=REQUEST):
                 cleaned_data = REQUEST.form
                 del cleaned_data['submit']
-                here.edit(**cleaned_data)
+                self.edit(**cleaned_data)
+                return REQUEST.RESPONSE.redirect(self.absolute_url())
         return self._edit_html(REQUEST)
 
 InitializeClass(BaseParticipant)

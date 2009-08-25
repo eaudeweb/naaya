@@ -2,6 +2,8 @@ from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from BaseParticipant import BaseParticipant
 
+import constants
+
 
 class SemideParticipant(BaseParticipant):
     """ Participant class """
@@ -31,6 +33,10 @@ class SemideParticipant(BaseParticipant):
         BaseParticipant.__dict__['edit'](self,first_name, last_name, email, country, passport_no, passport_expire, phone_number, 
                                         fax_number, arrival_date, arrival_from, arrival_flight, arrival_time, departure_date, 
                                         departure_flight, departure_time, hotel_reservation)
+
+    def edit_html(self, REQUEST=None):
+        """ edit properties interface """
+        return BaseParticipant.__dict__['edit_html'](self, constants.PART_MANDATORY_FIELDS, REQUEST)
 
 InitializeClass(SemideParticipant)
 

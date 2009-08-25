@@ -5,14 +5,146 @@
 <h2 i18n:translate="">Lyon, 23-24 November 2009</h2>
 
 
-<form action="" name="frm_login" method="post">
+<tal:block define="global entitled python:here.isEntitled(request);" />
+
+<tal:block condition="not:entitled">
+	<tal:block condition="python:request.form.has_key('authenticate')">
+		<div class="message-error">
+			Wrong email - password combination.Please try again.
+		</div>
+	</tal:block>
+
+	<form action="" name="frmLogin" method="post">
+		<table class="datatable">
+			<tr>
+				<th i18n:translate="">Registration number</th>
+				<td><input type="text" name="registration_no" value="" /></td>
+			</tr>
+		</table>
+		<input type="submit" name="authenticate" id="authenticate" value="Edit profile" i18n:attributes="value" />
+	</form>
+</tal:block>
+
+<tal:block condition="entitled">
+
+<form action="" name="frmEdit" method="post">
 	<table class="datatable">
 		<tr>
 			<th i18n:translate="">Registration number</th>
-			<td><input type="text" name="registration_no" value="" /></td>
+			<td><strong tal:content="here/id" /></td>
+		</tr>
+		<tr>
+			<th i18n:translate="">Name</th>
+			<td>
+				<input type="text" name="last_name" tal:attributes="value here/last_name" />
+				<div tal:condition="python:request.has_key('last_name_error')" class="message-error" i18n:translate="">The name is mandatory!</div>
+			</td>
+		</tr>
+		<tr>
+			<th i18n:translate="">First name</th>
+			<td><input type="text" name="first_name" tal:attributes="value here/first_name" /></td>
+		</tr>
+		<tr tal:condition="not:here/is_journalist">
+			<th i18n:translate="">Country</th>
+			<td><input type="text" name="country" tal:attributes="value here/country" /></td>
+		</tr>
+		<tr tal:condition="not:here/is_journalist">
+			<th i18n:translate="">Organisation</th>
+			<td><input type="text" name="organisation" tal:attributes="value here/organisation" /></td>
+		</tr>
+		<tr tal:condition="not:here/is_journalist">
+			<th i18n:translate="">Official title</th>
+			<td><input type="text" name="official_title" tal:attributes="value here/official_title" /></td>
+		</tr>
+		<tr tal:condition="here/is_journalist">
+			<th i18n:translate="">Media name</th>
+			<td><input type="text" name="media_name" tal:attributes="value here/media_name" /></td>
+		</tr>
+		<tr tal:condition="here/is_journalist">
+			<th i18n:translate="">Type of media</th>
+			<td><input type="text" name="media_type" tal:attributes="value here/media_type" /></td>
+		</tr>
+		<tr tal:condition="here/is_journalist">
+			<th i18n:translate="">Description of equipment used</th>
+			<td><input type="text" name="media_description" tal:attributes="value here/media_description" /></td>
+		</tr>
+		<tr tal:condition="here/is_journalist">
+			<th i18n:translate="">Your position</th>
+			<td><input type="text" name="media_position" tal:attributes="value here/media_position" /></td>
+		</tr>
+		<tr>
+			<th i18n:translate="">Passport number</th>
+			<td><input type="text" name="passport_no" tal:attributes="value here/passport_no" /></td>
+		</tr>
+		<tr>
+			<th i18n:translate="">Expiry date of the passport</th>
+			<td><input type="text" name="passport_expire" tal:attributes="value here/passport_expire" /></td>
+		</tr>
+		<tr>
+			<th i18n:translate="">Phone number</th>
+			<td><input type="text" name="phone_number" tal:attributes="value here/phone_number" /></td>
+		</tr>
+		<tr>
+			<th i18n:translate="">Email</th>
+			<td><input type="text" name="email" tal:attributes="value here/email" /></td>
+		</tr>
+		<tr tal:condition="here/is_journalist">
+			<th i18n:translate="">Mobile phone</th>
+			<td><input type="text" name="mobile_number" tal:attributes="value here/mobile_number" /></td>
+		</tr>
+		<tr>
+			<th i18n:translate="">Fax number</th>
+			<td><input type="text" name="fax_number" tal:attributes="value here/fax_number" /></td>
+		</tr>
+		<tr>
+			<th i18n:translate="">Date of arrival</th>
+			<td><input type="text" name="arrival_date" tal:attributes="value here/arrival_date" /></td>
+		</tr>
+		<tr>
+			<th i18n:translate="">Arriving from</th>
+			<td><input type="text" name="arrival_from" tal:attributes="value here/arrival_from" /></td>
+		</tr>
+		<tr>
+			<th i18n:translate="">Flight number</th>
+			<td><input type="text" name="arrival_flight" tal:attributes="value here/arrival_flight" /></td>
+		</tr>
+		<tr>
+			<th i18n:translate="">Time of arrival</th>
+			<td><input type="text" name="arrival_time" tal:attributes="value here/arrival_time" /></td>
+		</tr>
+		<tr>
+			<th i18n:translate="">Date of departure</th>
+			<td><input type="text" name="departure_date" tal:attributes="value here/departure_date" /></td>
+		</tr>
+		<tr>
+			<th i18n:translate="">Flight number</th>
+			<td><input type="text" name="departure_flight" tal:attributes="value here/departure_flight" /></td>
+		</tr>
+		<tr>
+			<th i18n:translate="">Time of departure</th>
+			<td><input type="text" name="departure_time" tal:attributes="value here/departure_time" /></td>
+		</tr>
+		<tr>
+			<th i18n:translate="">Registration date</th>
+			<td tal:content="python:here.formatDate(here.registration_date)" />
 		</tr>
 	</table>
-	<input type="submit" name="authenticate" id="authenticate" value="Edit profile" i18n:attributes="value" />
+	<div class="field">
+		<input type="radio" name="hotel_reservation" value="1" tal:attributes="checked python:here.hotel_reservation=='1'" />
+		<span  i18n:translate="">I am part of one of the following delegations:
+		(2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro,
+		Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon,
+		Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey.
+		My accommodation is covered by the French Government.</span><br/>
+		<input type="radio" name="hotel_reservation" value="2" tal:attributes="checked python:here.hotel_reservation=='2'"/>
+		<span  i18n:translate="">I pay my own accommodation. So please book your hotel room,
+		click here to get hotels contacts and special rates</span><br/>
+	</div>
+	<p i18n:translate="">* For UE representatives, passport details can be replaced by ID card details</p>
+	<div class="field">
+		<input type="submit" name="submit" value="Save changes" i18n:attributes="value" />
+	</div>
 </form>
+</tal:block>
 
 <tal:block replace="structure here/standard_html_footer"/>
