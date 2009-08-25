@@ -4,6 +4,8 @@ from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.SimpleItem import SimpleItem
 
+import constants
+
 class BaseParticipant(SimpleItem):
     """ Base class for participants """
 
@@ -52,6 +54,9 @@ class BaseParticipant(SimpleItem):
         self.hotel_reservation = hotel_reservation
         self_p_changed = 1
 
+    def is_entitled(self, REQUEST):
+        return REQUEST.SESSION.get('registration_no','') == self.registration_no
+
     #@todo: security
     index_html = PageTemplateFile('zpt/participant/index', globals())
 
@@ -64,9 +69,9 @@ class BaseParticipant(SimpleItem):
         submit =  REQUEST.form.get('submit', '')
         if REQUEST.form.has_key('authenticate'):
             REQUEST.set('authentication_try', False)
-            # if the user has submitted a valid registration number, this is saved on the session
-            if form_validation(mandatory_fields_authentication, REQUEST):
-                REQUEST.set('authentication_pass', REQUEST.get('registration_no'))
+            #if the user has submitted a valid registration number, this is saved on the session
+            if form_validation(constants.AUTH_MANDATORY_FIELDS, REQUEST):
+                REQUEST.set('registration_no', REQUEST.get('registration_no'))
                 REQUEST.set('authentication_try', True)
         if submit:
             if form_validation(mandatory_fields_model, REQUEST):
