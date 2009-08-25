@@ -1,23 +1,4 @@
-# The contents of this file are subject to the Mozilla Public
-# License Version 1.1 (the "License"); you may not use this file
-# except in compliance with the License. You may obtain a copy of
-# the License at http://www.mozilla.org/MPL/
-#
-# Software distributed under the License is distributed on an "AS
-# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-# implied. See the License for the specific language governing
-# rights and limitations under the License.
-#
-# The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Eau de Web are
-# Copyright (C) European Environment Agency.  All
-# Rights Reserved.
-#
-# Authors:
-#
-# Cornel Nitu, Eau de Web
-# Valentin Dumitru, Eau de Web
-
+import re
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -25,7 +6,10 @@ from OFS.Folder import Folder
 import re
 import time
 
+from Products.NaayaCore.managers import utils as naaya_utils
+import SemideParticipant
 from utilities.Slugify import slugify
+
 
 add_registration = PageTemplateFile('zpt/registration/add', globals())
 def manage_add_registration(self, id='', title='', administrative_email ='', start_date='', end_date='', introduction='', REQUEST=None):
@@ -42,6 +26,20 @@ def manage_add_registration(self, id='', title='', administrative_email ='', sta
         return add_registration.__of__(self)(REQUEST)
 
 email_expr = re.compile(r'^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$', re.IGNORECASE)
+def form_validation (mandatory_fields, REQUEST):
+    has_errors = False
+    for k,v in REQUEST.form.items():
+        if k in mandatory_fields:
+            if k == 'email' and v:
+                if not email_expr.match(v):
+                    REQUEST.set('%s_notvalid' % k, True)
+                    has_errors = True
+            if not v:
+                REQUEST.set('%s_error' % k, True)
+                has_errors = True
+    if has_errors:
+        REQUEST.set('request_error', True)
+    return not has_errors
 
 def registration_validation(REQUEST):
     """ Validates the new meeting registration fields """
@@ -83,6 +81,8 @@ def registration_validation(REQUEST):
         REQUEST.set('request_error', True)
     return not has_errors
 
+
+
 class SemideRegistration(Folder):
     """ Main class of the meeting registration"""
 
@@ -100,8 +100,22 @@ class SemideRegistration(Folder):
         self.end_date = end_date
         self.introduction = introduction
 
-    registration = PageTemplateFile('zpt/registration/registration', globals())
-    registration_press = PageTemplateFile('zpt/registration/registration_press', globals())
+    def registration_html(self, REQUEST):
+        """ registration form """
+        submit =  REQUEST.form.get('submit', '')
+        if submit:
+            form_valid = form_validation(SemideParticipant.PART_MANDATORY_FIELDS, REQUEST)
+            if form_valid:
+                registration_no = naaya_utils.genRandomId(10)
+                cleaned_data = REQUEST.form
+                del cleaned_data['submit']
+                ob = SemideParticipant.SemideParticipant(registration_no, **cleaned_data)
+                self._setObject(registration_no, ob)
+                return REQUEST.RESPONSE.redirect(self.absolute_url())
+        return self._registration_html(REQUEST)
+
+    _registration_html = PageTemplateFile('zpt/registration/registration', globals())
+    #registration_press_html = PageTemplateFile('zpt/registration/registration_press', globals())
 
 
 InitializeClass(SemideRegistration)
