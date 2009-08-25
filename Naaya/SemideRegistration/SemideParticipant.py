@@ -6,6 +6,8 @@ from OFS.SimpleItem import SimpleItem
 
 PART_MANDATORY_FIELDS = ['last_name', 'country', 'phone_number', 'email', 'passport_no', 'passport_expire']
 PRESS_MANDATORY_FIELDS = ['last_name', 'country', 'phone_number', 'email', 'passport_no', 'passport_expire']
+DATE_FIELDS = ['passport_expire', 'arrival_date', 'departure_date']
+TIME_FIELDS = ['arrival_time', 'departure_time']
 
 class BaseParticipant(SimpleItem):
     """ Base class for participants """
