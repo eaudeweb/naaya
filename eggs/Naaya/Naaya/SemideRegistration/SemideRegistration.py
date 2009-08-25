@@ -26,8 +26,9 @@ def manage_add_registration(self, id='', title='', administrative_email ='', sta
         return add_registration.__of__(self)(REQUEST)
 
 email_expr = re.compile(r'^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$', re.IGNORECASE)
-def form_validation (mandatory_fields, REQUEST):
+def form_validation (mandatory_fields, date_fields, time_fields, REQUEST):
     has_errors = False
+    #@TODO reverse cycling oder mandatory_fields --> REQUEST.form
     for k,v in REQUEST.form.items():
         if k in mandatory_fields:
             if k == 'email' and v:
@@ -36,6 +37,18 @@ def form_validation (mandatory_fields, REQUEST):
                     has_errors = True
             if not v:
                 REQUEST.set('%s_error' % k, True)
+                has_errors = True
+        if k in date_fields and v:
+            try:
+                temp = time.strptime(v, "%d/%m/%Y")
+            except:
+                REQUEST.set('%s_notvalid' % k, True)
+                has_errors = True
+        if k in time_fields and v:
+            try:
+                temp = time.strptime(v, "%H:%M")
+            except:
+                REQUEST.set('%s_notvalid' % k, True)
                 has_errors = True
     if has_errors:
         REQUEST.set('request_error', True)
@@ -100,11 +113,15 @@ class SemideRegistration(Folder):
         self.end_date = end_date
         self.introduction = introduction
 
+    _registration_html = PageTemplateFile('zpt/registration/registration', globals())
     def registration_html(self, REQUEST):
         """ registration form """
         submit =  REQUEST.form.get('submit', '')
         if submit:
-            form_valid = form_validation(SemideParticipant.PART_MANDATORY_FIELDS, REQUEST)
+            form_valid = form_validation(SemideParticipant.PART_MANDATORY_FIELDS,
+                                            SemideParticipant.DATE_FIELDS,
+                                            SemideParticipant.TIME_FIELDS,
+                                            REQUEST)
             if form_valid:
                 registration_no = naaya_utils.genRandomId(10)
                 cleaned_data = REQUEST.form
@@ -114,9 +131,26 @@ class SemideRegistration(Folder):
                 return REQUEST.RESPONSE.redirect(self.absolute_url())
         return self._registration_html(REQUEST)
 
+    _registration_press_html = PageTemplateFile('zpt/registration/registration_press', globals())
+    def registration_press_html(self, REQUEST):
+        """ registration form """
+        submit =  REQUEST.form.get('submit', '')
+        if submit:
+            form_valid = form_validation(SemideParticipant.PRESS_MANDATORY_FIELDS, REQUEST)
+            if form_valid:
+                registration_no = naaya_utils.genRandomId(10)
+                cleaned_data = REQUEST.form
+                del cleaned_data['submit']
+                ob = SemideParticipant.SemidePress(registration_no, **cleaned_data)
+                self._setObject(registration_no, ob)
+                return REQUEST.RESPONSE.redirect(self.absolute_url())
+        return self._registration_html(REQUEST)
+
     def formatDate(self, sdate):
         return sdate.strftime('%d %b %Y')
 
+    #@todo: security
+    participants = PageTemplateFile('zpt/registration/participants', globals())
     #@todo: security
     def getParticipants(self, skey, rkey):
         """ Returns the list of participants """
@@ -125,12 +159,5 @@ class SemideRegistration(Folder):
         if rkey:
             participants.reverse()
         return [p for (key, p) in participants]
-
-    _registration_html = PageTemplateFile('zpt/registration/registration', globals())
-    #@todo: security
-    participants = PageTemplateFile('zpt/registration/participants', globals())
-
-    #registration_press_html = PageTemplateFile('zpt/registration/registration_press', globals())
-
 
 InitializeClass(SemideRegistration)

@@ -1,5 +1,7 @@
 <tal:block replace="structure here/standard_html_header"/>
-
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
 <h1 i18n:translate="">Contribution of local and regional authorities to the Union for the
 						Mediterranean in the water sector</h1>
 <h2 i18n:translate="">Lyon, 23-24 November 2009</h2>
@@ -12,18 +14,20 @@
 <p i18n:translate="">Date format: dd/mm/yyyy or dd/mm/yy.</p>
 
 <form action="" method="post">
-	<div tal:condition="python:request.has_key('last_name_error')" class="message-error" i18n:translate="">Name is mandatory!</div>
+	<div tal:condition="python:request.has_key('last_name_error')" class="message-error" i18n:translate="">
+		The name is mandatory!
+	</div>
 	<div class="field">
 		<label class="mandatory" for="last_name" i18n:translate="">Name</label>
 		<input type="text" name="last_name" size="50" tal:attributes="value python:request.get('last_name')" />
 	</div>
-
 	<div class="field">
 		<label for="first_name" i18n:translate="">First name</label>
 		<input type="text" name="first_name" size="50" tal:attributes="value python:request.get('first_name')" />
 	</div>
-
-	<div tal:condition="python:request.has_key('country_error')" class="message-error" i18n:translate="">Country is mandatory!</div>
+	<div tal:condition="python:request.has_key('country_error')" class="message-error" i18n:translate="">
+		The country name is mandatory!
+	</div>
 	<div class="field">
 		<label class="mandatory" for="country" i18n:translate="">Country</label>
 		<input type="text" name="country" tal:attributes="value python:request.get('country')" />
@@ -37,25 +41,40 @@
 		<input type="text" name="official_title" size="50" tal:attributes="value python:request.get('official_title')" />
 	</div>
 
-	<div tal:condition="python:request.has_key('passport_no_error')" class="message-error" i18n:translate="">Passport number is mandatory!</div>
+	<div tal:condition="python:request.has_key('passport_no_error')" class="message-error" i18n:translate="">
+		Passport number is mandatory!
+	</div>
 	<div class="field">
 		<label class="mandatory" for="passport_no" i18n:translate="">Passport number *</label>
 		<input type="text" name="passport_no" tal:attributes="value python:request.get('passport_no')" />
 	</div>
 
-	<div tal:condition="python:request.has_key('passport_expire_error')" class="message-error" i18n:translate="">Expiry date of the passport is mandatory!</div>
+	<div tal:condition="python:request.has_key('passport_expire_error')" class="message-error" i18n:translate="">
+		Expiry date of the passport is mandatory!
+	</div>
+	<div tal:condition="python:request.has_key('passport_expire_notvalid')" class="message-error" i18n:translate="">
+		Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).
+	</div>
 	<div class="field">
 		<label class="mandatory" for="passport_expire" i18n:translate="">Expiry date of the passport *</label>
-		<input type="text" name="passport_expire" tal:attributes="value python:request.get('passport_expire')" />
+		<input type="text" name="passport_expire" class="vDateField" size="10" maxlength="10"
+		tal:attributes="value python:request.get('passport_expire')" />
 	</div>
 
-	<div tal:condition="python:request.has_key('phone_number_error')" class="message-error" i18n:translate="">Phone number is mandatory!</div>
+	<div tal:condition="python:request.has_key('phone_number_error')" class="message-error" i18n:translate="">
+		Phone number is mandatory!
+	</div>
 	<div class="field">
 		<label class="mandatory" for="phone_number" i18n:translate="">Phone number</label>
 		<input type="text" name="phone_number" size="50" tal:attributes="value python:request.get('phone_number')" />
 	</div>
 
-	<div tal:condition="python:request.has_key('email_error')" class="message-error" i18n:translate="">Email is mandatory!</div>
+	<div tal:condition="python:request.has_key('email_error')" class="message-error" i18n:translate="">
+		Email is mandatory!
+	</div>
+	<div tal:condition="python:request.has_key('email_notvalid')" class="message-error" i18n:translate="">
+		Please enter a valid email address!
+	</div>
 	<div class="field">
 		<label class="mandatory" for="email" i18n:translate="">Email</label>
 		<input type="text" name="email" size="50" tal:attributes="value python:request.get('email')" />
@@ -64,9 +83,13 @@
 		<label for="fax_number" i18n:translate="">Fax number</label>
 		<input type="text" name="fax_number" tal:attributes="value python:request.get('fax_number')" />
 	</div>
+	<div tal:condition="python:request.has_key('arrival_date_notvalid')" class="message-error" i18n:translate="">
+		Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).
+	</div>
 	<div class="field">
 		<label for="arrival_date" i18n:translate="">Date of arrival</label>
-		<input type="text" name="arrival_date" tal:attributes="value python:request.get('arrival_date')" />
+		<input type="text" name="arrival_date" class="vDateField" size="10" maxlength="10"
+			tal:attributes="value python:request.get('arrival_date')" />
 	</div>
 	<div class="field">
 		<label for="arrival_from" i18n:translate="">Arrival from</label>
@@ -76,40 +99,45 @@
 		<label for="arrival_flight" i18n:translate="">Flight number</label>
 		<input type="text" name="arrival_flight" tal:attributes="value python:request.get('arrival_flight')" />
 	</div>
+	<div tal:condition="python:request.has_key('arrival_time_notvalid')" class="message-error" i18n:translate="">
+		Please enter the time in the correct format hh:mm.
+	</div>
 	<div class="field">
 		<label for="arrival_time" i18n:translate="">Time of arrival</label>
 		<input type="text" name="arrival_time" tal:attributes="value python:request.get('arrival_time')" />
 	</div>
+	<div tal:condition="python:request.has_key('departure_date_notvalid')" class="message-error" i18n:translate="">
+		Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).
+	</div>
 	<div class="field">
 		<label for="departure_date" i18n:translate="">Date of departure</label>
-		<input type="text" name="departure_date" tal:attributes="value python:request.get('departure_date')" />
+		<input type="text" name="departure_date" class="vDateField" size="10" maxlength="10"
+			tal:attributes="value python:request.get('departure_date')" />
 	</div>
 	<div class="field">
 		<label for="departure_flight" i18n:translate="">Flight number</label>
 		<input type="text" name="departure_flight" tal:attributes="value python:request.get('departure_flight')" />
+	</div>
+	<div tal:condition="python:request.has_key('departure_time_notvalid')" class="message-error" i18n:translate="">
+		Please enter the time in the correct format hh:mm.
 	</div>
 	<div class="field">
 		<label for="departure_time" i18n:translate="">Time of departure</label>
 		<input type="text" name="departure_time" tal:attributes="value python:request.get('departure_time')" />
 	</div>
 
-	<h3>HOTEL RESERVATION</h3>
+	<h3 i18n:translate="">HOTEL RESERVATION</h3>
 
 	<div class="field">
-		<input type="radio" name="hotel_reservation" value="I am part of one of the following delegations:
+		<input type="radio" name="hotel_reservation" value="1" />
+		<span  i18n:translate="">I am part of one of the following delegations:
 		(2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro,
 		Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon,
 		Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey.
-		My accommodation is covered by the French Government." i18n:translate="" />
-		I am part of one of the following delegations:
-		(2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro,
-		Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon,
-		Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey.
-		My accommodation is covered by the French Government.<br/>
-		<input type="radio" name="hotel_reservation" value="I pay my own accommodation.
-		So please book your hotel room, click here to get hotels contacts and special rates" i18n:translate="" />
-		I pay my own accommodation. So please book your hotel room,
-		click here to get hotels contacts and special rates<br/>
+		My accommodation is covered by the French Government."</span><br/>
+		<input type="radio" name="hotel_reservation" value="2" checked="checked"/>
+		<span  i18n:translate="">I pay my own accommodation. So please book your hotel room,
+		click here to get hotels contacts and special rates"</span><br/>
 	</div>
 
 	<p i18n:translate="">* For UE representatives, passport details can be replaced by ID card details</p>
