@@ -180,9 +180,13 @@ class MeetingRegistration(Folder):
         form_list = self.get_list_by_name(list_name)
         return [ field for field in form_list if field.overview]
 
-    def list_participants(self, ptype="participant"):
-        """ returns the participants list """
-        return [ p for p in self.objectValues('Participant Profile') if p.id.startswith(ptype) ]
+    def list_participants(self, skey, rkey, ptype="participant"):
+        """ Returns the participants list, filtered and sorted according with the given parameters. """
+        participants = [ (getattr(p, skey, 'id'), p) for p in self.objectValues('Participant Profile') if p.id.startswith(ptype) ]
+        participants.sort()
+        if rkey:
+            participants.reverse()
+        return [p for (key, p) in participants]
 
     def getFieldValue(self, ob, id):
         """ returns the field value for a given object and field """

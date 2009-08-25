@@ -64,12 +64,12 @@
 			<div class="field" id="div_mandatory"
 				tal:attributes="style python:test(field_type=='body_text', 'display: none','display: block')">
 				<label style="display:inline" for="mandatory" i18n:translate="">Will the field be required?</label>
-				<input id="mandatory" name="mandatory:boolean" type="checkbox"/>
+				<input id="mandatory" name="mandatory:boolean" type="checkbox" tal:attributes="checked python:request.get('mandatory')" />
 			</div>
 			<div class="field" id="div_overview"
 				tal:attributes="style python:test(field_type=='body_text', 'display: none','display: block')">
 				<label style="display:inline" for="overview" i18n:translate="">Will the field appear in overview table?</label>
-				<input id="overview" name="overview:boolean" type="checkbox"/>
+				<input id="overview" name="overview:boolean" type="checkbox" tal:attributes="checked python:request.get('overview')" />
 			</div>
 			<input type="submit" name="add_field" value="Add field" class="button"/>
 		</form>
