@@ -57,7 +57,8 @@ class BaseParticipant(SimpleItem):
 
     def isEntitled(self, REQUEST):
         """ check if current user has the right to modify this object """
-        return REQUEST.SESSION.get('authentication_token','') == str(self.id)
+        return (REQUEST.SESSION.get('authentication_id','') == str(self.id)) and \
+            (REQUEST.SESSION.get('authentication_name','') == str(self.last_name))
 
     #@todo: security
     index_html = PageTemplateFile('zpt/participant/index', globals())
@@ -75,7 +76,8 @@ class BaseParticipant(SimpleItem):
                                 date_fields=constants.DATE_FIELDS,
                                 time_fields=constants.TIME_FIELDS,
                                 REQUEST=REQUEST):
-                REQUEST.SESSION.set('authentication_token', REQUEST.get('registration_no'))
+                REQUEST.SESSION.set('authentication_id', REQUEST.get('registration_no'))
+                REQUEST.SESSION.set('authentication_name', REQUEST.get('last_name'))
         if submit:
             if form_validation(mandatory_fields=mandatory_fields, 
                                 date_fields=constants.DATE_FIELDS,

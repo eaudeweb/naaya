@@ -63,6 +63,16 @@
 		<noscript><em class="tooltips">(dd/mm/yyyy)</em></noscript>
 	</div>
 	<div class="field">
+		<label for="registration_event" i18n:translate="">Title of the event</label>
+		<input type="text" size="200" name="registration_event" id="registration_event"
+		tal:attributes="value python:request.get('registration_event', '')"/>
+	</div>
+	<div class="field">
+		<label for="email_sender" i18n:translate="">Sender for emails (for the signature)</label>
+		<input type="text" size="200" name="email_sender" id="email_sender"
+		tal:attributes="value python:request.get('email_sender', '')"/>
+	</div>
+	<div class="field">
 		<label for="introduction" i18n:translate="">Introductory text</label>
 		<textarea id="introduction" name="introduction:utf8:ustring" rows="" cols=""
 		tal:content="python:request.get('introduction', '')" ></textarea>
