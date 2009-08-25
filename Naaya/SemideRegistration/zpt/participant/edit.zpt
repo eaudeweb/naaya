@@ -1,5 +1,8 @@
 <tal:block replace="structure here/standard_html_header"/>
-
+<link rel="stylesheet" type="text/css" media="screen" href="/misc_/SemideRegistration/style.css"/>
+<script type="text/javascript" src="/misc_/SemideRegistration/core.js"></script>
+<script type="text/javascript" src="/misc_/SemideRegistration/calendar.js"></script>
+<script type="text/javascript" src="/misc_/SemideRegistration/datetime.js"></script>
 <h1 i18n:translate="">Contribution of local and regional authorities to the Union for the
 						Mediterranean in the water sector</h1>
 <h2 i18n:translate="">Lyon, 23-24 November 2009</h2>
@@ -10,7 +13,7 @@
 <tal:block condition="not:entitled">
 	<tal:block condition="python:request.form.has_key('authenticate')">
 		<div class="message-error">
-			Wrong email - password combination.Please try again.
+			Wrong registration number - participant name combination. Please try again.
 		</div>
 	</tal:block>
 
@@ -19,6 +22,10 @@
 			<tr>
 				<th i18n:translate="">Registration number</th>
 				<td><input type="text" name="registration_no" value="" /></td>
+			</tr>
+			<tr>
+				<th i18n:translate="">Participant's family name</th>
+				<td><input type="text" name="last_name" value="" /></td>
 			</tr>
 		</table>
 		<input type="submit" name="authenticate" id="authenticate" value="Edit profile" i18n:attributes="value" />
@@ -36,93 +43,168 @@
 		<tr>
 			<th i18n:translate="">Name</th>
 			<td>
-				<input type="text" name="last_name" tal:attributes="value here/last_name" />
-				<div tal:condition="python:request.has_key('last_name_error')" class="message-error" i18n:translate="">The name is mandatory!</div>
+				<div tal:condition="python:request.has_key('last_name_error')" class="message-error" i18n:translate="">
+					The name is mandatory!
+				</div>
+				<input type="text" name="last_name" size="50"
+				tal:attributes="value python:request.get('last_name', '')" />
 			</td>
 		</tr>
 		<tr>
 			<th i18n:translate="">First name</th>
-			<td><input type="text" name="first_name" tal:attributes="value here/first_name" /></td>
+			<td><input type="text" name="first_name" size="50"
+			tal:attributes="value python:request.get('first_name', '')" /></td>
 		</tr>
 		<tr tal:condition="not:here/is_journalist">
 			<th i18n:translate="">Country</th>
-			<td><input type="text" name="country" tal:attributes="value here/country" /></td>
+			<td>
+				<div tal:condition="python:request.has_key('country_error')" class="message-error" i18n:translate="">
+					The country is mandatory!
+				</div>
+				<input type="text" name="country" size="50"
+				tal:attributes="value python:request.get('country', '')" />
+			</td>
 		</tr>
 		<tr tal:condition="not:here/is_journalist">
 			<th i18n:translate="">Organisation</th>
-			<td><input type="text" name="organisation" tal:attributes="value here/organisation" /></td>
+			<td><input type="text" name="organisation" size="50"
+			tal:attributes="value python:request.get('organisation', '')" /></td>
 		</tr>
 		<tr tal:condition="not:here/is_journalist">
 			<th i18n:translate="">Official title</th>
-			<td><input type="text" name="official_title" tal:attributes="value here/official_title" /></td>
+			<td><input type="text" name="official_title" size="50"
+			tal:attributes="value python:request.get('official_title', '')" /></td>
 		</tr>
 		<tr tal:condition="here/is_journalist">
 			<th i18n:translate="">Media name</th>
-			<td><input type="text" name="media_name" tal:attributes="value here/media_name" /></td>
+			<td><input type="text" name="media_name" size="50"
+			tal:attributes="value python:request.get('media_name', '')" /></td>
 		</tr>
 		<tr tal:condition="here/is_journalist">
 			<th i18n:translate="">Type of media</th>
-			<td><input type="text" name="media_type" tal:attributes="value here/media_type" /></td>
+			<td><input type="text" name="media_type" size="50"
+			tal:attributes="value python:request.get('media_type', '')" /></td>
 		</tr>
 		<tr tal:condition="here/is_journalist">
 			<th i18n:translate="">Description of equipment used</th>
-			<td><input type="text" name="media_description" tal:attributes="value here/media_description" /></td>
+			<td><input type="text" name="media_description" size="50"
+			tal:attributes="value python:request.get('media_description', '')" /></td>
 		</tr>
 		<tr tal:condition="here/is_journalist">
 			<th i18n:translate="">Your position</th>
-			<td><input type="text" name="media_position" tal:attributes="value here/media_position" /></td>
+			<td><input type="text" name="media_position" size="50"
+			tal:attributes="value python:request.get('media_position', '')" /></td>
 		</tr>
 		<tr>
 			<th i18n:translate="">Passport number</th>
-			<td><input type="text" name="passport_no" tal:attributes="value here/passport_no" /></td>
+			<td>
+				<div tal:condition="python:request.has_key('passport_no_error')" class="message-error" i18n:translate="">
+					Passport number is mandatory!
+				</div>
+				<input type="text" name="passport_no" size="50"
+				tal:attributes="value python:request.get('passport_no', '')" />
+			</td>
 		</tr>
 		<tr>
 			<th i18n:translate="">Expiry date of the passport</th>
-			<td><input type="text" name="passport_expire" tal:attributes="value here/passport_expire" /></td>
+			<td>
+				<div tal:condition="python:request.has_key('passport_expire_error')" class="message-error" i18n:translate="">
+					Expiry date of the passport is mandatory!
+				</div>
+				<div tal:condition="python:request.has_key('passport_expire_notvalid')" class="message-error" i18n:translate="">
+					Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).
+				</div>
+				<input type="text" name="passport_expire" class="vDateField" size="10" maxlength="10"
+				tal:attributes="value python:request.get('passport_expire', '')" />
+			</td>
 		</tr>
 		<tr>
 			<th i18n:translate="">Phone number</th>
-			<td><input type="text" name="phone_number" tal:attributes="value here/phone_number" /></td>
+			<td>
+				<div tal:condition="python:request.has_key('phone_number_error')" class="message-error" i18n:translate="">
+					Phone number is mandatory!
+				</div>
+				<input type="text" name="phone_number" size="50"
+					tal:attributes="value python:request.get('phone_number', '')" />
+			</td>
 		</tr>
 		<tr>
 			<th i18n:translate="">Email</th>
-			<td><input type="text" name="email" tal:attributes="value here/email" /></td>
+			<td>
+				<div tal:condition="python:request.has_key('email_error')" class="message-error" i18n:translate="">
+					Email is mandatory!
+				</div>
+				<div tal:condition="python:request.has_key('email_notvalid')" class="message-error" i18n:translate="">
+					Please enter a valid email address!
+				</div>
+				<input type="text" name="email" size="50"
+					tal:attributes="value python:request.get('email', '')" />
+			</td>
 		</tr>
 		<tr tal:condition="here/is_journalist">
 			<th i18n:translate="">Mobile phone</th>
-			<td><input type="text" name="mobile_number" tal:attributes="value here/mobile_number" /></td>
+			<td><input type="text" name="mobile_number" size="50"
+			tal:attributes="value python:request.get('mobile_number', '')" /></td>
 		</tr>
 		<tr>
 			<th i18n:translate="">Fax number</th>
-			<td><input type="text" name="fax_number" tal:attributes="value here/fax_number" /></td>
+			<td><input type="text" name="fax_number" size="50"
+			tal:attributes="value python:request.get('fax_number', '')" /></td>
 		</tr>
 		<tr>
 			<th i18n:translate="">Date of arrival</th>
-			<td><input type="text" name="arrival_date" tal:attributes="value here/arrival_date" /></td>
+			<td>
+				<div tal:condition="python:request.has_key('arrival_date_notvalid')" class="message-error" i18n:translate="">
+					Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).
+				</div>
+				<input type="text" name="arrival_date" class="vDateField" size="10" maxlength="10"
+					tal:attributes="value python:request.get('arrival_date', '')" />
+			</td>
 		</tr>
 		<tr>
 			<th i18n:translate="">Arriving from</th>
-			<td><input type="text" name="arrival_from" tal:attributes="value here/arrival_from" /></td>
+			<td><input type="text" name="arrival_from" size="50"
+			tal:attributes="value python:request.get('arrival_from', '')" /></td>
 		</tr>
 		<tr>
 			<th i18n:translate="">Flight number</th>
-			<td><input type="text" name="arrival_flight" tal:attributes="value here/arrival_flight" /></td>
+			<td><input type="text" name="arrival_flight" size="50"
+			tal:attributes="value python:request.get('arrival_flight', '')" /></td>
 		</tr>
 		<tr>
 			<th i18n:translate="">Time of arrival</th>
-			<td><input type="text" name="arrival_time" tal:attributes="value here/arrival_time" /></td>
+			<td>
+				<div tal:condition="python:request.has_key('arrival_time_notvalid')" class="message-error" i18n:translate="">
+					Please enter the time in the correct format hh:mm.
+				</div>
+				<input type="text" name="arrival_time" size="5"
+					tal:attributes="value python:request.get('arrival_time', '')" />
+			</td>
 		</tr>
 		<tr>
 			<th i18n:translate="">Date of departure</th>
-			<td><input type="text" name="departure_date" tal:attributes="value here/departure_date" /></td>
+			<td>
+				<div tal:condition="python:request.has_key('departure_date_notvalid')" class="message-error" i18n:translate="">
+					Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).
+				</div>
+				<input type="text" name="departure_date" class="vDateField" size="10" maxlength="10"
+					tal:attributes="value python:request.get('departure_date', '')" />
+			</td>
 		</tr>
 		<tr>
 			<th i18n:translate="">Flight number</th>
-			<td><input type="text" name="departure_flight" tal:attributes="value here/departure_flight" /></td>
+			<td><input type="text" name="departure_flight" size="50"
+			tal:attributes="value python:request.get('departure_flight', '')" /></td>
 		</tr>
 		<tr>
 			<th i18n:translate="">Time of departure</th>
-			<td><input type="text" name="departure_time" tal:attributes="value here/departure_time" /></td>
+			<td>
+				<div tal:condition="python:request.has_key('departure_time_notvalid')" class="message-error" i18n:translate="">
+					Please enter the time in the correct format hh:mm.
+				</div>
+				<input type="text" name="departure_time" size="5"
+					tal:attributes="value python:request.get('departure_time', '')" />
+			</td>
 		</tr>
 		<tr>
 			<th i18n:translate="">Registration date</th>
@@ -130,13 +212,13 @@
 		</tr>
 	</table>
 	<div class="field">
-		<input type="radio" name="hotel_reservation" value="1" tal:attributes="checked python:here.hotel_reservation=='1'" />
+		<input type="radio" name="hotel_reservation" value="1" tal:attributes="checked python:request.get('hotel_reservation')=='1'" />
 		<span  i18n:translate="">I am part of one of the following delegations:
 		(2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro,
 		Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon,
 		Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey.
 		My accommodation is covered by the French Government.</span><br/>
-		<input type="radio" name="hotel_reservation" value="2" tal:attributes="checked python:here.hotel_reservation=='2'"/>
+		<input type="radio" name="hotel_reservation" value="2" tal:attributes="checked python:request.get('hotel_reservation')=='2'"/>
 		<span  i18n:translate="">I pay my own accommodation. So please book your hotel room,
 		click here to get hotels contacts and special rates</span><br/>
 	</div>
