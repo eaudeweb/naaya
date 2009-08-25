@@ -32,6 +32,7 @@ from utilities.Slugify import slugify
 from Constants import *
 import Participant
 
+from DateTime import DateTime
 
 add_registration = PageTemplateFile('zpt/meeting_registration/add', globals())
 
@@ -118,6 +119,9 @@ class MeetingRegistration(Folder):
     security.declareProtected(ACCESS_MEETING_REGISTRATION, 'index_html')
     index_html = PageTemplateFile('zpt/meeting_registration/index', globals())
 
+    security.declareProtected(ACCESS_MEETING_REGISTRATION, 'view_participants')
+    view_participants = PageTemplateFile('zpt/meeting_registration/overview_participants', globals())
+
     security.declareProtected(EDIT_MEETING_REGISTRATION, 'edit')
     edit = PageTemplateFile('zpt/meeting_registration/edit', globals())
 
@@ -126,6 +130,12 @@ class MeetingRegistration(Folder):
         """ Edits the properties of the meeting registration """
         if registration_validation(mandatory_fields_registration, REQUEST, **REQUEST.form):
             self.title = title
+            try:
+                start_date = DateTime(start_date)
+            except:
+                eroare
+            if not end_date > start_date:
+                eroare
             self.start_date = start_date
             self.end_date = end_date
             self.introduction = introduction
@@ -163,6 +173,20 @@ class MeetingRegistration(Folder):
             REQUEST.set('overview', field.overview)
         REQUEST.set('list_name', list_name)
         return self._form_edit(REQUEST, field_types = field_types)
+
+    #interface API
+    def list_fields(self, list_name):
+        """ returns fields list """
+        form_list = self.get_list_by_name(list_name)
+        return [ field for field in form_list if field.overview]
+
+    def list_participants(self, ptype="participant"):
+        """ returns the participants list """
+        return [ p for p in self.objectValues('Participant Profile') if p.id.startswith(ptype) ]
+
+    def getFieldValue(self, ob, id):
+        """ returns the field value for a given object and field """
+        return getattr(ob , id, '')
 
     def get_list_by_name(self, list_name):
         if list_name == 'form_edit_participants':
@@ -374,6 +398,10 @@ InitializeClass(MeetingRegistration)
 
 class FormField(Persistent):
     ''' Defines the properties of a meeting registration field'''
+
+    security = ClassSecurityInfo()
+    security.setDefaultAccess('allow')
+
     def __init__(self, id, field_type, field_label, field_content, selection_values, mandatory, overview):
         self.id = id
         self.field_type = field_type

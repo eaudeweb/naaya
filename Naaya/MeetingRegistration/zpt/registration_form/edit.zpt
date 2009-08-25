@@ -1,4 +1,4 @@
-<tal:block replace="structure here/standard_html_header"/>
+<tal:block i18n:domain="portal_translations" replace="structure here/standard_html_header"/>
 <script type="text/javascript" src="/misc_/MeetingRegistration/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
 <script type="text/javascript" src="/misc_/MeetingRegistration/tinymceconfig.js"></script>
 <script type="text/javascript" src="/misc_/MeetingRegistration/showhide.js"></script>
@@ -6,7 +6,7 @@
 <script type="text/javascript" src="http://localhost:8080/Naaya_CSS/calendar_js"></script>
 <script type="text/javascript" src="http://localhost:8080/Naaya_CSS/datetime_js"></script>
 
-<h1 tal:content="here/title">Registration Form</h1>
+<h1 tal:content="here/title" i18n:translate="">Registration Form</h1>
 <fieldset>
 	<legend i18:translate="">Add / Edit field</legend>
 	<div class="fieldset_div">
