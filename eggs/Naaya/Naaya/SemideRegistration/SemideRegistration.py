@@ -34,6 +34,7 @@ from SemidePress import SemidePress
 from utilities.Slugify import slugify
 from utilities.SendMail import send_mail
 from utilities.validators import form_validation, registration_validation
+from utilities.countries import countries
 from utilities import tmpfile
 import constants
 
@@ -91,6 +92,10 @@ class SemideRegistration(LocalPropertyManager, Folder):
         """ Returns a property value in the specified language. """
         if lang is None: lang = self.gl_get_selected_language()
         return self.getLocalProperty(id, lang)
+
+    security.declareProtected(view, 'getCountryList')
+    def getCountryList(self):
+        return countries
 
     _registration_html = PageTemplateFile('zpt/registration/registration', globals())
     def registration_html(self, REQUEST):
@@ -203,7 +208,8 @@ class SemideRegistration(LocalPropertyManager, Folder):
 
     security.declareProtected(view_management_screens, 'participants')
     participants = PageTemplateFile('zpt/registration/participants', globals())
-    #@todo: security
+
+    security.declareProtected(view_management_screens, 'participants_press')
     participants_press = PageTemplateFile('zpt/registration/participants_press', globals())
 
     security.declareProtected(view_management_screens, 'getParticipants')
