@@ -1,4 +1,5 @@
 <tal:block replace="structure here/standard_html_header"/>
+<link rel="stylesheet" type="text/css" media="print" href="/misc_/SemideRegistration/print.css" />
 
 <h1 i18n:translate="">Contribution of local and regional authorities to the Union for the
 						Mediterranean in the water sector</h1>
