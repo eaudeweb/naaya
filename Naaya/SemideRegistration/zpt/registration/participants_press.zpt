@@ -7,11 +7,11 @@
 <h2 i18n:translate="" tal:content="here/conference_details">Lyon, 23-24 November 2009</h2>
 
 
-<p>Participants list</p>
+<p>Press list</p>
 
 <tal:block define="skey python:request.get('skey', 'registration_date');
 					rkey python:request.get('rkey', '');
-					participants python:here.getParticipants(skey, rkey, False)">
+					participants python:here.getParticipants(skey, rkey, True)">
 
 <p tal:condition="not:participants" i18n:translate="">No participants have registered yet</p>
 
@@ -117,30 +117,6 @@
 			</th>
 		</tal:block>
 
-		<tal:block tal:condition="python:skey=='organisation'">
-			<tal:block tal:condition="python:rkey==''">
-				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=organisation&amp;rkey=1">
-						<span i18n:translate="" tal:omit-tag="">Organisation</span>
-					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
-				</th>
-			</tal:block>
-			<tal:block tal:condition="python:rkey=='1'">
-				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=organisation">
-						<span i18n:translate="" tal:omit-tag="">Organisation</span>
-					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
-				</th>
-			</tal:block>
-		</tal:block>
-		<tal:block tal:condition="python:skey!='organisation'">
-			<th class="scope-col" scope="col">
-				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=organisation">
-					Organisation
-				</a>
-			</th>
-		</tal:block>
-
 		<tal:block tal:condition="python:skey=='arrival_date'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="scope-col" scope="col">
@@ -199,7 +175,6 @@
 			<a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/last_name" />
 		</td>
 		<td tal:content="participant/country" />
-		<td tal:content="participant/organisation" />
 		<td tal:content="participant/arrival_date" />
 		<td>
 			<a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/id" />

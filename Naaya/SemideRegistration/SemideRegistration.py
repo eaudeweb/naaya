@@ -175,7 +175,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
         """ exports the participants list in CSV format """
         data = [('Registration date', 'First name', 'Name', 'Country', 'Organisation', 'Arriving date', 'Registration number')]
         data_app = data.append
-        for part in self.getParticipants(skey='registration_date', rkey=1):
+        for part in self.getParticipants(skey='registration_date', rkey=1, is_journalist=False):
             data_app((part.registration_date, part.first_name, part.last_name, part.country, part.organisation, part.arrival_date, part.id))
         return self.create_csv(data, filename='participants.csv', RESPONSE=REQUEST.RESPONSE)
 
@@ -184,7 +184,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
         """ exports the press participants list in CSV format """
         data = [('Registration date', 'First name', 'Name', 'Country', 'Media name', 'Arriving date', 'Registration number')]
         data_app = data.append
-        for part in self.getParticipants(skey='registration_date', rkey=1):
+        for part in self.getParticipants(skey='registration_date', rkey=1, is_journalist=True):
             data_app((part.registration_date, part.first_name, part.last_name, part.country, part.media_name, part.arrival_date, part.id))
         return self.create_csv(data, filename='press.csv', RESPONSE=REQUEST.RESPONSE)
 
@@ -198,11 +198,17 @@ class SemideRegistration(LocalPropertyManager, Folder):
 
     security.declareProtected(view_management_screens, 'participants')
     participants = PageTemplateFile('zpt/registration/participants', globals())
+    #@todo: security
+    participants_press = PageTemplateFile('zpt/registration/participants_press', globals())
 
     security.declareProtected(view_management_screens, 'getParticipants')
-    def getParticipants(self, skey, rkey):
+    def getParticipants(self, skey, rkey, is_journalist):
         """ Returns the list of participants """
-        participants = [ (getattr(p, skey), p) for p in self.objectValues('Semide Participant') if p.is_journalist is False ]
+        if is_journalist:
+            meta_type = 'Semide Press Participant'
+        else:
+            meta_type = 'Semide Participant'
+        participants = [ (getattr(p, skey), p) for p in self.objectValues(meta_type) ]
         participants.sort()
         if rkey:
             participants.reverse()
