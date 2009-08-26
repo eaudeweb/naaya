@@ -275,7 +275,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
             meta_type = 'Semide Press Participant'
         else:
             meta_type = 'Semide Participant'
-        participants = [ (getattr(p, skey), p) for p in self.objectValues(meta_type) ]
+        participants = [ ( self.unicode2UTF8(getattr(p, skey)), p ) for p in self.objectValues(meta_type) ]
         participants.sort()
         if rkey:
             participants.reverse()
