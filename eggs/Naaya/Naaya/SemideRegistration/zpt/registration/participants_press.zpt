@@ -20,9 +20,11 @@
 
 <p tal:condition="not:participants" i18n:translate="">No participants have registered yet</p>
 
-<table class="datatable" tal:condition="participants">
+<form action="deleteParticipants" method="post" tal:condition="participants">
+<table class="datatable">
 <thead>
 	<tr>
+		<th />
 		<tal:block tal:condition="python:skey=='registration_date'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="scope-col" scope="col">
@@ -174,6 +176,9 @@
 </thead>
 <tbody>
 	<tr tal:repeat="participant participants">
+		<td>
+			<input type="checkbox" name="ids" tal:attributes="value participant/id"/>
+		</td>
 		<td tal:content="python:here.formatDate(participant.registration_date)" />
 		<td tal:content="participant/country" />
 		<td tal:content="participant/first_name" />
@@ -186,14 +191,15 @@
 		</td>
 	</tr>
 </tbody>
-<tfoot>
-	<tr>
-		<td colspan="2">
-			<a tal:attributes="href string:${here/absolute_url}/exportPress" i18n:translate="">Export press participants list</a>
-		</td>
-	</tr>
-</tfoot>
 </table>
+<br/>
+<p>
+	<a tal:attributes="href string:${here/absolute_url}/exportPress" i18n:translate="">
+		Export press participants list
+	</a>
+</p>
+<input type="submit" name="submit" value="Delete selected participants"/>
+</form>
 
 </tal:block>
 <tal:block replace="structure here/standard_html_footer"/>

@@ -8,13 +8,17 @@
 <h1 tal:content="here/getRegistrationTitle" />
 <h2 tal:content="here/getConferenceDetails" />
 
-
 <tal:block define="global entitled python:here.isEntitled(request);" />
 
 <tal:block condition="not:entitled">
 	<tal:block condition="python:request.form.has_key('authenticate')">
-		<div class="message-error">
+		<div style="padding: 1em" class="message-error" i18n:translate="">
 			Wrong registration number - participant name combination. Please try again.
+		</div>
+	</tal:block>
+	<tal:block condition="python:request.get('email_sent')">
+		<div style="padding: 1em" class="message-error" i18n:translate="">
+			An email with the registration credentials was sent. Please use these credentials for authentication.
 		</div>
 	</tal:block>
 
@@ -31,6 +35,26 @@
 		</table>
 		<input type="submit" name="authenticate" id="authenticate" value="Edit profile" i18n:attributes="value" />
 	</form>
+	<tal:block condition="python:request.form.has_key('authenticate') or request.get('wrong_email', '')">
+		<fieldset style="margin-top: 1em">
+			<legend i18:translate="">Resend credentials</legend>
+			<div style="padding: 1em;">
+				<form action="" name="frmResend" method="post">
+					<div>
+						<label for="email" i18n:translate="">
+							Please enter your email to resend the confirmation email,
+							in case you forgot the authentication details
+						</label>
+					</div>
+					<div class="message-error" tal:condition="python:request.get('wrong_email', '')" i18n:translate="">
+						The email doesn't correspond with the one used at the registration. Please try again!
+					</div>
+					<div><input type="text" name="email" value="" size="50"/></div>
+					<input type="submit" name="resend_mail" id="resend_mail" value="Submit" i18n:attributes="value" />
+				</form>
+			</div>
+		</fieldset>
+	</tal:block>
 </tal:block>
 
 <tal:block condition="entitled">
@@ -219,7 +243,7 @@
 			<td tal:content="python:here.formatDate(here.registration_date)" />
 		</tr>
 	</table>
-	<div class="field">
+	<div class="field" tal:condition="not:here/is_journalist">
 		<input type="radio" name="hotel_reservation" value="1" tal:attributes="checked python:request.get('hotel_reservation', here.hotel_reservation)=='1'" />
 		<span  i18n:translate="">I am part of one of the following delegations:
 		(2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro,

@@ -132,7 +132,6 @@ class SemideRegistration(LocalPropertyManager, Folder):
                 self._setObject(registration_no, ob)
                 participant = self._getOb(registration_no, None)
                 if participant:
-                    lang = self.gl_get_selected_language()
                     #save the authentication token on session
                     REQUEST.SESSION.set('authentication_id', registration_no)
                     REQUEST.SESSION.set('authentication_name', self.unicode2UTF8(participant.last_name))
@@ -172,6 +171,25 @@ class SemideRegistration(LocalPropertyManager, Folder):
                 self._setObject(registration_no, ob)
                 press = self._getOb(registration_no, None)
                 if press:
+                    #save the authentication token on session
+                    REQUEST.SESSION.set('authentication_id', registration_no)
+                    REQUEST.SESSION.set('authentication_name', self.unicode2UTF8(press.last_name))
+
+                    #send notifications
+                    values = {'registration_edit_link': press.absolute_url(),
+                                'registration_event': self.title,
+                                'website_team': self.site_title,
+                                'registration_number': registration_no,
+                                'last_name': press.last_name}
+                    self.send_registration_notification(press.email,
+                        'Event registration',
+                        constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
+                        constants.REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
+                    self.send_registration_notification(self.administrative_email,
+                        'Event registration',
+                        constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE % values,
+                        constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
+
                     return REQUEST.RESPONSE.redirect(press.absolute_url())
         return self.registration_press_form(REQUEST)
 
@@ -262,6 +280,13 @@ class SemideRegistration(LocalPropertyManager, Folder):
         if rkey:
             participants.reverse()
         return [p for (key, p) in participants]
+
+    security.declareProtected(constants.MANAGE_PERMISSION, 'deleteParticipants')
+    def deleteParticipants(self, ids=[], REQUEST=None):
+        """ Deletes selected participants """
+        ids = self.utConvertToList(ids)
+        self.manage_delObjects(ids)
+        return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
 
     security.declarePublic('canManageParticipants')
     def canManageParticipants(self):
