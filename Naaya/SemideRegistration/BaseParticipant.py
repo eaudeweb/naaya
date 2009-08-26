@@ -74,7 +74,7 @@ class BaseParticipant(SimpleItem):
     def isEntitled(self, REQUEST):
         """ check if current user has the right to modify this object """
         return ((REQUEST.SESSION.get('authentication_id','') == str(self.id)) and \
-            (REQUEST.SESSION.get('authentication_name','') == str(self.last_name))) or \
+            (REQUEST.SESSION.get('authentication_name','') == self.unicode2UTF8(self.last_name))) or \
             self.canManageParticipants()
 
     security.declareProtected(constants.VIEW_PERMISSION, 'index_html')
@@ -86,8 +86,8 @@ class BaseParticipant(SimpleItem):
         submit =  REQUEST.form.get('submit', '')
         if REQUEST.form.has_key('authenticate'):
             #if the user has submitted a valid registration number, this is saved on the session
-            REQUEST.SESSION.set('authentication_id', REQUEST.get('registration_no'))
-            REQUEST.SESSION.set('authentication_name', REQUEST.get('last_name'))
+            session.set('authentication_id', REQUEST.get('registration_no'))
+            session.set('authentication_name', self.unicode2UTF8(REQUEST.get('last_name')))
         return self._index_html(REQUEST)
 
     _edit_html = PageTemplateFile('zpt/participant/edit', globals())
@@ -103,8 +103,8 @@ class BaseParticipant(SimpleItem):
                                 date_fields=constants.DATE_FIELDS,
                                 time_fields=constants.TIME_FIELDS,
                                 REQUEST=REQUEST):
-                REQUEST.SESSION.set('authentication_id', REQUEST.get('registration_no'))
-                REQUEST.SESSION.set('authentication_name', REQUEST.get('last_name'))
+                session.set('authentication_id', REQUEST.get('registration_no'))
+                session.set('authentication_name', self.unicode2UTF8(REQUEST.get('last_name')))
         if submit:
             if form_validation(mandatory_fields=mandatory_fields, 
                                 date_fields=constants.DATE_FIELDS,
