@@ -32,6 +32,7 @@ misc_ = {
     'core.js': ImageFile('www/core.js', globals()),
     'datetime.js': ImageFile('www/datetime.js', globals()),
     'style.css': ImageFile('www/style.css', globals()),
+    'print.css': ImageFile('www/print.css', globals()),
     'SemideParticipant.png': ImageFile('www/SemideParticipant.png', globals()),
     'SemidePress.gif': ImageFile('www/SemidePress.gif', globals()),
     'print.gif': ImageFile('www/print.gif', globals()),
