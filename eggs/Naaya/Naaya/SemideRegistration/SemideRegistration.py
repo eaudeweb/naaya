@@ -138,10 +138,10 @@ class SemideRegistration(LocalPropertyManager, Folder):
 
                     #send notifications
                     values = {'registration_edit_link': participant.absolute_url(),
-                                'registration_event': self.title,
-                                'website_team': self.site_title,
+                                'registration_event': self.unicode2UTF8(self.title),
+                                'website_team': self.unicode2UTF8(self.site_title),
                                 'registration_number': registration_no,
-                                'last_name': participant.last_name}
+                                'last_name': self.unicode2UTF8(participant.last_name)}
                     self.send_registration_notification(participant.email,
                         'Event registration',
                         constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
@@ -177,10 +177,10 @@ class SemideRegistration(LocalPropertyManager, Folder):
 
                     #send notifications
                     values = {'registration_edit_link': press.absolute_url(),
-                                'registration_event': self.title,
-                                'website_team': self.site_title,
+                                'registration_event': self.unicode2UTF8(self.title),
+                                'website_team': self.unicode2UTF8(self.site_title),
                                 'registration_number': registration_no,
-                                'last_name': press.last_name}
+                                'last_name': self.unicode2UTF8(press.last_name)}
                     self.send_registration_notification(press.email,
                         'Event registration',
                         constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
