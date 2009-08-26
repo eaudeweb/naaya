@@ -103,8 +103,11 @@ class SemideRegistration(LocalPropertyManager, Folder):
                 participant = self._getOb(registration_no, None)
                 if participant:
                     lang = self.gl_get_selected_language()
+                    #save the authentication token on session
                     REQUEST.SESSION.set('authentication_id', registration_no)
-                    REQUEST.SESSION.set('authentication_name', participant.last_name)
+                    REQUEST.SESSION.set('authentication_name', self.unicode2UTF8(participant.last_name))
+
+                    #send notifications
                     values = {'registration_edit_link': participant.absolute_url(),
                                 'registration_event': self.title,
                                 'website_team': self.site_title,
@@ -118,6 +121,8 @@ class SemideRegistration(LocalPropertyManager, Folder):
                         'Event registration',
                         constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE % values,
                         constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
+
+                    #redirect to profile page
                     return REQUEST.RESPONSE.redirect(participant.absolute_url())
         return self._registration_html(REQUEST)
 
@@ -170,8 +175,8 @@ class SemideRegistration(LocalPropertyManager, Folder):
         send_mail(msg_from=constants.NO_REPLY_MAIL,
                     msg_to=email,
                     msg_subject='%s - Registration added / edited' % title,
-                    msg_body=email_html,
-                    msg_body_text=email_txt,
+                    msg_body=self.unicode2UTF8(email_html),
+                    msg_body_text=self.unicode2UTF8(email_txt),
                     smtp_host = constants.SMTP_HOST,
                     smtp_port = constants.SMTP_PORT
                     )
@@ -247,6 +252,10 @@ class SemideRegistration(LocalPropertyManager, Folder):
     #internal
     def formatDate(self, sdate):
         return sdate.strftime('%d %b %Y')
+
+    def unicode2UTF8(self, s):
+        if isinstance(s, unicode):
+            return s.encode('utf-8')
 
     def getPropertyValue(self, id, lang=None):
         """ Returns a property value in the specified language. """
