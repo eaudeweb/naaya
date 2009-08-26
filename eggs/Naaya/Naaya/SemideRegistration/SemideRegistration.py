@@ -67,6 +67,10 @@ class SemideRegistration(LocalPropertyManager, Folder):
     conference_details = LocalProperty('conference_details')
     introduction = LocalProperty('introduction')
 
+    def hasVersion(self):
+        """ """
+        return None
+
     def __init__(self, id, title, conference_details, administrative_email, start_date, end_date, introduction, lang):
         """ constructor """
         self.id = id

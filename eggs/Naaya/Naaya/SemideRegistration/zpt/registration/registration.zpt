@@ -8,8 +8,8 @@
 <h2 i18n:translate="">Lyon, 23-24 November 2009</h2>
 <h3 i18n:translate="">Participants registration </h3>
 
-<p i18n:translate="">Please fill the form below and click <strong i18n:name="submit" i18n:translate="">Submit</strong>.
-	Fields in <span i18n:name="red" i18n:translate="" style="color: #f40000">red</span> are mandatory.
+<p i18n:translate="">Please fill the form below and click <strong>Submit</strong>.
+	Fields in <span style="color: #f40000">red</span> are mandatory.
 	You can update your registration form later with your family name and
 	the registration number that will be given to you when you submit the form.</p>
 <p i18n:translate="">Date format: dd/mm/yyyy or dd/mm/yy.</p>
@@ -131,13 +131,13 @@
 
 	<div class="field">
 		<input type="radio" name="hotel_reservation" value="1" />
-		<span  i18n:translate="">I am part of one of the following delegations:
+		<span i18n:translate="">I am part of one of the following delegations:
 		(2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro,
 		Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon,
 		Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey.
 		My accommodation is covered by the French Government."</span><br/>
 		<input type="radio" name="hotel_reservation" value="2" checked="checked"/>
-		<span  i18n:translate="">I pay my own accommodation. So please book your hotel room,
+		<span i18n:translate="">I pay my own accommodation. So please book your hotel room,
 		click here to get hotels contacts and special rates"</span><br/>
 	</div>
 
@@ -147,6 +147,8 @@
 		<input type="submit" name="submit" value="Submit and print" i18n:attributes="value" />
 	</div>
 </form>
-<p i18n:translate="">IMPORTANT: If you do not receive a confirmation within 72 hours, please contact:
-Andrea MATUSAKOVA <a i18n:name="email-address" href="mailto:matusakova@pseau.org">matusakova@pseau.org</a></p>
+<p>
+	<span i18n:translate="">IMPORTANT: If you do not receive a confirmation within 72 hours, please contact: Andrea MATUSAKOVA</span>
+	<a href="mailto:matusakova@pseau.org">matusakova@pseau.org</a>
+</p>
 <tal:block replace="structure here/standard_html_footer"/>
