@@ -28,6 +28,11 @@ TIME_FIELDS = ['arrival_time', 'departure_time']
 
 SMTP_HOST = 'mail.eaudeweb.ro'
 SMTP_PORT = '25'
+NO_REPLY_MAIL = 'no-reply@ufm-water.net'
+
+
+VIEW_PERMISSION = 'View'
+MANAGE_PERMISSION = 'Manage Semide Registration'
 
 REGISTRATION_ADD_EDIT_TEMPLATE = """\
 <html>
@@ -43,14 +48,14 @@ REGISTRATION_ADD_EDIT_TEMPLATE = """\
             <a href="%(registration_edit_link)s">%(registration_edit_link)s</a>
         <p/>
         <p>
-            The registration number <strong>%{registration_number}s</strong> and your last name <strong>%{last_name}s</strong> (case sensitive) are required for authentication.
+            The registration number <strong>%(registration_number)s</strong> and your last name <strong>%(last_name)s</strong> (case sensitive) are required for authentication.
         <p/>
         <p>
             ---
         </p>
         <p>
             Best Regards,<br/>
-            %(website_team)s
+            %(website_team)s team
         </p>
     </body>
 </html>"""
@@ -61,11 +66,11 @@ Your registration for the "%(registration_event)s" was received in good order. Y
 
 %(registration_edit_link)s
 
-The registration number %{registration_number}s and your last name %{last_name}s (case sensitive) are required for authentication.
+The registration number %(registration_number)s and your last name %(last_name)s (case sensitive) are required for authentication.
 
 ---
 Best Regards,
-%(website_team)s"""
+%(website_team)s team"""
 
 NEW_REGISTRATION_ADD_EDIT_TEMPLATE = """\
 <html>
@@ -85,7 +90,7 @@ NEW_REGISTRATION_ADD_EDIT_TEMPLATE = """\
         </p>
         <p>
             Best Regards,<br/>
-            %(website_team)s
+            %(website_team)s team
         </p>
     </body>
 </html>"""
@@ -100,4 +105,4 @@ You are registered as the administrator of this folder.
 
 ---
 Best Regards,
-%(website_team)s"""
+%(website_team)s team"""

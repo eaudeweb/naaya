@@ -26,6 +26,7 @@ class SemidePress(BaseParticipant):
                         passport_no, passport_expire, phone_number, fax_number, arrival_date, arrival_from, \
                         arrival_flight, arrival_time, departure_date, departure_flight, departure_time, is_journalist=True)
 
+    security.declareProtected(constants.VIEW_PERMISSION, 'edit')
     def edit(self, first_name, last_name, email, country, media_name, media_type, media_description, media_position, \
                     passport_no, passport_expire, phone_number, mobile_number,fax_number, arrival_date, arrival_from, \
                     arrival_flight, arrival_time, departure_date, departure_flight, departure_time, hotel_reservation):
@@ -38,6 +39,7 @@ class SemidePress(BaseParticipant):
         BaseParticipant.__dict__['edit'](self, first_name, last_name, email, country, passport_no, passport_expire, phone_number, 
                fax_number, arrival_date, arrival_from, arrival_flight, arrival_time, departure_date, departure_flight, departure_time, hotel_reservation)
 
+    security.declareProtected(constants.VIEW_PERMISSION, 'edit_html')
     def edit_html(self, REQUEST=None):
         """ edit properties interface """
         return BaseParticipant.__dict__['edit_html'](self, constants.PRESS_MANDATORY_FIELDS, REQUEST)

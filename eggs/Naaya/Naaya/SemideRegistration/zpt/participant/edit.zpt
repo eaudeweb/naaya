@@ -3,9 +3,10 @@
 <script type="text/javascript" src="/misc_/SemideRegistration/core.js"></script>
 <script type="text/javascript" src="/misc_/SemideRegistration/calendar.js"></script>
 <script type="text/javascript" src="/misc_/SemideRegistration/datetime.js"></script>
-<h1 i18n:translate="">Contribution of local and regional authorities to the Union for the
-						Mediterranean in the water sector</h1>
-<h2 i18n:translate="">Lyon, 23-24 November 2009</h2>
+
+
+<h1 tal:content="here/getRegistrationTitle" />
+<h2 tal:content="here/getConferenceDetails" />
 
 
 <tal:block define="global entitled python:here.isEntitled(request);" />
@@ -219,13 +220,13 @@
 		</tr>
 	</table>
 	<div class="field">
-		<input type="radio" name="hotel_reservation" value="1" tal:attributes="checked python:request.get('hotel_reservation')=='1'" />
+		<input type="radio" name="hotel_reservation" value="1" tal:attributes="checked python:request.get('hotel_reservation', here.hotel_reservation)=='1'" />
 		<span  i18n:translate="">I am part of one of the following delegations:
 		(2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro,
 		Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon,
 		Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey.
 		My accommodation is covered by the French Government.</span><br/>
-		<input type="radio" name="hotel_reservation" value="2" tal:attributes="checked python:request.get('hotel_reservation')=='2'"/>
+		<input type="radio" name="hotel_reservation" value="2" tal:attributes="checked python:request.get('hotel_reservation', here.hotel_reservation)=='2'"/>
 		<span  i18n:translate="">I pay my own accommodation. So please book your hotel room,
 		click here to get hotels contacts and special rates</span><br/>
 	</div>

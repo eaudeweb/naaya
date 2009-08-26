@@ -1,9 +1,8 @@
 <tal:block replace="structure here/standard_html_header"/>
 <link rel="stylesheet" type="text/css" media="print" href="/misc_/SemideRegistration/print.css" />
 
-<h1 i18n:translate="">Contribution of local and regional authorities to the Union for the
-						Mediterranean in the water sector</h1>
-<h2 i18n:translate="">Lyon, 23-24 November 2009</h2>
+<h1 tal:content="here/getRegistrationTitle" />
+<h2 tal:content="here/getConferenceDetails" />
 
 <tal:block define="global entitled python:here.isEntitled(request);" />
 
@@ -38,7 +37,7 @@
 	<table class="datatable">
 	<tr>
 		<th i18n:translate="">Registration number</th>
-		<td tal:content="here/id" />
+		<td><strong tal:content="here/id" /></td>
 	</tr>
 	<tr>
 		<th i18n:translate="">Name</th>

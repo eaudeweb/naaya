@@ -34,6 +34,7 @@ class SemideParticipant(BaseParticipant):
                                         fax_number, arrival_date, arrival_from, arrival_flight, arrival_time, departure_date, 
                                         departure_flight, departure_time, hotel_reservation)
 
+    security.declareProtected(constants.VIEW_PERMISSION, 'edit_html')
     def edit_html(self, REQUEST=None):
         """ edit properties interface """
         return BaseParticipant.__dict__['edit_html'](self, constants.PART_MANDATORY_FIELDS, REQUEST)

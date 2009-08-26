@@ -3,9 +3,10 @@
 <script type="text/javascript" src="/misc_/SemideRegistration/core.js"></script>
 <script type="text/javascript" src="/misc_/SemideRegistration/calendar.js"></script>
 <script type="text/javascript" src="/misc_/SemideRegistration/datetime.js"></script>
-<h1 i18n:translate="">Contribution of local and regional authorities to the Union for the
-						Mediterranean in the water sector</h1>
-<h2 i18n:translate="">Lyon, 23-24 November 2009</h2>
+
+<h1 tal:content="here/getRegistrationTitle" />
+<h2 tal:content="here/getConferenceDetails" />
+
 <h3 i18n:translate="">Participants registration </h3>
 
 <p i18n:translate="">Please fill the form below and click <strong>Submit</strong>.

@@ -2,6 +2,8 @@ import os
 import tempfile
 import csv
 
+from AccessControl import getSecurityManager
+
 class tmpfile:
 
     def __init__(self, data):
@@ -15,3 +17,8 @@ class tmpfile:
 
     def __del__(self):
         os.unlink(self.fname)
+
+
+def checkPermission(permission, object):
+    """  Generic function to check a given permission on the current object. """
+    return getSecurityManager().checkPermission(permission, object)
