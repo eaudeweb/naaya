@@ -231,7 +231,6 @@ countries = (
 ("VG", "Virgin Islands (British)"),
 ("VI", "Virgin Islands (U.S.)"),
 ("WF", "Wallis And Futuna Islands"),
-("EH", "Western Sahara"),
 ("YE", "Yemen"),
 ("YU", "Yugoslavia"),
 ("ZR", "Zaire"),
