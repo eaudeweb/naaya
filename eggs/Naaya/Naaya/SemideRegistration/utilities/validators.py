@@ -1,5 +1,6 @@
 import re
 import time
+from DateTime import DateTime
 
 email_expr = re.compile(r'^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$', re.IGNORECASE)
 def form_validation (mandatory_fields, date_fields, time_fields, REQUEST):
@@ -66,6 +67,10 @@ def registration_validation(REQUEST):
             date = time.strptime(end_date, "%d/%m/%Y")
         except:
             REQUEST.set('end_date_invalid', True)
+            has_errors = True
+    if start_date and end_date and not has_errors:
+        if DateTime(start_date) > DateTime(end_date):
+            REQUEST.set('date_interval_invalid', True)
             has_errors = True
     if has_errors:
         REQUEST.set('request_error', True)
