@@ -27,6 +27,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.Folder import Folder
 
 from Products.NaayaCore.managers import utils as naaya_utils
+
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from SemideParticipant import SemideParticipant
 from SemidePress import SemidePress
@@ -54,7 +55,7 @@ def manage_add_registration(self, id='', title='', conference_details='', admini
         return add_registration.__of__(self)(REQUEST)
 
 
-class SemideRegistration(Folder, LocalPropertyManager):
+class SemideRegistration(LocalPropertyManager, Folder):
     """ Main class of the meeting registration"""
 
     meta_type = 'Semide Registration'
@@ -71,7 +72,7 @@ class SemideRegistration(Folder, LocalPropertyManager):
         self.id = id
         self.save_properties(title, conference_details, administrative_email, start_date, end_date, introduction, lang)
 
-    #@todo: security
+    security.declareProtected(view_management_screens, 'save_properties')
     def save_properties(self, title, conference_details, administrative_email, start_date, end_date, introduction, lang):
         """ save properties """
         self._setLocalPropValue('title', lang, title)
@@ -141,8 +142,18 @@ class SemideRegistration(Folder, LocalPropertyManager):
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/registration/index', globals())
 
+    security.declareProtected(view_management_screens, '_edit_html')
+    _edit_html = PageTemplateFile('zpt/registration/edit', globals())
+
     security.declareProtected(view_management_screens, 'edit_html')
-    edit_html = PageTemplateFile('zpt/registration/edit', globals())
+    def edit_html(self, REQUEST):
+        """ edit properties """
+        submit =  REQUEST.form.get('submit', '')
+        if submit:
+            cleaned_data = REQUEST.form
+            del cleaned_data['submit']
+            self.save_properties(**cleaned_data)
+        return self._edit_html(REQUEST)
 
     security.declarePrivate('send_registration_notification')
     def send_registration_notification(self, email, title, email_html, email_txt):
@@ -159,7 +170,7 @@ class SemideRegistration(Folder, LocalPropertyManager):
     def formatDate(self, sdate):
         return sdate.strftime('%d %b %Y')
 
-    #@todo: security
+    security.declareProtected(view_management_screens, 'exportParticipants')
     def exportParticipants(self, REQUEST=None, RESPONSE=None):
         """ exports the participants list in CSV format """
         data = [('Registration date', 'First name', 'Name', 'Country', 'Organisation', 'Arriving date', 'Registration number')]
@@ -168,7 +179,7 @@ class SemideRegistration(Folder, LocalPropertyManager):
             data_app((part.registration_date, part.first_name, part.last_name, part.country, part.organisation, part.arrival_date, part.id))
         return self.create_csv(data, filename='participants.csv', RESPONSE=REQUEST.RESPONSE)
 
-    #@todo: security
+    security.declareProtected(view_management_screens, 'exportPress')
     def exportPress(self, REQUEST=None, RESPONSE=None):
         """ exports the press participants list in CSV format """
         data = [('Registration date', 'First name', 'Name', 'Country', 'Media name', 'Arriving date', 'Registration number')]
@@ -185,10 +196,10 @@ class SemideRegistration(Folder, LocalPropertyManager):
         RESPONSE.setHeader('Content-Disposition', 'attachment; filename=participants.csv')
         return content
 
-    #@todo: security
+    security.declareProtected(view_management_screens, 'participants')
     participants = PageTemplateFile('zpt/registration/participants', globals())
 
-    #@todo: security
+    security.declareProtected(view_management_screens, 'getParticipants')
     def getParticipants(self, skey, rkey):
         """ Returns the list of participants """
         participants = [ (getattr(p, skey), p) for p in self.objectValues('Semide Participant') if p.is_journalist is False ]

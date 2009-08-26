@@ -9,7 +9,8 @@
 <h1 i18n:translate="">Add Semide Registration</h1>
 
 <form id="frmRegistrationForm" name="frmRegistrationForm" action="manage_add_registration" method="post"
-	tal:define="request_error python:request.get('request_error')">
+	tal:define="request_error python:request.get('request_error');
+				curr_lang python:request.get('lang', None) or here.gl_get_selected_language();">
 	<div class="field">
 		<label i18n:translate="">Fields marked with * are mandatory.</label>
 	</div>
@@ -75,6 +76,7 @@
 		When pasting from word documents, please use the "Paste from Word" button.
 	</div>
 	<div class="field">
+		<input type="hidden" name="lang" tal:attributes="value curr_lang" />
 		<input type="submit" value="Submit" i18n:attributes="value" />
 	</div>
 </form>
