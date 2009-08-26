@@ -34,6 +34,9 @@ NO_REPLY_MAIL = 'no-reply@ufm-water.net'
 VIEW_PERMISSION = 'View'
 MANAGE_PERMISSION = 'Manage Semide Registration'
 
+from os.path import dirname
+PRODUCT_PATH = dirname(__file__)
+
 REGISTRATION_ADD_EDIT_TEMPLATE = """\
 <html>
     <head/>

@@ -19,14 +19,15 @@
 # Valentin Dumitru, Eau de Web
 
 import re
+from os.path import join
 from DateTime import DateTime
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from OFS.Folder import Folder
 
 from Products.NaayaCore.managers import utils as naaya_utils
-
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from SemideParticipant import SemideParticipant
 from SemidePress import SemidePress
@@ -50,6 +51,7 @@ def manage_add_registration(self, id='', title='', conference_details='', admini
         self.gl_add_languages(ob)
         self._setObject(id, ob)
         ob = self._getOb(id)
+        ob._loadRegistrationForms()
         if REQUEST:
             REQUEST.RESPONSE.redirect(self.absolute_url())
     else:
@@ -68,7 +70,15 @@ class SemideRegistration(LocalPropertyManager, Folder):
     conference_details = LocalProperty('conference_details')
     introduction = LocalProperty('introduction')
 
-    manage_options = Folder.manage_options
+    manage_options = (
+        Folder.manage_options[:1]
+        +
+        (
+            {'label': 'Reload registration forms', 'action': 'reloadRegistrationForms'},
+        )
+        +
+        Folder.manage_options[2:]
+    )
 
     def __init__(self, id, title, conference_details, administrative_email, start_date, end_date, introduction, lang):
         """ constructor """
@@ -85,7 +95,27 @@ class SemideRegistration(LocalPropertyManager, Folder):
         self.start_date = DateTime(start_date)
         self.end_date = DateTime(end_date)
 
-    _registration_html = PageTemplateFile('zpt/registration/registration', globals())
+    def _loadRegistrationForms(self):
+        """ load registration forms """
+        registration_form = file(join(constants.PRODUCT_PATH, 'zpt', 'registration', 'registration.zpt')).read()
+        manage_addPageTemplate(self, 'registration_form', title='', text=registration_form)
+        registration_press_form = file(join(constants.PRODUCT_PATH, 'zpt', 'registration', 'registration_press.zpt')).read()
+        manage_addPageTemplate(self, 'registration_press_form', title='', text=registration_press_form)
+
+    def _deleteRegistrationForms(self):
+        try:
+            self.manage_delObjects(['registration_form', 'registration_press_form'])
+        except:
+            pass
+
+    security.declareProtected(constants.MANAGE_PERMISSION, 'reloadRegistrationForms')
+    def reloadRegistrationForms(self, REQUEST=None):
+        """ reload registration forms """
+        self._deleteRegistrationForms()
+        self._loadRegistrationForms()
+        if REQUEST:
+            return self.manage_main(self, REQUEST, update_menu=1)
+
     def registration_html(self, REQUEST):
         """ registration form """
         submit =  REQUEST.form.get('submit', '')
@@ -124,9 +154,8 @@ class SemideRegistration(LocalPropertyManager, Folder):
 
                     #redirect to profile page
                     return REQUEST.RESPONSE.redirect(participant.absolute_url())
-        return self._registration_html(REQUEST)
+        return self.registration_form(REQUEST)
 
-    _registration_press_html = PageTemplateFile('zpt/registration/registration_press', globals())
     def registration_press_html(self, REQUEST):
         """ registration form """
         submit =  REQUEST.form.get('submit', '')
@@ -144,7 +173,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
                 press = self._getOb(registration_no, None)
                 if press:
                     return REQUEST.RESPONSE.redirect(press.absolute_url())
-        return self._registration_press_html(REQUEST)
+        return self.registration_press_form(REQUEST)
 
     security.declareProtected(constants.VIEW_PERMISSION, 'index_html')
     index_html = PageTemplateFile('zpt/registration/index', globals())
