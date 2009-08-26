@@ -6,6 +6,7 @@
 
 <div id="admin_this_folder">
 	<a tal:attributes="href string:${here/absolute_url}/edit_html">Edit registration</a>
+	<a tal:attributes="href string:javascript:print()">Print registration</a>
 </div>
 
 <table class="datatable">
@@ -120,7 +121,4 @@
 </tr>
 </table>
 
-<a title="Print" href="javascript:print()">
-	<img alt="Print" src="misc_/SemideRegistration/print.gif" />
-</a>
 <tal:block replace="structure here/standard_html_footer"/>
