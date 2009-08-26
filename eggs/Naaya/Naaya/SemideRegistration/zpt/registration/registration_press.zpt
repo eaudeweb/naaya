@@ -12,7 +12,7 @@
 	Fields in <span style="color: #f40000">red</span> are mandatory.
 	You can update your registration form later with your family name and
 	the registration number that will be given to you when you submit the form.</p>
-<p i18n:translate="">Date format: dd/mm/yyyy or dd/mm/yy.</p>
+<p i18n:translate="">Date format: dd/mm/yyyy. Time format: hh:mm</p>
 
 <form action="" method="post">
 	<div tal:condition="python:request.has_key('last_name_error')" class="message-error" i18n:translate="">
@@ -120,7 +120,7 @@
 		Please enter the time in the correct format hh:mm.
 	</div>
 	<div class="field">
-		<label for="arrival_time" i18n:translate="">Time of arrival</label>
+		<label for="arrival_time" i18n:translate="">Time of arrival (hh:mm)</label>
 		<input type="text" name="arrival_time" size="50" tal:attributes="value python:request.get('arrival_time')" />
 	</div>
 	<div tal:condition="python:request.has_key('departure_date_notvalid')" class="message-error" i18n:translate="">
@@ -139,7 +139,7 @@
 		Please enter the time in the correct format hh:mm.
 	</div>
 	<div class="field">
-		<label for="departure_time" i18n:translate="">Time of departure</label>
+		<label for="departure_time" i18n:translate="">Time of departure (hh:mm)</label>
 		<input type="text" name="departure_time" size="50" tal:attributes="value python:request.get('departure_time')" />
 	</div>
 

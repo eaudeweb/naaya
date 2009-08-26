@@ -179,7 +179,7 @@
 			tal:attributes="value python:request.get('arrival_flight', here.arrival_flight)" /></td>
 		</tr>
 		<tr>
-			<th i18n:translate="">Time of arrival</th>
+			<th i18n:translate="">Time of arrival (hh:mm)</th>
 			<td>
 				<div tal:condition="python:request.has_key('arrival_time_notvalid')" class="message-error" i18n:translate="">
 					Please enter the time in the correct format hh:mm.
@@ -204,7 +204,7 @@
 			tal:attributes="value python:request.get('departure_flight', here.departure_flight)" /></td>
 		</tr>
 		<tr>
-			<th i18n:translate="">Time of departure</th>
+			<th i18n:translate="">Time of departure (hh:mm)</th>
 			<td>
 				<div tal:condition="python:request.has_key('departure_time_notvalid')" class="message-error" i18n:translate="">
 					Please enter the time in the correct format hh:mm.
