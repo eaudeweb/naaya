@@ -1,17 +1,12 @@
 <tal:block replace="structure here/standard_html_header"/>
 
-<h1 i18n:translate="" tal:content="here/title_or_id">
-	Contribution of local and regional authorities to the Union for the
-	Mediterranean in the water sector
-</h1>
-<h2 i18n:translate="" tal:content="here/conference_details">Lyon, 23-24 November 2009</h2>
+<h1 tal:content="here/getRegistrationTitle" />
+<h2 tal:content="here/getConferenceDetails" />
 
-<div id="admin_this_folder">
-	<a tal:attributes="href string:${here/absolute_url}/edit_html">Edit properties</a>
-	<a tal:attributes="href string:${here/absolute_url}/participants">View participants</a>
-	<a tal:attributes="href string:${here/absolute_url}/participants_press">View press participants</a>
-	<a tal:attributes="href string:${here/absolute_url}/registration_html">Register participants</a>
-	<a tal:attributes="href string:${here/absolute_url}/registration_html">Register press participants</a>
+<div class="floated-buttons">
+	<span class="buttons">
+		<a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a>
+	</span>
 </div>
 
 <p>Press list</p>
@@ -189,6 +184,8 @@
 	</tr>
 </tbody>
 </table>
+
+<p><a tal:attributes="href string:${here/absolute_url}/exportPress" i18n:translate="">Export press participants list</a></p>
 
 </tal:block>
 <tal:block replace="structure here/standard_html_footer"/>

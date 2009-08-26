@@ -10,6 +10,8 @@ import constants
 class BaseParticipant(SimpleItem):
     """ Base class for participants """
 
+    security = ClassSecurityInfo()
+
     def __init__(self, registration_no, first_name, last_name, email, country, passport_no, \
                 passport_expire, phone_number, fax_number, arrival_date, arrival_from, \
                 arrival_flight, arrival_time, departure_date, departure_flight, departure_time, is_journalist):
@@ -23,16 +25,23 @@ class BaseParticipant(SimpleItem):
         self.passport_expire = passport_expire
         self.phone_number = phone_number
         self.fax_number = fax_number
-        self.arrival_date = arrival_date
+        if arrival_date:
+            self.arrival_date = DateTime(arrival_date)
+        else:
+            self.arrival_date = ''
         self.arrival_from = arrival_from
         self.arrival_flight = arrival_flight
         self.arrival_time = arrival_time
-        self.departure_date = departure_date
+        if departure_date:
+            self.departure_date = DateTime(departure_date)
+        else:
+            self.departure_date = ''
         self.departure_flight = departure_flight
         self.departure_time = departure_time
         self.is_journalist = is_journalist
         self.registration_date = DateTime()
 
+    security.declareProtected(constants.VIEW_PERMISSION, 'edit')
     def edit(self, first_name, last_name, email, country, passport_no, passport_expire, phone_number, \
                     fax_number, arrival_date, arrival_from, arrival_flight, arrival_time, departure_date, \
                     departure_flight, departure_time, hotel_reservation):
@@ -45,22 +54,30 @@ class BaseParticipant(SimpleItem):
         self.passport_expire = passport_expire
         self.phone_number = phone_number
         self.fax_number = fax_number
-        self.arrival_date = arrival_date
+        if arrival_date:
+            self.arrival_date = DateTime(arrival_date)
+        else:
+            self.arrival_date = ''
         self.arrival_from = arrival_from
         self.arrival_flight = arrival_flight
         self.arrival_time = arrival_time
-        self.departure_date = departure_date
+        if departure_date:
+            self.departure_date = DateTime(departure_date)
+        else:
+            self.departure_date = ''
         self.departure_flight = departure_flight
         self.departure_time = departure_time
         self.hotel_reservation = hotel_reservation
         self_p_changed = 1
 
+    security.declareProtected(constants.VIEW_PERMISSION, 'isEntitled')
     def isEntitled(self, REQUEST):
         """ check if current user has the right to modify this object """
-        return (REQUEST.SESSION.get('authentication_id','') == str(self.id)) and \
-            (REQUEST.SESSION.get('authentication_name','') == str(self.last_name))
+        return ((REQUEST.SESSION.get('authentication_id','') == str(self.id)) and \
+            (REQUEST.SESSION.get('authentication_name','') == str(self.last_name))) or \
+            self.canManageParticipants()
 
-    #@todo: security
+    security.declareProtected(constants.VIEW_PERMISSION, 'index_html')
     _index_html = PageTemplateFile('zpt/participant/index', globals())
     #@todo: security
     def index_html(self, REQUEST=None):
@@ -73,9 +90,9 @@ class BaseParticipant(SimpleItem):
             REQUEST.SESSION.set('authentication_name', REQUEST.get('last_name'))
         return self._index_html(REQUEST)
 
-    #@todo: security
     _edit_html = PageTemplateFile('zpt/participant/edit', globals())
-    #@todo: security
+
+    security.declareProtected(constants.VIEW_PERMISSION, 'edit_html')
     def edit_html(self, mandatory_fields, REQUEST=None):
         """ edit base participant properties """
         session = REQUEST.SESSION
