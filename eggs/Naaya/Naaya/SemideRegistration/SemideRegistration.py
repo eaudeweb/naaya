@@ -47,6 +47,7 @@ def manage_add_registration(self, id='', title='', conference_details='', admini
         if lang is None: 
             lang = self.gl_get_selected_language()
         ob = SemideRegistration(id, title, conference_details, administrative_email, start_date, end_date, introduction, lang)
+        self.gl_add_languages(ob)
         self._setObject(id, ob)
         ob = self._getOb(id)
         if REQUEST:
