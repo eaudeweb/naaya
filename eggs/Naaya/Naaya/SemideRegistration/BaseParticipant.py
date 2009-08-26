@@ -44,7 +44,7 @@ class BaseParticipant(SimpleItem):
     security.declareProtected(constants.VIEW_PERMISSION, 'edit')
     def edit(self, first_name, last_name, email, country, passport_no, passport_expire, phone_number, \
                     fax_number, arrival_date, arrival_from, arrival_flight, arrival_time, departure_date, \
-                    departure_flight, departure_time, hotel_reservation):
+                    departure_flight, departure_time):
         """ edit properties """
         self.first_name = first_name
         self.last_name = last_name
@@ -67,7 +67,6 @@ class BaseParticipant(SimpleItem):
             self.departure_date = ''
         self.departure_flight = departure_flight
         self.departure_time = departure_time
-        self.hotel_reservation = hotel_reservation
         self_p_changed = 1
 
     security.declareProtected(constants.VIEW_PERMISSION, 'isEntitled')

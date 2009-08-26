@@ -26,13 +26,13 @@ class SemideParticipant(BaseParticipant):
                         arrival_flight, arrival_time, departure_date, departure_flight, departure_time, is_journalist=False)
 
     def edit(self, first_name, last_name, email, country, organisation, official_title, passport_no, passport_expire, phone_number, \
-                    fax_number, arrival_date, arrival_from, arrival_flight, arrival_time, departure_date, departure_flight, departure_time, hotel_reservation):
+                    fax_number, arrival_date, arrival_from, arrival_flight, arrival_time, departure_date, departure_flight, departure_time):
         """ edit properties """
         self.organisation = organisation
         self.official_title = official_title
-        BaseParticipant.__dict__['edit'](self,first_name, last_name, email, country, passport_no, passport_expire, phone_number, 
-                                        fax_number, arrival_date, arrival_from, arrival_flight, arrival_time, departure_date, 
-                                        departure_flight, departure_time, hotel_reservation)
+        self.hotel_reservation = hotel_reservation
+        BaseParticipant.__dict__['edit'](self,first_name, last_name, email, country, passport_no, passport_expire, phone_number, fax_number, 
+                                        arrival_date, arrival_from, arrival_flight, arrival_time, departure_date, departure_flight, departure_time)
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit_html')
     def edit_html(self, REQUEST=None):
