@@ -92,8 +92,8 @@ class SemideRegistration(LocalPropertyManager, Folder):
         self._setLocalPropValue('conference_details', lang, conference_details)
         self._setLocalPropValue('introduction', lang, introduction)
         self.administrative_email = administrative_email
-        self.start_date = DateTime(start_date)
-        self.end_date = DateTime(end_date)
+        self.start_date = DateTime(start_date, datefmt='international')
+        self.end_date = DateTime(end_date, datefmt='international')
 
     def _loadRegistrationForms(self):
         """ load registration forms """
