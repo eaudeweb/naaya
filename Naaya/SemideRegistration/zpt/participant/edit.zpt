@@ -80,7 +80,7 @@
 			<td><input type="text" name="first_name" size="50"
 			tal:attributes="value python:request.get('first_name', here.first_name)" /></td>
 		</tr>
-		<tr tal:condition="not:here/is_journalist">
+		<tr>
 			<th i18n:translate="">Country</th>
 			<td>
 				<div tal:condition="python:request.has_key('country_error')" class="message-error" i18n:translate="">
