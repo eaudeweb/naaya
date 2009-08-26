@@ -99,7 +99,7 @@ class UpdateScript(Item, Acquisition.Implicit):
     def _save_log(self, data, portal):
         logs_folder = getattr(self, LOGS_FOLDERNAME)
 
-        log_filename = '%s-%s-%s' % (DateTime().strftime('%Y.%m.%d_%H.%M.%S'), self.id, str(portal.title_or_id()))
+        log_filename = '%s-%s-%s' % (DateTime().strftime('%Y.%m.%d_%H.%M.%S'), self.id, str(portal.getId()))
 
         begin_transaction()
         transaction = get_transaction()
