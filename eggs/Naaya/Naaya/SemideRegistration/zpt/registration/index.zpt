@@ -3,11 +3,12 @@
 <h1 tal:content="here/title" i18n:translate="" />
 <h2><span tal:replace="python:here.formatDate(here.start_date)" /> - <span tal:replace="python:here.formatDate(here.end_date)" /></h2>
 
-<span tal:replace="structure request" />
 <div id="admin_this_folder">
 	<a tal:attributes="href string:${here/absolute_url}/edit_html">Edit properties</a>
 	<a tal:attributes="href string:${here/absolute_url}/participants">View participants</a>
 	<a tal:attributes="href string:${here/absolute_url}/participants_press">View press participants</a>
+	<a tal:attributes="href string:${here/absolute_url}/registration_html">Register participants</a>
+	<a tal:attributes="href string:${here/absolute_url}/registration_html">Register press participants</a>
 </div>
 
 <span tal:replace="structure here/introduction" />
