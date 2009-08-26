@@ -102,7 +102,7 @@
 	<th i18n:translate="">Registration date</th>
 	<td tal:content="python:here.formatDate(here.registration_date)" />
 </tr>
-<tr>
+<tr tal:condition="not:here/is_journalist">
 	<th i18n:translate="">Hotel reservation</th>
 	<td>
 		<span tal:condition="python:here.hotel_reservation=='1'">
