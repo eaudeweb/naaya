@@ -13,8 +13,8 @@
 	<span tal:replace="python:here.formatDate(here.start_date)" /> - 
 	<span tal:replace="python:here.formatDate(here.end_date)" />
 </h3>
-<h4 i18n:translate="">Press participansts registration</h4
-<br />>
+<h4 i18n:translate="">Press participansts registration</h4>
+<br />
 
 <tal:block tal:condition="open_registration">
 	<p i18n:translate="">Please fill the form below and click <strong i18n:translate="">Submit</strong>.
