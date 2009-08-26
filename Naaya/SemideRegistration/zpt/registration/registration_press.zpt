@@ -31,7 +31,15 @@
 	</div>
 	<div class="field">
 		<label class="mandatory" for="country" i18n:translate="">Country</label>
-		<input type="text" name="country" tal:attributes="value python:request.get('country')" />
+		<select name="country">
+			<option value=""></option>
+			<tal:block repeat="country here/getCountryList">
+				<option tal:define="country_name python:country[1];"
+						tal:attributes="value country_name; 
+										selected python:country_name == request.get('country')" 
+						tal:content="country_name" />
+			</tal:block>
+		</select>
 	</div>
 	<div class="field">
 		<label for="media_name" i18n:translate="">Media name</label>
