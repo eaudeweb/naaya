@@ -147,15 +147,20 @@ class SemideRegistration(LocalPropertyManager, Folder):
     security.declareProtected(constants.MANAGE_PERMISSION, '_edit_html')
     _edit_html = PageTemplateFile('zpt/registration/edit', globals())
 
+    def registrationIsOpen(self):
+        """ check if the registration is opend to the public """
+        now = DateTime(DateTime().strftime('%d/%m/%Y'))
+        if now >= self.start_date and now <= self.end_date:
+            return True
+        return False
+
     security.declareProtected(constants.MANAGE_PERMISSION, 'edit_html')
     def edit_html(self, REQUEST):
         """ edit properties """
-        submit =  REQUEST.form.get('submit', '')
+        submit =  REQUEST.form.get('edit-submit', '')
         if submit:
             cleaned_data = REQUEST.form
-            del cleaned_data['submit']
-            if cleaned_data.has_key('came_from'):
-                del cleaned_data['came_from']
+            del cleaned_data['edit-submit']
             self.save_properties(**cleaned_data)
         return self._edit_html(REQUEST)
 
@@ -177,7 +182,11 @@ class SemideRegistration(LocalPropertyManager, Folder):
         data = [('Registration date', 'First name', 'Name', 'Country', 'Organisation', 'Arriving date', 'Registration number')]
         data_app = data.append
         for part in self.getParticipants(skey='registration_date', rkey=1, is_journalist=False):
-            data_app((self.formatDate(part.registration_date), part.first_name, part.last_name, part.country, part.organisation, self.formatDate(part.arrival_date), part.id))
+            if part.arrival_date:
+                arrival_date = self.formatDate(part.arrival_date)
+            else:
+                arrival_date = 'n/a'
+            data_app((self.formatDate(part.registration_date), part.first_name, part.last_name, part.country, part.organisation, arrival_date, part.id))
         return self.create_csv(data, filename='participants.csv', RESPONSE=REQUEST.RESPONSE)
 
     security.declareProtected(constants.MANAGE_PERMISSION, 'exportPress')
@@ -186,7 +195,11 @@ class SemideRegistration(LocalPropertyManager, Folder):
         data = [('Registration date', 'First name', 'Name', 'Country', 'Media name', 'Arriving date', 'Registration number')]
         data_app = data.append
         for part in self.getParticipants(skey='registration_date', rkey=1, is_journalist=True):
-            data_app((self.formatDate(part.registration_date), part.first_name, part.last_name, part.country, part.media_name, self.formatDate(part.arrival_date), part.id))
+            if part.arrival_date:
+                arrival_date = self.formatDate(part.arrival_date)
+            else:
+                arrival_date = 'n/a'
+            data_app((self.formatDate(part.registration_date), part.first_name, part.last_name, part.country, part.media_name, arrival_date, part.id))
         return self.create_csv(data, filename='press.csv', RESPONSE=REQUEST.RESPONSE)
 
     security.declarePrivate('create_csv')

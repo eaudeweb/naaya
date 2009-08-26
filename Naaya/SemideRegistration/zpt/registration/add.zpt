@@ -63,6 +63,8 @@
 		The end date is mandatory. Please enter the end of the registration period.</div>
 		<div class="message-error" tal:condition="python:request.get('end_date_invalid')" i18:translate="">
 		Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).</div>
+		<div class="message-error" tal:condition="python:request.get('date_interval_invalid')" i18:translate="">
+		Please make sure that End date is greater than Start date.</div>
 		<input type="text" class="vDateField" size="10" maxlength="10" name="end_date" id="end_date"
 		tal:attributes="value python:request.get('end_date', '')"/>
 		<noscript><em class="tooltips">(dd/mm/yyyy)</em></noscript>

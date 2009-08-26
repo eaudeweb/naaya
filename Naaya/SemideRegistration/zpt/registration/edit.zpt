@@ -94,7 +94,7 @@
 
 	<div class="field">
 		<input type="hidden" name="lang" tal:attributes="value curr_lang" />
-		<input type="submit" name="submit" value="Save changes" i18n:attributes="value" />
+		<input type="submit" name="edit-submit" value="Save changes" i18n:attributes="value" />
 	</div>
 
 	<!-- Translation bar on bottom -->
