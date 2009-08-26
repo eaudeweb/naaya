@@ -26,7 +26,7 @@ AUTH_MANDATORY_FIELDS = ['registration_no']
 DATE_FIELDS = ['passport_expire', 'arrival_date', 'departure_date']
 TIME_FIELDS = ['arrival_time', 'departure_time']
 
-SMTP_HOST = 'localhost'
+SMTP_HOST = 'mail.eaudeweb.ro'
 SMTP_PORT = '25'
 
 REGISTRATION_ADD_EDIT_TEMPLATE = """\
@@ -37,10 +37,13 @@ REGISTRATION_ADD_EDIT_TEMPLATE = """\
             Hello,
         <p/>
         <p>
-            Your registration for the "%(registration_event)s" was received in good order. You can review the submitted information by following the link:
+            Your registration for the "%(registration_event)s" was received in good order. To review and/or edit the submitted information please use the following link:
         <p/>
         <p>
             <a href="%(registration_edit_link)s">%(registration_edit_link)s</a>
+        <p/>
+        <p>
+            The registration number <strong>%{registration_number}s</strong> and your last name <strong>%{last_name}s</strong> (case sensitive) are required for authentication.
         <p/>
         <p>
             ---
@@ -58,7 +61,7 @@ Your registration for the "%(registration_event)s" was received in good order. Y
 
 %(registration_edit_link)s
 
-You are registered as the administrator of this folder.
+The registration number %{registration_number}s and your last name %{last_name}s (case sensitive) are required for authentication.
 
 ---
 Best Regards,

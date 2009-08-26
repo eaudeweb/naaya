@@ -177,11 +177,11 @@
 <tbody>
 	<tr tal:repeat="participant participants">
 		<td tal:content="python:here.formatDate(participant.registration_date)" />
+		<td tal:content="participant/country" />
 		<td tal:content="participant/first_name" />
 		<td>
 			<a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/last_name" />
 		</td>
-		<td tal:content="participant/country" />
 		<td tal:content="participant/arrival_date" />
 		<td>
 			<a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/id" />

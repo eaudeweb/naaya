@@ -61,7 +61,17 @@ class BaseParticipant(SimpleItem):
             (REQUEST.SESSION.get('authentication_name','') == str(self.last_name))
 
     #@todo: security
-    index_html = PageTemplateFile('zpt/participant/index', globals())
+    _index_html = PageTemplateFile('zpt/participant/index', globals())
+    #@todo: security
+    def index_html(self, REQUEST=None):
+        """ edit base participant properties """
+        session = REQUEST.SESSION
+        submit =  REQUEST.form.get('submit', '')
+        if REQUEST.form.has_key('authenticate'):
+            #if the user has submitted a valid registration number, this is saved on the session
+            REQUEST.SESSION.set('authentication_id', REQUEST.get('registration_no'))
+            REQUEST.SESSION.set('authentication_name', REQUEST.get('last_name'))
+        return self._index_html(REQUEST)
 
     #@todo: security
     _edit_html = PageTemplateFile('zpt/participant/edit', globals())

@@ -115,9 +115,13 @@ class SemideRegistration(LocalPropertyManager, Folder):
                 participant = self._getOb(registration_no, None)
                 if participant:
                     lang = self.gl_get_selected_language()
+                    REQUEST.SESSION.set('authentication_id', registration_no)
+                    REQUEST.SESSION.set('authentication_name', participant.last_name)
                     values = {'registration_edit_link': participant.absolute_url(),
                                 'registration_event': self.getPropertyValue('title', lang),
-                                'website_team': self.getPropertyValue('site_title', 'en')}
+                                'website_team': self.getPropertyValue('site_title', 'en'),
+                                'registration_number': registration_no,
+                                'last_name': participant.last_name}
                     self.send_registration_notification(participant.email,
                         'Event registration',
                         constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
@@ -162,6 +166,8 @@ class SemideRegistration(LocalPropertyManager, Folder):
         if submit:
             cleaned_data = REQUEST.form
             del cleaned_data['submit']
+            if cleaned_data.has_key('came_from'):
+                del cleaned_data['came_from']
             self.save_properties(**cleaned_data)
         return self._edit_html(REQUEST)
 
