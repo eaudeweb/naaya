@@ -28,14 +28,14 @@
 		<tal:block tal:condition="python:skey=='registration_date'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=registration_date&amp;rkey=1">
+					<a tal:attributes="href string:${here/absolute_url}/participants_press?skey=registration_date&amp;rkey=1">
 						<span i18n:translate="" tal:omit-tag="">Registration date</span>
 					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=registration_date">
+					<a tal:attributes="href string:${here/absolute_url}/participants_press?skey=registration_date">
 						<span i18n:translate="" tal:omit-tag="">Registration date</span>
 					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
 				</th>
@@ -44,7 +44,7 @@
 		<tal:block tal:condition="python:skey!='registration_date'">
 			<th class="scope-col" scope="col">
 				<a i18n:translate=""
-				tal:attributes="href string:${here/absolute_url}/participants?skey=registration_date">
+				tal:attributes="href string:${here/absolute_url}/participants_press?skey=registration_date">
 					Registration date
 				</a>
 			</th>
@@ -53,14 +53,14 @@
 		<tal:block tal:condition="python:skey=='country'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=country&amp;rkey=1">
+					<a tal:attributes="href string:${here/absolute_url}/participants_press?skey=country&amp;rkey=1">
 						<span i18n:translate="" tal:omit-tag="">Country</span>
 					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=country">
+					<a tal:attributes="href string:${here/absolute_url}/participants_press?skey=country">
 						<span i18n:translate="" tal:omit-tag="">Country</span>
 					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
 				</th>
@@ -69,7 +69,7 @@
 		<tal:block tal:condition="python:skey!='country'">
 			<th class="scope-col" scope="col">
 				<a i18n:translate=""
-				tal:attributes="href string:${here/absolute_url}/participants?skey=country">
+				tal:attributes="href string:${here/absolute_url}/participants_press?skey=country">
 					Country
 				</a>
 			</th>
@@ -78,14 +78,14 @@
 		<tal:block tal:condition="python:skey=='first_name'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=first_name&amp;rkey=1">
+					<a tal:attributes="href string:${here/absolute_url}/participants_press?skey=first_name&amp;rkey=1">
 						<span i18n:translate="" tal:omit-tag="">First name</span>
 					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=first_name">
+					<a tal:attributes="href string:${here/absolute_url}/participants_press?skey=first_name">
 						<span i18n:translate="" tal:omit-tag="">First name</span>
 					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
 				</th>
@@ -93,7 +93,7 @@
 		</tal:block>
 		<tal:block tal:condition="python:skey!='first_name'">
 			<th class="scope-col" scope="col">
-				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=first_name">
+				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants_press?skey=first_name">
 					First name
 				</a>
 			</th>
@@ -103,14 +103,14 @@
 		<tal:block tal:condition="python:skey=='last_name'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=last_name&amp;rkey=1">
+					<a tal:attributes="href string:${here/absolute_url}/participants_press?skey=last_name&amp;rkey=1">
 						<span i18n:translate="" tal:omit-tag="">Name</span>
 					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=last_name">
+					<a tal:attributes="href string:${here/absolute_url}/participants_press?skey=last_name">
 						<span i18n:translate="" tal:omit-tag="">Name</span>
 					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
 				</th>
@@ -118,7 +118,7 @@
 		</tal:block>
 		<tal:block tal:condition="python:skey!='last_name'">
 			<th class="scope-col" scope="col">
-				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=last_name">
+				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants_press?skey=last_name">
 					Name
 				</a>
 			</th>
@@ -127,14 +127,14 @@
 		<tal:block tal:condition="python:skey=='arrival_date'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=arrival_date&amp;rkey=1">
+					<a tal:attributes="href string:${here/absolute_url}/participants_press?skey=arrival_date&amp;rkey=1">
 						<span i18n:translate="" tal:omit-tag="">Arriving date</span>
 					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=arrival_date">
+					<a tal:attributes="href string:${here/absolute_url}/participants_press?skey=arrival_date">
 						<span i18n:translate="" tal:omit-tag="">Arriving date</span>
 					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
 				</th>
@@ -142,7 +142,7 @@
 		</tal:block>
 		<tal:block tal:condition="python:skey!='arrival_date'">
 			<th class="scope-col" scope="col">
-				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=arrival_date">
+				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants_press?skey=arrival_date">
 					Arriving date
 				</a>
 			</th>
@@ -152,14 +152,14 @@
 		<tal:block tal:condition="python:skey=='id'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=id&amp;rkey=1">
+					<a tal:attributes="href string:${here/absolute_url}/participants_press?skey=id&amp;rkey=1">
 						<span i18n:translate="" tal:omit-tag="">Registration number</span>
 					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
 				<th class="scope-col" scope="col">
-					<a tal:attributes="href string:${here/absolute_url}/participants?skey=id">
+					<a tal:attributes="href string:${here/absolute_url}/participants_press?skey=id">
 						<span i18n:translate="" tal:omit-tag="">Registration number</span>
 					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
 				</th>
@@ -167,7 +167,7 @@
 		</tal:block>
 		<tal:block tal:condition="python:skey!='id'">
 			<th class="scope-col" scope="col">
-				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=id">
+				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants_press?skey=id">
 					Registration number
 				</a>
 			</th>
