@@ -2,11 +2,11 @@
 
 <h1 tal:content="here/getRegistrationTitle" />
 <h2 tal:content="here/getConferenceDetails" />
-<h3>
+<strong>
 	<span i18m:translate="">Registration opened for the period: </span>
-	<span tal:replace="python:here.formatDate(here.start_date)" /> - 
-	<span tal:replace="python:here.formatDate(here.end_date)" />
-</h3>
+	<span tal:replace="python:here.formatDate(here.start_date, '%d %b %Y')" /> - 
+	<span tal:replace="python:here.formatDate(here.end_date, '%d %b %Y')" />
+</strong>
 
 <div class="floated-buttons">
 	<span class="buttons">
@@ -18,9 +18,10 @@
 					rkey python:request.get('rkey', '');
 					participants python:here.getParticipants(skey, rkey, True)">
 
-<p tal:condition="not:participants" i18n:translate="">No participants have registered yet</p>
+<p/><p tal:condition="not:participants" i18n:translate="">No participants have registered yet</p>
 
 <form action="deleteParticipants" method="post" tal:condition="participants">
+<h3>Press list</h3>
 <table class="datatable">
 <thead>
 	<tr>
@@ -179,13 +180,13 @@
 		<td>
 			<input type="checkbox" name="ids" tal:attributes="value participant/id"/>
 		</td>
-		<td tal:content="python:here.formatDate(participant.registration_date)" />
+		<td tal:content="python:here.formatDate(participant.registration_date, '%d %b %Y')" />
 		<td tal:content="participant/country" />
 		<td tal:content="participant/first_name" />
 		<td>
 			<a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/last_name" />
 		</td>
-		<td tal:content="participant/arrival_date" />
+		<td tal:content="python:here.formatDate(participant.arrival_date, '%d %b %Y')" />
 		<td>
 			<a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/id" />
 		</td>

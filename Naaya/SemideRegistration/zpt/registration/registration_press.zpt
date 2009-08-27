@@ -4,19 +4,21 @@
 <script type="text/javascript" src="/misc_/SemideRegistration/calendar.js"></script>
 <script type="text/javascript" src="/misc_/SemideRegistration/datetime.js"></script>
 
-<tal:block define="global open_registration here/registrationIsOpen" />
+<tal:block define="global registration_opened here/registrationOpened" />
+<tal:block define="global registration_not_closed here/registrationNotClosed" />
 
 <h1 tal:content="here/getRegistrationTitle" />
 <h2 tal:content="here/getConferenceDetails" />
 <h3>
 	<span i18m:translate="">Registration opened for the period: </span>
-	<span tal:replace="python:here.formatDate(here.start_date)" /> - 
-	<span tal:replace="python:here.formatDate(here.end_date)" />
+	<span tal:replace="python:here.formatDate(here.start_date, '%d %b %Y')" /> - 
+	<span tal:replace="python:here.formatDate(here.end_date, '%d %b %Y')" />
 </h3>
+
 <h4 i18n:translate="">Press participansts registration</h4>
 <br />
 
-<tal:block tal:condition="open_registration">
+<tal:block tal:condition="python:registration_opened and registration_not_closed">
 	<p i18n:translate="">Please fill the form below and click <strong i18n:translate="">Submit</strong>.
 		Fields in <span style="color: #f40000">red</span> are mandatory.
 		You can update your registration form later with your family name and
@@ -167,5 +169,6 @@
 		<a href="mailto:matusakova@pseau.org">matusakova@pseau.org</a>
 	</p>
 </tal:block>
-<strong tal:condition="not: open_registration" i18n:translate="">Registration is closed</strong>
+<strong tal:condition="not: registration_opened" i18n:translate="">Registration did not start yet</strong>
+<strong tal:condition="not: registration_not_closed" i18n:translate="">Registration is closed</strong>
 <tal:block replace="structure here/standard_html_footer"/>

@@ -190,7 +190,7 @@
 					Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).
 				</div>
 				<input type="text" name="arrival_date" class="vDateField" size="10" maxlength="10"
-					tal:attributes="value python:request.get('arrival_date', here.arrival_date)" />
+					tal:attributes="value python:request.get('arrival_date', here.formatDate(here.arrival_date, '%d/%m/%Y'))" />
 			</td>
 		</tr>
 		<tr>
@@ -220,7 +220,7 @@
 					Please enter the date in the correct format dd/mm/yyyy (you can also use the calendar function).
 				</div>
 				<input type="text" name="departure_date" class="vDateField" size="10" maxlength="10"
-					tal:attributes="value python:request.get('departure_date', here.departure_date)" />
+					tal:attributes="value python:request.get('departure_date', here.formatDate(here.departure_date, '%d/%m/%Y'))" />
 			</td>
 		</tr>
 		<tr>
@@ -240,7 +240,7 @@
 		</tr>
 		<tr>
 			<th i18n:translate="">Registration date</th>
-			<td tal:content="python:here.formatDate(here.registration_date)" />
+			<td tal:content="python:here.formatDate(here.registration_date, '%d %b %Y')" />
 		</tr>
 	</table>
 	<div class="field" tal:condition="not:here/is_journalist">

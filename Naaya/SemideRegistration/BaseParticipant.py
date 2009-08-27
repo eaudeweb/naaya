@@ -1,10 +1,10 @@
-from DateTime import DateTime
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from OFS.SimpleItem import SimpleItem
+import time
 
-from utilities.validators import form_validation
+from utilities.validators import form_validation, str2date
 import constants
 
 class BaseParticipant(SimpleItem):
@@ -26,20 +26,20 @@ class BaseParticipant(SimpleItem):
         self.phone_number = phone_number
         self.fax_number = fax_number
         if arrival_date:
-            self.arrival_date = DateTime(arrival_date, datefmt='international')
+            self.arrival_date = str2date(arrival_date)
         else:
             self.arrival_date = ''
         self.arrival_from = arrival_from
         self.arrival_flight = arrival_flight
         self.arrival_time = arrival_time
         if departure_date:
-            self.departure_date = DateTime(departure_date, datefmt='international')
+            self.departure_date = str2date(departure_date)
         else:
             self.departure_date = ''
         self.departure_flight = departure_flight
         self.departure_time = departure_time
         self.is_journalist = is_journalist
-        self.registration_date = DateTime(datefmt='international')
+        self.registration_date = time.localtime()
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit')
     def edit(self, first_name, last_name, email, country, passport_no, passport_expire, phone_number, \
@@ -55,14 +55,14 @@ class BaseParticipant(SimpleItem):
         self.phone_number = phone_number
         self.fax_number = fax_number
         if arrival_date:
-            self.arrival_date = DateTime(arrival_date, datefmt='international')
+            self.arrival_date = str2date(arrival_date)
         else:
             self.arrival_date = ''
         self.arrival_from = arrival_from
         self.arrival_flight = arrival_flight
         self.arrival_time = arrival_time
         if departure_date:
-            self.departure_date = DateTime(departure_date, datefmt='international')
+            self.departure_date = str2date(departure_date)
         else:
             self.departure_date = ''
         self.departure_flight = departure_flight

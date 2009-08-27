@@ -126,7 +126,7 @@
 	</tr>
 	<tr>
 		<th i18n:translate="">Date of arrival</th>
-		<td tal:content="here/arrival_date" />
+		<td tal:content="python:here.formatDate(here.arrival_date, '%d %b %Y')" />
 	</tr>
 	<tr>
 		<th i18n:translate="">Arriving from</th>
@@ -142,7 +142,7 @@
 	</tr>
 	<tr>
 		<th i18n:translate="">Date of departure</th>
-		<td tal:content="here/departure_date" />
+		<td tal:content="python:here.formatDate(here.departure_date, '%d %b %Y')" />
 	</tr>
 	<tr>
 		<th i18n:translate="">Flight number</th>
@@ -154,7 +154,7 @@
 	</tr>
 	<tr>
 		<th i18n:translate="">Registration date</th>
-		<td tal:content="python:here.formatDate(here.registration_date)" />
+		<td tal:content="python:here.formatDate(here.registration_date, '%d %b %Y')" />
 	</tr>
 	<tr tal:condition="not:here/is_journalist">
 		<th i18n:translate="">Hotel reservation</th>

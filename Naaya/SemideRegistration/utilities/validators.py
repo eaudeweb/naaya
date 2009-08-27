@@ -1,6 +1,5 @@
 import re
 import time
-from DateTime import DateTime
 
 email_expr = re.compile(r'^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$', re.IGNORECASE)
 def form_validation (mandatory_fields, date_fields, time_fields, REQUEST):
@@ -53,25 +52,31 @@ def registration_validation(REQUEST):
     if not end_date:
         REQUEST.set('end_date_error', True)
         has_errors = True
-    if administrative_email and not email_expr.match(administrative_email):
-        REQUEST.set('administrative_email_invalid', True)
-        has_errors = True
+    if administrative_email:
+        for email_address in administrative_email:
+            if email_address and not email_expr.match(email_address):
+                REQUEST.set('administrative_email_invalid', True)
+                has_errors = True
     if start_date:
-        try:
-            date = time.strptime(start_date, "%d/%m/%Y")
-        except:
+        date = str2date(start_date)
+        if date is None:
             REQUEST.set('start_date_invalid', True)
             has_errors = True
     if end_date:
-        try:
-            date = time.strptime(end_date, "%d/%m/%Y")
-        except:
+        date = str2date(end_date)
+        if date is None:
             REQUEST.set('end_date_invalid', True)
             has_errors = True
     if start_date and end_date and not has_errors:
-        if DateTime(start_date) > DateTime(end_date):
+        if str2date(start_date) > str2date(end_date):
             REQUEST.set('date_interval_invalid', True)
             has_errors = True
     if has_errors:
         REQUEST.set('request_error', True)
     return not has_errors
+
+def str2date(s, format='%d/%m/%Y'):
+    try:
+        return time.strptime(s, format)
+    except:
+        return None

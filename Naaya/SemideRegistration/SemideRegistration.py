@@ -20,12 +20,12 @@
 
 import re
 from os.path import join
-from DateTime import DateTime
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.PageTemplates.ZopePageTemplate import manage_addPageTemplate
 from OFS.Folder import Folder
+import time
 
 from Products.NaayaCore.managers import utils as naaya_utils
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
@@ -33,7 +33,7 @@ from SemideParticipant import SemideParticipant
 from SemidePress import SemidePress
 from utilities.Slugify import slugify
 from utilities.SendMail import send_mail
-from utilities.validators import form_validation, registration_validation
+from utilities.validators import form_validation, registration_validation, str2date
 from utilities.countries import countries
 from utilities import tmpfile, checkPermission
 import constants
@@ -43,7 +43,9 @@ add_registration = PageTemplateFile('zpt/registration/add', globals())
 def manage_add_registration(self, id='', title='', conference_details='', administrative_email ='', start_date='', end_date='', introduction='', lang='', REQUEST=None):
     """ Adds a Semide registration instance"""
     if registration_validation(REQUEST):
-        if not id:
+        if id:
+            id = slugify(id)
+        else:
             id = slugify(title)
         if lang is None: 
             lang = self.gl_get_selected_language()
@@ -92,8 +94,8 @@ class SemideRegistration(LocalPropertyManager, Folder):
         self._setLocalPropValue('conference_details', lang, conference_details)
         self._setLocalPropValue('introduction', lang, introduction)
         self.administrative_email = administrative_email
-        self.start_date = DateTime(start_date, datefmt='international')
-        self.end_date = DateTime(end_date, datefmt='international')
+        self.start_date = str2date(start_date)
+        self.end_date = str2date(end_date)
 
     def _loadRegistrationForms(self):
         """ load registration forms """
@@ -146,7 +148,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
                         'Event registration',
                         constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
                         constants.REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
-                    self.send_registration_notification(self.administrative_email,
+                    self.send_registration_notification(';'.join(self.administrative_email),
                         'Event registration',
                         constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE % values,
                         constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
@@ -185,7 +187,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
                         'Event registration',
                         constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
                         constants.REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
-                    self.send_registration_notification(self.administrative_email,
+                    self.send_registration_notification(';'.join(self.administrative_email),
                         'Event registration',
                         constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE % values,
                         constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
@@ -199,10 +201,20 @@ class SemideRegistration(LocalPropertyManager, Folder):
     security.declareProtected(constants.MANAGE_PERMISSION, '_edit_html')
     _edit_html = PageTemplateFile('zpt/registration/edit', globals())
 
-    def registrationIsOpen(self):
+    def registrationOpened(self):
         """ check if the registration is opend to the public """
-        now = DateTime(DateTime().strftime('%d/%m/%Y'))
-        if now >= self.start_date and now <= self.end_date:
+        now = time.localtime()
+        if now >= self.start_date:
+            return True
+        return False
+
+    def registrationNotClosed(self):
+        """ check if the registration is opend to the public """
+        now = time.localtime()
+        from datetime import date, timedelta
+        end_date = date(*self.end_date[0:3]) + timedelta(days=1)
+        end_date = end_date.timetuple()[0:3] + self.end_date[3:]
+        if now < end_date:
             return True
         return False
 
@@ -211,9 +223,10 @@ class SemideRegistration(LocalPropertyManager, Folder):
         """ edit properties """
         submit =  REQUEST.form.get('edit-submit', '')
         if submit:
-            cleaned_data = REQUEST.form
-            del cleaned_data['edit-submit']
-            self.save_properties(**cleaned_data)
+            if registration_validation(REQUEST):
+                cleaned_data = REQUEST.form
+                del cleaned_data['edit-submit']
+                self.save_properties(**cleaned_data)
         return self._edit_html(REQUEST)
 
     security.declarePrivate('send_registration_notification')
@@ -304,8 +317,10 @@ class SemideRegistration(LocalPropertyManager, Folder):
         return self.conference_details
 
     #internal
-    def formatDate(self, sdate):
-        return sdate.strftime('%d %b %Y')
+    def formatDate(self, sdate, format='%d/%m/%Y'):
+        if sdate:
+            return time.strftime(format, sdate)
+        return None
 
     def unicode2UTF8(self, s):
         if isinstance(s, unicode):
