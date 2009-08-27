@@ -1,6 +1,5 @@
 def send_mail(msg_from, msg_to, msg_subject, msg_body, msg_body_text, smtp_host, smtp_port):
     import smtplib
-
     from email.MIMEMultipart import MIMEMultipart
     from email.MIMEText import MIMEText
 
@@ -8,7 +7,7 @@ def send_mail(msg_from, msg_to, msg_subject, msg_body, msg_body_text, smtp_host,
     msg = MIMEMultipart('alternative')
     msg['Subject'] = msg_subject
     msg['From'] = msg_from
-    msg['To'] = msg_to
+    msg['To'] = '; '.strip(msg_to)
 
     # Create the body of the message (a plain-text and an HTML version).
     text = msg_body_text
