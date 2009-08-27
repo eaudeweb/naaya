@@ -4,8 +4,8 @@
 <h2 tal:content="here/getConferenceDetails" />
 <h3>
 	<span i18m:translate="">Registration opened for the period: </span>
-	<span tal:replace="python:here.formatDate(here.start_date)" /> - 
-	<span tal:replace="python:here.formatDate(here.end_date)" />
+	<span tal:replace="python:here.formatDate(here.start_date, '%d %b %Y')" /> - 
+	<span tal:replace="python:here.formatDate(here.end_date, '%d %b %Y')" />
 </h3>
 
 <div id="admin_this_folder">
