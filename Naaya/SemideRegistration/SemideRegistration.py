@@ -148,7 +148,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
                         'Event registration',
                         constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
                         constants.REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
-                    self.send_registration_notification(';'.join(self.administrative_email),
+                    self.send_registration_notification(self.administrative_email,
                         'Event registration',
                         constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE % values,
                         constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
@@ -187,7 +187,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
                         'Event registration',
                         constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
                         constants.REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
-                    self.send_registration_notification(';'.join(self.administrative_email),
+                    self.send_registration_notification(self.administrative_email,
                         'Event registration',
                         constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE % values,
                         constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
@@ -325,6 +325,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
     def unicode2UTF8(self, s):
         if isinstance(s, unicode):
             return s.encode('utf-8')
+        return s
 
     def getPropertyValue(self, id, lang=None):
         """ Returns a property value in the specified language. """
