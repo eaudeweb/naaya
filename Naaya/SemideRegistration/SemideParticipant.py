@@ -26,7 +26,7 @@ class SemideParticipant(BaseParticipant):
                         arrival_flight, arrival_time, departure_date, departure_flight, departure_time, is_journalist=False)
 
     def edit(self, first_name, last_name, email, country, organisation, official_title, passport_no, passport_expire, phone_number, \
-                    fax_number, arrival_date, arrival_from, arrival_flight, arrival_time, departure_date, departure_flight, departure_time):
+                    fax_number, arrival_date, arrival_from, arrival_flight, arrival_time, departure_date, departure_flight, departure_time, hotel_reservation):
         """ edit properties """
         self.organisation = organisation
         self.official_title = official_title
