@@ -233,7 +233,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
     def send_registration_notification(self, email, title, email_html, email_txt):
         """ send a notification when a folder is added / edited / commented"""
         send_mail(msg_from=constants.NO_REPLY_MAIL,
-                    msg_to=email,
+                    msg_to=self.utConvertToList(email),
                     msg_subject='%s - Registration added / edited' % title,
                     msg_body=self.unicode2UTF8(email_html),
                     msg_body_text=self.unicode2UTF8(email_txt),
