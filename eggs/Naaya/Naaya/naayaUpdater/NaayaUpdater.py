@@ -207,57 +207,8 @@ class NaayaUpdater(Folder):
                 zmi_data = zmi_obj.document_src()
         return self.show_html_diff(zmi_data, fs_data)
 
-    ###
-    #See all modified forms
-    ######
-    security.declareProtected(view_management_screens, 'show_alldiff_html')
-    show_alldiff_html = PageTemplateFile('zpt/show_alldiff', globals())
-
-    security.declareProtected(view_management_screens, 'getAllModified')
-    def getAllModified(self, meta_types, nonrecursive=True, forms=True, contentype_forms=False, portlets=False, layout=False):
-        """ """
-        root = self.getPhysicalRoot()
-        meta_types = convertToList(meta_types)
-        out_modified = []
-        out_unmodified = []
-        out_diff = 0
-
-        if nonrecursive:
-            for portal in self.get_root_ny_sites(root, meta_types):
-                modified, unmodified, list_diff = self.get_modified_forms(portal)
-                out_modified.extend(modified)
-                out_unmodified.extend(unmodified)
-                out_diff += list_diff
-        else:
-            portals_list = self.getPortals(root, meta_types)
-            for portal in portals_list:
-                modified, unmodified, list_diff = self.get_modified_forms(portal)
-                out_modified.extend(modified)
-                out_unmodified.extend(unmodified)
-                out_diff += list_diff
-        return out_modified, out_unmodified, out_diff
-
-
-
-    ###
-    #Overwritte Naaya forms
-    ######
-    security.declareProtected(view_management_screens, 'overwritte_forms_html')
-    overwritte_forms_html = PageTemplateFile('zpt/overwritte_forms', globals())
-
     security.declareProtected(view_management_screens, 'quick_overwritte_forms_html')
     quick_overwritte_forms_html = PageTemplateFile('zpt/quick_overwritte_forms', globals())
-
-    security.declareProtected(view_management_screens, 'diff_forms_html')
-    diff_forms_html = PageTemplateFile('zpt/diff_forms', globals())
-
-#    security.declareProtected(view_management_screens, 'getPortalCreationDate')
-#    def getPortalCreationDate(self, portal):
-#        """ """
-#        creation_date = portal.error_log.bobobase_modification_time()
-#        for form in portal.getFormsTool().objectValues("Naaya Template"):
-#            creation_date = minDate(form.bobobase_modification_time(), creation_date)
-#        return creation_date
 
 
 #------------------------------------------------------------------------------------------------- API
@@ -266,25 +217,6 @@ class NaayaUpdater(Folder):
     def get_root_ny_sites(self, context, meta_types):
         """ """
         return [portal for portal in context.objectValues(meta_types)]
-
-    security.declarePrivate('get_modified_forms')
-    def get_modified_forms(self, portal):
-        """
-            return the list of modified forms inside this portal ?????
-        """
-        EXCLUSION_FORMS_LIST = ['site_admin_comments', 'site_admin_network', 'site_external_search', 'site_admin_properties']
-        modified = []   #modified forms list
-        unmodified = [] #unmodified forms list
-
-        forms_date_list = self.list_zmi_templates(portal)
-        for f in self.list_zmi_templates(portal):
-            if f.id not in EXCLUSION_FORMS_LIST:
-                if f.bobobase_modification_time() > self.getFTCreationDate(portal):
-                    modified.append(f)
-                else:
-                    unmodified.append(f)
-        list_diff = len(forms_date_list) - len(modified) - len(EXCLUSION_FORMS_LIST)   #number of unmodified forms
-        return modified, unmodified, list_diff
 
     security.declarePrivate('get_portal_path')
     def get_portal_path(self, portal):
@@ -330,14 +262,6 @@ class NaayaUpdater(Folder):
                     break
 
 
-    security.declarePrivate('list_zmi_templates')
-    def list_zmi_templates(self, portal):
-        """
-            return the list of the ZMI templates
-        """
-        return portal.getFormsTool().objectValues("Naaya Template")
-
-
     security.declarePrivate('list_fs_templates')
     def list_fs_templates(self, portal):
         """
@@ -370,35 +294,6 @@ class NaayaUpdater(Folder):
         elif id in self.list_fs_templates(NySite_module):   #fall back to Naaya filesytem templates
             return self.get_fs_template_content(id, NySite_module)
         return self.get_contenttype_content(id, portal) #fall back to Naaya pluggable content types
-
-    security.declarePrivate('get_fs_forms')
-    def get_fs_forms(self, portal):
-        """
-            return a filesystem template object given the id
-        """
-        flist = {}
-        #load contenttype forms
-        for meta_type in portal.get_pluggable_metatypes():
-            #chech if the meta_type is installed
-            if portal.is_pluggable_item_installed(meta_type):
-                item = portal.get_pluggable_item(meta_type)
-                for f in item['forms']:
-                    flist[f] = '%s/portal_forms/%s' % (physical_path(portal), f)
-
-        #load portal forms
-        for f in self.list_fs_templates(NySite_module):
-            flist[f] = '%s/portal_forms/%s' % (physical_path(portal), f)
-        for f in self.list_fs_templates(portal):
-            flist[f] = '%s/portal_forms/%s' % (physical_path(portal), f)
-
-        return flist
-
-#        if id in self.list_fs_templates(portal):
-#            return self.get_fs_template_content(id, portal)
-#        elif id in self.list_fs_templates(NySite_module):   #fall back to Naaya filesytem templates
-#            return self.get_fs_template_content(id, NySite_module)
-#        return self.get_contenttype_content(id, portal) #fall back to Naaya pluggable content types
-
 
     security.declarePrivate('get_zmi_template')
     def get_zmi_template(self, path):
@@ -449,41 +344,6 @@ class NaayaUpdater(Folder):
         """ """
         return self.pmeta_types
 
-    security.declareProtected(view_management_screens, 'generateFTCreationDate')
-    def generateFTCreationDate(self, portal):
-        """
-            generate creation date
-        """
-        flist = [(f.bobobase_modification_time(), f) for f in self.list_zmi_templates(portal)]
-        flist.sort()
-        return flist[0][0]
-
-    security.declareProtected(view_management_screens, 'testFTCreationDate')
-    def testFTCreationDate(self, portal):
-        """
-            test PortalForms creation date
-        """
-        forms_tool = portal.getFormsTool()
-        return hasattr(forms_tool, 'creation_date')
-
-    security.declareProtected(view_management_screens, 'setFTCreationDate')
-    def setFTCreationDate(self, portal):
-        """
-            set PortalForms creation date
-        """
-        forms_tool = portal.getFormsTool()
-        if not self.testFTCreationDate(portal):
-            forms_tool.creation_date = self.generateFTCreationDate(portal)
-            forms_tool._p_changed = 1
-
-    security.declareProtected(view_management_screens, 'getFTCreationDate')
-    def getFTCreationDate(self, portal):
-        """
-            test PortalForms creation date
-        """
-        forms_tool = portal.getFormsTool()
-        return getattr(forms_tool, 'creation_date', None)
-
     security.declareProtected(view_management_screens, 'diffTemplates')
     def diffTemplates(self, id, fpath, ppath):
         """ return the differences between the ZMI and the filesytem versions of the template"""
@@ -491,77 +351,6 @@ class NaayaUpdater(Folder):
         fs = self.get_fs_template(id, portal)
         zmi = self.get_zmi_template(fpath)
         return self.show_html_diff(fs, self.get_template_content(zmi))
-
-
-    security.declareProtected(view_management_screens, 'getReportModifiedForms')
-    def getReportModifiedForms(self, ppath, REQUEST=None):
-        """ overwritte Naaya portal forms """
-        if REQUEST.has_key('show_report'):
-            portal = self.getPortal(ppath)
-            out_modified = []
-            modified, unmodified, list_diff = self.get_modified_forms(portal)
-            #check for modified
-            buf = copy.copy(modified)
-            for m in buf:
-                zmi = self.get_fs_template(m.id, portal)
-                if create_signature(self.get_template_content(m)) == create_signature(zmi):
-                    modified.remove(m)
-            #check for unmodified
-            buf = copy.copy(unmodified)
-            for m in buf:
-                zmi = self.get_fs_template(m.id, portal)
-                if create_signature(self.get_template_content(m)) == create_signature(zmi):
-                    unmodified.remove(m)
-            out_modified.extend(modified)
-            return out_modified, len(unmodified)
-
-    security.declareProtected(view_management_screens, 'reloadPortalForms')
-    def reloadPortalForms(self, ppath, funmod=False, fmod=[], REQUEST=None):
-        """ reload portal forms """
-        portal = self.getPortal(ppath)
-        fmods = convertToList(fmod)
-        #modified forms
-        for f in fmods:
-            form_ob = self.get_zmi_template(f)
-            fs_content = self.get_fs_template(form_ob.id, portal)
-            try:
-                form_ob.pt_edit(text=fs_content, content_type='')
-            except Exception, error:
-                print error
-        #unmodified forms
-        if funmod:
-            modified, unmodified, list_diff = self.get_modified_forms(portal)
-            all_forms = self.get_fs_forms(portal)
-            for form_id, form_path in all_forms.items():
-                if form_path not in [physical_path(m) for m in modified]:
-                    fs_content = self.get_fs_template(form_id, portal)
-                    form_ob = self.get_zmi_template(form_path)
-                    try:
-                        if form_ob is None:
-                            formstool_ob = portal.getFormsTool()
-                            formstool_ob.manage_addTemplate(id=form_id, title='', file='')
-                            form_ob = formstool_ob._getOb(form_id, None)
-                        form_ob.pt_edit(text=fs_content, content_type='')
-                        form_ob._p_changed = 1
-                    except Exception, error:
-                        print error
-
-        return REQUEST.RESPONSE.redirect('%s/overwritte_forms_html?ppath=%s&show_report=1' % (self.absolute_url(), ppath))
-
-    security.declareProtected(view_management_screens, 'formatDateTime')
-    def formatDateTime(self, p_date):
-        """ date is a DateTime object. This function returns a string 'dd month_name yyyy' """
-        try: return p_date.strftime('%d/%m/%Y')
-        except: return ''
-
-    security.declareProtected(view_management_screens, 'setFTDateFormsPage')
-    def setFTDateFormsPage(self, ppath, REQUEST=None):
-        """
-            Set creation date
-        """
-        portal = self.getPortal(ppath)
-        self.setFTCreationDate(portal)
-        return REQUEST.RESPONSE.redirect('%s/overwritte_forms_html?ppath=%s&show_report=1' % (self.absolute_url(), ppath))
 
     security.declareProtected(view_management_screens, 'getReportQuickModifiedForms')
     def getReportQuickModifiedForms(self, forms, all_forms=False, portals='', p_action='', REQUEST=None):
@@ -628,30 +417,6 @@ class NaayaUpdater(Folder):
             form_ob = self.get_zmi_template(form_path)
             form_ob.aq_parent.manage_delObjects([form_id])
         return REQUEST.RESPONSE.redirect('%s/quick_overwritte_forms_html' % (self.absolute_url()))
-
-    security.declareProtected(view_management_screens, 'generateFormPath')
-    def generateFormPath(self, form_id, portal):
-        """ """
-        return '%s/portal_forms/%s' % (physical_path(portal), form_id)
-
-    security.declareProtected(view_management_screens, 'generateFormPath')
-    def updateBrokenDescription(self, portal_id='hazred'):
-        """ update broken description """
-        root = self.getPhysicalRoot()
-        portal_ob = root._getOb(portal_id, None)
-        if portal_ob is not None:
-            items = portal_ob.getCatalogedObjects()
-            for item in items:
-                descr = item.getPropertyValue('description', 'en')
-                try:
-                    item.createProperty('description', html_decode(descr), 'en')
-                    item._p_changed = 1
-                except:
-                    print item.absolute_url(0)
-            return 'done'
-        else:
-            return 'portal %s not found' % portal_id
-
 
 
 #layout updates
