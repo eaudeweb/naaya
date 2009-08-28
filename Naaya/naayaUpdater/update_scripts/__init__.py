@@ -182,4 +182,4 @@ def register_scripts(updater):
                         obj not in (UpdateScript, )):
                     updater.register_update_script(obj.id, obj)
         except ImportError, e:
-            pass
+            print 'Skipping update "%s" - %s' % (filename, str(e))
