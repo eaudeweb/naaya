@@ -58,25 +58,35 @@ class UpdateForms(UpdateScript):
             if p_action == 'ep' and portal.id in portals_custom: continue
             elif p_action != 'ep' and portal.id not in portals_custom: continue
 
-            res = []
             portal_path = '/'.join(portal.getPhysicalPath()[1:])
             if all_forms:
                 forms_list = portal.portal_forms.objectIds()
 
+            deltas = []
             for form_id in forms_list:
                 form_path = '%s/portal_forms/%s' % (portal_path, form_id)
                 form_fs = self.get_fs_template(form_id, portal)
                 form_zmi_ob = self.get_zmi_template(form_path)
                 if form_fs and form_zmi_ob:
+                    form_zmi = get_template_content(form_zmi_ob)
                     t1 = normalize_template(form_fs)
-                    t2 = normalize_template(get_template_content(form_zmi_ob))
-                    if t1 != t2:
-                        res.append((form_zmi_ob, 'edit'))
+                    t2 = normalize_template(form_zmi)
+                    delta = {
+                        'physical_path': '/'.join(form_zmi_ob.getPhysicalPath()[1:]),
+                        'absolute_url': form_zmi_ob.absolute_url(),
+                        'id': form_zmi_ob.getId(),
+                        'title': form_zmi_ob.title_or_id(),
+                    }
                     if t1 == t2:
-                        res.append((form_zmi_ob, 'remove'))
-                if form_fs and not form_zmi_ob:
-                    res.append((form_id, 'add'))
-            if len(res) > 0: report[portal_path] = res
+                        delta['result'] = 'identical'
+                    else:
+                        delta['result'] = 'different'
+
+                        delta['diff'] = html_diff(form_fs, form_zmi)
+                    deltas.append(delta)
+
+            if len(deltas) > 0:
+                report[portal_path] = deltas
         return report
 
     def do_reload(self, fmod=[], fdel=[], forms='', REQUEST=None):
@@ -104,14 +114,6 @@ class UpdateForms(UpdateScript):
             form_ob = self.get_zmi_template(form_path)
             form_ob.aq_parent.manage_delObjects([form_id])
         return REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_update')
-
-    def diffTemplates(self, id, fpath, ppath):
-        """ return the differences between the ZMI and the filesytem versions of the template"""
-        # TODO: no need to call this from zpt
-        portal = self.getPortal(ppath)
-        fs = self.get_fs_template(id, portal)
-        zmi = self.get_zmi_template(fpath)
-        return html_diff(fs, get_template_content(zmi))
 
     def get_zmi_template(self, path):
         """
