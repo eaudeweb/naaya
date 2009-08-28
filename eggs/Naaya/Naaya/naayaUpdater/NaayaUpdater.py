@@ -24,7 +24,6 @@ import time
 from os.path import join, isfile
 import os
 import sys
-from OFS.History import html_diff
 import copy
 import types
 
@@ -35,7 +34,6 @@ from AccessControl.Permissions import view_management_screens
 from AccessControl import ClassSecurityInfo
 
 from Products.Naaya import NySite as NySite_module
-from Products.Naaya.managers.skel_parser import skel_parser
 from Products.naayaUpdater.utils import *
 from Products.NaayaContent.discover import get_pluggable_content
 
@@ -157,37 +155,6 @@ class NaayaUpdater(Folder):
             REQUEST.RESPONSE.redirect('available_content_updates?manage_tabs_message=%s' % message)
         return message
 
-    def _normalize_template(self, src):
-        src = (src.strip().replace('\r', '')+'\n')
-        if isinstance(src, unicode):
-            src = src.encode('utf-8')
-        return src
-
-    security.declareProtected(view_management_screens, 'show_html_diff')
-    def show_html_diff(self, source, target):
-        """ """
-        #return html_diff(source, target)
-        import difflib
-        from cStringIO import StringIO
-        lines = lambda s: StringIO(self._normalize_template(s)).readlines()
-        htmlquote = lambda s: s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-        output = StringIO()
-        output.write('<div style="font-family: monospace;">')
-        for line in difflib.unified_diff(lines(source), lines(target)):
-            if line.startswith('+'):
-                cls = 'line_added'
-            elif line.startswith('-'):
-                cls = 'line_removed'
-            elif line.startswith('@@'):
-                cls = 'line_heading'
-            else:
-                cls = 'line_normal'
-            output.write('<div class="%s">%s</div>\n' % (cls, htmlquote(line)))
-        output.write('</div>')
-        return output.getvalue()
-        #return ''.join(htmlquote(s)+'<br/>' for s in difflib.unified_diff(lines(source), lines(target)))
-        #return difflib.HtmlDiff().make_table(lines(source), lines(target))
-
     security.declareProtected(view_management_screens, 'get_fs_data')
     def get_fs_data(self, fpath):
         """ """
@@ -205,10 +172,7 @@ class NaayaUpdater(Folder):
                 zmi_data = zmi_obj.body
             except AttributeError:
                 zmi_data = zmi_obj.document_src()
-        return self.show_html_diff(zmi_data, fs_data)
-
-    security.declareProtected(view_management_screens, 'quick_overwritte_forms_html')
-    quick_overwritte_forms_html = PageTemplateFile('zpt/quick_overwritte_forms', globals())
+        return html_diff(zmi_data, fs_data)
 
 
 #------------------------------------------------------------------------------------------------- API
@@ -261,59 +225,6 @@ class NaayaUpdater(Folder):
                         return readFile(join(pitem['package_path'], 'zpt', frm_name), 'r')
                     break
 
-
-    security.declarePrivate('list_fs_templates')
-    def list_fs_templates(self, portal):
-        """
-            return the list of the filesystem templates
-        """
-        portal_path = self.get_portal_path(portal)
-        skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
-        if skel_handler.root.forms is not None:
-            return [f.id for f in skel_handler.root.forms.forms]
-
-
-    security.declarePrivate('get_fs_template_content')
-    def get_fs_template_content(self, id, portal):
-        """
-            return the content of the filesystem template
-        """
-        portal_path = self.get_portal_path(portal)
-        skel_handler, error = skel_parser().parse(readFile(join(portal_path, 'skel', 'skel.xml'), 'r'))
-        if skel_handler.root.forms is not None:
-            return readFile(join(portal_path, 'skel', 'forms', '%s.zpt' % id), 'r')
-
-
-    security.declarePrivate('get_fs_template')
-    def get_fs_template(self, id, portal):
-        """
-            return a filesystem template object given the id
-        """
-        if id in self.list_fs_templates(portal):
-            return self.get_fs_template_content(id, portal)
-        elif id in self.list_fs_templates(NySite_module):   #fall back to Naaya filesytem templates
-            return self.get_fs_template_content(id, NySite_module)
-        return self.get_contenttype_content(id, portal) #fall back to Naaya pluggable content types
-
-    security.declarePrivate('get_zmi_template')
-    def get_zmi_template(self, path):
-        """
-            return a ZMI template object given the path
-        """
-        root = self.getPhysicalRoot()
-        return root.unrestrictedTraverse(path, None)
-
-
-    security.declarePrivate('get_template_content')
-    def get_template_content(self, form):
-        """
-            return a template content given the object
-        """
-        try:
-            return form._text
-        except:
-            return str(form.data)
-
 #----------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------EXTERNAL
 
@@ -343,81 +254,6 @@ class NaayaUpdater(Folder):
     def getPortalMetaTypes(self):
         """ """
         return self.pmeta_types
-
-    security.declareProtected(view_management_screens, 'diffTemplates')
-    def diffTemplates(self, id, fpath, ppath):
-        """ return the differences between the ZMI and the filesytem versions of the template"""
-        portal = self.getPortal(ppath)
-        fs = self.get_fs_template(id, portal)
-        zmi = self.get_zmi_template(fpath)
-        return self.show_html_diff(fs, self.get_template_content(zmi))
-
-    security.declareProtected(view_management_screens, 'getReportQuickModifiedForms')
-    def getReportQuickModifiedForms(self, forms, all_forms=False, portals='', p_action='', REQUEST=None):
-        """ """
-        if not REQUEST.has_key('show_report'):
-            return
-
-        report = {}
-        forms_list = convertLinesToList(forms)
-        portals_list = self.getPortals()
-        portals_custom = []
-
-        for portal_id in portals.split(','):
-            portals_custom.append(portal_id.strip())
-
-        for portal in portals_list:
-            if p_action == 'ep' and portal.id in portals_custom: continue
-            elif p_action != 'ep' and portal.id not in portals_custom: continue
-
-            res = []
-            portal_path = '/'.join(portal.getPhysicalPath()[1:])
-            if all_forms:
-                forms_list = portal.portal_forms.objectIds()
-
-            for form_id in forms_list:
-                form_path = '%s/portal_forms/%s' % (portal_path, form_id)
-                form_fs = self.get_fs_template(form_id, portal)
-                form_zmi_ob = self.get_zmi_template(form_path)
-                if form_fs and form_zmi_ob:
-                    t1 = self._normalize_template(form_fs)
-                    t2 = self._normalize_template(self.get_template_content(form_zmi_ob))
-                    if t1 != t2:
-                        res.append((form_zmi_ob, 'edit'))
-                    if t1 == t2:
-                        res.append((form_zmi_ob, 'remove'))
-                if form_fs and not form_zmi_ob:
-                    res.append((form_id, 'add'))
-            if len(res) > 0: report[portal_path] = res
-        return report
-
-    security.declareProtected(view_management_screens, 'reloadQuickPortalForms')
-    def reloadQuickPortalForms(self, fmod=[], fdel=[], forms='', REQUEST=None):
-        """ reload portal forms """
-        fmod = convertToList(fmod)
-        fdel = convertToList(fdel)
-        forms_list = convertLinesToList(forms)
-        for form_path in fmod:
-            portal = self.getPortal(form_path[:form_path.find('portal_forms')])
-            form_id = form_path[form_path.find('portal_forms')+13:]
-            form_ob = self.get_zmi_template(form_path)
-            fs_content = self.get_fs_template(form_id, portal)
-            try:
-                if form_ob is None:
-                    formstool_ob = portal.getFormsTool()
-                    formstool_ob.manage_addTemplate(id=form_id, title='', file='')
-                    form_ob = formstool_ob._getOb(form_id, None)
-                form_ob.pt_edit(text=fs_content, content_type='')
-                form_ob._p_changed = 1
-            except Exception, error:
-                print error
-        for form_path in fdel:
-            portal = self.getPortal(form_path[:form_path.find('portal_forms')])
-            form_id = form_path[form_path.find('portal_forms')+13:]
-            form_ob = self.get_zmi_template(form_path)
-            form_ob.aq_parent.manage_delObjects([form_id])
-        return REQUEST.RESPONSE.redirect('%s/quick_overwritte_forms_html' % (self.absolute_url()))
-
 
 #layout updates
     security.declareProtected(view_management_screens, 'updateStyle')

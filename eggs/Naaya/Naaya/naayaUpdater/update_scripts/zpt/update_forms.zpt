@@ -1,6 +1,11 @@
-<tal:block content="structure here/manage_page_header"/>
-<tal:block content="structure here/manage_tabs"/>
+<metal:block use-macro="here/update_template/macros/page">
 
+<h2 metal:fill-slot="title">Update forms</h2>
+
+<metal:block fill-slot="priority" />
+<metal:block fill-slot="description" />
+
+<metal:block fill-slot="body">
 <script type="text/javascript">
 <!--
 var isSelected = false;
@@ -25,8 +30,7 @@ function toggleSelect()
     portals python:request.get('portals', '');
     p_action python:request.get('p_action', 'ep');
     upload_ok python:request.get('u', 0);
-    report python:here.getReportQuickModifiedForms(forms, all_forms, portals, p_action, request)">
-<h2>Quick update Naaya forms</h2>
+    report python:here.get_report(forms, all_forms, portals, p_action, request)">
 
 <form method="post" name="frmQuickModForms">
     <label for="exclude">Form IDs (one per row)</label><br />
@@ -103,7 +107,7 @@ function toggleSelect()
 
     <em tal:condition="python: len(report) == 0">No forms found</em>
     <form tal:condition="report" method="post" name="frmQuickReloadForms"
-      tal:attributes="action string:${here/absolute_url}/reloadQuickPortalForms">
+      tal:attributes="action string:${here/absolute_url}/do_reload">
         <div class="diff">
             <div class="line_added">+ content from portal_forms</div>
             <div class="line_removed">- content from skel</div>
@@ -155,4 +159,5 @@ function toggleSelect()
 </tal:block>
 </tal:block>
 
-<tal:block content="structure here/manage_page_footer"/>
+</metal:block>
+</metal:block>
