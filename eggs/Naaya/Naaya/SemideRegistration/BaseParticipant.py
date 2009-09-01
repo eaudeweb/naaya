@@ -1,3 +1,23 @@
+# The contents of this file are subject to the Mozilla Public
+# License Version 1.1 (the "License"); you may not use this file
+# except in compliance with the License. You may obtain a copy of
+# the License at http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS
+# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+# implied. See the License for the specific language governing
+# rights and limitations under the License.
+#
+# The Initial Owner of the Original Code is European Environment
+# Agency (EEA).  Portions created by Eau de Web are
+# Copyright (C) European Environment Agency.  All
+# Rights Reserved.
+#
+# Authors:
+#
+# Cornel Nitu, Eau de Web
+# Valentin Dumitru, Eau de Web
+
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -67,7 +87,6 @@ class BaseParticipant(SimpleItem):
             self.departure_date = ''
         self.departure_flight = departure_flight
         self.departure_time = departure_time
-        self_p_changed = 1
 
     security.declareProtected(constants.VIEW_PERMISSION, 'isEntitled')
     def isEntitled(self, REQUEST):
@@ -122,11 +141,6 @@ class BaseParticipant(SimpleItem):
         if REQUEST.form.has_key('resend_mail'):
             #If the email corresponds with the one used at the registration, the confirmation mail will be resent
             if self.email == REQUEST.form.get('email', ''):
-                values = {'registration_edit_link': self.absolute_url(),
-                            'registration_event': self.title,
-                            'website_team': self.site_title,
-                            'registration_number': self.id,
-                            'last_name': self.last_name}
                 self.send_registration_notification(self.email,
                     'Event registration',
                     constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
@@ -142,6 +156,17 @@ class BaseParticipant(SimpleItem):
                 cleaned_data = REQUEST.form
                 del cleaned_data['submit']
                 self.edit(**cleaned_data)
+
+                #send notifications
+                values = {'registration_edit_link': self.absolute_url(),
+                            'registration_event': self.title,
+                            'website_team': self.site_title,
+                            'registration_number': self.id}
+                self.send_registration_notification(self.administrative_email,
+                    'Event registration',
+                    constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE % values,
+                    constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
+
                 return REQUEST.RESPONSE.redirect(self.absolute_url())
         return self._edit_html(REQUEST)
 

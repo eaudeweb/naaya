@@ -72,7 +72,7 @@
 		<th i18n:translate="">First name</th>
 		<td tal:content="here/first_name" />
 	</tr>
-	<tr tal:condition="not:here/is_journalist">
+	<tr>
 		<th i18n:translate="">Country</th>
 		<td tal:content="here/country" />
 	</tr>

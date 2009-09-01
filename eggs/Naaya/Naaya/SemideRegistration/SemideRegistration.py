@@ -244,27 +244,54 @@ class SemideRegistration(LocalPropertyManager, Folder):
     security.declareProtected(constants.MANAGE_PERMISSION, 'exportParticipants')
     def exportParticipants(self, REQUEST=None, RESPONSE=None):
         """ exports the participants list in CSV format """
-        data = [('Registration date', 'First name', 'Name', 'Country', 'Organisation', 'Arriving date', 'Registration number')]
+        data = [('Registration date', 'Registration number', 'First name', 'Name', 'Country', 'Organisation',
+                    'Official title', 'Passport number', 'Expiry date of the passport', 'Email address',
+                    'Phone number', 'Fax number', 'Date of arrival', 'Arriving from', 'Flight number',
+                    'Time of arrival', 'Date of departure', 'Flight number', 'Departure time', 'Hotel reservation')]
         data_app = data.append
         for part in self.getParticipants(skey='registration_date', rkey=1, is_journalist=False):
             if part.arrival_date:
                 arrival_date = self.formatDate(part.arrival_date)
             else:
                 arrival_date = 'n/a'
-            data_app((self.formatDate(part.registration_date), part.first_name, part.last_name, part.country, part.organisation, arrival_date, part.id))
+            if part.departure_date:
+                departure_date = self.formatDate(part.departure_date)
+            else:
+                departure_date = 'n/a'
+            if part.hotel_reservation == '1':
+                hotel_reservation = 'I am part of one of the following delegations: (2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro, Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon, Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey. My accommodation is covered by the French Government.'
+            else:
+                hotel_reservation = 'I pay my own accommodation. So please book your hotel room, click here to get hotels contacts and special rates.'
+            data_app((self.formatDate(part.registration_date), part.id, part.first_name, part.last_name,
+                        part.country, part.organisation, part.official_title, part.passport_no, part.passport_expire,
+                        part.email, part.phone_number, part.fax_number, arrival_date, part.arrival_from,
+                        part.arrival_flight, part.arrival_time, departure_date, part.departure_flight,
+                        part.departure_time, hotel_reservation))
+
         return self.create_csv(data, filename='participants.csv', RESPONSE=REQUEST.RESPONSE)
 
     security.declareProtected(constants.MANAGE_PERMISSION, 'exportPress')
     def exportPress(self, REQUEST=None, RESPONSE=None):
         """ exports the press participants list in CSV format """
-        data = [('Registration date', 'First name', 'Name', 'Country', 'Media name', 'Arriving date', 'Registration number')]
+        data = [('Registration date', 'Registration number', 'First name', 'Name', 'Country', 'Media name',
+                    'Type of media', 'Description of equipment used', 'Your position', 'Passport number',
+                    'Expiry date of the passport', 'Email address', 'Phone number', 'Fax number', 'Mobile phone', 'Date of arrival', 'Arriving from', 'Flight number', 'Time of arrival',
+                    'Date of departure', 'Flight number', 'Time of departure')]
         data_app = data.append
         for part in self.getParticipants(skey='registration_date', rkey=1, is_journalist=True):
             if part.arrival_date:
                 arrival_date = self.formatDate(part.arrival_date)
             else:
                 arrival_date = 'n/a'
-            data_app((self.formatDate(part.registration_date), part.first_name, part.last_name, part.country, part.media_name, arrival_date, part.id))
+            if part.departure_date:
+                departure_date = self.formatDate(part.departure_date)
+            else:
+                departure_date = 'n/a'
+            data_app((self.formatDate(part.registration_date), part.id, part.first_name, part.last_name,
+                        part.country, part.media_name, part.media_type, part.media_description,
+                        part.media_position, part.passport_no, part.passport_expire, part.email, part.phone_number, part.fax_number, part.mobile_number, arrival_date, part.arrival_from,
+                        part.arrival_flight, part.arrival_time, departure_date, part.departure_flight,
+                        part.departure_time))
         return self.create_csv(data, filename='press.csv', RESPONSE=REQUEST.RESPONSE)
 
     security.declarePrivate('create_csv')
