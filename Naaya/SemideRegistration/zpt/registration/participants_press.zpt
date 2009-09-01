@@ -125,6 +125,30 @@
 			</th>
 		</tal:block>
 
+		<tal:block tal:condition="python:skey=='media_name'">
+			<tal:block tal:condition="python:rkey==''">
+				<th class="scope-col" scope="col">
+					<a tal:attributes="href string:${here/absolute_url}/participants_press?skey=media_name&amp;rkey=1">
+						<span i18n:translate="" tal:omit-tag="">Media name</span>
+					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
+				</th>
+			</tal:block>
+			<tal:block tal:condition="python:rkey=='1'">
+				<th class="scope-col" scope="col">
+					<a tal:attributes="href string:${here/absolute_url}/participants_press?skey=media_name">
+						<span i18n:translate="" tal:omit-tag="">Media name</span>
+					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
+				</th>
+			</tal:block>
+		</tal:block>
+		<tal:block tal:condition="python:skey!='media_name'">
+			<th class="scope-col" scope="col">
+				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants_press?skey=media_name">
+					Media name
+				</a>
+			</th>
+		</tal:block>
+
 		<tal:block tal:condition="python:skey=='arrival_date'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="scope-col" scope="col">
@@ -186,6 +210,7 @@
 		<td>
 			<a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/last_name" />
 		</td>
+		<td tal:content="participant/media_name" />
 		<td tal:content="python:here.formatDate(participant.arrival_date, '%d %b %Y')" />
 		<td>
 			<a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/id" />
