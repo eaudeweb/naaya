@@ -53,7 +53,7 @@ def manage_add_registration(self, id='', title='', conference_details='', admini
         self.gl_add_languages(ob)
         self._setObject(id, ob)
         ob = self._getOb(id)
-        ob._loadRegistrationForms()
+        ob.loadDefaultContent()
         if REQUEST:
             REQUEST.RESPONSE.redirect(self.absolute_url())
     else:
@@ -82,6 +82,13 @@ class SemideRegistration(LocalPropertyManager, Folder):
         Folder.manage_options[2:]
     )
 
+    security.declarePrivate('loadDefaultContent')
+    def loadDefaultContent(self):
+        """ load default content such as: email templates """
+        from TemplatesManager import manage_addTemplatesManager
+        manage_addTemplatesManager(self)
+        self._loadRegistrationForms()
+
     def __init__(self, id, title, conference_details, administrative_email, start_date, end_date, introduction, lang):
         """ constructor """
         self.id = id
@@ -97,6 +104,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
         self.start_date = str2date(start_date)
         self.end_date = str2date(end_date)
 
+    security.declarePrivate('loadDefaultContent')
     def _loadRegistrationForms(self):
         """ load registration forms """
         registration_form = file(join(constants.PRODUCT_PATH, 'zpt', 'registration', 'registration.zpt')).read()
@@ -127,6 +135,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
                                             constants.TIME_FIELDS,
                                             REQUEST)
             if form_valid:
+                lang = self.gl_get_selected_language()
                 registration_no = naaya_utils.genRandomId(10)
                 cleaned_data = REQUEST.form
                 del cleaned_data['submit']
@@ -146,12 +155,12 @@ class SemideRegistration(LocalPropertyManager, Folder):
                                 'last_name': self.unicode2UTF8(participant.last_name)}
                     self.send_registration_notification(participant.email,
                         'Event registration',
-                        constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
-                        constants.REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
+                        self.getEmailTemplate('user_registration_html', lang) % values,
+                        self.getEmailTemplate('user_registration_text', lang) % values)
                     self.send_registration_notification(self.administrative_email,
                         'Event registration',
-                        constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE % values,
-                        constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
+                        self.getEmailTemplate('admin_registration_html', 'en') % values,
+                        self.getEmailTemplate('admin_registration_text', 'en') % values)
 
                     #redirect to profile page
                     return REQUEST.RESPONSE.redirect(participant.absolute_url())
@@ -166,6 +175,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
                                             constants.TIME_FIELDS,
                                             REQUEST)
             if form_valid:
+                lang = self.gl_get_selected_language()
                 registration_no = naaya_utils.genRandomId(10)
                 cleaned_data = REQUEST.form
                 del cleaned_data['submit']
@@ -185,12 +195,12 @@ class SemideRegistration(LocalPropertyManager, Folder):
                                 'last_name': self.unicode2UTF8(press.last_name)}
                     self.send_registration_notification(press.email,
                         'Event registration',
-                        constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
-                        constants.REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
+                        self.getEmailTemplate('user_registration_html', lang) % values,
+                        self.getEmailTemplate('user_registration_text', lang) % values)
                     self.send_registration_notification(self.administrative_email,
                         'Event registration',
-                        constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE % values,
-                        constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
+                        self.getEmailTemplate('admin_registration_html', 'en') % values,
+                        self.getEmailTemplate('admin_registration_text', 'en') % values)
 
                     return REQUEST.RESPONSE.redirect(press.absolute_url())
         return self.registration_press_form(REQUEST)
@@ -200,6 +210,15 @@ class SemideRegistration(LocalPropertyManager, Folder):
 
     security.declareProtected(constants.MANAGE_PERMISSION, '_edit_html')
     _edit_html = PageTemplateFile('zpt/registration/edit', globals())
+
+    security.declarePrivate('getEmailTemplate')
+    def getEmailTemplate(self, id, lang='en'):
+        """ get email template """
+        lang_dir = self.email_templates._getOb(lang, None)
+        if lang_dir is None:    #maybe arabic?
+            lang_dir = self.email_templates._getOb('en', None)
+        email_template = lang_dir._getOb(id)
+        return email_template.document_src()
 
     def registrationOpened(self):
         """ check if the registration is opend to the public """

@@ -1,0 +1,24 @@
+<html>
+    <head/>
+    <body>
+        <p>
+            Hello,
+        <p/>
+        <p>
+            Your registration for the "%(registration_event)s" was received in good order. To review and/or edit the submitted information please use the following link:
+        <p/>
+        <p>
+            <a href="%(registration_edit_link)s">%(registration_edit_link)s</a>
+        <p/>
+        <p>
+            The registration number <strong>%(registration_number)s</strong> and your last name <strong>%(last_name)s</strong> (case sensitive) are required for authentication.
+        <p/>
+        <p>
+            ---
+        </p>
+        <p>
+            Best Regards,<br/>
+            %(website_team)s team
+        </p>
+    </body>
+</html>
