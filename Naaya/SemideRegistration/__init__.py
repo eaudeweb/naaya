@@ -36,4 +36,5 @@ misc_ = {
     'SemideParticipant.png': ImageFile('www/SemideParticipant.png', globals()),
     'SemidePress.gif': ImageFile('www/SemidePress.gif', globals()),
     'print.gif': ImageFile('www/print.gif', globals()),
+    'EmailTemplates.gif': ImageFile('www/EmailTemplates.gif', globals()),
     }

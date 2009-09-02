@@ -1,0 +1,11 @@
+Hello, 
+
+Your registration for the "%(registration_event)s" was received in good order. You can review the submitted information by following the link:
+
+%(registration_edit_link)s
+
+The registration number %(registration_number)s and your last name %(last_name)s (case sensitive) are required for authentication.
+
+---
+Best Regards,
+%(website_team)s team
