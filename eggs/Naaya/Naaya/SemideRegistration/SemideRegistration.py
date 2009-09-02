@@ -82,7 +82,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
         Folder.manage_options[2:]
     )
 
-    security.declarePrivate('loadDefaultContent')
+    security.declareProtected(constants.MANAGE_PERMISSION, 'loadDefaultContent')
     def loadDefaultContent(self):
         """ load default content such as: email templates """
         from TemplatesManager import manage_addTemplatesManager
