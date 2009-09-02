@@ -10,7 +10,7 @@
 <h1 tal:content="here/getRegistrationTitle" />
 <h2 tal:content="here/getConferenceDetails" />
 <h3>
-	<span i18m:translate="">Registration opened for the period: </span>
+	<span i18n:translate="">Registration opened for the period: </span>
 	<span tal:replace="python:here.formatDate(here.start_date, '%d %b %Y')" /> - 
 	<span tal:replace="python:here.formatDate(here.end_date, '%d %b %Y')" />
 </h3>
@@ -19,7 +19,7 @@
 <br />
 
 <tal:block tal:condition="python:registration_opened and registration_not_closed">
-	<p i18n:translate="">Please fill the form below and click <strong>Submit</strong>.
+	<p i18n:translate="">Please fill the form below and click <strong>Submit and print</strong>.
 		Fields in <span style="color: #f40000">red</span> are mandatory.
 		You can update your registration form later with your family name and
 		the registration number that will be given to you when you submit the form.</p>
@@ -29,8 +29,8 @@
 		<div tal:condition="python:request.has_key('last_name_error')" class="message-error" i18n:translate="">
 			The name is mandatory!
 		</div>
-		<div class="field mandatory">
-			<label for="last_name" i18n:translate="">Name</label>
+		<div class="field">
+			<label class="mandatory" for="last_name" i18n:translate="">Name</label>
 			<input type="text" name="last_name:utf8:ustring" size="50" tal:attributes="value python:request.get('last_name')" />
 		</div>
 		<div class="field">

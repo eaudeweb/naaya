@@ -10,16 +10,16 @@
 <h1 tal:content="here/getRegistrationTitle" />
 <h2 tal:content="here/getConferenceDetails" />
 <h3>
-	<span i18m:translate="">Registration opened for the period: </span>
+	<span i18n:translate="">Registration opened for the period: </span>
 	<span tal:replace="python:here.formatDate(here.start_date, '%d %b %Y')" /> - 
 	<span tal:replace="python:here.formatDate(here.end_date, '%d %b %Y')" />
 </h3>
 
-<h4 i18n:translate="">Press participansts registration</h4>
+<h4 i18n:translate="">Press participants registration</h4>
 <br />
 
 <tal:block tal:condition="python:registration_opened and registration_not_closed">
-	<p i18n:translate="">Please fill the form below and click <strong i18n:translate="">Submit</strong>.
+	<p i18n:translate="">Please fill the form below and click <strong>Submit and print</strong>.
 		Fields in <span style="color: #f40000">red</span> are mandatory.
 		You can update your registration form later with your family name and
 		the registration number that will be given to you when you submit the form.</p>
