@@ -16,18 +16,40 @@
 # Authors:
 #
 # Alin Voinea, Eau de Web
+# Alex Morega, Eau de Web
+
 import os
+from zope.configuration.xmlconfig import xmlconfig
 from StringIO import StringIO
 import transaction
 from Testing import ZopeTestCase
-from zope.app.testing.functional import ZCMLLayer
 from Testing.ZopeTestCase import user_name, user_password
 from Testing.ZopeTestCase import Functional
 from AccessControl.User import nobody
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from Globals import package_home
-from Products.ExtFile import ExtFile
+
+
+test_zcml = """<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:meta="http://namespaces.zope.org/meta"
+    xmlns:five="http://namespaces.zope.org/five">
+
+  <!-- this comes from Five/skel/site.zcml -->
+
+  <include package="Products.Five"/>
+  <include files="%(INSTANCE_HOME)s/etc/package-includes/*-meta.zcml" />
+  <include files="%(INSTANCE_HOME)s/etc/package-includes/*-configure.zcml" />
+  <meta:redefinePermission from="zope2.Public" to="zope.Public" />
+
+  <five:loadProducts/>
+  <five:loadProductsOverrides/>
+
+</configure>
+""" % {'INSTANCE_HOME': INSTANCE_HOME}
+
+xmlconfig(StringIO(test_zcml), testing=True)
 
 ZopeTestCase.installProduct('Localizer')
 ZopeTestCase.installProduct('TextIndexNG3')
@@ -38,11 +60,6 @@ ZopeTestCase.installProduct('naayaHotfix')
 ZopeTestCase.installProduct('Naaya')
 ZopeTestCase.installProduct('PythonScripts')
 ZopeTestCase.installProduct('ZMIntrospection')
-
-config_file = 'naayadefaultlayer.zcml'
-config_file = os.path.join(os.path.dirname(__file__), config_file)
-
-NaayaZCMLLayer = ZCMLLayer(config_file, __name__, 'NaayaZCMLLayer')
 
 class MailDivertLayer(object):
     def get_log(self):
@@ -81,7 +98,7 @@ class NaayaLayerClass(object):
     """
 
     # The setUp of bases is called autmatically first
-    __bases__ = (NaayaZCMLLayer,)
+    __bases__ = []
 
     def __init__(self, module, name):
         self.__module__ = module
@@ -89,6 +106,7 @@ class NaayaLayerClass(object):
         self.mail_divert = MailDivertLayer()
 
     def setUp(self):
+        from Products.ExtFile import ExtFile
         ExtFile.REPOSITORY_PATH = ['var', 'testing']
         self.app = ZopeTestCase.app()
         self.install()

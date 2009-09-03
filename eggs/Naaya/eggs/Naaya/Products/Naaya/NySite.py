@@ -56,8 +56,8 @@ from interfaces import INySite, IHeartbeat
 from constants import *
 from Products.NaayaBase.constants import *
 from Products.NaayaCore.constants import *
-from Products import NaayaContent
-from Products.NaayaContent.constants import *
+import naaya.content.base
+from naaya.content.base.constants import *
 from Products.NaayaCore.PropertiesTool.PropertiesTool import manage_addPropertiesTool
 from Products.NaayaCore.CatalogTool.CatalogTool import manage_addCatalogTool
 from Products.NaayaCore.TranslationsTool.TranslationsTool import manage_addTranslationsTool
@@ -606,7 +606,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def get_site_uid(self): return self.__portal_uid
 
     security.declarePublic('get_constant')
-    def get_constant(self, c): return NaayaContent.discover.get_constant(c)
+    def get_constant(self, c): return naaya.content.base.discover.get_constant(c)
 
     security.declarePublic('get_meta_types')
     def get_meta_types(self, folder=0):
@@ -3156,7 +3156,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     #pluggable content
     def get_pluggable_content(self):
         #information about the available types
-        return NaayaContent.discover.get_pluggable_content()
+        return naaya.content.base.discover.get_pluggable_content()
 
     def get_pluggable_metatypes(self):
         return self.get_pluggable_content().keys()
@@ -3333,7 +3333,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'import_contacts_vcard')
     def import_contacts_vcard(self, vcard_zipfile, location, REQUEST=None):
         """ Import contacts in vCard format from a zip file """
-        from Products.NaayaContent.NyContact.NyContact import addNyContact, parse_vcard_data
+        from naaya.content.contact.NyContact import addNyContact, parse_vcard_data
         container = self.restrictedTraverse(location)
         errors = []
         infos = []
