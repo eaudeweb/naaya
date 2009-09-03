@@ -1,4 +1,4 @@
-<tal:block metal:use-macro="python:here.getFormsTool().site_macro_edit.macros['page']">
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_macro_edit').macros['page']">
 
 <div class="floated-buttons">
 	<span class="buttons">
