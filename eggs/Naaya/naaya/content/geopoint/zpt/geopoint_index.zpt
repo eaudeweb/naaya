@@ -42,7 +42,7 @@
 		</td>
 	</tr>
 
-<tal:block content="structure python: here.prop_display_tr('url', as_url=True, rel='external')" />
+<tal:block content="structure python: here.prop_display_tr('url', as_href=True, rel='external')" />
 
 	<tr tal:condition="python:here.pointer and here.restrictedTraverse(here.pointer, None)">
 		<th i18n:translate="">Pointer</th>
