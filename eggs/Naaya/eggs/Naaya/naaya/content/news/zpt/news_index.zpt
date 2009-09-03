@@ -32,7 +32,7 @@
 	<img tal:condition="python:not here.hasBigPicture()" src="getSmallPicture" alt="" /></td>
 </tr>
 
-<tal:block content="structure python: here.prop_display_tr('resourceurl', as_url=True)" />
+<tal:block content="structure python: here.prop_display_tr('resourceurl', as_href=True)" />
 <tal:block content="structure python: here.prop_display_tr('source')" />
 <tal:block content="structure python: here.prop_display_tr('releasedate')" />
 <tal:block content="structure python: here.prop_display_tr('contributor')" />
