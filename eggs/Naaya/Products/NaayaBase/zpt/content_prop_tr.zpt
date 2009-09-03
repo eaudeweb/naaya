@@ -1,0 +1,10 @@
+<tr>
+    <th i18n:translate="" tal:content="options/label" />
+    <td tal:condition="not:options/as_href" tal:content="options/value" />
+    <td tal:condition="options/as_href">
+    <a tal:attributes="href options/value; rel options/rel"
+        tal:content="options/value"
+        title="[Hold down the Shift key when you click on a link to open it in a new window]"
+        i18n:attributes="title" />
+    </td>
+</tr>

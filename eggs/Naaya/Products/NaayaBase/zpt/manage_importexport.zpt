@@ -1,0 +1,48 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+
+<p class="page-description">
+	In order to transfer the portal hierarchical structure of data from a site
+	to another site, the data must be first exported in a proprietary XML format
+	(.<em>nyexp</em> file) and then imported in the site. If you need to transfer
+	the data between two sites, it could be simpler to use Zope import/export
+	mechanisms (.<em>zexp</em> file).
+</p>
+
+<p>
+	<a href="exportdata?all_levels=1">Export all content</a> | <a href="exportdata?all_levels=0">Export first level content (without sub-folders content)</a>
+</p>
+
+<form method="post" action="manage_import" enctype="multipart/form-data">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+	<tr>
+		<td class="form-label">Import from</td>
+		<td>
+			<table border="0" cellspacing="1" cellpadding="0" width="100%">
+				<tr>
+					<td width="1%"><input type="radio" name="source" value="file" checked></td>
+					<td width="5%">File</td>
+					<td width="95%"><input type="file" name="file" size="40" value=""></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>
+			<table border="0" cellspacing="1" cellpadding="0" width="100%">
+				<tr>
+					<td width="1%"><input type="radio" name="source" value="url"></td>
+					<td width="5%">Url</td>
+					<td width="95%"><input type="text" name="url" size="40" value=""></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td></td><td><input type="submit" value="Import" /></td>
+	</tr>
+</table>
+</form>
+
+<span tal:replace="structure here/manage_page_footer" />

@@ -1,0 +1,54 @@
+<tal:block tal:define="portal_map here/getGeoMapTool">
+<script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${portal_map/get_mapsapikey}"></script>
+<script type="text/javascript" src="misc_/NaayaCore/remote.js"></script>
+<script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
+<!-- Extjs tree libs -->
+<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/tree.css"/>
+<link rel="stylesheet" type="text/css" media="all" tal:attributes="href string:${here/absolute_url}/extjs/css/custom-tree.css"/>
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-base.js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-all.js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/absolute_url}/extjs/ext-navigation.js.dtml"></script>
+
+<div class="field" tal:define="geo_type python:request.get('geo_type', here.geo_type)">
+	<label for="geo_type">
+		<span i18n:translate="">Geographical type</span>
+	</label>
+	<select name="geo_type:utf8:ustring" id="geo_type">
+		<option tal:repeat="item portal_map/getSymbolsList"
+			tal:attributes="value item/id; selected python:geo_type==item.id"
+			tal:content="item/title" i18n:translate="" />
+	</select>
+</div>
+
+<div style="background-color: #ecf5fa; border: 1px solid #b6cde1; margin-top: 0.5em; width: 430px;">
+	<div class="field-inline">
+		<label for="longitude">
+			<span i18n:translate="">Longitude</span>
+		</label>
+		<input type="text" name="longitude:utf8:ustring" id="longitude" size="20" maxlength="20" tal:attributes="value python:request.get('longitude', here.longitude)" />
+		<label for="latitude" style="margin-left: 1em;">
+			<span i18n:translate="">Latitude</span>
+		</label>
+		<input type="text" name="latitude:utf8:ustring" id="latitude" size="20" maxlength="20" tal:attributes="value python:request.get('latitude', here.latitude)" />
+	</div>
+	<noscript><p class="message-error" i18n:translate="">You must have Javascript turned on to be able to pick locations from the map.</p></noscript>
+	<div style="margin: 0.5em;">
+		<div id="map" style="width: 400px;"></div>
+		<p i18n:translate="">Use the address to retrieve the location coordinates <em>(e.g. Kongens Nytorv 6, 1050 Copenhagen K, Denmark)</em></p>
+		<label for="address">
+			<span i18n:translate="">Address</span>
+		</label>
+		<input type="text" id="address" name="address:utf8:ustring" size="50" tal:attributes="value python:request.get('address', here.address)" />
+		<input type="button" name="address_button" value="Search" onclick="findAddress()" />
+	</div>
+</div>
+
+<span tal:replace="structure python:portal_map.xrjs_editpick_loader(here.absolute_url(1))" />
+<div class="field" tal:condition="python:here.meta_type not in ['Naaya File', 'Naaya Extended File'] ">
+	<label for="url">
+		<span i18n:translate="">URL</span>
+	</label>
+	<input type="text" name="url:utf8:ustring" id="url" size="50" tal:attributes="value python:here.getSession('url', request.get('url', here.url))" />
+</div>
+
+</tal:block>
