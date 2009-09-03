@@ -1,0 +1,68 @@
+<tal:block metal:define-macro="page">
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure python:here.manage_form_title(here, request, form_title='Add %s' % template.kind)" />
+
+<p>
+	<tal:block metal:define-slot="description">Description</tal:block>
+</p>
+
+<p class="form-help">
+	Selected language: <strong tal:content="python:here.gl_get_language_name(here.gl_get_selected_language())" />
+</p>
+
+<form name="frmAdd" method="post" tal:attributes="action template/action" enctype="multipart/form-data">
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+	<tr><td class="form-label" colspan="2">Base properties</td></tr>
+	<tr>
+		<td class="form-label" width="20%">Id</td>
+		<td width="80%"><input type="text" name="id" size="30" value="" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Title</td>
+		<td><input type="text" name="title:utf8:ustring" size="50" value="" /></td>
+	</tr>
+	<tr>
+		<td class="form-label" valign="top">Description</td>
+		<td><textarea name="description:utf8:ustring" rows="5" cols="50"></textarea></td>
+	</tr>
+	<tr>
+		<td class="form-label">Geographical coverage</td>
+		<td><input type="text" name="coverage:utf8:ustring" size="50" value="" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Keywords</td>
+		<td><input type="text" name="keywords:utf8:ustring" size="50" value="" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Sort order</td>
+		<td><input type="text" name="sortorder" size="2" value="100" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Release date (<em>dd/mm/yyyy</em>)</td>
+		<td><input type="text" name="releasedate" size="20" value="" /></td>
+	</tr>
+	<tr>
+		<td class="form-label">Open for comments</td>
+		<td><input type="checkbox" name="discussion" id="discussion" /></td>
+	</tr>
+	<tr><td></td></tr>
+	<tr><td class="form-label" colspan="2">Custom properties</td></tr>
+	<tal:block metal:define-slot="custom_properties"/>
+	<tr><td></td></tr>
+	<tr><td class="form-label" colspan="2">Extended properties</td></tr>
+	<tr tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(template.kind)">
+		<td class="form-label"><span tal:replace="record/name"/></td>
+		<td tal:content="structure python:record.render(record.defaultvalue)">dynamic html control</td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>
+			<input type="hidden" name="submitted" value="1" />
+			<input type="submit" value="Add" />
+		</td>
+	</tr>
+</table>
+</form>
+
+<span tal:replace="structure here/manage_page_footer" />
+</tal:block>

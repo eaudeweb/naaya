@@ -1,0 +1,70 @@
+<tal:block metal:define-macro="page">
+
+<tal:block tal:replace="structure here/standard_html_header"/>
+
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/core_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/calendar_js"></script>
+<script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+
+<h1 metal:define-slot="title" tal:content="string:Submit ${form_helper/get_meta_label}" />
+
+<p metal:define-slot="description">description</p>
+
+<script type="text/javascript">
+<!--
+function fPick(glossary_url)
+{
+    var frm = document.frmAdd;
+    var wnd = window.open(glossary_url + '&amp;lang=' + frm.lang[frm.lang.selectedIndex].value, "pickkeyword", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
+    wnd.focus();
+}
+
+function fSet(ctrl, value)
+{
+    var frm = document.frmAdd;
+    var items = frm[ctrl + ':utf8:ustring'];
+    if (value != '')
+    {
+        if (items.value == '')
+            items.value = value;
+        else
+            items.value = items.value + ', ' + value;
+    }
+}
+// -->
+</script>
+
+<form name="frmAdd" method="post" tal:attributes="action action" enctype="multipart/form-data">
+
+<div class="field-inline" tal:define="selected_language python:here.getSession('lang', here.gl_get_selected_language())">
+    <label i18n:translate="" for="lang">Posting language</label>
+    <select name="lang" id="lang">
+        <option tal:repeat="item here/gl_get_languages_mapping"
+            tal:attributes="value python:item['code']; selected python:item['code']==selected_language"
+            tal:content="python:item['name']" />
+    </select>
+</div>
+
+<!-- Schema properties -->
+<tal:block metal:define-slot="schema_properties" repeat="form_item form_helper/form_items">
+    <tal:block replace="structure form_item/html" />
+</tal:block>
+
+<tal:block metal:define-slot="custom_properties" />
+
+<div class="field" tal:repeat="record python:here.getDynamicPropertiesTool().getDynamicProperties(kind)">
+    <label tal:attributes="for record/id" i18n:translate=""><span tal:replace="record/name" /></label>
+    <tal:block tal:content="structure python:record.render(record.defaultvalue)">dynamic html control</tal:block>
+</div>
+
+<div class="field">
+    <input type="submit" value="Submit" i18n:attributes="value" />
+</div>
+
+</form>
+
+<tal:block content="form_helper/del_schema_session_values" />
+<tal:block tal:replace="structure here/standard_html_footer"/>
+
+</tal:block>

@@ -1,0 +1,69 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portal properties - Metadata</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+				languages here/get_languages_mapping;
+				curr_lang python:request.get('lang', None) or here.gl_get_selected_language()">
+<tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
+<div id="tabbedmenu">
+<ul>
+	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_metadata_html" i18n:translate="">Metadata</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_logos_html" i18n:translate="">Logos</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_email_html" i18n:translate="">Email Settings</a></li>
+	<li><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
+</ul>
+</div>
+
+<div class="edit-holder" tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
+<p i18n:translate="" class="cleaner">
+	This form allows you to set the metadata that describe this entire website. This is a subset of the <strong i18n:name="dublin-core" i18n:translate="">Dublin Core</strong> element set - see the <a  i18n:name="dublicore-website" href="http://www.dublincore.org" i18n:translate="">Dublin Core website</a> for further information about their meaning.
+	The <em i18n:name="title" i18n:translate="">title</em> and <em i18n:name="subtitle" i18n:translate="">subtitle</em> are displayed in the top banner of each page. The <em i18n:name="description" i18n:translate="">description</em> will appear on the homepage. All together, the metadata describes your website to search engines and also goes into the local channels that might be  harvested by others.
+</p>
+
+<form method="post" tal:attributes="action string:${site_url}/admin_metadata">
+<dl>
+	<dt i18n:translate="">Site title</dt>
+	<dd><input type="text" name="site_title:utf8:ustring" tal:attributes="value python:here.getLocalProperty('title', curr_lang)" size="50" /></dd>
+	<dt	i18n:translate="">Site subtitle</dt>
+	<dd><input type="text" name="site_subtitle:utf8:ustring" tal:attributes="value python:here.getLocalProperty('site_subtitle', curr_lang)" size="50" /></dd>
+</dl>
+<dl tal:define="editor here/getEditorTool">
+	<dt i18n:translate="">Description (HTML)</dt>
+	<dd><span tal:replace="structure python:editor.render('description', curr_lang, image_support=True)" /></dd>
+	<dd><textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getLocalProperty('description', curr_lang)" /></dd>
+</dl>
+<dl>
+	<dt i18n:translate="">Publisher</dt>
+	<dd><input type="text" name="publisher:utf8:ustring" tal:attributes="value python:here.getLocalProperty('publisher', curr_lang)" size="50" /></dd>
+	<dt i18n:translate="">Contributor</dt>
+	<dd><input type="text" name="contributor:utf8:ustring" tal:attributes="value python:here.getLocalProperty('contributor', curr_lang)" size="50" /></dd>
+	<dt i18n:translate="">Creator</dt>
+	<dd><input type="text" name="creator:utf8:ustring" tal:attributes="value python:here.getLocalProperty('creator', curr_lang)" size="50" /></dd>
+	<dt i18n:translate="">Rights</dt>
+	<dd><input type="text" name="rights:utf8:ustring" tal:attributes="value python:here.getLocalProperty('rights', curr_lang)" size="50" /></dd>
+</dl>
+<p><input type="hidden" name="lang" tal:attributes="value curr_lang" /></p>
+<p><input type="submit" value="Save changes" i18n:attributes="value" /></p>
+
+<div class="translate translate-bottom">
+	<span i18n:translate="" tal:omit-tag="">Translate in</span>
+	<tal:block tal:repeat="language languages">
+		<div class="current" tal:condition="python:language['code'] == curr_lang"
+							 tal:attributes="style python:'background-color: %s' % here.utHexColors(curr_lang)">
+			<span tal:content="python:language['name']" />
+		</div>
+		<a tal:condition="python:language['code'] != curr_lang"
+			tal:attributes="href string:?lang=${language/code}; 
+							title python:language['name']; 
+							style python:'background-color: %s' % here.utHexColors(language['code'])">
+			<span tal:content="python:language['name']" />
+		</a>
+	</tal:block>
+</div>
+</form>
+</div>
+</tal:block>
+
+</tal:block>

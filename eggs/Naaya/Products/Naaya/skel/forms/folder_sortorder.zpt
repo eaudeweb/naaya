@@ -1,0 +1,69 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1><img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked); title here/get_meta_label; alt here/get_meta_label" /> <tal:block tal:replace="here/title_or_id" /> - <span i18n:translate="">sort items</span></h1>
+
+<div class="floated-buttons"><span class="buttons"><a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a></span></div>
+
+<p i18n:translate="">This page lists the items contained in this folder and lets you decide the order they will appear to end users.</p>
+
+<tal:block tal:define="folders here/getSortedFolders; items here/getSortedObjects">
+<div tal:condition="python:len(folders)>0" >
+<h2 i18n:translate="">Folders</h2>
+<form method="post" tal:attributes="action string:${here/absolute_url}/setSortOrder">
+	<table class="datatable">
+	<col style="width: 1em;" />
+	<col style="width: 35em;" />
+	<col style="width: 2em;" />
+	<thead>
+		<tr>
+			<th class="scope-col" scope="col" i18n:translate="">Type</th>
+			<th class="scope-col" scope="col" i18n:translate="">Title</th>
+			<th class="scope-col" scope="col" i18n:translate="">Sort order</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr tal:repeat="folder folders" tal:attributes="class python:test(path('repeat/folder/odd'), 'zebraodd', 'zebraeven')">
+			<td class="center"><img tal:attributes="src folder/icon; alt python:test(hasattr(folder, 'get_meta_label'), folder.get_meta_label(), folder.meta_type); title python:test(hasattr(folder, 'get_meta_label'), folder.get_meta_label(), folder.meta_type)" /></td>
+			<td>
+				<a tal:attributes="href folder/absolute_url; title folder/description" tal:content="folder/title_or_id"/>
+				<input type="hidden" name="ids" tal:attributes="value folder/id" />
+			</td>
+			<td class="center"><input type="text" size="2" tal:attributes="name string:${folder/id}__sortorder; value folder/sortorder" /></td>
+		</tr>
+	</tbody>
+	</table>
+	<input type="submit" value="Save changes" i18n:attributes="value" />
+</form>
+</div>
+
+<div tal:condition="python:len(items)>0" >
+<h2 i18n:translate="">Items</h2>
+<form method="post" tal:attributes="action string:${here/absolute_url}/setSortOrder">
+	<table class="datatable">
+	<col style="width: 1em;" />
+	<col style="width: 35em;" />
+	<col style="width: 2em;" />
+	<thead>
+		<tr>
+			<th class="scope-col" scope="col" i18n:translate="">Type</th>
+			<th class="scope-col" scope="col" i18n:translate="">Title</th>
+			<th class="scope-col" scope="col" i18n:translate="">Sort order</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr tal:repeat="item items" tal:attributes="class python:test(path('repeat/item/odd'), 'zebraodd', 'zebraeven')">
+			<td class="center"><img tal:attributes="src item/icon; alt python:test(hasattr(item, 'get_meta_label'), item.get_meta_label(), item.meta_type); title python:test(hasattr(item, 'get_meta_label'), item.get_meta_label(), item.meta_type)" /></td>
+			<td>
+				<a tal:attributes="href item/absolute_url; title item/description" tal:content="item/title_or_id"/>
+				<input type="hidden" name="ids" tal:attributes="value item/id" />
+			</td>
+			<td class="center"><input type="text" size="2" tal:attributes="name string:${item/id}__sortorder; value item/sortorder" /></td>
+		</tr>
+	</tbody>
+	</table>
+<input type="submit" value="Save changes" i18n:attributes="value" />
+</form>
+</div>
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer"/>

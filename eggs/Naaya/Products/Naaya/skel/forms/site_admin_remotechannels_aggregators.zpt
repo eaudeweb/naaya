@@ -1,0 +1,74 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Remote channels aggregators</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="site_url here/getSitePath;
+		syndication_tool here/getSyndicationTool;
+		channels python:syndication_tool.objectValues(['Naaya Channel Aggregator'])">
+<p i18n:translate="">
+	This section lists the remote channels aggregators defined by portal administrators and lets you manage them.
+	A remote channels aggregator is a collection of remote channels that contains all the data from
+	the channels defined in the <a tal:attributes="href string:${site_url}/admin_remotechannels_html" >Remote channels</a> section.
+</p>
+<h2 tal:condition="python:request.get('id', '')">
+	<a tal:attributes="href string:${site_url}/admin_remotechannels_aggregators_html" i18n:translate="">Add new aggregator</a>
+</h2>
+<fieldset tal:define="ag_id python:request.get('id', '')">
+	<legend>
+		<tal:block tal:condition="not:python:ag_id" i18n:translate="">Add new aggregator</tal:block>
+		<tal:block tal:condition="python:ag_id" i18n:translate="">Edit aggregator</tal:block>
+	</legend>
+	<form method="post" tal:attributes="action python:test(not ag_id, '%s/admin_addremotechannels_aggregator' % site_url, '%s/admin_editremotechannels_aggregator' % site_url)" tal:define="ag_obj python:syndication_tool.get_channel(ag_id)">
+	<p><input type="hidden" name="id" tal:attributes="value python:ag_id" /></p>
+	<dl>
+		<dt i18n:translate="">Title</dt>
+		<dd><input type="text" name="title" size="50" tal:attributes="value python:getattr(ag_obj, 'title', '')" /></dd>
+		<dt i18n:translate="">Description</dt>
+		<dd><textarea name="description" id="description" rows="5" cols="35" tal:content="python:getattr(ag_obj, 'description', '')"></textarea></dd>
+		<dt i18n:translate="" style="background-color: #ebebeb">Remote channels</dt>
+		<dd>
+			<tal:block tal:repeat="channel python:syndication_tool.objectValues(['Naaya Remote Channel'])">
+				<input type="checkbox" tal:attributes="value channel/id; id channel/id; checked python:channel.getId() in getattr(ag_obj, 'channels', [])" name="channels:list" /><label tal:attributes="for channel/id"><a tal:attributes="href python:'''%s/admin_remotechannels_html?id=%s''' % (site_url, channel.getId())" tal:content="channel/title_or_id" /></label><br />
+			</tal:block>
+		</dd>
+	</dl>
+	<dl tal:condition="not:ag_id">
+		<dt i18n:translate="">Create a portlet</dt>
+		<dd><input type="checkbox" name="portlet" checked="checked" /></dd>
+	</dl>
+	<p><input type="submit" tal:attributes="value python:test(not ag_id, 'Add', 'Save changes')" i18n:attributes="value" /></p>
+	</form>
+</fieldset>
+<br />
+<form method="post" tal:attributes="action string:${site_url}/admin_deleteremotechannels_aggregator">
+	<table class="datatable">
+		<col style="width: 1em;" />
+		<col style="width: 15em;" />
+		<col style="width: 2em;" />
+		<col style="width: 25em;" />
+		<thead>
+			<tr>
+				<th class="scope-col" scope="col">&nbsp;</th>
+				<th class="scope-col" scope="col" i18n:translate="">Title</th>
+				<th class="scope-col" scope="col" i18n:translate="">Channels</th>
+				<th class="scope-col" scope="col" i18n:translate="">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr tal:repeat="channel channels" tal:attributes="class python:test(path('repeat/channel/odd'), 'zebraodd', 'zebraeven')">
+				<td><input type="checkbox" name="ids" tal:attributes="value channel/id" /></td>
+				<td tal:content="channel/title_or_id" />
+				<td class="center" tal:content="python:len(channel.channels)" />
+				<td>
+					[<a tal:attributes="href string:${site_url}/admin_remotechannels_aggregators_html?id=${channel/id}" i18n:translate="">Edit aggregator</a>]
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<input type="submit" value="Delete" i18n:attributes="value" />
+</form>
+
+</tal:block>
+
+</tal:block>

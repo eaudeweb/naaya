@@ -1,0 +1,80 @@
+<tal:block tal:define="tab_ob python:None">
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_userprofile_macro').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Preferences</h1>
+
+<tal:block metal:fill-slot="section"
+	tal:define="user python:here.getAuthenticationTool().getUser(username)">
+<tal:block tal:condition="user">
+<p i18n:translate="">
+	From this page you can edit the preferences for your account.
+</p>
+<form method="post" tal:attributes="action string:${here/absolute_url}/process_profile">
+<table>
+<tr class="field">
+	<th>
+		<label for="firstname" i18n:translate="">First name</label>
+	</th>
+	<td>
+		<input type="text" name="firstname" id="firstname" size="20" tal:attributes="value user/firstname" />
+	</td>
+</tr>
+<tr class="field">
+	<th>
+		<label for="lastname" i18n:translate="">Last name</label>
+	</th>
+	<td>
+		<input type="text" name="lastname" id="lastname" size="20" tal:attributes="value user/lastname" />
+	</td>
+</tr>
+<tr class="field">
+	<th>
+		<label for="email" i18n:translate="">Email</label>
+	</th>
+	<td>
+		<input type="text" name="email" id="email" size="20" tal:attributes="value user/email" />
+	</td>
+</tr>
+<tr class="field">
+	<th>
+		<label for="old_pass" i18n:translate="">Old password</label>
+	</th>
+	<td>
+		<input type="password" name="old_pass" id="old_pass" size="20" value="" />
+	</td>
+</tr>
+<tr class="field">
+	<th>
+		<label for="password" i18n:translate="">New password</label>
+	</th>
+	<td>
+		<input type="password" name="password" id="password" size="20" value="" />
+	</td>
+</tr>
+<tr class="field">
+	<th>
+		<label for="confirm" i18n:translate="">Confirm New password</label>
+	</th>
+	<td>
+		<input type="password" name="confirm" id="confirm" size="20" value="" />
+	</td>
+</tr>
+<tr class="field">
+	<td colspan="2">
+		<input type="hidden" name="name" tal:attributes="value username" />
+		<input type="submit" value="Submit" i18n:attributes="value" />
+	</td>
+</tr>
+</form>
+</tal:block>
+
+<tal:block tal:condition="python:not user">
+	<p i18n:translate="">
+		You are not logged in with a local user, therefore you cannot edit your user profile from here.
+	</p>
+</tal:block>
+
+</tal:block>
+
+</tal:block>
+</tal:block>
