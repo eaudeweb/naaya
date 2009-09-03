@@ -17,7 +17,7 @@
 #
 # Alin Voinea, Eau de Web
 from unittest import TestSuite, makeSuite
-from Products.NaayaContent.NyEvent.NyEvent import addNyEvent
+from naaya.content.event.NyEvent import addNyEvent
 from Products.Naaya.tests import NaayaTestCase
 
 class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):

@@ -26,12 +26,12 @@ from Testing import ZopeTestCase
 import transaction
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from Products.NaayaContent.discover import get_pluggable_content
+from naaya.content.base.discover import get_pluggable_content
 from Products.NaayaBase.NyContentType import NyContentData
-from Products.NaayaContent.NyGeoPoint.tests.testFunctional import GeoPointMixin
-from Products.NaayaContent.NyExFile.tests.testFunctional import ExFileMixin
-from Products.NaayaContent.NyMediaFile.tests.testFunctional import MediaFileMixin
-from Products.NaayaContent.NyContact.tests.testFunctional import ContactMixin
+from naaya.content.geopoint.tests.testFunctional import GeoPointMixin
+from naaya.content.exfile.tests.testFunctional import ExFileMixin
+from naaya.content.mediafile.tests.testFunctional import MediaFileMixin
+from naaya.content.contact.tests.testFunctional import ContactMixin
 
 # not all content types will pass all tests
 SCHEMA_EXCEPTIONS = []

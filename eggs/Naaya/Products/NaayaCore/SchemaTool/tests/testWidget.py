@@ -20,7 +20,6 @@
 from unittest import TestSuite, makeSuite
 from Products.Naaya.tests import NaayaTestCase, NaayaFunctionalTestCase
 
-from Products import NaayaContent
 
 class WidgetTestCase(NaayaTestCase.NaayaTestCase):
     """ TestCase for Naaya Content Property Definition """

@@ -27,7 +27,7 @@ class NyStoryFunctionalTestCase(NaayaFunctionalTestCase):
 
     def afterSetUp(self):
         from Products.Naaya.NyFolder import addNyFolder
-        from Products.NaayaContent.NyStory.NyStory import addNyStory
+        from naaya.content.story.NyStory import addNyStory
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyStory(self.portal.myfolder, id='mystory', title='My story', submitted=1, contributor='contributor')
         import transaction; transaction.commit()
@@ -142,7 +142,7 @@ class NyStoryFunctionalTestCase(NaayaFunctionalTestCase):
 class NyStoryVersioningFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
     def afterSetUp(self):
-        from Products.NaayaContent.NyStory.NyStory import addNyStory
+        from naaya.content.story.NyStory import addNyStory
         addNyStory(self.portal.info, id='ver_story', title='ver_story', submitted=1)
         import transaction; transaction.commit()
 
@@ -151,7 +151,7 @@ class NyStoryVersioningFunctionalTestCase(NaayaFunctionalTestCase):
         import transaction; transaction.commit()
 
     def test_start_version(self):
-        from Products.NaayaContent.NyStory.story_item import story_item
+        from naaya.content.story.story_item import story_item
         self.browser_do_login('admin', '')
         self.failUnlessEqual(self.portal.info.ver_story.version, None)
         self.browser.go('http://localhost/portal/info/ver_story/startVersion')

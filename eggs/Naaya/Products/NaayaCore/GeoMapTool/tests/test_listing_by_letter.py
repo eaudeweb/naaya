@@ -27,7 +27,7 @@ import transaction
 #Product imports
 from Products.Naaya.NyFolder import addNyFolder
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from Products.NaayaContent.NyGeoPoint.tests.testFunctional import GeoPointMixin
+from naaya.content.geopoint.tests.testFunctional import GeoPointMixin
 
 class Parser(HTMLParser):
     def __init__(self):

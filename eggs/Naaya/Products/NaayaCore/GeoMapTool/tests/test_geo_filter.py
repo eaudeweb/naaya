@@ -22,7 +22,7 @@ from decimal import Decimal
 
 from Products.Naaya.tests import NaayaTestCase
 from Products.Naaya.tests import NaayaFunctionalTestCase
-from Products.NaayaContent.NyGeoPoint.tests.testFunctional import GeoPointMixin
+from naaya.content.geopoint.tests.testFunctional import GeoPointMixin
 
 from Products.NaayaCore.GeoMapTool import GeoMapTool
 from Products.Naaya.NyFolder import addNyFolder

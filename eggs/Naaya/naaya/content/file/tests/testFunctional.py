@@ -28,7 +28,7 @@ class NyFileFunctionalTestCase(NaayaFunctionalTestCase):
 
     def afterSetUp(self):
         from Products.Naaya.NyFolder import addNyFolder
-        from Products.NaayaContent.NyFile.NyFile import addNyFile
+        from naaya.content.file.NyFile import addNyFile
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyFile(self.portal.myfolder, id='myfile', title='My file', submitted=1, contributor='contributor')
         import transaction; transaction.commit()

@@ -1,6 +1,6 @@
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.NyFolder import addNyFolder
-from Products.NaayaContent.NyPointer.NyPointer import addNyPointer
+from naaya.content.pointer.NyPointer import addNyPointer
 
 class PageLoadTests(NaayaTestCase):
     def afterSetUp(self):

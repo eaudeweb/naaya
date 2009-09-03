@@ -48,7 +48,7 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase, MediaFileMixin):
     def afterSetUp(self):
         self.mediafile_install()
         from Products.Naaya.NyFolder import addNyFolder
-        from Products.NaayaContent.NyMediaFile.NyMediaFile import addNyMediaFile
+        from naaya.content.mediafile.NyMediaFile import addNyMediaFile
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyMediaFile(self.portal.myfolder, id='mymediafile', title='My media file',
             submitted=1, contributor='contributor', _skip_videofile_check=True)

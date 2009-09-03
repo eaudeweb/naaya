@@ -17,7 +17,7 @@
 #
 # Alin Voinea, Eau de Web
 from unittest import TestSuite, makeSuite
-from Products.NaayaContent.NyStory.NyStory import addNyStory
+from naaya.content.story.NyStory import addNyStory
 from Products.Naaya.tests import NaayaTestCase
 
 class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):

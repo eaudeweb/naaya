@@ -17,7 +17,7 @@
 #
 # Alin Voinea, Eau de Web
 from unittest import TestSuite, makeSuite
-from Products.NaayaContent.NyPointer.NyPointer import addNyPointer
+from naaya.content.pointer.NyPointer import addNyPointer
 from Products.Naaya.tests import NaayaTestCase
 
 class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
