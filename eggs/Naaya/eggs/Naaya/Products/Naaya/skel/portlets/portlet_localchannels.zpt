@@ -1,0 +1,15 @@
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title" i18n:translate="">Local channels</tal:block>
+<tal:block metal:fill-slot="portlet_content">
+	<tal:block tal:define="syndication_tool here/getSyndicationTool">
+		<ul tal:condition="syndication_tool/get_script_channels">
+			<li tal:repeat="channel syndication_tool/get_script_channels">
+				<a tal:attributes="href channel/absolute_url" tal:content="channel/title_or_id" />
+			</li>
+			<li tal:repeat="channel syndication_tool/get_local_channels">
+				<a tal:attributes="href channel/absolute_url" tal:content="channel/title_or_id" />
+			</li>
+		</ul>
+	</tal:block>
+</tal:block>
+</tal:block>

@@ -1,0 +1,6 @@
+This is an automatically generated message to inform you that 
+the item '@@ITEMTITLEORID@@' is uploaded to the library @@CONTAINERPATH@@.
+
+Uploaded by @@USERNAME@@(@@USEREMAIL@@) on @@UPLOADTIME@@.
+
+Review the pending item at @@CONTAINERBASKETPATH@@.
