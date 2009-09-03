@@ -1,0 +1,13 @@
+<tal:block define="portal_map here/getGeoMapTool">
+<tal:block condition="here/geo_location">
+	<script type="text/javascript" tal:attributes="src string:http://api.maps.yahoo.com/ajaxymap?v=3.7&appid=${portal_map/get_mapsapikey}"></script>
+	<script type="text/javascript" src="misc_/NaayaCore/remote.js"></script>
+	<script type="text/javascript" src="misc_/NaayaCore/yahoomaps.js"></script>
+	<span tal:replace="structure python:portal_map.xrjs_simple_loader(here.absolute_url(1))" />
+
+<div style="float:right; width: 400px;" tal:define="gl_mll here/geo_location/missing_lat_lon | nothing" tal:condition="python:gl_mll is False">
+	<div id="map" style="width: 400px; height: 275px;"></div>
+	<a tal:attributes="href string:${portal_map/absolute_url}/" i18n:translate="">See all locations on the map</a>
+</div>
+</tal:block>
+</tal:block>
