@@ -1,7 +1,7 @@
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya import NyFolder
 from unittest import TestSuite, makeSuite
-from Products.NaayaContent.NyURL import NyURL
+from naaya.content.url import NyURL
 
 class TestNyURL(NaayaTestCase):
 

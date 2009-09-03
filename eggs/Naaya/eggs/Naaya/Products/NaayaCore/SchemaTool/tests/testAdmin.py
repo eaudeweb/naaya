@@ -23,7 +23,6 @@ from DateTime import DateTime
 from Testing import ZopeTestCase
 from Products.Naaya.tests import NaayaTestCase, NaayaFunctionalTestCase
 
-from Products import NaayaContent
 from Products.NaayaCore.SchemaTool.Schema import Schema
 
 class SchemaAdminTest(NaayaFunctionalTestCase.NaayaFunctionalTestCase):

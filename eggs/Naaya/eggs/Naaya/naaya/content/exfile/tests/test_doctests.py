@@ -41,10 +41,10 @@ def test_suite():
     return unittest.TestSuite((
         Suite('doc/functionality.txt',
               optionflags=OPTIONFLAGS,
-              package='Products.NaayaContent.NyExFile',
+              package='naaya.content.exfile',
               test_class=CustomFunctionalTestCase),
         Suite('doc/versions.txt',
               optionflags=OPTIONFLAGS,
-              package='Products.NaayaContent.NyExFile',
+              package='naaya.content.exfile',
               test_class=CustomFunctionalTestCase),
     ))

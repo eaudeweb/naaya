@@ -18,10 +18,10 @@
 # Alin Voinea, Eau de Web
 import time
 from unittest import TestSuite, makeSuite
-from Products.NaayaContent.NyMediaFile.NyMediaFile import addNyMediaFile
+from naaya.content.mediafile.NyMediaFile import addNyMediaFile
 from Products.Naaya.tests.NaayaTestCase import FunctionalTestCase
 from Globals import package_home
-from Products.NaayaContent.NyMediaFile.converters.MediaConverter import can_convert
+from naaya.content.mediafile.converters.MediaConverter import can_convert
 
 
 class NaayaContentTestCase(FunctionalTestCase):

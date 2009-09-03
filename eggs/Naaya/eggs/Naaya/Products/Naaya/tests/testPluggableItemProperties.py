@@ -20,7 +20,7 @@
 from unittest import TestSuite, makeSuite
 from Testing import ZopeTestCase
 
-from Products.NaayaContent import constants
+from naaya.content.base import constants
 from Products.Naaya.NySite import NySite
 
 class DummyTranslations(object):

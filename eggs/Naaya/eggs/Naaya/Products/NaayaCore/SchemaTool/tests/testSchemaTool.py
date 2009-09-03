@@ -20,7 +20,6 @@
 from unittest import TestSuite, makeSuite
 from Products.Naaya.tests import NaayaTestCase
 
-from Products import NaayaContent
 
 class NaayaSchemaToolTestCase(NaayaTestCase.NaayaTestCase):
     """ TestCase for Naaya Schema Tool """

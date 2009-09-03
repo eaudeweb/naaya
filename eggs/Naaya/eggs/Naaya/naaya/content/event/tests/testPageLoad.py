@@ -1,6 +1,6 @@
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.NyFolder import addNyFolder
-from Products.NaayaContent.NyEvent.NyEvent import addNyEvent
+from naaya.content.event.NyEvent import addNyEvent
 
 class PageLoadTests(NaayaTestCase):
     def afterSetUp(self):

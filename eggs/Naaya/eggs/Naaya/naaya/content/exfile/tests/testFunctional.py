@@ -48,7 +48,7 @@ class NyExFileFunctionalTestCase(NaayaFunctionalTestCase, ExFileMixin):
     def afterSetUp(self):
         self.exfile_install()
         from Products.Naaya.NyFolder import addNyFolder
-        from Products.NaayaContent.NyExFile.NyExFile import addNyExFile
+        from naaya.content.exfile.NyExFile import addNyExFile
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyExFile(self.portal.myfolder, id='myexfile', title='My file', submitted=1, contributor='contributor')
         import transaction; transaction.commit()

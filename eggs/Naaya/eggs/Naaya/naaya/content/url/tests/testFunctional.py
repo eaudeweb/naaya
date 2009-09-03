@@ -8,7 +8,7 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
 
     def afterSetUp(self):
         from Products.Naaya.NyFolder import addNyFolder
-        from Products.NaayaContent.NyURL.NyURL import addNyURL
+        from naaya.content.url.NyURL import addNyURL
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyURL(self.portal.myfolder, id='myurl', title='My url',
             locator='http://www.eaudeweb.ro', submitted=1, contributor='contributor')

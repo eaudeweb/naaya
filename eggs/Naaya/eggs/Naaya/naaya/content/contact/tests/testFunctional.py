@@ -47,7 +47,7 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase, ContactMixin):
     def afterSetUp(self):
         self.contact_install()
         from Products.Naaya.NyFolder import addNyFolder
-        from Products.NaayaContent.NyContact.NyContact import addNyContact
+        from naaya.content.contact.NyContact import addNyContact
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyContact(self.portal.myfolder, id='mycontact', title='My contact', submitted=1, contributor='contributor')
         import transaction; transaction.commit()
@@ -161,7 +161,7 @@ class NyContactVersioningFunctionalTestCase(NaayaFunctionalTestCase, ContactMixi
     """ TestCase for NaayaContent object """
     def afterSetUp(self):
         self.contact_install()
-        from Products.NaayaContent.NyContact.NyContact import addNyContact
+        from naaya.content.contact.NyContact import addNyContact
         addNyContact(self.portal.info, id='ver_contact', title='ver_contact', submitted=1)
         import transaction; transaction.commit()
 
@@ -171,7 +171,7 @@ class NyContactVersioningFunctionalTestCase(NaayaFunctionalTestCase, ContactMixi
         import transaction; transaction.commit()
 
     def test_start_version(self):
-        from Products.NaayaContent.NyContact.contact_item import contact_item
+        from naaya.content.contact.contact_item import contact_item
         self.browser_do_login('admin', '')
         self.failUnlessEqual(self.portal.info.ver_contact.version, None)
         self.browser.go('http://localhost/portal/info/ver_contact/startVersion')

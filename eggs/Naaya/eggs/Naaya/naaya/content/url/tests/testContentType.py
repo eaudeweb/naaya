@@ -19,7 +19,7 @@
 # Alin Voinea, Eau de Web
 
 from unittest import TestSuite, makeSuite
-from Products.NaayaContent.NyURL.NyURL import addNyURL
+from naaya.content.url.NyURL import addNyURL
 from Products.Naaya.tests import NaayaTestCase
 
 class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):

@@ -41,6 +41,6 @@ def test_suite():
     return unittest.TestSuite((
         Suite('doc/functionality.txt',
               optionflags=OPTIONFLAGS,
-              package='Products.NaayaContent.NyStory',
+              package='naaya.content.story',
               test_class=CustomFunctionalTestCase),
           ))

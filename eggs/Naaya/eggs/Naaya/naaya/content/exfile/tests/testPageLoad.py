@@ -1,6 +1,6 @@
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.NyFolder import addNyFolder
-from Products.NaayaContent.NyExFile.NyExFile import addNyExFile
+from naaya.content.exfile.NyExFile import addNyExFile
 
 class PageLoadTests(NaayaTestCase):
     def afterSetUp(self):

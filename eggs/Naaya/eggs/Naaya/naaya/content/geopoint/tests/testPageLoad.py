@@ -1,6 +1,6 @@
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.NyFolder import addNyFolder
-from Products.NaayaContent.NyGeoPoint.NyGeoPoint import addNyGeoPoint
+from naaya.content.geopoint.NyGeoPoint import addNyGeoPoint
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 
 class PageLoadTests(NaayaTestCase):

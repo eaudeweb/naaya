@@ -23,7 +23,7 @@ from unittest import TestSuite, makeSuite
 
 from DateTime.DateTime import DateTime
 
-from Products.NaayaContent.NyDocument.NyDocument import addNyDocument
+from naaya.content.document.NyDocument import addNyDocument
 from Products.Naaya.tests import NaayaTestCase
 
 class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
