@@ -28,7 +28,6 @@ from cStringIO import StringIO
 
 #Product imports
 from Products.Naaya.constants import *
-#from Products.NaayaContent import *
 
 class skel_struct:
     def __init__(self):

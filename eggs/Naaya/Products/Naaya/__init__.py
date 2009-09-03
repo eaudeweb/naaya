@@ -28,8 +28,8 @@ from Globals import InitializeClass
 
 #Product imports
 from constants import *
-from Products.NaayaContent.discover import get_pluggable_content
-from Products.NaayaContent import discover
+from naaya.content.base.discover import get_pluggable_content
+from naaya.content.base import discover
 import NySite
 import NyFolder
 from managers import initialize as managers_initialize
@@ -178,12 +178,6 @@ misc_ = {
     'jquery-1.3.2.min.js':ImageFile('www/jquery-1.3.2.min.js', globals()),
 }
 
-#register NaayaContent misc_
-from OFS.Application import Application
-from OFS.misc_ import Misc_
-nyc_misc = Misc_('NaayaContent', discover.misc_)
-Application.misc_.__dict__['NaayaContent'] = nyc_misc
-
 def register_content(module, klass, module_methods, klass_methods, add_method):
     """ To be called from content type you want to register within Naaya Folder.
     
@@ -221,18 +215,3 @@ def register_content(module, klass, module_methods, klass_methods, add_method):
              'Dynamic module "%s" registered' % klass.__name__)
 
     InitializeClass(NyFolder.NyFolder)
-
-#constructors for pluggable content
-security = ClassSecurityInfo()
-NyFolder.NyFolder.security = security
-for k,v in get_pluggable_content().items():
-    if k == 'Naaya Folder':
-        continue
-    for cns in v['constructors']:
-        c = 'from Products.NaayaContent.%s import %s' % (v['module'], v['module'])
-        exec(c)
-        c = 'NyFolder.NyFolder.%s = %s.%s' % (cns, v['module'], cns)
-        exec(c)
-        NyFolder.NyFolder.security.declareProtected(v['permission'], cns)
-
-InitializeClass(NyFolder.NyFolder)

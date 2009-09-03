@@ -1158,7 +1158,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
         """ This function is called on the folder index and it checkes whether or not
             to display the various buttons on that form
         """
-        from Products.NaayaContent import get_constant
+        from naaya.content.base.discover import get_constant
         results_objects = []
         btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate = 0, 0, 0, 0, 0, 0
         # btn_select - if there is at least one permisson to delete or copy an object
