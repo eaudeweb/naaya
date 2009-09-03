@@ -1,0 +1,93 @@
+Editing a file you can keep the old versions of files. Let's add a test sandbox
+folder:
+
+    >>> from StringIO import StringIO
+    >>> self.login()
+    >>> info = self.portal.info
+    >>> folder_id = info.addNyFolder('test', 'test folder')
+    >>> folder = info._getOb(folder_id)
+
+Add a file:
+
+    >>> afile = StringIO('some file content')
+    >>> afile.filename = 'afilename'
+    >>> file_id = folder.addNyFile(title='Test Versions', file=afile)
+    >>> file_id
+    'afilename'
+    >>> zfile = folder._getOb(file_id)
+
+Now let's edit our zope file, add another file and uncheck keep version
+checkbox:
+
+    >>> anotherfile = StringIO('some other file content')
+    >>> anotherfile.filename = 'another-file-name.txt'
+    >>> zfile.saveProperties(title='New Version test', source='file', file=anotherfile)
+    >>> zfile.getVersions()
+    []
+
+Ok, now let's edit our zope file and check version checkbox:
+
+    >>> thirdfile = StringIO('third file content')
+    >>> thirdfile.filename = 'third-file-name.txt'
+    >>> zfile.saveProperties(title='Third Version Test', source='file', file=thirdfile, version=True)
+    >>> versions = zfile.getVersions()
+    >>> len(versions)
+    1
+    >>> version = versions[0]
+    >>> version.getId()
+    'another-file-name.txt'
+    >>> zfilename = '/'.join(zfile._get_data_name())
+    >>> zfilename.endswith('.undo')
+    False
+    >>> vfilename = '/'.join(version.filename)
+    >>> vfilename.endswith('.undo')
+    False
+    >>> zfilename != vfilename
+    True
+    >>> zfile.get_data(as_string=False).is_broken()
+    False
+    >>> version.is_broken()
+    False
+
+Let's see what happends if we copy & paste this file:
+
+    >>> cp = folder.copyObjects(id=[zfile.getId(),])
+    >>> res = folder.pasteObjects(cp_data=cp)
+    >>> new_id = res[0].get('new_id', 'empty')
+    >>> nfile = folder._getOb(new_id)
+    >>> nversion = nfile.getVersions()[0]
+    >>> zfile.get_data(as_string=False).is_broken()
+    False
+    >>> nfile.get_data(as_string=False).is_broken()
+    False
+    >>> version.is_broken()
+    False
+    >>> nversion.is_broken()
+    False
+    >>> nfilename = '/'.join(nfile._get_data_name())
+    >>> nfilename.endswith('.undo')
+    False
+    >>> vnfilename = '/'.join(nversion.filename)
+    >>> vnfilename.endswith('.undo')
+    False
+    >>> zfilename != nfilename
+    True
+    >>> vfilename != vnfilename
+    True
+
+Let's see what happends if we cut & paste this file:
+
+    >>> folder_id2 = info.addNyFolder('test2', 'test 2 folder')
+    >>> folder2 = info._getOb(folder_id2)
+    >>> cp = folder.cutObjects(id=[nfile.getId()])
+    >>> res = folder2.pasteObjects(cp_data=cp)
+    >>> folder.objectIds()
+    ['afilename']
+    >>> folder2.objectIds()
+    ['copy_of_afilename']
+    >>> nfile = folder2._getOb('copy_of_afilename')
+    >>> nversion = nfile.getVersions()[0]
+    >>> nfile.get_data(as_string=False).is_broken()
+    False
+    >>> nversion.is_broken()
+    False

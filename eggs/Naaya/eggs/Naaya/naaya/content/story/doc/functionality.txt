@@ -1,0 +1,96 @@
+    >>> from StringIO import StringIO
+    >>> defitem = ('story1', 'story 1', 'addNyStory')
+
+#Add Item with the contributor user, test that it's not approved and not visible
+
+    >>> self.login('contributor')
+    >>> info = self.portal.info
+    >>> test_id = info.addNyFolder('test', 'test folder')
+    >>> test = info[test_id]
+    >>> item_id = test[defitem[2]](id=defitem[0], title=defitem[1])
+    >>> item_id == defitem[0]
+    True
+    >>> item = test[item_id]
+    >>> item.approved
+    0
+    >>> item.approved_by
+    'contributor'
+    >>> [x.getId() for x in test.objectValues() if x.approved]
+    []
+
+#Log in with manager account, approve Item, check approved flags and visibility
+    
+    >>> self.login()
+    >>> item.manageProperties(title=defitem[1], approved='1')
+    >>> item.approved
+    1
+    >>> item.approved_by
+    'test_user_1_'
+    >>> [x.getId() for x in test.objectValues() if x.approved] == [defitem[0]]
+    True
+
+#Syndication
+
+    >>> ('<title>%s</title>' % defitem[1]) in item.syndicateThis()
+    True
+    
+#Start version
+
+    >>> item.checkout == 0
+    True
+    >>> item.startVersion()
+    >>> item.checkout == 1
+    True
+    >>> item.checkout_user == 'test_user_1_'
+    True
+    
+#Discard version
+
+    >>> item.discardVersion()
+    >>> item.checkout == 0
+    True
+    >>> item.checkout_user == None
+    True
+
+#Start version
+
+    >>> item.checkout == 0
+    True
+    >>> item.startVersion()
+    >>> item.checkout == 1
+    True
+    >>> item.checkout_user == 'test_user_1_'
+    True
+
+#Change properties in version
+
+    >>> item.saveProperties(title='item_version_title', description='item_version_description')
+    >>> item.title == defitem[1]
+    True
+    >>> item.description == ''
+    True
+
+#Commit version
+
+    >>> item.commitVersion()
+    >>> item.checkout == 0
+    True
+    >>> item.checkout_user == None
+    True
+    >>> item.title == 'item_version_title'
+    True
+    >>> item.description == 'item_version_description'
+    True
+
+#Export Item
+
+    >>> exp = test.exportdata()
+    >>> expfile = StringIO(exp)
+    >>> expfile.filename = defitem[0] + '.nyexp'
+
+#Delete Item
+
+    >>> test.deleteObjects(id=[item_id])
+    >>> test.objectIds()
+    []
+

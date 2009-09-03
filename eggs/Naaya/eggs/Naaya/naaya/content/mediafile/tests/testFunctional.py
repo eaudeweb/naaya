@@ -1,0 +1,208 @@
+# The contents of this file are subject to the Mozilla Public
+# License Version 1.1 (the "License"); you may not use this file
+# except in compliance with the License. You may obtain a copy of
+# the License at http://www.mozilla.org/MPL/
+#
+# Software distributed under the License is distributed on an "AS
+# IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+# implied. See the License for the specific language governing
+# rights and limitations under the License.
+#
+# The Initial Owner of the Original Code is European Environment
+# Agency (EEA).  Portions created by Eau de Web are
+# Copyright (C) European Environment Agency.  All
+# Rights Reserved.
+#
+# Authors:
+#
+# Alex Morega, Eau de Web
+
+import re
+from unittest import TestSuite, makeSuite
+from copy import deepcopy
+from StringIO import StringIO
+
+from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
+
+class MediaFileMixin(object):
+    """ testing mix-in that installs the Naaya MediaFile content type """
+
+    mediafile_metatype = 'Naaya Media File'
+    mediafile_permission = 'Naaya - Add Naaya Media File objects'
+
+    def mediafile_install(self):
+        self.portal.manage_install_pluggableitem(self.mediafile_metatype)
+        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
+        add_content_permissions['permissions'].append(self.mediafile_permission)
+        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
+
+    def mediafile_uninstall(self):
+        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
+        add_content_permissions['permissions'].remove(self.mediafile_permission)
+        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
+        self.portal.manage_uninstall_pluggableitem(self.mediafile_metatype)
+
+class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase, MediaFileMixin):
+    """ TestCase for NaayaContent object """
+
+    def afterSetUp(self):
+        self.mediafile_install()
+        from Products.Naaya.NyFolder import addNyFolder
+        from Products.NaayaContent.NyMediaFile.NyMediaFile import addNyMediaFile
+        addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
+        addNyMediaFile(self.portal.myfolder, id='mymediafile', title='My media file',
+            submitted=1, contributor='contributor', _skip_videofile_check=True)
+        import transaction; transaction.commit()
+
+    def beforeTearDown(self):
+        self.portal.manage_delObjects(['myfolder'])
+        self.mediafile_uninstall()
+        import transaction; transaction.commit()
+
+    def test_add(self):
+        self.browser_do_login('contributor', 'contributor')
+        self.browser.go('http://localhost/portal/myfolder/mediafile_add_html')
+        self.failUnless('<h1>Submit Media File</h1>' in self.browser.get_html())
+        form = self.browser.get_form('frmAdd')
+        expected_controls = set([
+            'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
+            'keywords:utf8:ustring', 'releasedate', 'discussion:boolean', 'file',
+        ])
+        found_controls = set(c.name for c in form.controls)
+        self.failUnless(expected_controls.issubset(found_controls),
+            'Missing form controls: %s' % repr(expected_controls - found_controls))
+
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
+        form['title:utf8:ustring'] = 'test_create_mediafile'
+        form['description:utf8:ustring'] = 'test_mediafile_description'
+        form['coverage:utf8:ustring'] = 'test_mediafile_coverage'
+        form['keywords:utf8:ustring'] = 'keyw1, keyw2'
+
+        form.find_control('file').add_file(StringIO('the_FLV_data'),
+            filename='testvid.flv', content_type='video/x-flv')
+
+        self.browser.submit()
+        html = self.browser.get_html()
+        self.failUnless('<h1>Thank you for your submission</h1>' in html)
+
+        self.portal.myfolder.testcreatemediafile.approveThis()
+
+        self.browser.go('http://localhost/portal/myfolder/testcreatemediafile')
+        html = self.browser.get_html()
+        self.failUnless(re.search(r'<h1>.*test_create_mediafile.*</h1>', html, re.DOTALL))
+        self.failUnless('test_mediafile_description' in html)
+        self.failUnless('test_mediafile_coverage' in html)
+        self.failUnless('keyw1, keyw2' in html)
+
+        media_id = self.portal.myfolder.testcreatemediafile.getSingleMediaId()
+        self.failUnlessEqual(media_id, 'testvid.flv')
+        self.browser.go('http://localhost/portal/myfolder/testcreatemediafile/%s' % media_id)
+        html = self.browser.get_html()
+        headers = self.browser._browser._response._headers
+        self.failUnlessEqual(headers.get('content-type', None), 'application/x-flash-video')
+
+        # apparently the test publisher doesn't serve our flv file correctly.
+        #self.failUnlessEqual(html, 'the_FLV_data')
+
+        self.browser_do_logout()
+
+    def test_add_error(self):
+        self.browser_do_login('contributor', 'contributor')
+        self.browser.go('http://localhost/portal/myfolder/mediafile_add_html')
+
+        form = self.browser.get_form('frmAdd')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
+        # enter no values in the fields
+        self.browser.submit()
+
+        html = self.browser.get_html()
+        self.failUnless('The form contains errors' in html)
+        self.failUnless('Value required for "Title"' in html)
+        self.failUnless('The file must be a valid flash video file (.flv)' in html)
+
+    def test_edit(self):
+        self.browser_do_login('admin', '')
+
+        self.browser.go('http://localhost/portal/myfolder/mymediafile/edit_html')
+        form = self.browser.get_form('frmEdit')
+
+        self.failUnlessEqual(form['title:utf8:ustring'], 'My media file')
+
+        form['title:utf8:ustring'] = 'new_mediafile_title'
+        form.find_control('file').add_file(StringIO('the_FLV_data_B'),
+            filename='testvid_B.flv', content_type='video/x-flv')
+
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.submit()
+        html = self.browser.get_html()
+        self.failUnless('<h1>Edit Media File</h1>' in html)
+
+        self.failUnlessEqual(self.portal.myfolder.mymediafile.title, 'new_mediafile_title')
+        self.portal.myfolder.mymediafile.approveThis()
+
+        media_id = self.portal.myfolder.mymediafile.getSingleMediaId()
+        self.failUnlessEqual(media_id, 'testvid_B.flv')
+        self.browser.go('http://localhost/portal/myfolder/mymediafile/%s' % media_id)
+        html = self.browser.get_html()
+        headers = self.browser._browser._response._headers
+        self.failUnlessEqual(headers.get('content-type', None), 'application/x-flash-video')
+        # apparently the test publisher doesn't serve our flv file correctly.
+        #self.failUnlessEqual(html, 'the_FLV_data_B')
+
+        self.browser.go('http://localhost/portal/myfolder/mymediafile/edit_html?lang=fr')
+        form = self.browser.get_form('frmEdit')
+        form['title:utf8:ustring'] = 'french_title'
+        form.find_control('file').add_file(StringIO('the_FLV_data_C'),
+            filename='testvid_C.flv', content_type='video/x-flv')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.submit()
+        self.failUnless('Saved changes' in self.browser.get_html())
+
+        media_id = self.portal.myfolder.mymediafile.getSingleMediaId()
+        self.failUnlessEqual(media_id, 'testvid_B.flv') # the file is not renamed - is this correct?
+        self.browser.go('http://localhost/portal/myfolder/mymediafile/%s' % media_id)
+        html = self.browser.get_html()
+        headers = self.browser._browser._response._headers
+        self.failUnlessEqual(headers.get('content-type', None), 'application/x-flash-video')
+        # apparently the test publisher doesn't serve our flv file correctly.
+        #self.failUnlessEqual(html, 'the_FLV_data_C')
+
+        self.failUnlessEqual(self.portal.myfolder.mymediafile.title, 'new_mediafile_title')
+        self.failUnlessEqual(self.portal.myfolder.mymediafile.getLocalProperty('title', 'fr'), 'french_title')
+
+        self.browser_do_logout()
+
+    def test_edit_error(self):
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/myfolder/mymediafile/edit_html')
+
+        form = self.browser.get_form('frmEdit')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        form['title:utf8:ustring'] = ''
+        self.browser.submit()
+
+        html = self.browser.get_html()
+        self.failUnless('The form contains errors' in html)
+        self.failUnless('Value required for "Title"' in html)
+
+        self.browser_do_logout()
+
+    def test_manage(self):
+        self.browser_do_login('admin', '')
+
+        self.browser.go('http://localhost/portal/myfolder/mymediafile/manage_edit_html')
+        form = self.browser.get_form('frmEdit')
+        # TODO: title control should be 'title:utf8:ustring'
+        self.failUnlessEqual(form['title'], 'My media file')
+        form['title'] = 'new_mediafile_title'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
+        self.browser.submit()
+
+        self.failUnlessEqual(self.portal.myfolder.mymediafile.title, 'new_mediafile_title')
+
+        self.browser_do_logout()
+
+def test_suite():
+    suite = TestSuite()
+    suite.addTest(makeSuite(NyMediaFileFunctionalTestCase))
+    return suite
