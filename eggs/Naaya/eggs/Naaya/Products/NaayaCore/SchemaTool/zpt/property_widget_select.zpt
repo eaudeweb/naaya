@@ -1,0 +1,17 @@
+<div class="field-inline" tal:define="
+    value options/value|nothing;
+    errors options/errors;
+    prop_id here/prop_name;
+    selection_list here/get_selection_list">
+    <label tal:attributes="for prop_id" class="widget-title">
+        <span tal:content="here/title" />
+        <span tal:condition="here/required" class="mandatory_field">*</span>
+    </label>
+    <p class="form-errors" tal:condition="errors" tal:content="errors" />
+    <select tal:attributes="name string:${prop_id}:utf8:ustring; id prop_id">
+        <option value=""></option>
+        <option tal:repeat="selection_item selection_list"
+            tal:attributes="value selection_item/id; selected python: selection_item.id == value"
+            tal:content="selection_item/title" i18n:translate="" />
+    </select>
+</div>

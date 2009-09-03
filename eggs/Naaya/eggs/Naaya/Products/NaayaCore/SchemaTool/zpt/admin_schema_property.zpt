@@ -1,0 +1,53 @@
+<metal:block define-macro="page">
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">
+    Manage content types -
+    <tal:block content="here/aq_parent/title" /> -
+    <tal:block content="here/prop_name" />
+</h1>
+
+<tal:block metal:fill-slot="section">
+
+<p i18n:translate="">Configure the <strong tal:content="here/title" /> property
+    of <strong tal:content="here/aq_parent/title" /> objects.</p>
+
+<div class="floated-buttons">
+    <span class="buttons"><a tal:attributes="href here/aq_parent/absolute_url" i18n:translate="">
+        Back to <tal:block content="here/aq_parent/title" /></a></span>
+</div>
+
+<form action="" method="post">
+    <div class="field-inline">
+        <label style="display: inline-block; width: 7em" i18n:translate="" for="title">Label</label>
+        <input type="text" id="title" name="title" tal:attributes="value here/title" />
+    </div>
+
+    <div class="field-inline">
+        <label style="display: inline-block; width: 7em" i18n:translate="" for="sortorder">Sort order</label>
+        <input type="text" id="sortorder" name="sortorder" tal:attributes="value here/sortorder" />
+    </div>
+
+    <div class="field-inline">
+        <label style="display: inline-block; width: 7em" i18n:translate="" for="required">Mandatory</label>
+        <input type="checkbox" id="required" name="required:boolean" tal:attributes="
+            checked python: test(here.required, 'checked', None);
+            disabled python: test(here.must_be_mandatory(), 'disabled', None)" />
+    </div>
+
+    <div class="field-inline">
+        <label style="display: inline-block; width: 7em" i18n:translate="" for="visible">Visible</label>
+        <input type="checkbox" id="visible" name="visible:boolean" tal:attributes="checked python: test(here.visible, 'checked', None)" />
+    </div>
+
+    <metal:block define-slot="custom_fields" />
+
+    <div class="field">
+        <input type="submit" value="Submit" name="saveProperties:method" />
+    </div>
+</form>
+
+</tal:block>
+
+</tal:block>
+</metal:block>

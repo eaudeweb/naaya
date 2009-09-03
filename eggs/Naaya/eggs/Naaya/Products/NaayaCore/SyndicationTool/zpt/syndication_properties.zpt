@@ -1,0 +1,42 @@
+<span tal:replace="structure here/manage_page_header" />
+<span tal:replace="structure here/manage_tabs" />
+
+<div class="system-msg" tal:condition="python:request.has_key('save')">
+	Saved changes. (<span tal:replace="here/ZopeTime" />)
+</div>
+
+<p class="page-description">
+	Insert the title and logo picture that will be included in the RDF files built as local channels.
+	Typically, this picture should be your company logo.
+</p>
+
+<form method="post" action="manageProperties" enctype="multipart/form-data">
+<fieldset>
+<table border="0" cellspacing="2" cellpadding="2" width="100%">
+<tr>
+	<td class="form-label">Title</td>
+	<td><input type="text" name="title" size="50" tal:attributes="value here/title" /></td>
+</tr>
+<tr>
+	<td class="form-label">Image</td>
+	<td><input type="file" name="image" /></td>
+</tr>
+<tal:block tal:condition="here/hasImage">
+<tr>
+	<td class="form-label"></td>
+	<td><img src="getImage" alt="Image" /></td>
+</tr>
+<tr>
+	<td class="form-label"></td>
+	<td><input type="checkbox" name="del_image" /> check this if you want do delete current image</td>
+</tr>
+</tal:block>
+<tr>
+	<td></td>
+	<td><input type="submit" name="submit" value="Save changes" /></td>
+</tr>
+</table>
+</fieldset>
+</form>
+
+<span tal:replace="structure here/manage_page_footer" />

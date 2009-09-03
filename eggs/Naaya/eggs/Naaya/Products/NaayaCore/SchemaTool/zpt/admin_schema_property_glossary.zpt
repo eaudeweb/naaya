@@ -1,0 +1,20 @@
+<metal:block use-macro="here/admin_html_template/macros/page">
+<metal:block fill-slot="custom_fields">
+
+    <div class="field-inline">
+        <label style="display: inline-block; width: 7em" i18n:translate="" for="glossary">Glossary</label>
+        <select name="glossary_id" id="glossary">
+            <option value="" i18n:translate="">[None]</option>
+            <option tal:repeat="item here/list_glossaries"
+                tal:attributes="value item/id; selected python:item.id==here.glossary_id"
+                tal:content="item/title_or_id" />
+        </select>
+    </div>
+
+    <div class="field-inline">
+        <label for="all_content_types">Change for all content types</label>
+        <input type="checkbox" name="all_content_types:boolean" id="all_content_types" />
+    </div>
+
+</metal:block>
+</metal:block>

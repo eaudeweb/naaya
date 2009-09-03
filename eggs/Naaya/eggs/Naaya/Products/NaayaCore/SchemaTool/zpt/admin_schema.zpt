@@ -1,0 +1,50 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Manage content types - <tal:block content="here/title" /></h1>
+
+<tal:block metal:fill-slot="section">
+
+<div class="floated-buttons">
+    <span class="buttons"><a tal:attributes="href here/aq_parent/absolute_url" i18n:translate="">Back to content types list</a></span>
+</div>
+
+<br/>
+<form method="POST">
+    <input name="title" tal:attributes="value here/title" />
+    <input type="submit" value="rename" name="saveProperties:method" />
+</form>
+<br/>
+
+<p i18n:translate="">These are the properties available for <strong tal:content="here/title" />
+    objects. Click a property to change it.</p>
+
+<table class="datatable" style="width: 50em;">
+<thead>
+    <tr>
+        <th i18n:translate="">Property</th>
+        <th i18n:translate="">Label</th>
+        <th i18n:translate="">Type</th>
+        <th i18n:translate="">Mandatory</th>
+        <th i18n:translate="">Localized</th>
+        <th i18n:translate="">Sort</th>
+        <th i18n:translate="">Visible</th>
+    </tr>
+</thead>
+
+<tbody tal:repeat="widget here/listWidgets">
+    <tr>
+        <td><a tal:attributes="href string:${widget/absolute_url}/admin_html" tal:content="widget/prop_name" /></td>
+        <td tal:content="widget/title" />
+        <td tal:content="widget/data_type" />
+        <td style="text-align: center" tal:content="structure python:test(widget.required, '&#x2713;', '')" />
+        <td style="text-align: center" tal:content="structure python:test(widget.localized, '&#x2713;', '')" />
+        <td tal:content="widget/sortorder" />
+        <td style="text-align: center" tal:content="structure python:test(widget.visible, '&#x2713;', '')" />
+    </tr>
+</tbody>
+
+</table>
+
+</tal:block>
+
+</tal:block>

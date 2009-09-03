@@ -1,0 +1,80 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<tal:block define="location python:here.get_location();
+					current_subscriptions python:list(here.list_subscriptions(request))">
+
+
+<h1 i18n:translate="">Notifications <!--for folder <span tal:content="location"/>--></h1>
+
+<br/>
+
+<h2 i18n:translate="">Current subscriptions:</h2>
+<br/>
+
+<span tal:condition="python:len(current_subscriptions) == 0" i18n:translate="">No subscriptions</span>
+
+<table tal:condition="python:len(current_subscriptions) > 0">
+	<thead>
+		<!--<th>Location</th>-->
+		<th>Notification</th>
+		<th>Language</th>
+		<th></th>
+	</thead>
+	<tbody>
+		<tr tal:repeat="subscription current_subscriptions">
+			<!--
+			<td>
+				<span tal:content="subscription/location"/>
+			</td>
+			-->
+			<td>
+				<span tal:content="subscription/notif_type"/>
+			</td>
+			<td>
+				<span tal:content="subscription/lang"/>
+			</td>
+			<td>
+				<form method="post" tal:attributes="action string:${here/absolute_url}/delete_subscription">
+					<input type="hidden" name="location" tal:attributes="value subscription/location"/>
+					<input type="hidden" name="notif_type" tal:attributes="value subscription/notif_type"/>
+					<input type="hidden" name="lang" tal:attributes="value subscription/lang"/>
+					<input type="submit" value="delete"/>
+				</form>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<br/>
+
+<h2 i18n:translate="">Subscribe</h2>
+
+<form name="subscribe" method="post" tal:attributes="action string:${here/absolute_url}/subscribe">
+<div>
+	<tal:block tal:condition="python:'instant' in here.list_enabled_subscriptions()">
+		<input id="notif_type_instant" type="radio" name="notif_type" value="instant"/>Instant notification<br/>
+	</tal:block>
+	<tal:block tal:condition="python:'daily' in here.list_enabled_subscriptions()">
+		<input id="notif_type_daily" type="radio" name="notif_type" value="daily"/>Daily digest<br/>
+	</tal:block>
+	<tal:block tal:condition="python:'weekly' in here.list_enabled_subscriptions()">
+		<input id="notif_type_weekly" type="radio" name="notif_type" value="weekly"/>Weekly digest<br/>
+	</tal:block>
+	<tal:block tal:condition="python:'monthly' in here.list_enabled_subscriptions()">
+		<input id="notif_type_monthly" type="radio" name="notif_type" value="monthly"/>Monthly digest<br/>
+	</tal:block>
+	<label for="lang" i18n:translate="">Select language:</label>
+	<select name="lang" id="lang"
+			tal:define="translations python:here.getPortalTranslations().gettext">
+		<option tal:repeat="item here/gl_get_languages_map"
+				tal:attributes="value python:item['id'];
+					selected python:item['selected']"
+				tal:content="python:translations(item['title'], item['id'])" />
+	</select><br/>
+	<input name="submit" type="submit" value="subscribe"/>
+</div>
+</form>
+
+</tal:block>
+
+<span tal:replace="structure here/standard_html_footer"/>
