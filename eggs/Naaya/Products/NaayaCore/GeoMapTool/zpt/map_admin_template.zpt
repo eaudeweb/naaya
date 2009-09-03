@@ -1,0 +1,28 @@
+<tal:block metal:define-macro="page">
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portal map settings</h1>
+
+<tal:block metal:fill-slot="section" 
+		tal:define="map_url here/getGeoMapToolPath;
+					portal_map here/getGeoMapTool;">
+
+<p i18n:translate="">
+	These settings apply to the <a tal:attributes="href string:${map_url}">portal_map</a> and the GeoPoint objects.
+</p>
+
+<div id="tabbedmenu">
+    <ul>
+        <li tal:repeat="tab here/admin_tabs"
+          tal:attributes="id python:test(tab['url'] == current_tab_url, 'currenttab', None)">
+            <a tal:attributes="href string:${map_url}/${tab/url}"
+                i18n:translate="" tal:content="tab/title"></a>
+        </li>
+    </ul>
+</div>
+
+<metal:block define-slot="tab_contents" />
+
+</tal:block>
+</tal:block>
+</tal:block>

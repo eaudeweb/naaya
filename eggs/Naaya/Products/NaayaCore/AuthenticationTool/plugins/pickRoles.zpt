@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>Pick NRC/NFPs involved</title>
+</head>
+<link rel="stylesheet" type="text/css" href="style_back_css">
+<body>
+<h1>NRC/NFPs involved</h1>
+<p class="info_text">Click on an item to insert it in the corresponding field.</p>
+
+<form name="frm">
+<p style="text-align: center">
+    <input type="button" name="btnCloseTop" value="Close window" onclick="javascript:self.close();" />
+</p>
+
+<tal:block define="user_folder python:here.getUserFolder();
+                    expand python:here.splitToList(request.get('expand', 'ROOT'));
+		    c python:here.connectLDAP(user_folder);
+                    roles_tree python:here.getRoles(expand);">
+
+<table border="0" cellspacing="0" cellpadding="2" width="100%">
+<tal:block repeat="role roles_tree">
+    <tr tal:define="role_obj python:role[0]; role_depth python:role[1];
+                    role_id python:role_obj.id; role_cn python:role_obj.cn;
+                    role_description python:role_obj.description">
+        <td tal:attributes="class python:test(path('repeat/role/odd'), 'cellodd', 'celleven')">
+            <table border="0" cellspacing="2" cellpadding="2">
+        		<tr>
+        			<td tal:attributes="class python:test(path('repeat/role/odd'), 'cellodd', 'celleven')" nowrap="nowrap">
+                        <img src="misc_/Naaya/spacer.gif" alt="" tal:repeat="i python:range(role_depth)" />
+                        <a tal:condition="python:here.isInList(expand, role_id)"
+                            tal:define="param python:here.joinToList(here.removeFromList(expand, str(role_id)))"
+                            tal:attributes="href string:${here/getPluginPath}/pickroles_html?expand=${param}">
+                            <img src="misc_/Naaya/minus.gif" tal:attributes="alt role_description" />
+                        </a>                        
+                        <a tal:condition="python: not here.isInList(expand, role_id)"
+                            tal:define="param python:here.joinToList(here.addToList(expand, str(role_id)))"
+                            tal:attributes="href string:${here/getPluginPath}/pickroles_html?expand=${param}">
+                            <img src="misc_/Naaya/plus.gif" tal:attributes="alt role_description" />
+                        </a>
+        			</td>
+                    <td tal:attributes="class python:test(path('repeat/role/odd'), 'cellodd', 'celleven')" nowrap="nowrap">
+                    <strong tal:condition="python:path('repeat/role/start')" tal:content="role_cn" />
+					<a class="itemlink" tal:condition="python:not path('repeat/role/start')"
+                        tal:content="role_cn" 
+                        href="" tal:attributes="title role_description;onclick string:window.opener.fSetRoles('${role_id}');;
+                        window.close();;"></a>&nbsp;<em tal:content="python:role_description[:60]" />
+        			</td>
+        		</tr>
+    		</table>
+    	</td>
+    </tr>
+</tal:block>
+</table>
+
+</tal:block>
+
+<p style="text-align: center"><input type="button" name="btnCloseBottom" value="Close window" onclick="javascript:self.close();" /></p>
+</form>
+
+</body>
+</html>
