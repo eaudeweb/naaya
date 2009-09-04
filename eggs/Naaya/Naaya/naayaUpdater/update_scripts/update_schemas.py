@@ -31,7 +31,11 @@ from Products.naayaUpdater.update_scripts import UpdateScript
 from Products.NaayaCore.SchemaTool.widgets.Widget import widgetid_from_propname
 
 try:
+    from naaya.content.base.discover import get_pluggable_content
+except ImportError:
     from Products.NaayaContent.discover import get_pluggable_content
+
+try:
     from Products.NaayaCore.constants import ID_SCHEMATOOL
 except ImportError:
     # we're probably on an old Naaya version with no Schema code
