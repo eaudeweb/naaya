@@ -35,7 +35,10 @@ from AccessControl import ClassSecurityInfo
 
 from Products.Naaya import NySite as NySite_module
 from Products.naayaUpdater.utils import *
-from Products.NaayaContent.discover import get_pluggable_content
+try:
+    from naaya.content.base.discover import get_pluggable_content
+except ImportError:
+    from Products.NaayaContent.discover import get_pluggable_content
 
 from Products.naayaUpdater import update_scripts
 
