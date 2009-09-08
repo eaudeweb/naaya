@@ -48,7 +48,7 @@ class EmailPageTemplateUnitTest(TestCase):
         # make sure the page template is Persistent
         self.failUnless(issubclass(EmailPageTemplate, Item))
 
-        render1 = templ.render_email(number=13, item="THING")
+        render1 = templ.render_email(number=13, item=u"THING")
         self.assertEqual(render1, {
             'subject': 'Hello testing #13',
             'body_text': 'Test message to\n check THING rendering',
