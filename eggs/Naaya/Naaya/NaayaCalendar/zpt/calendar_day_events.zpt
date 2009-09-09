@@ -8,7 +8,7 @@
 			<!-- TODO: use localized strftime for displaying the date bellow -->
 			<tal:block condition="date">
 				<span i18n:translate="">Items for</span> 
-				<span tal:replace="python:date.strftime('%d %B %Y')"/>
+				<span tal:replace="python:here.show_date(date)"/>
 			</tal:block>
 			<em tal:condition="not:date" i18n:translate>invalid date</em>
 		</h3>

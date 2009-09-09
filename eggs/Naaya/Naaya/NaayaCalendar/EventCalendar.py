@@ -227,8 +227,19 @@ class EventCalendar(Folder, DateFunctions, Utils): # TODO: inherit only from Fol
     security.declareProtected(view, 'getDayEvents')
     def getDayEvents(self, date=''):
         """Return the events for the given day"""
-        if date: return self.getEvents(date.year(), date.month(), date.day())
+        if date:
+            try:
+                return self.getEvents(date.year(), date.month(), date.day())
+            except OverflowError:
+                pass # bad date, return
         return []
+
+    security.declareProtected(view, 'show_date')
+    def show_date(self, date):
+        try:
+            return date.strftime('%d %B %Y')
+        except:
+            return ''
 
     # this is another implementation of the getEvents method; it's kept for reference
     #security.declareProtected(view, 'getEvents')
