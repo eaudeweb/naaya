@@ -1,4 +1,4 @@
-<tal:block metal:use-macro="python:here.getFormsTool().site_admin_template.macros['page']">
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
 
     <tal:block metal:fill-slot="title"><h1 i18n:translate="">Bulk Mail</h1></tal:block>
 
@@ -9,9 +9,41 @@
                     acl_tool here/getAuthenticationTool;
                     skey python: request.get('skey', 'name');
                     rkey python: request.get('rkey', 0);
-                    compose python: request.get('compose', '');
-                    select_all python: request.get('select_all', '');">
+                    compose python: request.get('compose', '');">
 
+
+    <script language="JavaScript" src="misc_/Naaya/jquery-1.3.2.min.js"></script>
+    <script language="JavaScript">
+        $(document).ready(function(){
+            if ($("input[type=checkbox][name=user_mails:list]").length > 0) {
+                var sel_all = document.createElement('a');
+                var sel_none = document.createElement('a');
+                sel_all.innerHTML = 'Select all';
+                sel_none.innerHTML = 'Select none';
+                sel_all.id = 'select_all';
+                sel_none.id = 'select_none';
+                sel_all.href="#";
+                sel_none.href="#";
+                sel_none.style.display = 'none';
+                $(sel_all).click(function(){
+                        $("input[type=checkbox][name=user_mails:list]").attr('checked', 'checked');
+                        $("#select_all").css({'display': 'none'});
+                        $("#select_none").css({'display': 'inline'});
+                    })
+                $(sel_none).click(function(){
+                        $("input[type=checkbox][name=user_mails:list]").attr('checked', '');
+                        $("#select_none").css({'display': 'none'});
+                        $("#select_all").css({'display': 'inline'});
+                    })
+                $('#role_selector').append(sel_all);
+                $('#role_selector').append(sel_none);
+                $('#compose_message').css({'display': 'inline'});
+            }
+            else {
+                $('#compose_message').css({'display': 'none'});
+            }
+        })
+    </script>
 
     <tal:block condition="not:compose">
         <p i18n:translate="">This page allow you to send a mail to all users that
@@ -20,7 +52,7 @@
         you can procede to composing the message.</p>
 
 
-        <form action="" method="post">
+        <form action="" method="post" id="role_selector">
             <div class="field-inline">
                 <label for="roleselect" i18n:translate="">Role</label>
                 <select id="roleselect" name="target_role" tal:define="roles acl_tool/list_valid_roles">
@@ -29,14 +61,6 @@
                 <input type="submit" i18n:attributes="value" value="Show users"/>
             </div>
         </form>
-
-
-        <form action="" method="post" tal:condition="target_role">
-            <input type="hidden" name="select_all" value="true" tal:condition="not:select_all"/>
-            <input type="hidden" name="target_role" tal:attributes="value target_role" />
-            <input type="submit" tal:attributes="value python:test(select_all, 'Select none', 'Select all')" i18n:attributes="value"/>
-        </form>
-
 
         <form tal:attributes="action string:${here/absolute_url}/admin_bulk_mail_html" method="post" tal:condition="target_role" tal:define="users python:acl_tool.getUsersWithRole(target_role)">
             <p tal:condition="not:users" i18n:translate="">No users were found with the selected role.</p>
@@ -58,7 +82,7 @@
                 <tbody>
                     <tr tal:repeat="user_id python:users.keys()">
                         <td class="center">
-                            <input type="checkbox" name="user_mails:list" tal:attributes="value python:users[user_id]['email']; checked select_all" />
+                            <input type="checkbox" name="user_mails:list" tal:attributes="value python:users[user_id]['email']" />
                         </td>
                         <td><strong tal:content="user_id">username</strong>
                         </td>
@@ -68,7 +92,7 @@
                 </tbody>
             </table>
             <input type="hidden" name="compose" value="true"/>
-            <input type="submit" value="Compose message" i18n:attributes="value" />
+            <input type="submit" id="compose_message" value="Compose message" i18n:attributes="value" />
         </form>
     </tal:block>
     
