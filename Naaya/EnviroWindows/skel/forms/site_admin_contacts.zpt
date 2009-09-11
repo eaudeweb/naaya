@@ -5,9 +5,9 @@
 	<tal:block metal:fill-slot="section" tal:define="section python:request.get('section', '')">
 
 	<h1 i18n:translate="" tal:condition="python:not section">Contact listing</h1>
-	<h1 i18n:translate="" tal:condition="python:section == 'vcard'">Bulk vCard</h1>
-	<h1 i18n:translate="" tal:condition="python:section == 'csv'">Bulk CSV</h1>
-	<h1 i18n:translate="" tal:condition="python:section == 'mail'">Send mail</h1>
+	<h1 i18n:translate="" tal:condition="python:section == 'vcard'">Contacts - vCard import/export</h1>
+	<h1 i18n:translate="" tal:condition="python:section == 'csv'">Contacts - CSV import/export</h1>
+	<h1 i18n:translate="" tal:condition="python:section == 'mail'">Contacts - send mail</h1>
 
 	<div id="tabbedmenu">
 	<ul>
@@ -15,13 +15,13 @@
 			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html">Contacts listing</a>
 		</li>
 		<li tal:attributes="id python:test(section=='vcard', 'currenttab', None)">
-			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=vcard" >Bulk vCard</a>
+			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=vcard" >Contacts - vCard import/export</a>
 		</li>
 		<li tal:attributes="id python:test(section=='csv', 'currenttab', None)">
-			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=csv" >Bulk CSV</a>
+			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=csv" >Contacts - CSV import/export</a>
 		</li>
 		<li tal:attributes="id python:test(section=='mail', 'currenttab', None)">
-			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=mail">Send mail</a>
+			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=mail">Contacts - send mail</a>
 		</li>
 	</ul>
 	</div>
@@ -30,7 +30,7 @@
 
 		<h2>Export</h2>
 		<p>
-			<span i18n:translate="">Export contacts as</span>
+			<span>Export contacts as</span>
 			<a tal:attributes="href python:here.getSite().absolute_url() +
 				'/csv_export/export?meta_type=Naaya%20Contact&as_attachment=y'"
 				i18n:translate="">CSV file</a>.
