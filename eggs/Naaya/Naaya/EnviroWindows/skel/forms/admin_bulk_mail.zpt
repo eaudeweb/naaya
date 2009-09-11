@@ -35,8 +35,8 @@
                         $("#select_none").css({'display': 'none'});
                         $("#select_all").css({'display': 'inline'});
                     })
-                $('#role_selector').append(sel_all);
-                $('#role_selector').append(sel_none);
+                $('#user_listing').before(sel_all);
+                $('#user_listing').before(sel_none);
                 $('#compose_message').css({'display': 'inline'});
             }
             else {
@@ -46,53 +46,57 @@
     </script>
 
     <tal:block condition="not:compose">
-        <p i18n:translate="">This page allow you to send a mail to all users that
-        have a certain role in this portal. Select a role then click on
-        <em>Show users</em>. After selecting the users you wish to mail
-        you can procede to composing the message.</p>
+        <p i18n:translate="">Send an email to all users that
+        have been granted a role (local or global) in the portal.</p>
 
 
-        <form action="" method="post" id="role_selector">
-            <div class="field-inline">
-                <label for="roleselect" i18n:translate="">Role</label>
-                <select id="roleselect" name="target_role" tal:define="roles acl_tool/list_valid_roles">
-                    <option tal:repeat="role roles" tal:content="role" tal:attributes="selected python:role == target_role">[role name]</option>
-                </select>
-                <input type="submit" i18n:attributes="value" value="Show users"/>
-            </div>
-        </form>
+        <fieldset>
+            <legend i18n:translate="">Step 1: Select a role from the dropdown list.</legend>
+            <form action="" method="post" id="role_selector">
+                <div class="field-inline">
+                    <label for="roleselect" i18n:translate="">Role</label>
+                    <select id="roleselect" name="target_role" tal:define="roles acl_tool/list_valid_roles">
+                        <option tal:repeat="role roles" tal:content="role" tal:attributes="selected python:role == target_role">[role name]</option>
+                    </select>
+                    <input type="submit" i18n:attributes="value" value="Show users"/>
+                </div>
+            </form>
+        </fieldset>
 
         <form tal:attributes="action string:${here/absolute_url}/admin_bulk_mail_html" method="post" tal:condition="target_role" tal:define="users python:acl_tool.getUsersWithRole(target_role)">
             <p tal:condition="not:users" i18n:translate="">No users were found with the selected role.</p>
-            <table class="datatable" tal:condition="users">
-                <thead>
-                    <tr>
-                        <th align="left" i18n:translate="">Select</th>
-                        <th align="left">
-                            <span i18n:translate="">Username</span>
-                        </th>
-                        <th align="left">
-                            <span i18n:translate="">Name</span>
-                        </th>
-                        <th align="left">
-                            <span i18n:translate="">Email address</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr tal:repeat="user_id python:users.keys()">
-                        <td class="center">
-                            <input type="checkbox" name="user_mails:list" tal:attributes="value python:users[user_id]['email']" />
-                        </td>
-                        <td><strong tal:content="user_id">username</strong>
-                        </td>
-                        <td tal:content="python:users[user_id]['name']" />
-                        <td tal:content="python:users[user_id]['email']" />
-                    </tr>
-                </tbody>
-            </table>
-            <input type="hidden" name="compose" value="true"/>
-            <input type="submit" id="compose_message" value="Compose message" i18n:attributes="value" />
+            <fieldset>
+                <legend tal:condition="users" i18n:translate="">Step 2: Select one or more users, then click on <em>Compose message</em></legend>
+                <table class="datatable" id="user_listing" tal:condition="users">
+                    <thead>
+                        <tr>
+                            <th align="left" i18n:translate="">Select</th>
+                            <th align="left">
+                                <span i18n:translate="">Username</span>
+                            </th>
+                            <th align="left">
+                                <span i18n:translate="">Name</span>
+                            </th>
+                            <th align="left">
+                                <span i18n:translate="">Email address</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr tal:repeat="user_id python:users.keys()">
+                            <td class="center">
+                                <input type="checkbox" name="user_mails:list" tal:attributes="value python:users[user_id]['email']" />
+                            </td>
+                            <td><strong tal:content="user_id">username</strong>
+                            </td>
+                            <td tal:content="python:users[user_id]['name']" />
+                            <td tal:content="python:users[user_id]['email']" />
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" name="compose" value="true"/>
+                <input type="submit" id="compose_message" value="Compose message" i18n:attributes="value" />
+            </fieldset>
         </form>
     </tal:block>
     
@@ -106,7 +110,7 @@
             </p>
         </tal:block>
         <form action="send_mail_to_roles" method="post" tal:condition="mails">
-			<div class="message-error" tal:condition="not:mail_from" i18n:translate="">If you want to use this feature please add a valid email address in the "Default from address" field
+			<div class="message-error" tal:condition="not:mail_from" i18n:translate="">Please add a valid email address in the "Default from address" field
 			on the <a tal:attributes="href string:${here/absolute_url}/admin_email_html">portal properties page</a>.
 			</div>
             <div class="field">
