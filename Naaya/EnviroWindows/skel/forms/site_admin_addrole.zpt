@@ -14,7 +14,7 @@
 	</li>
 </ul>
 </div>
-<br class="cleaner" />
+<div class="cleaner"> </div>
 
 <form method="post" id="addrole-form" tal:attributes="action string:${site_url}/admin_addrole">
 <table border="0" width="99%">
