@@ -4,7 +4,7 @@
 
 	<tal:block metal:fill-slot="section" tal:define="section python:request.get('section', '')">
 
-	<h1 i18n:translate="" tal:condition="python:not section">Contact listing</h1>
+	<h1 i18n:translate="" tal:condition="python:not section">Contact - listing</h1>
 	<h1 i18n:translate="" tal:condition="python:section == 'vcard'">Contacts - vCard import/export</h1>
 	<h1 i18n:translate="" tal:condition="python:section == 'csv'">Contacts - CSV import/export</h1>
 	<h1 i18n:translate="" tal:condition="python:section == 'mail'">Contacts - send mail</h1>
@@ -12,16 +12,16 @@
 	<div id="tabbedmenu">
 	<ul>
 		<li tal:attributes="id python:test(not section, 'currenttab', None)">
-			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html">Contacts listing</a>
+			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html">Listing</a>
 		</li>
 		<li tal:attributes="id python:test(section=='vcard', 'currenttab', None)">
-			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=vcard" >Contacts - vCard import/export</a>
+			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=vcard" >vCard import/export</a>
 		</li>
 		<li tal:attributes="id python:test(section=='csv', 'currenttab', None)">
-			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=csv" >Contacts - CSV import/export</a>
+			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=csv" >CSV import/export</a>
 		</li>
 		<li tal:attributes="id python:test(section=='mail', 'currenttab', None)">
-			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=mail">Contacts - send mail</a>
+			<a tal:attributes="href string:${here/absolute_url}/admin_contacts_html?section=mail">Send mail</a>
 		</li>
 	</ul>
 	</div>
