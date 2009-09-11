@@ -134,7 +134,7 @@
 					<th i18n:translate="">Export</th>
 				</tr>
 				<tr tal:repeat="contact contacts">
-					<td tal:content="string:${contact/firstname} ${contact/lastname}" />
+					<td tal:content="python:test(contact.firstname and contact.lastname, '%s %s' % (contact.firstname, contact.lastname), contact.title_or_id())" />
 					<td tal:content="contact/email" />
 					<td><a tal:attributes="href contact/absolute_url">View contact</a></td>
 					<td><a tal:attributes="href string:${contact/absolute_url}/edit_html">Edit contact</a></td>
