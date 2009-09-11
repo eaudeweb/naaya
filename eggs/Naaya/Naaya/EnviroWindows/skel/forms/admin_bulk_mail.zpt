@@ -1,6 +1,6 @@
 <tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
 
-    <tal:block metal:fill-slot="title"><h1 i18n:translate="">Bulk Mail</h1></tal:block>
+    <tal:block metal:fill-slot="title"><h1 i18n:translate="">Send bulk mail</h1></tal:block>
 
 
 
