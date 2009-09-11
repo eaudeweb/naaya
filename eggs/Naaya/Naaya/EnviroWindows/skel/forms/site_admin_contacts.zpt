@@ -25,6 +25,7 @@
 		</li>
 	</ul>
 	</div>
+	<div class="cleaner" />
 		<tal:block condition="python:section == 'csv'">
 
 		<h2>Export</h2>
