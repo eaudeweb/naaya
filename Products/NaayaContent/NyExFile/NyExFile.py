@@ -1,1 +1,1 @@
-from naaya.content.exfile.NyExFile import NyExFile
+from naaya.content.exfile import NyExFile_extfile as NyExFile

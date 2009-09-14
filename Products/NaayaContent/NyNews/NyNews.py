@@ -1,1 +1,1 @@
-from naaya.content.news.NyNews import NyNews
+from naaya.content.news import NyNews
