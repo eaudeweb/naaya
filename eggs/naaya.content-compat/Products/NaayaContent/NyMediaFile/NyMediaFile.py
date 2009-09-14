@@ -1,1 +1,1 @@
-from naaya.content.mediafile.NyMediaFile import NyMediaFile
+from naaya.content.mediafile import NyMediaFile_extfile as NyMediaFile

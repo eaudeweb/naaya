@@ -1,1 +1,1 @@
-from naaya.content.event.NyEvent import NyEvent
+from naaya.content.event import NyEvent
