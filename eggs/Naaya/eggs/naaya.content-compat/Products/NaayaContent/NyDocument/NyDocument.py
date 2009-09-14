@@ -1,1 +1,1 @@
-from naaya.content.document.NyDocument import NyDocument
+from naaya.content.document import NyDocument

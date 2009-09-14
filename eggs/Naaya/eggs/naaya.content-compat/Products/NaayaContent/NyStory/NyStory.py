@@ -1,1 +1,1 @@
-from naaya.content.story.NyStory import NyStory
+from naaya.content.story import NyStory
