@@ -1,1 +1,1 @@
-from naaya.content.geopoint.NyGeoPoint import NyGeoPoint
+from naaya.content.geopoint import NyGeoPoint
