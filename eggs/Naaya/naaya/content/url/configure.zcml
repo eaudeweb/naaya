@@ -2,6 +2,6 @@
   xmlns:naaya="http://namespaces.zope.org/naaya"
   i18n_domain="naaya.content">
 
-  <naaya:content klass=".NyURL" />
+  <naaya:content factory=".url_item.get_config" />
 
 </configure>

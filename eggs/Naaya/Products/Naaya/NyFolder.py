@@ -323,7 +323,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
                 object.objects)
         elif object.meta_type in self.get_pluggable_installed_meta_types():
             item = self.get_pluggable_item(object.meta_type)
-            c = 'self.import%s(object.param, object.id, object.attrs, \
+            c = 'self.import_%s(object.param, object.id, object.attrs, \
                 object.content, object.properties, object.discussion, \
                 object.objects)' % item['module']
             exec(c)
@@ -385,7 +385,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
                         meta_label = schema.title_or_id()
                     else:
                         meta_label = pc[k]['label']
-                    ra((pc[k]['addform'], meta_label))
+                    ra((pc[k]['add_form'], meta_label))
         return r
 
     security.declareProtected(view, 'checkPermissionManageObjects')
@@ -1158,7 +1158,6 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
         """ This function is called on the folder index and it checkes whether or not
             to display the various buttons on that form
         """
-        from naaya.content.base.discover import get_constant
         results_objects = []
         btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate = 0, 0, 0, 0, 0, 0
         # btn_select - if there is at least one permisson to delete or copy an object
@@ -1168,7 +1167,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
         # btn_paste - if there is the add permission and there's some copyed data
         btn_paste = self.cb_dataValid() and self.checkPermissionPasteObjects()
         # Naaya objects
-        objects = self.getCatalogedObjects(meta_type=[get_constant('METATYPE_NYBLOGENTRY')], contributor=author, howmany=howmany, tags_en=tag, path='/%s' % self.absolute_url(1))
+        objects = self.getCatalogedObjects(meta_type=['Naaya Blog Entry'], contributor=author, howmany=howmany, tags_en=tag, path='/%s' % self.absolute_url(1))
         sorted_objects = self.utSortObjsListByAttr(objects, 'releasedate', 1)
         for x in self.utSortObjsListByAttr(sorted_objects, 'sortorder', 0):
             del_permission = x.checkPermissionDeleteObject()

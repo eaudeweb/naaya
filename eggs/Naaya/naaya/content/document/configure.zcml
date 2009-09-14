@@ -1,9 +1,7 @@
 <configure
     xmlns:naaya="http://namespaces.zope.org/naaya"
-    xmlns:browser="http://namespaces.zope.org/browser"
-    xmlns:five="http://namespaces.zope.org/five"
     i18n_domain="naaya.content">
 
-    <naaya:content klass=".NyDocument" />
+    <naaya:content factory=".document_item.get_config" />
 
 </configure>

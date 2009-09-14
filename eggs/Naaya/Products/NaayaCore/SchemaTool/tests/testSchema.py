@@ -140,8 +140,8 @@ class SchemaTestCase(NaayaTestCase.NaayaTestCase):
             set(['title', 'description', 'coverage', 'keywords', 'body']))
 
     def test_NyDocument_initial_schema(self):
-        self.failUnless('NyDocument' in self.portal.portal_schemas.objectIds())
-        schema = self.portal.portal_schemas.NyDocument
+        self.failUnless('document_item' in self.portal.portal_schemas.objectIds())
+        schema = self.portal.portal_schemas.document_item
 
         self.failUnless('title-property' in schema.objectIds())
         pr_title = schema.getWidget('title')
@@ -253,13 +253,13 @@ class SchemaFunctionalTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
 
     def test_hidden_property(self):
         import transaction
-        self.portal.portal_schemas.NyDocument.getWidget('discussion').visible = False
+        self.portal.portal_schemas.document_item.getWidget('discussion').visible = False
         transaction.commit()
         self.browser.go('http://localhost/portal/info/contact/edit_html')
         form = self.browser.get_form('frmEdit')
         control = form.find_control('discussion:utf8:ustring')
         self.failUnlessEqual(control.type, 'hidden')
-        self.portal.portal_schemas.NyDocument.getWidget('discussion').visible = True
+        self.portal.portal_schemas.document_item.getWidget('discussion').visible = True
         transaction.commit()
 
 def test_suite():

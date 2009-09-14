@@ -17,8 +17,8 @@
 #
 # Alin Voinea, Eau de Web
 from unittest import TestSuite, makeSuite
-from naaya.content.contact.NyContact import addNyContact as addNaayaContent
-from naaya.content.contact.NyContact import NyContact as NaayaContent
+from naaya.content.contact.contact_item import addNyContact as addNaayaContent
+from naaya.content.contact.contact_item import NyContact as NaayaContent
 from Products.Naaya.tests import NaayaTestCase
 
 class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):

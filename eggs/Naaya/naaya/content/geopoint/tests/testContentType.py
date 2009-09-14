@@ -17,7 +17,7 @@
 #
 # Alin Voinea, Eau de Web
 from unittest import TestSuite, makeSuite
-from naaya.content.geopoint.NyGeoPoint import addNyGeoPoint
+from naaya.content.geopoint.geopoint_item import addNyGeoPoint
 from Products.Naaya.tests import NaayaTestCase
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 

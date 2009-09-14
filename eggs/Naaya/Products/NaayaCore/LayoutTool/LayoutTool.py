@@ -119,7 +119,7 @@ class LayoutTool(Folder, combosync_tool):
         ny_content = self.get_pluggable_content()
         res = []
         for v in ny_content.values():
-            if v.has_key('additional_style'):
+            if v.has_key('additional_style') and v['additional_style']:
                 style = v['additional_style']
                 res.append(style)
         return '\n'.join(res)

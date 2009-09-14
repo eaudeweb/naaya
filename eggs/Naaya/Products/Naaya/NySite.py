@@ -3333,7 +3333,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'import_contacts_vcard')
     def import_contacts_vcard(self, vcard_zipfile, location, REQUEST=None):
         """ Import contacts in vCard format from a zip file """
-        from naaya.content.contact.NyContact import addNyContact, parse_vcard_data
+        from naaya.content.contact.contact_item import addNyContact, parse_vcard_data
         container = self.restrictedTraverse(location)
         errors = []
         infos = []

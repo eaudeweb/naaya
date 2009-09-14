@@ -1402,7 +1402,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         for item in pc.values():
             if item['module'] == content_type:
                 return REQUEST.RESPONSE.redirect('%s/%s' %
-                    (start_url, item['addform']))
+                    (start_url, item['add_form']))
         raise ValueError, 'Could not add this content type to the folder'
 
     security.declareProtected(view, 'suggest_location')

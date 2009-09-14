@@ -47,7 +47,7 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase, ContactMixin):
     def afterSetUp(self):
         self.contact_install()
         from Products.Naaya.NyFolder import addNyFolder
-        from naaya.content.contact.NyContact import addNyContact
+        from naaya.content.contact.contact_item import addNyContact
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyContact(self.portal.myfolder, id='mycontact', title='My contact', submitted=1, contributor='contributor')
         import transaction; transaction.commit()
@@ -161,7 +161,7 @@ class NyContactVersioningFunctionalTestCase(NaayaFunctionalTestCase, ContactMixi
     """ TestCase for NaayaContent object """
     def afterSetUp(self):
         self.contact_install()
-        from naaya.content.contact.NyContact import addNyContact
+        from naaya.content.contact.contact_item import addNyContact
         addNyContact(self.portal.info, id='ver_contact', title='ver_contact', submitted=1)
         import transaction; transaction.commit()
 

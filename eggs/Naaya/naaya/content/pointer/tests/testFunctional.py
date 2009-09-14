@@ -8,7 +8,7 @@ class NyPointerFunctionalTestCase(NaayaFunctionalTestCase):
 
     def afterSetUp(self):
         from Products.Naaya.NyFolder import addNyFolder
-        from naaya.content.pointer.NyPointer import addNyPointer
+        from naaya.content.pointer.pointer_item import addNyPointer
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyPointer(self.portal.myfolder, id='mypointer', title='My pointer',
             pointer='http://www.eaudeweb.ro', submitted=1, contributor='contributor')
