@@ -27,7 +27,7 @@ class NyDocumentFunctionalTestCase(NaayaFunctionalTestCase):
 
     def afterSetUp(self):
         from Products.Naaya.NyFolder import addNyFolder
-        from naaya.content.document.NyDocument import addNyDocument
+        from naaya.content.document.document_item import addNyDocument
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyDocument(self.portal.myfolder, id='mydoc', title='My document', submitted=1, contributor='contributor')
         import transaction; transaction.commit()
@@ -142,7 +142,7 @@ class NyDocumentFunctionalTestCase(NaayaFunctionalTestCase):
 class NyDocumentVersioningFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
     def afterSetUp(self):
-        from naaya.content.document.NyDocument import addNyDocument
+        from naaya.content.document.document_item import addNyDocument
         addNyDocument(self.portal.info, id='ver_doc', title='ver_doc', submitted=1)
         import transaction; transaction.commit()
 

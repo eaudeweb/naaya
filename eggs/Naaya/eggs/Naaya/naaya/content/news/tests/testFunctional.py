@@ -27,7 +27,7 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
 
     def afterSetUp(self):
         from Products.Naaya.NyFolder import addNyFolder
-        from naaya.content.news.NyNews import addNyNews
+        from naaya.content.news.news_item import addNyNews
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyNews(self.portal.myfolder, id='mynews', title='My news', submitted=1, contributor='contributor')
         import transaction; transaction.commit()
@@ -142,7 +142,7 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
 class NyNewsVersioningFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
     def afterSetUp(self):
-        from naaya.content.news.NyNews import addNyNews
+        from naaya.content.news.news_item import addNyNews
         addNyNews(self.portal.info, id='ver_news', title='ver_news', submitted=1)
         import transaction; transaction.commit()
 

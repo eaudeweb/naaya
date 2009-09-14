@@ -46,7 +46,7 @@
 					 global came_from python:test(query, proc_came_from + query, proc_came_from)">
 </tal:block>
 <div id="outer_wrapper">
-	<div id="container" tal:attributes="style python:test(len(here.portal_portlets.get_portlets_for_obj(here, 'right')) or here.meta_type == here.get_constant('METATYPE_FOLDER'), '', 'background: none')">
+	<div id="container" tal:attributes="style python:test(len(here.portal_portlets.get_portlets_for_obj(here, 'right')) or here.meta_type == 'Naaya Folder', '', 'background: none')">
 <div id="header">
 	<div id="language">
 		<span tal:replace="structure here/languages_box"/>

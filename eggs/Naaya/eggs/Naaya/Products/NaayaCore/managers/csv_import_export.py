@@ -85,7 +85,7 @@ class CSVImportTool(Implicit, Item):
             raise ValueError('Schema for meta-type not found: "%s"' % meta_type)
 
         content_type = self.getSite().get_pluggable_item(meta_type)
-        add_object = getattr(content_type['_module'], 'add'+content_type['module'])
+        add_object = content_type['add_method']
 
         try:
             location_obj = self.getParentNode()

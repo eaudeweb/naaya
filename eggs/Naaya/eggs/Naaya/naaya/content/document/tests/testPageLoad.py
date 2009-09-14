@@ -1,6 +1,6 @@
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.NyFolder import addNyFolder
-from naaya.content.document.NyDocument import addNyDocument
+from naaya.content.document.document_item import addNyDocument
 
 class PageLoadTests(NaayaTestCase):
     def afterSetUp(self):

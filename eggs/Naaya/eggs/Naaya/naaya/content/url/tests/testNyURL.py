@@ -1,7 +1,7 @@
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya import NyFolder
 from unittest import TestSuite, makeSuite
-from naaya.content.url import NyURL
+from naaya.content.url import url_item
 
 class TestNyURL(NaayaTestCase):
 
@@ -19,21 +19,21 @@ class TestNyURL(NaayaTestCase):
         """
         Test adding URL without being logged in
         """
-        NyURL.addNyURL(self.app.portal.test_folder, title="testURL")
+        url_item.addNyURL(self.app.portal.test_folder, title="testURL")
         self.assertFalse(hasattr(self.app.portal.test_folder, "testURL"))
         
 
 
     def test_addNyURL_no_requiredattrs(self):
         self.login("contributor")
-        self.failUnlessRaises(ValueError, lambda: NyURL.addNyURL(self.app.portal.test_folder))
+        self.failUnlessRaises(ValueError, lambda: url_item.addNyURL(self.app.portal.test_folder))
         self.assertFalse(hasattr(self.app.portal.test_folder, "testURL"))
         self.logout()
 
 
     def test_addNyURL_has_requiredattrs(self):
         self.login("contributor")
-        id = NyURL.addNyURL(self.app.portal.test_folder, title="test1", locator="www.google.com")
+        id = url_item.addNyURL(self.app.portal.test_folder, title="test1", locator="www.google.com")
         self.assertTrue(hasattr(self.app.portal.test_folder, "test1"), "URL object test1 was not found in folder 'test_folder'")
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=["Naaya URL"])
         test1 = None
@@ -48,9 +48,9 @@ class TestNyURL(NaayaTestCase):
 
     def test_addNyURL_duplicates(self):
         self.login("contributor")
-        NyURL.addNyURL(self.app.portal.test_folder, id="urldup1", title="urldup1", locator="www.google.com")
+        url_item.addNyURL(self.app.portal.test_folder, id="urldup1", title="urldup1", locator="www.google.com")
         self.assertTrue(hasattr(self.app.portal.test_folder, "urldup1"), "URL object urldup1 was not found in folder 'test_folder'")
-        NyURL.addNyURL(self.app.portal.test_folder, id="urldup1", title="urldup1", locator="www.google.com")
+        url_item.addNyURL(self.app.portal.test_folder, id="urldup1", title="urldup1", locator="www.google.com")
         self.assertTrue(hasattr(self.app.portal.test_folder, "urldup1-1"), "URL object urldup1 was not found in folder 'test_folder'")
         self.logout()
 
@@ -59,7 +59,7 @@ class TestNyURL(NaayaTestCase):
         import time
         self.login("contributor")
         time.sleep(1)
-        NyURL.addNyURL(self.app.portal.test_folder,
+        url_item.addNyURL(self.app.portal.test_folder,
                             id="test2", 
                             title="test2", 
                             description = "description",
@@ -108,14 +108,14 @@ class TestNyURL(NaayaTestCase):
         id = "url3"
         param = 0;
         
-        self.app.portal.test_folder.importNyURL(param, id, attrs, '', {}, None, None)
+        self.app.portal.test_folder.import_url_item(param, id, attrs, '', {}, None, None)
         self.assertTrue(hasattr(self.app.portal.test_folder, "url3"), "URL object url3 was not found in folder 'test_folder'")
 
 
     def test_export_this_tag_custom(self):
         import re
         self.login("contributor")
-        NyURL.addNyURL(self.app.portal.test_folder, title="urlx", contributor="cristiroma", locator="www.google.com")
+        url_item.addNyURL(self.app.portal.test_folder, title="urlx", contributor="cristiroma", locator="www.google.com")
         url = self.app.portal.test_folder.urlx
         self.app.portal.test_folder.validateObject(id="urlx", status="-1", comment="No comment")
         exportStr = url.export_this_tag_custom()
@@ -130,7 +130,7 @@ class TestNyURL(NaayaTestCase):
 
     def test_export_this_body_custom(self):
         self.login("contributor")
-        NyURL.addNyURL(self.app.portal.test_folder, title="urly", contributor="cristiroma", locator="www.google.com")
+        url_item.addNyURL(self.app.portal.test_folder, title="urly", contributor="cristiroma", locator="www.google.com")
         url = self.app.portal.test_folder.urly
         exportStr = url.export_this_body_custom()
         self.assertTrue(exportStr == '<locator lang="en"><![CDATA[www.google.com]]></locator>', "Exported custom body is malformed")
@@ -140,7 +140,7 @@ class TestNyURL(NaayaTestCase):
     def test_startVersion(self):
         import traceback
         self.login("contributor")
-        NyURL.addNyURL(self.app.portal.test_folder,
+        url_item.addNyURL(self.app.portal.test_folder,
                             id="test2", 
                             title="test2", 
                             description = "description",

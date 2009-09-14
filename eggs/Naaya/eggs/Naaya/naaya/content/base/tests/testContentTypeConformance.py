@@ -34,13 +34,13 @@ from naaya.content.mediafile.tests.testFunctional import MediaFileMixin
 from naaya.content.contact.tests.testFunctional import ContactMixin
 
 # not all content types will pass all tests
-SCHEMA_EXCEPTIONS = []
+SCHEMA_EXCEPTIONS = ['mediafile_item']
 DYNAMIC_PROPERTIES_EXCEPTIONS = []
-FORM_REMEMBER_DATA_EXCEPTIONS = []
-TRANSLATE_OBJECT_EXCEPTIONS = []
+FORM_REMEMBER_DATA_EXCEPTIONS = ['mediafile_item']
+TRANSLATE_OBJECT_EXCEPTIONS = ['mediafile_item']
 
 # these content types don't support dynamic properties
-DYNAMIC_PROPERTIES_EXCEPTIONS += [ 'NyExFile', 'NyMediaFile', 'NyGeoPoint' ]
+DYNAMIC_PROPERTIES_EXCEPTIONS += [ 'exfile_item', 'mediafile_item', 'geopoint_item' ]
 
 # NySMAP* products need an EnviroWindows site to function properly
 # so we can't easily test them here
@@ -127,7 +127,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin, ExFi
             transaction.commit()
 
             # add an object
-            self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['addform'])
+            self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['add_form'])
             form = self.browser.get_form('frmAdd')
             self.failUnless('xzzx:utf8:ustring' in (c.name for c in form.controls),
                 'missing "xzzx" control for %s when adding' % type_name)
@@ -208,7 +208,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin, ExFi
             self.browser.submit()
 
             # create a new object
-            self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['addform'])
+            self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['add_form'])
             form = self.browser.get_form('frmAdd')
             self.failUnless('yvvy:utf8:ustring' in (c.name for c in form.controls),
                 'missing "yvvy" control for %s when adding' % type_name)
@@ -253,7 +253,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin, ExFi
             type_name = content_type['module']
 
             # "create object" form
-            self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['addform'])
+            self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['add_form'])
             # dont' add title, so the form generates an error
             form = self.browser.get_form('frmAdd')
             form['keywords:utf8:ustring'] = 'no save me'
@@ -316,7 +316,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin, ExFi
                 continue
 
             # "create object" form
-            self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['addform'])
+            self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['add_form'])
             form = self.browser.get_form('frmAdd')
             form['title:utf8:ustring'] = 'ze title'
             self._fill_specific_form_fields(form, type_name)
@@ -369,7 +369,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin, ExFi
                 continue
             rnd_title = 'title' + str(random())[2:8]
 
-            self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['addform'])
+            self.browser.go('http://localhost/portal/xz_folder/%s' % content_type['add_form'])
             form = self.browser.get_form('frmAdd')
             form['title:utf8:ustring'] = rnd_title
             self._fill_specific_form_fields(form, type_name)

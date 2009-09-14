@@ -48,7 +48,7 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin):
     def afterSetUp(self):
         self.geopoint_install()
         from Products.Naaya.NyFolder import addNyFolder
-        from naaya.content.geopoint.NyGeoPoint import addNyGeoPoint
+        from naaya.content.geopoint.geopoint_item import addNyGeoPoint
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         self.portal.myfolder.folder_meta_types.append('Naaya GeoPoint')
         addNyGeoPoint(self.portal.myfolder, id='mygeopoint', title='My geopoint',
@@ -166,7 +166,7 @@ class NyGeoPointVersioningFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMi
     """ TestCase for NaayaContent object """
     def afterSetUp(self):
         self.geopoint_install()
-        from naaya.content.geopoint.NyGeoPoint import addNyGeoPoint
+        from naaya.content.geopoint.geopoint_item import addNyGeoPoint
         addNyGeoPoint(self.portal.info, id='ver_geopoint', title='ver_geopoint',
             submitted=1, geo_location=Geo('13', '13'))
         import transaction; transaction.commit()

@@ -27,7 +27,7 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
 
     def afterSetUp(self):
         from Products.Naaya.NyFolder import addNyFolder
-        from naaya.content.event.NyEvent import addNyEvent
+        from naaya.content.event.event_item import addNyEvent
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyEvent(self.portal.myfolder, id='myevent', title='My event', submitted=1, contributor='contributor')
         import transaction; transaction.commit()
@@ -151,7 +151,7 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
 class NyEventVersioningFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
     def afterSetUp(self):
-        from naaya.content.event.NyEvent import addNyEvent
+        from naaya.content.event.event_item import addNyEvent
         addNyEvent(self.portal.info, id='ver_event', title='ver_event', submitted=1)
         import transaction; transaction.commit()
 

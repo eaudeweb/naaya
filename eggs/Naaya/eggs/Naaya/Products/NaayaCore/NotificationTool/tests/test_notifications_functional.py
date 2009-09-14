@@ -26,7 +26,7 @@ from Products.NaayaCore.NotificationTool.NotificationTool \
     import set_testing_mode as set_notif_testing_mode
 
 from Products.Naaya.NyFolder import addNyFolder
-from naaya.content.document.NyDocument import addNyDocument
+from naaya.content.document.document_item import addNyDocument
 
 class NotificationsTest(NaayaFunctionalTestCase):
     """ functional test for notifications """

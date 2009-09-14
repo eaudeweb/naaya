@@ -61,9 +61,10 @@ def initialize(context):
         context.registerClass(
                 x['_class'],
                 permission=x['permission'],
-                constructors=(getattr(x['_module'], 'manage_add%s_html' % (x['module'],)),
-                              getattr(x['_module'], 'add%s' % (x['module'],))),
-                icon='%s/www/%s.gif' % (x['package_path'], x['module']),
+                #constructors=(getattr(x['_module'], 'manage_add%s_html' % (x['module'],)),
+                #              getattr(x['_module'], 'add%s' % (x['module'],))),
+                constructors=x['constructors'],
+                icon=x['icon'],
                 visibility=None)
 
 #misc_ = _get_content_types()['misc_']
