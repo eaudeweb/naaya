@@ -313,14 +313,14 @@ class SemideRegistration(LocalPropertyManager, Folder):
                         part.media_position, part.passport_no, part.passport_expire, part.email, part.phone_number, part.fax_number, part.mobile_number, arrival_date, part.arrival_from,
                         part.arrival_flight, part.arrival_time, departure_date, part.departure_flight,
                         part.departure_time))
-        return self.create_csv(data, filename='press.csv', RESPONSE=REQUEST.RESPONSE)
+        return self.create_csv(data, filename='press_participants.csv', RESPONSE=REQUEST.RESPONSE)
 
     security.declarePrivate('create_csv')
     def create_csv(self, data, filename, RESPONSE):
         tmp_name = tmpfile(data)
         content = open(str(tmp_name)).read()
         RESPONSE.setHeader('Content-Type', 'text/csv')
-        RESPONSE.setHeader('Content-Disposition', 'attachment; filename=participants.csv')
+        RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s' % filename)
         return content
 
     security.declareProtected(constants.MANAGE_PERMISSION, 'participants')
