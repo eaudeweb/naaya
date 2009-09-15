@@ -218,7 +218,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
         if lang_dir is None:    #maybe arabic?
             lang_dir = self.email_templates._getOb('en', None)
         email_template = lang_dir._getOb(id)
-        return email_template.document_src()
+        return self.unicode2UTF8(email_template.document_src())
 
     def registrationOpened(self):
         """ check if the registration is opend to the public """

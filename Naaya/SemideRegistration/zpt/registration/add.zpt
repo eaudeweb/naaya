@@ -32,7 +32,7 @@
 		<label for="title" i18n:translate="">Conference name *</label>
 		<div class="message-error" tal:condition="python:request.get('title_error')" i18:translate="">
 		The conference name is mandatory.</div>
-		<input type="text" name="title" tal:attributes="value python:request.get('title', '')" />
+		<input type="text" name="title:utf8:ustring" tal:attributes="value python:request.get('title', '')" />
 	</div>
 	<div class="field">
 		<label for="title" i18n:translate="">Conference details</label>
