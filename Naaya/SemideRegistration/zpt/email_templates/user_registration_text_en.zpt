@@ -1,6 +1,6 @@
-Hello, 
+Dear Madam, Sir,
 
-Your registration for the "%(registration_event)s" was received in good order. You can review the submitted information by following the link:
+Your registration for the international conference «"%(registration_event)s"» that will take place on the 23-24 November 2009 in Lyon, France was received in good order. To review and/or edit the submitted information please use the following link:
 
 %(registration_edit_link)s
 
@@ -8,4 +8,4 @@ The registration number %(registration_number)s and your last name %(last_name)s
 
 ---
 Best Regards,
-%(website_team)s team
+The conference organisers
