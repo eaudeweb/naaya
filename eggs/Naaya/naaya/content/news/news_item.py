@@ -44,14 +44,6 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 
 #pluggable type metadata
-METATYPE_OBJECT = 'Naaya News'
-LABEL_OBJECT = 'News'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya News objects'
-OBJECT_FORMS = ['news_add', 'news_edit', 'news_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyNews_html', 'news_add_html', 'addNyNews', 'importNyNews']
-OBJECT_ADD_FORM = 'news_add_html'
-DESCRIPTION_OBJECT = 'This is Naaya News type.'
-PREFIX_OBJECT = 'news'
 PROPERTIES_OBJECT = {
     'id':               (0, '', ''),
     'title':            (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -81,49 +73,34 @@ DEFAULT_SCHEMA = {
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
-manage_addNyNews_html = PageTemplateFile('zpt/news_manage_add', globals())
-manage_addNyNews_html.kind = METATYPE_OBJECT
-manage_addNyNews_html.action = 'addNyNews'
-
-def get_config():
-    factory = {
-            'product': 'NaayaContent',
-            'module': 'news_item',
-            'package_path': os.path.abspath(os.path.dirname(__file__)),
-            'meta_type': 'Naaya News',
-            'label': 'News',
-            'permission': 'Naaya - Add Naaya News objects',
-            'forms': ['news_add', 'news_edit', 'news_index'],
-            'constructors': (manage_addNyNews_html, addNyNews),
-            'folder_constructors': [
-                    # NyFolder.manage_addNyNews_html = manage_addNyNews_html
-                    ('manage_addNyNews_html', manage_addNyNews_html),
-                    ('news_add_html', news_add_html),
-                    ('addNyNews', addNyNews),
-                    ('import_news_item', importNyNews),
-                ],
-            'add_form': 'news_add_html',
-            'add_method': addNyNews,
-            'validation': issubclass(NyNews, NyValidation),
-            'description': 'This is Naaya News type.',
-            'properties': PROPERTIES_OBJECT,
-            'default_schema': DEFAULT_SCHEMA,
-            '_module': sys.modules[__name__],
-            '_class': NyNews,
-            'additional_style': None,
-            'icon': os.path.join(os.path.dirname(__file__), 'www', 'news.gif'),
-            '_misc': {
-                    'NyNews.gif': ImageFile('www/news.gif', globals()),
-                    'NyNews_marked.gif': ImageFile('www/news_marked.gif', globals()),
-                },
-        }
-    return factory
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'news_item',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya News',
+        'label': 'News',
+        'permission': 'Naaya - Add Naaya News objects',
+        'forms': ['news_add', 'news_edit', 'news_index'],
+        'add_form': 'news_add_html',
+        'description': 'This is Naaya News type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': DEFAULT_SCHEMA,
+        'schema_name': 'NyNews',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'news.gif'),
+        '_misc': {
+                'NyNews.gif': ImageFile('www/news.gif', globals()),
+                'NyNews_marked.gif': ImageFile('www/news_marked.gif', globals()),
+            },
+    }
 
 def news_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
-    form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyNews', 'form_helper': form_helper}, 'news_add')
+    form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
+    return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyNews', 'form_helper': form_helper}, 'news_add')
 
 def _create_NyNews_object(parent, id, contributor):
     i = 0
@@ -157,7 +134,7 @@ def addNyNews(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
+    if not id: id = 'news' + self.utGenRandomId(5)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyNews_object(self, id, contributor)
@@ -292,8 +269,8 @@ class news_item(Implicit, NyContentData):
 class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     """ """
 
-    meta_type = METATYPE_OBJECT
-    meta_label = LABEL_OBJECT
+    meta_type = config['meta_type']
+    meta_label = config['label']
     icon = 'misc_/NaayaContent/NyNews.gif'
     icon_marked = 'misc_/NaayaContent/NyNews_marked.gif'
 
@@ -529,3 +506,22 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
 
 InitializeClass(NyNews)
 
+manage_addNyNews_html = PageTemplateFile('zpt/news_manage_add', globals())
+manage_addNyNews_html.kind = config['meta_type']
+manage_addNyNews_html.action = 'addNyNews'
+config.update({
+    'constructors': (manage_addNyNews_html, addNyNews),
+    'folder_constructors': [
+            # NyFolder.manage_addNyNews_html = manage_addNyNews_html
+            ('manage_addNyNews_html', manage_addNyNews_html),
+            ('news_add_html', news_add_html),
+            ('addNyNews', addNyNews),
+            ('import_news_item', importNyNews),
+        ],
+    'add_method': addNyNews,
+    'validation': issubclass(NyNews, NyValidation),
+    '_class': NyNews,
+})
+
+def get_config():
+    return config

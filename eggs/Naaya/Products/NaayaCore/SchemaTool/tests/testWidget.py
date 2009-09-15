@@ -68,7 +68,7 @@ class WidgetDefaultDefinitionTestCase(NaayaTestCase.NaayaTestCase):
     """ testing code that queries the default definition of a property """
 
     def afterSetUp(self):
-        self.doc_schema = self.portal.portal_schemas.document_item
+        self.doc_schema = self.portal.portal_schemas.NyDocument
         self.doc_schema.addWidget('newpr', label='newpr', widget_type='String')
 
     def beforeTearDown(self):

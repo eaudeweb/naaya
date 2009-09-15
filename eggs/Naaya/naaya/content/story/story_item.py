@@ -47,14 +47,6 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 
 #module constants
-METATYPE_OBJECT = 'Naaya Story'
-LABEL_OBJECT = 'Story'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Story objects'
-OBJECT_FORMS = ['story_add', 'story_edit', 'story_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyStory_html', 'story_add', 'addNyStory', 'importNyStory']
-OBJECT_ADD_FORM = 'story_add'
-DESCRIPTION_OBJECT = 'This is Naaya Story type.'
-PREFIX_OBJECT = 'story'
 PROPERTIES_OBJECT = {
     'id':           (0, '', ''),
     'title':        (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -79,47 +71,32 @@ DEFAULT_SCHEMA = {
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
-manage_addNyStory_html = PageTemplateFile('zpt/story_manage_add', globals())
-manage_addNyStory_html.kind = METATYPE_OBJECT
-manage_addNyStory_html.action = 'addNyStory'
-
-def get_config():
-    factory = {
-            'product': 'NaayaContent',
-            'module': 'story_item',
-            'package_path': os.path.abspath(os.path.dirname(__file__)),
-            'meta_type': 'Naaya Story',
-            'label': 'Story',
-            'permission': 'Naaya - Add Naaya Story objects',
-            'forms': ['story_add', 'story_edit', 'story_index'],
-            'constructors': (manage_addNyStory_html, addNyStory),
-            'folder_constructors': [
-                    # NyFolder.manage_addNyStory_html = manage_addNyStory_html
-                    ('manage_addNyStory_html', manage_addNyStory_html),
-                    ('story_add', story_add),
-                    ('addNyStory', addNyStory),
-                    ('import_story_item', importNyStory),
-                ],
-            'add_form': 'story_add',
-            'add_method': addNyStory,
-            'validation': issubclass(NyStory, NyValidation),
-            'description': 'This is Naaya Story type.',
-            'properties': PROPERTIES_OBJECT,
-            'default_schema': DEFAULT_SCHEMA,
-            '_module': sys.modules[__name__],
-            '_class': NyStory,
-            'additional_style': None,
-            'icon': os.path.join(os.path.dirname(__file__), 'www', 'story.gif'),
-            '_misc': {
-                    'NyStory.gif': ImageFile('www/story.gif', globals()),
-                    'NyStory_marked.gif': ImageFile('www/story_marked.gif', globals()),
-                },
-        }
-    return factory
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'story_item',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya Story',
+        'label': 'Story',
+        'permission': 'Naaya - Add Naaya Story objects',
+        'forms': ['story_add', 'story_edit', 'story_index'],
+        'add_form': 'story_add',
+        'description': 'This is Naaya Story type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': DEFAULT_SCHEMA,
+        'schema_name': 'NyStory',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'story.gif'),
+        '_misc': {
+                'NyStory.gif': ImageFile('www/story.gif', globals()),
+                'NyStory_marked.gif': ImageFile('www/story_marked.gif', globals()),
+            },
+    }
 
 def story_add(self, REQUEST=None, RESPONSE=None):
     """ """
-    id = PREFIX_OBJECT + self.utGenRandomId(6)
+    id = 'story' + self.utGenRandomId(6)
     self.addNyStory(id)
     if REQUEST: REQUEST.RESPONSE.redirect('%s/add_html' % self._getOb(id).absolute_url())
 
@@ -153,7 +130,7 @@ def addNyStory(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
+    if not id: id = 'story' + self.utGenRandomId(5)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyStory_object(self, id, contributor)
@@ -246,8 +223,8 @@ class story_item(Implicit, NyContentData):
 class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentType):
     """ """
 
-    meta_type = METATYPE_OBJECT
-    meta_label = LABEL_OBJECT
+    meta_type = config['meta_type']
+    meta_label = config['label']
     icon = 'misc_/NaayaContent/NyStory.py'
     icon_marked = 'misc_/NaayaContent/NyStory_marked.gif'
 
@@ -368,7 +345,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #site actions
-    security.declareProtected(PERMISSION_ADD_OBJECT, 'process_add')
+    security.declareProtected(config['permission'], 'process_add')
     def process_add(self, REQUEST, **kwargs):
         """ """
         schema_raw_data = dict(REQUEST.form)
@@ -504,7 +481,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
     manage_edit_html = PageTemplateFile('zpt/story_manage_edit', globals())
 
     #site pages
-    security.declareProtected(PERMISSION_ADD_OBJECT, 'add_html')
+    security.declareProtected(config['permission'], 'add_html')
     def add_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'story_add')
@@ -521,3 +498,22 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
 
 InitializeClass(NyStory)
 
+manage_addNyStory_html = PageTemplateFile('zpt/story_manage_add', globals())
+manage_addNyStory_html.kind = config['meta_type']
+manage_addNyStory_html.action = 'addNyStory'
+config.update({
+    'constructors': (manage_addNyStory_html, addNyStory),
+    'folder_constructors': [
+            # NyFolder.manage_addNyStory_html = manage_addNyStory_html
+            ('manage_addNyStory_html', manage_addNyStory_html),
+            ('story_add', story_add),
+            ('addNyStory', addNyStory),
+            ('import_story_item', importNyStory),
+        ],
+    'add_method': addNyStory,
+    'validation': issubclass(NyStory, NyValidation),
+    '_class': NyStory,
+})
+
+def get_config():
+    return config

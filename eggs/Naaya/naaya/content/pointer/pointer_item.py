@@ -44,14 +44,6 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 
 #module constants
-METATYPE_OBJECT = 'Naaya Pointer'
-LABEL_OBJECT = 'Pointer'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Pointer objects'
-OBJECT_FORMS = ['pointer_add', 'pointer_edit', 'pointer_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyPointer_html', 'pointer_add_html', 'addNyPointer', 'importNyPointer']
-OBJECT_ADD_FORM = 'pointer_add_html'
-DESCRIPTION_OBJECT = 'This is Naaya Pointer type.'
-PREFIX_OBJECT = 'pnt'
 PROPERTIES_OBJECT = {
     'id':           (0, '', ''),
     'title':        (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -70,49 +62,34 @@ DEFAULT_SCHEMA = {
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
-manage_addNyPointer_html = PageTemplateFile('zpt/pointer_manage_add', globals())
-manage_addNyPointer_html.kind = METATYPE_OBJECT
-manage_addNyPointer_html.action = 'addNyPointer'
-
-def get_config():
-    factory = {
-            'product': 'NaayaContent',
-            'module': 'pointer_item',
-            'package_path': os.path.abspath(os.path.dirname(__file__)),
-            'meta_type': 'Naaya Pointer',
-            'label': 'Pointer',
-            'permission': 'Naaya - Add Naaya Pointer objects',
-            'forms': ['pointer_add', 'pointer_edit', 'pointer_index'],
-            'constructors': (manage_addNyPointer_html, addNyPointer),
-            'folder_constructors': [
-                    # NyFolder.manage_addNyPointer_html = manage_addNyPointer_html
-                    ('manage_addNyPointer_html', manage_addNyPointer_html),
-                    ('pointer_add_html', pointer_add_html),
-                    ('addNyPointer', addNyPointer),
-                    ('import_pointer_item', importNyPointer),
-                ],
-            'add_form': 'pointer_add_html',
-            'add_method': addNyPointer,
-            'validation': issubclass(NyPointer, NyValidation),
-            'description': 'This is Naaya Pointer type.',
-            'properties': PROPERTIES_OBJECT,
-            'default_schema': DEFAULT_SCHEMA,
-            '_module': sys.modules[__name__],
-            '_class': NyPointer,
-            'additional_style': None,
-            'icon': os.path.join(os.path.dirname(__file__), 'www', 'pointer.gif'),
-            '_misc': {
-                    'NyPointer.gif': ImageFile('www/pointer.gif', globals()),
-                    'NyPointer_marked.gif': ImageFile('www/pointer_marked.gif', globals()),
-                },
-        }
-    return factory
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'pointer_item',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya Pointer',
+        'label': 'Pointer',
+        'permission': 'Naaya - Add Naaya Pointer objects',
+        'forms': ['pointer_add', 'pointer_edit', 'pointer_index'],
+        'add_form': 'pointer_add_html',
+        'description': 'This is Naaya Pointer type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': DEFAULT_SCHEMA,
+        'schema_name': 'NyPointer',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'pointer.gif'),
+        '_misc': {
+                'NyPointer.gif': ImageFile('www/pointer.gif', globals()),
+                'NyPointer_marked.gif': ImageFile('www/pointer_marked.gif', globals()),
+            },
+    }
 
 def pointer_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
-    form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyPointer', 'form_helper': form_helper}, 'pointer_add')
+    form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
+    return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyPointer', 'form_helper': form_helper}, 'pointer_add')
 
 def _create_NyPointer_object(parent, id, contributor):
     i = 0
@@ -141,7 +118,7 @@ def addNyPointer(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
+    if not id: id = 'pnt' + self.utGenRandomId(5)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyPointer_object(self, id, contributor)
@@ -229,8 +206,8 @@ class pointer_item(Implicit, NyContentData):
 class NyPointer(pointer_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
     """ """
 
-    meta_type = METATYPE_OBJECT
-    meta_label = LABEL_OBJECT
+    meta_type = config['meta_type']
+    meta_label = config['label']
     icon = 'misc_/NaayaContent/NyPointer.gif'
     icon_marked = 'misc_/NaayaContent/NyPointer_marked.gif'
 
@@ -398,3 +375,22 @@ class NyPointer(pointer_item, NyAttributes, NyItem, NyCheckControl, NyValidation
 
 InitializeClass(NyPointer)
 
+manage_addNyPointer_html = PageTemplateFile('zpt/pointer_manage_add', globals())
+manage_addNyPointer_html.kind = config['meta_type']
+manage_addNyPointer_html.action = 'addNyPointer'
+config.update({
+    'constructors': (manage_addNyPointer_html, addNyPointer),
+    'folder_constructors': [
+            # NyFolder.manage_addNyPointer_html = manage_addNyPointer_html
+            ('manage_addNyPointer_html', manage_addNyPointer_html),
+            ('pointer_add_html', pointer_add_html),
+            ('addNyPointer', addNyPointer),
+            ('import_pointer_item', importNyPointer),
+        ],
+    'add_method': addNyPointer,
+    'validation': issubclass(NyPointer, NyValidation),
+    '_class': NyPointer,
+})
+
+def get_config():
+    return config

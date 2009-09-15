@@ -201,7 +201,7 @@ class Schema(Folder):
     def getDefaultDefinition(self):
         """ get initial definition for this schema, from the NyZzz Python module """
         for content_type in self.get_pluggable_content().values():
-            if self.id == content_type['module']:
+            if self.id == content_type['schema_name']:
                 return content_type['default_schema']
         return None
 

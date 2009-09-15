@@ -47,17 +47,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyFolderishVersioning import NyFolderishVersioning
 
-# import METATYPE_OBJECT here so file_item can have access to it
-METATYPE_OBJECT = 'Naaya File'
-
 #module constants
-LABEL_OBJECT = 'File'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya File objects'
-OBJECT_FORMS = ['file_add', 'file_edit', 'file_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyFile_html', 'file_add_html', 'addNyFile', 'importNyFile']
-OBJECT_ADD_FORM = 'file_add_html'
-DESCRIPTION_OBJECT = 'This is Naaya File type.'
-PREFIX_OBJECT = 'file'
 PROPERTIES_OBJECT = {
     'id':               (0, '', ''),
     'title':            (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -76,49 +66,34 @@ DEFAULT_SCHEMA = {
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
-manage_addNyFile_html = PageTemplateFile('zpt/file_manage_add', globals())
-manage_addNyFile_html.kind = METATYPE_OBJECT
-manage_addNyFile_html.action = 'addNyFile'
-
-def get_config():
-    factory = {
-            'product': 'NaayaContent',
-            'module': 'file_item',
-            'package_path': os.path.abspath(os.path.dirname(__file__)),
-            'meta_type': 'Naaya File',
-            'label': 'File',
-            'permission': 'Naaya - Add Naaya File objects',
-            'forms': ['file_add', 'file_edit', 'file_index'],
-            'constructors': (manage_addNyFile_html, addNyFile),
-            'folder_constructors': [
-                    # NyFolder.manage_addNyFile_html = manage_addNyFile_html
-                    ('manage_addNyFile_html', manage_addNyFile_html),
-                    ('file_add_html', file_add_html),
-                    ('addNyFile', addNyFile),
-                    ('import_file_item', importNyFile),
-                ],
-            'add_form': 'file_add_html',
-            'add_method': addNyFile,
-            'validation': issubclass(NyFile_extfile, NyValidation),
-            'description': 'This is Naaya File type.',
-            'properties': PROPERTIES_OBJECT,
-            'default_schema': DEFAULT_SCHEMA,
-            '_module': sys.modules[__name__],
-            '_class': NyFile_extfile,
-            'additional_style': None,
-            'icon': os.path.join(os.path.dirname(__file__), 'www', 'file.gif'),
-            '_misc': {
-                    'NyFile.gif': ImageFile('www/file.gif', globals()),
-                    'NyFile_marked.gif': ImageFile('www/file_marked.gif', globals()),
-                },
-        }
-    return factory
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'file_item',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya File',
+        'label': 'File',
+        'permission': 'Naaya - Add Naaya File objects',
+        'forms': ['file_add', 'file_edit', 'file_index'],
+        'add_form': 'file_add_html',
+        'description': 'This is Naaya File type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': DEFAULT_SCHEMA,
+        'schema_name': 'NyFile',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'file.gif'),
+        '_misc': {
+                'NyFile.gif': ImageFile('www/file.gif', globals()),
+                'NyFile_marked.gif': ImageFile('www/file_marked.gif', globals()),
+            },
+    }
 
 def file_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
-    form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyFile', 'form_helper': form_helper}, 'file_add')
+    form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
+    return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyFile', 'form_helper': form_helper}, 'file_add')
 
 def _create_NyFile_object(parent, id, title, file, precondition, contributor):
     i = 0
@@ -156,7 +131,7 @@ def addNyFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     if _source=='file': id = cookId(id, title, _file)[0] #upload from a file
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(title)
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
+    if not id: id = 'file' + self.utGenRandomId(5)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyFile_object(self, id, title, '', _precondition, contributor)
@@ -245,7 +220,7 @@ def importNyFile(self, param, id, attrs, content, properties, discussion, object
 
 class file_item(NyContentData, NyFSFile):
     """ """
-    meta_type = METATYPE_OBJECT
+    meta_type = config['meta_type']
 
     def __init__(self, id, title, file, precondition):
         """
@@ -308,8 +283,8 @@ class file_item(NyContentData, NyFSFile):
 class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyCheckControl, NyValidation, NyContentType):
     """ """
 
-    meta_type = METATYPE_OBJECT
-    meta_label = LABEL_OBJECT
+    meta_type = config['meta_type']
+    meta_label = config['label']
     icon = 'misc_/NaayaContent/NyFile.gif'
     icon_marked = 'misc_/NaayaContent/NyFile_marked.gif'
 
@@ -646,3 +621,23 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
         return '/'.join(file_path)
 
 InitializeClass(NyFile_extfile)
+
+manage_addNyFile_html = PageTemplateFile('zpt/file_manage_add', globals())
+manage_addNyFile_html.kind = config['meta_type']
+manage_addNyFile_html.action = 'addNyFile'
+config.update({
+    'constructors': (manage_addNyFile_html, addNyFile),
+    'folder_constructors': [
+            # NyFolder.manage_addNyFile_html = manage_addNyFile_html
+            ('manage_addNyFile_html', manage_addNyFile_html),
+            ('file_add_html', file_add_html),
+            ('addNyFile', addNyFile),
+            ('import_file_item', importNyFile),
+        ],
+    'add_method': addNyFile,
+    'validation': issubclass(NyFile_extfile, NyValidation),
+    '_class': NyFile_extfile,
+})
+
+def get_config():
+    return config

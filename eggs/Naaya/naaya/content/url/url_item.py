@@ -44,14 +44,6 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 
 #module constants
-METATYPE_OBJECT = 'Naaya URL'
-LABEL_OBJECT = 'URL'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya URL objects'
-OBJECT_FORMS = ['url_add', 'url_edit', 'url_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyURL_html', 'url_add_html', 'addNyURL', 'importNyURL']
-OBJECT_ADD_FORM = 'url_add_html'
-DESCRIPTION_OBJECT = 'This is Naaya URL type.'
-PREFIX_OBJECT = 'url'
 PROPERTIES_OBJECT = {
     'id':           (0, '', ''),
     'title':        (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -70,49 +62,34 @@ DEFAULT_SCHEMA = {
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
-manage_addNyURL_html = PageTemplateFile('zpt/url_manage_add', globals())
-manage_addNyURL_html.kind = METATYPE_OBJECT
-manage_addNyURL_html.action = 'addNyURL'
-
-def get_config():
-    factory = {
-            'product': 'NaayaContent',
-            'module': 'url_item',
-            'package_path': os.path.abspath(os.path.dirname(__file__)),
-            'meta_type': 'Naaya URL',
-            'label': 'URL',
-            'permission': 'Naaya - Add Naaya URL objects',
-            'forms': ['url_add', 'url_edit', 'url_index'],
-            'constructors': (manage_addNyURL_html, addNyURL),
-            'folder_constructors': [
-                    # NyFolder.manage_addNyURL_html = manage_addNyURL_html
-                    ('manage_addNyURL_html', manage_addNyURL_html),
-                    ('url_add_html', url_add_html),
-                    ('addNyURL', addNyURL),
-                    ('import_url_item', importNyURL),
-                ],
-            'add_form': 'url_add_html',
-            'add_method': addNyURL,
-            'validation': issubclass(NyURL, NyValidation),
-            'description': 'This is Naaya URL type.',
-            'properties': PROPERTIES_OBJECT,
-            'default_schema': DEFAULT_SCHEMA,
-            '_module': sys.modules[__name__],
-            '_class': NyURL,
-            'additional_style': None,
-            'icon': os.path.join(os.path.dirname(__file__), 'www', 'url.gif'),
-            '_misc': {
-                    'NyURL.gif': ImageFile('www/url.gif', globals()),
-                    'NyURL_marked.gif': ImageFile('www/url_marked.gif', globals()),
-                },
-        }
-    return factory
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'url_item',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya URL',
+        'label': 'URL',
+        'permission': 'Naaya - Add Naaya URL objects',
+        'forms': ['url_add', 'url_edit', 'url_index'],
+        'add_form': 'url_add_html',
+        'description': 'This is Naaya URL type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': DEFAULT_SCHEMA,
+        'schema_name': 'NyURL',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'url.gif'),
+        '_misc': {
+                'NyURL.gif': ImageFile('www/url.gif', globals()),
+                'NyURL_marked.gif': ImageFile('www/url_marked.gif', globals()),
+            },
+    }
 
 def url_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
-    form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyURL', 'form_helper': form_helper}, 'url_add')
+    form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
+    return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyURL', 'form_helper': form_helper}, 'url_add')
 
 def _create_NyURL_object(parent, id, contributor):
     i = 0
@@ -141,7 +118,7 @@ def addNyURL(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
+    if not id: id = 'url' + self.utGenRandomId(5)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyURL_object(self, id, contributor)
@@ -228,8 +205,8 @@ class url_item(Implicit, NyContentData):
 class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
     """ """
 
-    meta_type = METATYPE_OBJECT
-    meta_label = LABEL_OBJECT
+    meta_type = config['meta_type']
+    meta_label = config['label']
 
     icon = 'misc_/NaayaContent/NyURL.gif'
     icon_marked = 'misc_/NaayaContent/NyURL_marked.gif'
@@ -389,3 +366,22 @@ class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyCont
 
 InitializeClass(NyURL)
 
+manage_addNyURL_html = PageTemplateFile('zpt/url_manage_add', globals())
+manage_addNyURL_html.kind = config['meta_type']
+manage_addNyURL_html.action = 'addNyURL'
+config.update({
+    'constructors': (manage_addNyURL_html, addNyURL),
+    'folder_constructors': [
+            # NyFolder.manage_addNyURL_html = manage_addNyURL_html
+            ('manage_addNyURL_html', manage_addNyURL_html),
+            ('url_add_html', url_add_html),
+            ('addNyURL', addNyURL),
+            ('import_url_item', importNyURL),
+        ],
+    'add_method': addNyURL,
+    'validation': issubclass(NyURL, NyValidation),
+    '_class': NyURL,
+})
+
+def get_config():
+    return config

@@ -98,7 +98,7 @@ class SchemaTool(Folder):
                 # this content type has not been ported to Schema
                 continue
             schemas[meta_type] = {
-                'id': content_type['module'],
+                'id': content_type['schema_name'],
                 'title':content_type['label'],
                 'defaults': content_type['default_schema'],
             }
@@ -131,7 +131,7 @@ class SchemaTool(Folder):
         """ Get a list of all schemas, indexed my meta_type """
         output = {}
         for content_type in self.getSite().get_pluggable_content().values():
-            name = content_type['module']
+            name = content_type['schema_name']
             meta_type = content_type['meta_type']
             if installed is True:
                 if not self.getSite().is_pluggable_item_installed(meta_type):

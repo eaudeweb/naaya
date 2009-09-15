@@ -55,18 +55,7 @@ try:
 except ImportError:
     txng_converters = 0
 
-# import METATYPE_OBJECT here so file_item can have access to it
-METATYPE_OBJECT = 'Naaya Extended File'
-
-
 #module constants
-LABEL_OBJECT = 'ExFile'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Extended File objects'
-OBJECT_FORMS = ['exfile_add', 'exfile_edit', 'exfile_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyExFile_html', 'exfile_add_html', 'addNyExFile', 'importNyExFile']
-OBJECT_ADD_FORM = 'exfile_add_html'
-DESCRIPTION_OBJECT = 'This is Naaya Extended File type.'
-PREFIX_OBJECT = 'exfile'
 PROPERTIES_OBJECT = {
     'id':               (0, '', ''),
     'title':            (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -85,49 +74,34 @@ DEFAULT_SCHEMA = {
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
-manage_addNyExFile_html = PageTemplateFile('zpt/exfile_manage_add', globals())
-manage_addNyExFile_html.kind = METATYPE_OBJECT
-manage_addNyExFile_html.action = 'addNyExFile'
-
-def get_config():
-    factory = {
-            'product': 'NaayaContent',
-            'module': 'exfile_item',
-            'package_path': os.path.abspath(os.path.dirname(__file__)),
-            'meta_type': 'Naaya Extended File',
-            'label': 'ExFile',
-            'permission': 'Naaya - Add Naaya Extended File objects',
-            'forms': ['exfile_add', 'exfile_edit', 'exfile_index'],
-            'constructors': (manage_addNyExFile_html, addNyExFile),
-            'folder_constructors': [
-                    # NyFolder.manage_addNyExFile_html = manage_addNyExFile_html
-                    ('manage_addNyExFile_html', manage_addNyExFile_html),
-                    ('exfile_add_html', exfile_add_html),
-                    ('addNyExFile', addNyExFile),
-                    ('import_exfile_item', importNyExFile),
-                ],
-            'add_form': 'exfile_add_html',
-            'add_method': addNyExFile,
-            'validation': issubclass(NyExFile_extfile, NyValidation),
-            'description': 'This is Naaya ExFile type.',
-            'properties': PROPERTIES_OBJECT,
-            'default_schema': DEFAULT_SCHEMA,
-            '_module': sys.modules[__name__],
-            '_class': NyExFile_extfile,
-            'additional_style': None,
-            'icon': os.path.join(os.path.dirname(__file__), 'www', 'exfile.gif'),
-            '_misc': {
-                    'NyExFile.gif': ImageFile('www/exfile.gif', globals()),
-                    'NyExFile_marked.gif': ImageFile('www/exfile_marked.gif', globals()),
-                },
-        }
-    return factory
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'exfile_item',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya Extended File',
+        'label': 'ExFile',
+        'permission': 'Naaya - Add Naaya Extended File objects',
+        'forms': ['exfile_add', 'exfile_edit', 'exfile_index'],
+        'add_form': 'exfile_add_html',
+        'description': 'This is Naaya ExFile type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': DEFAULT_SCHEMA,
+        'schema_name': 'NyExFile',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'exfile.gif'),
+        '_misc': {
+                'NyExFile.gif': ImageFile('www/exfile.gif', globals()),
+                'NyExFile_marked.gif': ImageFile('www/exfile_marked.gif', globals()),
+            },
+    }
 
 def exfile_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
-    form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyExFile', 'form_helper': form_helper}, 'exfile_add')
+    form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
+    return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyExFile', 'form_helper': form_helper}, 'exfile_add')
 
 def _create_NyExFile_object(parent, id, contributor):
     i = 0
@@ -164,7 +138,7 @@ def addNyExFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(title)
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
+    if not id: id = 'exfile' + self.utGenRandomId(5)
 
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
@@ -301,7 +275,7 @@ class file_item(NyFSFile, NyFolderishVersioning):
 
 class exfile_item(NyContentData, Folder):
     """ """
-    meta_type = METATYPE_OBJECT
+    meta_type = config['meta_type']
 
     __files = {}
 
@@ -401,8 +375,8 @@ class exfile_item(NyContentData, Folder):
 class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
     """ """
 
-    meta_type = METATYPE_OBJECT
-    meta_label = LABEL_OBJECT
+    meta_type = config['meta_type']
+    meta_label = config['label']
     icon = 'misc_/NaayaContent/NyExFile.gif'
     icon_marked = 'misc_/NaayaContent/NyExFile_marked.gif'
 
@@ -839,3 +813,23 @@ class NyExFile_extfile(exfile_item, NyAttributes, NyItem, NyCheckControl, NyVali
         return '/'.join(file_path)
 
 InitializeClass(NyExFile_extfile)
+
+manage_addNyExFile_html = PageTemplateFile('zpt/exfile_manage_add', globals())
+manage_addNyExFile_html.kind = config['meta_type']
+manage_addNyExFile_html.action = 'addNyExFile'
+config.update({
+    'constructors': (manage_addNyExFile_html, addNyExFile),
+    'folder_constructors': [
+            # NyFolder.manage_addNyExFile_html = manage_addNyExFile_html
+            ('manage_addNyExFile_html', manage_addNyExFile_html),
+            ('exfile_add_html', exfile_add_html),
+            ('addNyExFile', addNyExFile),
+            ('import_exfile_item', importNyExFile),
+        ],
+    'add_method': addNyExFile,
+    'validation': issubclass(NyExFile_extfile, NyValidation),
+    '_class': NyExFile_extfile,
+})
+
+def get_config():
+    return config

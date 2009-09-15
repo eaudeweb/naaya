@@ -55,14 +55,6 @@ from converters.MediaConverter import \
 from parsers import DEFAULT_PARSER as SubtitleParser
 
 #module constants
-METATYPE_OBJECT = 'Naaya Media File'
-LABEL_OBJECT = 'Media File'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Media File objects'
-OBJECT_FORMS = ['mediafile_add', 'mediafile_edit', 'mediafile_index', 'mediafile_subtitle']
-OBJECT_CONSTRUCTORS = ['manage_addNyMediaFile_html', 'mediafile_add_html', 'addNyMediaFile', 'importNyMediaFile']
-OBJECT_ADD_FORM = 'mediafile_add_html'
-DESCRIPTION_OBJECT = 'This is Naaya Media File type.'
-PREFIX_OBJECT = 'media'
 PROPERTIES_OBJECT = {
     'id':           (0, '', ''),
     'title':        (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -93,49 +85,34 @@ else:
 
 FLV_HEADERS = ["application/x-flash-video", "video/x-flv"]
 
-manage_addNyMediaFile_html = PageTemplateFile('zpt/mediafile_manage_add', globals())
-manage_addNyMediaFile_html.kind = METATYPE_OBJECT
-manage_addNyMediaFile_html.action = 'addNyMediaFile'
-
-def get_config():
-    factory = {
-            'product': 'NaayaContent',
-            'module': 'mediafile_item',
-            'package_path': os.path.abspath(os.path.dirname(__file__)),
-            'meta_type': 'Naaya Media File',
-            'label': 'Media File',
-            'permission': 'Naaya - Add Naaya Media File objects',
-            'forms': ['mediafile_add', 'mediafile_edit', 'mediafile_index'],
-            'constructors': (manage_addNyMediaFile_html, addNyMediaFile),
-            'folder_constructors': [
-                    # NyFolder.manage_addNyMediaFile_html = manage_addNyMediaFile_html
-                    ('manage_addNyMediaFile_html', manage_addNyMediaFile_html),
-                    ('mediafile_add_html', mediafile_add_html),
-                    ('addNyMediaFile', addNyMediaFile),
-                    ('import_mediafile_item', importNyMediaFile),
-                ],
-            'add_form': 'mediafile_add_html',
-            'add_method': addNyMediaFile,
-            'validation': issubclass(NyMediaFile_extfile, NyValidation),
-            'description': 'This is Naaya MediaFile type.',
-            'properties': PROPERTIES_OBJECT,
-            'default_schema': DEFAULT_SCHEMA,
-            '_module': sys.modules[__name__],
-            '_class': NyMediaFile_extfile,
-            'additional_style': None,
-            'icon': os.path.join(os.path.dirname(__file__), 'www', 'mediafile.gif'),
-            '_misc': {
-                    'NyMediaFile.gif': ImageFile('www/mediafile.gif', globals()),
-                    'NyMediaFile_marked.gif': ImageFile('www/mediafile_marked.gif', globals()),
-                },
-        }
-    return factory
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'mediafile_item',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya Media File',
+        'label': 'Media File',
+        'permission': 'Naaya - Add Naaya Media File objects',
+        'forms': ['mediafile_add', 'mediafile_edit', 'mediafile_index'],
+        'add_form': 'mediafile_add_html',
+        'description': 'This is Naaya MediaFile type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': DEFAULT_SCHEMA,
+        'schema_name': 'NyMediaFile',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'mediafile.gif'),
+        '_misc': {
+                'NyMediaFile.gif': ImageFile('www/mediafile.gif', globals()),
+                'NyMediaFile_marked.gif': ImageFile('www/mediafile_marked.gif', globals()),
+            },
+    }
 
 def mediafile_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
-    form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyMediaFile', 'form_helper': form_helper}, 'mediafile_add')
+    form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
+    return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyMediaFile', 'form_helper': form_helper}, 'mediafile_add')
 
 def _create_NyMediaFile_object(parent, id, contributor):
     i = 0
@@ -179,7 +156,7 @@ def addNyMediaFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
+    if not id: id = 'media' + self.utGenRandomId(5)
 
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
@@ -278,8 +255,8 @@ class mediafile_item(Implicit, NyContentData):
 class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckControl, NyValidation, NyContentType):
     """ """
 
-    meta_type = METATYPE_OBJECT
-    meta_label = LABEL_OBJECT
+    meta_type = config['meta_type']
+    meta_label = config['label']
     icon = 'misc_/NaayaContent/NyMediaFile.gif'
     icon_marked = 'misc_/NaayaContent/NyMediaFile_marked.gif'
     player = 'misc_/NaayaContent/EdWideoPlayer.swf'
@@ -635,3 +612,22 @@ class NyMediaFile_extfile(mediafile_item, NyAttributes, NyFSContainer, NyCheckCo
 
 InitializeClass(NyMediaFile_extfile)
 
+manage_addNyMediaFile_html = PageTemplateFile('zpt/mediafile_manage_add', globals())
+manage_addNyMediaFile_html.kind = config['meta_type']
+manage_addNyMediaFile_html.action = 'addNyMediaFile'
+config.update({
+    'constructors': (manage_addNyMediaFile_html, addNyMediaFile),
+    'folder_constructors': [
+            # NyFolder.manage_addNyMediaFile_html = manage_addNyMediaFile_html
+            ('manage_addNyMediaFile_html', manage_addNyMediaFile_html),
+            ('mediafile_add_html', mediafile_add_html),
+            ('addNyMediaFile', addNyMediaFile),
+            ('import_mediafile_item', importNyMediaFile),
+        ],
+    'add_method': addNyMediaFile,
+    'validation': issubclass(NyMediaFile_extfile, NyValidation),
+    '_class': NyMediaFile_extfile,
+})
+
+def get_config():
+    return config

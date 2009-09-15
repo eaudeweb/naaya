@@ -46,14 +46,6 @@ from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.NaayaBase.NyContentType import NyContentData
 
 #module constants
-METATYPE_OBJECT = 'Naaya Document'
-LABEL_OBJECT = 'HTML Document'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Document objects'
-OBJECT_FORMS = ['document_add', 'document_edit', 'document_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyDocument_html', 'document_add', 'addNyDocument', 'importNyDocument']
-OBJECT_ADD_FORM = 'document_add'
-DESCRIPTION_OBJECT = 'This is Naaya Document type.'
-PREFIX_OBJECT = 'doc'
 PROPERTIES_OBJECT = {
     'id':           (0, '', ''),
     'title':        (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -71,47 +63,32 @@ DEFAULT_SCHEMA = {
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
-manage_addNyDocument_html = PageTemplateFile('zpt/document_manage_add', globals())
-manage_addNyDocument_html.kind = METATYPE_OBJECT
-manage_addNyDocument_html.action = 'addNyDocument'
-
-def get_config():
-    factory = {
-            'product': 'NaayaContent',
-            'module': 'document_item',
-            'package_path': os.path.abspath(os.path.dirname(__file__)),
-            'meta_type': 'Naaya Document',
-            'label': 'HTML Document',
-            'permission': 'Naaya - Add Naaya Document objects',
-            'forms': ['document_add', 'document_edit', 'document_index'],
-            'constructors': (manage_addNyDocument_html, addNyDocument),
-            'folder_constructors': [
-                    # NyFolder.manage_addNyDocument_html = manage_addNyDocument_html
-                    ('manage_addNyDocument_html', manage_addNyDocument_html),
-                    ('document_add', document_add),
-                    ('addNyDocument', addNyDocument),
-                    ('import_document_item', importNyDocument),
-                ],
-            'add_form': 'document_add',
-            'add_method': addNyDocument,
-            'validation': issubclass(NyDocument, NyValidation),
-            'description': 'This is Naaya Document type.',
-            'properties': PROPERTIES_OBJECT,
-            'default_schema': DEFAULT_SCHEMA,
-            '_module': sys.modules[__name__],
-            '_class': NyDocument,
-            'additional_style': None,
-            'icon': os.path.join(os.path.dirname(__file__), 'www', 'document.gif'),
-            '_misc': {
-                    'NyDocument.gif': ImageFile('www/document.gif', globals()),
-                    'NyDocument_marked.gif': ImageFile('www/document_marked.gif', globals()),
-                },
-        }
-    return factory
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'document_item',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya Document',
+        'label': 'HTML Document',
+        'permission': 'Naaya - Add Naaya Document objects',
+        'forms': ['document_add', 'document_edit', 'document_index'],
+        'add_form': 'document_add',
+        'description': 'This is Naaya Document type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': DEFAULT_SCHEMA,
+        'schema_name': 'NyDocument',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'document.gif'),
+        '_misc': {
+                'NyDocument.gif': ImageFile('www/document.gif', globals()),
+                'NyDocument_marked.gif': ImageFile('www/document_marked.gif', globals()),
+            },
+    }
 
 def document_add(self, REQUEST=None, RESPONSE=None):
     """ """
-    id = PREFIX_OBJECT + self.utGenRandomId(6)
+    id = 'doc' + self.utGenRandomId(6)
     self.addNyDocument(id)
     if REQUEST: REQUEST.RESPONSE.redirect('%s/add_html' % self._getOb(id).absolute_url())
     else: return id
@@ -142,7 +119,7 @@ def addNyDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
+    if not id: id = 'doc' + self.utGenRandomId(5)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyDocument_object(self, id, contributor)
@@ -211,8 +188,8 @@ class document_item(Implicit, NyContentData):
 class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyValidation, NyContentType):
     """ """
 
-    meta_type = METATYPE_OBJECT
-    meta_label = LABEL_OBJECT
+    meta_type = config['meta_type']
+    meta_label = config['label']
     icon = 'misc_/NaayaContent/NyDocument.gif'
     icon_marked = 'misc_/NaayaContent/NyDocument_marked.gif'
 
@@ -305,7 +282,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #site actions
-    security.declareProtected(PERMISSION_ADD_OBJECT, 'process_add')
+    security.declareProtected(config['permission'], 'process_add')
     def process_add(self, REQUEST, **kwargs):
         """ """
         schema_raw_data = dict(REQUEST.form)
@@ -434,7 +411,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
     manage_edit_html = PageTemplateFile('zpt/document_manage_edit', globals())
 
     #site pages
-    security.declareProtected(PERMISSION_ADD_OBJECT, 'add_html')
+    security.declareProtected(config['permission'], 'add_html')
     def add_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'document_add')
@@ -451,3 +428,22 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
 
 InitializeClass(NyDocument)
 
+manage_addNyDocument_html = PageTemplateFile('zpt/document_manage_add', globals())
+manage_addNyDocument_html.kind = config['meta_type']
+manage_addNyDocument_html.action = 'addNyDocument'
+config.update({
+    'constructors': (manage_addNyDocument_html, addNyDocument),
+    'folder_constructors': [
+            # NyFolder.manage_addNyDocument_html = manage_addNyDocument_html
+            ('manage_addNyDocument_html', manage_addNyDocument_html),
+            ('document_add', document_add),
+            ('addNyDocument', addNyDocument),
+            ('import_document_item', importNyDocument),
+        ],
+    'add_method': addNyDocument,
+    'validation': issubclass(NyDocument, NyValidation),
+    '_class': NyDocument,
+})
+
+def get_config():
+    return config

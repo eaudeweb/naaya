@@ -118,7 +118,7 @@ class GeopointImportTest(NaayaTestCase):
     def afterSetUp(self):
         from Products.Naaya.NyFolder import addNyFolder
         addNyFolder(self.portal, 'imported', contributor='contributor', submitted=1)
-        schema = self.portal.portal_schemas.document_item
+        schema = self.portal.portal_schemas.NyDocument
         schema.addWidget('test_geo_loc', label="Geo Loc", widget_type='Geo', data_type='geo')
         schema.addWidget('test_geo_type', label="Geo Type", widget_type='GeoType', data_type='str')
         self.portal.portal_map.addSymbol('sym1', 'Test symbol one', '', '', '', '')
@@ -126,8 +126,8 @@ class GeopointImportTest(NaayaTestCase):
 
     def beforeTearDown(self):
         self.portal.portal_map.deleteSymbol(['sym1', 'sym2'])
-        self.portal.portal_schemas.document_item.manage_delObjects('test_geo_loc-property')
-        self.portal.portal_schemas.document_item.manage_delObjects('test_geo_type-property')
+        self.portal.portal_schemas.NyDocument.manage_delObjects('test_geo_loc-property')
+        self.portal.portal_schemas.NyDocument.manage_delObjects('test_geo_type-property')
         self.portal.manage_delObjects(['imported'])
 
     def test_template(self):
