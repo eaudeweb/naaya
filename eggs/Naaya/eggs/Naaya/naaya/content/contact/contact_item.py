@@ -45,14 +45,6 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyValidation import NyValidation
 
 #module constants
-METATYPE_OBJECT = 'Naaya Contact'
-LABEL_OBJECT = 'Contact'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Contact objects'
-OBJECT_FORMS = ['contact_add', 'contact_edit', 'contact_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyContact_html', 'contact_add_html', 'addNyContact', 'importNyContact']
-OBJECT_ADD_FORM = 'contact_add_html'
-DESCRIPTION_OBJECT = 'This is Naaya Contact type.'
-PREFIX_OBJECT = 'contact'
 PROPERTIES_OBJECT = {
     'id':           (0, '', ''),
     'title':        (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -92,51 +84,34 @@ DEFAULT_SCHEMA = {
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
-manage_addNyContact_html = PageTemplateFile('zpt/contact_manage_add', globals())
-manage_addNyContact_html.kind = METATYPE_OBJECT
-manage_addNyContact_html.action = 'addNyContact'
-
-
-def get_config():
-    factory = {
-            'product': 'NaayaContent',
-            'module': 'contact_item',
-            'package_path': os.path.abspath(os.path.dirname(__file__)),
-            'meta_type': 'Naaya Contact',
-            'label': 'Contact',
-            'permission': 'Naaya - Add Naaya Contact objects',
-            'forms': ['contact_add', 'contact_edit', 'contact_index'],
-            'constructors': (manage_addNyContact_html, addNyContact),
-            'folder_constructors': [
-                    # NyFolder.manage_addNyContact_html = manage_addNyContact_html
-                    ('manage_addNyContact_html', manage_addNyContact_html),
-                    ('contact_add_html', contact_add_html),
-                    ('addNyContact', addNyContact),
-                    ('import_contact_item', importNyContact),
-                ],
-            'add_form': 'contact_add_html',
-            'add_method': addNyContact,
-            'validation': issubclass(NyContact, NyValidation),
-            'description': 'This is Naaya Contact type.',
-            'properties': PROPERTIES_OBJECT,
-            'default_schema': DEFAULT_SCHEMA,
-            '_module': sys.modules[__name__],
-            '_class': NyContact,
-            'additional_style': None,
-            'icon': os.path.join(os.path.dirname(__file__), 'www', 'contact.gif'),
-            '_misc': {
-                    'NyContact.gif': ImageFile('www/contact.gif', globals()),
-                    'NyContact_marked.gif': ImageFile('www/contact_marked.gif', globals()),
-                },
-        }
-    return factory
-
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'contact_item',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya Contact',
+        'label': 'Contact',
+        'permission': 'Naaya - Add Naaya Contact objects',
+        'forms': ['contact_add', 'contact_edit', 'contact_index'],
+        'add_form': 'contact_add_html',
+        'description': 'This is Naaya Contact type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': DEFAULT_SCHEMA,
+        'schema_name': 'NyContact',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'contact.gif'),
+        '_misc': {
+                'NyContact.gif': ImageFile('www/contact.gif', globals()),
+                'NyContact_marked.gif': ImageFile('www/contact_marked.gif', globals()),
+            },
+    }
 
 def contact_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
-    form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyContact', 'form_helper': form_helper}, 'contact_add')
+    form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
+    return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyContact', 'form_helper': form_helper}, 'contact_add')
 
 def _create_NyContact_object(parent, id, contributor):
     i = 0
@@ -169,7 +144,7 @@ def addNyContact(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
+    if not id: id = 'contact' + self.utGenRandomId(5)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyContact_object(self, id, contributor)
@@ -260,8 +235,8 @@ class contact_item(Implicit, NyContentData):
 class NyContact(contact_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     """ """
 
-    meta_type = METATYPE_OBJECT
-    meta_label = LABEL_OBJECT
+    meta_type = config['meta_type']
+    meta_label = config['label']
 
     icon = 'misc_/NaayaContent/NyContact.gif'
     icon_marked = 'misc_/NaayaContent/NyContact_marked.gif'
@@ -519,3 +494,23 @@ def squash_list(data):
         return ' '.join(data)
     else:
         return data
+
+manage_addNyContact_html = PageTemplateFile('zpt/contact_manage_add', globals())
+manage_addNyContact_html.kind = config['meta_type']
+manage_addNyContact_html.action = 'addNyContact'
+config.update({
+    'constructors': (manage_addNyContact_html, addNyContact),
+    'folder_constructors': [
+            # NyFolder.manage_addNyContact_html = manage_addNyContact_html
+            ('manage_addNyContact_html', manage_addNyContact_html),
+            ('contact_add_html', contact_add_html),
+            ('addNyContact', addNyContact),
+            ('import_contact_item', importNyContact),
+        ],
+    'add_method': addNyContact,
+    'validation': issubclass(NyContact, NyValidation),
+    '_class': NyContact,
+})
+
+def get_config():
+    return config

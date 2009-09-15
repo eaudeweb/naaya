@@ -84,7 +84,7 @@ class GeoWidgetTestCase(NaayaTestCase.NaayaTestCase):
 
     def afterSetUp(self):
         widget = GeoWidget('geo-property', title='Geo Location', lang='en')
-        self.widget = widget.__of__(self.portal.portal_schemas.document_item)
+        self.widget = widget.__of__(self.portal.portal_schemas.NyDocument)
 
     def test_edit_form(self):
         html = self.widget.render_html(Geo(3, 5, 'here!'))

@@ -43,14 +43,6 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 
 #module constants
-METATYPE_OBJECT = 'Naaya GeoPoint'
-LABEL_OBJECT = 'GeoPoint'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya GeoPoint objects'
-OBJECT_FORMS = ['geopoint_add', 'geopoint_edit', 'geopoint_index', 'marker_popup']
-OBJECT_CONSTRUCTORS = ['manage_addNyGeoPoint_html', 'geopoint_add_html', 'addNyGeoPoint', 'importNyGeoPoint']
-OBJECT_ADD_FORM = 'geopoint_add_html'
-DESCRIPTION_OBJECT = 'This is Naaya GeoPoint type.'
-PREFIX_OBJECT = 'geo'
 PROPERTIES_OBJECT = {
     'id':           (0, '', ''),
     'title':        (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -76,49 +68,34 @@ DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
 DEFAULT_SCHEMA['geo_location'].update(visible=True, required=True)
 DEFAULT_SCHEMA['geo_type'].update(visible=True)
 
-manage_addNyGeoPoint_html = PageTemplateFile('zpt/geopoint_manage_add', globals())
-manage_addNyGeoPoint_html.kind = METATYPE_OBJECT
-manage_addNyGeoPoint_html.action = 'addNyGeoPoint'
-
-def get_config():
-    factory = {
-            'product': 'NaayaContent',
-            'module': 'geopoint_item',
-            'package_path': os.path.abspath(os.path.dirname(__file__)),
-            'meta_type': 'Naaya GeoPoint',
-            'label': 'GeoPoint',
-            'permission': 'Naaya - Add Naaya GeoPoint objects',
-            'forms': ['geopoint_add', 'geopoint_edit', 'geopoint_index'],
-            'constructors': (manage_addNyGeoPoint_html, addNyGeoPoint),
-            'folder_constructors': [
-                    # NyFolder.manage_addNyGeoPoint_html = manage_addNyGeoPoint_html
-                    ('manage_addNyGeoPoint_html', manage_addNyGeoPoint_html),
-                    ('geopoint_add_html', geopoint_add_html),
-                    ('addNyGeoPoint', addNyGeoPoint),
-                    ('import_geopoint_item', importNyGeoPoint),
-                ],
-            'add_form': 'geopoint_add_html',
-            'add_method': addNyGeoPoint,
-            'validation': issubclass(NyGeoPoint, NyValidation),
-            'description': 'This is Naaya GeoPoint type.',
-            'properties': PROPERTIES_OBJECT,
-            'default_schema': DEFAULT_SCHEMA,
-            '_module': sys.modules[__name__],
-            '_class': NyGeoPoint,
-            'additional_style': None,
-            'icon': os.path.join(os.path.dirname(__file__), 'www', 'geopoint.gif'),
-            '_misc': {
-                    'NyGeoPoint.gif': ImageFile('www/geopoint.gif', globals()),
-                    'NyGeoPoint_marked.gif': ImageFile('www/geopoint_marked.gif', globals()),
-                },
-        }
-    return factory
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'geopoint_item',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya GeoPoint',
+        'label': 'GeoPoint',
+        'permission': 'Naaya - Add Naaya GeoPoint objects',
+        'forms': ['geopoint_add', 'geopoint_edit', 'geopoint_index'],
+        'add_form': 'geopoint_add_html',
+        'description': 'This is Naaya GeoPoint type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': DEFAULT_SCHEMA,
+        'schema_name': 'NyGeoPoint',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'geopoint.gif'),
+        '_misc': {
+                'NyGeoPoint.gif': ImageFile('www/geopoint.gif', globals()),
+                'NyGeoPoint_marked.gif': ImageFile('www/geopoint_marked.gif', globals()),
+            },
+    }
 
 def geopoint_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
-    form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyGeoPoint', 'form_helper': form_helper}, 'geopoint_add')
+    form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
+    return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyGeoPoint', 'form_helper': form_helper}, 'geopoint_add')
 
 def _create_NyGeoPoint_object(parent, id, contributor):
     i = 0
@@ -148,7 +125,7 @@ def addNyGeoPoint(self, id='', REQUEST=None, contributor=None, **kwargs):
     #process parameters
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(title)
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
+    if not id: id = 'geo' + self.utGenRandomId(5)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyGeoPoint_object(self, id, contributor)
@@ -239,8 +216,8 @@ class geopoint_item(Implicit, NyContentData):
 class NyGeoPoint(geopoint_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     """ """
 
-    meta_type = METATYPE_OBJECT
-    meta_label = LABEL_OBJECT
+    meta_type = config['meta_type']
+    meta_label = config['label']
 
     icon = 'misc_/NaayaContent/NyGeoPoint.gif'
     icon_marked = 'misc_/NaayaContent/NyGeoPoint_marked.gif'
@@ -404,3 +381,23 @@ class NyGeoPoint(geopoint_item, NyAttributes, NyItem, NyCheckControl, NyContentT
         return self.getFormsTool().getContent({'here': self}, 'geopoint_edit')
 
 InitializeClass(NyGeoPoint)
+
+manage_addNyGeoPoint_html = PageTemplateFile('zpt/geopoint_manage_add', globals())
+manage_addNyGeoPoint_html.kind = config['meta_type']
+manage_addNyGeoPoint_html.action = 'addNyGeoPoint'
+config.update({
+    'constructors': (manage_addNyGeoPoint_html, addNyGeoPoint),
+    'folder_constructors': [
+            # NyFolder.manage_addNyGeoPoint_html = manage_addNyGeoPoint_html
+            ('manage_addNyGeoPoint_html', manage_addNyGeoPoint_html),
+            ('geopoint_add_html', geopoint_add_html),
+            ('addNyGeoPoint', addNyGeoPoint),
+            ('import_geopoint_item', importNyGeoPoint),
+        ],
+    'add_method': addNyGeoPoint,
+    'validation': issubclass(NyGeoPoint, NyValidation),
+    '_class': NyGeoPoint,
+})
+
+def get_config():
+    return config

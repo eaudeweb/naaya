@@ -44,14 +44,6 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 
 #module constants
-METATYPE_OBJECT = 'Naaya Event'
-LABEL_OBJECT = 'Event'
-PERMISSION_ADD_OBJECT = 'Naaya - Add Naaya Event objects'
-OBJECT_FORMS = ['event_add', 'event_edit', 'event_index']
-OBJECT_CONSTRUCTORS = ['manage_addNyEvent_html', 'event_add_html', 'addNyEvent', 'importNyEvent']
-OBJECT_ADD_FORM = 'event_add_html'
-DESCRIPTION_OBJECT = 'This is Naaya Event type.'
-PREFIX_OBJECT = 'ev'
 PROPERTIES_OBJECT = {
     'id':               (0, '', ''),
     'title':            (1, MUST_BE_NONEMPTY, 'The Title field must have a value.'),
@@ -97,49 +89,34 @@ DEFAULT_SCHEMA = {
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
-manage_addNyEvent_html = PageTemplateFile('zpt/event_manage_add', globals())
-manage_addNyEvent_html.kind = METATYPE_OBJECT
-manage_addNyEvent_html.action = 'addNyEvent'
-
-def get_config():
-    factory = {
-            'product': 'NaayaContent',
-            'module': 'event_item',
-            'package_path': os.path.abspath(os.path.dirname(__file__)),
-            'meta_type': 'Naaya Event',
-            'label': 'Event',
-            'permission': 'Naaya - Add Naaya Event objects',
-            'forms': ['event_add', 'event_edit', 'event_index'],
-            'constructors': (manage_addNyEvent_html, addNyEvent),
-            'folder_constructors': [
-                    # NyFolder.manage_addNyEvent_html = manage_addNyEvent_html
-                    ('manage_addNyEvent_html', manage_addNyEvent_html),
-                    ('event_add_html', event_add_html),
-                    ('addNyEvent', addNyEvent),
-                    ('import_event_item', importNyEvent),
-                ],
-            'add_form': 'event_add_html',
-            'add_method': addNyEvent,
-            'validation': issubclass(NyEvent, NyValidation),
-            'description': 'This is Naaya Event type.',
-            'properties': PROPERTIES_OBJECT,
-            'default_schema': DEFAULT_SCHEMA,
-            '_module': sys.modules[__name__],
-            '_class': NyEvent,
-            'additional_style': None,
-            'icon': os.path.join(os.path.dirname(__file__), 'www', 'event.gif'),
-            '_misc': {
-                    'NyEvent.gif': ImageFile('www/event.gif', globals()),
-                    'NyEvent_marked.gif': ImageFile('www/event_marked.gif', globals()),
-                },
-        }
-    return factory
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'event_item',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya Event',
+        'label': 'Event',
+        'permission': 'Naaya - Add Naaya Event objects',
+        'forms': ['event_add', 'event_edit', 'event_index'],
+        'add_form': 'event_add_html',
+        'description': 'This is Naaya Event type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': DEFAULT_SCHEMA,
+        'schema_name': 'NyEvent',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'event.gif'),
+        '_misc': {
+                'NyEvent.gif': ImageFile('www/event.gif', globals()),
+                'NyEvent_marked.gif': ImageFile('www/event_marked.gif', globals()),
+            },
+    }
 
 def event_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
     from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
-    form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyEvent', 'form_helper': form_helper}, 'event_add')
+    form_helper = get_schema_helper_for_metatype(self, config['meta_type'])
+    return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyEvent', 'form_helper': form_helper}, 'event_add')
 
 def _create_NyEvent_object(parent, id, contributor):
     i = 0
@@ -171,7 +148,7 @@ def addNyEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
+    if not id: id = 'ev' + self.utGenRandomId(5)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyEvent_object(self, id, contributor)
@@ -263,8 +240,8 @@ class event_item(Implicit, NyContentData):
 class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     """ """
 
-    meta_type = METATYPE_OBJECT
-    meta_label = LABEL_OBJECT
+    meta_type = config['meta_type']
+    meta_label = config['label']
     icon = 'misc_/NaayaContent/NyEvent.gif'
     icon_marked = 'misc_/NaayaContent/NyEvent_marked.gif'
 
@@ -457,3 +434,22 @@ class NyEvent(event_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
 
 InitializeClass(NyEvent)
 
+manage_addNyEvent_html = PageTemplateFile('zpt/event_manage_add', globals())
+manage_addNyEvent_html.kind = config['meta_type']
+manage_addNyEvent_html.action = 'addNyEvent'
+config.update({
+    'constructors': (manage_addNyEvent_html, addNyEvent),
+    'folder_constructors': [
+            # NyFolder.manage_addNyEvent_html = manage_addNyEvent_html
+            ('manage_addNyEvent_html', manage_addNyEvent_html),
+            ('event_add_html', event_add_html),
+            ('addNyEvent', addNyEvent),
+            ('import_event_item', importNyEvent),
+        ],
+    'add_method': addNyEvent,
+    'validation': issubclass(NyEvent, NyValidation),
+    '_class': NyEvent,
+})
+
+def get_config():
+    return config

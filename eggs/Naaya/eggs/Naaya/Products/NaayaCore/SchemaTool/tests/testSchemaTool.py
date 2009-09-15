@@ -30,20 +30,20 @@ class NaayaSchemaToolTestCase(NaayaTestCase.NaayaTestCase):
         self.failUnlessEqual(self.portal.portal_schemas.title, 'Portal schemas')
 
         initial_schemas = set(self.portal.portal_schemas.objectIds())
-        expected_schemas = set(['document_item', 'event_item', 'exfile_item', 'file_item',
-                'geopoint_item', 'mediafile_item', 'news_item', 'pointer_item', 'story_item', 'url_item'])
+        expected_schemas = set(['NyDocument', 'NyEvent', 'NyExFile', 'NyFile',
+                'NyGeoPoint', 'NyMediaFile', 'NyNews', 'NyPointer', 'NyStory', 'NyURL'])
         self.failUnless(expected_schemas.issubset(initial_schemas))
 
     def test_getSchemaForMetatype(self):
         tool = self.portal.portal_schemas
-        self.failUnlessEqual(tool.document_item, tool.getSchemaForMetatype('Naaya Document'))
+        self.failUnlessEqual(tool.NyDocument, tool.getSchemaForMetatype('Naaya Document'))
         self.failUnlessEqual(tool.getSchemaForMetatype('No Such Type'), None)
 
     def test_listSchemas(self):
         schemas = self.portal.portal_schemas.listSchemas()
         self.failUnless('Naaya Document' in schemas.keys())
         self.failUnless(schemas['Naaya Document'].absolute_url()
-            == self.portal.portal_schemas.document_item.absolute_url())
+            == self.portal.portal_schemas.NyDocument.absolute_url())
 
 
 def test_suite():
