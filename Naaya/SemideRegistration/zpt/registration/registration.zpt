@@ -4,8 +4,10 @@
 <script type="text/javascript" src="/misc_/SemideRegistration/calendar.js"></script>
 <script type="text/javascript" src="/misc_/SemideRegistration/datetime.js"></script>
 
-<tal:block define="global registration_opened here/registrationOpened" />
-<tal:block define="global registration_not_closed here/registrationNotClosed" />
+<tal:block define="global registration_opened here/registrationOpened;
+					global registration_not_closed here/registrationNotClosed;
+					global curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
+					global curr_lang_label python:here.get_language_name(curr_lang);"/>
 
 <h1 tal:content="here/getRegistrationTitle" />
 <h2 tal:content="here/getConferenceDetails" />
@@ -45,9 +47,10 @@
 			<select name="country">
 				<option value=""></option>
 				<tal:block repeat="country here/getCountryList">
-					<option tal:define="country_name python:country[1];"
-							tal:attributes="value country_name; 
-											selected python:country_name == request.get('country')" 
+					<option tal:define="country_id country/id;
+										country_name python:country.get_translation_by_language(curr_lang_label);"
+							tal:attributes="value country_id; 
+											selected python:country_id == request.get('country')" 
 							tal:content="country_name" />
 				</tal:block>
 			</select>
