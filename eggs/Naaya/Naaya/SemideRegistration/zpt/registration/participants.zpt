@@ -3,7 +3,7 @@
 <h1 tal:content="here/getRegistrationTitle" />
 <h2 tal:content="here/getConferenceDetails" />
 <strong>
-	<span i18m:translate="">Registration opened for the period: </span>
+	<span i18n:translate="">Registration opened for the period: </span>
 	<span tal:replace="python:here.formatDate(here.start_date, '%d %b %Y')" /> - 
 	<span tal:replace="python:here.formatDate(here.end_date, '%d %b %Y')" />
 </strong>
