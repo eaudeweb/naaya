@@ -4,7 +4,9 @@
 <h1 tal:content="here/getRegistrationTitle" />
 <h2 tal:content="here/getConferenceDetails" />
 
-<tal:block define="global entitled python:here.isEntitled(request);" />
+<tal:block define="global entitled python:here.isEntitled(request);
+					global curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
+					global curr_lang_label python:here.get_language_name(curr_lang);" />
 
 <tal:block condition="not:entitled">
 	<tal:block condition="python:request.form.has_key('authenticate')">
@@ -74,7 +76,7 @@
 	</tr>
 	<tr>
 		<th i18n:translate="">Country</th>
-		<td tal:content="here/country" />
+		<td tal:content="python:here.getCountry(curr_lang_label)" />
 	</tr>
 	<tr tal:condition="not:here/is_journalist">
 		<th i18n:translate="">Organisation</th>

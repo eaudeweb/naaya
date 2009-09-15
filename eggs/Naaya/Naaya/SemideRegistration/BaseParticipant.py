@@ -88,6 +88,13 @@ class BaseParticipant(SimpleItem):
         self.departure_flight = departure_flight
         self.departure_time = departure_time
 
+    def getCountry(self, lang):
+        """ get country name """
+        language, query, results = self.glossary_coverage.searchGlossary(query=self.country, size=1)
+        if results:
+            return results[0].get_translation_by_language(lang)
+        return ''
+
     security.declareProtected(constants.VIEW_PERMISSION, 'isEntitled')
     def isEntitled(self, REQUEST):
         """ check if current user has the right to modify this object """

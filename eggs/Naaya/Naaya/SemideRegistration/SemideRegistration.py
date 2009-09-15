@@ -34,7 +34,6 @@ from SemidePress import SemidePress
 from utilities.Slugify import slugify
 from utilities.SendMail import send_mail
 from utilities.validators import form_validation, registration_validation, str2date
-from utilities.countries import countries
 from utilities import tmpfile, checkPermission
 import constants
 
@@ -382,7 +381,17 @@ class SemideRegistration(LocalPropertyManager, Folder):
 
     security.declareProtected(constants.VIEW_PERMISSION, 'getCountryList')
     def getCountryList(self):
-        return countries
+        """ """
+        catalog = self.glossary_coverage.getGlossaryCatalog()
+        brains = catalog(meta_type='Naaya Glossary Element', sort_on='id', sort_order='ascending')
+        return self.__getObjects(catalog, brains)
+
+    def __getObjects(self, catalog, p_brains):
+        """ """
+        try:
+            return map(catalog.getobject, map(getattr, p_brains, ('data_record_id_',)*len(p_brains)))
+        except:
+            return []
 
     def hasVersion(self):
         """ """

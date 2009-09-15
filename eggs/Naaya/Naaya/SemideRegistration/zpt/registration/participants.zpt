@@ -16,7 +16,9 @@
 
 <tal:block define="skey python:request.get('skey', 'registration_date');
 					rkey python:request.get('rkey', '');
-					participants python:here.getParticipants(skey, rkey, False)">
+					participants python:here.getParticipants(skey, rkey, False);
+					curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
+					curr_lang_label python:here.get_language_name(curr_lang);">
 
 <p/><p tal:condition="not:participants" i18n:translate="">No participants have registered yet</p>
 
@@ -205,7 +207,7 @@
 			<input type="checkbox" name="ids" tal:attributes="value participant/id"/>
 		</td>
 		<td tal:content="python:here.formatDate(participant.registration_date, '%d %b %Y')" />
-		<td tal:content="participant/country" />
+		<td tal:content="python:participant.getCountry(curr_lang_label)" />
 		<td tal:content="participant/first_name" />
 		<td>
 			<a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/last_name" />
