@@ -130,6 +130,7 @@ class BaseParticipant(SimpleItem):
         """ edit base participant properties """
         session = REQUEST.SESSION
         submit =  REQUEST.form.get('submit', '')
+        lang = self.gl_get_selected_language()
         if REQUEST.form.has_key('authenticate'):
             #The registration number and last name are saved on the session as submitted by the user
             if form_validation(mandatory_fields=constants.AUTH_MANDATORY_FIELDS, 
@@ -143,8 +144,8 @@ class BaseParticipant(SimpleItem):
             if self.email == REQUEST.form.get('email', ''):
                 self.send_registration_notification(self.email,
                     'Event registration',
-                    constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
-                    constants.REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
+                    self.getEmailTemplate('user_registration_html', lang) % values,
+                    self.getEmailTemplate('user_registration_text', lang) % values)
                 REQUEST.set('email_sent', True)
             else:
                 REQUEST.set('wrong_email', True)
@@ -164,8 +165,8 @@ class BaseParticipant(SimpleItem):
                             'registration_number': self.id}
                 self.send_registration_notification(self.administrative_email,
                     'Event registration',
-                    constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE % values,
-                    constants.NEW_REGISTRATION_ADD_EDIT_TEMPLATE_TEXT % values)
+                    self.getEmailTemplate('admin_registration_html', 'en') % values,
+                    self.getEmailTemplate('admin_registration_text', 'en') % values)
 
                 return REQUEST.RESPONSE.redirect(self.absolute_url())
         return self._edit_html(REQUEST)

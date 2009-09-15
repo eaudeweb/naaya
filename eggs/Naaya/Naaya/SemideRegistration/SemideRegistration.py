@@ -309,7 +309,7 @@ class SemideRegistration(LocalPropertyManager, Folder):
             else:
                 departure_date = 'n/a'
             data_app((self.formatDate(part.registration_date), part.id, part.first_name, part.last_name,
-                        part.country, part.media_name, part.media_type, part.media_description,
+                        part.country, part.media_name, part.media_type, part.media_description.replace('\r\n', ' ').replace('\n', ' '),
                         part.media_position, part.passport_no, part.passport_expire, part.email, part.phone_number, part.fax_number, part.mobile_number, arrival_date, part.arrival_from,
                         part.arrival_flight, part.arrival_time, departure_date, part.departure_flight,
                         part.departure_time))
