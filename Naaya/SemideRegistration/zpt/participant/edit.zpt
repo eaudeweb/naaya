@@ -119,8 +119,10 @@
 		</tr>
 		<tr tal:condition="here/is_journalist">
 			<th i18n:translate="">Description of equipment used</th>
-			<td><input type="text" name="media_description" size="50"
-			tal:attributes="value python:request.get('media_description', here.media_description)" /></td>
+			<td>
+				<textarea name="media_description:utf8:ustring" rows="5" cols="31"
+				tal:content="structure python:request.get('media_description', here.media_description)" />
+			</td>
 		</tr>
 		<tr tal:condition="here/is_journalist">
 			<th i18n:translate="">Your position</th>
