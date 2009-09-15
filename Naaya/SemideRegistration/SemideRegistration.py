@@ -282,11 +282,11 @@ class SemideRegistration(LocalPropertyManager, Folder):
                 hotel_reservation = 'I am part of one of the following delegations: (2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro, Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon, Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey. My accommodation is covered by the French Government.'
             else:
                 hotel_reservation = 'I pay my own accommodation. So please book your hotel room, click here to get hotels contacts and special rates.'
-            data_app((self.formatDate(part.registration_date), part.id, part.first_name, part.last_name,
-                        part.country, part.organisation, part.official_title, part.passport_no, part.passport_expire,
-                        part.email, part.phone_number, part.fax_number, arrival_date, part.arrival_from,
-                        part.arrival_flight, part.arrival_time, departure_date, part.departure_flight,
-                        part.departure_time, hotel_reservation))
+            data_app((self.formatDate(part.registration_date), part.id, self.unicode2UTF8(part.first_name), self.unicode2UTF8(part.last_name),
+                        self.unicode2UTF8(part.country), self.unicode2UTF8(part.organisation), self.unicode2UTF8(part.official_title), 
+                        self.unicode2UTF8(part.passport_no), self.unicode2UTF8(part.passport_expire), part.email, self.unicode2UTF8(part.phone_number), 
+                        self.unicode2UTF8(part.fax_number), arrival_date, self.unicode2UTF8(part.arrival_from), self.unicode2UTF8(part.arrival_flight),
+                        part.arrival_time, departure_date, self.unicode2UTF8(part.departure_flight), part.departure_time, hotel_reservation))
 
         return self.create_csv(data, filename='participants.csv', RESPONSE=REQUEST.RESPONSE)
 
@@ -307,10 +307,11 @@ class SemideRegistration(LocalPropertyManager, Folder):
                 departure_date = self.formatDate(part.departure_date)
             else:
                 departure_date = 'n/a'
-            data_app((self.formatDate(part.registration_date), part.id, part.first_name, part.last_name,
-                        part.country, part.media_name, part.media_type, part.media_description.replace('\r\n', ' ').replace('\n', ' '),
-                        part.media_position, part.passport_no, part.passport_expire, part.email, part.phone_number, part.fax_number, part.mobile_number, arrival_date, part.arrival_from,
-                        part.arrival_flight, part.arrival_time, departure_date, part.departure_flight,
+            data_app((self.formatDate(part.registration_date), part.id, self.unicode2UTF8(part.first_name), self.unicode2UTF8(part.last_name),
+                        self.unicode2UTF8(part.country), self.unicode2UTF8(part.media_name), self.unicode2UTF8(part.media_type), self.unicode2UTF8(part.media_description).replace('\r\n', ' ').replace('\n', ' '),
+                        self.unicode2UTF8(part.media_position), self.unicode2UTF8(part.passport_no), self.unicode2UTF8(part.passport_expire), part.email, 
+                        self.unicode2UTF8(part.phone_number), self.unicode2UTF8(part.fax_number), self.unicode2UTF8(part.mobile_number), arrival_date, 
+                        self.unicode2UTF8(part.arrival_from), self.unicode2UTF8(part.arrival_flight), part.arrival_time, departure_date, self.unicode2UTF8(part.departure_flight),
                         part.departure_time))
         return self.create_csv(data, filename='press_participants.csv', RESPONSE=REQUEST.RESPONSE)
 
