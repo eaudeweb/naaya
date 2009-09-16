@@ -295,11 +295,17 @@ class NyContact(contact_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         ra = r.append
         postaladdress = self.postaladdress
         postaladdress = postaladdress.replace('\r\n', ' ')
+        if not self.firstname and not self.lastname:
+            fn = self.title_or_id()
+            n = self.title_or_id()
+        else:
+            fn ='%s %s %s' % (self.utToUtf8(self.personaltitle), self.utToUtf8(self.firstname), self.utToUtf8(self.lastname))
+            n = '%s;%s;%s;%s;%s' % (self.utToUtf8(self.lastname), self.utToUtf8(self.firstname), '', self.utToUtf8(self.personaltitle), '')
         ra('BEGIN:VCARD')
         ra('CHARSET:UTF-8')
         ra('VERSION:2.1')
-        ra('FN;CHARSET=UTF-8:%s %s %s' % (self.utToUtf8(self.personaltitle), self.utToUtf8(self.firstname), self.utToUtf8(self.lastname)))
-        ra('N;CHARSET=UTF-8:%s;%s;%s;%s;%s' % (self.utToUtf8(self.lastname), self.utToUtf8(self.firstname), '', self.utToUtf8(self.personaltitle), ''))
+        ra('FN;CHARSET=UTF-8:%s' % fn)
+        ra('N;CHARSET=UTF-8:%s' % n)
         ra('TITLE;CHARSET=UTF-8:%s' % self.utToUtf8(self.jobtitle))
         ra('ROLE;CHARSET=UTF-8:%s' % self.utToUtf8(self.jobtitle))
         ra('ORG;CHARSET=UTF-8:%s;%s' % (self.utToUtf8(self.organisation), self.utToUtf8(self.department)))
@@ -309,7 +315,7 @@ class NyContact(contact_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         ra('ADR;WORK;CHARSET=UTF-8:;;%s;;;;' % self.utToUtf8(postaladdress))
         ra('EMAIL;INTERNET:%s' % self.utToUtf8(self.email))
         ra('URL:%s' % self.utToUtf8(self.webpage))
-        ra('NOTE;CHARSET=UTF-8:%s' % self.utToUtf8(self.description))
+        ra('NOTE;CHARSET=UTF-8:%s' % self.utToUtf8(self.utStripAllHtmlTags(self.description)))
         ra('END:VCARD')
         
         if REQUEST:
