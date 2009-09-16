@@ -14,8 +14,8 @@ def send_mail(msg_from, msg_to, msg_subject, msg_body, msg_body_text, smtp_host,
     html = msg_body
 
     # Record the MIME types of both parts - text/plain and text/html.
-    part1 = MIMEText(text, 'plain')
-    part2 = MIMEText(html, 'html')
+    part1 = MIMEText(text, 'plain', _charset='utf-8')
+    part2 = MIMEText(html, 'html', _charset='utf-8')
 
     # Attach parts into message container.
     # According to RFC 2046, the last part of a multipart message, in this case
