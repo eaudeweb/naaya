@@ -17,6 +17,10 @@
 #
 # David Batranu, Eau de Web
 
+#Python imports
+import os
+import sys
+
 #Zope imports
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
@@ -68,9 +72,29 @@ PROPERTIES_OBJECT = {
     'lang':                (0, '', '')
 }
 
-manage_addNyConsultation_html = PageTemplateFile('zpt/consultation_manage_add', globals())
-manage_addNyConsultation_html.kind = METATYPE_OBJECT
-manage_addNyConsultation_html.action = 'addNyConsultation'
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'NyConsultation',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya Consultation',
+        'label': 'Consultation',
+        'permission': 'Naaya - Add Naaya Consultation objects',
+        'forms': [],
+        'add_form': 'consultation_add_html',
+        'description': 'This is Naaya Consultation type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': None,
+        'schema_name': '',
+        'import_string': '',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyConsultation.gif'),
+        '_misc': {
+                'NyConsultation.gif': ImageFile('www/NyConsultation.gif', globals()),
+                'NyConsultation_marked.gif': ImageFile('www/NyConsultation_marked.gif', globals()),
+            },
+    }
 
 consultation_add_html = PageTemplateFile('zpt/consultation_add', globals())
 
@@ -711,3 +735,21 @@ class NyConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, NyConta
 
 InitializeClass(NyConsultation)
 
+manage_addNyConsultation_html = PageTemplateFile('zpt/consultation_manage_add', globals())
+manage_addNyConsultation_html.kind = METATYPE_OBJECT
+manage_addNyConsultation_html.action = 'addNyConsultation'
+config.update({
+    'constructors': (manage_addNyConsultation_html, addNyConsultation),
+    'folder_constructors': [
+            # NyFolder.manage_addNyConsultation_html = manage_addNyConsultation_html
+            ('manage_addNyConsultation_html', manage_addNyConsultation_html),
+            ('consultation_add_html', consultation_add_html),
+            ('addNyConsultation', addNyConsultation),
+        ],
+    'add_method': addNyConsultation,
+    'validation': issubclass(NyConsultation, NyValidation),
+    '_class': NyConsultation,
+})
+
+def get_config():
+    return config

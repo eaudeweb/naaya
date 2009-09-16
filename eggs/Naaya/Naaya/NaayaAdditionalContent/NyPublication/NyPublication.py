@@ -19,9 +19,12 @@
 
 #Python imports
 from copy import deepcopy
+import os
+import sys
 
 #Zope imports
 from Globals import InitializeClass
+from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -77,9 +80,29 @@ DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 # make sure the label is the one we wanted
 DEFAULT_SCHEMA['description'].update({'label': 'Short description of content'})
 
-manage_addNyPublication_html = PageTemplateFile('zpt/publication_manage_add', globals())
-manage_addNyPublication_html.kind = METATYPE_OBJECT
-manage_addNyPublication_html.action = 'addNyPublication'
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'NyPublication',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya Publication',
+        'label': 'Publication',
+        'permission': 'Naaya - Add Naaya Publication objects',
+        'forms': ['publication_add', 'publication_edit', 'publication_index'],
+        'add_form': 'publication_add_html',
+        'description': 'This is Naaya Publication type. It can be used for published articles or books.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': DEFAULT_SCHEMA,
+        'schema_name': 'NyPublication',
+        'import_string': 'importNyPublication',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyPublication.gif'),
+        '_misc': {
+                'NyPublication.gif': ImageFile('www/NyPublication.gif', globals()),
+                'NyPublication_marked.gif': ImageFile('www/NyPublication_marked.gif', globals()),
+            },
+    }
 
 def publication_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
@@ -357,3 +380,22 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl, NyVa
 
 InitializeClass(NyPublication)
 
+manage_addNyPublication_html = PageTemplateFile('zpt/publication_manage_add', globals())
+manage_addNyPublication_html.kind = METATYPE_OBJECT
+manage_addNyPublication_html.action = 'addNyPublication'
+config.update({
+    'constructors': (manage_addNyPublication_html, addNyPublication),
+    'folder_constructors': [
+            # NyFolder.manage_addNyPublication_html = manage_addNyPublication_html
+            ('manage_addNyPublication_html', manage_addNyPublication_html),
+            ('publication_add_html', publication_add_html),
+            ('addNyPublication', addNyPublication),
+            (config['import_string'], importNyPublication),
+        ],
+    'add_method': addNyPublication,
+    'validation': issubclass(NyPublication, NyValidation),
+    '_class': NyPublication,
+})
+
+def get_config():
+    return config

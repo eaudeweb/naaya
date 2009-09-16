@@ -17,8 +17,13 @@
 #
 # David Batranu, Eau de Web
 
+#Python imports
+import os
+import sys
+
 #Zope imports
 from Globals import InitializeClass
+from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -67,9 +72,29 @@ PROPERTIES_OBJECT = {
     'lang':                (0, '', '')
 }
 
-manage_addNySimpleConsultation_html = PageTemplateFile('zpt/simpleconsultation_manage_add', globals())
-manage_addNySimpleConsultation_html.kind = METATYPE_OBJECT
-manage_addNySimpleConsultation_html.action = 'addNySimpleConsultation'
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'NySimpleConsultation',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya Simple Consultation',
+        'label': 'Simple Consultation',
+        'permission': 'Naaya - Add Naaya Simple Consultation objects',
+        'forms': [],
+        'add_form': 'simpleconsultation_add_html',
+        'description': 'This is Naaya Simple Consultation type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': None,
+        'schema_name': '',
+        'import_string': '',
+        '_module': sys.modules[__name__],
+        'additional_style': ADDITIONAL_STYLE,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'NySimpleConsultation.gif'),
+        '_misc': {
+                'NySimpleConsultation.gif': ImageFile('www/NySimpleConsultation.gif', globals()),
+                'NySimpleConsultation_marked.gif': ImageFile('www/NySimpleConsultation_marked.gif', globals()),
+            },
+    }
 
 simpleconsultation_add_html = PageTemplateFile('zpt/simpleconsultation_add', globals())
 
@@ -405,3 +430,22 @@ class NySimpleConsultation(NyAttributes, Implicit, NyProperties, BTreeFolder2, N
     add_simpleconsultation_comment = PageTemplateFile('zpt/simpleconsultation_comment_add', globals())
 
 InitializeClass(NySimpleConsultation)
+
+manage_addNySimpleConsultation_html = PageTemplateFile('zpt/simpleconsultation_manage_add', globals())
+manage_addNySimpleConsultation_html.kind = METATYPE_OBJECT
+manage_addNySimpleConsultation_html.action = 'addNySimpleConsultation'
+config.update({
+    'constructors': (manage_addNySimpleConsultation_html, addNySimpleConsultation),
+    'folder_constructors': [
+            # NyFolder.manage_addNySimpleConsultation_html = manage_addNySimpleConsultation_html
+            ('manage_addNySimpleConsultation_html', manage_addNySimpleConsultation_html),
+            ('simpleconsultation_add_html', simpleconsultation_add_html),
+            ('addNySimpleConsultation', addNySimpleConsultation),
+        ],
+    'add_method': addNySimpleConsultation,
+    'validation': issubclass(NySimpleConsultation, NyValidation),
+    '_class': NySimpleConsultation,
+})
+
+def get_config():
+    return config
