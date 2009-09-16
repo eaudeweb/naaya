@@ -296,8 +296,8 @@ class NyContact(contact_item, NyAttributes, NyItem, NyCheckControl, NyContentTyp
         postaladdress = self.postaladdress
         postaladdress = postaladdress.replace('\r\n', ' ')
         if not self.firstname and not self.lastname:
-            fn = self.title_or_id()
-            n = self.title_or_id()
+            fn = self.utToUtf8(self.title_or_id())
+            n = self.utToUtf8(self.title_or_id())
         else:
             fn ='%s %s %s' % (self.utToUtf8(self.personaltitle), self.utToUtf8(self.firstname), self.utToUtf8(self.lastname))
             n = '%s;%s;%s;%s;%s' % (self.utToUtf8(self.lastname), self.utToUtf8(self.firstname), '', self.utToUtf8(self.personaltitle), '')
