@@ -105,6 +105,9 @@ config = {
         '_misc': {
                 'NyMediaFile.gif': ImageFile('www/mediafile.gif', globals()),
                 'NyMediaFile_marked.gif': ImageFile('www/mediafile_marked.gif', globals()),
+                'EdWideoPlayer.swf': ImageFile('player/EdWideoPlayer.swf', globals()),
+                'NyMediaFileLoading.gif': ImageFile('www/mediafile_loading.gif', globals()),
+                'NyMediaFileBroken.gif': ImageFile('www/mediafile_broken.gif', globals()),
             },
     }
 
