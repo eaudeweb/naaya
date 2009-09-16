@@ -86,11 +86,11 @@ class EnviroWindowsSite(NySite):
     def addConsultationDynProp(self):
         dynprop_tool = self.getDynamicPropertiesTool()
         try:
-            dynprop_tool.manage_addDynamicPropertiesItem(id=METATYPE_NYCONSULTATION, title=METATYPE_NYCONSULTATION)
-            dynprop_tool._getOb(METATYPE_NYCONSULTATION).manageAddDynamicProperty(id='show_contributor_request_role', name='Allow visitors to register as reviewers for this consultation', type='boolean')
+            dynprop_tool.manage_addDynamicPropertiesItem(id='Naaya Consultation', title='Naaya Consultation')
+            dynprop_tool._getOb('Naaya Consultation').manageAddDynamicProperty(id='show_contributor_request_role', name='Allow visitors to register as reviewers for this consultation', type='boolean')
 
-            dynprop_tool.manage_addDynamicPropertiesItem(id=METATYPE_NYSIMPLECONSULTATION, title=METATYPE_NYSIMPLECONSULTATION)
-            dynprop_tool._getOb(METATYPE_NYSIMPLECONSULTATION).manageAddDynamicProperty(id='show_contributor_request_role', name='Allow visitors to register as reviewers for this consultation', type='boolean')
+            dynprop_tool.manage_addDynamicPropertiesItem(id='Naaya Simple Consultation', title='Naaya Simple Consultation')
+            dynprop_tool._getOb('Naaya Simple Consultation').manageAddDynamicProperty(id='show_contributor_request_role', name='Allow visitors to register as reviewers for this consultation', type='boolean')
         except: pass
 
     security.declarePrivate('loadDefaultData')
@@ -153,8 +153,8 @@ class EnviroWindowsSite(NySite):
         manage_addLinkChecker(self, ID_LINKCHECKER, TITLE_LINKCHECKER)
         linkchecker_ob = self._getOb(ID_LINKCHECKER)
         linkchecker_ob.manage_edit(proxy='', batch_size=10, catalog_name=ID_CATALOGTOOL)
-        linkchecker_ob.manage_addMetaType(METATYPE_NYURL)
-        linkchecker_ob.manage_addProperty(METATYPE_NYURL, 'locator')
+        linkchecker_ob.manage_addMetaType('Naaya URL')
+        linkchecker_ob.manage_addProperty('Naaya URL', 'locator')
         for k,v in self.get_content_urls().items():
             linkchecker_ob.manage_addMetaType(k)
             for p in v:
@@ -289,16 +289,16 @@ class EnviroWindowsSite(NySite):
     def getPendingAnnouncements(self, container=None):
         #returns a list with the draft NYNews objects from the specified folder(container)
         if container is None or container == self:
-            return self.getCatalogedObjectsA(meta_type=METATYPE_NYNEWS, approved=0)
+            return self.getCatalogedObjectsA(meta_type='Naaya News', approved=0)
         else:
             sector = container.id
-            return self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, approved=0, sector=sector)
+            return self.getCatalogedObjects(meta_type='Naaya News', approved=0, sector=sector)
 
     def getAnnouncementsFrontPage(self, howmany=None):
         #returns a list with latest approved NYNews objects from the specified folder(container)
         #the number of objects can be set by modifing the property 'number_announcements'
         if howmany is None: howmany = -1
-        return self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, approved=1, howmany=howmany, topstory=1)
+        return self.getCatalogedObjects(meta_type='Naaya News', approved=1, howmany=howmany, topstory=1)
 
     def getAnnouncements(self, container=None, howmany=None):
         #returns a list with latest approved EWNews objects from the specified folder(container)
@@ -312,9 +312,9 @@ class EnviroWindowsSite(NySite):
                 l_top_container = l_top_container.getParentNode()
             sector = l_top_container.id
         if sector:
-            return self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, approved=1, howmany=howmany, sector=sector)
+            return self.getCatalogedObjects(meta_type='Naaya News', approved=1, howmany=howmany, sector=sector)
         else:
-            return self.getCatalogedObjects(meta_type=METATYPE_NYNEWS, approved=1, howmany=howmany)
+            return self.getCatalogedObjects(meta_type='Naaya News', approved=1, howmany=howmany)
 
 #####################################################
 # SMAP functions loaded for backwards compatibility #
@@ -322,7 +322,7 @@ class EnviroWindowsSite(NySite):
     security.declareProtected(view_management_screens, 'updateExperts')
     def updateExperts(self):
         """ expert object is associated to more than one category (priority areas/main topics of expertise) """
-        experts = self.getCatalogedObjects(meta_type=[METATYPE_NYSMAPEXPERT])
+        experts = self.getCatalogedObjects(meta_type=['Naaya SMAP Expert'])
         for expert in experts:
             buf = []
             for k in expert.subtopics:
@@ -335,7 +335,7 @@ class EnviroWindowsSite(NySite):
     security.declareProtected(view_management_screens, 'updateProjects')
     def updateProjects(self):
         """ project object is associated to more than one category (priority areas/main topics of expertise) """
-        projects = self.getCatalogedObjects(meta_type=[METATYPE_NYSMAPPROJECT])
+        projects = self.getCatalogedObjects(meta_type=['Naaya SMAP Project'])
         for project in projects:
             buf = []
             for k in project.focus:
@@ -642,7 +642,7 @@ class EnviroWindowsSite(NySite):
     def getDocuments(self, path, meta_type=''):
         """ Returns object values of given meta_type in given path.
         """
-        meta_type = meta_type or METATYPE_NYEXFILE
+        meta_type = meta_type or 'Naaya Extended File'
         folder = self.getObjectByPath(path)
         if not folder: return []
         return folder.objectValues(meta_type)
