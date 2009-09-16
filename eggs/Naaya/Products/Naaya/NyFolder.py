@@ -323,10 +323,12 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
                 object.objects)
         elif object.meta_type in self.get_pluggable_installed_meta_types():
             item = self.get_pluggable_item(object.meta_type)
-            c = 'self.import_%s(object.param, object.id, object.attrs, \
-                object.content, object.properties, object.discussion, \
-                object.objects)' % item['module']
-            exec(c)
+            if not item.has_key('import_string'):
+                import_method = getattr(self, 'import_%s' % item['module'])
+            else:
+                import_method = getattr(self, item['import_string'])
+            import_method(object.param, object.id, object.attrs, object.content,
+                          object.properties, object.discussion, object.objects)
         else:
             self.import_data_custom(self, object)
 
