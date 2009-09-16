@@ -1,1 +1,1 @@
-from naaya.content.pointer import NyPointer
+from naaya.content.pointer.pointer_item import NyPointer

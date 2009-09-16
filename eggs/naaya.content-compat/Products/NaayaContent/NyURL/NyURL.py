@@ -1,1 +1,1 @@
-from naaya.content.url import NyURL
+from naaya.content.url.url_item import NyURL
