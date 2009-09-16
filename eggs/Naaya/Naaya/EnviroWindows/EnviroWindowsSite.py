@@ -36,7 +36,6 @@ from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
 #Product imports
 from constants                                      import *
 from Products.NaayaBase.constants                   import *
-from Products.NaayaContent.discover                 import *
 from Products.Naaya.constants                       import *
 from Products.NaayaCore.constants                   import *
 from Products.Naaya.NySite                          import NySite
