@@ -18,6 +18,9 @@
 # David Batranu, Eau de Web
 # Alex Morega, Eau de Web
 
+#Python imports
+import os
+import sys
 
 #Zope imports
 from Globals import InitializeClass
@@ -33,6 +36,7 @@ from Products.NaayaContent.constants import *
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyNonCheckControl import NyNonCheckControl
+from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyImageContainer import NyImageContainer
@@ -85,11 +89,29 @@ PROPERTIES_OBJECT = {
     'lang':                (0, '', '')
 }
 
-manage_addNyTalkBackConsultation_html = PageTemplateFile(
-    'zpt/talkbackconsultation_manage_add', globals()
-)
-manage_addNyTalkBackConsultation_html.kind = METATYPE_TALKBACKCONSULTATION
-manage_addNyTalkBackConsultation_html.action = 'addNyTalkBackConsultation'
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'NyTalkBackConsultation',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya TalkBack Consultation',
+        'label': 'TalkBack Consultation',
+        'permission': 'Naaya - Add Naaya TalkBack Consultation objects',
+        'forms': [],
+        'add_form': 'talkbackconsultation_add_html',
+        'description': 'This is Naaya TalkBack Consultation type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': None,
+        'schema_name': '',
+        'import_string': '',
+        '_module': sys.modules[__name__],
+        'additional_style': ADDITIONAL_STYLE,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyTalkBackConsultation.gif'),
+        '_misc': {
+                'NyTalkBackConsultation.gif': ImageFile('www/NyTalkBackConsultation.gif', globals()),
+                'NyTalkBackConsultation_marked.gif': ImageFile('www/NyTalkBackConsultation_marked.gif', globals()),
+            },
+    }
 
 talkbackconsultation_add_html = PageTemplateFile(
     'zpt/talkbackconsultation_add', globals()
@@ -491,3 +513,23 @@ class NyTalkBackConsultation(NyAttributes,
     section_add_html = addSection_html
 
 InitializeClass(NyTalkBackConsultation)
+manage_addNyTalkBackConsultation_html = PageTemplateFile(
+    'zpt/talkbackconsultation_manage_add', globals()
+)
+manage_addNyTalkBackConsultation_html.kind = METATYPE_TALKBACKCONSULTATION
+manage_addNyTalkBackConsultation_html.action = 'addNyTalkBackConsultation'
+config.update({
+    'constructors': (manage_addNyTalkBackConsultation_html, addNyTalkBackConsultation),
+    'folder_constructors': [
+            # NyFolder.manage_addNyTalkBackConsultation_html = manage_addNyTalkBackConsultation_html
+            ('manage_addNyTalkBackConsultation_html', manage_addNyTalkBackConsultation_html),
+            ('talkbackconsultation_add_html', talkbackconsultation_add_html),
+            ('addNyTalkBackConsultation', addNyTalkBackConsultation),
+        ],
+    'add_method': addNyTalkBackConsultation,
+    'validation': issubclass(NyTalkBackConsultation, NyValidation),
+    '_class': NyTalkBackConsultation,
+})
+
+def get_config():
+    return config

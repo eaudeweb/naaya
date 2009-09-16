@@ -20,9 +20,12 @@
 
 #Python imports
 from copy import deepcopy
+import os
+import sys
 
 #Zope imports
 from Globals import InitializeClass
+from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -64,9 +67,29 @@ PROPERTIES_OBJECT = {
     'lang':         (0, '', '')
 }
 
-manage_addNyStudy_html = PageTemplateFile('zpt/study_manage_add', globals())
-manage_addNyStudy_html.kind = METATYPE_OBJECT
-manage_addNyStudy_html.action = 'addNyStudy'
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'NyStudy',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya Study',
+        'label': 'Study',
+        'permission': 'Naaya - Add Naaya Study objects',
+        'forms': ['study_add', 'study_edit', 'study_index', 'study_style'],
+        'add_form': 'study_add',
+        'description': 'This is Naaya Study type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': None,
+        'schema_name': 'NyStudy',
+        'import_string': 'importNyStudy',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyStudy.gif'),
+        '_misc': {
+                'NyStudy.gif': ImageFile('www/NyStudy.gif', globals()),
+                'NyStudy_marked.gif': ImageFile('www/NyStudy_marked.gif', globals()),
+            },
+    }
 
 def study_add(self, REQUEST=None, RESPONSE=None):
     """ """
@@ -438,3 +461,23 @@ class NyStudy(NyAttributes, study_item, NyContainer, NyCheckControl, NyValidatio
         return self.getFormsTool().getContent({'here': self}, 'study_style')
 
 InitializeClass(NyStudy)
+
+manage_addNyStudy_html = PageTemplateFile('zpt/study_manage_add', globals())
+manage_addNyStudy_html.kind = METATYPE_OBJECT
+manage_addNyStudy_html.action = 'addNyStudy'
+config.update({
+    'constructors': (manage_addNyStudy_html, addNyStudy),
+    'folder_constructors': [
+            # NyFolder.manage_addNyStudy_html = manage_addNyStudy_html
+            ('manage_addNyStudy_html', manage_addNyStudy_html),
+            ('study_add', study_add),
+            ('addNyStudy', addNyStudy),
+            (config['import_string'], importNyStudy),
+        ],
+    'add_method': addNyStudy,
+    'validation': issubclass(NyStudy, NyValidation),
+    '_class': NyStudy,
+})
+
+def get_config():
+    return config

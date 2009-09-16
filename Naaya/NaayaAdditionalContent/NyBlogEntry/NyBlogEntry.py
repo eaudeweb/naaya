@@ -19,9 +19,12 @@
 
 #Python imports
 from copy import deepcopy
+import os
+import sys
 
 #Zope imports
 from Globals import InitializeClass
+from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -60,9 +63,29 @@ PROPERTIES_OBJECT = {
     'lang':         (0, '', '')
 }
 
-manage_addNyBlogEntry_html = PageTemplateFile('zpt/blog_entry_manage_add', globals())
-manage_addNyBlogEntry_html.kind = METATYPE_OBJECT
-manage_addNyBlogEntry_html.action = 'addNyBlogEntry'
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'NyBlogEntry',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya Blog Entry',
+        'label': 'Blog Entry',
+        'permission': 'Naaya - Add Naaya Blog Entry objects',
+        'forms': ['blog_entry_add', 'blog_entry_edit', 'blog_entry_index', 'blogcomments_box', 'blogcomment_add'],
+        'add_form': 'blog_entry_add',
+        'description': 'This is Naaya Blog Entry type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': None,
+        'schema_name': '',
+        'import_string': 'importNyBlogEntry',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyBlogEntry.gif'),
+        '_misc': {
+                'NyBlogEntry.gif': ImageFile('www/NyBlogEntry.gif', globals()),
+                'NyBlogEntry_marked.gif': ImageFile('www/NyBlogEntry_marked.gif', globals()),
+            },
+    }
 
 def blog_entry_add(self, REQUEST=None, RESPONSE=None):
     """ """
@@ -420,3 +443,23 @@ class NyBlogEntry(NyAttributes, blog_entry_item, NyBlogComments, NyContainer, Ny
         return self.getFormsTool().getContent({'here': self}, 'blog_entry_edit')
 
 InitializeClass(NyBlogEntry)
+
+manage_addNyBlogEntry_html = PageTemplateFile('zpt/blog_entry_manage_add', globals())
+manage_addNyBlogEntry_html.kind = METATYPE_OBJECT
+manage_addNyBlogEntry_html.action = 'addNyBlogEntry'
+config.update({
+    'constructors': (manage_addNyBlogEntry_html, addNyBlogEntry),
+    'folder_constructors': [
+            # NyFolder.manage_addNyBlogEntry_html = manage_addNyBlog Entry_html
+            ('manage_addNyBlogEntry_html', manage_addNyBlogEntry_html),
+            ('blog_entry_add', blog_entry_add),
+            ('addNyBlogEntry', addNyBlogEntry),
+            (config['import_string'], importNyBlogEntry),
+        ],
+    'add_method': addNyBlogEntry,
+    'validation': issubclass(NyBlogEntry, NyValidation),
+    '_class': NyBlogEntry,
+})
+
+def get_config():
+    return config
