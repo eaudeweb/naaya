@@ -41,7 +41,8 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyFolderishVersioning import NyFolderishVersioning
-from Products.NaayaBase.NyBlobFile import NyBlobFile
+
+from NyBlobFile import NyBlobFile
 
 #module constants
 DEFAULT_SCHEMA = {
@@ -154,8 +155,7 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     return ob.getId()
 
-# TODO: ce fac NyItem, NyFolderishVersioning?
-class NyBFile(NyContentData, NyAttributes, NyItem, NyFolderishVersioning, NyCheckControl, NyValidation, NyContentType):
+class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
     """ """
 
     meta_type = config['meta_type']
@@ -177,7 +177,6 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyFolderishVersioning, NyChec
         NyContentData.__init__(self)
         NyValidation.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)
-        NyFolderishVersioning.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
         self._versions = PersistentList()
@@ -219,48 +218,6 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyFolderishVersioning, NyChec
         f = ver.open_write()
         f.write('')
         f.close()
-
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
-    def saveProperties(self, REQUEST=None, **kwargs):
-        """ """
-        if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-
-        if self.hasVersion():
-            obj = self.version
-            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        else:
-            obj = self
-
-        if REQUEST is not None:
-            schema_raw_data = dict(REQUEST.form)
-        else:
-            schema_raw_data = kwargs
-        _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
-        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
-
-        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
-
-        if form_errors:
-            if REQUEST is not None:
-                self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
-                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
-                return
-            else:
-                raise ValueError(form_errors.popitem()[1]) # pick a random error
-
-        if self.discussion: self.open_for_comments()
-        else: self.close_for_comments()
-        self._p_changed = 1
-        self.recatalogNyObject(self)
-        #log date
-        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        auth_tool = self.getAuthenticationTool()
-        auth_tool.changeLastPost(contributor)
-        if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
 
     #site actions
     security.declareProtected(view, 'index_html')
