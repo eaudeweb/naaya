@@ -21,6 +21,7 @@
 import os
 import sys
 from datetime import datetime
+import urllib
 
 #Zope imports
 from Globals import InitializeClass
@@ -187,6 +188,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         """ BFile objects are not versionable """
         return False
 
+    security.declarePrivate('current_version')
     @property
     def current_version(self):
         for ver in reversed(self._versions):
@@ -210,6 +212,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
 
         self._versions.append(bf)
 
+    security.declarePrivate('remove_version')
     def remove_version(self, number):
         ver = self._versions[number]
         ver.removed = True
@@ -219,7 +222,46 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         f.write('')
         f.close()
 
-    #site actions
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
+    def saveProperties(self, REQUEST=None, **kwargs):
+        """ """
+        if not self.checkPermissionEditObject():
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+
+        if REQUEST is not None:
+            schema_raw_data = dict(REQUEST.form)
+        else:
+            schema_raw_data = kwargs
+        _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
+        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
+        _uploaded_file = schema_raw_data.pop('uploaded_file', None)
+
+        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+
+        if form_errors:
+            if REQUEST is not None:
+                self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+                return
+            else:
+                raise ValueError(form_errors.popitem()[1]) # pick a random error
+
+        if self.discussion: self.open_for_comments()
+        else: self.close_for_comments()
+        self._p_changed = 1
+        self.recatalogNyObject(self)
+        #log date
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+        auth_tool = self.getAuthenticationTool()
+        auth_tool.changeLastPost(contributor)
+
+        if _uploaded_file is not None:
+            self._save_file(_uploaded_file)
+
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
@@ -229,6 +271,24 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'bfile_edit')
+
+    # TODO: security
+    def download(self, REQUEST, RESPONSE):
+        """ serve the current_version file """
+        ver = self.current_version
+        if ver is None:
+            raise NotImplementedError # TODO
+
+        RESPONSE.setHeader('Content-Type', ver.content_type)
+        #RESPONSE.setHeader('Content-Length', ver.size) # TODO
+        RESPONSE.setHeader('Content-Disposition',
+            "attachment;filename*=UTF-8''%s" % urllib.quote(ver.filename))
+
+        # TODO: stream the response
+        f = ver.open()
+        data = f.read()
+        f.close()
+        return data
 
 InitializeClass(NyBFile)
 
