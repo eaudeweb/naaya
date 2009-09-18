@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Image import cookId
 from persistent.list import PersistentList
+from zExceptions import NotFound
 
 #Product imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -204,6 +205,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             'filename': the_file.filename,
             'content_type': content_type,
             'timestamp': datetime.utcnow(),
+            'removed': False,
         }
         bf = NyBlobFile(**meta)
 
@@ -267,7 +269,20 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'bfile_index')
+        tmpl_data = {
+            'here': self,
+            'options': {
+                'versions': [{
+                    'n': n,
+                    'filename': ver.filename,
+                    'content_type': ver.content_type,
+                    #'size': ver.size, # TODO
+                    'removed': ver.removed,
+                    'url': self.absolute_url() + '/download?v=' + str(n+1),
+                } for n, ver in enumerate(self._versions)],
+            },
+        }
+        return self.getFormsTool().getContent(tmpl_data, 'bfile_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
@@ -275,11 +290,15 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         return self.getFormsTool().getContent({'here': self}, 'bfile_edit')
 
     # TODO: security
-    def download(self, REQUEST, RESPONSE):
-        """ serve the current_version file """
-        ver = self.current_version
-        if ver is None:
-            raise NotImplementedError # TODO
+    def download(self, REQUEST, RESPONSE, v):
+        """ serve the specified version file """
+
+        try:
+            ver = self._versions[int(v)-1]
+            if ver.removed:
+                raise IndexError
+        except (IndexError, ValueError), e:
+            raise NotFound
 
         RESPONSE.setHeader('Content-Type', ver.content_type)
         #RESPONSE.setHeader('Content-Length', ver.size) # TODO

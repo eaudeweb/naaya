@@ -37,6 +37,12 @@
 
 </table>
 
+<ul>
+    <li tal:repeat="version options/versions">
+        <a tal:attributes="href version/url" tal:content="version/filename"></a>
+    </li>
+</ul>
+
 <div tal:define="description python:here.prop_value_or_none('description')"
     tal:condition="description" tal:content="structure description" />
 
