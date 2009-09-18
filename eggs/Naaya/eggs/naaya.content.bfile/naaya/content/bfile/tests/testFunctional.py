@@ -82,7 +82,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
 
         TEST_FILE_DATA = 'some data for my bfile'
         form.find_control('uploaded_file').add_file(StringIO(TEST_FILE_DATA),
-            filename='testcreatebfile.txt', content_type='text/plain')
+            filename='testcreatebfile.txt', content_type='text/plain; charset=utf-8')
 
         self.browser.submit()
         html = self.browser.get_html()
@@ -102,6 +102,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
         headers = self.browser._browser._response._headers
         self.failUnlessEqual(headers.get('content-disposition', None),
             'attachment;filename*=UTF-8\'\'testcreatebfile.txt')
+        self.assertEqual(headers['content-type'], 'text/plain; charset=utf-8')
         self.failUnlessEqual(html, TEST_FILE_DATA)
 
         self.browser_do_logout()
@@ -130,7 +131,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
         form['title:utf8:ustring'] = 'New Title'
         TEST_FILE_DATA_2 = 'some new data for my bfile'
         form.find_control('uploaded_file').add_file(StringIO(TEST_FILE_DATA_2),
-            filename='the_new_bfile.txt', content_type='text/plain')
+            filename='the_new_bfile.txt', content_type='text/plain; charset=latin-1')
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
@@ -145,6 +146,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
         headers = self.browser._browser._response._headers
         self.failUnlessEqual(headers.get('content-disposition', None),
             'attachment;filename*=UTF-8\'\'the_new_bfile.txt')
+        self.assertEqual(headers['content-type'], 'text/plain; charset=latin-1')
         self.failUnlessEqual(html, TEST_FILE_DATA_2)
 
         self.browser.go('http://localhost/portal/myfolder/mybfile/edit_html?lang=fr')
@@ -152,7 +154,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
         form['title:utf8:ustring'] = 'french_title'
         TEST_FILE_DATA_3 = 'some new data for my bfile'
         form.find_control('uploaded_file').add_file(StringIO(TEST_FILE_DATA_3),
-            filename='the_new_bfile.txt', content_type='text/plain')
+            filename='the_new_bfile.txt', content_type='text/html; charset=utf-8')
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
@@ -161,6 +163,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
         headers = self.browser._browser._response._headers
         self.failUnlessEqual(headers.get('content-disposition', None),
             'attachment;filename*=UTF-8\'\'the_new_bfile.txt')
+        self.assertEqual(headers['content-type'], 'text/html; charset=utf-8')
         self.failUnlessEqual(html, TEST_FILE_DATA_3)
 
         self.failUnlessEqual(self.portal.myfolder.mybfile.title, 'New Title')
