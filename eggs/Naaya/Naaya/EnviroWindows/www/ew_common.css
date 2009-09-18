@@ -1036,3 +1036,13 @@ ul.boxy li {
 #maintopicslist .chk {
 	margin: 0px;
 }
+
+td.portlet_arrange_left {
+	background-color: #fdd;
+}
+td.portlet_arrange_right {
+	background-color: #ddf;
+}
+td.portlet_arrange_center {
+	background-color: #dfd;
+}
