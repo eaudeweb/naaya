@@ -198,9 +198,11 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             return None
 
     def _save_file(self, the_file):
+        content_type = getattr(the_file, 'headers', {}).get(
+            'content-type', 'application/octet-stream')
         meta = {
             'filename': the_file.filename,
-            'content_type': 'application/octet-stream',
+            'content_type': content_type,
             'timestamp': datetime.utcnow(),
         }
         bf = NyBlobFile(**meta)
@@ -288,7 +290,8 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         f = ver.open()
         data = f.read()
         f.close()
-        return data
+        RESPONSE.setBody(data)
+        return RESPONSE
 
 InitializeClass(NyBFile)
 
