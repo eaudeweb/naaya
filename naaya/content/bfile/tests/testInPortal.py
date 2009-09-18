@@ -53,7 +53,7 @@ class NyBFileTestCase(NaayaTestCase):
     def test_add_with_file(self):
         myfile = StringIO('hello data!')
         myfile.filename = 'my.txt'
-        # TODO: set filename and content-type
+        myfile.headers = {'content-type': 'image/jpeg'}
 
         now_pre = datetime.utcnow()
         self.add_bfile(id='mybfile', title='My bfile', uploaded_file=myfile)
@@ -69,6 +69,7 @@ class NyBFileTestCase(NaayaTestCase):
         self.assertTrue(now_pre <= ver.timestamp <= now_post)
         self.assertEqual(ver.open().read(), 'hello data!')
         self.assertEqual(ver.filename, 'my.txt')
+        self.assertEqual(ver.content_type, 'image/jpeg')
         #self.assertEqual(ver.content_type, 'text/plain')
 
     def test_change_file(self):
