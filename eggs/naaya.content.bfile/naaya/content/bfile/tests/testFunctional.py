@@ -24,6 +24,8 @@ from unittest import TestSuite, makeSuite
 from StringIO import StringIO
 from copy import deepcopy
 
+import transaction
+
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
 class BFileMixin(object):
@@ -53,12 +55,12 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
         from naaya.content.bfile.bfile_item import addNyBFile
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         addNyBFile(self.portal.myfolder, id='mybfile', title='My bfile', submitted=1, contributor='contributor')
-        import transaction; transaction.commit()
+        transaction.commit()
 
     def beforeTearDown(self):
         self.portal.manage_delObjects(['myfolder'])
         self.bfile_uninstall()
-        import transaction; transaction.commit()
+        transaction.commit()
 
     def test_add(self):
         self.browser_do_login('contributor', 'contributor')
@@ -97,7 +99,8 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
         self.failUnless('test_bfile_coverage' in html)
         self.failUnless('keyw1, keyw2' in html)
 
-        self.browser.go('http://localhost/portal/myfolder/test-bfile/download')
+        self.browser.go('http://localhost/portal/myfolder/test-bfile/download?v=1')
+        self.assertEqual(self.browser.get_code(), 200)
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
         self.failUnlessEqual(headers.get('content-disposition', None),
@@ -141,7 +144,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
         self.failUnlessEqual(self.portal.myfolder.mybfile.title, 'New Title')
         self.portal.myfolder.mybfile.approveThis()
 
-        self.browser.go('http://localhost/portal/myfolder/mybfile/download')
+        self.browser.go('http://localhost/portal/myfolder/mybfile/download?v=1')
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
         self.failUnlessEqual(headers.get('content-disposition', None),
@@ -158,7 +161,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
 
-        self.browser.go('http://localhost/portal/myfolder/mybfile/download')
+        self.browser.go('http://localhost/portal/myfolder/mybfile/download?v=2')
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
         self.failUnlessEqual(headers.get('content-disposition', None),
@@ -186,7 +189,99 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
 
         self.browser_do_logout()
 
+class VersioningTestCase(NaayaFunctionalTestCase, BFileMixin):
+    """ TestCase for NaayaContent object """
+
+    def afterSetUp(self):
+        self.bfile_install()
+        from Products.Naaya.NyFolder import addNyFolder
+        from naaya.content.bfile.bfile_item import addNyBFile
+        addNyFolder(self.portal, 'fol', contributor='contributor', submitted=1)
+        addNyBFile(self.portal.fol, id='multiver', title='Mulitple versions',
+            submitted=1, contributor='contributor')
+        self.ob_url = 'http://localhost/portal/fol/multiver'
+        transaction.commit()
+        self.the_file = self.portal.fol.multiver
+
+    def beforeTearDown(self):
+        self.portal.manage_delObjects(['fol'])
+        self.bfile_uninstall()
+        transaction.commit()
+
+    def make_file(self, filename, content_type, data):
+        f = StringIO(data)
+        f.filename = filename
+        f.headers = {'content-type': content_type}
+        return f
+
+    def assertDownload(self, filename, content_type, data):
+        self.assertEqual(self.browser.get_header('content-disposition'),
+            'attachment;filename*=UTF-8\'\'' + filename)
+        self.assertEqual(self.browser.get_header('content-type'), content_type)
+        self.assertEqual(self.browser.get_html(), data)
+
+    def test_no_file(self):
+        return # TODO: make it pass
+        self.browser_do_login('contributor', 'contributor')
+        self.browser.go(self.ob_url)
+        self.assertEqual(self.browser.get_code(), 200)
+        html = self.browser.get_html()
+        self.assertTrue('no files whatsoever' in html)
+        self.assertFalse(self.ob_url + '/download' in html)
+        self.browser.go(self.ob_url + '/download?v=1')
+        self.assertEqual(self.browser.get_code(), 404)
+        self.browser_do_logout()
+
+    def test_one_file(self):
+        return # TODO: make it pass
+        file_data = {
+            'filename': 'my.png',
+            'content_type': 'image/png',
+            'data': '1234',
+        }
+        self.the_file._save_file(self.make_file(**file_data))
+        transaction.commit()
+        self.browser_do_login('contributor', 'contributor')
+        self.browser.go(self.ob_url)
+        self.assertEqual(self.browser.get_code(), 200)
+        html = self.browser.get_html()
+        self.assertFalse('no files whatsoever' in html)
+        self.assertTrue(self.ob_url + '/download?v=1' in html)
+        self.assertFalse(self.ob_url + '/download?v=2' in html)
+        self.browser.go(self.ob_url + '/download?v=1')
+        self.assertDownload(**file_data)
+        self.browser_do_logout()
+
+    def test_two_files(self):
+        return # TODO: make it pass
+        file_data_1 = {
+            'filename': 'my.png',
+            'content_type': 'image/png',
+            'data': '1234',
+        }
+        file_data_2 = {
+            'filename': 'my.jpg',
+            'content_type': 'image/jpg',
+            'data': '5678',
+        }
+        self.the_file._save_file(self.make_file(**file_data_1))
+        self.the_file._save_file(self.make_file(**file_data_2))
+        transaction.commit()
+        self.browser_do_login('contributor', 'contributor')
+        self.browser.go(self.ob_url)
+        self.assertEqual(self.browser.get_code(), 200)
+        html = self.browser.get_html()
+        self.assertFalse('no files whatsoever' in html)
+        self.assertTrue(self.ob_url + '/download?v=1' in html)
+        self.assertTrue(self.ob_url + '/download?v=2' in html)
+        self.browser.go(self.ob_url + '/download?v=1')
+        self.assertDownload(**file_data_1)
+        self.browser.go(self.ob_url + '/download?v=2')
+        self.assertDownload(**file_data_2)
+        self.browser_do_logout()
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(NyBFileFunctionalTestCase))
+    suite.addTest(makeSuite(VersioningTestCase))
     return suite
