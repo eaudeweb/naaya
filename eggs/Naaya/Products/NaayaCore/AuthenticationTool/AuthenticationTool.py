@@ -24,13 +24,14 @@
 import re
 import time
 import string
-from copy import copy
+from copy import copy, deepcopy
 
 #zope imports
 from OFS.PropertyManager import PropertyManager
 from OFS.ObjectManager import ObjectManager
 from AccessControl import ClassSecurityInfo
 from AccessControl.User import BasicUserFolder
+from AccessControl.User import SpecialUser
 from AccessControl.Permissions import view_management_screens, view, manage_users
 from Globals import InitializeClass, PersistentMapping
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -44,6 +45,7 @@ from Products.NaayaCore.managers.session_manager import session_manager
 from plugins_tool import plugins_tool
 from User import User
 from Role import Role
+
 
 def manage_addAuthenticationTool(self, REQUEST=None):
     """ """
@@ -413,6 +415,27 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     def getUser(self, name):
         """Return the named user object or None"""
         return self.data.get(name, None)
+
+    def get_ldap_group_roles(self, name, source):
+        acl_groups = source.get_mapped_groups()
+        roles = []
+        for group in acl_groups:
+            if source.user_in_group(name, group):
+                roles.extend(source.get_group_roles(group))
+        return roles
+
+    def authenticate(self, name, password, request):
+        # return local defined user if it exists
+        user = super(AuthenticationTool, self).authenticate(name, password, request)
+        if user is not None:
+            return user
+        # otherwise start looking in LDAP sources
+        for source in self.getSources():
+            user = source.getUserFolder().authenticate(name, password, request)
+            if user is not None and not isinstance(user, SpecialUser):
+                user = deepcopy(user) #we make a copy so the new roles are not cached in the root acl_users
+                user.roles.extend([x for x in self.get_ldap_group_roles(name, source) if x not in user.roles])
+                return user
 
     def getAuthenticatedUserRoles(self, p_meta_types=None):
         """
