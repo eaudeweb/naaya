@@ -46,6 +46,21 @@ class BFileMixin(object):
         self.portal.acl_users.editPermission('Add content', **add_content_permissions)
         self.portal.manage_uninstall_pluggableitem(self.bfile_metatype)
 
+class BrowserFileTestingMixin(object):
+    def make_file(self, filename, content_type, data):
+        f = StringIO(data)
+        f.filename = filename
+        f.headers = {'content-type': content_type}
+        return f
+
+    def assertDownload(self, filename, content_type, data):
+        self.assertEqual(self.browser.get_code(), 200)
+        self.assertEqual(self.browser_get_header('content-length'), str(len(data)))
+        self.assertEqual(self.browser_get_header('content-disposition'),
+            'attachment;filename*=UTF-8\'\'' + filename)
+        self.assertEqual(self.browser_get_header('content-type'), content_type)
+        self.assertEqual(self.browser.get_html(), data)
+
 class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
     """ TestCase for NaayaContent object """
 
@@ -189,7 +204,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
 
         self.browser_do_logout()
 
-class VersioningTestCase(NaayaFunctionalTestCase, BFileMixin):
+class VersioningTestCase(NaayaFunctionalTestCase, BFileMixin, BrowserFileTestingMixin):
     """ TestCase for NaayaContent object """
 
     def afterSetUp(self):
@@ -207,19 +222,6 @@ class VersioningTestCase(NaayaFunctionalTestCase, BFileMixin):
         self.portal.manage_delObjects(['fol'])
         self.bfile_uninstall()
         transaction.commit()
-
-    def make_file(self, filename, content_type, data):
-        f = StringIO(data)
-        f.filename = filename
-        f.headers = {'content-type': content_type}
-        return f
-
-    def assertDownload(self, filename, content_type, data):
-        self.assertEqual(self.browser_get_header('content-length'), str(len(data)))
-        self.assertEqual(self.browser_get_header('content-disposition'),
-            'attachment;filename*=UTF-8\'\'' + filename)
-        self.assertEqual(self.browser_get_header('content-type'), content_type)
-        self.assertEqual(self.browser.get_html(), data)
 
     def test_no_file(self):
         self.browser_do_login('contributor', 'contributor')
@@ -282,8 +284,52 @@ class VersioningTestCase(NaayaFunctionalTestCase, BFileMixin):
         self.assertDownload(**file_data_2)
         self.browser_do_logout()
 
+class SecurityTestCase(NaayaFunctionalTestCase, BFileMixin, BrowserFileTestingMixin):
+    """ TestCase for NaayaContent object """
+
+    def afterSetUp(self):
+        self.bfile_install()
+        from Products.Naaya.NyFolder import addNyFolder
+        from naaya.content.bfile.bfile_item import addNyBFile
+        addNyFolder(self.portal, 'fol', contributor='contributor', submitted=1)
+        addNyBFile(self.portal.fol, id='secur', title='Mulitple versions',
+            submitted=1, contributor='contributor')
+        self.ob_url = 'http://localhost/portal/fol/secur'
+        transaction.commit()
+        self.file_data = {
+            'filename': 'my.png',
+            'content_type': 'image/png',
+            'data': 'asdf'*1024*1024,
+        }
+        self.portal.fol.secur._save_file(self.make_file(**self.file_data))
+        transaction.commit()
+        self.the_file = self.portal.fol.secur
+
+    def beforeTearDown(self):
+        self.portal.manage_delObjects(['fol'])
+        self.bfile_uninstall()
+        transaction.commit()
+
+    def test_restricted_access(self):
+        self.the_file._View_Permission = ('Administrator', 'Owner')
+        transaction.commit()
+
+        self.browser_do_login('admin', '')
+        self.browser.go(self.ob_url)
+        self.assertEqual(self.browser.get_code(), 200)
+        self.assertTrue(self.ob_url + '/download?v=1' in self.browser.get_html())
+        self.browser.go(self.ob_url + '/download?v=1')
+        self.assertDownload(**self.file_data)
+        self.browser_do_logout()
+
+        self.browser.go(self.ob_url)
+        self.assertRedirectLoginPage()
+        self.browser.go(self.ob_url + '/download?v=1')
+        self.assertRedirectLoginPage()
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(NyBFileFunctionalTestCase))
     suite.addTest(makeSuite(VersioningTestCase))
+    suite.addTest(makeSuite(SecurityTestCase))
     return suite

@@ -296,7 +296,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'bfile_edit')
 
-    # TODO: security
+    security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE, v):
         """ serve the specified version file """
 
