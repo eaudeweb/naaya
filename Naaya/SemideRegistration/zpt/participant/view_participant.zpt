@@ -1,0 +1,174 @@
+<link rel="stylesheet" type="text/css" media="print" href="/misc_/SemideRegistration/print.css" />
+
+<h1 tal:content="here/getRegistrationTitle" />
+<h2 tal:content="here/getConferenceDetails" />
+
+<tal:block define="global entitled python:here.isEntitled(request);
+					global curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
+					global curr_lang_label python:here.get_language_name(curr_lang);" />
+
+<tal:block condition="not:entitled">
+	<tal:block condition="python:request.form.has_key('authenticate')">
+		<div style="padding: 1em" class="message-error" i18n:translate="">
+			Wrong registration number - participant name combination. Please try again.
+		</div>
+	</tal:block>
+	<tal:block condition="python:request.get('email_sent')">
+		<div style="padding: 1em" class="message-error" i18n:translate="">
+			An email with the registration credentials was sent. Please use these credentials for authentication.
+		</div>
+	</tal:block>
+
+	<form action="" name="frmLogin" method="post">
+		<table class="datatable">
+			<tr>
+				<th i18n:translate="">Registration number</th>
+				<td><input type="text" name="registration_no" value="" /></td>
+			</tr>
+			<tr>
+				<th i18n:translate="">Participant's family name</th>
+				<td><input type="text" name="last_name" value="" /></td>
+			</tr>
+		</table>
+		<input type="submit" name="authenticate" id="authenticate" value="View profile" i18n:attributes="value" />
+	</form>
+	<tal:block condition="python:request.form.has_key('authenticate') or request.get('wrong_email', '')">
+		<fieldset style="margin-top: 1em">
+			<legend i18:translate="">Resend credentials</legend>
+			<div style="padding: 1em;">
+				<form action="" name="frmResend" method="post">
+					<div>
+						<label for="email" i18n:translate="">
+							Please enter your email to resend the confirmation email,
+							in case you forgot the authentication details
+						</label>
+					</div>
+					<div class="message-error" tal:condition="python:request.get('wrong_email', '')" i18n:translate="">
+						The email doesn't correspond with the one used at the registration. Please try again!
+					</div>
+					<div><input type="text" name="email" value="" size="50"/></div>
+					<input type="submit" name="resend_mail" id="resend_mail" value="Submit" i18n:attributes="value" />
+				</form>
+			</div>
+		</fieldset>
+	</tal:block>
+</tal:block>
+
+<tal:block condition="entitled">
+	<div id="admin_this_folder">
+		<a tal:attributes="href string:${here/absolute_url}/edit_html" i18n:translate="">Edit registration</a>
+		<a tal:attributes="href string:javascript:print()" i18n:translate="">Print registration</a>
+	</div>
+
+	<table class="datatable">
+	<tr>
+		<th i18n:translate="">Registration number</th>
+		<td><strong tal:content="here/id" /></td>
+	</tr>
+	<tr>
+		<th i18n:translate="">Name</th>
+		<td tal:content="here/last_name" />
+	</tr>
+	<tr>
+		<th i18n:translate="">First name</th>
+		<td tal:content="here/first_name" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Country</th>
+		<td tal:content="python:here.getCountry(curr_lang_label)" />
+	</tr>
+	<tr tal:condition="not:here/is_journalist">
+		<th i18n:translate="">Organisation</th>
+		<td tal:content="here/organisation" />
+	</tr>
+	<tr tal:condition="not:here/is_journalist">
+		<th i18n:translate="">Official title</th>
+		<td tal:content="here/official_title" />
+	</tr>
+	<tr tal:condition="here/is_journalist">
+		<th i18n:translate="">Media name</th>
+		<td tal:content="here/media_name" />
+	</tr>
+	<tr tal:condition="here/is_journalist">
+		<th i18n:translate="">Type of media</th>
+		<td tal:content="here/media_type" />
+	</tr>
+	<tr tal:condition="here/is_journalist">
+		<th i18n:translate="">Description of equipment used</th>
+		<td tal:content="here/media_description" />
+	</tr>
+	<tr tal:condition="here/is_journalist">
+		<th i18n:translate="">Your position</th>
+		<td tal:content="here/media_position" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Passport number</th>
+		<td tal:content="here/passport_no" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Expiry date of the passport</th>
+		<td tal:content="here/passport_expire" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Phone number</th>
+		<td tal:content="here/phone_number" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Email</th>
+		<td tal:content="here/email" />
+	</tr>
+	<tr tal:condition="here/is_journalist">
+		<th i18n:translate="">Mobile phone</th>
+		<td tal:content="here/mobile_number" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Fax number</th>
+		<td tal:content="here/fax_number" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Date of arrival</th>
+		<td tal:content="python:here.formatDate(here.arrival_date, '%d %b %Y')" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Arriving from</th>
+		<td tal:content="here/arrival_from" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Flight number</th>
+		<td tal:content="here/arrival_flight" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Time of arrival</th>
+		<td tal:content="here/arrival_time" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Date of departure</th>
+		<td tal:content="python:here.formatDate(here.departure_date, '%d %b %Y')" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Flight number</th>
+		<td tal:content="here/departure_flight" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Time of departure</th>
+		<td tal:content="here/departure_time" />
+	</tr>
+	<tr>
+		<th i18n:translate="">Registration date</th>
+		<td tal:content="python:here.formatDate(here.registration_date, '%d %b %Y')" />
+	</tr>
+	<tr tal:condition="not:here/is_journalist">
+		<th i18n:translate="">Hotel reservation</th>
+		<td>
+			<span tal:condition="python:here.hotel_reservation=='1'">
+				I am part of one of the following delegations: (2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro,
+				Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon, Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey.
+				My accommodation is covered by the French Government.
+			</span>
+			<span tal:condition="python:here.hotel_reservation=='2'">
+				I pay my own accommodation. So please book your hotel room, click here to get hotels contacts and special rates.
+			</span>
+		</td>
+	</tr>
+	</table>
+</tal:block>

@@ -110,12 +110,16 @@ class SemideRegistration(LocalPropertyManager, Folder):
         manage_addPageTemplate(self, 'registration_form', title='', text=registration_form)
         registration_press_form = file(join(constants.PRODUCT_PATH, 'zpt', 'registration', 'registration_press.zpt')).read()
         manage_addPageTemplate(self, 'registration_press_form', title='', text=registration_press_form)
+        view_participant = file(join(constants.PRODUCT_PATH, 'zpt', 'participant', 'view_participant.zpt')).read()
+        edit_participant = file(join(constants.PRODUCT_PATH, 'zpt', 'participant', 'edit_participant.zpt')).read()
         menu_buttons = file(join(constants.PRODUCT_PATH, 'zpt', 'menu_buttons.zpt')).read()
         manage_addPageTemplate(self, 'menu_buttons', title='', text=menu_buttons)
+        manage_addPageTemplate(self, 'view_participant', title='', text=view_participant)
+        manage_addPageTemplate(self, 'edit_participant', title='', text=edit_participant)
 
     def _deleteRegistrationForms(self):
         try:
-            self.manage_delObjects(['registration_form', 'registration_press_form', 'menu_buttons'])
+            self.manage_delObjects(['registration_form', 'registration_press_form', 'menu_buttons', 'view_participant', 'edit_participant'])
         except:
             pass
 
