@@ -211,17 +211,21 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
 
         # copy file data
         bf_stream = bf.open_write()
-        bf_stream.write(the_file.read()) # TODO: copy data in chunks
+        data = the_file.read()
+        bf_stream.write(data) # TODO: copy data in chunks
         bf_stream.close()
+        bf.size = len(data)
 
         self._versions.append(bf)
 
     security.declarePrivate('remove_version')
     def remove_version(self, number):
+        # TODO: expose this method to admins through index_html
         ver = self._versions[number]
         ver.removed = True
         ver.removed_at = datetime.utcnow()
         ver.removed_by = None # TODO
+        ver.size = None
         f = ver.open_write()
         f.write('')
         f.close()
@@ -269,6 +273,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
+        current_ver = self.current_version
         tmpl_data = {
             'here': self,
             'options': {
@@ -276,10 +281,12 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
                     'n': n,
                     'filename': ver.filename,
                     'content_type': ver.content_type,
-                    #'size': ver.size, # TODO
+                    'pretty_size': pretty_size(ver.size),
                     'removed': ver.removed,
                     'url': self.absolute_url() + '/download?v=' + str(n+1),
-                } for n, ver in enumerate(self._versions)],
+                    'pretty_timestamp': ver.timestamp.strftime('%d %b %Y'),
+                    'is_current': ver is current_ver,
+                } for n, ver in reversed(list(enumerate(self._versions)))],
             },
         }
         return self.getFormsTool().getContent(tmpl_data, 'bfile_index')
@@ -301,7 +308,6 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             raise NotFound
 
         RESPONSE.setHeader('Content-Type', ver.content_type)
-        #RESPONSE.setHeader('Content-Length', ver.size) # TODO
         RESPONSE.setHeader('Content-Disposition',
             "attachment;filename*=UTF-8''%s" % urllib.quote(ver.filename))
 
@@ -327,3 +333,13 @@ config.update({
 
 def get_config():
     return config
+
+def pretty_size(size):
+    if size < 1024:
+        return '%d bytes' % size
+    elif size < 1024**2:
+        return '%d KB' % (size/1024)
+    elif size < 1024**3:
+        return '%d MB' % (size/1024**2)
+    else:
+        return '%d GB' % (size/1024**3)
