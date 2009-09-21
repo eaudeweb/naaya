@@ -27,6 +27,7 @@ from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from persistent.dict import PersistentDict
 
 try:
     import ldap
@@ -68,6 +69,7 @@ class plugLDAPUserFolder(PlugBase):
     """ """
 
     meta_type = 'Plugin for user folder'
+    group_to_roles_mapping = PersistentDict()
 
     def __init__(self):
         """ constructor """
@@ -76,6 +78,7 @@ class plugLDAPUserFolder(PlugBase):
         self.located = {}
         self.canonical_name = {}
         self.buffer = {}
+        group_to_roles_mapping = PersistentDict()
         PlugBase.__dict__['__init__'](self)
 
     security = ClassSecurityInfo()
@@ -234,6 +237,44 @@ class plugLDAPUserFolder(PlugBase):
 
     def isList(self, l):
         return isinstance(l, list)
+
+    def get_group_roles(self, group):
+        return self.group_to_roles_mapping.get(group, [])
+
+    def get_mapped_groups(self):
+        return self.group_to_roles_mapping.keys()
+
+    def map_group_to_role(self, group, roles, REQUEST=None):
+        """ """
+        if not self.__dict__.has_key('group_to_roles_mapping'):
+            setattr(self, 'group_to_roles_mapping', PersistentDict())
+        gm = self.group_to_roles_mapping
+        gm.setdefault(group, []).extend([x for x in roles if x not in gm[group]])
+        gm._p_changed = 1
+        if REQUEST is not None:
+            return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+
+    def revoke_group_role(self, roles, REQUEST=None):
+        """ """
+        gm = self.group_to_roles_mapping
+        for role in roles:
+            g, r = role.split(';')[:2]
+            gm[g] = [x for x in gm[g] if x != r]
+            if not gm[g]:
+                del gm[g]
+            gm._p_changed = 1
+        if REQUEST is not None:
+            return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
+
+    def user_in_group(self, user, group):
+        ldap_folder = self.getUserFolder()
+        root_dn = self.getRootDN(ldap_folder)
+        scope = self.getGroupScope(ldap_folder)
+        result = self.delegate.search(root_dn, scope, filter_format('cn=%s', (group,)), ['uniqueMember'])
+        if result['size'] > 0:
+            group_users = (x.split(',')[0] for x in result['results'][result['size']-1]['uniqueMember'])
+            return 'uid=%s' % user in group_users
+        return False
 
     def getUsersByRole(self, acl_folder, groups=None):
         """ Return all those users that are in a group """

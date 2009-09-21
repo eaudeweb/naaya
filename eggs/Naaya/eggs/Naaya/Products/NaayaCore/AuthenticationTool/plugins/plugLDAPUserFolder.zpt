@@ -24,9 +24,9 @@ function fPickRoles(url)
     wnd.focus();
 }
 
-function fSetRoles(role, dn)
-{   document.frmRoles.role.value = role;
-	document.frmRoles.dn.value = dn;}
+function fSetRoles(role, dn) {
+    document.getElementById('ldap_group').value = role;
+}
 var isSelected = false;
 function toggleSelect()
 {   var frm = document.frmRevoke;
@@ -68,6 +68,12 @@ function toggleSelect()
 
 .padding_td {
 	padding-left: 20px;
+}
+
+.ldap_groups ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
 -->
@@ -188,15 +194,6 @@ function toggleSelect()
 			<input type="submit" name="search_user" value="Search" />
 		</td>
 	</tr>
-	<tr>
-		<td width="20"><div style="white-space: nowrap; "><label for="role">which have the role</label> </div></td>
-		<td width="1"><input type="text" name="role" size="15" />
-			<input type="hidden" name="dn" /></td>
-		<td width="1" nowrap class="padding_td"><input type="button" name="pickroles2" value="   Pick   "
-						tal:attributes="onclick string:javascript:fPickRoles('${here/getPluginPath}/pickroles_html')" /></td>
-		<td width="1">&nbsp;</td>
-		<td class="padding_td"> <input type="submit" name="search_role" value="Search"></td>
-	</tr>
 </table>
 </form>
 
@@ -265,6 +262,56 @@ function toggleSelect()
 </form>
 </tal:block>
 
+</fieldset>
+
+<fieldset>
+<legend i18n:translate="">Grant roles to LDAP groups</legend>
+
+    <form tal:attributes="action string:${here/absolute_url}/map_group_to_role" method="post">
+        <div class="field">
+        <label for="ldap_group" i18n:translate="">LDAP group</label>
+        <input type="text" id="ldap_group" name="group"/>
+        <input type="button" name="pickroles2" value="Pick" 
+               tal:attributes="onclick string:javascript:fPickRoles('${here/getPluginPath}/pickroles_html')" />
+        </div>
+
+        <div class="field">
+        <label for="portal_roles" i18n:translate="">Role to grant</label>
+        <select multiple="multiple" id="portal_roles" name="roles:list">
+			<tal:block repeat="item here/list_valid_roles">
+			<option tal:condition="python:item=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')"
+					tal:attributes="value item" tal:content="item" />
+			<option tal:condition="python:item!='Manager'" tal:attributes="value item" tal:content="item" />
+			</tal:block>
+        </select>
+        </div>
+
+        <input type="submit" value="Grant role" i18n:attributes="value"/>
+    </form>
+
+    <form method="post" tal:attributes="action string:${here/absolute_url}/revoke_group_role" tal:define="groups here/get_mapped_groups" tal:condition="groups">
+        <p i18n:translate="">LDAP groups with roles in this portal</p>
+        <table class="datatable ldap_groups">
+        <thead>
+            <th i18n:translate="">Group</th>
+            <th i18n:translate="">Role</th>
+        </thead>
+        <tbody>
+            <tr tal:repeat="group groups">
+                <td tal:content="group"/>
+                <td><ul>
+                    <li tal:repeat="role python:here.get_group_roles(group)">
+                        <label>
+                            <input type="checkbox" name="roles:list" tal:attributes="value string:${group};;${role}"/>
+                            <span tal:replace="role"/>
+                        </label>
+                    </li>
+                </ul></td>
+            </tr>
+        </tbody>
+        </table>
+        <input type="submit" value="Revoke roles" i18n:attributes="value"/>
+    </form>
 </fieldset>
 
 
