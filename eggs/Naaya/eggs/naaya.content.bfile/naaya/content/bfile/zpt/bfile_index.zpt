@@ -37,11 +37,20 @@
 
 </table>
 
-<ul>
-    <li tal:repeat="version options/versions">
-        <a tal:attributes="href version/url" tal:content="version/filename"></a>
-    </li>
-</ul>
+<div tal:condition="not:options/versions" i18n:translate="">No files uploaded</div>
+<dl tal:condition="options/versions">
+    <tal:block repeat="version options/versions">
+        <dt>
+            <a tal:attributes="href version/url" tal:content="version/filename"></a>
+            <em tal:condition="version/is_current">(current version)</em>
+        </dt>
+        <dd>
+        <tal:block content="version/pretty_timestamp" />,
+        <code tal:content="version/content_type" />,
+        <tal:block content="version/pretty_size" />
+        </dd>
+    </tal:block>
+</dl>
 
 <div tal:define="description python:here.prop_value_or_none('description')"
     tal:condition="description" tal:content="structure description" />

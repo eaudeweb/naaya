@@ -215,25 +215,24 @@ class VersioningTestCase(NaayaFunctionalTestCase, BFileMixin):
         return f
 
     def assertDownload(self, filename, content_type, data):
-        self.assertEqual(self.browser.get_header('content-disposition'),
+        self.assertEqual(self.browser_get_header('content-length'), str(len(data)))
+        self.assertEqual(self.browser_get_header('content-disposition'),
             'attachment;filename*=UTF-8\'\'' + filename)
-        self.assertEqual(self.browser.get_header('content-type'), content_type)
+        self.assertEqual(self.browser_get_header('content-type'), content_type)
         self.assertEqual(self.browser.get_html(), data)
 
     def test_no_file(self):
-        return # TODO: make it pass
         self.browser_do_login('contributor', 'contributor')
         self.browser.go(self.ob_url)
         self.assertEqual(self.browser.get_code(), 200)
         html = self.browser.get_html()
-        self.assertTrue('no files whatsoever' in html)
+        self.assertTrue('No files uploaded' in html)
         self.assertFalse(self.ob_url + '/download' in html)
         self.browser.go(self.ob_url + '/download?v=1')
         self.assertEqual(self.browser.get_code(), 404)
         self.browser_do_logout()
 
     def test_one_file(self):
-        return # TODO: make it pass
         file_data = {
             'filename': 'my.png',
             'content_type': 'image/png',
@@ -245,24 +244,25 @@ class VersioningTestCase(NaayaFunctionalTestCase, BFileMixin):
         self.browser.go(self.ob_url)
         self.assertEqual(self.browser.get_code(), 200)
         html = self.browser.get_html()
-        self.assertFalse('no files whatsoever' in html)
+        self.assertFalse('No files uploaded' in html)
         self.assertTrue(self.ob_url + '/download?v=1' in html)
         self.assertFalse(self.ob_url + '/download?v=2' in html)
+        self.assertTrue('image/png' in html)
+        self.assertTrue('4 bytes' in html)
         self.browser.go(self.ob_url + '/download?v=1')
         self.assertDownload(**file_data)
         self.browser_do_logout()
 
     def test_two_files(self):
-        return # TODO: make it pass
         file_data_1 = {
             'filename': 'my.png',
             'content_type': 'image/png',
-            'data': '1234',
+            'data': 'asdf'*1024*1024,
         }
         file_data_2 = {
             'filename': 'my.jpg',
-            'content_type': 'image/jpg',
-            'data': '5678',
+            'content_type': 'image/jpeg',
+            'data': 'g'*int(1024*15.3),
         }
         self.the_file._save_file(self.make_file(**file_data_1))
         self.the_file._save_file(self.make_file(**file_data_2))
@@ -271,9 +271,11 @@ class VersioningTestCase(NaayaFunctionalTestCase, BFileMixin):
         self.browser.go(self.ob_url)
         self.assertEqual(self.browser.get_code(), 200)
         html = self.browser.get_html()
-        self.assertFalse('no files whatsoever' in html)
+        self.assertFalse('No files uploaded' in html)
         self.assertTrue(self.ob_url + '/download?v=1' in html)
         self.assertTrue(self.ob_url + '/download?v=2' in html)
+        self.assertTrue('4 MB' in html)
+        self.assertTrue('15 KB' in html)
         self.browser.go(self.ob_url + '/download?v=1')
         self.assertDownload(**file_data_1)
         self.browser.go(self.ob_url + '/download?v=2')
