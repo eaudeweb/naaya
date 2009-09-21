@@ -40,7 +40,6 @@ class NyBFileTestCase(NaayaTestCase):
         addNyBFile(self.portal.myfolder, submitted=1, contributor='contributor', **kwargs)
 
     def test_add_blank(self):
-        # add blank file
         self.add_bfile(id='mybfile', title='My bfile')
         self.assertTrue('mybfile' in self.portal.myfolder.objectIds())
 
@@ -69,8 +68,8 @@ class NyBFileTestCase(NaayaTestCase):
         self.assertTrue(now_pre <= ver.timestamp <= now_post)
         self.assertEqual(ver.open().read(), 'hello data!')
         self.assertEqual(ver.filename, 'my.txt')
+        self.assertEqual(ver.size, 11)
         self.assertEqual(ver.content_type, 'image/jpeg')
-        #self.assertEqual(ver.content_type, 'text/plain')
 
     def test_change_file(self):
         myfile = StringIO('hello data!')
@@ -85,6 +84,7 @@ class NyBFileTestCase(NaayaTestCase):
         self.assertEqual(len(mybfile._versions), 2)
         cv = mybfile.current_version
         self.assertEqual(cv.filename, 'other.txt')
+        self.assertEqual(cv.size, 8)
         self.assertEqual(cv.open().read(), 'new data')
 
     def test_remove_version(self):
@@ -98,8 +98,10 @@ class NyBFileTestCase(NaayaTestCase):
         mybfile._save_file(myfile2)
 
         mybfile.remove_version(1)
-        self.assertEqual(mybfile._versions[1].open().read(), '')
-        self.assertEqual(mybfile._versions[1].removed, True)
+        rm_ver = mybfile._versions[1]
+        self.assertEqual(rm_ver.open().read(), '')
+        self.assertEqual(rm_ver.size, None)
+        self.assertEqual(rm_ver.removed, True)
         self.assertTrue(mybfile.current_version is mybfile._versions[0])
 
         myfile3 = StringIO('even newer data')
