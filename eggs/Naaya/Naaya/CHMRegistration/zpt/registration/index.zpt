@@ -10,6 +10,4 @@
 
 <span tal:replace="structure here/menu_buttons"/>
 
-<span tal:replace="structure here/introduction" />
-
 <tal:block replace="structure here/standard_html_footer"/>

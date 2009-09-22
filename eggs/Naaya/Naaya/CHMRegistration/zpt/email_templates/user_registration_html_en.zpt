@@ -11,7 +11,7 @@
             <a href="%(registration_edit_link)s">%(registration_edit_link)s</a>
         <p/>
         <p>
-            The registration number <strong>%(registration_number)s</strong> and your last name <strong>%(last_name)s</strong> (case sensitive) are required for authentication.
+            The registration number <strong>%(registration_number)s</strong> and your last name <strong>%(name)s</strong> (case sensitive) are required for authentication.
         <p/>
         <p>
             Soon you will receive a confirmation e-mail and some practical information about the conference.

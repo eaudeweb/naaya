@@ -30,7 +30,6 @@ import time
 from Products.NaayaCore.managers import utils as naaya_utils
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager, LocalProperty
 from CHMParticipant import CHMParticipant
-from CHMPress import CHMPress
 from utilities.Slugify import slugify
 from utilities.SendMail import send_mail
 from utilities.validators import form_validation, registration_validation, str2date
@@ -39,7 +38,7 @@ import constants
 
 
 add_registration = PageTemplateFile('zpt/registration/add', globals())
-def manage_add_registration(self, id='', title='', conference_details='', administrative_email ='', start_date='', end_date='', introduction='', lang='', REQUEST=None):
+def manage_add_registration(self, id='', title='', conference_details='', administrative_email ='', start_date='', end_date='', lang='', REQUEST=None):
     """ Adds a CHM registration instance"""
     if registration_validation(REQUEST):
         if id:
@@ -48,7 +47,7 @@ def manage_add_registration(self, id='', title='', conference_details='', admini
             id = slugify(title)
         if lang is None: 
             lang = self.gl_get_selected_language()
-        ob = CHMRegistration(id, title, conference_details, administrative_email, start_date, end_date, introduction, lang)
+        ob = CHMRegistration(id, title, conference_details, administrative_email, start_date, end_date, lang)
         self.gl_add_languages(ob)
         self._setObject(id, ob)
         ob = self._getOb(id)
@@ -69,7 +68,6 @@ class CHMRegistration(LocalPropertyManager, Folder):
 
     title = LocalProperty('title')
     conference_details = LocalProperty('conference_details')
-    introduction = LocalProperty('introduction')
 
     manage_options = (
         Folder.manage_options[:1]
@@ -88,17 +86,16 @@ class CHMRegistration(LocalPropertyManager, Folder):
         manage_addTemplatesManager(self)
         self._loadRegistrationForms()
 
-    def __init__(self, id, title, conference_details, administrative_email, start_date, end_date, introduction, lang):
+    def __init__(self, id, title, conference_details, administrative_email, start_date, end_date, lang):
         """ constructor """
         self.id = id
-        self.save_properties(title, conference_details, administrative_email, start_date, end_date, introduction, lang)
+        self.save_properties(title, conference_details, administrative_email, start_date, end_date, lang)
 
     security.declareProtected(constants.MANAGE_PERMISSION, 'save_properties')
-    def save_properties(self, title, conference_details, administrative_email, start_date, end_date, introduction, lang):
+    def save_properties(self, title, conference_details, administrative_email, start_date, end_date, lang):
         """ save properties """
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('conference_details', lang, conference_details)
-        self._setLocalPropValue('introduction', lang, introduction)
         self.administrative_email = administrative_email
         self.start_date = str2date(start_date)
         self.end_date = str2date(end_date)
@@ -108,8 +105,6 @@ class CHMRegistration(LocalPropertyManager, Folder):
         """ load registration forms """
         registration_form = file(join(constants.PRODUCT_PATH, 'zpt', 'registration', 'registration.zpt')).read()
         manage_addPageTemplate(self, 'registration_form', title='', text=registration_form)
-        registration_press_form = file(join(constants.PRODUCT_PATH, 'zpt', 'registration', 'registration_press.zpt')).read()
-        manage_addPageTemplate(self, 'registration_press_form', title='', text=registration_press_form)
         view_participant = file(join(constants.PRODUCT_PATH, 'zpt', 'participant', 'view_participant.zpt')).read()
         edit_participant = file(join(constants.PRODUCT_PATH, 'zpt', 'participant', 'edit_participant.zpt')).read()
         menu_buttons = file(join(constants.PRODUCT_PATH, 'zpt', 'menu_buttons.zpt')).read()
@@ -119,7 +114,7 @@ class CHMRegistration(LocalPropertyManager, Folder):
 
     def _deleteRegistrationForms(self):
         try:
-            self.manage_delObjects(['registration_form', 'registration_press_form', 'menu_buttons', 'view_participant', 'edit_participant'])
+            self.manage_delObjects(['registration_form', 'menu_buttons', 'view_participant', 'edit_participant'])
         except:
             pass
 
@@ -144,20 +139,23 @@ class CHMRegistration(LocalPropertyManager, Folder):
                 registration_no = naaya_utils.genRandomId(10)
                 cleaned_data = REQUEST.form
                 del cleaned_data['submit']
+                if not 'event_1' in cleaned_data: cleaned_data['event_1'] = '0'
+                if not 'event_2' in cleaned_data: cleaned_data['event_2'] = '0'
+                if not 'event_3' in cleaned_data: cleaned_data['event_3'] = '0'
                 ob = CHMParticipant(registration_no, **cleaned_data)
                 self._setObject(registration_no, ob)
                 participant = self._getOb(registration_no, None)
                 if participant:
                     #save the authentication token on session
                     REQUEST.SESSION.set('authentication_id', registration_no)
-                    REQUEST.SESSION.set('authentication_name', self.unicode2UTF8(participant.last_name))
+                    REQUEST.SESSION.set('authentication_name', self.unicode2UTF8(participant.first_last_name))
 
                     #send notifications
                     values = {'registration_edit_link': participant.absolute_url(),
                                 'registration_event': self.unicode2UTF8(self.title),
                                 'website_team': self.unicode2UTF8(self.site_title),
                                 'registration_number': registration_no,
-                                'last_name': self.unicode2UTF8(participant.last_name)}
+                                'name': self.unicode2UTF8(participant.first_last_name)}
                     self.send_registration_notification(participant.email,
                         'Event registration',
                         self.getEmailTemplate('user_registration_html', lang) % values,
@@ -170,45 +168,6 @@ class CHMRegistration(LocalPropertyManager, Folder):
                     #redirect to profile page
                     return REQUEST.RESPONSE.redirect(participant.absolute_url())
         return self.registration_form(REQUEST)
-
-    def registration_press_html(self, REQUEST):
-        """ registration form """
-        submit =  REQUEST.form.get('submit', '')
-        if submit:
-            form_valid = form_validation(constants.PRESS_MANDATORY_FIELDS,
-                                            constants.DATE_FIELDS,
-                                            constants.TIME_FIELDS,
-                                            REQUEST)
-            if form_valid:
-                lang = self.gl_get_selected_language()
-                registration_no = naaya_utils.genRandomId(10)
-                cleaned_data = REQUEST.form
-                del cleaned_data['submit']
-                ob = CHMPress(registration_no, **cleaned_data)
-                self._setObject(registration_no, ob)
-                press = self._getOb(registration_no, None)
-                if press:
-                    #save the authentication token on session
-                    REQUEST.SESSION.set('authentication_id', registration_no)
-                    REQUEST.SESSION.set('authentication_name', self.unicode2UTF8(press.last_name))
-
-                    #send notifications
-                    values = {'registration_edit_link': press.absolute_url(),
-                                'registration_event': self.unicode2UTF8(self.title),
-                                'website_team': self.unicode2UTF8(self.site_title),
-                                'registration_number': registration_no,
-                                'last_name': self.unicode2UTF8(press.last_name)}
-                    self.send_registration_notification(press.email,
-                        'Event registration',
-                        self.getEmailTemplate('user_registration_html', lang) % values,
-                        self.getEmailTemplate('user_registration_text', lang) % values)
-                    self.send_registration_notification(self.administrative_email,
-                        'Event registration',
-                        self.getEmailTemplate('admin_registration_html', 'en') % values,
-                        self.getEmailTemplate('admin_registration_text', 'en') % values)
-
-                    return REQUEST.RESPONSE.redirect(press.absolute_url())
-        return self.registration_press_form(REQUEST)
 
     security.declareProtected(constants.VIEW_PERMISSION, 'index_html')
     index_html = PageTemplateFile('zpt/registration/index', globals())
@@ -268,56 +227,22 @@ class CHMRegistration(LocalPropertyManager, Folder):
     security.declareProtected(constants.MANAGE_PERMISSION, 'exportParticipants')
     def exportParticipants(self, REQUEST=None, RESPONSE=None):
         """ exports the participants list in CSV format """
-        data = [('Registration date', 'Registration number', 'First name', 'Name', 'Country', 'Organisation',
-                    'Official title', 'Passport number', 'Expiry date of the passport', 'Email address',
-                    'Phone number', 'Fax number', 'Date of arrival', 'Arriving from', 'Flight number',
-                    'Time of arrival', 'Date of departure', 'Flight number', 'Departure time', 'Hotel reservation')]
+        data = [('Registration date', 'Registration number', 'Name', 'Position', 'Organisation',
+                    'Address', 'Postal code', 'eMail', 'Phone number', 'Event #1', 'Event #2', 'Event #3', 
+                    'Topic #1', 'Topic #2', 'Topic #3', 'Topic #4', 'Explanation')]
         data_app = data.append
-        for part in self.getParticipants(skey='registration_date', rkey=1, is_journalist=False):
-            if part.arrival_date:
-                arrival_date = self.formatDate(part.arrival_date)
-            else:
-                arrival_date = 'n/a'
-            if part.departure_date:
-                departure_date = self.formatDate(part.departure_date)
-            else:
-                departure_date = 'n/a'
-            if part.hotel_reservation == '1':
-                hotel_reservation = 'I am part of one of the following delegations: (2 persons for each delegation): Albania, Algeria, Bosnia-Herzegovina, Croatia, Montenegro, Egypt, Euro-Mediterranean Parliamentary Assembly, Israel, League of Arab States, Lebanon, Libya, Mauritania, Morocco, Palestine, Syria, Tunisia, Turkey. My accommodation is covered by the French Government.'
-            else:
-                hotel_reservation = 'I pay my own accommodation. So please book your hotel room, click here to get hotels contacts and special rates.'
-            data_app((self.formatDate(part.registration_date), part.id, self.unicode2UTF8(part.first_name), self.unicode2UTF8(part.last_name),
-                        self.unicode2UTF8(part.country), self.unicode2UTF8(part.organisation), self.unicode2UTF8(part.official_title), 
-                        self.unicode2UTF8(part.passport_no), self.unicode2UTF8(part.passport_expire), part.email, self.unicode2UTF8(part.phone_number), 
-                        self.unicode2UTF8(part.fax_number), arrival_date, self.unicode2UTF8(part.arrival_from), self.unicode2UTF8(part.arrival_flight),
-                        part.arrival_time, departure_date, self.unicode2UTF8(part.departure_flight), part.departure_time, hotel_reservation))
+        for part in self.getParticipants(skey='registration_date', rkey=1):
+            data_app((self.formatDate(part.registration_date), part.id,
+                    self.unicode2UTF8(part.first_last_name), self.unicode2UTF8(part.position), 
+                    self.unicode2UTF8(part.organisation), self.unicode2UTF8(part.address),
+                    self.unicode2UTF8(part.zip_code), part.email, self.unicode2UTF8(part.phone_number),
+                    self.unicode2UTF8(part.event_1), self.unicode2UTF8(part.event_2),
+                    self.unicode2UTF8(part.event_3), self.unicode2UTF8(part.topic_1),
+                     self.unicode2UTF8(part.topic_2), self.unicode2UTF8(part.topic_3),
+                     self.unicode2UTF8(part.topic_4),
+                     self.unicode2UTF8(part.explanation.replace('\r\n', ' ').replace('\n', ' '))))
 
         return self.create_csv(data, filename='participants.csv', RESPONSE=REQUEST.RESPONSE)
-
-    security.declareProtected(constants.MANAGE_PERMISSION, 'exportPress')
-    def exportPress(self, REQUEST=None, RESPONSE=None):
-        """ exports the press participants list in CSV format """
-        data = [('Registration date', 'Registration number', 'First name', 'Name', 'Country', 'Media name',
-                    'Type of media', 'Description of equipment used', 'Your position', 'Passport number',
-                    'Expiry date of the passport', 'Email address', 'Phone number', 'Fax number', 'Mobile phone', 'Date of arrival', 'Arriving from', 'Flight number', 'Time of arrival',
-                    'Date of departure', 'Flight number', 'Time of departure')]
-        data_app = data.append
-        for part in self.getParticipants(skey='registration_date', rkey=1, is_journalist=True):
-            if part.arrival_date:
-                arrival_date = self.formatDate(part.arrival_date)
-            else:
-                arrival_date = 'n/a'
-            if part.departure_date:
-                departure_date = self.formatDate(part.departure_date)
-            else:
-                departure_date = 'n/a'
-            data_app((self.formatDate(part.registration_date), part.id, self.unicode2UTF8(part.first_name), self.unicode2UTF8(part.last_name),
-                        self.unicode2UTF8(part.country), self.unicode2UTF8(part.media_name), self.unicode2UTF8(part.media_type), self.unicode2UTF8(part.media_description).replace('\r\n', ' ').replace('\n', ' '),
-                        self.unicode2UTF8(part.media_position), self.unicode2UTF8(part.passport_no), self.unicode2UTF8(part.passport_expire), part.email, 
-                        self.unicode2UTF8(part.phone_number), self.unicode2UTF8(part.fax_number), self.unicode2UTF8(part.mobile_number), arrival_date, 
-                        self.unicode2UTF8(part.arrival_from), self.unicode2UTF8(part.arrival_flight), part.arrival_time, departure_date, self.unicode2UTF8(part.departure_flight),
-                        part.departure_time))
-        return self.create_csv(data, filename='press_participants.csv', RESPONSE=REQUEST.RESPONSE)
 
     security.declarePrivate('create_csv')
     def create_csv(self, data, filename, RESPONSE):
@@ -330,16 +255,10 @@ class CHMRegistration(LocalPropertyManager, Folder):
     security.declareProtected(constants.MANAGE_PERMISSION, 'participants')
     participants = PageTemplateFile('zpt/registration/participants', globals())
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'participants_press')
-    participants_press = PageTemplateFile('zpt/registration/participants_press', globals())
-
     security.declareProtected(constants.MANAGE_PERMISSION, 'getParticipants')
-    def getParticipants(self, skey, rkey, is_journalist):
+    def getParticipants(self, skey, rkey):
         """ Returns the list of participants """
-        if is_journalist:
-            meta_type = 'CHM Press Participant'
-        else:
-            meta_type = 'CHM Participant'
+        meta_type = 'CHM Participant'
         participants = [ ( self.unicode2UTF8(getattr(p, skey)), p ) for p in self.objectValues(meta_type) ]
         participants.sort()
         if rkey:
