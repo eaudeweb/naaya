@@ -1,7 +1,7 @@
 <tal:block replace="structure here/standard_html_header"/>
 <link rel="stylesheet" type="text/css" media="screen" href="/misc_/CHMRegistration/style.css"/>
-<script type="text/javascript" src="/misc_/CHMRegistration/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="/misc_/CHMRegistration/tinymceconfig.js"></script>
+<!--<script type="text/javascript" src="/misc_/CHMRegistration/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="/misc_/CHMRegistration/tinymceconfig.js"></script>-->
 <script type="text/javascript" src="/misc_/CHMRegistration/core.js"></script>
 <script type="text/javascript" src="/misc_/CHMRegistration/calendar.js"></script>
 <script type="text/javascript" src="/misc_/CHMRegistration/datetime.js"></script>
@@ -12,14 +12,17 @@
 	tal:define="request_error python:request.get('request_error');
 				curr_lang python:request.get('lang', None) or here.gl_get_selected_language();">
 	<div class="field">
-		<label i18n:translate="">Fields marked with * are mandatory.</label>
+		<label i18n:translate="">
+			Fields marked with <span class="mandatory_field">*</span> are mandatory.
+		</label>
 	</div>
 	<div class="message-error" tal:condition="request_error">
 		<fieldset>
 			<legend i18:translate="">Errors</legend>
 			<div class="fieldset_div">
 				<ul>
-					<li i18:translate="">This form contains errors. Please fill all mandatory fields correctly and try again.</li>
+					<li i18:translate="">This form contains errors.
+					Please fill all mandatory fields correctly and try again.</li>
 				</ul>
 			</div>
 		</fieldset>
@@ -72,14 +75,6 @@
 		<input type="text" class="vDateField" size="10" maxlength="10" name="end_date" id="end_date"
 		tal:attributes="value python:request.get('end_date', '')"/>
 		<noscript><em class="tooltips">(dd/mm/yyyy)</em></noscript>
-	</div>
-	<div class="field">
-		<label for="introduction" i18n:translate="">Introductory text</label>
-		<textarea id="introduction" name="introduction:utf8:ustring" rows="" cols=""
-		tal:content="python:request.get('introduction', '')" ></textarea>
-	</div>
-	<div style="font-size: x-small;font-style: italic;padding-left: 3ex" i18n:translate="">
-		When pasting from word documents, please use the "Paste from Word" button.
 	</div>
 	<div class="field">
 		<input type="hidden" name="lang" tal:attributes="value curr_lang" />

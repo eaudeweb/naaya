@@ -32,61 +32,46 @@ class BaseParticipant(SimpleItem):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, registration_no, first_name, last_name, email, country, passport_no, \
-                passport_expire, phone_number, fax_number, arrival_date, arrival_from, \
-                arrival_flight, arrival_time, departure_date, departure_flight, departure_time, is_journalist):
+    def __init__(self, registration_no, first_last_name, position, organisation, address, zip_code,\
+                email, phone_number, event_1, event_2, event_3, topic_1, topic_2, topic_3, topic_4, explanation):
         """ constructor """
         self.id = registration_no
-        self.first_name = first_name
-        self.last_name = last_name
+        self.first_last_name = first_last_name
+        self.position = position
+        self.organisation = organisation
+        self.address = address
+        self.zip_code = zip_code
         self.email = email
-        self.country = country
-        self.passport_no = passport_no
-        self.passport_expire = passport_expire
         self.phone_number = phone_number
-        self.fax_number = fax_number
-        if arrival_date:
-            self.arrival_date = str2date(arrival_date)
-        else:
-            self.arrival_date = ''
-        self.arrival_from = arrival_from
-        self.arrival_flight = arrival_flight
-        self.arrival_time = arrival_time
-        if departure_date:
-            self.departure_date = str2date(departure_date)
-        else:
-            self.departure_date = ''
-        self.departure_flight = departure_flight
-        self.departure_time = departure_time
-        self.is_journalist = is_journalist
+        self.event_1 = event_1
+        self.event_2 = event_2
+        self.event_3 = event_3
+        self.topic_1 = topic_1
+        self.topic_2 = topic_2
+        self.topic_3 = topic_3
+        self.topic_4 = topic_4
+        self.explanation = explanation
         self.registration_date = time.localtime()
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit')
-    def edit(self, first_name, last_name, email, country, passport_no, passport_expire, phone_number, \
-                    fax_number, arrival_date, arrival_from, arrival_flight, arrival_time, departure_date, \
-                    departure_flight, departure_time):
+    def edit(self, first_last_name, position, organisation, address, zip_code,\
+                email, phone_number, event_1, event_2, event_3, topic_1, topic_2, topic_3, topic_4, explanation):
         """ edit properties """
-        self.first_name = first_name
-        self.last_name = last_name
+        self.first_last_name = first_last_name
+        self.position = position
+        self.organisation = organisation
+        self.address = address
+        self.zip_code = zip_code
         self.email = email
-        self.country = country
-        self.passport_no = passport_no
-        self.passport_expire = passport_expire
         self.phone_number = phone_number
-        self.fax_number = fax_number
-        if arrival_date:
-            self.arrival_date = str2date(arrival_date)
-        else:
-            self.arrival_date = ''
-        self.arrival_from = arrival_from
-        self.arrival_flight = arrival_flight
-        self.arrival_time = arrival_time
-        if departure_date:
-            self.departure_date = str2date(departure_date)
-        else:
-            self.departure_date = ''
-        self.departure_flight = departure_flight
-        self.departure_time = departure_time
+        self.event_1 = event_1
+        self.event_2 = event_2
+        self.event_3 = event_3
+        self.topic_1 = topic_1
+        self.topic_2 = topic_2
+        self.topic_3 = topic_3
+        self.topic_4 = topic_4
+        self.explanation = explanation
 
     def getCountry(self, lang):
         """ get country name """
@@ -99,7 +84,7 @@ class BaseParticipant(SimpleItem):
     def isEntitled(self, REQUEST):
         """ check if current user has the right to modify this object """
         return ((REQUEST.SESSION.get('authentication_id','') == str(self.id)) and \
-            (REQUEST.SESSION.get('authentication_name','') == self.unicode2UTF8(self.last_name))) or \
+            (REQUEST.SESSION.get('authentication_name','') == self.unicode2UTF8(self.first_last_name))) or \
             self.canManageParticipants()
 
     security.declareProtected(constants.VIEW_PERMISSION, 'index_html')
@@ -112,7 +97,7 @@ class BaseParticipant(SimpleItem):
         if REQUEST.form.has_key('authenticate'):
             #The registration number and last name are saved on the session as submitted by the user
             session.set('authentication_id', REQUEST.get('registration_no'))
-            session.set('authentication_name', self.unicode2UTF8(REQUEST.get('last_name')))
+            session.set('authentication_name', self.unicode2UTF8(REQUEST.get('first_last_name')))
         if REQUEST.form.has_key('resend_mail'):
             #If the email corresponds with the one used at the registration, the confirmation mail will be resent
             if self.email == REQUEST.form.get('email', ''):
@@ -120,7 +105,7 @@ class BaseParticipant(SimpleItem):
                             'registration_event': self.title,
                             'website_team': self.site_title,
                             'registration_number': self.id,
-                            'last_name': self.last_name}
+                            'name': self.first_last_name}
                 self.send_registration_notification(self.email,
                     'Event registration',
                     constants.REGISTRATION_ADD_EDIT_TEMPLATE % values,
@@ -145,7 +130,7 @@ class BaseParticipant(SimpleItem):
                                 time_fields=constants.TIME_FIELDS,
                                 REQUEST=REQUEST):
                 session.set('authentication_id', REQUEST.get('registration_no'))
-                session.set('authentication_name', self.unicode2UTF8(REQUEST.get('last_name')))
+                session.set('authentication_name', self.unicode2UTF8(REQUEST.get('first_last_name')))
         if REQUEST.form.has_key('resend_mail'):
             #If the email corresponds with the one used at the registration, the confirmation mail will be resent
             if self.email == REQUEST.form.get('email', ''):
@@ -163,6 +148,9 @@ class BaseParticipant(SimpleItem):
                                 REQUEST=REQUEST):
                 cleaned_data = REQUEST.form
                 del cleaned_data['submit']
+                if not 'event_1' in cleaned_data: cleaned_data['event_1'] = '0'
+                if not 'event_2' in cleaned_data: cleaned_data['event_2'] = '0'
+                if not 'event_3' in cleaned_data: cleaned_data['event_3'] = '0'
                 self.edit(**cleaned_data)
 
                 #send notifications

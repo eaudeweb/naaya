@@ -34,7 +34,6 @@ misc_ = {
     'style.css': ImageFile('www/style.css', globals()),
     'print.css': ImageFile('www/print.css', globals()),
     'CHMParticipant.png': ImageFile('www/CHMParticipant.png', globals()),
-    'CHMPress.gif': ImageFile('www/CHMPress.gif', globals()),
     'print.gif': ImageFile('www/print.gif', globals()),
     'EmailTemplates.gif': ImageFile('www/EmailTemplates.gif', globals()),
     }

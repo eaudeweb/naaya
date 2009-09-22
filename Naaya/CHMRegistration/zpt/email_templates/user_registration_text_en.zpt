@@ -4,7 +4,7 @@ Your registration for the international conference «"%(registration_event)s"» th
 
 %(registration_edit_link)s
 
-The registration number %(registration_number)s and your last name %(last_name)s (case sensitive) are required for authentication.
+The registration number %(registration_number)s and your last name %(name)s (case sensitive) are required for authentication.
 
 ---
 Best Regards,
