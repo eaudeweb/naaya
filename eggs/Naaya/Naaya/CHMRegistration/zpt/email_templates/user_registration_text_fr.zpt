@@ -1,0 +1,13 @@
+Madame, Monsieur,
+
+Votre enregistrement à la conférence internationale «"%(registration_event)s"», qui se déroulera à Lyon les 23-24 novembre 2009, a bien été reçue. Vous pouvez revoir ou éditer votre formulaire à partir du lien suivant:
+
+%(registration_edit_link)s
+
+Votre numéro d’enregistrement %(registration_number)s et votre nom de famille %(last_name)s (en respectant la casse) seront nécessaire pour votre authentification.
+
+Vous recevrez prochainement un message de confirmation et des informations pratiques sur la conférence.
+
+---
+Sincères salutations,
+L’équipe d’organisation de la conférence
