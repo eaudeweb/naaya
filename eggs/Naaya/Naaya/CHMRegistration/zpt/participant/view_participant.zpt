@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" media="print" href="/misc_/SemideRegistration/print.css" />
+<link rel="stylesheet" type="text/css" media="print" href="/misc_/CHMRegistration/print.css" />
 
 <h1 tal:content="here/getRegistrationTitle" />
 <h2 tal:content="here/getConferenceDetails" />

@@ -1,7 +1,7 @@
-<link rel="stylesheet" type="text/css" media="screen" href="/misc_/SemideRegistration/style.css"/>
-<script type="text/javascript" src="/misc_/SemideRegistration/core.js"></script>
-<script type="text/javascript" src="/misc_/SemideRegistration/calendar.js"></script>
-<script type="text/javascript" src="/misc_/SemideRegistration/datetime.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="/misc_/CHMRegistration/style.css"/>
+<script type="text/javascript" src="/misc_/CHMRegistration/core.js"></script>
+<script type="text/javascript" src="/misc_/CHMRegistration/calendar.js"></script>
+<script type="text/javascript" src="/misc_/CHMRegistration/datetime.js"></script>
 
 
 <h1 tal:content="here/getRegistrationTitle" />

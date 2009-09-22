@@ -1,17 +1,17 @@
 <tal:block replace="structure here/standard_html_header"/>
 
-<link rel="stylesheet" type="text/css" media="screen" href="/misc_/SemideRegistration/style.css"/>
-<script type="text/javascript" src="/misc_/SemideRegistration/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="/misc_/SemideRegistration/tinymceconfig.js"></script>
-<script type="text/javascript" src="/misc_/SemideRegistration/core.js"></script>
-<script type="text/javascript" src="/misc_/SemideRegistration/calendar.js"></script>
-<script type="text/javascript" src="/misc_/SemideRegistration/datetime.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="/misc_/CHMRegistration/style.css"/>
+<script type="text/javascript" src="/misc_/CHMRegistration/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="/misc_/CHMRegistration/tinymceconfig.js"></script>
+<script type="text/javascript" src="/misc_/CHMRegistration/core.js"></script>
+<script type="text/javascript" src="/misc_/CHMRegistration/calendar.js"></script>
+<script type="text/javascript" src="/misc_/CHMRegistration/datetime.js"></script>
 
 <tal:block define="languages here/get_languages_mapping;
 					curr_lang python:request.get('lang', None) or here.gl_get_selected_language();
 					curr_lang_label python:here.get_language_name(curr_lang);">
 
-<h1 i18n:translate="">Edit Semide Registration</h1>
+<h1 i18n:translate="">Edit CHM Registration</h1>
 <div class="floated-buttons">
 	<span class="buttons">
 		<a tal:attributes="href here/absolute_url" i18n:translate="">Back to index</a>
