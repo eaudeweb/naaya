@@ -25,6 +25,7 @@
 #Zope imports
 from OFS.SimpleItem import SimpleItem
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import manage_users
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from persistent.dict import PersistentDict
@@ -69,6 +70,7 @@ class plugLDAPUserFolder(PlugBase):
     """ """
 
     meta_type = 'Plugin for user folder'
+    default_encoding = 'latin-1' # TODO: this should be editable from ZMI
     group_to_roles_mapping = PersistentDict()
 
     def __init__(self):
@@ -98,7 +100,10 @@ class plugLDAPUserFolder(PlugBase):
             pass
 
     def getUserCanonicalName(self, user):
-        return self.canonical_name.get(user, '-')
+        value = self.canonical_name.get(user, '-')
+        if isinstance(value, str):
+            value = value.decode(self.default_encoding)
+        return value
 
     def setUserCanonicalName(self, user, user_name):
         self.canonical_name[user] = user_name
@@ -244,6 +249,7 @@ class plugLDAPUserFolder(PlugBase):
     def get_mapped_groups(self):
         return self.group_to_roles_mapping.keys()
 
+    security.declareProtected(manage_users, 'map_group_to_role')
     def map_group_to_role(self, group, roles, REQUEST=None):
         """ """
         if not self.__dict__.has_key('group_to_roles_mapping'):
@@ -254,6 +260,7 @@ class plugLDAPUserFolder(PlugBase):
         if REQUEST is not None:
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
+    security.declareProtected(manage_users, 'revoke_group_role')
     def revoke_group_role(self, roles, REQUEST=None):
         """ """
         gm = self.group_to_roles_mapping
