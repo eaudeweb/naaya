@@ -39,13 +39,15 @@ def addSurveyAttachment(container, id='', title='', description='', coverage='',
         i += 1
         id = '%s-%u' % (id, i)
     #create object
-    ob = SurveyAttachment(id, title, description, coverage, keywords, sortorder, '', precondition, content_type,
-                          downloadfilename, contributor, releasedate, lang)
+    ob = SurveyAttachment(id, contributor)
+    container._setObject(ob.getId(), ob)
+    ob = container._getOb(id)
+    ob.saveProperties(title=title, description=description, coverage=coverage, keywords=keywords,
+                      sortorder=sortorder, precondition=precondition, content_type=content_type,
+                      downloadfilename=downloadfilename, releasedate=releasedate, lang=lang)
     container.gl_add_languages(ob)
     #ob.createDynamicProperties(container.processDynamicProperties(METATYPE_OBJECT, REQUEST, kwargs), lang) # ???
-    container._setObject(id, ob)
     #extra settings
-    ob = container._getOb(id)
     ob.updatePropertiesFromGlossary(lang)
     ob.submitThis()
     ob.approveThis(approved, approved_by)
@@ -75,6 +77,10 @@ class SurveyAttachment(NyExFile):
     _constructors = (addSurveyAttachment, )
 
     security = ClassSecurityInfo()
+
+    def _get_schema(self):
+        meta_type = super(NyExFile, self).meta_type
+        return self.getSite().getSchemaTool().getSchemaForMetatype(meta_type)
 
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/attachment_index', globals())
