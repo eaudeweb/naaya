@@ -95,41 +95,41 @@ function toggleSelect()
 </p>
 <fieldset><legend>Users with roles in this portal</legend>
 <form method="post" tal:attributes="action string:${here/absolute_url}/revokeUserRoles" name="frmRevoke">
-<table border="0" cellspacing="2" cellpadding="2" class="admin_table">
+<table border="0" cellspacing="2" cellpadding="2" class="datatable">
 	<tr>
 	    <tal:block tal:condition="python:skey=='user'">
 		<th width="10%">
-		    <a title="Sorted - Click to reverse" rel="nofollow" style="color:white;"
+		    <a title="Sorted - Click to reverse" rel="nofollow" 
 			tal:attributes="href python:test(rkey==0, '%s/admin_sources_html?id=%s&skey=user&rkey=1' % (site_path, id), '%s/admin_sources_html?id=%s&skey=user' % (site_path, id))">User</a>
 		</th>
 	    </tal:block>
 	    <tal:block tal:condition="python:skey!='user'">
 		<th width="10%">
-		    <a title="Sortable" rel="nofollow" style="color:white;"
+		    <a title="Sortable" rel="nofollow"
 			tal:attributes="href string:${site_path}/admin_sources_html?id=${id}&skey=user">User</a>
 		</th>
 	    </tal:block>
 	    <tal:block tal:condition="python:skey=='cn'">
 		<th width="20%">
-		    <a title="Sorted - Click to reverse" rel="nofollow" style="color:white;"
+		    <a title="Sorted - Click to reverse" rel="nofollow"
 			tal:attributes="href python:test(rkey==0, '%s/admin_sources_html?id=%s&skey=cn&rkey=1' % (site_path, id), '%s/admin_sources_html?id=%s&skey=cn' % (site_path, id))">Canonical Name</a>
 		</th>
 	    </tal:block>
 	    <tal:block tal:condition="python:skey!='cn'">
 		<th width="20%">
-		    <a title="Sortable" rel="nofollow" style="color:white;"
+		    <a title="Sortable" rel="nofollow"
 			tal:attributes="href string:${site_path}/admin_sources_html?id=${id}&skey=cn">Canonical Name</a>
 		</th>
 	    </tal:block>
 	    <tal:block tal:condition="python:skey=='group'">
 		<th width="20%">
-		    <a title="Sorted - Click to reverse" rel="nofollow" style="color:white;"
+		    <a title="Sorted - Click to reverse" rel="nofollow"
 			tal:attributes="href python:test(rkey==0, '%s/admin_sources_html?id=%s&skey=group&rkey=1' % (site_path, id), '%s/admin_sources_html?id=%s&skey=group' % (site_path, id))">Group</a>
 		</th>
 	    </tal:block>
 	    <tal:block tal:condition="python:skey!='group'">
 		<th width="20%">
-		    <a title="Sortable" rel="nofollow" style="color:white;"
+		    <a title="Sortable" rel="nofollow"
 			tal:attributes="href string:${site_path}/admin_sources_html?id=${id}&skey=group">Group</a>
 		</th>
 	    </tal:block>
@@ -212,7 +212,7 @@ function toggleSelect()
 </p>
 
 <form name="userRoles" method="post" tal:attributes="action string:${here/absolute_url}/addUserRoles">
-<table border="0" cellspacing="2" cellpadding="2" class="admin_table" width="95%">
+<table class="datatable" width="95%">
 	<tr>
 		<th></th>
 		<th>User ID</th>
@@ -267,6 +267,10 @@ function toggleSelect()
 <fieldset>
 <legend i18n:translate="">Grant roles to LDAP groups</legend>
 
+    <p i18n:translate="">
+        Type a LDAP group or select one from the list generated when pressing the <em>pick</em> button,
+        then select what role you wish to grant to that group. Roles are granted for the entire portal.
+    </p>
     <form tal:attributes="action string:${here/absolute_url}/map_group_to_role" method="post">
         <div class="field">
         <label for="ldap_group" i18n:translate="">LDAP group</label>
@@ -286,11 +290,11 @@ function toggleSelect()
         </select>
         </div>
 
-        <input type="submit" value="Grant role" i18n:attributes="value"/>
+        <input type="submit" value="Grant roles" i18n:attributes="value"/>
     </form>
 
     <form method="post" tal:attributes="action string:${here/absolute_url}/revoke_group_role" tal:define="groups here/get_mapped_groups" tal:condition="groups">
-        <p i18n:translate="">LDAP groups with roles in this portal</p>
+        <p i18n:translate="">Roles currently granted for LDAP groups are listed in the table below. To revoke roles, select them and click on the <em>Revoke roles</em> button.</p>
         <table class="datatable ldap_groups">
         <thead>
             <th i18n:translate="">Group</th>
