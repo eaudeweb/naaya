@@ -28,11 +28,11 @@ TIME_FIELDS = ['arrival_time', 'departure_time']
 
 SMTP_HOST = 'mail.eaudeweb.ro'
 SMTP_PORT = '25'
-NO_REPLY_MAIL = 'no-reply@ufm-water.net'
+NO_REPLY_MAIL = 'no-reply@biodiversiteit.nl'
 
 
 VIEW_PERMISSION = 'View'
-MANAGE_PERMISSION = 'Manage Semide Registration'
+MANAGE_PERMISSION = 'Manage CHM Registration'
 
 from os.path import dirname
 PRODUCT_PATH = dirname(__file__)

@@ -1,8 +1,8 @@
 <tal:block replace="structure here/standard_html_header"/>
-<link rel="stylesheet" type="text/css" media="screen" href="/misc_/SemideRegistration/style.css"/>
-<script type="text/javascript" src="/misc_/SemideRegistration/core.js"></script>
-<script type="text/javascript" src="/misc_/SemideRegistration/calendar.js"></script>
-<script type="text/javascript" src="/misc_/SemideRegistration/datetime.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="/misc_/CHMRegistration/style.css"/>
+<script type="text/javascript" src="/misc_/CHMRegistration/core.js"></script>
+<script type="text/javascript" src="/misc_/CHMRegistration/calendar.js"></script>
+<script type="text/javascript" src="/misc_/CHMRegistration/datetime.js"></script>
 
 <tal:block define="global registration_opened here/registrationOpened;
 					global registration_not_closed here/registrationNotClosed;

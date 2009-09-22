@@ -1,15 +1,15 @@
 from App.ImageFile import ImageFile
 
 from Products.Naaya import register_content
-import SemideRegistration
+import CHMRegistration
 from utilities.StaticServe import StaticServeFromZip
 
-ADD_PERMISSION = 'Add Semide Registration'
+ADD_PERMISSION = 'Add CHM Registration'
 
 # Register as a folder content type
 register_content(
-    module=SemideRegistration,
-    klass=SemideRegistration.SemideRegistration,
+    module=CHMRegistration,
+    klass=CHMRegistration.CHMRegistration,
     module_methods={'manage_add_registration': ADD_PERMISSION, 'add_registration': ADD_PERMISSION},
     klass_methods={},
     add_method=('add_registration', ADD_PERMISSION),
@@ -17,12 +17,12 @@ register_content(
 
 def initialize(context):
     context.registerClass(
-                          SemideRegistration.SemideRegistration,
+                          CHMRegistration.CHMRegistration,
                           permission = ADD_PERMISSION,
                           constructors=(
-                                    SemideRegistration.add_registration,
-                                    SemideRegistration.manage_add_registration),
-                          icon='www/SemideRegistration.gif',
+                                    CHMRegistration.add_registration,
+                                    CHMRegistration.manage_add_registration),
+                          icon='www/CHMRegistration.gif',
                           )
 
 misc_ = {
@@ -33,8 +33,8 @@ misc_ = {
     'datetime.js': ImageFile('www/datetime.js', globals()),
     'style.css': ImageFile('www/style.css', globals()),
     'print.css': ImageFile('www/print.css', globals()),
-    'SemideParticipant.png': ImageFile('www/SemideParticipant.png', globals()),
-    'SemidePress.gif': ImageFile('www/SemidePress.gif', globals()),
+    'CHMParticipant.png': ImageFile('www/CHMParticipant.png', globals()),
+    'CHMPress.gif': ImageFile('www/CHMPress.gif', globals()),
     'print.gif': ImageFile('www/print.gif', globals()),
     'EmailTemplates.gif': ImageFile('www/EmailTemplates.gif', globals()),
     }
