@@ -267,10 +267,17 @@ class plugLDAPUserFolder(PlugBase):
             return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
     def user_in_group(self, user, group):
+        if not hasattr(self, '_v_ldap_groups_cache'):
+            cache = self._v_ldap_groups_cache = {}
+        cache = self._v_ldap_groups_cache
         ldap_folder = self.getUserFolder()
         root_dn = self.getRootDN(ldap_folder)
         scope = self.getGroupScope(ldap_folder)
-        result = self.delegate.search(root_dn, scope, filter_format('cn=%s', (group,)), ['uniqueMember'])
+        if not cache.get(group, {}):
+            result = self.delegate.search(root_dn, scope, filter_format('cn=%s', (group,)), ['uniqueMember'])
+            cache[group] = result
+        else:
+            result = cache[group]
         if result['size'] > 0:
             group_users = (x.split(',')[0] for x in result['results'][result['size']-1]['uniqueMember'])
             return 'uid=%s' % user in group_users
