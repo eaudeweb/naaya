@@ -5,16 +5,17 @@
             Dear Madam, Sir,
         <p/>
         <p>
-            Your registration for the international conference «"%(registration_event)s"» that will take place on the 23-24 November 2009 in Lyon, France was received in good order. To review and/or edit the submitted information please use the following link:
+            Your registration for the conference «"%(registration_event)s"» that will take place
+			on the 4th if November in Amersfoort, Auditorium van de Rijksdienst voor het Cultureel Erfgoed
+			was received in good order.
+			To review and/or edit the submitted information please use the following link:
         <p/>
         <p>
             <a href="%(registration_edit_link)s">%(registration_edit_link)s</a>
         <p/>
         <p>
-            The registration number <strong>%(registration_number)s</strong> and your last name <strong>%(name)s</strong> (case sensitive) are required for authentication.
-        <p/>
-        <p>
-            Soon you will receive a confirmation e-mail and some practical information about the conference.
+            The registration number <strong>%(registration_number)s</strong> and your last name
+			<strong>%(name)s</strong> (case sensitive) are required for authentication.
         <p/>
         <p>
             ---

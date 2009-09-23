@@ -3,8 +3,8 @@
 <!--<script type="text/javascript" src="/misc_/CHMRegistration/core.js"></script>
 <script type="text/javascript" src="/misc_/CHMRegistration/calendar.js"></script>
 <script type="text/javascript" src="/misc_/CHMRegistration/datetime.js"></script>
-<script type="text/javascript" src="/misc_/SemideRegistration/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="/misc_/SemideRegistration/tinymceconfig.js"></script>-->
+<script type="text/javascript" src="/misc_/CHMRegistration/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="/misc_/CHMRegistration/tinymceconfig.js"></script>-->
 
 <tal:block define="global registration_opened here/registrationOpened;
 					global registration_not_closed here/registrationNotClosed;

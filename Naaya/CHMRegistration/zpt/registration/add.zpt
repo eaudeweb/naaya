@@ -8,7 +8,7 @@
 
 <h1 i18n:translate="">Add CHM Registration</h1>
 
-<form id="frmRegistrationForm" name="frmRegistrationForm" action="manage_add_registration" method="post"
+<form id="frmRegistrationForm" name="frmRegistrationForm" action="manage_add_chm_registration" method="post"
 	tal:define="request_error python:request.get('request_error');
 				curr_lang python:request.get('lang', None) or here.gl_get_selected_language();">
 	<div class="field">
