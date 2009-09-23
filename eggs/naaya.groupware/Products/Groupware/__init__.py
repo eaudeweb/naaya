@@ -18,4 +18,5 @@ def initialize(context):
 
 misc_ = {
     'site.gif':ImageFile(groupware_folder + '/www/site.gif'),
+    'printer.gif':ImageFile(groupware_folder + '/www/printer.gif'),
 }
