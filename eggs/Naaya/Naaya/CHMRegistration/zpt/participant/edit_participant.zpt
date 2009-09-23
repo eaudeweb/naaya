@@ -67,13 +67,13 @@ Amersfoort, 4 November 2009, 12.00 - 18.00 hrs.</h3>
 <tal:block condition="entitled">
 
 <form action="" name="frmEdit" method="post">
-	<table class="datatable">
+	<table class="datatable" style="text-align: left">
 		<tr>
 			<th i18n:translate="">Registration number</th>
 			<td><strong tal:content="here/id" /></td>
 		</tr>
 		<tr>
-			<th i18n:translate="">Name</th>
+			<th i18n:translate="">Name *</th>
 			<td>
 				<div tal:condition="python:request.has_key('first_last_name_error')" class="message-error"
 					i18n:translate="">
@@ -84,7 +84,7 @@ Amersfoort, 4 November 2009, 12.00 - 18.00 hrs.</h3>
 			</td>
 		</tr>
 		<tr>
-			<th i18n:translate="">Position</th>
+			<th i18n:translate="">Position *</th>
 			<td>
 				<div tal:condition="python:request.has_key('position_error')" class="message-error"
 					i18n:translate="">
@@ -95,7 +95,7 @@ Amersfoort, 4 November 2009, 12.00 - 18.00 hrs.</h3>
 			</td>
 		</tr>
 		<tr>
-			<th i18n:translate="">Organisation</th>
+			<th i18n:translate="">Organisation *</th>
 			<td>
 				<div tal:condition="python:request.has_key('organisation_error')" class="message-error"
 					i18n:translate="">
@@ -106,7 +106,7 @@ Amersfoort, 4 November 2009, 12.00 - 18.00 hrs.</h3>
 			</td>
 		</tr>
 		<tr>
-			<th i18n:translate="">Address</th>
+			<th i18n:translate="">Address *</th>
 			<td>
 				<div tal:condition="python:request.has_key('address_error')" class="message-error"
 					i18n:translate="">
@@ -117,7 +117,7 @@ Amersfoort, 4 November 2009, 12.00 - 18.00 hrs.</h3>
 			</td>
 		</tr>
 		<tr>
-			<th i18n:translate="">Postal code and place</th>
+			<th i18n:translate="">Postal code and place *</th>
 			<td>
 				<div tal:condition="python:request.has_key('zip_code_error')" class="message-error"
 					i18n:translate="">
@@ -128,7 +128,7 @@ Amersfoort, 4 November 2009, 12.00 - 18.00 hrs.</h3>
 			</td>
 		</tr>
 		<tr>
-			<th i18n:translate="">eMail</th>
+			<th i18n:translate="">eMail *</th>
 			<td>
 				<div tal:condition="python:request.has_key('email_error')" class="message-error"
 					i18n:translate="">
@@ -139,7 +139,7 @@ Amersfoort, 4 November 2009, 12.00 - 18.00 hrs.</h3>
 			</td>
 		</tr>
 		<tr>
-			<th i18n:translate="">Telephone</th>
+			<th i18n:translate="">Telephone *</th>
 			<td>
 				<div tal:condition="python:request.has_key('phone_number_error')" class="message-error"
 					i18n:translate="">
