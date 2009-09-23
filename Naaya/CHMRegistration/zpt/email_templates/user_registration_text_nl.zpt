@@ -1,13 +1,11 @@
-Madame, Monsieur,
+Geachte Mevrouw, Mijnheer,
 
-Votre enregistrement à la conférence internationale «"%(registration_event)s"», qui se déroulera à Lyon les 23-24 novembre 2009, a bien été reçue. Vous pouvez revoir ou éditer votre formulaire à partir du lien suivant:
+Uw registratie voor de conferentie «"%(registration_event)s"» welke plaats vindt op 4 November in Amersfoort, Auditorium van de Rijksdienst voor het Cultureel Erfgoed is in goede orde ontvangen. Om de ingestuurde informatie te kunnen inzien of aanpassen kunt u gebruik maken van de volgende link:
 
 %(registration_edit_link)s
 
-Votre numéro d’enregistrement %(registration_number)s et votre nom de famille %(name)s (en respectant la casse) seront nécessaire pour votre authentification.
-
-Vous recevrez prochainement un message de confirmation et des informations pratiques sur la conférence.
+Het registratie nummer %(registration_number)s en uw naam %(name)s (hoofdlettergevoelig) zijn daarbij benodigd.
 
 ---
-Sincères salutations,
-L’équipe d’organisation de la conférence
+Vriendelijke Groet,
+De conferentieorganisatoren
