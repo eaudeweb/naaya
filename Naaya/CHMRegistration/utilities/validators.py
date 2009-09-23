@@ -26,6 +26,28 @@ def form_validation (mandatory_fields, date_fields, time_fields, REQUEST):
             except:
                 REQUEST.set('%s_notvalid' % k, True)
                 has_errors = True
+
+        event_1 = REQUEST.get('event_1', False)
+        event_2 = REQUEST.get('event_2', False)
+        event_3 = REQUEST.get('event_3', False)
+        if event_3 and (event_1 or event_2):
+            REQUEST.set('event_error', True)
+            has_errors = True
+        if event_2 and not event_1:
+            REQUEST.set('event_error', True)
+            has_errors = True
+        if not (event_1 or event_2 or event_3):
+            REQUEST.set('no_event_error', True)
+            has_errors = True
+
+        topic_1 = int(REQUEST.get('topic_1', False))
+        topic_2 = int(REQUEST.get('topic_2', False))
+        topic_3 = int(REQUEST.get('topic_3', False))
+        topic_4 = int(REQUEST.get('topic_4', False))
+        if topic_1 + topic_2 + topic_3 + topic_4 != 10:
+            REQUEST.set('topic_error', True)
+            has_errors = True
+
     if has_errors:
         REQUEST.set('request_error', True)
     return not has_errors
