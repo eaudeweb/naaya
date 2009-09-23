@@ -2,6 +2,8 @@
 
 <h1 tal:content="here/getRegistrationTitle" />
 <h2 tal:content="here/getConferenceDetails" />
+<h3 i18n:translate="">Auditorium van de Rijksdienst voor het Cultureel Erfgoed<br/>
+Amersfoort, 4 November 2009, 12.00 - 18.00 hrs.</h3>
 
 <tal:block define="global entitled python:here.isEntitled(request);
 					global curr_lang python:request.get('lang', None) or here.gl_get_selected_language();

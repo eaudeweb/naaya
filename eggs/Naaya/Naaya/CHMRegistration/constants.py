@@ -25,7 +25,7 @@ AUTH_MANDATORY_FIELDS = ['registration_no']
 DATE_FIELDS = []
 TIME_FIELDS = []
 
-SMTP_HOST = 'mail.eaudeweb.ro'
+SMTP_HOST = 'localhost'
 SMTP_PORT = '25'
 NO_REPLY_MAIL = 'no-reply@biodiversiteit.nl'
 

@@ -1,7 +1,14 @@
+.field{
+	width:48em;
+}
 .vDateField {
 margin-left:0;
 }
+
 .mandatory{
+	/*color: red;*/
+}
+.message-error{
 	color: red;
 }
 
