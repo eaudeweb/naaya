@@ -37,8 +37,8 @@ from utilities import tmpfile, checkPermission
 import constants
 
 
-add_registration = PageTemplateFile('zpt/registration/add', globals())
-def manage_add_registration(self, id='', title='', conference_details='', administrative_email ='', start_date='', end_date='', lang='', REQUEST=None):
+add_chm_registration = PageTemplateFile('zpt/registration/add', globals())
+def manage_add_chm_registration(self, id='', title='', conference_details='', administrative_email ='', start_date='', end_date='', lang='', REQUEST=None):
     """ Adds a CHM registration instance"""
     if registration_validation(REQUEST):
         if id:
@@ -55,7 +55,7 @@ def manage_add_registration(self, id='', title='', conference_details='', admini
         if REQUEST:
             REQUEST.RESPONSE.redirect(self.absolute_url())
     else:
-        return add_registration.__of__(self)(REQUEST)
+        return add_chm_registration.__of__(self)(REQUEST)
 
 
 class CHMRegistration(LocalPropertyManager, Folder):

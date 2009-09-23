@@ -10,9 +10,9 @@ ADD_PERMISSION = 'Add CHM Registration'
 register_content(
     module=CHMRegistration,
     klass=CHMRegistration.CHMRegistration,
-    module_methods={'manage_add_registration': ADD_PERMISSION, 'add_registration': ADD_PERMISSION},
+    module_methods={'manage_add_chm_registration': ADD_PERMISSION, 'add_chm_registration': ADD_PERMISSION},
     klass_methods={},
-    add_method=('add_registration', ADD_PERMISSION),
+    add_method=('add_chm_registration', ADD_PERMISSION),
 )
 
 def initialize(context):
@@ -20,8 +20,8 @@ def initialize(context):
                           CHMRegistration.CHMRegistration,
                           permission = ADD_PERMISSION,
                           constructors=(
-                                    CHMRegistration.add_registration,
-                                    CHMRegistration.manage_add_registration),
+                                    CHMRegistration.add_chm_registration,
+                                    CHMRegistration.manage_add_chm_registration),
                           icon='www/CHMRegistration.gif',
                           )
 
