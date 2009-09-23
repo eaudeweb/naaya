@@ -155,7 +155,7 @@ class BaseParticipant(SimpleItem):
 
                 #send notifications
                 values = {'registration_edit_link': self.absolute_url(),
-                            'registration_event': self.title,
+                            'registration_event': self.aq_parent.title,
                             'website_team': self.site_title,
                             'registration_number': self.id}
                 self.send_registration_notification(self.administrative_email,
