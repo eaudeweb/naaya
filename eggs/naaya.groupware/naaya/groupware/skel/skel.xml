@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<skel>
+	<layout default_skin_id="groupware" default_scheme_id="skin_00">
+		<skin id="groupware" title="Groupware">
+			<template id="site_header" title="Portal standard HTML header"/>
+			<template id="site_footer" title="Portal standard HTML footer"/>
+			<template id="portlet_left_macro" title="Macro for left portlets"/>
+			<template id="portlet_center_macro" title="Macro for center portlets"/>
+			<template id="portlet_right_macro" title="Macro for right portlets"/>
+			<template id="folder_administration_macro" title="Folder administration macro page"/>
+			<scheme id="skin_00" title="Yellow leaves">
+				<style id="scheme_style" title="Scheme CSS"/>
+				<image id="screenshot.gif" title="Skin screenshot"/>
+				<image id="menunav-bg.jpg" title=""/>
+				<image id="top_01.png" title=""/>
+				<image id="eeaicon.gif" title=""/>
+				<image id="dot-bg.gif" title=""/>
+				<image id="flv-bg.jpg" title=""/>
+				<image id="arrow-normal.png" title=""/>
+			</scheme>
+		</skin>
+	</layout>
+
+    <portlets left="portlet_places" center="portlet_latestuploads_rdf">
+        <linkslist id="places" title="Places" portlet="1">
+            <link id="103" title="EWindows" description="EnviroWindows" url="http://ew.eea.europa.eu/" relative="0" permission="" order="1"/>
+            <link id="104" title="EEA home" description="" url="http://www.eea.europa.eu/" relative="0" permission="" order="2"/>
+            <link id="105" title="Europa" description="EU website" url="http://www.europa.eu" relative="0" permission="" order="3"/>
+            <link id="106" title="Eionet" description="" url="http://eionet.europa.eu/" relative="0" permission="" order="4"/>
+        </linkslist>
+        <linkslist id="top" title="Top navigation links" portlet="">
+            <link id="103" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="1"/>
+            <link id="110" title="Admin" description="" url="/admin_centre_html" relative="1" permission="Publish content" order="3"/>
+        </linkslist>
+    </portlets>
+
+	<security>
+		<grouppermissions name="Browse content" description="Browse the site structure. This is the base privilege aimed for Anonymous users."
+			permissions="Access Transient Objects,Access contents information,Access session data,Query Vocabulary,Search ZCatalog,Use Database Methods,Use mailhost services,View,WebDAV access,WebDAV Unlock items,WebDAV Lock items"/>
+		<grouppermissions name="Add content" description="Create Naaya objects. Editing, publishing and deleting them are not granted as a part of thisprivilege."
+			permissions="Naaya - Access administrative area,Naaya - Add Naaya Folder objects,Naaya - Add Naaya Document objects,Naaya - Add Naaya Event objects,Naaya - Add Naaya File objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Pointer objects,Naaya - Add Naaya Story objects,Naaya - Add Naaya URL objects,Naaya - Add Naaya Photo,Naaya - Add Naaya Media File objects,Naaya - Add Naaya Contact objects,Naaya - Add Naaya Extended File objects,Naaya - Add Naaya GeoPoint objects,Naaya - Add Naaya Photo Folder,Naaya - Add Naaya SMAP Expert objects,Naaya - Add Naaya SMAP Project objects,Take ownership"/>
+		<grouppermissions name="Add comments" description="Posibility to add comments for each type of content."
+			permissions="Naaya - Add comments for content"/>
+		<grouppermissions name="Edit content" description="Adding, publishing and deleting are not granted as a part of this privilege. Edit content is only allowed for owners if users do not have the 'Naaya - Publish content' permission."
+			permissions="Naaya - Access administrative area,Naaya - Edit content,Take ownership"/>
+		<grouppermissions name="Copy content" description="Copy content. Adding, publishing and deleting are not granted as a part of this privilege. In order to be able to paste the copied content, users must have the add permission in the target location."
+			permissions="Naaya - Copy content,Take ownership"/>
+		<grouppermissions name="Publish content" description="Publish Naaya objects. Adding, editing and deleting are not granted as a part of this privilege."
+			permissions="Naaya - Access administrative area,Naaya - Publish content,Take ownership"/>
+		<grouppermissions name="Delete content" description="Delete Naaya objects. Adding, publishing and editing are not granted as a part of this privilege. Delete content is only allowed for owners."
+			permissions="Naaya - Access administrative area,Naaya - Delete content,Take ownership,Naaya - Manage comments for content"/>
+		<grouppermissions name="Validate content" description="Validate Naaya objects. Adding, editing and deleting are not granted as a part of this privilege."
+			permissions="Naaya - Access administrative area,Naaya - Validate content,Take ownership"/>
+		<grouppermissions name="Translate pages" description="Translate pages in the portal"
+			permissions="Naaya - Access administrative area,Naaya - Translate pages"/>
+		<grouppermissions name="Manage Users" description="Create/modify/delete users in the portal"
+			permissions="Naaya - Access administrative area,Manage users"/>
+		<role name="Anonymous" grouppermissions="Browse content" permissions=""/>
+		<role name="Authenticated" grouppermissions="Add comments" permissions="Naaya - Bulk download,Naaya - Skip Captcha"/>
+		<role name="Contributor" grouppermissions="Add content" permissions=""/>
+		<role name="Administrator" grouppermissions="Browse content,Add content,Add comments,Edit content,Copy content,Publish content,Delete content,Validate content,Translate pages,Manage Users" permissions=""/>
+	</security>
+
+	<properties>
+		<language code="en" />
+	</properties>
+
+</skel>

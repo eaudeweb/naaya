@@ -1,9 +1,11 @@
 # Python imports
 
 # Zope imports
+import Globals
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from App.ImageFile import ImageFile
 
 # Product imports
 from Products.Naaya.NySite import NySite
@@ -48,5 +50,15 @@ class GroupwareSite(NySite):
         except ImportError:
             # this version of Naaya doesn't use Schemas; we can safely move on
             pass
+
+        self.loadSkeleton(Globals.package_home(globals()))
+
+        #remove Naaya default content
+        self.getLayoutTool().manage_delObjects('skin')
+        self.manage_delObjects('info')
+
+    ew_common_css = ImageFile('www/ew_common.css', globals())
+    ew_print_css = ImageFile('www/ew_print.css', globals())
+    ew_style_css = ImageFile('www/ew_style.css', globals())
 
 InitializeClass(GroupwareSite)
