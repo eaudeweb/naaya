@@ -1,0 +1,19 @@
+#header {
+    background: #A5CED1 url('top_01.png') repeat-y scroll 0 0;
+}
+
+#dropdowns li ul li a:link, #dropdowns li ul li a:visited {
+	background: transparent url('arrow-normal.png') 3px center no-repeat;
+}
+#outer_wrapper {
+	background: url(dot-bg.gif) repeat-y 17.5%;
+}
+#container {
+	background: url(dot-bg.gif) repeat-y 81.5%;
+}
+* html #container { 
+	background: url(dot-bg.gif) repeat-y 82%;
+}
+a#eealink {
+	background: url("eeaicon.gif") no-repeat left center;
+}
