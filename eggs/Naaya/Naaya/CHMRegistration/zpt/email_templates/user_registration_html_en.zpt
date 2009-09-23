@@ -6,7 +6,7 @@
         <p/>
         <p>
             Your registration for the conference «"%(registration_event)s"» that will take place
-			on the 4th if November in Amersfoort, Auditorium van de Rijksdienst voor het Cultureel Erfgoed
+			on the 4th of November in Amersfoort, Auditorium van de Rijksdienst voor het Cultureel Erfgoed
 			was received in good order.
 			To review and/or edit the submitted information please use the following link:
         <p/>
@@ -14,7 +14,7 @@
             <a href="%(registration_edit_link)s">%(registration_edit_link)s</a>
         <p/>
         <p>
-            The registration number <strong>%(registration_number)s</strong> and your last name
+            The registration number <strong>%(registration_number)s</strong> and your name
 			<strong>%(name)s</strong> (case sensitive) are required for authentication.
         <p/>
         <p>
