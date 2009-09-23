@@ -1,0 +1,26 @@
+Metadata-Version: 1.0
+Name: naaya.groupware
+Version: 1.0dev
+Summary: Naaya Groupware
+Home-page: UNKNOWN
+Author: David Batranu
+Author-email: david@eaudeweb.ro
+License: MPL
+Description: Introduction
+        ============
+        
+        
+        
+        Changelog
+        =========
+        
+        1.0 - Unreleased
+        ----------------
+        
+        * Initial release
+        
+        
+Keywords: naaya groupware
+Platform: UNKNOWN
+Classifier: Programming Language :: Python
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
