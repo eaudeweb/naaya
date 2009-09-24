@@ -17,3 +17,12 @@
 a#eealink {
 	background: url("eeaicon.gif") no-repeat left center;
 }
+
+.left_portlet ul li a {
+    background: transparent url('lnav_menu.gif') no-repeat scroll left top;
+}
+
+.left_portlet li a:hover {
+    background: #deeff2 url('lnav_menu_h.gif') no-repeat scroll left top;
+    color: black;
+}
