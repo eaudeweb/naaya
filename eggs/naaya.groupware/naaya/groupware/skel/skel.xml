@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <skel>
+    <forms>
+        <form id="languages_box" title="Box for changing the language on pages"/>
+    </forms>
 	<layout default_skin_id="groupware" default_scheme_id="eionet">
 		<skin id="groupware" title="Groupware">
 			<template id="site_header" title="Portal standard HTML header"/>
@@ -16,6 +19,8 @@
 				<image id="eeaicon.gif" title=""/>
 				<image id="dot-bg.gif" title=""/>
 				<image id="flv-bg.jpg" title=""/>
+				<image id="lnav_menu.gif" title=""/>
+				<image id="lnav_menu_h.gif" title=""/>
 				<image id="arrow-normal.png" title=""/>
 			</scheme>
 		</skin>
