@@ -57,8 +57,8 @@ class GroupwareSite(NySite):
         self.getLayoutTool().manage_delObjects('skin')
         self.manage_delObjects('info')
 
-    ew_common_css = ImageFile('www/ew_common.css', globals())
-    ew_print_css = ImageFile('www/ew_print.css', globals())
-    ew_style_css = ImageFile('www/ew_style.css', globals())
+    gw_common_css = ImageFile('www/gw_common.css', globals())
+    gw_print_css = ImageFile('www/gw_print.css', globals())
+    gw_style_css = ImageFile('www/gw_style.css', globals())
 
 InitializeClass(GroupwareSite)
