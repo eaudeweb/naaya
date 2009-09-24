@@ -36,6 +36,7 @@ class GroupwareSite(NySite):
         NySite.manage_options
     )
 
+    product_paths = NySite.product_paths + [Globals.package_home(globals())]
     security = ClassSecurityInfo()
 
     security.declarePrivate('loadDefaultData')
