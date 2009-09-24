@@ -65,9 +65,8 @@ def _get_available_updates():
         try:
             update = __import__(mod, globals(), locals(), ['Products',])
         except:
-            err = sys.exc_info()
             zLOG.LOG('NaayaUpdater', zLOG.WARNING,
-                     "Could not import module %s" % mod, error=err)
+                     "Could not import module %s" % mod)
             continue
         
         if not hasattr(update, 'register'):
