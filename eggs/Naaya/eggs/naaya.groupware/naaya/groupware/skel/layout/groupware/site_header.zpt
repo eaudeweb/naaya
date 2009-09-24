@@ -48,10 +48,12 @@
 		{
 			document.body.className="fullscreen";
 			document.getElementById("outer_wrapper").id="outer_wrapper_fs";
+            document.getElementById("footer").style.maxWidth = '100%';
 		}
 		else {
 			document.body.className="";
 			document.getElementById("outer_wrapper_fs").id="outer_wrapper";
+            document.getElementById("footer").style.maxWidth = '80em';
 		}
 	}
 
@@ -77,10 +79,13 @@
 	<div id="container" tal:attributes="style python:test(len(here.portal_portlets.get_portlets_for_obj(here, 'right')) or here.meta_type == here.get_constant('METATYPE_FOLDER'), '', 'background: none')">
 		<div id="toolribbon">
 			<div id="topnav">
-				<div id="language">
-					<span tal:replace="structure here/languages_box"/>
-					<label for="old_lang">Select language</label>
-				</div>
+                <form method="get" tal:attributes="action string:${site_url}/search_html">
+                    <div id="search">
+                        <label for="query"><span i18n:translate="">site search</span></label>
+                        <input id="query" type="text" name="query:utf8:ustring" accesskey="4" />
+                        <input id="freesrchbtn" type="image" alt="Go" src="misc_/Groupware/button_go.gif"/>
+                    </div>
+                </form>
 				<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('top').get_links_list()">
 					<li><a tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'" tal:attributes="href string:${site_url}/login_html?came_from=${came_from}&disable_cookie_login__=1" i18n:translate="">Login</a></li>
 					<li><a tal:condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'" tal:attributes="href string:${site_url}/login_html" i18n:translate="">Logout</a></li>
@@ -90,7 +95,7 @@
 				</ul>
 				<ul class="site_actions">
 					<li><a href="javascript:this.print();" title="Print this page"><img src="misc_/Groupware/printer.gif" alt="print this page" /></a></li>
-					<li><a id="fs_hide" title="Switch to/from full screen mode" href="javascript:fullScreen()" /></li>
+					<li><a id="fs_hide" title="Switch to/from full screen mode" href="javascript:fullScreen()"></a></li>
 					<li><a href="feedback_html" title="Feedback"  accesskey="9">Feedback</a>
 				</ul>
 			</div>
@@ -112,6 +117,9 @@
 			<div class="page_subtitle" tal:content="here/site_subtitle" />
 		</div>
 		<div id="menunav">
+            <div id="language">
+                <span tal:replace="structure here/languages_box"/>
+            </div>
 			<ul id="dropdowns">
 				<li tal:repeat="main_categ here/getMainTopics">
 					<a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/title" tal:content="main_categ/title" tal:condition="main_categ/checkPermissionView" />
@@ -124,11 +132,6 @@
 					</tal:block>
 				</li>
 			</ul>
-			<form method="get" tal:attributes="action string:${site_url}/search_html">
-				<div id="search"><label for="query"><span i18n:translate="">site search</span></label>
-				<input id="query" type="text" name="query:utf8:ustring" accesskey="4" />
-				<input type="submit" value="GO" class="search_btn" /></div>
-			</form>
 		</div>
 		<div id="breadcrumbtrail" tal:define="crumbs python:here.getBreadCrumbTrail(request)">
 			<a href="http://ew.eea.europa.eu" title="EnviroWindows">EW</a> &raquo; 
