@@ -58,18 +58,22 @@ class GroupwareSite(NySite):
         self.getLayoutTool().manage_delObjects('skin')
         self.manage_delObjects('info')
 
-    def getUserAccess(self):
+    def get_user_access(self):
         user = self.REQUEST['AUTHENTICATED_USER'].getUserName()
         user_roles = self.getAuthenticationTool().get_all_user_roles(user)
 
         if 'Manager' in user_roles or 'Administrator' in user_roles:
-            return 'administrator'
+            return 'admin'
         if 'Contributor' in user_roles and 'Administrator' not in user_roles and 'Manager' not in user_roles:
             return 'member'
         if self.checkPermissionView():
-            return 'view'
+            return 'viewer'
         else:
             return 'restricted'
+
+    def request_ig_access_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self.REQUEST.PARENTS[0]}, 'request_ig_access')
 
     gw_common_css = ImageFile('www/gw_common.css', globals())
     gw_print_css = ImageFile('www/gw_print.css', globals())

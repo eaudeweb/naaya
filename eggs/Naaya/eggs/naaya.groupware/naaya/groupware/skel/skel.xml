@@ -2,6 +2,7 @@
 <skel>
     <forms>
         <form id="languages_box" title="Box for changing the language on pages"/>
+        <form id="request_ig_access" title="Page where an unauthorized user can request access to the IG"/>
     </forms>
 	<layout default_skin_id="groupware" default_scheme_id="eionet">
 		<skin id="groupware" title="Groupware">

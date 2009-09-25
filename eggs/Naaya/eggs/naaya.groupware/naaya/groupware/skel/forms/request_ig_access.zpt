@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title tal:content="here/title_or_id"></title>
+    <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/screen.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/print.css" media="print" />
+    <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/handheld.css" media="handheld" />
+    <link rel="icon" href="http://eionet.europa.eu/styles/eionet2007/eeaicon.gif" type="image/gif" />
+    <link rel="start" title="Home" href="/" />
+    <link rel="search" title="Search Eionet" href="http://search.eionet.europa.eu/" />
+    <link rel="alternate" type="application/rss+xml" title="Eionet headlines" href="http://www.eionet.europa.eu/announcements.rdf" />
+  </head>
+    <body tal:define="user_obj python:request.get('AUTHENTICATED_USER', None);
+                      portals python:here.objectValues('Groupware site')">
+        <div style="border: 2px dashed rgb(255, 255, 255); padding: 1pt; background: rgb(170, 0, 0) none repeat scroll 0% 0%;font-weight: bold; text-align: center; font-size: 1.5em; color: white;">
+            This is a DEMO site. Please do not upload any importand data!
+        </div>
+        <div id="container">
+            <div id="toolribbon">
+                <div id="lefttools">
+                  <a href="http://www.eea.europa.eu/" id="eealink">EEA</a>
+                  <a href="http://ew.eea.europa.eu/" id="ewlink">EnviroWindows</a>
+                </div>
+                <div id="righttools">
+                    <a id="loginlink" href="/loggedin" tal:condition="python:user_obj.getUserName() == 'Anonymous User'">Login</a>
+                    <a id="logoutlink" href="/manage_zmi_logout" tal:condition="python:user_obj.getUserName() != 'Anonymous User'">Logout</a>
+                </div>
+            </div>
+            <div id="pagehead">
+                <a href="/" title="Frontpage"></a>
+                <div id="networktitle" tal:content="here/title_or_id">Naaya Groupware</div>
+                <div id="sitetitle" tal:content="here/site_subtitle">Demo site</div>
+            </div>
+            <div id="workarea" tal:define="portals here/groupedIGs">
+                <h1>Request interest group access</h1>
+                <p>Form not yet implemented</p>
+            </div>
+        </div>
+        <div id="pagefoot"></div>
+    </body>
+</html>
