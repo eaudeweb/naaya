@@ -33,59 +33,49 @@
                 <div id="networktitle">Naaya Groupware</div>
                 <div id="sitetitle">Demo site</div>
             </div>
-            <div id="workarea">
-                <h1>Groupware portals:</h1>
-                <ol>
-                    <tal:block repeat="portal portals">
-                    <li tal:condition="python:not portal.id.startswith('old')">
-                        <a tal:attributes="href portal/absolute_url"><strong tal:content="portal/title_or_id" /></a>
-                        <span tal:replace="portal/site_subtitle" />
-                        <span tal:condition="not:portal/checkPermissionView">restricted website</span>
-                                <br />
-                                <a tal:attributes="href portal/portal_url" tal:content="portal/portal_url" />
-                    </li>
-                    </tal:block>
-                </ol>
-                <h2>Interest groups that you administer</h2>
+            <div id="workarea" tal:define="portals here/groupedIGs">
+                <tal:block define="igs python:portals.get('admin', [])" condition="igs">
+                    <h2>Interest groups that you administer</h2>
                     <ul>
-                        <tal:block tal:repeat="portal portals">
-                            <li tal:condition="python:portal.getUserAccess() == 'administrator'">
-                                <a tal:attributes="href portal/absolute_url"><strong tal:content="portal/title_or_id" /></a> - <span tal:replace="portal/site_subtitle" />
-                                <div tal:content="structure portal/description"></div>
-                                <span tal:content="python:portal['acl_users'].get_all_user_roles(user_obj.id)"/>
-                            </li>
-                        </tal:block>
+                        <li tal:repeat="ig igs">
+                            <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
+                            <span tal:replace="ig/site_subtitle"/>
+                            <div tal:content="structure ig/description"></div>
+                        </li>
                     </ul>
-                <h2>Interest groups that you are a member of</h2>
+                </tal:block>
+                <tal:block define="igs python:portals.get('member', [])" condition="igs">
+                    <h2>Interest groups that you are a member of</h2>
                     <ul>
-                        <tal:block tal:repeat="portal portals">
-                            <li tal:condition="python:portal.getUserAccess() == 'member'">
-                                <a tal:attributes="href portal/absolute_url"><strong tal:content="portal/title_or_id" /></a> - <span tal:replace="portal/site_subtitle" />
-                                <div tal:content="structure portal/description"></div>
-                                <span tal:content="python:portal['acl_users'].get_all_user_roles(user_obj.id)"/>
-                            </li>
-                        </tal:block>
+                        <li tal:repeat="ig igs">
+                            <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
+                            <span tal:replace="ig/site_subtitle"/>
+                            <div tal:content="structure ig/description"></div>
+                        </li>
                     </ul>
-                <h2>Interest groups that you can access</h2>
+                </tal:block>
+                <tal:block define="igs python:portals.get('viewer', [])" condition="igs">
+                    <h2>Interest groups that you can access</h2>
                     <ul>
-                        <tal:block tal:repeat="portal portals">
-                            <li tal:condition="python:portal.getUserAccess() == 'view'">
-                                <a tal:attributes="href portal/absolute_url"><strong tal:content="portal/title_or_id" /></a> - <span tal:replace="portal/site_subtitle" />
-                                <div tal:content="structure portal/description"></div>
-                                <span tal:content="python:portal['acl_users'].get_all_user_roles(user_obj.id)"/>
-                            </li>
-                        </tal:block>
+                        <li tal:repeat="ig igs">
+                            <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
+                            <span tal:replace="ig/site_subtitle"/>
+                            <div tal:content="structure ig/description"></div>
+                        </li>
                     </ul>
-                <h2>Interest groups that are restricted to you</h2>
+                </tal:block>
+                <tal:block define="igs python:portals.get('restricted', [])" condition="igs">
+                    <h2>Interest groups that are restricted to you</h2>
+                    <p>You can request access to these interest groups by contacting your group leader or by clicking the <em>Request access</em> link below</p>
                     <ul>
-                        <tal:block tal:repeat="portal portals">
-                            <li tal:condition="python:portal.getUserAccess() == 'restricted'">
-                                <a tal:attributes="href portal/absolute_url"><strong tal:content="portal/title_or_id" /></a> - <span tal:replace="portal/site_subtitle" />
-                                <div tal:content="structure portal/description"></div>
-                                <span tal:content="python:portal['acl_users'].get_all_user_roles(user_obj.id)"/>
-                            </li>
-                        </tal:block>
+                        <li tal:repeat="ig igs">
+                            <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
+                            [<small><a tal:attributes="href string:${ig/absolute_url}/request_ig_access_html">Request access</a></small>]
+                            <span tal:replace="ig/site_subtitle"/>
+                            <div tal:content="structure ig/description"></div>
+                        </li>
                     </ul>
+                </tal:block>
             </div>
         </div>
         <div id="pagefoot"></div>
