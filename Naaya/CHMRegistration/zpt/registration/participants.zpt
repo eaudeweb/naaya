@@ -23,7 +23,7 @@
 <p/><p tal:condition="not:participants" i18n:translate="">No participants have registered yet</p>
 
 <form action="deleteParticipants" method="post" tal:condition="participants">
-<h3>Participants list</h3>
+<h3 i18n:translate="">Participants list</h3>
 <table class="datatable">
 <thead>
 	<tr>
@@ -212,7 +212,7 @@
 		</td>
 		<td tal:content="participant/position" />
 		<td tal:content="participant/organisation" />
-		<td tal:content="participant/email" />
+		<td tal:content="python:test(participant.private_email, '', participant.email)" />
 		<td tal:content="participant/phone_number" />
 		<td>
 			<a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/id" />
@@ -226,7 +226,7 @@
 		Export participants list
 	</a>
 </p>
-<input type="submit" name="submit" value="Delete selected participants"/>
+<input type="submit" name="submit" value="Delete selected participants" i18n:attributes="value"/>
 </form>
 
 </tal:block>

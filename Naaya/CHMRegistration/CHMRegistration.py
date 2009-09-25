@@ -232,10 +232,14 @@ class CHMRegistration(LocalPropertyManager, Folder):
                     'Topic #1', 'Topic #2', 'Topic #3', 'Topic #4', 'Explanation')]
         data_app = data.append
         for part in self.getParticipants(skey='registration_date', rkey=1):
+            if part.private_email:
+                email = ''
+            else:
+                email = part.email
             data_app((self.formatDate(part.registration_date), part.id,
                     self.unicode2UTF8(part.first_last_name), self.unicode2UTF8(part.position), 
                     self.unicode2UTF8(part.organisation), self.unicode2UTF8(part.address),
-                    self.unicode2UTF8(part.zip_code), part.email, self.unicode2UTF8(part.phone_number),
+                    self.unicode2UTF8(part.zip_code), email, self.unicode2UTF8(part.phone_number),
                     self.unicode2UTF8(part.event_1), self.unicode2UTF8(part.event_2),
                     self.unicode2UTF8(part.event_3), self.unicode2UTF8(part.topic_1),
                      self.unicode2UTF8(part.topic_2), self.unicode2UTF8(part.topic_3),

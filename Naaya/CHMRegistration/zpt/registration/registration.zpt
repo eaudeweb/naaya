@@ -87,7 +87,12 @@ Amersfoort, 4 November 2009, 12.00 - 18.00 hrs.</h3>
 				Please enter a valid email address!
 			</div>
 			<input type="text" name="email:utf8:ustring" size="50"
-				tal:attributes="value python:request.get('email')" />
+				tal:attributes="value python:request.get('email')" /><br/>
+			<input type="checkbox" name="private_email" value="1"
+				tal:attributes="checked python:test(request.get('private_email')=='1', 'checked', None)"/>
+			<span i18n:translate="">I do not want my email address to be published in the participants list.</span><br/>
+			<span i18n:translate="">(Participants will be added to the participants list with their name, position,
+				organisation and if so desired email address)</span><br/>
 		</div>
 		<div class="field">
 			<label class="mandatory" for="phone_number" i18n:translate="">Telephone *</label>

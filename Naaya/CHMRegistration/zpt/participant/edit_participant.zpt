@@ -136,6 +136,11 @@ Amersfoort, 4 November 2009, 12.00 - 18.00 hrs.</h3>
 				</div>
 				<input type="text" name="email" size="50"
 				tal:attributes="value python:request.get('email', here.email)" />
+				<br/>
+				<input type="checkbox" name="private_email" value="1"
+					tal:attributes="checked python:test(request.get('private_email', here.private_email)=='1', 'checked', None)"/>
+				<span i18n:translate="">I do not want my email address to be published in the participants list.</span><br/>
+				<span i18n:translate="">(Participants will be added to the participants list with their name, position, organisation and if so desired email address)</span><br/>
 			</td>
 		</tr>
 		<tr>
@@ -274,7 +279,7 @@ Amersfoort, 4 November 2009, 12.00 - 18.00 hrs.</h3>
 				as unpredictable and original as possible. The dreams will be projected during the breaks.
 				Filing your dream is not obligatory, but highly appreciated.
 			</span><br/><br/>
-			<textarea name="explanation:utf8:ustring" cols="55" rows="5"
+			<textarea name="explanation:utf8:ustring" cols="58" rows="5"
 				tal:content="python:request.get('explanation', here.explanation)">
 			</textarea>
 		</div>
