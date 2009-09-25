@@ -33,7 +33,7 @@ class BaseParticipant(SimpleItem):
     security = ClassSecurityInfo()
 
     def __init__(self, registration_no, first_last_name, position, organisation, address, zip_code,\
-                email, phone_number, event_1, event_2, event_3, topic_1, topic_2, topic_3, topic_4, explanation):
+                email, phone_number, event_1, event_2, event_3, topic_1, topic_2, topic_3, topic_4, explanation, private_email=False):
         """ constructor """
         self.id = registration_no
         self.first_last_name = first_last_name
@@ -42,6 +42,7 @@ class BaseParticipant(SimpleItem):
         self.address = address
         self.zip_code = zip_code
         self.email = email
+        self.private_email = private_email
         self.phone_number = phone_number
         self.event_1 = event_1
         self.event_2 = event_2
@@ -55,7 +56,7 @@ class BaseParticipant(SimpleItem):
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit')
     def edit(self, first_last_name, position, organisation, address, zip_code,\
-                email, phone_number, event_1, event_2, event_3, topic_1, topic_2, topic_3, topic_4, explanation):
+                email, phone_number, event_1, event_2, event_3, topic_1, topic_2, topic_3, topic_4, explanation, private_email=False):
         """ edit properties """
         self.first_last_name = first_last_name
         self.position = position
@@ -63,6 +64,7 @@ class BaseParticipant(SimpleItem):
         self.address = address
         self.zip_code = zip_code
         self.email = email
+        self.private_email = private_email
         self.phone_number = phone_number
         self.event_1 = event_1
         self.event_2 = event_2

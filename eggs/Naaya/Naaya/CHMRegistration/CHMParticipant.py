@@ -35,18 +35,18 @@ class CHMParticipant(BaseParticipant):
     security = ClassSecurityInfo()
 
     def __init__(self, registration_no, first_last_name, position, organisation, address, zip_code,\
-                email, phone_number, event_1, event_2, event_3, topic_1, topic_2, topic_3, topic_4, explanation):
+                email, phone_number, event_1, event_2, event_3, topic_1, topic_2, topic_3, topic_4, explanation, private_email=False):
         """ constructor """
         BaseParticipant.__dict__['__init__'](self, registration_no, first_last_name, position,\
                 organisation, address, zip_code, email, phone_number, event_1, event_2, event_3,\
-                topic_1, topic_2, topic_3, topic_4, explanation)
+                topic_1, topic_2, topic_3, topic_4, explanation, private_email)
 
     def edit(self, first_last_name, position, organisation, address, zip_code,\
-                email, phone_number, event_1, event_2, event_3, topic_1, topic_2, topic_3, topic_4, explanation):
+                email, phone_number, event_1, event_2, event_3, topic_1, topic_2, topic_3, topic_4, explanation, private_email=False):
         """ edit properties """
         BaseParticipant.__dict__['edit'](self, first_last_name, position, organisation, address,\
                 zip_code, email, phone_number, event_1, event_2, event_3,\
-                topic_1, topic_2, topic_3, topic_4, explanation)
+                topic_1, topic_2, topic_3, topic_4, explanation, private_email)
 
     security.declareProtected(constants.VIEW_PERMISSION, 'edit_html')
     def edit_html(self, REQUEST=None):

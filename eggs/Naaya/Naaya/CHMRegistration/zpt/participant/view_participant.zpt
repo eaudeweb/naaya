@@ -93,7 +93,7 @@ Amersfoort, 4 November 2009, 12.00 - 18.00 hrs.</h3>
 		<td tal:content="structure here/address" />
 	</tr>
 	<tr>
-		<th i18n:translate="">Postal code</th>
+		<th i18n:translate="">Postal code and place</th>
 		<td tal:content="here/zip_code" />
 	</tr>
 	<tr>
