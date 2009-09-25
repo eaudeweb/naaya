@@ -87,7 +87,7 @@ class BaseParticipant(SimpleItem):
         """ check if current user has the right to modify this object """
         return ((REQUEST.SESSION.get('authentication_id','') == str(self.id)) and \
             (REQUEST.SESSION.get('authentication_name','') == self.unicode2UTF8(self.first_last_name))) or \
-            self.canManageParticipants()
+            self.canManageParticipants() or self.canViewParticipants()
 
     security.declareProtected(constants.VIEW_PERMISSION, 'index_html')
     _index_html = PageTemplateFile('zpt/participant/index', globals())
