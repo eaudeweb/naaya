@@ -224,7 +224,7 @@ class CHMRegistration(LocalPropertyManager, Folder):
                     smtp_port = constants.SMTP_PORT
                     )
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'exportParticipants')
+    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'exportParticipants')
     def exportParticipants(self, REQUEST=None, RESPONSE=None):
         """ exports the participants list in CSV format """
         data = [('Registration date', 'Registration number', 'Name', 'Position', 'Organisation',
@@ -259,7 +259,7 @@ class CHMRegistration(LocalPropertyManager, Folder):
     security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'participants')
     participants = PageTemplateFile('zpt/registration/participants', globals())
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'getParticipants')
+    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'getParticipants')
     def getParticipants(self, skey, rkey):
         """ Returns the list of participants """
         meta_type = 'CHM Participant'
@@ -269,7 +269,7 @@ class CHMRegistration(LocalPropertyManager, Folder):
             participants.reverse()
         return [p for (key, p) in participants]
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'deleteParticipants')
+    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'deleteParticipants')
     def deleteParticipants(self, ids=[], REQUEST=None):
         """ Deletes selected participants """
         ids = self.utConvertToList(ids)
