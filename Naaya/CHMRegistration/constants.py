@@ -31,6 +31,7 @@ NO_REPLY_MAIL = 'no-reply@biodiversiteit.nl'
 
 
 VIEW_PERMISSION = 'View'
+VIEW_EDIT_PERMISSION = 'View CHM Registrations'
 MANAGE_PERMISSION = 'Manage CHM Registration'
 
 from os.path import dirname

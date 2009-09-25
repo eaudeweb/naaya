@@ -151,6 +151,30 @@
 			</th>
 		</tal:block>
 
+		<tal:block tal:condition="python:skey=='private_email'">
+			<tal:block tal:condition="python:rkey==''">
+				<th class="scope-col" scope="col">
+					<a tal:attributes="href string:${here/absolute_url}/participants?skey=private_email&amp;rkey=1">
+						<span i18n:translate="" tal:omit-tag="">eMail type</span>
+					</a><img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
+				</th>
+			</tal:block>
+			<tal:block tal:condition="python:rkey=='1'">
+				<th class="scope-col" scope="col">
+					<a tal:attributes="href string:${here/absolute_url}/participants?skey=private_email">
+						<span i18n:translate="" tal:omit-tag="">eMail type</span>
+					</a><img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
+				</th>
+			</tal:block>
+		</tal:block>
+		<tal:block tal:condition="python:skey!='private_email'">
+			<th class="scope-col" scope="col">
+				<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/participants?skey=private_email">
+					eMail type
+				</a>
+			</th>
+		</tal:block>
+
 		<tal:block tal:condition="python:skey=='phone_number'">
 			<tal:block tal:condition="python:rkey==''">
 				<th class="scope-col" scope="col">
@@ -212,7 +236,8 @@
 		</td>
 		<td tal:content="participant/position" />
 		<td tal:content="participant/organisation" />
-		<td tal:content="python:test(participant.private_email, '', participant.email)" />
+		<td tal:content="participant/email" />
+		<td tal:content="python:test(participant.private_email, 'Private', 'Public')" />
 		<td tal:content="participant/phone_number" />
 		<td>
 			<a tal:attributes="href string:${here/absolute_url}/${participant/id}" tal:content="participant/id" />

@@ -228,18 +228,18 @@ class CHMRegistration(LocalPropertyManager, Folder):
     def exportParticipants(self, REQUEST=None, RESPONSE=None):
         """ exports the participants list in CSV format """
         data = [('Registration date', 'Registration number', 'Name', 'Position', 'Organisation',
-                    'Address', 'Postal code', 'eMail', 'Phone number', 'Event #1', 'Event #2', 'Event #3', 
+                    'Address', 'Postal code', 'eMail', 'eMail type', 'Phone number', 'Event #1', 'Event #2', 'Event #3', 
                     'Topic #1', 'Topic #2', 'Topic #3', 'Topic #4', 'Explanation')]
         data_app = data.append
         for part in self.getParticipants(skey='registration_date', rkey=1):
             if part.private_email:
-                email = ''
+                email_type = 'Private'
             else:
-                email = part.email
+                email_type = 'Public'
             data_app((self.formatDate(part.registration_date), part.id,
                     self.unicode2UTF8(part.first_last_name), self.unicode2UTF8(part.position), 
                     self.unicode2UTF8(part.organisation), self.unicode2UTF8(part.address),
-                    self.unicode2UTF8(part.zip_code), email, self.unicode2UTF8(part.phone_number),
+                    self.unicode2UTF8(part.zip_code), part.email, email_type, self.unicode2UTF8(part.phone_number),
                     self.unicode2UTF8(part.event_1), self.unicode2UTF8(part.event_2),
                     self.unicode2UTF8(part.event_3), self.unicode2UTF8(part.topic_1),
                      self.unicode2UTF8(part.topic_2), self.unicode2UTF8(part.topic_3),
@@ -256,7 +256,7 @@ class CHMRegistration(LocalPropertyManager, Folder):
         RESPONSE.setHeader('Content-Disposition', 'attachment; filename=%s' % filename)
         return content
 
-    security.declareProtected(constants.MANAGE_PERMISSION, 'participants')
+    security.declareProtected(constants.VIEW_EDIT_PERMISSION, 'participants')
     participants = PageTemplateFile('zpt/registration/participants', globals())
 
     security.declareProtected(constants.MANAGE_PERMISSION, 'getParticipants')
@@ -278,8 +278,13 @@ class CHMRegistration(LocalPropertyManager, Folder):
 
     security.declarePublic('canManageParticipants')
     def canManageParticipants(self):
-        """ Check the permissions to edit/delete participants """
+        """ Check the permissions to edit/delete meeting settgins and participants """
         return checkPermission(constants.MANAGE_PERMISSION, self)
+
+    security.declarePublic('canViewParticipants')
+    def canViewParticipants(self):
+        """ Check the permissions to edit/delete participants """
+        return checkPermission(constants.VIEW_EDIT_PERMISSION, self)
 
     security.declarePublic('getRegistrationTitle')
     def getRegistrationTitle(self):
