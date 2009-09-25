@@ -3,7 +3,7 @@
 		tal:attributes="href string:${here/absolute_url}/edit_html">
 		Edit properties
 	</a>
-	<a i18n:translate="" tal:condition="here/canManageParticipants"
+	<a i18n:translate="" tal:condition="python:here.canViewParticipants() or here.canManageParticipants()"
 		tal:attributes="href string:${here/absolute_url}/participants">
 		View participants
 	</a>
