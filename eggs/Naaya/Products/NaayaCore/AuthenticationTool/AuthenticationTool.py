@@ -613,6 +613,28 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         """ Return the user roles """
         return user_obj.roles
 
+    def get_all_user_roles(self, uid):
+        # check local users
+        roles = []
+        local_user = self.getUser(uid)
+        if local_user is not None:
+            return local_user.roles
+        # check ldap users and groups
+        for source in self.getSources():
+            # users
+            portal_roles = source.getUsersRoles(source.getUserFolder()).get(uid, [])
+            if portal_roles:
+                for role, location in portal_roles:
+                    if location == self.getSite().getId():
+                        roles.extend(role)
+            # groups
+            roles.extend(self.get_ldap_group_roles(uid, source))
+
+        if self.REQUEST is not None:
+            auth_user = self.REQUEST['AUTHENTICATED_USER']
+            roles.extend(auth_user.getRoles())
+        return roles
+
     def getUserFirstName(self, user_obj):
         """ Return the firstname"""
         return user_obj.firstname
