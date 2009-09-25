@@ -58,6 +58,19 @@ class GroupwareSite(NySite):
         self.getLayoutTool().manage_delObjects('skin')
         self.manage_delObjects('info')
 
+    def getUserAccess(self):
+        user = self.REQUEST['AUTHENTICATED_USER'].getUserName()
+        user_roles = self.getAuthenticationTool().get_all_user_roles(user)
+
+        if 'Manager' in user_roles or 'Administrator' in user_roles:
+            return 'administrator'
+        if 'Contributor' in user_roles and 'Administrator' not in user_roles and 'Manager' not in user_roles:
+            return 'member'
+        if self.checkPermissionView():
+            return 'view'
+        else:
+            return 'restricted'
+
     gw_common_css = ImageFile('www/gw_common.css', globals())
     gw_print_css = ImageFile('www/gw_print.css', globals())
     gw_style_css = ImageFile('www/gw_style.css', globals())
