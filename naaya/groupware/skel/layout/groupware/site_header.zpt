@@ -134,9 +134,6 @@
 			</ul>
 		</div>
 		<div id="breadcrumbtrail" tal:define="crumbs python:here.getBreadCrumbTrail(request)">
-			<a href="http://ew.eea.europa.eu" title="EnviroWindows">EW</a> &raquo; 
-			<a tal:attributes="href string:${site_url}/" title="Home" i18n:attributes="title" i18n:translate="">Home</a>
-			<tal:block condition="crumbs">&raquo;</tal:block>
 			<tal:block repeat="crumb crumbs">
 				<a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" />
 				<span tal:condition="not:repeat/crumb/end"> &raquo; </span>
