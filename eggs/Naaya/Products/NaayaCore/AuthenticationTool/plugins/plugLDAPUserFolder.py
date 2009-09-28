@@ -101,9 +101,7 @@ class plugLDAPUserFolder(PlugBase):
 
     def getUserCanonicalName(self, user):
         value = self.canonical_name.get(user, '-')
-        if isinstance(value, str):
-            value = value.decode(self.default_encoding)
-        return value
+        return self.decode_cn(value)
 
     def setUserCanonicalName(self, user, user_name):
         self.canonical_name[user] = user_name
@@ -316,7 +314,7 @@ class plugLDAPUserFolder(PlugBase):
                 try:
                     self.buffer = {}
                     users = acl_folder.findUser(search_param=params, search_term=term)
-                    [ self.buffer.setdefault(u['uid'], u['cn']) for u in users ]
+                    [ self.buffer.setdefault(u['uid'], self.decode_cn(u['cn'])) for u in users ]
                     return users
                 except: return ()
             else:   return ()
@@ -324,7 +322,7 @@ class plugLDAPUserFolder(PlugBase):
             try:
                 self.buffer = {}
                 users = self.getUsersByRole(acl_folder, [(role, dn)])
-                [ self.buffer.setdefault(u['uid'][0], u['cn'][0]) for u in users ]
+                [ self.buffer.setdefault(u['uid'][0], self.decode_cn(u['cn'][0])) for u in users ]
                 return users
             except: return ()
         else:
@@ -363,6 +361,11 @@ class plugLDAPUserFolder(PlugBase):
 
     def getLDAPUserDescription(self, dn):
         return unicode(dn.get('description', ''), 'iso-8859-1').encode('utf-8')
+
+    def decode_cn(self, value):
+        if isinstance(value, str):
+            value = value.decode(self.default_encoding)
+        return value
 
     security.declarePublic('interface_html')
     interface_html = PageTemplateFile('plugLDAPUserFolder', globals())
