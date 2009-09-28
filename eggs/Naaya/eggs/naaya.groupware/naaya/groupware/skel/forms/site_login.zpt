@@ -82,7 +82,7 @@
     </tal:block>
 
     <tal:block define="user python:request.AUTHENTICATED_USER.getUserName()" condition="python:user=='Anonymous User'">
-    <h1 i18n:translate="">Restricted interest group</h1>
+    <h1 i18n:translate="">Restricted access</h1>
     <p i18n:translate="">You may request access to this interest group by contacting your group leader or by filling out the <a href="./request_ig_access_html" title="Request IG access">access request</a> form.</p>
 
 
@@ -131,5 +131,6 @@
     </tal:block>
     </div>
 </div>
+    <div id="pagefoot"></div>
 </body>
 </html>
