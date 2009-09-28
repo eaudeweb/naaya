@@ -70,8 +70,8 @@
                     <ul>
                         <li tal:repeat="ig igs">
                             <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
-                            [<small><a tal:attributes="href string:${ig/absolute_url}/request_ig_access_html">Request access</a></small>]
                             <span tal:replace="ig/site_subtitle"/>
+                            [<small><a tal:attributes="href string:${ig/absolute_url}/request_ig_access_html">Request access</a></small>]
                             <div tal:content="structure ig/description"></div>
                         </li>
                     </ul>
