@@ -18,7 +18,6 @@
 	</div>
 </div>
 <div id="footer">
-	<p i18n:translate="">European Environment Agency, Kongens Nytorv 6, 1050 Copenhagen K, Denmark - Phone: +45 3336 7100 <br /> &copy; Copyright 1993-2006</p>
 	<a tal:attributes="href string:${site_url}/about/contact" i18n:translate="">Contact us</a>
 	<a tal:attributes="href string:${site_url}/about/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>
 	<a href="http://www.eea.europa.eu/disclaimer" i18n:translate="">Disclaimer</a>
