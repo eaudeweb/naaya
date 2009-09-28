@@ -223,7 +223,7 @@ function toggleSelect()
 		tal:attributes="class python:test(path('repeat/item/odd'), 'odd', 'even')">
 		<td><input type="checkbox" name="name" tal:attributes="value python:test(here.isList(item['uid']), item['uid'][0], item['uid'])" CHECKED/></td>
 		<td tal:content="python:test(here.isList(item['uid']), item['uid'][0], item['uid'])">uid</td>
-		<td tal:content="python:test(here.isList(item['cn']), item['cn'][0], item['cn'])">cn</td>
+		<td tal:content="python:test(here.isList(item['cn']), here.decode_cn(item['cn'][0]), here.decode_cn(item['cn']))">cn</td>
 		<td tal:content="python:item['dn']">dn</td>
 	</tr>
 </table>
