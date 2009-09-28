@@ -162,7 +162,10 @@ def importNyDocument(self, param, id, attrs, content, properties, discussion, ob
                 try: self.manage_delObjects([id])
                 except: pass
 
-            ob = _create_NyDocument_object(self, id, self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
+            contributor = self.utEmptyToNone(attrs['contributor'].encode('utf-8'))
+            if contributor is None:
+                contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            ob = _create_NyDocument_object(self, id, contributor)
             ob.sortorder = attrs['sortorder'].encode('utf-8')
             ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
 
