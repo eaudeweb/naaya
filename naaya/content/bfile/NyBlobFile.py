@@ -16,9 +16,11 @@
 # Authors:
 #
 # Alex Morega, Eau de Web
+# David Batranu, Eau de Web
 
 from ZODB.blob import Blob
 from Persistence import Persistent
+from ZPublisher.Iterators import filestream_iterator
 
 class NyBlobFile(Persistent):
     """
@@ -34,6 +36,9 @@ class NyBlobFile(Persistent):
 
     def open(self):
         return self._blob.open('r')
+
+    def open_iterator(self):
+        return filestream_iterator(self._blob.committed(), 'rb')
 
     def open_write(self):
         return self._blob.open('w')
