@@ -16,6 +16,7 @@
 # Authors:
 #
 # Alex Morega, Eau de Web
+# David Batranu, Eau de Web
 
 #Python imports
 import os
@@ -307,16 +308,14 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         except (IndexError, ValueError), e:
             raise NotFound
 
+        RESPONSE.setHeader('Content-Length', ver.size)
         RESPONSE.setHeader('Content-Type', ver.content_type)
         RESPONSE.setHeader('Content-Disposition',
             "attachment;filename*=UTF-8''%s" % urllib.quote(ver.filename))
 
-        # TODO: stream the response
-        f = ver.open()
-        data = f.read()
-        f.close()
-        RESPONSE.setBody(data)
-        return RESPONSE
+        if not hasattr(RESPONSE, '_streaming'):
+            return ver.open().read()
+        return ver.open_iterator()
 
 InitializeClass(NyBFile)
 
