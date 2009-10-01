@@ -70,10 +70,15 @@ class EmailSender(object):
         self.smtp_host = smtp_host
         self.mail_server = None
 
-    def send_emails(self):
-        """ send all the emails in the folder """
+    def _open_smtp(self):
         self.mail_server = smtplib.SMTP(self.smtp_host)
 
+    def _close_smtp(self):
+        self.mail_server.quit()
+
+    def send_emails(self):
+        """ send all the emails in the folder """
+        self._open_smtp()
         while True:
             file_name = self._get_email_file()
             if file_name is None:
@@ -90,8 +95,7 @@ class EmailSender(object):
                 self._error_onsend(file_name, email_content)
 
             self._finished_email(file_name)
-
-        self.mail_server.quit()
+        self._close_smtp()
 
     def _get_email_file(self):
         """ gets the email from the first file in the folder """
