@@ -36,6 +36,12 @@ class EmailSenderSub(EmailSender):
         self.sent_content = []
         self.error_content = []
 
+    def _open_smtp(self):
+        pass
+
+    def _close_smtp(self):
+        pass
+
     def _send_email(self, content):
         if random.randint(0, 1) == 0:
             self.sent_content.append(content)
