@@ -199,6 +199,8 @@ function toggleSelect(caller){
 </div>
 </div>
 
+<a href="./subscribe" title="Subscribe notifications about changes in this folder" tal:condition="here/is_logged">Subscribe to notifications</a>
+
 <tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
 	<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})" />
 </tal:block>

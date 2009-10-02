@@ -44,6 +44,7 @@ from Products.NaayaBase.NyProperties import NyProperties
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyContentType import NyContentType
 from Products.NaayaCore.managers.csv_import_export import CSVImportTool, CSVExportTool
+from Products.NaayaCore.NotificationTool.Subscriber import Subscriber
 
 manage_addNyFolder_html = PageTemplateFile('zpt/folder_manage_add', globals())
 manage_addNyFolder_html.kind = METATYPE_FOLDER
@@ -1609,5 +1610,6 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
         return self.getFormsTool().getContent({'here': self}, 'site_feedback')
 
     csv_import = CSVImportTool('csv_import')
+    subscribe = Subscriber('subscribe')
 
 InitializeClass(NyFolder)

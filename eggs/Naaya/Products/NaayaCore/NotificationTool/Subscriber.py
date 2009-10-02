@@ -65,6 +65,11 @@ class Subscriber(Implicit, Item):
         location = self.get_location()
         return notificationTool.available_notif_types('')
 
+    def get_enabled_subscriptions(self, REQUEST):
+        enabled = set(self.list_enabled_subscriptions())
+        current = set((x.notif_type for x in self.list_subscriptions(REQUEST)))
+        return enabled.difference(current)
+
     def subscribe(self, REQUEST, notif_type, lang=None):
         """ """
         user_id = self.get_user_id(REQUEST)
