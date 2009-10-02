@@ -95,6 +95,25 @@ class NotificationTool(Folder):
     def get_config(self, key):
         return self.config[key]
 
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_add_subscription')
+    def admin_add_subscription(self, user_id, location, notif_type, REQUEST):
+        """ """
+        if location == '__root': location = ''
+        location = ('/').join(location.split('/')[1:])
+        try:
+            self.add_subscription(user_id, location, notif_type, 'en')
+        except ValueError, msg:
+            self.setSessionErrors(msg)
+        REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
+
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_remove_subscription')
+    def admin_remove_subscription(self, user_id, location, notif_type, lang, REQUEST):
+        """ """
+        self.remove_subscription(user_id, location, notif_type, lang)
+        REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
+
     security.declarePrivate('add_subscription')
     def add_subscription(self, user_id, location, notif_type, lang):
         """ Subscribe the user `user_id` """
@@ -141,7 +160,7 @@ class NotificationTool(Folder):
 
         return output
 
-    def available_notif_types(self, location):
+    def available_notif_types(self, location=''):
         if self.config['enable_instant']:
             yield 'instant'
         if self.config['enable_daily']:

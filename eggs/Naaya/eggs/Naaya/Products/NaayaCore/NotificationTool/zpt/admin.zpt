@@ -93,5 +93,68 @@
 </div>
 </form>
 
+<h2 i18n:translate="">Current subscriptions</h2>
+<tal:block tal:define="current_subscriptions python:list(here.list_subscriptions())">
+<br />
+<p tal:condition="python:len(current_subscriptions) == 0" i18n:translate="">No users have yet subscribed to any notifications.</p> 
+<br />
+<form action="admin_add_subscription" method="post" tal:define="available_subscriptions here/available_notif_types">
+    <fieldset>
+        <legend i18n:translate="">Add user subscripion</legend>
+        <div class="field">
+            <label for="user_id" i18n:translate="">User id</label>
+            <input type="text" id="user_id" name="user_id"/>
+        </div>
+        <div class="field">
+            <label for="location" i18n:translate="">Location</label>
+            <div id="extjs_tree" class="extjs_tree custom-tree"></div>
+            <input type="text" id="location" name="location" class="extjs_target" style="width:40%"/>
+        </div>
+        <div class="field">
+            <label for="notif_type">Subscribe to</label>
+            <select name="notif_type" id="notif_type">
+                <option value="instant" tal:condition="python:'instant' in available_subscriptions" i18n:translate="">Instant notifications</option>
+                <option value="daily" tal:condition="python:'daily' in available_subscriptions" i18n:translate="">Daily digest</option>
+                <option value="weekly" tal:condition="python:'weekly' in available_subscriptions" i18n:translate="">Weekly digest</option>
+                <option value="monthly" tal:condition="python:'monthly' in available_subscriptions" i18n:translate="">Monthly digest</option>
+            </select>
+        </div>
+        <input type="hidden" name="lang" value="en"/>
+        <input type="submit" value="Subscribe user" i18n:attributes="value"/>
+    </fieldset>
+</form>
+<table class="datatable" tal:condition="python:len(current_subscriptions) > 0">
+	<thead>
+		<th>User</th>
+		<th>Location</th>
+		<th>Notification</th>
+		<th></th>
+	</thead>
+	<tbody>
+		<tr tal:repeat="subscription current_subscriptions">
+			<td>
+				<span tal:content="subscription/user_id"/>
+			</td>
+			<td tal:define="location subscription/location">
+				<span tal:content="python: test(location, location, here.getSite().absolute_url(1))"/>
+			</td>
+			<td>
+				<span tal:content="subscription/notif_type"/>
+			</td>
+			<td>
+				<form method="post" tal:attributes="action string:${here/absolute_url}/admin_remove_subscription">
+					<input type="hidden" name="user_id" tal:attributes="value subscription/user_id"/>
+					<input type="hidden" name="location" tal:attributes="value subscription/location"/>
+					<input type="hidden" name="notif_type" tal:attributes="value subscription/notif_type"/>
+					<input type="hidden" name="lang" tal:attributes="value subscription/lang"/>
+					<input type="submit" value="delete"/>
+				</form>
+			</td>
+		</tr>
+	</tbody>
+</table>
+</tal:block>
+<!-- Ajax tree scripts -->
+<metal:block use-macro="here/macro_utils/macros/ajaxtree" />
 </tal:block>
 </metal:block>
