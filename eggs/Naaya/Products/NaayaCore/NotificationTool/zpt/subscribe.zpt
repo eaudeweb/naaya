@@ -27,7 +27,7 @@
                     selected python:item['selected']"
                 tal:content="python:translations(item['title'], item['id'])" />
     </select-->
-    <input name="submit" type="submit" value="subscribe"/>
+    <input name="submit" type="submit" value="Subscribe" i18n:attributes="value"/>
 </form>
 <p tal:condition="python: not available_subscriptions and current_subscriptions">You are subscribed to all available notifications.</p>
 <p tal:condition="python: not available_subscriptions and not current_subscriptions">There are no subscriptions available.</p>
