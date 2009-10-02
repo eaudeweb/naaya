@@ -45,8 +45,8 @@
 	</thead>
 	<tbody>
 		<tr tal:repeat="subscription current_subscriptions">
-			<td>
-				<span tal:content="subscription/location"/>
+			<td tal:define="location subscription/location">
+				<span tal:content="python: test(location, location, here.getSite().absolute_url(1))"/>
 			</td>
 			<td>
 				<span tal:content="subscription/notif_type"/>
