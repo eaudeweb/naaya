@@ -571,7 +571,7 @@ a#eealink {
 }
 
 #dropdowns li:hover ul li, #dropdowns li.over ul li {
-    width: 20em;
+    min-width: 20em;
 }
 /* End EIONET dropdown */
 
