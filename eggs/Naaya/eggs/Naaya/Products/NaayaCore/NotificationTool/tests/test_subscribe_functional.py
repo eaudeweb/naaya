@@ -50,13 +50,12 @@ class SubscriptionsTest(NaayaFunctionalTestCase):
         _notif = self.portal.portal_notification
         self.browser_do_login('contributor', 'contributor')
 
-        self.browser.go('http://localhost/portal/notification_subscribe')
+        self.browser.go('http://localhost/portal/subscribe')
 
         num_forms_before = len(self.browser.get_all_forms())
 
         form = self.browser.get_form('subscribe')
         form['notif_type'] = ['instant']
-        form['lang'] = ['en']
         self.browser.clicked(form, self.browser.get_form_field(form, 'submit'))
 
         self.browser.submit()

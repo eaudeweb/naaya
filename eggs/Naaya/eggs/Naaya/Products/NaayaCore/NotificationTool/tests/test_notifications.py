@@ -39,7 +39,6 @@ class NotificationsTest(NaayaTestCase):
         self.notif.config['enable_daily'] = True
         self.notif.config['enable_weekly'] = True
         self.notif.config['enable_monthly'] = True
-        self.notif.config['enable_top_folders'] = True
         addNyFolder(self.portal, 'notifol', contributor='contributor', submitted=1)
         addNyDocument(self.portal.notifol, id='notidoc',
             title='Notifying document', submitted=1, contributor='contributor')

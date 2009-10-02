@@ -38,7 +38,10 @@ class Subscriber(Implicit, Item):
         return self.getSite().getNotificationTool()
 
     def get_location(self):
-        return ''
+        current_location = self.absolute_url(1)
+        # remove site id and 'subscribe'
+        current_location = current_location.split('/')[1:-1]
+        return ('/').join(current_location)
 
     def get_user_id(self, REQUEST):
         user_id = REQUEST.AUTHENTICATED_USER.getId()
@@ -58,7 +61,8 @@ class Subscriber(Implicit, Item):
         location = self.get_location()
 
         notificationTool = self.get_notification_tool()
-        return notificationTool.list_subscriptions(user_id)
+        return notificationTool.list_subscriptions(user_id,
+            location=location, inherit_location=True)
 
     def list_enabled_subscriptions(self):
         notificationTool = self.get_notification_tool()
