@@ -38,18 +38,16 @@
 
 <table class="datatable" tal:condition="python:len(current_subscriptions) > 0">
 	<thead>
-		<!--<th>Location</th>-->
+		<th>Location</th>
 		<th>Notification</th>
 		<!--th>Language</th-->
 		<th></th>
 	</thead>
 	<tbody>
 		<tr tal:repeat="subscription current_subscriptions">
-			<!--
 			<td>
 				<span tal:content="subscription/location"/>
 			</td>
-			-->
 			<td>
 				<span tal:content="subscription/notif_type"/>
 			</td>

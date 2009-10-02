@@ -88,7 +88,6 @@ class NotificationsUnitTest(TestCase):
         self.notif.config['enable_daily'] = True
         self.notif.config['enable_weekly'] = True
         self.notif.config['enable_monthly'] = True
-        self.notif.config['enable_top_folders'] = True
         self._notifications = []
         set_notif_testing_mode(True, save_to=self._notifications)
 
@@ -348,14 +347,7 @@ class NotificationsUiApiTest(TestCase):
         self.notif.add_subscription('user1', '', 'instant', 'en')
 
         self.notif.config['enable_weekly'] = True
-        self.assertRaisesWithMessage(ValueError, 'Subscribing to notifications in "fol1" not allowed',
-            self.notif.add_subscription, 'user2', 'fol1', 'weekly', 'en')
-
-        self.notif.config['enable_top_folders'] = True
         self.notif.add_subscription('user2', 'fol1', 'weekly', 'en')
-
-        self.assertRaisesWithMessage(ValueError, 'Subscribing to notifications in "fol1/fol2" not allowed',
-            self.notif.add_subscription, 'user2', 'fol1/fol2', 'weekly', 'en')
 
         self.assertEqual(set(self.notif.list_subscriptions()), set([
             ('user1', '', 'instant', 'en'), ('user2', 'fol1', 'weekly', 'en'),
@@ -363,7 +355,6 @@ class NotificationsUiApiTest(TestCase):
 
     def test_remove_subscription(self):
         self.notif.config['enable_weekly'] = True
-        self.notif.config['enable_top_folders'] = True
 
         self.notif.add_subscription('user1', 'fol1', 'weekly', 'en')
         self.assertEqual(set(self.notif.list_subscriptions()), set([
@@ -379,7 +370,6 @@ class NotificationsUiApiTest(TestCase):
     def test_list_subscriptions(self):
         self.notif.config['enable_instant'] = True
         self.notif.config['enable_daily'] = True
-        self.notif.config['enable_top_folders'] = True
 
         self.notif.add_subscription('user1', 'fol1', 'instant', 'en')
         self.notif.add_subscription('user1', '', 'daily', 'en')
@@ -430,14 +420,9 @@ class NotificationsUiApiTest(TestCase):
         self.assertEqual(list(self.notif.available_notif_types(location='')),
             ['instant', 'daily', 'weekly', 'monthly'])
 
-        self.assertEqual(list(self.notif.available_notif_types(location='fol1')), [])
-
-        self.notif.config['enable_top_folders'] = True
         self.notif.config['enable_weekly'] = False
         self.assertEqual(list(self.notif.available_notif_types(location='fol1')),
             ['instant', 'daily', 'monthly'])
-
-        self.assertEqual(list(self.notif.available_notif_types(location='fol1/fol2')), [])
 
 def test_suite():
     suite = TestSuite()

@@ -88,7 +88,6 @@ class NotificationTool(Folder):
             'enable_monthly': False,
             'monthly_day': 1, # 1 = first day of the month
             'monthly_hour': 0,
-            'enable_top_folders': False,
             'notif_content_types': [],
         })
         self.timestamps = PersistentDict()
@@ -143,11 +142,6 @@ class NotificationTool(Folder):
         return output
 
     def available_notif_types(self, location):
-        if location != '':
-            if not self.config['enable_top_folders']:
-                return
-            if '/' in location:
-                return
         if self.config['enable_instant']:
             yield 'instant'
         if self.config['enable_daily']:
@@ -325,7 +319,6 @@ class NotificationTool(Folder):
         self.config['enable_monthly'] = form.get('enable_monthly', False)
         self.config['monthly_day'] = form.get('monthly_day')
         self.config['monthly_hour'] = form.get('monthly_hour')
-        self.config['enable_top_folders'] = form.get('enable_top_folders', False)
         self.config['notif_content_types'] = form.get('notif_content_types', [])
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
