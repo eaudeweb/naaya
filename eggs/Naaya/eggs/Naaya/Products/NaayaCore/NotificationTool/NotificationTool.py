@@ -333,7 +333,8 @@ InitializeClass(NotificationTool)
 
 def _send_notification(email_tool, addr_from, addr_to, subject, body):
     mail = build_email(addr_from, addr_to, subject, body)
-    raise NotImplementedError
+    #TODO: send using the EmailSender
+    email_tool.sendEmail(body, addr_to, addr_from, subject)
 
 def _mock_send_notification(email_tool, addr_from, addr_to, subject, body):
     mock_saved.append( (addr_from, addr_to, subject, body) )
