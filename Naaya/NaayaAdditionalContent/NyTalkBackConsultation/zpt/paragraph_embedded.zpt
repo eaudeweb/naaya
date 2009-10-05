@@ -9,7 +9,7 @@
 
 <div class="talkback-comments_list">
     <h2 i18n:translate="" tal:condition="here/get_comments">Previous comments</h2>
-    <tal:block replace="structure here/comments_html" />
+    <tal:block replace="structure python:here.comments_html(embedded=True)" />
 </div>
 
 <tal:block content="structure python:here.comment_form(

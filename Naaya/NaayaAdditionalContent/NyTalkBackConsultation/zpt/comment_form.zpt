@@ -39,17 +39,8 @@
             <label for="message" i18n:translate="">Comment</label>
             <textarea id="message" cols="70" rows="5" name="message:utf8:ustring"
               tal:content="message"></textarea>
-            <tal:block content="structure python:editor.render(
-              'message', curr_lang, image_support=True, extra_options={
-                  'content_css': [here.absolute_url() + '/misc_/NaayaContent/tb-editor.css'],
-                  'theme_advanced_buttons1': [
-                        'bold,italic,underline,strikethrough,sub,sup,forecolor,backcolor,removeformat,separator,'
-                        'bullist,numlist,separator,'
-                        'justifyleft,justifycenter,justifyright,justifyfull,separator,'
-                        'link,unlink,hr,image,separator,'
-                        'pastetext,pasteword,cleanup,code,help'],
-                  'theme_advanced_buttons2': [''],
-                })" />
+            <tal:block content="structure python:here.custom_editor(
+                                    editor, curr_lang, 'message')" />
         </div>
 
         <div class="field">
@@ -77,8 +68,6 @@
           >request reviewer rights</a> at the
           <a tal:attributes="href consultation_url">consultation index</a>.
     </p>
-    <a tal:attributes="href python:here.get_section().absolute_url()"
-      i18n:translate="">Return to chapter</a>
 </div>
 
 </tal:block>

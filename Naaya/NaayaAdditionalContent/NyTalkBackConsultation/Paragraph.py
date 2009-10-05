@@ -105,7 +105,9 @@ class Paragraph(Folder):
         
         self.manage_delObjects([comment_id])
         if REQUEST:
-            REQUEST.RESPONSE.redirect(self.get_section().absolute_url())
+            back_url = REQUEST.form.get('back_url',
+                                        self.get_section().absolute_url())
+            REQUEST.RESPONSE.redirect(back_url)
 
     _split_content_html = PageTemplateFile('zpt/paragraph_split', globals())
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'split_body')

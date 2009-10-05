@@ -4,40 +4,56 @@ to show a whole tree of comments.
 </tal:comment>
 
 <span style="display:none;" class="talkback-comment_count"
-  tal:content="here/comment_count" />
+      tal:content="here/comment_count" />
 <tal:block define="comment_data nothing">
-<li class="tb-comment-box" metal:define-macro="display_child" tal:condition="comment_data">
-    <div class="tb-comment" tal:define="comment comment_data/comment">
-    <span class="tb-comment-head" tal:define="can_edit comment/checkPermissionEditObject">
-    <span tal:replace="comment/get_contributor_name"/>
-    <span tal:replace="python:here.utShowFullDateTime(comment.comment_date)"/>
-    [<a tal:attributes="href string:${here/absolute_url}?reply_to=${comment/id}#comment-form"
-      i18n:translate="">reply</a>]
-    <tal:block condition="can_edit">
-        [<a tal:attributes="href string:${comment/absolute_url}/edit_html"
-          i18n:translate="">edit</a>]
-    </tal:block>
-    <tal:block condition="can_edit">
-        [<a tal:attributes="href string:${here/absolute_url}/delete_comment?comment_id=${comment/id}"
-          i18n:translate="">delete</a>]
-    </tal:block>
-    </span>
+<li class="tb-comment-box"
+    metal:define-macro="display_child"
+    tal:condition="comment_data">
+    <div class="tb-comment"
+         tal:define="comment comment_data/comment;
+                     comment_id comment/id">
+        <div class="tb-comment-head"
+             tal:define="can_edit comment/checkPermissionEditObject">
+            <div class="tb-comment-author">
+                <tal:block content="comment/get_contributor_name"/>
+                <tal:block content="python:here.utShowFullDateTime(comment.comment_date)"/>
+            </div>
+            <div class="buttons">
+                <a tal:define="url python:(here.absolute_url() +
+                                           test(embedded, '/embedded_html', '') +
+                                           '?reply_to=' + comment_id + '#comment-form')"
+                   tal:attributes="href url"
+                   i18n:translate="">reply</a>
+                <a tal:define="url python:(comment.absolute_url() + '/edit_html' +
+                                           test(embedded, '?embedded=on', ''))"
+                   tal:condition="can_edit"
+                   tal:attributes="href url"
+                   i18n:translate="">edit</a>
+                <a tal:define="url python:(comment.aq_parent.absolute_url() +
+                                           '/delete_comment?comment_id=' + comment_id +
+                                           test(embedded, '&embedded=on', ''))"
+                   tal:condition="can_edit"
+                   tal:attributes="href url"
+                   i18n:translate="">delete</a>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        <div class="tb-comment-body" tal:content="structure comment/message" />
 
-    <div class="tb-comment-body" tal:content="structure comment/message" />
-
-    <a tal:attributes="href string:${comment/absolute_url}/get_talkback_file"
-      tal:condition="comment/check_file" i18n:translate="">Download attached file</a>
+        <a tal:attributes="href string:${comment/absolute_url}/get_talkback_file"
+           tal:condition="comment/check_file"
+           i18n:translate="">Download attached file</a>
     </div>
 
     <ul tal:repeat="comment_data comment_data/children">
         <metal:block use-macro="template/macros/display_child" />
     </ul>
-
 </li>
 </tal:block>
 
 <ul class="tb-comments-tree">
-<tal:block repeat="comment_data here/get_comment_tree">
+<tal:block define="embedded options/embedded|nothing"
+           repeat="comment_data here/get_comment_tree">
     <metal:block use-macro="template/macros/display_child" />
 </tal:block>
 </ul>

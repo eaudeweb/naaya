@@ -1,22 +1,32 @@
-<span tal:replace="structure here/standard_html_header" />
+<tal:block define="global embedded python:request.get('embedded', 'off') == 'on';
+                   global back_url python:here.aq_parent.absolute_url() +
+                                          test(embedded, '/embedded_html', '')"
+           condition="not:embedded"
+           content="structure here/standard_html_header" />
 
-<h1 tal:content="here/title_or_id"></h1>
+<tal:block define="global curr_lang python:request.get('lang', None) or
+                                      here.gl_get_selected_language();
+                   global editor here/getEditorTool;"
+           content="structure editor/includeLibs" />
 
-<div class="floated-buttons">
-    <span class="buttons">
-        <a tal:attributes="href python:here.get_section().absolute_url() + '#' + here.get_anchor()" i18n:translate="">Back to section</a>
-    </span>
-</div>
-<div class="cleaner" />
+<h1 tal:content="string:${here/aq_parent/aq_parent/title_or_id} -
+                        comment by ${here/get_contributor_name}" />
 
 <form name="frmEdit" method="post" action="save_modifications">
 <div class="field">
-    <label for="message"><span i18n:translate="">Comment</span></label>
-    <textarea id="message" cols="70" rows="5"
-      name="message:utf8:ustring" tal:content="here/message"></textarea>
+    <input type="hidden" name="back_url" tal:attributes="value back_url" />
+    <label for="message" i18n:translate="">Comment</label>
+    <textarea id="message" name="message:utf8:ustring"
+              cols="70" rows="5"
+              tal:content="here/message"
+              ></textarea>
+    <tal:block content="structure python:here.custom_editor(
+                            editor, curr_lang, 'message')" />
 </div>
 
 <input type="submit" i18n:attributes="value" value="Save modifications" />
+<a tal:attributes="href back_url" i18n:translate="">Cancel</a>
 </form>
 
-<span tal:replace="structure here/standard_html_footer" />
+<tal:block condition="not:embedded"
+           content="structure here/standard_html_footer" />
