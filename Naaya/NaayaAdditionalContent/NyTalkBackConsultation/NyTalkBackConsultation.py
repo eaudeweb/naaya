@@ -44,9 +44,10 @@ from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyProperties import NyProperties
 from constants import *
 
-#Section
+#local imports
 from Section import addSection
 from Section import addSection_html
+from invitations import InvitationsContainer
 
 #module constants
 
@@ -110,6 +111,7 @@ config = {
         '_misc': {
                 'NyTalkBackConsultation.gif': ImageFile('www/NyTalkBackConsultation.gif', globals()),
                 'NyTalkBackConsultation_marked.gif': ImageFile('www/NyTalkBackConsultation_marked.gif', globals()),
+                'tb-editor.css': ImageFile('www/tb-editor.css', globals()),
             },
     }
 
@@ -126,6 +128,7 @@ def addNyTalkBackConsultation(self,
                               end_date='',
                               public_registration='',
                               allow_file='',
+                              allow_reviewer_invites=False,
                               contributor=None,
                               releasedate='',
                               lang=None,
@@ -173,15 +176,10 @@ def addNyTalkBackConsultation(self,
             i += 1
             id = '%s-%u' % (id, i)
         #create object
-        ob = NyTalkBackConsultation(id,
-                                    title,
-                                    description,
-                                    sortorder,
-                                    start_date,
-                                    end_date,
-                                    public_registration,
-                                    allow_file, contributor,
-                                    releasedate, lang)
+        ob = NyTalkBackConsultation(id, title, description, sortorder,
+                                    start_date, end_date, public_registration,
+                                    allow_file, allow_reviewer_invites,
+                                    contributor, releasedate, lang)
         self.gl_add_languages(ob)
         ob.createDynamicProperties(
             self.processDynamicProperties(METATYPE_TALKBACKCONSULTATION, REQUEST, kwargs),
@@ -222,6 +220,7 @@ def addNyTalkBackConsultation(self,
                 start_date=start_date,
                 end_date=end_date,
                 allow_file=allow_file,
+                allow_reviewer_invites=allow_reviewer_invites,
                 public_registration=public_registration,
                 lang=lang
             )
@@ -265,6 +264,7 @@ class NyTalkBackConsultation(NyAttributes,
                  end_date,
                  public_registration,
                  allow_file,
+                 allow_reviewer_invites,
                  contributor,
                  releasedate,
                  lang):
@@ -281,11 +281,36 @@ class NyTalkBackConsultation(NyAttributes,
                              end_date,
                              public_registration,
                              allow_file,
+                             allow_reviewer_invites,
                              releasedate,
                              lang)
 
         NyProperties.__dict__['__init__'](self)
+        self.invitations = InvitationsContainer('invitations')
         self.submitted = 1
+
+    def set_allow_reviewer_invites(self, allow):
+        perm = '_Naaya___Invite_to_TalkBack_Consultation_Permission'
+        roles = getattr(self, perm, [])
+
+        if allow and 'Reviewer' not in roles:
+            roles.append('Reviewer')
+        elif not allow and 'Reviewer' in roles:
+            roles.remove('Reviewer')
+
+        if roles:
+            setattr(self, perm, roles)
+        else:
+            if hasattr(self, perm):
+                delattr(self, perm)
+
+    def get_allow_reviewer_invites(self):
+        perm = '_Naaya___Invite_to_TalkBack_Consultation_Permission'
+        roles = getattr(self, perm, [])
+        return ('Reviewer' in roles)
+
+    allow_reviewer_invites = property(get_allow_reviewer_invites,
+                                      set_allow_reviewer_invites)
 
     security.declarePrivate('save_properties')
     def save_properties(self,
@@ -296,6 +321,7 @@ class NyTalkBackConsultation(NyAttributes,
                         end_date,
                         public_registration,
                         allow_file,
+                        allow_reviewer_invites,
                         releasedate,
                         lang):
 
@@ -321,6 +347,7 @@ class NyTalkBackConsultation(NyAttributes,
         self.releasedate = releasedate
         self.public_registration = public_registration
         self.allow_file = allow_file
+        self.allow_reviewer_invites = allow_reviewer_invites
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
                               'saveProperties')
@@ -332,6 +359,7 @@ class NyTalkBackConsultation(NyAttributes,
                        end_date='',
                        public_registration='',
                        allow_file='',
+                       allow_reviewer_invites=False,
                        lang='',
                        REQUEST=None):
         """ """
@@ -348,7 +376,9 @@ class NyTalkBackConsultation(NyAttributes,
 
         releasedate = self.releasedate
         self.updateRequestRoleStatus(public_registration, lang)
-        self.save_properties(title, description, sortorder, start_date, end_date, public_registration, allow_file, releasedate, lang)
+        self.save_properties(title, description, sortorder, start_date, end_date,
+                             public_registration, allow_file, allow_reviewer_invites,
+                             releasedate, lang)
 
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
@@ -449,9 +479,22 @@ class NyTalkBackConsultation(NyAttributes,
         return l_options
 
     def get_user_name(self):
-        return self.getAuthenticationTool().getUserFullName(
-            self.REQUEST.AUTHENTICATED_USER
-        )
+        # first, check if we have an invite key
+        invitation = self.invitations.get_current_invitation(self.REQUEST)
+        if invitation is not None:
+            return invitation.name
+
+        # no invite key; look for current Zope user
+        auth_tool = self.getAuthenticationTool()
+        userid = auth_tool.get_current_userid()
+
+        if userid is None: # anonymous user
+            return None
+
+        name = auth_tool.name_from_userid(userid)
+        if name == '':
+            name = userid
+        return name
 
     def checkTalkBackConsultationUser(self):
         """
@@ -470,7 +513,9 @@ class NyTalkBackConsultation(NyAttributes,
     def check_cannot_comment(self):
         """ """
 
-        if not self.checkPermissionReviewTalkBackConsultation():
+        if self.invitations.get_current_invitation(self.REQUEST) is not None:
+            pass
+        elif not self.checkPermissionReviewTalkBackConsultation():
             return 'no-permission'
 
         if self.get_days_left()[1] <= 0:
@@ -495,6 +540,12 @@ class NyTalkBackConsultation(NyAttributes,
         Check for managing the TalkBack Consultation.
         """
         return self.checkPermission(PERMISSION_MANAGE_TALKBACKCONSULTATION)
+
+    def checkPermissionInviteToTalkBackConsultation(self):
+        """
+        Check for inviting others to the TalkBack Consultation.
+        """
+        return self.checkPermission(PERMISSION_INVITE_TO_TALKBACKCONSULTATION)
 
     addSection = addSection
 

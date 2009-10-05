@@ -14,8 +14,9 @@
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
 <tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
 
-<form action="saveProperties" method="post" tal:define="lang python:test(request.get('lang'),request.get('lang'), here.gl_get_selected_language())">
-
+<form name="frmEdit" action="saveProperties" method="post"
+  tal:define="lang python:test(request.get('lang'),
+    request.get('lang'), here.gl_get_selected_language())">
 	<div class="field">
 		<label for="title" i18n:translate="">Title</label>
 		<input id="title" type="text" tal:attributes="value python: here.getLocalProperty('title', lang)" size="50" name="title:utf8:ustring"/>
@@ -51,6 +52,13 @@
 	<div class="field-inline">
 		<label for="allow_file" i18n:translate="">Allow reviewers to upload files when posting a comment</label>
 		<input type="checkbox" name="allow_file" id="allow_file" value="1" tal:attributes="checked python:test(here.allow_file == '1', '1', '')" />
+	</div>
+
+	<div class="field-inline">
+		<label for="allow_reviewer_invites" i18n:translate="">Allow reviewers to invite other people to review</label>
+		<input type="checkbox" name="allow_reviewer_invites:boolean"
+			id="allow_reviewer_invites"
+			tal:attributes="checked here/allow_reviewer_invites" />
 	</div>
 
 	<input type="hidden" tal:attributes="value lang" name="lang" />

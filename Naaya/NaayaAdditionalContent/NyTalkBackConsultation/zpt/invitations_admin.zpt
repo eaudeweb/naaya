@@ -1,0 +1,30 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 i18n:translate="">Invitations administration</h1>
+
+<dl>
+<tal:block repeat="invite options/invites">
+<tal:block condition="invite/enabled">
+    <dt tal:content="invite/name" />
+    <dd><strong i18n:translate="">Organization:</strong>
+        <tal:block content="invite/organization" />
+    </dd>
+    <dd tal:define="inviter_userid invite/inviter_userid;
+      inviter_name python:options['name_from_userid'](inviter_userid);">
+        <strong i18n:translate="">Invited by:</strong>
+        <tal:block content="inviter_name" />
+        (<tal:block content="invite/inviter_userid" />)
+    </dd>
+    <dd tal:condition="invite/notes"><p tal:content="invite/notes" /></dd>
+    <dd>
+        <form method="post" tal:attributes="action
+          string:${here/absolute_url}/admin_revoke_invitation">
+            <input type="hidden" name="key" tal:attributes="value invite/key" />
+            <input type="submit" value="revoke" />
+        </form>
+    </dd>
+</tal:block>
+</tal:block>
+</dl>
+
+<span tal:replace="structure here/standard_html_footer" />

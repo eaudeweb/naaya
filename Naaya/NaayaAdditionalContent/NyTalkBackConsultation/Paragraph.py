@@ -21,14 +21,15 @@
 #Zope imports
 from OFS.Folder import Folder
 from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
 from DateTime import DateTime
 
 #Product imports
-from comment_item import addComment, TalkBackConsultationComment
+from Products.NaayaBase.NyImageContainer import NyImageContainer
+from comment_item import addComment, TalkBackConsultationComment, cleanup_message
 from constants import *
 
 
@@ -63,6 +64,7 @@ class Paragraph(Folder):
         self.id =  id
         self.title = title
         self.body = body
+        self.imageContainer = NyImageContainer(self, True)
 
     security.declareProtected(view, 'get_paragraph')
     def get_paragraph(self):
@@ -70,11 +72,25 @@ class Paragraph(Folder):
 
     security.declareProtected(view, 'get_anchor')
     def get_anchor(self):
-        return 'naaaya-talkback-paragraph-%s' % self.id
+        return 'tbp-%s' % self.id
 
     security.declareProtected(view, 'get_comments')
     def get_comments(self):
         return self.objectValues([METATYPE_TALKBACKCONSULTATION_COMMENT])
+
+    security.declareProtected(view, 'get_comment_tree')
+    def get_comment_tree(self):
+        comment_data = {}
+        for comment in self.objectValues([METATYPE_TALKBACKCONSULTATION_COMMENT]):
+            parent = comment_data.setdefault(comment.reply_to, [])
+            children = comment_data.setdefault(comment.getId(), [])
+            parent.append({'comment': comment, 'children': children})
+        # comment_data[None] is the list of top-level comments
+        return comment_data.get(None, [])
+
+    @property
+    def comment_count(self):
+        return len(self.objectValues([METATYPE_TALKBACKCONSULTATION_COMMENT]))
 
     _delete_comment_confirmation = PageTemplateFile('zpt/paragraph_delete_comment', globals())
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'delete_comment')
@@ -173,9 +189,70 @@ class Paragraph(Folder):
                                    (self.get_section().absolute_url(),
                                     self.get_anchor()) )
 
-    security.declareProtected(
-        PERMISSION_REVIEW_TALKBACKCONSULTATION, 'addComment')
-    addComment = addComment
+    security.declarePublic('addComment')
+    def addComment(self, REQUEST):
+        """ wrapper method that checks security and calls the real addComment """
+        if self.check_cannot_comment():
+            raise Unauthorized
+
+        invitation = self.invitations.get_current_invitation(REQUEST)
+        userid = self.getAuthenticationTool().get_current_userid()
+        message = REQUEST.form.get('message', '')
+        clean_message = cleanup_message(message)
+        next_page = REQUEST.get('next_page', self.absolute_url())
+        reply_to = REQUEST.form.get('reply_to', None)
+
+        contributor_name = REQUEST.form.get('contributor_name', '')
+        if invitation is not None:
+            contributor = 'invite:' + invitation.key
+        elif userid is None:
+            if contributor_name:
+                contributor = 'anonymous:' + contributor_name
+            else:
+                errors.append('Please input your name.')
+        else:
+            contributor = userid
+
+        errors = []
+        if not clean_message:
+            errors.append('The comment field cannot be empty.')
+        if reply_to is not None and reply_to not in self.objectIds():
+            errors.append("Can't reply to non-existent comment")
+
+        if errors:
+            self.setSessionErrors(errors)
+            self.setSession('contributor_name', contributor_name)
+            self.setSession('message', message)
+            return REQUEST.RESPONSE.redirect(self.absolute_url())
+        else:
+            self.delSession('username')
+            self.delSession('message')
+
+        form_data = {
+            'contributor': contributor,
+            'message': clean_message,
+            'file': REQUEST.form.get('file', ''),
+            'reply_to': reply_to,
+        }
+        addComment(self, **form_data)
+
+        REQUEST.RESPONSE.redirect(next_page)
+
+    security.declareProtected(view, 'comment_form')
+    comment_form = PageTemplateFile('zpt/comment_form', globals())
+
+    security.declarePublic('get_message')
+    def get_message(self, reply_to=None):
+        session_message = self.getSession('message', None)
+        if session_message is not None:
+            return session_message
+
+        if reply_to is not None:
+            orig_message = self._getOb(reply_to).message
+            reply_message = '<p></p><blockquote>%s</blockquote><p></p>' % orig_message
+            return reply_message
+
+        return ''
 
     security.declareProtected(
         PERMISSION_MANAGE_TALKBACKCONSULTATION, 'save_modifications')
@@ -196,5 +273,8 @@ class Paragraph(Folder):
 
     security.declareProtected(view, 'comments_html')
     comments_html = PageTemplateFile('zpt/paragraph_comments', globals())
+
+    security.declareProtected(view, 'embedded_html')
+    embedded_html = PageTemplateFile('zpt/paragraph_embedded', globals())
 
 InitializeClass(Paragraph)

@@ -135,6 +135,13 @@ class Section(Folder):
         else:
             return None
 
+    security.declareProtected(view, 'get_comment_count')
+    def get_comment_count(self):
+        count = 0
+        for paragraph in self.get_paragraphs():
+            count += len(paragraph.objectIds([METATYPE_TALKBACKCONSULTATION_COMMENT]))
+        return count
+
     security.declarePrivate('parseBody')
     def parseBody(self):
         output = parse(self.body)
@@ -153,9 +160,6 @@ class Section(Folder):
 
     security.declareProtected(view, 'index_html')
     index_html = PageTemplateFile('zpt/section_index', globals())
-
-    security.declareProtected(view, 'jquery_js')
-    jquery_js = ImageFile('www/jquery.js', globals())
 
     security.declareProtected(view, 'section_js')
     section_js = ImageFile('www/section.js', globals())

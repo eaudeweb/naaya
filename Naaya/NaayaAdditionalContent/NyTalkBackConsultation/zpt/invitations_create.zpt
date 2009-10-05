@@ -1,0 +1,61 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 tal:content="here/title_or_id" />
+
+<p i18n:translate="">Invite other people to participate in this consultation.</p>
+
+<form name="invite" method="post"
+  tal:define="data options/formdata; errors options/formerrors">
+    <div class="field">
+        <label for="name" i18n:translate="">Name</label>
+        <p class="form-errors" tal:define="err errors/name|nothing"
+          tal:condition="err" tal:content="err" />
+        <input type="text" name="name:utf8:ustring" id="name" size="50"
+          tal:attributes="value data/name" />
+    </div>
+    <div class="field">
+        <label for="email" i18n:translate="">E-mail address</label>
+        <p class="form-errors" tal:define="err errors/email|nothing"
+          tal:condition="err" tal:content="err" />
+        <input type="text" name="email" id="email" size="50"
+          tal:attributes="value data/email" />
+    </div>
+    <div class="field">
+        <label for="organization" i18n:translate="">Organization</label>
+        <p class="form-errors" tal:define="err errors/organization|nothing"
+          tal:condition="err" tal:content="err" />
+        <input type="text" name="organization:utf8:ustring" id="organization" size="50"
+          tal:attributes="value data/organization" />
+    </div>
+    <div class="field">
+        <label for="notes" i18n:translate="">Admin notes (optional)</label>
+        <p class="form-errors" tal:define="err errors/notes|nothing"
+          tal:condition="err" tal:content="err" />
+        <input type="text" name="notes:utf8:ustring" id="notes" size="50"
+          tal:attributes="value data/notes" />
+    </div>
+    <div class="field">
+        <label for="message" i18n:translate="">Message</label>
+        <p class="form-errors" tal:define="err errors/message|nothing"
+          tal:condition="err" tal:content="err" />
+        <small i18n:translate="">Will be used when sending invitation e-mail</small><br />
+        <textarea name="message:utf8:ustring" id="message" rows="5" cols="50"
+          tal:content="data/message"></textarea>
+    </div>
+    <dl tal:condition="options/preview_mail|nothing">
+        <dt i18n:translate="">Preview e-mail message:</dt>
+        <dd>
+            <p tal:content="string:Subject: ${options/preview_mail/subject}" />
+            <pre class="tb-invitation-preview"
+              tal:content="options/preview_mail/body_text" />
+        <dd>
+        <dt i18n:translate="">Comments will be attributed with the text:</dt>
+        <dd>
+            <pre tal:content="options/preview_attribution" />
+        </dd>
+    </dl>
+    <input type="submit" name="do" value="Preview" />
+    <input type="submit" name="do" value="Send invitation" />
+</form>
+
+<span tal:replace="structure here/standard_html_footer" />

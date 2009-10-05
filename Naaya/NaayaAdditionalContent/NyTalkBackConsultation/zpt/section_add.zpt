@@ -5,11 +5,12 @@
 <h1 i18n:translate="">Add TalkBack Consultation Paragraph</h1>
 <p i18n:translate="">Note: if you are pasting text from Word or similar applications, you should use one of the <em>Paste from Word</em> or <em>Paste as Plain Text</em> buttons.</p>
 
-<form method="post" action="addSection" tal:define="title python:here.getSession('title', ''); body python:here.getSession('body', '')">
+<form name="frmAdd" method="post" action="addSection"
+  tal:define="title python:here.getSession('title', ''); body python:here.getSession('body', '')">
 
 <div class="field">
 	<label for="title" i18n:translate="">Title</label>
-	<input type="text" id="title" name="title" size="50" tal:attributes="value title" />
+	<input type="text" id="title" name="title:utf8:ustring" size="50" tal:attributes="value title" />
 </div>
 
 <div class="field">

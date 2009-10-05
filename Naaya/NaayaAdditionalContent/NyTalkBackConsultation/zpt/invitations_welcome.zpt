@@ -1,0 +1,14 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 tal:content="here/title_or_id" />
+
+<p i18n:translate="">
+    Welcome, <tal:block content="options/invitation/name" i18n:name="name" />.
+    You have been invited to participate in the consultation
+    <a tal:content="here/aq_parent/title_or_id"
+      tal:attributes="href here/aq_parent/absolute_url"
+      i18n:name="consultation_name" />
+    by <tal:block content="options/inviter_name" i18n:name="inviter_name" />.
+</p>
+
+<span tal:replace="structure here/standard_html_footer" />

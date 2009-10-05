@@ -11,7 +11,7 @@
 	Create a new consultation by filling out the fields below. Afterwards, add one or more paragraphs for reviewers to comment on. Users need to have the <em>Reviewer</em> role in order to post comments.
 </p>
 
-<form method="post" action="addNyTalkBackConsultation">
+<form name="frmAdd" method="post" action="addNyTalkBackConsultation">
 		<div class="field-inline" tal:define="selected_language python:here.getSession('lang', here.gl_get_selected_language())">
 			<label i18n:translate="" for="lang">Posting language</label>
 			<select name="lang" id="lang">
@@ -51,6 +51,12 @@
 		<div class="field-inline">
 			<label for="allow_file" i18n:translate="">Allow reviewers to upload files when posting a comment</label>
 			<input type="checkbox" name="allow_file" id="allow_file" value="1" tal:attributes="checked python:here.getSession('allow_file', '') == '1'" />
+		</div>
+
+		<div class="field-inline">
+			<label for="allow_reviewer_invites" i18n:translate="">Allow reviewers to invite other people to review</label>
+			<input type="checkbox" name="allow_reviewer_invites:boolean"
+				id="allow_reviewer_invites" />
 		</div>
 
 		<div class="field">

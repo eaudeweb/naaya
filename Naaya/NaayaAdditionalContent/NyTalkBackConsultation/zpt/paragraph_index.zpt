@@ -1,54 +1,23 @@
 <span tal:replace="structure here/standard_html_header" />
 
+<div class="floated-buttons">
+    <span class="buttons">
+        <a tal:define="section here/get_section"
+          tal:attributes="href string:${section/absolute_url}#${here/get_anchor}"
+          i18n:translate="">Back to section</a>
+    </span>
+</div>
+
 <h1 i18n:translate="">Post a comment on the text below</h1>
 
 <div tal:content="structure here/body" class="talkback-section"/>
-
-<tal:block define="cannot_comment here/check_cannot_comment">
-
-<div class="talkback-add_comment_form" tal:condition="not:cannot_comment">
-        <h2 i18n:translate="">Add a comment</h2>
-
-        <form method="post" action="addComment" enctype="multipart/form-data" tal:define="username python:here.getSession('username', ''); message python:here.getSession('message', '')">
-                <div class="field">
-                        <label for="contributor_name"><span i18n:translate="">Your name</span> <span class="mandatory_field">*</span></label>
-                        <input type="text" name="contributor_name:utf8:ustring" id="contributor_name"
-                               tal:attributes="value python:test(here.get_user_name(), here.get_user_name(), username)" />
-                </div>
-
-                <div class="field">
-                        <label for="message"><span i18n:translate="">Your comment</span> <span class="mandatory_field">*</span></label>
-                        <textarea id="message" cols="70" rows="5" name="message:utf8:ustring" tal:content="message"></textarea>
-                </div>
-
-                <div class="field">
-                        <tal:block tal:condition="here/allow_file">
-                                <label for="file" i18n:translate="">Attach file (optional)</label>
-                                <input type="file" name="file" id="file" />
-                        </tal:block>
-                </div>
-                <br />
-                <input type="submit" value="Add comment" />
-        </form>
-</div>
-
 
 <div class="talkback-comments_list">
     <h2 i18n:translate="" tal:condition="here/get_comments">Previous comments</h2>
     <tal:block replace="structure here/comments_html" />
 </div>
 
-
-<div tal:condition="python:cannot_comment">
-        <p class="talkback-cannot_comment">
-                <span i18n:translate="">You cannot post comments to this consultation because</span>
-                <span tal:condition="python:cannot_comment == 'no-permission'" i18n:translate="">you do not have the required permission.</span>
-                <span tal:condition="python:cannot_comment == 'deadline-reached'" i18n:translate="">the deadline for this consultation has been reached.</span>
-                You can <a tal:attributes="href string:${here/absolute_url}/log_in_authenticated">login</a> or <a tal:attributes="href python: here.get_consultation().absolute_url() + '/requestrole_html'">request reviewer rights</a> at the <a tal:attributes="href python:here.get_consultation().absolute_url()">consultation index</a>.
-        </p>
-        <a tal:attributes="href python:here.get_section().absolute_url()" i18n:translate="">Return to chapter</a>
-</div>
-
-</tal:block>
+<tal:block content="structure python:here.comment_form(
+  reply_to=request.get('reply_to', None))" />
 
 <span tal:replace="structure here/standard_html_footer" />

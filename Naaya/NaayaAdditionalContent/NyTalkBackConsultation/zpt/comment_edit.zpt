@@ -9,11 +9,11 @@
 </div>
 <div class="cleaner" />
 
-<form method="post" action="save_modifications" tal:define="message here/message">
-
+<form name="frmEdit" method="post" action="save_modifications">
 <div class="field">
     <label for="message"><span i18n:translate="">Comment</span></label>
-    <textarea id="message" cols="70" rows="5" name="message:utf8:ustring" tal:content="message"></textarea>
+    <textarea id="message" cols="70" rows="5"
+      name="message:utf8:ustring" tal:content="here/message"></textarea>
 </div>
 
 <input type="submit" i18n:attributes="value" value="Save modifications" />
