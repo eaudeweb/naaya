@@ -19,119 +19,81 @@
 
 (function() {
 
-var comments_visible = true;
+function comment_add(evt) {
+    evt.preventDefault();
+    var $link = $(this);
 
-function comment_add(comment_link) {
     // if this comment box is already open, don't re-open it
-    if($('div.talkback-comment_floating_box', $(comment_link).parent()).length)
+    if($('div.talkback-comment_floating_box', $link.parent()).length)
         return;
 
     $('div.talkback-comment_floating_box').remove();
 
-    var top = $(comment_link).attr('offsetTop') - 5;
-    var left = $(comment_link).attr('offsetLeft') + 150;
+    var overlay = $('<div class="tb-modal-overlay" />').appendTo('body');
 
-    var comment_box = $('<div class="talkback-comment_floating_box"></div>').css({
-        top: String(top) + 'px',
-        left: String(left) + 'px'
+    var link_position = $link.position();
+    var comment_box = $('<div ></div>').insertAfter($link)
+        .addClass("talkback-comment_floating_box").css({
+            top: (link_position.top + 20) + 'px',
+            left: '130px'
+        });
+
+    var close_button = $('<a href="javascript:;">[close]</a>').appendTo(comment_box)
+    close_button.addClass('talkback-comment_close_box').click(function(){
+        clearInterval(resize_interval);
+        comment_box.remove();
+        overlay.remove();
     });
 
-    function close_comment_box() {
-        try { comment_box.remove(); }
-        catch(e) {} return false;
-    }
+    var resize_interval;
+    var iframe = $('<iframe>').appendTo(comment_box);
+    iframe.attr('src', $link.attr('href') + "/embedded_html")
+    iframe.load(function(){
+        clearInterval(resize_interval);
+        var comment_count = $('span.talkback-comment_count', this.contentDocument).html();
+        $link.children('span.talkback-comment_count').html(comment_count);
 
-    var comment_form_box = $('<div>Loading...</div>');
-    var comment_list = $('fieldset', $(comment_link).parent()).clone().css({display: 'block'});
-
-    comment_box.append(
-        $('<a href="javascript:;" class="talkback-comment_close_box">[close]</a>').click(close_comment_box),
-        $('<div class="talkback-js_comment_window"></div>').append(
-            comment_form_box,
-            $('<div class="comments_list">').append(
-                $('<h2>Previous comments</h2>').css({display: (comment_list.length ? 'block' : 'none')}),
-                comment_list
-            ).css({display: (comments_visible ? 'none' : 'block')})
-        )
-    );
-
-    comment_box.insertAfter(comment_link);
-
-    $.get(comment_link.href, function(data){
-        comment_form_box.empty().append(
-            $('p.talkback-cannot_comment', data),
-            $('div.talkback-section', data),
-            $('div.talkback-add_comment_form', data)
-        );
-        $('form', comment_form_box).append(
-            $('<input type="submit" value="Cancel" />').click(close_comment_box)
-        ).attr('action', $(comment_link).attr('href') + '/' + $('form', comment_box).attr('action'));
+        var height = 0;
+        resize_interval = setInterval(function() {
+            var new_height = get_height(iframe[0].contentWindow);
+            if(new_height == height) return;
+            iframe.height(new_height + 15);
+            height = new_height;
+            overlay.height($(document).height());
+        }, 500);
     });
 }
 
-function comment_buttons_display(comments_visible) {
-    $('a.talkback-show_comments').css({display: (comments_visible ? 'none' : 'inline')});
-    $('a.talkback-hide_comments').css({display: (comments_visible ? 'inline' : 'none')});
-}
-
-function show_comments() {
-    comment_buttons_display(true);
-    $('div.talkback-comments_list > fieldset').show();
-    $('div.talkback-js_comment_window > div.comments_list').css({display: 'none'});
-    $('a.talkback-add_comment').text('Add comment');
-    comments_visible = true;
-}
-
-function hide_comments() {
-    comment_buttons_display(false);
-    $('div.talkback-comments_list > fieldset').hide();
-    $('div.talkback-js_comment_window > div.comments_list').css({display: 'block'});
-    $('a.talkback-add_comment').text('Comments');
-    comments_visible = false;
-}
-
-var button_bg = 'none'
-
-$(document).ready(function() {setTimeout(function(){
-    // if the comments are already hidden, don't apply any javascript
-    if (String(window.location.search).search("comments=off") > 0)
-        return;
-
-    hide_comments();
-
-    if(window.location.hash) {
-        window.location.hash = window.location.hash;
-    }
-
-    $('a.talkback-show_comments').click(function() { try { show_comments(); } catch(e) {}; return false; });
-    $('a.talkback-hide_comments').click(function() { try { hide_comments(); } catch(e) {}; return false; });
-
+$(function() {
     $('a.talkback-add_comment').each(function() {
-        var n_comments = String($('fieldset', $(this).parent()).length);
-        var text = (n_comments == 1 ? 'comment' : 'comments');
-        //$(this).text(n_comments + ' ' + text);
-    }).click(function() {
-        try { comment_add(this); }
-        catch(e) {} return false;
+        var $paragraph = $(this).prev('div.talkback-paragraph');
+        $(this).mouseover(function() {$paragraph.css({background: '#eee'});});
+        $(this).mouseout(function() {$paragraph.css({background: ''});});
+        $(this).click(comment_add);
     });
+});
 
-    $('a.talkback-add_comment').mouseover(function() {
-        var elem_url = this.href.split('/');
-        var elem_paragraph = $("#" + elem_url[elem_url.length - 1]);
-        // save previous background value
-        button_bg = $(this).css("background");
-        // highlight background
-        elem_paragraph.css({"background": "#eee"});
-        $(this).css({"background": "#eee"});
-    });
+function get_height(the_window) {
+    var the_document = the_window.document;
+    if ($.browser.msie && $.browser.version < 7) {
+        var scrollHeight = Math.max(
+            the_document.documentElement.scrollHeight,
+            the_document.body.scrollHeight
+        );
+        var offsetHeight = Math.max(
+            the_document.documentElement.offsetHeight,
+            the_document.body.offsetHeight
+        );
 
-    $('a.talkback-add_comment').mouseout(function() {
-        var elem_url = this.href.split('/');
-        var elem_paragraph = $("#" + elem_url[elem_url.length - 1]);
-        elem_paragraph.css({"background": 'transparent'});
-        $(this).css({"background": button_bg});
-    });
-}, 0); });
+        if (scrollHeight < offsetHeight) {
+            return $(the_document.body).height();
+        } else {
+            return scrollHeight;
+        }
+    // handle "good" browsers
+    } else {
+        return $('html', the_document).height();
+    }
+}
 
 })();
-

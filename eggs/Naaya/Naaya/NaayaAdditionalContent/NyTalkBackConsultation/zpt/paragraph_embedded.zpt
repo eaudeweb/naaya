@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+    <link href="portal_layout/style_css" type="text/css" rel="stylesheet" />
+    <link href="portal_layout/common_css" type="text/css" rel="stylesheet" />
+    <link href="portal_layout/additional_style_css" type="text/css" rel="stylesheet" />
+</head>
+<body class="tb-embedded">
+
+<div class="talkback-comments_list">
+    <h2 i18n:translate="" tal:condition="here/get_comments">Previous comments</h2>
+    <tal:block replace="structure here/comments_html" />
+</div>
+
+<tal:block content="structure python:here.comment_form(
+  reply_to=request.get('reply_to', None), embedded=True)" />
+
+</body>
+</html>

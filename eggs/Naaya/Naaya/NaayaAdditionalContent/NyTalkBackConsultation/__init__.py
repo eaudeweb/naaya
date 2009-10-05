@@ -17,3 +17,9 @@
 #
 # David Batranu, Eau de Web
 # Alex Morega, Eau de Web
+
+from App.ImageFile import ImageFile
+
+misc_ = {
+    'tb-editor.css': ImageFile('www/tb-editor.css', globals()),
+}

@@ -5,3 +5,4 @@ METATYPE_TALKBACKCONSULTATION_COMMENT = 'Naaya TalkBack Consultation Comment'
 
 PERMISSION_REVIEW_TALKBACKCONSULTATION = 'Naaya - Review TalkBack Consultation'
 PERMISSION_MANAGE_TALKBACKCONSULTATION = 'Naaya - Manage TalkBack Consultation'
+PERMISSION_INVITE_TO_TALKBACKCONSULTATION = 'Naaya - Invite to TalkBack Consultation'

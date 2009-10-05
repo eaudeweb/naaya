@@ -4,9 +4,23 @@
 
 <h1 tal:content="here/title_or_id" />
 
-<div id="admin_this_folder" tal:condition="python:here.checkPermissionManageTalkBackConsultation()">
-	<a tal:attributes="href string:${here/absolute_url}/edit_html" rel="nofollow"><span i18n:translate="">Edit TalkBack Consultation</span></a>
-	<a tal:attributes="href string:${here/absolute_url}/section_add_html" rel="nofollow"><span i18n:translate="">Add Section</span></a>
+<div id="admin_this_folder"
+  tal:define="
+    perm_manage python:here.checkPermissionManageTalkBackConsultation();
+    perm_invite python:here.checkPermissionInviteToTalkBackConsultation()"
+  tal:condition="python: perm_manage or perm_invite">
+    <a tal:attributes="href string:${here/absolute_url}/edit_html"
+      tal:condition="perm_manage"
+      rel="nofollow" i18n:translate="">Edit TalkBack Consultation</a>
+    <a tal:attributes="href string:${here/absolute_url}/section_add_html"
+      tal:condition="perm_manage"
+      rel="nofollow" i18n:translate="">Add Section</a>
+    <a tal:attributes="href string:${here/absolute_url}/invitations/admin_html"
+      tal:condition="perm_manage"
+      rel="nofollow" i18n:translate="">Manage invitations</a>
+    <a tal:attributes="href string:${here/absolute_url}/invitations/create"
+      tal:condition="perm_invite"
+      rel="nofollow" i18n:translate="">Send review invitation</a>
 </div>
 
 <div class="consultation_right_box" tal:define="days_left python:here.get_days_left()">
@@ -24,12 +38,14 @@
 <thead>
 	<tr>
 		<th i8n:translate="">Section</th>
+		<th i8n:translate="">Comments</th>
 		<th class="talkback-section_list-edit_column" tal:condition="here/checkPermissionManageTalkBackConsultation" i8n:translate="" />
 	</tr>
 </thead>
 <tbody>
 	<tr tal:repeat="section here/list_sections">
 		<td><a tal:attributes="href section/absolute_url" tal:content="section/title_or_id" /></td>
+		<td tal:content="section/get_comment_count" />
 		<td class="talkback-section_list-edit_column" tal:condition="here/checkPermissionManageTalkBackConsultation">
 			<a tal:attributes="href string:${section/absolute_url}/edit_html" i18n:translate="" rel="nofollow">Edit</a>
 		</td>

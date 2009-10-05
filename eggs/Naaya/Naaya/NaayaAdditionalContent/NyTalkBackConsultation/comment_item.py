@@ -18,6 +18,27 @@
 # David Batranu, Eau de Web
 # Alex Morega, Eau de Web
 
+import re
+
+try:
+    import scrubber
+except ImportError:
+    sanitize = lambda x: x
+else:
+    if 'any' not in dir(__builtins__):
+        from Products.NaayaCore.backport import any
+        scrubber.any = any
+    sanitize = scrubber.Scrubber().scrub
+
+def trim(message):
+    """ Remove leading and trailing empty paragraphs """
+    message = re.sub(r'^\s*<p>(\s*(&nbsp;)*)*\s*</p>\s*', '', message)
+    message = re.sub(r'\s*<p>(\s*(&nbsp;)*)*\s*</p>\s*$', '', message)
+    return message
+
+def cleanup_message(message):
+    return sanitize(trim(message)).strip()
+
 #Zope imports
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -30,51 +51,17 @@ from Products.NaayaBase.NyFSFile import NyFSFile
 from constants import *
 
 
-def addComment(self,
-               title='',
-               contributor='',
-               contributor_name='',
-               message='',
-               file='',
-               REQUEST=None):
-    """ """
-
-    errors = []
-    if not contributor_name: errors.append('Please input your name.')
-    if not message: errors.append('The comment field cannot be empty.')
-    if errors:
-        self.setSessionErrors(errors)
-        if REQUEST is not None:
-            self.setSession('username', contributor_name)
-            self.setSession('message', message)
-            self.REQUEST.RESPONSE.redirect(self.absolute_url())
-        return
-    self.delSession('username')
-    self.delSession('message')
-
-    if REQUEST and not contributor:
-        contributor = REQUEST.AUTHENTICATED_USER.getUserName()
-
-    id = str('tb%s-%s' % (contributor, self.utGenRandomId(6)))
-    title = 'Comment by %s (%s)' % (contributor_name, contributor)
-
-    ob = TalkBackConsultationComment(id,
-                                     title,
-                                     contributor,
-                                     contributor_name,
-                                     message,
-                                     file)
+def addComment(self, contributor, message, file='', reply_to=None):
+    id = self.utGenRandomId(6)
+    while id in self.objectIds():
+        id = self.utGenRandomId(6)
+    ob = TalkBackConsultationComment(id, contributor, message, file, reply_to)
     self._setObject(id, ob)
 
     ob = self._getOb(id)
     ob.handleUpload(file)
 
-    if REQUEST is not None:
-        anchor = self.get_anchor()
-        section = self.get_section()
-        ret_url = '%s/index_html#%s' % (section.absolute_url(), anchor)
-
-        return REQUEST.RESPONSE.redirect(ret_url)
+    return id
 
 class TalkBackConsultationComment(NyFSFile):
     """ """
@@ -88,12 +75,33 @@ class TalkBackConsultationComment(NyFSFile):
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, contributor, contributor_name, message, file):
+    reply_to = None
+
+    def __init__(self, id, contributor, message, file, reply_to):
         self.contributor = contributor
-        self.contributor_name = contributor_name
         self.message = message
+        self.reply_to = reply_to
         self.comment_date = DateTime()
-        NyFSFile.__init__(self, id, title, file)
+        NyFSFile.__init__(self, id, '', file)
+
+    def get_contributor_name(self):
+        auth_tool = self.getAuthenticationTool()
+        contributor = self.contributor
+
+        if self.contributor.startswith('invite:'):
+            invite = self.invitations.get_invitation(contributor[7:])
+            inviter_name = auth_tool.name_from_userid(invite.inviter_userid)
+            return "%s (invited by %s)" % (invite.name, inviter_name)
+
+        elif self.contributor.startswith('anonymous:'):
+            return "%s (not authenticated)" % contributor[10:]
+
+        else:
+            name = auth_tool.name_from_userid(contributor)
+            return "%s (%s)" % (name, contributor)
+
+    title = property(lambda self: 'Comment by %s' % self.contributor,
+                     lambda self, value: None)
 
     security.declareProtected(
         PERMISSION_REVIEW_TALKBACKCONSULTATION, 'handleUpload')
@@ -112,8 +120,7 @@ class TalkBackConsultationComment(NyFSFile):
         RESPONSE.setHeader('Content-Type', self.content_type)
         RESPONSE.setHeader('Content-Length', self.size)
         RESPONSE.setHeader('Content-Disposition',
-                           'attachment;filename=' + self.utToUtf8(self.filename)
-                           )
+            "attachment;filename*=UTF-8''" + self.utToUtf8(self.filename))
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
         return self.index_html()
@@ -131,7 +138,7 @@ class TalkBackConsultationComment(NyFSFile):
         PERMISSION_MANAGE_TALKBACKCONSULTATION, 'save_modifications')
     def save_modifications(self, message, REQUEST=None):
         """ Save body edits """
-        self.message = message
+        self.message = cleanup_message(message)
         if REQUEST is not None:
             self.setSessionInfo(['Saved changes (%s)' % DateTime()])
             self.REQUEST.RESPONSE.redirect(self.absolute_url() + '/edit_html')

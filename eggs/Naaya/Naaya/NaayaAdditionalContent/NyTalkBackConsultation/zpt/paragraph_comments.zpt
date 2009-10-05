@@ -1,11 +1,43 @@
-<fieldset tal:repeat="comment here/get_comments">
-	<legend><span tal:replace="comment/contributor"/> (<span tal:replace="comment/contributor_name"/>) <span tal:replace="python:here.utShowFullDateTime(comment.comment_date)"/></legend>
-	<tal:block condition="python:comment.checkPermissionEditObject()">
-		[<a tal:attributes="href string:${comment/absolute_url}/edit_html"
-			i18n:translate="">Edit comment</a>]
-		[<a tal:attributes="href string:${here/absolute_url}/delete_comment?comment_id=${comment/id}"
-			i18n:translate="">Delete comment</a>]
-	</tal:block>
-	<p class="tb-comment-message" tal:content="comment/message" />
-	<a tal:attributes="href string:${comment/absolute_url}/get_talkback_file" i18n:translate="" tal:condition="comment/check_file">Download attached file</a>
-</fieldset>
+<tal:comment condition="nothing">
+We define a macro to display one comment, then render it recursively
+to show a whole tree of comments.
+</tal:comment>
+
+<span style="display:none;" class="talkback-comment_count"
+  tal:content="here/comment_count" />
+<tal:block define="comment_data nothing">
+<li class="tb-comment-box" metal:define-macro="display_child" tal:condition="comment_data">
+    <div class="tb-comment" tal:define="comment comment_data/comment">
+    <span class="tb-comment-head" tal:define="can_edit comment/checkPermissionEditObject">
+    <span tal:replace="comment/get_contributor_name"/>
+    <span tal:replace="python:here.utShowFullDateTime(comment.comment_date)"/>
+    [<a tal:attributes="href string:?reply_to=${comment/id}#comment-form"
+      i18n:translate="">reply</a>]
+    <tal:block condition="can_edit">
+        [<a tal:attributes="href string:${comment/absolute_url}/edit_html"
+          i18n:translate="">edit</a>]
+    </tal:block>
+    <tal:block condition="can_edit">
+        [<a tal:attributes="href string:${here/absolute_url}/delete_comment?comment_id=${comment/id}"
+          i18n:translate="">delete</a>]
+    </tal:block>
+    </span>
+
+    <div class="tb-comment-body" tal:content="structure comment/message" />
+
+    <a tal:attributes="href string:${comment/absolute_url}/get_talkback_file"
+      tal:condition="comment/check_file" i18n:translate="">Download attached file</a>
+    </div>
+
+    <ul tal:repeat="comment_data comment_data/children">
+        <metal:block use-macro="template/macros/display_child" />
+    </ul>
+
+</li>
+</tal:block>
+
+<ul class="tb-comments-tree">
+<tal:block repeat="comment_data here/get_comment_tree">
+    <metal:block use-macro="template/macros/display_child" />
+</tal:block>
+</ul>

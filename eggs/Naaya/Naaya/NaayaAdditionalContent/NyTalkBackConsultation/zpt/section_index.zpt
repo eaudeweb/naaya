@@ -1,45 +1,38 @@
 <span tal:replace="structure here/standard_html_header" />
+<tal:block define="global editor here/getEditorTool;
+    global curr_lang python:request.get('lang', None) or here.gl_get_selected_language();"
+    replace="structure editor/includeLibs" />
 
-<script src="jquery_js" type="text/javascript"></script>
-<script src="section_js" type="text/javascript" charset="utf-8"></script>
-
-<tal:block define="show_comments python:request.get('comments') != 'off'">
-
-<div class="floated-buttons">
-    <span class="buttons talkback-show_hide_comments">
-        <a href="" class="talkback-show_comments"
-                tal:attributes="style python:'display: %s' % test(show_comments, 'none', 'inline')"
-                ><span i18n:translate="">Show comments</span></a>
-        <a href="?comments=off" class="talkback-hide_comments"
-                tal:attributes="style python:'display: %s' % test(show_comments, 'inline', 'none')"
-                ><span i18n:translate="">Hide comments</span></a>
-    </span>
-    
-    <span class="buttons">
-        <a tal:attributes="href python:here.get_consultation().absolute_url()" i18n:translate="">Back to consultation index</a>
-    </span>
-</div>
-
-<p class="talkback-section_next_prev">
-    <span tal:define="previous_section here/get_previous_section" tal:condition="previous_section">
-        &larr;
-        <a tal:attributes="href previous_section/absolute_url; title previous_section/title"
-            i18n:translate="">Previous section</a>
-    </span>
-    <span tal:define="next_section here/get_next_section" tal:condition="next_section">
-        <a tal:attributes="href next_section/absolute_url; title next_section/title"
-            i18n:translate="">Next section</a>
-        &rarr;
-    </span>
-</p>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
+<script type="text/javascript" src="misc_/Naaya/jquery-ui-1.7.2.full.min.js"></script>
+<script type="text/javascript" src="section_js"></script>
 
 <div class="cleaner" ></div>
 
 <div class="talkback-section_toc">
-    <h6>Table of contents</h6>
+    <h6 i18n:translate="">Table of contents</h6>
+
+    <span tal:define="previous_section here/get_previous_section"
+      tal:condition="previous_section">
+        [ &larr;
+        <a tal:attributes="href previous_section/absolute_url;
+          title previous_section/title" i18n:translate="">prev</a>]
+    </span>
+
+    [<a tal:attributes="href python:here.get_consultation().absolute_url()"
+      i18n:translate="">index</a>]
+
+    <span tal:define="next_section here/get_next_section"
+      tal:condition="next_section">
+        [<a tal:attributes="href next_section/absolute_url;
+          title next_section/title" i18n:translate="">next</a>
+        &rarr; ]
+    </span>
+
     <ul tal:define="consultation_sections python:here.get_consultation().list_sections()">
-        <li tal:repeat="section consultation_sections" tal:attributes="class python:test(section==here, 'talkback-current_section', '')">
-            <a tal:attributes="href section/absolute_url" tal:content="section/title" />
+        <li tal:repeat="section consultation_sections"
+          tal:attributes="class python:test(section==here, 'talkback-current_section', '')">
+            <a tal:attributes="href section/absolute_url" tal:content="section/title"></a>
         </li>
     </ul>
 </div>
@@ -53,30 +46,16 @@
 </div>
 
 <div class="talkback-section">
-    <tal:block repeat="paragraph here/get_paragraphs">
+    <div tal:repeat="paragraph here/get_paragraphs">
         <a tal:attributes="name paragraph/get_anchor"></a>
-        <div tal:content="structure paragraph/body" tal:attributes="id paragraph/getId" />
-        <div class="talkback-comments_list" tal:attributes="id string:talkback-comments_list_for-${paragraph/id}">
-            <tal:block replace="structure paragraph/comments_html" />
-            <a i18n:translate="" tal:attributes="href string:${paragraph/absolute_url}" class="talkback-add_comment" rel="nofollow">Add comment</a>
-        </div>
-    </tal:block>
+        <div class="talkback-paragraph" tal:content="structure paragraph/body" />
+        <a class="talkback-add_comment"
+          tal:attributes="href string:${paragraph/absolute_url}"
+          i18n:translate="">comments
+          (<span class="talkback-comment_count" i18n:name="count"
+            tal:content="paragraph/comment_count" />)
+        </a>
+    </div>
 </div>
 
-<p class="talkback-section_next_prev">
-    <span tal:define="previous_section here/get_previous_section" tal:condition="previous_section">
-        &larr;
-        <a tal:attributes="href previous_section/absolute_url; title previous_section/title"
-            i18n:translate="">Previous section</a>
-    </span>
-    <span tal:define="next_section here/get_next_section" tal:condition="next_section">
-        <a tal:attributes="href next_section/absolute_url; title next_section/title"
-            i18n:translate="">Next section</a>
-        &rarr;
-    </span>
-</p>
-
-</tal:block>
-
 <span tal:replace="structure here/standard_html_footer" />
-
