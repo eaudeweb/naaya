@@ -20,7 +20,6 @@
         <a tal:condition="perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit Folder</span></a>
         <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
         <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
-        <a tal:condition="perm_validate_objects" tal:attributes="href string:${this_absolute_url}/basketofvalidation_html"><span i18n:translate="">Validation</span></a>
         <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/sortorder_html"><span i18n:translate="">Sort order</span></a>
         <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/restrict_html"><span i18n:translate="">Restrict</span></a>
         <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/csv_import"><span i18n:translate="">CSV import</span></a>

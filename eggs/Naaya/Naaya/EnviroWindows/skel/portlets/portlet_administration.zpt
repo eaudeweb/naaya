@@ -13,6 +13,7 @@
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_reflists_html" title="Manage selection lists" i18n:attributes="title" i18n:translate="">Selection lists</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_contacts_html" title="Manage portal contacts" i18n:attributes="title" i18n:translate="">Portal contacts</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_bulk_mail_html" title="Send bulk mail" i18n:attributes="title" i18n:translate="">Send bulk mail</a></li>
+    <li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_notifications_html" title="Notifications" i18n:attributes="title" i18n:translate="">Notifications</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_map/admin_map_html" title="Map settings" i18n:attributes="title" i18n:translate="">Map management</a></li>
 	<li><strong i18n:translate="">Content management</strong></li>
 		<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_schemas/admin_html" title="Content type property definitions" i18n:attributes="title" i18n:translate="">Content types</a></li>
