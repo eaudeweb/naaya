@@ -1,12 +1,21 @@
-<span tal:replace="structure here/standard_html_header" />
+<tal:block define="global embedded python:request.get('embedded', 'off') == 'on';
+                   global back_url python:here.absolute_url() +
+                                          test(embedded, '/embedded_html', '')"
+           condition="not:embedded"
+           content="structure here/standard_html_header" />
 
-<h1 tal:content="here/title_or_id" />
+<h1 tal:content="here/aq_parent/title_or_id"></h1>
 
 <form method="post" tal:attributes="action string:${here/absolute_url}/delete_comment">
-    <p>Are you sure you want to delete "<tal:block content="options/comment/title_or_id" />?</p>
+    <p>
+        Are you sure you want to delete the comment by
+        <em tal:content="options/comment/get_contributor_name" />?
+    </p>
+    <input type="hidden" name="back_url" tal:attributes="value back_url" />
     <input type="hidden" name="comment_id" tal:attributes="value options/comment/id" />
     <input type="submit" i18n:attributes="value" value="Delete" />
-    <a tal:attributes="href python:here.get_section().absolute_url()" i18n:translate="">Cancel</a>
+    <a tal:attributes="href back_url" i18n:translate="">Cancel</a>
 </form>
 
-<span tal:replace="structure here/standard_html_footer" />
+<tal:block condition="not:embedded"
+           content="structure here/standard_html_footer" />

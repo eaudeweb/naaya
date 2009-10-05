@@ -141,7 +141,9 @@ class TalkBackConsultationComment(NyFSFile):
         self.message = cleanup_message(message)
         if REQUEST is not None:
             self.setSessionInfo(['Saved changes (%s)' % DateTime()])
-            self.REQUEST.RESPONSE.redirect(self.absolute_url() + '/edit_html')
+            back_url = REQUEST.form.get('back_url',
+                                        self.get_section().absolute_url())
+            REQUEST.RESPONSE.redirect(back_url)
 
     security.declareProtected(view_management_screens, 'manage_workspace')
     manage_workspace = PageTemplateFile('zpt/comment_manage', globals())
