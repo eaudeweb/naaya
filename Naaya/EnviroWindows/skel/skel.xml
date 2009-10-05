@@ -224,7 +224,7 @@
 		<emailtemplate id="email_requestaccount" title="Request account"/>
 		<emailtemplate id="email_createaccount" title="Create account notification"/>
 	</emails>
-	<portlets left="portlet_places" center="portlet_latestuploads_rdf">
+	<portlets left="portlet_places,portlet_notifications" center="portlet_latestuploads_rdf">
 		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="portlet_ymap" title="Destinet frontpage Yahoo map" />
 		<linkslist id="places" title="Places" portlet="1">
