@@ -11,7 +11,7 @@ to show a whole tree of comments.
     <span class="tb-comment-head" tal:define="can_edit comment/checkPermissionEditObject">
     <span tal:replace="comment/get_contributor_name"/>
     <span tal:replace="python:here.utShowFullDateTime(comment.comment_date)"/>
-    [<a tal:attributes="href string:?reply_to=${comment/id}#comment-form"
+    [<a tal:attributes="href string:${here/absolute_url}?reply_to=${comment/id}#comment-form"
       i18n:translate="">reply</a>]
     <tal:block condition="can_edit">
         [<a tal:attributes="href string:${comment/absolute_url}/edit_html"
