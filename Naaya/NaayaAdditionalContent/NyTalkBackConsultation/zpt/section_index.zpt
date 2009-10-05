@@ -13,24 +13,22 @@
 
 <div class="talkback-section_toc">
     <h6 i18n:translate="">Table of contents</h6>
-
+<div class="buttons" style="padding-left: 1em;">
     <span tal:define="previous_section here/get_previous_section"
       tal:condition="previous_section">
-        [ &larr;
         <a tal:attributes="href previous_section/absolute_url;
-          title previous_section/title" i18n:translate="">prev</a>]
+          title previous_section/title" i18n:translate="">prev</a>
     </span>
 
-    [<a tal:attributes="href python:here.get_consultation().absolute_url()"
-      i18n:translate="">index</a>]
+    <a tal:attributes="href python:here.get_consultation().absolute_url()"
+      i18n:translate="">index</a>
 
     <span tal:define="next_section here/get_next_section"
       tal:condition="next_section">
-        [<a tal:attributes="href next_section/absolute_url;
+        <a tal:attributes="href next_section/absolute_url;
           title next_section/title" i18n:translate="">next</a>
-        &rarr; ]
     </span>
-
+</div>
     <ul tal:define="consultation_sections python:here.get_consultation().list_sections()">
         <li tal:repeat="section consultation_sections"
           tal:attributes="class python:test(section==here, 'talkback-current_section', '')">

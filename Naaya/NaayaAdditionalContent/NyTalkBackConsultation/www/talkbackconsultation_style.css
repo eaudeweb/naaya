@@ -131,7 +131,7 @@ ul.tb-comments-tree div.tb-comment-body {
 }
 ul.tb-comments-tree div.tb-comment-author {
 	margin-top: 0.1em;
-	padding: 0.5em 0.5em;
+	padding: 0.3em 0.5em 0 0;
 	font-size: 85%;
 	font-weight: bold;
 	float: left;
@@ -140,8 +140,10 @@ ul.tb-comments-tree div.buttons {
 	float: left;
 	font-size: 100%;
 }
-ul.tb-comments-tree div.buttons a{
-	border-width: 1px;
+div.buttons a{
+	border: 1px solid #ccc;
+	padding: 0.1em 0.3em 0.1em 0.3em;
+	margin: 0;
 }
 .talkback-add_comment, .button_sect_edit, a.tb-button{
 	margin: 0.5em 0;
