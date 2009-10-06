@@ -140,7 +140,8 @@
 		<localchannel id="news_rdf" title="News" description="News" language="en" type="News" objmetatype="Naaya News" numberofitems="5"/>
 		<!-- remotechannel id="" title="Example" url="http://" numbershownitems="10" /-->
 	</syndication>
-	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_latestnews_rdf,portlet_upcomingevents_rdf,portlet_latestuploads_rdf">
+	<portlets left="portlet_notifications,portlet_maincategories" center="portlet_lateststories_rdf,portlet_latestnews_rdf,portlet_upcomingevents_rdf,portlet_latestuploads_rdf">
+		<portlet id="portlet_notifications" title="Administration" />
 		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="portlet_maincategories" title="Main sections" />
 		<portlet id="portlet_localchannels" title="Local channels" />

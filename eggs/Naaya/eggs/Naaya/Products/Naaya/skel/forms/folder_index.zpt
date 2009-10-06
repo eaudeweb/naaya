@@ -197,7 +197,6 @@ function toggleSelect(caller){
 		<img src="/misc_/NaayaCore/xml-blue.jpg" alt="Atom Feed" title="Atom Feed" i18n:attributes="alt title" />
 	</a>
 </div>
-    <a href="./subscribe" title="Subscribe notifications about changes in this folder" tal:condition="here/is_logged">Subscribe to notifications</a>
 </div>
 
 <tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">

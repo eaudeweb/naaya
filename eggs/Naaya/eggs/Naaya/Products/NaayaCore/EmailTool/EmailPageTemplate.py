@@ -18,8 +18,10 @@
 # Alex Morega, Eau de Web
 
 import re
+import os.path
 
 from zope import interface
+from Globals import package_home
 from OFS.interfaces import ITraversable
 
 from OFS.SimpleItem import SimpleItem
@@ -61,6 +63,18 @@ class EmailPageTemplate(SimpleItem, ZopePageTemplate):
         }
 
     pt_getContext = PageTemplate.pt_getContext
+
+def EmailPageTemplateFile(filename, _prefix):
+    if _prefix:
+        if isinstance(_prefix, str):
+            filename = os.path.join(_prefix, filename)
+        else:
+            filename = os.path.join(package_home(_prefix), filename)
+    f = open(filename)
+    content = f.read()
+    f.close()
+    id = os.path.basename(filename)
+    return EmailPageTemplate(id, content)
 
 class TraversableDict(dict):
     """

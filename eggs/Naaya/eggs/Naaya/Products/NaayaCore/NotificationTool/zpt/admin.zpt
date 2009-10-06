@@ -127,7 +127,7 @@
 	<thead>
 		<th>User</th>
 		<th>Location</th>
-		<th>Notification</th>
+		<th>Notification type</th>
 		<th></th>
 	</thead>
 	<tbody>
@@ -136,7 +136,8 @@
 				<span tal:content="subscription/user_id"/>
 			</td>
 			<td tal:define="location subscription/location">
-				<span tal:content="python: test(location, location, here.getSite().absolute_url(1))"/>
+                <span tal:condition="location"><a tal:attributes="href python:here.get_location_link(location)" tal:content="location"></a></span>
+                <span tal:condition="not:location"><a tal:attributes="href python:here.get_location_link(location)">entire portal</a></span>
 			</td>
 			<td>
 				<span tal:content="subscription/notif_type"/>
@@ -147,7 +148,7 @@
 					<input type="hidden" name="location" tal:attributes="value subscription/location"/>
 					<input type="hidden" name="notif_type" tal:attributes="value subscription/notif_type"/>
 					<input type="hidden" name="lang" tal:attributes="value subscription/lang"/>
-					<input type="submit" value="delete"/>
+					<input type="submit" value="unsubscribe" i18n:attributes="value"/>
 				</form>
 			</td>
 		</tr>
