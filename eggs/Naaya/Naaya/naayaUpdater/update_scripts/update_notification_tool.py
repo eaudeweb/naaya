@@ -125,7 +125,7 @@ class UpdateNotificationTool(UpdateScript):
         for line in destination:
             for control_str, new_line in to_add:
                 if control_str in line and new_line not in dest_source:
-                    destination = destination[:destination.index(line)-1] + [new_line] + destination[destination.index(line)-1:]
+                    destination = destination[:destination.index(line)] + [new_line] + destination[destination.index(line):]
                     updated = True
 
         if not updated:
