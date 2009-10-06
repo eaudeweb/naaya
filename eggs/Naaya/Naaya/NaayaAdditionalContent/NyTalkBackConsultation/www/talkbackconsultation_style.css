@@ -97,9 +97,6 @@ p.talkback-cannot_comment {
 	margin: 1em 0;
 	font-weight: bold;
 }
-.talkback-section div {
-	margin: 0.5em 0;
-}
 .talkback-section input, .talkback-section textarea {
 	border: 1px solid #ccc;
 }
@@ -116,6 +113,7 @@ ul.tb-comments-tree div.tb-comment-head {
 	background-color: #F2F2F2;
 	border: 1px solid #ccc;
 	padding: 0 0.5em;
+	overflow: auto;
 }
 
 ul.tb-comments-tree div.tb-comment {
@@ -153,6 +151,7 @@ div.buttons a{
 	color: #000;
 	text-decoration: none;
 	background: #eee;
+	display: inline-block;
 }
 .talkback-add_comment:hover, .button_sect_edit:hover {
 	border: 1px solid #eee;
@@ -192,7 +191,11 @@ div.talkback-section_toc ul li {
 }
 
 li.talkback-current_section a {
-	background-color: #ccc;
+	font-weight: bold;
+}
+
+li.talkback-section a {
+	color: #4E7CB0;
 }
 
 table.talkback-section_list .talkback-section_list-edit_column {
