@@ -33,6 +33,7 @@ import base64
 import re
 from urllib import quote
 import locale
+from time import gmtime, strftime, time
 
 #Zope imports
 import zLOG
@@ -158,6 +159,101 @@ class TranslationsTool(MessageCatalog):
             if x['code'] != 'en':
                 d.append(x)
         return d
+
+    security.declarePublic('manage_export')
+    def manage_export(self, x, REQUEST=None, RESPONSE=None):
+        """Exports the content of the message catalog either to a template
+        file (locale.pot) or to an language specific PO file (<x>.po).
+        """
+        # Get the PO header info
+        header = self.get_po_header(x)
+        last_translator_name = header['last_translator_name']
+        last_translator_email = header['last_translator_email']
+        language_team = header['language_team']
+        charset = header['charset']
+
+        # PO file header, empty message.
+        po_revision_date = strftime('%Y-%m-%d %H:%m+%Z', gmtime(time()))
+        pot_creation_date = po_revision_date
+        last_translator = '%s <%s>' % (last_translator_name,
+                                       last_translator_email)
+
+        if x == 'locale.pot':
+            language_team = 'LANGUAGE <LL@li.org>'
+        else:
+            language_team = '%s <%s>' % (x, language_team)
+
+        r = ['msgid ""',
+             'msgstr "Project-Id-Version: %s\\n"' % self.title,
+             '"POT-Creation-Date: %s\\n"' % pot_creation_date,
+             '"PO-Revision-Date: %s\\n"' % po_revision_date,
+             '"Last-Translator: %s\\n"' % last_translator,
+             '"Language-Team: %s\\n"' % language_team,
+             '"MIME-Version: 1.0\\n"',
+             '"Content-Type: text/plain; charset=%s\\n"' % charset,
+             '"Content-Transfer-Encoding: 8bit\\n"',
+             '', '']
+
+
+        # Get the messages, and perhaps its translations.
+        d = {}
+        if x == 'locale.pot':
+            filename = x
+            for k in self._messages.keys():
+                d[k] = ""
+        else:
+            filename = '%s.po' % x
+            for k, v in self._messages.items():
+                # don't export bad messages 
+                if not isinstance(k, unicode):
+                    try:
+                        k.decode('ascii')
+                    except UnicodeDecodeError:
+                        continue
+                try:
+                    d[k] = v[x]
+                except KeyError:
+                    d[k] = ""
+
+        # Generate the file
+        def backslashescape(x):
+            quote_esc = re.compile(r'"')
+            x = quote_esc.sub('\\"', x)
+
+            trans = [('\n', '\\n'), ('\r', '\\r'), ('\t', '\\t')]
+            for a, b in trans:
+                x = x.replace(a, b)
+
+            return x
+
+        # Generate sorted msgids to simplify diffs
+        dkeys = d.keys()
+        def my_cmp(a, b):
+            if isinstance(a, unicode):
+                a = a.encode('utf-8')
+            if isinstance(b, unicode):
+                b = b.encode('utf-8')
+            return cmp(a, b)
+        dkeys.sort(my_cmp)
+        for k in dkeys:
+            r.append('msgid "%s"' % backslashescape(k))
+            v = d[k]
+            r.append('msgstr "%s"' % backslashescape(v))
+            r.append('')
+
+        if RESPONSE is not None:
+            RESPONSE.setHeader('Content-type','application/data')
+            RESPONSE.setHeader('Content-Disposition',
+                               'inline;filename=%s' % filename)
+
+        r2 = []
+        for x in r:
+            if isinstance(x, unicode):
+                r2.append(x.encode(charset))
+            else:
+                r2.append(x)
+
+        return '\n'.join(r2)
 
     security.declareProtected('Manage messages', 'xliff_export')
     def xliff_export(self, x, export_all=1, REQUEST=None, RESPONSE=None):
