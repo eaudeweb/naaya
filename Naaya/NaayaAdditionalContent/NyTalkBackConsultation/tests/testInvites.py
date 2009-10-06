@@ -67,7 +67,7 @@ class InvitationTestCase(NaayaFunctionalTestCase):
 
         self.assertEqual(len(self.diverted_mail), 1)
         body, addr_to, addr_from, subject = self.diverted_mail[0]
-        self.assertEqual(addr_to, data['email'])
+        self.assertEqual(addr_to, [data['email']])
         self.assertTrue(data['message'] in body)
 
     def test_invite_page(self):
@@ -102,7 +102,7 @@ class InvitationTestCase(NaayaFunctionalTestCase):
 
         self.assertEqual(len(self.diverted_mail), 1)
         body, addr_to, addr_from, subject = self.diverted_mail[0]
-        self.assertEqual(addr_to, data['email'])
+        self.assertEqual(addr_to, [data['email']])
         self.assertTrue(data['message'] in body)
 
         self.browser_do_logout()
