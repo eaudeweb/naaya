@@ -33,6 +33,7 @@ from Products.NaayaCore.NotificationTool import NotificationTool
 class Subscriber(Implicit, Item):
     def __init__(self, id):
         self.id = id
+        self.title= 'Subscribe to notifications'
 
     def get_notification_tool(self):
         return self.getSite().getNotificationTool()
@@ -42,6 +43,9 @@ class Subscriber(Implicit, Item):
         # remove site id and 'subscribe'
         current_location = current_location.split('/')[1:-1]
         return ('/').join(current_location)
+
+    def get_location_link(self, REQUEST):
+        return self.get_notification_tool().get_location_link(REQUEST)
 
     def get_user_id(self, REQUEST):
         user_id = REQUEST.AUTHENTICATED_USER.getId()
@@ -63,6 +67,11 @@ class Subscriber(Implicit, Item):
         notificationTool = self.get_notification_tool()
         return notificationTool.list_subscriptions(user_id,
             location=location, inherit_location=True)
+
+    def list_user_subscriptions(self, REQUEST):
+        user_id = self.get_user_id(REQUEST)
+        notificationTool = self.get_notification_tool()
+        return notificationTool.list_subscriptions(user_id)
 
     def list_enabled_subscriptions(self):
         notificationTool = self.get_notification_tool()

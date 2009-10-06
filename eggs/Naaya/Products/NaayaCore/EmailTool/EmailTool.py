@@ -124,6 +124,9 @@ class EmailTool(Folder):
             p_to = [e.strip() for e in p_to.split(',') if e.strip()!='']
         try:
             if self.mail_server_name and self.mail_server_port and p_to:
+                if diverted_mail is not None: # we're inside a unit test
+                    diverted_mail.append([p_content, p_to, p_from, p_subject])
+                    return 1
                 l_message = self.__create_email(p_content, self.__build_addresses(p_to), p_from, p_subject)
                 server = smtplib.SMTP(self.mail_server_name, self.mail_server_port)
                 server.sendmail(p_from, p_to, l_message)
@@ -156,3 +159,12 @@ class EmailTool(Folder):
     manage_settings_html = PageTemplateFile('zpt/email_settings', globals())
 
 InitializeClass(EmailTool)
+
+diverted_mail = None
+def divert_mail(enabled=True):
+    global diverted_mail
+    if enabled:
+        diverted_mail = []
+        return diverted_mail
+    else:
+        diverted_mail = None

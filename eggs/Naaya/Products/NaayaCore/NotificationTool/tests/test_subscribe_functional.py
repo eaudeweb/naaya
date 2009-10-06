@@ -50,7 +50,7 @@ class SubscriptionsTest(NaayaFunctionalTestCase):
         _notif = self.portal.portal_notification
         self.browser_do_login('contributor', 'contributor')
 
-        self.browser.go('http://localhost/portal/subscribe')
+        self.browser.go('http://localhost/portal/notifications_subscribe')
 
         num_forms_before = len(self.browser.get_all_forms())
 
@@ -67,7 +67,7 @@ class SubscriptionsTest(NaayaFunctionalTestCase):
         found_form = False
         for form in self.browser.get_all_forms():
             controls = form.controls
-            if [c.value for c in controls] == ['', 'instant', 'en', 'delete']:
+            if [c.value for c in controls] == ['', 'instant', 'en', 'unsubscribe']:
                 found_form = True
                 break
         self.assert_(found_form)

@@ -1610,6 +1610,6 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
         return self.getFormsTool().getContent({'here': self}, 'site_feedback')
 
     csv_import = CSVImportTool('csv_import')
-    subscribe = Subscriber('subscribe')
+    notifications_subscribe = Subscriber('notifications_subscribe')
 
 InitializeClass(NyFolder)

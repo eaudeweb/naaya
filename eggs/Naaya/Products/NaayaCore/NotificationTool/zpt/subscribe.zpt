@@ -1,7 +1,15 @@
 <span tal:replace="structure here/standard_html_header" />
 
+<tal:block condition="not:here/is_logged">
+    <h1 i18n:translate="">Notifications</h1>
+    <p i18n:translate="">
+        Make sure that you are logged in properly before subscribing to any notifications. 
+    </p>
+</tal:block>
+<tal:block condition="here/is_logged">
 <tal:block define="location python:here.get_location();
 					current_subscriptions python:list(here.list_subscriptions(request));
+                    my_subscriptions python:list(here.list_user_subscriptions(request));
                     available_subscriptions python:here.get_enabled_subscriptions(request)">
 
 
@@ -34,19 +42,20 @@
 <br />
 <h2 i18n:translate="">Your subscriptions</h2>
 
-<p tal:condition="python:len(current_subscriptions) == 0" i18n:translate="">You have not subscribed to any notifications.</p>
+<p tal:condition="python:len(current_subscriptions) == 0" i18n:translate="">You have not yet subscribed to receive any notifications.</p>
 
-<table class="datatable" tal:condition="python:len(current_subscriptions) > 0">
+<table class="datatable" tal:condition="python:len(my_subscriptions) > 0">
 	<thead>
 		<th>Location</th>
-		<th>Notification</th>
+		<th>Notification type</th>
 		<!--th>Language</th-->
 		<th></th>
 	</thead>
 	<tbody>
-		<tr tal:repeat="subscription current_subscriptions">
+		<tr tal:repeat="subscription my_subscriptions">
 			<td tal:define="location subscription/location">
-				<span tal:content="python: test(location, location, here.getSite().absolute_url(1))"/>
+                <span tal:condition="location"><a tal:attributes="href python:here.get_location_link(location)" tal:content="location"></a></span>
+                <span tal:condition="not:location"><a tal:attributes="href python:here.get_location_link(location)">entire portal</a></span>
 			</td>
 			<td>
 				<span tal:content="subscription/notif_type"/>
@@ -59,7 +68,7 @@
 					<input type="hidden" name="location" tal:attributes="value subscription/location"/>
 					<input type="hidden" name="notif_type" tal:attributes="value subscription/notif_type"/>
 					<input type="hidden" name="lang" tal:attributes="value subscription/lang"/>
-					<input type="submit" value="delete"/>
+					<input type="submit" value="unsubscribe" i18n:attributes="value"/>
 				</form>
 			</td>
 		</tr>
@@ -68,6 +77,7 @@
 
 <br/>
 
+</tal:block>
 </tal:block>
 
 <span tal:replace="structure here/standard_html_footer"/>

@@ -3554,7 +3554,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         REQUEST.RESPONSE.setHeader('Content-Type', 'text/css')
         return self.getLayoutTool().getNaayaContentStyles()
 
-    subscribe = Subscriber('subscribe')
+    notifications_subscribe = Subscriber('notifications_subscribe')
 
     def heartbeat_work(self, REQUEST=None):
         """ does a heartbeat work on this site """

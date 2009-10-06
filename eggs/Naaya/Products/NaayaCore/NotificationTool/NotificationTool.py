@@ -96,6 +96,12 @@ class NotificationTool(Folder):
         return self.config[key]
 
 
+    def get_location_link(self, location):
+        if location:
+            return self.restrictedTraverse(location, self.getSite()).absolute_url()
+        else:
+            return self.getSite().absolute_url()
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_add_subscription')
     def admin_add_subscription(self, user_id, location, notif_type, REQUEST):
         """ """
