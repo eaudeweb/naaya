@@ -395,10 +395,12 @@ def disk_pack(method):
         return method(context, days=days, REQUEST=REQUEST)
     return wrapper
 
-LOG('naayaHotfix', INFO, 'Decorate ApplicationManager.manage_pack in order to delete .undo files from disk on database pack.')
-LOG('naayaHotfix', INFO, 'Patching AltDatabaseManager.manage_pack in order to delete .undo files from disk on database pack.')
-ApplicationManager.manage_pack = disk_pack(ApplicationManager.manage_pack)
-AltDatabaseManager.manage_pack = disk_pack(AltDatabaseManager.manage_pack)
+# XXX This method is bugous
+#LOG('naayaHotfix', INFO, 'Decorate ApplicationManager.manage_pack in order to delete .undo files from disk on database pack.')
+#LOG('naayaHotfix', INFO, 'Patching AltDatabaseManager.manage_pack in order to delete .undo files from disk on database pack.')
+#ApplicationManager.manage_pack = disk_pack(ApplicationManager.manage_pack)
+#AltDatabaseManager.manage_pack = disk_pack(AltDatabaseManager.manage_pack)
+
 #
 # Patch _get_new_ufn
 #
