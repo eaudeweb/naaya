@@ -207,6 +207,69 @@ class InviteeCommentTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.assertTrue('The Invitee (invited by Contributor Test)' in html)
 
+    def test_hide_unapproved(self):
+        comment_id = addComment(self.consultation['test-section']['000'],
+                                contributor='invite:' + self.invite_key,
+                                message=u'invitee comment',
+                                approved=False)
+        transaction.commit()
+
+        self.browser.go(self.cons_url + '/test-section/000')
+        html = self.browser.get_html()
+        self.assertFalse('The Invitee (invited by Contributor Test)' in html)
+        self.assertFalse('invitee comment' in html)
+        self.assertFalse('This comment is awaiting approval' in html)
+
+        self.browser.go(self.cons_url + '/invitations/welcome?key=' + self.invite_key)
+        self.browser.go(self.cons_url + '/test-section/000')
+        html = self.browser.get_html()
+        self.assertTrue('The Invitee (invited by Contributor Test)' in html)
+        self.assertTrue('invitee comment' in html)
+        self.assertTrue('This comment is awaiting approval' in html)
+
+        comment = self.consultation['test-section']['000'][comment_id]
+        comment.approved = True
+        transaction.commit()
+
+        self.browser.go(self.cons_url + '/test-section/000')
+        html = self.browser.get_html()
+        self.assertTrue('The Invitee (invited by Contributor Test)' in html)
+        self.assertTrue('invitee comment' in html)
+        self.assertFalse('This comment is awaiting approval' in html)
+
+    def test_approve(self):
+        comment_id = addComment(self.consultation['test-section']['000'],
+                                contributor='invite:' + self.invite_key,
+                                message=u'invitee comment',
+                                approved=False)
+        transaction.commit()
+        paragraph_url = self.cons_url + '/test-section/000'
+        approve_url = paragraph_url + '/' + comment_id + '/approve'
+
+        comment = self.consultation['test-section']['000'][comment_id]
+        self.assertFalse(comment.approved)
+
+        self.browser_do_login('contributor', 'contributor')
+
+        self.browser.go(paragraph_url)
+        for form in self.browser._browser.forms():
+            if form.action == approve_url:
+                break
+        else:
+            self.fail('Could not find approve form')
+        self.browser.clicked(form, form.controls[0])
+        self.browser.submit()
+
+        self.assertTrue(comment.approved)
+        self.assertEqual(self.browser.get_url(), paragraph_url)
+
+        self.browser.go(paragraph_url)
+        for form in self.browser._browser.forms():
+            if form.action == approve_url:
+                self.fail('no comments should be awaiting approval')
+
+        self.browser_do_logout()
+
     def test_invited_comments_admin(self):
         comment_id = addComment(self.consultation['test-section']['000'],
                                 contributor='invite:' + self.invite_key,

@@ -81,13 +81,15 @@ class Paragraph(Folder):
 
     security.declareProtected(view, 'get_comment_tree')
     def get_comment_tree(self):
-        comment_data = {}
+        comment_tree = {}
         for comment in self.objectValues([METATYPE_TALKBACKCONSULTATION_COMMENT]):
-            parent = comment_data.setdefault(comment.reply_to, [])
-            children = comment_data.setdefault(comment.getId(), [])
-            parent.append({'comment': comment, 'children': children})
-        # comment_data[None] is the list of top-level comments
-        return comment_data.get(None, [])
+            parent = comment_tree.setdefault(comment.reply_to, [])
+            children = comment_tree.setdefault(comment.getId(), [])
+            comment_dict = {'comment': comment, 'children': children}
+            parent.append(comment_dict)
+
+        # comment_tree[None] is the list of top-level comments
+        return comment_tree.get(None, [])
 
     @property
     def comment_count(self):
@@ -204,13 +206,16 @@ class Paragraph(Folder):
         clean_message = cleanup_message(message)
         next_page = REQUEST.get('next_page', self.absolute_url())
         reply_to = REQUEST.form.get('reply_to', None)
+        approved = True
 
         contributor_name = REQUEST.form.get('contributor_name', '')
         if invitation is not None:
             contributor = 'invite:' + invitation.key
+            approved = False
         elif userid is None:
             if contributor_name:
                 contributor = 'anonymous:' + contributor_name
+                approved = False
             else:
                 errors.append('Please input your name.')
         else:
@@ -236,6 +241,7 @@ class Paragraph(Folder):
             'message': clean_message,
             'file': REQUEST.form.get('file', ''),
             'reply_to': reply_to,
+            'approved': approved,
         }
         addComment(self, **form_data)
 
