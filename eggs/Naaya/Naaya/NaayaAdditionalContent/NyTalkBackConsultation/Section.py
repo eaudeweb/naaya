@@ -28,6 +28,7 @@ from App.ImageFile import ImageFile
 from Acquisition import Implicit
 
 #Product imports
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from parser import parse
 from Paragraph import addParagraph
 from constants import *
@@ -162,7 +163,8 @@ class Section(Folder):
     edit_html = PageTemplateFile('zpt/section_edit', globals())
 
     security.declareProtected(view, 'index_html')
-    index_html = PageTemplateFile('zpt/section_index', globals())
+    index_html = NaayaPageTemplateFile('zpt/section_index', globals(),
+                                       'tbconsultation_section_index')
 
     security.declareProtected(view, 'section_js')
     section_js = ImageFile('www/section.js', globals())
