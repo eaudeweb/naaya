@@ -143,6 +143,13 @@ div.buttons a{
 	padding: 0.1em 0.3em 0.1em 0.3em;
 	margin: 0;
 }
+div.buttons input{
+	border: 1px solid #ccc;
+	margin: 2px 4px;
+	padding: 0 1px;
+	background-color: white; color: #666;
+	font-weight: bold;
+}
 .talkback-add_comment, .button_sect_edit, a.tb-button{
 	margin: 0.5em 0;
 	padding: 3px;
