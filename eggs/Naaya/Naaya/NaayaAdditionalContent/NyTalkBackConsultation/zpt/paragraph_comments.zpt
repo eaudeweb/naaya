@@ -8,7 +8,8 @@ to show a whole tree of comments.
 <tal:block define="comment_data nothing">
 <li class="tb-comment-box"
     metal:define-macro="display_child"
-    tal:condition="comment_data">
+    tal:condition="python:comment_data and
+                          comment_data['comment'].visible_to_user(request)">
     <div class="tb-comment"
          tal:define="comment comment_data/comment;
                      comment_id comment/id">
@@ -35,8 +36,19 @@ to show a whole tree of comments.
                    tal:condition="can_edit"
                    tal:attributes="href url"
                    i18n:translate="">delete</a>
+                <form method="post"
+                      tal:attributes="action string:${comment/absolute_url}/approve"
+                      tal:condition="python:not comment.approved and
+                                            comment.check_admin_permissions()">
+                    <input type="hidden" name="back_url"
+                           tal:attributes="value python:(here.absolute_url() +
+                                    test(embedded, '/embedded_html', ''))">
+                    <input type="submit" value="approve" />
+                </form>
             </div>
             <div style="clear: both;"></div>
+            <em tal:condition="not:comment_data/comment/approved"
+                i18n:translate="">This comment is awaiting approval.</em>
         </div>
         <div class="tb-comment-body" tal:content="structure comment/message" />
 

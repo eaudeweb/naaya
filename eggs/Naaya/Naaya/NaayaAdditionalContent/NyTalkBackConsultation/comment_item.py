@@ -51,11 +51,13 @@ from Products.NaayaBase.NyFSFile import NyFSFile
 from constants import *
 
 
-def addComment(self, contributor, message, file='', reply_to=None):
+def addComment(self, contributor, message,
+               file='', reply_to=None, approved=True):
     id = self.utGenRandomId(6)
     while id in self.objectIds():
         id = self.utGenRandomId(6)
-    ob = TalkBackConsultationComment(id, contributor, message, file, reply_to)
+    ob = TalkBackConsultationComment(id, contributor, message,
+                                     file, reply_to, approved)
     self._setObject(id, ob)
 
     ob = self._getOb(id)
@@ -76,11 +78,13 @@ class TalkBackConsultationComment(NyFSFile):
     security = ClassSecurityInfo()
 
     reply_to = None
+    approved = True
 
-    def __init__(self, id, contributor, message, file, reply_to):
+    def __init__(self, id, contributor, message, file, reply_to, approved):
         self.contributor = contributor
         self.message = message
         self.reply_to = reply_to
+        self.approved = approved
         self.comment_date = DateTime()
         NyFSFile.__init__(self, id, '', file)
 
@@ -134,20 +138,44 @@ class TalkBackConsultationComment(NyFSFile):
         """ """
         return self.comment_date
 
+    @property
+    def invite_key(self):
+        if self.contributor.startswith('invite:'):
+            return self.contributor[len('invite:'):]
+        else:
+            return None
+
+    def visible_to_user(self, request):
+        if self.approved:
+            return True
+
+        if self.check_admin_permissions():
+            return True
+
+        if self.invite_key is not None:
+            invitations = self.get_consultation().invitations
+            current_invite = invitations.get_current_invitation(request)
+            if (current_invite is not None and
+                current_invite.key == self.invite_key):
+                return True
+
+        return False
+
     def check_admin_permissions(self):
         """
         Allow people with PERMISSION_REVIEW_TALKBACKCONSULTATION.
         In the case of invited comments, also allow the inviter.
         """
-        if self.checkPermissionReviewTalkBackConsultation():
+        if self.checkPermissionManageTalkBackConsultation():
             return True # user has review permission
 
-        elif self.contributor.startswith('invite:'):
-            key = self.contributor[len('invite:'):]
-            invite = self.get_consultation().invitations.get_invitation(key)
+        if self.invite_key is not None:
+            invite = self.get_consultation().invitations.get_invitation(self.invite_key)
             auth_tool = self.getAuthenticationTool()
             if invite.inviter_userid == auth_tool.get_current_userid():
-                return True
+                return True # contributor was invited by current user
+
+        return False
 
     security.declarePublic('save_modifications')
     def save_modifications(self, message, REQUEST=None):
@@ -160,6 +188,20 @@ class TalkBackConsultationComment(NyFSFile):
             back_url = REQUEST.form.get('back_url',
                                         self.get_section().absolute_url())
             REQUEST.RESPONSE.redirect(back_url)
+
+    security.declarePublic('approve')
+    def approve(self, REQUEST):
+        """ approve this comment """
+        if not self.check_admin_permissions():
+            raise Unauthorized
+
+        if REQUEST.REQUEST_METHOD != 'POST':
+            raise ValueError('Please use POST')
+
+        self.approved = True
+
+        back_url = REQUEST.form.get('back_url', self.get_section().absolute_url())
+        REQUEST.RESPONSE.redirect(back_url)
 
     security.declareProtected(view_management_screens, 'manage_workspace')
     manage_workspace = PageTemplateFile('zpt/comment_manage', globals())
