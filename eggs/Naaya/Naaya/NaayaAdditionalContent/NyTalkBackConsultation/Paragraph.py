@@ -28,6 +28,7 @@ from Acquisition import Implicit
 from DateTime import DateTime
 
 #Product imports
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaBase.NyImageContainer import NyImageContainer
 from comment_item import addComment, TalkBackConsultationComment, cleanup_message
 from constants import *
@@ -241,7 +242,8 @@ class Paragraph(Folder):
         REQUEST.RESPONSE.redirect(next_page)
 
     security.declareProtected(view, 'comment_form')
-    comment_form = PageTemplateFile('zpt/comment_form', globals())
+    comment_form = NaayaPageTemplateFile('zpt/comment_form', globals(),
+                                         'tbconsultation_comment_form')
 
     security.declarePublic('get_message')
     def get_message(self, reply_to=None):

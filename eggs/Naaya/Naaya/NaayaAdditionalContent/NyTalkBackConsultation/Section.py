@@ -53,8 +53,11 @@ def addSection(self, id='', title='', body='', REQUEST=None):
     self.delSession('title')
     self.delSession('body')
 
-    id = self.utCleanupId(id)
-    if not id: id = '%s-%s' % (self.utGenObjectId(title), self.utGenRandomId(6))
+    id = base_id = self.utCleanupId(id) or self.utGenObjectId(title)
+    i = 0
+    while self._getOb(id, None) is not None:
+        i += 1
+        id = '%s-%d' % (base_id, i)
     ob = Section(id, title, body)
     self._setObject(id, ob)
     ob = self._getOb(id)

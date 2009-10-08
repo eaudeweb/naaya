@@ -68,7 +68,7 @@
             <tal:block content="structure paragraph/comments_html" />
             <a class="tb-button"
               tal:attributes="href string:${paragraph/absolute_url}"
-              i18n:translate="">Write comment</a>
+              i18n:translate="">Submit comment</a>
         </tal:block>
     </div>
 </div>
