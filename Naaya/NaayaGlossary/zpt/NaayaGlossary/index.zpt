@@ -43,11 +43,11 @@
 
 <div id="tabbedmenu" tal:condition="here/checkPermissionManageGlossary">
 <ul>
-    <li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/index_html">View</a></li>
-    <li><a tal:attributes="href string:${here/absolute_url}/index_properties_html">Properties</a></li>
-    <li><a tal:attributes="href string:${here/absolute_url}/index_themes_html">Themes</a></li>
-    <li><a tal:attributes="href string:${here/absolute_url}/index_impexp_html">Import/Export</a></li>
-    <li><a tal:attributes="href string:${here/absolute_url}/index_approvals_html">Basket of approvals</a></li>
+    <li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/index_html" i18n:translate="">View</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_properties_html" i18n:translate="">Properties</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_themes_html" i18n:translate="">Themes</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_impexp_html" i18n:translate="">Import/Export</a></li>
+    <li><a tal:attributes="href string:${here/absolute_url}/index_approvals_html" i18n:translate="">Basket of approvals</a></li>
 </ul>
 </div>
 <div class="cleaner"/>
@@ -62,8 +62,8 @@
                     insert_after  python:here.getGlossaryChild(request.get('insert', ''));
                     is_manager here/checkPermissionManageGlossary">
 	<p>
-		<a class="button" href="javascript:fTreeClick('all')">Expand all</a>
-		<a class="button" href="javascript:fTreeClick('')">Collapse all</a>
+		<a class="button" href="javascript:fTreeClick('all')" i18n:translate="">Expand all</a>
+		<a class="button" href="javascript:fTreeClick('')" i18n:translate="">Collapse all</a>
 	</p>
 	<tal:block tal:define="expand python:request.get('expand', '');
 				tree python:here.getStructMap(here.splitToList(expand), None, 1);
@@ -74,7 +74,7 @@
 	<form id="glossary_mapping" name="frmGlossMap" method="get" action="">
 		<table>
 			<tr tal:repeat="tree_node tree">
-				<td tal:define="lang python:here.get_language_by_code(selected_lang);
+				<td tal:define="lang python:here.get_language_by_code(here.getSelectedLang());
                                 item python:tree_node[0];
                                 translation python:item.get_translation_by_language(lang);
                                 translation_java python:item.get_translation_by_language(lang).replace('\'', '\\\'')">
@@ -111,9 +111,9 @@
 									<span tal:condition="translation" tal:replace="translation"/><em tal:condition="python:not translation" i18n:translate="" tal:content="string:${item/title_or_id}"/></a>
 								<em tal:condition="python:not translation" i18n:translate="">(no translation available)</em>
 								<tal:block condition="is_manager">
-                                    <a class="button" tal:attributes="href python:'%s/index_html?item=%s' % (here.absolute_url(), item.absolute_url(1))">edit</a>
+                                    <a class="button" tal:attributes="href python:'%s/index_html?item=%s' % (here.absolute_url(), item.absolute_url(1))" i18n:translate="">edit</a>
 									<tal:block condition="python:item.meta_type=='Naaya Glossary Folder'">
-                                        <a class="button" tal:attributes="href python:'%s/index_html?insert=%s' % (here.absolute_url(), item.absolute_url(1))">add</a>
+                                        <a class="button" tal:attributes="href python:'%s/index_html?insert=%s' % (here.absolute_url(), item.absolute_url(1))" i18n:translate="">add</a>
                                     </tal:block>
 								</tal:block>
 							</td>
@@ -137,16 +137,16 @@
     <tal:block tal:condition="is_manager">
     <div class="management_div" tal:condition="python:selected_item and is_manager">
         <form action="updateGlossaryItem" method="post">
-            <h2><span tal:replace="selected_item/title_or_id"/> properties</h2>
+            <h2><span tal:replace="selected_item/title_or_id"/> <span i18n:translate="">properties</span></h2>
 
             <div class="field">
-                <label for="item_title">Title</label>
+                <label for="item_title" i18n:translate="">Title</label>
                 <input type="text" name="item_title" tal:attributes="value selected_item/title"/>
             </div>
             <div class="field">
-                <label for="item_themes">Themes</label>
+                <label for="item_themes" i18n:translate="">Themes</label>
                 <tal:block tal:define="theme_list here/get_subjects_list">
-                    <span tal:condition="python:not theme_list">no themes defined</span>
+                    <span tal:condition="python:not theme_list" i18n:translate="">no themes defined</span>
                     <select name="item_subjects" multiple size="5" tal:condition="theme_list">
                         <option	tal:repeat="record theme_list"
                                 tal:attributes="value python:record['code'];
@@ -156,26 +156,26 @@
                 </tal:block>
             </div>
             <div class="field">
-                <label for="item_source">Source</label>
+                <label for="item_source" i18n:translate="">Source</label>
                 <input type="text" id="item_source" name="item_source:utf8:ustring" size="35" tal:attributes="value selected_item/source" />
             </div>
             <div class="field">
-                <label for="item_contributor">Contributor</label>
+                <label for="item_contributor" i18n:translate="">Contributor</label>
                 <input type="text" id="item_contributor" name="item_contributor:utf8:ustring" size="35" tal:attributes="value selected_item/contributor" />
             </div>
             <div class="field">
-                <label for="item_approved">Approved</label>
+                <label for="item_approved" i18n:translate="">Approved</label>
                 <input type="checkbox" id="item_approved" name="item_approved" tal:attributes="checked python:test(selected_item.approved, 'checked', '')" />
             </div>
 
-            <h2>Translations</h2>
+            <h2 i18n:translate="">Translations</h2>
 
             <div class="field">
             <table class="datatable">
-                <tr>
-                    <th>Language</th>
-                    <th>Translation</th>
-                    <th>Translate</th>
+                <tr i18n:translate="">
+                    <th i18n:translate="">Language</th>
+                    <th i18n:translate="">Translation</th>
+                    <th i18n:translate="">Translate</th>
                 </tr>
                 <tal:block repeat="language selected_item/get_english_names">
                     <tr tal:attributes='class python:test(path("repeat/language/odd"), "cellodd", "celleven")' tal:define="translation python:selected_item.get_translation_by_language(language)">
@@ -205,19 +205,19 @@
         <h2>Add entry</h2>
         <form action="addGlossaryEntry" method="post" tal:define="theme_list insert_after/get_subjects_list ">
             <div class="field">
-                <label for="entry_type">Type</label>
+                <label for="entry_type" i18n:translate="">Type</label>
                 <select name="entry_type">
-                    <option value="folder">Glossary Folder</option>
-                    <option value="element" tal:condition="python:insert_after.meta_type != 'Naaya Glossary'">Glossary Element</option>
+                    <option value="folder" i18n:translate="">Glossary Folder</option>
+                    <option value="element" tal:condition="python:insert_after.meta_type != 'Naaya Glossary'" i18n:translate="">Glossary Element</option>
                 </select>
             </div>
             <div class="field">
-                <label for="entry_title">Title</label>
+                <label for="entry_title" i18n:translate="">Title</label>
                 <input type="text" name="entry_title" id="entry_title"/>
             </div>
             <div class="field">
-                <label for="entry_subjects">Themes</label>
-                <span tal:condition="python:not theme_list">no themes defined</span>
+                <label for="entry_subjects" i18n:translate="">Themes</label>
+                <span tal:condition="python:not theme_list" i18n:translate="">no themes defined</span>
                 <select multiple="multiple" name="entry_subjects" id="entry_subjects" tal:condition="theme_list">
                     <option	tal:repeat="record theme_list"
                             tal:attributes="value python:record['code']"
@@ -225,11 +225,11 @@
                 </select>
             </div>
             <div class="field">
-                <label for="entry_source">Source</label>
+                <label for="entry_source" i18n:translate="">Source</label>
                 <input type="text" name="entry_source" id="entry_source"/>
             </div>
             <div class="field">
-                <label for="entry_contributor">Contributor</label>
+                <label for="entry_contributor" i18n:translate="">Contributor</label>
                 <input type="text" name="entry_contributor" id="entry_contributor"/>
             </div>
                 <input type="hidden" name="entry_parent" tal:attributes="value python:insert_after.absolute_url(1)"/>
