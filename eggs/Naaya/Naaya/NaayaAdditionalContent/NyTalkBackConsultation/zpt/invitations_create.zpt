@@ -2,7 +2,12 @@
 
 <h1 tal:content="here/title_or_id" />
 
-<p i18n:translate="">Invite other people to participate in this consultation.</p>
+<p i18n:translate="">
+    Invite other people to participate in this consultation. They will
+    receive an invitation e-mail with a personalized link and be able to
+    submit comments directly. Afterwards you will have the option to
+    approve, edit or remove those comments.
+</p>
 
 <form name="invite" method="post"
   tal:define="data options/formdata; errors options/formerrors">
@@ -24,21 +29,23 @@
         <label for="organization" i18n:translate="">Organization</label>
         <p class="form-errors" tal:define="err errors/organization|nothing"
           tal:condition="err" tal:content="err" />
+        <em i18n:translate="">Optional</em><br />
         <input type="text" name="organization:utf8:ustring" id="organization" size="50"
           tal:attributes="value data/organization" />
     </div>
     <div class="field">
-        <label for="notes" i18n:translate="">Admin notes (optional)</label>
+        <label for="notes" i18n:translate="">Admin notes</label>
         <p class="form-errors" tal:define="err errors/notes|nothing"
           tal:condition="err" tal:content="err" />
+        <em i18n:translate="">Optional, visible only to site administrator</em><br />
         <input type="text" name="notes:utf8:ustring" id="notes" size="50"
           tal:attributes="value data/notes" />
     </div>
     <div class="field">
-        <label for="message" i18n:translate="">Message</label>
+        <label for="message" i18n:translate="">Message to invitee</label>
         <p class="form-errors" tal:define="err errors/message|nothing"
           tal:condition="err" tal:content="err" />
-        <small i18n:translate="">Will be used when sending invitation e-mail</small><br />
+        <em i18n:translate="">Will be included with invitation e-mail</em><br />
         <textarea name="message:utf8:ustring" id="message" rows="5" cols="50"
           tal:content="data/message"></textarea>
     </div>
