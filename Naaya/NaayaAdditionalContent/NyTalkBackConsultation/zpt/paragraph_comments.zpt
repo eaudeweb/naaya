@@ -36,6 +36,8 @@ to show a whole tree of comments.
                    tal:condition="can_edit"
                    tal:attributes="href url"
                    i18n:translate="">delete</a>
+            </div>
+            <div class="buttons">
                 <form method="post"
                       tal:attributes="action string:${comment/absolute_url}/approve"
                       tal:condition="python:not comment.approved and
