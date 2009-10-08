@@ -394,9 +394,11 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                                                 item_source, item_contributor,
                                                 item_approved)
                 #update translations
+                i = 0
                 for translation in item_translation:
-                    lang_code = item_lang_code[item_translation.index(translation)]
+                    lang_code = item_lang_code[i]
                     folder.manageFolderTranslations(lang_code, translation)
+                    i+=1
 
         elif item_meta_type == "Naaya Glossary Element":
             #do element update
@@ -405,9 +407,11 @@ class NyGlossary(Folder, utils, catalog_utils, glossary_export, file_utils):
                 element.manageBasicProperties(item_title, item_source,
                                               item_subjects, item_contributor,
                                               item_approved)
+                i = 0
                 for translation in item_translation:
-                    lang_code = item_lang_code[item_translation.index(translation)]
+                    lang_code = item_lang_code[i]
                     element.manageNameTranslations(lang_code, translation)
+                    i+=1
         if REQUEST:
             return REQUEST.RESPONSE.redirect('index_html?item=%s' % item_url)
 
