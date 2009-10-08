@@ -282,7 +282,8 @@ class Paragraph(Folder):
     edit_html = PageTemplateFile('zpt/paragraph_edit', globals())
 
     security.declareProtected(view, 'comments_html')
-    comments_html = PageTemplateFile('zpt/paragraph_comments', globals())
+    comments_html = NaayaPageTemplateFile('zpt/paragraph_comments', globals(),
+                                          'tbconsultation_paragraph_comments')
 
     security.declareProtected(view, 'embedded_html')
     embedded_html = PageTemplateFile('zpt/paragraph_embedded', globals())

@@ -32,6 +32,7 @@ from App.ImageFile import ImageFile
 from OFS.Image import cookId
 
 #Product imports
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaContent.constants import *
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.constants import *
@@ -572,7 +573,8 @@ class NyTalkBackConsultation(NyAttributes,
 
     #site pages
     security.declareProtected(view, 'index_html')
-    index_html = PageTemplateFile('zpt/talkbackconsultation_index', globals())
+    index_html = NaayaPageTemplateFile('zpt/talkbackconsultation_index', globals(),
+                                       'tbconsultation_index')
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
     edit_html = PageTemplateFile('zpt/talkbackconsultation_edit', globals())
