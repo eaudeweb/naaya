@@ -207,6 +207,29 @@ class InviteeCommentTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.assertTrue('The Invitee (invited by Contributor Test)' in html)
 
+    def test_invited_comments_admin(self):
+        comment_id = addComment(self.consultation['test-section']['000'],
+                                contributor='invite:' + self.invite_key,
+                                message=u'invitee comment')
+        transaction.commit()
+
+        self.browser_do_login('contributor', 'contributor')
+
+        edit_url = '%s/test-section/000/%s/edit_html' % (self.cons_url, comment_id)
+        self.browser.go('%s/test-section/000' % self.cons_url)
+        self.assertTrue(edit_url in self.browser.get_html())
+
+        self.browser.go(edit_url)
+        self.assertRedirectUnauthorizedPage(False)
+
+        form = self.browser.get_form('frmEdit')
+        form['message:utf8:ustring'] = 'edited'
+        self.browser.clicked(form, form.find_control('message:utf8:ustring'))
+        self.browser.submit()
+        self.assertRedirectUnauthorizedPage(False)
+
+        self.browser_do_logout()
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(InvitationTestCase))

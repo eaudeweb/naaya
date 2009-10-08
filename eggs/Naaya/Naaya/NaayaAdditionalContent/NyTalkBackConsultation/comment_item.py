@@ -42,7 +42,7 @@ def cleanup_message(message):
 #Zope imports
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view
 from DateTime import DateTime
 
@@ -134,10 +134,26 @@ class TalkBackConsultationComment(NyFSFile):
         """ """
         return self.comment_date
 
-    security.declareProtected(
-        PERMISSION_MANAGE_TALKBACKCONSULTATION, 'save_modifications')
+    def check_admin_permissions(self):
+        """
+        Allow people with PERMISSION_REVIEW_TALKBACKCONSULTATION.
+        In the case of invited comments, also allow the inviter.
+        """
+        if self.checkPermissionReviewTalkBackConsultation():
+            return True # user has review permission
+
+        elif self.contributor.startswith('invite:'):
+            key = self.contributor[len('invite:'):]
+            invite = self.get_consultation().invitations.get_invitation(key)
+            auth_tool = self.getAuthenticationTool()
+            if invite.inviter_userid == auth_tool.get_current_userid():
+                return True
+
+    security.declarePublic('save_modifications')
     def save_modifications(self, message, REQUEST=None):
         """ Save body edits """
+        if not self.check_admin_permissions():
+            raise Unauthorized
         self.message = cleanup_message(message)
         if REQUEST is not None:
             self.setSessionInfo(['Saved changes (%s)' % DateTime()])
@@ -148,7 +164,12 @@ class TalkBackConsultationComment(NyFSFile):
     security.declareProtected(view_management_screens, 'manage_workspace')
     manage_workspace = PageTemplateFile('zpt/comment_manage', globals())
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
-    edit_html = PageTemplateFile('zpt/comment_edit', globals())
+    _edit_html = PageTemplateFile('zpt/comment_edit', globals())
+    security.declarePublic('edit_html')
+    def edit_html(self, REQUEST):
+        """ edit this comment """
+        if not self.check_admin_permissions():
+            raise Unauthorized
+        return self._edit_html(REQUEST)
 
 InitializeClass(TalkBackConsultationComment)
