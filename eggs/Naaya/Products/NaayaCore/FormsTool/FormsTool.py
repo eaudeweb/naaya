@@ -133,7 +133,7 @@ class FormsTool(Folder):
         Fetches a Naaya form
 
         First looks in the portal_forms folder (in case the form has been
-        customized). If not, then it looks for default demplates in packages.
+        customized). If not, then it looks for default templates in packages.
         """
         if form_id in self.objectIds():
             return self._getOb(form_id)
