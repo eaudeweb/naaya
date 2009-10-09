@@ -114,11 +114,19 @@ class FormsTool(Folder):
                 path = join(pluggable_item['package_path'], 'zpt', '%s.zpt' % form_id)
                 yield {'id': form_id, 'title': title, 'path': path}
 
+        # forms of type NaayaPageTemplateFile
+        for form_id, tmpl in naaya_templates.iteritems():
+            yield {'id': form_id, 'title': form_id, 'form_ob': tmpl}
+
     def getDefaultForm(self, form_id):
         for form in self.listDefaultForms():
             if form['id'] == form_id:
-                return dict(form, body=self.futRead(form['path'], 'r'))
-        raise KeyError('Not found form named "%s"' % form_id)
+                if 'form_ob' in form:
+                    return form['form_ob']._text
+                else:
+                    return self.futRead(form['path'], 'r')
+        else:
+            raise KeyError('Not found form named "%s"' % form_id)
 
     def getForm(self, form_id):
         """
@@ -130,10 +138,18 @@ class FormsTool(Folder):
         if form_id in self.objectIds():
             return self._getOb(form_id)
         else:
-            form = self.getDefaultForm(form_id)
-            t = Template(id=form['id'], title=form['title'],
-                text=form['body'], content_type='')
-            return t.__of__(self)
+            for form in self.listDefaultForms():
+                if form['id'] == form_id:
+                    if 'form_ob' in form:
+                        return form['form_ob'].__of__(self)
+
+                    body=self.futRead(form['path'], 'r')
+                    t = Template(id=form['id'],
+                                 title=form['title'],
+                                 text=body,
+                                 content_type='')
+                    return t.__of__(self)
+            raise KeyError('Not found form named "%s"' % form_id)
 
     def getContent(self, p_context={}, p_page=None):
         """
@@ -151,10 +167,21 @@ class FormsTool(Folder):
     security.declareProtected(view_management_screens, 'manage_customizeForm')
     def manage_customizeForm(self, form_id, REQUEST=None):
         """ Copy the form from disk to zodb """
-        form = self.getDefaultForm(form_id)
-        ob = Template(id=form['id'], title=form['title'],
-            text=form['body'], content_type='text/html')
-        ob._naaya_original_text = form['body']
+        for form in self.listDefaultForms():
+            if form['id'] == form_id:
+                if 'form_ob' in form:
+                    body = form['form_ob']._text
+                else:
+                    body = self.futRead(form['path'], 'r')
+                break
+        else:
+            raise KeyError('Not found form named "%s"' % form_id)
+
+        ob = Template(id=form['id'],
+                      title=form['title'],
+                      text=body,
+                      content_type='text/html')
+        ob._naaya_original_text = body
         self._setObject(form['id'], ob)
 
         if REQUEST is not None:
@@ -164,3 +191,7 @@ class FormsTool(Folder):
     manage_customize = PageTemplateFile('zpt/customize', globals())
 
 InitializeClass(FormsTool)
+
+naaya_templates = {}
+def register_naaya_template(tmpl, form_id):
+    naaya_templates[form_id] = tmpl
