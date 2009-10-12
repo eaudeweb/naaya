@@ -1,7 +1,28 @@
 from setuptools import setup, find_packages
 import os
+import warnings
 
-version = '1.0'
+try:
+    import pysvnaa
+    pysvn_installed = True
+except ImportError:
+    warnings.warn('pysvn not installed')
+    pysvn_installed = False
+
+def get_svn_version():
+    if not os.path.isdir('.svn'):
+        return '1.0dev-r0'
+    client = pysvn.Client()
+    entry = client.info('.')
+    revision = entry.revision.number
+    return '1.0dev-r%s' % revision
+
+def get_version():
+    if pysvn_installed:
+        return get_svn_version()
+    return '1.0dev-r0'
+
+version = get_version()
 
 setup(name='Naaya',
       version=version,
@@ -18,8 +39,8 @@ setup(name='Naaya',
       author_email='',
       url='',
       license='GPL',
-      packages=find_packages(exclude=['ez_setup']),
-      namespace_packages=['Products'],
+      packages=['Products', 'naaya'],
+      namespace_packages=['Products', 'naaya'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[
