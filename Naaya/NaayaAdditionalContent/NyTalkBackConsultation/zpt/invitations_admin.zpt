@@ -15,6 +15,10 @@
         <tal:block content="inviter_name" />
         (<tal:block content="invite/inviter_userid" />)
     </dd>
+    <dd>
+        <strong>Private URL:</strong>
+        <small tal:content="string:${here/absolute_url}/welcome?key=${invite/key}" />
+    </dd>
     <dd tal:condition="invite/notes"><p tal:content="invite/notes" /></dd>
     <dd>
         <form method="post" tal:attributes="action

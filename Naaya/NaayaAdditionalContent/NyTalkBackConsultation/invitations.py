@@ -24,9 +24,11 @@ from BTrees.OOBTree import OOBTree
 from Persistence import Persistent
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from AccessControl.User import BasicUserFolder, SimpleUser
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from constants import (PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
                        PERMISSION_MANAGE_TALKBACKCONSULTATION)
@@ -148,7 +150,8 @@ class InvitationsContainer(SimpleItem):
             self.setSessionInfo(['Invitation for %s has been revoked.' % invite.name])
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
-    _welcome_html = PageTemplateFile('zpt/invitations_welcome', globals())
+    _welcome_html = NaayaPageTemplateFile('zpt/invitations_welcome', globals(),
+                                          'tbconsultation_invitations_welcome')
     security.declarePublic('welcome')
     def welcome(self, REQUEST):
         """ welcome page for invitees """
@@ -186,6 +189,23 @@ class Invitation(Persistent):
         self.notes = notes
         self.key = key
         self.enabled = True
+
+class InvitationUsersTool(BasicUserFolder):
+    def authenticate(self, name, password, request):
+        # first try to authenticate using the site acl_users
+        auth_tool = self.getSite().getAuthenticationTool()
+        user = auth_tool.authenticate(name, password, request)
+        if user is not None:
+            return user
+
+        # no user logged in; try with an invite key
+        invite_key = self.invitations.get_current_invitation(request)
+        if invite_key:
+            return SimpleUser('invited_reviewer', '', ('InvitedReviewer',), [])
+        else:
+            return None
+
+InitializeClass(InvitationUsersTool)
 
 def random_key():
     """ generate a 120-bit random key, expressed as 20 base64 characters """

@@ -48,7 +48,7 @@ from constants import *
 #local imports
 from Section import addSection
 from Section import addSection_html
-from invitations import InvitationsContainer
+from invitations import InvitationsContainer, InvitationUsersTool
 
 #module constants
 
@@ -514,9 +514,7 @@ class NyTalkBackConsultation(NyAttributes,
     def check_cannot_comment(self):
         """ """
 
-        if self.invitations.get_current_invitation(self.REQUEST) is not None:
-            pass
-        elif not self.checkPermissionReviewTalkBackConsultation():
+        if not self.checkPermissionReviewTalkBackConsultation():
             return 'no-permission'
 
         if self.get_days_left()[1] <= 0:
@@ -576,11 +574,25 @@ class NyTalkBackConsultation(NyAttributes,
     index_html = NaayaPageTemplateFile('zpt/talkbackconsultation_index', globals(),
                                        'tbconsultation_index')
 
+    # header and footer templates are proxied since invited reviewers
+    # have "View" permission only in this folder; if the consultation
+    # is restricted, they would not be able to see consultation pages.
+    def standard_html_header(self):
+        return self.aq_parent.standard_html_header()
+
+    def standard_html_footer(self):
+        return self.aq_parent.standard_html_footer()
+
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
     edit_html = PageTemplateFile('zpt/talkbackconsultation_edit', globals())
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'section_add_html')
     section_add_html = addSection_html
+
+    __allow_groups__ = InvitationUsersTool()
+    _View_Permission = ['InvitedReviewer']
+    _Naaya___Review_TalkBack_Consultation_Permission = ['InvitedReviewer']
+    __ac_roles__ = ['InvitedReviewer']
 
 InitializeClass(NyTalkBackConsultation)
 manage_addNyTalkBackConsultation_html = PageTemplateFile(
