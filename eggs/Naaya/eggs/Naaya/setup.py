@@ -3,7 +3,7 @@ import os
 import warnings
 
 try:
-    import pysvnaa
+    import pysvn
     pysvn_installed = True
 except ImportError:
     warnings.warn('pysvn not installed')
