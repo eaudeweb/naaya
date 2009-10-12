@@ -293,6 +293,30 @@ class InviteeCommentTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
+    def test_restricted_access(self):
+        self.portal.myfolder._View_Permission = ('Administrator', 'Reviewer')
+        transaction.commit()
+
+        section_url = self.cons_url + '/test-section'
+        paragraph_url = section_url + '/000'
+        paragraph_embedded_url = paragraph_url + '/embedded_html'
+        invite_url = self.cons_url + '/invitations/welcome?key=' + self.invite_key
+
+        for url in [self.cons_url, section_url,
+                    paragraph_url, paragraph_embedded_url]:
+            self.browser.go(url)
+            self.assertAccessDenied(True, url)
+
+        self.browser.go(invite_url)
+
+        for url in [self.cons_url, section_url,
+                    paragraph_url, paragraph_embedded_url]:
+            self.browser.go(url)
+            self.assertAccessDenied(False, url)
+
+        self.browser.go(self.cons_url + '/manage_main')
+        self.assertAccessDenied()
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(InvitationTestCase))
