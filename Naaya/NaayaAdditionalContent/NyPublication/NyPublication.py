@@ -24,6 +24,9 @@ import sys
 
 #Zope imports
 from Globals import InitializeClass
+from zope import event as zope_event
+from OFS.event import ObjectWillBeRemovedEvent
+from OFS.Image import File, cookId
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -110,12 +113,12 @@ def publication_add_html(self, REQUEST=None, RESPONSE=None):
     form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyPublication', 'form_helper': form_helper}, 'publication_add')
 
-def _create_NyPublication_object(parent, id, contributor):
+def _create_NyPublication_object(parent, id, title, file, contributor):
     i = 0
     while parent._getOb(id, None):
         i += 1
         id = '%s-%u' % (id, i)
-    ob = NyPublication(id, contributor)
+    ob = NyPublication(id, title, file, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
     ob = parent._getOb(id)
@@ -133,14 +136,19 @@ def addNyPublication(self, id='', REQUEST=None, contributor=None, **kwargs):
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
     schema_raw_data.setdefault('locator', '')
+    _source = schema_raw_data.pop('source', 'file')
+    _file = schema_raw_data.pop('file', '')
+    _url = schema_raw_data.pop('url', '')
     _contact_word = schema_raw_data.get('contact_word', '')
 
+    title = schema_raw_data.get('title', '')
+    id = cookId(id, title, _file)[0] #upload from a file
     id = self.utCleanupId(id)
     if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
     if not id: id = PREFIX_OBJECT + self.utGenRandomId(5)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
-    ob = _create_NyPublication_object(self, id, contributor)
+    ob = _create_NyPublication_object(self, id, title, '', contributor)
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
@@ -166,6 +174,7 @@ def addNyPublication(self, id='', REQUEST=None, contributor=None, **kwargs):
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
     ob.submitThis()
+    ob.handleUpload(_source, _file, _url)
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
@@ -229,18 +238,17 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl, NyVa
     def manage_options(self):
         """ """
         l_options = ()
-        if not self.hasVersion():
-            l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
+        l_options += ({'label': 'Properties', 'action': 'manage_edit_html'},)
         l_options += publication_item.manage_options
         l_options += ({'label': 'View', 'action': 'index_html'},) + NyItem.manage_options
         return l_options
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, contributor):
+    def __init__(self, id, title, file, contributor):
         """ """
         self.id = id
-        publication_item.__init__(self)
+        publication_item.__init__(self, id, title, file)
         NyValidation.__dict__['__init__'](self)
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
@@ -295,32 +303,12 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl, NyVa
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'commitVersion')
     def commitVersion(self, REQUEST=None):
         """ """
-        if (not self.checkPermissionEditObject()) or (self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName()):
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        if not self.hasVersion():
-            raise EXCEPTION_NOVERSION, EXCEPTION_NOVERSION_MSG
-        self.copy_naaya_properties_from(self.version)
-        self.checkout = 0
-        self.checkout_user = None
-        self.version = None
-        self._p_changed = 1
-        self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
+        raise EXCEPTION_NOTIMPLEMENTED, 'commitVersion'
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'startVersion')
     def startVersion(self, REQUEST=None):
         """ """
-        if not self.checkPermissionEditObject():
-            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        if self.hasVersion():
-            raise EXCEPTION_STARTEDVERSION, EXCEPTION_STARTEDVERSION_MSG
-        self.checkout = 1
-        self.checkout_user = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        self.version = publication_item()
-        self.version.copy_naaya_properties_from(self)
-        self._p_changed = 1
-        self.recatalogNyObject(self)
-        if REQUEST: REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
+        raise EXCEPTION_NOTIMPLEMENTED, 'startVersion'
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
@@ -328,12 +316,7 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl, NyVa
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
 
-        if self.hasVersion():
-            obj = self.version
-            if self.checkout_user != self.REQUEST.AUTHENTICATED_USER.getUserName():
-                raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        else:
-            obj = self
+        obj = self
 
         if REQUEST is not None:
             schema_raw_data = dict(REQUEST.form)
@@ -342,9 +325,17 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl, NyVa
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
+        _source = schema_raw_data.pop('source', 'file')
+        _file = schema_raw_data.pop('file', '')
+        _url = schema_raw_data.pop('url', '')
+
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if not form_errors:
+            # Upload file
+            if _source:
+                self.saveUpload(source=_source, file=_file, url=_url, lang=_lang)
+
             if self.discussion: self.open_for_comments()
             else: self.close_for_comments()
             self._p_changed = 1
@@ -363,6 +354,35 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl, NyVa
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
 
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveUpload')
+    def saveUpload(self, source='file', file='', url='', lang=None, REQUEST=None):
+        """ """
+        if REQUEST:
+            username = REQUEST.AUTHENTICATED_USER.getUserName()
+        else:
+            username = self.REQUEST.AUTHENTICATED_USER.getUserName()
+
+        if not self.checkPermissionEditObject():
+            raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
+        if self.wl_isLocked():
+            raise ResourceLockedError, "File is locked via WebDAV"
+
+        if lang is None:
+            lang = self.gl_get_selected_language()
+
+        context = self
+
+        ext_file = self.get_data(as_string=False)
+        zope_event.notify(ObjectWillBeRemovedEvent(
+            ext_file, self, ext_file.getId()))
+
+        context.handleUpload(source, file, url)
+        self.recatalogNyObject(self)
+
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), lang))
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
     manage_edit_html = PageTemplateFile('zpt/publication_manage_edit', globals())
@@ -377,6 +397,51 @@ class NyPublication(publication_item, NyAttributes, NyItem, NyCheckControl, NyVa
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'publication_edit')
+
+
+    def downloadfilename(self):
+        """ Return download file name
+        """
+        context = self
+        filename = context._get_data_name()
+        if not filename:
+            return context.title_or_id()
+        return filename[-1]
+
+    security.declareProtected(view, 'download')
+    def download(self, REQUEST, RESPONSE):
+        """ """
+        RESPONSE.setHeader('Content-Type', self.getContentType())
+        RESPONSE.setHeader('Content-Length', self.size)
+        filename = self.utToUtf8(self.downloadfilename())
+        filename = self.utCleanupId(filename)
+        RESPONSE.setHeader('Content-Disposition', 'attachment;filename=' + filename)
+        RESPONSE.setHeader('Pragma', 'public')
+        RESPONSE.setHeader('Cache-Control', 'max-age=0')
+        return publication_item.index_html(self, REQUEST, RESPONSE)
+
+    security.declareProtected(view, 'view')
+    def view(self, REQUEST, RESPONSE):
+        """ """
+        RESPONSE.setHeader('Content-Type', self.getContentType())
+        RESPONSE.setHeader('Content-Length', self.size)
+        RESPONSE.setHeader('Pragma', 'public')
+        RESPONSE.setHeader('Cache-Control', 'max-age=0')
+        return publication_item.index_html(self, REQUEST, RESPONSE)
+
+    security.declarePublic('getDownloadUrl')
+    def getDownloadUrl(self):
+        """ """
+        site = self.getSite()
+        file_path = self._get_data_name()
+        return self.absolute_url() + '/download'
+
+    security.declarePublic('getEditDownloadUrl')
+    def getEditDownloadUrl(self):
+        """ """
+        site = self.getSite()
+        file_path = self._get_data_name()
+        return self.absolute_url() + '/download?version=1'
 
 InitializeClass(NyPublication)
 

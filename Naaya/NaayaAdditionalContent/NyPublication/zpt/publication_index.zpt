@@ -58,6 +58,14 @@
 <tal:block content="structure python: here.prop_display_tr('languages')" />
 <tal:block content="structure python: here.prop_display_tr('locator', as_href=True)" />
 
+<tr tal:condition="python:here.size>0">
+	<th i18n:translate="">Download</th>
+	<td tal:define="download_url here/getDownloadUrl">
+		<a tal:define="size python:here.utShowSizeKb(here.size); content_type python:here.getContentTypeTitle(here.getContentType())"
+			tal:attributes="href download_url"><img tal:attributes="src string:getContentTypePicture?id=${here/getContentType}" alt="" /> <span tal:replace="string:${here/downloadfilename} (${content_type}, ${size} Kb)"/></a>
+	</td>
+</tr>
+
 </table>
 
 <div tal:define="description python:here.prop_value_or_none('description')"
