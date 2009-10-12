@@ -17,7 +17,7 @@
 	<span i18n:translate="">Attached file</span>
 </legend>
 
-<div class="field-inline" tal:condition="python:here.get_size()>0">
+<div class="field-inline" tal:condition="python:here.size>0">
 	<input type="radio" name="source" id="source-none" value="" checked="checked" />
 	<label for="source-none" i18n:translate="">Keep</label>
 	<tal:block define="download_url here/getEditDownloadUrl; size python:here.utShowSizeKb(here.size); content_type python:here.getContentTypeTitle(here.content_type)">
@@ -27,7 +27,7 @@
 	</tal:block>
 </div>
 <div class="field-inline">
-	<input type="radio" name="source" id="source-file" value="file" tal:attributes="checked python:test(here.get_size()<=0, 'checked', None)"/>
+	<input type="radio" name="source" id="source-file" value="file" tal:attributes="checked python:test(here.size<=0, 'checked', None)"/>
 	<label for="source-file" i18n:translate="">Upload file</label>
 	<input type="file" name="file" id="file" value="" size="50" onclick="document.getElementById('source-file').checked='checked'"/>
 </div>

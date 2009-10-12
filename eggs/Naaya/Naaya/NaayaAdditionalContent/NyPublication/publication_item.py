@@ -41,6 +41,13 @@ class publication_item(Implicit, NyContentData, NyFSFile):
         except: pass
         NyContentData.__init__(self)
 
+    def __setstate__(self, state):
+        """ Updates """
+        publication_item.inheritedAttribute("__setstate__") (self, state)
+        if 'id' in self.__dict__:
+            self.__name__ = self.__dict__['id']
+            del self.__dict__['id']
+
     def del_file_title(self):
         """
         Removes the File's object 'title' property.
