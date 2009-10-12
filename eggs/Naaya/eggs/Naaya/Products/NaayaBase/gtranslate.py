@@ -24,7 +24,7 @@ _GOOGLE_LANGUAGES = {
   'CZECH' : 'cs',
   'DANISH' : 'da',
   'DHIVEHI' : 'dv',
-  'DUTCH': 'nl',  
+  'DUTCH': 'nl',
   'ENGLISH' : 'en',
   'ESPERANTO' : 'eo',
   'ESTONIAN' : 'et',
@@ -91,7 +91,6 @@ _GOOGLE_LANGUAGES = {
   'UZBEK' : 'uz',
   'UIGHUR' : 'ug',
   'VIETNAMESE' : 'vi',
-  'UNKNOWN' : ''
 }
 
 _GOOGLE_URL = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0"
@@ -186,6 +185,9 @@ def translate(text, src_lang, dest_lang):
             dest_lang = _GOOGLE_LANGUAGES[dest_lang.upper()]
         else:
             return text
+
+    if src_lang == dest_lang:
+        return text
 
     try:
         translated_text = ''

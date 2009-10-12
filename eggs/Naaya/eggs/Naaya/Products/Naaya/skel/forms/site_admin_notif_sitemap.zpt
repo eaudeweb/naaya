@@ -15,7 +15,7 @@
 </ul>
 </div>
 
-<p i18n:translate="">
+<p i18n:translate="" class="cleaner">
 This is the list with monitorised folders. The notifications and newsletters are based on updating of the content of these folders. Here you can add or delete folders from this list.
 </p>
 <tal:block tal:define="maintopics_children python:here.get_maintopics_children(first_level='0',foldermetatypes=ob_notificationtool.foldermetatypes)">

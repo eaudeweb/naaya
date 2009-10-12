@@ -176,6 +176,7 @@ misc_ = {
 
     # jQuery
     'jquery-1.3.2.min.js':ImageFile('www/jquery-1.3.2.min.js', globals()),
+    'jquery-ui-1.7.2.full.min.js':ImageFile('www/jquery-ui-1.7.2.full.min.js', globals()),
 }
 
 def register_content(module, klass, module_methods, klass_methods, add_method):

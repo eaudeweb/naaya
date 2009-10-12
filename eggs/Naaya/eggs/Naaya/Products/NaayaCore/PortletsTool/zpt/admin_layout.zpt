@@ -3,19 +3,53 @@
 <h1 metal:fill-slot="title" i18n:translate="">Arrange portlets</h1>
 
 <tal:block metal:fill-slot="section">
+<script type="text/javascript" src="misc_/Naaya/jquery-1.3.2.min.js"></script>
+<script type="text/javascript" src="misc_/Naaya/jquery-ui-1.7.2.full.min.js"></script>
+<script type="text/javascript">
+$(function(){
+    $('tbody').each(function() {
+        var group_jq = $(this);
+        group_jq.sortable({axis: 'y', stop: function(evt, ui) {
+            var portlet_order = jQuery.makeArray(group_jq.children().map(function() {
+                return $(this).attr('ny_hashkey');
+            }));
+            var post_data = {
+                folder_path: group_jq.attr('ny_folder_path'),
+                position: group_jq.attr('ny_position'),
+                portlet_order: portlet_order
+            }
+            $.ajax({
+                type: 'POST',
+                url: 'sort_portlets',
+                data: post_data,
+                error: function() {
+                    alert('An error occurred while saving portlet sort order');
+                }
+            });
+        }});
+    });
+});
+</script>
 
 <table class="datatable">
 <thead>
     <tr>
-        <th style="width: 15em;" i18n:translate="">Location</th>
-        <th style="width: 7em;" i18n:translate="">Position</th>
-        <th>Inherit</th>
-        <th style="width: 15em;" i18n:translate="">Portlet</th>
+        <th title="Folder where the portlet should appear" style="width: 15em;"
+          i18n:translate="" i18n:attributes="title">Location</th>
+        <th title="Position within the page" style="width: 7em;"
+          i18n:translate="" i18n:attributes="title">Position</th>
+        <th title="Show portlet in subfolders of `location`"
+          i18n:translate="" i18n:attributes="title">Inherit</th>
+        <th title="Title of portlet" style="width: 15em;"
+          i18n:translate="" i18n:attributes="title">Portlet</th>
         <th></th>
     </tr>
 </thead>
-<tbody>
-    <tr tal:repeat="item options/portlet_layout">
+<tal:block repeat="keyvalue options/portlet_layout">
+<tbody tal:define="items python:keyvalue[1]" tal:attributes="
+  ny_folder_path python:items[0]['folder_path'];
+  ny_position python:items[0]['position']">
+    <tr tal:repeat="item items" tal:attributes="ny_hashkey item/hashkey">
         <td tal:define="
           folder_path item/folder_path;
           folder python:here.getFolderByPath(folder_path);
@@ -26,7 +60,8 @@
             &nbsp;
             <small tal:content="string:/${folder_path}"></small>
         </td>
-        <td tal:content="item/position" tal:attributes="class string:portlet_arrange_${item/position}" />
+        <td tal:content="item/position"
+          tal:attributes="class string:portlet_arrange_${item/position}" />
         <td tal:content="structure python:test(item['inherit'], '&#x2713;', '')" />
         <td tal:content="item/portlet/title_or_id" />
         <td>
@@ -38,11 +73,12 @@
                     tal:attributes="value item/position" />
                 <input type="hidden" name="portlet_id"
                     tal:attributes="value item/portlet/id" />
-                <input type="submit" name="action" value="Remove" />
+                <input type="submit" name="action" value="Unassign" />
             </form>
         </td>
     </tr>
 </tbody>
+</tal:block>
 </table>
 
 <form name="assign_portlet" method="POST">

@@ -56,11 +56,21 @@ def getObjectFromCatalog(catalog_tool, rid):
     object = catalog_tool._catalog.unrestrictedTraverse(obj_path)
     return object
 
-def getClusters(catalog_tool, zoom_level, lat_min, lat_max, lon_min, lon_max,
-        path, meta_types, geo_types, approved, is_public, landscape_type, administrative_level, query, languages):
+def getClusters(catalog_tool, filters):
     # the objects are searched for in the tile limits (to get the same clusters every time)
-    tlat_min, tlat_max, tlon_min, tlon_max = clusters.get_discretized_limits(zoom_level,
-                                                        lat_min, lat_max, lon_min, lon_max)
+    grid_size = 12
+
+    # unpack map limits
+    if filters:
+        lat_min = float(filters[0]['geo_latitude']['query'][0])
+        lat_max = float(filters[0]['geo_latitude']['query'][1])
+
+        lon_min = float(filters[0]['geo_longitude']['query'][0])
+        lon_max = float(filters[0]['geo_longitude']['query'][1])
+    else: # this should not happen
+        return [], []
+
+    tlat_min, tlat_max, tlon_min, tlon_max = clusters.get_discretized_limits(lat_min, lat_max, lon_min, lon_max, grid_size)
 
     catalog = catalog_tool._catalog
 
@@ -75,33 +85,6 @@ def getClusters(catalog_tool, zoom_level, lat_min, lat_max, lon_min, lon_max,
 
     lon_set, lon_dict = _apply_index_with_range_dict_results(lon_index, Decimal(str(tlon_min)), Decimal(str(tlon_max)))
     w, rs = weightedIntersection(rs, lon_set)
-
-    # filters for the rest of the indexes
-    base_filter = {}
-    base_filter['path'] = path
-    base_filter['meta_type'] = meta_types
-
-    if geo_types: base_filter['geo_type'] = geo_types
-
-    if approved: base_filter['approved'] = 1
-
-    if is_public: base_filter['is_public'] = True
-
-    if landscape_type: base_filter['landscape_type'] = landscape_type
-
-    if administrative_level: base_filter['administrative_level'] = administrative_level
-
-    filters = []
-    if query:
-        filter_full_text = base_filter.copy()
-        filter_full_text['PrincipiaSearchSource'] = query
-
-        filter_keywords = base_filter.copy()
-        for lang in languages:
-            filter_keywords['objectkeywords_%s' % (lang,)] = query
-        filters = [filter_full_text, filter_keywords]
-    else:
-        filters = [base_filter]
 
     rs_final = None
     # OR the filters and apply the index for each one
@@ -129,7 +112,7 @@ def getClusters(catalog_tool, zoom_level, lat_min, lat_max, lon_min, lon_max,
     for i in range(len(r_list)):
         points.append(clusters.Point(i, float(lat_dict[r_list[i]]), float(lon_dict[r_list[i]])))
 
-    centers, groups = clusters.kmeans(zoom_level, tlat_min, tlat_max, tlon_min, tlon_max, points)
+    centers, groups = clusters.kmeans(tlat_min, tlat_max, tlon_min, tlon_max, points, grid_size)
 
     # transform group points to rids
     for i in range(len(groups)):

@@ -20,6 +20,7 @@
 		</tal:block>
 	</ul>
 	</div>
+	<div class="cleaner"> </div>
 	<tal:block metal:define-slot="section">Profile sheet content</tal:block>
 </tal:block>
 

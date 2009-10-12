@@ -102,7 +102,7 @@ function dosubmit()
 // -->
 </script>
 
-<p i18n:translate="">
+<p i18n:translate="" class="cleaner">
 	This page allows you to establish the list of portlets displayed in the middle part of
 	this portal's front page. The portlet(s) must already exist - if you want to define new ones, choose the 
 	appropriate link from the administration menu.

@@ -23,7 +23,7 @@
 		user_created python:user_tool.getUserCreatedDate(user_obj); user_lastupdated python:user_tool.getUserLastUpdated(user_obj);
 		session python:user_tool.setUserSession(user_account, user_roles, '', user_firstname, user_lastname, user_email, '')">
 
-<p i18n:translate="">
+<p i18n:translate="" class="cleaner">
 	Change the form below with user's credentials and account and click <em i18n:name="save-button" i18n:translate="">Save changes</em>:
 </p>
 <form method="post" tal:attributes="action string:${site_url}/admin_edituser">

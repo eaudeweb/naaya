@@ -184,6 +184,8 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin, ExFi
         for content_type in content_types:
             if content_type['module'] in DYNAMIC_PROPERTIES_EXCEPTIONS:
                 continue
+            if not self.portal.is_pluggable_item_installed(content_type['meta_type']):
+                continue
 
             type_name = content_type['module']
 

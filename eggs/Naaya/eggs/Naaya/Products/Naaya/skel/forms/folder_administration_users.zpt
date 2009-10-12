@@ -15,6 +15,7 @@
 		</li>
 	</ul>
 	</div>
+	<div class="cleaner"> </div>
 	<script type="text/javascript">
 	function emptyLocation()
 	{

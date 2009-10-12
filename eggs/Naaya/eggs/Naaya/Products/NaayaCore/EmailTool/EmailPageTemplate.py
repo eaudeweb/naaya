@@ -23,7 +23,6 @@ import os.path
 from zope import interface
 from Globals import package_home
 from OFS.interfaces import ITraversable
-
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplate import PageTemplate
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate

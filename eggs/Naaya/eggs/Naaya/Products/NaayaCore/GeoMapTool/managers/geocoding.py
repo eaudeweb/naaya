@@ -28,7 +28,9 @@ import time
 
 def google_geocode(address):
     google_key = GOOGLE_KEY
-    adress = address.replace(" ", "+")
+    adress = address.replace(" ", "+").encode('utf-8')
+    if isinstance(address, unicode):
+        address = address.encode('utf-8')
     url = "http://maps.google.com/maps/geo?q=%s&output=csv&key=%s" % (url_quote(adress), google_key)
     u = urllib.urlopen(url)
     buffer = u.read()

@@ -46,6 +46,7 @@
     </div>
 
     <script type="text/javascript" tal:content="structure here/portal_map_config_js" />
+    <script type="text/javascript" src="misc_/Naaya/jquery-1.3.2.min.js"></script>
     <script type="text/javascript">
     var map;
     ( function() {
@@ -67,6 +68,7 @@
                 map_toggle_button.innerHTML = "[Hide map &#x25b2;]";
                 map_container.style.display = "block";
                 search_button.style.display = "inline";
+                search_button.focus
                 locations_link.style.display = "none";
                 map_visible = true;
                 fixMapDisplay();
@@ -79,13 +81,22 @@
             'address': document.getElementById(prop_name + '.address')
         }
 
+        $(geo_form['lat']).keypress(findLocOnEnter);
+        $(geo_form['lon']).keypress(findLocOnEnter);
+        $(geo_form['address']).keypress(findLocOnEnter);
+
         addAdditionalMapControls();
         enableMouseMarkers(setLatLonValues);
-        search_button.onclick = findAddress;
+        search_button.onclick = findLocation;
 
-        function findAddress() {
-            var address = document.getElementById(prop_name + '.address').value;
-            if (address != '') {
+        function findLocation() {
+            var address = geo_form['address'].value;
+            var lat = geo_form['lat'].value;
+            var lon = geo_form['lon'].value;
+            if (lat != '' && lon != '' && address == '') {
+                    centerMapToCoordinates(parseFloat(lat), parseFloat(lon));
+                }
+            else if (address != '') {
                 centerMapToLocation(address, setLatLonValues);
             }
         }
@@ -93,6 +104,13 @@
         function setLatLonValues(lat, lon) {
             geo_form['lat'].value = lat;
             geo_form['lon'].value = lon;
+        }
+
+        function findLocOnEnter(e) {
+            if (e.keyCode == 13) {
+                    findLocation();
+                    e.preventDefault();
+            }
         }
     } )();
     </script>

@@ -13,6 +13,7 @@
 	</li>
 </ul>
 </div>
+<div class="cleaner"> </div>
 
 <form method="post" tal:attributes="action string:${site_url}/admin_adduser">
 <p i18n:translate="">Fill the form below with user's credentials and account and click on <em i18n:name="add-button" i18n:translate="">Add</em>:</p>

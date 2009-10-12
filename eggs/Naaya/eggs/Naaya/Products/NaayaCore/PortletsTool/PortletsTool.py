@@ -9,16 +9,18 @@
 # rights and limitations under the License.
 #
 # The Initial Owner of the Original Code is European Environment
-# Agency (EEA).  Portions created by Finsiel Romania are
-# Copyright (C) European Environment Agency.  All
+# Agency (EEA).  Portions created by Eau de Web and Finsiel Romania
+# are Copyright (C) European Environment Agency.  All
 # Rights Reserved.
 #
 # Authors:
 #
 # Cornel Nitu, Finsiel Romania
 # Dragos Chirila, Finsiel Romania
+# Alex Morega, Eau de Web
 
 #Python imports
+from md5 import new as new_md5
 
 #Zope imports
 from Globals import InitializeClass
@@ -274,7 +276,7 @@ class PortletsTool(Folder, utils):
                     self.setSessionInfo(['Successfully assigned portlet "%s" at "%s"'
                         % (portlet.title_or_id(), location)])
 
-            elif action == 'Remove':
+            elif action == 'Unassign':
                 portlet_id = form['portlet_id']
                 portlet = self._getOb(portlet_id)
                 location = form['location']
@@ -283,23 +285,29 @@ class PortletsTool(Folder, utils):
                 self.setSessionInfo(['Successfully removed portlet "%s" from "%s"'
                     % (portlet.title_or_id(), location)])
 
-        return self._admin_layout_zpt(REQUEST,
-            portlet_layout=self._enumerate_portlet_positions())
+            else:
+                raise ValueError('Unknown value for `action`: %s' % repr(action))
 
-    def _enumerate_portlet_positions(self):
+        return self._admin_layout_zpt(REQUEST,
+            portlet_layout=ordered_portlets(self._enumerate_portlet_assignments()))
+
+    def _enumerate_portlet_assignments(self):
         """ Enumerate portlet assignments in this portal """
-        positions = []
+        assignments = dict()
 
         def add_portlet_if_exists(portlet_id, folder_path, position, inherit, oldstyle=False):
             portlet = self._getOb(portlet_id, None)
             if portlet is not None:
-                positions.append({
+                key = (folder_path, position)
+                data = {
                     'portlet': portlet,
                     'folder_path': folder_path,
                     'position': position,
                     'inherit': inherit,
-                    'oldstyle': oldstyle,
-                })
+                }
+                data['hashkey'] = simplehash(data)
+                data['oldstyle'] = oldstyle
+                assignments.setdefault(key, list()).append(data)
 
         old_data = lambda name: self.getSite().__dict__['_portlets_manager__%s' % name]
 
@@ -319,13 +327,31 @@ class PortletsTool(Folder, utils):
                 add_portlet_if_exists(portlet_data['id'], key[0], key[1],
                     portlet_data['inherit'])
 
-        return positions
+        return assignments
 
     def get_all_portlets(self):
         output = []
         for portlet_id in self.getPortletsIds():
             output.append(self._getOb(portlet_id))
         return output
+
+    def sort_portlets(self, REQUEST, folder_path, position, portlet_order):
+        """ Ajax method that changes order of portlets in a group """
+        if isinstance(portlet_order, basestring):
+            portlet_order = [portlet_order]
+        assignments = self._enumerate_portlet_assignments()
+        key = (folder_path, position)
+        by_hash = dict( (entry['hashkey'], entry) for entry in assignments[key])
+
+        if set(by_hash.keys()) != set(portlet_order):
+            raise ValueError('Not the same portlets')
+
+        _portlet_layout = getattr(self, '_portlet_layout', {})
+        _portlet_layout[key] = [{'id': item['portlet'].id, 'inherit': item['inherit']}
+                                for item in (by_hash[h] for h in portlet_order)]
+        self._p_changed = True
+
+        return 'ok'
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manage_left_portlets')
@@ -367,3 +393,24 @@ class PortletsTool(Folder, utils):
     manage_right_portlets_html = PageTemplateFile('zpt/manage_right_portlets', globals())
 
 InitializeClass(PortletsTool)
+
+def simplehash(data):
+    """ generate a hex hashkey for a simple dict """
+    h = new_md5()
+    for key, value in sorted(data.items()):
+        h.update('%s=%s,' % (repr(key), repr(value)))
+    return h.hexdigest()
+
+def ordered_portlets(assignments):
+    """ sort the portlet assignments by path """
+    position_names = ('left', 'right', 'center')
+    positions = dict( (name, dict()) for name in position_names )
+    for key, value in assignments.iteritems():
+        location, position = key
+        positions[position][location] = value
+    output = []
+    for name in position_names:
+        position = positions[name]
+        for location in sorted(position.iterkeys()):
+            output.append( (name, position[location]) )
+    return output

@@ -20,7 +20,7 @@
 	</tal:block>
 </ul>
 </div>
-
+<div class="cleaner"> </div>
 <tal:block tal:condition="python:source_obj is not None">
 	<span tal:replace="structure source_obj/interface_html" />
 </tal:block>

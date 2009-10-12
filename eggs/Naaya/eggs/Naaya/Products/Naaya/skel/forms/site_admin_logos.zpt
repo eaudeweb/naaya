@@ -37,7 +37,7 @@
 </ul>
 </div>
 
-<p i18n:translate="">
+<p i18n:translate="" class="cleaner">
 	This form lists logos for each language defined for this site. Logos defined for one language will appear only when browsing the portal in that language.
 	By checking "Set as default" for a language, the logos defined for that language will be used for languages which don't have logos defined.
 </p>

@@ -70,6 +70,7 @@ class NyFeed:
         self.__feed_etag = None
         self.__feed_modified = None
         self.__feed_entries = []
+        self.__feed_lang = None
 
     def __set_feed(self, gone=0, feed=None, status=None, version=None, bozo_exception=None, encoding=None, etag=None,
         modified=None, entries=None):

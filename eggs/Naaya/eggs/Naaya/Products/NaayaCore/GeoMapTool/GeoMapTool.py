@@ -122,12 +122,41 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     _marker_template = """
         <div class="marker-body">
             <h3>%s</h3>
+            %s
             <small>%s</small>
             <div class="marker-more">
                 <a href="%s" i18n:translate="">see more</a>
             </div>
         </div>
         """
+
+    _small_marker_template = """
+        <div class="marker-more">
+            <a href="%s" i18n:translate="">%s</a>%s
+        </div>
+        """
+
+    def get_small_marker(self, object):
+        has_access = bool(self.REQUEST.AUTHENTICATED_USER.has_permission(permission=view,
+                                                                        object=object))
+        access_str = ''
+        if not has_access:
+            access_str = '(RESTRICTED ACCESS)'
+        return self._small_marker_template % (object.absolute_url(),
+                                            object.title_or_id(),
+                                            access_str)
+
+    def get_marker(self, object):
+        has_access = bool(self.REQUEST.AUTHENTICATED_USER.has_permission(permission=view,
+                                                                        object=object))
+        access_str = ''
+        if not has_access:
+            access_str = '<div>RESTRICTED ACCESS</div>'
+        return self._marker_template % (object.title_or_id(),
+                                        access_str,
+                                        object.description,
+                                        object.absolute_url())
+
     _cluster_marker_template = """
         <div class="marker-body">
             <h3>Cluster</h3>
@@ -288,43 +317,86 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         catalog_tool = self.getCatalogTool()
         return catalog_tool._catalog.indexes.has_key('full_title')
 
+    security.declarePrivate('build_geo_filters')
+    def build_geo_filters(self, path='', meta_types=None, geo_types=None,
+            approved=True,
+            landscape_type=[], administrative_level=[],
+            lat_min=-90., lat_max=90., lon_min=-180., lon_max=180.,
+            query='', languages=None, first_letter=None):
+        base_filter = {}
+
+        base_filter['path'] = path
+
+        if meta_types is None:
+            base_filter['meta_type'] = self.get_geotaggable_meta_types()
+        else:
+            base_filter['meta_type'] = meta_types
+
+        if geo_types is not None:
+            base_filter['geo_type'] = geo_types
+
+        if approved:
+            base_filter['approved'] = 1
+
+        if landscape_type:
+            base_filter['landscape_type'] = landscape_type
+
+        if administrative_level:
+            base_filter['administrative_level'] = administrative_level
+
+        base_filter['geo_latitude'] = {'query': (Decimal(str(lat_min)), Decimal(str(lat_max))),
+                                        'range':'min:max'}
+        base_filter['geo_longitude'] = {'query': (Decimal(str(lon_min)), Decimal(str(lon_max))),
+                                        'range':'min:max'}
+
+        filters = []
+        filters.append(base_filter)
+
+        if query:
+            query_filters = []
+            for f in filters:
+                f_full_text = f.copy()
+                f_full_text['PrincipiaSearchSource'] = query
+                query_filters.append(f_full_text)
+
+                if languages == None:
+                    languages = self.gl_get_selected_language()
+                languages = self.utConvertToList(languages)
+                for lang in languages:
+                    f_keywords = f.copy()
+                    f_keywords['objectkeywords_%s' % (lang,)] = query
+                    query_filters.append(f_keywords)
+            filters = query_filters
+
+        if first_letter:
+            letter_filters = []
+            for f in filters:
+                f_lower = f.copy()
+                f_lower['full_title'] = {'query': (first_letter.upper(), chr(ord(first_letter.upper())+1)),
+                                            'range':'min:max'}
+                letter_filters.append(f_lower)
+
+                f_upper = f.copy()
+                f_upper['full_title'] = {'query': (first_letter.lower(), chr(ord(first_letter.lower())+1)),
+                                            'range':'min:max'}
+                letter_filters.append(f_upper)
+            filters = letter_filters
+
+        return filters
+
     security.declarePrivate('get_geo_objects')
-    def get_geo_objects(self, REQUEST, lat, lon, path='', geo_types=None, query='',
-            approved=True, is_public=True, landscape_type=[], administrative_level=[], languages=None):
+    def get_geo_objects(self, lat, lon, path='', geo_types=None, query='',
+            approved=True, landscape_type=[], administrative_level=[], languages=None):
         """ """
         catalog_tool = self.getCatalogTool()
 
-        base_filter = {}
-        base_filter['path'] = path
-        base_filter['meta_type'] = self.get_geotaggable_meta_types()
-
-        if geo_types: base_filter['geo_type'] = geo_types
-
-        if approved: base_filter['approved'] = 1
-
-        if is_public: base_filter['is_public'] = True
-
-        if landscape_type: base_filter['landscape_type'] = landscape_type
-
-        if administrative_level: base_filter['administrative_level'] = administrative_level
-
-        base_filter['geo_latitude'] = Decimal(str(lat))
-        base_filter['geo_longitude'] = Decimal(str(lon))
-
-        filters = []
-        if query:
-            filter_full_text = base_filter.copy()
-            filter_full_text['PrincipiaSearchSource'] = query
-
-            filter_keywords = base_filter.copy()
-            if languages == None:
-                languages = self.gl_get_selected_language()
-            languages = self.utConvertToList(languages)
-            for lang in languages:
-                filter_keywords['objectkeywords_%s' % (lang,)] = query
-            filters = [filter_full_text, filter_keywords]
-        else:
-            filters = [base_filter]
+        eps = Decimal('0.000001')
+        lat, lon = Decimal(lat), Decimal(lon)
+        filters = self.build_geo_filters(path=path, geo_types=geo_types,
+                approved=approved,
+                landscape_type=landscape_type, administrative_level=administrative_level,
+                lat_min=lat-eps, lat_max=lat+eps, lon_min=lon-eps, lon_max=lon+eps,
+                query=query, languages=languages)
 
         # OR the filters
         brains = []
@@ -344,66 +416,15 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         return results
 
     security.declarePrivate('_search_geo_objects')
-    def _search_geo_objects(self, lat_min=-90., lat_max=90., lon_min=-180., lon_max=180.,
-            path='', geo_types=None, query='', approved=True, is_public=True,
-            landscape_type=[], administrative_level=[], languages=None, first_letter=None,
-            sort_on='', sort_order='', REQUEST=None):
+    def _search_geo_objects(self, filters, sort_on, sort_order):
         """
         Returns all the objects that match the specified criteria.
         This does not check for the 180/-180 meridian in the map
         """
-
         catalog_tool = self.getCatalogTool()
 
-        base_filter = {}
-        base_filter['path'] = path
-        base_filter['meta_type'] = self.get_geotaggable_meta_types()
-
-        if geo_types: base_filter['geo_type'] = geo_types
-
-        if approved: base_filter['approved'] = 1
-
-        if is_public: base_filter['is_public'] = True
-
-        if landscape_type: base_filter['landscape_type'] = landscape_type
-
-        if administrative_level: base_filter['administrative_level'] = administrative_level
-
-        if sort_on not in ['' , 'title', 'geo_address']:
-            base_filter['sort_on'] = sort_on
-            if sort_order != '':
-                base_filter['sort_order'] = sort_order
-
-        filters = []
-        if query:
-            filter_full_text = base_filter.copy()
-            filter_full_text['PrincipiaSearchSource'] = query
-
-            filter_keywords = base_filter.copy()
-            if languages == None:
-                languages = self.gl_get_selected_language()
-            languages = self.utConvertToList(languages)
-            for lang in languages:
-                filter_keywords['objectkeywords_%s' % (lang,)] = query
-            filters = [filter_full_text, filter_keywords]
-        else:
-            filters = [base_filter]
-
-        if first_letter:
-            new_filters = []
-            for f in filters:
-                new_f1, new_f2 = f, f.copy()
-                new_f1['full_title'] = {'query': (first_letter.upper(), chr(ord(first_letter.upper())+1)), 'range':'min:max'}
-                new_f2['full_title'] = {'query': (first_letter.lower(), chr(ord(first_letter.lower())+1)), 'range':'min:max'}
-                new_filters.append(new_f1)
-                new_filters.append(new_f2)
-            filters = new_filters
-
-        # OR the filters
         brains = []
         for f in filters:
-            f['geo_latitude'] = {'query': (Decimal(str(lat_min)), Decimal(str(lat_max))), 'range':'min:max'}
-            f['geo_longitude'] = {'query': (Decimal(str(lon_min)), Decimal(str(lon_max))), 'range':'min:max'}
             brains.extend(catalog_tool(f))
 
         # getting the unique data record ids
@@ -417,26 +438,29 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         results = map(lambda rid: catalog_tool.getobject(rid), rids)
 
+        # manual sorting
+        key_func = None
         if sort_on == 'title':
             key_func = lambda x: x.title
-            if sort_order == 'reverse':
-                results.sort(key=key_func, reverse=True)
-            else:
-                results.sort(key=key_func)
         elif sort_on == 'geo_address':
             key_func = lambda x: x.geo_location.address
-            if sort_order == 'reverse':
-                results.sort(key=key_func, reverse=True)
-            else:
-                results.sort(key=key_func)
+        elif sort_on == 'geo_latitude':
+            key_func = lambda x: x.geo_location.lat
+        elif sort_on == 'geo_longitude':
+            key_func = lambda x: x.geo_location.lon
+
+        reverse = (sort_order == 'reverse')
+
+        if key_func is not None:
+            results.sort(key=key_func, reverse=reverse)
 
         return results
 
     security.declareProtected(view, 'search_geo_objects')
     def search_geo_objects(self, lat_min=None, lat_max=None, lon_min=None, lon_max=None,
-            path='', geo_types=None, query='', approved=True, is_public=True, lat_center=None, lon_center=None,
+            path='', geo_types=None, query='', approved=True, lat_center=None, lon_center=None,
             landscape_type=[], administrative_level=[], languages=None, first_letter=None,
-            sort_on='', sort_order='', REQUEST=None):
+            sort_on='', sort_order=''):
         """ Returns all the objects that match the specified criteria.
 
                 lat_min -- string/float: minimum latitude for results
@@ -463,51 +487,51 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             lon_min, lon_max = lon_max, lon_min
 
         if float(lon_min) < float(lon_center) < float(lon_max):
-            results = self._search_geo_objects(
-                lat_min=lat_min, lat_max=lat_max, lon_min=lon_min,
-                lon_max=lon_max, geo_types=geo_types, query=query,
-                first_letter=first_letter,
-                approved=approved, is_public=is_public,
-                sort_on=sort_on, sort_order=sort_order,
-            )
+            filters = self.build_geo_filters(path=path, geo_types=geo_types,
+                approved=approved,
+                landscape_type=landscape_type, administrative_level=administrative_level,
+                lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max,
+                query=query, languages=languages, first_letter=first_letter)
+
         else:
-            results = self._search_geo_objects(
-                lat_min=lat_min, lat_max=lat_max, lon_min=lon_max,
-                lon_max=180., geo_types=geo_types, query=query,
-                first_letter=first_letter,
-                approved=approved, is_public=is_public,
-                sort_on=sort_on, sort_order=sort_order,
-            )
-            results2 = self._search_geo_objects(
-                lat_min=lat_min, lat_max=lat_max, lon_min=-180.,
-                lon_max=lon_min, geo_types=geo_types, query=query,
-                first_letter=first_letter,
-                approved=approved, is_public=is_public,
-                sort_on=sort_on, sort_order=sort_order,
-            )
-            results.extend(results2)
+            filters = self.build_geo_filters(path=path, geo_types=geo_types,
+                approved=approved,
+                landscape_type=landscape_type, administrative_level=administrative_level,
+                lat_min=lat_min, lat_max=lat_max, lon_min=lon_max, lon_max=180.,
+                query=query, languages=languages, first_letter=first_letter)
+
+            filters2 = self.build_geo_filters(path=path, geo_types=geo_types,
+                approved=approved,
+                landscape_type=landscape_type, administrative_level=administrative_level,
+                lat_min=lat_min, lat_max=lat_max, lon_min=-180., lon_max=lon_min,
+                query=query, languages=languages, first_letter=first_letter)
+
+            filters.extend(filters2)
+
+        results = self._search_geo_objects(filters, sort_on, sort_order)
         return results
 
     security.declarePrivate('_search_geo_clusters')
-    def _search_geo_clusters(self, lat_min=-90., lat_max=90., lon_min=-180., lon_max=180., zoom_level=0,
-            path='', geo_types=None, query='', approved=True, is_public=True,
-            landscape_type=[], administrative_level=[], languages=None, REQUEST=None):
+    def _search_geo_clusters(self, filters):
         """
         Returns all the clusters that match the specified criteria.
         This does not check for the 180/-180 meridian in the map
         """
+        # unpack map limits
+        if filters:
+            lat_min = float(filters[0]['geo_latitude']['query'][0])
+            lat_max = float(filters[0]['geo_latitude']['query'][1])
+
+            lon_min = float(filters[0]['geo_longitude']['query'][0])
+            lon_max = float(filters[0]['geo_longitude']['query'][1])
+        else: # this should not happen
+            return [], []
 
         #preparing for the call to the catalog
         catalog_tool = self.getCatalogTool()
-        meta_types = self.get_geotaggable_meta_types()
-        if languages == None:
-                languages = self.gl_get_selected_language()
-        languages = self.utConvertToList(languages)
 
         # call the improved cluster_catalog function for getting the clusters
-        centers, groups = clusters_catalog.getClusters(catalog_tool,
-                zoom_level, lat_min, lat_max, lon_min, lon_max, path, meta_types,
-                geo_types, approved, is_public, landscape_type, administrative_level, query, languages)
+        centers, groups = clusters_catalog.getClusters(catalog_tool, filters)
 
         # transform centers to Geo
         centers = map(lambda c: Geo(str(c.lat), str(c.lon)), centers)
@@ -531,8 +555,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     security.declareProtected(view, 'search_geo_clusters')
     def search_geo_clusters(self, lat_min=None, lat_max=None, lon_min=None, lon_max=None, zoom_level=None,
-            path='', geo_types=None, query='', approved=True, is_public=True, lat_center=None, lon_center=None,
-            landscape_type=[], administrative_level=[], languages=None, REQUEST=None):
+            path='', geo_types=None, query='', approved=True, lat_center=None, lon_center=None,
+            landscape_type=[], administrative_level=[], languages=None):
         """ Returns all the clusters that match the specified criteria. """
         if zoom_level is None: zoom_level = 0
         if lat_min is None or lat_min == '': lat_min = -90.
@@ -551,21 +575,29 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             lon_min, lon_max = lon_max, lon_min
 
         if float(lon_min) < float(lon_center) < float(lon_max):
-            cluster_obs, single_obs = self._search_geo_clusters(path=path, geo_types=geo_types, query=query, REQUEST=REQUEST,
-                                            zoom_level=zoom_level, lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max,
-                                            approved=approved, is_public=is_public)
+            filters = self.build_geo_filters(path=path, geo_types=geo_types,
+                approved=approved,
+                landscape_type=landscape_type, administrative_level=administrative_level,
+                lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max,
+                query=query, languages=languages)
+
         else:
-            cluster_obs, single_obs = self._search_geo_clusters(path=path, geo_types=geo_types, query=query, REQUEST=REQUEST,
-                                            zoom_level=zoom_level, lat_min=lat_min, lat_max=lat_max, lon_min=lon_max, lon_max=180.,
-                                            approved=approved, is_public=is_public)
-            cluster_obs2, single_obs2 = self._search_geo_clusters(path=path, geo_types=geo_types, query=query, REQUEST=REQUEST,
-                                            zoom_level=zoom_level, lat_min=lat_min, lat_max=lat_max, lon_min=-180., lon_max=lon_min,
-                                            approved=approved, is_public=is_public)
-            cluster_obs.extend(cluster_obs2)
-            single_obs.extend(single_obs2)
+            filters = self.build_geo_filters(path=path, geo_types=geo_types,
+                approved=approved,
+                landscape_type=landscape_type, administrative_level=administrative_level,
+                lat_min=lat_min, lat_max=lat_max, lon_min=lon_max, lon_max=180.,
+                query=query, languages=languages)
+
+            filters2 = self.build_geo_filters(path=path, geo_types=geo_types,
+                approved=approved,
+                landscape_type=landscape_type, administrative_level=administrative_level,
+                lat_min=lat_min, lat_max=lat_max, lon_min=-180., lon_max=lon_min,
+                query=query, languages=languages)
+
+            filters.extend(filters2)
+
+        cluster_obs, single_obs = self._search_geo_clusters(filters)
         return cluster_obs, single_obs
-
-
 
     security.declareProtected(view, 'downloadLocationsKml')
     def downloadLocationsKml(self, path='', geo_types=None, geo_query='', REQUEST=None):
@@ -614,15 +646,15 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         ra = r.append
         portal_ob = self.getSite()
         if geo_types:
-            for res in self._search_geo_objects(path=path, geo_types=geo_types, query=geo_query, REQUEST=REQUEST, lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max):
+            filters = self.build_geo_filters(path=path, geo_types=geo_types, query=geo_query, lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max)
+            for res in self._search_geo_objects(filters):
                 if res.geo_location is not None:
                     ra('%s##%s##mk_%s##%s##%s##%s' % (self.utToUtf8(res.geo_location.lat),
                                               self.utToUtf8(res.geo_location.lon),
                                               self.utToUtf8(res.id),
                                               self.utToUtf8(self.utJavaScriptEncode(res.title_or_id())),
                                               'mk_%s' % self.utToUtf8(res.geo_type),
-                                              self.utToUtf8(self._marker_template % (res.title_or_id(),
-                                                res.description, res.absolute_url())),
+                                              self.utToUtf8(self.get_marker(res)),
                                               ))
 
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
@@ -634,8 +666,8 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             lat_center=0., lon_center=0.):
         """ """
         r = []
-        cluster_obs, single_obs = self.search_geo_clusters(path=path, geo_types=geo_types, query=geo_query, REQUEST=REQUEST,\
-                              zoom_level=zoom_level, lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max,\
+        cluster_obs, single_obs = self.search_geo_clusters(path=path, geo_types=geo_types, query=geo_query,
+                              zoom_level=zoom_level, lat_min=lat_min, lat_max=lat_max, lon_min=lon_min, lon_max=lon_max,
                               lat_center=lat_center, lon_center=lon_center)
 
         for res in cluster_obs:
@@ -652,8 +684,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                                               self.utToUtf8(res.id),
                                               self.utToUtf8(self.utJavaScriptEncode(res.title_or_id())),
                                               'mk_%s' % self.utToUtf8(res.geo_type),
-                                              self.utToUtf8(self._marker_template % (res.title_or_id(),
-                                                res.description, res.absolute_url())),
+                                              self.utToUtf8(self.get_marker(res)),
                                               ))
 
         REQUEST.RESPONSE.setHeader('Content-type', 'text/html;charset=utf-8')
@@ -661,17 +692,15 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
 
     security.declareProtected(view, 'xrjs_getTooltip')
-    def xrjs_getTooltip(self, REQUEST, lat, lon, path='', geo_types=None, geo_query=None):
+    def xrjs_getTooltip(self, lat, lon, path='', geo_types=None, geo_query=None):
         """ """
-        obs = self.get_geo_objects(REQUEST, lat, lon, path, geo_types, geo_query)
+        obs = self.get_geo_objects(lat, lon, path, geo_types, geo_query)
         if len(obs) == 1:
-            return self.utToUtf8(self._marker_template % (obs[0].title_or_id(),
-                obs[0].description, obs[0].absolute_url()))
+            return self.utToUtf8(self.get_marker(obs[0]))
 
-        small_template = '<div class="marker-more"><a href="%s" i18n:translate="">%s</a></div>'
         ret = ''
         for ob in obs:
-            ret += small_template % (ob.absolute_url(), ob.title_or_id())
+            ret += self.get_small_marker(ob)
         return ret
 
     security.declareProtected(view, 'xrjs_simple_feed')
@@ -937,7 +966,14 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         catalog_tool = self.getCatalogTool()
         meta_types = self.get_geotaggable_meta_types()
         schema_tool = self.getSite().portal_schemas
-        objects = map(lambda b: catalog_tool.getobject(b.getRID()), catalog_tool())
+
+        objects = []
+        for b in catalog_tool():
+            try:
+                objects.append(catalog_tool.getobject(b.getRID()))
+            except KeyError:
+                pass
+
         for item in objects:
             if isinstance(item, Products.NaayaBase.NyContentType.NyContentType):
                 schema = schema_tool.getSchemaForMetatype(item.meta_type)
@@ -1253,7 +1289,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
     security.declareProtected(view, 'export_geo_rss')
     def export_geo_rss(self, lat_min=None, lat_max=None, lon_min=None, lon_max=None,
-            path='', geo_types=None, geo_query='', approved=True, is_public=True, lat_center=None, lon_center=None,
+            path='', geo_types=None, geo_query='', approved=True, lat_center=None, lon_center=None,
             landscape_type=[], administrative_level=[], languages=None,
             sort_on='', sort_order='', REQUEST=None):
         """ """
@@ -1269,7 +1305,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
               <updated>%s</updated>
               """ % (self.title, self.absolute_url(), self.absolute_url(), timestamp) ]
         items = self.search_geo_objects(lat_min, lat_max, lon_min, lon_max,
-                                        path, geo_types, geo_query, approved, is_public, lat_center, lon_center,
+                                        path, geo_types, geo_query, approved, lat_center, lon_center,
                                         landscape_type, administrative_level, languages,
                                         sort_on, sort_order)
         for item in items:
@@ -1369,8 +1405,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                      'SAT': {'google': 'G_SATELLITE_MAP', 'yahoo': 'YAHOO_MAP_SAT'},
                      }
         
-        lat, lon = geo_location.lat, geo_location.lon
-        address = self.center_locality.strip()
+        if geo_location.missing_lat_lon:
+            lat, lon = "''", "''"
+        else:
+            lat, lon = geo_location.lat, geo_location.lon
+        address = geo_location.address or self.center_locality.strip()
         all_map_types = [map_types[x[-3:]][self.map_engine] for x in self.map_types]
         default_map_type = map_types[self.default_type[-3:]][self.map_engine]
         dom_element = "map"

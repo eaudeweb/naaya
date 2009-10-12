@@ -39,11 +39,14 @@ from DateTime import DateTime
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
+from Products.NaayaCore.SchemaTool.widgets.GeoWidget import GeoWidget
+from Products.NaayaCore.GeoMapTool.managers import geocoding
 
 class CSVImportTool(Implicit, Item):
     title = "CSV import"
 
     security = ClassSecurityInfo()
+    geo_fields = {}
 
     def __init__(self, id):
         self.id = id
@@ -71,6 +74,23 @@ class CSVImportTool(Implicit, Item):
             set_response_attachment(REQUEST.RESPONSE, filename,
                 'text/csv; charset=utf-8', output.len)
         return output.getvalue()
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_geocoding')
+    def do_geocoding(self, properties):
+        lat = properties.get(self.geo_fields['lat'], '')
+        lon = properties.get(self.geo_fields['lon'], '')
+        address = properties.get(self.geo_fields['address'], '')
+        if lat.strip() == '' and lon.strip() == '' and address:
+            if self.portal_map.map_engine == 'yahoo':
+                coordinates = geocoding.yahoo_geocode(address)
+            elif self.portal_map.map_engine == 'google':
+                coordinates = geocoding.location_geocode(address)
+            if coordinates != None:
+                lat, lon = coordinates
+                properties[self.geo_fields['lat']] = lat
+                properties[self.geo_fields['lon']] = lon
+        return properties
+
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'do_import')
     def do_import(self, meta_type, data, REQUEST=None):
@@ -102,6 +122,9 @@ class CSVImportTool(Implicit, Item):
                         prop_subname = prop_name + '.' + subname
                         prop_map[widget.title + ' - ' + subname] = {
                             'column': prop_subname, 'widget': widget}
+                    if isinstance(widget, GeoWidget):
+                        for subname in widget.multiple_form_values:
+                            self.geo_fields[subname] = prop_name + '.' + subname
                 else:
                     prop_map[widget.title] = {'column': prop_name, 'widget': widget}
 
@@ -128,11 +151,13 @@ class CSVImportTool(Implicit, Item):
                         if value == '':
                             continue
                         properties[key] = widget.convert_from_user_string(value)
-                    ob_id = add_object(location_obj, **properties)
+                    properties = self.do_geocoding(properties)
+                    ob_id = add_object(location_obj, _send_notifications=False, **properties)
                     ob = location_obj._getOb(ob_id)
                     ob.submitThis()
                     ob.approveThis()
                 except ValueError, e:
+                    self.log_current_error()
                     msg = 'Error while importing from CSV, row %d: %s' % (record_number, str(e))
                     if REQUEST is None:
                         raise ValueError(msg)

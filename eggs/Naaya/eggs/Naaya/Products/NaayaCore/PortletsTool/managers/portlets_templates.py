@@ -34,6 +34,7 @@ PORTLETS_TYPES = {
     5: 'Script channel',
     6: 'Remote channel facade',
     7: 'Remote channel aggregator',
+    8: 'Remote channel with automatic translation',
     99: 'Other',
     100: 'Special'
 }
@@ -69,8 +70,9 @@ LINKSLIST_PORTLET_TEMPLATE = '''<tal:block metal:use-macro="python:here.getLayou
 </tal:block>
 </tal:block>'''
 
-REMOTECHANNEL_PORTLET_TEMPLATE = '''<tal:block define="title python:here.getSyndicationTool()['PORTLET_REMOTECHANNEL_ID'].title_or_id();
-		   items python:here.getSyndicationTool()['PORTLET_REMOTECHANNEL_ID'].getChannelItems()"
+REMOTECHANNEL_PORTLET_TEMPLATE = '''<tal:block define="channel python:here.getSyndicationTool()['PORTLET_REMOTECHANNEL_ID'];
+		   title python:channel.title_or_id();
+		   items python:channel.getChannelItems()"
 		   condition="items">
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
 <tal:block metal:fill-slot="portlet_title"><span tal:content="title" /></tal:block>
@@ -84,6 +86,54 @@ REMOTECHANNEL_PORTLET_TEMPLATE = '''<tal:block define="title python:here.getSynd
 	<a tal:attributes="href string:${here/absolute_url}/channel_details_html?id_channel=PORTLET_REMOTECHANNEL_ID">
 		<span i18n:translate="">More...</span>
 	</a>
+	</div>
+</tal:block>
+</tal:block>
+</tal:block>'''
+
+REMOTECHANNEL_AUTOTRANSLATE_PORTLET_TEMPLATE = '''<tal:block define="channel python:here.getSyndicationTool()['PORTLET_REMOTECHANNEL_ID'];
+		   title python:channel.title_or_id();
+		   items python:channel.getChannelItems();
+		   feed_lang python:channel.get_feed_lang();
+		   current_lang here/gl_get_selected_language"
+		   condition="items">
+<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
+<tal:block metal:fill-slot="portlet_title"><span tal:content="title" /></tal:block>
+<tal:block metal:fill-slot="portlet_content">
+	<ul>
+		<li tal:repeat="item items">
+			<a tal:attributes="href python:test(item.has_key('link'), item['link'], '')" tal:content="python:item['title']" />
+		</li>
+	</ul>
+	<div style="text-align: right;">
+	<a tal:attributes="href string:${here/absolute_url}/channel_details_html?id_channel=PORTLET_REMOTECHANNEL_ID">
+		<span i18n:translate="">More...</span>
+	</a>
+	</div>
+	<div class="automatic_translation" tal:condition="feed_lang">
+		<div class="tip-msg">
+			<strong>Information</strong>
+			<p>
+				Please note that these automatic translations are only meant to give the
+				reader a general idea of what is contained in the news items (RSS feeds).
+				Automatic translations differ in quality and the reader is advised to
+				check the sources before quoting such translated texts or referring to
+				them.
+			</p>
+		</div>
+		<h4>Automatic translation by Google</h4>
+		<ul>
+			<li tal:repeat="item items">
+				<a tal:attributes="href python:here.translation_url(item['link'], feed_lang, current_lang)"
+						tal:content="python:here.translate(item['title'], feed_lang, current_lang)" />
+			</li>
+		</ul>
+		<div style="text-align: right;">
+			<a tal:define="url string:${here/absolute_url}/channel_details_html?id_channel=PORTLET_REMOTECHANNEL_ID"
+					tal:attributes="href python:here.translation_url(url, feed_lang, current_lang)">
+				<span i18n:translate="">More...</span>
+			</a>
+		</div>
 	</div>
 </tal:block>
 </tal:block>
@@ -164,6 +214,7 @@ PORTLETS_BODIES = {
     5: SCRIPTCHANNEL_PORTLET_TEMPLATE,
     6: REMOTECHANNEL_PORTLET_TEMPLATE,
     7: CHANNEL_AGGREGATOR_PORTLET_TEMPLATE,
+    8: REMOTECHANNEL_AUTOTRANSLATE_PORTLET_TEMPLATE,
     99: SIMPLE_PORTLET_TEMPLATE,
     100: SIMPLE_PORTLET_TEMPLATE
 }
