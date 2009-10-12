@@ -21,9 +21,68 @@
 
 #Zope imports
 from Acquisition import Implicit
+from OFS.Image import cookId
 
 #Product imports
+from Products.NaayaBase.NyFSFile import NyFSFile
 from Products.NaayaBase.NyContentType import NyContentData
 
-class publication_item(Implicit, NyContentData):
+class publication_item(Implicit, NyContentData, NyFSFile):
     """ """
+    def __init__(self, id, title, file):
+        """
+        Constructor.
+        """
+        NyFSFile.__init__(self, id, title, file, '')
+        #"dirty" trick to get rid of the File's title property
+        try: del self.title
+        except: pass
+        try: del self.id
+        except: pass
+        NyContentData.__init__(self)
+
+    def del_file_title(self):
+        """
+        Removes the File's object 'title' property.
+        We are using a LocalProperty 'title'.
+        """
+        try: del self.title
+        except: pass
+        self._p_changed = 1
+
+    def getContentType(self):
+        """Returns file content-type"""
+        data = self.get_data(as_string=False)
+        ctype = data.getContentType()
+        if not ctype:
+            return getattr(self, 'content_type', '')
+        return ctype
+
+    def _get_upload_file(self, source, file, url):
+        """ grab file from disk or from a given url.
+        Returns data, content_type, size, filename
+        """
+        if source=='file':
+            if file != '':
+                if hasattr(file, 'filename'):
+                    filename = cookId('', '', file)[0]
+                    if filename != '':
+                        data, size = self._read_data(file)
+                        content_type = self._get_content_type(file, data,
+                            self.__name__, 'application/octet-stream')
+                        return data, content_type, size, filename
+                else:
+                    return file, '', None, ''
+        elif source=='url':
+            if url != '':
+                l_data, l_ctype = self.grabFromUrl(url)
+                if l_data is not None:
+                    return l_data, l_ctype, None, ''
+        return '', '', None, ''
+
+    def handleUpload(self, source, file, url):
+        """
+        Upload a file from disk or from a given URL.
+        """
+        data, ctype, size, filename = self._get_upload_file(source, file, url)
+        self.update_data(data, ctype, size, filename)
