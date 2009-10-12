@@ -13,7 +13,6 @@
 </ul>
 </div>
 <div class="cleaner"> </div>
-<br clear="left" />
 
 <form method="post" tal:attributes="action string:${site_url}/admin_properties">
 <dl>

@@ -428,10 +428,6 @@ class NyContentData(NyProperties):
             return ''
         return self.geo_location.address
 
-    security.declareProtected(view, 'is_public')
-    def is_public(self):
-        return bool(SpecialUsers.nobody.has_permission(permission=view, object=self))
-
     security.declarePrivate(view, 'title_utf8')
     def title_utf8(self):
         if not isinstance(self.title, basestring):

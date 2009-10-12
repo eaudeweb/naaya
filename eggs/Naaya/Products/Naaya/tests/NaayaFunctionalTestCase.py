@@ -84,10 +84,37 @@ class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase):
         self.browser.go('http://localhost/portal/logout')
         self.failUnless('<h1>Log in</h1>' in self.browser.get_html())
 
-    def assertRedirectLoginPage(self):
+    def assertRedirectLoginPage(self, logic=True):
         url = self.browser.get_url()
         login_prefix = 'http://localhost/portal/login_html?came_from='
-        self.failUnless(url.startswith(login_prefix))
+        if logic is True:
+            self.failUnless(url.startswith(login_prefix))
+        else:
+            self.failIf(url.startswith(login_prefix))
+
+    def assertRedirectUnauthorizedPage(self, logic=True):
+        url = self.browser.get_url()
+        login_prefix = 'http://localhost/portal/unauthorized_html?came_from='
+        if logic is True:
+            self.failUnless(url.startswith(login_prefix))
+        else:
+            self.failIf(url.startswith(login_prefix))
+
+    def assertAccessDenied(self, logic=True, msg=None):
+        url = self.browser.get_url()
+        login_prefix = 'http://localhost/portal/login_html?came_from='
+        unauthorized_prefix = 'http://localhost/portal/unauthorized_html?came_from='
+        access_denied = (url.startswith(login_prefix) or
+                         url.startswith(unauthorized_prefix) or
+                         self.browser.result.http_code == 401)
+        if logic is True:
+            if msg is None:
+                msg = "Access should be denied, but is not"
+            self.failUnless(access_denied, msg)
+        else:
+            if msg is None:
+                msg = "Access should be allowed, but is denied"
+            self.failIf(access_denied, msg)
 
     def browser_get_header(self, header_name):
         return self.browser._browser._response._headers.get(header_name, None)

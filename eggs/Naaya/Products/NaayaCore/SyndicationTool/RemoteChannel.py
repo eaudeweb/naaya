@@ -36,7 +36,8 @@ from Products.NaayaBase.NyFeed import NyFeed
 from Products.NaayaBase.gtranslate import translate, translation_url
 
 manage_addRemoteChannelForm = PageTemplateFile('zpt/remotechannel_manage_add', globals())
-def manage_addRemoteChannel(self, id='', title='', url='', numbershownitems='', portlet='', filter_by_language='', REQUEST=None):
+def manage_addRemoteChannel(self, id='', title='', url='', numbershownitems='', portlet='', filter_by_language='',
+        automatic_translation_portlet='', REQUEST=None):
     """ """
     id = self.utCleanupId(id)
     if not id: id = PREFIX_SUFIX_REMOTECHANNEL % self.utGenRandomId(6)
@@ -46,6 +47,8 @@ def manage_addRemoteChannel(self, id='', title='', url='', numbershownitems='', 
     self._setObject(id, ob)
     if portlet:
         self.create_portlet_for_remotechannel(self._getOb(id))
+    if automatic_translation_portlet:
+        self.create_automatic_translation_portlet_for_remotechannel(self._getOb(id))
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -132,35 +135,6 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
         #returns a list of dictionaries, where a dictionary stores the link and the title of the item
         return self._getAllChannelItems({'summary': 'summary', 'date': 'modified'})
 
-    def _translate_item(self, item):
-        """ adds translations for the title, link and summary for an item dict
-
-            This can only be done if the language of the feed is in the list of
-            accepted values (by the automatic translator)
-        """
-        feed_lang = self.get_feed_lang()
-        if feed_lang is not None:
-            # translate to english if needed
-            if feed_lang != 'en':
-                if item.has_key('title'):
-                    item['title_en'] = translate(item['title'], feed_lang, 'en')
-                if item.has_key('link'):
-                    item['link_en'] = translation_url(item['link'], feed_lang, 'en')
-                if item.has_key('summary'):
-                    item['summary_en'] = translate(item['summary'], feed_lang, 'en')
-        return item
-
-    def translate_url_to_en(self, url):
-        """ translates the url to a url from google translate
-        !!! If the language is not specified or english the starting url is returned
-        """
-        feed_lang = self.get_feed_lang()
-        if feed_lang is not None:
-            if feed_lang != 'en':
-                return translation_url(url, feed_lang, 'en')
-        return url
-
-
     def _getAllChannelItems(self, extra_tags={}):
         """Returns a list of dictionaries for each channel item with a link and a title.
 
@@ -187,7 +161,6 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
                 v = feed_item.get(tag, None)
                 if v is not None:
                     x[key] = v
-            x = self._translate_item(x)
             L.append(x)
         return L
 

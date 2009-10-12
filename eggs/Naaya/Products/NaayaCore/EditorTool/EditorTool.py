@@ -121,7 +121,7 @@ class EditorTool(Folder):
         jsappend('</script>')
         return '\n'.join(js)
 
-    def render(self, element, lang=None, image_support=False):
+    def render(self, element, lang=None, image_support=False, extra_options={}):
         """Return the HTML necessary to run the TinyMCE.
 
             @param element: name of the HTML element that will be converted to TinyMCE;
@@ -149,6 +149,7 @@ class EditorTool(Folder):
         doc = self.restrictedTraverse(doc_url)
         if not doc.imageContainer.relative:
             params.append('document_base_url:"%s/"' % self.getSitePath())
+        params.extend([('%s: "%s"' % (k, ','.join(v))) for k, v in extra_options.items()])
         return """<script type="text/javascript">tinyMCE.init({%s});</script>""" % (',\n'.join(params), )
 
     security.declarePublic('getTinyMCEJavaScript')

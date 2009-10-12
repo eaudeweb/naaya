@@ -17,9 +17,8 @@
 	</li>
 </ul>
 </div>
-<div class="cleaner"> </div>
 
-<p i18n:translate="">
+<p i18n:translate="" class="cleaner">
 	This page lists the users defined in this portal along with their credentials.
 	Click on a username to modify the corresponding information.
 	In order to assign roles to users in various parts of the portal, click on the <strong>Users

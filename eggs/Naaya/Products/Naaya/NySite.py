@@ -98,6 +98,7 @@ from Products.NaayaBase.managers.import_parser import import_parser
 from NyVersions import NyVersions
 from NyFolder import NyFolder, addNyFolder, importNyFolder
 from Products.NaayaCore.NotificationTool.Subscriber import Subscriber
+from Products.NaayaBase.gtranslate import translate, translation_url
 
 #reCaptcha
 from Products.NaayaCore.managers import recaptcha_utils
@@ -2521,13 +2522,15 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addremotechannel')
     def admin_addremotechannel(self, title='', url='', numbershownitems='', portlet='',
-        saveit='', providername='', location='', obtype='', filter_by_language='', REQUEST=None):
+        saveit='', providername='', location='', obtype='', filter_by_language='',
+        automatic_translation_portlet='', REQUEST=None):
         """ """
         if saveit:
             self.getSyndicationTool().manage_addRemoteChannelFacade('', title, url, providername,
                 location, obtype, numbershownitems, portlet)
         else:
-            self.getSyndicationTool().manage_addRemoteChannel('', title, url, numbershownitems, portlet, filter_by_language)
+            self.getSyndicationTool().manage_addRemoteChannel('', title, url, numbershownitems, portlet,
+                    filter_by_language, automatic_translation_portlet)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_remotechannels_html' % self.absolute_url())
@@ -3574,6 +3577,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
         heartbeat_cooldown[path] = datetime.now() + timedelta(minutes=10)
         self.heartbeat_work()
+
+    # functions for translation
+    def translate(self, *args):
+        return translate(*args)
+
+    def translation_url(self, *args):
+        return translation_url(*args)
 
 InitializeClass(NySite)
 

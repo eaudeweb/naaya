@@ -114,8 +114,6 @@ class CatalogTool(ZCatalog, utils):
         except: pass
         try: self.addIndex('approved', 'FieldIndex')
         except: pass
-        try: self.addIndex('is_public', 'FieldIndex')
-        except: pass
         try: self.addIndex('topitem', 'FieldIndex')
         except: pass
         try: self.addIndex('checkout', 'FieldIndex')

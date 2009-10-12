@@ -143,6 +143,7 @@ class GeopointImportTest(NaayaTestCase):
             "doc_one,,,,\n"
             "doc_two,13.45,22.60,,Test symbol one\n"
             "doc_three,8,9,somewhere else,Test symbol two\n"
+            "doc_four,,,Bucharest,Test symbol two\n"
         )
         try:
             self.portal.imported.csv_import.do_import(meta_type='Naaya Document',
@@ -150,7 +151,7 @@ class GeopointImportTest(NaayaTestCase):
         except:
             raise
             self.fail('Should not raise exception')
-        self.failUnlessEqual(len(self.portal.imported.objectIds()), 3)
+        self.failUnlessEqual(len(self.portal.imported.objectIds()), 4)
 
         doc_one = self.portal.imported._getOb('docone')
         self.failUnlessEqual(doc_one.title, 'doc_one')
@@ -164,6 +165,10 @@ class GeopointImportTest(NaayaTestCase):
         doc_three = self.portal.imported._getOb('docthree')
         self.failUnlessEqual(doc_three.test_geo_loc, Geo('8', '9', 'somewhere else'))
         self.failUnlessEqual(doc_three.test_geo_type, 'sym2')
+
+        doc_four = self.portal.imported._getOb('docfour')
+        self.failUnlessEqual(doc_four.test_geo_loc, Geo('44.434200', '26.102975', 'Bucharest'))
+        self.failUnlessEqual(doc_four.test_geo_type, 'sym2')
 
 class SecurityTestCase(NaayaFunctionalTestCase):
     def afterSetUp(self):

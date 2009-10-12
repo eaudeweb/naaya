@@ -19,6 +19,7 @@
 
 import math
 
+import unittest
 import time
 import random
 
@@ -37,7 +38,6 @@ def timecall(func):
             new_fn.__doc__ = func.__doc__
     return new_fn
 
-
 class Point:
     def __init__(self, id=-1, lat=0., lon=0.):
         self.id = id
@@ -51,57 +51,49 @@ def distance(p1, p2):
     return abs(p1.lat - p2.lat) + abs(p1.lon - p2.lon) #this one is faster
 
 
-def getGridSize(zoom_level):
-    """ Returns the Z of the Z*Z grid of tiles """
-    return 5 * 2 ** (zoom_level - 1)
+def getFullGridSize(size_y, size_x, lat_min, lat_max, lon_min, lon_max):
+    """ get the size of the full map grid based on the sizes for the view """
+    return (
+            size_y * int(math.floor(180. / abs(lat_max - lat_min))),
+            size_x * int(math.floor(360. / abs(lon_max - lon_min))),
+            )
 
-def getTileFromLatLon(zoom_level, lat, lon):
-    """ Returns the x,y of the tile the lat and lon are in """
-    Z = getGridSize(zoom_level)
+def y_from_lat(size_y, lat):
+    return (lat + 90.) * size_y / 180.
 
-    y = (lat + 90.) * Z / 180.
-    x = (lon + 180.) * Z / 360.
+def x_from_lon(size_x, lon):
+    return (lon + 180.) * size_x / 360.
 
-    return int(math.floor(y)), int(math.floor(x))
+def tile_limits(size_y, size_x, lat_min, lat_max, lon_min, lon_max):
+    return (
+            int(math.floor(y_from_lat(size_y, lat_min))),
+            int(math.ceil(y_from_lat(size_y, lat_max))),
+            int(math.floor(x_from_lon(size_x, lon_min))),
+            int(math.ceil(x_from_lon(size_x, lon_max))),
+            )
 
-def getLatLonFromTile(zoom_level, y, x, dy=0., dx=0.):
+def getLatLonFromTile(size_y, size_x, y, x, dy=0., dx=0.):
     """ Returns the lat and lon of the point with dx,dy inside x,y tile
     where 0. <= dx <= 1. and 0. <= dy <= 1. (selects the actual point in tile)
     """
-    Z = getGridSize(zoom_level)
 
-    lat = 180. * (y + dy) / Z - 90.
-    lon = 360. * (x + dx) / Z - 180.
+    lat = 180. * (y + dy) / size_y - 90.
+    lon = 360. * (x + dx) / size_x - 180.
 
     return lat, lon
 
-
-def get_discretized_limits(zoom_level, lat_min, lat_max, lon_min, lon_max):
-    """
-    Returns the tile limits that cover the map borders
-    """
-    # get tile limits
-    ty_min, tx_min = getTileFromLatLon(zoom_level, lat_min, lon_min)
-    ty_max, tx_max = getTileFromLatLon(zoom_level, lat_max, lon_max)
-
-    # get lat, lon for the margins
-    tlat_min, tlon_min = getLatLonFromTile(zoom_level, ty_min, tx_min, 0., 0.)
-    tlat_max, tlon_max = getLatLonFromTile(zoom_level, ty_max, tx_max, 1., 1.)
-
-    return (tlat_min, tlat_max, tlon_min, tlon_max)
-
-def get_initial_centers(zoom_level, lat_min, lat_max, lon_min, lon_max):
+def get_initial_centers(lat_min, lat_max, lon_min, lon_max,
+                        size_x, size_y):
     """
     Returns the inital considered centers.
     """
-    # get tile limits
-    ty_min, tx_min = getTileFromLatLon(zoom_level, lat_min, lon_min)
-    ty_max, tx_max = getTileFromLatLon(zoom_level, lat_max, lon_max)
+    ty_min, ty_max, tx_min, tx_max = tile_limits(size_y, size_x,
+                                        lat_min, lat_max, lon_min, lon_max)
 
     result = []
-    for y in range(ty_min, ty_max + 1):
-        for x in range(tx_min, tx_max + 1):
-            lat, lon = getLatLonFromTile(zoom_level, y, x, 0.5, 0.5)
+    for y in range(ty_min, ty_max):
+        for x in range(tx_min, tx_max):
+            lat, lon = getLatLonFromTile(size_y, size_x, y, x, 0.5, 0.5)
             result.append(Point(-1, lat, lon))
     return result
 
@@ -115,6 +107,7 @@ def closest_center_index(centers, point):
             closest_i = i
             min_dist = current_dist
     return closest_i
+
 
 def calc_new_centers(old_centers, points):
     """
@@ -147,58 +140,113 @@ def calc_new_centers(old_centers, points):
 
     return new_centers, groups
 
-def finished_kmeans(new_centers, old_centers, zoom_level):
+
+def finished_kmeans(new_centers, old_centers, centers_step):
     """
     Checks if all the distances between the new center and the old center
-    of every group are smaller than a chosen value (EPSILON)
+    of every group are smaller than a chosen value (centers_step)
     """
-    EPSILON = 20. / 2 ** zoom_level
     assert len(new_centers) == len(old_centers)
 
     for i in range(len(new_centers)):
-        if distance(new_centers[i], old_centers[i]) > EPSILON:
+        if distance(new_centers[i], old_centers[i]) > centers_step:
             return False
     return True
 
-def kmeans(zoom_level, lat_min, lat_max, lon_min, lon_max, points):
+def kmeans(lat_min, lat_max, lon_min, lon_max,
+        points, size_x, size_y=None, centers_step=None):
     """
-    The centers and the groups of some points
-    for a specified zoom level and map bounds
+    size_x, size_y - are the dimensions of the initial grid of centers on full map
+    centers_step - small value for determining if the centers are stable
     """
-    if points == []:
-        return [], []
+    # default arguments for size_y and centers_step
+    if size_y is None:
+        size_y = size_x
 
-    old_centers = get_initial_centers(zoom_level, lat_min, lat_max, lon_min, lon_max)
+    size_y, size_x = getFullGridSize(size_y, size_x, lat_min, lat_max, lon_min, lon_max)
 
-    while True:
-        new_centers, groups = calc_new_centers(old_centers, points)
+    if centers_step is None:
+        centers_step = 50. / max(size_x, size_y)
 
-        if finished_kmeans(new_centers, old_centers, zoom_level):
-            break
+    # initialize
+    centers, groups = [], []
+    old_centers = get_initial_centers(lat_min, lat_max, lon_min, lon_max,
+                                        size_x, size_y)
+    centers, groups = calc_new_centers(old_centers, points)
 
-        #remove centers with empty groups
+    while not finished_kmeans(centers, old_centers, centers_step):
+        # remove centers with empty groups
         old_centers = []
-        for i in range(len(new_centers)):
+        for i in range(len(centers)):
             if len(groups[i]) != 0:
-                old_centers.append(new_centers[i])
+                old_centers.append(centers[i])
 
-    ret = ([], [])
-    for i in range(len(groups)):
-        if groups[i] != []:
-            ret[0].append(new_centers[i])
-            ret[1].append(groups[i])
-    return ret
+        # next calc_centers
+        centers, groups = calc_new_centers(old_centers, points)
+
+    return centers, groups
+
+
+def get_discretized_limits(lat_min, lat_max, lon_min, lon_max,
+        size_x, size_y=None):
+    """
+    Returns the tile limits that cover the map borders
+    """
+    # default arguments for size_y and centers_step
+    if size_y is None:
+        size_y = size_x
+
+    size_y, size_x = getFullGridSize(size_y, size_x, lat_min, lat_max, lon_min, lon_max)
+
+    ty_min, ty_max, tx_min, tx_max = tile_limits(size_y, size_x,
+                                        lat_min, lat_max, lon_min, lon_max)
+
+    # get lat, lon for the margins
+    tlat_min, tlon_min = getLatLonFromTile(size_y, size_x, ty_min, tx_min, 0., 0.)
+    tlat_max, tlon_max = getLatLonFromTile(size_y, size_x, ty_max, tx_max, 0., 0.)
+
+    return (tlat_min, tlat_max, tlon_min, tlon_max)
 
 @timecall
 def test_kmeans(n):
     points = []
     for i in range(n):
-        #g = Point(random.uniform(-11.25, 11.25), random.uniform(-22.5, 22.5))
         g = Point(i, random.uniform(-90., 90.), random.uniform(-180., 180.))
         points.append(g)
-    #kmeans(3, -11.25, 11.25, -22.5, 22.5, points)
-    kmeans(0, -90., 90., -180., 180., points)
+    centers, groups = kmeans(-90., 90., -180., 180., points, 10)
+
+@timecall
+def test_kmeans2(n):
+    points = []
+    for i in range(n):
+        g = Point(i, random.uniform(-11.25, 11.25), random.uniform(-22.5, 22.5))
+        points.append(g)
+    centers, groups = kmeans(-11.25, 11.25, -22.5, 22.5, points, 10)
+
+
+class TestKmeans(unittest.TestCase):
+    def test_2points(self):
+        points = [Point(1, 1., 1.), Point(2, 9., 9.)]
+        centers, groups = kmeans(0., 10., 0., 10., points, 2)
+        assert len(centers) == 2
+        assert (centers[0].lat == 1.) and (centers[0].lon == 1.)
+        assert (centers[1].lat == 9.) and (centers[1].lon == 9.)
+
+    def test_3points(self):
+        points = [Point(1, 1., 1.), Point(2, 9., 9.), Point(3, 3., 3.)]
+        centers, groups = kmeans(0., 10., 0., 10., points, 2)
+        assert len(centers) == 2
+        assert (centers[0].lat == 2.) and (centers[0].lon == 2.)
+        assert (centers[1].lat == 9.) and (centers[1].lon == 9.)
+
+class TestDiscretizedLimits(unittest.TestCase):
+    def test_margin(self):
+        assert (get_discretized_limits(-90., 90., -180., 180., 10)
+                == get_discretized_limits(-89., 89., -179., 179., 10))
 
 if __name__=='__main__':
     test_kmeans(5000)
+    test_kmeans2(5000)
+
+    unittest.main()
 

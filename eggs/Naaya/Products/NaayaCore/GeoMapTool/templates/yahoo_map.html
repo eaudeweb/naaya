@@ -43,6 +43,13 @@
         });
     }
 
+    function centerMapToCoordinates(lat, lon) {
+            var point = new YGeoPoint(lat, lon);
+            mapEl.removeMarkersAll();
+            mapEl.addOverlay(new YMarker(point));
+            mapEl.drawZoomAndCenter(point);
+        }
+
     function enableMouseMarkers(callback) {
         YEvent.Capture(mapEl, EventsList.MouseClick, function(_e, _c){
             var mapCoordCenter = mapEl.convertLatLonXY(mapEl.getCenterLatLon());

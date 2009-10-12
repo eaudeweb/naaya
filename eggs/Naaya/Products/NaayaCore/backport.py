@@ -1,5 +1,11 @@
 # Library code from newer versions of Python
 
+def any(iterable):
+    for element in iterable:
+        if element:
+            return True
+    return False
+
 # namedtuple is taken from the Python 2.6 standard library
 from keyword import iskeyword as _iskeyword
 from operator import itemgetter as _itemgetter

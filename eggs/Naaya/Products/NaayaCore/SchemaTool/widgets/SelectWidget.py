@@ -46,7 +46,10 @@ class SelectWidget(Widget):
     list_id = None
 
     def get_selection_list(self):
-        return self.getPortletsTool().getRefListById(self.list_id).get_list()
+        list_ob = self.getPortletsTool().getRefListById(self.list_id)
+        if list_ob is None:
+            raise ValueError('Could not find selection list "%s"' % self.list_id)
+        return list_ob.get_list()
 
     def isEmptyDatamodel(self, value):
         return not bool(value)

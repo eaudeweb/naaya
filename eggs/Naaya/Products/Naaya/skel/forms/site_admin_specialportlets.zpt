@@ -13,6 +13,7 @@
 	<li id="currenttab"><a tal:attributes="href string:${site_url}/admin_specialportlets_html" i18n:translate="">Special</a></li>
 </ul>
 </div>
+
 <p i18n:translate="" class="cleaner">
 	This page displays the list of available special portlets. These portlets cannot be erased or modified
 	using this page.

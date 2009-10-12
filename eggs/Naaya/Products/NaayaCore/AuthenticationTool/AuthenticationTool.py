@@ -579,6 +579,29 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     if len(buf1)==0: break
         return r
 
+    security.declarePrivate('name_from_userid')
+    def name_from_userid(self, userid):
+        if userid is None:
+            return "Anonymous User"
+
+        if userid in self.user_names():
+            return self.getUserFullName(self.getUser(userid))
+
+        for source in self.getSources():
+            source_acl = source.getUserFolder()
+            name = source.getUserFullName(userid, source_acl)
+            if name is not None:
+                return name
+
+        return ''
+
+    security.declarePrivate('get_current_userid')
+    def get_current_userid(self):
+        if self.isAnonymousUser():
+            return None
+        else:
+            return self.REQUEST.AUTHENTICATED_USER.getId()
+
     security.declareProtected(manage_users, 'getUsersEmails')
     def getUsersEmails(self, users):
         """
