@@ -238,21 +238,23 @@ class NyForum(NyForumBase, Folder, utils):
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
-    def manageProperties(self, title='', description='', categories='', REQUEST=None):
+    def manageProperties(self, title='', description='', categories='', file_max_size='', REQUEST=None):
         """ """
         self.title = title
         self.description = description
         self.categories = self.utConvertLinesToList(categories)
+        self.file_max_size = file_max_size
         self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
     #zmi actions
     security.declareProtected(PERMISSION_ADD_FORUM, 'saveProperties')
-    def saveProperties(self, title='', description='', categories='', REQUEST=None):
+    def saveProperties(self, title='', description='', categories='', file_max_size='', REQUEST=None):
         """ """
         self.title = title
         self.description = description
         self.categories = self.utConvertLinesToList(categories)
+        self.file_max_size = file_max_size
         self._p_changed = 1
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
