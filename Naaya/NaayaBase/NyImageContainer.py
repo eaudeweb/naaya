@@ -28,6 +28,8 @@ class NyImageContainer(Acquisition.Implicit):
 
     def _get_storage(self):
         parent = self.aq_parent
+        while parent.meta_type in ('Local Directory', 'Local File System', 'Naaya Editor Tool'):
+            parent = parent.aq_parent
         if 'images' in parent.objectIds(['Folder']):
             return parent._getOb('images').__of__(self)
         else:
