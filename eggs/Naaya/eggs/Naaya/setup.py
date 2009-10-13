@@ -1,26 +1,6 @@
 from setuptools import setup, find_packages
 import os
-import warnings
-
-try:
-    import pysvn
-    pysvn_installed = True
-except ImportError:
-    warnings.warn('pysvn not installed')
-    pysvn_installed = False
-
-def get_svn_version():
-    if not os.path.isdir('.svn'):
-        return '1.0dev-r0'
-    client = pysvn.Client()
-    entry = client.info('.')
-    revision = entry.revision.number
-    return '1.0dev-r%s' % revision
-
-def get_version():
-    if pysvn_installed:
-        return get_svn_version()
-    return '1.0dev-r0'
+from getversion import get_version
 
 version = get_version()
 
