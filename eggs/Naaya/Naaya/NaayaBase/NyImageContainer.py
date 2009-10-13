@@ -29,9 +29,9 @@ class NyImageContainer(Acquisition.Implicit):
     def _get_storage(self):
         parent = self.aq_parent
         if 'images' in parent.objectIds(['Folder']):
-            return parent._getOb('images')
+            return parent._getOb('images').__of__(self)
         else:
-            return parent
+            return parent.__of__(self)
 
     security.declarePrivate('_redirectBack')
     def _redirectBack(self, REQUEST):
