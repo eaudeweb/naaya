@@ -22,9 +22,16 @@ class NyImageContainer(Acquisition.Implicit):
             @param relative: the images are stored in a location
             @param baseURL: relative storage location
         """
-        self.storage = storage
+        #self.storage = storage # unsafe; better to fetch the folder whenever we need it
         self.relative = relative
         self.baseURL = baseURL
+
+    def _get_storage(self):
+        parent = self.aq_parent
+        if 'images' in parent.objectIds(['Folder']):
+            return parent._getOb('images')
+        else:
+            return parent
 
     security.declarePrivate('_redirectBack')
     def _redirectBack(self, REQUEST):
@@ -36,10 +43,11 @@ class NyImageContainer(Acquisition.Implicit):
         """Upload image to the collection and then return to the referring URL."""
         id, title = cookId(None, None, file)
         i = 0
-        while self.storage._getOb(id, None):
+        storage = self._get_storage()
+        while storage._getOb(id, None):
             i += 1
             id = '%s-%u' % (id, i)
-        manage_addImage(self.storage, id, file, title)
+        manage_addImage(storage, id, file, title)
         self._redirectBack(REQUEST)
 
     def deleteImages(self, ids, REQUEST=None):
@@ -47,7 +55,7 @@ class NyImageContainer(Acquisition.Implicit):
 
             @param ids: image ids
         """
-        self.storage.manage_delObjects(ids)
+        self._get_storage().manage_delObjects(ids)
         self._redirectBack(REQUEST)
 
     def getImageURL(self, image):
@@ -56,12 +64,12 @@ class NyImageContainer(Acquisition.Implicit):
             @param image: image object
         """
         if self.relative:
-            return '%s/%s' % (self.storage.aq_parent.absolute_url(), image.getId())
-        return '%s/%s' % (self.storage.absolute_url(), image.getId())
+            return '%s/%s' % (self._get_storage().aq_parent.absolute_url(), image.getId())
+        return '%s/%s' % (self._get_storage().absolute_url(), image.getId())
 
     def getImages(self):
         """Return the list of images"""
-        return self.storage.objectValues(['Image'])
+        return self._get_storage().objectValues(['Image'])
 
 
 InitializeClass(NyImageContainer)
