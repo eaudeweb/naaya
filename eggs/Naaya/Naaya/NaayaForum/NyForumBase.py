@@ -96,6 +96,12 @@ class NyForumBase(NyAttributes):
         """
         return getSecurityManager().checkPermission(p_permission, self) is not None
 
+    def checkPermissionAddForum(self):
+        """
+        Check the permission to add forum topics.
+        """
+        return self.checkPermission(PERMISSION_ADD_FORUM)
+
     def checkPermissionAddForumTopic(self):
         """
         Check the permission to add forum topics.
