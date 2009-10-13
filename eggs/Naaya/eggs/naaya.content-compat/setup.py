@@ -1,7 +1,8 @@
 from setuptools import setup, find_packages
 import os
+from getversion import get_version
 
-version = '1.0'
+version = get_version()
 
 setup(name='naaya.content-compat',
       version=version,
@@ -18,7 +19,7 @@ setup(name='naaya.content-compat',
       author_email='',
       url='',
       license='GPL',
-      packages=find_packages(exclude=['ez_setup']),
+      packages=['Products'],
       namespace_packages=['Products'],
       include_package_data=True,
       zip_safe=False,
