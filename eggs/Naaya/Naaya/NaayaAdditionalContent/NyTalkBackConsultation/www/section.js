@@ -75,7 +75,7 @@ $(function() {
 
 function get_height(the_window) {
     var the_document = the_window.document;
-    if ($.browser.msie && $.browser.version < 7) {
+    if ($.browser.msie) {
         var scrollHeight = Math.max(
             the_document.documentElement.scrollHeight,
             the_document.body.scrollHeight
