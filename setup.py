@@ -1,7 +1,8 @@
 from setuptools import setup, find_packages
 import os
+from getversion import get_version
 
-version = '0.1'
+version = get_version()
 
 setup(name='naaya.content.bfile',
       version=version,
@@ -17,8 +18,8 @@ setup(name='naaya.content.bfile',
       author_email='',
       url='',
       license='GPL',
-      packages=find_packages(exclude=['ez_setup']),
-      namespace_packages=['naaya', 'naaya.content'],
+      packages=['naaya'],
+      namespace_packages=['naaya'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[
