@@ -243,7 +243,7 @@ class NyForum(NyForumBase, Folder, utils):
         self.title = title
         self.description = description
         self.categories = self.utConvertLinesToList(categories)
-        self.file_max_size = file_max_size
+        self.file_max_size = abs(int(file_max_size))
         self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
@@ -254,7 +254,7 @@ class NyForum(NyForumBase, Folder, utils):
         self.title = title
         self.description = description
         self.categories = self.utConvertLinesToList(categories)
-        self.file_max_size = file_max_size
+        self.file_max_size = abs(int(file_max_size))
         self._p_changed = 1
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
