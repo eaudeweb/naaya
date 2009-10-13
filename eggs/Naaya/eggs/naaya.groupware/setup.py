@@ -1,7 +1,8 @@
 from setuptools import setup, find_packages
 import os
+from getversion import get_version
 
-version = '1.0'
+version = get_version()
 
 setup(name='naaya.groupware',
       version=version,
@@ -18,8 +19,8 @@ setup(name='naaya.groupware',
       author_email='david@eaudeweb.ro',
       url='',
       license='MPL',
-      packages=find_packages(exclude=['ez_setup']),
-      namespace_packages=['naaya'],
+      packages=['naaya', 'Products'],
+      namespace_packages=['naaya', 'Products'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[
