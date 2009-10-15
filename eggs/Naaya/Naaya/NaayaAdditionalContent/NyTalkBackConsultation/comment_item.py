@@ -20,15 +20,11 @@
 
 import re
 
-try:
-    import scrubber
-except ImportError:
-    sanitize = lambda x: x
-else:
-    if 'any' not in dir(__builtins__):
-        from Products.NaayaCore.backport import any
-        scrubber.any = any
-    sanitize = scrubber.Scrubber().scrub
+import scrubber
+if 'any' not in dir(__builtins__):
+    from Products.NaayaCore.backport import any
+    scrubber.any = any
+sanitize = scrubber.Scrubber().scrub
 
 def trim(message):
     """ Remove leading and trailing empty paragraphs """
