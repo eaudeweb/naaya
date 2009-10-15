@@ -60,8 +60,8 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
         self.assertEqual(meta.sortorder, 100)
         
         #delete NyPublication
-        self._portal().info.manage_delObjects([meta.id])
-        self._portal().info.manage_delObjects([meta_fr.id])
+        self._portal().info.manage_delObjects([meta.getId()])
+        self._portal().info.manage_delObjects([meta_fr.getId()])
         
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Publication'])
         self.assertEqual(meta, [])
