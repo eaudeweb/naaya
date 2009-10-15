@@ -1,8 +1,12 @@
 from setuptools import setup, find_packages
 import os
-from getversion import get_version
 
-version = get_version()
+try:
+    from getversion import get_version
+except ImportError:
+    version = '1.0-dev'
+else:
+    version = get_version()
 
 setup(name='Naaya',
       version=version,
