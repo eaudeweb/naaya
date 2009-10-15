@@ -157,14 +157,15 @@ class InvitationsContainer(SimpleItem):
         """ welcome page for invitees """
 
         key = REQUEST.get('key', None)
-        if key is None or key not in self._invites:
-            raise ValueError('Bad key!')
+        invitation = self.get_invitation(key)
 
-        invitation = self._invites[key]
-        auth_tool = self.getAuthenticationTool()
-        inviter_name = auth_tool.name_from_userid(invitation.inviter_userid)
-
-        REQUEST.SESSION.set('nytb-current-key', key)
+        if invitation is not None and invitation.enabled:
+            auth_tool = self.getAuthenticationTool()
+            inviter_name = auth_tool.name_from_userid(invitation.inviter_userid)
+            REQUEST.SESSION.set('nytb-current-key', key)
+        else:
+            invitation = None
+            inviter_name = ''
 
         return self._welcome_html(REQUEST,
                                   invitation=invitation,
@@ -199,8 +200,8 @@ class InvitationUsersTool(BasicUserFolder):
             return user
 
         # no user logged in; try with an invite key
-        invite_key = self.invitations.get_current_invitation(request)
-        if invite_key:
+        invitation = self.invitations.get_current_invitation(request)
+        if invitation is not None and invitation.enabled:
             return SimpleUser('invited_reviewer', '', ('InvitedReviewer',), [])
         else:
             return None

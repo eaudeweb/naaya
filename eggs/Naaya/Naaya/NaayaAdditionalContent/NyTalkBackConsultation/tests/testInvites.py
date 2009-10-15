@@ -207,6 +207,30 @@ class InviteeCommentTestCase(NaayaFunctionalTestCase):
         html = self.browser.get_html()
         self.assertTrue('The Invitee (invited by Contributor Test)' in html)
 
+    def test_invalid_or_revoked_key(self):
+        self.browser.go(self.cons_url + '/invitations/welcome?key=INVALIDVALUE')
+        html = self.browser.get_html()
+        self.assertTrue('Invalid key' in html)
+
+        self.browser.go(self.cons_url + '/test-section/000')
+        self.assertFalse('The Invitee' in self.browser.get_html())
+        self.assertEqual(self.browser.get_form('frmAdd'), None)
+
+        self.browser.go(self.cons_url + '/invitations/welcome?key=' + self.invite_key)
+        self.assertTrue('You have been invited' in self.browser.get_html())
+
+        self.consultation.invitations._invites[self.invite_key].enabled = False
+        transaction.commit()
+
+        self.browser.go(self.cons_url + '/invitations/welcome?key=' + self.invite_key)
+        html = self.browser.get_html()
+        self.assertFalse('You have been invited' in html)
+        self.assertTrue('Invalid key' in html)
+
+        self.browser.go(self.cons_url + '/test-section/000')
+        self.assertFalse('The Invitee' in self.browser.get_html())
+        self.assertEqual(self.browser.get_form('frmAdd'), None)
+
     def test_hide_unapproved(self):
         comment_id = addComment(self.consultation['test-section']['000'],
                                 contributor='invite:' + self.invite_key,
