@@ -1439,7 +1439,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         pc = self.get_pluggable_content()
         for item in pc.values():
-            if item['module'] == content_type:
+            if item['schema_name'] == content_type:
                 return REQUEST.RESPONSE.redirect('%s/%s' %
                     (start_url, item['add_form']))
         raise ValueError, 'Could not add this content type to the folder'
