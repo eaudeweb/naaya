@@ -79,7 +79,7 @@ class TestNyPublication(NaayaTestCase):
             if pub.getLocalProperty("title", "ar") == "test2":
                 test2 = pub
         self.assertTrue(test2 != None, "Publication not found via CatalogedObjectsCheckView")
-        self.assertEqual(test2.id, "test2")
+        self.assertEqual(test2.getId(), "test2")
         self.assertEqual(test2.getLocalProperty("title", "ar"), "test2")
         self.assertEqual(test2.getLocalProperty("description", "ar"), "description")
         self.assertEqual(test2.getLocalProperty("coverage", "ar"), "coverage")
@@ -92,25 +92,6 @@ class TestNyPublication(NaayaTestCase):
         self.assertEqual(test2.releasedate.year(), 2008, "Release year does not match")
         self.assertEqual(test2.discussion, 1)
         self.logout()
-
-
-    def test_importNyPublication(self):
-        attrs = {"sortorder" : "1", 
-                  "contributor" : "contributor", 
-                  "discussion" : "1", 
-                  "approved" : "1",
-                  "approved_by" : "contributor",
-                  "releasedate" : "30/04/2008",
-                  "validation_status" : "None",
-                  "validation_comment" : "OK",
-                  "validation_by" : "contributor",
-                  "validation_date" : "30/04/2008"}
-        id = "pub3"
-        param = 0;
-        
-        self.app.portal.test_folder.importNyPublication(param, id, attrs, '', {}, None, None)
-        self.assertTrue(hasattr(self.app.portal.test_folder, "pub3"), "Publication object pub3 was not found in folder 'test_folder'")
-
 
     def test_export_this_tag_custom(self):
         import re
@@ -135,97 +116,6 @@ class TestNyPublication(NaayaTestCase):
         exportStr = pub.export_this_body_custom()
         self.assertTrue(exportStr == '<locator lang="en"><![CDATA[www.google.com]]></locator>', "Exported custom body is malformed")
         self.logout()
-
-
-    def test_startVersion(self):
-        import traceback
-        self.login("contributor")
-        NyPublication.addNyPublication(self.app.portal.test_folder,
-                            id="test2", 
-                            title="test2", 
-                            description = "description",
-                            coverage = "coverage",
-                            keywords = "keyword1, keywords2",
-                            sortorder = 1,
-                            locator="www.google.com",
-                            contributor = "cristiroma",
-                            releasedate = "30/04/2008",
-                            discussion = 1,
-                            lang = "ar"
-                            )
-        pub = self.app.portal.test_folder.test2
-        #Contributor is not allowed to start versioning
-
-        # TODO: fix this test
-        #try:
-        #    pub.startVersion()
-        #    self.fail()
-        #except:
-        #    pass
-
-        self.logout()
-        self.login()
-        pub.startVersion()
-        pub.saveProperties(
-                           title='test22', 
-                           description='', 
-                           coverage='', 
-                           keywords='',
-                           sortorder=10, 
-                           locator='www.yahoo.com', 
-                           releasedate='02/02/2003', 
-                           discussion=0,
-                           lang="ar")
-        self.assertEqual(pub.id, "test2")
-        self.assertEqual(pub.getLocalProperty("title", "ar"), "test2")
-        self.assertEqual(pub.getLocalProperty("description", "ar"), "description")
-        self.assertEqual(pub.getLocalProperty("coverage", "ar"), "coverage")
-        self.assertEqual(pub.getLocalProperty("keywords", "ar"), "keyword1, keywords2")
-        self.assertEqual(pub.sortorder, 1)
-        self.assertEqual(pub.getLocalProperty("locator", "ar"), "www.google.com")
-        self.assertEqual(pub.contributor, "cristiroma")
-        self.assertEqual(pub.releasedate.day(), 30, "Release day does not match")
-        self.assertEqual(pub.releasedate.month(), 4, "Release month does not match")
-        self.assertEqual(pub.releasedate.year(), 2008, "Release year does not match")
-        #Discussion field passes the versioning system, no need to test self.assertEqual(pub.discussion, 1)
-        pub.commitVersion()
-        self.assertEqual(pub.id, "test2")
-        self.assertEqual(pub.getLocalProperty("title", "ar"), "test22")
-        self.assertEqual(pub.getLocalProperty("description", "ar"), "")
-        self.assertEqual(pub.getLocalProperty("coverage", "ar"), "")
-        self.assertEqual(pub.getLocalProperty("keywords", "ar"), "")
-        self.assertEqual(pub.sortorder, 10)
-        self.assertEqual(pub.getLocalProperty("locator", "ar"), "www.yahoo.com")
-        self.assertEqual(pub.contributor, "cristiroma")
-        self.assertEqual(pub.releasedate.day(), 2, "Release day does not match")
-        self.assertEqual(pub.releasedate.month(), 2, "Release month does not match")
-        self.assertEqual(pub.releasedate.year(), 2003, "Release year does not match")
-        #Discussion field passes the versioning system, no noeed to test self.assertEqual(pub.discussion, 0)
-        
-        pub.startVersion()
-        pub.saveProperties(
-                           title='1', 
-                           description='1', 
-                           coverage='1', 
-                           keywords='1',
-                           sortorder=1, 
-                           locator='1', 
-                           releasedate='03/03/2004', 
-                           discussion=1,
-                           lang="ar")
-        pub.discardVersion()
-        self.assertEqual(pub.id, "test2")
-        self.assertEqual(pub.getLocalProperty("title", "ar"), "test22")
-        self.assertEqual(pub.getLocalProperty("description", "ar"), "")
-        self.assertEqual(pub.getLocalProperty("coverage", "ar"), "")
-        self.assertEqual(pub.getLocalProperty("keywords", "ar"), "")
-        self.assertEqual(pub.sortorder, 10)
-        self.assertEqual(pub.getLocalProperty("locator", "ar"), "www.yahoo.com")
-        self.assertEqual(pub.contributor, "cristiroma")
-        self.assertEqual(pub.releasedate.day(), 2, "Release day does not match")
-        self.assertEqual(pub.releasedate.month(), 2, "Release month does not match")
-        self.assertEqual(pub.releasedate.year(), 2003, "Release year does not match")
-
 
 def test_suite():
     suite = TestSuite()
