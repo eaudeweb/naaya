@@ -149,8 +149,13 @@ class NyGadflyContainer(Folder):
                                columns=columns, conditions=conditions)
 
         # Return
-        return res.dictionaries()
-    
+        try:
+            return res.dictionaries()
+        except AttributeError:
+            LOG(LOG_KEY, ERROR, 'Could not retrieve statistics from table %s' % self._table_name)
+            self.log_current_error()
+            return []
+
     security.declareProtected(view_management_screens, 'set')
     def set(self, key, value, **conditions):
         """ UPDATE TABLE SET key = value WHERE conditions
