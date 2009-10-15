@@ -21,9 +21,13 @@
                   '?form_id=%s' % form['id']);
               ">
                 <a class="form" tal:attributes="href form_url" tal:content="form/id"></a>
+                <tal:block condition="customized">
+                    <em>(customized)</em>
+                    [<a tal:attributes="href string:${here/absolute_url}/show_diff?form_id=${form/id}"
+                        class="form">diff</a>]
+                </tal:block>
                 <tal:block condition="not:customized">
                 </tal:block>
-                <em tal:condition="customized">(customized)</em>
             </li>
         </tal:block>
     </ul>

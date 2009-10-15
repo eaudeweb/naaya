@@ -128,6 +128,21 @@ class FormsTool(Folder):
         else:
             raise KeyError('Not found form named "%s"' % form_id)
 
+    def _default_form(self, form_id):
+        """ get the non-customized form """
+        for form in self.listDefaultForms():
+            if form['id'] == form_id:
+                if 'form_ob' in form:
+                    return form['form_ob'].__of__(self)
+
+                body=self.futRead(form['path'], 'r')
+                t = Template(id=form['id'],
+                             title=form['title'],
+                             text=body,
+                             content_type='')
+                return t.__of__(self)
+        raise KeyError('Not found form named "%s"' % form_id)
+
     def getForm(self, form_id):
         """
         Fetches a Naaya form
@@ -138,18 +153,7 @@ class FormsTool(Folder):
         if form_id in self.objectIds():
             return self._getOb(form_id)
         else:
-            for form in self.listDefaultForms():
-                if form['id'] == form_id:
-                    if 'form_ob' in form:
-                        return form['form_ob'].__of__(self)
-
-                    body=self.futRead(form['path'], 'r')
-                    t = Template(id=form['id'],
-                                 title=form['title'],
-                                 text=body,
-                                 content_type='')
-                    return t.__of__(self)
-            raise KeyError('Not found form named "%s"' % form_id)
+            return self._default_form(form_id)
 
     def getContent(self, p_context={}, p_page=None):
         """
@@ -163,6 +167,17 @@ class FormsTool(Folder):
         p_context['skin_files_path'] = self.getLayoutTool().getSkinFilesPath()
         form = self.getForm(p_page)
         return form(p_context)
+
+    _diff = PageTemplateFile('zpt/diff', globals())
+    security.declareProtected(view_management_screens, 'show_diff')
+    def show_diff(self, REQUEST):
+        """ show the differences between the default and customized form """
+        from Products.naayaUpdater.utils import html_diff
+        form_id = REQUEST.get('form_id', '')
+        form_customized = self._getOb(form_id)
+        form_default = self._default_form(form_id)
+        diff = html_diff(form_default._text, form_customized._text)
+        return self._diff(diff=diff)
 
     security.declareProtected(view_management_screens, 'manage_customizeForm')
     def manage_customizeForm(self, form_id, REQUEST=None):
