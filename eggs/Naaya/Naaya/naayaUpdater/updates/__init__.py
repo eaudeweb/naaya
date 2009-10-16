@@ -27,7 +27,9 @@ import Globals
 import Products
 
 # Config custom logger
-LOG_ROOT = os.path.join(Globals.INSTANCE_HOME, 'log')
+LOG_ROOT = os.path.join(os.environ['CLIENT_HOME'], 'log')
+if not os.path.isdir(LOG_ROOT):
+    os.mkdir(LOG_ROOT)
 LOG_FILE = os.path.join(LOG_ROOT, 'updates.log')
 
 logging.basicConfig()
