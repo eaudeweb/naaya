@@ -21,10 +21,11 @@ import os
 import sys
 import logging
 from threading import Thread
-from Globals import INSTANCE_HOME
 
 # Config custom logger
-LOG_ROOT = os.path.join(INSTANCE_HOME, 'log')
+LOG_ROOT = os.path.join(os.environ['CLIENT_HOME'], 'log')
+if not os.path.isdir(LOG_ROOT):
+    os.mkdir(LOG_ROOT)
 LOG_FILE = os.path.join(LOG_ROOT, 'packing.log')
 
 logging.basicConfig()
