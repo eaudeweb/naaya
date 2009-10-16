@@ -1,0 +1,35 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1 i18n:translate="" tal:content="here/title_or_id" />
+
+<p i18n:translate="">
+    Total comments:
+    <tal:block content="options/total_count"
+               i18n:name="comment_count" />
+</p>
+
+<p i18n:translate="" tal:condition="options/invited_count">
+    Invited:
+    <tal:block content="options/invited_count"
+               i18n:name="invited_count" />
+</p>
+
+<p i18n:translate="" tal:condition="options/anonymous_count">
+    Anonymous:
+    <tal:block content="options/anonymous_count"
+               i18n:name="anonymous_count" />
+</p>
+
+<p i18n:translate="" tal:condition="options/unapproved_count">
+    Unapproved:
+    <tal:block content="options/unapproved_count"
+               i18n:name="unapproved_count" />
+</p>
+
+<ul class="tb-comments-tree">
+<tal:block repeat="comment options/unapproved_comments">
+    <metal:block use-macro="options/comment_macro" />
+</tal:block>
+</ul>
+
+<span tal:replace="structure here/standard_html_footer" />

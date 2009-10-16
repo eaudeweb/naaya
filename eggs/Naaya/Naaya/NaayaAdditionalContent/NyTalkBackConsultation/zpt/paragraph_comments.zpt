@@ -3,16 +3,13 @@ We define a macro to display one comment, then render it recursively
 to show a whole tree of comments.
 </tal:comment>
 
-<span style="display:none;" class="talkback-comment_count"
-      tal:content="here/comment_count" />
-<tal:block define="comment_data nothing">
+<tal:block condition="nothing">
 <li class="tb-comment-box"
-    metal:define-macro="display_child"
-    tal:condition="python:comment_data and
-                          comment_data['comment'].visible_to_user(request)">
+    metal:define-macro="comment"
+    tal:define="embedded embedded|nothing"
+    tal:condition="python:comment.visible_to_user(request)">
     <div class="tb-comment"
-         tal:define="comment comment_data/comment;
-                     comment_id comment/id">
+         tal:define="comment_id comment/id">
         <div class="tb-comment-head"
              tal:define="can_edit comment/check_admin_permissions">
             <div class="tb-comment-author">
@@ -23,6 +20,7 @@ to show a whole tree of comments.
                 <a tal:define="url python:(here.absolute_url() +
                                            test(embedded, '/embedded_html', '') +
                                            '?reply_to=' + comment_id + '#comment-form')"
+                   tal:condition="can_reply|nothing"
                    tal:attributes="href url"
                    i18n:translate="">reply</a>
                 <a tal:define="url python:(comment.absolute_url() + '/edit_html' +
@@ -49,7 +47,7 @@ to show a whole tree of comments.
                 </form>
             </div>
             <div style="clear: both;"></div>
-            <em tal:condition="not:comment_data/comment/approved"
+            <em tal:condition="not:comment/approved"
                 i18n:translate="">This comment is awaiting approval.</em>
         </div>
         <div class="tb-comment-body" tal:content="structure comment/message" />
@@ -59,15 +57,24 @@ to show a whole tree of comments.
            i18n:translate="">Download attached file</a>
     </div>
 
-    <ul tal:repeat="comment_data comment_data/children">
-        <metal:block use-macro="template/macros/display_child" />
+    <ul tal:condition="comment_data|nothing"
+        tal:repeat="comment_data comment_data/children">
+        <tal:block define="comment comment_data/comment">
+            <metal:block use-macro="template/macros/comment" />
+        </tal:block>
     </ul>
 </li>
 </tal:block>
 
+<span style="display:none;" class="talkback-comment_count"
+      tal:content="here/comment_count" />
+
 <ul class="tb-comments-tree">
-<tal:block define="embedded options/embedded|nothing"
+<tal:block define="embedded options/embedded|nothing;
+                   can_reply python:True"
            repeat="comment_data here/get_comment_tree">
-    <metal:block use-macro="template/macros/display_child" />
+    <tal:block define="comment comment_data/comment">
+        <metal:block use-macro="template/macros/comment" />
+    </tal:block>
 </tal:block>
 </ul>
