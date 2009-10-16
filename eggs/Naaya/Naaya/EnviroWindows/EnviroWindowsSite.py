@@ -517,6 +517,24 @@ class EnviroWindowsSite(NySite):
         else:
             return RESPONSE.redirect('requestinfo_html?role=%s' % role)
 
+    security.declareProtected(view, 'processRequestRole')
+    def processRequestRoleForm(self, REQUEST, **kwargs):
+        """
+        Comments field is mandatory on EW sites, this function
+        checks that the field exists and has a value.
+        """
+        kwargs.update(REQUEST.form)
+        if not kwargs.get('comments', ''):
+            # setRequestRoleSession expects 'name' instead of 'username'
+            # also, it does not expect 'confirm'
+            kwargs['name'] = kwargs['username']
+            del kwargs['username']
+            del kwargs['confirm']
+            self.setRequestRoleSession(**kwargs)
+            self.setSessionErrors(['Required field: Comments'])
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+        return super(EnviroWindowsSite, self).processRequestRoleForm(REQUEST=REQUEST, **kwargs)
+
     security.declareProtected(view, 'processRequestAccount')
     def processRequestAccount(self, username='', passwd='', role='', REQUEST=None, RESPONSE=None):
         """ process an existing account """
