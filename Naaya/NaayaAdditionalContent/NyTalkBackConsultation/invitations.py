@@ -19,6 +19,7 @@
 
 from base64 import urlsafe_b64encode
 from random import randrange
+from datetime import date
 
 from BTrees.OOBTree import OOBTree
 from Persistence import Persistent
@@ -190,6 +191,11 @@ class Invitation(Persistent):
         self.notes = notes
         self.key = key
         self.enabled = True
+        self.create_date = date.today()
+
+    @property
+    def pretty_date(self):
+        return self.create_date.strftime('%Y/%m/%d')
 
 class InvitationUsersTool(BasicUserFolder):
     def authenticate(self, name, password, request):
