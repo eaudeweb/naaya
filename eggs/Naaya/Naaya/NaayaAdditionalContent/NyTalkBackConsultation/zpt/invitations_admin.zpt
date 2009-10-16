@@ -1,6 +1,14 @@
 <tal:block define="global name_from_userid python:options['name_from_userid']" />
 <span tal:replace="structure here/standard_html_header" />
 
+<div class="floated-buttons">
+    <span class="buttons">
+        <a tal:define="section here/get_consultation"
+          tal:attributes="href section/absolute_url"
+          i18n:translate="">Back to consultation index</a>
+    </span>
+</div>
+
 <h1 i18n:translate="">Invitations administration</h1>
 
 <tal:block condition="nothing"><metal:block define-macro="invitation">
