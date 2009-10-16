@@ -207,7 +207,7 @@ class InvitationUsersTool(BasicUserFolder):
         auth_tool = self.getSite().getAuthenticationTool()
         user = auth_tool.authenticate(name, password, request)
         if user is not None:
-            return user
+            return None
 
         # no user logged in; try with an invite key
         invitation = self.invitations.get_current_invitation(request)
