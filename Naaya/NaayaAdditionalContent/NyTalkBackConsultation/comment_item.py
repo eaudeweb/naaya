@@ -135,8 +135,16 @@ class TalkBackConsultationComment(NyFSFile):
         return self.comment_date
 
     @property
+    def is_invited(self):
+        return self.contributor.startswith('invite:')
+
+    @property
+    def is_anonymous(self):
+        return self.contributor.startswith('anonymous:')
+
+    @property
     def invite_key(self):
-        if self.contributor.startswith('invite:'):
+        if self.is_invited:
             return self.contributor[len('invite:'):]
         else:
             return None

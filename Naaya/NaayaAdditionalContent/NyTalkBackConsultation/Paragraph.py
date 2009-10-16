@@ -209,6 +209,7 @@ class Paragraph(Folder):
         approved = True
 
         contributor_name = REQUEST.form.get('contributor_name', '')
+        errors = []
         if invitation is not None:
             contributor = 'invite:' + invitation.key
             approved = False
@@ -221,7 +222,6 @@ class Paragraph(Folder):
         else:
             contributor = userid
 
-        errors = []
         if not clean_message:
             errors.append('The comment field cannot be empty.')
         if reply_to is not None and reply_to not in self.objectIds():

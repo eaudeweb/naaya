@@ -49,6 +49,7 @@ from constants import *
 from Section import addSection
 from Section import addSection_html
 from invitations import InvitationsContainer, InvitationUsersTool
+from comments_admin import CommentsAdmin
 
 #module constants
 
@@ -593,6 +594,8 @@ class NyTalkBackConsultation(NyAttributes,
     _View_Permission = ['InvitedReviewer']
     _Naaya___Review_TalkBack_Consultation_Permission = ['InvitedReviewer']
     __ac_roles__ = ['InvitedReviewer']
+
+    admin_comments = CommentsAdmin('admin_comments')
 
 InitializeClass(NyTalkBackConsultation)
 manage_addNyTalkBackConsultation_html = PageTemplateFile(
