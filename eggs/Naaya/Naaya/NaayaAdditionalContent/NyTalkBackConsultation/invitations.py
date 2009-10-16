@@ -137,18 +137,22 @@ class InvitationsContainer(SimpleItem):
     def admin_html(self, REQUEST):
         """ the admin view """
         options = {
-            'invites': self._invites.values(),
+            'invites_active': [i for i in self._invites.values() if i.enabled],
+            'invites_revoked': [i for i in self._invites.values() if not i.enabled],
             'name_from_userid': self.getAuthenticationTool().name_from_userid,
         }
         return self._admin_html(**options)
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'admin_revoke_invitation')
-    def admin_revoke_invitation(self, key, REQUEST=None):
-        """ disable an invitation """
+    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
+                              'admin_invitation_enabled')
+    def admin_invitation_enabled(self, key, value=False, REQUEST=None):
+        """ disable, or re-enable, an invitation """
         invite = self._invites[key]
-        invite.enabled = False
+        invite.enabled = value
         if REQUEST is not None:
-            self.setSessionInfo(['Invitation for %s has been revoked.' % invite.name])
+            action = value and 'restored' or 'revoked'
+            self.setSessionInfo(['Invitation for %s has been %s.' %
+                                 (invite.name, action)])
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
 
     _welcome_html = NaayaPageTemplateFile('zpt/invitations_welcome', globals(),

@@ -243,3 +243,7 @@ div.tb-modal-overlay {
     filter:alpha(opacity=50);
     opacity: 0.5;
 }
+
+dl.tb-invitations.revoked dt {
+    text-decoration: line-through;
+}
