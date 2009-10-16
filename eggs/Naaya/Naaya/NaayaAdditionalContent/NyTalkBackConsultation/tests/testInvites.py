@@ -99,6 +99,7 @@ class InvitationTestCase(NaayaFunctionalTestCase):
         self.assertEqual(i.organization, data['organization'])
         self.assertEqual(i.notes, data['notes'])
         self.assertEqual(i.inviter_userid, 'admin')
+        self.assertEqual(i.create_date, date.today())
 
         self.assertEqual(len(self.diverted_mail), 1)
         body, addr_to, addr_from, subject = self.diverted_mail[0]

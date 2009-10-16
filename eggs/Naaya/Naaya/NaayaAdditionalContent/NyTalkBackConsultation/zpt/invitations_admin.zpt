@@ -14,6 +14,8 @@
         <strong i18n:translate="">Invited by:</strong>
         <tal:block content="inviter_name" />
         (<tal:block content="invite/inviter_userid" />)
+        <strong i18n:translate="">On:</strong>
+        <tal:block content="invite/create_date" />
     </dd>
     <dd>
         <strong>Private URL:</strong>
