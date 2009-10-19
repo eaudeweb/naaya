@@ -11,13 +11,14 @@
 	If the replies are not deleted they become replies to the parent message.
 </p>
 
-<form tal:attributes="action string:${here/absolute_url}/deleteMessage" method="post" enctype="multipart/form-data">
+<form name="frmConfirm" method="post" enctype="multipart/form-data"
+	tal:attributes="action string:${here/absolute_url}/deleteMessage">
 <div class="field">
 	<input type="checkbox" name="nodes" id="nodes" />
 	<span i18n:translate="" tal:omit-tag="">Also erase replies </span>
 </div>
 <div class="field">
-	<input type="submit" value="Confirm" i18n:attributes="value" />
+	<input name="confirm" type="submit" value="Confirm" i18n:attributes="value" />
 </div>
 </form>
 </tal:block>

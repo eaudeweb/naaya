@@ -10,7 +10,8 @@
 	Fill the properties in the form below and click <strong>Submit</strong>.
 </p>
 
-<form tal:attributes="action string:${here/absolute_url}/saveProperties" method="post">
+<form name="frmEdit" method="post"
+	tal:attributes="action string:${here/absolute_url}/saveProperties">
 <div class="field">
 	<label for="title" i18n:translate="">Subject</label>
 	<input type="text" name="title:utf8:ustring" id="title" size="50" tal:attributes="value here/title" />
@@ -54,7 +55,8 @@
 
 <h2 i18n:translate="">Attachments</h2>
 
-<form tal:attributes="action string:${here/absolute_url}/deleteAttachments" method="post">
+<form name="frmDelete" method="post"
+	tal:attributes="action string:${here/absolute_url}/deleteAttachments">
 <div>
 	<div id="toolbar">
 		<input type="submit" value="Delete" i18n:attributes="value" />
@@ -69,7 +71,7 @@
 	</tr>
 	<tbody>
 		<tr tal:repeat="item here/get_attachments">
-			<td><input type="checkbox" name="ids" tal:attributes="value item/id" /></td>
+			<td><input type="checkbox" name="ids" tal:attributes="value item/id; id item/id" /></td>
 			<td tal:content="item/title_or_id" />
 			<td tal:content="item/content_type" />
 			<td tal:content="python:here.utShowSize(item.size)" />
@@ -82,7 +84,11 @@
 	Add new attachments one by one using the form below:
 </p>
 
-<form tal:attributes="action string:${here/absolute_url}/addAttachment" method="post" enctype="multipart/form-data">
+<form name="addAttachment" method="post" enctype="multipart/form-data"
+	tal:attributes="action string:${here/absolute_url}/addAttachment">
+<div style="color: red;" tal:define="file_max_size python:request.get('file_max_size', '')"
+	tal:condition="file_max_size"
+	tal:content="string:The attachment is larger than permitted (${file_max_size} Bytes). Please select a smaller file."/>
 <div class="field">
 	<label for="attachment" i18n:translate="">Attachment</label>
 	<input type="file" name="attachment" id="attachment" />

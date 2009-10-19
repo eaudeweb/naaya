@@ -48,6 +48,11 @@ def addNyForumTopic(self, id='', title='', category='', description='',
     author, postdate = self.processIdentity()
     #by default a topic is opened, status = 0; when closed status = 1
     status = 0
+    if attachment != '' and hasattr(attachment, 'filename') and attachment.filename != '':
+        if len(attachment.read()) > self.file_max_size:
+            REQUEST.set('file_max_size', self.file_max_size)
+            return topic_add_html.__of__(self)(REQUEST)
+
     ob = NyForumTopic(id, title, category, description, notify, author, postdate, status, sort_reverse)
     self._setObject(id, ob)
     ob = self._getOb(id)
@@ -59,7 +64,7 @@ def addNyForumTopic(self, id='', title='', category='', description='',
         if referer == 'manage_addNyForumTopic_html' or \
             referer.find('manage_addNyForumTopic_html') != -1:
             return self.manage_main(self, REQUEST, update_menu=1)
-        elif referer == 'topic_add_html':
+        elif referer in ['topic_add_html', 'addNyForumTopic']:
             REQUEST.RESPONSE.redirect(self.absolute_url())
 
 class NyForumTopic(NyForumBase, Folder):
@@ -263,6 +268,10 @@ class NyForumTopic(NyForumBase, Folder):
     security.declareProtected(PERMISSION_MODIFY_FORUMTOPIC, 'addAttachment')
     def addAttachment(self, attachment='', REQUEST=None):
         """ """
+        if attachment != '' and hasattr(attachment, 'filename') and attachment.filename != '':
+            if len(attachment.read()) > self.file_max_size:
+                REQUEST.set('file_max_size', self.file_max_size)
+                return self.edit_html.__of__(self)(REQUEST)
         self.handleAttachmentUpload(self, attachment)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
