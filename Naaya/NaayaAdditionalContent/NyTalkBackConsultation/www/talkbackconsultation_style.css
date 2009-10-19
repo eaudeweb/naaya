@@ -153,12 +153,12 @@ div.buttons input{
 .talkback-add_comment, .button_sect_edit, a.tb-button{
 	margin: 0.5em 0;
 	padding: 3px;
-	border: 1px solid #ccc;
 	font-size: 85%;
 	color: #000;
 	text-decoration: none;
-	background: #eee;
 	display: inline-block;
+	background: #dbe6e3;
+	border: 1px solid #78a095;
 }
 .talkback-add_comment:hover, .button_sect_edit:hover {
 	border: 1px solid #eee;
@@ -175,9 +175,9 @@ div.talkback-section_toc {
 	float:right;
 	clear: right;
 	width: 14em;
-	border: 1px solid #ccc;
-	background-color: #eee;
-    margin: 1em 0 1em 1em;
+	border: 3px solid #78a095;
+	background-color: #dbe6e3;
+	margin: 1em 0 1em 1em;
 }
 
 div.talkback-section_toc h6 {
