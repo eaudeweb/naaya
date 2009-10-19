@@ -139,12 +139,9 @@ class Section(Folder):
         else:
             return None
 
-    security.declareProtected(view, 'get_comment_count')
-    def get_comment_count(self):
-        count = 0
-        for paragraph in self.get_paragraphs():
-            count += len(paragraph.objectIds([METATYPE_TALKBACKCONSULTATION_COMMENT]))
-        return count
+    security.declareProtected(view, 'comment_count')
+    def comment_count(self):
+        return sum(p.comment_count() for p in self.get_paragraphs())
 
     security.declarePrivate('parseBody')
     def parseBody(self):

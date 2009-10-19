@@ -45,7 +45,7 @@
 <tbody>
 	<tr tal:repeat="section here/list_sections">
 		<td><a tal:attributes="href section/absolute_url" tal:content="section/title_or_id" /></td>
-		<td tal:content="section/get_comment_count" />
+		<td tal:content="section/comment_count" />
 		<td class="talkback-section_list-edit_column" tal:condition="here/checkPermissionManageTalkBackConsultation">
 			<a tal:attributes="href string:${section/absolute_url}/edit_html" i18n:translate="" rel="nofollow">Edit</a>
 		</td>
