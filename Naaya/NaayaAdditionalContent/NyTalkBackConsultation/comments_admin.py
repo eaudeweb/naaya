@@ -20,6 +20,7 @@
 #Python imports
 import os
 import sys
+from itertools import groupby
 
 #Zope imports
 from Globals import InitializeClass
@@ -69,13 +70,17 @@ class CommentsAdmin(SimpleItem):
             elif comment.is_anonymous:
                 anonymous_count += 1
 
+        group_key = lambda comment: comment.get_section()
+        grouped_unapproved = [(k, list(g))
+                              for k, g in groupby(unapproved, group_key)]
+
         options = {
             'total_count': total_count,
             'invited_count': invited_count,
             'anonymous_count': anonymous_count,
             'unapproved_count': len(unapproved),
-            'unapproved_comments': unapproved,
-            'comment_macro': self._comment_template.macros['comment'],
+            'unapproved_comments': grouped_unapproved,
+            'comment_macros': self._comment_template.macros,
         }
         return self._admin_template(REQUEST, **options)
 

@@ -17,6 +17,8 @@ to show a whole tree of comments.
                 <tal:block content="python:here.utShowFullDateTime(comment.comment_date)"/>
             </div>
             <div class="buttons">
+            <metal:block metal:define-slot="buttons">
+            <metal:block define-macro="comment-buttons">
                 <a tal:define="url python:(here.absolute_url() +
                                            test(embedded, '/embedded_html', '') +
                                            '?reply_to=' + comment_id + '#comment-form')"
@@ -34,8 +36,6 @@ to show a whole tree of comments.
                    tal:condition="can_edit"
                    tal:attributes="href url"
                    i18n:translate="">delete</a>
-            </div>
-            <div class="buttons">
                 <form method="post"
                       tal:attributes="action string:${comment/absolute_url}/approve"
                       tal:condition="python:not comment.approved and
@@ -45,6 +45,8 @@ to show a whole tree of comments.
                                     test(embedded, '/embedded_html', ''))">
                     <input type="submit" value="approve" />
                 </form>
+            </metal:block>
+            </metal:block>
             </div>
             <div style="clear: both;"></div>
             <em tal:condition="not:comment/approved"
