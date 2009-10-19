@@ -91,9 +91,9 @@ class Paragraph(Folder):
         # comment_tree[None] is the list of top-level comments
         return comment_tree.get(None, [])
 
-    @property
+    security.declareProtected(view, 'comment_count')
     def comment_count(self):
-        return len(self.objectValues([METATYPE_TALKBACKCONSULTATION_COMMENT]))
+        return sum(1 for c in self.get_comments() if c.approved)
 
     _delete_comment_confirmation = PageTemplateFile('zpt/paragraph_delete_comment', globals())
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'delete_comment')
