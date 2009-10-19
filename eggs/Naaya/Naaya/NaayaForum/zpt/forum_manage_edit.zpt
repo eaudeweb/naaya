@@ -9,7 +9,7 @@
 	Saved changes. (<span tal:replace="here/ZopeTime" />)<br />
 </div>
 
-<form method="post" action="manageProperties">
+<form method="post" action="manageProperties" name="frmEdit">
 <table border="0" cellspacing="2" cellpadding="2" width="100%">
 	<tr>
 		<td class="form-label">Title</td>
@@ -26,7 +26,7 @@
 	<tr>
 		<td class="form-label" valign="top">Max allowed uploaded files size</td>
 		<td>
-                    <input type="text" name="file_max_size" tal:attributes="value here/file_max_size" /> (bytes) <br />
+                    <input type="text" name="file_max_size:int" tal:attributes="value here/file_max_size" /> (bytes) <br />
                     (Value 0 is for no limit uploads)
                 </td>
 	</tr>

@@ -41,6 +41,10 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
     notify='', REQUEST=None):
     """ """
     if self.is_topic_opened():
+        if attachment != '' and hasattr(attachment, 'filename') and attachment.filename != '':
+            if len(attachment.read()) > self.file_max_size:
+                REQUEST.set('file_max_size', self.file_max_size)
+                return message_add_html.__of__(self)(REQUEST)
         id = self.utCleanupId(id)
         if not id: id = PREFIX_NYFORUMMESSAGE + self.utGenRandomId(10)
         if inreplyto == '': inreplyto = None
@@ -59,7 +63,7 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
             if referer == 'manage_addNyForumMessage_html' or \
                 referer.find('manage_addNyForumMessage_html') != -1:
                 return self.manage_main(self, REQUEST, update_menu=1)
-            elif referer == 'message_add_html':
+            elif referer in ['message_add_html', 'addNyForumMessage']:
                 REQUEST.RESPONSE.redirect(self.absolute_url())
     else:
         raise Exception, 'This topic is closed. No more operations are allowed.'
@@ -147,6 +151,10 @@ class NyForumMessage(NyForumBase, Folder):
         """ """
         if self.is_topic_closed():
             raise Exception, 'This topic is closed. No more operations are allowed.'
+        if attachment != '' and hasattr(attachment, 'filename') and attachment.filename != '':
+            if len(attachment.read()) > self.file_max_size:
+                REQUEST.set('file_max_size', self.file_max_size)
+                return self.edit_html.__of__(self)(REQUEST)
         self.handleAttachmentUpload(self, attachment)
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
@@ -159,6 +167,10 @@ class NyForumMessage(NyForumBase, Folder):
         if self.is_topic_closed():
             raise Exception, 'This topic is closed. No more operations are allowed.'
         id = PREFIX_NYFORUMMESSAGE + self.utGenRandomId(10)
+        if attachment != '' and hasattr(attachment, 'filename') and attachment.filename != '':
+            if len(attachment.read()) > self.file_max_size:
+                REQUEST.set('file_max_size', self.file_max_size)
+                return self.reply_html.__of__(self)(REQUEST)
         addNyForumMessage(self.get_topic_object(), id, self.id,
             title, description, attachment, notify)
         if REQUEST:
