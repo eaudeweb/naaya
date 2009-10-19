@@ -26,7 +26,7 @@
             </p>
         </tal:block>
         <input type="hidden" name="next_page" tal:condition="embedded"
-          tal:attributes="value string:${here/absolute_url}/embedded_html" />
+               tal:attributes="value string:${request/URL0}?${request/QUERY_STRING}" />
         <div class="field-inline">
             <label for="contributor_name" i18n:translate="">Name</label>
             <input tal:condition="anonymous_user" type="text"

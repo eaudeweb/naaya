@@ -231,7 +231,7 @@ class Paragraph(Folder):
             self.setSessionErrors(errors)
             self.setSession('contributor_name', contributor_name)
             self.setSession('message', message)
-            return REQUEST.RESPONSE.redirect(self.absolute_url())
+            return REQUEST.RESPONSE.redirect(next_page)
         else:
             self.delSession('username')
             self.delSession('message')
@@ -245,6 +245,10 @@ class Paragraph(Folder):
         }
         addComment(self, **form_data)
 
+        success_message = "Comment submitted successfully."
+        if not approved:
+            success_message += " An administrator will review it for approval."
+        self.setSessionInfo([success_message])
         REQUEST.RESPONSE.redirect(next_page)
 
     security.declareProtected(view, 'comment_form')

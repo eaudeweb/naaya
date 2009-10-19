@@ -57,13 +57,18 @@ div.talkback-comment_floating_box iframe {
 	border: none;
 }
 
-a.talkback-comment_close_box {
+a.tb-iframe-close-bottom, a.tb-iframe-close-top {
 	text-decoration: none;
 	position: absolute;
-	top: 0;
-	right: 20px;
+	right: 5px;
 	background-color: white;
 	padding: 3px;
+}
+a.tb-iframe-close-top {
+	top: 0;
+}
+a.tb-iframe-close-bottom {
+	bottom: 0;
 }
 
 p.talkback-cannot_comment {
@@ -201,7 +206,7 @@ div.talkback-section_toc ul li {
 }
 
 li.talkback-current_section a {
-	font-weight: bold;
+	font-style: italic;
 }
 
 li.talkback-section a {

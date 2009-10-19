@@ -7,7 +7,10 @@
 </head>
 <body class="tb-embedded">
 
-<div class="talkback-comments_list">
+<span tal:replace="structure here/messages_box"/>
+
+<div class="talkback-comments_list"
+     tal:condition="python:request.get('prev_comments', 'on') == 'on'">
     <h2 i18n:translate="" tal:condition="here/get_comments">Previous comments</h2>
     <tal:block replace="structure python:here.comments_html(embedded=True)" />
 </div>
