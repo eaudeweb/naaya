@@ -33,28 +33,23 @@ from naaya.content.exfile.tests.testFunctional import ExFileMixin
 from naaya.content.mediafile.tests.testFunctional import MediaFileMixin
 from naaya.content.contact.tests.testFunctional import ContactMixin
 
-# not all content types will pass all tests
-SCHEMA_EXCEPTIONS = ['mediafile_item']
-DYNAMIC_PROPERTIES_EXCEPTIONS = []
-FORM_REMEMBER_DATA_EXCEPTIONS = ['mediafile_item']
-TRANSLATE_OBJECT_EXCEPTIONS = ['mediafile_item']
 
-# these content types don't support dynamic properties
-DYNAMIC_PROPERTIES_EXCEPTIONS += [ 'exfile_item', 'mediafile_item', 'geopoint_item' ]
+SCHEMA_TESTABLES = ['contact_item', 'document_item', 'event_item',
+                    'exfile_item', 'file_item', 'geopoint_item',
+                    'news_item', 'pointer_item', 'story_item', 'url_item']
 
-# NySMAP* products need an EnviroWindows site to function properly
-# so we can't easily test them here
-SCHEMA_EXCEPTIONS += ['NySMAPExpert', 'NySMAPProject']
-DYNAMIC_PROPERTIES_EXCEPTIONS += ['NySMAPExpert', 'NySMAPProject']
-FORM_REMEMBER_DATA_EXCEPTIONS += ['NySMAPExpert', 'NySMAPProject']
-TRANSLATE_OBJECT_EXCEPTIONS += ['NySMAPExpert', 'NySMAPProject']
+DYNAMIC_PROPERTIES_TESTABLES =['contact_item', 'document_item', 'event_item',
+                               'file_item', 'news_item', 'pointer_item',
+                               'story_item', 'url_item']
 
-# Ny(Simlple)?Consultation is also non-conformant
-consultation_products = ['NyConsultation', 'NySimpleConsultation', 'NyTalkBackConsultation']
-SCHEMA_EXCEPTIONS += consultation_products
-DYNAMIC_PROPERTIES_EXCEPTIONS += consultation_products
-FORM_REMEMBER_DATA_EXCEPTIONS += consultation_products
-TRANSLATE_OBJECT_EXCEPTIONS += consultation_products
+FORM_TESTABLES = ['contact_item', 'document_item', 'event_item',
+                  'exfile_item', 'file_item', 'geopoint_item',
+                  'news_item', 'pointer_item', 'story_item', 'url_item']
+
+TRANSLATE_TESTABLES = ['contact_item', 'document_item', 'event_item',
+                  'exfile_item', 'file_item', 'geopoint_item',
+                  'news_item', 'pointer_item', 'story_item', 'url_item']
+
 
 def _list_content_types():
     for content_type in get_pluggable_content().values():
@@ -76,7 +71,7 @@ class ContentTypeConformanceTestCase(ZopeTestCase.TestCase):
         resolution order).
         """
         for content_type in content_types:
-            if content_type['module'] in SCHEMA_EXCEPTIONS:
+            if content_type['module'] not in SCHEMA_TESTABLES:
                 continue
             self.failUnlessEqual(content_type['_class'].__getattr__.im_func,
                 NyContentData.__getattr__.im_func,
@@ -118,7 +113,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin, ExFi
         n = 1
 
         for content_type in content_types:
-            if content_type['module'] in SCHEMA_EXCEPTIONS:
+            if content_type['module'] not in SCHEMA_TESTABLES:
                 continue
 
             type_name = content_type['module']
@@ -182,7 +177,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin, ExFi
         n = 1
 
         for content_type in content_types:
-            if content_type['module'] in DYNAMIC_PROPERTIES_EXCEPTIONS:
+            if content_type['module'] not in DYNAMIC_PROPERTIES_TESTABLES:
                 continue
             if not self.portal.is_pluggable_item_installed(content_type['meta_type']):
                 continue
@@ -249,7 +244,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin, ExFi
     def test_form_remember_data(self):
         """ Make sure forms don't lose their data when they have an error """
         for content_type in content_types:
-            if content_type['module'] in FORM_REMEMBER_DATA_EXCEPTIONS:
+            if content_type['module'] not in FORM_TESTABLES:
                 continue
 
             type_name = content_type['module']
@@ -314,7 +309,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin, ExFi
         for content_type in content_types:
             type_name = content_type['module']
 
-            if type_name in TRANSLATE_OBJECT_EXCEPTIONS:
+            if type_name not in TRANSLATE_TESTABLES:
                 continue
 
             # "create object" form
@@ -366,8 +361,7 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin, ExFi
         """ Make sure objects get cataloged properly """
         for content_type in content_types:
             type_name = content_type['module']
-            if type_name not in [ 'NyNews', 'NyStory', 'NyDocument', 'NyPointer',
-                    'NyURL', 'NyEvent', 'NyFile', 'NyFolder']:
+            if type_name not in SCHEMA_TESTABLES:
                 continue
             rnd_title = 'title' + str(random())[2:8]
 

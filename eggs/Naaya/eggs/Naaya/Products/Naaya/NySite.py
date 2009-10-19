@@ -3252,6 +3252,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
             #remember that this meta_type was installed
             self.__pluggable_installed_content[meta_type] = 1
+            self.searchable_content.append(meta_type)
             self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html' % self.absolute_url())
 
@@ -3265,6 +3266,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             except: pass
             #remember that this meta_type was removed
             del(self.__pluggable_installed_content[meta_type])
+            self.searchable_content = [x for x in self.searchable_content if x != meta_type]
             self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html' % self.absolute_url())
 
