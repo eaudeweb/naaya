@@ -17,7 +17,19 @@
 
 // Alex Morega, Eau de Web
 
-(function() {
+$(function() {
+
+if($('ul.tb-comments-tree').length > 0)
+    var inline_comments = true;
+else
+    var inline_comments = false;
+
+$('a.talkback-add_comment').each(function() {
+    var $paragraph = $(this).prev('div.talkback-paragraph');
+    $(this).mouseover(function() {$paragraph.css({background: '#eee'});});
+    $(this).mouseout(function() {$paragraph.css({background: ''});});
+    $(this).click(comment_add);
+});
 
 function comment_add(evt) {
     evt.preventDefault();
@@ -38,8 +50,12 @@ function comment_add(evt) {
             left: '130px'
         });
 
-    var close_button = $('<a href="javascript:;">[close]</a>').appendTo(comment_box)
-    close_button.addClass('talkback-comment_close_box').click(function(){
+    var close_button_1 = $('<a href="javascript:;">[close]</a>');
+    var close_button_2 = close_button_1.clone();
+    close_button_1.addClass('tb-iframe-close-top').appendTo(comment_box);
+    close_button_2.addClass('tb-iframe-close-bottom');
+    var close_buttons = $([close_button_1[0], close_button_2[0]]);
+    close_buttons.click(function() {
         clearInterval(resize_interval);
         comment_box.remove();
         overlay.remove();
@@ -47,11 +63,25 @@ function comment_add(evt) {
 
     var resize_interval;
     var iframe = $('<iframe>').appendTo(comment_box);
-    iframe.attr('src', $link.attr('href') + "/embedded_html")
+    iframe.attr('src', $link.attr('href') + "/embedded_html" +
+                       (inline_comments ? '?prev_comments=off' : ''));
     iframe.load(function(){
         clearInterval(resize_interval);
-        var comment_count = $('span.talkback-comment_count', this.contentDocument).html();
-        $link.children('span.talkback-comment_count').html(comment_count);
+        if(! inline_comments) {
+            var comment_count = $('span.talkback-comment_count',
+                                  this.contentDocument
+                                ).html();
+            $link.children('span.talkback-comment_count').html(comment_count);
+        }
+        else {
+            var infomsg = $('div.message.information',
+                            this.contentDocument
+                          ).text()
+            if(infomsg.search('Comment submitted successfully') > -1) {
+                window.location.reload();
+                return;
+            }
+        }
 
         var height = 0;
         resize_interval = setInterval(function() {
@@ -62,20 +92,14 @@ function comment_add(evt) {
             overlay.height($(document).height());
         }, 500);
     });
-}
 
-$(function() {
-    $('a.talkback-add_comment').each(function() {
-        var $paragraph = $(this).prev('div.talkback-paragraph');
-        $(this).mouseover(function() {$paragraph.css({background: '#eee'});});
-        $(this).mouseout(function() {$paragraph.css({background: ''});});
-        $(this).click(comment_add);
-    });
-});
+    close_button_2.appendTo(comment_box);
+}
 
 function get_height(the_window) {
     var the_document = the_window.document;
     if ($.browser.msie) {
+        // IE6 and IE7 are broken. Fix works with IE8 too.
         var scrollHeight = Math.max(
             the_document.documentElement.scrollHeight,
             the_document.body.scrollHeight
@@ -90,10 +114,10 @@ function get_height(the_window) {
         } else {
             return scrollHeight;
         }
-    // handle "good" browsers
     } else {
+        // handle "good" browsers
         return $('html', the_document).height();
     }
 }
 
-})();
+});
