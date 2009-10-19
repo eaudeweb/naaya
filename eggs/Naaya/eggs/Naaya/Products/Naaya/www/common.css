@@ -1378,3 +1378,9 @@ td.portlet_arrange_right {
 td.portlet_arrange_center {
 	background-color: #dfd;
 }
+
+p.form-errors {
+	color: #f00;
+	font-style: italic;
+	margin: 0.2em 0;
+}
