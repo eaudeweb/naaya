@@ -62,7 +62,7 @@ class InvitationsContainer(SimpleItem):
 
             auth_tool = self.getAuthenticationTool()
             inviter_userid = auth_tool.get_current_userid()
-            inviter_name = auth_tool.name_from_userid(inviter_userid)
+            inviter_name = self.get_user_name_or_userid(inviter_userid)
 
             kwargs = dict(formdata, web_form=True,
                           inviter_userid=inviter_userid,
@@ -80,6 +80,8 @@ class InvitationsContainer(SimpleItem):
                                             formdata['name']])
                     return REQUEST.RESPONSE.redirect(self.absolute_url() + '/create')
             except FormError, e:
+                self.setSessionErrors(['The form contains errors. Please '
+                                       'correct them and try again.'])
                 formerrors = dict(e.errors)
 
         else:
@@ -104,20 +106,21 @@ class InvitationsContainer(SimpleItem):
             else:
                 raise errors[0][1]
 
-        key = random_key()
-        keyed_url = self.absolute_url() + '/welcome?key=' + key
-
         kwargs = {
             'name': name,
             'consultation': self.get_consultation(),
-            'keyed_url': keyed_url,
             'inviter_name': inviter_name,
             'inviter_message': message,
         }
-        mail_data = self._invite_email.render_email(**kwargs)
 
         if preview:
+            kwargs['keyed_url'] = '[PRIVATE URL]'
+            mail_data = self._invite_email.render_email(**kwargs)
             return {'preview_mail': mail_data}
+
+        key = random_key()
+        kwargs['keyed_url'] = self.absolute_url() + '/welcome?key=' + key
+        mail_data = self._invite_email.render_email(**kwargs)
 
         invitation = Invitation(inviter_userid, key, name, email, organization, notes)
         self._invites.insert(key, invitation)

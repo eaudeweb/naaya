@@ -11,7 +11,11 @@
     has invited you to participate in the consultation
     "<tal:block content="options/consultation/title_or_id"
         i18n:name="consultation_title" />".
+    You will be able to submit comments, subject to approval by the person who
+    invited you (or by the consultation administrator). Please do not reply to
+    this e-mail, and save it for future reference.
 </tal:block>
+
 <tal:block i18n:translate="">
     You can access the consultation using the following address:
     <tal:block content="options/keyed_url" i18n:name="keyed_url" />

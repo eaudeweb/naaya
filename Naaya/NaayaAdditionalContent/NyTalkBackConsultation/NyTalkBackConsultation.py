@@ -498,6 +498,17 @@ class NyTalkBackConsultation(NyAttributes,
             name = userid
         return name
 
+    def get_user_name_or_userid(self, userid=None):
+        if userid is None:
+            return self.get_user_name()
+
+        auth_tool = self.getAuthenticationTool()
+        name = auth_tool.name_from_userid(userid)
+        if name == '':
+            name = userid
+
+        return name
+
     def checkTalkBackConsultationUser(self):
         """
         Checks if the user is logged in and has reviewer rights:

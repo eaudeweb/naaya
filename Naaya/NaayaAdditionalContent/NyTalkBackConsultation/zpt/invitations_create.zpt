@@ -20,7 +20,7 @@
 <form name="invite" method="post"
   tal:define="data options/formdata; errors options/formerrors">
     <div class="field">
-        <label for="name" i18n:translate="">Name</label>
+        <label for="name" i18n:translate="">Name of person to invite</label>
         <p class="form-errors" tal:define="err errors/name|nothing"
           tal:condition="err" tal:content="err" />
         <input type="text" name="name:utf8:ustring" id="name" size="50"
