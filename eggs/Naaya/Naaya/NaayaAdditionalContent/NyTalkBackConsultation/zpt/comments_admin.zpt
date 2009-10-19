@@ -34,10 +34,36 @@
                i18n:name="unapproved_count" />
 </p>
 
-<ul class="tb-comments-tree">
-<tal:block repeat="comment options/unapproved_comments">
-    <metal:block use-macro="options/comment_macro" />
+<dl class="tb-comments-unapproved">
+<tal:block repeat="comment_group options/unapproved_comments">
+    <tal:block define="section python:comment_group[0];
+                       comments python:comment_group[1];">
+
+        <dt>
+            <h2>
+            <a tal:attributes="href section/absolute_url"
+               tal:content="section/title"></a>
+            </h2>
+        </dt>
+
+        <dd>
+        <ul class="tb-comments-tree">
+        <tal:block repeat="comment comments">
+            <metal:block use-macro="options/comment_macros/comment">
+            <metal:block fill-slot="buttons">
+                <metal:block use-macro="options/comment_macros/comment-buttons" />
+                <a tal:define="paragraph comment/get_paragraph;
+                               section_url string:${section/absolute_url}?inline_comments=on;
+                               anchor paragraph/get_anchor;"
+                   tal:attributes="href string:${section_url}#${anchor}"
+                   i18n:translate="">original paragraph</a>
+            </metal:block>
+            </metal:block>
+        </tal:block>
+        </ul>
+        </dd>
+    </tal:block>
 </tal:block>
-</ul>
+</dl>
 
 <span tal:replace="structure here/standard_html_footer" />
