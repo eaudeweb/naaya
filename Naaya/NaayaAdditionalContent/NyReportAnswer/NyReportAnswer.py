@@ -18,10 +18,13 @@
 # Alex Ghica, Finsiel Romania
 
 #Python imports
+import os
+import sys
 from copy import deepcopy
 
 #Zope imports
 from Globals                                    import InitializeClass
+from App.ImageFile import ImageFile
 from AccessControl                              import ClassSecurityInfo
 from AccessControl.Permissions                  import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
@@ -33,6 +36,8 @@ from Products.NaayaBase.constants       import *
 from Products.NaayaBase.NyContainer     import NyContainer
 from Products.NaayaBase.NyAttributes    import NyAttributes
 from Products.NaayaBase.NyCheckControl  import NyCheckControl
+from Products.NaayaBase.NyValidation import NyValidation
+
 from reportanswer_item                        import reportanswer_item
 
 #module constants
@@ -57,10 +62,29 @@ PROPERTIES_OBJECT = {
     'answer':                       (0, '', ''),
     'assoc_question':               (0, '', '')
 }
-
-manage_addNyReportAnswer_html = PageTemplateFile('zpt/reportanswer_manage_add', globals())
-manage_addNyReportAnswer_html.kind = METATYPE_OBJECT
-manage_addNyReportAnswer_html.action = 'addNyReportAnswer'
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'NyReportAnswer',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya Report Answer',
+        'label': 'Report Answer',
+        'permission': 'Naaya - Add Naaya Report Answer objects',
+        'forms': ['reportanswer_add', 'reportanswer_edit', 'reportanswer_index'],
+        'add_form': 'reportanswer_add_html',
+        'description': 'This is Naaya Report Answer type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': None,
+        'schema_name': '',
+        'import_string': 'importNyReportAnswer',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyReportAnswer.gif'),
+        '_misc': {
+                'NyReportAnswer.gif': ImageFile('www/NyReportAnswer.gif', globals()),
+                'NyReportAnswer_marked.gif': ImageFile('www/NyReportAnswer_marked.gif', globals()),
+            },
+    }
 
 def reportanswer_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
@@ -355,3 +379,23 @@ class NyReportAnswer(NyAttributes, reportanswer_item, NyContainer, NyCheckContro
         return self.getFormsTool().report_macro_objecttree
 
 InitializeClass(NyReportAnswer)
+manage_addNyReportAnswer_html = PageTemplateFile('zpt/reportanswer_manage_add', globals())
+manage_addNyReportAnswer_html.kind = METATYPE_OBJECT
+manage_addNyReportAnswer_html.action = 'addNyReportAnswer'
+
+config.update({
+    'constructors': (manage_addNyReportAnswer_html, addNyReportAnswer),
+    'folder_constructors': [
+            # NyFolder.manage_addNyReportAnswer_html = manage_addNyReportAnswer_html
+            ('manage_addNyReportAnswer_html', manage_addNyReportAnswer_html),
+            ('reportanswer_add_html', reportanswer_add_html),
+            ('addNyReportAnswer', addNyReportAnswer),
+            (config['import_string'], importNyReportAnswer),
+        ],
+    'add_method': addNyReportAnswer,
+    'validation': issubclass(NyReportAnswer, NyValidation),
+    '_class': NyReportAnswer,
+})
+
+def get_config():
+    return config
