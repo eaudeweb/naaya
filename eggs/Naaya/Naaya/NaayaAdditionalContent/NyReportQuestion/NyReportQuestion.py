@@ -18,10 +18,13 @@
 # Lehel Kacso, Finsiel Romania
 
 #Python imports
+import os
+import sys
 from copy import deepcopy
 
 #Zope imports
 from Globals                                    import InitializeClass
+from App.ImageFile import ImageFile
 from AccessControl                              import ClassSecurityInfo
 from AccessControl.Permissions                  import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
@@ -33,6 +36,7 @@ from Products.NaayaBase.constants       import *
 from Products.NaayaBase.NyContainer     import NyContainer
 from Products.NaayaBase.NyAttributes    import NyAttributes
 from Products.NaayaBase.NyCheckControl  import NyCheckControl
+from Products.NaayaBase.NyValidation import NyValidation
 from reportquestion_item                        import reportquestion_item
 
 
@@ -57,9 +61,29 @@ PROPERTIES_OBJECT = {
     'lang':                         (0, '', '')
 }
 
-manage_addNyReportQuestion_html = PageTemplateFile('zpt/reportquestion_manage_add', globals())
-manage_addNyReportQuestion_html.kind = METATYPE_OBJECT
-manage_addNyReportQuestion_html.action = 'addNyReportQuestion'
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'NyReportQuestion',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya Report Question',
+        'label': 'Report Question',
+        'permission': 'Naaya - Add Naaya Report Question objects',
+        'forms': ['reportquestion_add', 'reportquestion_edit', 'reportquestion_index'],
+        'add_form': 'reportquestion_add_html',
+        'description': 'This is Naaya Report Question type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': None,
+        'schema_name': '',
+        'import_string': 'importNyReportQuestion',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyReportQuestion.gif'),
+        '_misc': {
+                'NyReportQuestion.gif': ImageFile('www/NyReportQuestion.gif', globals()),
+                'NyReportQuestion_marked.gif': ImageFile('www/NyReportQuestion_marked.gif', globals()),
+            },
+    }
 
 def reportquestion_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
@@ -354,3 +378,24 @@ class NyReportQuestion(NyAttributes, reportquestion_item, NyContainer, NyCheckCo
         return self.getFormsTool().report_macro_objecttree
 
 InitializeClass(NyReportQuestion)
+
+manage_addNyReportQuestion_html = PageTemplateFile('zpt/reportquestion_manage_add', globals())
+manage_addNyReportQuestion_html.kind = METATYPE_OBJECT
+manage_addNyReportQuestion_html.action = 'addNyReportQuestion'
+
+config.update({
+    'constructors': (manage_addNyReportQuestion_html, addNyReportQuestion),
+    'folder_constructors': [
+            # NyFolder.manage_addNyReportQuestion_html = manage_addNyReportQuestion_html
+            ('manage_addNyReportQuestion_html', manage_addNyReportQuestion_html),
+            ('reportquestion_add_html', reportquestion_add_html),
+            ('addNyReportQuestion', addNyReportQuestion),
+            (config['import_string'], importNyReportQuestion),
+        ],
+    'add_method': addNyReportQuestion,
+    'validation': issubclass(NyReportQuestion, NyValidation),
+    '_class': NyReportQuestion,
+})
+
+def get_config():
+    return config
