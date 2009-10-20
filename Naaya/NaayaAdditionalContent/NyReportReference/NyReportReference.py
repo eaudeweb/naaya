@@ -18,10 +18,13 @@
 # Alex Ghica, Finsiel Romania
 
 #Python imports
+import os
+import sys
 from copy import deepcopy
 
 #Zope imports
 from Globals                                    import InitializeClass
+from App.ImageFile import ImageFile
 from AccessControl                              import ClassSecurityInfo
 from AccessControl.Permissions                  import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
@@ -33,6 +36,7 @@ from Products.NaayaBase.constants       import *
 from Products.NaayaBase.NyContainer     import NyContainer
 from Products.NaayaBase.NyAttributes    import NyAttributes
 from Products.NaayaBase.NyCheckControl  import NyCheckControl
+from Products.NaayaBase.NyValidation import NyValidation
 from reportreference_item               import reportreference_item
 
 #module constants
@@ -57,9 +61,29 @@ PROPERTIES_OBJECT = {
     'reference':                    (0, '', '')
 }
 
-manage_addNyReportReference_html = PageTemplateFile('zpt/reportreference_manage_add', globals())
-manage_addNyReportReference_html.kind = METATYPE_OBJECT
-manage_addNyReportReference_html.action = 'addNyReportReference'
+# this dictionary is updated at the end of the module
+config = {
+        'product': 'NaayaContent',
+        'module': 'NyReportReference',
+        'package_path': os.path.abspath(os.path.dirname(__file__)),
+        'meta_type': 'Naaya Report Reference',
+        'label': 'Report Reference',
+        'permission': 'Naaya - Add Naaya Report Reference objects',
+        'forms': ['reportreference_add', 'reportreference_edit', 'reportreference_index'],
+        'add_form': 'reportreference_add_html',
+        'description': 'This is Naaya Report Reference type.',
+        'properties': PROPERTIES_OBJECT,
+        'default_schema': None,
+        'schema_name': '',
+        'import_string': 'importNyReportReference',
+        '_module': sys.modules[__name__],
+        'additional_style': None,
+        'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyReportReference.gif'),
+        '_misc': {
+                'NyReportReference.gif': ImageFile('www/NyReportReference.gif', globals()),
+                'NyReportReference_marked.gif': ImageFile('www/NyReportReference_marked.gif', globals()),
+            },
+    }
 
 def reportreference_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
@@ -370,3 +394,24 @@ class NyReportReference(NyAttributes, reportreference_item, NyContainer, NyCheck
         return self.getFormsTool().report_macro_objecttree
 
 InitializeClass(NyReportReference)
+
+manage_addNyReportReference_html = PageTemplateFile('zpt/reportreference_manage_add', globals())
+manage_addNyReportReference_html.kind = METATYPE_OBJECT
+manage_addNyReportReference_html.action = 'addNyReportReference'
+
+config.update({
+    'constructors': (manage_addNyReportReference_html, addNyReportReference),
+    'folder_constructors': [
+            # NyFolder.manage_addNyReportReference_html = manage_addNyReportReference_html
+            ('manage_addNyReportReference_html', manage_addNyReportReference_html),
+            ('reportreference_add_html', reportreference_add_html),
+            ('addNyReportReference', addNyReportReference),
+            (config['import_string'], importNyReportReference),
+        ],
+    'add_method': addNyReportReference,
+    'validation': issubclass(NyReportReference, NyValidation),
+    '_class': NyReportReference,
+})
+
+def get_config():
+    return config
