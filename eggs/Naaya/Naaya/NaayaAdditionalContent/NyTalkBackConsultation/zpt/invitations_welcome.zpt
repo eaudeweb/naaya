@@ -2,7 +2,8 @@
 
 <h1 tal:content="here/title_or_id" />
 
-<p tal:condition="options/invitation" i18n:translate="">
+<tal:block condition="options/invitation">
+<p i18n:translate="">
     Welcome, <tal:block content="options/invitation/name" i18n:name="name" />.
     You have been invited to participate in the consultation
     <a tal:content="here/aq_parent/title_or_id"
@@ -10,6 +11,11 @@
       i18n:name="consultation_name"></a>
     by <tal:block content="options/inviter_name" i18n:name="inviter_name" />.
 </p>
+
+<p>
+    <a tal:attributes="href options/logout_url">Logout</a>
+</p>
+</tal:block>
 
 <p tal:condition="not:options/invitation" i18n:translate="">
     Invalid key

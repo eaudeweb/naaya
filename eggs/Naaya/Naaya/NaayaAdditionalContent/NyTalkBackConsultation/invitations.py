@@ -164,20 +164,32 @@ class InvitationsContainer(SimpleItem):
     def welcome(self, REQUEST):
         """ welcome page for invitees """
 
+        if REQUEST.get('logout', None) == 'on':
+            try:
+                del REQUEST.SESSION['nytb-current-key']
+            except KeyError:
+                pass # session key already removed
+            cons_url = self.get_consultation().absolute_url()
+            return REQUEST.RESPONSE.redirect(cons_url)
+
         key = REQUEST.get('key', None)
         invitation = self.get_invitation(key)
 
         if invitation is not None and invitation.enabled:
             auth_tool = self.getAuthenticationTool()
             inviter_name = auth_tool.name_from_userid(invitation.inviter_userid)
-            REQUEST.SESSION.set('nytb-current-key', key)
+            REQUEST.SESSION['nytb-current-key'] = key
         else:
             invitation = None
             inviter_name = ''
 
-        return self._welcome_html(REQUEST,
-                                  invitation=invitation,
-                                  inviter_name=inviter_name)
+        options = {
+            'invitation': invitation,
+            'inviter_name': inviter_name,
+            'logout_url': self.absolute_url() + '/welcome?logout=on',
+        }
+
+        return self._welcome_html(REQUEST, **options)
 
     security.declarePrivate('get_current_invitation')
     def get_current_invitation(self, REQUEST):
@@ -206,13 +218,6 @@ class Invitation(Persistent):
 
 class InvitationUsersTool(BasicUserFolder):
     def authenticate(self, name, password, request):
-        # first try to authenticate using the site acl_users
-        auth_tool = self.getSite().getAuthenticationTool()
-        user = auth_tool.authenticate(name, password, request)
-        if user is not None:
-            return None
-
-        # no user logged in; try with an invite key
         invitation = self.invitations.get_current_invitation(request)
         if invitation is not None and invitation.enabled:
             return SimpleUser('invited_reviewer', '', ('InvitedReviewer',), [])
