@@ -344,6 +344,34 @@ class InviteeCommentTestCase(NaayaFunctionalTestCase):
         self.browser.go(self.cons_url + '/manage_main')
         self.assertAccessDenied()
 
+    def test_auth_precedence(self):
+        welcome_url = self.cons_url + '/invitations/welcome'
+
+        # first, try as 'admin'
+        self.browser_do_login('admin', '')
+        self.browser.go(self.cons_url)
+        self.assertTrue('Manage comments' in self.browser.get_html())
+        self.browser.go(self.cons_url + '/invitations')
+        self.assertAccessDenied(False)
+
+        # next authenticate using a key. we should not see admin buttons anymore.
+        self.browser.go(welcome_url + '?key=' + self.invite_key)
+        self.assertTrue(welcome_url + '?logout=on' in self.browser.get_html())
+        self.browser.go(self.cons_url)
+        self.assertTrue('Manage comments' not in self.browser.get_html())
+        # but if we really go to a protected page, zope will authenticate us as admin
+        self.browser.go(self.cons_url + '/invitations')
+        self.assertAccessDenied(False)
+
+        # 'log out' from invited access; should resume 'admin' login
+        self.browser.go(welcome_url + '?logout=on')
+        self.browser.go(self.cons_url)
+        self.assertTrue('Manage comments' in self.browser.get_html())
+        self.browser.go(self.cons_url + '/invitations')
+        self.assertAccessDenied(False)
+
+        self.browser_do_logout()
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(InvitationTestCase))
