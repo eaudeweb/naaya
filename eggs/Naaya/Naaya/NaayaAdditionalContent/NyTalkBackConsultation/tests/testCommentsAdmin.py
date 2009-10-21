@@ -43,7 +43,7 @@ class CommentsAdminTestCase(NaayaFunctionalTestCase):
             id='test-section', title='Test section',
             body='<p>First paragraph</p><p>Second paragraph</p>')
 
-        consultation.invitations._create_invitation(
+        consultation.invitations._send_invitation(
             name='The Invitee', email='invitee@thinkle.edu',
             organization='Thinkle University', notes='Knows his shit',
             inviter_userid='contributor', inviter_name='Contributor Test', message='')
