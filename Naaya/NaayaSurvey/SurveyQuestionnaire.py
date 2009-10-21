@@ -41,7 +41,8 @@ from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.constants import \
      EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG, \
-     MESSAGE_SAVEDCHANGES, PERMISSION_EDIT_OBJECTS
+     MESSAGE_SAVEDCHANGES, PERMISSION_EDIT_OBJECTS, \
+     PERMISSION_SKIP_CAPTCHA
 from Products.NaayaCore.managers.utils import genObjectId, genRandomId
 from Products.NaayaCore.managers import recaptcha_utils
 from Products.NaayaWidgets.Widget import WidgetError
@@ -241,9 +242,14 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
                 datamodel[widget.getWidgetId()] = None
                 errors.append(ex)
 
-        if errors or not recaptcha_utils.is_valid_captcha(self, REQUEST):
-            if errors:
-                self.setSessionErrors(errors)
+        #check Captcha/reCaptcha
+        if not self.checkPermission(PERMISSION_SKIP_CAPTCHA):
+            captcha_errors = self.getSite().validateCaptcha('', REQUEST)
+            if captcha_errors:
+                errors.add(captcha_errors)
+
+        if errors:
+            self.setSessionErrors(errors)
             self.setSessionAnswer(datamodel)
             self.setSession('notify_respondent', notify_respondent)
             REQUEST.RESPONSE.redirect('%s/index_html' % self.absolute_url())
@@ -331,7 +337,12 @@ class SurveyQuestionnaire(NyAttributes, questionnaire_item, NyContainer):
         auth_tool = self.getSite().getAuthenticationTool()
         email_tool = self.getSite().getEmailTool()
         template = email_tool._getOb(template_name)
-        sender_email = self.getNotificationTool().from_email
+
+        try:
+            sender_email = self.getNotificationTool().from_email
+        except AttributeError:
+            sender_email = email_tool._get_from_address()
+
         try:
             recp_email = auth_tool.getUserEmail(recipient)
             email_tool.sendEmail(template.body % d,
