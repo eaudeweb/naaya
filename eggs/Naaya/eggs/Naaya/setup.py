@@ -3,10 +3,9 @@ import os
 
 try:
     from getversion import get_version
-except ImportError:
-    version = '1.0-dev'
-else:
     version = get_version()
+except ImportError:
+    version = '1.0dev'
 
 setup(name='Naaya',
       version=version,
