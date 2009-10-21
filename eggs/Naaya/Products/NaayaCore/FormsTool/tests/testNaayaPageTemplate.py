@@ -24,7 +24,7 @@ from Products.Naaya.tests import NaayaTestCase
 
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
-from Products.NaayaContent.NyDocument.NyDocument import NyDocument
+from naaya.content.document import NyDocument
 
 class NaayaTemplateTestCase(NaayaTestCase.NaayaTestCase):
     def afterSetUp(self):
