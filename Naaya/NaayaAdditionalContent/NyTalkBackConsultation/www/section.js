@@ -68,10 +68,12 @@ function comment_add(evt) {
     iframe.load(function(){
         clearInterval(resize_interval);
         if(! inline_comments) {
-            var comment_count = $('span.talkback-comment_count',
-                                  this.contentDocument
-                                ).html();
-            $link.children('span.talkback-comment_count').html(comment_count);
+            var comment_count_span = $('span.talkback-comment_count',
+                                       this.contentDocument);
+            if(comment_count_span.length) {
+                $link.children('span.talkback-comment_count').html(
+                        comment_count_span.html());
+            }
         }
         else {
             var infomsg = $('div.message.information',
