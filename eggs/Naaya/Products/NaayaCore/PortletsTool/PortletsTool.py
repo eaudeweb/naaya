@@ -31,6 +31,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Product imports
 from Products.NaayaCore.constants import *
+from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.managers.utils import utils
 from managers.portlets_templates import *
 from Portlet import manage_addPortlet_html, addPortlet
@@ -247,7 +248,7 @@ class PortletsTool(Folder, utils):
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_layout')
 
     _admin_layout_zpt = PageTemplateFile('zpt/admin_layout', globals())
-    security.declareProtected(view_management_screens, 'admin_layout')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_layout')
     def admin_layout(self, REQUEST):
         """ Administration page for portlets layout """
         if REQUEST.REQUEST_METHOD == 'POST':

@@ -108,6 +108,9 @@ streamlined_updates = [
     '2009_05-schema_tool',
 ]
 
+from naaya.z2util import redirect_to
+
+
 #constructor
 manage_addNySite_html = PageTemplateFile('zpt/site_manage_add', globals())
 def manage_addNySite(self, id='', title='', lang=None, default_content=True, REQUEST=None):
@@ -2908,21 +2911,33 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def admin_remotechannels_aggregators_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_remotechannels_aggregators')
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_leftportlets_html')
-    def admin_leftportlets_html(self, REQUEST=None, RESPONSE=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_leftportlets_html_old')
+    def admin_leftportlets_html_old(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_leftportlets')
+    admin_leftportlets_html = redirect_to(
+            '%(self_url)s/portal_portlets/admin_layout')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_frontportlets_html')
-    def admin_frontportlets_html(self, REQUEST=None, RESPONSE=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_frontportlets_html_old')
+    def admin_frontportlets_html_old(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_frontportlets')
+    admin_rightportlets_html = redirect_to(
+            '%(self_url)s/portal_portlets/admin_layout')
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_rightportlets_html')
-    def admin_rightportlets_html(self, REQUEST=None, RESPONSE=None):
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_rightportlets_html_old')
+    def admin_rightportlets_html_old(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_rightportlets')
+
+    admin_leftportlets_html = redirect_to(
+            '%(self_url)s/portal_portlets/admin_layout')
+
+    admin_rightportlets_html = redirect_to(
+            '%(self_url)s/portal_portlets/admin_layout')
+
+    admin_frontportlets_html = redirect_to(
+            '%(self_url)s/portal_portlets/admin_layout')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_specialportlets_html')
     def admin_specialportlets_html(self, REQUEST=None, RESPONSE=None):
