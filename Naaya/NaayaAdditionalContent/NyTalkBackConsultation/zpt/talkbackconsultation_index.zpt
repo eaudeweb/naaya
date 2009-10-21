@@ -16,7 +16,7 @@
       tal:condition="perm_manage"
       rel="nofollow" i18n:translate="">Add Section</a>
     <a tal:attributes="href string:${here/absolute_url}/invitations/admin_html"
-      tal:condition="perm_manage"
+      tal:condition="perm_invite"
       rel="nofollow" i18n:translate="">Manage invitations</a>
     <a tal:attributes="href string:${here/absolute_url}/invitations/create"
       tal:condition="perm_invite"

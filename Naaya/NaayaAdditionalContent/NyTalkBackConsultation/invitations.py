@@ -70,11 +70,11 @@ class InvitationsContainer(SimpleItem):
 
             try:
                 if do_preview:
-                    extra_opts.update(self._create_invitation(preview=True, **kwargs))
+                    extra_opts.update(self._send_invitation(preview=True, **kwargs))
                     extra_opts['preview_attribution'] = '%s (invited by %s)' % \
                         (formdata['name'], inviter_name)
                 else:
-                    self._create_invitation(**kwargs)
+                    self._send_invitation(**kwargs)
                     self.setSessionInfo(['Invitation for %s '
                                          'has been sent.' %
                                             formdata['name']])
@@ -90,10 +90,16 @@ class InvitationsContainer(SimpleItem):
         return self._create_html(formdata=formdata, formerrors=formerrors,
                                  **extra_opts)
 
+    def _create_invitation(self, **invite_args):
+        key = random_key()
+        invitation = Invitation(key=key, **invite_args)
+        self._invites.insert(key, invitation)
+        return key
+
     _invite_email = EmailPageTemplateFile('zpt/invitations_email.zpt', globals())
-    def _create_invitation(self, name, email, organization, notes, message,
-                           inviter_userid, inviter_name,
-                           web_form=False, preview=False):
+    def _send_invitation(self, name, email, organization, notes, message,
+                         inviter_userid, inviter_name,
+                         web_form=False, preview=False):
         errors = []
         if not name:
             errors.append(('name', ValueError('Name is mandatory')))
@@ -106,7 +112,7 @@ class InvitationsContainer(SimpleItem):
             else:
                 raise errors[0][1]
 
-        kwargs = {
+        mail_opts = {
             'name': name,
             'consultation': self.get_consultation(),
             'inviter_name': inviter_name,
@@ -114,23 +120,28 @@ class InvitationsContainer(SimpleItem):
         }
 
         if preview:
-            kwargs['keyed_url'] = '[PRIVATE URL]'
-            mail_data = self._invite_email.render_email(**kwargs)
+            mail_opts['keyed_url'] = '[PRIVATE URL]'
+            mail_data = self._invite_email.render_email(**mail_opts)
             return {'preview_mail': mail_data}
 
-        key = random_key()
-        kwargs['keyed_url'] = self.absolute_url() + '/welcome?key=' + key
-        mail_data = self._invite_email.render_email(**kwargs)
+        invite_args = {
+            'inviter_userid': inviter_userid,
+            'name': name,
+            'email': email,
+            'organization': organization,
+            'notes': notes,
+        }
+        key = self._create_invitation(**invite_args)
 
-        invitation = Invitation(inviter_userid, key, name, email, organization, notes)
-        self._invites.insert(key, invitation)
+        mail_opts['keyed_url'] = self.absolute_url() + '/welcome?key=' + key
+        mail_data = self._invite_email.render_email(**mail_opts)
 
         email_tool = self.getEmailTool()
         email_tool.sendEmail(mail_data['body_text'],
                              email, email_tool._get_from_address(),
                              mail_data['subject'])
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'index_html')
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION, 'index_html')
     def index_html(self, REQUEST):
         """ redirect to admin_html """
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
@@ -139,19 +150,47 @@ class InvitationsContainer(SimpleItem):
     _admin_html = PageTemplateFile('zpt/invitations_admin', globals())
     def admin_html(self, REQUEST):
         """ the admin view """
+
+        auth_tool = self.getAuthenticationTool()
+
+        admin = self.checkPermission(PERMISSION_MANAGE_TALKBACKCONSULTATION)
+        if not admin:
+            userid = auth_tool.get_current_userid()
+
+        active = []
+        revoked = []
+        for invite in self._invites.itervalues():
+            if not admin and not invite.inviter_userid == userid:
+                continue
+            if invite.enabled:
+                active.append(invite)
+            else:
+                revoked.append(invite)
+
         options = {
-            'invites_active': [i for i in self._invites.values() if i.enabled],
-            'invites_revoked': [i for i in self._invites.values() if not i.enabled],
-            'name_from_userid': self.getAuthenticationTool().name_from_userid,
+            'invites_active': active,
+            'invites_revoked': revoked,
+            'name_from_userid': auth_tool.name_from_userid,
         }
         return self._admin_html(**options)
 
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION,
+    security.declareProtected(PERMISSION_INVITE_TO_TALKBACKCONSULTATION,
                               'admin_invitation_enabled')
     def admin_invitation_enabled(self, key, value=False, REQUEST=None):
         """ disable, or re-enable, an invitation """
+
+        auth_tool = self.getAuthenticationTool()
+
+        admin = self.checkPermission(PERMISSION_MANAGE_TALKBACKCONSULTATION)
+        if not admin:
+            userid = auth_tool.get_current_userid()
+
         invite = self._invites[key]
+        if not admin and not invite.inviter_userid == userid:
+            raise Unauthorized
+
         invite.enabled = value
+
         if REQUEST is not None:
             action = value and 'restored' or 'revoked'
             self.setSessionInfo(['Invitation for %s has been %s.' %

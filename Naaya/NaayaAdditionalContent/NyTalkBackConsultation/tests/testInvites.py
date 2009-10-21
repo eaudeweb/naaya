@@ -40,6 +40,7 @@ class InvitationTestCase(NaayaFunctionalTestCase):
         transaction.commit()
         self.consultation = self.portal.myfolder['test-consultation']
         self.diverted_mail = divert_mail()
+        self.cons_url = 'http://localhost/portal/myfolder/test-consultation'
 
     def beforeTearDown(self):
         divert_mail(False)
@@ -56,7 +57,7 @@ class InvitationTestCase(NaayaFunctionalTestCase):
             'inviter_userid': 'someguy',
             'inviter_name': 'Some Guy',
         }
-        self.consultation.invitations._create_invitation(**data)
+        self.consultation.invitations._send_invitation(**data)
         self.assertEqual(len(self.consultation.invitations._invites), 1)
         i = self.consultation.invitations._invites.values()[0]
         self.assertEqual(i.name, data['name'])
@@ -153,6 +154,47 @@ class InvitationTestCase(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
+    def test_manage_invites(self):
+        data = {
+            'name': 'The Invitee',
+            'email': 'invitee@thinkle.edu',
+            'organization': 'Thinkle University',
+            'notes': 'Knows his shit',
+        }
+        create_invitation = self.consultation.invitations._create_invitation
+        key1 = create_invitation(inviter_userid='someguy', **data)
+        key2 = create_invitation(inviter_userid='reviewer', **data)
+        self.consultation.allow_reviewer_invites = True
+        transaction.commit()
+
+        self.browser_do_login('admin', '')
+        self.browser.go(self.cons_url + '/invitations')
+        html = self.browser.get_html()
+        self.assertTrue(key1 in html)
+        self.assertTrue(key2 in html)
+        self.browser_do_logout()
+
+        self.browser_do_login('reviewer', 'reviewer')
+        self.browser.go(self.cons_url + '/invitations')
+        self.assertAccessDenied(False)
+        html = self.browser.get_html()
+        self.assertTrue(key1 not in html)
+        self.assertTrue(key2 in html)
+
+        for form in self.browser._browser.forms():
+            try:
+                if form['key'] == key2:
+                    break
+            except: pass
+        else:
+            self.fail('Could not find invitation')
+        self.browser.clicked(form, form.find_control('key'))
+        self.browser.submit()
+
+        self.assertFalse(self.consultation.invitations._invites[key2].enabled)
+
+        self.browser_do_logout()
+
 class InviteeCommentTestCase(NaayaFunctionalTestCase):
     def afterSetUp(self):
         addNyFolder(self.portal, 'myfolder', contributor='admin', submitted=1)
@@ -162,7 +204,7 @@ class InviteeCommentTestCase(NaayaFunctionalTestCase):
             start_date=start_date, end_date=end_date,
             contributor='admin', submitted=1)
         consultation = self.portal.myfolder['test-consultation']
-        consultation.invitations._create_invitation(
+        consultation.invitations._send_invitation(
             name='The Invitee', email='invitee@thinkle.edu',
             organization='Thinkle University', notes='Knows his shit',
             inviter_userid='contributor', inviter_name='Contributor Test', message='')
