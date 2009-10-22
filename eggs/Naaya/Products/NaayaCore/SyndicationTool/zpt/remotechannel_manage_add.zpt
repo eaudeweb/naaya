@@ -10,7 +10,7 @@
 	</tr>
 	<tr>
 		<td class="form-label">Title</td>
-		<td><input type="text" name="title" size="50" /></td>
+		<td><input type="text" name="title:utf8:ustring" size="50" /></td>
 	</tr>
 	<tr>
 		<td class="form-label">RSS/RDF URL</td>

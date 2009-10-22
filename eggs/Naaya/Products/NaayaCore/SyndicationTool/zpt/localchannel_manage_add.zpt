@@ -9,11 +9,11 @@
 	</tr>
 	<tr>
 		<td class="form-label">Title</td>
-		<td><input type="text" name="title" size="50" value="" /></td>
+		<td><input type="text" name="title:utf8:ustring" size="50" value="" /></td>
 	</tr>
 	<tr>
 		<td class="form-label" style="vertical-align: top">Description</td>
-		<td><textarea name="description" rows="5" cols="38"></textarea></td>
+		<td><textarea name="description:utf8:ustring" rows="5" cols="38"></textarea></td>
 	</tr>
 	<tr>
 		<td class="form-label">Language</td>
