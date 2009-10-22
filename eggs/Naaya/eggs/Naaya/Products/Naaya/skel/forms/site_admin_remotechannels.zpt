@@ -26,7 +26,7 @@
 	<p><input type="hidden" name="id" tal:attributes="value python:ob_data[1]" /></p>
 	<dl>
 		<dt i18n:translate="">Title</dt>
-		<dd><input type="text" name="title" size="50" tal:attributes="value python:ob_data[2]" /></dd>
+		<dd><input type="text" name="title:utf8:ustring" size="50" tal:attributes="value python:ob_data[2]" /></dd>
 		<dt i18n:translate="">RSS/RDF file URL</dt>
 		<dd><input type="text" name="url" size="50" tal:attributes="value python:ob_data[3]" /></dd>
 		<dt i18n:translate="">Number of items shown</dt>

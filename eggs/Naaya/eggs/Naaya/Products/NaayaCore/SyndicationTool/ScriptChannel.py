@@ -83,6 +83,12 @@ class ScriptChannel(PythonScript, utils):
         self.type = type
         self.numberofitems = numberofitems
 
+    def ZPythonScript_setTitle(self, title):
+        if isinstance(title, str):
+            title = title.decode('utf-8')
+        self.title = title
+        self.ZCacheable_invalidate()
+
     security.declarePrivate('syndicateThis')
     def syndicateThis(self, lang=None):
         s = self.getSite()
