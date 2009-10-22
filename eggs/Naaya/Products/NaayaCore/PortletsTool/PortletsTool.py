@@ -55,14 +55,8 @@ class PortletsTool(Folder, utils):
     icon = 'misc_/NaayaCore/PortletsTool.gif'
 
     manage_options = (
-        Folder.manage_options[:1]
-        +
-        (
-            {'label': 'Left portlets', 'action': 'manage_left_portlets_html'},
-            {'label': 'Center portlets', 'action': 'manage_center_portlets_html'},
-            {'label': 'Right portlets', 'action': 'manage_right_portlets_html'},
-        )
-        +
+        Folder.manage_options[:1] +
+        ({'label': 'Layout', 'action': 'manage_layout'},) +
         Folder.manage_options[2:]
     )
 
@@ -247,50 +241,68 @@ class PortletsTool(Folder, utils):
         """ redirect to admin_layout """
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_layout')
 
+    def _process_layout_post(self, REQUEST):
+        form = REQUEST.form
+        action = form.get('action', None)
+        if action == 'Assign':
+            portlet_id = form['portlet_id']
+            portlet = self._getOb(portlet_id)
+            location = form['location']
+            position = form['position']
+            inherit = form.get('inherit', False)
+            site_base_url = self.getSite().absolute_url(1)
+            if site_base_url and location.startswith(site_base_url):
+                location = location[len(site_base_url)+1:]
+            if location == '__root':
+                location = ''
+            try:
+                self.assign_portlet(location, position, portlet_id, inherit)
+            except ValueError, e:
+                if 'already assigned' in str(e):
+                    self.setSessionErrors(['Portlet "%s" already assigned to '
+                        '"%s" at "%s"' % (portlet.title_or_id(), position, location)])
+                else:
+                    raise
+            else:
+                self.setSessionInfo(['Successfully assigned portlet "%s" at "%s"'
+                    % (portlet.title_or_id(), location)])
+
+        elif action == 'Unassign':
+            portlet_id = form['portlet_id']
+            portlet = self._getOb(portlet_id)
+            location = form['location']
+            position = form['position']
+            self.unassign_portlet(location, position, portlet_id)
+            self.setSessionInfo(['Successfully removed portlet "%s" from "%s"'
+                % (portlet.title_or_id(), location)])
+
+        else:
+            raise ValueError('Unknown value for `action`: %s' % repr(action))
+
     _admin_layout_zpt = PageTemplateFile('zpt/admin_layout', globals())
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_layout')
     def admin_layout(self, REQUEST):
         """ Administration page for portlets layout """
         if REQUEST.REQUEST_METHOD == 'POST':
-            form = REQUEST.form
-            action = form.get('action', None)
-            if action == 'Assign':
-                portlet_id = form['portlet_id']
-                portlet = self._getOb(portlet_id)
-                location = form['location']
-                position = form['position']
-                inherit = form.get('inherit', False)
-                site_base_url = self.getSite().absolute_url(1)
-                if site_base_url and location.startswith(site_base_url):
-                    location = location[len(site_base_url)+1:]
-                if location == '__root':
-                    location = ''
-                try:
-                    self.assign_portlet(location, position, portlet_id, inherit)
-                except ValueError, e:
-                    if 'already assigned' in str(e):
-                        self.setSessionErrors(['Portlet "%s" already assigned to '
-                            '"%s" at "%s"' % (portlet.title_or_id(), position, location)])
-                    else:
-                        raise
-                else:
-                    self.setSessionInfo(['Successfully assigned portlet "%s" at "%s"'
-                        % (portlet.title_or_id(), location)])
+            self._process_layout_post(REQUEST)
 
-            elif action == 'Unassign':
-                portlet_id = form['portlet_id']
-                portlet = self._getOb(portlet_id)
-                location = form['location']
-                position = form['position']
-                self.unassign_portlet(location, position, portlet_id)
-                self.setSessionInfo(['Successfully removed portlet "%s" from "%s"'
-                    % (portlet.title_or_id(), location)])
+        options = {
+            'portlet_layout': ordered_portlets(self._enumerate_portlet_assignments()),
+        }
+        return self._admin_layout_zpt(REQUEST, **options)
 
-            else:
-                raise ValueError('Unknown value for `action`: %s' % repr(action))
+    _manage_layout_zpt = PageTemplateFile('zpt/manage_layout', globals())
+    security.declareProtected(view_management_screens, 'manage_layout')
+    def manage_layout(self, REQUEST=None):
+        """ ZMI page for portlets layout """
+        if REQUEST.REQUEST_METHOD == 'POST':
+            self._process_layout_post(REQUEST)
 
-        return self._admin_layout_zpt(REQUEST,
-            portlet_layout=ordered_portlets(self._enumerate_portlet_assignments()))
+        options = {
+            'portlet_layout': ordered_portlets(self._enumerate_portlet_assignments()),
+            'admin_layout_zpt': self._admin_layout_zpt,
+        }
+        return self._manage_layout_zpt(REQUEST, **options)
 
     def _enumerate_portlet_assignments(self):
         """ Enumerate portlet assignments in this portal """
