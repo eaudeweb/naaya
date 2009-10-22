@@ -137,6 +137,8 @@ class CSVImportTool(Implicit, Item):
             else:
                 if isinstance(e, StopIteration):
                     errors.append('Invalid CSV file')
+                elif isinstance(e, UnicodeDecodeError):
+                    errors.append('CSV file is not utf-8 encoded')
                 else:
                     self.getSite().log_current_error()
                     errors.append(str(e))

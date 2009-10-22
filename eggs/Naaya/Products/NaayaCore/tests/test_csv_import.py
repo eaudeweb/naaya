@@ -37,6 +37,9 @@ def check_uploaded(test):
     test.failUnlessEqual(test.portal.imported._getOb('my-url-1').redirect, False)
     test.failUnlessEqual(test.portal.imported._getOb('eau-de-web').redirect, True)
 
+def change_encoding(string, current, new):
+    return string.decode(current).encode(new)
+
 class NyCSVImportTest(NaayaTestCase):
     """ TestCase for Naaya CSV import """
 
@@ -88,6 +91,20 @@ class NyCSVImportTest(NaayaTestCase):
         self.failUnlessEqual(my_doc.sortorder, 100)
         self.failUnless(my_doc.approved)        
 
+    def test_import_bad_unicode_document(self):
+        """ Importing a 'utf-8' encoded document as 'latin-1' """
+        data = ('Title,Description,Geographical coverage,Keywords,Sort order,'
+                'Release date,Open for comments,Body (HTML)\n'
+            'Forschungsinstitut f\xc3\xbcr Freizeit und Tourismus (FIF),,,,,,,This is a test document.\n')
+        data = data.decode('utf-8')
+        data = data.encode('latin-1')
+        before = self.portal.imported.objectIds()
+        def do_import():
+            self.portal.imported.csv_import.do_import(meta_type='Naaya Document', data=StringIO(data))
+        self.assertRaises(UnicodeDecodeError, do_import)
+        after = self.portal.imported.objectIds()
+        self.assertEqual(before, after)
+
     def test_import_bad_data(self):
         def do_import(row=''):
             self.portal.imported.csv_import.do_import(meta_type='Naaya URL',
@@ -113,6 +130,24 @@ class NyCSVImportTest(NaayaTestCase):
     def test_import_bad_destination(self):
         # TODO
         pass
+
+class CSVImportFunctionalTests(NaayaFunctionalTestCase):
+
+    def test_bad_encoding(self):
+        string = ('Title,Description,Geographical coverage,Keywords,Sort order,'
+                  'Release date,Open for comments,Body (HTML)\n'
+                  'Forschungsinstitut f\xc3\xbcr Freizeit und Tourismus (FIF),,,,,,,This is a test document.\n')
+        data = StringIO(change_encoding(string, 'utf-8', 'latin-1'))
+        before = self.portal.info.objectIds()
+        self.browser_do_login('admin', '')
+        self.browser.go('http://localhost/portal/info/csv_import')
+        form = self.browser.get_form('csv_import')
+        form['meta_type'] = ['Naaya Document']
+        form.find_control('data').add_file(data, 'text/csv', 'HTML Document bulk upload')
+        self.browser.clicked(form, form.find_control('data'))
+        self.browser.submit()
+        assert('CSV file is not utf-8 encoded')
+        self.assertEqual(before, self.portal.info.objectIds())
 
 class GeopointImportTest(NaayaTestCase):
     def afterSetUp(self):
@@ -204,4 +239,5 @@ def test_suite():
     suite.addTest(makeSuite(NyCSVImportTest))
     suite.addTest(makeSuite(GeopointImportTest))
     suite.addTest(makeSuite(SecurityTestCase))
+    suite.addTest(makeSuite(CSVImportFunctionalTests))
     return suite
