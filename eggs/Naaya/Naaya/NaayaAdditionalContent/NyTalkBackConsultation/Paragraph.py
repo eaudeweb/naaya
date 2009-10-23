@@ -56,7 +56,7 @@ class Paragraph(Folder):
 
     security = ClassSecurityInfo()
 
-    all_meta_types = [
+    meta_types = [
         {'name': METATYPE_TALKBACKCONSULTATION_COMMENT, 'action': 'addComment',
             'permission': PERMISSION_REVIEW_TALKBACKCONSULTATION},
     ]

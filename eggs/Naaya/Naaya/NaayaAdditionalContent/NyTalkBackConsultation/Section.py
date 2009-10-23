@@ -69,10 +69,9 @@ def addSection(self, id='', title='', body='', REQUEST=None):
 
 class Section(Folder):
     meta_type = METATYPE_TALKBACKCONSULTATION_SECTION
-    all_meta_types = ()
     security = ClassSecurityInfo()
 
-    all_meta_types = [
+    meta_types = [
         {'name': METATYPE_TALKBACKCONSULTATION_PARAGRAPH, 'action': 'addParagraph',
             'permission': PERMISSION_MANAGE_TALKBACKCONSULTATION},
     ]
