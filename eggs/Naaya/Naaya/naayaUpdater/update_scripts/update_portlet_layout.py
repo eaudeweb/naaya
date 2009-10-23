@@ -38,7 +38,11 @@ class UpdateGeotaggedContent(UpdateScript):
         update_portlets_data(portal, self.log)
 
         for ob_path, delta_list in zpt_patches.iteritems():
-            obj = portal.unrestrictedTraverse(ob_path)
+            try:
+                obj = portal.unrestrictedTraverse(ob_path)
+            except:
+                self.log.debug('Skipped %s - NotFound' % ob_path)
+                continue
             update_zpt(obj, delta_list, self.log)
 
         header = portal.portal_layout.getCurrentSkin().site_header
