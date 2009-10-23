@@ -1300,7 +1300,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     "icon": icon,
                 })
         res = ', '.join(res)
-        return '[%s]' % res.encode('utf-8')
+        return '[%s]' % res
 
     security.declareProtected(view, 'getCompleteNavigationSiteMap')
     def getCompleteNavigationSiteMap(self, REQUEST=None, **kwargs):
