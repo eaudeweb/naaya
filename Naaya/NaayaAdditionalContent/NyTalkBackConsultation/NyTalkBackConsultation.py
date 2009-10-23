@@ -243,7 +243,7 @@ class NyTalkBackConsultation(NyAttributes,
     meta_type = METATYPE_TALKBACKCONSULTATION
     meta_label = LABEL_OBJECT
 
-    all_meta_types = [
+    meta_types = [
         {'name': METATYPE_TALKBACKCONSULTATION_SECTION, 'action': 'addSection',
             'permission': PERMISSION_MANAGE_TALKBACKCONSULTATION},
     ]
