@@ -77,7 +77,7 @@ Example:
 	<div tal:condition="not:broken" class="flvPlayerNotReady" style="width: 200px; padding: 20px; 0 20px 0">
 		<img src="misc_/NaayaContent/NyMediaFileLoading.gif" /><br />
 		<label i18n:translate="" >
-		  Video file is been processed. Please try again later.
+		  Video file is being processed. Please try again later.
 		</label>
 	</div>
 </tal:block>
