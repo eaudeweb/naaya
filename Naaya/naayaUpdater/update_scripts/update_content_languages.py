@@ -80,6 +80,7 @@ class UpdateContentLanguages(UpdateScript):
                         }
                 except:
                     # sometimes the wrong things get cataloged (e.g. methods)
+                    logger.debug('WARNING: Object is not a valid content type: %s' % ob)
                     continue
                 if langs not in overview:
                     overview[langs] = []
