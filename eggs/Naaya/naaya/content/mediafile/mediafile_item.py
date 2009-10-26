@@ -93,7 +93,7 @@ config = {
         'meta_type': 'Naaya Media File',
         'label': 'Media File',
         'permission': 'Naaya - Add Naaya Media File objects',
-        'forms': ['mediafile_add', 'mediafile_edit', 'mediafile_index'],
+        'forms': ['mediafile_add', 'mediafile_edit', 'mediafile_index', 'mediafile_subtitle'],
         'add_form': 'mediafile_add_html',
         'description': 'This is Naaya MediaFile type.',
         'properties': PROPERTIES_OBJECT,
