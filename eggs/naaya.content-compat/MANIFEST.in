@@ -1,3 +1,0 @@
-global-include *
-global-exclude *.pyc *.swp .svn .svn/* .svn/*/* .svn/*/*/* .git .git/* .git/*/* .git/*/*/* .git/*/*/*/*
-prune dist
