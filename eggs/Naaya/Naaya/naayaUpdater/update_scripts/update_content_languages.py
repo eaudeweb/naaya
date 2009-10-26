@@ -72,11 +72,15 @@ class UpdateContentLanguages(UpdateScript):
                                  brain.getPath())
                     continue
                 langs = str(getattr(ob, '_languages', '[no translations]'))
-                ob_info = {
-                    'short_title': maxlen(ob.title_or_id(), 50),
-                    'the_ob': ob,
-                    'languages': langs,
-                }
+                try:
+                    ob_info = {
+                        'short_title': maxlen(ob.title_or_id(), 50),
+                        'the_ob': ob,
+                        'languages': langs,
+                        }
+                except:
+                    # sometimes the wrong things get cataloged (e.g. methods)
+                    continue
                 if langs not in overview:
                     overview[langs] = []
                 overview[langs].append(ob_info)
