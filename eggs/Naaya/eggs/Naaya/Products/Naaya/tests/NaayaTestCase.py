@@ -235,7 +235,7 @@ class FunctionalTestCase(Functional, NaayaTestCase):
     def loadFile(self, filename):
         """ load a file"""
         filename = os.path.sep.join([self.home, filename])
-        data = StringIO(open(filename, 'r').read())
+        data = StringIO(open(filename, 'rb').read())
         data.filename = os.path.basename(filename)
         return data
 
