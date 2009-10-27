@@ -28,7 +28,7 @@ from decimal import Decimal
 from datetime import datetime
 import time
 from xml.dom import minidom
-import json
+import simplejson as json
 
 #Zope imports
 from Globals import InitializeClass
@@ -1410,7 +1410,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
             lat, lon = "''", "''"
         else:
             lat, lon = geo_location.lat, geo_location.lon
-        address = json.write(geo_location.address) or self.center_locality.strip()
+        address = json.dumps(geo_location.address)
+        if address == '""':
+            address = json.dumps(self.center_locality.strip())
         all_map_types = [map_types[x[-3:]][self.map_engine] for x in self.map_types]
         default_map_type = map_types[self.default_type[-3:]][self.map_engine]
         dom_element = "map"
