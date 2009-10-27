@@ -62,10 +62,12 @@ $(function(){
         <td tal:define="
           folder_path item/folder_path;
           folder python:here.getFolderByPath(folder_path);
-          folder_url folder/absolute_url;
+          folder_url folder/absolute_url|nothing;
           folder_title folder/title_or_id|string:[missing]">
-            <a tal:attributes="href folder_url" tal:content="folder_title"
-              i18n:translate=""></a>
+            <a tal:attributes="href folder_url"
+               tal:content="folder_title"
+               tal:omit-tag="not:folder_url"
+               i18n:translate=""></a>
             &nbsp;
             <small tal:content="string:/${folder_path}"></small>
         </td>
