@@ -589,11 +589,11 @@ class NyTalkBackConsultation(NyAttributes,
     # header and footer templates are proxied since invited reviewers
     # have "View" permission only in this folder; if the consultation
     # is restricted, they would not be able to see consultation pages.
-    def standard_html_header(self):
-        return self.aq_parent.standard_html_header()
+    def standard_html_header(self, *args, **kwargs):
+        return self.aq_parent.standard_html_header(*args, **kwargs)
 
-    def standard_html_footer(self):
-        return self.aq_parent.standard_html_footer()
+    def standard_html_footer(self, *args, **kwargs):
+        return self.aq_parent.standard_html_footer(*args, **kwargs)
 
     security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'edit_html')
     edit_html = PageTemplateFile('zpt/talkbackconsultation_edit', globals())
