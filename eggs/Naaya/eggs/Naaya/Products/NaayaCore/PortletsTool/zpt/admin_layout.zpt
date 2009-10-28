@@ -18,7 +18,15 @@
 $(function(){
     $('table.datatable tbody').each(function() {
         var group_jq = $(this);
-        group_jq.sortable({axis: 'y', stop: function(evt, ui) {
+        group_jq.sortable({
+            axis: 'y',
+            handle: '.sort-handle',
+            stop: on_stop
+        });
+
+        $('.sort-handle', group_jq).css('cursor', 'move');
+
+        function on_stop(evt, ui) {
             var portlet_order = jQuery.makeArray(group_jq.children().map(function() {
                 return $(this).attr('ny_hashkey');
             }));
@@ -35,7 +43,7 @@ $(function(){
                     alert('An error occurred while saving portlet sort order');
                 }
             });
-        }});
+        }
     });
 });
 </script>
@@ -54,16 +62,20 @@ $(function(){
         <th></th>
     </tr>
 </thead>
-<tal:block repeat="keyvalue options/portlet_layout">
-<tbody tal:define="items python:keyvalue[1]" tal:attributes="
-  ny_folder_path python:items[0]['folder_path'];
-  ny_position python:items[0]['position']">
-    <tr tal:repeat="item items" tal:attributes="ny_hashkey item/hashkey">
-        <td tal:define="
-          folder_path item/folder_path;
-          folder python:here.getFolderByPath(folder_path);
-          folder_url folder/absolute_url|nothing;
-          folder_title folder/title_or_id|string:[missing]">
+<tal:block define="helper here/get_helper"
+           repeat="keyvalue options/portlet_layout">
+<tbody tal:define="items python:keyvalue[1]"
+       tal:attributes="ny_folder_path python:items[0]['folder_path'];
+                       ny_position python:items[0]['position']">
+    <tal:block repeat="item items">
+    <tr tal:define="button_options python:{'location': item['folder_path'],
+                                           'position': item['position'],
+                                           'portlet_id': item['portlet'].id}"
+        tal:attributes="ny_hashkey item/hashkey">
+        <td tal:define="folder_path item/folder_path;
+                        folder python:here.getFolderByPath(folder_path);
+                        folder_url folder/absolute_url|nothing;
+                        folder_title folder/title_or_id|string:[missing]">
             <a tal:attributes="href folder_url"
                tal:content="folder_title"
                tal:omit-tag="not:folder_url"
@@ -72,22 +84,20 @@ $(function(){
             <small tal:content="string:/${folder_path}"></small>
         </td>
         <td tal:content="item/position"
-          tal:attributes="class string:portlet_arrange_${item/position}" />
-        <td tal:content="structure python:test(item['inherit'], '&#x2713;', '')" />
+            tal:attributes="class string:sort-handle portlet_arrange_${item/position}" />
+        <td tal:define="label python:test(item['inherit'], 'yes', 'no')"
+            tal:content="structure python:helper.button_form(
+                label=label, formdata=dict(action='ToggleInherit', **button_options))" />
         <td tal:content="item/portlet/title_or_id" />
         <td>
             <em tal:condition="item/oldstyle">[needs update]</em>
-            <form method="POST" tal:condition="not:item/oldstyle">
-                <input type="hidden" name="location"
-                    tal:attributes="value item/folder_path" />
-                <input type="hidden" name="position"
-                    tal:attributes="value item/position" />
-                <input type="hidden" name="portlet_id"
-                    tal:attributes="value item/portlet/id" />
-                <input type="submit" name="action" value="Unassign" />
-            </form>
+            <tal:block condition="not:item/oldstyle">
+            <tal:block content="structure python:helper.button_form(
+                label='Remove', formdata=dict(action='Unassign', **button_options))" />
+            </tal:block>
         </td>
     </tr>
+    </tal:block>
 </tbody>
 </tal:block>
 </table>

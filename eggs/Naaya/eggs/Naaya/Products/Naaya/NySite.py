@@ -103,6 +103,8 @@ from Products.NaayaBase.gtranslate import translate, translation_url
 #reCaptcha
 from Products.NaayaCore.managers import recaptcha_utils
 
+from naaya.core.template_helper import NaayaTemplateHelper
+
 streamlined_updates = [
     '2009_05-zope_210_baseline',
     '2009_05-schema_tool',
@@ -3601,6 +3603,15 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     def translation_url(self, *args):
         return translation_url(*args)
+
+    def get_helper(self):
+        return NaayaTemplateHelper(ny_site=self)
+
+    @property
+    def helper(self):
+        return NaayaTemplateHelper(ny_site=self)
+
+    helper = NaayaTemplateHelper()
 
 InitializeClass(NySite)
 

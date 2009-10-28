@@ -244,6 +244,7 @@ class PortletsTool(Folder, utils):
     def _process_layout_post(self, REQUEST):
         form = REQUEST.form
         action = form.get('action', None)
+
         if action == 'Assign':
             portlet_id = form['portlet_id']
             portlet = self._getOb(portlet_id)
@@ -259,13 +260,17 @@ class PortletsTool(Folder, utils):
                 self.assign_portlet(location, position, portlet_id, inherit)
             except ValueError, e:
                 if 'already assigned' in str(e):
-                    self.setSessionErrors(['Portlet "%s" already assigned to '
-                        '"%s" at "%s"' % (portlet.title_or_id(), position, location)])
+                    self.setSessionErrors([
+                        'Portlet "%s" already assigned to "%s" at "%s"'
+                        % (portlet.title_or_id(), position, location or "[site root]")
+                        ])
                 else:
                     raise
             else:
-                self.setSessionInfo(['Successfully assigned portlet "%s" at "%s"'
-                    % (portlet.title_or_id(), location)])
+                self.setSessionInfo([
+                    'Successfully assigned portlet "%s" at "%s"'
+                    % (portlet.title_or_id(), location or "[site root]")
+                    ])
 
         elif action == 'Unassign':
             portlet_id = form['portlet_id']
@@ -273,8 +278,25 @@ class PortletsTool(Folder, utils):
             location = form['location']
             position = form['position']
             self.unassign_portlet(location, position, portlet_id)
-            self.setSessionInfo(['Successfully removed portlet "%s" from "%s"'
-                % (portlet.title_or_id(), location)])
+            self.setSessionInfo([
+                'Successfully removed portlet "%s" from "%s"'
+                % (portlet.title_or_id(), location or "[site root]")
+                ])
+
+        elif action == 'ToggleInherit':
+            portlet_id = form['portlet_id']
+            portlet = self._getOb(portlet_id)
+            location = form['location']
+            key = (location, form['position'])
+            for i in self._portlet_layout[key]:
+                if i['id'] == portlet_id:
+                    inherit = i['inherit'] = not i['inherit']
+                    self._p_changed = True
+                    self.setSessionInfo([
+                        'Successfully changed portlet inheritance "%s" at "%s" to %r'
+                        % (portlet.title_or_id(), location or "[site root]", inherit)
+                        ])
+                    break
 
         else:
             raise ValueError('Unknown value for `action`: %s' % repr(action))
@@ -285,6 +307,7 @@ class PortletsTool(Folder, utils):
         """ Administration page for portlets layout """
         if REQUEST.REQUEST_METHOD == 'POST':
             self._process_layout_post(REQUEST)
+            return REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_layout')
 
         options = {
             'portlet_layout': ordered_portlets(self._enumerate_portlet_assignments()),
@@ -297,6 +320,7 @@ class PortletsTool(Folder, utils):
         """ ZMI page for portlets layout """
         if REQUEST.REQUEST_METHOD == 'POST':
             self._process_layout_post(REQUEST)
+            return REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_layout')
 
         options = {
             'portlet_layout': ordered_portlets(self._enumerate_portlet_assignments()),

@@ -229,10 +229,11 @@ class PortletAdminFunctionalTestCase(FunctionalSetupMixin, NaayaFunctionalTestCa
         def assert_entry(html, **kwargs):
             pattern = (r"<td>\s*<a href=\"[^\"]*\">%(folder_title)s</a>[^<]*"
                 r"<small>%(folder_path)s</small>\s*</td>"
-                r"\s*<td class=\"portlet_arrange_%(position)s\">"
-                r"%(position)s</td>\s*<td>[^<]*</td>"
-                r"\s*<td>%(portlet_title)s</td>")
-            self.failUnless(re.search(pattern % kwargs, html))
+                r"\s*<td class=\".*portlet_arrange_%(position)s\">"
+                r"%(position)s</td>\s*<td>.*</td>"
+                r"\s*<td>%(portlet_title)s</td>"
+                )
+            self.failUnless(re.search(pattern % kwargs, html, re.DOTALL))
 
         assert_entry(html, folder_path='/', folder_title='portal',
             position='center', portlet_title='Test Portlet 1')
@@ -321,6 +322,7 @@ class PortletAdminFunctionalTestCase(FunctionalSetupMixin, NaayaFunctionalTestCa
                 if form['portlet_id'] != 'prt2': continue
                 if form['location'] != 'fol': continue
                 if form['position'] != 'right': continue
+                if form['action'] != 'Unassign': continue
             except: # one of the form fields is missing
                 continue
             break # found it!
