@@ -24,6 +24,9 @@
 				<image id="lnav_menu.gif" title=""/>
 				<image id="lnav_menu_h.gif" title=""/>
 				<image id="arrow-normal.png" title=""/>
+				<image id="ep_collapse.gif" title="Collapse icon for expandable portlets"/>
+				<image id="ep_expand.gif" title="Expand icon for expandable portlets"/>
+				<image id="ep_none.gif" title="Blank icon for expandable portlets"/>
 			</scheme>
 		</skin>
 	</layout>
