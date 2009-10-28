@@ -21,6 +21,8 @@
 naaya.z2util - utilities to make Zope 2 a friendlier place
 """
 
+from AccessControl import ClassSecurityInfo as Z2_ClassSecurityInfo
+
 def redirect_to(tmpl):
     """
     Generate a simple view that redirects to the specified URL.
@@ -41,3 +43,18 @@ def redirect_to(tmpl):
         }
         REQUEST.RESPONSE.redirect(url)
     return redirect
+
+class ClassSecurityInfo(Z2_ClassSecurityInfo):
+    def public(self, func):
+        self.declarePublic(func.func_name)
+        return func
+
+    def protected(self, permission):
+        def decorator(func):
+            self.declareProtected(permission, func.func_name)
+            return func
+        return decorator
+
+    def private(self, func):
+        self.declarePrivate(func.func_name)
+        return func
