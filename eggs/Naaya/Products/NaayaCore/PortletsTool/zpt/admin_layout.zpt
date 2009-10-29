@@ -81,19 +81,26 @@ $(function(){
                tal:omit-tag="not:folder_url"
                i18n:translate=""></a>
             &nbsp;
-            <small tal:content="string:/${folder_path}"></small>
+            <small tal:define="path python:test(folder_path, '/'+folder_path,
+                                                             'home page')"
+                   tal:content="path"></small>
         </td>
-        <td tal:content="item/position"
+        <td title="Click and drag to change ordering" i18n:attributes="title"
+            tal:content="item/position"
             tal:attributes="class string:sort-handle portlet_arrange_${item/position}" />
         <td tal:define="label python:test(item['inherit'], 'yes', 'no')"
             tal:content="structure python:helper.button_form(
-                label=label, formdata=dict(action='ToggleInherit', **button_options))" />
+                label=label,
+                formdata=dict(action='ToggleInherit', **button_options),
+                button_title='Click to toggle inheritance')" />
         <td tal:content="item/portlet/title_or_id" />
         <td>
             <em tal:condition="item/oldstyle">[needs update]</em>
             <tal:block condition="not:item/oldstyle">
             <tal:block content="structure python:helper.button_form(
-                label='Remove', formdata=dict(action='Unassign', **button_options))" />
+                label='Remove',
+                formdata=dict(action='Unassign', **button_options),
+                button_title='Stop displaying the portlet')" />
             </tal:block>
         </td>
     </tr>
