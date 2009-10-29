@@ -78,7 +78,7 @@ function toggleSelect(caller){
     folder python:folders[4]">
     <td class="checkbox" tal:condition="btn_select"
       style="width: 4%; vertical-align: top;">
-      <input tal:condition="del_permission|edit_permission|copy_permission"
+      <input tal:condition="python:del_permission or edit_permission or copy_permission"
         type="checkbox" name="id" tal:attributes="value folder/id" />
     </td>
     <td class="type" style="width: 4%;">
@@ -197,6 +197,9 @@ function toggleSelect(caller){
 		<img src="/misc_/NaayaCore/xml-blue.jpg" alt="Atom Feed" title="Atom Feed" i18n:attributes="alt title" />
 	</a>
 </div>
+
+<metal:block use-macro="here/folder_listing/macros/content" />
+<metal:block use-macro="here/folder_test/macros/content" />
 </div>
 
 <tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
@@ -213,3 +216,5 @@ function toggleSelect(caller){
 
 <span tal:replace="structure here/comments_box" />
 <span tal:replace="structure here/standard_html_footer"/>
+
+
