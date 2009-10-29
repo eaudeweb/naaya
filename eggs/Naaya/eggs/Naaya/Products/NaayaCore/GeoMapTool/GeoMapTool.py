@@ -613,6 +613,11 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
         out_app(kml.style())
         for loc in self.search_geo_objects(path=path, geo_types=geo_types, query=geo_query):
             if loc.geo_location is not None:
+                try:
+                    loc_url = loc.url
+                except AttributeError:
+                    loc_url = ''
+
                 out_app(kml.add_point(self.utToUtf8(loc.getId()),
                                       self.utXmlEncode(loc.title_or_id()),
                                       self.utXmlEncode(loc.description),
@@ -622,7 +627,7 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
                                       self.utXmlEncode(self.getSymbolTitle(loc.geo_type)),
                                       self.utToUtf8(self.absolute_url()),
                                       self.utToUtf8(loc.absolute_url()),
-                                      self.utToUtf8(loc.url),
+                                      self.utToUtf8(loc_url),
                                       self.utXmlEncode(loc.geo_location.address)))
         out_app(kml.footer())
         REQUEST.RESPONSE.setHeader('Content-Type', 'application/vnd.google-earth.kml+xml')
