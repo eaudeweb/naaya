@@ -198,8 +198,6 @@ function toggleSelect(caller){
 	</a>
 </div>
 
-<metal:block use-macro="here/folder_listing/macros/content" />
-<metal:block use-macro="here/folder_test/macros/content" />
 </div>
 
 <tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
