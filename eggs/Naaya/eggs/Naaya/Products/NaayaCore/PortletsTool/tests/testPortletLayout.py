@@ -229,13 +229,13 @@ class PortletAdminFunctionalTestCase(FunctionalSetupMixin, NaayaFunctionalTestCa
         def assert_entry(html, **kwargs):
             pattern = (r"<td>\s*<a href=\"[^\"]*\">%(folder_title)s</a>[^<]*"
                 r"<small>%(folder_path)s</small>\s*</td>"
-                r"\s*<td class=\".*portlet_arrange_%(position)s\">"
+                r"\s*<td\s*title=\".*\"\s*class=\".*portlet_arrange_%(position)s\">"
                 r"%(position)s</td>\s*<td>.*</td>"
                 r"\s*<td>%(portlet_title)s</td>"
                 )
             self.failUnless(re.search(pattern % kwargs, html, re.DOTALL))
 
-        assert_entry(html, folder_path='/', folder_title='portal',
+        assert_entry(html, folder_path='home page', folder_title='portal',
             position='center', portlet_title='Test Portlet 1')
         assert_entry(html, folder_path='/fol', folder_title='Folderr',
             position='left', portlet_title='Test Portlet 2')
