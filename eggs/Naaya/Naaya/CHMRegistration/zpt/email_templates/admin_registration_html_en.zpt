@@ -10,6 +10,7 @@
         <p/>
         <p>
             <a href="%(registration_edit_link)s">%(registration_edit_link)s</a>
+			(<a href="http://www.biodiversiteit.nl/login_html">login</a> om deze registratie te bekijken).
         <p/>
         <p>
             ---
