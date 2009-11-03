@@ -59,7 +59,7 @@
         <div class="talkback-paragraph" tal:content="structure paragraph/body" />
         <tal:block condition="inline_comments"
                    content="structure paragraph/comments_html" />
-        <a class="talkback-add_comment"
+        <p class="talkback-add_comment-p"><a class="talkback-add_comment"
            tal:attributes="href string:${paragraph/absolute_url}">
             <tal:block condition="not:inline_comments" i18n:translate="">
                comments (<span class="talkback-comment_count"
@@ -69,7 +69,7 @@
             <tal:block condition="inline_comments" i18n:translate="">
                 submit comment
             </tal:block>
-        </a>
+        </a></p>
     </div>
 </div>
 
