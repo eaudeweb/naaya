@@ -134,6 +134,12 @@ class LayoutTool(Folder, combosync_tool):
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_layout_html')
 
+    def header(self):
+        return PageTemplateFile('zpt/site_header', globals()).__of__(self)
+
+    def footer(self):
+        return PageTemplateFile('zpt/site_footer', globals()).__of__(self)
+
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_layout_html')
     manage_layout_html = PageTemplateFile('zpt/layout_layout', globals())
