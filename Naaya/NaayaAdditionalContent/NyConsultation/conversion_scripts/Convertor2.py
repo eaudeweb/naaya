@@ -1,6 +1,9 @@
+import re
+from os.path import isdir, isfile, splitext
+from os import mkdir, listdir
+
 from BeautifulSoup import BeautifulSoup, Tag
 from soupselect import select
-import re
 
 def remove_align_left_from_images(soup):
     imgs_aligned_left = soup.findAll('img', align=re.compile('left', re.IGNORECASE))
@@ -171,11 +174,12 @@ def find_footnotes_and_anchors(soup):
 def remove_footnotes_from_last_section(sections_strings):
     last_ss = sections_strings[-1]
     last_ssoup = BeautifulSoup(last_ss)
+    footnote_anchors = find_footnotes_and_anchors(last_ssoup)
 
     last_ssfootnotes = []
     for i in range(len(footnote_anchors)):
         selector = '#sdfootnote%s' % (i+1)
-        last_ssfootnotes.extend(select(soup, selector))
+        last_ssfootnotes.extend(select(last_ssoup, selector))
 
     for f in last_ssfootnotes:
         f.extract()
@@ -193,7 +197,8 @@ def add_footnotes_to_sections(sections_strings, footnote_anchors, footnotes):
             footnote = footnotes[j]
 
             if '#' + anchor['name'] == footnote.p.a['href'] and '#' + footnote.p.a['name'] == anchor['href']:
-                print 'Found match for footnote', j, ' in section ', i, ' anchor ', k
+                #print 'Found match for footnote', j, ' in section ', i, ' anchor ', k
+                pass
             else:
                 print 'ERROR: wrong match for footnote', j, ' with anchor ', k, ' from section ', i
 
@@ -220,14 +225,18 @@ def propagate_styles(soup):
             else:
                 tag['style'] = style
 
-if __name__ == '__main__':
-    from sys import argv, exit
 
-    if len(argv) != 3:
-        print 'USAGE: python %s <input-html> <output-html>' % argv[0]
-        exit(255)
+def find_first_html(dir):
+    for entry in listdir(dir):
+        fpath = dir + '/' + entry
+        if isfile(fpath):
+            fname, fext = splitext(entry)
+            if fext == '.html':
+                return entry
+    return None
 
-    fd = open(argv[1], 'r')
+def convert_file(filepath, filename):
+    fd = open(filepath+'/'+filename, 'r')
     htmldoc = fd.read()
     fd.close()
 
@@ -240,24 +249,50 @@ if __name__ == '__main__':
     insert_front_path_for_images(soup, 'images/')
     scale_all_images(soup, 1.5)
 
+    sections_dir = filepath+'/sections'
+    if not isdir(sections_dir):
+        mkdir(sections_dir)
+
     footnote_anchors, footnotes = find_footnotes_and_anchors(soup)
     try:
         title, sections_titles, sections_strings = split_sections(soup)
+        titles_info = 'found title: %s\n' % title
 
         remove_footnotes_from_last_section(sections_strings)
         add_footnotes_to_sections(sections_strings, footnote_anchors, footnotes)
 
-        print 'found title:', title
         for i, s in enumerate(sections_strings):
-            print 'found section.%d title:' % i, sections_titles[i]
-            fd = open('section.%d.html' % i, 'w')
+            titles_info += 'found section.%d title: %s\n' % (i, sections_titles[i])
+            fd = open(sections_dir+'/section.%d.html' % i, 'w')
             fd.write(s)
             fd.close()
     except IndexError, e:
-        print 'Could not split into sections'
+        titles_info = 'WARNING: Could not split into sections the file: %s' % filename
+        print titles_info
 
 
-    fd = open(argv[2], 'w')
+
+    fd = open(sections_dir+'/titles.txt', 'w')
+    fd.write(titles_info)
+    fd.close()
+
+    fd = open(sections_dir+'/full.html', 'w')
     fd.write(soup.prettify())
     fd.close()
+
+if __name__ == '__main__':
+    from sys import argv, exit
+
+    if len(argv) != 2:
+        print 'USAGE: python %s <input-dir>' % argv[0]
+        exit(255)
+    else:
+        input_dir = argv[1]
+
+
+    input_html = find_first_html(input_dir)
+    if input_html is None:
+        print 'Could not find a .html file in dir: ', input_dir
+
+    convert_file(input_dir, input_html)
 
