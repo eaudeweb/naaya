@@ -40,13 +40,13 @@
 <div class="field">
 	<label for="title" i18n:translate="">Subject</label>
 	<input type="text" name="title:utf8:ustring" id="title" size="50"
-		tal:attributes="value python:request.get('title', '')" />
+		tal:attributes="value python:request.get('title', '') or here.getSession('title', '')" />
 </div>
 <div class="field">
 	<label for="description" i18n:translate="">Text</label>
 	<span tal:define="editor here/getEditorTool" tal:replace="structure python:editor.render('description', image_support=True)" />
 	<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor"
-		tal:content="python:request.get('description', '')">
+		tal:content="python:request.get('description', '') or here.getSession('description', '')">
 	</textarea>
 </div>
 <div class="field">
@@ -58,9 +58,25 @@
 </div>
 <div class="field">
 	<label for="notify" i18n:translate="">Notify</label>
-	<input type="checkbox" name="notify" id="notify" tal:attributes="checked python:request.get('notify', None)" />
+	<input type="checkbox" name="notify" id="notify" tal:attributes="checked python:request.get('notify', None) or here.getSession('notify', None)" />
 	<span i18n:translate="">Notify me by e-mail if someone answers to this</span>
 </div>
+
+<tal:block condition="not:here/checkPermissionSkipCaptcha">
+    <span tal:condition="here/recaptcha_is_present" tal:replace="structure python:here.show_recaptcha(here)" />
+    <tal:block condition="not:here/recaptcha_is_present">
+      <div class="field">
+         <img tal:attributes="src string:${here/getSitePath}/getCaptcha" alt="" />
+      </div>
+
+      <div class="field">
+        <label for="contact_word"><span i18n:translate="">Word verification</span>
+        <input type="text" name="contact_word" size="50" id="contact_word" value="" />(required)<br />
+        <em i18n:translate="">please type the word you see in the above picture.</em>
+      </div>
+    </tal:block>
+</tal:block>
+
 <div class="field">
 	<input type="submit" value="Submit" i18n:attributes="value" />
 </div>

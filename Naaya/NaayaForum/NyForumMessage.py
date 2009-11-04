@@ -50,6 +50,18 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
         if inreplyto == '': inreplyto = None
         if notify: notify = 1
         else: notify = 0
+
+        for k in REQUEST.form.keys():
+            self.delSession(k)
+        if not self.checkPermissionSkipCaptcha():
+            _contact_word = REQUEST.form.get('contact_word', '')
+            captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
+            if captcha_validator:
+                self.setSessionErrors(captcha_validator)
+                for k, v in REQUEST.form.items():
+                    self.setSession(k, v)
+                return REQUEST.RESPONSE.redirect(self.absolute_url() + '/message_add_html')
+
         author, postdate = self.processIdentity()
         ob = NyForumMessage(id, inreplyto, title, description, notify, author, postdate)
         self._setObject(id, ob)
@@ -171,8 +183,10 @@ class NyForumMessage(NyForumBase, Folder):
             if len(attachment.read()) > self.file_max_size:
                 REQUEST.set('file_max_size', self.file_max_size)
                 return self.reply_html.__of__(self)(REQUEST)
-        addNyForumMessage(self.get_topic_object(), id, self.id,
-            title, description, attachment, notify)
+        captcha_redirect = addNyForumMessage(self.get_topic_object(), id, self.id,
+                                            title, description, attachment, notify, REQUEST)
+        if captcha_redirect:
+            return REQUEST.RESPONSE.redirect(self.absolute_url() + '/reply_html')
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s#%s' % (self.get_topic_path(), id))
