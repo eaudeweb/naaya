@@ -11,7 +11,6 @@ def perform(curl):
         sys.stderr.flush()
 
 def upload_image(curl, url, filepath):
-    """ """
     curl.setopt(pycurl.URL, url)
     curl.setopt(pycurl.HTTPPOST, [('file', (curl.FORM_FILE, filepath))])
     #curl.setopt(curl.VERBOSE, 1)
@@ -43,6 +42,8 @@ if __name__ == '__main__':
     url = 'http://tbconsultation.edw.ro/site/demo/urban-environment/.images/manage_addProduct/ExtFile/manage_addExtImage'
     for fname in os.listdir(sys.argv[1]):
         if fname.endswith('.html'):
+            continue
+        if fname.endswith('.pdf'):
             continue
         print 'Uploading ', fname
         upload_image(curl, url, sys.argv[1] + '\\' + fname)
