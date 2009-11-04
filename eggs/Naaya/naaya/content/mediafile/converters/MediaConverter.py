@@ -31,11 +31,13 @@ class MediaConverterError(Exception):
     """Media Convertor Error"""
     pass
 
-class MediaConverter(object):
+class MediaConverter(threading.Thread):
     """ Convert any video file to FlashVideoFile (.flv) using ffmpeg and index
     is with flvtool2.
     """
     def __init__(self, fin, fout, fdone, flog):
+        threading.Thread.__init__(self)
+
         self.fin = fin
         self.fout = fout
         self.fdone = fdone
@@ -62,13 +64,7 @@ class MediaConverter(object):
         """
         logger.debug('Conversion step 2')
 
-        self.exit_code = self.process.poll()
-        if self.exit_code is None:
-            # Not finished yet
-            timer = threading.Timer(5, self.step_2)
-            timer.start()
-            return None
-
+        self.exit_code = self.process.wait()
         if self.exit_code != 0:
             return self.finish('Exit code %s' % self.exit_code)
 
@@ -93,13 +89,7 @@ class MediaConverter(object):
         """
         logger.debug('Conversion step 4')
 
-        self.exit_code = self.process.poll()
-        if self.exit_code is None:
-            # Not finished yet
-            timer = threading.Timer(5, self.step_4)
-            timer.start()
-            return None
-
+        self.exit_code = self.process.wait()
         if self.exit_code != 0:
             logger.exception('An error occured while indexing video file.')
         return self.finish()
@@ -220,7 +210,7 @@ def media2flv(finput, suffix=""):
     cvd = finput + ".cvd" # converted
     os.rename(fin, tcv)
     media_converter = MediaConverter(tcv, cvd, finput, finput + '.log')
-    media_converter.run()
+    media_converter.start()
 
 def get_conversion_errors(fpath, suffix=".log"):
     """ Open error file and parse it for errors
