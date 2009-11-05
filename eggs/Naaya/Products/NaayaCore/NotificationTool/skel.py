@@ -15,8 +15,9 @@ This is an automatically generated message to inform you that the item
 <subject i18n:translate="">Changed items - daily digest</subject>
 <body_text><tal:block i18n:translate="">
 This is an automatically generated daily message listing modified items
-in the "<tal:block content="options/portal" i18n:name="title" />" portal.</tal:block>
-<tal:block repeat="item options/items" i18n:translate="">
+in the "<tal:block content="options/portal/title_or_id" i18n:name="title" />"
+portal.</tal:block>
+<tal:block repeat="item options/objs" i18n:translate="">
 <tal:block content="item/ob/title_or_id" i18n:name="title" /> \
 (at <tal:block content="item/ob/absolute_url" i18n:name="url" />)
 </tal:block>
@@ -27,8 +28,9 @@ in the "<tal:block content="options/portal" i18n:name="title" />" portal.</tal:b
 <subject i18n:translate="">Changed items - weekly digest</subject>
 <body_text><tal:block i18n:translate="">
 This is an automatically generated weekly message listing modified items
-in the "<tal:block content="options/portal" i18n:name="title" />" portal.</tal:block>
-<tal:block repeat="item options/items" i18n:translate="">
+in the "<tal:block content="options/portal/title_or_id" i18n:name="title" />"
+portal.</tal:block>
+<tal:block repeat="item options/objs" i18n:translate="">
 <tal:block content="item/ob/title_or_id" i18n:name="title" /> \
 (at <tal:block content="item/ob/absolute_url" i18n:name="url" />)
 </tal:block>
@@ -39,8 +41,9 @@ in the "<tal:block content="options/portal" i18n:name="title" />" portal.</tal:b
 <subject i18n:translate="">Changed items - monthly digest</subject>
 <body_text><tal:block i18n:translate="">
 This is an automatically generated monthly message listing modified items
-in the "<tal:block content="options/portal" i18n:name="title" />" portal.</tal:block>
-<tal:block repeat="item options/items" i18n:translate="">
+in the "<tal:block content="options/portal/title_or_id" i18n:name="title" />"
+portal.</tal:block>
+<tal:block repeat="item options/objs" i18n:translate="">
 <tal:block content="item/ob/title_or_id" i18n:name="title" /> \
 (at <tal:block content="item/ob/absolute_url" i18n:name="url" />)
 </tal:block>
