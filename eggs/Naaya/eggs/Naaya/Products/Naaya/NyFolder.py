@@ -431,6 +431,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
             if del_permission: btn_delete = 1
             if copy_permission: btn_copy = 1
             if edit_permission: can_operate = 1
+            #TODO: remove version_status -- moved to NaayaBase.NyContentType.version_status
             # version_status:  0 - cannot check out for some reason
             #                  1 - can check in
             #                  2 - can check out

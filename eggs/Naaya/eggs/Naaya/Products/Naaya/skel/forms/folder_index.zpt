@@ -119,15 +119,7 @@ function toggleSelect(caller){
         <span tal:omit-tag="" i18n:translate="">comment(s)</span>]
       </tal:block>
     </td>
-    <td class="checkin" tal:condition="can_operate" i18n:translate="">n/a</td>
-    <td class="edit" tal:condition="can_operate">
-      <a tal:condition="edit_permission"
-        tal:attributes="href string:${folder/absolute_url}/edit_html">
-        <img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
-      </a>
-      <tal:block tal:condition="python:not edit_permission"
-        i18n:translate="">n/a</tal:block>
-    </td>
+    <tal:block replace="structure folder/version_status"/>
   </tal:block>
 </tr>
 
@@ -162,28 +154,7 @@ function toggleSelect(caller){
         <span tal:omit-tag="" i18n:translate="">comment(s)</span>]
       </tal:block>
     </td>
-    <td class="checkin" tal:condition="can_operate">
-      <tal:block tal:condition="python:version_status == 0"
-        i18n:translate="">n/a</tal:block>
-      <a tal:condition="python:version_status == 2"
-        tal:attributes="href string:${object/absolute_url}/startVersion">
-        <img src="misc_/Naaya/checkout"
-          alt="Checkout - start new version" i18n:attributes="alt" />
-      </a>
-      <a tal:condition="python:version_status == 1"
-        tal:attributes="href string:${object/absolute_url}/edit_html">
-        <img src="misc_/Naaya/checkin" alt="Version control"
-          i18n:attributes="alt" />
-      </a>
-    </td>
-    <td class="edit" tal:condition="can_operate">
-      <a tal:condition="python:edit_permission and not (object.isVersionable() and object.hasVersion())"
-         tal:attributes="href string:${object/absolute_url}/edit_html">
-        <img src="misc_/Naaya/edit" alt="Edit" i18n:attributes="alt" />
-      </a>
-      <tal:block tal:condition="python:edit_permission and (object.isVersionable() and object.hasVersion()) or not edit_permission"
-      i18n:translate="">n/a</tal:block>
-    </td>
+    <tal:block replace="structure object/version_status"/>
   </tal:block>
 </tr>
 
