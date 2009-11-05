@@ -51,16 +51,17 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
         if notify: notify = 1
         else: notify = 0
 
-        for k in REQUEST.form.keys():
-            self.delSession(k)
-        if not self.checkPermissionSkipCaptcha():
-            _contact_word = REQUEST.form.get('contact_word', '')
-            captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
-            if captcha_validator:
-                self.setSessionErrors(captcha_validator)
-                for k, v in REQUEST.form.items():
-                    self.setSession(k, v)
-                return REQUEST.RESPONSE.redirect(self.absolute_url() + '/message_add_html')
+        if REQUEST is not None:
+            for k in REQUEST.form.keys():
+                self.delSession(k)
+            if not self.checkPermissionSkipCaptcha():
+                _contact_word = REQUEST.form.get('contact_word', '')
+                captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
+                if captcha_validator:
+                    self.setSessionErrors(captcha_validator)
+                    for k, v in REQUEST.form.items():
+                        self.setSession(k, v)
+                    return REQUEST.RESPONSE.redirect(self.absolute_url() + '/message_add_html')
 
         author, postdate = self.processIdentity()
         ob = NyForumMessage(id, inreplyto, title, description, notify, author, postdate)
