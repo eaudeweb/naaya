@@ -190,6 +190,7 @@ def addNyEvent(self, id='', REQUEST=None, contributor=None, **kwargs):
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'event_add_html':
             self.setSession('referer', self.absolute_url())
+            return self.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
     return ob.getId()

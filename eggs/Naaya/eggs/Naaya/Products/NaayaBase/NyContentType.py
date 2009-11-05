@@ -229,6 +229,15 @@ class NyContentType:
             return self.meta_label
         return self._get_schema().title_or_id()
 
+    def object_submitted_message(self, REQUEST):
+        if self.approved:
+            self.setSessionInfo(['Item added'])
+        elif self.checkPermissionPublishObjects():
+            self.setSessionInfo(['Item added (unapproved)'])
+        else:
+            self.setSessionInfo(['The administrator will analyze your request and you will be notified about the result shortly.'])
+        return REQUEST.RESPONSE.redirect(self.aq_parent.absolute_url())
+
 InitializeClass(NyContentType)
 
 def _null_getattr(key):
