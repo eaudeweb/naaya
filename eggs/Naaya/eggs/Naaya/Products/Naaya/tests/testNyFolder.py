@@ -178,7 +178,7 @@ class TestNyFolderFileListing(NaayaFunctionalTestCase):
         self.browser.submit()
         # check html
         html = self.browser.get_html()
-        self.assertTrue('<h1>Thank you for your submission</h1>' in html)
+        self.assertTrue('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
         self.assertTrue(hasattr(self.parent, folder_name))
         self.assertFalse(hasattr(self.parent2, folder_name))
