@@ -21,6 +21,7 @@
 import os
 from zope.configuration.xmlconfig import xmlconfig
 from StringIO import StringIO
+from copy import deepcopy
 import transaction
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import user_name, user_password

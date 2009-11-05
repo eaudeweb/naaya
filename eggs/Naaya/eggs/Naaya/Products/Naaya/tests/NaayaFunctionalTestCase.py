@@ -19,7 +19,6 @@
 
 import sys
 from StringIO import StringIO
-from copy import deepcopy
 
 try: import twill
 except: twill = None
