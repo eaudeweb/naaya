@@ -78,7 +78,7 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase, ContactMixin):
 
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('Item added' in html)
+        self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
         self.portal.info.testcontact.approveThis()
 

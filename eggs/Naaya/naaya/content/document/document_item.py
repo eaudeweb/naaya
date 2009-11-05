@@ -332,7 +332,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
             self.recatalogNyObject(self)
             self.notifyFolderMaintainer(self.getParentNode(), self)
             self.setSession('referer', self.getParentNode().absolute_url())
-            return ob.object_submitted_message(REQUEST)
+            return self.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.getParentNode().absolute_url())
         else:
             l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
