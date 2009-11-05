@@ -156,7 +156,6 @@ def addNyStory(self, id='', REQUEST=None, contributor=None, **kwargs):
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'story_add_html':
             self.setSession('referer', self.absolute_url())
-            return self.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
     return ob.getId()
 
@@ -394,6 +393,7 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
             self.recatalogNyObject(self)
             self.notifyFolderMaintainer(self.getParentNode(), self)
             self.setSession('referer', self.getParentNode().absolute_url())
+            return self.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.getParentNode().absolute_url())
         else:
             l_referer = REQUEST['HTTP_REFERER'].split('/')[-1]
