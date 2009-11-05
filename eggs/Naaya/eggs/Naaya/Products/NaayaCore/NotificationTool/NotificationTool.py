@@ -209,13 +209,17 @@ class NotificationTool(Folder):
     def _get_email_tool(self):
         return self.getSite().getEmailTool()
 
+    def _get_site(self):
+        return self.getSite()
+
     def _send_notifications(self, messages_by_user, template):
         """ send the notifications described in the `messages_by_user` data structure """
+        portal = self._get_site()
         email_tool = self._get_email_tool()
         addr_from = email_tool._get_from_address()
         for user_id, kwargs in messages_by_user.iteritems():
             addr_to = self._get_user_info(user_id)['email']
-            mail_data = template(**kwargs)
+            mail_data = template(portal=portal, **kwargs)
             send_notification(email_tool, addr_from, addr_to,
                 mail_data['subject'], mail_data['body_text'])
 
@@ -270,7 +274,7 @@ class NotificationTool(Folder):
 
         messages_by_user = {}
         for user_id, objs in objects_by_user.iteritems():
-            messages_by_user[user_id] = {'items': objs}
+            messages_by_user[user_id] = {'objs': objs}
 
         template = self._get_template(notif_type)
         self._send_notifications(messages_by_user, template)

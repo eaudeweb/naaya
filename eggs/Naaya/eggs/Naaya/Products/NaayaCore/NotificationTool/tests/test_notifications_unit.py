@@ -57,15 +57,15 @@ class TestedNotificationTool(NotificationTool):
                 yield ob
 
     def _get_template(self, template_name):
-        def single_tmpl(ob, person):
+        def single_tmpl(ob, person, portal):
             return {'subject': 'notifications',
-                'body_text': 'instant [%s]' % ob.path}
+                'body_text': 'instant [%s] %s' % (ob.path, portal.title_or_id())}
 
-        def group_tmpl(items):
+        def group_tmpl(portal, objs):
             keyer = lambda item: item['ob'].path
-            sorted_items = sorted(items, key=keyer)
+            sorted_items = sorted(objs, key=keyer)
             items_str = ''.join('[%s]' % item['ob'].path for item in sorted_items)
-            body = '%s %s' % (template_name, items_str)
+            body = '%s %s %s' % (template_name, items_str, portal.title_or_id())
             return {'subject': 'notifications', 'body_text': body}
 
         if template_name == 'instant':
@@ -78,6 +78,12 @@ class TestedNotificationTool(NotificationTool):
             def _get_from_address(self):
                 return 'notif@example.com'
         return MockEmailTool()
+
+    def _get_site(self):
+        class MockSite(object):
+            def title_or_id(self):
+                return 'mocky site'
+        return MockSite()
 
 class NotificationsUnitTest(TestCase):
     """ unit test for notifications """
@@ -124,9 +130,9 @@ class NotificationsUnitTest(TestCase):
             datetime(2009, 7, 30), datetime(2009, 8, 5))
         self.assertEqual(set(self._fetch_test_notifications()), set([
             ('notif@example.com', 'user1@example.com', 'notifications',
-                'weekly [fol1/doc_b]'),
+                'weekly [fol1/doc_b] mocky site'),
             ('notif@example.com', 'user2@example.com', 'notifications',
-                'weekly [fol1/doc_b]'),
+                'weekly [fol1/doc_b] mocky site'),
         ]))
 
     def test_notification_type_checking(self):
@@ -143,14 +149,14 @@ class NotificationsUnitTest(TestCase):
             datetime(2009, 7, 30), datetime(2009, 8, 5))
         self.assertEqual(set(self._fetch_test_notifications()), set([
             ('notif@example.com', 'user2@example.com', 'notifications',
-                'daily [fol1/doc_b]'),
+                'daily [fol1/doc_b] mocky site'),
         ]))
 
         self.notif._send_newsletter('weekly',
             datetime(2009, 7, 30), datetime(2009, 8, 5))
         self.assertEqual(set(self._fetch_test_notifications()), set([
             ('notif@example.com', 'user3@example.com', 'notifications',
-                'weekly [fol1/doc_b]'),
+                'weekly [fol1/doc_b] mocky site'),
         ]))
 
         self.notif._send_newsletter('monthly',
@@ -172,11 +178,11 @@ class NotificationsUnitTest(TestCase):
             datetime(2009, 7, 30), datetime(2009, 8, 5))
         self.assertEqual(set(self._fetch_test_notifications()), set([
             ('notif@example.com', 'user1@example.com', 'notifications',
-                'weekly [fol1/doc_a]'),
+                'weekly [fol1/doc_a] mocky site'),
             ('notif@example.com', 'user2@example.com', 'notifications',
-                'weekly [fol2/doc_b]'),
+                'weekly [fol2/doc_b] mocky site'),
             ('notif@example.com', 'user3@example.com', 'notifications',
-                'weekly [doc_c][fol1/doc_a][fol2/doc_b]'),
+                'weekly [doc_c][fol1/doc_a][fol2/doc_b] mocky site'),
         ]))
 
     def test_instant_notifications(self):
@@ -188,9 +194,9 @@ class NotificationsUnitTest(TestCase):
         self.notif.notify_instant(ob, 'somebody')
         self.assertEqual(set(self._fetch_test_notifications()), set([
             ('notif@example.com', 'user1@example.com', 'notifications',
-                'instant [fol1/doc_a]'),
+                'instant [fol1/doc_a] mocky site'),
             ('notif@example.com', 'user3@example.com', 'notifications',
-                'instant [fol1/doc_a]'),
+                'instant [fol1/doc_a] mocky site'),
         ]))
 
 class CronTestedNotificationTool(NotificationTool):

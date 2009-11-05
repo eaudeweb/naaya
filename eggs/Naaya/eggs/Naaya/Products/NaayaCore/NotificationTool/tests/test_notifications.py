@@ -89,7 +89,7 @@ class NotificationsTest(NaayaTestCase):
             ('from.zope@example.com', 'contrib@example.com',
             u'Changed items - weekly digest',
             u'This is an automatically generated weekly message '
-            u'listing modified items in the "" portal.\n'
+            u'listing modified items in the "portal" portal.\n'
             u'notifol (at http://nohost/portal/notifol)\n'
             u'Notifying document (at http://nohost/portal/notifol/notidoc)')])
 
