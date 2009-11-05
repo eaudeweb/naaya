@@ -62,6 +62,56 @@ class EmailPageTemplateUnitTest(TestCase):
         except ValueError, e:
             self.assertTrue('Section "body_text" not found' in str(e))
 
+    def test_i18n(self):
+        text = ('<subject i18n:translate="">qwer</subject>\n'
+                '<body_text>lala</body_text>\n')
+        templ = EmailPageTemplate(id='templ', text=text)
+        render = templ.render_email
+
+        i18n_data = {
+            ('qwer', 'fr'): 'azer',
+        }
+        def translate(message, lang):
+            return i18n_data.get((message, lang), message)
+
+        def render_subject(l=None, t=None):
+            return templ.render_email(_lang=l, _translate=t)['subject']
+
+        # no translation service specified
+        s = render()['subject']
+        self.assertEqual(render_subject(), 'qwer')
+
+        s = render(_lang='fr')['subject']
+        self.assertEqual(render_subject('fr'), 'qwer')
+
+        # language not specified
+        s = render(_translate=translate)['subject']
+        self.assertEqual(render_subject(t=translate), 'qwer')
+
+        # language specified
+        s = render(_lang='fr', _translate=translate)['subject']
+        self.assertEqual(render_subject('fr', translate), 'azer')
+
+    def test_i18n_with_mapping(self):
+        text = ('<subject>qwer</subject>\n'
+                '<body_text i18n:translate="">the '
+                    '<tal:block i18n:name="x">Y</tal:block>'
+                ' value</body_text>\n')
+        templ = EmailPageTemplate(id='templ', text=text)
+        render = templ.render_email
+
+        i18n_data = {
+            ('the ${x} value', 'fr'): 'la valeur ${x}',
+        }
+        def translate(message, lang):
+            return i18n_data.get((message, lang), message)
+
+        def render_body(l=None, t=None):
+            return templ.render_email(_lang=l, _translate=t)['body_text']
+
+        self.assertEqual(render_body(t=translate), 'the Y value')
+        self.assertEqual(render_body('fr', translate), 'la valeur Y')
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(EmailPageTemplateUnitTest))

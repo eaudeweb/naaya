@@ -24,15 +24,17 @@ from zope import interface
 from Globals import package_home
 from OFS.interfaces import ITraversable
 from OFS.SimpleItem import SimpleItem
-from Products.PageTemplates.PageTemplate import PageTemplate
-from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
+from zope.pagetemplate.pagetemplate import PageTemplate as Z3_PageTemplate
+from zope.tales.tales import Context
+
+from zope.i18n import interpolate
 
 def manage_addEmailPageTemplate(self, id, text):
     ept = EmailPageTemplate(id, text)
     self._setObject(id, ept)
     return id
 
-class EmailPageTemplate(SimpleItem, ZopePageTemplate):
+class EmailPageTemplate(SimpleItem, Z3_PageTemplate):
     meta_type = 'Naaya Email Page Template'
 
     manage_options = (
@@ -42,10 +44,10 @@ class EmailPageTemplate(SimpleItem, ZopePageTemplate):
         ) + SimpleItem.manage_options
 
     def __init__(self, id, text):
-        super(EmailPageTemplate, self).__init__(id, text)
+        self._text = text
 
     def render_email(self, **kwargs):
-        text = self.pt_render(extra_context={'options': TraversableDict(kwargs)})
+        text = self.pt_render({'options': TraversableDict(kwargs)})
 
         def get_section(name):
             try:
@@ -61,7 +63,8 @@ class EmailPageTemplate(SimpleItem, ZopePageTemplate):
             'body_text': get_section('body_text'),
         }
 
-    pt_getContext = PageTemplate.pt_getContext
+    def pt_getEngineContext(self, namespace):
+        return CustomI18nContext(self.pt_getEngine(), namespace)
 
 def EmailPageTemplateFile(filename, _prefix):
     if _prefix:
@@ -83,3 +86,18 @@ class TraversableDict(dict):
     interface.implements(ITraversable)
     def restrictedTraverse(self, name, default=None):
         return self.get(name, default)
+
+class CustomI18nContext(Context):
+    def __init__(self, engine, contexts):
+        super(CustomI18nContext, self).__init__(engine, contexts)
+
+    def translate(self, msgid, domain=None, mapping=None, default=None):
+        options = self.contexts['options']
+
+        lang = options.get('_lang', None)
+        translate = options.get('_translate', None)
+        if translate is None:
+            translate = lambda msgid, lang: msgid
+
+        msg = translate(msgid, lang)
+        return interpolate(msg, mapping)
