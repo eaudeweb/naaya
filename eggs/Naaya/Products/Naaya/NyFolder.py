@@ -113,6 +113,7 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
             return self.manage_main(self, REQUEST, update_menu=1)
         elif referer == 'folder_add_html':
             self.setSession('referer', self.absolute_url())
+            return ob.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
     else:
         return ob.getId()
