@@ -58,7 +58,7 @@ class NyNewsFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('<h1>Thank you for your submission</h1>' in html)
+        self.failUnless('Item added' in html)
 
         self.portal.info.testnews.approveThis()
 
