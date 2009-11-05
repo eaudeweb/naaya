@@ -238,6 +238,33 @@ class NyContentType:
             self.setSessionInfo(['The administrator will analyze your request and you will be notified about the result shortly.'])
         return REQUEST.RESPONSE.redirect(self.aq_parent.absolute_url())
 
+    def _version_status(self):
+        # return version status
+        if self.checkPermissionEditObject():
+            if self.isVersionable():
+                if self.hasVersion():
+                    if self.isVersionAuthor():
+                        return True, False
+                        #return 'versioned-mine, not-editable'
+                    else:
+                        return False, False
+                        #return 'versioned-not-mine, not-editable'
+                else:
+                    return True, True
+                    #return 'versionable, editable'
+
+            else:
+                return False, True
+                #return 'not-versionable, editable'
+        else:
+            return False, False
+            #return 'no-permission, not-editable'
+
+    def version_status(self):
+        version, editable = self._version_status()
+        pt = PageTemplateFile('zpt/version_status', globals())
+        return pt.__of__(self)(version=version, editable=editable)
+
 InitializeClass(NyContentType)
 
 def _null_getattr(key):
