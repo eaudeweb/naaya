@@ -154,18 +154,3 @@ class NaayaFunctionalTestCase(NaayaTestCase.NaayaTestCase):
         server = make_server(host, port, self.wsgi_request)
         print 'serving pages on "%s" port %d; press ^C to stop' % (host, port)
         server.serve_forever()
-
-    def install_content_type(self, meta_type):
-        content_type = self.portal.get_pluggable_item(meta_type)
-        self.portal.manage_install_pluggableitem(meta_type)
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].append(content_type['permission'])
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
-
-    def remove_content_type(self, meta_type):
-        content_type = self.portal.get_pluggable_item(meta_type)
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].remove(content_type['permission'])
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
-        self.portal.manage_uninstall_pluggableitem(meta_type)
-
