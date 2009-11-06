@@ -247,7 +247,7 @@
 		<role name="Authenticated" grouppermissions="Add comments" permissions=""/>
 		<role name="Contributor" grouppermissions="Add content" permissions=""/>
 		<role name="Reviewer" grouppermissions="Review content" permissions=""/>
-		<role name="Administrator" grouppermissions="Browse content,Add content,Add comments,Edit content,Copy content,Publish content,Delete content,Validate content,Translate pages,Manage Users" permissions="Naaya - Manage Consultation,Naaya - Manage Simple Consultation,Naaya - Review Consultation,Naaya - Review Simple Consultation,Manage Naaya Glossary"/>
+		<role name="Administrator" grouppermissions="Browse content,Add content,Add comments,Edit content,Copy content,Publish content,Delete content,Validate content,Translate pages,Manage Users" permissions="Naaya - Manage Consultation,Naaya - Manage Simple Consultation,Naaya - Review Consultation,Naaya - Review Simple Consultation,Manage Naaya Glossary,Add Naaya Forum"/>
 	</security>
 	<notification>
 		<newsmetatype meta_type="Naaya News" action="1"/>
