@@ -26,7 +26,6 @@
 <tal:block content="structure python: here.prop_display_tr('surname')" />
 <tal:block content="structure python: here.prop_display_tr('name')" />
 <tal:block content="structure python: here.prop_display_tr('ref_lang')" />
-<tal:block content="structure python: here.prop_display_tr('country')" />
 <tal:block content="structure python: here.prop_display_tr('email')" />
 <tal:block content="structure python: here.prop_display_tr('contributor')" />
 

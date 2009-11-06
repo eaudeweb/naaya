@@ -49,40 +49,29 @@ OBJECT_CONSTRUCTORS = ['expert_add_html', 'addNyExpert']
 OBJECT_ADD_FORM = 'expert_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Expert type.'
 PREFIX_OBJECT = 'expert'
-PROPERTIES_OBJECT = {
-    'id':               (0, '', ''),
-    'title':            (0, '', ''),
-    'description':      (0, '', ''),
-    'coverage':         (0, '', ''),
-    'keywords':         (0, '', ''),
-    'surname':          (1, MUST_BE_NONEMPTY, 'The Surname field must have a value.'),
-    'name':             (1, MUST_BE_NONEMPTY, 'The Name field must have a value.'),
-    'ref_lang':         (0, '', ''),
-    'country':          (0, '', ''),
-    'maintopics':       (0, '', ''),
-    'subtopics':        (0, '', ''),
-    'sortorder':        (0, MUST_BE_POSITIV_INT, 'The Sort order field must contain a positive integer.'),
-    'releasedate':      (0, MUST_BE_DATETIME, 'The Release date field must contain a valid date.'),
-    'discussion':       (0, '', ''),
-    'content_type':     (0, '', ''),
-    'email':            (0, '', ''),
-    'lang':             (0, '', '')
-}
 DEFAULT_SCHEMA = {
-    'surname':  dict(sortorder=100, widget_type='String', label='Surname', required=True, localized=True),
-    'name':     dict(sortorder=110, widget_type='String', label='Name', required=True, localized=True),
-    'ref_lang': dict(sortorder=120, widget_type='String', label='Working language(s)', localized=True),
-    'country':  dict(sortorder=130, widget_type='Select', label='Country', list_id='countries'),
-    'email':    dict(sortorder=140, widget_type='String', label='Email address'),
+    'personal_title':  dict(sortorder=100, widget_type='String', label='Title', required=True, localized=True),
+    'surname':  dict(sortorder=110, widget_type='String', label='Surname', required=True, localized=True),
+    'name':     dict(sortorder=120, widget_type='String', label='Name', required=True, localized=True),
+    'email':    dict(sortorder=150, widget_type='String', label='Email address'),
+    'address':  dict(sortorder=160, widget_type='String', label='Address'),
+    'phone':    dict(sortorder=170, widget_type='String', label='Phone'),
+    'mobile':   dict(sortorder=180, widget_type='String', label='Mobile phone'),
+    'website':  dict(sortorder=190, widget_type='String', label='Website'),
+    'instant_messaging':  dict(sortorder=200, widget_type='String', label='Instant messaging'),
+    'main_topics':  dict(sortorder=220, widget_type='Select', label='Main topics', list_id='topics'),
+    'sub_topics':  dict(sortorder=230, widget_type='Select', label='Subtopics', list_id='topics'),
+    'ref_lang': dict(sortorder=240, widget_type='String', label='Working language(s)', localized=True),
 }
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
 DEFAULT_SCHEMA['title'].update(visible=False, required=False)
-DEFAULT_SCHEMA['description'].update(visible=False)
+DEFAULT_SCHEMA['description'].update(sortorder=130)
+DEFAULT_SCHEMA['geo_location'].update(visible=True, sortorder=210)
 DEFAULT_SCHEMA['coverage'].update(visible=False)
 DEFAULT_SCHEMA['keywords'].update(visible=False)
 DEFAULT_SCHEMA['releasedate'].update(visible=False)
 DEFAULT_SCHEMA['discussion'].update(visible=False)
-DEFAULT_SCHEMA['sortorder'].update(sortorder=200)
+DEFAULT_SCHEMA['sortorder'].update(sortorder=300)
 
 # this dictionary is updated at the end of the module
 config = {
@@ -95,10 +84,8 @@ config = {
         'forms': OBJECT_FORMS,
         'add_form': OBJECT_ADD_FORM,
         'description': DESCRIPTION_OBJECT,
-        'properties': PROPERTIES_OBJECT,
         'default_schema': DEFAULT_SCHEMA,
         'schema_name': 'NyExpert',
-        'import_string': 'importNyExpert',
         '_module': sys.modules[__name__],
         'additional_style': None,
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyExpert.gif'),
@@ -114,12 +101,12 @@ def expert_add_html(self, REQUEST=None, RESPONSE=None):
     form_helper = get_schema_helper_for_metatype(self, METATYPE_OBJECT)
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyExpert', 'form_helper': form_helper}, 'expert_add')
 
-def _create_NyExpert_object(parent, id, title, content_type, contributor):
+def _create_NyExpert_object(parent, id, title, contributor):
     i = 0
     while parent._getOb(id, None):
         i += 1
         id = '%s-%u' % (id, i)
-    ob = NyExpert(id, title, content_type, contributor)
+    ob = NyExpert(id, title, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
     ob = parent._getOb(id)
@@ -138,15 +125,7 @@ def addNyExpert(self, id='', REQUEST=None, contributor=None, **kwargs):
     _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
 
-    _content_type = schema_raw_data.pop('content_type', '')
-    _subtopics = schema_raw_data.pop('subtopics', '')
     _send_notifications = schema_raw_data.pop('_send_notifications', True)
-
-    _subtopics = self.utConvertToList(_subtopics)
-    res = {}
-    for x in _subtopics:
-        res[x.split('|@|')[0]] = ''
-    _maintopics = res.keys()
 
     _title = '%s %s' % (schema_raw_data.get('surname',''), schema_raw_data.get('name',''))
     schema_raw_data['title'] = _title
@@ -160,7 +139,7 @@ def addNyExpert(self, id='', REQUEST=None, contributor=None, **kwargs):
     if id == '': id = PREFIX_OBJECT + self.utGenRandomId(6)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
-    ob = _create_NyExpert_object(self, id, _title, _content_type, contributor)
+    ob = _create_NyExpert_object(self, id, _title, contributor)
 
     form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
@@ -187,9 +166,6 @@ def addNyExpert(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.approveThis(approved, approved_by)
     ob.submitThis()
 
-    ob.subtopics = _subtopics
-    ob.maintopics = _maintopics
-
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
     if _send_notifications:
@@ -207,10 +183,6 @@ def addNyExpert(self, id='', REQUEST=None, contributor=None, **kwargs):
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
 
     return ob.getId()
-
-def importNyExpert(self, param, id, attrs, content, properties, discussion, objects):
-    #this method is called during the import process
-    raise NotImplementedError
 
 class expert_item(Implicit, NyContentData):
     """ """
@@ -232,7 +204,7 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
 
     security = ClassSecurityInfo()
 
-    def __init__(self, id, title, content_type, contributor):
+    def __init__(self, id, title, contributor):
         """ """
         self.id = id
         expert_item.__init__(self)
@@ -240,10 +212,6 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         NyCheckControl.__dict__['__init__'](self)
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
-
-    security.declarePrivate('export_this_tag_custom')
-    def export_this_tag_custom(self):
-        raise NotImplementedError
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
@@ -260,24 +228,11 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
         _approved = int(bool(schema_raw_data.pop('approved', False)))
 
-        _content_type = schema_raw_data.pop('content_type', '')
-        _subtopics = schema_raw_data.pop('subtopics', '')
-
-        _subtopics = self.utConvertToList(_subtopics)
-        res = {}
-        for x in _subtopics:
-            res[x.split('|@|')[0]] = ''
-        _maintopics = res.keys()
-
         schema_raw_data['title'] = self.title
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
         if form_errors:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
-
-        self.content_type = _content_type
-        self.subtopics = _subtopics
-        self.maintopics = _maintopics
 
         if _approved != self.approved:
             if _approved == 0: _approved_by = None
@@ -325,19 +280,6 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
-        _source = schema_raw_data.pop('source', 'file')
-        _url = schema_raw_data.pop('url', '')
-        _version = schema_raw_data.pop('version', False)
-
-        _content_type = schema_raw_data.pop('content_type', '')
-        _subtopics = schema_raw_data.pop('subtopics', '')
-
-        _subtopics = self.utConvertToList(_subtopics)
-        res = {}
-        for x in _subtopics:
-            res[x.split('|@|')[0]] = ''
-        _maintopics = res.keys()
-
         schema_raw_data['title'] = obj.title
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
@@ -349,10 +291,6 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
                 return
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
-
-        obj.content_type = _content_type
-        obj.subtopics = _subtopics
-        obj.maintopics = _maintopics
 
         if self.discussion: self.open_for_comments()
         else: self.close_for_comments()
@@ -384,7 +322,6 @@ config.update({
     'folder_constructors': [
             ('expert_add_html', expert_add_html),
             ('addNyExpert', addNyExpert),
-            (config['import_string'], importNyExpert),
         ],
     'add_method': addNyExpert,
     'validation': issubclass(NyExpert, NyValidation),
