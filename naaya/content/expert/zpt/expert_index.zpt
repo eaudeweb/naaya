@@ -83,8 +83,8 @@
 				website here/website;
 				instant_messaging here/instant_messaging;
 				geo_location here/geo_location;
-				main_topics here/main_topics;
-				sub_topics here/sub_topics;
+				main_topics python:here.getExpertTopics(here.main_topics);
+				sub_topics python:here.getExpertTopics(here.sub_topics);
 				ref_lang here/ref_lang;
 				">
 	<h4 tal:condition="description" tal:content="structure description"/>
@@ -92,7 +92,7 @@
 		<a tal:attributes="href string:mailto:${email}" tal:content="email"/>
 	</div>
 	<div tal:condition="website">
-		<a tal:attributes="href website" tal:content="website"/>
+		<a tal:attributes="href website" i18n:translate="">Homepage</a>
 	</div>
 	<div tal:condition="phone" tal:content="phone"/>
 	<div tal:condition="mobile" tal:content="string:${mobile} (mobile)"/>
@@ -105,7 +105,7 @@
 		<h2 i18n:translate="">Main area of expertise</h2>
 		<ul>
 			<tal:block repeat="topic main_topics">
-				<li tal:content="topic"/>
+				<li tal:content="topic/title"/>
 			</tal:block>
 		</ul>
 	</div>
@@ -113,7 +113,7 @@
 		<h2 i18n:translate="">Secondary area of expertise</h2>
 		<ul>
 			<tal:block repeat="topic sub_topics">
-				<li tal:content="topic"/>
+				<li tal:content="topic/title"/>
 			</tal:block>
 		</ul>
 	</div>
