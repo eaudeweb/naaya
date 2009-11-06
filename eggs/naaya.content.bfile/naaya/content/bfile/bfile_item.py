@@ -22,7 +22,6 @@
 import os
 import sys
 from datetime import datetime
-import urllib
 
 #Zope imports
 from Globals import InitializeClass
@@ -45,7 +44,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyFolderishVersioning import NyFolderishVersioning
 
-from NyBlobFile import NyBlobFile
+from NyBlobFile import make_blobfile
 
 #module constants
 DEFAULT_SCHEMA = {
@@ -200,23 +199,9 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             return None
 
     def _save_file(self, the_file):
-        content_type = getattr(the_file, 'headers', {}).get(
-            'content-type', 'application/octet-stream')
-        meta = {
-            'filename': the_file.filename,
-            'content_type': content_type,
-            'timestamp': datetime.utcnow(),
-            'removed': False,
-        }
-        bf = NyBlobFile(**meta)
-
-        # copy file data
-        bf_stream = bf.open_write()
-        data = the_file.read()
-        bf_stream.write(data) # TODO: copy data in chunks
-        bf_stream.close()
-        bf.size = len(data)
-
+        bf = make_blobfile(the_file,
+                           removed=False,
+                           timestamp=datetime.utcnow())
         self._versions.append(bf)
 
     security.declarePrivate('remove_version')
@@ -308,14 +293,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         except (IndexError, ValueError), e:
             raise NotFound
 
-        RESPONSE.setHeader('Content-Length', ver.size)
-        RESPONSE.setHeader('Content-Type', ver.content_type)
-        RESPONSE.setHeader('Content-Disposition',
-            "attachment;filename*=UTF-8''%s" % urllib.quote(ver.filename))
-
-        if not hasattr(RESPONSE, '_streaming'):
-            return ver.open().read()
-        return ver.open_iterator()
+        return ver.send_data(RESPONSE)
 
 InitializeClass(NyBFile)
 

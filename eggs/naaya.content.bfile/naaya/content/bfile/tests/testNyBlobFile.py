@@ -20,12 +20,22 @@
 import blob_patch
 
 from unittest import TestSuite, makeSuite
+from StringIO import StringIO
 
 from Testing import ZopeTestCase
 import transaction
 
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
-from naaya.content.bfile.NyBlobFile import NyBlobFile
+from naaya.content.bfile.NyBlobFile import NyBlobFile, make_blobfile
+
+class MockResponse(object):
+    def __init__(self, stream=False):
+        self.headers = {}
+        if stream:
+            self._streaming = 'whatever value'
+
+    def setHeader(self, key, value):
+        self.headers[key] = value
 
 class NyBlobFileTestCase(ZopeTestCase.TestCase):
     """ CRUD test for NyBlobFile """
@@ -55,6 +65,36 @@ class NyBlobFileTestCase(ZopeTestCase.TestCase):
         self.assertEqual(bf2.content_type, 'text/html')
         self.assertEqual(bf2.filename, 'other_file.txt')
         self.assertEqual(bf2.open().read(), 'other content')
+
+    def test_factory(self):
+        data = 'some test data'
+        f = StringIO(data)
+        f.filename = 'my.txt'
+        f.headers = {'content-type': 'text/plain'}
+
+        bf = make_blobfile(f, somerandomkw='thevalue')
+
+        self.assertEqual(bf.open().read(), data)
+        self.assertEqual(bf.content_type, 'text/plain')
+        self.assertEqual(bf.filename, 'my.txt')
+        self.assertEqual(bf.somerandomkw, 'thevalue')
+
+    def test_send_data(self):
+        data = 'some test data'
+        f = StringIO(data)
+        f.filename = 'my.txt'
+        f.headers = {'content-type': 'text/plain'}
+
+        bf = make_blobfile(f, somerandomkw='thevalue')
+
+        ok_headers = {'Content-Length': 14,
+                      'Content-Type': 'text/plain',
+                      'Content-Disposition': ("attachment;filename*="
+                                              "UTF-8''my.txt")}
+        response = MockResponse()
+        ret = bf.send_data(response)
+        self.assertEqual(response.headers, ok_headers)
+        self.assertEqual(ret, 'some test data')
 
 class NyBlobFileTransactionsTestCase(NaayaTestCase):
     def afterSetUp(self):
