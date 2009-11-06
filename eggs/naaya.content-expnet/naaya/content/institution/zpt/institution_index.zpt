@@ -23,11 +23,7 @@
 
 <tal:block content="structure python: here.prop_display_tr('releasedate')" />
 <tal:block content="structure python: here.prop_display_tr('coverage')" />
-<tal:block content="structure python: here.prop_display_tr('surname')" />
 <tal:block content="structure python: here.prop_display_tr('name')" />
-<tal:block content="structure python: here.prop_display_tr('ref_lang')" />
-<tal:block content="structure python: here.prop_display_tr('country')" />
-<tal:block content="structure python: here.prop_display_tr('email')" />
 <tal:block content="structure python: here.prop_display_tr('contributor')" />
 
 <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
