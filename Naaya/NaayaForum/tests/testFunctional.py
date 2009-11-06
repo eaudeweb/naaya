@@ -255,10 +255,6 @@ class NyForumFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser_do_logout()
 
     def test_message_add(self):
-        #Check that an unidentified user cannot edit a message
-        self.browser.go('http://localhost/portal/forum_id/topic_id/message_add_html')
-        self.assertAccessDenied()
-
         #Add topic
         self.browser_do_login('admin', '')
         self.browser.go('http://localhost/portal/forum_id/topic_id/message_add_html')

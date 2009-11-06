@@ -80,6 +80,10 @@ class NyForum(NyForumBase, Folder, utils):
 
     security = ClassSecurityInfo()
 
+    _Add_Naaya_Forum_Message_Permission = ['Anonymous']
+    _Add_Edit_Delete_Naaya_Forum_Topic_Permission = ['Administrator', 'Manager']
+    _Naaya___Skip_Captcha_Permission = ['Administrator', 'Manager']
+
     #constructors
     security.declareProtected(view_management_screens, 'manage_addNyForumTopic_html')
     manage_addNyForumTopic_html = manage_addNyForumTopic_html
@@ -235,6 +239,9 @@ class NyForum(NyForumBase, Folder, utils):
             ra((del_permission, edit_permission, x))
         can_operate = can_operate or btn_select
         return btn_select, btn_delete, can_operate, r
+
+    def checkPermissionSkipCaptcha(self):
+        return getSecurityManager().checkPermission('Naaya - Skip Captcha', self)
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')

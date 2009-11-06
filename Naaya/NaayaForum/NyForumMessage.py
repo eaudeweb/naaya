@@ -52,7 +52,7 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
         else: notify = 0
 
         if REQUEST is not None:
-            for k in REQUEST.form.keys():
+            for k in ['title', 'description', 'notify']:
                 self.delSession(k)
             if not self.checkPermissionSkipCaptcha():
                 _contact_word = REQUEST.form.get('contact_word', '')
@@ -60,7 +60,8 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
                 if captcha_validator:
                     self.setSessionErrors(captcha_validator)
                     for k, v in REQUEST.form.items():
-                        self.setSession(k, v)
+                        if k in ['title', 'description', 'notify']:
+                            self.setSession(k, v)
                     return REQUEST.RESPONSE.redirect(self.absolute_url() + '/message_add_html')
 
         author, postdate = self.processIdentity()
