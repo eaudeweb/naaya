@@ -7,11 +7,11 @@
         <span tal:content="here/title" />
         <span tal:condition="here/required" class="mandatory_field">*</span>
     </label>
-    <p class="form-errors" tal:condition="errors" tal:content="errors" />
+    <br />
     <select tal:attributes="name string:${prop_id}:utf8:ustring:list; id prop_id" multiple="multiple" size="5">
-        <option value=""></option>
         <option tal:repeat="selection_item selection_list"
             tal:attributes="value selection_item/id; selected python: selection_item.id in value"
             tal:content="selection_item/title" i18n:translate="" />
     </select>
+    <p class="form-errors" tal:condition="errors" tal:content="errors" />
 </div>
