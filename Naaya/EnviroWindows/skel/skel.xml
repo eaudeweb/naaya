@@ -473,7 +473,7 @@
 		<role name="Anonymous" grouppermissions="Browse content" permissions=""/>
 		<role name="Authenticated" grouppermissions="Add comments" permissions="Naaya - Bulk download,Naaya - Skip Captcha"/>
 		<role name="Contributor" grouppermissions="Add content" permissions=""/>
-		<role name="Administrator" grouppermissions="Browse content,Add content,Add comments,Edit content,Copy content,Publish content,Delete content,Validate content,Translate pages,Manage Users" permissions=""/>
+		<role name="Administrator" grouppermissions="Browse content,Add content,Add comments,Edit content,Copy content,Publish content,Delete content,Validate content,Translate pages,Manage Users" permissions="Add Naaya Forum"/>
 	</security>
 	<properties>
 		<language code="en" />
