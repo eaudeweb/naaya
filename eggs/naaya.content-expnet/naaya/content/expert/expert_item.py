@@ -319,6 +319,11 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         """ """
         return self.getFormsTool().getContent({'here': self}, 'expert_edit')
 
+    def getExpertTopics(self, category):
+        ptool = self.getPortletsTool()
+        topics = getattr(ptool, 'experts_topics', None)
+        return [topics.get_item(topic) for topic in category if topics.get_collection().has_key(topic)]
+
     _minimap_template = PageTemplateFile('zpt/minimap', globals())
     def minimap(self):
         if self.geo_location not in (None, Geo()):
