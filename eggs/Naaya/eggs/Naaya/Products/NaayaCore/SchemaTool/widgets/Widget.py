@@ -44,6 +44,7 @@ DATA_TYPES = {
     'bool': bool,
     'date': DateTime,
     'geo': Geo,
+    'list': list,
 }
 
 
