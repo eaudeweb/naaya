@@ -18,6 +18,8 @@
 # Alex Morega, Eau de Web
 # David Batranu, Eau de Web
 
+import urllib
+
 from ZODB.blob import Blob
 from Persistence import Persistent
 from ZPublisher.Iterators import filestream_iterator
@@ -42,3 +44,34 @@ class NyBlobFile(Persistent):
 
     def open_write(self):
         return self._blob.open('w')
+
+    def send_data(self, RESPONSE):
+        RESPONSE.setHeader('Content-Length', self.size)
+        RESPONSE.setHeader('Content-Type', self.content_type)
+        RESPONSE.setHeader('Content-Disposition',
+            "attachment;filename*=UTF-8''%s" % urllib.quote(self.filename))
+
+        if not hasattr(RESPONSE, '_streaming'):
+            return self.open().read()
+        return self.open_iterator()
+
+def make_blobfile(the_file, **kwargs):
+    content_type = getattr(the_file, 'headers', {}).get(
+        'content-type', 'application/octet-stream')
+
+    meta = {
+        'filename': the_file.filename,
+        'content_type': content_type,
+    }
+    meta.update(kwargs)
+
+    blobfile = NyBlobFile(**meta)
+
+    # copy file data
+    bf_stream = blobfile.open_write()
+    data = the_file.read()
+    bf_stream.write(data) # TODO: copy data in chunks
+    bf_stream.close()
+    blobfile.size = len(data)
+
+    return blobfile
