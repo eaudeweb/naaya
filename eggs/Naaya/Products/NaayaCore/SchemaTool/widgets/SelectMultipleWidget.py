@@ -50,12 +50,4 @@ class SelectMultipleWidget(Widget):
     def isEmptyDatamodel(self, value):
         return not bool(value)
 
-    def parseFormData(self, data):
-        return data
-
-    def _convert_to_form_string(self, value):
-        if isinstance(value, int):
-            value = str(value)
-        return value
-
     template = PageTemplateFile('../zpt/property_widget_select_multiple', globals())
