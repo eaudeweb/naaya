@@ -40,6 +40,7 @@ class SelectMultipleWidget(Widget):
     )
 
     list_id = None
+    data_type = 'list'
 
     def get_selection_list(self):
         list_ob = self.getPortletsTool().getRefListById(self.list_id)
