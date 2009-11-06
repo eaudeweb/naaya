@@ -31,7 +31,7 @@ from widgets.Widget import WidgetError, DATA_TYPES, widgetid_from_propname
 
 known_widget_types = [
     'String', 'TextArea', 'Date', 'Checkbox',
-    'Select', 'Glossary', 'Geo', 'GeoType', 'Pointer',
+    'Select', 'SelectMultiple', 'Glossary', 'Geo', 'GeoType', 'Pointer',
 ]
 
 # widgets
