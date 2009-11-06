@@ -21,6 +21,8 @@
 from copy import deepcopy
 import os
 import sys
+import simplejson as json
+from decimal import Decimal
 
 #Zope imports
 from Globals import InitializeClass
@@ -39,6 +41,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
+from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 
 #module constants
 METATYPE_OBJECT = 'Naaya Expert'
@@ -51,17 +54,18 @@ DESCRIPTION_OBJECT = 'This is Naaya Expert type.'
 PREFIX_OBJECT = 'expert'
 DEFAULT_SCHEMA = {
     'personal_title':  dict(sortorder=100, widget_type='String', label='Title', required=True, localized=True),
-    'surname':  dict(sortorder=110, widget_type='String', label='Surname', required=True, localized=True),
-    'name':     dict(sortorder=120, widget_type='String', label='Name', required=True, localized=True),
+    'surname':  dict(sortorder=110, widget_type='String', label='Surname', required=True),
+    'name':     dict(sortorder=120, widget_type='String', label='Name', required=True),
     'email':    dict(sortorder=150, widget_type='String', label='Email address'),
     'address':  dict(sortorder=160, widget_type='String', label='Address'),
+    'address':  dict(sortorder=160, widget_type='TextArea', label='Address'),
     'phone':    dict(sortorder=170, widget_type='String', label='Phone'),
     'mobile':   dict(sortorder=180, widget_type='String', label='Mobile phone'),
     'website':  dict(sortorder=190, widget_type='String', label='Website'),
     'instant_messaging':  dict(sortorder=200, widget_type='String', label='Instant messaging'),
-    'main_topics':  dict(sortorder=220, widget_type='Select', label='Main topics', list_id='topics'),
-    'sub_topics':  dict(sortorder=230, widget_type='Select', label='Subtopics', list_id='topics'),
-    'ref_lang': dict(sortorder=240, widget_type='String', label='Working language(s)', localized=True),
+    'main_topics':  dict(sortorder=220, widget_type='SelectMultiple', label='Main topics', list_id='experts_topics'),
+    'sub_topics':  dict(sortorder=230, widget_type='SelectMultiple', label='Subtopics', list_id='experts_topics'),
+    'ref_lang': dict(sortorder=240, widget_type='String', label='Working language(s)'),
 }
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
 DEFAULT_SCHEMA['title'].update(visible=False, required=False)
@@ -314,6 +318,23 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'expert_edit')
+
+    _minimap_template = PageTemplateFile('zpt/minimap', globals())
+    def minimap(self):
+        if self.geo_location not in (None, Geo()):
+            simplepoints = [{'lat': self.geo_location.lat, 'lon': self.geo_location.lon}]
+        elif self.aq_parent.geo_location not in (None, Geo()):
+            simplepoints = [{'lat': self.aq_parent.geo_location.lat, 'lon': self.aq_parent.geo_location.lon}]
+        else:
+            return ""
+        json_simplepoints = json.dumps(simplepoints, default=json_encode)
+        return self._minimap_template(points=json_simplepoints)
+
+def json_encode(ob):
+    """ try to encode some known value types to JSON """
+    if isinstance(ob, Decimal):
+        return float(ob)
+    raise ValueError
 
 InitializeClass(NyExpert)
 
