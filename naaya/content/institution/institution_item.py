@@ -30,7 +30,6 @@ from Globals import InitializeClass
 from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
 
 #Product imports
@@ -43,14 +42,13 @@ from Products.NaayaBase.NyValidation import NyValidation
 
 
 DEFAULT_SCHEMA = {
-    'name': dict(sortorder=100, widget_type='String', label='Name'),
     'address': dict(sortorder=110, widget_type='String', label='Address'),
     'webpage': dict(sortorder=120, widget_type='String', label='Webpage'),
     'phone': dict(sortorder=140, widget_type='String', label='Phone'),
     'fax': dict(sortorder=160, widget_type='String', label='Fax'),
     'picture': dict(sortorder=180, widget_type='String', label='Picture'),
-    'main_topic': dict(sortorder=200, widget_type='Select', label='Main topic', list_id='institution_topics'),
-    'sub_topic': dict(sortorder=220, widget_type='Select', label='Additional topics', list_id='institution_topics'),
+    'main_topic': dict(sortorder=200, widget_type='SelectMultiple', label='Main topic', list_id='institution_topics'),
+    'sub_topic': dict(sortorder=220, widget_type='SelectMultiple', label='Additional topics', list_id='institution_topics'),
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
