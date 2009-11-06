@@ -10,75 +10,6 @@
 	</div>
 </tal:block>
 
-<h1>
-	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
-		title here/get_meta_label;
-		alt here/get_meta_label" />
-		<span tal:replace="string:${here/personal_title} ${here/title}" />
-		<span class="available_langs"
-			tal:condition="python:here.check_item_title(here, here.title)">
-			<span i18n:translate="">Item only translated in </span>
-			<span tal:repeat="lang here/gl_get_languages_map">
-				<a tal:content="python:' %s' % lang['title']"
-				tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
-				tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
-			</span>
-		</span>
-</h1>
-<div tal:define="
-				title here/title;
-				personal_title here/personal_title;
-				name here/name;
-				surname here/surname;
-				description here/description;
-				email here/email;
-				address here/address;
-				phone here/phone;
-				mobile here/mobile;
-				website here/website;
-				instant_messaging here/instant_messaging;
-				geo_location here/geo_location;
-				main_topics here/main_topics;
-				sub_topics here/sub_topics;
-				ref_lang here/ref_lang;
-				">
-	<div tal:condition="description" tal:content="structure description"/>
-	<div tal:condition="email">
-		<a tal:attributes="href string:mailto:${email}" tal:content="email"/>
-	</div>
-	<div tal:condition="website">
-		<a tal:attributes="href website" tal:content="website"/>
-	</div>
-	<div tal:condition="phone" tal:content="phone"/>
-	<div tal:condition="mobile" tal:content="mobile"/>
-	<div tal:condition="address" tal:define="map python:request.get('map', '')">
-		<span tal:content="address"/>
-		<a i18n:translate="" tal:condition="not: map" tal:attributes="href string:${here/absolute_url}?map=True">View on the map</a>
-		<a i18n:translate="" tal:condition="map" tal:attributes="href string:${here/absolute_url}">Hide map</a>
-	</div>
-	<div tal:condition="main_topics">
-		<h2 i18n:translate="">Main area of expertise</h2>
-		<ul>
-			<tal:block repeat="topic main_topics">
-				<li tal:content="topic"/>
-			</tal:block>
-		</ul>
-		<tal:block content="main_topics"/>
-	</div>
-	<div tal:condition="sub_topics">
-		<h2 i18n:translate="">Secondary area of expertise</h2>
-		<ul>
-			<tal:block repeat="topic sub_topics">
-				<li tal:content="topic"/>
-			</tal:block>
-		</ul>
-	</div>
-	<div >
-		<h2 i18n:translate="">Institutions</h2>
-		<span />
-	</div>
-</div>
-
 <div style="float: right;
 			width: 20em;
 			">
@@ -124,6 +55,72 @@
 	</div>
 </div>
 
-<tal:block content="structure here/comments_box" />
+<h1>
+	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
+		title here/get_meta_label;
+		alt here/get_meta_label" />
+		<span tal:replace="string:${here/personal_title} ${here/title}" />
+		<span class="available_langs"
+			tal:condition="python:here.check_item_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']"
+				tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
+				tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+</h1>
+<div tal:define="
+				title here/title;
+				personal_title here/personal_title;
+				name here/name;
+				surname here/surname;
+				description here/description;
+				email here/email;
+				address here/address;
+				phone here/phone;
+				mobile here/mobile;
+				website here/website;
+				instant_messaging here/instant_messaging;
+				geo_location here/geo_location;
+				main_topics here/main_topics;
+				sub_topics here/sub_topics;
+				ref_lang here/ref_lang;
+				">
+	<h4 tal:condition="description" tal:content="structure description"/>
+	<div tal:condition="email">
+		<a tal:attributes="href string:mailto:${email}" tal:content="email"/>
+	</div>
+	<div tal:condition="website">
+		<a tal:attributes="href website" tal:content="website"/>
+	</div>
+	<div tal:condition="phone" tal:content="phone"/>
+	<div tal:condition="mobile" tal:content="string:${mobile} (mobile)"/>
+	<div tal:condition="address" tal:define="map python:request.get('map', '')">
+		<span tal:content="address"/>
+		<a i18n:translate="" tal:condition="not: map" tal:attributes="href string:${here/absolute_url}?map=True">View on the map</a>
+		<a i18n:translate="" tal:condition="map" tal:attributes="href string:${here/absolute_url}">Hide map</a>
+	</div>
+	<div tal:condition="main_topics">
+		<h2 i18n:translate="">Main area of expertise</h2>
+		<ul>
+			<tal:block repeat="topic main_topics">
+				<li tal:content="topic"/>
+			</tal:block>
+		</ul>
+	</div>
+	<div tal:condition="sub_topics">
+		<h2 i18n:translate="">Secondary area of expertise</h2>
+		<ul>
+			<tal:block repeat="topic sub_topics">
+				<li tal:content="topic"/>
+			</tal:block>
+		</ul>
+	</div>
+	<div >
+		<h2 i18n:translate="">Institutions</h2>
+		<span />
+	</div>
+</div>
 
 <tal:block content="structure here/standard_html_footer" />
