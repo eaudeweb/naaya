@@ -3252,7 +3252,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(view_management_screens, 'manage_install_pluggableitem')
     def manage_install_pluggableitem(self, meta_type=None, REQUEST=None):
-        """ """
+        """
+        Makes the content with the given meta_type available for usage in the portal.
+        Raises ValueError if content does not exist.
+        If the content specifies an `on_install` function in it's `config`
+        this method will call `[on_install](self)`
+        """
         data_path = join(self.get_data_path(), 'skel', 'forms')
         if meta_type is not None:
             pitem = self.get_pluggable_item(meta_type)
@@ -3266,6 +3271,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 schema_tool = self._getOb(ID_SCHEMATOOL)
                 if pitem['module'] not in schema_tool.objectIds() and pitem['default_schema']:
                     schema_tool.addSchema(pitem['module'], title=pitem['label'], defaults=pitem['default_schema'])
+
+            #run `on_install` function if defined in content's `config`
+            if 'on_install' in pitem:
+                pitem['on_install'](self)
 
             #remember that this meta_type was installed
             self.__pluggable_installed_content[meta_type] = 1
