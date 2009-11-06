@@ -65,9 +65,9 @@ class TestNyExpert(NaayaTestCase):
     def test_addNyExpert_duplicates(self):
         self.login("contributor")
         expert_item.addNyExpert(self.app.portal.test_folder, id="expertdup1", name="expertdup1", surname="expertdup1")
-        self.assertTrue(hasattr(self.app.portal.test_folder, "expertdup1"), "URL object urldup1 was not found in folder 'test_folder'")
+        self.assertTrue(hasattr(self.app.portal.test_folder, "expertdup1"), "Expert object expertdup1 was not found in folder 'test_folder'")
         expert_item.addNyExpert(self.app.portal.test_folder, id="expertdup1", name="expertdup1", surname="expertdup1")
-        self.assertTrue(hasattr(self.app.portal.test_folder, "expertdup1-1"), "URL object urldup1 was not found in folder 'test_folder'")
+        self.assertTrue(hasattr(self.app.portal.test_folder, "expertdup1-1"), "Expert object expertdup1 was not found in folder 'test_folder'")
         self.logout()
 
 def test_suite():
