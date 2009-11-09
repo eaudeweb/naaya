@@ -74,6 +74,13 @@ def setupContentType(site):
         for k, v in values.items():
             ptool.institution_topics.manage_add_item(k, v)
 
+    #Create catalog index if it doesn't exist
+    ctool = site.getCatalogTool()
+    try: 
+        ctool.addIndex('topics', 'KeywordIndex', extra={'indexed_attrs' : 'main_topics, sub_topics'})
+        ctool.manage_reindexIndex(['topics'])
+    except: pass
+
 
 # this dictionary is updated at the end of the module
 config = {
@@ -114,7 +121,6 @@ def _create_NyInstitution_object(parent, id, contributor):
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
     ob = parent._getOb(id)
-    ob.picture = None
     ob.after_setObject()
     return ob
 
@@ -167,7 +173,7 @@ def addNyInstitution(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.submitThis()
 
     #Process uploaded file
-    self.picture = None
+    ob.picture = None
     _uploaded_file = schema_raw_data.pop('institution_picture', None)
     if _uploaded_file is not None:
         ob.picture = make_blobfile(_uploaded_file,
@@ -379,7 +385,6 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
         #Process uploaded file
-        self.picture = None
         _uploaded_file = schema_raw_data.pop('institution_picture', None)
         if _uploaded_file is not None:
             self.picture = make_blobfile(_uploaded_file,
@@ -434,7 +439,6 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/edit_html' % (self.absolute_url()))
 
-
     def getTopics(self, category):
         ptool = self.getPortletsTool()
         topics = getattr(ptool, 'institution_topics', None)
@@ -477,12 +481,30 @@ class InstitutionLister(Implicit, Item):
         site = self.getSite()
         return self._index_template(REQUEST, institutions=[1,2,3])
 
-    def query_institutions(self):
+
+    def topic_filters(self):
+        """ """
+        ret = []
+        ptool = self.getPortletsTool()
+        ctool = self.getCatalogTool()
+        ret.append((None, len(self.items_in_topic(ctool))))
+        topics = getattr(ptool, 'institution_topics', None)
+        for id, value in topics.get_collection().items():
+            ret.append((value, len(self.items_in_topic(ctool, id))))
+        return ret
+
+    def items_in_topic(self, catalog=None, topic='', objects=False):
         """
-        Retrieve the list of institutions
+        @param objects: Return full objects, not brains
         """
-        site = self.getSite()
-        return site.getCatalogTool().getCatalogedObjects(meta_type='Naaya Institution', approved=1)
+        dict = {'meta_type' : 'Naaya Institution'}
+        if not catalog:
+            catalog = self.getCatalogTool()
+        if topic:
+            dict['topics'] = topic
+        if objects:
+            return [catalog.getobject(ob.data_record_id_) for ob in catalog.search(dict)]
+        return catalog.search(dict)
 
 
 from Products.Naaya.NySite import NySite

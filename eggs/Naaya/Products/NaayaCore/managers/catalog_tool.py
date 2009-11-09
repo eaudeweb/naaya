@@ -265,6 +265,7 @@ class catalog_tool:
         else: l_filter['meta_type'] = self.searchable_content
         return self.__searchCatalog(l_filter)
 
+
     def query_objects_ex(self, meta_type=None, q=None, lang=None, path=None, howmany=-1, **kwargs):
         l_results = []
         l_filter = {'submitted': 1} #only submitted items
