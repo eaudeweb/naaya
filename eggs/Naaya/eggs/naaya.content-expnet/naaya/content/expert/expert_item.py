@@ -23,6 +23,7 @@ import os
 import sys
 import simplejson as json
 from decimal import Decimal
+from datetime import datetime
 
 #Zope imports
 from Globals import InitializeClass
@@ -31,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
+from OFS.SimpleItem import Item
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -42,6 +44,8 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from naaya.content.bfile.NyBlobFile import make_blobfile
 
 #module constants
 METATYPE_OBJECT = 'Naaya Expert'
@@ -52,16 +56,16 @@ OBJECT_CONSTRUCTORS = ['expert_add_html', 'addNyExpert']
 OBJECT_ADD_FORM = 'expert_add_html'
 DESCRIPTION_OBJECT = 'This is Naaya Expert type.'
 PREFIX_OBJECT = 'expert'
+ADDITIONAL_STYLE = open(ImageFile('www/expert.css', globals()).path).read()
+
 DEFAULT_SCHEMA = {
     'personal_title':  dict(sortorder=100, widget_type='String', label='Title', required=True, localized=True),
     'surname':  dict(sortorder=110, widget_type='String', label='Surname', required=True),
     'name':     dict(sortorder=120, widget_type='String', label='Name', required=True),
     'email':    dict(sortorder=150, widget_type='String', label='Email address'),
-    'address':  dict(sortorder=160, widget_type='String', label='Address'),
-    'address':  dict(sortorder=160, widget_type='TextArea', label='Address'),
     'phone':    dict(sortorder=170, widget_type='String', label='Phone'),
     'mobile':   dict(sortorder=180, widget_type='String', label='Mobile phone'),
-    'website':  dict(sortorder=190, widget_type='String', label='Website'),
+    'webpage':  dict(sortorder=190, widget_type='String', label='Webpage'),
     'instant_messaging':  dict(sortorder=200, widget_type='String', label='Instant messaging'),
     'main_topics':  dict(sortorder=220, widget_type='SelectMultiple', label='Main topics', list_id='experts_topics'),
     'sub_topics':  dict(sortorder=230, widget_type='SelectMultiple', label='Subtopics', list_id='experts_topics'),
@@ -76,6 +80,22 @@ DEFAULT_SCHEMA['keywords'].update(visible=False)
 DEFAULT_SCHEMA['releasedate'].update(visible=False)
 DEFAULT_SCHEMA['discussion'].update(visible=False)
 DEFAULT_SCHEMA['sortorder'].update(sortorder=300)
+
+def setupContentType(site):
+    #@TODO: initialize the list of topics (only and only once per site)
+    from skel import TOPICS
+    ptool = site.getPortletsTool()
+    itopics = getattr(ptool, 'experts_topics', None)
+    if not itopics:
+        ptool.manage_addRefList('experts_topics')
+        for k, v in TOPICS.items():
+            ptool.experts_topics.manage_add_item(k, v)
+    #Create catalog index if it doesn't exist
+    ctool = site.getCatalogTool()
+    try: 
+        ctool.addIndex('topics', 'KeywordIndex', extra={'indexed_attrs' : 'main_topics, sub_topics'})
+        ctool.manage_reindexIndex(['topics'])
+    except: pass
 
 # this dictionary is updated at the end of the module
 config = {
@@ -93,6 +113,8 @@ config = {
         '_module': sys.modules[__name__],
         'additional_style': None,
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyExpert.gif'),
+        'on_install' : setupContentType,
+        'additional_style': ADDITIONAL_STYLE,
         '_misc': {
                 'NyExpert.gif': ImageFile('www/NyExpert.gif', globals()),
                 'NyExpert_marked.gif': ImageFile('www/NyExpert_marked.gif', globals()),
@@ -114,6 +136,8 @@ def _create_NyExpert_object(parent, id, title, contributor):
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
     ob = parent._getOb(id)
+    ob.picture = None
+    ob.cv = None
     ob.after_setObject()
     return ob
 
@@ -169,6 +193,20 @@ def addNyExpert(self, id='', REQUEST=None, contributor=None, **kwargs):
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
     ob.submitThis()
+
+    #Process uploaded files
+    ob.picture = None
+    _uploaded_file = schema_raw_data.pop('expert_picture', None)
+    if _uploaded_file is not None:
+        ob.picture = make_blobfile(_uploaded_file,
+                           removed=False,
+                           timestamp=datetime.utcnow())
+    ob.cv = None
+    _uploaded_file = schema_raw_data.pop('expert_cv', None)
+    if _uploaded_file is not None:
+        ob.cv = make_blobfile(_uploaded_file,
+                           removed=False,
+                           timestamp=datetime.utcnow())
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
@@ -286,6 +324,10 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
 
         schema_raw_data['title'] = obj.title
 
+        #Process uploaded file
+        self.save_file(schema_raw_data, 'picture', 'expert_picture')
+        self.save_file(schema_raw_data, 'cv', 'expert_cv')
+
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if form_errors:
@@ -335,6 +377,37 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         json_simplepoints = json.dumps(simplepoints, default=json_encode)
         return self._minimap_template(points=json_simplepoints)
 
+    def save_file(self, schema_raw_data, object_attribute, form_field):
+        _uploaded_file = schema_raw_data.pop(form_field, None)
+        if _uploaded_file is not None and _uploaded_file.filename:
+            setattr(self,
+                        object_attribute,
+                        make_blobfile(_uploaded_file,
+                                        removed=False,
+                                        timestamp=datetime.utcnow()))
+
+    def render_picture(self, RESPONSE):
+        """ Render expert picture """
+        if hasattr(self, 'picture'):
+            return self.picture.send_data(RESPONSE, as_attachment=False)
+
+    def serve_file(self, RESPONSE):
+        """ Server expert file (CV) """
+        if hasattr(self, 'cv'):
+            return self.cv.send_data(RESPONSE, as_attachment=True)
+
+    def delete_picture(self, REQUEST=None):
+        """ Delete attached expert picture """
+        self.picture = None
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/edit_html' % (self.absolute_url()))
+
+    def delete_file(self, REQUEST=None):
+        """ Delete attached expert file """
+        self.cv = None
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/edit_html' % (self.absolute_url()))
+
 def json_encode(ob):
     """ try to encode some known value types to JSON """
     if isinstance(ob, Decimal):
@@ -342,6 +415,51 @@ def json_encode(ob):
     raise ValueError
 
 InitializeClass(NyExpert)
+
+class ExpertsLister(Implicit, Item):
+    """
+    Plug into the catalog to retrieve the list of experts
+    """
+    def __init__(self, id):
+        self.id = id
+
+    _index_template = NaayaPageTemplateFile('zpt/experts_list', globals(), 'expert')
+
+    def index_html(self, REQUEST):
+        """
+        Render the list of institutions recorded for this site.
+        """
+        site = self.getSite()
+        return self._index_template(REQUEST, experts=[1,2,3])
+
+
+    def topic_filters(self):
+        """ """
+        ret = []
+        ptool = self.getPortletsTool()
+        ctool = self.getCatalogTool()
+        ret.append((None, len(self.items_in_topic(ctool))))
+        topics = getattr(ptool, 'experts_topics', None)
+        for id, value in topics.get_collection().items():
+            ret.append((value, len(self.items_in_topic(ctool, id))))
+        return ret
+
+    def items_in_topic(self, catalog=None, topic='', objects=False):
+        """
+        @param objects: Return full objects, not brains
+        """
+        dict = {'meta_type' : 'Naaya Expert'}
+        if not catalog:
+            catalog = self.getCatalogTool()
+        if topic:
+            dict['topics'] = topic
+        if objects:
+            return [catalog.getobject(ob.data_record_id_) for ob in catalog.search(dict)]
+        return catalog.search(dict)
+
+
+from Products.Naaya.NySite import NySite
+NySite.list_expertss = ExpertsLister('experts_list')
 
 config.update({
     'constructors': (expert_add_html, addNyExpert),

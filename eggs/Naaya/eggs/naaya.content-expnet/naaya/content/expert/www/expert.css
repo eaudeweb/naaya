@@ -1,0 +1,57 @@
+.description 
+{
+ color: #8DA559;
+ font-size: 120%;
+ font-style: bold;
+}
+
+.boxes-right 
+{
+ float: right;
+ width: 20em;
+}
+
+.box 
+{
+ margin-top: 0.5em;
+ border-color: #DEDEDE;
+ border-top-style: none;
+ border-right-style: solid;
+ border-bottom-style: solid;
+ border-left-style: solid;
+ border-width: 1px;
+}
+
+.box .title 
+{
+ border-bottom-color: #DEDEDE;
+ border-bottom-width: 1px;
+ border-bottom-style: solid;
+ border-top-color: #DEDEDE;
+ border-top-width: 1px;
+ border-top-style: solid;
+ background-color: #d5dde1;
+ font-size: 120%;
+ font-weight: bold;
+ padding: 0.5em;
+}
+
+.box .minimap 
+{
+ margin: -0.5em;
+}
+
+.box .body 
+{
+ margin: 0.5em;
+}
+
+.main-content div 
+{
+ margin: 0.5em 0 0.5em 0;
+}
+
+.main-content a 
+{
+ text-decoration: None;
+}
