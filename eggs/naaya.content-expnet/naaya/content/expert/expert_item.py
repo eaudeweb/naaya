@@ -408,6 +408,46 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/edit_html' % (self.absolute_url()))
 
+    security.declareProtected(view, 'export_vcard')
+    def export_vcard(self, REQUEST=None):
+        """ """
+        r = []
+        ra = r.append
+        if self.geo_location.address:
+            postaladdress = self.geo_location.address
+        else:
+            postaladdress = ''
+        postaladdress = postaladdress.replace('\r\n', ' ')
+        if not self.surname and not self.name:
+            fn = self.utToUtf8(self.title_or_id())
+            n = self.utToUtf8(self.title_or_id())
+        else:
+            fn ='%s %s %s' % (self.utToUtf8(self.personal_title), self.utToUtf8(self.surname), self.utToUtf8(self.name))
+            n = '%s;%s;%s;%s;%s' % (self.utToUtf8(self.name), self.utToUtf8(self.surname), '', self.utToUtf8(self.personal_title), '')
+        ra('BEGIN:VCARD')
+        ra('CHARSET:UTF-8')
+        ra('VERSION:2.1')
+        ra('FN;CHARSET=UTF-8:%s' % fn)
+        ra('N;CHARSET=UTF-8:%s' % n)
+        #ra('TITLE;CHARSET=UTF-8:%s' % self.utToUtf8(self.jobtitle))
+        #ra('ROLE;CHARSET=UTF-8:%s' % self.utToUtf8(self.jobtitle))
+        #ra('ORG;CHARSET=UTF-8:%s;%s' % (self.utToUtf8(self.organisation), self.utToUtf8(self.department)))
+        ra('TEL;WORK:%s' % self.utToUtf8(self.phone))
+        ra('TEL;CELL:%s' % self.utToUtf8(self.mobile))
+        ra('ADR;WORK;CHARSET=UTF-8:;;%s;;;;' % self.utToUtf8(postaladdress))
+        ra('EMAIL;INTERNET:%s' % self.utToUtf8(self.email))
+        ra('URL:%s' % self.utToUtf8(self.webpage))
+        ra('NOTE;CHARSET=UTF-8:%s' % self.utToUtf8(self.utStripAllHtmlTags(self.description)))
+        ra('END:VCARD')
+        
+        if REQUEST:
+            response = self.REQUEST.RESPONSE
+            response.setHeader('content-type', 'text/x-vCard')
+            response.setHeader('charset', 'UTF-8')
+            response.setHeader('content-disposition', 'attachment; filename=%s.vcf' % self.id)
+        
+        return '\n'.join(r)
+
 def json_encode(ob):
     """ try to encode some known value types to JSON """
     if isinstance(ob, Decimal):
@@ -459,7 +499,7 @@ class ExpertsLister(Implicit, Item):
 
 
 from Products.Naaya.NySite import NySite
-NySite.list_expertss = ExpertsLister('experts_list')
+NySite.experts_list = ExpertsLister('experts_list')
 
 config.update({
     'constructors': (expert_add_html, addNyExpert),

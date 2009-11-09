@@ -16,8 +16,13 @@
 			<ul>
 				<tal:block repeat="topic topics">
 					<li tal:define="tp python:topic[0]; cnt python:topic[1]">
-						<a tal:condition="not: tp" tal:attributes="href string:${here/absolute_url}"><span i18n:translate="">All</span> (<span tal:replace="cnt" />)</a>
-						<a tal:condition="tp" tal:attributes="href string:${here/absolute_url}?topic=${tp/id}" i18n:translate=""><span tal:replace="tp/title" /> (<span tal:replace="cnt" />)</a>
+						<a tal:condition="not: tp"
+						tal:attributes="href string:${here/absolute_url}">
+						<span i18n:translate="">All</span> (<span tal:replace="cnt" />)</a>
+						<a tal:condition="tp"
+						tal:attributes="href string:${here/absolute_url}?topic=${tp/id}"
+						i18n:translate=""><span tal:replace="tp/title" />
+						(<span tal:replace="cnt" />)</a>
 					</li>
 				</tal:block>
 			</ul>
