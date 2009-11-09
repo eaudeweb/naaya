@@ -31,6 +31,7 @@ from App.ImageFile import ImageFile
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Acquisition import Implicit
+from OFS.SimpleItem import Item
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -39,7 +40,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyValidation import NyValidation
-
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 DEFAULT_SCHEMA = {
     'address': dict(sortorder=110, widget_type='String', label='Address'),
@@ -52,9 +53,15 @@ DEFAULT_SCHEMA = {
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
-def createTopicsList(site):
+def setupContentType(site):
+    #@TODO: initialize the list of topics (only and only once per site)
     values = { 1: 'unu', 2: 'doi' }
-    print 'institution_topics'
+    ptool = site.getPortletsTool()
+    itopics = getattr(ptool, 'institution_topics', None)
+    if not itopics:
+        ptool.manage_addRefList('institution_topics')
+        for k, v in values.items():
+            ptool.institution_topics.manage_add_item(k, v)
 
 
 # this dictionary is updated at the end of the module
@@ -74,7 +81,7 @@ config = {
         '_module': sys.modules[__name__],
         'additional_style': None,
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyInstitution.gif'),
-        'install' : createTopicsList,
+        'on_install' : setupContentType,
         '_misc': {
                 'NyInstitution.gif': ImageFile('www/NyInstitution.gif', globals()),
                 'NyInstitution_marked.gif': ImageFile('www/NyInstitution_marked.gif', globals()),
@@ -419,6 +426,38 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
         return self.getFormsTool().getContent({'here': self}, 'institution_edit')
 
 InitializeClass(NyInstitution)
+
+
+#
+class InstitutionLister(Implicit, Item):
+    """
+    Plug into the catalog to retrieve the list of institutions
+    """
+    def __init__(self, id):
+        self.id = id
+
+    _index_template = NaayaPageTemplateFile('zpt/institutions_list', globals(), 'institution')
+
+    def index_html(self, REQUEST):
+        """
+        Render the list of institutions recorded for this site.
+        """
+        site = self.getSite()
+        return self._index_template(REQUEST, institutions=[1,2,3])
+
+    def query_institutions(self):
+        """
+        Retrieve the list of institutions
+        """
+        site = self.getSite()
+        return site.getCatalogTool().getCatalogedObjects(meta_type='Naaya Institution', approved=1)
+
+
+from Products.Naaya.NySite import NySite
+NySite.list_institutions = InstitutionLister('list_institutions')
+
+
+
 
 import vobject
 from vobject.vcard import ParseError
