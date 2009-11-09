@@ -25,8 +25,31 @@
 		<br />
 		<input id="expert_cv" type="file" name="expert_cv" />
 	</div>
-	
-	<h2 i18n:translate="">Employment history</h2>
+	<br />
+	<div class="field-inline">
+		<h2 i18n:translate="">Employment history</h2>
+		<br />
+		<label class="widget-title" for="id_start">Start year</label>
+		<input id="id_start" type="text" name="start" size="5" />
+		<label class="widget-title" for="id_end">End year</label>
+		<input id="id_end" type="text" name="end"  size="5" />
+		<input id="id_current" type="checkbox" name="current" />
+		<label class="widget-title" for="id_current">Still working here</label>
+		<br />
+	</div>
+	<div class="field-inline">
+		<label class="widget-title" for="id_institution">Institution</label>
+		<input id="id_institution" type="text" name="institution" />
+	</div>
+	<a name="Employment"></a>
+	<ul>
+		<tal:block repeat="ob here/getEmploymentHistory">
+			<li>
+				<span tal:replace="ob/start" /> - <span tal:replace="ob/end" />, <span tal:replace="ob/institution" />
+				<a tal:attributes="href string:${here/absolute_url}/delete_EmploymentHistory?id=${ob/id}#Employment">Delete</a>
+			</li>
+		</tal:block>
+	</ul>
 </tal:block>
 
 </tal:block>
