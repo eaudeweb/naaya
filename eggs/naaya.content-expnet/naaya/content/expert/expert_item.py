@@ -79,7 +79,7 @@ DEFAULT_SCHEMA['coverage'].update(visible=False)
 DEFAULT_SCHEMA['keywords'].update(visible=False)
 DEFAULT_SCHEMA['releasedate'].update(visible=False)
 DEFAULT_SCHEMA['discussion'].update(visible=False)
-DEFAULT_SCHEMA['sortorder'].update(sortorder=300)
+DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
 def setupContentType(site):
     #@TODO: initialize the list of topics (only and only once per site)
@@ -195,22 +195,11 @@ def addNyExpert(self, id='', REQUEST=None, contributor=None, **kwargs):
     ob.submitThis()
 
     #Process uploaded files
-    ob.picture = None
-    _uploaded_file = schema_raw_data.pop('expert_picture', None)
-    if _uploaded_file is not None:
-        ob.picture = make_blobfile(_uploaded_file,
-                           removed=False,
-                           timestamp=datetime.utcnow())
+    ob.save_file(schema_raw_data, 'picture', 'expert_picture')
+    ob.save_file(schema_raw_data, 'cv', 'expert_cv')
 
     #Employment history data (list of EmploymentRecord objects)
     ob.employment_history = []
-
-    ob.cv = None
-    _uploaded_file = schema_raw_data.pop('expert_cv', None)
-    if _uploaded_file is not None:
-        ob.cv = make_blobfile(_uploaded_file,
-                           removed=False,
-                           timestamp=datetime.utcnow())
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
@@ -226,7 +215,7 @@ def addNyExpert(self, id='', REQUEST=None, contributor=None, **kwargs):
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'expert_add_html':
             self.setSession('referer', self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+            return ob.object_submitted_message(REQUEST)
 
     return ob.getId()
 
@@ -513,7 +502,6 @@ class EmploymentRecord(object):
         self.end = end
         self.current = current
         self.institution = institution
-
 
 config.update({
     'constructors': (expert_add_html, addNyExpert),
