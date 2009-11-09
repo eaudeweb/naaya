@@ -21,6 +21,7 @@ from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED,\
     EXCEPTION_NOVERSION_MSG
 
 #Python imports
+from datetime import datetime
 import re
 from cStringIO import StringIO
 import os, sys
@@ -41,13 +42,13 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from naaya.content.bfile.NyBlobFile import make_blobfile
 
 DEFAULT_SCHEMA = {
     'address': dict(sortorder=110, widget_type='String', label='Address'),
     'webpage': dict(sortorder=120, widget_type='String', label='Webpage'),
     'phone': dict(sortorder=140, widget_type='String', label='Phone'),
     'fax': dict(sortorder=160, widget_type='String', label='Fax'),
-    'picture': dict(sortorder=180, widget_type='String', label='Picture'),
     'main_topic': dict(sortorder=200, widget_type='SelectMultiple', label='Main topic', list_id='institution_topics'),
     'sub_topic': dict(sortorder=220, widget_type='SelectMultiple', label='Additional topics', list_id='institution_topics'),
 }
@@ -389,6 +390,14 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
+        #Process uploaded file
+        _uploaded_file = schema_raw_data.pop('institution_picture', None)
+        if _uploaded_file is not None:
+            self.picture = make_blobfile(_uploaded_file,
+                               removed=False,
+                               timestamp=datetime.utcnow())
+
+
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if not form_errors:
@@ -424,6 +433,10 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'institution_edit')
+    
+    def render_picture(self, RESPONSE):
+        """ """
+        return self.picture.send_data(RESPONSE, as_attachment=False)
 
 InitializeClass(NyInstitution)
 

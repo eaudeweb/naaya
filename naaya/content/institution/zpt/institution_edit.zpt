@@ -2,4 +2,10 @@
 
 <h1 metal:fill-slot="title" i18n:translate="">Edit Institution</h1>
 
+<tal:block metal:fill-slot="custom_properties">
+	<label class="widget-title" for="institution_picture">Picture</label>
+	<input id="institution_picture" type="file" name="institution_picture" />
+</tal:block>
+
+
 </tal:block>
