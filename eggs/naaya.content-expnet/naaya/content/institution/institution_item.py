@@ -44,15 +44,21 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.content.bfile.NyBlobFile import make_blobfile
 
-DEFAULT_SCHEMA = {
+DEFAULT_SCHEMA = {}
+DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
+DEFAULT_SCHEMA.update({
     'address': dict(sortorder=110, widget_type='String', label='Address'),
     'webpage': dict(sortorder=120, widget_type='String', label='Webpage'),
     'phone': dict(sortorder=140, widget_type='String', label='Phone'),
     'fax': dict(sortorder=160, widget_type='String', label='Fax'),
     'main_topic': dict(sortorder=200, widget_type='SelectMultiple', label='Main topic', list_id='institution_topics'),
     'sub_topic': dict(sortorder=220, widget_type='SelectMultiple', label='Additional topics', list_id='institution_topics'),
-}
-DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
+    'coverage': dict(sortorder=30, widget_type='Glossary', label='Geographical coverage', glossary_id='coverage', localized=True, visible=False),
+    'keywords': dict(sortorder=40, widget_type='Glossary', label='Keywords', glossary_id='keywords', localized=True, visible=False),
+    'sortorder': dict(sortorder=50, widget_type='String', data_type='int', default='100', label='Sort order', required=False, visible=False),
+    'releasedate': dict(sortorder=60, widget_type='Date', data_type='date', label='Release date', required=False, visible=False),
+    'discussion': dict(sortorder=70, widget_type='Checkbox', data_type='int', label='Open for comments', visible=False),
+})
 
 def setupContentType(site):
     #@TODO: initialize the list of topics (only and only once per site)
@@ -104,6 +110,7 @@ def _create_NyInstitution_object(parent, id, contributor):
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
     ob = parent._getOb(id)
+    ob.picture = None
     ob.after_setObject()
     return ob
 
@@ -154,6 +161,14 @@ def addNyInstitution(self, id='', REQUEST=None, contributor=None, **kwargs):
         approved, approved_by = 0, None
     ob.approveThis(approved, approved_by)
     ob.submitThis()
+
+    #Process uploaded file
+    self.picture = None
+    _uploaded_file = schema_raw_data.pop('institution_picture', None)
+    if _uploaded_file is not None:
+        ob.picture = make_blobfile(_uploaded_file,
+                           removed=False,
+                           timestamp=datetime.utcnow())
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
@@ -391,6 +406,7 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), obj.releasedate)
 
         #Process uploaded file
+        self.picture = None
         _uploaded_file = schema_raw_data.pop('institution_picture', None)
         if _uploaded_file is not None:
             self.picture = make_blobfile(_uploaded_file,
@@ -435,8 +451,15 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
         return self.getFormsTool().getContent({'here': self}, 'institution_edit')
     
     def render_picture(self, RESPONSE):
-        """ """
-        return self.picture.send_data(RESPONSE, as_attachment=False)
+        """ Render institution picture """
+        if hasattr(self, 'picture'):
+            return self.picture.send_data(RESPONSE, as_attachment=False)
+
+    def delete_picture(self, REQUEST=None):
+        """ Delete attached institution picture """
+        self.picture = None
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/edit_html' % (self.absolute_url()))
 
 InitializeClass(NyInstitution)
 
