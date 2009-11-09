@@ -27,14 +27,14 @@
             <option value="monthly" tal:condition="python:'monthly' in available_subscriptions" i18n:translate="">Monthly digest</option>
         </select>
     </label>
-    <!--label for="lang" i18n:translate="">in</label>
+    <label for="lang" i18n:translate="">in</label>
     <select name="lang" id="lang"
             tal:define="translations python:here.getPortalTranslations().gettext">
         <option tal:repeat="item here/gl_get_languages_map"
                 tal:attributes="value python:item['id'];
                     selected python:item['selected']"
                 tal:content="python:translations(item['title'], item['id'])" />
-    </select-->
+    </select>
     <input name="submit" type="submit" value="Subscribe" i18n:attributes="value"/>
 </form>
 <p tal:condition="python: not available_subscriptions and current_subscriptions">You are subscribed to all available notifications.</p>
@@ -48,7 +48,7 @@
 	<thead>
 		<th>Location</th>
 		<th>Notification type</th>
-		<!--th>Language</th-->
+		<th>Language</th>
 		<th></th>
 	</thead>
 	<tbody>
@@ -60,9 +60,9 @@
 			<td>
 				<span tal:content="subscription/notif_type"/>
 			</td>
-			<!--td tal:define="lang subscription/lang">
+			<td tal:define="lang subscription/lang">
 				<span tal:content="python:here.gl_get_language_name(lang)"/>
-			</td-->
+			</td>
 			<td>
 				<form method="post" tal:attributes="action string:${here/absolute_url}/delete_subscription">
 					<input type="hidden" name="location" tal:attributes="value subscription/location"/>
