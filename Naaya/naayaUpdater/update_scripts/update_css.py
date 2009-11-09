@@ -40,12 +40,7 @@ from Products.Naaya.managers.skel_parser import skel_parser
 from Products.naayaUpdater.utils import (convertLinesToList, convertToList,
     get_template_content, normalize_template, html_diff, readFile)
 
-css_scheme_names = ['scheme_style', 'style', 'style_common']
-css_layout_names = ['common_css', 'style_css',
-                    'ew_common_css', 'ew_style_css',
-                    'chm_common_css']
-
-default_service_url = 'http://85.9.55.194:1324/css_diff?format=json'
+default_service_url = 'http://speaker.edw.ro/css_diff?format=json'
 service_url = os.environ.get('NY_UPDATER_CSS_URL', default_service_url)
 
 class UpdateCSS(UpdateScript):
@@ -55,15 +50,25 @@ class UpdateCSS(UpdateScript):
     authors = ['Alex Morega']
     creation_date = DateTime('Nov 9, 2009')
 
+    css_scheme_names = ['scheme_style', 'style', 'style_common']
+    css_layout_names = ['common_css', 'style_css',
+                        'ew_common_css', 'ew_style_css',
+                        'chm_common_css']
+
     def _update(self, portal):
         self.log.debug('/'.join(portal.getPhysicalPath()))
 
-        new_css = self.REQUEST.form.get('new_css', '') # TODO: don't rely on self.REQUEST
+        form = self.REQUEST.form # TODO: don't rely on self.REQUEST
+        new_css = form.get('new_css', '')
+        skip_css_scheme_names = form.get('skip_css_scheme_names', [])
+        skip_css_layout_names = form.get('skip_css_layout_names', [])
 
         all_css = StringIO()
 
         layout_tool = portal.portal_layout
-        for name in css_layout_names:
+        for name in self.css_layout_names:
+            if name in skip_css_layout_names:
+                continue
             ob = getattr(layout_tool, name, None)
             if ob is None:
                 continue
@@ -73,7 +78,9 @@ class UpdateCSS(UpdateScript):
                 raise NotImplementedError
 
         scheme = layout_tool.getCurrentSkinScheme()
-        for name in css_scheme_names:
+        for name in self.css_scheme_names:
+            if name in skip_css_scheme_names:
+                continue
             ob = getattr(scheme, name, None)
             if ob is not None:
                 all_css.write(ob())
