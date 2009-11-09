@@ -12,7 +12,7 @@
 						">
 				<span i18n:translate="">Browse by topics</span>
 		</div>
-		<div style="margin: 0.5em;" tal:define="topics here/topic_filters">
+		<div style="margin-left: -1.5em;" tal:define="topics here/topic_filters">
 			<ul>
 				<tal:block repeat="topic topics">
 					<li tal:define="tp python:topic[0]; cnt python:topic[1]">
