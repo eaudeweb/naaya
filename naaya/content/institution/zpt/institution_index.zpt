@@ -41,8 +41,8 @@
 <div tal:define="description python:here.prop_value_or_none('description')"
     tal:condition="description" tal:content="structure description" />
 
-<div tal:condition="here/picture">
-	<img tal:attributes="src string:${here/absolute_url}/render_picture" />
+<div tal:condition="here/picture|None">
+	<img tal:attributes="src string:${here/absolute_url}/render_picture" width="300" height="200" />
 </div>
 
 <tal:block content="structure here/comments_box" />
