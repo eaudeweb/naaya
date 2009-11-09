@@ -19,7 +19,10 @@
         </div>
     </tal:block>
 </tal:block>
-	<label class="widget-title" for="institution_picture">Picture</label>
-	<input id="institution_picture" type="file" name="institution_picture" />
+	<div class="field-inline">
+		<label class="widget-title" for="institution_picture">Picture</label>
+		<br />
+		<input id="institution_picture" type="file" name="institution_picture" />
+	</div>
 </tal:block>
 </tal:block>
