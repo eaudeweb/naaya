@@ -47,7 +47,7 @@ class EmailPageTemplate(SimpleItem, Z3_PageTemplate):
         self._text = text
 
     def render_email(self, **kwargs):
-        text = self.pt_render({'options': TraversableDict(kwargs)})
+        text = self.pt_render({'options': kwargs})
 
         def get_section(name):
             try:
@@ -77,15 +77,6 @@ def EmailPageTemplateFile(filename, _prefix):
     f.close()
     id = os.path.basename(filename)
     return EmailPageTemplate(id, content)
-
-class TraversableDict(dict):
-    """
-    `dict` subclass that implements the restrictedTraverse method to make the
-    zope template engine happy
-    """
-    interface.implements(ITraversable)
-    def restrictedTraverse(self, name, default=None):
-        return self.get(name, default)
 
 class CustomI18nContext(Context):
     def __init__(self, engine, contexts):
