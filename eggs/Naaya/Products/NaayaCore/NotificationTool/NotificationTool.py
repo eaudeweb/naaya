@@ -39,7 +39,7 @@ from zope import component
 #Product imports
 from Products.NaayaCore.constants import *
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
-from Products.NaayaCore.EmailTool.EmailPageTemplate import manage_addEmailPageTemplate
+from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailTool import build_email
 from Products.Naaya.interfaces import INySite, IHeartbeat
 
@@ -47,16 +47,9 @@ def manage_addNotificationTool(self, REQUEST=None):
     """ """
     ob = NotificationTool(ID_NOTIFICATIONTOOL, TITLE_NOTIFICATIONTOOL)
     self._setObject(ID_NOTIFICATIONTOOL, ob)
-    load_default_templates(ob)
 
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
-
-def load_default_templates(notification_tool):
-    from skel import default_email_templates
-    for name, contents in default_email_templates.iteritems():
-        manage_addEmailPageTemplate(notification_tool,
-            id='%s_template' % name, text=contents)
 
 Subscription = namedtuple('Subscription', 'user_id location notif_type lang')
 
@@ -201,7 +194,7 @@ class NotificationTool(Folder):
             yield brain.getObject()
 
     def _get_template(self, name):
-        template = self._getOb('%s_template' % name, None)
+        template = self._getOb('%s_emailpt' % name, None)
         if template is None:
             raise ValueError('template for "%s" not found' % name)
         return template.render_email
@@ -350,6 +343,11 @@ class NotificationTool(Folder):
         self.config['monthly_hour'] = form.get('monthly_hour')
         self.config['notif_content_types'] = form.get('notif_content_types', [])
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
+
+    instant_emailpt = EmailPageTemplateFile('emailpt/instant.zpt', globals())
+    daily_emailpt = EmailPageTemplateFile('emailpt/daily.zpt', globals())
+    weekly_emailpt = EmailPageTemplateFile('emailpt/weekly.zpt', globals())
+    monthly_emailpt = EmailPageTemplateFile('emailpt/monthly.zpt', globals())
 
 InitializeClass(NotificationTool)
 
