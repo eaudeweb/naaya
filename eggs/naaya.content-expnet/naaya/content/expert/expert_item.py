@@ -201,6 +201,10 @@ def addNyExpert(self, id='', REQUEST=None, contributor=None, **kwargs):
         ob.picture = make_blobfile(_uploaded_file,
                            removed=False,
                            timestamp=datetime.utcnow())
+
+    #Employment history data (list of EmploymentRecord objects)
+    ob.employment_history = []
+
     ob.cv = None
     _uploaded_file = schema_raw_data.pop('expert_cv', None)
     if _uploaded_file is not None:
@@ -500,6 +504,16 @@ class ExpertsLister(Implicit, Item):
 
 from Products.Naaya.NySite import NySite
 NySite.experts_list = ExpertsLister('experts_list')
+
+
+class EmploymentRecord(object):
+
+    def __init__(self, start, end, current, institution):
+        self.start = start
+        self.end = end
+        self.current = current
+        self.institution = institution
+
 
 config.update({
     'constructors': (expert_add_html, addNyExpert),

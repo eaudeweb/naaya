@@ -25,6 +25,8 @@
 		<br />
 		<input id="expert_cv" type="file" name="expert_cv" />
 	</div>
+	
+	<h2 i18n:translate="">Employment history</h2>
 </tal:block>
 
 </tal:block>

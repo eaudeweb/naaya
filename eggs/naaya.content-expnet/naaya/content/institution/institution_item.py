@@ -48,7 +48,7 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from naaya.content.bfile.NyBlobFile import make_blobfile
 
-ADDITIONAL_STYLE = open(ImageFile('www/expert.css', globals()).path).read()
+ADDITIONAL_STYLE = open(ImageFile('www/institution.css', globals()).path).read()
 
 DEFAULT_SCHEMA = {}
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
