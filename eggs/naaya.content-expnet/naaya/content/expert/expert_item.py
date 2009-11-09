@@ -46,7 +46,6 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.content.bfile.NyBlobFile import make_blobfile
-from Products.NaayaCore.managers.utils.utils import utGenerateUID
 
 #module constants
 METATYPE_OBJECT = 'Naaya Expert'
@@ -423,8 +422,6 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
 
     def delete_EmploymentHistory(self, REQUEST=None):
         """ Delete one record from employment history """
-        if 
-        
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/edit_html' % (self.absolute_url()))
 
@@ -433,7 +430,7 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         """ """
         r = []
         ra = r.append
-        if self.geo_location.address:
+        if self.geo_location:
             postaladdress = self.geo_location.address
         else:
             postaladdress = ''
@@ -525,7 +522,7 @@ NySite.experts_list = ExpertsLister('experts_list')
 class EmploymentRecord(object):
 
     def __init__(self, start, end, current, institution):
-        self.id = utGenerateUID()
+        self.id = self.utGenerateUID()
         self.start = start
         self.end = end
         self.current = current
