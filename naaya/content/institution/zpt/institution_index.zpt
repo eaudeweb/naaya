@@ -57,18 +57,22 @@
 				description here/description;
 				webpage here/webpage;
 				geo_location here/geo_location;
-				address geo_location/address;
+				address geo_location/address|string:;
 				main_topics python:here.getTopics(here.main_topics);
-				sub_topics python:here.getTopics(here.sub_topics);
-				" style="float: left">
+				sub_topics python:here.getTopics(here.sub_topics);" style="float: left">
 	<h4 tal:condition="description" tal:content="structure description" />
 	<div tal:condition="webpage">
 		<a tal:attributes="href webpage" i18n:translate="">Homepage</a>
 	</div>
 	<div tal:condition="here/phone" tal:content="here/phone"/>
+	<div tal:condition="here/fax"><span tal:content="here/fax"/> (fax)</div>
 	<div tal:condition="address" tal:define="map python:request.get('map', '')">
 		<span tal:content="address"/>
-		(<a i18n:translate="" tal:condition="not: map" tal:attributes="href string:${here/absolute_url}?map=True">View on the map</a><a i18n:translate="" tal:condition="map" tal:attributes="href string:${here/absolute_url}">Hide map</a>)
+		<span tal:define="latitude geo_location/lat; longitude geo_location/lon" tal:condition="python: latitude and longitude">
+			<span>
+			(<a i18n:translate="" tal:condition="not: map" tal:attributes="href string:${here/absolute_url}?map=True">View on the map</a><a i18n:translate="" tal:condition="map" tal:attributes="href string:${here/absolute_url}">Hide map</a>)
+		</span>
+		</span>
 	</div>
 	<div tal:condition="main_topics">
 		<h4 i18n:translate="">Main area of expertise</h4>
