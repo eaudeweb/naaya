@@ -1,6 +1,30 @@
 <metal:block use-macro="template/default/macros/page">
 <metal:block fill-slot="in-form">
 
+<div style="float: right"
+     tal:define="prev_skip_scheme request/skip_css_scheme_names|python:[];
+                 prev_skip_layout request/skip_css_layout_names|python:[]">
+
+<h4 style="margin: .5em 0 0;">Skip css_scheme_names:</h4>
+<label tal:repeat="name here/css_scheme_names">
+<input type="checkbox" name="skip_css_scheme_names:list"
+       tal:attributes="value name;
+                       checked python:test(name in prev_skip_scheme,
+                                           'checked', None)" />
+<tal:block content="name" /><br/>
+</label>
+
+<h4 style="margin: .5em 0 0;">Skip css_layout_names:</h4>
+<label tal:repeat="name here/css_layout_names">
+<input type="checkbox" name="skip_css_layout_names:list"
+       tal:attributes="value name;
+                       checked python:test(name in prev_skip_layout,
+                                           'checked', None)" />
+<tal:block content="name" /><br/>
+</label>
+
+</div>
+
 <label for="new_css">New CSS rules:</label><br />
 <textarea id="new_css" name="new_css" cols="80" rows="15"
           tal:content="request/new_css|nothing" />
