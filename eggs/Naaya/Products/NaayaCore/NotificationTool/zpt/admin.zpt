@@ -98,7 +98,8 @@
 <br />
 <p tal:condition="python:len(current_subscriptions) == 0" i18n:translate="">No users have yet subscribed to any notifications.</p> 
 <br />
-<form action="admin_add_subscription" method="post" tal:define="available_subscriptions here/available_notif_types">
+<form action="admin_add_subscription" method="post"
+      tal:define="available_subscriptions python:list(here.available_notif_types())">
     <fieldset>
         <legend i18n:translate="">Add user subscripion</legend>
         <div class="field">
@@ -110,7 +111,7 @@
             <div id="extjs_tree" class="extjs_tree custom-tree"></div>
             <input type="text" id="location" name="location" class="extjs_target" style="width:40%"/>
         </div>
-        <div class="field">
+        <div class="field-inline">
             <label for="notif_type">Subscribe to</label>
             <select name="notif_type" id="notif_type">
                 <option value="instant" tal:condition="python:'instant' in available_subscriptions" i18n:translate="">Instant notifications</option>
@@ -119,7 +120,16 @@
                 <option value="monthly" tal:condition="python:'monthly' in available_subscriptions" i18n:translate="">Monthly digest</option>
             </select>
         </div>
-        <input type="hidden" name="lang" value="en"/>
+        <div class="field-inline">
+            <label for="lang" i18n:translate="">Language</label>
+            <select name="lang" id="lang"
+                    tal:define="translations python:here.getPortalTranslations().gettext">
+                <option tal:repeat="item here/gl_get_languages_map"
+                        tal:attributes="value python:item['id'];
+                            selected python:item['selected']"
+                        tal:content="python:translations(item['title'], item['id'])" />
+            </select>
+        </div>
         <input type="submit" value="Subscribe user" i18n:attributes="value"/>
     </fieldset>
 </form>
@@ -128,6 +138,7 @@
 		<th>User</th>
 		<th>Location</th>
 		<th>Notification type</th>
+		<th>Language</th>
 		<th></th>
 	</thead>
 	<tbody>
@@ -141,6 +152,9 @@
 			</td>
 			<td>
 				<span tal:content="subscription/notif_type"/>
+			</td>
+			<td tal:define="lang subscription/lang">
+				<span tal:content="python:here.gl_get_language_name(lang)"/>
 			</td>
 			<td>
 				<form method="post" tal:attributes="action string:${here/absolute_url}/admin_remove_subscription">

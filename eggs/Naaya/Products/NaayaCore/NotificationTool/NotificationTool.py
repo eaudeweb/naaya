@@ -96,12 +96,12 @@ class NotificationTool(Folder):
             return self.getSite().absolute_url()
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_add_subscription')
-    def admin_add_subscription(self, user_id, location, notif_type, REQUEST):
+    def admin_add_subscription(self, user_id, location, notif_type, lang, REQUEST):
         """ """
         if location == '__root': location = ''
         location = ('/').join(location.split('/')[1:])
         try:
-            self.add_subscription(user_id, location, notif_type, 'en')
+            self.add_subscription(user_id, location, notif_type, lang)
         except ValueError, msg:
             self.setSessionErrors(msg)
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_html')
@@ -179,7 +179,11 @@ class NotificationTool(Folder):
         for subscription in self.list_subscriptions(notif_type='instant'):
             if not is_subpath(ob_path, subscription.location):
                 continue
-            messages_by_user[subscription.user_id] = {'ob': ob, 'person': user_id}
+            messages_by_user[subscription.user_id] = {
+                'ob': ob,
+                'person': user_id,
+                '_lang': subscription.lang,
+            }
 
         template = self._get_template('instant')
         self._send_notifications(messages_by_user, template)
@@ -212,7 +216,9 @@ class NotificationTool(Folder):
         addr_from = email_tool._get_from_address()
         for user_id, kwargs in messages_by_user.iteritems():
             addr_to = self._get_user_info(user_id)['email']
-            mail_data = template(portal=portal, **kwargs)
+            translate = self._get_site().getPortalTranslations()
+            kwargs.update({'portal': portal, '_translate': translate})
+            mail_data = template(**kwargs)
             send_notification(email_tool, addr_from, addr_to,
                 mail_data['subject'], mail_data['body_text'])
 
@@ -257,6 +263,7 @@ class NotificationTool(Folder):
         using the `notif_type` template
         """
         objects_by_user = {}
+        langs_by_user = {}
         for ob in self._list_modified_objects(when_start, when_end):
             ob_path = ob.get_path_in_site()
             for subscription in self.list_subscriptions(notif_type=notif_type):
@@ -264,10 +271,14 @@ class NotificationTool(Folder):
                     continue
                 msgs_for_user = objects_by_user.setdefault(subscription.user_id, [])
                 msgs_for_user.append({'ob': ob})
+                langs_by_user[subscription.user_id] = subscription.lang
 
         messages_by_user = {}
-        for user_id, objs in objects_by_user.iteritems():
-            messages_by_user[user_id] = {'objs': objs}
+        for user_id in objects_by_user:
+            messages_by_user[user_id] = {
+                'objs': objects_by_user[user_id],
+                '_lang': langs_by_user[user_id],
+            }
 
         template = self._get_template(notif_type)
         self._send_notifications(messages_by_user, template)

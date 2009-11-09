@@ -57,11 +57,11 @@ class TestedNotificationTool(NotificationTool):
                 yield ob
 
     def _get_template(self, template_name):
-        def single_tmpl(ob, person, portal):
+        def single_tmpl(ob, person, portal, **kwargs):
             return {'subject': 'notifications',
                 'body_text': 'instant [%s] %s' % (ob.path, portal.title_or_id())}
 
-        def group_tmpl(portal, objs):
+        def group_tmpl(portal, objs, **kwargs):
             keyer = lambda item: item['ob'].path
             sorted_items = sorted(objs, key=keyer)
             items_str = ''.join('[%s]' % item['ob'].path for item in sorted_items)
@@ -83,6 +83,8 @@ class TestedNotificationTool(NotificationTool):
         class MockSite(object):
             def title_or_id(self):
                 return 'mocky site'
+            def getPortalTranslations(self):
+                return lambda msgid, lang: msgid
         return MockSite()
 
 class NotificationsUnitTest(TestCase):
