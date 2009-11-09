@@ -55,7 +55,7 @@ class UpdateScript(Item, Acquisition.Implicit):
     creation_date = None
     authors = ['John Doe']
     priority = PRIORITY['LOW']
-    description = 'No description'
+    description = ''
     dependencies = []
     categories = []
 

@@ -1,0 +1,9 @@
+<metal:block use-macro="template/default/macros/page">
+<metal:block fill-slot="in-form">
+
+<label for="new_css">New CSS rules:</label><br />
+<textarea id="new_css" name="new_css" cols="80" rows="15"
+          tal:content="request/new_css|nothing" />
+
+</metal:block>
+</metal:block>
