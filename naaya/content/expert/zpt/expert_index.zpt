@@ -86,7 +86,7 @@
 		</span>
 	</div>
 	<div>
-		<a i18n:translate="" tal:attributes="href here/absolute_url">&#187;Download vCard</a>
+		<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/export_vcard">&#187;Download vCard</a>
 	</div>
 	<div tal:condition="main_topics">
 		<h2 i18n:translate="">Main area of expertise</h2>
