@@ -227,7 +227,10 @@ class NyContentType:
         if self.meta_type == 'Naaya Folder':
             # TODO: port NyFolder to schema, so we can remove this special case
             return self.meta_label
-        return self._get_schema().title_or_id()
+        try:
+            return self._get_schema().title_or_id()
+        except AttributeError:
+            return self.meta_label
 
     def object_submitted_message(self, REQUEST):
         if self.approved:
