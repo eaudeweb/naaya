@@ -204,7 +204,7 @@ function fRenameObjects()
             <span tal:omit-tag="" i18n:translate="">comment(s)</span>]
         </tal:block>
     </td>
-    <tal:block replace="structure folder/version_status"/>
+    <tal:block replace="structure object/version_status"/>
     </tal:block>
 </tr>
 </table>
