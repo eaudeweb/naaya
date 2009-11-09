@@ -48,6 +48,8 @@ from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from naaya.content.bfile.NyBlobFile import make_blobfile
 
+ADDITIONAL_STYLE = open(ImageFile('www/expert.css', globals()).path).read()
+
 DEFAULT_SCHEMA = {}
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA.update({
@@ -66,12 +68,12 @@ DEFAULT_SCHEMA.update({
 
 def setupContentType(site):
     #@TODO: initialize the list of topics (only and only once per site)
-    values = { 1: 'unu', 2: 'doi' }
+    from skel import TOPICS
     ptool = site.getPortletsTool()
     itopics = getattr(ptool, 'institution_topics', None)
     if not itopics:
         ptool.manage_addRefList('institution_topics')
-        for k, v in values.items():
+        for k, v in TOPICS.items():
             ptool.institution_topics.manage_add_item(k, v)
 
     #Create catalog index if it doesn't exist
@@ -97,7 +99,7 @@ config = {
         'default_schema': DEFAULT_SCHEMA,
         'schema_name': 'NyInstitution',
         '_module': sys.modules[__name__],
-        'additional_style': None,
+        'additional_style': ADDITIONAL_STYLE,
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyInstitution.gif'),
         'on_install' : setupContentType,
         '_misc': {
@@ -175,7 +177,7 @@ def addNyInstitution(self, id='', REQUEST=None, contributor=None, **kwargs):
     #Process uploaded file
     ob.picture = None
     _uploaded_file = schema_raw_data.pop('institution_picture', None)
-    if _uploaded_file is not None:
+    if _uploaded_file is not None and _uploaded_file.filename:
         ob.picture = make_blobfile(_uploaded_file,
                            removed=False,
                            timestamp=datetime.utcnow())
@@ -265,44 +267,6 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
             ra('<jobtitle lang="%s"><![CDATA[%s]]></jobtitle>' % (l, self.utToUtf8(self.getLocalProperty('jobtitle', l))))
         return ''.join(r)
 
-    security.declareProtected(view, 'export_vcard')
-    def export_vcard(self, REQUEST=None):
-        """ """
-        r = []
-        ra = r.append
-        postaladdress = self.postaladdress
-        postaladdress = postaladdress.replace('\r\n', ' ')
-        if not self.firstname and not self.lastname:
-            fn = self.utToUtf8(self.title_or_id())
-            n = self.utToUtf8(self.title_or_id())
-        else:
-            fn ='%s %s %s' % (self.utToUtf8(self.personaltitle), self.utToUtf8(self.firstname), self.utToUtf8(self.lastname))
-            n = '%s;%s;%s;%s;%s' % (self.utToUtf8(self.lastname), self.utToUtf8(self.firstname), '', self.utToUtf8(self.personaltitle), '')
-        ra('BEGIN:VCARD')
-        ra('CHARSET:UTF-8')
-        ra('VERSION:2.1')
-        ra('FN;CHARSET=UTF-8:%s' % fn)
-        ra('N;CHARSET=UTF-8:%s' % n)
-        ra('TITLE;CHARSET=UTF-8:%s' % self.utToUtf8(self.jobtitle))
-        ra('ROLE;CHARSET=UTF-8:%s' % self.utToUtf8(self.jobtitle))
-        ra('ORG;CHARSET=UTF-8:%s;%s' % (self.utToUtf8(self.organisation), self.utToUtf8(self.department)))
-        ra('TEL;WORK:%s' % self.utToUtf8(self.phone))
-        ra('TEL;FAX:%s' % self.utToUtf8(self.fax))
-        ra('TEL;CELL:%s' % self.utToUtf8(self.cellphone))
-        ra('ADR;WORK;CHARSET=UTF-8:;;%s;;;;' % self.utToUtf8(postaladdress))
-        ra('EMAIL;INTERNET:%s' % self.utToUtf8(self.email))
-        ra('URL:%s' % self.utToUtf8(self.webpage))
-        ra('NOTE;CHARSET=UTF-8:%s' % self.utToUtf8(self.utStripAllHtmlTags(self.description)))
-        ra('END:VCARD')
-        
-        if REQUEST:
-            response = self.REQUEST.RESPONSE
-            response.setHeader('content-type', 'text/x-vCard')
-            response.setHeader('charset', 'UTF-8')
-            response.setHeader('content-disposition', 'attachment; filename=%s.vcf' % self.id)
-        
-        return '\n'.join(r)
-
     #zmi actions
     security.declareProtected(view_management_screens, 'manageProperties')
     def manageProperties(self, REQUEST=None, **kwargs):
@@ -386,7 +350,7 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
 
         #Process uploaded file
         _uploaded_file = schema_raw_data.pop('institution_picture', None)
-        if _uploaded_file is not None:
+        if _uploaded_file is not None and _uploaded_file.filename:
             self.picture = make_blobfile(_uploaded_file,
                                removed=False,
                                timestamp=datetime.utcnow())
@@ -509,65 +473,6 @@ class InstitutionLister(Implicit, Item):
 
 from Products.Naaya.NySite import NySite
 NySite.list_institutions = InstitutionLister('list_institutions')
-
-
-
-
-import vobject
-from vobject.vcard import ParseError
-_phone_map = {'WORK': 'phone', 'FAX': 'fax', 'CELL': 'cellphone'}
-_phone_pattern = re.compile(r'^TEL;(\w+?)\:')
-def parse_vcard_data(raw_data):
-    try:
-        vcard = vobject.readOne(StringIO(raw_data), validate=True)
-    except ParseError:
-        raise ValueError
-
-    raw_lines = raw_data.split('\n')
-
-    institution_data = {
-        'jobtitle': squash_list(vcard.title.value),
-        'firstname': squash_list(vcard.n.value.given),
-        'lastname': squash_list(vcard.n.value.family),
-        'personaltitle': squash_list(vcard.n.value.prefix),
-        'webpage': squash_list(vcard.url.value),
-        'email': squash_list(vcard.email.value),
-        'description': squash_list(vcard.note.value),
-    }
-
-    try:
-        institution_data['organisation'] = squash_list(vcard.org.value[0])
-    except IndexError:
-        pass # no organisation entry
-
-    try:
-        institution_data['department'] = squash_list(vcard.org.value[1])
-    except IndexError:
-        pass # no department entry
-
-    try:
-        pa_line = vcard.contents['adr'][0].lineNumber
-        raw_address = raw_lines[pa_line].split(':')[-1]
-        postal_address = re.sub(r'[; ]+', ' ', raw_address).strip()
-        institution_data['postaladdress'] = postal_address
-    except IndexError:
-        pass # no address in this vcard
-
-    for phone_entry in vcard.contents['tel']:
-        raw_line = raw_lines[phone_entry.lineNumber-1].strip()
-        phone_location_m = _phone_pattern.match(raw_line)
-        if phone_location_m is None:
-            continue
-        phone_location = _phone_map.get(phone_location_m.group(1), None)
-        if phone_location is not None:
-            institution_data[phone_location] = phone_entry.value
-    return institution_data
-
-def squash_list(data):
-    if isinstance(data, list):
-        return ' '.join(data)
-    else:
-        return data
 
 #manage_addNyInstitution_html = PageTemplateFile('zpt/institution_manage_add', globals())
 #manage_addNyInstitution_html.kind = config['meta_type']
