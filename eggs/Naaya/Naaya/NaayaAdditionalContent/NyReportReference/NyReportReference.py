@@ -391,7 +391,7 @@ class NyReportReference(NyAttributes, reportreference_item, NyContainer, NyCheck
     security.declareProtected(view, 'report_macro_objecttree_html')
     def report_macro_objecttree_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().report_macro_objecttree
+        return self.getFormsTool().getForm('report_macro_objecttree')
 
 InitializeClass(NyReportReference)
 
