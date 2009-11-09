@@ -97,8 +97,9 @@
     <div tal:condition="broken" class="flvPlayerBroken">
       <img src="misc_/NaayaContent/NyMediaFileBroken.gif" /><br />
       <label i18n:translate="">
-      An error occurred when trying to process uploaded video file. This may be
-      because uploaded file is not a valid video file, or not supported.
+      An error occurred when trying to process uploaded video file.
+      This may be because the file you uploaded is not a valid video file,
+      or the system does not recognize this encoding.
       </label>
     </div>
     <div tal:condition="not:broken" class="flvPlayerNotReady">
