@@ -2,4 +2,29 @@
 
 <h1 metal:fill-slot="title" i18n:translate="">Edit Expert</h1>
 
+<tal:block metal:fill-slot="custom_properties">
+	<div class="field-inline">
+		<div tal:condition="here/picture|nothing">
+			<img tal:attributes="src string:${here/absolute_url}/render_picture" width="320" />
+			<br />
+			<a tal:attributes="href string:${here/absolute_url}/delete_picture">Delete</a>
+		</div>
+		<label class="widget-title" for="expert_picture">Picture</label>
+		<br />
+		<input id="expert_picture" type="file" name="expert_picture" />
+	</div>
+	<div class="field-inline">
+		<div tal:condition="here/cv|nothing">
+			<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/serve_file">
+				Download curriculum vitae
+			</a>
+			<br />
+			<a tal:attributes="href string:${here/absolute_url}/delete_file">Delete</a>
+		</div>
+		<label class="widget-title" for="expert_cv">Curriculum vitae</label>
+		<br />
+		<input id="expert_cv" type="file" name="expert_cv" />
+	</div>
+</tal:block>
+
 </tal:block>
