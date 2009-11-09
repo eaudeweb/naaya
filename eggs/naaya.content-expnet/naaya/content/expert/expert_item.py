@@ -46,6 +46,7 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.content.bfile.NyBlobFile import make_blobfile
+from Products.NaayaCore.managers.utils.utils import utGenerateUID
 
 #module constants
 METATYPE_OBJECT = 'Naaya Expert'
@@ -321,6 +322,20 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         self.save_file(schema_raw_data, 'picture', 'expert_picture')
         self.save_file(schema_raw_data, 'cv', 'expert_cv')
 
+        #Process employment history
+        start = schema_raw_data.pop('start', None)
+        end = schema_raw_data.pop('end', None)
+        current = schema_raw_data.pop('current', None)
+        institution = schema_raw_data.pop('institution', None)
+        if start:
+            start = int(start)
+        
+        print 'adding emplyment', start, end, current, institution
+        if start and end and current and institution:
+            self.employment_history.append(EmploymentRecord(start, end, current, institution))
+
+        print self.employment_history
+
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
         if form_errors:
@@ -398,6 +413,18 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
     def delete_file(self, REQUEST=None):
         """ Delete attached expert file """
         self.cv = None
+        if REQUEST:
+            REQUEST.RESPONSE.redirect('%s/edit_html' % (self.absolute_url()))
+
+    def getEmploymentHistory(self):
+        """ """
+        self.employment_history.sort(key=lambda ob: ob.start, reverse=True)
+        return self.employment_history
+
+    def delete_EmploymentHistory(self, REQUEST=None):
+        """ Delete one record from employment history """
+        if 
+        
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/edit_html' % (self.absolute_url()))
 
@@ -498,6 +525,7 @@ NySite.experts_list = ExpertsLister('experts_list')
 class EmploymentRecord(object):
 
     def __init__(self, start, end, current, institution):
+        self.id = utGenerateUID()
         self.start = start
         self.end = end
         self.current = current
