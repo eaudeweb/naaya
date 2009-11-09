@@ -326,11 +326,11 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         end = schema_raw_data.pop('end', None)
         current = schema_raw_data.pop('current', None)
         institution = schema_raw_data.pop('institution', None)
-        if start:
-            start = int(start)
-        
-        print 'adding emplyment', start, end, current, institution
-        if start and end and current and institution:
+        if start: start = int(start)
+        if end: end = int(end)
+        if current: current = True
+        else: current = False
+        if start and (end or current) and institution:
             self.employment_history.append(EmploymentRecord(start, end, current, institution))
 
         print self.employment_history
@@ -422,8 +422,21 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
 
     def delete_EmploymentHistory(self, REQUEST=None):
         """ Delete one record from employment history """
+        id = REQUEST.form['id']
+        ob = None
+        for x in self.employment_history:
+            if x.id == id: ob = x
+        if ob:
+            del self.employment_history[self.employment_history.index(ob)]
+            self._p_changed = True
         if REQUEST:
-            REQUEST.RESPONSE.redirect('%s/edit_html' % (self.absolute_url()))
+            REQUEST.RESPONSE.redirect('%s/edit_html#Employment' % (self.absolute_url()))
+
+    def find_InstitutionByName(self, name):
+        ctool = self.getCatalogTool()
+        ret = ctool.search({'meta_type' : 'Naaya Institution', 'title' : name})
+        if ret:
+            return ctool.getobject(ret[0].data_record_id_)
 
     security.declareProtected(view, 'export_vcard')
     def export_vcard(self, REQUEST=None):
@@ -486,7 +499,6 @@ class ExpertsLister(Implicit, Item):
         """
         Render the list of institutions recorded for this site.
         """
-        site = self.getSite()
         return self._index_template(REQUEST, experts=[1,2,3])
 
 
