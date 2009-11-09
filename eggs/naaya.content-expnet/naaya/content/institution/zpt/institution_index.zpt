@@ -21,9 +21,7 @@
 
 <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
 
-<tal:block content="structure python: here.prop_display_tr('releasedate')" />
-<tal:block content="structure python: here.prop_display_tr('coverage')" />
-<tal:block content="structure python: here.prop_display_tr('name')" />
+<tal:block content="structure python: here.prop_display_tr('title')" />
 <tal:block content="structure python: here.prop_display_tr('contributor')" />
 
 <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
@@ -42,6 +40,10 @@
 
 <div tal:define="description python:here.prop_value_or_none('description')"
     tal:condition="description" tal:content="structure description" />
+
+<div tal:condition="here/picture">
+	<img tal:attributes="src string:${here/absolute_url}/render_picture" />
+</div>
 
 <tal:block content="structure here/comments_box" />
 
