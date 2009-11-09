@@ -2,13 +2,16 @@
 <tal:block content="structure here/manage_page_header"/>
 <tal:block content="structure here/manage_tabs"/>
 
-<h2 metal:define-slot="title" tal:content="string:${here/title_or_id} (created on: ${here/creation_date}, by: ${here/get_authors_string})" />
-<h3 metal:define-slot="priority">Priority: <span tal:replace="here/get_priority_string"/></h3>
+<h2 metal:define-slot="title" tal:content="string:${here/title_or_id} " />
+<!--<h3 metal:define-slot="priority">Priority: <span tal:replace="here/get_priority_string"/></h3>-->
 <div metal:define-slot="description"><span tal:replace="here/description"/></div>
 
 <metal:block define-slot="body">
+
 <form method="post">
-    <ul>
+<metal:block define-slot="in-form" />
+    <h4 style="margin: .5em">Portals:</h4>
+    <ul style="margin: .5em">
         <tal:block repeat="portal here/getPortals">
         <li tal:define="portal_path python:'/'.join(portal.getPhysicalPath());
           form_portal_paths python:options.get('form', {}).get('portal_paths', [])">
