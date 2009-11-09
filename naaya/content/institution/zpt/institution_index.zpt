@@ -61,7 +61,7 @@
 				main_topics python:here.getTopics(here.main_topics);
 				sub_topics python:here.getTopics(here.sub_topics);
 				" style="float: left">
-	<h4 tal:condition="description" tal:content="structure description"/>
+	<h4 tal:condition="description" tal:content="structure description" />
 	<div tal:condition="webpage">
 		<a tal:attributes="href webpage" i18n:translate="">Homepage</a>
 	</div>
