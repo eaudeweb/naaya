@@ -32,15 +32,20 @@
 <div style="width: 60%;">
 	<div tal:repeat="ob python: here.items_in_topic(topic=req_topic, objects=True)">
 		<div style="margin: 0.5em;">
-			<div style="width: 100px; height: 50px; border: 1px solid black; float: left; margin-right: 0.4em;">
-				<img tal:attributes="src string:${ob/absolute_url}/render_picture" width="100" height="50" />
+			<div tal:condition="ob/picture"
+			style="width: 100px; height: 50px; border: 1px solid black; float: left; margin-right: 0.4em;">
+				<img tal:attributes="src string:${ob/absolute_url}/render_picture" width="100" />
 			</div>
 		</div>
 		<div>
 			<h4><a tal:attributes="href ob/absolute_url" tal:content="ob/title" /></h4>
 			<span tal:content="ob/description" />
 		</div>
-		<a tal:attributes="href ob/absolute_url">View the details for <span tal:replace="ob/title" /></a>
+		<div>
+			<a tal:attributes="href ob/absolute_url">
+				View the details for <span tal:replace="ob/title" />
+			</a>
+		</div>
 		<br clear="all" />
 	</div>
 </div>
