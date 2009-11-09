@@ -1,0 +1,43 @@
+<span tal:replace="structure here/standard_html_header" />
+<tal:block define="global req_topic python: request.get('topic', '')" /> 
+<h1>List of experts</h1>
+
+<div style="float: right; width: 20em;">
+			<div style="border-bottom: 1px solid #DEDEDE;
+						border-top: 1px solid #DEDEDE;
+						background: #d5dde1;
+						font-size: 120%;
+						font-weight: bold;
+						padding: 0.5em;
+						">
+				<span i18n:translate="">Browse by topics</span>
+		</div>
+		<div style="margin: 0.5em;" tal:define="topics here/topic_filters">
+			<ul>
+				<tal:block repeat="topic topics">
+					<li tal:define="tp python:topic[0]; cnt python:topic[1]">
+						<a tal:condition="not: tp" tal:attributes="href string:${here/absolute_url}"><span i18n:translate="">All</span> (<span tal:replace="cnt" />)</a>
+						<a tal:condition="tp" tal:attributes="href string:${here/absolute_url}?topic=${tp/id}" i18n:translate=""><span tal:replace="tp/title" /> (<span tal:replace="cnt" />)</a>
+					</li>
+				</tal:block>
+			</ul>
+		</div>
+</div>
+
+<div style="width: 60%;">
+	<div tal:repeat="ob python: here.items_in_topic(topic=req_topic, objects=True)">
+		<div style="margin: 0.5em;">
+			<div style="width: 100px; height: 50px; border: 1px solid black; float: left; margin-right: 0.4em;">
+				<img tal:attributes="src string:${ob/absolute_url}/render_picture" width="100" height="50" />
+			</div>
+		</div>
+		<div>
+			<h4><a tal:attributes="href ob/absolute_url" tal:content="ob/title" /></h4>
+			<span tal:content="ob/description" />
+		</div>
+		<a tal:attributes="href ob/absolute_url">View the details for <span tal:replace="ob/title" /></a>
+		<br clear="all" />
+	</div>
+</div>
+
+<tal:block content="structure here/standard_html_footer" />

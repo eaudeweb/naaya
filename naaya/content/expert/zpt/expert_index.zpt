@@ -10,46 +10,25 @@
 	</div>
 </tal:block>
 
-<div style="float: right;
-			width: 20em;
-			">
-	<div style="margin-top: 0.5em;
-				border-color: #DEDEDE;
-				border-style: none solid solid;
-				border-width: 1px;
-				">
-		<div style="border-bottom: 1px solid #DEDEDE;
-					border-top: 1px solid #DEDEDE;
-					background: #d5dde1;
-					font-size: 120%;
-					font-weight: bold;
-					padding: 0.5em;
-					">
+<div class="boxes-right">
+	<div class="box" tal:condition="here/picture">
+		<div class="title">
 			<span i18n:translate="">Photo</span>
 		</div>
-		<div style="margin: 0.5em;">
-			<span i18n:translate="">Body</span>
+		<div class="body">
+			<img tal:attributes="src string:${here/absolute_url}/render_picture"
+			width="230" />
 		</div>
 	</div>
 
 	<!-- Details box -->
-	<div style="margin-top: 0.5em;
-				border-color: #DEDEDE;
-				border-style: none solid solid;
-				border-width: 1px;
-				"
+	<div class="box"
 				tal:condition="python:request.get('map', '')">
 		<!-- Map widget -->
-		<div style="border-bottom: 1px solid #DEDEDE;
-					border-top: 1px solid #DEDEDE;
-					background: #d5dde1;
-					font-size: 120%;
-					font-weight: bold;
-					padding: 0.5em;
-					">
+		<div class="title">
 			<span i18n:translate="">Address</span>
 		</div>
-		<div style="margin: -0.5em;">
+		<div class="minimap">
 			<tal:block content="structure here/minimap" />
 		</div>
 	</div>
@@ -70,36 +49,44 @@
 			</span>
 		</span>
 </h1>
-<div tal:define="
+<div class="main-content" tal:define="
 				title here/title;
 				personal_title here/personal_title;
 				name here/name;
 				surname here/surname;
 				description here/description;
 				email here/email;
-				address here/address;
 				phone here/phone;
 				mobile here/mobile;
-				website here/website;
+				webpage here/webpage;
 				instant_messaging here/instant_messaging;
 				geo_location here/geo_location;
+				address geo_location/address|string:;
 				main_topics python:here.getExpertTopics(here.main_topics);
 				sub_topics python:here.getExpertTopics(here.sub_topics);
 				ref_lang here/ref_lang;
 				">
-	<h4 tal:condition="description" tal:content="structure description"/>
+	<div class="description" tal:condition="description" tal:content="structure description"/>
 	<div tal:condition="email">
 		<a tal:attributes="href string:mailto:${email}" tal:content="email"/>
 	</div>
-	<div tal:condition="website">
-		<a tal:attributes="href website" i18n:translate="">Homepage</a>
+	<div tal:condition="webpage">
+		<a tal:attributes="href webpage" i18n:translate="">Homepage</a>
 	</div>
 	<div tal:condition="phone" tal:content="phone"/>
 	<div tal:condition="mobile" tal:content="string:${mobile} (mobile)"/>
 	<div tal:condition="address" tal:define="map python:request.get('map', '')">
 		<span tal:content="address"/>
-		<a i18n:translate="" tal:condition="not: map" tal:attributes="href string:${here/absolute_url}?map=True">View on the map</a>
-		<a i18n:translate="" tal:condition="map" tal:attributes="href string:${here/absolute_url}">Hide map</a>
+		<span tal:define="latitude geo_location/lat; longitude geo_location/lon"
+			tal:condition="python: latitude and longitude">
+				(<a i18n:translate="" tal:condition="not: map"
+				tal:attributes="href string:${here/absolute_url}?map=True">&#187;View on the map</a>
+				<a i18n:translate="" tal:condition="map"
+				tal:attributes="href string:${here/absolute_url}">&#187;Hide map</a>)
+		</span>
+	</div>
+	<div>
+		<a i18n:translate="" tal:attributes="href here/absolute_url">&#187;Download vCard</a>
 	</div>
 	<div tal:condition="main_topics">
 		<h2 i18n:translate="">Main area of expertise</h2>
@@ -120,6 +107,11 @@
 	<div >
 		<h2 i18n:translate="">Institutions</h2>
 		<span />
+	</div>
+	<div tal:condition="here/cv">
+		<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/serve_file">
+			&#187;Download curriculum vitae
+		</a>
 	</div>
 </div>
 
