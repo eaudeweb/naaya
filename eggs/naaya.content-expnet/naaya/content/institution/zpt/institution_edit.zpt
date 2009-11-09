@@ -4,7 +4,7 @@
 
 <tal:block metal:fill-slot="custom_properties">
 	<div class="field-inline">
-		<div tal:condition="here/picture">
+		<div tal:condition="here/picture|nothing">
 			<img tal:attributes="src string:${here/absolute_url}/render_picture" width="300" height="200" />
 			<br />
 			<a tal:attributes="href string:${here/absolute_url}/delete_picture">Delete</a>

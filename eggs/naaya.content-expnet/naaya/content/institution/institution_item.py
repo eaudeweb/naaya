@@ -25,6 +25,8 @@ from datetime import datetime
 import re
 from cStringIO import StringIO
 import os, sys
+import simplejson as json
+from decimal import Decimal
 
 #Zope imports
 from Globals import InitializeClass
@@ -33,6 +35,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Acquisition import Implicit
 from OFS.SimpleItem import Item
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -42,22 +45,23 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
+from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from naaya.content.bfile.NyBlobFile import make_blobfile
 
 DEFAULT_SCHEMA = {}
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA.update({
-    'address': dict(sortorder=110, widget_type='String', label='Address'),
     'webpage': dict(sortorder=120, widget_type='String', label='Webpage'),
     'phone': dict(sortorder=140, widget_type='String', label='Phone'),
     'fax': dict(sortorder=160, widget_type='String', label='Fax'),
-    'main_topic': dict(sortorder=200, widget_type='SelectMultiple', label='Main topic', list_id='institution_topics'),
-    'sub_topic': dict(sortorder=220, widget_type='SelectMultiple', label='Additional topics', list_id='institution_topics'),
+    'main_topics': dict(sortorder=200, widget_type='SelectMultiple', label='Main topic', list_id='institution_topics'),
+    'sub_topics': dict(sortorder=220, widget_type='SelectMultiple', label='Additional topics', list_id='institution_topics'),
     'coverage': dict(sortorder=30, widget_type='Glossary', label='Geographical coverage', glossary_id='coverage', localized=True, visible=False),
     'keywords': dict(sortorder=40, widget_type='Glossary', label='Keywords', glossary_id='keywords', localized=True, visible=False),
     'sortorder': dict(sortorder=50, widget_type='String', data_type='int', default='100', label='Sort order', required=False, visible=False),
     'releasedate': dict(sortorder=60, widget_type='Date', data_type='date', label='Release date', required=False, visible=False),
     'discussion': dict(sortorder=70, widget_type='Checkbox', data_type='int', label='Open for comments', visible=False),
+    'geo_location': dict(sortorder=24, widget_type='Geo', data_type='geo', label='Geographical location', visible=True)
 })
 
 def setupContentType(site):
@@ -189,46 +193,15 @@ def addNyInstitution(self, id='', REQUEST=None, contributor=None, **kwargs):
     return ob.getId()
 
 def importNyInstitution(self, param, id, attrs, content, properties, discussion, objects):
-    #this method is called during the import process
-    try: param = abs(int(param))
-    except: param = 0
-    if param == 3:
-        #just try to delete the object
-        try: self.manage_delObjects([id])
-        except: pass
-    else:
-        ob = self._getOb(id, None)
-        if param in [0, 1] or (param==2 and ob is None):
-            if param == 1:
-                #delete the object if exists
-                try: self.manage_delObjects([id])
-                except: pass
+    """
+    @todo: Not implemented 
+    """
+    raise NotImplementedError
 
-            ob = _create_NyInstitution_object(self, id, self.utEmptyToNone(attrs['contributor'].encode('utf-8')))
-            ob.sortorder = attrs['sortorder'].encode('utf-8')
-            ob.discussion = abs(int(attrs['discussion'].encode('utf-8')))
-            ob.firstname = attrs['firstname'].encode('utf-8')
-            ob.lastname = attrs['lastname'].encode('utf-8')
-            ob.department = attrs['department'].encode('utf-8')
-            ob.organisation = attrs['organisation'].encode('utf-8')
-            ob.postaladdress = attrs['postaladdress'].encode('utf-8')
-            ob.phone = attrs['phone'].encode('utf-8')
-            ob.fax = attrs['fax'].encode('utf-8')
-            ob.cellphone = attrs['cellphone'].encode('utf-8')
-            ob.email = attrs['email'].encode('utf-8')
-            ob.webpage = attrs['webpage'].encode('utf-8')
-
-            for property, langs in properties.items():
-                [ ob._setLocalPropValue(property, lang, langs[lang]) for lang in langs if langs[lang]!='' ]
-            ob.approveThis(approved=abs(int(attrs['approved'].encode('utf-8'))),
-                approved_by=self.utEmptyToNone(attrs['approved_by'].encode('utf-8')))
-            if attrs['releasedate'].encode('utf-8') != '':
-                ob.setReleaseDate(attrs['releasedate'].encode('utf-8'))
-            ob.import_comments(discussion)
-            self.recatalogNyObject(ob)
 
 class institution_item(Implicit, NyContentData):
     """ """
+    pass
 
 class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
     """ """
@@ -460,6 +433,29 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
         self.picture = None
         if REQUEST:
             REQUEST.RESPONSE.redirect('%s/edit_html' % (self.absolute_url()))
+
+
+    def getTopics(self, category):
+        ptool = self.getPortletsTool()
+        topics = getattr(ptool, 'institution_topics', None)
+        return [topics.get_item(topic) for topic in category if topics.get_collection().has_key(topic)]
+
+    _minimap_template = PageTemplateFile('zpt/minimap', globals())
+    def minimap(self):
+        if self.geo_location not in (None, Geo()):
+            simplepoints = [{'lat': self.geo_location.lat, 'lon': self.geo_location.lon}]
+        elif self.aq_parent.geo_location not in (None, Geo()):
+            simplepoints = [{'lat': self.aq_parent.geo_location.lat, 'lon': self.aq_parent.geo_location.lon}]
+        else:
+            return ""
+        json_simplepoints = json.dumps(simplepoints, default=json_encode)
+        return self._minimap_template(points=json_simplepoints)
+
+def json_encode(ob):
+    """ try to encode some known value types to JSON """
+    if isinstance(ob, Decimal):
+        return float(ob)
+    raise ValueError
 
 InitializeClass(NyInstitution)
 
