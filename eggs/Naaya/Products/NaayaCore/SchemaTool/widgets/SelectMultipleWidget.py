@@ -28,7 +28,7 @@ class SelectMultipleWidget(Widget):
     """ Multiple Select Widget """
 
     meta_type = "Naaya Schema Multiple Select Widget"
-    meta_label = "Multiple selecttion from list"
+    meta_label = "Multiple selection from list"
     meta_description = "Multiple value selection from a list of possible values"
     meta_sortorder = 150
 

@@ -1,0 +1,16 @@
+<span tal:replace="structure here/standard_html_header" />
+
+<h1>List of institutions</h1>
+<tal:block define="global institutions here/query_institutions" />
+
+<style type="text/css">
+
+</style>
+
+<ul tal:repeat="institution institutions">
+	<li>
+		<a tal:attributes="href institution/absolute_url" tal:content="institution/title" />
+	</li>
+</ul>
+
+<tal:block content="structure here/standard_html_footer" />
