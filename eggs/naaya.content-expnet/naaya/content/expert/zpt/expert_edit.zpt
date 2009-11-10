@@ -20,7 +20,6 @@
 		});
 		<tal:block replace='structure string:</script>' />
 	</tal:block>
-
 	<div class="field-inline">
 		<div tal:condition="here/picture|nothing">
 			<img tal:attributes="src string:${here/absolute_url}/render_picture" width="320" />
