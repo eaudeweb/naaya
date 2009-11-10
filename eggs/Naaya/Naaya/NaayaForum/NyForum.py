@@ -62,6 +62,7 @@ class NyForum(NyForumBase, Folder, utils):
     meta_type = METATYPE_NYFORUM
     meta_label = LABEL_NYFORUM
     icon = 'misc_/NaayaForum/NyForum.gif'
+    icon_marked = 'misc_/NaayaForum/NyForum_marked.gif'
 
     manage_options = (
         Folder.manage_options[0:2]
