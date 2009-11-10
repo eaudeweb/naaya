@@ -306,9 +306,11 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         return False
 
     def obfuscated_email(self):
+        ret = self.email
         if self.email:
-            return self.email.replace('@', ' at ')
-        return self.email
+            ret = self.email.replace('@', ' at ')
+        print ret
+        return ret
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
