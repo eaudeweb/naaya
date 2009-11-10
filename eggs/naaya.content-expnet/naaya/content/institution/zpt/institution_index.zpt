@@ -40,7 +40,7 @@
 	<div tal:condition="here/webpage">
 		<a tal:attributes="href here/webpage" i18n:translate="">Homepage</a>
 	</div>
-	<div tal:condition="here/phone" tal:content="here/phone"/>
+	<div tal:condition="here/phone" tal:content="here/phone" />
 	<div tal:condition="here/fax"><span tal:content="here/fax"/> (fax)</div>
 	<div tal:condition="address" tal:define="map python:request.get('map', '')">
 		<span tal:content="address"/>
@@ -66,7 +66,24 @@
 			</tal:block>
 		</ul>
 	</div>
+	<tal:block define="emp_lists here/list_employees; emp_current python: emp_lists[0]; emp_previous python: emp_lists[1]">
+		<tal:block condition="emp_current">
+			<h2 i18n:translate="">Current employees</h2>
+			<ul>
+				<tal:block repeat="emp emp_current">
+					<li><a tal:attributes="href emp/absolute_url" tal:content="emp/title" /></li>
+				</tal:block>
+			</ul>
+		</tal:block>
+		<tal:block condition="emp_previous">	
+			<h2 i18n:translate="">Previous employees</h2>
+				<tal:block repeat="emp emp_previous">
+					<li><a tal:attributes="href emp/absolute_url" tal:content="emp/title" /></li>
+				</tal:block>
+		</tal:block>
+	</tal:block>
 </div>
+
 <br clear="all" />
 <tal:block tal:condition="python:here.checkPermissionEditObject()">
 	<div id="admin_this_folder">

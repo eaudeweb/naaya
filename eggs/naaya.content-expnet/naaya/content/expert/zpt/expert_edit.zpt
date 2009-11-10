@@ -34,7 +34,7 @@
 		<label class="widget-title" for="id_end">End year</label>
 		<input id="id_end" type="text" name="end"  size="5" />
 		<input id="id_current" type="checkbox" name="current" />
-		<label class="widget-title" for="id_current">Still working here</label>
+		<label class="widget-title" for="id_current">Current position</label>
 		<br />
 	</div>
 	<div class="field-inline">

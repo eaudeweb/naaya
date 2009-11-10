@@ -97,15 +97,21 @@
 			<tal:block repeat="ob EmploymentHistory">
 				<li>
 					<span tal:replace="ob/start" /> - <span tal:replace="ob/end" />,
-					<tal:block define="ob_name ob/institution; inst python:here.find_InstitutionByName(ob_name)"> 
+				<tal:block define="ob_name ob/institution; inst python:here.find_InstitutionByName(ob_name)">
+					<strong tal:condition="ob/current">
 						<span tal:condition="not: inst" tal:replace="ob/institution" />
 						<a tal:condition="inst" tal:attributes="href string:${inst/absolute_url}" tal:content="ob/institution" />
-					</tal:block>
+					</strong>
+					<span tal:condition="not: ob/current">
+						<span tal:condition="not: inst" tal:replace="ob/institution" />
+						<a tal:condition="inst" tal:attributes="href string:${inst/absolute_url}" tal:content="ob/institution" />
+					</span>
+				</tal:block>
 				</li>
 			</tal:block>
 		</ul>
 	</div>
-	
+
 	<div tal:condition="here/cv">
 		<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/serve_file">
 			&#187;Download curriculum vitae
