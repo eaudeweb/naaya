@@ -70,8 +70,8 @@
 				">
 	<div class="description" tal:condition="here/description"
 		tal:content="structure here/description"/>
-	<div tal:condition="here/email">
-		<a tal:attributes="href string:mailto:${here/email}" tal:content="here/email"/>
+	<div tal:condition="here/obfuscated_email">
+		<span tal:replace="here/obfuscated_email" />
 	</div>
 	<div tal:condition="here/webpage">
 		<a tal:attributes="href here/webpage" i18n:translate="">Homepage</a>
