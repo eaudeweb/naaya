@@ -398,8 +398,8 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
     
     def render_picture(self, RESPONSE):
         """ Render institution picture """
-        if hasattr(self, 'picture'):
-            return self.picture.send_data(RESPONSE, as_attachment=False)
+        if hasattr(self, 'picture') and self.picture:
+                return self.picture.send_data(RESPONSE, as_attachment=False)
 
     def delete_picture(self, REQUEST=None):
         """ Delete attached institution picture """
@@ -468,7 +468,7 @@ class InstitutionLister(Implicit, Item):
 
     def index_html(self, REQUEST):
         """ Index page """
-        return self._index_template(REQUEST, institutions=[1,2,3])
+        return self._index_template(REQUEST)
 
 
     def topic_filters(self):
@@ -492,7 +492,7 @@ class InstitutionLister(Implicit, Item):
         return ret
 
 
-    def items_in_topic(self, catalog=None, topic='', objects=False):
+    def items_in_topic(self, catalog=None, topic='', filter_name=None, objects=False):
         """
         Find the institutions that have associated a specific topic (either as primary or secondary topic).
         @param topic: The name of the topic to find items in. If None, return all institutions
@@ -504,10 +504,11 @@ class InstitutionLister(Implicit, Item):
             catalog = self.getCatalogTool()
         if topic:
             dict['topics'] = topic
+        if filter_name:
+            dict['title'] = '*%s*' % filter_name
         if objects:
             return [catalog.getobject(ob.data_record_id_) for ob in catalog.search(dict)]
         return catalog.search(dict)
-
 
 from Products.Naaya.NySite import NySite
 NySite.list_institutions = InstitutionLister('list_institutions')

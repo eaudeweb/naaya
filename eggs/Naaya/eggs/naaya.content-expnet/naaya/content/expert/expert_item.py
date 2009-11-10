@@ -294,6 +294,11 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         """
         return False
 
+    def obfuscated_email(self):
+        if self.email:
+            return self.email.replace('@', ' at ')
+        return self.email
+
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
     def saveProperties(self, REQUEST=None, **kwargs):
         """ """
@@ -395,7 +400,7 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
 
     def render_picture(self, RESPONSE):
         """ Render expert picture """
-        if hasattr(self, 'picture'):
+        if hasattr(self, 'picture') and self.picture:
             return self.picture.send_data(RESPONSE, as_attachment=False)
 
     def serve_file(self, RESPONSE):
