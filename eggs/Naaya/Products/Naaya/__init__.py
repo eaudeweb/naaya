@@ -177,6 +177,10 @@ misc_ = {
     # jQuery
     'jquery-1.3.2.min.js':ImageFile('www/jquery-1.3.2.min.js', globals()),
     'jquery-ui-1.7.2.full.min.js':ImageFile('www/jquery-ui-1.7.2.full.min.js', globals()),
+		# jQuery plugins
+    'jquery.bgiframe.min.js':ImageFile('www/jquery.bgiframe.min.js', globals()),
+		'jquery.autocomplete.min.js':ImageFile('www/jquery.autocomplete.min.js', globals()),
+		'jquery.autocomplete.css':ImageFile('www/jquery.autocomplete.css', globals()),
 }
 
 def register_content(module, klass, module_methods, klass_methods, add_method):
