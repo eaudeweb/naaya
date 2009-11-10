@@ -6,7 +6,7 @@
     <script type="text/javascript">
     ( function() {
         var map_div = document.getElementById("minimap");
-		var minimap = new YMap(map_div, YAHOO_MAP_REG, new YSize(230, 160));
+		var minimap = new YMap(map_div, YAHOO_MAP_REG, new YSize(230, 305));
 		var first_point = new YGeoPoint(minimap_points[0].lat, minimap_points[0].lon)
 		minimap.drawZoomAndCenter(first_point, 5);
 		for (var i in minimap_points) {

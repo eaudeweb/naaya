@@ -1,5 +1,16 @@
 <span tal:replace="structure here/standard_html_header" />
 
+<tal:block tal:condition="python:here.checkPermissionEditObject()">
+	<br clear="all"/>
+	<div id="admin_this_folder">
+		<tal:block tal:condition="python: not here.hasVersion()">
+			<a tal:attributes="href string:${here/absolute_url}/edit_html">
+				<span i18n:translate="">Edit</span>
+			</a>
+		</tal:block>
+	</div>
+</tal:block>
+
 <h1>
 	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
 		title here/get_meta_label;
@@ -18,22 +29,33 @@
 
 <div class="boxes-right">
 	<div class="box" tal:condition="here/picture">
-		<div class="title">
-			<span i18n:translate="">Photo</span>
-		</div>
 		<div class="body">
 			<img tal:attributes="src string:${here/absolute_url}/render_picture"
 			width="230" />
 		</div>
 	</div>
 
+	<div class="link-box">
+		<a i18n:translate="" tal:condition="here/cv"
+			tal:attributes="href string:${here/absolute_url}/serve_file">
+			Download CV
+		</a>
+		<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/export_vcard">
+			Download vCard
+		</a>
+		<tal:block condition="python:here.has_coordinates() and here.picture"
+			tal:define="map python:request.get('map', '')">
+			<a i18n:translate="" tal:condition="not: map"
+			tal:attributes="href string:${here/absolute_url}?map=True">View map</a>
+			<a i18n:translate="" tal:condition="map"
+			tal:attributes="href string:${here/absolute_url}">Hide map</a>
+		</tal:block>
+	</div>
+
 	<!-- Details box -->
 	<div class="box"
-				tal:condition="python:request.get('map', '')">
+				tal:condition="python:(here.has_coordinates() and not here.picture) or request.get('map', '')">
 		<!-- Map widget -->
-		<div class="title">
-			<span i18n:translate="">Address</span>
-		</div>
 		<div class="minimap">
 			<tal:block content="structure here/minimap" />
 		</div>
@@ -58,21 +80,11 @@
 	<div tal:condition="here/mobile" tal:content="string:${here/mobile} (mobile)"/>
 	<div tal:condition="here/instant_messaging"
 		tal:content="string:${here/instant_messaging} (instant messaging)"/>
-	<div tal:condition="address" tal:define="map python:request.get('map', '')">
+	<div tal:condition="address">
 		<span tal:content="address"/>
-		<span tal:define="latitude geo_location/lat; longitude geo_location/lon"
-			tal:condition="python: latitude and longitude">
-				(<a i18n:translate="" tal:condition="not: map"
-				tal:attributes="href string:${here/absolute_url}?map=True">&#187;View on the map</a>
-				<a i18n:translate="" tal:condition="map"
-				tal:attributes="href string:${here/absolute_url}">&#187;Hide map</a>)
-		</span>
-	</div>
-	<div>
-		<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/export_vcard">&#187;Download vCard</a>
 	</div>
 	<div tal:condition="main_topics">
-		<h3 i18n:translate="">Main area of expertise</h3>
+		<h4 i18n:translate="">Main areas of expertise</h4>
 		<ul>
 			<tal:block repeat="topic main_topics">
 				<li tal:content="topic/title"/>
@@ -80,18 +92,22 @@
 		</ul>
 	</div>
 	<div tal:condition="sub_topics">
-		<h3 i18n:translate="">Secondary area of expertise</h3>
+		<h4 i18n:translate="">Secondary areas of expertise</h4>
 		<ul>
 			<tal:block repeat="topic sub_topics">
 				<li tal:content="topic/title"/>
 			</tal:block>
 		</ul>
 	</div>
+	<div tal:condition="here/ref_lang">
+		<strong i18n:translate="">Working languages:</strong>
+		<span tal:replace="here/ref_lang"/>
+	</div>
 
 	<a name="Employment"></a>
 	<div tal:define="EmploymentHistory here/getEmploymentHistory"
 		tal:condition="EmploymentHistory">
-		<h2 i18n:translate="">Employment History</h2>
+		<h4 i18n:translate="">Employment History</h4>
 		<span />
 		<ul>
 			<tal:block repeat="ob EmploymentHistory">
@@ -112,22 +128,6 @@
 		</ul>
 	</div>
 
-	<div tal:condition="here/cv">
-		<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/serve_file">
-			&#187;Download curriculum vitae
-		</a>
-	</div>
 </div>
-
-<tal:block tal:condition="python:here.checkPermissionEditObject()">
-	<br clear="all"/>
-	<div id="admin_this_folder">
-		<tal:block tal:condition="python: not here.hasVersion()">
-			<a tal:attributes="href string:${here/absolute_url}/edit_html">
-				<span i18n:translate="">Edit</span>
-			</a>
-		</tal:block>
-	</div>
-</tal:block>
 
 <tal:block content="structure here/standard_html_footer" />
