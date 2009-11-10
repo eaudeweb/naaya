@@ -112,15 +112,14 @@
 		<ul>
 			<tal:block repeat="ob EmploymentHistory">
 				<li>
-					<span tal:replace="ob/start" /> - <span tal:replace="ob/end" />,
+					<span tal:replace="ob/start" /> - 
+					<span tal:condition="ob/end" tal:replace="ob/end" /><span tal:condition="not:ob/end" i18n:translate="" >present</span>,
 				<tal:block define="ob_name ob/institution; inst python:here.find_InstitutionByName(ob_name)">
-					<strong tal:condition="ob/current">
+					<span>
 						<span tal:condition="not: inst" tal:replace="ob/institution" />
-						<a tal:condition="inst" tal:attributes="href string:${inst/absolute_url}" tal:content="ob/institution" />
-					</strong>
-					<span tal:condition="not: ob/current">
-						<span tal:condition="not: inst" tal:replace="ob/institution" />
-						<a tal:condition="inst" tal:attributes="href string:${inst/absolute_url}" tal:content="ob/institution" />
+						<a style="text-decoration: underline;" tal:condition="inst"
+						tal:attributes="href string:${inst/absolute_url}"
+						tal:content="ob/institution" />
 					</span>
 				</tal:block>
 				</li>
