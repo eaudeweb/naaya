@@ -23,7 +23,7 @@ TOPICS = {
             3: 'Climate Change',
             4: 'Desertification',
             5: 'Economics',
-            6: 'Environmental education &amp; awareness raising',
+            6: 'Environmental education & awareness raising',
             7: 'Environmental legislation',
             8: 'Environmental management',
             9: 'Human Health',

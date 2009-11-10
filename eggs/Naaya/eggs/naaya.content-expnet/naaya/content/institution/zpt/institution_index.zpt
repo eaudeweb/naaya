@@ -6,63 +6,39 @@
 		<span tal:replace="here/title" />
 </h1>
 
-<div style="float: right;
-			width: 20em;
-			">
-	<div style="margin-top: 0.5em;
-				border-color: #DEDEDE;
-				border-style: none solid solid;
-				border-width: 1px;
-				">
-		<div tal:condition="here/picture|nothing">
-			<div style="border-bottom: 1px solid #DEDEDE;
-						border-top: 1px solid #DEDEDE;
-						background: #d5dde1;
-						font-size: 120%;
-						font-weight: bold;
-						padding: 0.5em;
-						">
-				<span i18n:translate="">Photo</span>
-			</div>
-			<div style="margin: 0.5em;">
-				<img tal:attributes="src string:${here/absolute_url}/render_picture" width="200" height="100" />
-			</div>
+<div class="boxes-right">
+	<div class="box" tal:condition="here/picture">
+		<div class="title">
+			<span i18n:translate="">Photo</span>
+		</div>
+		<div class="body">
+			<img tal:attributes="src string:${here/absolute_url}/render_picture"
+				width="230" />
 		</div>
 	</div>
 
 	<!-- Details box -->
-	<div style="margin-top: 0.5em;
-				border-color: #DEDEDE;
-				border-style: none solid solid;
-				border-width: 1px;
-				"
+	<div class="box"
 				tal:condition="python:request.get('map', '')">
 		<!-- Map widget -->
-		<div style="border-bottom: 1px solid #DEDEDE;
-					border-top: 1px solid #DEDEDE;
-					background: #d5dde1;
-					font-size: 120%;
-					font-weight: bold;
-					padding: 0.5em;
-					">
+		<div class="title">
 			<span i18n:translate="">Address</span>
 		</div>
-		<div style="margin: -0.5em;">
+		<div class="minimap">
 			<tal:block content="structure here/minimap" />
 		</div>
 	</div>
 </div>
-<div tal:define="
-				title here/title;
-				description here/description;
-				webpage here/webpage;
+
+<div class="main-content" tal:define="
 				geo_location here/geo_location;
 				address geo_location/address|string:;
 				main_topics python:here.getTopics(here.main_topics);
 				sub_topics python:here.getTopics(here.sub_topics);" style="float: left">
-	<h4 tal:condition="description" tal:content="structure description" />
-	<div tal:condition="webpage">
-		<a tal:attributes="href webpage" i18n:translate="">Homepage</a>
+	<div class="description" tal:condition="here/description"
+		tal:content="structure here/description" />
+	<div tal:condition="here/webpage">
+		<a tal:attributes="href here/webpage" i18n:translate="">Homepage</a>
 	</div>
 	<div tal:condition="here/phone" tal:content="here/phone"/>
 	<div tal:condition="here/fax"><span tal:content="here/fax"/> (fax)</div>
@@ -75,7 +51,7 @@
 		</span>
 	</div>
 	<div tal:condition="main_topics">
-		<h4 i18n:translate="">Main area of expertise</h4>
+		<h3 i18n:translate="">Main area of expertise</h3>
 		<ul>
 			<tal:block repeat="topic main_topics">
 				<li tal:content="topic/title"/>
@@ -83,7 +59,7 @@
 		</ul>
 	</div>
 	<div tal:condition="sub_topics">
-		<h4 i18n:translate="">Secondary area of expertise</h4>
+		<h3 i18n:translate="">Secondary area of expertise</h3>
 		<ul>
 			<tal:block repeat="topic sub_topics">
 				<li tal:content="topic/title"/>

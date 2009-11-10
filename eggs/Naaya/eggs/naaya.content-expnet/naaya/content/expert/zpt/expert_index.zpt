@@ -1,14 +1,20 @@
 <span tal:replace="structure here/standard_html_header" />
 
-<tal:block tal:condition="python:here.checkPermissionEditObject()">
-	<div id="admin_this_folder">
-		<tal:block tal:condition="python: not here.hasVersion()">
-			<a tal:attributes="href string:${here/absolute_url}/edit_html">
-				<span i18n:translate="">Edit</span>
-			</a>
-		</tal:block>
-	</div>
-</tal:block>
+<h1>
+	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
+		title here/get_meta_label;
+		alt here/get_meta_label" />
+		<span tal:replace="string:${here/personal_title} ${here/title}" />
+		<span class="available_langs"
+			tal:condition="python:here.check_item_title(here, here.title)">
+			<span i18n:translate="">Item only translated in </span>
+			<span tal:repeat="lang here/gl_get_languages_map">
+				<a tal:content="python:' %s' % lang['title']"
+				tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
+				tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
+			</span>
+		</span>
+</h1>
 
 <div class="boxes-right">
 	<div class="box" tal:condition="here/picture">
@@ -34,47 +40,24 @@
 	</div>
 </div>
 
-<h1>
-	<img tal:attributes="src python:test(here.approved, here.icon, here.icon_marked);
-		title here/get_meta_label;
-		alt here/get_meta_label" />
-		<span tal:replace="string:${here/personal_title} ${here/title}" />
-		<span class="available_langs"
-			tal:condition="python:here.check_item_title(here, here.title)">
-			<span i18n:translate="">Item only translated in </span>
-			<span tal:repeat="lang here/gl_get_languages_map">
-				<a tal:content="python:' %s' % lang['title']"
-				tal:condition="python:not lang['selected'] and here.getLocalProperty('title', lang['id'])"
-				tal:attributes="href python:'gl_changeLanguage?old_lang=%s' % (lang['id'])" />
-			</span>
-		</span>
-</h1>
 <div class="main-content" tal:define="
-				title here/title;
-				personal_title here/personal_title;
-				name here/name;
-				surname here/surname;
-				description here/description;
-				email here/email;
-				phone here/phone;
-				mobile here/mobile;
-				webpage here/webpage;
-				instant_messaging here/instant_messaging;
 				geo_location here/geo_location;
 				address geo_location/address|string:;
 				main_topics python:here.getExpertTopics(here.main_topics);
 				sub_topics python:here.getExpertTopics(here.sub_topics);
-				ref_lang here/ref_lang;
 				">
-	<div class="description" tal:condition="description" tal:content="structure description"/>
-	<div tal:condition="email">
-		<a tal:attributes="href string:mailto:${email}" tal:content="email"/>
+	<div class="description" tal:condition="here/description"
+		tal:content="structure here/description"/>
+	<div tal:condition="here/email">
+		<a tal:attributes="href string:mailto:${here/email}" tal:content="here/email"/>
 	</div>
-	<div tal:condition="webpage">
-		<a tal:attributes="href webpage" i18n:translate="">Homepage</a>
+	<div tal:condition="here/webpage">
+		<a tal:attributes="href here/webpage" i18n:translate="">Homepage</a>
 	</div>
-	<div tal:condition="phone" tal:content="phone"/>
-	<div tal:condition="mobile" tal:content="string:${mobile} (mobile)"/>
+	<div tal:condition="here/phone" tal:content="here/phone"/>
+	<div tal:condition="here/mobile" tal:content="string:${here/mobile} (mobile)"/>
+	<div tal:condition="here/instant_messaging"
+		tal:content="string:${here/instant_messaging} (instant messaging)"/>
 	<div tal:condition="address" tal:define="map python:request.get('map', '')">
 		<span tal:content="address"/>
 		<span tal:define="latitude geo_location/lat; longitude geo_location/lon"
@@ -89,7 +72,7 @@
 		<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/export_vcard">&#187;Download vCard</a>
 	</div>
 	<div tal:condition="main_topics">
-		<h2 i18n:translate="">Main area of expertise</h2>
+		<h3 i18n:translate="">Main area of expertise</h3>
 		<ul>
 			<tal:block repeat="topic main_topics">
 				<li tal:content="topic/title"/>
@@ -97,17 +80,12 @@
 		</ul>
 	</div>
 	<div tal:condition="sub_topics">
-		<h2 i18n:translate="">Secondary area of expertise</h2>
+		<h3 i18n:translate="">Secondary area of expertise</h3>
 		<ul>
 			<tal:block repeat="topic sub_topics">
 				<li tal:content="topic/title"/>
 			</tal:block>
 		</ul>
-	</div>
-	<div tal:condition="here/cv">
-		<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/serve_file">
-			&#187;Download curriculum vitae
-		</a>
 	</div>
 
 	<a name="Employment"></a>
@@ -126,6 +104,23 @@
 			</li>
 		</tal:block>
 	</ul>
+	
+	<div tal:condition="here/cv">
+		<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/serve_file">
+			&#187;Download curriculum vitae
+		</a>
+	</div>
 </div>
+
+<tal:block tal:condition="python:here.checkPermissionEditObject()">
+	<br clear="all"/>
+	<div id="admin_this_folder">
+		<tal:block tal:condition="python: not here.hasVersion()">
+			<a tal:attributes="href string:${here/absolute_url}/edit_html">
+				<span i18n:translate="">Edit</span>
+			</a>
+		</tal:block>
+	</div>
+</tal:block>
 
 <tal:block content="structure here/standard_html_footer" />
