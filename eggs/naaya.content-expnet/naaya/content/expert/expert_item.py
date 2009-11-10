@@ -479,6 +479,10 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         
         return '\n'.join(r)
 
+    def has_coordinates(self):
+        """ check if the current object has map coordinates"""
+        return self.geo_location.lat and self.geo_location.lon
+
 def json_encode(ob):
     """ try to encode some known value types to JSON """
     if isinstance(ob, Decimal):
