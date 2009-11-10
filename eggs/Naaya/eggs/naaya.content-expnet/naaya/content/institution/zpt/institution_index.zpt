@@ -88,7 +88,7 @@
 			<h4 i18n:translate="">Current employees</h4>
 			<ul>
 				<tal:block repeat="emp emp_current">
-					<li><a tal:attributes="href emp/absolute_url" tal:content="emp/title" /></li>
+					<li><a tal:attributes="href emp/absolute_url" tal:content="emp/title" style="text-decoration: underline;"/></li>
 				</tal:block>
 			</ul>
 		</tal:block>
@@ -96,7 +96,7 @@
 			<h4 i18n:translate="">Previous employees</h4>
 			<ul>
 				<tal:block repeat="emp emp_previous">
-					<li><a tal:attributes="href emp/absolute_url" tal:content="emp/title" /></li>
+					<li><a tal:attributes="href emp/absolute_url" tal:content="emp/title" style="text-decoration: underline;"/></li>
 				</tal:block>
 			</ul>
 		</tal:block>
