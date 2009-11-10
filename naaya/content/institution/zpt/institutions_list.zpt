@@ -34,7 +34,8 @@
 <tal:block define="results python: here.items_in_topic(topic=req_topic, filter_name=req_filter, objects=True)">
 	<div class="main-content" tal:condition="results" tal:repeat="ob results">
 		<div tal:condition="ob/picture" class="picture">
-			<img tal:attributes="src string:${ob/absolute_url}/render_picture" width="80" />
+			<img tal:attributes="src string:${ob/absolute_url}/render_picture"
+			alt="Institution picture" width="80" i18n:attributes="alt"/>
 		</div>
 		<div>
 			<h4><a tal:attributes="href ob/absolute_url" tal:content="ob/title" /></h4>

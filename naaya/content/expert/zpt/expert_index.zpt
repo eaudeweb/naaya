@@ -31,7 +31,7 @@
 	<div class="box" tal:condition="here/picture">
 		<div class="body">
 			<img tal:attributes="src string:${here/absolute_url}/render_picture"
-			width="230" />
+			alt="Expert picture" width="230" i18n:attributes="alt"/>
 		</div>
 	</div>
 
