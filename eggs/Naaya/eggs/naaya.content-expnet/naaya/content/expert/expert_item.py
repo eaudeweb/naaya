@@ -92,10 +92,21 @@ def setupContentType(site):
             ptool.experts_topics.manage_add_item(k, v)
     #Create catalog index if it doesn't exist
     ctool = site.getCatalogTool()
-    try: 
-        ctool.addIndex('topics', 'KeywordIndex', extra={'indexed_attrs' : 'main_topics, sub_topics'})
-        ctool.manage_reindexIndex(['topics'])
-    except: pass
+
+    if not 'topics' in ctool.indexes():
+        try:
+            ctool.addIndex('topics', 'KeywordIndex', extra={'indexed_attrs' : 'main_topics, sub_topics'})
+            ctool.manage_reindexIndex(['topics'])
+        except:
+            print 'Failed to create topics index. Naaya Expert content type may not work properly'
+
+    if not 'title_field' in ctool.indexes():
+        try: 
+            ctool.addIndex('title_field', 'FieldIndex', extra={'indexed_attrs' : 'title'})
+            ctool.manage_reindexIndex(['title_field'])
+        except:
+            print 'Failed to create title_field index. Naaya Expert content type may not work properly'
+
 
 # this dictionary is updated at the end of the module
 config = {
@@ -439,7 +450,7 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
 
     def find_InstitutionByName(self, name):
         ctool = self.getCatalogTool()
-        ret = ctool.search({'meta_type' : 'Naaya Institution', 'title' : name})
+        ret = ctool.search({'meta_type' : 'Naaya Institution', 'title_field' : name})
         if ret:
             return ctool.getobject(ret[0].data_record_id_)
 
