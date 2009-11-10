@@ -112,7 +112,6 @@ config = {
         'default_schema': DEFAULT_SCHEMA,
         'schema_name': 'NyExpert',
         '_module': sys.modules[__name__],
-        'additional_style': None,
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'NyExpert.gif'),
         'on_install' : setupContentType,
         'additional_style': ADDITIONAL_STYLE,
