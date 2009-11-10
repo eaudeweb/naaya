@@ -83,7 +83,6 @@ DEFAULT_SCHEMA['discussion'].update(visible=False)
 DEFAULT_SCHEMA['sortorder'].update(visible=False)
 
 def setupContentType(site):
-    #@TODO: initialize the list of topics (only and only once per site)
     from skel import TOPICS
     ptool = site.getPortletsTool()
     itopics = getattr(ptool, 'experts_topics', None)
@@ -439,6 +438,10 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         if ret:
             return ctool.getobject(ret[0].data_record_id_)
 
+    def has_institution_autocomplete(self):
+        #@WARNING: 'Naaya Institution' is hard-coded name of the NyInstitution meta_type
+        return 'Naaya Institution' in self.getSite().get_pluggable_installed_meta_types()
+
     security.declareProtected(view, 'export_vcard')
     def export_vcard(self, REQUEST=None):
         """ """
@@ -481,7 +484,9 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
 
     def has_coordinates(self):
         """ check if the current object has map coordinates"""
-        return self.geo_location.lat and self.geo_location.lon
+        if self.geo_location:
+            return self.geo_location.lat and self.geo_location.lon
+        return False
 
 def json_encode(ob):
     """ try to encode some known value types to JSON """
@@ -534,6 +539,45 @@ class ExpertsLister(Implicit, Item):
 
 from Products.Naaya.NySite import NySite
 NySite.experts_list = ExpertsLister('experts_list')
+
+
+try:
+    import naaya.content.institution.institution_item
+except:
+    HAS_META_TYPE_INSTITUTION = False
+else:
+    HAS_META_TYPE_INSTITUTION = True
+if HAS_META_TYPE_INSTITUTION:
+    class AutosuggestInstitution(Implicit, Item):
+
+        def __init__(self, id):
+            self.id = id
+    
+        def index_html(self, REQUEST=None):
+            """
+            Index for autosuggest institutions.
+            @return: JSON formatted array with title of institutions
+            """
+            if REQUEST:
+                REQUEST.RESPONSE.setHeader('Content-Type', 'text/plain')
+                q = None; limit = 10
+                if REQUEST.form.has_key('q'):
+                    q = REQUEST.form['q']
+                if REQUEST.form.has_key('limit'):
+                    limit = int(REQUEST.form['limit'])
+                if q:
+                    catalog = self.getCatalogTool()
+                    print q
+                    q = '%s*' % q
+                    lst = catalog.search({'meta_type' : 'Naaya Institution', 'title' : q}) #@WARNING: Hard-coded meta_type
+                    if len(lst) > limit:
+                        lst = lst[0:limit]
+                    return '|'.join([ '%s' % brain.getObject().title for brain in lst])
+                return '[]'
+            return None
+
+
+    NySite.autosuggest_institutions = AutosuggestInstitution('autosuggest_institutions')
 
 
 class EmploymentRecord(object):

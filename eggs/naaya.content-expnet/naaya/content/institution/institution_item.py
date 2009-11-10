@@ -425,11 +425,11 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
 
     def list_employees(self):
         ctool = self.getCatalogTool()
-        contacts = ctool.search({'meta_type' : METATYPE_OBJECT})
+        contacts = ctool.search({'meta_type' : 'Naaya Expert'}) #@WARNING: Hard-coded meta_type
         ret_current = []
         ret_previous = []
         for brain in contacts:
-            contact = ctool.getobject(brain.data_record_id_)
+            contact = brain.getObject()
             for record in contact.employment_history:
                 if record.institution == self.title:
                     if record.current:
@@ -440,7 +440,9 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
 
     def has_coordinates(self):
         """ check if the current object has map coordinates"""
-        return self.geo_location.lat and self.geo_location.lon
+        if self.geo_location:
+            return self.geo_location.lat and self.geo_location.lon
+        return False
 
 def json_encode(ob):
     """ try to encode some known value types to JSON """
@@ -509,36 +511,6 @@ class InstitutionLister(Implicit, Item):
 
 from Products.Naaya.NySite import NySite
 NySite.list_institutions = InstitutionLister('list_institutions')
-
-class AutosuggestInstitution(Implicit, Item):
-    
-    def __init__(self, id):
-        self.id = id
-
-    def index_html(self, REQUEST=None):
-        """
-        Index for autosuggest institutions.
-        @return: JSON formatted array with title of institutions
-        """
-        if REQUEST:
-            REQUEST.RESPONSE.setHeader('Content-Type', 'text/plain')
-            q = None; limit = 10
-            if REQUEST.form.has_key('q'):
-                q = REQUEST.form['q']
-            if REQUEST.form.has_key('limit'):
-                limit = int(REQUEST.form['limit'])
-            if q:
-                catalog = self.getCatalogTool()
-                print q
-                q = '%s*' % q
-                lst = catalog.search({'meta_type' : METATYPE_OBJECT, 'title' : q})
-                if len(lst) > limit:
-                    lst = lst[0:limit]
-                return '|'.join([ '%s' % brain.getObject().title for brain in lst])
-            return '[]'
-        return None
-
-NySite.autosuggest_institutions = AutosuggestInstitution('autosuggest_institutions')
 
 #manage_addNyInstitution_html = PageTemplateFile('zpt/institution_manage_add', globals())
 #manage_addNyInstitution_html.kind = config['meta_type']

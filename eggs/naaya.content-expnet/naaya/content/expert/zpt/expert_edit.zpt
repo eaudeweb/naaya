@@ -3,21 +3,23 @@
 <h1 metal:fill-slot="title" i18n:translate="">Edit Expert</h1>
 
 <tal:block metal:fill-slot="custom_properties">
-	<link rel="stylesheet" type="text/css" media="screen" href="misc_/Naaya/jquery.autocomplete.css" />
-	<script type="text/javascript" src="misc_/Naaya/jquery.bgiframe.min.js"></script>
-	<script type="text/javascript" src="misc_/Naaya/jquery.autocomplete.min.js"></script>
 
-	<tal:block replace='structure string:<script type="text/javascript">' />
-	$(function() {
-		$('#id_institution').autocomplete('<span tal:replace="string:${here/absolute_url}/autosuggest_institutions" />', 
-			{
-				autoFill : true,
-				delay : 250,
-				cacheLength : 50
-			}
-		);
-	});
-	<tal:block replace='structure string:</script>' />
+	<tal:block condition="here/has_institution_autocomplete">
+		<link rel="stylesheet" type="text/css" media="screen" href="misc_/Naaya/jquery.autocomplete.css" />
+		<script type="text/javascript" src="misc_/Naaya/jquery.bgiframe.min.js"></script>
+		<script type="text/javascript" src="misc_/Naaya/jquery.autocomplete.min.js"></script>
+		<tal:block replace='structure string:<script type="text/javascript">' />
+		$(function() {
+			$('#id_institution').autocomplete('<span tal:replace="string:${here/absolute_url}/autosuggest_institutions" />', 
+				{
+					autoFill : true,
+					delay : 250,
+					cacheLength : 50
+				}
+			);
+		});
+		<tal:block replace='structure string:</script>' />
+	</tal:block>
 
 	<div class="field-inline">
 		<div tal:condition="here/picture|nothing">
