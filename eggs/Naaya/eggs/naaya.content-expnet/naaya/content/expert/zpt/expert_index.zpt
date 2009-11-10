@@ -89,11 +89,12 @@
 	</div>
 
 	<a name="Employment"></a>
-	<div tal:condition="here/getEmploymentHistory">
+	<div tal:define="EmploymentHistory here/getEmploymentHistory"
+		tal:condition="EmploymentHistory">
 		<h2 i18n:translate="">Employment History</h2>
 		<span />
 		<ul>
-			<tal:block repeat="ob here/getEmploymentHistory">
+			<tal:block repeat="ob EmploymentHistory">
 				<li>
 					<span tal:replace="ob/start" /> - <span tal:replace="ob/end" />,
 					<tal:block define="ob_name ob/institution; inst python:here.find_InstitutionByName(ob_name)"> 
