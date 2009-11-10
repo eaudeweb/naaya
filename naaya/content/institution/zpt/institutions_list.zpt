@@ -1,5 +1,6 @@
 <span tal:replace="structure here/standard_html_header" />
 <tal:block define="global req_topic python: request.get('topic', '')" /> 
+<tal:block define="global req_filter python: request.get('q', '')" />
 <h1>List of institutions</h1>
 
 <div style="float: right; width: 20em;">
@@ -13,8 +14,9 @@
 				<span i18n:translate="">Search institutions</span>
 		</div>
 		<div style="margin: 0.5em;" tal:define="topics here/topic_filters">
-			<form>
-				<input type="text" size="30" name="q" value="" />
+			<form tal:attributes="action string:${here/absolute_url}" method="get">
+				<input type="text" size="30" name="q" tal:attributes="value req_filter" />
+				<input tal:condition="req_topic" type="hidden" name="topic" tal:attributes="value req_topic" />
 				<input type="submit" name="search" value="Search" />
 			</form>
 		</div>
@@ -35,7 +37,8 @@
 				<tal:block repeat="topic topics">
 					<li tal:define="tp python:topic[0]; cnt python:topic[1]">
 						<a tal:condition="not: tp" tal:attributes="href string:${here/absolute_url}"><span i18n:translate="">All</span> (<span tal:replace="cnt" />)</a>
-						<a tal:condition="tp" tal:attributes="href string:${here/absolute_url}?topic=${tp/id}" i18n:translate=""><span tal:replace="tp/title" /> (<span tal:replace="cnt" />)</a>
+						<a tal:condition="python: tp and cnt" tal:attributes="href string:${here/absolute_url}?topic=${tp/id}"><span tal:replace="tp/title" /> (<span tal:replace="cnt" />)</a>
+						<span tal:condition="python: tp and not cnt" tal:replace="tp/title" />
 					</li>
 				</tal:block>
 			</ul>
@@ -43,7 +46,7 @@
 </div>
 
 <div style="width: 60%;">
-	<div tal:repeat="ob python: here.items_in_topic(topic=req_topic, objects=True)">
+	<div tal:repeat="ob python: here.items_in_topic(topic=req_topic, filter_name=req_filter, objects=True)">
 		<div style="margin: 0.5em;">
 			<div style="width: 100px; height: 50px; border: 1px solid black; float: left; margin-right: 0.4em;">
 				<img tal:attributes="src string:${ob/absolute_url}/render_picture" width="100" height="50" />
