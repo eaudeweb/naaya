@@ -42,8 +42,9 @@
 		<input id="id_institution" type="text" name="institution" />
 	</div>
 	<a name="Employment"></a>
-	<ul>
-		<tal:block repeat="ob here/getEmploymentHistory">
+	<ul tal:define="EmploymentHistory here/getEmploymentHistory"
+		tal:condition="EmploymentHistory">
+		<tal:block repeat="ob EmploymentHistory">
 			<li>
 				<span tal:replace="ob/start" /> - <span tal:replace="ob/end" />, <span tal:replace="ob/institution" />
 				<a tal:attributes="href string:${here/absolute_url}/delete_EmploymentHistory?id=${ob/id}#Employment">Delete</a>
