@@ -22,6 +22,7 @@ from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED,\
 
 #Python imports
 from datetime import datetime
+from naaya.content.expert.expert_item import METATYPE_OBJECT
 import re
 from cStringIO import StringIO
 import os, sys
@@ -419,6 +420,21 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
         json_simplepoints = json.dumps(simplepoints, default=json_encode)
         return self._minimap_template(points=json_simplepoints)
 
+    def list_employees(self):
+        ctool = self.getCatalogTool()
+        contacts = ctool.search({'meta_type' : METATYPE_OBJECT})
+        ret_current = []
+        ret_previous = []
+        for brain in contacts:
+            contact = ctool.getobject(brain.data_record_id_)
+            for record in contact.employment_history:
+                if record.institution == self.title:
+                    if record.current:
+                        ret_current.append(contact)
+                    else:
+                        ret_previous.append(contact)
+        return (ret_current, ret_previous)
+
 def json_encode(ob):
     """ try to encode some known value types to JSON """
     if isinstance(ob, Decimal):
@@ -456,6 +472,7 @@ class InstitutionLister(Implicit, Item):
         for id, value in topics.get_collection().items():
             ret.append((value, len(self.items_in_topic(ctool, id))))
         return ret
+
 
     def items_in_topic(self, catalog=None, topic='', objects=False):
         """
