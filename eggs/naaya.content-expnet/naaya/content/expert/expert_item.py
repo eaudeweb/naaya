@@ -541,7 +541,7 @@ class ExpertsLister(Implicit, Item):
             ret.append((value, len(self.items_in_topic(ctool, id))))
         return ret
 
-    def items_in_topic(self, catalog=None, topic='', objects=False):
+    def items_in_topic(self, catalog=None, topic='', filter_name=None, objects=False):
         """
         @param objects: Return full objects, not brains
         """
@@ -550,6 +550,8 @@ class ExpertsLister(Implicit, Item):
             catalog = self.getCatalogTool()
         if topic:
             dict['topics'] = topic
+        if filter_name:
+            dict['title'] = '*%s*' % filter_name
         if objects:
             return [catalog.getobject(ob.data_record_id_) for ob in catalog.search(dict)]
         return catalog.search(dict)

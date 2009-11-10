@@ -1,12 +1,14 @@
 <span tal:replace="structure here/standard_html_header" />
 <tal:block define="global req_topic python: request.get('topic', '')" /> 
+<tal:block define="global req_filter python: request.get('q', '')" />
 <h1>List of experts</h1>
 
 <div class="boxes-right">
 	<div class="link-box">
 		<strong i18n:translate="">Search experts:</strong>
-		<form>
-			<input type="text" size="30" name="q" value="" />
+		<form tal:attributes="action string:${here/absolute_url}" method="get">
+			<input type="text" size="30" name="q" tal:attributes="value req_filter" />
+			<input tal:condition="req_topic" type="hidden" name="topic" tal:attributes="value req_topic" />
 			<input type="submit" name="search" value="Go" i18n:attributes="value"/>
 		</form>
 	</div>
@@ -30,7 +32,7 @@
 </div>
 
 <div class="main-content"
-	tal:repeat="ob python: here.items_in_topic(topic=req_topic, objects=True)">
+	tal:repeat="ob python: here.items_in_topic(topic=req_topic, filter_name=req_filter, objects=True)">
 	<div tal:condition="ob/picture" class="picture">
 		<img tal:attributes="src string:${ob/absolute_url}/render_picture"
 		alt="Expert picture" width="80" i18n:attributes="alt"/>
