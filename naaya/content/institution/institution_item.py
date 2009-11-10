@@ -38,6 +38,7 @@ from Acquisition import Implicit
 from OFS.SimpleItem import Item
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
+from naaya.content.bfile.NyBlobFile import make_blobfile
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
 from Products.NaayaBase.NyItem import NyItem
@@ -47,9 +48,11 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
-from naaya.content.bfile.NyBlobFile import make_blobfile
 
+
+METATYPE_OBJECT = 'Naaya Institution'
 ADDITIONAL_STYLE = open(ImageFile('www/institution.css', globals()).path).read()
+
 
 DEFAULT_SCHEMA = {}
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
@@ -90,7 +93,7 @@ config = {
         'product': 'NaayaContent',
         'module': 'institution_item',
         'package_path': os.path.abspath(os.path.dirname(__file__)),
-        'meta_type': 'Naaya Institution',
+        'meta_type': METATYPE_OBJECT,
         'label': 'Institution',
         'permission': 'Naaya - Add Naaya Institution objects',
         'forms': ['institution_add', 'institution_edit', 'institution_index'],
@@ -450,24 +453,33 @@ InitializeClass(NyInstitution)
 
 #
 class InstitutionLister(Implicit, Item):
+
+    _index_template = NaayaPageTemplateFile('zpt/institutions_list', globals(), 'institution')
+
     """
     Plug into the catalog to retrieve the list of institutions
+    Render the list of institutions recorded for this site.
     """
     def __init__(self, id):
         self.id = id
 
-    _index_template = NaayaPageTemplateFile('zpt/institutions_list', globals(), 'institution')
 
     def index_html(self, REQUEST):
-        """
-        Render the list of institutions recorded for this site.
-        """
-        site = self.getSite()
+        """ Index page """
         return self._index_template(REQUEST, institutions=[1,2,3])
 
 
     def topic_filters(self):
-        """ """
+        """ 
+        Return the list of topics and their count of items inside to be displayed from template.
+        Example:
+        <ul>
+            <li>All (12)</li>
+            <li>Water management (10)</li>
+            <li>Climate change (2)</li>
+        </ul>
+        @return: List of tuples in format: [(None, intCountAll), (topic_obj1, intCountObj1), (topic_obj2, intCountObj2)...]
+        """
         ret = []
         ptool = self.getPortletsTool()
         ctool = self.getCatalogTool()
@@ -480,9 +492,12 @@ class InstitutionLister(Implicit, Item):
 
     def items_in_topic(self, catalog=None, topic='', objects=False):
         """
-        @param objects: Return full objects, not brains
+        Find the institutions that have associated a specific topic (either as primary or secondary topic).
+        @param topic: The name of the topic to find items in. If None, return all institutions
+        @param objects: Return full objects (True) or just the brains (False). Brains are useful to count: i.e. len(brains_arr)
+        @return: list of NyInstitution objects if objects=True or list of catalog brains if objects=False.
         """
-        dict = {'meta_type' : 'Naaya Institution'}
+        dict = {'meta_type' : METATYPE_OBJECT}
         if not catalog:
             catalog = self.getCatalogTool()
         if topic:
@@ -494,6 +509,36 @@ class InstitutionLister(Implicit, Item):
 
 from Products.Naaya.NySite import NySite
 NySite.list_institutions = InstitutionLister('list_institutions')
+
+class AutosuggestInstitution(Implicit, Item):
+    
+    def __init__(self, id):
+        self.id = id
+
+    def index_html(self, REQUEST=None):
+        """
+        Index for autosuggest institutions.
+        @return: JSON formatted array with title of institutions
+        """
+        if REQUEST:
+            REQUEST.RESPONSE.setHeader('Content-Type', 'text/plain')
+            q = None; limit = 10
+            if REQUEST.form.has_key('q'):
+                q = REQUEST.form['q']
+            if REQUEST.form.has_key('limit'):
+                limit = int(REQUEST.form['limit'])
+            if q:
+                catalog = self.getCatalogTool()
+                print q
+                q = '%s*' % q
+                lst = catalog.search({'meta_type' : METATYPE_OBJECT, 'title' : q})
+                if len(lst) > limit:
+                    lst = lst[0:limit]
+                return '|'.join([ '%s' % brain.getObject().title for brain in lst])
+            return '[]'
+        return None
+
+NySite.autosuggest_institutions = AutosuggestInstitution('autosuggest_institutions')
 
 #manage_addNyInstitution_html = PageTemplateFile('zpt/institution_manage_add', globals())
 #manage_addNyInstitution_html.kind = config['meta_type']
