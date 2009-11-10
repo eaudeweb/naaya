@@ -89,21 +89,21 @@
 	</div>
 
 	<a name="Employment"></a>
-	<div >
+	<div tal:condition="here/getEmploymentHistory">
 		<h2 i18n:translate="">Employment History</h2>
 		<span />
+		<ul>
+			<tal:block repeat="ob here/getEmploymentHistory">
+				<li>
+					<span tal:replace="ob/start" /> - <span tal:replace="ob/end" />,
+					<tal:block define="ob_name ob/institution; inst python:here.find_InstitutionByName(ob_name)"> 
+						<span tal:condition="not: inst" tal:replace="ob/institution" />
+						<a tal:condition="inst" tal:attributes="href string:${inst/absolute_url}" tal:content="ob/institution" />
+					</tal:block>
+				</li>
+			</tal:block>
+		</ul>
 	</div>
-	<ul>
-		<tal:block repeat="ob here/getEmploymentHistory">
-			<li>
-				<span tal:replace="ob/start" /> - <span tal:replace="ob/end" />,
-				<tal:block define="ob_name ob/institution; inst python:here.find_InstitutionByName(ob_name)"> 
-					<span tal:condition="not: inst" tal:replace="ob/institution" />
-					<a tal:condition="inst" tal:attributes="href string:${inst/absolute_url}" tal:content="ob/institution" />
-				</tal:block>
-			</li>
-		</tal:block>
-	</ul>
 	
 	<div tal:condition="here/cv">
 		<a i18n:translate="" tal:attributes="href string:${here/absolute_url}/serve_file">
