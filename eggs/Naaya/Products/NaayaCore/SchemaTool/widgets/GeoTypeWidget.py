@@ -51,7 +51,7 @@ class GeoTypeWidget(Widget):
         """ Convert a user-readable string to a value that can be saved """
         geo_map_tool = self.getSite().getGeoMapTool()
         for symbol in geo_map_tool.getSymbolsList():
-            if value == symbol.title:
+            if value.strip() == symbol.title:
                 return symbol.id
         raise ValueError('Could not convert value %s' % repr(value))
 
