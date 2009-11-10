@@ -24,9 +24,9 @@
 		<div tal:condition="here/picture|nothing">
 			<img tal:attributes="src string:${here/absolute_url}/render_picture" width="320" />
 			<br />
-			<a tal:attributes="href string:${here/absolute_url}/delete_picture">Delete</a>
+			<a tal:attributes="href string:${here/absolute_url}/delete_picture" i18n:translate="">Delete</a>
 		</div>
-		<label class="widget-title" for="expert_picture">Picture</label>
+		<label class="widget-title" for="expert_picture" i18n:translate="">Picture</label>
 		<br />
 		<input id="expert_picture" type="file" name="expert_picture" />
 	</div>
@@ -36,25 +36,25 @@
 				Download curriculum vitae
 			</a>
 			<br />
-			<a tal:attributes="href string:${here/absolute_url}/delete_file">Delete</a>
+			<a tal:attributes="href string:${here/absolute_url}/delete_file" i18n:translate="">Delete</a>
 		</div>
-		<label class="widget-title" for="expert_cv">Curriculum vitae</label>
+		<label class="widget-title" for="expert_cv" i18n:translate="">Curriculum vitae</label>
 		<br />
 		<input id="expert_cv" type="file" name="expert_cv" />
 	</div>
 	<br />
 	<div class="field-inline">
 		<h2 i18n:translate="">Employment history</h2>
-		<label class="widget-title" for="id_start">Start year</label>
+		<label class="widget-title" for="id_start" i18n:translate="">Start year</label>
 		<input id="id_start" type="text" name="start" size="5" />
-		<label class="widget-title" for="id_end">End year</label>
+		<label class="widget-title" for="id_end" i18n:translate="">End year</label>
 		<input id="id_end" type="text" name="end"  size="5" />
 		<input id="id_current" type="checkbox" name="current" />
-		<label class="widget-title" for="id_current">Current position</label>
+		<label class="widget-title" for="id_current" i18n:translate="">Current position</label>
 		<br />
 	</div>
 	<div class="field-inline">
-		<label class="widget-title" for="id_institution">Institution</label>
+		<label class="widget-title" for="id_institution" i18n:translate="">Institution</label>
 		<input id="id_institution" type="text" name="institution" autocomplete="off" />
 	</div>
 	<a name="Employment"></a>
@@ -62,8 +62,16 @@
 		tal:condition="EmploymentHistory">
 		<tal:block repeat="ob EmploymentHistory">
 			<li>
-				<span tal:replace="ob/start" /> - <span tal:replace="ob/end" />, <span tal:replace="ob/institution" />
-				<a tal:attributes="href string:${here/absolute_url}/delete_EmploymentHistory?id=${ob/id}#Employment">Delete</a>
+				<span tal:replace="ob/start" /> - <span tal:replace="ob/end" />,
+				<tal:block define="ob_name ob/institution; inst python:here.find_InstitutionByName(ob_name)">
+				<span>
+					<span tal:condition="not: inst" tal:replace="ob/institution" />
+					<a style="text-decoration: underline;" tal:condition="inst"
+					tal:attributes="href string:${inst/absolute_url}"
+					tal:content="ob/institution" />
+				</span>
+				</tal:block>
+				<a tal:attributes="href string:${here/absolute_url}/delete_EmploymentHistory?id=${ob/id}#Employment" i18n:translate="">Delete</a>
 			</li>
 		</tal:block>
 	</ul>
