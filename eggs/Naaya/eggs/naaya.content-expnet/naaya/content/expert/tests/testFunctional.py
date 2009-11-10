@@ -42,8 +42,9 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless('<h1>Submit Expert</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
-            'lang', 'sortorder:utf8:ustring', 'email:utf8:ustring', 'country:utf8:ustring',
-            'ref_lang:utf8:ustring', 'name:utf8:ustring', 'surname:utf8:ustring',
+            'name:utf8:ustring', 'surname:utf8:ustring', 'lang',
+            'sortorder:utf8:ustring', 'email:utf8:ustring','instant_messaging:utf8:ustring',
+            'ref_lang:utf8:ustring', 'phone:utf8:ustring','mobile:utf8:ustring',
         ])
         found_controls = set(c.name for c in form.controls)
         self.failUnless(expected_controls.issubset(found_controls),
@@ -58,7 +59,8 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
 
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('<h1>Thank you for your submission</h1>' in html)
+
+        self.failUnless('The administrator will analyze your request and you will be notified about the result shortly.' in html)
 
         expert_id = (set(self.portal.myfolder.objectIds()) - set(['myexpert'])).pop()
         self.portal.myfolder[expert_id].approveThis()
@@ -66,7 +68,7 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.go('http://localhost/portal/myfolder/' + expert_id)
         html = self.browser.get_html()
         self.failUnless(re.search(r'<h1>.*mister expert.*</h1>', html, re.DOTALL))
-        self.failUnless('expert@example.com' in html)
+        self.failUnless('expert at example.com' in html)
 
         self.browser_do_logout()
 
@@ -76,7 +78,7 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
 
         #The object should not be added if the mandatory fields are not all filled
         form = self.browser.get_form('frmAdd')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
+        self.browser.clicked(form, self.browser.get_form_field(form, 'name'))
         form['name:utf8:ustring'] = 'mister expert'
         self.browser.submit()
         html = self.browser.get_html()
@@ -84,7 +86,7 @@ class NyExpertFunctionalTestCase(NaayaFunctionalTestCase):
         self.failUnless('Value required for "Surname"' in html)
 
         form = self.browser.get_form('frmAdd')
-        self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
+        self.browser.clicked(form, self.browser.get_form_field(form, 'name'))
         form['surname:utf8:ustring'] = 'knowitall'
         form['name:utf8:ustring'] = ''
         self.browser.submit()
