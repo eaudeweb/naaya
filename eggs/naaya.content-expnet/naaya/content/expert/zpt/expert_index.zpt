@@ -126,6 +126,11 @@
 			</tal:block>
 		</ul>
 	</div>
+	<div class="footer_link">
+		&#171; <a tal:attributes=" href string:${here/absolute_url}/experts_list" i18n:translate="">
+			Experts list
+		</a>
+	</div>
 
 </div>
 
