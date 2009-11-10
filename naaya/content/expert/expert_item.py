@@ -60,7 +60,7 @@ PREFIX_OBJECT = 'expert'
 ADDITIONAL_STYLE = open(ImageFile('www/expert.css', globals()).path).read()
 
 DEFAULT_SCHEMA = {
-    'personal_title':  dict(sortorder=100, widget_type='String', label='Title', required=True, localized=True),
+    'personal_title':  dict(sortorder=100, widget_type='String', label='Personal title', localized=True),
     'surname':  dict(sortorder=110, widget_type='String', label='Surname', required=True),
     'name':     dict(sortorder=120, widget_type='String', label='Name', required=True),
     'email':    dict(sortorder=150, widget_type='String', label='Email address'),
