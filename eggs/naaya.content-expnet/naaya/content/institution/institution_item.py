@@ -511,7 +511,7 @@ class InstitutionLister(Implicit, Item):
         return catalog.search(dict)
 
 from Products.Naaya.NySite import NySite
-NySite.list_institutions = InstitutionLister('list_institutions')
+NySite.institutions_list = InstitutionLister('institutions_list')
 
 #manage_addNyInstitution_html = PageTemplateFile('zpt/institution_manage_add', globals())
 #manage_addNyInstitution_html.kind = config['meta_type']
