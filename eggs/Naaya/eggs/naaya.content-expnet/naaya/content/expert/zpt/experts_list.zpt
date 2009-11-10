@@ -32,7 +32,8 @@
 <div class="main-content"
 	tal:repeat="ob python: here.items_in_topic(topic=req_topic, objects=True)">
 	<div tal:condition="ob/picture" class="picture">
-		<img tal:attributes="src string:${ob/absolute_url}/render_picture" width="80" />
+		<img tal:attributes="src string:${ob/absolute_url}/render_picture"
+		alt="Expert picture" width="80" i18n:attributes="alt"/>
 	</div>
 	<div>
 		<h4><a tal:attributes="href ob/absolute_url" tal:content="ob/title" /></h4>
