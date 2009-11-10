@@ -28,7 +28,6 @@
 	<br />
 	<div class="field-inline">
 		<h2 i18n:translate="">Employment history</h2>
-		<br />
 		<label class="widget-title" for="id_start">Start year</label>
 		<input id="id_start" type="text" name="start" size="5" />
 		<label class="widget-title" for="id_end">End year</label>
