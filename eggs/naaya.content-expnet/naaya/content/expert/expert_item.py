@@ -46,6 +46,7 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.content.bfile.NyBlobFile import make_blobfile
+from Products.NaayaCore.managers.utils import utils
 
 #module constants
 METATYPE_OBJECT = 'Naaya Expert'
@@ -327,13 +328,14 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         current = schema_raw_data.pop('current', None)
         institution = schema_raw_data.pop('institution', None)
         if start: start = int(start)
-        if end: end = int(end)
         if current: current = True
-        else: current = False
+        if end: 
+            end = int(end)
+        else: 
+            current = True
         if start and (end or current) and institution:
             self.employment_history.append(EmploymentRecord(start, end, current, institution))
 
-        print self.employment_history
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
@@ -534,7 +536,8 @@ NySite.experts_list = ExpertsLister('experts_list')
 class EmploymentRecord(object):
 
     def __init__(self, start, end, current, institution):
-        self.id = self.utGenerateUID()
+        ut = utils()
+        self.id = ut.utGenerateUID()
         self.start = start
         self.end = end
         self.current = current
