@@ -61,15 +61,15 @@ ADDITIONAL_STYLE = open(ImageFile('www/expert.css', globals()).path).read()
 
 DEFAULT_SCHEMA = {
     'personal_title':  dict(sortorder=100, widget_type='String', label='Personal title', localized=True),
-    'surname':  dict(sortorder=110, widget_type='String', label='Surname', required=True),
-    'name':     dict(sortorder=120, widget_type='String', label='Name', required=True),
+    'name':     dict(sortorder=110, widget_type='String', label='Name', required=True),
+    'surname':  dict(sortorder=120, widget_type='String', label='Surname', required=True),
     'email':    dict(sortorder=150, widget_type='String', label='Email address'),
     'phone':    dict(sortorder=170, widget_type='String', label='Phone'),
     'mobile':   dict(sortorder=180, widget_type='String', label='Mobile phone'),
     'webpage':  dict(sortorder=190, widget_type='String', label='Webpage'),
     'instant_messaging':  dict(sortorder=200, widget_type='String', label='Instant messaging'),
-    'main_topics':  dict(sortorder=220, widget_type='SelectMultiple', label='Main topics', list_id='experts_topics'),
-    'sub_topics':  dict(sortorder=230, widget_type='SelectMultiple', label='Subtopics', list_id='experts_topics'),
+    'main_topics':  dict(sortorder=220, widget_type='SelectMultiple', label='Main areas of expertise', list_id='experts_topics'),
+    'sub_topics':  dict(sortorder=230, widget_type='SelectMultiple', label='Secondary areas of expertise', list_id='experts_topics'),
     'ref_lang': dict(sortorder=240, widget_type='String', label='Working language(s)'),
 }
 DEFAULT_SCHEMA.update(deepcopy(NY_CONTENT_BASE_SCHEMA))
@@ -165,7 +165,7 @@ def addNyExpert(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     _send_notifications = schema_raw_data.pop('_send_notifications', True)
 
-    _title = '%s %s' % (schema_raw_data.get('surname',''), schema_raw_data.get('name',''))
+    _title = '%s %s' % (schema_raw_data.get('name',''), schema_raw_data.get('surname',''))
     schema_raw_data['title'] = _title
     _contact_word = schema_raw_data.get('contact_word', '')
 
