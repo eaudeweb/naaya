@@ -111,8 +111,7 @@ class CSVImportTool(Implicit, Item):
             location_obj = self.getParentNode()
             reader = UnicodeReader(data)
 
-            # build a list of property names based on the CSV header row
-            header = reader.next()
+            # build a list of property names based on the object schema
             prop_map = {}
             for widget in schema.listWidgets():
                 prop_name = widget.prop_name()
@@ -128,9 +127,6 @@ class CSVImportTool(Implicit, Item):
                 else:
                     prop_map[widget.title] = {'column': prop_name, 'widget': widget}
 
-            columns = [prop_map[title]['column'] for title in header]
-            widgets = [prop_map[title]['widget'] for title in header]
-
         except Exception, e:
             if REQUEST is None:
                 raise
@@ -145,13 +141,16 @@ class CSVImportTool(Implicit, Item):
 
         else:
             record_number = 0
+            header = reader.next()
             for row in reader:
                 try:
                     record_number += 1
                     properties = {}
-                    for key, widget, value in zip(columns, widgets, row):
+                    for column, value in zip(header, row):
                         if value == '':
                             continue
+                        key = prop_map[column]['column']
+                        widget = prop_map[column]['widget']
                         properties[key] = widget.convert_from_user_string(value)
                     properties = self.do_geocoding(properties)
                     ob_id = add_object(location_obj, _send_notifications=False, **properties)
