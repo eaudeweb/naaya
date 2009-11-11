@@ -83,7 +83,9 @@
 		tal:condition="EmploymentHistory">
 		<tal:block repeat="ob EmploymentHistory">
 			<li tal:attributes="id string:employment_${ob/id}">
-				<span tal:replace="ob/start" /> - <span tal:replace="ob/end" />,
+				<span tal:condition="ob/start_date" tal:replace="ob/start_date" /><span tal:condition="not:ob/start_date" i18n:translate="" >Unknown</span>
+				-
+				<span tal:condition="ob/end_date" tal:replace="ob/end_date" /><span tal:condition="not:ob/end_date" i18n:translate="" >Present</span>,
 				<tal:block define="ob_name ob/institution; inst python:here.find_InstitutionByName(ob_name)">
 				<span>
 					<span tal:condition="not: inst" tal:replace="ob/institution" />
