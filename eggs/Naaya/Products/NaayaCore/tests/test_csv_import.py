@@ -20,9 +20,14 @@
 from unittest import TestSuite, makeSuite
 from StringIO import StringIO
 
+from zope import component, interface
+from zope.component.globalregistry import getGlobalSiteManager
+
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
+from Products.NaayaCore.interfaces import ICSVImportExtraColumns
+from naaya.content.url.interfaces import INyURL
 
 csv_data = ('Title,Description,Automatically redirect to the given URL,URL\n'
     'My URL 1,The best URL,no,http://example.com\n'
@@ -130,6 +135,31 @@ class NyCSVImportTest(NaayaTestCase):
     def test_import_bad_destination(self):
         # TODO
         pass
+
+    def test_extra_csv_columns(self):
+        csv_with_extra = ('Title,something,something_else\n'
+                          'TY,asdf,qwer\n')
+        extra_data = []
+
+        class UrlAdapter(object):
+            interface.implements(ICSVImportExtraColumns)
+            component.adapts(INyURL)
+            def __init__(self, ob):
+                self.ob = ob
+            def handle_columns(self, extra_properties):
+                extra_data.append(extra_properties)
+
+        reg = getGlobalSiteManager()
+        reg.registerAdapter(UrlAdapter)
+
+        self.portal.imported.csv_import.do_import(meta_type='Naaya URL',
+            data=StringIO(csv_with_extra))
+
+        self.assertEqual(self.portal.imported['ty'].title, 'TY')
+        self.assertEqual(extra_data, [{'something': 'asdf',
+                                       'something_else': 'qwer'}])
+
+        reg.unregisterAdapter(UrlAdapter)
 
 class CSVImportFunctionalTests(NaayaFunctionalTestCase):
 
