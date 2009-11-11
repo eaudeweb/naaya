@@ -36,33 +36,26 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
     def test_main(self):
         """ Add, Find, Edit and Delete Naaya Experts """
         #add NyExpert
-        addNyExpert(self._portal().info, id='expert', name='Expert Name', surname='Expert Surname', lang='en')
-        addNyExpert(self._portal().info, id='expert_fr', name='Expert Name FR', surname='Expert Surname FR', lang='fr')
+        addNyExpert(self._portal().info, id='expert', name='Expert Name', surname='Expert Surname')
         
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Expert'])
         
         #get added NyExpert
         for x in meta:
-            if x.getLocalProperty('name', 'en') == 'Expert Name':
+            if x.name == 'Expert Name':
                 meta = x
-            if x.getLocalProperty('name', 'fr') == 'Expert Name FR':
-                meta_fr = x
         
-        self.assertEqual(meta.getLocalProperty('name', 'en'), 'Expert Name')
-        self.assertEqual(meta_fr.getLocalProperty('name', 'fr'), 'Expert Name FR')
+        self.assertEqual(meta.name, 'Expert Name')
         
         #change NyExpert name
-        meta.saveProperties(name='Expert Name edited', surname='Expert Surname edited', lang='en')
-        meta_fr.saveProperties(name='Expert Name FR edited', surname='Expert Surname FR edited', lang='fr')
+        meta.saveProperties(name='Expert Name edited', surname='Expert Surname edited')
         
-        self.assertEqual(meta.getLocalProperty('name', 'en'), 'Expert Name edited')
-        self.assertEqual(meta_fr.getLocalProperty('name', 'fr'), 'Expert Name FR edited')
+        self.assertEqual(meta.name, 'Expert Name edited')
         
         self.assertEqual(meta.sortorder, 100)
         
         #delete NyExpert
         self._portal().info.manage_delObjects([meta.id])
-        self._portal().info.manage_delObjects([meta_fr.id])
         
         meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Expert'])
         self.assertEqual(meta, [])
