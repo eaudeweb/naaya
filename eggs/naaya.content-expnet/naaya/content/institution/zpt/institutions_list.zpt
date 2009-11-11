@@ -6,7 +6,7 @@
 <div class="boxes-right">
 	<div class="link-box">
 		<strong i18n:translate="">Search institutions</strong>
-		<form tal:attributes="action string:${here/absolute_url}" method="get">
+		<form tal:attributes="action string:${here/absolute_url}" method="get" name="frmSearch">
 			<input type="text" size="30" name="q" tal:attributes="value req_filter" />
 			<input tal:condition="req_topic" type="hidden" name="topic" tal:attributes="value req_topic" />
 			<input type="submit" name="search" value="Go" i18n:attributes="value"/>
