@@ -6,9 +6,9 @@ Usage:
 Windows
 =======
 - cd path\to\zope\instance
-- bin\zopectl test -vp NaayaContent.NyInstitution
+- bin\zopectl test -vp NaayaContent.NyExpert
 
 UNIX
 ====
 - cd path/to/zope/instance
-- bin/zopectl test -vp NaayaContent.NyInstitution
+- bin/zopectl test -vp NaayaContent.NyExpert

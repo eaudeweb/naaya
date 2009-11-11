@@ -68,7 +68,7 @@
 		<span tal:content="address"/>
 	</div>
 	<div tal:condition="main_topics">
-		<h4 i18n:translate="">Main area of expertise</h4>
+		<h4 i18n:translate="">Main topics covered</h4>
 		<ul>
 			<tal:block repeat="topic main_topics">
 				<li tal:content="topic/title"/>
@@ -76,7 +76,7 @@
 		</ul>
 	</div>
 	<div tal:condition="sub_topics">
-		<h4 i18n:translate="">Secondary area of expertise</h4>
+		<h4 i18n:translate="">Secondary topics covered</h4>
 		<ul>
 			<tal:block repeat="topic sub_topics">
 				<li tal:content="topic/title"/>
