@@ -19,7 +19,7 @@
 # Alin Voinea, Eau de Web
 
 from unittest import TestSuite, makeSuite
-from naaya.content.expert.expert_item import addNyExpert
+from naaya.content.institution.institution_item import addNyInstitution
 from Products.Naaya.tests import NaayaTestCase
 
 class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
@@ -27,44 +27,41 @@ class NaayaContentTestCase(NaayaTestCase.NaayaTestCase):
     """
     def afterSetUp(self):
         self.login()
-        self.install_content_type('Naaya Expert')
+        self.install_content_type('Naaya Institution')
         
     def beforeTearDown(self):
-        self.remove_content_type('Naaya Expert')
+        self.remove_content_type('Naaya Institution')
         self.logout()
 
     def test_main(self):
-        """ Add, Find, Edit and Delete Naaya Experts """
-        #add NyExpert
-        addNyExpert(self._portal().info, id='expert', name='Expert Name', surname='Expert Surname', lang='en')
-        addNyExpert(self._portal().info, id='expert_fr', name='Expert Name FR', surname='Expert Surname FR', lang='fr')
+        """ Add, Find, Edit and Delete Naaya Institutions """
+        #add NyInstitution
+        addNyInstitution(self._portal().info, id='myinstitution', title='My institution', lang='en')
+        addNyInstitution(self._portal().info, id='myfrenchinstitution', title='My french institution', lang='fr')
         
-        meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Expert'])
+        meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Institution'])
         
-        #get added NyExpert
+        #get added NyInstitution
         for x in meta:
-            if x.getLocalProperty('name', 'en') == 'Expert Name':
+            if x.getLocalProperty('title', 'en') == 'My institution':
                 meta = x
-            if x.getLocalProperty('name', 'fr') == 'Expert Name FR':
+            if x.getLocalProperty('title', 'fr') == 'My french institution':
                 meta_fr = x
         
-        self.assertEqual(meta.getLocalProperty('name', 'en'), 'Expert Name')
-        self.assertEqual(meta_fr.getLocalProperty('name', 'fr'), 'Expert Name FR')
+        #change NyInstitution title
+        meta.saveProperties(title='My edited institution', lang='en')
+        meta_fr.saveProperties(title='My edited french institution', lang='fr')
         
-        #change NyExpert name
-        meta.saveProperties(name='Expert Name edited', surname='Expert Surname edited', lang='en')
-        meta_fr.saveProperties(name='Expert Name FR edited', surname='Expert Surname FR edited', lang='fr')
-        
-        self.assertEqual(meta.getLocalProperty('name', 'en'), 'Expert Name edited')
-        self.assertEqual(meta_fr.getLocalProperty('name', 'fr'), 'Expert Name FR edited')
+        self.assertEqual(meta.getLocalProperty('title', 'en'), 'My edited institution')
+        self.assertEqual(meta_fr.getLocalProperty('title', 'fr'), 'My edited french institution')
         
         self.assertEqual(meta.sortorder, 100)
         
-        #delete NyExpert
+        #delete NyInstitution
         self._portal().info.manage_delObjects([meta.id])
         self._portal().info.manage_delObjects([meta_fr.id])
         
-        meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Expert'])
+        meta = self._portal().getCatalogedObjectsCheckView(meta_type=['Naaya Institution'])
         self.assertEqual(meta, [])
 
 def test_suite():
