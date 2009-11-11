@@ -588,7 +588,6 @@ if HAS_META_TYPE_INSTITUTION:
                     limit = int(REQUEST.form['limit'])
                 if q:
                     catalog = self.getCatalogTool()
-                    print q
                     q = '%s*' % q
                     lst = catalog.search({'meta_type' : 'Naaya Institution', 'title' : q}) #@WARNING: Hard-coded meta_type
                     if len(lst) > limit:
