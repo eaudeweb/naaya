@@ -441,15 +441,15 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
 
     def delete_EmploymentHistory(self, REQUEST=None):
         """ Delete one record from employment history """
-        id = REQUEST.form['id']
-        ob = None
-        for x in self.employment_history:
-            if x.id == id: ob = x
-        if ob:
-            del self.employment_history[self.employment_history.index(ob)]
-            self._p_changed = True
-        if REQUEST:
-            REQUEST.RESPONSE.redirect('%s/edit_html#Employment' % (self.absolute_url()))
+        if REQUEST.REQUEST_METHOD == 'POST':
+            id = REQUEST.form['id']
+            ob = None
+            for x in self.employment_history:
+                if x.id == id: ob = x
+            if ob:
+                del self.employment_history[self.employment_history.index(ob)]
+                self._p_changed = True
+            return 'success'
 
     def find_InstitutionByName(self, name):
         ctool = self.getCatalogTool()

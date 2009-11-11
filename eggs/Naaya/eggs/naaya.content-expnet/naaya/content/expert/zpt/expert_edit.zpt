@@ -20,6 +20,20 @@
 		});
 		<tal:block replace='structure string:</script>' />
 	</tal:block>
+	<tal:block replace='structure string:<script type="text/javascript">' />
+		function deleteEmploymentHistory(id) {
+			var url = '<span tal:replace="string:${here/absolute_url}/delete_EmploymentHistory" />';
+			jQuery.post(url, 
+								{'id' : id },
+								function(data, textStatus) {
+									if(data === 'success') {
+										$('#employment_' + id).remove();
+									}
+								},
+								'text'
+			);
+		}
+	<tal:block replace='structure string:</script>' />
 	<div class="field-inline">
 		<div tal:condition="here/picture|nothing">
 			<img tal:attributes="src string:${here/absolute_url}/render_picture" width="320" />
@@ -61,7 +75,7 @@
 	<ul tal:define="EmploymentHistory here/getEmploymentHistory"
 		tal:condition="EmploymentHistory">
 		<tal:block repeat="ob EmploymentHistory">
-			<li>
+			<li tal:attributes="id string:employment_${ob/id}">
 				<span tal:replace="ob/start" /> - <span tal:replace="ob/end" />,
 				<tal:block define="ob_name ob/institution; inst python:here.find_InstitutionByName(ob_name)">
 				<span>
@@ -71,7 +85,7 @@
 					tal:content="ob/institution" />
 				</span>
 				</tal:block>
-				<a tal:attributes="href string:${here/absolute_url}/delete_EmploymentHistory?id=${ob/id}#Employment" i18n:translate="">Delete</a>
+				<a tal:attributes="href string:javascript:deleteEmploymentHistory('${ob/id}');" i18n:translate="">Delete</a>
 			</li>
 		</tal:block>
 	</ul>
