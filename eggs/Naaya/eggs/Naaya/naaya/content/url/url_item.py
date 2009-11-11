@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
+from zope.interface import implements
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -42,6 +43,8 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
+
+from interfaces import INyURL
 
 #module constants
 PROPERTIES_OBJECT = {
@@ -205,6 +208,8 @@ class url_item(Implicit, NyContentData):
 
 class NyURL(url_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
     """ """
+
+    implements(INyURL)
 
     meta_type = config['meta_type']
     meta_label = config['label']

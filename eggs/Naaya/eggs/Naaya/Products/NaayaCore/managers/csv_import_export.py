@@ -41,6 +41,7 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.SchemaTool.widgets.GeoWidget import GeoWidget
 from Products.NaayaCore.GeoMapTool.managers import geocoding
+from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 
 class CSVImportTool(Implicit, Item):
     title = "CSV import"
@@ -146,8 +147,12 @@ class CSVImportTool(Implicit, Item):
                 try:
                     record_number += 1
                     properties = {}
+                    extra_properties = {}
                     for column, value in zip(header, row):
                         if value == '':
+                            continue
+                        if column not in prop_map:
+                            extra_properties[column] = value
                             continue
                         key = prop_map[column]['column']
                         widget = prop_map[column]['widget']
@@ -155,6 +160,10 @@ class CSVImportTool(Implicit, Item):
                     properties = self.do_geocoding(properties)
                     ob_id = add_object(location_obj, _send_notifications=False, **properties)
                     ob = location_obj._getOb(ob_id)
+                    if extra_properties:
+                        adapter = ICSVImportExtraColumns(ob, None)
+                        if adapter is not None:
+                            adapter.handle_columns(extra_properties)
                     ob.submitThis()
                     ob.approveThis()
                 except ValueError, e:
