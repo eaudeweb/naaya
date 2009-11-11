@@ -11,3 +11,9 @@ class INyItem(Interface):
 class INyFSFile(Interface):
     """ Interface for NyFSFile """
     pass
+
+class INyContentType(Interface):
+    """ """
+    def version_status():
+        """ returns html that discribes the versioning status """
+
