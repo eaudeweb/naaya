@@ -22,9 +22,6 @@ from Products.NaayaBase.constants import EXCEPTION_NOTAUTHORIZED,\
 
 #Python imports
 from datetime import datetime
-from naaya.content.expert.expert_item import METATYPE_OBJECT
-import re
-from cStringIO import StringIO
 import os, sys
 import simplejson as json
 from decimal import Decimal
@@ -71,7 +68,6 @@ DEFAULT_SCHEMA.update({
 })
 
 def setupContentType(site):
-    #@TODO: initialize the list of topics (only and only once per site)
     from skel import TOPICS
     ptool = site.getPortletsTool()
     itopics = getattr(ptool, 'institution_topics', None)
