@@ -1422,11 +1422,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         res = ', '.join(res)
         return '[%s]' % res.encode('utf-8')
 
-    def getSiteMap(self, expand=[], root=None, showitems=0):
+    def getSiteMap(self, expand=[], root=None, showitems=0, sort_order=1):
         #returns a list of objects with additional information
         #in order to draw the site map
         if root is None: root = self
-        return self.__getSiteMap(root, showitems, expand, 0)
+        return self.__getSiteMap(root, showitems, expand, 0, sort_order)
 
     def getSiteMapTrail(self, expand, tree):
         #given a list with all tree nodes, returns a string with all relatives urls
@@ -1457,12 +1457,12 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             return folder_ob.getFolders(), folder_ob.getObjects(), ppath
         return [x for x in self.objectValues(self.get_naaya_containers_metatypes()) if x.submitted==1], [], ''
 
-    def __getSiteMap(self, root, showitems, expand, depth):
+    def __getSiteMap(self, root, showitems, expand, depth, sort_order=1):
         #site map core
         l_tree = []
         if root is self: l_folders = [x for x in root.objectValues(self.get_naaya_containers_metatypes()) if x.approved == 1 and x.submitted==1]
         else: l_folders = root.getPublishedFolders()
-        l_folders = self.utSortObjsListByAttr(l_folders, 'sortorder')
+        l_folders = self.utSortObjsListByAttr(l_folders, 'sortorder', sort_order)
         for l_folder in l_folders:
             if (len(l_folder.objectValues(self.get_naaya_containers_metatypes())) > 0) or ((len(l_folder.getObjects()) > 0) and showitems==1):
                 if l_folder.absolute_url(1) in expand or 'all' in expand:
@@ -1470,7 +1470,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     if showitems:
                         for l_item in l_folder.getPublishedObjects():
                             l_tree.append((l_item, -1, depth+1))
-                    l_tree.extend(self.__getSiteMap(l_folder, showitems, expand, depth+1))
+                    l_tree.extend(self.__getSiteMap(l_folder, showitems, expand, depth+1, sort_order))
                 else:
                     l_tree.append((l_folder, 1, depth))
             else:

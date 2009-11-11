@@ -4,7 +4,7 @@
 					site_url here/absolute_url;
 					expand python:request.get('expand', '');
 					expand_list python:here.splitToList(expand);
-					tree python:here.getSiteMap(expand_list, None, 0);
+					tree python:here.getSiteMap(expand_list, None, 0, 0);
 					folder python:request.get('folder', '');
 					url python:request.get('url', '')">
 
