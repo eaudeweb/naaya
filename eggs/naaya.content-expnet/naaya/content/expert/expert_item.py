@@ -344,15 +344,7 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         end = schema_raw_data.pop('end', None)
         current = schema_raw_data.pop('current', None)
         institution = schema_raw_data.pop('institution', None)
-        if start: start = int(start)
-        if current: current = True
-        if end: 
-            end = int(end)
-        else: 
-            current = True
-        if start and (end or current) and institution:
-            self.employment_history.append(EmploymentRecord(start, end, current, institution))
-
+        self.add_EmploymentRecord(start, end, institution, current)
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
@@ -366,6 +358,7 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
 
         if self.discussion: self.open_for_comments()
         else: self.close_for_comments()
+
         self._p_changed = 1
         self.recatalogNyObject(self)
         #log date
@@ -438,6 +431,25 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         """ """
         self.employment_history.sort(key=lambda ob: ob.start, reverse=True)
         return self.employment_history
+
+
+    def add_EmploymentRecord(self, start, end, institution, current):
+        """
+        Add new employment record.
+        Required parameters are institution and one of: end or current. If this rule is not fullfilled, no record is added.
+        @warning: This do not commits Zope transaction!
+        @param start: Start year - str or int
+        @param end: End year - str or int
+        @param institution: Institution name - str
+        @param current: Is still employed there - anything True or False
+
+        """
+        if start: start = int(start)
+        if end:
+            end = int(end)
+        if institution and (current or end):
+            self.employment_history.append(EmploymentRecord(start, end, current, institution))
+
 
     def delete_EmploymentHistory(self, REQUEST=None):
         """ Delete one record from employment history """
@@ -609,6 +621,14 @@ class EmploymentRecord(object):
         self.end = end
         self.current = current
         self.institution = institution
+
+    def start_date(self):
+        return self.start
+
+    def end_date(self):
+        if self.current:
+            return None
+        return self.end
 
 config.update({
     'constructors': (expert_add_html, addNyExpert),
