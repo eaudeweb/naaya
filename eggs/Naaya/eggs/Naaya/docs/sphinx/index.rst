@@ -4,10 +4,11 @@ Naaya API documentation
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    authentication_tool
    pluggable_content
+   permissions
 
 Indices and tables
 ==================

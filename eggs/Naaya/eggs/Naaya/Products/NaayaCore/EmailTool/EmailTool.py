@@ -35,6 +35,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.constants import *
 import EmailTemplate
 from EmailSender import build_email
+from naaya.core.permissions import naaya_admin
 
 def manage_addEmailTool(self, REQUEST=None):
     """ """
@@ -115,6 +116,16 @@ class EmailTool(Folder):
 
     def _get_from_address(self):
         return self.getSite().mail_address_from
+
+    _errors_report = PageTemplateFile('zpt/configuration_errors_report', globals())
+    security.declareProtected(naaya_admin, 'configuration_errors_report')
+    def configuration_errors_report(self):
+        errors = []
+        if not (self.mail_server_name and self.mail_server_port):
+            errors.append('Mail server address/port not configured')
+        if not self._get_from_address():
+            errors.append('"From" address not configured')
+        return self._errors_report(errors=errors)
 
     #api
     security.declareProtected(view, 'sendEmail')
