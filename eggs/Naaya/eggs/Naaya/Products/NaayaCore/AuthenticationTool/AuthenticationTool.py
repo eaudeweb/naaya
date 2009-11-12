@@ -579,8 +579,32 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     if len(buf1)==0: break
         return r
 
+    security.declarePrivate('get_user_with_userid')
+    def get_user_with_userid(self, userid):
+        """
+        Search for a user with the given ID, in this user folder and
+        external sources. Returns None if user not found, or is anonymous.
+        """
+        if userid is None:
+            return None
+
+        if userid in self.user_names():
+            return self.getUser(userid)
+
+        for source in self.getSources():
+            user = source.getUserFolder().getUser(userid)
+            if user is not None:
+                return user
+
+        return None
+
     security.declarePrivate('name_from_userid')
     def name_from_userid(self, userid):
+        """
+        Given a userid, try to get its full name. If userid is None then we
+        assume it's an anonymous user, and return `"Anonymous User"`. If we
+        can't find the user, return an empty string.
+        """
         if userid is None:
             return "Anonymous User"
 
@@ -597,6 +621,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
     security.declarePrivate('get_current_userid')
     def get_current_userid(self):
+        """
+        Get the userid of the currently logged-in user. Returns `None` if
+        the current user is anonymous.
+        """
         if self.isAnonymousUser():
             return None
         else:

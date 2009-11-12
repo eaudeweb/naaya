@@ -179,6 +179,8 @@ class NotificationTool(Folder):
         for subscription in self.list_subscriptions(notif_type='instant'):
             if not is_subpath(ob_path, subscription.location):
                 continue
+            if not self._has_view_permission(subscription.user_id, ob):
+                continue
             messages_by_user[subscription.user_id] = {
                 'ob': ob,
                 'person': user_id,
@@ -208,6 +210,17 @@ class NotificationTool(Folder):
 
     def _get_site(self):
         return self.getSite()
+
+    def _has_view_permission(self, user_id, ob):
+        acl_users = self.getSite().getAuthenticationTool()
+        user = acl_users.get_user_with_userid(user_id)
+
+        if user is None:
+            return False
+        elif user.has_permission(view, ob):
+            return True
+        else:
+            return False
 
     def _send_notifications(self, messages_by_user, template):
         """ send the notifications described in the `messages_by_user` data structure """
@@ -268,6 +281,8 @@ class NotificationTool(Folder):
             ob_path = ob.get_path_in_site()
             for subscription in self.list_subscriptions(notif_type=notif_type):
                 if not is_subpath(ob_path, subscription.location):
+                    continue
+                if not self._has_view_permission(subscription.user_id, ob):
                     continue
                 msgs_for_user = objects_by_user.setdefault(subscription.user_id, [])
                 msgs_for_user.append({'ob': ob})

@@ -85,6 +85,34 @@ class NotificationsTest(NaayaFunctionalTestCase):
         remove_subscription = self.portal.portal_notification.remove_subscription
         remove_subscription('contributor', '', 'instant', 'en')
         remove_subscription('admin', '', 'weekly', 'en')
+        transaction.commit()
+
+    def test_notify_with_restricted_obj(self):
+        add_subscription = self.portal.portal_notification.add_subscription
+        add_subscription('contributor', '', 'instant', 'en')
+        add_subscription('reviewer', '', 'instant', 'en')
+        self.portal.notifol._View_Permission = ('Reviewer','Manager')
+        transaction.commit()
+
+        self.browser_do_login('admin', '')
+
+        self.browser.go('http://localhost/portal/notifol/notidoc/edit_html')
+        form = self.browser.get_form('frmEdit')
+
+        form['description:utf8:ustring'] = 'i have been changed'
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.submit()
+
+        self.browser_do_logout()
+
+        notifications = self._fetch_test_notifications()
+        self.assertEqual(len(notifications), 1)
+        self.assertEqual(notifications[0][1], 'reviewer@example.com')
+
+        remove_subscription = self.portal.portal_notification.remove_subscription
+        remove_subscription('contributor', '', 'instant', 'en')
+        remove_subscription('reviewer', '', 'instant', 'en')
+        transaction.commit()
 
 def test_suite():
     suite = TestSuite()
