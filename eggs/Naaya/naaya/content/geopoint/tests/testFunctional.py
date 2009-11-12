@@ -173,9 +173,9 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin):
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)
 
-        links_to_story = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/mygeopoint'})
-        self.assertTrue(len(links_to_story) == 1)
-        self.assertTrue(links_to_story[0].string == 'My geopoint')
+        links_to_geopoint = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/mygeopoint'})
+        self.assertTrue(len(links_to_geopoint) == 1)
+        self.assertTrue(links_to_geopoint[0].string == 'My geopoint')
 
         self.browser_do_logout()
 

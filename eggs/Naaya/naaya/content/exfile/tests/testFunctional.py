@@ -210,9 +210,9 @@ class NyExFileFunctionalTestCase(NaayaFunctionalTestCase, ExFileMixin):
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)
 
-        links_to_story = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/myexfile'})
-        self.assertTrue(len(links_to_story) == 1)
-        self.assertTrue(links_to_story[0].string == 'My file')
+        links_to_extfile = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/myexfile'})
+        self.assertTrue(len(links_to_extfile) == 1)
+        self.assertTrue(links_to_extfile[0].string == 'My file')
 
         self.browser_do_logout()
 

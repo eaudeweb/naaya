@@ -168,9 +168,9 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase, ContactMixin):
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)
 
-        links_to_story = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/mycontact'})
-        self.assertTrue(len(links_to_story) == 1)
-        self.assertTrue(links_to_story[0].string == 'My contact')
+        links_to_contact = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/mycontact'})
+        self.assertTrue(len(links_to_contact) == 1)
+        self.assertTrue(links_to_contact[0].string == 'My contact')
 
         self.browser_do_logout()
 
