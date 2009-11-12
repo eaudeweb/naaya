@@ -1,6 +1,7 @@
 import re
 from unittest import TestSuite, makeSuite
 from copy import deepcopy
+from BeautifulSoup import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -148,6 +149,22 @@ class NyPublicationFunctionalTestCase(NaayaFunctionalTestCase, PublicationMixin)
         self.browser.submit()
 
         self.failUnlessEqual(self.portal.myfolder.mypublication.title, 'new_publication_title')
+
+        self.browser_do_logout()
+
+    def test_view_in_folder(self):
+        self.browser_do_login('admin', '')
+
+        self.browser.go('http://localhost/portal/myfolder')
+        html = self.browser.get_html()
+        soup = BeautifulSoup(html)
+
+        tables = soup.findAll('table', id='folderfile_list')
+        self.assertTrue(len(tables) == 1)
+
+        links_to_consultation = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/mypublication'})
+        self.assertTrue(len(links_to_consultation) == 1)
+        self.assertTrue(links_to_consultation[0].string == 'My publication')
 
         self.browser_do_logout()
 
