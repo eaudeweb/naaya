@@ -20,6 +20,7 @@
 import re
 from unittest import TestSuite, makeSuite
 from StringIO import StringIO
+from BeautifulSoup import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -171,6 +172,22 @@ class NyFileFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         self.failUnlessEqual(self.portal.myfolder.myfile.title, 'new_file_title')
+
+        self.browser_do_logout()
+
+    def test_view_in_folder(self):
+        self.browser_do_login('admin', '')
+
+        self.browser.go('http://localhost/portal/myfolder')
+        html = self.browser.get_html()
+        soup = BeautifulSoup(html)
+
+        tables = soup.findAll('table', id='folderfile_list')
+        self.assertTrue(len(tables) == 1)
+
+        links_to_story = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/myfile'})
+        self.assertTrue(len(links_to_story) == 1)
+        self.assertTrue(links_to_story[0].string == 'My file')
 
         self.browser_do_logout()
 
