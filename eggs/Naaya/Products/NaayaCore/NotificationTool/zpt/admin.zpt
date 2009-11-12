@@ -3,6 +3,9 @@
 <h1 metal:fill-slot="title" i18n:translate="">Notifications administration</h1>
 <tal:block metal:fill-slot="section" tal:define="get_config python:here.get_config">
 
+<tal:block define="email_tool here/getEmailTool"
+           content="structure email_tool/configuration_errors_report" />
+
 <tal:block define="global days_of_week python:['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']" />
 
 <form method="post" tal:attributes="action string:${here/absolute_url}/admin_settings">
