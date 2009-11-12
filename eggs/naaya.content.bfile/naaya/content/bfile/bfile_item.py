@@ -31,6 +31,8 @@ from AccessControl.Permissions import view_management_screens, view
 from OFS.Image import cookId
 from persistent.list import PersistentList
 from zExceptions import NotFound
+from zope.event import notify
+from naaya.content.base.events import NyContentObjectAddedEvent
 
 #Product imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -142,7 +144,7 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
-    self.notifyFolderMaintainer(self, ob)
+    notify(NyContentObjectAddedEvent(ob, schema_raw_data))
     #log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
