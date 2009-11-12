@@ -21,6 +21,8 @@ import re
 from unittest import TestSuite, makeSuite
 from datetime import date, timedelta
 from StringIO import StringIO
+from BeautifulSoup import BeautifulSoup
+from copy import deepcopy
 
 import transaction
 
@@ -29,8 +31,28 @@ from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.talkback.tbconsultation_item import addNyTalkBackConsultation
 from naaya.content.talkback.comment_item import addComment
 
-class ConsultationBasicTestCase(NaayaFunctionalTestCase):
+class ConsultationMixin(object):
+    """ testing mix-in that installs the Naaya Talkback Consultation content type """
+
+    consultation_metatype = 'Naaya TalkBack Consultation'
+    consultation_permission = 'Naaya - Add Naaya TalkBack Consultation objects'
+
+    def consultation_install(self):
+        self.portal.manage_install_pluggableitem(self.consultation_metatype)
+        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
+        add_content_permissions['permissions'].append(self.consultation_permission)
+        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
+
+    def consultation_uninstall(self):
+        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
+        add_content_permissions['permissions'].remove(self.consultation_permission)
+        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
+        self.portal.manage_uninstall_pluggableitem(self.consultation_metatype)
+
+
+class ConsultationBasicTestCase(NaayaFunctionalTestCase, ConsultationMixin):
     def afterSetUp(self):
+        self.consultation_install()
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         start_date = (date.today() - timedelta(days=1)).strftime('%d/%m/%Y')
         end_date = (date.today() + timedelta(days=10)).strftime('%d/%m/%Y')
@@ -41,6 +63,7 @@ class ConsultationBasicTestCase(NaayaFunctionalTestCase):
 
     def beforeTearDown(self):
         self.portal.manage_delObjects(['myfolder'])
+        self.consultation_uninstall()
         transaction.commit()
 
     def test_create_consultation(self):
@@ -100,6 +123,22 @@ class ConsultationBasicTestCase(NaayaFunctionalTestCase):
         comment = paragraph.objectValues()[0]
         self.assertEqual(comment.contributor, 'admin')
         self.assertEqual(comment.message, 'I has something to say')
+
+        self.browser_do_logout()
+
+    def test_view_in_folder(self):
+        self.browser_do_login('admin', '')
+
+        self.browser.go('http://localhost/portal/myfolder')
+        html = self.browser.get_html()
+        soup = BeautifulSoup(html)
+
+        tables = soup.findAll('table', id='folderfile_list')
+        self.assertTrue(len(tables) == 1)
+
+        links_to_consultation = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/test-consultation'})
+        self.assertTrue(len(links_to_consultation) == 1)
+        self.assertTrue(links_to_consultation[0].string == 'Test consultation')
 
         self.browser_do_logout()
 
