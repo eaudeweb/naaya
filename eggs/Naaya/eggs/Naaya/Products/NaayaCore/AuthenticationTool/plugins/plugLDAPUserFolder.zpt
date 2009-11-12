@@ -18,14 +18,22 @@ function pickLocation()
 function createKey(key)
 {    document.userRoles.location.value = key;}
 
-function fPickRoles(url)
+var set_roles_target = '';
+function fPickRoles(url, target)
 {
+    set_roles_target = target;
     var wnd = window.open(url, "pickroles", "height=400,width=500,status=no,resizable=no,toolbar=no,menubar=no,location=no,scrollbars=yes");
     wnd.focus();
 }
 
 function fSetRoles(role, dn) {
-    document.getElementById('ldap_group').value = role;
+    if (set_roles_target == 'ldap_group') {
+        document.getElementById('ldap_group').value = role;
+        }
+    else {
+        document.frmRoles.role.value = role;
+        document.frmRoles.dn.value = dn;
+    }
 }
 var isSelected = false;
 function toggleSelect()
@@ -194,6 +202,15 @@ function toggleSelect()
 			<input type="submit" name="search_user" value="Search" />
 		</td>
 	</tr>
+	<tr>
+		<td width="20"><div style="white-space: nowrap; "><label for="role">which have the role</label> </div></td>
+		<td width="1"><input type="text" name="role" size="15" />
+			<input type="hidden" name="dn" /></td>
+		<td width="1" nowrap class="padding_td"><input type="button" name="pickroles2" value="   Pick   "
+						tal:attributes="onclick string:javascript:fPickRoles('${here/getPluginPath}/pickroles_html', 'dn')" /></td>
+		<td width="1">&nbsp;</td>
+		<td class="padding_td"> <input type="submit" name="search_role" value="Search"></td>
+	</tr>
 </table>
 </form>
 
@@ -276,7 +293,7 @@ function toggleSelect()
         <label for="ldap_group" i18n:translate="">LDAP group</label>
         <input type="text" id="ldap_group" name="group"/>
         <input type="button" name="pickroles2" value="Pick" 
-               tal:attributes="onclick string:javascript:fPickRoles('${here/getPluginPath}/pickroles_html')" />
+               tal:attributes="onclick string:javascript:fPickRoles('${here/getPluginPath}/pickroles_html', 'ldap_group')" />
         </div>
 
         <div class="field">
