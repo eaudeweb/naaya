@@ -99,6 +99,7 @@ from NyVersions import NyVersions
 from NyFolder import NyFolder, addNyFolder, importNyFolder
 from Products.NaayaCore.NotificationTool.Subscriber import Subscriber
 from Products.NaayaBase.gtranslate import translate, translation_url
+from NyFolderBase import NyFolderBase
 
 #reCaptcha
 from Products.NaayaCore.managers import recaptcha_utils
@@ -138,7 +139,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     contenttypes_tool,
     session_manager,
     portlets_manager,
-    networkportals_manager):
+    networkportals_manager,
+    NyFolderBase):
     """ """
 
     implements(INySite)
@@ -3554,6 +3556,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(view, 'folder_lib_toolbar_buttons')
     folder_lib_toolbar_buttons = PageTemplateFile(
         'zpt/folder_lib_toolbar_buttons', globals())
+
+    security.declareProtected(view, 'folder_listing')
+    folder_listing = PageTemplateFile(
+        'zpt/folder_listing', globals())
 
     security.declareProtected(view, 'macro_utils')
     macro_utils = PageTemplateFile('zpt/site_macro_utils', globals())

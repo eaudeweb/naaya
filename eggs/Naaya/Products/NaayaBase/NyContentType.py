@@ -27,11 +27,13 @@ from AccessControl import ClassSecurityInfo, SpecialUsers
 from AccessControl.Permissions import view
 from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from zope.interface import implements
 
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.NaayaCore.constants import ID_SCHEMATOOL
+from interfaces import INyContentType
 
 NY_CONTENT_BASE_SCHEMA = {
     'title':        dict(sortorder=10, widget_type='String', label='Title', required=True, localized=True),
@@ -105,6 +107,8 @@ class NyContentType:
     Base class for NyZzz classes - wrapper for NyContentData instances
     that handle editing, displaying, etc.
     """
+
+    implements(INyContentType)
 
     security = ClassSecurityInfo()
 
@@ -255,7 +259,6 @@ class NyContentType:
                 else:
                     return True, True
                     #return 'versionable, editable'
-
             else:
                 return False, True
                 #return 'not-versionable, editable'

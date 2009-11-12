@@ -25,10 +25,13 @@ from BeautifulSoup import BeautifulSoup
 # Zope
 import transaction
 from Testing import ZopeTestCase
+from zope import component
 
 # Products
 from Products.Naaya.NyFolder import NyFolder, addNyFolder
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
+from Products.Naaya.NyFolderBase import NyContentTypeViewAdapter
+from Products.Naaya.interfaces import IObjectView
 
 class FolderIndexInfo:
     def __init__(self, browser, parent, name):
@@ -199,7 +202,7 @@ class TestNyFolderFileListing(NaayaFunctionalTestCase):
 
 
     def test_view_folder(self):
-        # view folder only if approved or del_perm or edit_perm
+        # view folder only if approved or del_perm or copy_perm or edit_perm
         # edit link to folder only if edit_perm
         # checkbox for folder only if del_perm or copy_perm
         # if approved folder icon is icon, else folder icon is icon_marked
@@ -289,11 +292,14 @@ class TestNyFolderFileListing(NaayaFunctionalTestCase):
         # folder is in parent and not in parent 2
         self.assertTrue(hasattr(self.parent, self.folder_name))
         self.assertFalse(hasattr(self.parent2, self.folder_name))
-        # no links in parent
+        # only index link in parent
         parent_info = FolderIndexInfo(self.browser, self.parent, self.folder_name)
         self.assertTrue(parent_info.has_table_head)
-        self.assertFalse(parent_info.has_checkbox)
-        self.assertFalse(parent_info.has_index_link)
+        self.assertTrue(parent_info.has_checkbox)
+        self.assertTrue(parent_info.has_index_link)
+        self.assertFalse(parent_info.is_restricted)
+        self.assertFalse(parent_info.is_limited)
+        self.assertTrue(parent_info.has_icon_marked)
         self.assertFalse(parent_info.has_edit_link)
 
         # check folder description
@@ -417,6 +423,12 @@ class TestNyFolderFileListing(NaayaFunctionalTestCase):
         self.assertTrue(parent2_info.has_edit_link)
 
         self.browser_do_logout()
+
+    def test_view_adapter(self):
+        adapter = component.queryAdapter(self.portal.info)
+        self.assertTrue(adapter is not None)
+        self.assertTrue(isinstance(adapter, NyContentTypeViewAdapter))
+
 
 def test_suite():
     suite = TestSuite()

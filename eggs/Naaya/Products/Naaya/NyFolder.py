@@ -45,6 +45,7 @@ from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyContentType import NyContentType
 from Products.NaayaCore.managers.csv_import_export import CSVImportTool, CSVExportTool
 from Products.NaayaCore.NotificationTool.Subscriber import Subscriber
+from NyFolderBase import NyFolderBase
 
 manage_addNyFolder_html = PageTemplateFile('zpt/folder_manage_add', globals())
 manage_addNyFolder_html.kind = METATYPE_FOLDER
@@ -163,7 +164,7 @@ def importNyFolder(self, param, id, attrs, content, properties, discussion, obje
         for object in objects:
             ob.import_data(object)
 
-class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, NyContentType):
+class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, NyContentType, NyFolderBase):
     """ """
 
     implements(INyFolder)
@@ -394,7 +395,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
 
     security.declareProtected(view, 'checkPermissionManageObjects')
     def checkPermissionManageObjects(self, sort_on='title', sort_order=0):
-        """ This function is called on the folder index and it checkes whether or not
+        """ Deprecated: This function was moved in NyFolderBase as folder_listing_info
+            This function is called on the folder index and it checkes whether or not
             to display the various buttons on that form
         """
         results_folders = []
@@ -485,8 +487,14 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
         can_operate = can_operate or btn_select
         return (btn_select, btn_delete, btn_copy, btn_cut, btn_paste, can_operate, result_mixed_objects)
 
-    def getObjects(self): return [x for x in self.objectValues(self.get_meta_types()) if x.submitted==1]
-    def getFolders(self): return [x for x in self.objectValues(METATYPE_FOLDER) if x.submitted==1]
+    def getObjects(self):
+        """ Deprecated: This function was moved in NyFolderBase as contained_objects """
+        return [x for x in self.objectValues(self.get_meta_types()) if x.submitted==1]
+
+    def getFolders(self):
+        """ Deprecated: This function was moved in NyFolderBase as contained_folders """
+        return [x for x in self.objectValues(METATYPE_FOLDER) if x.submitted==1]
+
     def hasContent(self): return (len(self.getObjects()) > 0) or (len(self.objectValues(METATYPE_FOLDER)) > 0)
 
     def getPublishedFolders(self):
@@ -1345,6 +1353,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
     security.declareProtected(view, 'check_item_title')
     def check_item_title(self, object, obj_title=''):
         """
+        Deprecated: This function was moved in NyFolderBase as item_has_title
         Checks if the object has no display title and if it
         has a title in at least one of the portal languages
         """
@@ -1529,7 +1538,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
 
 
 
-    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
+    security.declareProtected(PERMISSION_EDIT_OBJECTS, 'subobjects_html')
     def subobjects_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'folder_subobjects')
