@@ -17,6 +17,7 @@ Authentication Tool
      getUsersWithRole,
      getUserSource,
      getUsersFullNames,
+     get_user_with_userid,
      name_from_userid,
      get_current_userid,
      getUsersEmails,

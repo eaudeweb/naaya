@@ -29,11 +29,22 @@ from Products.NaayaCore.NotificationTool.NotificationTool \
     import set_testing_mode as set_notif_testing_mode
 from Products.NaayaCore.NotificationTool.NotificationTool import NotificationTool
 
-class TestObject(namedtuple('TestObject', 'title path modif_datetime')):
+class TestObject(object):
+    def __init__(self, title, path, modif_datetime):
+        self.title = title
+        self.path = path
+        self.modif_datetime = modif_datetime
+
     def get_path_in_site(self):
         return self.path
+
     def title_or_id(self):
         return self.title
+
+class RestrictedTestObject(TestObject):
+    def __init__(self, *args, **kwargs):
+        self.allowed = kwargs.pop('allowed', None)
+        super(RestrictedTestObject, self).__init__(*args, **kwargs)
 
 class TestedNotificationTool(NotificationTool):
     """
@@ -86,6 +97,12 @@ class TestedNotificationTool(NotificationTool):
             def getPortalTranslations(self):
                 return lambda msgid, lang: msgid
         return MockSite()
+
+    def _has_view_permission(self, user_id, ob):
+        if isinstance(ob, RestrictedTestObject):
+            if user_id not in ob.allowed:
+                return False
+        return True
 
 class NotificationsUnitTest(TestCase):
     """ unit test for notifications """
@@ -199,6 +216,67 @@ class NotificationsUnitTest(TestCase):
                 'instant [fol1/doc_a] mocky site'),
             ('notif@example.com', 'user3@example.com', 'notifications',
                 'instant [fol1/doc_a] mocky site'),
+        ]))
+
+class NotificationsRestrictedUnitTest(TestCase):
+    """ unit test for notifications on restricted objects """
+
+    def afterSetUp(self):
+        self.notif = TestedNotificationTool('notif', 'NotificationTool')
+        self.notif.config['enable_instant'] = True
+        self.notif.config['enable_daily'] = True
+        self.notif.config['enable_weekly'] = True
+        self.notif.config['enable_monthly'] = True
+        self._notifications = []
+        set_notif_testing_mode(True, save_to=self._notifications)
+
+    def beforeTearDown(self):
+        set_notif_testing_mode(False)
+        del self.notif
+
+    def _fetch_test_notifications(self):
+        notifications = list(self._notifications)
+        self._notifications[:] = []
+        return notifications
+
+    def test_restricted_instant(self):
+        self.notif.add_subscription('user1', 'fol1', 'instant', 'en')
+        self.notif.add_subscription('user2', 'fol1', 'instant', 'en')
+
+        ob1 = RestrictedTestObject('doc_a', 'fol1/doc_a', datetime(2009, 8, 3),
+                                   allowed=['user1'])
+        ob2 = RestrictedTestObject('doc_a', 'fol1/doc_b', datetime(2009, 8, 3),
+                                   allowed=['user2'])
+
+        self.notif.notify_instant(ob1, 'somebody')
+        self.notif.notify_instant(ob2, 'somebody')
+
+        self.assertEqual(set(self._fetch_test_notifications()), set([
+            ('notif@example.com', 'user1@example.com', 'notifications',
+                'instant [fol1/doc_a] mocky site'),
+            ('notif@example.com', 'user2@example.com', 'notifications',
+                'instant [fol1/doc_b] mocky site'),
+        ]))
+
+    def test_restricted_periodic(self):
+        self.notif.add_subscription('user1', 'fol1', 'weekly', 'en')
+        self.notif.add_subscription('user2', 'fol1', 'weekly', 'en')
+
+        self.notif._objects = [
+            RestrictedTestObject('doc_a', 'fol1/doc_a', datetime(2009, 8, 3),
+                                 allowed=['user1']),
+            RestrictedTestObject('doc_b', 'fol1/doc_b', datetime(2009, 8, 3),
+                                 allowed=['user2']),
+        ]
+
+        self.notif._send_newsletter('weekly',
+            datetime(2009, 7, 30), datetime(2009, 8, 5))
+
+        self.assertEqual(set(self._fetch_test_notifications()), set([
+            ('notif@example.com', 'user1@example.com', 'notifications',
+                'weekly [fol1/doc_a] mocky site'),
+            ('notif@example.com', 'user2@example.com', 'notifications',
+                'weekly [fol1/doc_b] mocky site'),
         ]))
 
 class CronTestedNotificationTool(NotificationTool):
@@ -435,6 +513,7 @@ class NotificationsUiApiTest(TestCase):
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(NotificationsUnitTest))
+    suite.addTest(makeSuite(NotificationsRestrictedUnitTest))
     suite.addTest(makeSuite(NotificationsCronUnitTest))
     suite.addTest(makeSuite(NotificationsUiApiTest))
     return suite
