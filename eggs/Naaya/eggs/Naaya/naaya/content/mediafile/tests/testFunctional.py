@@ -213,9 +213,9 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase, MediaFileMixin):
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)
 
-        links_to_story = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/mymediafile'})
-        self.assertTrue(len(links_to_story) == 1)
-        self.assertTrue(links_to_story[0].string == 'My media file')
+        links_to_mediafile = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/mymediafile'})
+        self.assertTrue(len(links_to_mediafile) == 1)
+        self.assertTrue(links_to_mediafile[0].string == 'My media file')
 
         self.browser_do_logout()
 

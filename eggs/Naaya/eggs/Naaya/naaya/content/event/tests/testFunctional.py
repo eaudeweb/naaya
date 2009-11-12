@@ -159,9 +159,9 @@ class NyEventFunctionalTestCase(NaayaFunctionalTestCase):
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)
 
-        links_to_story = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/myevent'})
-        self.assertTrue(len(links_to_story) == 1)
-        self.assertTrue(links_to_story[0].string == 'My event')
+        links_to_event = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/myevent'})
+        self.assertTrue(len(links_to_event) == 1)
+        self.assertTrue(links_to_event[0].string == 'My event')
 
         self.browser_do_logout()
 

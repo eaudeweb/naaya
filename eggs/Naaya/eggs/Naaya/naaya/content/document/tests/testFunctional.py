@@ -150,9 +150,9 @@ class NyDocumentFunctionalTestCase(NaayaFunctionalTestCase):
         tables = soup.findAll('table', id='folderfile_list')
         self.assertTrue(len(tables) == 1)
 
-        links_to_story = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/mydoc'})
-        self.assertTrue(len(links_to_story) == 1)
-        self.assertTrue(links_to_story[0].string == 'My document')
+        links_to_document = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/mydoc'})
+        self.assertTrue(len(links_to_document) == 1)
+        self.assertTrue(links_to_document[0].string == 'My document')
 
         self.browser_do_logout()
 
