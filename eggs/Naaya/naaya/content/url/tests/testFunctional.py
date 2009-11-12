@@ -1,5 +1,6 @@
 import re
 from unittest import TestSuite, makeSuite
+from BeautifulSoup import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
@@ -136,6 +137,22 @@ class NyURLFunctionalTestCase(NaayaFunctionalTestCase):
         self.browser.submit()
 
         self.failUnlessEqual(self.portal.myfolder.myurl.title, 'new_url_title')
+
+        self.browser_do_logout()
+
+    def test_view_in_folder(self):
+        self.browser_do_login('admin', '')
+
+        self.browser.go('http://localhost/portal/myfolder')
+        html = self.browser.get_html()
+        soup = BeautifulSoup(html)
+
+        tables = soup.findAll('table', id='folderfile_list')
+        self.assertTrue(len(tables) == 1)
+
+        links_to_url = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/myurl'})
+        self.assertTrue(len(links_to_url) == 1)
+        self.assertTrue(links_to_url[0].string == 'My url')
 
         self.browser_do_logout()
 

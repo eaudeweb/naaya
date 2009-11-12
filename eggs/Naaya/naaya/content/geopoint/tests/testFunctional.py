@@ -20,6 +20,7 @@
 import re
 from unittest import TestSuite, makeSuite
 from copy import deepcopy
+from BeautifulSoup import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
@@ -159,6 +160,22 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin):
         html = self.browser.get_html()
         self.failUnless('The form contains errors' in html)
         self.failUnless('Value required for "Title"' in html)
+
+        self.browser_do_logout()
+
+    def test_view_in_folder(self):
+        self.browser_do_login('admin', '')
+
+        self.browser.go('http://localhost/portal/myfolder')
+        html = self.browser.get_html()
+        soup = BeautifulSoup(html)
+
+        tables = soup.findAll('table', id='folderfile_list')
+        self.assertTrue(len(tables) == 1)
+
+        links_to_story = tables[0].findAll('a', attrs={'href': 'http://localhost/portal/myfolder/mygeopoint'})
+        self.assertTrue(len(links_to_story) == 1)
+        self.assertTrue(links_to_story[0].string == 'My geopoint')
 
         self.browser_do_logout()
 
