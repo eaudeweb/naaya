@@ -12,3 +12,8 @@ class IHeartbeat(Interface):
     """ Interface for Heartbeat """
     when = Attribute('when')
 
+class IObjectView(Interface):
+    """ """
+    def version_status_html():
+        """ returns html that discribes the versioning status """
+
