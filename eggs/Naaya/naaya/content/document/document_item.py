@@ -33,6 +33,8 @@ from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import Products
 from Acquisition import Implicit
+from zope.event import notify
+from naaya.content.base.events import NyContentObjectAddedEvent
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -132,6 +134,7 @@ def addNyDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
     if kwargs.has_key('submitted'): ob.submitThis()
     if self.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
+    notify(NyContentObjectAddedEvent(ob, schema_raw_data))
     #log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
@@ -330,7 +333,7 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
             self.submitThis()
             if self.discussion: self.open_for_comments()
             self.recatalogNyObject(self)
-            self.notifyFolderMaintainer(self.getParentNode(), self)
+            notify(NyContentObjectAddedEvent(self, schema_raw_data))
             self.setSession('referer', self.getParentNode().absolute_url())
             return self.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.getParentNode().absolute_url())

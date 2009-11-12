@@ -1035,6 +1035,18 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 l_users.append(user)
         return l_users
 
+    def get_portal_domain(self):
+        if not self.portal_url.startswith('http://'):
+            return 'http://%s' % self.portal_url
+        else:
+            return self.portal_url
+
+    def get_portal_mail_address(self):
+        if self.portal_url != '':
+            return 'notifications@%s' % urlparse(self.get_portal_domain())[1]
+        else:
+            return 'notifications@%s' % self.REQUEST.SERVER_NAME
+
     def notifyFolderMaintainer(self, p_folder, p_object, **kwargs):
         """
         Process and notify by email that B{p_object} has been
@@ -1043,14 +1055,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         if (hasattr(p_object, 'submitted') and p_object.submitted==1) or not hasattr(p_object, 'submitted'):
             l_emails = self.getMaintainersEmails(p_folder)
             if len(l_emails) > 0:
-                if self.portal_url != '':
-                    if not self.portal_url.startswith('http://'):
-                        domain_name = 'http://%s' % self.portal_url
-                    else:
-                        domain_name = self.portal_url
-                    mail_from = 'notifications@%s' % urlparse(domain_name)[1]
-                else:
-                    mail_from = 'notifications@%s' % self.REQUEST.SERVER_NAME
+                mail_from = self.get_portal_mail_address()
                 self.notifyMaintainerEmail(l_emails, mail_from, p_object, p_folder.absolute_url(), '%s/basketofapprovals_html' % p_folder.absolute_url(), **kwargs)
 
     def processDynamicProperties(self, meta_type, REQUEST=None, keywords={}):

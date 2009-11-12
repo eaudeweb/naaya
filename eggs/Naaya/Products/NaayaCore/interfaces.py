@@ -38,3 +38,9 @@ class ICSVImportExtraColumns(Interface):
 
     def handle_columns(extra_properties):
         """ Handle extra CSV data columns """
+
+class ICSVImportEvent(Interface):
+    """ An event triggered after a CSV import
+    """
+    context = Attribute("The containing folder")
+    ids = Attribute("List containing the ids of the newly added objects")

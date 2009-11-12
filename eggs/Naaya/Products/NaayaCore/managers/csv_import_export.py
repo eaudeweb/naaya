@@ -34,6 +34,8 @@ from Globals import InitializeClass
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo, Unauthorized
 from DateTime import DateTime
+from zope.event import notify
+from Products.NaayaCore.events import CSVImportEvent
 
 #Product imports
 from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
@@ -143,6 +145,7 @@ class CSVImportTool(Implicit, Item):
         else:
             record_number = 0
             header = reader.next()
+            obj_ids = []
             for row in reader:
                 try:
                     record_number += 1
@@ -164,6 +167,7 @@ class CSVImportTool(Implicit, Item):
                         adapter = ICSVImportExtraColumns(ob, None)
                         if adapter is not None:
                             adapter.handle_columns(extra_properties)
+                    obj_ids.append(ob.getId())
                     ob.submitThis()
                     ob.approveThis()
                 except ValueError, e:
@@ -173,6 +177,9 @@ class CSVImportTool(Implicit, Item):
                         raise ValueError(msg)
                     else:
                         errors.append(msg)
+
+        if not errors:
+            notify(CSVImportEvent(location_obj, obj_ids))
 
         if REQUEST is not None:
             if errors:

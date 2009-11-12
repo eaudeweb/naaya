@@ -1,0 +1,13 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <subscriber
+    handler="Products.NaayaCore.NotificationTool.subscribers.handler_object_added"
+    for="naaya.content.base.interfaces.INyContentObjectAddedEvent"
+    />
+
+  <subscriber
+    handler="Products.NaayaCore.NotificationTool.subscribers.handler_csv_import"
+    for="Products.NaayaCore.interfaces.ICSVImportEvent"
+    />
+
+</configure>
