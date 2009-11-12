@@ -29,13 +29,20 @@
 		tal:content="python:request.get('description', '')">
 	</textarea>
 </div>
-<div class="field">
-	<label for="attachment" i18n:translate="">Attachment</label>
-	<div style="color: red;" tal:define="file_max_size python:request.get('file_max_size', '')"
-		tal:condition="file_max_size"
-		tal:content="string:The attachment is larger than permitted (${file_max_size} Bytes). Please select a smaller file."/>
-	<input type="file" name="attachment" id="attachment" />
-</div>
+<tal:block define="file_max_size python:request.get('file_max_size', None)">
+	<div class="field" tal:condition="python:file_max_size!=0">
+		<label for="attachment" i18n:translate="">Attachment</label>
+		<div style="color: red;" tal:condition="python:file_max_size is not None">
+			<tal:block condition="python:file_max_size>0" i18n:translate="">
+				The attachment is larger than permitted (<tal:block i18n:name="size" content="file_max_size" /> Bytes). Please select a smaller file."
+			</tal:block>
+		</div>
+		<input type="file" name="attachment" id="attachment" />
+	</div>
+	<div style="color: red;" tal:condition="python:file_max_size==0" i18n:translate="">
+		The attachment upload is disabled by the administrator.
+	</div>
+</tal:block>
 <div class="field">
 	<label for="notify" i18n:translate="">Notify</label>
 	<input type="checkbox" name="notify" id="notify" tal:attributes="checked python:request.get('notify', None)" />
