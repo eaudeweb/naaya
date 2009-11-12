@@ -35,6 +35,8 @@ from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 import Products
 from Acquisition import Implicit
+from zope.event import notify
+from naaya.content.base.events import NyContentObjectAddedEvent
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -200,7 +202,7 @@ def addNyMediaFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
-    self.notifyFolderMaintainer(self, ob)
+    notify(NyContentObjectAddedEvent(ob, schema_raw_data))
     #log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
