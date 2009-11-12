@@ -4,8 +4,6 @@
 <div id="center_content" tal:attributes="style python:test(len(right_portlets)>0, 'width: 78%;; overflow-x: auto;;', '')">
 	<span tal:replace="structure here/description" />
 
-	<metal:block use-macro="here/folder_listing/macros/content" />
-
 	<tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
 		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})" />
 	</tal:block>
