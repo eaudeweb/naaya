@@ -1053,21 +1053,6 @@ text-decoration: underline;
             self.setSessionInfo(['Mail sent. (%s)' % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_contacts_html' % self.absolute_url())
 
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'send_mail_to_roles')
-    def send_mail_to_roles(self, mail_subject, mail_body, mails, REQUEST=None):
-        """
-        Sends bulk mail with the specified subject and body to
-        all email addresses in 'mails'
-        """
-        for mail in mails:
-            self.getEmailTool().sendEmail(mail_body, mail, self.mail_address_from, mail_subject)
-
-        if REQUEST:
-            self.setSessionInfo(['Mail sent. (%s)' % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('%s/admin_bulk_mail_html' % self.absolute_url())
-
-
-
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'import_contacts_from_csv')
     def import_contacts_from_csv(self, file=None, dialect='comma', encoding='utf-8', location='', REQUEST=None):
         """Bulk import of Naaya Contacts from a CSV file"""
@@ -1156,11 +1141,6 @@ text-decoration: underline;
     def admin_contacts_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_contacts')
-
-    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_bulk_mail_html')
-    def admin_bulk_mail_html(self, REQUEST=None, RESPONSE=None):
-        """ """
-        return PageTemplateFile('skel/forms/admin_bulk_mail', globals()).__of__(self)()
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_linkchecker_html')
     def admin_linkchecker_html(self, REQUEST=None, RESPONSE=None):
