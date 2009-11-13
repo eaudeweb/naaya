@@ -137,13 +137,6 @@ class NyContentType:
             roles.remove('Owner')
             self.manage_permission(PERMISSION_EDIT_OBJECTS, roles, acquire=1)
 
-    def get_path_in_site(self):
-        site_path = '/'.join(self.getSite().getPhysicalPath())
-        self_path = '/'.join(self.getPhysicalPath())
-        if not self_path.startswith(site_path):
-            raise ValueError('My path is not in the site. Panicking.')
-        return self_path[len(site_path)+1:]
-
     def get_schema_helper(self, lang=None):
         if lang is None:
             lang = self.gl_get_selected_language()
