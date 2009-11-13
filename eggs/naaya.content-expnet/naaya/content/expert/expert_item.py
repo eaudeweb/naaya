@@ -33,6 +33,9 @@ from AccessControl.Permissions import view_management_screens, view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Acquisition import Implicit
 from OFS.SimpleItem import Item
+from zope.interface import implements
+from zope.component import adapts
+
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -47,6 +50,9 @@ from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.content.bfile.NyBlobFile import make_blobfile
 from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.interfaces import ICSVImportExtraColumns
+
+from interfaces import INyExpert
 
 #module constants
 METATYPE_OBJECT = 'Naaya Expert'
@@ -186,7 +192,7 @@ def addNyExpert(self, id='', REQUEST=None, contributor=None, **kwargs):
         captcha_validator = self.validateCaptcha(_contact_word, REQUEST)
         if captcha_validator:
             form_errors['captcha'] = captcha_validator
-
+    
     if form_errors:
         if REQUEST is None:
             raise ValueError(form_errors.popitem()[1]) # pick a random error
@@ -234,6 +240,7 @@ class expert_item(Implicit, NyContentData):
 
 class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, NyContentType):
     """ """
+    implements(INyExpert)
     meta_type = METATYPE_OBJECT
     meta_label = LABEL_OBJECT
     icon = 'misc_/NaayaContent/NyExpert.gif'
@@ -518,6 +525,14 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         if self.geo_location:
             return self.geo_location.lat and self.geo_location.lon
         return False
+
+class ExpertCSVImportAdapter(object):
+    implements(ICSVImportExtraColumns)
+    adapts(INyExpert)
+    def __init__(self, ob):
+        self.ob = ob
+    def handle_columns(self, extra_properties):
+        self.ob.add_EmploymentRecord(None, None, extra_properties['Institution'], True)
 
 def json_encode(ob):
     """ try to encode some known value types to JSON """

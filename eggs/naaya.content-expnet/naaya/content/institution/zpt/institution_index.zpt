@@ -62,10 +62,15 @@
 	<div tal:condition="here/webpage">
 		<a tal:attributes="href here/webpage" i18n:translate="">Homepage</a>
 	</div>
+	<div tal:condition="here/email" tal:content="here/obfuscated_email" />
 	<div tal:condition="here/phone" tal:content="here/phone" />
 	<div tal:condition="here/fax"><span tal:content="here/fax"/> (fax)</div>
 	<div tal:condition="address" tal:define="map python:request.get('map', '')">
 		<span tal:content="address"/>
+	</div>
+	<div tal:condition="here/contact_details">
+		<h4 i18n:translate="">Contact details</h4>
+		<span tal:replace=" structure here/contact_details"/>
 	</div>
 	<div tal:condition="main_topics">
 		<h4 i18n:translate="">Main topics covered</h4>
