@@ -3359,6 +3359,19 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_delmessages')
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'send_mail_to_roles')
+    def send_mail_to_roles(self, mail_subject, mail_body, mails, REQUEST=None):
+        """
+        Sends bulk mail with the specified subject and body to
+        all email addresses in 'mails'
+        """
+        for mail in mails:
+            self.getEmailTool().sendEmail(mail_body, mail, self.mail_address_from, mail_subject)
+
+        if REQUEST:
+            self.setSessionInfo(['Mail sent. (%s)' % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_bulk_mail_html' % self.absolute_url())
+
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'export_contacts_vcard')
     def export_contacts_vcard(self, REQUEST=None):
         """ Exports all portal contacts in vCard format contained in a zip file """
@@ -3541,6 +3554,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         kwargs['here'] = self
         return self.getFormsTool().getContent(kwargs, 'channel_details')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_bulk_mail_html')
+    def admin_bulk_mail_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return PageTemplateFile('skel/forms/admin_bulk_mail', globals()).__of__(self)()
 
     #calendar widget
     security.declareProtected(view, 'calendar_js')
