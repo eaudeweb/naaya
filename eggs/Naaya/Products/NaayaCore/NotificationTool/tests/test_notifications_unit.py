@@ -35,8 +35,8 @@ class TestObject(object):
         self.path = path
         self.modif_datetime = modif_datetime
 
-    def get_path_in_site(self):
-        return self.path
+    def getPhysicalPath(self):
+        return ('/portal/' + self.path).split('/')
 
     def title_or_id(self):
         return self.title
@@ -96,6 +96,8 @@ class TestedNotificationTool(NotificationTool):
                 return 'mocky site'
             def getPortalTranslations(self):
                 return lambda msgid, lang: msgid
+            def getPhysicalPath(self):
+                return ['', 'portal']
         return MockSite()
 
     def _has_view_permission(self, user_id, ob):

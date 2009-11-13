@@ -43,6 +43,8 @@ from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailTool import build_email
 from Products.Naaya.interfaces import INySite, IHeartbeat
 
+from naaya.core.utils import relative_object_path
+
 def manage_addNotificationTool(self, REQUEST=None):
     """ """
     ob = NotificationTool(ID_NOTIFICATIONTOOL, TITLE_NOTIFICATIONTOOL)
@@ -171,10 +173,13 @@ class NotificationTool(Folder):
 
     security.declarePrivate('notify_instant')
     def notify_instant(self, ob, user_id):
-        """ send instant notifications because object `ob` was changed """
+        """
+        send instant notifications because object `ob` was changed by
+        the user `user_id`
+        """
         if not self.config['enable_instant']:
             return
-        ob_path = ob.get_path_in_site()
+        ob_path = relative_object_path(ob, self._get_site())
         messages_by_user = {}
         for subscription in self.list_subscriptions(notif_type='instant'):
             if not is_subpath(ob_path, subscription.location):
@@ -223,7 +228,14 @@ class NotificationTool(Folder):
             return False
 
     def _send_notifications(self, messages_by_user, template):
-        """ send the notifications described in the `messages_by_user` data structure """
+        """
+        Send the notifications described in the `messages_by_user` data
+        structure, using the specified EmailTemplate.
+
+        `messages_by_user` should be a dictionary, keyed by user_id. The
+        values should be dictionaries suitable to be passwd as kwargs
+        to the template.
+        """
         portal = self._get_site()
         email_tool = self._get_email_tool()
         addr_from = email_tool._get_from_address()
@@ -278,7 +290,7 @@ class NotificationTool(Folder):
         objects_by_user = {}
         langs_by_user = {}
         for ob in self._list_modified_objects(when_start, when_end):
-            ob_path = ob.get_path_in_site()
+            ob_path = relative_object_path(ob, self._get_site())
             for subscription in self.list_subscriptions(notif_type=notif_type):
                 if not is_subpath(ob_path, subscription.location):
                     continue
@@ -386,6 +398,10 @@ def _mock_send_notification(email_tool, addr_from, addr_to, subject, body):
     mock_saved.append( (addr_from, addr_to, subject, body) )
 
 def set_testing_mode(testing, save_to=[]):
+    """
+    Place the NotificationTool module in testing mode: all notifications will
+    be appended to `save_to` instead of being sent via e-mail.
+    """
     global send_notification
     global mock_saved
 
