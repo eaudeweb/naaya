@@ -18,14 +18,11 @@
 # Alex Morega, Eau de Web
 
 """
-naaya.core.permissions
-----------------------
 Permissions relevant to Naaya objects
-
-`naaya_admin`
-  the "administrator" permission, previously known
-  as `PERMISSION_PUBLISH_OBJECTS`
-
 """
 
-from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS as naaya_admin
+from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
+
+naaya_admin = PERMISSION_PUBLISH_OBJECTS
+""" the "administrator" permission, previously known
+    as `PERMISSION_PUBLISH_OBJECTS` """
