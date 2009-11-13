@@ -13,6 +13,3 @@ class INyItem(Interface):
 class INyFSFile(Interface):
     """ Interface for NyFSFile """
     pass
-
-class INyContentType(INyContentObject):
-    """ Deprecated; use INyContentObject instead. """

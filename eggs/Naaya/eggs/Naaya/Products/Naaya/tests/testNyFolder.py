@@ -32,6 +32,7 @@ from Products.Naaya.NyFolder import NyFolder, addNyFolder
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya.NyFolderBase import NyContentTypeViewAdapter
 from Products.Naaya.interfaces import IObjectView
+from naaya.content.base.interfaces import INyContentObject
 
 class FolderIndexInfo:
     def __init__(self, browser, parent, name):
@@ -425,6 +426,7 @@ class TestNyFolderFileListing(NaayaFunctionalTestCase):
         self.browser_do_logout()
 
     def test_view_adapter(self):
+        self.assertTrue(INyContentObject.providedBy(self.portal.info))
         adapter = component.queryAdapter(self.portal.info)
         self.assertTrue(adapter is not None)
         self.assertTrue(isinstance(adapter, NyContentTypeViewAdapter))
