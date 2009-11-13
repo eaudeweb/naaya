@@ -54,16 +54,18 @@ ADDITIONAL_STYLE = open(ImageFile('www/institution.css', globals()).path).read()
 DEFAULT_SCHEMA = {}
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 DEFAULT_SCHEMA.update({
-    'webpage': dict(sortorder=120, widget_type='String', label='Webpage'),
-    'phone': dict(sortorder=140, widget_type='String', label='Phone'),
-    'fax': dict(sortorder=160, widget_type='String', label='Fax'),
-    'main_topics': dict(sortorder=200, widget_type='SelectMultiple', label='Main topics covered', list_id='institution_topics'),
-    'sub_topics': dict(sortorder=220, widget_type='SelectMultiple', label='Secondary topics covered', list_id='institution_topics'),
-    'coverage': dict(sortorder=30, widget_type='Glossary', label='Geographical coverage', glossary_id='coverage', localized=True, visible=False),
-    'keywords': dict(sortorder=40, widget_type='Glossary', label='Keywords', glossary_id='keywords', localized=True, visible=False),
-    'sortorder': dict(sortorder=50, widget_type='String', data_type='int', default='100', label='Sort order', required=False, visible=False),
-    'releasedate': dict(sortorder=60, widget_type='Date', data_type='date', label='Release date', required=False, visible=False),
-    'discussion': dict(sortorder=70, widget_type='Checkbox', data_type='int', label='Open for comments', visible=False),
+    'webpage':      dict(sortorder=120, widget_type='String', label='Webpage'),
+    'phone':        dict(sortorder=140, widget_type='String', label='Phone'),
+    'fax':          dict(sortorder=160, widget_type='String', label='Fax'),
+    'email':        dict(sortorder=170, widget_type='String', label='Email address'),
+    'main_topics':  dict(sortorder=200, widget_type='SelectMultiple', label='Main topics covered', list_id='institution_topics'),
+    'sub_topics':   dict(sortorder=220, widget_type='SelectMultiple', label='Secondary topics covered', list_id='institution_topics'),
+    'contact_details': dict(sortorder=230, widget_type='TextArea', label='Contact details'),
+    'coverage':     dict(sortorder=30, widget_type='Glossary', label='Geographical coverage', glossary_id='coverage', localized=True, visible=False),
+    'keywords':     dict(sortorder=40, widget_type='Glossary', label='Keywords', glossary_id='keywords', localized=True, visible=False),
+    'sortorder':    dict(sortorder=50, widget_type='String', data_type='int', default='100', label='Sort order', required=False, visible=False),
+    'releasedate':  dict(sortorder=60, widget_type='Date', data_type='date', label='Release date', required=False, visible=False),
+    'discussion':   dict(sortorder=70, widget_type='Checkbox', data_type='int', label='Open for comments', visible=False),
     'geo_location': dict(sortorder=24, widget_type='Geo', data_type='geo', label='Geographical location', visible=True)
 })
 
@@ -439,6 +441,14 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
         if self.geo_location:
             return self.geo_location.lat and self.geo_location.lon
         return False
+
+    def obfuscated_email(self):
+        ret = self.email
+        if self.email:
+            if isinstance(self.email, unicode):
+                self.email = self.email.encode('UTF-8')
+            ret = self.email.replace('@', ' at ')
+        return ret
 
 def json_encode(ob):
     """ try to encode some known value types to JSON """
