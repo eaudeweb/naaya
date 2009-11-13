@@ -110,45 +110,43 @@ class CSVImportTool(Implicit, Item):
         content_type = self.getSite().get_pluggable_item(meta_type)
         add_object = content_type['add_method']
 
-        try:
-            location_obj = self.getParentNode()
-            reader = UnicodeReader(data)
+        location_obj = self.getParentNode()
 
-            # build a list of property names based on the object schema
-            prop_map = {}
-            for widget in schema.listWidgets():
-                prop_name = widget.prop_name()
+        # build a list of property names based on the object schema
+        # TODO: extract this loop into a separate function
+        prop_map = {}
+        for widget in schema.listWidgets():
+            prop_name = widget.prop_name()
 
-                if widget.multiple_form_values:
+            if widget.multiple_form_values:
+                for subname in widget.multiple_form_values:
+                    prop_subname = prop_name + '.' + subname
+                    prop_map[widget.title + ' - ' + subname] = {
+                        'column': prop_subname, 'widget': widget}
+                if isinstance(widget, GeoWidget):
                     for subname in widget.multiple_form_values:
-                        prop_subname = prop_name + '.' + subname
-                        prop_map[widget.title + ' - ' + subname] = {
-                            'column': prop_subname, 'widget': widget}
-                    if isinstance(widget, GeoWidget):
-                        for subname in widget.multiple_form_values:
-                            self.geo_fields[subname] = prop_name + '.' + subname
-                else:
-                    prop_map[widget.title] = {'column': prop_name, 'widget': widget}
-
-        except Exception, e:
-            if REQUEST is None:
-                raise
+                        self.geo_fields[subname] = prop_name + '.' + subname
             else:
-                if isinstance(e, StopIteration):
-                    errors.append('Invalid CSV file')
-                elif isinstance(e, UnicodeDecodeError):
-                    errors.append('CSV file is not utf-8 encoded')
-                else:
-                    self.getSite().log_current_error()
-                    errors.append(str(e))
+                prop_map[widget.title] = {'column': prop_name, 'widget': widget}
 
-        else:
+        try:
+            reader = UnicodeReader(data)
+            try:
+                header = reader.next()
+            except StopIteration:
+                if REQUEST is None:
+                    raise ValueError('Invalid CSV file')
+                else:
+                    errors.append('Invalid CSV file')
+                    reader = []
+
             record_number = 0
-            header = reader.next()
             obj_ids = []
+
             for row in reader:
                 try:
                     record_number += 1
+                    # TODO: extract this block into a separate function
                     properties = {}
                     extra_properties = {}
                     for column, value in zip(header, row):
@@ -170,13 +168,21 @@ class CSVImportTool(Implicit, Item):
                     obj_ids.append(ob.getId())
                     ob.submitThis()
                     ob.approveThis()
-                except ValueError, e:
+                except UnicodeDecodeError, e:
+                    raise
+                except Exception, e:
                     self.log_current_error()
                     msg = 'Error while importing from CSV, row %d: %s' % (record_number, str(e))
                     if REQUEST is None:
                         raise ValueError(msg)
                     else:
                         errors.append(msg)
+
+        except UnicodeDecodeError, e:
+            if REQUEST is None:
+                raise
+            else:
+                errors = ['CSV file is not utf-8 encoded']
 
         if not errors:
             notify(CSVImportEvent(location_obj, obj_ids))

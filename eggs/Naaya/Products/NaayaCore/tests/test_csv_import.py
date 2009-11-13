@@ -101,7 +101,7 @@ class NyCSVImportTest(NaayaTestCase):
         self.failUnlessEqual(my_doc.title, unicode('Forschungsinstitut f\xc3\xbcr Freizeit und Tourismus (FIF)', 'utf-8'))
         self.failUnlessEqual(my_doc.body, 'This is a test document.')
         self.failUnlessEqual(my_doc.sortorder, 100)
-        self.failUnless(my_doc.approved)        
+        self.failUnless(my_doc.approved)
 
     def test_import_bad_unicode_document(self):
         """ Importing a 'utf-8' encoded document as 'latin-1' """
@@ -203,9 +203,9 @@ class CSVImportFunctionalTests(NaayaFunctionalTestCase):
         form = self.browser.get_form('csv_import')
         form['meta_type'] = ['Naaya Document']
         form.find_control('data').add_file(data, 'text/csv', 'HTML Document bulk upload')
-        self.browser.clicked(form, form.find_control('data'))
+        self.browser.clicked(form, form.find_control('do_import:method'))
         self.browser.submit()
-        assert('CSV file is not utf-8 encoded')
+        self.assertTrue('CSV file is not utf-8 encoded' in self.browser.get_html())
         self.assertEqual(before, self.portal.info.objectIds())
 
 class GeopointImportTest(NaayaTestCase):
