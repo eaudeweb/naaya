@@ -367,6 +367,9 @@ a:visited {
 	margin: 0;
 	padding: 0;
 }
+#toolribbon form {
+    margin-bottom: 0;
+}
 
 #lefttools {
 	float:left;
@@ -507,6 +510,9 @@ a#eealink {
 #menunav li a:hover {
 	background: #fff;
 	color: #000;
+}
+#menunav form {
+    margin-bottom: 0;
 }
 
 /* start EIONET - Like dropdown menus */

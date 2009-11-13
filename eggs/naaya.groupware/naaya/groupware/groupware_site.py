@@ -10,7 +10,12 @@ from App.ImageFile import ImageFile
 # Product imports
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
-
+from Products.Naaya.NyFolder import addNyFolder
+try:
+    from Products.RDFCalendar.RDFCalendar import manage_addRDFCalendar
+    rdf_calendar_available = True
+except:
+    rdf_calendar_available = False
 
 
 manage_addGroupwareSite_html = PageTemplateFile('zpt/site_manage_add', globals())
@@ -52,11 +57,22 @@ class GroupwareSite(NySite):
             # this version of Naaya doesn't use Schemas; we can safely move on
             pass
 
-        self.loadSkeleton(Globals.package_home(globals()))
-
         #remove Naaya default content
         self.getLayoutTool().manage_delObjects('skin')
+        self.getPortletsTool().manage_delObjects(['menunav_links', 'topnav_links'])
         self.manage_delObjects('info')
+
+        #load groupware skel
+        self.loadSkeleton(Globals.package_home(globals()))
+
+        addNyFolder(self, id="library", title="Library", submitted=1)
+        if rdf_calendar_available:
+            events_rdf = self.getSyndicationTool()['latestevents_rdf']
+            manage_addRDFCalendar(self, id="portal_rdfcalendar", title="Events calendar")
+            summary_add = self['portal_rdfcalendar'].manage_addProduct['RDFSummary']
+            summary_add.manage_addRDFSummary('latest_events', 'events',
+                                             events_rdf.absolute_url(),
+                                             '', 'yes')
 
     def get_user_access(self):
         user = self.REQUEST['AUTHENTICATED_USER'].getUserName()
