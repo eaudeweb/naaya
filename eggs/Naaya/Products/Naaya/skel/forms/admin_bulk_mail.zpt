@@ -1,0 +1,129 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+    <tal:block metal:fill-slot="title"><h1 i18n:translate="">Send bulk mail</h1></tal:block>
+
+
+
+    <tal:block metal:fill-slot="section" 
+        tal:define="target_role python:request.get('target_role', ''); 
+                    acl_tool here/getAuthenticationTool;
+                    skey python: request.get('skey', 'name');
+                    rkey python: request.get('rkey', 0);
+                    compose python: request.get('compose', '');">
+
+
+    <script language="JavaScript" src="misc_/Naaya/jquery-1.3.2.min.js"></script>
+    <script language="JavaScript">
+        $(document).ready(function(){
+            if ($("input[type=checkbox][name=user_mails:list]").length > 0) {
+                var sel_all = document.createElement('a');
+                var sel_none = document.createElement('a');
+                sel_all.innerHTML = 'Select all';
+                sel_none.innerHTML = 'Select none';
+                sel_all.id = 'select_all';
+                sel_none.id = 'select_none';
+                sel_all.href="#";
+                sel_none.href="#";
+                sel_none.style.display = 'none';
+                $(sel_all).click(function(){
+                        $("input[type=checkbox][name=user_mails:list]").attr('checked', 'checked');
+                        $("#select_all").css({'display': 'none'});
+                        $("#select_none").css({'display': 'inline'});
+                    })
+                $(sel_none).click(function(){
+                        $("input[type=checkbox][name=user_mails:list]").attr('checked', '');
+                        $("#select_none").css({'display': 'none'});
+                        $("#select_all").css({'display': 'inline'});
+                    })
+                $('#user_listing').before(sel_all);
+                $('#user_listing').before(sel_none);
+                $('#compose_message').css({'display': 'inline'});
+            }
+            else {
+                $('#compose_message').css({'display': 'none'});
+            }
+        })
+    </script>
+
+    <tal:block condition="not:compose">
+        <p i18n:translate="">Send an email to all users that
+        have been granted a role (local or global) in the portal.</p>
+
+
+        <fieldset>
+            <legend i18n:translate="">Step 1: Select a role from the dropdown list.</legend>
+            <form action="" method="post" id="role_selector">
+                <div class="field-inline">
+                    <label for="roleselect" i18n:translate="">Role</label>
+                    <select id="roleselect" name="target_role" tal:define="roles acl_tool/list_valid_roles">
+                        <option tal:repeat="role roles" tal:content="role" tal:attributes="selected python:role == target_role">[role name]</option>
+                    </select>
+                    <input type="submit" i18n:attributes="value" value="Show users"/>
+                </div>
+            </form>
+        </fieldset>
+
+        <form tal:attributes="action string:${here/absolute_url}/admin_bulk_mail_html" method="post" tal:condition="target_role" tal:define="users python:acl_tool.getUsersWithRole(target_role)">
+            <p tal:condition="not:users" i18n:translate="">No users were found with the selected role.</p>
+            <fieldset>
+                <legend tal:condition="users" i18n:translate="">Step 2: Select one or more users, then click on <em>Compose message</em></legend>
+                <table class="datatable" id="user_listing" tal:condition="users">
+                    <thead>
+                        <tr>
+                            <th align="left" i18n:translate="">Select</th>
+                            <th align="left">
+                                <span i18n:translate="">Username</span>
+                            </th>
+                            <th align="left">
+                                <span i18n:translate="">Name</span>
+                            </th>
+                            <th align="left">
+                                <span i18n:translate="">Email address</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr tal:repeat="user_id python:users.keys()">
+                            <td class="center">
+                                <input type="checkbox" name="user_mails:list" tal:attributes="value python:users[user_id]['email']" />
+                            </td>
+                            <td><strong tal:content="user_id">username</strong>
+                            </td>
+                            <td tal:content="python:users[user_id]['name']" />
+                            <td tal:content="python:users[user_id]['email']" />
+                        </tr>
+                    </tbody>
+                </table>
+                <input type="hidden" name="compose" value="true"/>
+                <input type="submit" id="compose_message" value="Compose message" i18n:attributes="value" />
+            </fieldset>
+        </form>
+    </tal:block>
+    
+    <tal:block condition="compose" 
+               define="mails python:request.get('user_mails', []);
+                       mail_from here/mail_address_from">
+        <tal:block condition="not:mails">
+            <p>
+                <span i18n:translate="">You did not select any users.</span>
+                <a href="" i18n:translate="">Go back</a>
+            </p>
+        </tal:block>
+        <form action="send_mail_to_roles" method="post" tal:condition="mails">
+			<div class="message-error" tal:condition="not:mail_from" i18n:translate="">Please add a valid email address in the "Default from address" field
+			on the <a tal:attributes="href string:${here/absolute_url}/admin_email_html">portal properties page</a>.
+			</div>
+            <div class="field">
+                <label for="mail_subject" i18n:translate="">Subject</label>
+                <input type="text" id="mail_subject" name="mail_subject" size="70" tal:attributes="disabled not:mail_from"/>
+            </div>
+            <div class="field">
+                <label for="mail_body" i18n:translate="">Body</label>
+                <textarea type="text" id="mail_body" name="mail_body" cols="70" rows="10" tal:attributes="disabled not:mail_from"></textarea>
+            </div>
+            <input type="hidden" name="mails:list" tal:attributes="value mail" tal:repeat="mail mails"/>
+            <input type="submit" value="Send mail" i18n:attributes="value" tal:attributes="disabled not:mail_from"/>
+        </form>
+    </tal:block>
+    </tal:block>
+</tal:block>
