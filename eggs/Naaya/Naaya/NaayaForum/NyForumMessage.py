@@ -33,6 +33,12 @@ from constants import *
 from NyForumBase import NyForumBase
 from Products.NaayaBase.constants import *
 
+try:
+    from zope.event import notify as zope_notify
+    from events import NyForumMessageAddedEvent
+except ImportError:
+    zope_notify = None
+
 NyForumMessage_creation_hooks = []
 
 manage_addNyForumMessage_html = PageTemplateFile('zpt/message_manage_add', globals())
@@ -72,6 +78,8 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
         self.notifyOnMessage(ob)
         for hook in NyForumMessage_creation_hooks:
             hook(ob)
+        if zope_notify is not None:
+            zope_notify(NyForumMessageAddedEvent(ob))
         if REQUEST is not None:
             referer = REQUEST['HTTP_REFERER'].split('/')[-1]
             if referer == 'manage_addNyForumMessage_html' or \

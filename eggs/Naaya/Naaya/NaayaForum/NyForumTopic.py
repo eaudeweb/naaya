@@ -34,6 +34,12 @@ from NyForumBase import NyForumBase
 from Products.NaayaBase.constants import *
 from NyForumMessage import manage_addNyForumMessage_html, message_add_html, addNyForumMessage
 
+try:
+    from zope.event import notify as zope_notify
+    from events import NyForumTopicAddedEvent
+except ImportError:
+    zope_notify = None
+
 NyForumTopic_creation_hooks = []
 
 manage_addNyForumTopic_html = PageTemplateFile('zpt/topic_manage_add', globals())
@@ -59,6 +65,8 @@ def addNyForumTopic(self, id='', title='', category='', description='',
     self.handleAttachmentUpload(ob, attachment)
     for hook in NyForumTopic_creation_hooks:
         hook(ob)
+    if zope_notify is not None:
+        zope_notify(NyForumTopicAddedEvent(ob))
     if REQUEST is not None:
         referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if referer == 'manage_addNyForumTopic_html' or \
