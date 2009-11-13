@@ -42,6 +42,15 @@
             <link id="103" title="Sitemap" description="" url="/sitemap_html" relative="1" permission="" order="1"/>
             <link id="110" title="Admin" description="" url="/admin_centre_html" relative="1" permission="Publish content" order="3"/>
         </linkslist>
+        <linkslist id="menunav_links" title="Top menu navigation" portlet="1">
+            <link id="about" title="About" description="" url="/about" relative="1" permission="" order="10"/>
+            <link id="library" title="Library" description="" url="/library" relative="1" permission="" order="20"/>
+            <link id="directory" title="Directory" description="" url="/admin_users_html" relative="1" permission="Publish content" order="30"/>
+            <link id="events" title="Events" description="" url="/portal_rdfcalendar" relative="1" permission="" order="40"/>
+            <link id="email" title="Email" description="" url="/admin_bulk_mail_html" relative="1" permission="Publish content" order="50"/>
+            <link id="search" title="Search" description="" url="/search_html" relative="1" permission="" order="60"/>
+            <link id="help" title="Help" description="" url="/about/accessibility" relative="1" permission="" order="70"/>
+        </linkslist>
     </portlets>
 
 	<security>
