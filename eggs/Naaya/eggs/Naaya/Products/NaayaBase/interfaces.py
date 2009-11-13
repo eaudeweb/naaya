@@ -1,5 +1,7 @@
 from zope.interface import Interface, Attribute
 
+from naaya.content.base.interfaces import INyContentObject
+
 class INyContainer(Interface):
     """ Interface for NyContainer"""
     pass
@@ -12,8 +14,5 @@ class INyFSFile(Interface):
     """ Interface for NyFSFile """
     pass
 
-class INyContentType(Interface):
-    """ """
-    def version_status():
-        """ returns html that discribes the versioning status """
-
+class INyContentType(INyContentObject):
+    """ Deprecated; use INyContentObject instead. """

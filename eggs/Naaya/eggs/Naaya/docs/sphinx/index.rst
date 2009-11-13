@@ -7,6 +7,7 @@ Contents:
    :maxdepth: 1
 
    authentication_tool
+   notification_tool
    pluggable_content
    permissions
 

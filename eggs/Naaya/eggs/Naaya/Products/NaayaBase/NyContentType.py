@@ -33,7 +33,7 @@ from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.NaayaCore.constants import ID_SCHEMATOOL
-from interfaces import INyContentType
+from naaya.content.base.interfaces import INyContentObject
 
 NY_CONTENT_BASE_SCHEMA = {
     'title':        dict(sortorder=10, widget_type='String', label='Title', required=True, localized=True),
@@ -108,7 +108,7 @@ class NyContentType:
     that handle editing, displaying, etc.
     """
 
-    implements(INyContentType)
+    implements(INyContentObject)
 
     security = ClassSecurityInfo()
 
