@@ -1,7 +1,10 @@
 <configure
   xmlns:naaya="http://namespaces.zope.org/naaya"
+  xmlns="http://namespaces.zope.org/zope"
   i18n_domain="naaya.content">
 
   <naaya:content factory=".expert_item.get_config" />
+
+  <adapter factory="naaya.content.expert.expert_item.ExpertCSVImportAdapter" />
 
 </configure>
