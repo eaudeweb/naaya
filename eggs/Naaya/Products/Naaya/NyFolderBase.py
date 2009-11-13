@@ -12,12 +12,12 @@ from OFS.interfaces import IItem
 #Product imports
 from Products.Naaya.constants import METATYPE_FOLDER
 from Products.NaayaBase.NyPermissions import NyPermissions
-from Products.NaayaBase.interfaces import INyContentType
+from naaya.content.base.interfaces import INyContentObject
 from interfaces import IObjectView
 
 
 class NyContentTypeViewAdapter(object):
-    adapts(INyContentType)
+    adapts(INyContentObject)
     implements(IObjectView)
 
     def __init__(self, ob):

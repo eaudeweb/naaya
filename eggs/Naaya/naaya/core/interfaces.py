@@ -1,6 +1,6 @@
-from zope.interface import Interface
+from OFS.interfaces import IItem
 
-class INyObject(Interface):
+class INyObject(IItem):
     """ A generic Naaya object that supports some basic methods """
 
     def getSite():
