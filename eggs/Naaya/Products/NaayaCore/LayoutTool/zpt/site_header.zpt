@@ -15,14 +15,14 @@
 
 	<!--The stylesheets 'style', 'common' and 'print' are common to all schemes and are opened as imagefiles.
 	The stylesheet 'scheme_style' carries all the differences between schemes.-->
-	<metal:block define-slot="standard-links">
+	<metal:block define-slot="standard-head-links">
 		<link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${layout_path}/style_css" />
 		<link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${layout_path}/common_css" />
 		<link rel="stylesheet" type="text/css" media="print" tal:attributes="href string:${layout_path}/print_css" />
 		<link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${skin_files_path}/scheme_style" />
 		<link rel="stylesheet" type="text/css" media="screen" tal:attributes="href string:${here/absolute_url}/additional_style_css" />
 	</metal:block>
-	<metal:block define-slot="additional-links"></metal:block>
+	<metal:block define-slot="additional-head-links"></metal:block>
 	
 	<metal:block define-slot="standard-head-content">
 	<script type="text/javascript">
