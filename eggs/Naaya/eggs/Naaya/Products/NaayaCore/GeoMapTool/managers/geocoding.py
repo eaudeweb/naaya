@@ -77,7 +77,6 @@ def yahoo_geocode(address):
         dom = parse(urllib.urlopen(url))
         results = dom.getElementsByTagName('Result')
         result_count = len(results)
-
         for result in results:
             d = {'precision': result.getAttribute('precision'), 'warning': result.getAttribute('warning')}
             for itm in result.childNodes:
@@ -89,6 +88,7 @@ def yahoo_geocode(address):
             addresses.append(d)
     except:
         return None
+    if not addresses: return None
     addr = addresses[0] #take the first one, it should be the good one
     return (addr['Latitude'].encode('utf-8'), addr['Longitude'].encode('utf-8'))
 
