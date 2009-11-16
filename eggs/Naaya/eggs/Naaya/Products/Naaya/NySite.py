@@ -98,7 +98,7 @@ from Products.NaayaBase.managers.import_parser import import_parser
 from NyVersions import NyVersions
 from NyFolder import NyFolder, addNyFolder, importNyFolder
 from Products.NaayaCore.NotificationTool.Subscriber import Subscriber
-from Products.NaayaBase.gtranslate import translate, translation_url
+from Products.NaayaBase.gtranslate import translate, translate_url
 from NyFolderBase import NyFolderBase
 
 #reCaptcha
@@ -3639,8 +3639,8 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def translate(self, *args):
         return translate(*args)
 
-    def translation_url(self, *args):
-        return translation_url(*args)
+    def translate_url(self, *args):
+        return translate_url(*args)
 
     def get_helper(self):
         return NaayaTemplateHelper(ny_site=self)

@@ -27,13 +27,14 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+import urllib2
 
 #Product imports
 from Products.NaayaCore.interfaces import IRemoteChannel
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.managers.utils import utils
 from Products.NaayaBase.NyFeed import NyFeed
-from Products.NaayaBase.gtranslate import translate, translation_url
+from Products.NaayaBase.countries import language_from_country_code
 
 manage_addRemoteChannelForm = PageTemplateFile('zpt/remotechannel_manage_add', globals())
 def manage_addRemoteChannel(self, id='', title='', url='', numbershownitems='', portlet='', filter_by_language='',
@@ -185,6 +186,21 @@ class RemoteChannel(SimpleItem, NyFeed, utils):
         self._p_changed = 1
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_properties_html')
+
+    def get_language_from_domain(self):
+        """ """
+        # get main domain name
+        rq = urllib2.Request(self.url)
+        host = rq.get_host()
+        idx = host.rfind('.')
+        main_domain = host[idx+1:]
+
+        try:
+            language = language_from_country_code(main_domain)
+            return language
+        except KeyError:
+            return None
+
 
     #zmi forms
     security.declareProtected(view_management_screens, 'manage_properties_html')
