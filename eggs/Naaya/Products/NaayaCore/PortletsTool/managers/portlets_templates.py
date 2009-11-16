@@ -94,7 +94,7 @@ REMOTECHANNEL_PORTLET_TEMPLATE = '''<tal:block define="channel python:here.getSy
 REMOTECHANNEL_AUTOTRANSLATE_PORTLET_TEMPLATE = '''<tal:block define="channel python:here.getSyndicationTool()['PORTLET_REMOTECHANNEL_ID'];
 		   title python:channel.title_or_id();
 		   items python:channel.getChannelItems();
-		   feed_lang python:channel.get_feed_lang();
+		   feed_lang python:test(channel.get_feed_lang(), channel.get_feed_lang(), channel.get_language_from_domain());
 		   current_lang here/gl_get_selected_language"
 		   condition="items">
 <tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
@@ -124,13 +124,13 @@ REMOTECHANNEL_AUTOTRANSLATE_PORTLET_TEMPLATE = '''<tal:block define="channel pyt
 		<h4>Automatic translation by Google</h4>
 		<ul>
 			<li tal:repeat="item items">
-				<a tal:attributes="href python:here.translation_url(item['link'], feed_lang, current_lang)"
-						tal:content="python:here.translate(item['title'], feed_lang, current_lang)" />
+				<a tal:attributes="href python:here.translate_url(item['link'], current_lang, feed_lang)"
+						tal:content="python:here.translate(item['title'], current_lang, feed_lang)" />
 			</li>
 		</ul>
 		<div style="text-align: right;">
 			<a tal:define="url string:${here/absolute_url}/channel_details_html?id_channel=PORTLET_REMOTECHANNEL_ID"
-					tal:attributes="href python:here.translation_url(url, feed_lang, current_lang)">
+					tal:attributes="href python:here.translate_url(url, current_lang, feed_lang)">
 				<span i18n:translate="">More...</span>
 			</a>
 		</div>
