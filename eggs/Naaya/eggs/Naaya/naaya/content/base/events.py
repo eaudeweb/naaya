@@ -1,12 +1,22 @@
 from zope.interface import implements
-from interfaces import INyContentObjectAddedEvent
+from interfaces import INyContentObjectAddEvent
+from interfaces import INyContentObjectEditEvent
 
 
-class NyContentObjectAddedEvent(object):
-    """Event triggered after a naaya content object has been added
-    """
-    implements(INyContentObjectAddedEvent)
+class NyContentObjectAddEvent(object):
+    """ Naaya content object has been created """
+    implements(INyContentObjectAddEvent)
 
-    def __init__(self, context, schema):
+    def __init__(self, context, contributor, schema_data):
         self.context = context
-        self.schema = schema
+        self.contributor = contributor
+        self.schema = schema_data
+
+
+class NyContentObjectEditEvent(object):
+    """ Naaya content object has been edited """
+    implements(INyContentObjectEditEvent)
+
+    def __init__(self, context, contributor):
+        self.context = context
+        self.contributor = contributor

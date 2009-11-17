@@ -189,12 +189,6 @@ class NyContentType:
             target.updateDynamicProperties(self.processDynamicProperties(
                 self.meta_type, REQUEST_form), _lang)
 
-            try:
-                user_id = self.REQUEST.AUTHENTICATED_USER.getUserName()
-                self.getSite().getNotificationTool().notify_instant(self, user_id)
-            except Exception, e:
-                self.getSite().log_current_error()
-
         return form_errors
 
     security.declarePrivate('_prepare_error_response')

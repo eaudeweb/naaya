@@ -74,7 +74,7 @@ class NotificationsTest(NaayaTestCase):
             ('from.zope@example.com', 'contrib@example.com',
             u'Change notification - Contact us',
             u'This is an automatically generated message to inform you '
-            u'that the item "Contact us" has been changed at '
+            u'that the item "Contact us" has been created at '
             u'http://nohost/portal/info/contact by "somebody".')])
 
         self.notif.remove_subscription('contributor', '', 'instant', 'en')

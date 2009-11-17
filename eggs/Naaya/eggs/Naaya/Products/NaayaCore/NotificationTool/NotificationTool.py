@@ -172,7 +172,7 @@ class NotificationTool(Folder):
             yield 'monthly'
 
     security.declarePrivate('notify_instant')
-    def notify_instant(self, ob, user_id):
+    def notify_instant(self, ob, user_id, ob_edited=False):
         """
         send instant notifications because object `ob` was changed by
         the user `user_id`
@@ -188,6 +188,7 @@ class NotificationTool(Folder):
                 continue
             messages_by_user[subscription.user_id] = {
                 'ob': ob,
+                'ob_edited': ob_edited,
                 'person': user_id,
                 '_lang': subscription.lang,
             }
