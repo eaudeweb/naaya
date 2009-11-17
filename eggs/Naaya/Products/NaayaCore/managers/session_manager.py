@@ -29,12 +29,28 @@ class session_manager:
         """Constructor"""
         pass
 
+    def _sessionExists(self):
+        """
+        Check if a session has been created for this visitor
+        """
+        if 'SESSION' in self.REQUEST.other:
+            # this occurs when testing
+            return True
+        elif self.session_data_manager.hasSessionData():
+            return True
+        else:
+            return False
+
     def __isSession(self, key):
         """Test if exists a variable with the given key in SESSION"""
+        if not self._sessionExists():
+            return 0
         return self.REQUEST.SESSION.has_key(key)
 
     def __getSession(self, key, default):
         """Get a key value from SESSION; if that key doesn't exist then return default value"""
+        if not self._sessionExists():
+            return default
         try: return self.REQUEST.SESSION[key]
         except: return default
 
@@ -45,6 +61,8 @@ class session_manager:
 
     def __delSession(self, key):
         """Delete a value from SESSION"""
+        if not self._sessionExists():
+            return
         try: self.REQUEST.SESSION.delete(key)
         except: pass
 
