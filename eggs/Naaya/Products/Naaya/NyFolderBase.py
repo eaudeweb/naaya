@@ -14,6 +14,7 @@ from Products.Naaya.constants import METATYPE_FOLDER
 from Products.NaayaBase.NyPermissions import NyPermissions
 from naaya.content.base.interfaces import INyContentObject
 from interfaces import IObjectView
+from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS, PERMISSION_DELETE_OBJECTS
 
 
 class NyContentTypeViewAdapter(object):
@@ -158,4 +159,75 @@ class NyFolderBase(Folder, NyPermissions):
             return real_object.is_open_for_comments()
         else:
             return False
+
+
+    security.declareProtected(PERMISSION_COPY_OBJECTS, 'copyObjects')
+    def copyObjects(self, REQUEST=None, **kwargs):
+        """ """
+        if not REQUEST:
+            ids = self.utConvertToList(kwargs.get('id', []))
+            return self.manage_copyObjects(ids)
+
+        kwargs.update(REQUEST.form)
+        ids = self.utConvertToList(kwargs.get('id', []))
+        if not ids:
+            self.setSessionErrors(['Please select one or more items to copy.'])
+        else:
+            try: self.manage_copyObjects(ids, REQUEST)
+            except: self.setSessionErrors(['Error while copy data.'])
+            else: self.setSessionInfo(['Item(s) copied.'])
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
+
+    security.declareProtected(PERMISSION_DELETE_OBJECTS, 'cutObjects')
+    def cutObjects(self, REQUEST=None, **kwargs):
+        """ """
+        if not REQUEST:
+            ids = self.utConvertToList(kwargs.get('id', []))
+            return self.manage_cutObjects(ids)
+
+        kwargs.update(REQUEST.form)
+        ids = self.utConvertToList(kwargs.get('id', []))
+        if not ids:
+            self.setSessionErrors(['Please select one or more items to cut.'])
+        else:
+            try: self.manage_cutObjects(ids, REQUEST)
+            except: self.setSessionErrors(['Error while cut data.'])
+            else: self.setSessionInfo(['Item(s) cut.'])
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
+
+    security.declareProtected(view, 'pasteObjects')
+    def pasteObjects(self, REQUEST=None, **kwargs):
+        """ """
+        if not REQUEST:
+            cp = kwargs.get('cp_data', None)
+            return self.manage_pasteObjects(cp)
+
+        if not self.checkPermissionPasteObjects():
+            self.setSessionErrors(['You are not allowed to paste objects in this context.'])
+        else:
+            try: self.manage_pasteObjects(None, REQUEST)
+            except: self.setSessionErrors(['Error while paste data.'])
+            else: self.setSessionInfo(['Item(s) pasted.'])
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
+
+    security.declareProtected(PERMISSION_DELETE_OBJECTS, 'deleteObjects')
+    def deleteObjects(self, REQUEST=None, **kwargs):
+        """ """
+        if not REQUEST:
+            ids = self.utConvertToList(kwargs.get('id', []))
+            return self.manage_delObjects(ids)
+
+        kwargs.update(REQUEST.form)
+        id_list = self.utConvertToList(kwargs.get('id', []))
+        if not id_list:
+            self.setSessionErrors(['Please select one or more items to delete.'])
+        else:
+            try:
+                self.manage_delObjects(id_list)
+            except Exception, err:
+                self.setSessionErrors(['Error while delete data.'])
+                zLOG.LOG("NyFolder.deleteObjects", zLOG.DEBUG, err)
+            else:
+                self.setSessionInfo(['Item(s) deleted.'])
+        return REQUEST.RESPONSE.redirect('index_html')
 
