@@ -2,6 +2,6 @@
 	<metal:block fill-slot="toolbar_extend">
 		<input type="button" value="Create Folder"
 			tal:condition="python:here.getSite() == here"
-			tal:attributes="onclick python:'location.href='+here.absolute_url()+'/folder_add_html'" />
+			tal:attributes="onclick python:'location.href=\''+here.absolute_url()+'/folder_add_html\''" />
 	</metal:block>
 </metal:block>
