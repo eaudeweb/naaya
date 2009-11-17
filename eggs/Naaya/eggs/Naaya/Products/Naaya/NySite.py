@@ -96,7 +96,7 @@ from managers.skel_parser import skel_parser
 from managers.networkportals_manager import networkportals_manager
 from Products.NaayaBase.managers.import_parser import import_parser
 from NyVersions import NyVersions
-from NyFolder import NyFolder, addNyFolder, importNyFolder
+from NyFolder import NyFolder, folder_add_html, addNyFolder, importNyFolder
 from Products.NaayaCore.NotificationTool.Subscriber import Subscriber
 from Products.NaayaBase.gtranslate import translate, translate_url
 from NyFolderBase import NyFolderBase
@@ -3583,6 +3583,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(view, 'folder_listing')
     folder_listing = PageTemplateFile(
         'zpt/folder_listing', globals())
+
+    security.declareProtected(PERMISSION_ADD_FOLDER, 'folder_add_html')
+    folder_add_html = folder_add_html
+    security.declareProtected(PERMISSION_ADD_FOLDER, 'addNyFolder')
+    addNyFolder = addNyFolder
 
     security.declareProtected(view, 'macro_utils')
     macro_utils = PageTemplateFile('zpt/site_macro_utils', globals())
