@@ -37,7 +37,8 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaBase.NyFSFile import NyFSFile
 from Products.NaayaBase.NyContentType import NyContentData
 from zope.event import notify
-from naaya.content.base.events import NyContentObjectAddedEvent
+from naaya.content.base.events import NyContentObjectAddEvent
+from naaya.content.base.events import NyContentObjectEditEvent
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -166,7 +167,7 @@ def addNyFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
-    notify(NyContentObjectAddedEvent(ob, schema_raw_data))
+    notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     #log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
@@ -495,6 +496,7 @@ class NyFile_extfile(file_item, NyAttributes, NyItem, NyFolderishVersioning, NyC
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
+        notify(NyContentObjectEditEvent(self, contributor))
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))

@@ -4,7 +4,10 @@
 <body_text i18n:translate="">
 This is an automatically generated message to inform you that the item
 "<tal:block content="options/ob/title_or_id" i18n:name="title" />"
-has been changed at
+has been
+<tal:block condition="not:options/ob_edited">created</tal:block>
+<tal:block condition="options/ob_edited">edited</tal:block>
+at
 <tal:block content="options/ob/absolute_url" i18n:name="url" /> by
 "<tal:block content="options/person" i18n:name="person" />".
 </body_text>

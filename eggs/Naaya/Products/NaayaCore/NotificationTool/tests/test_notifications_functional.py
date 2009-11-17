@@ -79,7 +79,7 @@ class NotificationsTest(NaayaFunctionalTestCase):
         self.assertEqual(self._fetch_test_notifications(), [('from.zope@example.com',
             'contrib@example.com', u'Change notification - Notifying document',
             u'This is an automatically generated message to inform you that the item '
-            u'"Notifying document" has been changed at '
+            u'"Notifying document" has been edited at '
             'http://localhost/portal/notifol/notidoc by "contributor".')])
 
         remove_subscription = self.portal.portal_notification.remove_subscription

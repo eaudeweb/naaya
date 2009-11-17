@@ -8,9 +8,17 @@ class INyContentObject(INyObject):
     def version_status():
         """ returns html that discribes the versioning status """
 
-class INyContentObjectAddedEvent(Interface):
-    """An event triggered when a naaya content object is added.
-    """
 
-    context = Attribute("The added content object")
-    schema = Attribute("Schema arguments used to create the object")
+class INyContentObjectAddEvent(Interface):
+    """ Naaya content object has been created """
+
+    context = Attribute("INyContentObject instance")
+    contributor = Attribute("user_id of user who made the changes")
+    schema_raw_data = Attribute("Schema arguments used to create the object")
+
+
+class INyContentObjectEditEvent(Interface):
+    """ Naaya content object has been edited """
+
+    context = Attribute("INyContentObject instance")
+    contributor = Attribute("user_id of user who made the changes")

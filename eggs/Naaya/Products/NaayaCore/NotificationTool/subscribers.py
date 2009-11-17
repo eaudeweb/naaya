@@ -3,12 +3,22 @@ from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 
 csv_email_template = EmailPageTemplateFile('emailpt/csv_import.zpt', globals())
 
-def handler_object_added(event):
-    if event.schema.get('_send_notifications', True):
-        ob = event.context
-        ob.getSite().notifyFolderMaintainer(ob.aq_parent, ob)
+def handle_object_add(event):
+    if not event.schema.get('_send_notifications', True):
+        return
+    ob = event.context
+    ob.getSite().notifyFolderMaintainer(ob.aq_parent, ob)
+    contributor = event.contributor
+    notification_tool = ob.getSite().getNotificationTool()
+    notification_tool.notify_instant(ob, contributor)
 
-def handler_csv_import(event):
+def handle_object_edit(event):
+    ob = event.context
+    contributor = event.contributor
+    notification_tool = ob.getSite().getNotificationTool()
+    notification_tool.notify_instant(ob, contributor, ob_edited=True)
+
+def handle_csv_import(event):
     folder = event.context
     portal = folder.getSite()
     obj_titles = [folder[oid].title_or_id() for oid in event.ids]
