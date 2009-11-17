@@ -32,7 +32,8 @@ from OFS.Image import cookId
 from persistent.list import PersistentList
 from zExceptions import NotFound
 from zope.event import notify
-from naaya.content.base.events import NyContentObjectAddedEvent
+from naaya.content.base.events import NyContentObjectAddEvent
+from naaya.content.base.events import NyContentObjectEditEvent
 
 #Product imports
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -144,7 +145,7 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
-    notify(NyContentObjectAddedEvent(ob, schema_raw_data))
+    notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     #log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
@@ -253,6 +254,8 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
 
         if _uploaded_file is not None:
             self._save_file(_uploaded_file)
+
+        notify(NyContentObjectEditEvent(self, contributor))
 
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
