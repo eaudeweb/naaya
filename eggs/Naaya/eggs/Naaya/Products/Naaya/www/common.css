@@ -325,7 +325,7 @@ td.title-column a:hover{
 	text-decoration: none;
 	font-weight: normal;
 	color: black;
-	background: url('tabbg.gif') repeat-x top left #F0F5FB;
+	background: #F0F5FB;
 	padding: 0.3em 1em 0.3em 1em;
 	margin: 0.3em 0.1em 0 0.1em;
 	border: 1px solid #346d9f;
@@ -342,7 +342,7 @@ td.title-column a:hover{
 #tabbedmenu #currenttab a {
 	text-decoration: none;
 	font-weight: bold;
-	background: url('tabbg_on.gif') repeat-x top left #336399;
+	background: #336399;
 	margin: 0em 0.1em 0 0.1em;
 	padding: 0.5em 1em 0.4em 1em;
 	color: #fafafa;
