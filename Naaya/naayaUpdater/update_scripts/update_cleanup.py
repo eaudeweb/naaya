@@ -39,6 +39,7 @@ class UpdateCSS(UpdateScript):
         self.log.debug('/'.join(portal.getPhysicalPath()))
 
         self.remove_old_notification_emailpt(portal)
+        self.remove_old_notifications_portlet(portal)
 
         return True
 
@@ -62,3 +63,14 @@ class UpdateCSS(UpdateScript):
             if name in ids:
                 notification_tool.manage_delObjects([name])
                 self.log.info('NotificationTool: removing template %r', name)
+
+    def remove_old_notifications_portlet(self, portal):
+        """
+        Remove the `portlet_notifications` object from `portal_portlets`
+        -- Alex Morega, 2009/11/18
+        """
+        name = 'portlet_notifications'
+        portlets_tool = portal.getPortletsTool()
+        if name in portlets_tool.objectIds():
+            portlets_tool.manage_delObjects(name)
+            self.log.info('PortletsTool: removing portlet %r', name)
