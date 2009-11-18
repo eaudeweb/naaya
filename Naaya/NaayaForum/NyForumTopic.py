@@ -36,7 +36,7 @@ from NyForumMessage import manage_addNyForumMessage_html, message_add_html, addN
 
 try:
     from zope.event import notify as zope_notify
-    from events import NyForumTopicAddedEvent
+    from events import NyForumTopicAddEvent, NyForumTopicEditEvent
 except ImportError:
     zope_notify = None
 
@@ -66,7 +66,7 @@ def addNyForumTopic(self, id='', title='', category='', description='',
     for hook in NyForumTopic_creation_hooks:
         hook(ob)
     if zope_notify is not None:
-        zope_notify(NyForumTopicAddedEvent(ob))
+        zope_notify(NyForumTopicAddEvent(ob, author))
     if REQUEST is not None:
         referer = REQUEST['HTTP_REFERER'].split('/')[-1]
         if referer == 'manage_addNyForumTopic_html' or \
@@ -261,6 +261,12 @@ class NyForumTopic(NyForumBase, Folder):
         self.notify = notify
         self.sort_reverse = sort_reverse
         self._p_changed = 1
+        if zope_notify is not None:
+            if REQUEST is not None:
+                contributor = REQUEST.AUTHENTICATED_USER.getUserName()
+            else:
+                contributor = None
+            zope_notify(NyForumTopicEditEvent(self, contributor))
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())

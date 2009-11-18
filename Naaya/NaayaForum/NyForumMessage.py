@@ -35,7 +35,7 @@ from Products.NaayaBase.constants import *
 
 try:
     from zope.event import notify as zope_notify
-    from events import NyForumMessageAddedEvent
+    from events import NyForumMessageAddEvent, NyForumMessageEditEvent
 except ImportError:
     zope_notify = None
 
@@ -79,7 +79,7 @@ def addNyForumMessage(self, id='', inreplyto='', title='', description='', attac
         for hook in NyForumMessage_creation_hooks:
             hook(ob)
         if zope_notify is not None:
-            zope_notify(NyForumMessageAddedEvent(ob))
+            zope_notify(NyForumMessageAddEvent(ob, author))
         if REQUEST is not None:
             referer = REQUEST['HTTP_REFERER'].split('/')[-1]
             if referer == 'manage_addNyForumMessage_html' or \
@@ -154,6 +154,12 @@ class NyForumMessage(NyForumBase, Folder):
         self.description = description
         self.notify = notify
         self._p_changed = 1
+        if zope_notify is not None:
+            if REQUEST is not None:
+                contributor = REQUEST.AUTHENTICATED_USER.getUserName()
+            else:
+                contributor = None
+            zope_notify(NyForumMessageEditEvent(self, contributor))
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html' % self.absolute_url())
