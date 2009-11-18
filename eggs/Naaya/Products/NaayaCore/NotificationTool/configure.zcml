@@ -15,4 +15,9 @@
     for="naaya.content.base.interfaces.INyContentObjectEditEvent"
     />
 
+  <adapter
+    factory="..NotificationTool.NotificationsPortlet"
+    name="portlet_notifications"
+    />
+
 </configure>

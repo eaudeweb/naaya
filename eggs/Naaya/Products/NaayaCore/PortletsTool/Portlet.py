@@ -28,6 +28,7 @@ import Products
 from OFS.Folder import Folder
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from zope import interface
 
 #Product imports
 from Products.NaayaCore.constants import *
