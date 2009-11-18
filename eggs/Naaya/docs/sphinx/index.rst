@@ -10,6 +10,7 @@ Contents:
    notification_tool
    pluggable_content
    permissions
+   buildout_windows
 
 Indices and tables
 ==================
