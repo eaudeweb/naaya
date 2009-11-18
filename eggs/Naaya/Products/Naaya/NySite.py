@@ -3303,7 +3303,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html' % self.absolute_url())
 
-    security.declareProtected(view, 'is_logged')
     def is_logged(self, REQUEST=None):
         """ """
         if not REQUEST:
