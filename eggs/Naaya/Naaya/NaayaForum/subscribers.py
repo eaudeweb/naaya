@@ -17,9 +17,16 @@
 #
 # Alex Morega, Eau de Web
 
-from interfaces import INyForumObjectAddedEvent
+from interfaces import INyForumObjectAddEvent, INyForumObjectEditEvent
 
-def handler_forum_object_added(event):
+def handle_forum_object_add(event):
     obj = event.context
+    contributor = event.contributor
     notification_tool = obj.getSite().getNotificationTool()
-    notification_tool.notify_instant(obj, obj.author)
+    notification_tool.notify_instant(obj, contributor)
+
+def handle_forum_object_edit(event):
+    obj = event.context
+    contributor = event.contributor
+    notification_tool = obj.getSite().getNotificationTool()
+    notification_tool.notify_instant(obj, contributor, ob_edited=True)

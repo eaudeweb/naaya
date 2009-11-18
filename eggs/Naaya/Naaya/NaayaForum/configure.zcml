@@ -1,8 +1,13 @@
 <configure xmlns="http://namespaces.zope.org/zope">
 
   <subscriber
-    handler="Products.NaayaForum.subscribers.handler_forum_object_added"
-    for="Products.NaayaForum.interfaces.INyForumObjectAddedEvent"
+    handler="Products.NaayaForum.subscribers.handle_forum_object_add"
+    for="Products.NaayaForum.interfaces.INyForumObjectAddEvent"
+    />
+
+  <subscriber
+    handler="Products.NaayaForum.subscribers.handle_forum_object_edit"
+    for="Products.NaayaForum.interfaces.INyForumObjectEditEvent"
     />
 
 </configure>

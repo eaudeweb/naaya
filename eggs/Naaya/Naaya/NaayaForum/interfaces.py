@@ -19,13 +19,27 @@
 
 from zope.interface import Interface, Attribute
 
-class INyForumObjectAddedEvent(Interface):
+class INyForumObjectAddEvent(Interface):
     """ Event triggered when a forum object is added """
 
-    context = Attribute("The new forum topic")
+    context = Attribute("The new forum topic or message")
+    contributor = Attribute("user_id of user who made the changes")
 
-class INyForumTopicAddedEvent(INyForumObjectAddedEvent):
+class INyForumTopicAddEvent(INyForumObjectAddEvent):
     """ Event triggered when a forum topic is added """
 
-class INyForumMessageAddedEvent(INyForumObjectAddedEvent):
+class INyForumMessageAddEvent(INyForumObjectAddEvent):
     """ Event triggered when a forum message is added """
+
+
+class INyForumObjectEditEvent(Interface):
+    """ Event triggered when a forum object is edited """
+
+    context = Attribute("The forum topic or message")
+    contributor = Attribute("user_id of user who made the changes")
+
+class INyForumTopicEditEvent(INyForumObjectEditEvent):
+    """ Event triggered when a forum topic is edited """
+
+class INyForumMessageEditEvent(INyForumObjectEditEvent):
+    """ Event triggered when a forum message is edited """
