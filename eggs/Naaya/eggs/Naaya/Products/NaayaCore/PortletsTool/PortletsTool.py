@@ -28,6 +28,7 @@ from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
 from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from zope import component
 
 #Product imports
 from Products.NaayaCore.constants import *
@@ -39,6 +40,16 @@ from HTMLPortlet import manage_addHTMLPortlet_html, addHTMLPortlet
 from LinksList import manage_addLinksListForm, manage_addLinksList
 from RefList import manage_addRefListForm, manage_addRefList
 from RefTree import manage_addRefTreeForm, manage_addRefTree
+
+from interfaces import INyPortlet
+
+portlet_template_names = {
+    'left': 'portlet_left_macro',
+    'right': 'portlet_right_macro',
+    'center': 'portlet_center_macro',
+}
+portlet_template_reverse_names = dict((v,k) for k,v in portlet_template_names.items())
+
 
 def manage_addPortletsTool(self, REQUEST=None):
     """ """
@@ -123,6 +134,10 @@ class PortletsTool(Folder, utils):
         except: ob = None
         if ob is not None:
             if ob.meta_type not in [METATYPE_PORTLET, METATYPE_HTMLPORTLET]: ob = None
+        if ob is None:
+            ob = component.queryAdapter(self.getSite(), INyPortlet, name=p_id)
+            if ob is not None:
+                return LegacyPortletWrapper(ob, p_id)
         return ob
 
     def getLinksListById(self, p_id):
@@ -232,7 +247,7 @@ class PortletsTool(Folder, utils):
 
     def _get_portlets_for_ids(self, portlet_ids):
         for portlets_id in portlet_ids:
-            portlet = self._getOb(portlets_id, None)
+            portlet = self.getPortletById(portlets_id)
             if portlet is not None:
                 yield portlet
 
@@ -247,7 +262,7 @@ class PortletsTool(Folder, utils):
 
         if action == 'Assign':
             portlet_id = form['portlet_id']
-            portlet = self._getOb(portlet_id)
+            portlet = self.getPortletById(portlet_id)
             location = form['location']
             position = form['position']
             inherit = form.get('inherit', False)
@@ -274,7 +289,7 @@ class PortletsTool(Folder, utils):
 
         elif action == 'Unassign':
             portlet_id = form['portlet_id']
-            portlet = self._getOb(portlet_id)
+            portlet = self.getPortletById(portlet_id)
             location = form['location']
             position = form['position']
             self.unassign_portlet(location, position, portlet_id)
@@ -285,7 +300,7 @@ class PortletsTool(Folder, utils):
 
         elif action == 'ToggleInherit':
             portlet_id = form['portlet_id']
-            portlet = self._getOb(portlet_id)
+            portlet = self.getPortletById(portlet_id)
             location = form['location']
             key = (location, form['position'])
             for i in self._portlet_layout[key]:
@@ -333,7 +348,7 @@ class PortletsTool(Folder, utils):
         assignments = dict()
 
         def add_portlet_if_exists(portlet_id, folder_path, position, inherit, oldstyle=False):
-            portlet = self._getOb(portlet_id, None)
+            portlet = self.getPortletById(portlet_id)
             if portlet is not None:
                 key = (folder_path, position)
                 data = {
@@ -368,8 +383,17 @@ class PortletsTool(Folder, utils):
 
     def get_all_portlets(self):
         output = []
+        names = set()
         for portlet_id in self.getPortletsIds():
-            output.append(self._getOb(portlet_id))
+            output.append(self.getPortletById(portlet_id))
+            names.add(portlet_id)
+
+        site = self.getSite()
+        for portlet_id, portlet in component.getAdapters((site,), INyPortlet):
+            if portlet_id not in names:
+                output.append(LegacyPortletWrapper(portlet, portlet_id))
+                names.add(portlet_id)
+
         return output
 
     def sort_portlets(self, REQUEST, folder_path, position, portlet_order):
@@ -389,6 +413,11 @@ class PortletsTool(Folder, utils):
         self._p_changed = True
 
         return 'ok'
+
+    def _get_macro(self, name):
+        tmpl_name = portlet_template_names[name]
+        skin = self.getSite().getLayoutTool().getCurrentSkin()
+        return skin.getTemplateById(tmpl_name).macros['portlet']
 
     #zmi actions
     security.declareProtected(view_management_screens, 'manage_left_portlets')
@@ -430,6 +459,30 @@ class PortletsTool(Folder, utils):
     manage_right_portlets_html = PageTemplateFile('zpt/manage_right_portlets', globals())
 
 InitializeClass(PortletsTool)
+
+class LegacyPortletWrapper(object):
+    security = ClassSecurityInfo()
+
+    def __init__(self, portlet, portlet_id):
+        self.portlet_id = portlet_id
+        self.portlet = portlet
+
+    security.declarePublic('id')
+    @property
+    def id(self):
+        return self.portlet_id
+
+    def __call__(self, options):
+        position = portlet_template_reverse_names[options['portlet_macro']]
+        return self.portlet(options['here'], position)
+
+    def title_or_id(self):
+        return self.portlet.title
+
+    def get_type_label(self):
+        return 'Special'
+
+InitializeClass(LegacyPortletWrapper)
 
 def simplehash(data):
     """ generate a hex hashkey for a simple dict """

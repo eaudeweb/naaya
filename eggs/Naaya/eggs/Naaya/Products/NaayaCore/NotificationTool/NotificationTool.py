@@ -34,6 +34,7 @@ from OFS.Folder import Folder
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from persistent.dict import PersistentDict
 from BTrees.OIBTree import OISet as PersistentTreeSet
+from zope import interface
 from zope import component
 
 #Product imports
@@ -42,6 +43,7 @@ from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 from Products.NaayaCore.EmailTool.EmailPageTemplate import EmailPageTemplateFile
 from Products.NaayaCore.EmailTool.EmailTool import build_email
 from Products.Naaya.interfaces import INySite, IHeartbeat
+from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
 
 from naaya.core.utils import relative_object_path
 
@@ -455,3 +457,23 @@ def notifSubscriber(site, hb):
     site.getNotificationTool()._cron_heartbeat(when)
 component.provideHandler(notifSubscriber)
 
+class NotificationsPortlet(object):
+    interface.implements(INyPortlet)
+    component.adapts(INySite)
+
+    title = 'Subscribe to notifications'
+
+    def __init__(self, site):
+        self.site = site
+
+    def __call__(self, context, position):
+        subscriber = context.notifications_subscribe
+        enabled_subscriptions = list(subscriber.list_enabled_subscriptions())
+        if not enabled_subscriptions:
+            return ''
+
+        macro = self.site.getPortletsTool()._get_macro(position)
+        tmpl = self.template.__of__(context)
+        return tmpl(macro=macro, context=context)
+
+    template = PageTemplateFile('zpt/portlet', globals())
