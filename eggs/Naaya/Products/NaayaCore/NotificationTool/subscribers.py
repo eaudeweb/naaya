@@ -31,7 +31,7 @@ def handle_csv_import(event):
     }
 
     mail_data = csv_email_template.render_email(**mail_args)
-    mail_from = portal.get_portal_mail_address()
+    mail_from = portal.getEmailTool()._get_from_address()
     mail_to = portal.getMaintainersEmails(folder)
     mail_subject = mail_data['subject']
     mail_body = mail_data['body_text']
