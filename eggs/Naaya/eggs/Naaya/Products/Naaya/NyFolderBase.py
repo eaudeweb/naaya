@@ -15,6 +15,9 @@ from Products.NaayaBase.NyPermissions import NyPermissions
 from naaya.content.base.interfaces import INyContentObject
 from interfaces import IObjectView
 from Products.NaayaBase.constants import PERMISSION_COPY_OBJECTS, PERMISSION_DELETE_OBJECTS
+from Products.Naaya.interfaces import INySite
+from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 
 class NyContentTypeViewAdapter(object):
@@ -230,4 +233,18 @@ class NyFolderBase(Folder, NyPermissions):
             else:
                 self.setSessionInfo(['Item(s) deleted.'])
         return REQUEST.RESPONSE.redirect('index_html')
+
+class ObjectListingPortlet(object):
+    implements(INyPortlet)
+    adapts(INySite)
+
+    title = 'List contained objects'
+
+    def __init__(self, site):
+        self.site = site
+
+    def __call__(self, context, position):
+        return self.template.__of__(context)()
+
+    template = NaayaPageTemplateFile('zpt/listing_portlet', globals(), 'naaya.core.folder.listing_portlet')
 

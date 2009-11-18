@@ -1,3 +1,9 @@
 <configure xmlns='http://namespaces.zope.org/zope'>
   <include package=".adapter" />
+
+  <adapter
+    factory="Products.Naaya.NyFolderBase.ObjectListingPortlet"
+    name="portlet_objects_listing"
+    />
+
 </configure>
