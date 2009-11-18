@@ -32,7 +32,6 @@ import os
 
 #Naaya imports
 from Products.naayaUpdater.update_scripts import UpdateScript, PRIORITY
-from Products.NaayaCore.NotificationTool.NotificationTool import load_default_templates
 
 class UpdateNotificationTool(UpdateScript):
     """ Update Notification tool """
@@ -53,13 +52,7 @@ class UpdateNotificationTool(UpdateScript):
         notif_tool = portal.getNotificationTool()
         portlets_tool = portal.getPortletsTool()
         self.add_properties(notif_tool)
-        self.add_portlets(portal)
         self.add_admin_entry(portal)
-        if not notif_tool.objectIds():
-            load_default_templates(notif_tool)
-            self.log.debug('Added email templates')
-        else:
-            self.log.debug('Notification tool already contains objects - skipping templates')
         return True
 
     def add_properties(self, notif_tool):
@@ -87,30 +80,6 @@ class UpdateNotificationTool(UpdateScript):
         if not hasattr(notif_tool, 'timestamps'):
             setattr(notif_tool, 'timestamps', PersistentDict())
             self.log.debug("Added 'timestamps' attribute to notification tool.")
-
-    def add_portlets(self, portal):
-        portlets_tool = portal.getPortletsTool()
-        portlet_content = self.get_portlet_content(portal, 'portlet_notifications')
-        if not portlet_content:
-            self.log.debug('portlet_notifications missing from all skels - not added')
-            return
-        if not hasattr(portlets_tool, 'portlet_notifications'):
-            portlets_tool.addPortlet('portlet_notifications', 'Portal notifications', '99')
-            portlets_tool['portlet_notifications'].pt_edit(text=portlet_content, content_type='text/html')
-            self.log.debug('Added portlet_notifications')
-        else:
-            self.log.debug('portlet_notifications already exists - skipping')
-
-    def get_portlet_content(self, portal, portlet_name):
-        portlet_name += '.zpt'
-        for path in reversed(portal.product_paths):
-            portlets_dir = os.path.join(path, 'skel', 'portlets')
-            if os.path.isfile(os.path.join(portlets_dir, portlet_name)):
-                 portlet = open(os.path.join(portlets_dir, portlet_name), 'rb')
-                 content = portlet.read()
-                 portlet.close()
-                 return content
-        return None
 
     def add_admin_entry(self, portal):
         portlet = portal.getPortletsTool()['portlet_administration']
