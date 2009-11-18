@@ -181,7 +181,7 @@ class NyCSVImportTest(NaayaTestCase):
                           ' - My URL 1\n - Eau de Web\n\n'
                           'Uploaded by Anonymous User on')
         expected_recipients = ['someone@somehost', ''] #folder_maintainer, administrator_email
-        expected_sender = 'notifications@nohost'
+        expected_sender = 'from.zope@example.com'
 
         mail = diverted_mail[0]
         self.assertTrue(expected_body in mail[0])
