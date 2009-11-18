@@ -147,7 +147,6 @@
 		<portlet id="portlet_administration" title="Administration" />
 		<portlet id="portlet_maincategories" title="Main sections" />
 		<portlet id="portlet_localchannels" title="Local channels" />
-		<portlet id="portlet_objects_listing" title="Objects listing" />
 		<portlet id="portlet_folder_administration" title="Folder Administration"/>
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
 			<link id="102" title="EauDeWeb" description="Eaudeweb Romania" url="http://www.eaudeweb.ro" relative="0" permission="" order="2"/>
