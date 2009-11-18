@@ -3016,11 +3016,13 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     def get_keywords_glossary(self):
         # TODO: deprecate and remove this
-        return None
+        try: return self._getOb(self.keywords_glossary)
+        except: return None
 
     def get_coverage_glossary(self):
         # TODO: deprecate and remove this
-        return None
+        try: return self._getOb(self.coverage_glossary)
+        except: return None
 
     security.declareProtected(PERMISSION_PUBLISH_DIRECT, 'publish_direct')
     def publish_direct(self):
