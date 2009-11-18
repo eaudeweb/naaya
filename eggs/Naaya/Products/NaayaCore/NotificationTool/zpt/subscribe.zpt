@@ -27,14 +27,22 @@
             <option value="monthly" tal:condition="python:'monthly' in available_subscriptions" i18n:translate="">Monthly digest</option>
         </select>
     </label>
-    <label for="lang" i18n:translate="">in</label>
-    <select name="lang" id="lang"
-            tal:define="translations python:here.getPortalTranslations().gettext">
-        <option tal:repeat="item here/gl_get_languages_map"
-                tal:attributes="value python:item['id'];
-                    selected python:item['selected']"
-                tal:content="python:translations(item['title'], item['id'])" />
-    </select>
+    <tal:block define="languages here/gl_get_languages_map">
+        <tal:block condition="python:len(languages) <= 1">
+            <input type="hidden" name="lang" id="lang"
+                   tal:attributes="value python:languages[0]['id']" />
+        </tal:block>
+        <tal:block condition="python:len(languages) > 1">
+        <label for="lang" i18n:translate="">in</label>
+        <select tal:define="translations python:here.getPortalTranslations().gettext"
+                name="lang" id="lang">
+            <option tal:repeat="item languages"
+                    tal:attributes="value python:item['id'];
+                        selected python:item['selected']"
+                    tal:content="python:translations(item['title'], item['id'])" />
+        </select>
+        </tal:block>
+    </tal:block>
     <input name="submit" type="submit" value="Subscribe" i18n:attributes="value"/>
 </form>
 <p tal:condition="python: not available_subscriptions and current_subscriptions">You are subscribed to all available notifications.</p>
