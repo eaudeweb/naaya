@@ -34,6 +34,8 @@ from AccessControl.Permissions import view_management_screens, view
 from Acquisition import Implicit
 from OFS.SimpleItem import Item
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from zope.event import notify 
+from naaya.content.base.events import NyContentObjectAddEvent, NyContentObjectEditEvent
 
 from naaya.content.bfile.NyBlobFile import make_blobfile
 #Product imports
@@ -186,7 +188,7 @@ def addNyInstitution(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
-    self.notifyFolderMaintainer(self, ob)
+    notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     #log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
@@ -369,6 +371,7 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
             contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
             auth_tool = self.getAuthenticationTool()
             auth_tool.changeLastPost(contributor)
+            notify(NyContentObjectEditEvent(self, contributor))
             if REQUEST:
                 self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
