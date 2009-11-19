@@ -50,7 +50,7 @@
                              query python:test(proc_query.startswith('?'), proc_query, '?' + proc_query);
                              global came_from python:test(query, proc_came_from + query, proc_came_from)">
         </tal:block>
-        <div id="outer_wrapper">
+        <div id="outer_wrapper" tal:define="username python:request.AUTHENTICATED_USER.getUserName()">
             <div id="container" tal:attributes="style python:test(len(here.portal_portlets.get_portlets_for_obj(here, 'right')) or here.meta_type == here.get_constant('METATYPE_FOLDER'), '', 'background: none')">
                 <div id="toolribbon">
                     <div id="topnav">
@@ -62,8 +62,8 @@
                             </div>
                         </form>
                         <ul tal:define="l_list python:here.getPortletsTool().getLinksListById('top').get_links_list()">
-                            <li><a tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'" tal:attributes="href string:${site_url}/login_html?came_from=${came_from}&disable_cookie_login__=1" i18n:translate="">Login</a></li>
-                            <li><a tal:condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'" tal:attributes="href string:${site_url}/login_html" i18n:translate="">Logout</a></li>
+                            <li><a tal:condition="python:username == 'Anonymous User'" tal:attributes="href string:${site_url}/login_html?came_from=${came_from}&disable_cookie_login__=1" i18n:translate="">Login</a></li>
+                            <li><a tal:condition="python:username != 'Anonymous User'" tal:attributes="href string:${site_url}/login_html" i18n:translate="">Logout <tal:block tal:content="string:(${username})" i18n:name="username"/></a></li>
                             <tal:block tal:repeat="item l_list">
                                 <li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
                             </tal:block>

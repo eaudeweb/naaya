@@ -2,8 +2,9 @@
 <skel>
     <forms>
         <form id="languages_box" title="Box for changing the language on pages"/>
-        <form id="request_ig_access" title="Page where an unauthorized user can request access to the IG"/>
         <form id="site_login" title="Portal login"/>
+        <form id="site_admin_properties" title="Portal properties"/>
+        <form id="folder_menusubmissions" title="NyFolder menu of submissions"/>
     </forms>
 	<layout default_skin_id="groupware" default_scheme_id="eionet">
 		<skin id="groupware" title="Groupware">
@@ -77,6 +78,7 @@
 		<role name="Anonymous" grouppermissions="Browse content" permissions=""/>
 		<role name="Authenticated" grouppermissions="Add comments" permissions="Naaya - Bulk download,Naaya - Skip Captcha"/>
 		<role name="Contributor" grouppermissions="Add content" permissions=""/>
+		<role name="Viewer" grouppermissions="Add comments" permissions="View"/>
 		<role name="Administrator" grouppermissions="Browse content,Add content,Add comments,Edit content,Copy content,Publish content,Delete content,Validate content,Translate pages,Manage Users" permissions=""/>
 	</security>
 

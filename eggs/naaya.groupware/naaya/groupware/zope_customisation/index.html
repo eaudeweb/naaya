@@ -24,14 +24,20 @@
                   <a href="http://ew.eea.europa.eu/" id="ewlink">EnviroWindows</a>
                 </div>
                 <div id="righttools">
-                    <a id="loginlink" href="/loggedin" tal:condition="python:user_obj.getUserName() == 'Anonymous User'">Login</a>
-                    <a id="logoutlink" href="/manage_zmi_logout" tal:condition="python:user_obj.getUserName() != 'Anonymous User'">Logout</a>
+                    <a id="loginlink" href="./loggedin" tal:condition="python:user_obj.getUserName() == 'Anonymous User'">Login</a>
+                    <a id="logoutlink" href="./manage_zmi_logout" tal:condition="python:user_obj.getUserName() != 'Anonymous User'">Logout (<span tal:replace="user_obj/getUserName"/>)</a>
                 </div>
             </div>
             <div id="pagehead">
                 <a href="/" title="Frontpage"></a>
                 <div id="networktitle">Naaya Groupware</div>
                 <div id="sitetitle">Demo site</div>
+            </div>
+            <div class="breadcrumbtrail">
+                <div class="breadcrumbhead" i18n:translate="">You are here: </div>
+                <div class="breadcrumbitemlast">
+                    <a href="." title="Groupware home">Groupware home</a>
+                </div>
             </div>
             <div id="workarea" tal:define="portals here/groupedIGs">
                 <tal:block define="igs python:portals.get('admin', [])" condition="igs">
@@ -60,6 +66,7 @@
                         <li tal:repeat="ig igs">
                             <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
                             <span tal:replace="ig/site_subtitle"/>
+                            [<small><a tal:attributes="href string:${ig/absolute_url}/request_ig_access_html">Request membership</a></small>]
                             <div tal:content="structure ig/description"></div>
                         </li>
                     </ul>

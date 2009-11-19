@@ -93,7 +93,9 @@ function toggleSelect()
 		    rkey python:request.get('rkey', 0);
 		    id python:request.get('id', 0);
 		    site_path python:here.getSitePath();
-		    source_id python:request.get('id', '')">
+		    source_id python:request.get('id', '');
+		    req_role python:request.get('req_role', '');
+		    req_location python:request.get('req_location', '')">
 
 <string tal:replace="python:here.deleteCache(user_folder)" />
 <p>
@@ -173,6 +175,7 @@ function toggleSelect()
 <p><input type="submit" value="Revoke selected roles" /></p>
 </form>
 </fieldset>
+<a name="ldap_user_roles"/>
 <fieldset><legend>Assign roles to users</legend>
 <p>
 	Select a user from the above list by clicking on its ID or just type its userid in the field below,
@@ -251,8 +254,8 @@ function toggleSelect()
 		<td><select name="roles" size="5" multiple="multiple">
 			<tal:block repeat="item here/list_valid_roles">
 			<option tal:condition="python:item=='Manager' and request.AUTHENTICATED_USER.has_role('Manager')"
-					tal:attributes="value item" tal:content="item" />
-			<option tal:condition="python:item!='Manager'" tal:attributes="value item" tal:content="item" />
+					tal:attributes="value item; selected python:req_role and req_role == item" tal:content="item" />
+			<option tal:condition="python:item!='Manager'" tal:attributes="value item; selected python:req_role and req_role == item" tal:content="item" />
 			</tal:block>
 			</select>
 		</td>
@@ -260,9 +263,9 @@ function toggleSelect()
 	<tr>
 		<td style="vertical-align: top">Location(folder)<br />e.g. /folderURL</td>
 		<td>
-			<input type="radio" name="loc" value="allsite" checked="checked" onclick="emptyLocation();" /> Entire portal<br />
-			<input type=radio name="loc" value="other" /> Pick other...<br />
-			<input type=text name="location" size="50" onclick="pickLocation();" value="" />
+			<input type="radio" name="loc" value="allsite" tal:attributes="checked not:req_location" onclick="emptyLocation();" /> Entire portal<br />
+			<input type=radio name="loc" value="other" tal:attributes="checked req_location" /> Pick other...<br />
+			<input type=text name="location" size="50" onclick="pickLocation();" value="" tal:attributes="value req_location" />
 			<input type="button" value="Pick" tal:attributes="onclick string:javascript:setupWin('${here/getAuthenticationToolPath}/sitemap', 400, 500);" />
 		</td>
 	</tr>
