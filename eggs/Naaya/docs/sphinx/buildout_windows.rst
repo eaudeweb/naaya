@@ -65,7 +65,7 @@ Configurations, build
 4. Open a command prompt, change to the Naaya buildout checkout folder, and run::
 
        python bootstrap.py
-       bin\buildout –v
+       bin\buildout -v
 
 5. After installation you can start the Zope instance with::
 
