@@ -35,7 +35,8 @@ from Acquisition import Implicit
 from OFS.SimpleItem import Item
 from zope.interface import implements
 from zope.component import adapts
-
+from zope.event import notify 
+from naaya.content.base.events import NyContentObjectAddEvent, NyContentObjectEditEvent
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -219,8 +220,7 @@ def addNyExpert(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
-    if _send_notifications:
-        self.notifyFolderMaintainer(self, ob)
+    notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     #log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
@@ -372,6 +372,7 @@ class NyExpert(expert_item, NyAttributes, NyItem, NyCheckControl, NyValidation, 
         contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
+        notify(NyContentObjectEditEvent(self, contributor))
         if REQUEST:
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
