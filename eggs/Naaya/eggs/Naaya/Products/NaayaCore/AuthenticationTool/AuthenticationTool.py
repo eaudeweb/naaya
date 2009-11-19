@@ -824,7 +824,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             user_info.append(unicode(user).encode('utf-8'))
 
             full_name = self.getUserFirstName(user) + ' ' + self.getUserLastName(user)
-            user_info.append(unicode(full_name).encode('utf-8'))
+            if isinstance(full_name, unicode):
+                full_name = full_name.encode('utf-8')
+            user_info.append(full_name)
 
             email = self.getUserEmail(user)
             user_info.append(unicode(email).encode('utf-8'))
