@@ -11,6 +11,8 @@ from App.ImageFile import ImageFile
 from Products.Naaya.NySite import NySite
 from Products.NaayaCore.managers.utils import utils
 from Products.Naaya.NyFolder import addNyFolder
+from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile as nptf
 try:
     from Products.RDFCalendar.RDFCalendar import manage_addRDFCalendar
     rdf_calendar_available = True
@@ -87,9 +89,91 @@ class GroupwareSite(NySite):
         else:
             return 'restricted'
 
-    def request_ig_access_html(self, REQUEST=None, RESPONSE=None):
+    @property
+    def portal_is_restricted(self):
+        view_perm = getattr(self, '_View_Permission', [])
+        return isinstance(view_perm, tuple) and ('Anonymous' not in view_perm)
+
+    security.declarePrivate('toggle_portal_restricted')
+    def toggle_portal_restricted(self, status):
+        permission = getattr(self, '_View_Permission', [])
+
+        if status:
+            new_permission = [x for x in permission if x != 'Anonymous']
+            if 'Contributor' not in new_permission:
+                new_permission.append('Contributor')
+            self._View_Permission = tuple(new_permission)
+        else:
+            new_permission = list(permission)
+            new_permission.append('Anonymous')
+            self._View_Permission = new_permission
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
+    def admin_properties(self, REQUEST=None, **kwargs):
         """ """
-        return self.getFormsTool().getContent({'here': self.REQUEST.PARENTS[0]}, 'request_ig_access')
+        if REQUEST is not None:
+            kwargs.update(REQUEST.form)
+        self.toggle_portal_restricted(kwargs.get('portal_is_restricted', None))
+        super(GroupwareSite, self).admin_properties(REQUEST=REQUEST, **kwargs)
+
+    def request_ig_access(self, REQUEST):
+        """ Called when `request_ig_access_html` submits.
+            Sends a mail to the portal administrator informing
+            that the current user has requested elevated access.
+        """
+        role = REQUEST.form.get('role', '')
+        location = REQUEST.form.get('location', '')
+        sources = self.getAuthenticationTool().getSources()
+
+        if not role or not sources:
+            return REQUEST.RESPONSE.redirect(REQUEST.HTTP_REFERER)
+
+        source_obj = sources[0] #should not be more than one
+        if location == "__root":
+            location = ''
+        if location:
+            location_obj = self.unrestrictedTraverse(location, None)
+            location_title = location_obj.title_or_id()
+            location_url = location_obj.absolute_url()
+        else:
+            location_title = self.title_or_id()
+            location_url = self.absolute_url()
+
+        user = REQUEST.AUTHENTICATED_USER
+
+        user_admin_link = \
+             ("%(ig_url)s/admin_sources_html?"
+              "id=%(source_id)s&params=uid&term=%(userid)s&search_user=Search&"
+              "req_role=%(role)s&req_location=%(location)s#ldap_user_roles") % \
+                  {'role': role,
+                   'userid': user.name,
+                   'ig_url': self.absolute_url(),
+                   'source_id': source_obj.getId(),
+                   'location': location}
+
+        mail_tool = self.getEmailTool()
+        mail_to = self.administrator_email
+        mail_from = mail_tool._get_from_address()
+        mail_subject = "IG access request"
+        mail_body = \
+            ("This is an automated mail to inform you that "
+             "user `%(userid)s` has requested %(role)s rights on "
+             "%(location_title)s (%(location_url)s).\n\n"
+             "You can choose to grant the request by following these steps:\n"
+             " - Open the user administration page at %(user_admin_link)s\n"
+             " - Verify the form contents for the requesting user\n"
+             " - Click on the `Assign role` button\n")  % \
+                {'role': role,
+                 'userid': user.name,
+                 'location_title': location_title,
+                 'user_admin_link': user_admin_link,
+                 'location_url': location_url}
+
+        mail_tool.sendEmail(mail_body, mail_to, mail_from, mail_subject)
+
+        return REQUEST.RESPONSE.redirect('%s/request_ig_access_html?mail_sent=True' % self.absolute_url())
+
+    request_ig_access_html = nptf('zpt/request_ig_access', globals(), 'naaya.groupware.request_ig_access')
 
     gw_common_css = ImageFile('www/gw_common.css', globals())
     gw_print_css = ImageFile('www/gw_print.css', globals())
