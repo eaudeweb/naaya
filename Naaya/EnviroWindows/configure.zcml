@@ -1,0 +1,8 @@
+<configure xmlns='http://namespaces.zope.org/zope'>
+
+  <adapter
+    factory="Products.EnviroWindows.EnviroWindowsSite.ObjectListingPortlet"
+    name="portlet_objects_listing"
+    />
+
+</configure>
