@@ -4,8 +4,14 @@
 
 <tal:block metal:fill-slot="section" tal:define="mode python:request.get('mode', '')">
 <tal:block tal:define="site_url here/getSitePath;
+						user_tool here/getAuthenticationTool;
 						source_id python:request.get('id', '');
-						source_obj python:here.getAuthenticationTool().getSourceObj(source_id);">
+						source_obj python:user_tool.getSourceObj(source_id);">
+
+<a style="float: right" tal:condition="user_tool/showBulkDownloadButton"
+		tal:attributes="href string:${user_tool/absolute_url}/downloadUsersCsv">
+	<span i18n:translate="">Bulk download</span>
+</a>
 
 <div id="tabbedmenu">
 <ul>
