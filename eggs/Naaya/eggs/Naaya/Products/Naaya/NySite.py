@@ -2833,6 +2833,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_sources_html')
     def admin_sources_html(self, REQUEST=None, RESPONSE=None):
         """ """
+        came_from = REQUEST.get('came_from', None)
+        if came_from is not None:
+            return REQUEST.RESPONSE.redirect(came_from)
         return self.getFormsTool().getContent({'here': self}, 'site_admin_sources')
 
     security.declareProtected(PERMISSION_TRANSLATE_PAGES, 'admin_translations_html')
