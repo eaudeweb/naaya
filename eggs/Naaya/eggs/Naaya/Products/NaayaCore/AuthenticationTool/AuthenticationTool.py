@@ -25,6 +25,8 @@ import re
 import time
 import string
 from copy import copy, deepcopy
+from StringIO import StringIO
+import csv
 
 #zope imports
 from OFS.PropertyManager import PropertyManager
@@ -45,6 +47,7 @@ from Products.NaayaCore.managers.session_manager import session_manager
 from plugins_tool import plugins_tool
 from User import User
 from Role import Role
+from Products.NaayaBase.constants import PERMISSION_PUBLISH_OBJECTS
 
 
 def manage_addAuthenticationTool(self, REQUEST=None):
@@ -793,6 +796,72 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         except: pass
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_sources_html')
+
+    def showBulkDownloadButton(self):
+        """ """
+        return self.checkPermissionPublishObjects()
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'downloadUsersCsv')
+    def downloadUsersCsv(self, REQUEST=None, RESPONSE=None):
+        """ Return a csv file as a session response.
+        """
+        if not (REQUEST and RESPONSE):
+            return ""
+
+        if REQUEST and not self.getParentNode().checkPermissionPublishObjects():
+            raise Unauthorized
+
+        output = StringIO()
+        csv_writer = csv.writer(output)
+        csv_writer.writerow(['Account', 'User', 'Full name', 'Email address', 'LDAP Group', 'LDAP Roles'])
+
+        local_users = self.getUsers()
+        for user in local_users:
+            user_info = []
+
+            user_info.append(u'Local')
+
+            user_info.append(unicode(user).encode('utf-8'))
+
+            full_name = self.getUserFirstName(user) + ' ' + self.getUserLastName(user)
+            user_info.append(unicode(full_name).encode('utf-8'))
+
+            email = self.getUserEmail(user)
+            user_info.append(unicode(email).encode('utf-8'))
+
+            csv_writer.writerow(user_info)
+
+        ldap_sources = self.getSources()
+        for source in ldap_sources:
+            acl = source.getUserFolder()
+            for user, roles in source.getUsersRoles(acl).items():
+                user_info = []
+
+                user_info.append(u'LDAP (source_id=%s)' % source.id)
+
+                user_info.append(user)
+
+                full_name = source.getUserFullName(user, acl)
+                user_info.append(full_name)
+
+                email = source.getUserEmail(user, acl)
+                user_info.append(email)
+
+                group = source.getUserLocation(user)
+                user_info.append(group)
+
+                roles_info = ' | '.join([', '.join(role[0]) + ' on ' + role[1] for role in roles])
+                user_info.append(unicode(roles_info).encode('utf-8'))
+
+                csv_writer.writerow(user_info)
+
+        RESPONSE.setHeader('Content-Type', 'text/csv; charset=utf-8')
+        RESPONSE.setHeader('Content-Length', output.len)
+        RESPONSE.setHeader('Pragma', 'public')
+        RESPONSE.setHeader('Cache-Control', 'max-age=0')
+        RESPONSE.setHeader('Content-Disposition', "inline; filename*=UTF-8''users.csv")
+
+        return output.getvalue()
 
     manage_users_html = PageTemplateFile('zpt/authentication_content', globals())
     manage_addUser_html = PageTemplateFile('zpt/authentication_adduser', globals())
