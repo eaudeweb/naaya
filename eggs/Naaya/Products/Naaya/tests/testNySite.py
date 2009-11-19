@@ -1,9 +1,19 @@
+# Python
 import time
+from unittest import TestSuite, makeSuite
+from BeautifulSoup import BeautifulSoup
+
+# Zope
+from DateTime import DateTime
+import transaction
+
+# Products
 from Products.Naaya.NySite import NySite
 from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
+from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.Naaya import NyFolder
-from unittest import TestSuite, makeSuite
-from DateTime import DateTime
+from Products.Naaya.NyFolder import addNyFolder
+from testNyFolder import FolderListingInfo
 
 class TestNySite(NaayaTestCase):
 
@@ -42,8 +52,31 @@ class TestNySite(NaayaTestCase):
         
         self.assertNotEqual(aDate, now, "The two dates were equal!")
 
+class TestNySiteListing(NaayaFunctionalTestCase):
+    """ """
+    def afterSetUp(self):
+        addNyFolder(self.portal, 'test_folder', contributor='contributor', submission=1)
+
+        self.portal.getPortletsTool().assign_portlet('', 'center', 'portlet_objects_listing')
+        transaction.commit()
+
+    def beforeTearDown(self):
+        self.portal.manage_delObjects(['test_folder'])
+
+        self.portal.getPortletsTool().unassign_portlet('', 'center', 'portlet_objects_listing')
+        transaction.commit()
+
+    def test_view(self):
+        self.browser_do_login('contributor', 'contributor')
+
+        site_info = FolderListingInfo(self.browser, self.portal, 'test_folder')
+        self.assertFalse(site_info.has_checkbox)
+        self.assertTrue(site_info.has_index_link)
+        self.assertTrue(site_info.has_edit_link)
+
 
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(TestNySite))
+    suite.addTest(makeSuite(TestNySiteListing))
     return suite
