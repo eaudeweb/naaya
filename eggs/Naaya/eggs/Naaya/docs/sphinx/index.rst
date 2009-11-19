@@ -6,11 +6,11 @@ Contents:
 .. toctree::
    :maxdepth: 1
 
+   installation
    authentication_tool
    notification_tool
    pluggable_content
    permissions
-   buildout_windows
 
 Indices and tables
 ==================
