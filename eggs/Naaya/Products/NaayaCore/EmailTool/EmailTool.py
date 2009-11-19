@@ -23,6 +23,7 @@ import time
 import smtplib
 import MimeWriter
 import cStringIO
+from urlparse import urlparse
 
 #Zope imports
 from Globals import InitializeClass
@@ -114,8 +115,15 @@ class EmailTool(Folder):
         elif type(p_emails) == type([]):
             return ', '.join(p_emails)
 
+    def _guess_from_address(self):
+        if self.portal_url != '':
+            return 'notifications@%s' % urlparse(self.getSite().get_portal_domain())[1]
+        else:
+            return 'notifications@%s' % self.REQUEST.SERVER_NAME
+
     def _get_from_address(self):
-        return self.getSite().mail_address_from
+        addr_from = self.getSite().mail_address_from
+        return addr_from or self._guess_from_address()
 
     _errors_report = PageTemplateFile('zpt/configuration_errors_report', globals())
     security.declareProtected(naaya_admin, 'configuration_errors_report')

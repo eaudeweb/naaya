@@ -26,7 +26,6 @@
 import urllib
 from os.path import join, isfile
 from urllib import quote
-from urlparse import urlparse
 from copy import copy
 from cStringIO import StringIO
 from zipfile import ZipFile
@@ -1041,11 +1040,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         else:
             return self.portal_url
 
+    # deprecated
     def get_portal_mail_address(self):
-        if self.portal_url != '':
-            return 'notifications@%s' % urlparse(self.get_portal_domain())[1]
-        else:
-            return 'notifications@%s' % self.REQUEST.SERVER_NAME
+        return self.getEmailTool()._get_from_address()
 
     def notifyFolderMaintainer(self, p_folder, p_object, **kwargs):
         """
