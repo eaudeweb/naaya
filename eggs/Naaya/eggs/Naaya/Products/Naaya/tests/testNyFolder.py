@@ -34,7 +34,7 @@ from Products.Naaya.NyFolderBase import NyContentTypeViewAdapter
 from Products.Naaya.interfaces import IObjectView
 from naaya.content.base.interfaces import INyContentObject
 
-class FolderIndexInfo:
+class FolderListingInfo:
     def __init__(self, browser, parent, name):
         parent_url = parent.absolute_url(1)
         soup = self.makeSoup(browser, parent_url, name)
@@ -112,7 +112,7 @@ class FolderIndexInfo:
 
 
 
-class TestNyFolderFileListing(NaayaFunctionalTestCase):
+class TestNyFolderListing(NaayaFunctionalTestCase):
     def afterSetUp(self):
         self.ancestor = self.portal.info
         self.parent_name = 'testparentfolder'
@@ -211,7 +211,7 @@ class TestNyFolderFileListing(NaayaFunctionalTestCase):
         self.browser_do_login('contributor', 'contributor')
 
         # no links in parent2
-        parent2_info = FolderIndexInfo(self.browser, self.parent2, self.folder_name)
+        parent2_info = FolderListingInfo(self.browser, self.parent2, self.folder_name)
         self.assertFalse(parent2_info.has_checkbox)
         self.assertFalse(parent2_info.has_index_link)
         self.assertFalse(parent2_info.has_edit_link)
@@ -227,7 +227,7 @@ class TestNyFolderFileListing(NaayaFunctionalTestCase):
         self.assertTrue(hasattr(self.parent, self.folder_name))
         self.assertFalse(hasattr(self.parent2, self.folder_name))
         # no links in parent
-        parent_info = FolderIndexInfo(self.browser, self.parent, self.folder_name)
+        parent_info = FolderListingInfo(self.browser, self.parent, self.folder_name)
         self.assertFalse(parent_info.has_table_head)
         self.assertFalse(parent_info.has_checkbox)
         self.assertFalse(parent_info.has_index_link)
@@ -241,7 +241,7 @@ class TestNyFolderFileListing(NaayaFunctionalTestCase):
         self.assertTrue(hasattr(self.parent, self.folder_name))
         self.assertFalse(hasattr(self.parent2, self.folder_name))
         # only index link in parent
-        parent_info = FolderIndexInfo(self.browser, self.parent, self.folder_name)
+        parent_info = FolderListingInfo(self.browser, self.parent, self.folder_name)
         self.assertFalse(parent_info.has_checkbox)
         self.assertTrue(parent_info.has_index_link)
         self.assertFalse(parent_info.is_restricted)
@@ -258,7 +258,7 @@ class TestNyFolderFileListing(NaayaFunctionalTestCase):
         self.assertTrue(hasattr(self.parent, self.folder_name))
         self.assertFalse(hasattr(self.parent2, self.folder_name))
         # index and edit link in parent
-        parent_info = FolderIndexInfo(self.browser, self.parent, self.folder_name)
+        parent_info = FolderListingInfo(self.browser, self.parent, self.folder_name)
         self.assertTrue(parent_info.has_table_head)
         self.assertFalse(parent_info.has_checkbox)
         self.assertTrue(parent_info.has_index_link)
@@ -276,7 +276,7 @@ class TestNyFolderFileListing(NaayaFunctionalTestCase):
         self.assertTrue(hasattr(self.parent, self.folder_name))
         self.assertFalse(hasattr(self.parent2, self.folder_name))
         # only index link in parent
-        parent_info = FolderIndexInfo(self.browser, self.parent, self.folder_name)
+        parent_info = FolderListingInfo(self.browser, self.parent, self.folder_name)
         self.assertTrue(parent_info.has_table_head)
         self.assertTrue(parent_info.has_checkbox)
         self.assertTrue(parent_info.has_index_link)
@@ -294,7 +294,7 @@ class TestNyFolderFileListing(NaayaFunctionalTestCase):
         self.assertTrue(hasattr(self.parent, self.folder_name))
         self.assertFalse(hasattr(self.parent2, self.folder_name))
         # only index link in parent
-        parent_info = FolderIndexInfo(self.browser, self.parent, self.folder_name)
+        parent_info = FolderListingInfo(self.browser, self.parent, self.folder_name)
         self.assertTrue(parent_info.has_table_head)
         self.assertTrue(parent_info.has_checkbox)
         self.assertTrue(parent_info.has_index_link)
@@ -332,11 +332,11 @@ class TestNyFolderFileListing(NaayaFunctionalTestCase):
         self.assertFalse(hasattr(self.parent, self.folder_name))
         self.assertFalse(hasattr(self.parent2, self.folder_name))
         # no links in parent
-        parent_info = FolderIndexInfo(self.browser, self.parent, self.folder_name)
+        parent_info = FolderListingInfo(self.browser, self.parent, self.folder_name)
         self.assertFalse(parent_info.has_index_link)
         self.assertFalse(parent_info.has_edit_link)
         # no links in parent 2
-        parent2_info = FolderIndexInfo(self.browser, self.parent2, self.folder_name)
+        parent2_info = FolderListingInfo(self.browser, self.parent2, self.folder_name)
         self.assertFalse(parent2_info.has_index_link)
         self.assertFalse(parent2_info.has_edit_link)
 
@@ -373,11 +373,11 @@ class TestNyFolderFileListing(NaayaFunctionalTestCase):
         self.assertTrue(hasattr(self.parent, self.folder_name))
         self.assertTrue(hasattr(self.parent2, self.folder_name))
         # index and edit links in parent
-        parent_info = FolderIndexInfo(self.browser, self.parent, self.folder_name)
+        parent_info = FolderListingInfo(self.browser, self.parent, self.folder_name)
         self.assertTrue(parent_info.has_index_link)
         self.assertTrue(parent_info.has_edit_link)
         # index and edit links in parent 2
-        parent2_info = FolderIndexInfo(self.browser, self.parent2, self.folder_name)
+        parent2_info = FolderListingInfo(self.browser, self.parent2, self.folder_name)
         self.assertTrue(parent2_info.has_index_link)
         self.assertTrue(parent2_info.has_edit_link)
 
@@ -415,11 +415,11 @@ class TestNyFolderFileListing(NaayaFunctionalTestCase):
         self.assertFalse(hasattr(self.parent, self.folder_name))
         self.assertTrue(hasattr(self.parent2, self.folder_name))
         # no links in parent
-        parent_info = FolderIndexInfo(self.browser, self.parent, self.folder_name)
+        parent_info = FolderListingInfo(self.browser, self.parent, self.folder_name)
         self.assertFalse(parent_info.has_index_link)
         self.assertFalse(parent_info.has_edit_link)
         # index and edit links in parent 2
-        parent2_info = FolderIndexInfo(self.browser, self.parent2, self.folder_name)
+        parent2_info = FolderListingInfo(self.browser, self.parent2, self.folder_name)
         self.assertTrue(parent2_info.has_index_link)
         self.assertTrue(parent2_info.has_edit_link)
 
@@ -434,5 +434,5 @@ class TestNyFolderFileListing(NaayaFunctionalTestCase):
 
 def test_suite():
     suite = TestSuite()
-    suite.addTest(makeSuite(TestNyFolderFileListing))
+    suite.addTest(makeSuite(TestNyFolderListing))
     return suite
