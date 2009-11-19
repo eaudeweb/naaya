@@ -28,6 +28,8 @@ from Products.PageTemplates.PageTemplateFile    import PageTemplateFile
 from AccessControl                              import ClassSecurityInfo
 from AccessControl.Permissions                  import view_management_screens, view
 from App.ImageFile import ImageFile
+from zope.interface import Interface, implements
+from zope.component import adapts, provideAdapter
 
 #Zope imports
 from Products.RDFCalendar.RDFCalendar               import manage_addRDFCalendar
@@ -35,6 +37,7 @@ from Products.RDFSummary.RDFSummary                 import manage_addRDFSummary
 
 #Product imports
 from constants                                      import *
+from interfaces                                     import IEWSite
 from Products.NaayaBase.constants                   import *
 from Products.Naaya.constants                       import *
 from Products.NaayaCore.constants                   import *
@@ -45,6 +48,8 @@ from Products.NaayaLinkChecker.LinkChecker import manage_addLinkChecker
 from Products.Naaya.NyFolder import addNyFolder
 from Products.NaayaContent.NyContact.NyContact import addNyContact
 from Products.NaayaCore.GeoMapTool.managers.geocoding import location_geocode
+from Products.NaayaCore.PortletsTool.interfaces import INyPortlet
+from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 
 
 manage_addEnviroWindowsSite_html = PageTemplateFile('zpt/site_manage_add', globals())
@@ -61,6 +66,8 @@ def manage_addEnviroWindowsSite(self, id='', title='', lang=None, REQUEST=None):
 
 class EnviroWindowsSite(NySite):
     """ """
+
+    implements(IEWSite)
 
     meta_type = METATYPE_ENVIROWINDOWSSITE
     icon = 'misc_/EnviroWindows/Site.gif'
@@ -1170,3 +1177,19 @@ class SimpleFieldStorage(object):
         self.file = file
         self.filename = filename
         self.headers = headers
+
+
+class ObjectListingPortlet(object):
+    implements(INyPortlet)
+    adapts(IEWSite)
+
+    title = 'List contained objects'
+
+    def __init__(self, site):
+        self.site = site
+
+    def __call__(self, context, position):
+        return self.template.__of__(context)()
+
+    template = NaayaPageTemplateFile('zpt/listing_portlet', globals(), 'naaya.envirowindows.folder.listing_portlet')
+
