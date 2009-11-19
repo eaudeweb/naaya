@@ -313,7 +313,6 @@ a:visited {
     clear:both;
     color:black;
     margin:0 auto;
-    max-width:80%;
     padding:0.3em 0;
     width:100%;
 }
@@ -1181,7 +1180,6 @@ text-decoration: underline;
 #outer_wrapper {
     margin: 0 auto;
     width: 100%;
-    max-width: 80%;
 	border-left: 1px solid #666666;
 	border-right: 1px solid #666666;
 }
