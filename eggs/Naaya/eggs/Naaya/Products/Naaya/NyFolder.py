@@ -862,7 +862,7 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
         self.createPublicInterface()
         if REQUEST: REQUEST.RESPONSE.redirect('manage_edit_html?save=ok')
 
-    security.declareProtected(view_management_screens, 'manageSubobjects')
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'manageSubobjects')
     def manageSubobjects(self, REQUEST=None, **kwargs):
         """ """
         if REQUEST:
