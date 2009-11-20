@@ -86,4 +86,8 @@
 		<language code="en" />
 	</properties>
 
+	<others>
+		<favicon />
+	</others>
+
 </skel>
