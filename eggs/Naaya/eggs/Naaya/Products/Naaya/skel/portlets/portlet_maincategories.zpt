@@ -81,6 +81,7 @@ $(function() {
 	<tal:block metal:use-macro="python:here.getLayoutTool().getCurrentSkin().getTemplateById(portlet_macro).macros['portlet']">
 		<tal:block metal:fill-slot="portlet_title">
 			<div class="mainsection_title">
+				<a tal:attributes="href fold/absolute_url" tal:content="fold/title_or_id" />
 				<img tal:condition="fold/getPublishedFolders" style="vertical-align:middle" i18n:attributes="alt"
 					tal:attributes="
 						id string:img${fold/id};
@@ -92,7 +93,6 @@ $(function() {
 						id string:img${fold/id};
 						src string:${skin_files_path}/ep_none.gif;"
 						alt='' title=''/>
-				<a tal:attributes="href fold/absolute_url" tal:content="fold/title_or_id" />
 			</div>
 		</tal:block>
 		<tal:block metal:fill-slot="portlet_content">
