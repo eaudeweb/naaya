@@ -80,7 +80,7 @@
                     <a href="./" i18n:translate="">Go to IG home page.</a>
                 </tal:block>
                 <p tal:condition="not:logged_in" i18n:translate="">
-                    You need to login with your CIRCA account before you can use this form.
+                    You need to login with your EIONET account before you can use this form.
                 </p>
                 <tal:block condition="mail_sent">
                     <p i18n:translate="">
