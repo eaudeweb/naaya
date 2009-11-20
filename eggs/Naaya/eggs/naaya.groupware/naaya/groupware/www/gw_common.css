@@ -89,6 +89,26 @@ a img {
 	position: relative;
 	top:1px;
 }
+
+#toolbar input, #toolbar button, #toolbar span {
+  white-space: nowrap;
+  font-size: 0.85em;
+  font-weight: bold;
+  background: #fff;
+  border-left:1px solid #bbb;
+  border-top:1px solid #bbb;
+  border-bottom:1px solid #666;
+  border-right:1px solid #666;
+  padding: 0.2em;
+  color: #333333;
+}
+#toolbar input:hover, #toolbar button:hover, #toolbar span:hover {
+  border-left:1px solid #6791c3;
+  border-top:1px solid #6791c3;
+  border-bottom:1px solid #34649b;
+  border-right:1px solid #34649b;
+  color: #4e7cb0;
+}
 table#folderfile_list{
 /*
 <tal:block tal:condition="python: len(here.get_right_portlets_locations_objects(here)) > 0">
@@ -1013,6 +1033,13 @@ padding: 0 0 0 2em;
 }
 /* End map styles */
 
+form input[type="button"], form input[type="submit"], form input[type="reset"]{
+	border: 1px solid #ccc;
+	background: #336399;
+	padding: 1px 4px;
+	color: #fff;
+	text-transform: lowercase;
+}
 /* styles for the main sections page */
 ul.boxy {
 	list-style-type: none;
