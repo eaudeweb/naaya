@@ -55,6 +55,8 @@ DEFAULT_SCHEMA = {
 }
 DEFAULT_SCHEMA.update(NY_CONTENT_BASE_SCHEMA)
 
+ADDITIONAL_STYLE = open(ImageFile('www/style.css', globals()).path).read()
+
 # this dictionary is updated at the end of the module
 config = {
         'product': 'NaayaContent',
@@ -69,7 +71,7 @@ config = {
         'default_schema': DEFAULT_SCHEMA,
         'schema_name': 'NyBFile',
         '_module': sys.modules[__name__],
-        'additional_style': None,
+        'additional_style': ADDITIONAL_STYLE,
         'icon': os.path.join(os.path.dirname(__file__), 'www', 'bfile.gif'),
         '_misc': {
                 'NyBFile.gif': ImageFile('www/bfile.gif', globals()),
@@ -208,12 +210,13 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         self._versions.append(bf)
 
     security.declarePrivate('remove_version')
-    def remove_version(self, number):
-        # TODO: expose this method to admins through index_html
+    def remove_version(self, number, removed_by=None):
         ver = self._versions[number]
+        if ver.removed:
+            return # TODO complain loudly, this is unacceptable
         ver.removed = True
         ver.removed_at = datetime.utcnow()
-        ver.removed_by = None # TODO
+        ver.removed_by = removed_by
         ver.size = None
         f = ver.open_write()
         f.write('')
@@ -232,6 +235,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
         _uploaded_file = schema_raw_data.pop('uploaded_file', None)
+        versions_to_remove = schema_raw_data.pop('versions_to_remove', [])
 
         form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
 
@@ -243,12 +247,16 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
 
+        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+
+        for ver_id in versions_to_remove:
+            self.remove_version(int(ver_id) - 1, contributor)
+
         if self.discussion: self.open_for_comments()
         else: self.close_for_comments()
         self._p_changed = 1
         self.recatalogNyObject(self)
         #log date
-        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
 
@@ -304,7 +312,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        options = {}
+        options = {'versions': self._versions_for_tmpl()}
         template_vars = {'here': self, 'options': options}
         return self.getFormsTool().getContent(template_vars, 'bfile_edit')
 
