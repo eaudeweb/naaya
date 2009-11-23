@@ -110,9 +110,16 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     _uploaded_file = schema_raw_data.pop('uploaded_file', None)
     _contact_word = schema_raw_data.get('contact_word', '')
 
+    title = schema_raw_data.get('title', '')
+    if not title:
+        filename = getattr(_uploaded_file, 'filename', '')
+        base_filename = filename.rsplit('.', 1)[0] # strip extension
+        if base_filename:
+            schema_raw_data['title'] = title = base_filename.decode('utf-8')
+
     id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = 'doc' + self.utGenRandomId(5)
+    if not id: id = self.utGenObjectId(title)
+    if not id: id = 'file' + self.utGenRandomId(5)
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyBFile_object(self, id, contributor)

@@ -115,6 +115,19 @@ class NyBFileTestCase(NaayaTestCase):
         mybfile.remove_version(0)
         self.assertTrue(mybfile.current_version is None)
 
+    def test_add_no_title(self):
+        myfile = StringIO('hello data!')
+        myfile.filename = 'my_file_for_title.txt'
+
+        myfolder = self.portal.myfolder
+        file_id = addNyBFile(myfolder, uploaded_file=myfile,
+                             submitted=1, contributor='contributor')
+
+        self.assertEqual(file_id, 'myfilefortitle')
+        self.assertTrue('myfilefortitle' in myfolder.objectIds())
+        myfile = myfolder['myfilefortitle']
+        self.assertEqual(myfile.title, 'my_file_for_title')
+
 def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(NyBFileTestCase))
