@@ -53,12 +53,16 @@
             <link id="help" title="Help" description="" url="/feedback_html" relative="1" permission="" order="70"/>
         </linkslist>
     </portlets>
+	<pluggablecontenttypes>
+		<pluggablecontenttype meta_type="Naaya Blob File" action="1"/>
+		<pluggablecontenttype meta_type="Naaya File" action="0"/>
+	</pluggablecontenttypes>
 
 	<security>
 		<grouppermissions name="Browse content" description="Browse the site structure. This is the base privilege aimed for Anonymous users."
 			permissions="Access Transient Objects,Access contents information,Access session data,Query Vocabulary,Search ZCatalog,Use Database Methods,Use mailhost services,View,WebDAV access,WebDAV Unlock items,WebDAV Lock items"/>
 		<grouppermissions name="Add content" description="Create Naaya objects. Editing, publishing and deleting them are not granted as a part of thisprivilege."
-			permissions="Naaya - Access administrative area,Naaya - Add Naaya Folder objects,Naaya - Add Naaya Document objects,Naaya - Add Naaya Event objects,Naaya - Add Naaya File objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Pointer objects,Naaya - Add Naaya Story objects,Naaya - Add Naaya URL objects,Naaya - Add Naaya Photo,Naaya - Add Naaya Media File objects,Naaya - Add Naaya Contact objects,Naaya - Add Naaya Extended File objects,Naaya - Add Naaya GeoPoint objects,Naaya - Add Naaya Photo Folder,Naaya - Add Naaya SMAP Expert objects,Naaya - Add Naaya SMAP Project objects,Take ownership"/>
+			permissions="Naaya - Access administrative area,Naaya - Add Naaya Folder objects,Naaya - Add Naaya Document objects,Naaya - Add Naaya Event objects,Naaya - Add Naaya Blob File objects,Naaya - Add Naaya News objects,Naaya - Add Naaya Pointer objects,Naaya - Add Naaya Story objects,Naaya - Add Naaya URL objects,Naaya - Add Naaya Photo,Naaya - Add Naaya Media File objects,Naaya - Add Naaya Contact objects,Naaya - Add Naaya Extended File objects,Naaya - Add Naaya GeoPoint objects,Naaya - Add Naaya Photo Folder,Naaya - Add Naaya SMAP Expert objects,Naaya - Add Naaya SMAP Project objects,Take ownership"/>
 		<grouppermissions name="Add comments" description="Posibility to add comments for each type of content."
 			permissions="Naaya - Add comments for content"/>
 		<grouppermissions name="Edit content" description="Adding, publishing and deleting are not granted as a part of this privilege. Edit content is only allowed for owners if users do not have the 'Naaya - Publish content' permission."
