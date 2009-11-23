@@ -14,14 +14,34 @@
 </div>
 </tal:block>
 
+<script type="text/javascript" src="misc_/Naaya/jquery-1.3.2.min.js"></script>
+
 <!-- Map widget -->
 <tal:block content="structure python:here.portal_map.render_object_map(here.geo_location)"/>
 
 <table border="0" cellspacing="2" cellpadding="2" tal:define="portal_map here/getGeoMapTool;">
 
-<tal:block content="structure python: here.prop_display_tr('releasedate')" />
-<tal:block content="structure python: here.prop_display_tr('contributor')" />
-<tal:block content="structure python: here.prop_display_tr('coverage')" />
+<tr tal:define="current_version options/current_version|nothing">
+    <th i18n:translate="">Download</th>
+    <td tal:condition="current_version">
+        <img tal:attributes="src current_version/icon_url;
+                             title current_version/content_type" />
+        <a tal:attributes="href current_version/url"
+           tal:content="current_version/filename"></a>
+        (<tal:block content="current_version/pretty_size" />)
+    </td>
+    <td tal:condition="not:current_version">
+        <em i18n:translate="">No file uploaded</em>
+    </td>
+</tr>
+<tal:block condition="here/releasedate"
+           content="structure python: here.prop_display_tr('releasedate')" />
+<tal:block condition="here/contributor"
+           content="structure python: here.prop_display_tr('contributor')" />
+<tal:block condition="here/coverage"
+           content="structure python: here.prop_display_tr('coverage')" />
+<tal:block condition="here/keywords"
+           content="structure python: here.prop_display_tr('keywords')" />
 
 <tr tal:define="title python:portal_map.getSymbolTitle(here.geo_type);
 	picture python:portal_map.getSymbolPicture(here.geo_type)"
@@ -33,24 +53,60 @@
 </td>
 </tr>
 
-<tal:block content="structure python: here.prop_display_tr('keywords')" />
-
 </table>
 
-<div tal:condition="not:options/versions" i18n:translate="">No files uploaded</div>
-<dl tal:condition="options/versions">
-    <tal:block repeat="version options/versions">
-        <dt>
-            <a tal:attributes="href version/url" tal:content="version/filename"></a>
-            <em tal:condition="version/is_current">(current version)</em>
-        </dt>
-        <dd>
-        <tal:block content="version/pretty_timestamp" />,
-        <code tal:content="version/content_type" />,
-        <tal:block content="version/pretty_size" />
-        </dd>
-    </tal:block>
-</dl>
+<noscript><style type="text/css">
+    table.ny-bfile-all-versions { display: table; }
+</style></noscript>
+
+<table class="ny-bfile-all-versions">
+<caption i18n:translate="">All versions</caption>
+<thead>
+    <tr>
+        <td i18n:translate="">#</td>
+        <td i18n:translate="">File name</td>
+        <td i18n:translate="">Upload date</td>
+        <td i18n:translate="">Size</td>
+        <td i18n:translate="">Content type</td>
+    </tr>
+</thead>
+<tbody>
+<tr tal:repeat="version options/versions">
+    <td tal:content="version/id" />
+    <td>
+        <a tal:attributes="href version/url"
+           tal:content="version/filename"></a>
+        <em tal:condition="version/is_current"
+            i18n:translate="">(current)</em>
+    </td>
+    <td tal:content="version/pretty_timestamp" />
+    <td tal:content="version/pretty_size" />
+    <td>
+        <img tal:attributes="src version/icon_url;
+                             title version/content_type" />
+        <tal:block content="version/content_type" />
+    </td>
+</tr>
+</tbody>
+</table>
+
+<div id="naaya_bfile_versions_slot" style="display: none;">
+    <p>[<a href="javascript:;" i18n:translate="">Show all versions</a>]</p>
+</div>
+
+<tal:block condition="options/versions">
+<script type="text/javascript">
+var all_versions = $('table.ny-bfile-all-versions');
+var versions_slot = $('div#naaya_bfile_versions_slot');
+
+versions_slot.show();
+
+$('a', versions_slot).click(function() {
+    versions_slot.empty();
+    all_versions.show();
+});
+</script>
+</tal:block>
 
 <div tal:define="description python:here.prop_value_or_none('description')"
     tal:condition="description" tal:content="structure description" />
