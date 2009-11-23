@@ -61,7 +61,7 @@ config = {
         'module': 'bfile_item',
         'package_path': os.path.abspath(os.path.dirname(__file__)),
         'meta_type': 'Naaya Blob File',
-        'label': 'BFile',
+        'label': 'File',
         'permission': 'Naaya - Add Naaya Blob File objects',
         'forms': ['bfile_add', 'bfile_edit', 'bfile_index'],
         'add_form': 'bfile_add_html',
@@ -132,7 +132,7 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
             REQUEST.RESPONSE.redirect('%s/bfile_add_html' % self.absolute_url())
             return
 
-    if _uploaded_file is not None:
+    if file_has_content(_uploaded_file):
         ob._save_file(_uploaded_file)
 
     #process parameters
@@ -156,7 +156,7 @@ def addNyBFile(self, id='', REQUEST=None, contributor=None, **kwargs):
             return self.manage_main(self, REQUEST, update_menu=1)
         elif l_referer == 'bfile_add_html':
             self.setSession('referer', self.absolute_url())
-            REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
+            return ob.object_submitted_message(REQUEST)
 
     return ob.getId()
 
@@ -196,7 +196,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
     @property
     def current_version(self):
         for ver in reversed(self._versions):
-            if not getattr(ver, 'removed', False):
+            if not ver.removed:
                 return ver
         else:
             return None
@@ -252,7 +252,7 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
         auth_tool = self.getAuthenticationTool()
         auth_tool.changeLastPost(contributor)
 
-        if _uploaded_file is not None:
+        if file_has_content(_uploaded_file):
             self._save_file(_uploaded_file)
 
         notify(NyContentObjectEditEvent(self, contributor))
@@ -261,31 +261,52 @@ class NyBFile(NyContentData, NyAttributes, NyItem, NyCheckControl, NyValidation,
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
 
+    def _versions_for_tmpl(self):
+        """
+        generate a dictionary with info about all versions, suitable for
+        use in a page template
+        """
+
+        tmpl_version = lambda version, ver_id: {
+            'filename': version.filename,
+            'content_type': version.content_type,
+            'pretty_size': pretty_size(version.size),
+            'removed': version.removed,
+            'url': self.absolute_url() + '/download?v=' + ver_id,
+            'icon_url': ('%s/getContentTypePicture?id=%s' %
+                         (self.getSite().absolute_url(),
+                          version.content_type)),
+            'pretty_timestamp': version.timestamp.strftime('%d %b %Y'),
+            'id': ver_id,
+            'is_current': False,
+        }
+
+        versions = [tmpl_version(ver, str(n+1))
+                    for n, ver in enumerate(self._versions)
+                    if not ver.removed]
+
+        if versions:
+            versions[-1]['is_current'] = True
+
+        return versions
+
     security.declareProtected(view, 'index_html')
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        current_ver = self.current_version
-        tmpl_data = {
-            'here': self,
-            'options': {
-                'versions': [{
-                    'n': n,
-                    'filename': ver.filename,
-                    'content_type': ver.content_type,
-                    'pretty_size': pretty_size(ver.size),
-                    'removed': ver.removed,
-                    'url': self.absolute_url() + '/download?v=' + str(n+1),
-                    'pretty_timestamp': ver.timestamp.strftime('%d %b %Y'),
-                    'is_current': ver is current_ver,
-                } for n, ver in reversed(list(enumerate(self._versions)))],
-            },
-        }
-        return self.getFormsTool().getContent(tmpl_data, 'bfile_index')
+        versions = self._versions_for_tmpl()
+        options = {'versions': versions}
+        if versions:
+            options['current_version'] = versions[-1]
+
+        template_vars = {'here': self, 'options': options}
+        return self.getFormsTool().getContent(template_vars, 'bfile_index')
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'edit_html')
     def edit_html(self, REQUEST=None, RESPONSE=None):
         """ """
-        return self.getFormsTool().getContent({'here': self}, 'bfile_edit')
+        options = {}
+        template_vars = {'here': self, 'options': options}
+        return self.getFormsTool().getContent(template_vars, 'bfile_edit')
 
     security.declareProtected(view, 'download')
     def download(self, REQUEST, RESPONSE, v):
@@ -325,3 +346,11 @@ def pretty_size(size):
         return '%d MB' % (size/1024**2)
     else:
         return '%d GB' % (size/1024**3)
+
+def file_has_content(file_ob):
+    if file_ob is None:
+        return False
+    elif file_ob.filename == '':
+        return False
+    else:
+        return True
