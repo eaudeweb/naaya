@@ -10,5 +10,6 @@ setup(name='naaya.groupware',
       zip_safe=False,
       install_requires=[
           'Naaya',
+          'naaya.content.bfile',
       ]
 )
