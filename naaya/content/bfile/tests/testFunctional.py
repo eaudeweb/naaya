@@ -61,7 +61,9 @@ class BrowserFileTestingMixin(object):
         self.assertEqual(self.browser_get_header('content-type'), content_type)
         self.assertEqual(self.browser.get_html(), data)
 
-class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
+class NyBFileFunctionalTestCase(NaayaFunctionalTestCase,
+                                BFileMixin,
+                                BrowserFileTestingMixin):
     """ TestCase for NaayaContent object """
 
     def afterSetUp(self):
@@ -186,6 +188,44 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
 
         self.failUnlessEqual(self.portal.myfolder.mybfile.title, 'New Title')
         self.failUnlessEqual(self.portal.myfolder.mybfile.getLocalProperty('title', 'fr'), 'french_title')
+
+        self.browser_do_logout()
+
+    def test_edit_remove_versions(self):
+        self.browser_do_login('admin', '')
+
+        for c in range(4):
+            f = self.make_file('afile', 'text/plain', 'some data')
+            self.portal.myfolder['mybfile']._save_file(f)
+
+        transaction.commit()
+
+        self.browser.go('http://localhost/portal/myfolder/mybfile')
+        html = self.browser.get_html()
+        self.assertTrue('download?v=1' in html)
+        self.assertTrue('download?v=2' in html)
+        self.assertTrue('download?v=3' in html)
+        self.assertTrue('download?v=4' in html)
+
+        self.browser.go('http://localhost/portal/myfolder/mybfile/edit_html')
+        form = self.browser.get_form('frmEdit')
+        form['versions_to_remove:list'] = ['2', '4']
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
+        self.browser.submit()
+
+        mybfile = self.portal.myfolder['mybfile']
+        self.assertEqual(mybfile._versions[0].removed, False)
+        self.assertEqual(mybfile._versions[1].removed, True)
+        self.assertEqual(mybfile._versions[1].removed_by, 'admin')
+        self.assertEqual(mybfile._versions[2].removed, False)
+        self.assertEqual(mybfile._versions[3].removed_by, 'admin')
+
+        self.browser.go('http://localhost/portal/myfolder/mybfile')
+        html = self.browser.get_html()
+        self.assertTrue('download?v=1' in html)
+        self.assertTrue('download?v=2' not in html)
+        self.assertTrue('download?v=3' in html)
+        self.assertTrue('download?v=4' not in html)
 
         self.browser_do_logout()
 
