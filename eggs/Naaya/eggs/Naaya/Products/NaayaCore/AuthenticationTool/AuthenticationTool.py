@@ -57,6 +57,10 @@ def manage_addAuthenticationTool(self, REQUEST=None):
     if REQUEST:
         return self.manage_main(self, REQUEST, update_menu=1)
 
+def check_username(name):
+    name_expr = re.compile('^[A-Za-z0-9]*$')
+    return re.match(name_expr, name)
+
 class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                          file_utils, plugins_tool, PropertyManager):
 
@@ -220,9 +224,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         # Verify captcha
         captcha_gen_word = self.getSession('captcha', '')
         captcha_prov_word = kwargs.get('verify_word', captcha_gen_word)
-        name_expr = re.compile('^[a-z0-9]*$')
-        if not re.match(name_expr, name):
-            raise Exception, 'Username: only lowercase letters and numbers allowed'
+        if not check_username(name):
+            raise Exception, 'Username: only letters and numbers allowed'
         if captcha_prov_word != captcha_gen_word:
             raise Exception, 'The word you typed does not match with the one shown in the image. Please try again.'
         if not firstname:
