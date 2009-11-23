@@ -4,6 +4,21 @@
 
 <tal:block metal:fill-slot="custom_properties">
 <div class="field-inline">
+    <label i18n:translate="">Existing versions - check to remove</label>
+    <ul class="ny-bfile-editversions">
+    <tal:block repeat="version options/versions">
+        <li>
+            <input type="checkbox" name="versions_to_remove:list"
+                   tal:attributes="value version/id" />
+            <a tal:attributes="href version/url" tal:content="version/filename"></a>
+            <tal:block content="version/pretty_timestamp" />,
+            <tal:block content="version/content_type" />,
+            <tal:block content="version/pretty_size" />,
+            <em tal:condition="version/is_current"
+                i18n:translate="">(current version)</em>
+        </li>
+    </tal:block>
+    </ul>
     <label for="uploaded_file" i18n:translate="">Upload a new version</label>
     <input type="file" name="uploaded_file" id="uploaded_file" size="40" value="" />
 </div>

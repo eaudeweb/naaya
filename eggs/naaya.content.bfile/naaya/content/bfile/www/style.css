@@ -19,3 +19,7 @@ table.ny-bfile-all-versions thead td {
     text-align: center;
     font-weight: bold;
 }
+
+ul.ny-bfile-editversions {
+    list-style: none;
+}
