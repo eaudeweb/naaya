@@ -29,7 +29,7 @@ import transaction
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
 class BFileMixin(object):
-    """ testing mix-in that installs the Naaya BFile content type """
+    """ testing mix-in that installs the Naaya Blob File content type """
 
     bfile_metatype = 'Naaya Blob File'
     bfile_permission = 'Naaya - Add Naaya Blob File objects'
@@ -69,7 +69,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
         from Products.Naaya.NyFolder import addNyFolder
         from naaya.content.bfile.bfile_item import addNyBFile
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
-        addNyBFile(self.portal.myfolder, id='mybfile', title='My bfile', submitted=1, contributor='contributor')
+        addNyBFile(self.portal.myfolder, id='mybfile', title='My file', submitted=1, contributor='contributor')
         transaction.commit()
 
     def beforeTearDown(self):
@@ -80,7 +80,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
     def test_add(self):
         self.browser_do_login('contributor', 'contributor')
         self.browser.go('http://localhost/portal/myfolder/bfile_add_html')
-        self.failUnless('<h1>Submit BFile</h1>' in self.browser.get_html())
+        self.failUnless('<h1>Submit File</h1>' in self.browser.get_html())
         form = self.browser.get_form('frmAdd')
         expected_controls = set([
             'lang', 'title:utf8:ustring', 'description:utf8:ustring', 'coverage:utf8:ustring',
@@ -92,29 +92,29 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
             'Missing form controls: %s' % repr(expected_controls - found_controls))
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
-        form['title:utf8:ustring'] = 'Test BFile'
+        form['title:utf8:ustring'] = 'Test File'
         form['description:utf8:ustring'] = 'test_bfile_description'
         form['coverage:utf8:ustring'] = 'test_bfile_coverage'
         form['keywords:utf8:ustring'] = 'keyw1, keyw2'
 
-        TEST_FILE_DATA = 'some data for my bfile'
+        TEST_FILE_DATA = 'some data for my file'
         form.find_control('uploaded_file').add_file(StringIO(TEST_FILE_DATA),
             filename='testcreatebfile.txt', content_type='text/plain; charset=utf-8')
 
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('<h1>Thank you for your submission</h1>' in html)
+        self.failUnless('The administrator will analyze your request' in html)
 
-        self.portal.myfolder['test-bfile'].approveThis()
+        self.portal.myfolder['test-file'].approveThis()
 
-        self.browser.go('http://localhost/portal/myfolder/test-bfile')
+        self.browser.go('http://localhost/portal/myfolder/test-file')
         html = self.browser.get_html()
-        self.failUnless(re.search(r'<h1>.*Test BFile.*</h1>', html, re.DOTALL))
+        self.failUnless(re.search(r'<h1>.*Test File.*</h1>', html, re.DOTALL))
         self.failUnless('test_bfile_description' in html)
         self.failUnless('test_bfile_coverage' in html)
         self.failUnless('keyw1, keyw2' in html)
 
-        self.browser.go('http://localhost/portal/myfolder/test-bfile/download?v=1')
+        self.browser.go('http://localhost/portal/myfolder/test-file/download?v=1')
         self.assertEqual(self.browser.get_code(), 200)
         html = self.browser.get_html()
         headers = self.browser._browser._response._headers
@@ -144,17 +144,17 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
         self.browser.go('http://localhost/portal/myfolder/mybfile/edit_html')
         form = self.browser.get_form('frmEdit')
 
-        self.failUnlessEqual(form['title:utf8:ustring'], 'My bfile')
+        self.failUnlessEqual(form['title:utf8:ustring'], 'My file')
 
         form['title:utf8:ustring'] = 'New Title'
-        TEST_FILE_DATA_2 = 'some new data for my bfile'
+        TEST_FILE_DATA_2 = 'some new data for my file'
         form.find_control('uploaded_file').add_file(StringIO(TEST_FILE_DATA_2),
             filename='the_new_bfile.txt', content_type='text/plain; charset=latin-1')
 
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
         self.browser.submit()
         html = self.browser.get_html()
-        self.failUnless('<h1>Edit BFile</h1>' in html)
+        self.failUnless('<h1>Edit File</h1>' in html)
 
         self.failUnlessEqual(self.portal.myfolder.mybfile.title, 'New Title')
         self.portal.myfolder.mybfile.approveThis()
@@ -170,7 +170,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BFileMixin):
         self.browser.go('http://localhost/portal/myfolder/mybfile/edit_html?lang=fr')
         form = self.browser.get_form('frmEdit')
         form['title:utf8:ustring'] = 'french_title'
-        TEST_FILE_DATA_3 = 'some new data for my bfile'
+        TEST_FILE_DATA_3 = 'some new data for my file'
         form.find_control('uploaded_file').add_file(StringIO(TEST_FILE_DATA_3),
             filename='the_new_bfile.txt', content_type='text/html; charset=utf-8')
         self.browser.clicked(form, self.browser.get_form_field(form, 'title:utf8:ustring'))
@@ -228,7 +228,7 @@ class VersioningTestCase(NaayaFunctionalTestCase, BFileMixin, BrowserFileTesting
         self.browser.go(self.ob_url)
         self.assertEqual(self.browser.get_code(), 200)
         html = self.browser.get_html()
-        self.assertTrue('No files uploaded' in html)
+        self.assertTrue('No file uploaded' in html)
         self.assertFalse(self.ob_url + '/download' in html)
         self.browser.go(self.ob_url + '/download?v=1')
         self.assertEqual(self.browser.get_code(), 404)
