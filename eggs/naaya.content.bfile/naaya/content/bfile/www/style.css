@@ -1,0 +1,21 @@
+table.ny-bfile-all-versions {
+    display: none;
+    margin: 1em 2em 2em;
+    min-width: 80%;
+    border-collapse: collapse;
+}
+
+table.ny-bfile-all-versions caption {
+    margin-top: 1em;
+    font-size: 12pt;
+}
+
+table.ny-bfile-all-versions td {
+    border: 1px solid #777;
+    padding: .3em;
+}
+
+table.ny-bfile-all-versions thead td {
+    text-align: center;
+    font-weight: bold;
+}
