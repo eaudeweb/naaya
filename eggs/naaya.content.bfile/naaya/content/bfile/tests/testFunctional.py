@@ -23,6 +23,7 @@ import re
 from unittest import TestSuite, makeSuite
 from StringIO import StringIO
 from copy import deepcopy
+import urllib
 
 import transaction
 
@@ -241,6 +242,32 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase,
         html = self.browser.get_html()
         self.failUnless('The form contains errors' in html)
         self.failUnless('Value required for "Title"' in html)
+
+        self.browser_do_logout()
+
+    def test_utf8_filenames(self):
+        self.browser_do_login('contributor', 'contributor')
+        self.browser.go('http://localhost/portal/myfolder/bfile_add_html')
+        form = self.browser.get_form('frmAdd')
+        self.browser.clicked(form, self.browser.get_form_field(form, 'title'))
+        filename = u'un\u00efc\u00f8d\u04d4.txt'.encode('utf-8')
+        form.find_control('uploaded_file').add_file(
+            StringIO('simple contents'),
+            filename=filename,
+            content_type='text/plain; charset=utf-8')
+        self.browser.submit()
+
+        self.portal.myfolder['unicod'].approveThis()
+
+        self.browser.go('http://localhost/portal/myfolder/unicod/download?v=1')
+        self.assertEqual(self.browser.get_code(), 200)
+        html = self.browser.get_html()
+        self.failUnlessEqual(self.browser_get_header('content-disposition'),
+                             "attachment;filename*=UTF-8''%s" %
+                                 urllib.quote(filename))
+        self.assertEqual(self.browser_get_header('content-type'),
+                         'text/plain; charset=utf-8')
+        self.failUnlessEqual(html, 'simple contents')
 
         self.browser_do_logout()
 
