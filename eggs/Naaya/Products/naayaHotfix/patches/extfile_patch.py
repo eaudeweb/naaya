@@ -38,12 +38,13 @@ def patch_fs_paths_and_pack():
                     REQUEST['URL1']+'/manage_workspace')
             return t
 
-        LOG('naayaHotfix', INFO, 'Patching ApplicationManager in order to delete .undo files from disk on database pack.')
-        LOG('naayaHotfix', INFO, 'Patching AltDatabaseManager in order to delete .undo files from disk on database pack.')
-        ApplicationManager.__old_manage_pack = ApplicationManager.manage_pack
-        AltDatabaseManager.__old_manage_pack = ApplicationManager.manage_pack.im_func
-        ApplicationManager.manage_pack = am_manage_pack
-        AltDatabaseManager.manage_pack = am_manage_pack
+        # XXX This method is bugous
+        #LOG('naayaHotfix', INFO, 'Patching ApplicationManager in order to delete .undo files from disk on database pack.')
+        #LOG('naayaHotfix', INFO, 'Patching AltDatabaseManager in order to delete .undo files from disk on database pack.')
+        #ApplicationManager.__old_manage_pack = ApplicationManager.manage_pack
+        #AltDatabaseManager.__old_manage_pack = ApplicationManager.manage_pack.im_func
+        #ApplicationManager.manage_pack = am_manage_pack
+        #AltDatabaseManager.manage_pack = am_manage_pack
 
 def patch_extfile_extension():
     # Patch _get_new_ufn
