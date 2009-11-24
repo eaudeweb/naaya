@@ -25,29 +25,12 @@ from BeautifulSoup import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
-class MediaFileMixin(object):
-    """ testing mix-in that installs the Naaya MediaFile content type """
 
-    mediafile_metatype = 'Naaya Media File'
-    mediafile_permission = 'Naaya - Add Naaya Media File objects'
-
-    def mediafile_install(self):
-        self.portal.manage_install_pluggableitem(self.mediafile_metatype)
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].append(self.mediafile_permission)
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
-
-    def mediafile_uninstall(self):
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].remove(self.mediafile_permission)
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
-        self.portal.manage_uninstall_pluggableitem(self.mediafile_metatype)
-
-class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase, MediaFileMixin):
+class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
 
     def afterSetUp(self):
-        self.mediafile_install()
+        self.portal.manage_install_pluggableitem('Naaya Media File')
         from Products.Naaya.NyFolder import addNyFolder
         from naaya.content.mediafile.mediafile_item import addNyMediaFile
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
@@ -57,7 +40,7 @@ class NyMediaFileFunctionalTestCase(NaayaFunctionalTestCase, MediaFileMixin):
 
     def beforeTearDown(self):
         self.portal.manage_delObjects(['myfolder'])
-        self.mediafile_uninstall()
+        self.portal.manage_uninstall_pluggableitem('Naaya Media File')
         import transaction; transaction.commit()
 
     def test_add(self):

@@ -291,6 +291,19 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             emailtool_ob = self.getEmailTool()
             authenticationtool_ob = self.getAuthenticationTool()
             notificationtool_ob = self.getNotificationTool()
+            #load security permissions and roles
+            if skel_handler.root.security is not None:
+                for permission in skel_handler.root.security.grouppermissions:
+                    authenticationtool_ob.addPermission(permission.name, permission.description, permission.permissions)
+                for role in skel_handler.root.security.roles:
+                    try: authenticationtool_ob.addRole(role.name, role.grouppermissions)
+                    except: pass
+                    #set the grouppermissions
+                    authenticationtool_ob.editRole(role.name, role.grouppermissions)
+                    #set individual permissions
+                    b = [x['name'] for x in self.permissionsOfRole(role.name) if x['selected']=='SELECTED']
+                    b.extend(role.permissions)
+                    self.manage_role(role.name, b)
             #load pluggable content types
             if skel_handler.root.pluggablecontenttypes is not None:
                 for pluggablecontenttype in skel_handler.root.pluggablecontenttypes.pluggablecontenttypes:
@@ -386,19 +399,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                     syndicationtool_ob.manage_addLocalChannel(channel.id, channel.title, channel.description, language, type, channel.objmetatype.split(','), channel.numberofitems, 1)
                 for channel in skel_handler.root.syndication.remotechannels:
                     syndicationtool_ob.manage_addRemoteChannel(channel.id, channel.title, channel.url, channel.numbershownitems, 1)
-            #load security permissions and roles
-            if skel_handler.root.security is not None:
-                for permission in skel_handler.root.security.grouppermissions:
-                    authenticationtool_ob.addPermission(permission.name, permission.description, permission.permissions)
-                for role in skel_handler.root.security.roles:
-                    try: authenticationtool_ob.addRole(role.name, role.grouppermissions)
-                    except: pass
-                    #set the grouppermissions
-                    authenticationtool_ob.editRole(role.name, role.grouppermissions)
-                    #set individual permissions
-                    b = [x['name'] for x in self.permissionsOfRole(role.name) if x['selected']=='SELECTED']
-                    b.extend(role.permissions)
-                    self.manage_role(role.name, b)
             #load portlets and links lists
             if skel_handler.root.portlets is not None:
                 for portlet in skel_handler.root.portlets.portlets:
@@ -3287,6 +3287,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
                 if pitem['module'] not in schema_tool.objectIds() and pitem['default_schema']:
                     schema_tool.addSchema(pitem['module'], title=pitem['label'], defaults=pitem['default_schema'])
 
+            #add content's permission to `Add content` permission group
+            acl = self.getAuthenticationTool()
+            acl.manage_group_permission('Add content', pitem['permission'], 'add')
+
             #run `on_install` function if defined in content's `config`
             if 'on_install' in pitem:
                 pitem['on_install'](self)
@@ -3308,6 +3312,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             #remember that this meta_type was removed
             del(self.__pluggable_installed_content[meta_type])
             self.searchable_content = [x for x in self.searchable_content if x != meta_type]
+            #remove content's permission from `Add content` permission group
+            acl = self.getAuthenticationTool()
+            acl.manage_group_permission('Add content', pitem['permission'], 'remove')
             self._p_changed = 1
         if REQUEST: REQUEST.RESPONSE.redirect('%s/manage_controlpanel_html' % self.absolute_url())
 

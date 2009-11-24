@@ -21,6 +21,7 @@
 # Dragos Chirila, Finsiel Romania
 
 #Python imports
+from copy import deepcopy
 
 #Zope imports
 from AccessControl.Role import RoleManager
@@ -260,5 +261,19 @@ class Role(RoleManager, utils):
             elif i%3 == 0:
                 third.append(permission['name'])
         return map(None, first, second, third)  #return [(first[0], second[0], third[0]), ...]
+
+    security.declarePrivate('manage_group_permission')
+    def manage_group_permission(self, group, permission, action):
+        """Add or remove a permission from a permission group.
+        """
+        perm_group = deepcopy(self.getPermission(group))
+        permissions = perm_group['permissions']
+        if action == 'add':
+            if permission not in permissions:
+                permissions.append(permission)
+        elif action == 'remove':
+            if permission in permissions:
+                permissions.pop(permissions.index(permission))
+        self.editPermission(group, **perm_group)
 
 InitializeClass(Role)

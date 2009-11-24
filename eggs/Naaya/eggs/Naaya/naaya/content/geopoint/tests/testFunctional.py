@@ -25,29 +25,12 @@ from BeautifulSoup import BeautifulSoup
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 
-class GeoPointMixin(object):
-    """ testing mix-in that installs the Naaya GeoPoint content type """
 
-    geopoint_metatype = 'Naaya GeoPoint'
-    geopoint_permission = 'Naaya - Add Naaya GeoPoint objects'
-
-    def geopoint_install(self):
-        self.portal.manage_install_pluggableitem(self.geopoint_metatype)
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].append(self.geopoint_permission)
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
-
-    def geopoint_uninstall(self):
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].remove(self.geopoint_permission)
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
-        self.portal.manage_uninstall_pluggableitem(self.geopoint_metatype)
-
-class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin):
+class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
 
     def afterSetUp(self):
-        self.geopoint_install()
+        self.portal.manage_install_pluggableitem('Naaya GeoPoint')
         from Products.Naaya.NyFolder import addNyFolder
         from naaya.content.geopoint.geopoint_item import addNyGeoPoint
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
@@ -58,7 +41,7 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin):
 
     def beforeTearDown(self):
         self.portal.manage_delObjects(['myfolder'])
-        self.geopoint_uninstall()
+        self.portal.manage_uninstall_pluggableitem('Naaya GeoPoint')
         import transaction; transaction.commit()
 
     def test_add(self):
@@ -179,10 +162,10 @@ class NyGeoPointFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin):
 
         self.browser_do_logout()
 
-class NyGeoPointVersioningFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin):
+class NyGeoPointVersioningFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
     def afterSetUp(self):
-        self.geopoint_install()
+        self.portal.manage_install_pluggableitem('Naaya GeoPoint')
         from naaya.content.geopoint.geopoint_item import addNyGeoPoint
         addNyGeoPoint(self.portal.info, id='ver_geopoint', title='ver_geopoint',
             submitted=1, geo_location=Geo('13', '13'))
@@ -190,7 +173,7 @@ class NyGeoPointVersioningFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMi
 
     def beforeTearDown(self):
         self.portal.info.manage_delObjects(['ver_geopoint'])
-        self.geopoint_uninstall()
+        self.portal.manage_uninstall_pluggableitem('Naaya GeoPoint')
         import transaction; transaction.commit()
 
     def test_start_version(self):

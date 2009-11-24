@@ -25,13 +25,10 @@ from random import random
 from Testing import ZopeTestCase
 import transaction
 
+from Products.Naaya.tests.NaayaTestCase import NaayaTestCase
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 from naaya.content.base.discover import get_pluggable_content
 from Products.NaayaBase.NyContentType import NyContentData
-from naaya.content.geopoint.tests.testFunctional import GeoPointMixin
-from naaya.content.exfile.tests.testFunctional import ExFileMixin
-from naaya.content.mediafile.tests.testFunctional import MediaFileMixin
-from naaya.content.contact.tests.testFunctional import ContactMixin
 
 
 SCHEMA_TESTABLES = ['contact_item', 'document_item', 'event_item',
@@ -77,16 +74,17 @@ class ContentTypeConformanceTestCase(ZopeTestCase.TestCase):
                 NyContentData.__getattr__.im_func,
                 '__getattr__ method of "%s" is wrong' % content_type['meta_type'])
 
-class ConformanceFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin, ExFileMixin, MediaFileMixin, ContactMixin):
+
+class ConformanceFunctionalTestCase(NaayaFunctionalTestCase):
     """
     Test all content types to make sure they all do certain things
     """
 
     def afterSetUp(self):
-        self.geopoint_install()
-        self.exfile_install()
-        self.mediafile_install()
-        self.contact_install()
+        self.portal.manage_install_pluggableitem('Naaya GeoPoint')
+        self.portal.manage_install_pluggableitem('Naaya Extended File')
+        self.portal.manage_install_pluggableitem('Naaya Media File')
+        self.portal.manage_install_pluggableitem('Naaya Contact')
         from Products.Naaya.NyFolder import addNyFolder
         addNyFolder(self.portal, 'xz_folder', contributor='contributor', submitted=1)
         self.portal.switch_language = 1
@@ -99,11 +97,39 @@ class ConformanceFunctionalTestCase(NaayaFunctionalTestCase, GeoPointMixin, ExFi
         self.portal.gl_del_site_languages(['fr'])
         self.portal.switch_language = 0
         self.portal.manage_delObjects(['xz_folder'])
-        self.contact_uninstall()
-        self.mediafile_uninstall()
-        self.exfile_uninstall()
-        self.geopoint_uninstall()
+        self.portal.manage_uninstall_pluggableitem('Naaya Contact')
+        self.portal.manage_uninstall_pluggableitem('Naaya Media File')
+        self.portal.manage_uninstall_pluggableitem('Naaya Extended File')
+        self.portal.manage_uninstall_pluggableitem('Naaya GeoPoint')
         transaction.commit()
+
+    def test_install_uninstall(self):
+        """ """
+        acl = self.portal.getAuthenticationTool()
+        for content_type in content_types:
+            if content_type['meta_type'] in self.portal.get_pluggable_installed_meta_types():
+                # permission should be added by the skel
+                self.assertTrue(content_type['permission'] in acl.getPermission('Add content')['permissions'])
+
+                # uninstall and check
+                self.portal.manage_uninstall_pluggableitem(content_type['meta_type'])
+                self.assertFalse(content_type['permission'] in acl.getPermission('Add content')['permissions'])
+
+                # clean-up -- install and check
+                self.portal.manage_install_pluggableitem(content_type['meta_type'])
+                self.assertTrue(content_type['permission'] in acl.getPermission('Add content')['permissions'])
+
+            else:
+                # permission should be missing
+                self.assertFalse(content_type['permission'] in acl.getPermission('Add content')['permissions'])
+
+                # install and check
+                self.portal.manage_install_pluggableitem(content_type['meta_type'])
+                self.assertTrue(content_type['permission'] in acl.getPermission('Add content')['permissions'])
+
+                # clean-up -- uninstall and check
+                self.portal.manage_uninstall_pluggableitem(content_type['meta_type'])
+                self.assertFalse(content_type['permission'] in acl.getPermission('Add content')['permissions'])
 
     def test_new_schema_property(self):
         """

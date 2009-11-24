@@ -24,29 +24,12 @@ from BeautifulSoup import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
-class ContactMixin(object):
-    """ testing mix-in that installs the Naaya Contact content type """
 
-    contact_metatype = 'Naaya Contact'
-    contact_permission = 'Naaya - Add Naaya Contact objects'
-
-    def contact_install(self):
-        self.portal.manage_install_pluggableitem(self.contact_metatype)
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].append(self.contact_permission)
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
-
-    def contact_uninstall(self):
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].remove(self.contact_permission)
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
-        self.portal.manage_uninstall_pluggableitem(self.contact_metatype)
-
-class NyContactFunctionalTestCase(NaayaFunctionalTestCase, ContactMixin):
+class NyContactFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
 
     def afterSetUp(self):
-        self.contact_install()
+        self.portal.manage_install_pluggableitem('Naaya Contact')
         from Products.Naaya.NyFolder import addNyFolder
         from naaya.content.contact.contact_item import addNyContact
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
@@ -55,7 +38,7 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase, ContactMixin):
 
     def beforeTearDown(self):
         self.portal.manage_delObjects(['myfolder'])
-        self.contact_uninstall()
+        self.portal.manage_uninstall_pluggableitem('Naaya Contact')
         import transaction; transaction.commit()
 
     def test_add(self):
@@ -174,17 +157,17 @@ class NyContactFunctionalTestCase(NaayaFunctionalTestCase, ContactMixin):
 
         self.browser_do_logout()
 
-class NyContactVersioningFunctionalTestCase(NaayaFunctionalTestCase, ContactMixin):
+class NyContactVersioningFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
     def afterSetUp(self):
-        self.contact_install()
+        self.portal.manage_install_pluggableitem('Naaya Contact')
         from naaya.content.contact.contact_item import addNyContact
         addNyContact(self.portal.info, id='ver_contact', title='ver_contact', submitted=1)
         import transaction; transaction.commit()
 
     def beforeTearDown(self):
         self.portal.info.manage_delObjects(['ver_contact'])
-        self.contact_uninstall()
+        self.portal.manage_uninstall_pluggableitem('Naaya Contact')
         import transaction; transaction.commit()
 
     def test_start_version(self):

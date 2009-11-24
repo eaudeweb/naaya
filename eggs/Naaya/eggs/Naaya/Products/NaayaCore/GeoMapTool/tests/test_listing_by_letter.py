@@ -27,7 +27,6 @@ import transaction
 #Product imports
 from Products.Naaya.NyFolder import addNyFolder
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
-from naaya.content.geopoint.tests.testFunctional import GeoPointMixin
 
 class Parser(HTMLParser):
     def __init__(self):
@@ -44,14 +43,14 @@ class Parser(HTMLParser):
         if tag == 'tr':
             self.num_rows += 1
 
-class ListingByLetterTest(NaayaFunctionalTestCase, GeoPointMixin):
+class ListingByLetterTest(NaayaFunctionalTestCase):
     """ functional test for listing locations by letter """
     symbol_ids = ['symbol1', 'symbol2']
     titles = ['A point', 'a second point', 'the third point']
     ob_dicts = []
 
     def afterSetUp(self):
-        self.geopoint_install()
+        self.portal.manage_install_pluggableitem('Naaya GeoPoint')
         self.portal.setDefaultSearchableContent()
 
         for id in self.symbol_ids:
@@ -94,7 +93,7 @@ class ListingByLetterTest(NaayaFunctionalTestCase, GeoPointMixin):
         for id in self.symbol_ids:
             self.portal.portal_map.deleteSymbol(id)
 
-        self.geopoint_uninstall()
+        self.portal.manage_uninstall_pluggableitem('Naaya GeoPoint')
         self.portal.setDefaultSearchableContent()
 
         transaction.commit()

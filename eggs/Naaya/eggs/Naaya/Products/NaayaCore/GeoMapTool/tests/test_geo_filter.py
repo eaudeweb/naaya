@@ -22,12 +22,11 @@ from decimal import Decimal
 
 from Products.Naaya.tests import NaayaTestCase
 from Products.Naaya.tests import NaayaFunctionalTestCase
-from naaya.content.geopoint.tests.testFunctional import GeoPointMixin
 
 from Products.NaayaCore.GeoMapTool import GeoMapTool
 from Products.Naaya.NyFolder import addNyFolder
 
-class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase, GeoPointMixin):
+class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
     symbols = ['Capital', 'City', 'News_type', 'Document_type', 'Story_type',
             'Pointer_type', 'URL_type', 'Event_type', 'File_type']
     objects = [
@@ -157,7 +156,7 @@ class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase, GeoPoin
             }]
 
     def afterSetUp(self):
-        self.geopoint_install()
+        self.portal.manage_install_pluggableitem('Naaya GeoPoint')
         self.portal.setDefaultSearchableContent()
 
         for id in self.symbols:
@@ -188,7 +187,7 @@ class GeoFilterTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase, GeoPoin
         for ob_dict in self.objects:
             self.portal.portal_map.deleteSymbol(ob_dict['data']['id'])
 
-        self.geopoint_uninstall()
+        self.portal.manage_uninstall_pluggableitem('Naaya GeoPoint')
         self.portal.setDefaultSearchableContent()
 
     def test_indexes_in_catalog(self):
