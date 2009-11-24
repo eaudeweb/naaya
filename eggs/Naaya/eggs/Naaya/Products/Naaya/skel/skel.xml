@@ -243,7 +243,7 @@
 		<grouppermissions name="Review content" description="Allow posting reviews/comments to consultation objects."
 			permissions="Naaya - Review Consultation,Naaya - Review Simple Consultation"/>
 		<role name="Anonymous" grouppermissions="Browse content" permissions=""/>
-		<role name="Authenticated" grouppermissions="Add comments" permissions=""/>
+		<role name="Authenticated" grouppermissions="Add comments" permissions="Naaya - Skip Captcha"/>
 		<role name="Contributor" grouppermissions="Add content" permissions=""/>
 		<role name="Reviewer" grouppermissions="Review content" permissions=""/>
 		<role name="Administrator" grouppermissions="Browse content,Add content,Add comments,Edit content,Copy content,Publish content,Delete content,Validate content,Translate pages,Manage Users" permissions="Naaya - Manage Consultation,Naaya - Manage Simple Consultation,Naaya - Review Consultation,Naaya - Review Simple Consultation,Manage Naaya Glossary,Add Naaya Forum"/>
