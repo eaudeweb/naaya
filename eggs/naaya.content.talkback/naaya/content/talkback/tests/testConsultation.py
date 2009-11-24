@@ -31,28 +31,10 @@ from Products.Naaya.NyFolder import addNyFolder
 from naaya.content.talkback.tbconsultation_item import addNyTalkBackConsultation
 from naaya.content.talkback.comment_item import addComment
 
-class ConsultationMixin(object):
-    """ testing mix-in that installs the Naaya Talkback Consultation content type """
 
-    consultation_metatype = 'Naaya TalkBack Consultation'
-    consultation_permission = 'Naaya - Add Naaya TalkBack Consultation objects'
-
-    def consultation_install(self):
-        self.portal.manage_install_pluggableitem(self.consultation_metatype)
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].append(self.consultation_permission)
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
-
-    def consultation_uninstall(self):
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].remove(self.consultation_permission)
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
-        self.portal.manage_uninstall_pluggableitem(self.consultation_metatype)
-
-
-class ConsultationBasicTestCase(NaayaFunctionalTestCase, ConsultationMixin):
+class ConsultationBasicTestCase(NaayaFunctionalTestCase):
     def afterSetUp(self):
-        self.consultation_install()
+        self.portal.manage_install_pluggableitem('Naaya TalkBack Consultation')
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
         start_date = (date.today() - timedelta(days=1)).strftime('%d/%m/%Y')
         end_date = (date.today() + timedelta(days=10)).strftime('%d/%m/%Y')
@@ -63,7 +45,7 @@ class ConsultationBasicTestCase(NaayaFunctionalTestCase, ConsultationMixin):
 
     def beforeTearDown(self):
         self.portal.manage_delObjects(['myfolder'])
-        self.consultation_uninstall()
+        self.portal.manage_uninstall_pluggableitem('Naaya TalkBack Consultation')
         transaction.commit()
 
     def test_create_consultation(self):
