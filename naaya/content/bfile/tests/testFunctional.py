@@ -29,23 +29,6 @@ import transaction
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
-class BFileMixin(object):
-    """ testing mix-in that installs the Naaya Blob File content type """
-
-    bfile_metatype = 'Naaya Blob File'
-    bfile_permission = 'Naaya - Add Naaya Blob File objects'
-
-    def bfile_install(self):
-        self.portal.manage_install_pluggableitem(self.bfile_metatype)
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].append(self.bfile_permission)
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
-
-    def bfile_uninstall(self):
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].remove(self.bfile_permission)
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
-        self.portal.manage_uninstall_pluggableitem(self.bfile_metatype)
 
 class BrowserFileTestingMixin(object):
     def make_file(self, filename, content_type, data):
@@ -62,13 +45,11 @@ class BrowserFileTestingMixin(object):
         self.assertEqual(self.browser_get_header('content-type'), content_type)
         self.assertEqual(self.browser.get_html(), data)
 
-class NyBFileFunctionalTestCase(NaayaFunctionalTestCase,
-                                BFileMixin,
-                                BrowserFileTestingMixin):
+class NyBFileFunctionalTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
     """ TestCase for NaayaContent object """
 
     def afterSetUp(self):
-        self.bfile_install()
+        self.portal.manage_install_pluggableitem('Naaya Blob File')
         from Products.Naaya.NyFolder import addNyFolder
         from naaya.content.bfile.bfile_item import addNyBFile
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
@@ -77,7 +58,7 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase,
 
     def beforeTearDown(self):
         self.portal.manage_delObjects(['myfolder'])
-        self.bfile_uninstall()
+        self.portal.manage_uninstall_pluggableitem('Naaya Blob File')
         transaction.commit()
 
     def test_add(self):
@@ -271,11 +252,11 @@ class NyBFileFunctionalTestCase(NaayaFunctionalTestCase,
 
         self.browser_do_logout()
 
-class VersioningTestCase(NaayaFunctionalTestCase, BFileMixin, BrowserFileTestingMixin):
+class VersioningTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
     """ TestCase for NaayaContent object """
 
     def afterSetUp(self):
-        self.bfile_install()
+        self.portal.manage_install_pluggableitem('Naaya Blob File')
         from Products.Naaya.NyFolder import addNyFolder
         from naaya.content.bfile.bfile_item import addNyBFile
         addNyFolder(self.portal, 'fol', contributor='contributor', submitted=1)
@@ -287,7 +268,7 @@ class VersioningTestCase(NaayaFunctionalTestCase, BFileMixin, BrowserFileTesting
 
     def beforeTearDown(self):
         self.portal.manage_delObjects(['fol'])
-        self.bfile_uninstall()
+        self.portal.manage_uninstall_pluggableitem('Naaya Blob File')
         transaction.commit()
 
     def test_no_file(self):
@@ -351,11 +332,11 @@ class VersioningTestCase(NaayaFunctionalTestCase, BFileMixin, BrowserFileTesting
         self.assertDownload(**file_data_2)
         self.browser_do_logout()
 
-class SecurityTestCase(NaayaFunctionalTestCase, BFileMixin, BrowserFileTestingMixin):
+class SecurityTestCase(NaayaFunctionalTestCase, BrowserFileTestingMixin):
     """ TestCase for NaayaContent object """
 
     def afterSetUp(self):
-        self.bfile_install()
+        self.portal.manage_install_pluggableitem('Naaya Blob File')
         from Products.Naaya.NyFolder import addNyFolder
         from naaya.content.bfile.bfile_item import addNyBFile
         addNyFolder(self.portal, 'fol', contributor='contributor', submitted=1)
@@ -374,7 +355,7 @@ class SecurityTestCase(NaayaFunctionalTestCase, BFileMixin, BrowserFileTestingMi
 
     def beforeTearDown(self):
         self.portal.manage_delObjects(['fol'])
-        self.bfile_uninstall()
+        self.portal.manage_uninstall_pluggableitem('Naaya Blob File')
         transaction.commit()
 
     def test_restricted_access(self):
