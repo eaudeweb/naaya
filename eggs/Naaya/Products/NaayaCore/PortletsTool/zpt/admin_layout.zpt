@@ -27,28 +27,24 @@ $(function(){
         $('.sort-handle', group_jq).css('cursor', 'move');
 
         function on_stop(evt, ui) {
-            var portlet_order = jQuery.makeArray(group_jq.children().map(function() {
-                return $(this).attr('ny_hashkey');
-            }));
-            var post_data = {
-                folder_path: group_jq.attr('ny_folder_path'),
-                position: group_jq.attr('ny_position'),
-                portlet_order: portlet_order
-            }
-            $.ajax({
-                type: 'POST',
-                url: 'sort_portlets',
-                data: post_data,
-                error: function() {
-                    alert('An error occurred while saving portlet sort order');
-                }
+            var container = $('form#portlet-sortorder div.sort_container');
+
+            container.empty();
+            var order = $('table#assigned-portlets tbody tr').map(function() {
+                var hashkey = $(this).attr('ny_hashkey');
+                var input = $('<' + 'input type="hidden">');
+                input.attr('name', "portlet_order:list");
+                input.attr('value', hashkey);
+                container.append(input);
             });
+
+            $('form#portlet-sortorder').show();
         }
     });
 });
 </script>
 
-<table class="datatable">
+<table class="datatable" id="assigned-portlets">
 <thead>
     <tr>
         <th title="Folder where the portlet should appear" style="width: 15em;"
@@ -108,6 +104,13 @@ $(function(){
 </tbody>
 </tal:block>
 </table>
+
+<form id="portlet-sortorder" action="sort_portlets"
+      style="display: none; margin-bottom: 2em;">
+<div class="sort_container"></div>
+<input type="submit" value="Save sort order" />
+</form>
+
 
 <form name="assign_portlet" method="POST">
 <fieldset><legend i18n:translate="">Assign portlet</legend>
