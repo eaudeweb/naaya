@@ -30,6 +30,8 @@ from AccessControl import Unauthorized
 #Product imports
 from Products.NaayaCore.NotificationTool import NotificationTool
 
+from naaya.core import utils
+
 class Subscriber(Implicit, Item):
     def __init__(self, id):
         self.id = id
@@ -39,10 +41,7 @@ class Subscriber(Implicit, Item):
         return self.getSite().getNotificationTool()
 
     def get_location(self):
-        current_location = self.absolute_url(1)
-        # remove site id and 'subscribe'
-        current_location = current_location.split('/')[1:-1]
-        return ('/').join(current_location)
+        return utils.relative_object_path(self.aq_parent, self.getSite())
 
     def get_location_link(self, REQUEST):
         return self.get_notification_tool().get_location_link(REQUEST)
