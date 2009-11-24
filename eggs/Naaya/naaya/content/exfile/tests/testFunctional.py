@@ -25,29 +25,12 @@ from BeautifulSoup import BeautifulSoup
 
 from Products.Naaya.tests.NaayaFunctionalTestCase import NaayaFunctionalTestCase
 
-class ExFileMixin(object):
-    """ testing mix-in that installs the Naaya ExFile content type """
 
-    exfile_metatype = 'Naaya Extended File'
-    exfile_permission = 'Naaya - Add Naaya Extended File objects'
-
-    def exfile_install(self):
-        self.portal.manage_install_pluggableitem(self.exfile_metatype)
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].append(self.exfile_permission)
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
-
-    def exfile_uninstall(self):
-        add_content_permissions = deepcopy(self.portal.acl_users.getPermission('Add content'))
-        add_content_permissions['permissions'].remove(self.exfile_permission)
-        self.portal.acl_users.editPermission('Add content', **add_content_permissions)
-        self.portal.manage_uninstall_pluggableitem(self.exfile_metatype)
-
-class NyExFileFunctionalTestCase(NaayaFunctionalTestCase, ExFileMixin):
+class NyExFileFunctionalTestCase(NaayaFunctionalTestCase):
     """ TestCase for NaayaContent object """
 
     def afterSetUp(self):
-        self.exfile_install()
+        self.portal.manage_install_pluggableitem('Naaya Extended File')
         from Products.Naaya.NyFolder import addNyFolder
         from naaya.content.exfile.exfile_item import addNyExFile
         addNyFolder(self.portal, 'myfolder', contributor='contributor', submitted=1)
@@ -56,7 +39,7 @@ class NyExFileFunctionalTestCase(NaayaFunctionalTestCase, ExFileMixin):
 
     def beforeTearDown(self):
         self.portal.manage_delObjects(['myfolder'])
-        self.exfile_uninstall()
+        self.portal.manage_uninstall_pluggableitem('Naaya Extended File')
         import transaction; transaction.commit()
 
     def test_add(self):

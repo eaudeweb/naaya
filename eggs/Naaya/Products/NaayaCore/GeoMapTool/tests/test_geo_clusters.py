@@ -22,17 +22,16 @@ import random
 
 from Products.Naaya.tests import NaayaTestCase
 from Products.Naaya.tests import NaayaFunctionalTestCase
-from naaya.content.geopoint.tests.testFunctional import GeoPointMixin
 
 from Products.Naaya.NyFolder import addNyFolder
 
-class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase, GeoPointMixin):
+class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase):
     symbol_ids = ['symbol1', 'symbol2']
     howmany = 100
     ob_dicts = []
 
     def afterSetUp(self):
-        self.geopoint_install()
+        self.portal.manage_install_pluggableitem('Naaya GeoPoint')
         self.portal.setDefaultSearchableContent()
 
         for id in self.symbol_ids:
@@ -77,7 +76,7 @@ class GeoClustersTestCase(NaayaFunctionalTestCase.NaayaFunctionalTestCase, GeoPo
         for id in self.symbol_ids:
             self.portal.portal_map.deleteSymbol(id)
 
-        self.geopoint_uninstall()
+        self.portal.manage_uninstall_pluggableitem('Naaya GeoPoint')
         self.portal.setDefaultSearchableContent()
 
     def test_clusters_function(self):
