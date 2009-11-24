@@ -40,7 +40,10 @@
 	border-bottom:1px solid #34649b;
 	border-right:1px solid #34649b;
 }
-
+dd#admin_textarea{
+	margin-left: 3px;
+	width: 650px;
+}
 #toolbar{
 	padding: 0.6em 0;
 	margin: 0 auto;
