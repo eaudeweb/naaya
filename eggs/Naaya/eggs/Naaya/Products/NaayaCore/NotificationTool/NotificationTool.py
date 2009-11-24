@@ -103,7 +103,8 @@ class NotificationTool(Folder):
     def admin_add_subscription(self, user_id, location, notif_type, lang, REQUEST):
         """ """
         if location == '__root': location = ''
-        location = ('/').join(location.split('/')[1:])
+        ob = self.getSite().unrestrictedTraverse(location)
+        location = relative_object_path(ob, self.getSite())
         try:
             self.add_subscription(user_id, location, notif_type, lang)
         except ValueError, msg:
