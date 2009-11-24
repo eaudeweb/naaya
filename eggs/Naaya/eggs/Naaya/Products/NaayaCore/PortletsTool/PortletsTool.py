@@ -396,23 +396,28 @@ class PortletsTool(Folder, utils):
 
         return output
 
-    def sort_portlets(self, REQUEST, folder_path, position, portlet_order):
+    def sort_portlets(self, REQUEST, portlet_order):
         """ Ajax method that changes order of portlets in a group """
         if isinstance(portlet_order, basestring):
             portlet_order = [portlet_order]
-        assignments = self._enumerate_portlet_assignments()
-        key = (folder_path, position)
-        by_hash = dict( (entry['hashkey'], entry) for entry in assignments[key])
-
-        if set(by_hash.keys()) != set(portlet_order):
-            raise ValueError('Not the same portlets')
+        all_assignments = self._enumerate_portlet_assignments()
 
         _portlet_layout = getattr(self, '_portlet_layout', {})
-        _portlet_layout[key] = [{'id': item['portlet'].id, 'inherit': item['inherit']}
-                                for item in (by_hash[h] for h in portlet_order)]
+        for key, assignments in all_assignments.iteritems():
+            entry_by_hash = dict((entry['hashkey'], entry)
+                                 for entry in assignments)
+            ordered_entries = []
+            for hashkey in portlet_order:
+                if hashkey in entry_by_hash:
+                    ordered_entries.append(entry_by_hash.pop(hashkey))
+            ordered_entries += entry_by_hash.values()
+            _portlet_layout[key] = [{'id': item['portlet'].id,
+                                     'inherit': item['inherit']}
+                                    for item in ordered_entries]
+
         self._p_changed = True
 
-        return 'ok'
+        return REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
     def _get_macro(self, name):
         tmpl_name = portlet_template_names[name]
@@ -481,6 +486,13 @@ class LegacyPortletWrapper(object):
 
     def get_type_label(self):
         return 'Special'
+
+    def __repr__(self):
+        """
+        needed, since it's used when calculating `simplehash` for wrapped
+        portlets
+        """
+        return '<LegacyPortletWrapper for %r>' % self.id
 
 InitializeClass(LegacyPortletWrapper)
 
