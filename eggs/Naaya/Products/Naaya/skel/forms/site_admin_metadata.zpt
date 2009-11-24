@@ -25,24 +25,33 @@
 <form method="post" tal:attributes="action string:${site_url}/admin_metadata">
 <dl>
 	<dt i18n:translate="">Site title</dt>
-	<dd><input type="text" name="site_title:utf8:ustring" tal:attributes="value python:here.getLocalProperty('title', curr_lang)" size="50" /></dd>
+	<dd><input type="text" name="site_title:utf8:ustring"
+		tal:attributes="value python:here.getLocalProperty('title', curr_lang)" size="50" /></dd>
 	<dt	i18n:translate="">Site subtitle</dt>
-	<dd><input type="text" name="site_subtitle:utf8:ustring" tal:attributes="value python:here.getLocalProperty('site_subtitle', curr_lang)" size="50" /></dd>
+	<dd><input type="text" name="site_subtitle:utf8:ustring"
+		tal:attributes="value python:here.getLocalProperty('site_subtitle', curr_lang)" size="50" /></dd>
+</dl>
+<dl>
+	<dt i18n:translate="">Publisher</dt>
+	<dd><input type="text" name="publisher:utf8:ustring"
+		tal:attributes="value python:here.getLocalProperty('publisher', curr_lang)" size="50" /></dd>
+	<dt i18n:translate="">Contributor</dt>
+	<dd><input type="text" name="contributor:utf8:ustring"
+		tal:attributes="value python:here.getLocalProperty('contributor', curr_lang)" size="50" /></dd>
+	<dt i18n:translate="">Creator</dt>
+	<dd><input type="text" name="creator:utf8:ustring"
+		tal:attributes="value python:here.getLocalProperty('creator', curr_lang)" size="50" /></dd>
+	<dt i18n:translate="">Rights</dt>
+	<dd><input type="text" name="rights:utf8:ustring"
+		tal:attributes="value python:here.getLocalProperty('rights', curr_lang)" size="50" /></dd>
 </dl>
 <dl tal:define="editor here/getEditorTool">
 	<dt i18n:translate="">Description (HTML)</dt>
 	<dd><span tal:replace="structure python:editor.render('description', curr_lang, image_support=True)" /></dd>
-	<dd><textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:here.getLocalProperty('description', curr_lang)" /></dd>
-</dl>
-<dl>
-	<dt i18n:translate="">Publisher</dt>
-	<dd><input type="text" name="publisher:utf8:ustring" tal:attributes="value python:here.getLocalProperty('publisher', curr_lang)" size="50" /></dd>
-	<dt i18n:translate="">Contributor</dt>
-	<dd><input type="text" name="contributor:utf8:ustring" tal:attributes="value python:here.getLocalProperty('contributor', curr_lang)" size="50" /></dd>
-	<dt i18n:translate="">Creator</dt>
-	<dd><input type="text" name="creator:utf8:ustring" tal:attributes="value python:here.getLocalProperty('creator', curr_lang)" size="50" /></dd>
-	<dt i18n:translate="">Rights</dt>
-	<dd><input type="text" name="rights:utf8:ustring" tal:attributes="value python:here.getLocalProperty('rights', curr_lang)" size="50" /></dd>
+	<dd id="admin_textarea">
+		<textarea id="description" name="description:utf8:ustring" rows="20" cols="72" class="mceEditor"
+		tal:content="python:here.getLocalProperty('description', curr_lang)" />
+	</dd>
 </dl>
 <p><input type="hidden" name="lang" tal:attributes="value curr_lang" /></p>
 <p><input type="submit" value="Save changes" i18n:attributes="value" /></p>
