@@ -1,5 +1,6 @@
 <configure xmlns='http://namespaces.zope.org/zope'>
   <include package=".adapter" />
+  <include package="naaya.core" />
 
   <adapter
     factory="Products.Naaya.NyFolderBase.ObjectListingPortlet"
