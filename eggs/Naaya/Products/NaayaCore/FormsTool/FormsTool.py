@@ -40,6 +40,8 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.LayoutTool.Template import manage_addTemplateForm, manage_addTemplate, Template
 
+template_cache = {}
+
 def manage_addFormsTool(self, REQUEST=None):
     """
     Class that implements the tool.
@@ -136,10 +138,10 @@ class FormsTool(Folder):
                     return form['form_ob'].__of__(self)
 
                 body=self.futRead(form['path'], 'r')
-                t = Template(id=form['id'],
-                             title=form['title'],
-                             text=body,
-                             content_type='')
+                t = template_cache.get(form['id'], None)
+                if t is None:
+                    t = PageTemplateFile(form['path'])
+                    template_cache[form['id']] = t
                 return t.__of__(self)
         raise KeyError('Not found form named "%s"' % form_id)
 
@@ -166,7 +168,7 @@ class FormsTool(Folder):
 
         p_context['skin_files_path'] = self.getLayoutTool().getSkinFilesPath()
         form = self.getForm(p_page)
-        return form(p_context)
+        return form.pt_render(extra_context=p_context)
 
     _diff = PageTemplateFile('zpt/diff', globals())
     security.declareProtected(view_management_screens, 'show_diff')
