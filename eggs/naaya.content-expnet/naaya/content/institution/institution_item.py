@@ -243,10 +243,6 @@ class NyInstitution(institution_item, NyAttributes, NyItem, NyCheckControl, NyCo
         NyItem.__dict__['__init__'](self)
         self.contributor = contributor
 
-    security.declarePrivate('objectkeywords')
-    def objectkeywords(self, lang):
-        return u' '.join([self._objectkeywords(lang), self.firstname, self.lastname, self.getLocalProperty('jobtitle', lang)])
-
     security.declarePrivate('export_this_tag_custom')
     def export_this_tag_custom(self):
         return 'personaltitle="%s" firstname="%s" lastname="%s" department="%s" organisation="%s" postaladdress="%s" phone="%s" fax="%s" cellphone="%s" email="%s" webpage="%s"' % \
