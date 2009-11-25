@@ -4,7 +4,7 @@
 <metal:block fill-slot="tab_contents" tal:define="map_url here/getGeoMapToolPath;">
 
 <div i18n:translate="">
-	Obtaining a <em>Yahoo Map API key</em> is mandatory for the map to work and you can <a href="http://search.yahooapis.com/webservices/register_application" title="Yahoo.com | Get an application ID" i18n:translate="" i18n:attributes="title">request one here</a>. <em>The Google maps API key</em> can be obtained from the <a href="http://code.google.com/apis/maps/signup.html" title="Sign Up for the Google Maps API">Google Maps API page</a>
+    Obtaining a <em>Yahoo Map API key</em> is mandatory for the map to work and you can <a href="http://search.yahooapis.com/webservices/register_application" title="Yahoo.com | Get an application ID" i18n:translate="" i18n:attributes="title">request one here</a>. <em>The Google maps API key</em> can be obtained from the <a href="http://code.google.com/apis/maps/signup.html" title="Sign Up for the Google Maps API">Google Maps API page</a>
 </div>
 <form method="post" tal:attributes="action string:${map_url}/manageProperties">
 
@@ -83,6 +83,18 @@
             <label for="detailed_map_height">Map height</label>
             <input type="text" name="detailed_map_height" id="detailed_map_height" tal:attributes="value here/detailed_map_height" size="10" />
         </div>
+</fieldset>
+<fieldset class="form-fieldset">
+    <legend i18n:translate="">Embed map</legend>
+        <p i18n:translate="">
+            Embed this map in your site using a code like this:
+        </p>
+        <pre tal:define="site_url here/absolute_url">
+&lt;iframe src="<tal:block content="string:${site_url}/embed_map_html"/>&quot;
+    width="600" height="500" frameborder="0" scrolling="no"&gt;
+        &lt;p&gt;Your browser does not support iframes.&lt;/p&gt;
+&lt;/iframe&gt;
+</pre>
 </fieldset>
 <p><input type="submit" value="Save changes" i18n:attributes="value" /></p>
 </form>
