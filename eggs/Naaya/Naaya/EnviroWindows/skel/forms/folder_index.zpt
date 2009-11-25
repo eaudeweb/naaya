@@ -51,6 +51,10 @@
 		<a tal:attributes="href string:${here/absolute_url}/requestrole_html">Create an account on this server and apply for contribution rights</a>
 	</p>
 
+	<tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'center')">
+		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_center_macro'})" />
+	</tal:block>
+
 	<span tal:replace="structure here/comments_box" />
 </div>
 
