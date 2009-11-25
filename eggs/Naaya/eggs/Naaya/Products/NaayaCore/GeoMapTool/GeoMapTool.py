@@ -1235,6 +1235,9 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
     security.declareProtected(view, 'view_map_html')
     view_map_html = PageTemplateFile('zpt/map_index', globals())
 
+    security.declareProtected(view, 'embed_map_html')
+    embed_map_html = PageTemplateFile('zpt/map_embed', globals())
+
     security.declareProtected(view, 'list_locations')
     def list_locations(self, REQUEST=None, **kw):
         """" """
