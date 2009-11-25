@@ -145,7 +145,6 @@
 	</syndication>
 	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_latestnews_rdf,portlet_upcomingevents_rdf,portlet_latestuploads_rdf">
 		<portlet id="portlet_administration" title="Administration" />
-		<portlet id="portlet_maincategories" title="Main sections" />
 		<portlet id="portlet_localchannels" title="Local channels" />
 		<portlet id="portlet_folder_administration" title="Folder Administration"/>
 		<linkslist id="topnav_links" title="Top navigation links" portlet="">
