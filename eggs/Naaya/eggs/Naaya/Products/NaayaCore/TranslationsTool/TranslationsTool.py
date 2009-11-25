@@ -174,6 +174,26 @@ class TranslationsTool(MessageCatalog):
                 d.append(x)
         return d
 
+    def tt_get_not_translated_messages_count(self, query):
+        """
+        Returns the number of not translated messages per language.
+        """
+        langs = self.tt_get_languages_mapping()
+        mesgs = self.tt_get_messages(query, 'msg', False)
+        not_translated_messages = {}
+        if len(langs) == 0 or len(mesgs) == 0:
+            return False
+        language = 0
+        for lang in langs:
+            language += 1
+            mesg_count = 0
+            for mesg in mesgs:
+                if not mesg[language]:
+                    mesg_count += 1
+            not_translated_messages[lang['name']] = mesg_count
+        print repr(not_translated_messages)
+        return not_translated_messages
+
     security.declarePublic('manage_export')
     def manage_export(self, x, REQUEST=None, RESPONSE=None):
         """Exports the content of the message catalog either to a template
