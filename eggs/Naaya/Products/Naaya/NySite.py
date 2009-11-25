@@ -1452,7 +1452,17 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             pub_folders = call_method(folder_ob, 'getPublishedFolders', [])
             pub_objects = call_method(folder_ob, 'getPublishedObjects', [])
             return pub_folders, pub_objects, ppath
-        return [x for x in self.objectValues(self.get_naaya_containers_metatypes()) if x.approved == 1 and x.submitted==1], [], ''
+
+        objects = []
+        for ob in self.objectValues(self.get_naaya_containers_metatypes()):
+            if not getattr(ob, 'approved', 0):
+                continue
+            elif not getattr(ob, 'submitted', 0):
+                continue
+            else:
+                objects.append(ob)
+
+        return objects, [], ''
 
     def getFolderContent(self, folder_path):
         """ return the content of a folder """
