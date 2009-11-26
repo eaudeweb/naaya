@@ -3673,6 +3673,20 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         heartbeat_cooldown[path] = datetime.now() + timedelta(minutes=10)
         self.heartbeat_work()
 
+    def manage_check_heartbeat(self):
+        """ return the time of the last heartbeat """
+
+        path = '/'.join(self.getPhysicalPath())
+        if heartbeat_cooldown.has_key(path):
+            last_heartbeat = heartbeat_cooldown[path] - timedelta(minutes=10)
+            time_ever_since = datetime.now() - last_heartbeat
+            minutes_ever_since = int(time_ever_since.seconds / 60)
+            seconds_ever_since = time_ever_since.seconds % 60
+            last_heartbeat = last_heartbeat.strftime('%d %B %Y %H:%M:%S')
+            return 'Time of last heartbeat: %s (%s minutes and %s seconds ago)'\
+                % (last_heartbeat, minutes_ever_since, seconds_ever_since)
+        return 'The heart did not beat since last system restart.'
+
     # functions for translation
     def translate(self, *args):
         return translate(*args)
