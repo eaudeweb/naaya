@@ -2164,7 +2164,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_adduser')
     def admin_adduser(self, firstname='', lastname='', email='', name='', password='',
         confirm='', strict=0, REQUEST=None):
-        """ """
+        """
+        Create a user with the specified information
+        """
         msg = err = ''
         try:
             userinfo = self.getAuthenticationTool().manage_addUser(name,
@@ -2189,7 +2191,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_edituser')
     def admin_edituser(self, firstname='', lastname='', email='', name='', password='',
         confirm='', REQUEST=None):
-        """ """
+        """
+        Update the specified user's information
+        """
         msg = err = ''
         try:
             self.getAuthenticationTool().manage_changeUser(name, password, confirm, [], [], firstname,
@@ -2208,7 +2212,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addrole')
     def admin_addrole(self, role='', permissions=[], REQUEST=None):
-        """ """
+        """
+        Create a role, with the specified permissions
+        """
         msg = err = ''
         try:
             self.getAuthenticationTool().addRole(role, permissions)
@@ -2234,7 +2240,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_addroles')
     def admin_addroles(self, names=[], roles=[], loc='allsite', location='', send_mail='', REQUEST=None):
-        """ """
+        """
+        Assign the given list of roles to the given list of users at the
+        specified location
+        """
         msg = err = ''
         names = self.utConvertToList(names)
         if len(names)<=0:

@@ -343,7 +343,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
     security.declareProtected(manage_users, 'getUserNames')
     def getUserNames(self):
-        """Return a list of usernames"""
+        """
+        Return a list of userids of all users registered in this portal.
+        """
         names=self.data.keys()
         names.sort()
         return names
@@ -362,7 +364,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     security.declareProtected(manage_users, 'getUsersRolesRestricted')
     def getUsersRolesRestricted(self, path):
         """
-        Returns information about the user's roles inside the given path.
+        Returns information about all the users' roles inside the given path.
         """
         users_roles = {}
         for folder in self.getCatalogedObjects(meta_type=[METATYPE_FOLDER,'Folder'], has_local_role=1, path=path):
@@ -376,7 +378,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
     security.declareProtected(manage_users, 'searchUsers')
     def searchUsers(self, query, limit=0):
-        """ search users """
+        """
+        Search `query` in all users' first/last/full names and emails
+        TODO: refactor
+        """
         if query:
             users = []
             users_a = users.append
@@ -393,7 +398,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
     security.declareProtected(manage_users, 'isNewUser')
     def isNewUser(self, user_obj, days=5):
-        """ check if the user is recently added """
+        """
+        return True if user was created in the last 5 days
+        note: the `days` parameter is not used.
+        """
         if DateTime() - DateTime(self.getUserCreatedDate(user_obj)) <= 5:
             return True
         else:
@@ -401,13 +409,18 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
     security.declareProtected(view, 'isLocalUser')
     def isLocalUser(self, REQUEST=None):
-        """ check if authenticated user is stored localy """
+        """
+        Return 1 if the current user is registered in this user folder,
+        0 otherwise
+        """
         if REQUEST.AUTHENTICATED_USER.getUserName() in self.getUserNames():
             return 1
         return 0
 
     def getUsers(self):
-        """Return a list of user objects"""
+        """
+        Return all user objects registered in this user folder
+        """
         data=self.data
         names=data.keys()
         names.sort()
@@ -419,7 +432,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
     security.declareProtected(view, 'getUser')
     def getUser(self, name):
-        """Return the named user object or None"""
+        """
+        Return the user object for the specified userid ( None if not found)
+        """
         return self.data.get(name, None)
 
     def get_ldap_group_roles(self, name, source):
@@ -453,6 +468,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
     def getAuthenticatedUserRoles(self, p_meta_types=None):
         """
         Returns a list with all roles of the authenticated user.
+
+        This function looks at the site level, then inside all folders for
+        local roles.
         """
         if p_meta_types is None: p_meta_types = self.get_containers_metatypes()
         r = []
@@ -474,7 +492,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return r
 
     def isAdministrator(self, path=''):
-        """ check if user is administrator """
+        """
+        Check if the current user has Administrator role at the specified
+        path (by default, at the site level)
+        """
         list_roles = self.getAuthenticatedUserRoles()
         for roles, path in list_roles:
             if (('Manager' in roles) or ('Administrator' in roles)) and path == '':
@@ -484,7 +505,13 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return False
 
     def getUsersRoles(self, p_meta_types=None):
-        """ """
+        """
+        Same as getAuthenticatedUserRoles, except for all the users registered
+        in this folder. Don't use this in new code.
+
+        Output format: a dict with keyes=userids and values=list of roles. The
+        list of roles contains tuples of (list of role names, path of folder).
+        """
         if p_meta_types is None: p_meta_types = self.get_containers_metatypes()
         users_roles = {}
         for username in self.user_names():   #get the users
@@ -500,7 +527,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
     security.declareProtected(manage_users, 'getUsersWithRoles')
     def getUsersWithRoles(self):
-        """ return the users with their roles """
+        """
+        Honestly, we're stumped. Don't use this in new code.
+        """
         users = {}
         for k, v in self.getUsersRoles().items():
             if (len(v) > 1 and len(v[1][0]) > 0) or (len(v) == 1 and len(v[0][0]) > 0):
@@ -509,7 +538,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
     security.declareProtected(manage_users, 'getUsersWithRole')
     def getUsersWithRole(self, role):
-        """ return the user objects that have the specified role"""
+        """
+        Don't use this in new code.
+        return the user objects that have the specified role
+        """
         local_users = self.getUsersWithRoles()
         #dictionary that will hold local users
         local_result = {}
@@ -543,7 +575,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return local_result
 
     def getUserSource(self, user):
-        """ given a user returns the source """
+        """
+        Returns information about where a user is registered:
+         - if it's inside this user folder, return 'acl_users'
+         - if it's in a known external source, returns the source's title
+         - otherwise returns 'n/a'
+        """
         user_ob = self.getUser(user)
         if user_ob:
             return 'acl_users'
@@ -666,18 +703,29 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return r
 
     def getUserAccount(self, user_obj):
-        """ Return the username"""
+        """
+        Given a user object, returns the name inside
+        """
         return user_obj.name
 
     def getUserPassword(self, user_obj):
-        """ Return the password"""
+        """
+        Given a user object, returns the password inside
+        """
         return user_obj.__
 
     def getUserRoles(self, user_obj):
-        """ Return the user roles """
+        """
+        Given a user object, returns the roles inside
+        """
         return user_obj.roles
 
+    security.declarePrivate('get_all_user_roles')
     def get_all_user_roles(self, uid):
+        """
+        Given a userid, returns all the roles of that user, looking at this
+        user folder and any external sources.
+        """
         # check local users
         roles = []
         local_user = self.getUser(uid)
@@ -700,22 +748,31 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         return roles
 
     def getUserFirstName(self, user_obj):
-        """ Return the firstname"""
+        """
+        Given a user object, returns the first name
+        """
         return user_obj.firstname
 
     def getUserLastName(self, user_obj):
-        """ Return the lastname"""
+        """
+        Given a user object, returns the last name
+        """
         return user_obj.lastname
 
     def getUserFullName(self, user_obj):
-        """ Return the full name of the user """
+        """
+        Given a user object, returns the concatenation of first+last names
+        """
         try:
             return '%s %s' % (user_obj.firstname, user_obj.lastname)
         except AttributeError:
             return ''
 
     def getUserFullNameByID(self, user_str):
-        """ Return the full name of the user """
+        """
+        Just like getUserFullName, but receives userid as parameter, and
+        only works for locally registered users
+        """
         user_obj = self.getUser(user_str)
         if user_obj is not None:
             return user_obj.firstname + ' ' + user_obj.lastname
@@ -723,7 +780,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             return user_str
 
     def getUserEmail(self, user_obj):
-        """ Return the email """
+        """
+        Given a user object, returns the email
+        """
         try:
             return user_obj.email
         except AttributeError:
@@ -733,23 +792,23 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             return user_obj.mail
 
     def getUserHistory(self, user_obj):
-        """ return the last login"""
+        """ Given a user object, returns its `history` property """
         return user_obj.history
 
     def getUserCreatedDate(self, user_obj):
-        """ Return the created date """
+        """ Given a user object, returns its `created` property """
         return user_obj.created
 
     def getUserLastUpdated(self, user_obj):
-        """ Return the lastupdated date"""
+        """ Given a user object, returns its `lastupdated` property """
         return user_obj.lastupdated
 
     def getUserLastLogin(self, user_obj):
-        """ Return the user's last login date """
+        """ Given a user object, returns its `lastlogin` property """
         return user_obj.lastlogin
 
     def getUserLastPost(self, user_obj):
-        """ Return the user's last post date """
+        """ Given a user object, returns its `lastpost` property """
         return user_obj.lastpost
 
     def getSuperUserFolders(self):
@@ -758,12 +817,18 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         if self in ufs: ufs.remove(self)
         return ufs
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getSources')
     def getSources(self):
-        #returns a list with all sources
+        """
+        returns a list with all registered external sources
+        """
         return map(self._getOb, map(lambda x: x['id'], self._objects))
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'getSourceObj')
     def getSourceObj(self, p_source_id):
-        #returns a source object
+        """
+        returns a source object
+        """
         try: return self._getOb(p_source_id)
         except: return None
 
@@ -787,7 +852,9 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
     security.declareProtected(manage_users, 'emailConfirmationEnabled')
     def emailConfirmationEnabled(self):
-        # Check to see if email confirmation is enabled
+        """
+        Check to see if email confirmation is enabled
+        """
         if self.isAnonymousUser():
             return self.email_confirmation
         # No email confirmation need if user is not anonymous
