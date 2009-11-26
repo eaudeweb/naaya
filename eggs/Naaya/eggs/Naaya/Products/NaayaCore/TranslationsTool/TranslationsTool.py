@@ -190,8 +190,7 @@ class TranslationsTool(MessageCatalog):
             for mesg in mesgs:
                 if not mesg[language]:
                     mesg_count += 1
-            not_translated_messages[lang['name']] = mesg_count
-        print repr(not_translated_messages)
+            not_translated_messages[lang['code']] = mesg_count
         return not_translated_messages
 
     security.declarePublic('manage_export')

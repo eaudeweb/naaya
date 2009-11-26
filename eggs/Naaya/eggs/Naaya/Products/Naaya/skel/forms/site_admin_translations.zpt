@@ -84,19 +84,22 @@
 		</tal:block>
 		<tal:block tal:condition="python:skey!='msg'">
 			<th class="scope-col" scope="col">
-				<a tal:attributes="href string:${site_url}/admin_translations_html?skey=msg&amp;query=${query}" i18n:translate="">Message</a>
+				<a tal:attributes="href string:${site_url}/admin_translations_html?skey=msg&amp;query=${query}"
+					i18n:translate="">Message</a>
 			</th>
 		</tal:block>
 		<tal:block tal:repeat="language languages">
 			<tal:block define="language_name python:language['name'];
-				not_translated python:catalog.tt_get_not_translated_messages_count(query)[language_name]">
+				language_code python:language['code'];
+				not_translated python:catalog.tt_get_not_translated_messages_count(query)[language_code]">
 				<tal:block tal:condition="python:skey==language['code']">
 					<tal:block tal:condition="python:rkey==''">
 						<th class="scope-col" scope="col">
 							<a tal:attributes="href string:${site_url}/admin_translations_html?skey=${skey}&amp;rkey=1&amp;query=${query}">
 								<span i18n:translate="" tal:omit-tag="" tal:content="language_name" />
 							</a> (*<span tal:content="not_translated" i18n:attributes="title"
-							title="Number of messages not translated in this language"/>)<img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
+								title="Number of messages not translated in this language"/>)
+							<img src="misc_/Naaya/sort_asc.gif" style="vertical-align: middle" alt="" />
 						</th>
 					</tal:block>
 					<tal:block tal:condition="python:rkey=='1'">
@@ -104,14 +107,17 @@
 							<a tal:attributes="href string:${site_url}/admin_translations_html?skey=${skey}&amp;query=${query}">
 								<span i18n:translate="" tal:omit-tag="" tal:content="language_name" />
 							</a> (*<span tal:content="not_translated" i18n:attributes="title"
-							title="Number of messages not translated in this language"/>)<img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
+								title="Number of messages not translated in this language"/>)
+							<img src="misc_/Naaya/sort_desc.gif" style="vertical-align: middle" alt="" />
 						</th>
 					</tal:block>
 				</tal:block>
 				<tal:block tal:condition="python:skey!=language['code']">
-					<th class="scope-col" scope="col" tal:define="language_code python:language['code']">
-						<a tal:attributes="href string:${site_url}/admin_translations_html?skey=${language_code}&amp;query=${query}" i18n:translate="" tal:content="language_name" /> (*<span tal:content="not_translated" i18n:attributes="title"
-							title="Number of messages not translated in this language"/>)
+					<th class="scope-col" scope="col">
+						<a tal:attributes="href string:${site_url}/admin_translations_html?skey=${language_code}&amp;query=${query}"
+							i18n:translate="" tal:content="language_name" />
+							(*<span tal:content="not_translated" i18n:attributes="title"
+								title="Number of messages not translated in this language"/>)
 					</th>
 				</tal:block>
 			</tal:block>
@@ -134,7 +140,7 @@
 </tbody>
 </table>
 <tal:block condition="python:paging_total!=0">
-	<p ii18n:translate="">* Number of messages not yet translated (per language)</p><br/>
+	<p i18n:translate="">* Number of messages not yet translated (per language)</p><br/>
 </tal:block>
 </tal:block>
 <tal:block tal:condition="python:paging_total==0">
