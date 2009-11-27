@@ -9,8 +9,11 @@ Contents:
    installation
    authentication_tool
    notification_tool
+   portlets
+   site
    pluggable_content
    permissions
+   buildout_windows
 
 Indices and tables
 ==================
