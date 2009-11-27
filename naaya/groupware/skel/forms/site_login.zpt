@@ -1,136 +1,83 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-    <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/screen.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/print.css" media="print" />
-    <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/handheld.css" media="handheld" />
-    <link rel="icon" href="http://eionet.europa.eu/styles/eionet2007/eeaicon.gif" type="image/gif" />
-<title>Login</title>
-<style type="text/css">
-    .field {
-        margin:1em;
-    }
-    .field label {
-        display:block;
-        font-weight:bold;
-        margin-bottom:0.3em;
-    }
-</style>
-</head>
-
-<body>
-    <div id="container">
-    <div id="toolribbon">
-        <div id="lefttools">
-          <a href="http://www.eea.europa.eu/" id="eealink">EEA</a>
-          <a href="http://ew.eea.europa.eu/" id="ewlink">EnviroWindows</a>
-        </div>
-        <div id="righttools">
-        </div>
-    </div>
-    <div id="pagehead">
+<metal:block use-macro="here/gw_macro/macros/main">
+    <div id="pagehead" metal:fill-slot="div-pagehead">
         <a href="/" title="Frontpage"></a>
-        <div id="networktitle" tal:content="here/title_or_id"></div>
-        <div id="sitetitle" tal:content="here/site_subtitle"></div>
+        <div id="networktitle">Naaya Groupware</div>
+        <div id="sitetitle" tal:content="here/title_or_id"></div>
     </div>
-    <div id="workarea">
-    <tal:block define="came_from python:request.get('came_from', here.getSite().absolute_url(1));
-                       action_url python:came_from or 'logged_in'">
-
-    <tal:block define="user python:request.AUTHENTICATED_USER.getUserName()" condition="python:user!='Anonymous User'">
-    <tal:block define="auth_tool python:here.getAuthenticationTool();
-                                    user_obj python:auth_tool.getUser(request.AUTHENTICATED_USER.getUserName());">
-
-    <h1 i18n:translate="">Log out</h1>
-
-
-    <div id="log1"><tal:block  i18n:translate="">You are logged in as:</tal:block> <em><span tal:replace="user" /></em>.</div>
-    <div id="log1"><a tal:define="url python:here.absolute_url()" tal:attributes="href string:${url}/logout" i18n:translate="">Logout</a></div>
-    <p><a tal:attributes="href here/absolute_url" title="Back" i18n:translate="">Back to <em tal:content="here/title_or_id" /></a></p>
-    <br />
-    <div>
-        <div>Tips</div>
-        <ul>
-            <li i18n:translate=""><strong>&raquo;</strong> Having trouble logging out? Make sure that cookies are allowed in your browser</li>
-            <li i18n:translate=""><strong>&raquo;</strong> If you opened child browser windows from this one, those will maintain your authentication</li>
-        </ul>
-    </div>
-    <tal:block tal:define="roles python:here.getAuthenticationTool().getAuthenticatedUserRoles()">
-        <div tal:condition="python:user_obj is None" i18n:translate="">
-            <!-- List roles for Zope user here -->
+    <div class="breadcrumbtrail" tal:define="crumbs python:here.getBreadCrumbTrail(request)" metal:fill-slot="div-breadcrumbtrail">
+        <div class="breadcrumbhead" i18n:translate="">You are here: </div>
+        <div class="breadcrumbitem">
+            <a href="../" title="Groupware home">Groupware home</a>
         </div>
-        <tal:block tal:condition="python:len(roles) and user_obj is not None" i18n:translate="">
-            You have the following rights in this portal:<br />
-            <ul>
-                <li tal:repeat="item roles">
-                    <span tal:replace="python:', '.join(item[0])" />
-                    on
-                    <a tal:define="object python:here.utGetObject(item[1])"
-                        tal:attributes="href string:${object/absolute_url}/"
-                        tal:content="object/title_or_id" />
-                </li>
-            </ul>
+        <tal:block tal:repeat="crumb crumbs">
+            <div tal:attributes="class python:test(repeat['crumb'].end, 'breadcrumbitemlast', 'breadcrumbitem')">
+                <a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" />
+            </div>
         </tal:block>
-        <tal:block tal:condition="python:not len(roles)">
-            You have no rights in this portal.
+    </div>
+    <div id="workarea" metal:fill-slot="div-workarea">
+        <tal:block define="came_from python:request.get('came_from', here.getSite().absolute_url(1));
+                           action_url python:came_from or 'logged_in';
+                           username python:request.AUTHENTICATED_USER.getUserName()">
+
+            <tal:block condition="python:username != 'Anonymous User' and here.get_user_access() != 'restricted'">
+                <h1 i18n:translate="">Log out</h1>
+                <div id="log1"><tal:block  i18n:translate="">You are logged in as:</tal:block> <em><span tal:replace="username" /></em>.</div>
+                <div id="log1"><a tal:define="url python:here.absolute_url()" tal:attributes="href string:${url}/logout" i18n:translate="">Logout</a></div>
+                <p><a tal:attributes="href here/absolute_url" title="Back" i18n:translate="">Back to <em tal:content="here/title_or_id" /></a></p>
+                <p i18n:translate="">
+                    If you wish to remove yourself from this interest group you can
+                    <a href="./relinquish_membership_html" i18n:name="relinquish_link" i18n:translate="">relinquish your membership</a>.
+                </p>
+                <div>
+                    <div>Tips</div>
+                    <ul>
+                        <li i18n:translate=""><strong>&raquo;</strong> Having trouble logging out? Make sure that cookies are allowed in your browser</li>
+                        <li i18n:translate=""><strong>&raquo;</strong> If you opened child browser windows from this one, those will maintain your authentication</li>
+                    </ul>
+                </div>
+                <br />
+            </tal:block>
+
+            <tal:block condition="python:username=='Anonymous User' or here.get_user_access() == 'restricted'">
+                <h1 i18n:translate="">Restricted access</h1>
+                <p i18n:translate="">You may request access to this interest group by contacting your group leader or by filling out the <a href="./request_ig_access_html" title="Request IG access">access request</a> form.</p>
+
+                <h2 i18n:translate="">Existing user</h2>
+                <form tal:attributes="action action_url" method="POST" tal:define="retry python:request.get('retry', '')">
+                    <div id="log1" tal:condition="python:retry=='1'" i18n:translate="">
+                        The username or password you provided are incorrect or this account doesn't have
+                        enough rights to access this interest group. Please try again.
+                    </div>
+
+                    <span tal:condition="python:came_from!=''">
+                        <input type="hidden" name="came_from" tal:attributes="value came_from" />
+                    </span>
+
+                    <div class="field">
+                        <label for="__ac_name" i18n:translate="">Username</label>
+                        <input type="text" name="__ac_name" id="__ac_name" size="20"
+                            tal:attributes="value python:request.get('__ac_name', '')" />
+                    </div>
+
+                    <div class="field">
+                        <label for="__ac_password" i18n:translate="">Password</label>
+                        <input type="password" name="__ac_password" id="__ac_password" size="20" />
+                    </div>
+
+                    <div class="field">
+                        <input type="submit" name="submit" value=" Login " i18n:attributes="value" />
+                    </div>
+                </form>
+                <div>
+                    <div i18n:translate="">Tips</div>
+                    <ul>
+                        <li i18n:translate=""><strong>&raquo;</strong> Having trouble logging in? Make sure that cookies are allowed in your browser</li>
+                        <li i18n:translate=""><strong>&raquo;</strong> Don't forget to logout or exit your browser when you're done</li>
+                        <li i18n:translate=""><strong>&raquo;</strong> Letting your browser to remember your username or password on this machine can be dangerous since other people might use this account to log in</li>
+                    </ul>
+                </div>
+            </tal:block>
         </tal:block>
-    </tal:block>
-    <br />
-
-    </tal:block>
-    </tal:block>
-
-    <tal:block define="user python:request.AUTHENTICATED_USER.getUserName()" condition="python:user=='Anonymous User'">
-    <h1 i18n:translate="">Restricted access</h1>
-    <p i18n:translate="">You may request access to this interest group by contacting your group leader or by filling out the <a href="./request_ig_access_html" title="Request IG access">access request</a> form.</p>
-
-
-
-    <h2 i18n:translate="">Existing user</h2>
-    <form tal:attributes="action action_url" method="POST">
-
-    <tal:block define="retry python:request.get('retry', '')">
-    <div id="log1" tal:condition="python:retry=='1'" i18n:translate="">
-        The username or password you provided are incorrect or this account doesn't have
-        enough rights to access this interest group. Please try again.
     </div>
-    </tal:block>
-
-    <span tal:condition="python:came_from!=''">
-        <input type="hidden" name="came_from" tal:attributes="value came_from" />
-    </span>
-
-    <div class="field">
-        <label for="__ac_name" i18n:translate="">Username</label>
-        <input type="text" name="__ac_name" id="__ac_name" size="20"
-            tal:attributes="value python:request.get('__ac_name', '')" />
-    </div>
-
-    <div class="field">
-        <label for="__ac_password" i18n:translate="">Password</label>
-        <input type="password" name="__ac_password" id="__ac_password" size="20" />
-    </div>
-
-    <div class="field">
-        <input type="submit" name="submit" value=" Login " i18n:attributes="value" />
-    </div>
-
-    </form>
-    <div>
-        <div i18n:translate="">Tips</div>
-        <ul>
-            <li i18n:translate=""><strong>&raquo;</strong> Having trouble logging in? Make sure that cookies are allowed in your browser</li>
-            <li i18n:translate=""><strong>&raquo;</strong> Don't forget to logout or exit your browser when you're done</li>
-            <li i18n:translate=""><strong>&raquo;</strong> Letting your browser to remember your username or password on this machine can be dangerous since other people might use this account to log in</li>
-        </ul>
-    </div>
-    </tal:block>
-
-
-    </tal:block>
-    </div>
-</div>
-    <div id="pagefoot"></div>
-</body>
-</html>
+</metal:block>

@@ -85,6 +85,9 @@ class GroupwareSite(NySite):
         else:
             return 'restricted'
 
+    def get_gw_root(self):
+        return self.aq_parent.absolute_url()
+
     @property
     def portal_is_restricted(self):
         view_perm = getattr(self, '_View_Permission', [])
@@ -169,7 +172,43 @@ class GroupwareSite(NySite):
 
         return REQUEST.RESPONSE.redirect('%s/request_ig_access_html?mail_sent=True' % self.absolute_url())
 
+    def relinquish_membership(self, REQUEST):
+        """
+        Allows a user to give up membership rights on this portal.
+        Deletes all local user accounts, including LDAP mappings.
+        """
+        if REQUEST['REQUEST_METHOD'] != 'POST':
+            return REQUEST.RESPONSE.redirect(self.getSite().aq_parent.absolute_url() + '/index_html')
+
+        user = REQUEST.AUTHENTICATED_USER
+        if user.name == 'Anonymous User':
+            return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/login_html')
+
+        acl = self.getAuthenticationTool()
+        relinquished = False
+        for source in acl.getSources():
+            relinquished = source.removeUser(user.name)
+
+        try:
+            acl.manage_delUsers([user.name])
+            if user.name not in acl.getUserNames():
+                relinquished = True
+        except KeyError:
+            pass
+
+        if relinquished:
+            return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/relinquish_membership_html?done=success')
+        else:
+            return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/relinquish_membership_html?done=failed')
+
+
+    security.declarePublic('unauthorized_html')
+    def unauthorized_html(self, REQUEST):
+        """ """
+        return REQUEST.RESPONSE.redirect(self.getSite().absolute_url() + '/login_html?' + REQUEST.get('came_from', ''))
+
     request_ig_access_html = nptf('zpt/request_ig_access', globals(), 'naaya.groupware.request_ig_access')
+    relinquish_membership_html = nptf('zpt/relinquish_membership', globals(), 'naaya.groupware.relinquish_membership')
 
     gw_common_css = ImageFile('www/gw_common.css', globals())
     gw_print_css = ImageFile('www/gw_print.css', globals())
