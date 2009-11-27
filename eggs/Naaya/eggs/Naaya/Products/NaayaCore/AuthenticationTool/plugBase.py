@@ -120,4 +120,12 @@ class PlugBase(SimpleItem):
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(REQUEST['HTTP_REFERER'])
 
+    def removeUser(self, name):
+        acl = self.getUserFolder()
+        roles = self.getUsersRoles(acl)
+        if name in roles.keys():
+            roles = [(name + '||' + x[1]).encode('utf-8') for x in roles[name]]
+            self.revokeUserRoles(roles)
+            return True
+
 InitializeClass(PlugBase)

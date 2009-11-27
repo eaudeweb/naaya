@@ -737,7 +737,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             portal_roles = source.getUsersRoles(source.getUserFolder()).get(uid, [])
             if portal_roles:
                 for role, location in portal_roles:
-                    if location == self.getSite().getId():
+                    if location == self.getSite().absolute_url(1):
                         roles.extend(role)
             # groups
             roles.extend(self.get_ldap_group_roles(uid, source))
