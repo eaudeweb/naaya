@@ -129,7 +129,11 @@ class PortletsTool(Folder, utils):
         return [x for x in self.objectValues(METATYPE_PORTLET) if x.portlettype==100]
 
     def getPortletById(self, p_id):
-        #return the portlet with the given id
+        """
+        Get the portlet with the given id. Returns the portlet from
+        ``portal_portlets`` if it exists; otherwise, performs an adapter query
+        and returns the result. If no portlet is found, returns ``None``.
+        """
         try: ob = self._getOb(p_id)
         except: ob = None
         if ob is not None:
