@@ -1,90 +1,47 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb">
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>Groupware</title>
-    <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/screen.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/print.css" media="print" />
-    <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/handheld.css" media="handheld" />
-    <link rel="icon" href="http://eionet.europa.eu/styles/eionet2007/eeaicon.gif" type="image/gif" />
-    <link rel="start" title="Home" href="/" />
-    <link rel="search" title="Search Eionet" href="http://search.eionet.europa.eu/" />
-    <link rel="alternate" type="application/rss+xml" title="Eionet headlines" href="http://www.eionet.europa.eu/announcements.rdf" />
-  </head>
-    <body tal:define="user_obj python:request.get('AUTHENTICATED_USER', None);
-                      portals python:here.objectValues('Groupware site')">
-        <div style="border: 2px dashed rgb(255, 255, 255); padding: 1pt; background: rgb(170, 0, 0) none repeat scroll 0% 0%;font-weight: bold; text-align: center; font-size: 1.5em; color: white;">
-            This is a DEMO site. Please do not upload any importand data!
-        </div>
-        <div id="container">
-            <div id="toolribbon">
-                <div id="lefttools">
-                  <a href="http://www.eea.europa.eu/" id="eealink">EEA</a>
-                  <a href="http://ew.eea.europa.eu/" id="ewlink">EnviroWindows</a>
-                </div>
-                <div id="righttools">
-                    <a id="loginlink" href="./loggedin" tal:condition="python:user_obj.getUserName() == 'Anonymous User'">Login</a>
-                    <a id="logoutlink" href="./manage_zmi_logout" tal:condition="python:user_obj.getUserName() != 'Anonymous User'">Logout (<span tal:replace="user_obj/getUserName"/>)</a>
-                </div>
-            </div>
-            <div id="pagehead">
-                <a href="/" title="Frontpage"></a>
-                <div id="networktitle">Naaya Groupware</div>
-                <div id="sitetitle">Demo site</div>
-            </div>
-            <div class="breadcrumbtrail">
-                <div class="breadcrumbhead" i18n:translate="">You are here: </div>
-                <div class="breadcrumbitemlast">
-                    <a href="." title="Groupware home">Groupware home</a>
-                </div>
-            </div>
-            <div id="workarea" tal:define="portals here/groupedIGs">
-                <tal:block define="igs python:portals.get('admin', [])" condition="igs">
-                    <h2>Interest groups that you administer</h2>
-                    <ul>
-                        <li tal:repeat="ig igs">
-                            <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
-                            <span tal:replace="ig/site_subtitle"/>
-                            <div tal:content="structure ig/description"></div>
-                        </li>
-                    </ul>
-                </tal:block>
-                <tal:block define="igs python:portals.get('member', [])" condition="igs">
-                    <h2>Interest groups that you are a member of</h2>
-                    <ul>
-                        <li tal:repeat="ig igs">
-                            <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
-                            <span tal:replace="ig/site_subtitle"/>
-                            <div tal:content="structure ig/description"></div>
-                        </li>
-                    </ul>
-                </tal:block>
-                <tal:block define="igs python:portals.get('viewer', [])" condition="igs">
-                    <h2>Interest groups that you can access</h2>
-                    <ul>
-                        <li tal:repeat="ig igs">
-                            <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
-                            <span tal:replace="ig/site_subtitle"/>
-                            [<small><a tal:attributes="href string:${ig/absolute_url}/request_ig_access_html">Request membership</a></small>]
-                            <div tal:content="structure ig/description"></div>
-                        </li>
-                    </ul>
-                </tal:block>
-                <tal:block define="igs python:portals.get('restricted', [])" condition="igs">
-                    <h2>Interest groups that are restricted to you</h2>
-                    <p>You can request access to these interest groups by contacting your group leader or by clicking the <em>Request access</em> link below</p>
-                    <ul>
-                        <li tal:repeat="ig igs">
-                            <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
-                            <span tal:replace="ig/site_subtitle"/>
-                            [<small><a tal:attributes="href string:${ig/absolute_url}/request_ig_access_html">Request access</a></small>]
-                            <div tal:content="structure ig/description"></div>
-                        </li>
-                    </ul>
-                </tal:block>
-            </div>
-        </div>
-        <div id="pagefoot"></div>
-    </body>
-</html>
+<metal:block use-macro="here/gw_macro/macros/main">
+    <div id="workarea" tal:define="portals here/groupedIGs" metal:fill-slot="div-workarea">
+        <tal:block define="igs python:portals.get('admin', [])" condition="igs">
+            <h2>Interest groups that you administer</h2>
+            <ul>
+                <li tal:repeat="ig igs">
+                    <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
+                    <span tal:replace="ig/site_subtitle"/>
+                    <div tal:content="structure ig/description"></div>
+                </li>
+            </ul>
+        </tal:block>
+        <tal:block define="igs python:portals.get('member', [])" condition="igs">
+            <h2>Interest groups that you are a member of</h2>
+            <ul>
+                <li tal:repeat="ig igs">
+                    <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
+                    <span tal:replace="ig/site_subtitle"/>
+                    <div tal:content="structure ig/description"></div>
+                </li>
+            </ul>
+        </tal:block>
+        <tal:block define="igs python:portals.get('viewer', [])" condition="igs">
+            <h2>Interest groups that you can access</h2>
+            <ul>
+                <li tal:repeat="ig igs">
+                    <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
+                    <span tal:replace="ig/site_subtitle"/>
+                    [<small><a tal:attributes="href string:${ig/absolute_url}/request_ig_access_html">Request membership</a></small>]
+                    <div tal:content="structure ig/description"></div>
+                </li>
+            </ul>
+        </tal:block>
+        <tal:block define="igs python:portals.get('restricted', [])" condition="igs">
+            <h2>Interest groups that are restricted to you</h2>
+            <p>You can request access to these interest groups by contacting your group leader or by clicking the <em>Request access</em> link below</p>
+            <ul>
+                <li tal:repeat="ig igs">
+                    <a tal:attributes="href ig/absolute_url" tal:content="ig/title_or_id"></a>
+                    <span tal:replace="ig/site_subtitle"/>
+                    [<small><a tal:attributes="href string:${ig/absolute_url}/request_ig_access_html">Request access</a></small>]
+                    <div tal:content="structure ig/description"></div>
+                </li>
+            </ul>
+        </tal:block>
+    </div>
+</metal:block>

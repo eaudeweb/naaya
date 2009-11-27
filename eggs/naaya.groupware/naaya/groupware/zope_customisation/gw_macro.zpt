@@ -1,0 +1,58 @@
+<metal:block define-macro="main">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"> 
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-gb">
+  <head metal:define-slot="head">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Groupware</title>
+    <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/screen.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/print.css" media="print" />
+    <link rel="stylesheet" type="text/css" href="http://eionet.europa.eu/styles/eionet2007/handheld.css" media="handheld" />
+    <link rel="icon" href="http://eionet.europa.eu/styles/eionet2007/eeaicon.gif" type="image/gif" />
+    <link rel="start" title="Home" href="/" />
+    <link rel="search" title="Search Eionet" href="http://search.eionet.europa.eu/" />
+    <link rel="alternate" type="application/rss+xml" title="Eionet headlines" href="http://www.eionet.europa.eu/announcements.rdf" />
+    <style type="text/css">
+        .field {
+            margin:1em;
+        }
+        .field label {
+            display:block;
+            font-weight:bold;
+            margin-bottom:0.3em;
+        }
+    </style>
+  </head>
+    <body tal:define="gw_root_url string:${here/get_gw_root}/index_html" metal:define-slot="body">
+        <div style="border: 2px dashed rgb(255, 255, 255); padding: 1pt; background: rgb(170, 0, 0) none repeat scroll 0% 0%;font-weight: bold; text-align: center; font-size: 1.5em; color: white;">
+            This is a DEMO site. Please do not upload any importand data!
+        </div>
+        <div id="container" metal:define-slot="div-container">
+            <div id="toolribbon" metal:define-slot="div-toolribbon">
+                <div id="lefttools">
+                  <a href="http://www.eea.europa.eu/" id="eealink">EEA</a>
+                  <a href="http://ew.eea.europa.eu/" id="ewlink">EnviroWindows</a>
+                </div>
+                <div id="righttools" metal:define-slot="div-righttools" tal:define="username python:request.AUTHENTICATED_USER.getUserName()">
+                    <a id="loginlink" tal:attributes="href string:${here/get_gw_root}/login/login_form" tal:condition="python:username == 'Anonymous User'">Login</a>
+                    <a id="logoutlink" tal:attributes="href string:${here/get_gw_root}/login/logout" tal:condition="python:username != 'Anonymous User'">Logout (<span tal:replace="username"/>)</a>
+                </div>
+            </div>
+            <div id="pagehead" metal:define-slot="div-pagehead">
+                <a href="/" title="Frontpage"></a>
+                <div id="networktitle">Naaya Groupware</div>
+                <div id="sitetitle">Demo site</div>
+            </div>
+            <div class="breadcrumbtrail" metal:define-slot="div-breadcrumbtrail">
+                <div class="breadcrumbhead" i18n:translate="">You are here: </div>
+                <div class="breadcrumbitemlast">
+                    <a tal:attributes="href gw_root_url" title="Groupware home">Groupware home</a>
+                </div>
+            </div>
+            <div id="workarea" metal:define-slot="div-workarea">
+            </div>
+        </div>
+        <div id="pagefoot" metal:define-slot="div-pagefoot"></div>
+    </body>
+</html>
+</metal:block>
