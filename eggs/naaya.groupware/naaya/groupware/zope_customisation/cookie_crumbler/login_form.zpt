@@ -1,0 +1,39 @@
+<metal:block use-macro="here/gw_macro/macros/main">
+    <div id="workarea" metal:fill-slot="div-workarea">
+        <tal:block define="came_from python:request.get('came_from', '');
+                           retry python:request.get('retry', 0)">
+                <h1>Login</h1>
+                <form action="logged_in" method="post" tal:define="retry python:request.get('retry', '')">
+                    <p tal:condition="retry">
+                        The username or password you provided are incorrect or this account doesn't have
+                        enough rights. Please try again.
+                    </p>
+
+                    <input type="hidden" name="came_from" tal:attributes="value came_from" tal:condition="came_from"/>
+
+                    <div class="field">
+                        <label for="__ac_name">Username</label>
+                        <input type="text" name="__ac_name" id="__ac_name" size="20"
+                            tal:attributes="value python:request.get('__ac_name', '')" />
+                    </div>
+
+                    <div class="field">
+                        <label for="__ac_password">Password</label>
+                        <input type="password" name="__ac_password" id="__ac_password" size="20" />
+                    </div>
+
+                    <div class="field">
+                        <input type="submit" name="submit" value=" Login "/>
+                    </div>
+                </form>
+                <div>
+                    <div>Tips</div>
+                    <ul>
+                        <li><strong>&raquo;</strong> Having trouble logging in? Make sure that cookies are allowed in your browser</li>
+                        <li><strong>&raquo;</strong> Don't forget to logout or exit your browser when you're done</li>
+                        <li><strong>&raquo;</strong> Letting your browser to remember your username or password on this machine can be dangerous since other people might use this account to log in</li>
+                    </ul>
+                </div>
+        </tal:block>
+    </div>
+</metal:block>
