@@ -466,10 +466,11 @@ class NyTalkBackConsultation(NyAttributes,
         if not self.start_date or not self.end_date:
             return (1, 0)
 
+        after_end_date = self.end_date + 1
         if self.start_date.lessThanEqualTo(today):
-            return (1, int(str(self.end_date - today).split('.')[0]))
+            return (1, int(str(after_end_date - today).split('.')[0]))
         else:
-            return (0, int(str(self.start_date - today).split('.')[0]))
+            return (0, int(str(start_date - today).split('.')[0]))
 
     security.declareProtected(view_management_screens, 'manage_options')
     def manage_options(self):
