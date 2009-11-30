@@ -49,6 +49,9 @@ class CommentsAdminTestCase(NaayaFunctionalTestCase):
             inviter_userid='contributor', inviter_name='Contributor Test', message='')
         self.invite_key = consultation.invitations._invites.values()[0].key
 
+        permattr = '_Naaya___Invite_to_TalkBack_Consultation_Permission'
+        setattr(consultation, permattr, ['Reviewer'])
+
         comments = []
         paragraph_000 = consultation['test-section']['000']
         # comment 0
@@ -90,6 +93,21 @@ class CommentsAdminTestCase(NaayaFunctionalTestCase):
         self.assertFalse(self.comments[0].message in html)
         self.assertTrue(self.comments[1].message in html)
 
+        self.browser_do_logout()
+
+    def test_moderate_comments_access(self):
+        self.browser_do_login('reviewer', 'reviewer')
+        self.browser.go(self.cons_url)
+        self.assertTrue('admin_comments' in self.browser.get_html())
+        self.browser.go(self.cons_url + '/admin_comments')
+        self.assertAccessDenied(False)
+        self.browser_do_logout()
+
+        self.browser_do_login('contributor', 'contributor')
+        self.browser.go(self.cons_url)
+        self.assertTrue('admin_comments' not in self.browser.get_html())
+        self.browser.go(self.cons_url + '/admin_comments')
+        self.assertAccessDenied(True)
         self.browser_do_logout()
 
 def test_suite():
