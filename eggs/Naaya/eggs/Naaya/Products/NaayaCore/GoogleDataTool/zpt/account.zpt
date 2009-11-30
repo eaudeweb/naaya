@@ -1,0 +1,54 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portal statistics</h1>
+
+
+
+<tal:block metal:fill-slot="section">
+<style type="text/css">
+blockquote {
+	background:#F8F8F8;
+	border:1px dashed #CCCCCC;
+	margin:5px 0;
+	padding:8px 12px 8px 36px;
+	color: black;
+}
+</style>
+
+<div id="tabbedmenu">
+	<ul>
+		<li><a tal:attributes="href string:${here/absolute_url}/admin_stats" i18n:translate="">Statistics</a></li>
+		<li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/admin_account" i18n:translate="">Settings</a></li>
+	</ul>
+</div>
+
+<tal:block define="authorization here/checkAuthorization">
+
+<span tal:condition="not:authorization">
+	In order to access the statistics provided by Google Analytics for your website, you need to grant access to your account using the following link: <br />
+	<blockquote><a tal:attributes="href python:request.get('auth_url', '')" tal:content="python:request.get('auth_url', '')" /></blockquote>
+	<p>After access granting you only need to select the website for which you want the Google Analytics statistics to be displayed.</p>
+</span>
+
+<form method="post" action="" tal:condition="authorization">
+	<p>Selected your website from the list below and save it as default account.</p>
+	<select name="account">
+		<option></option>
+	<tal:block repeat="entry python:request.get('accounts', '')">
+		<option tal:define="tableId python:entry[0];
+							title python:entry[1];"
+				tal:attributes="value tableId; selected python:tableId==here.account" 
+				tal:content="title" />
+	</tal:block>
+	</select>
+	<input type="submit" value="save" name="save" />
+</form>
+
+<form method="post" action="" tal:condition="authorization">
+	<p>If you want to stop access to the Google Analytics statistics for your website choose the <em>Revoke access</em> button</p>
+	<input type="submit" value="Revoke access" name="revoke" />
+</form>
+</tal:block>
+
+</tal:block>
+</tal:block>

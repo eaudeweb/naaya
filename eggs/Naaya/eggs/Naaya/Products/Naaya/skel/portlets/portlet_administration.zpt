@@ -7,6 +7,7 @@
 				canTranslate here/checkPermissionTranslatePages">
 	<li><a tal:attributes="href string:${site_url}/admin_centre_html" title="Administration console starting point" i18n:attributes="title" i18n:translate="">Overview</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_metadata_html" title="Generic portal properties and modification of the logo icon" i18n:attributes="title" i18n:translate="">Portal properties</a></li>
+	<!-- li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/portal_statistics/admin_stats" title="Portal statistics" i18n:attributes="title" i18n:translate="">Portal statistics</a></li -->
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_layout_html" title="Change the portal layout and color scheme" i18n:attributes="title" i18n:translate="">Portal layout</a></li>
 	<li tal:condition="canPublish"><a tal:attributes="href string:${site_url}/admin_users_html" title="Users and security settings" i18n:attributes="title" i18n:translate="">Users' management</a></li>
 	<li tal:condition="canTranslate"><a tal:attributes="href string:${site_url}/admin_translations_html" title="Translate messages" i18n:attributes="title" i18n:translate="">Translate messages</a></li>

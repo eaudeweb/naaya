@@ -74,6 +74,8 @@ from Products.NaayaCore.ProfilesTool.ProfilesTool import manage_addProfilesTool
 from Products.NaayaCore.EditorTool.EditorTool import manage_addEditorTool
 from Products.NaayaCore.GeoMapTool.GeoMapTool import manage_addGeoMapTool
 from Products.NaayaCore.SchemaTool.SchemaTool import manage_addSchemaTool
+from Products.NaayaCore.GoogleDataTool.AnalyticsTool import manage_addAnalyticsTool
+
 from Products.NaayaBase.NyBase import NyBase
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyPermissions import NyPermissions
@@ -247,6 +249,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         manage_addProfilesTool(self)
         manage_addEditorTool(self)
         manage_addGeoMapTool(self)
+        manage_addAnalyticsTool(self)
         manage_addErrorLog(self)
 
     security.declarePrivate('loadDefaultData')
@@ -740,6 +743,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     security.declarePublic('getEditorTool')
     def getEditorTool(self): return self._getOb(ID_EDITORTOOL)
+
+    security.declarePublic('getAnalyticsTool')
+    def getAnalyticsTool(self): return self._getOb(ID_ANALYTICSTOOL)
 
     security.declarePublic('getGeoMapTool')
     def getGeoMapTool(self): return self._getOb(ID_GEOMAPTOOL, None)

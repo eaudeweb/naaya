@@ -1,0 +1,90 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portal statistics</h1>
+
+<tal:block metal:fill-slot="section">
+
+<div id="tabbedmenu">
+	<ul>
+		<li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/admin_stats" i18n:translate="">Statistics</a></li>
+		<li><a tal:attributes="href string:${here/absolute_url}/admin_account" i18n:translate="">Settings</a></li>
+	</ul>
+</div>
+<br clear="all" />
+<tal:block define="authorized here/checkAuthorization">
+
+<tal:block condition="authorized">
+	<tal:block define="chart here/getVisitsGraph;
+						site_usage here/getSiteUsage;
+						top_pages here/getTopPages;
+						top_referers here/getTopReferers;
+						top_searches here/getTopSearches">
+
+	<h2 i18n:translate="">Visits Over the Past 30 Days</h2>
+	<div style="float:right;" tal:condition="chart">
+		<img tal:define="chart_values python:chart[0]; ymax python:chart[1];"
+			tal:attributes="src string:http://chart.apis.google.com/chart?cht=lc&chs=400x120&chd=t:${chart_values}&chco=224499&chm=B,76A4FB,0,0,0&chds=0,${ymax}" />
+	</div>
+	<div tal:condition="site_usage">
+		<table>
+			<tbody>
+				<tr>
+					<th i18n:translate="">Visits:</th>
+					<td tal:content="site_usage/visits" />
+				</tr>
+				<tr>
+					<th i18n:translate="">Pageviews:</th>
+					<td tal:content="site_usage/pageviews" />
+				</tr>
+				<tr>
+					<th i18n:translate="">Pages/Visit:</th>
+					<td tal:content="site_usage/pages_visit" />
+				</tr>
+				<tr>
+					<th i18n:translate="">Bounce Rate:</th>
+					<td tal:content="site_usage/bounces" />
+				</tr>
+				<tr>
+					<th i18n:translate="">Avg. Time on Site:</th>
+					<td tal:content="site_usage/timeOnSite" />
+				</tr>
+				<tr>
+					<th i18n:translate="">% New Visits:</th>
+					<td tal:content="site_usage/newVisits" />
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<p tal:condition="not:chart">No data available for this website</p>
+
+	<h2 i18n:translate="">Top Pages</h2>
+	<ol tal:condition="top_pages">
+		<tal:block repeat="page top_pages">
+			<li><a tal:attributes="href page/pagePath" tal:content="page/pagePath" /> - <span tal:replace="page/pageviews" /> <span i18n:translate="">Views</span>
+		</tal:block>
+	</ol>
+	<p tal:condition="not:top_pages">No data available for this website</p>
+
+	<h2 i18n:translate="">Top Searches</h2>
+	<ol tal:condition="top_searches">
+		<tal:block repeat="search top_searches">
+			<li><strong tal:content="search/keyword" /> - <span tal:replace="search/visits" /> <span i18n:translate="">Visits</span>
+		</tal:block>
+	</ol>
+	<p tal:condition="not:top_searches">No data available for this website</p>
+
+	<h2 i18n:translate="">Top Referers</h2>
+	<ol tal:condition="top_referers">
+		<tal:block repeat="referer top_referers">
+			<li><strong tal:content="referer/source" /> - <span tal:replace="referer/visits" /> <span i18n:translate="">Visits</span>
+		</tal:block>
+	</ol>
+	<p tal:condition="not:top_referers">No data available for this website</p>
+
+	</tal:block>
+</tal:block>
+<p tal:condition="not:authorized">You don't have access to the Google Analytics statistics. You need to grant access to your account from the <a tal:attributes="href string:${here/absolute_url}/admin_account">settings</a> page.</p>
+</tal:block>
+
+</tal:block>
+</tal:block>
