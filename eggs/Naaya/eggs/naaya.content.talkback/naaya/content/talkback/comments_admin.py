@@ -24,13 +24,14 @@ from itertools import groupby
 
 #Zope imports
 from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, Unauthorized
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Product imports
 from Paragraph import Paragraph
-from constants import PERMISSION_MANAGE_TALKBACKCONSULTATION
+from constants import (PERMISSION_MANAGE_TALKBACKCONSULTATION,
+                       PERMISSION_INVITE_TO_TALKBACKCONSULTATION)
 
 #local imports
 
@@ -51,9 +52,17 @@ class CommentsAdmin(SimpleItem):
 
     _comment_template = Paragraph.comments_html
     _admin_template = PageTemplateFile('zpt/comments_admin', globals())
-    security.declareProtected(PERMISSION_MANAGE_TALKBACKCONSULTATION, 'index_html')
+
+    security.declarePublic('index_html')
     def index_html(self, REQUEST):
         """ the admin page for comments """
+
+        if self.checkPermission(PERMISSION_MANAGE_TALKBACKCONSULTATION):
+            pass
+        elif self.checkPermission(PERMISSION_INVITE_TO_TALKBACKCONSULTATION):
+            pass
+        else:
+            raise Unauthorized
 
         unapproved = []
         total_count = 0
