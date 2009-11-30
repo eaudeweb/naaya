@@ -40,6 +40,7 @@ from NotificationTool import NotificationTool
 from ProfilesTool import ProfilesTool
 from EditorTool import EditorTool
 from SchemaTool import SchemaTool
+from GoogleDataTool import AnalyticsTool
 
 try:
     from GeoMapTool import GeoMapTool
@@ -161,7 +162,14 @@ def initialize(context):
                 ),
         icon = 'SchemaTool/www/SchemaTool.gif'
         )
-
+    context.registerClass(
+        AnalyticsTool.AnalyticsTool,
+        permission = PERMISSION_ADD_NAAYACORE_TOOL,
+        constructors = (
+                AnalyticsTool.manage_addAnalyticsTool,
+                ),
+        icon = 'GoogleDataTool/www/AnalyticsTool.gif'
+        )
 
     if geo_installed:
         context.registerClass(
@@ -212,6 +220,7 @@ misc_ = {
     'xml.png':ImageFile('SyndicationTool/www/xml.png', globals()),
     'xml-blue.jpg':ImageFile('SyndicationTool/www/xml-blue.jpg', globals()),
     'SchemaTool.gif': ImageFile('SchemaTool/www/SchemaTool.gif', globals()),
+    'AnalyticsTool.gif': ImageFile('GoogleDataTool/www/AnalyticsTool.gif', globals()),
 #     'Schema.gif': ImageFile('SchemaTool/www/Schema.gif', globals()),
 #     'PropertyDefinition.gif': ImageFile('SchemaTool/www/PropertyDefinition.gif', globals()),
 }

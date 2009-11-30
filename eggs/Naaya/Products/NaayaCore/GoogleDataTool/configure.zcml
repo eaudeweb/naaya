@@ -1,0 +1,4 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+    <adapter factory="Products.NaayaCore.GoogleDataTool.portlets.StatisticsPortlet"
+             name="portlet_statistics" />
+</configure>
