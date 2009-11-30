@@ -225,7 +225,10 @@ class NyForum(NyForumBase, Folder, utils):
         """
         This function is called on the forum index and it checkes whether or not
         to display the various buttons on that form.
+        Returns in a list of tuples: which buttons should be visible,
+        a list of topics, sorted reversed by the date of the last post.
         """
+        import operator
         r = []
         ra = r.append
         btn_select, btn_delete, can_operate = 0, 0, 0
@@ -237,9 +240,9 @@ class NyForum(NyForumBase, Folder, utils):
             if del_permission: btn_select = 1
             if del_permission: btn_delete = 1
             if edit_permission: can_operate = 1
-            ra((del_permission, edit_permission, x))
+            ra((del_permission, edit_permission, x, x.get_last_message().postdate))
         can_operate = can_operate or btn_select
-        return btn_select, btn_delete, can_operate, r
+        return btn_select, btn_delete, can_operate, sorted(r, key=operator.itemgetter(3), reverse=True)
 
     def checkPermissionSkipCaptcha(self):
         return getSecurityManager().checkPermission('Naaya - Skip Captcha', self)
