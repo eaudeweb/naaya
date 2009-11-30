@@ -13,7 +13,7 @@ Contents:
    site
    pluggable_content
    permissions
-   buildout_windows
+   buildout
 
 Indices and tables
 ==================
