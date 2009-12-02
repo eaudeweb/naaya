@@ -27,8 +27,8 @@
 						<span tal:replace="python:here.utShowDateTime1(start_date)" /> -
 						<span tal:replace="python:here.utShowDateTime1(end_date)" /></h2>
 	<div style="float:right;" tal:condition="chart">
-		<img tal:define="chart_values python:chart[0]; ymax python:chart[1];"
-			tal:attributes="src string:http://chart.apis.google.com/chart?cht=lc&chs=400x120&chd=t:${chart_values}&chco=224499&chm=B,76A4FB,0,0,0&chds=0,${ymax}" />
+		<img tal:define="chart_values python:chart[0]; ymax python:chart[1]; ystep python:chart[2]; xlbl python:chart[3]"
+			tal:attributes="src string:http://chart.apis.google.com/chart?cht=lc&chs=400x120&chd=t:${chart_values}&chco=224499&chm=B,76A4FB,0,0,0&chds=0,${ymax}&chxt=x,y&chxl=0:${xlbl}1:${ystep}" />
 	</div>
 	<div tal:condition="site_usage">
 		<table>
@@ -64,8 +64,10 @@
 
 	<h2 i18n:translate="">Top Pages</h2>
 	<ol tal:condition="top_pages">
-		<tal:block repeat="page top_pages">
-			<li><a tal:attributes="href page/pagePath" tal:content="page/pagePath" /> - <span tal:replace="page/pageviews" /> <span i18n:translate="">Views</span>
+		<tal:block define="pages python:top_pages[0]; website python:top_pages[1];">
+		<tal:block repeat="page pages">
+			<li><a tal:attributes="href string:${website}${page/pagePath}" tal:content="string:${website}${page/pagePath}" /> - <span tal:replace="page/pageviews" /> <span i18n:translate="">Views</span>
+		</tal:block>
 		</tal:block>
 	</ol>
 	<p tal:condition="not:top_pages">No data available for this website</p>
