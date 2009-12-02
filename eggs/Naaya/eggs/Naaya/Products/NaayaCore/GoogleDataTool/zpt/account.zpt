@@ -5,49 +5,71 @@
 
 
 <tal:block metal:fill-slot="section">
-<style type="text/css">
-blockquote {
-	background:#F8F8F8;
-	border:1px dashed #CCCCCC;
-	margin:5px 0;
-	padding:8px 12px 8px 36px;
-	color: black;
-}
-</style>
+	<script type="text/javascript"
+         src="http://localhost:8080/naaya/core_js"></script>
+	<script type="text/javascript"
+         src="http://localhost:8080/naaya/calendar_js"></script>
+	<script type="text/javascript"
+         src="http://localhost:8080/naaya/datetime_js"></script>
+	<style type="text/css">
+	blockquote {
+		background:#F8F8F8;
+		border:1px dashed #CCCCCC;
+		margin:5px 0;
+		padding:8px 12px 8px 36px;
+		color: black;
+	}
+	</style>
+	<script type="text/javascript">
+		function emptyEndDate(){
+			if (document.forms['frmAccount'].date_choice[0].checked == true)
+				document.forms['frmAccount'].end_date_text.value = '';
+		}
+	</script>
+	<div id="tabbedmenu">
+		<ul>
+			<li><a tal:attributes="href string:${here/absolute_url}/admin_stats" i18n:translate="">Statistics</a></li>
+			<li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/admin_account" i18n:translate="">Settings</a></li>
+		</ul>
+	</div>
 
-<div id="tabbedmenu">
-	<ul>
-		<li><a tal:attributes="href string:${here/absolute_url}/admin_stats" i18n:translate="">Statistics</a></li>
-		<li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/admin_account" i18n:translate="">Settings</a></li>
-	</ul>
-</div>
+	<tal:block define="authorization here/checkAuthorization">
 
-<tal:block define="authorization here/checkAuthorization">
+	<span tal:condition="not:authorization">
+		In order to access the statistics provided by Google Analytics for your website, you need to grant access to your account using the following link: <br />
+		<blockquote><a tal:attributes="href python:request.get('auth_url', '')" tal:content="python:request.get('auth_url', '')" /></blockquote>
+		<p>After access granting you only need to select the website for which you want the Google Analytics statistics to be displayed.</p>
+	</span>
 
-<span tal:condition="not:authorization">
-	In order to access the statistics provided by Google Analytics for your website, you need to grant access to your account using the following link: <br />
-	<blockquote><a tal:attributes="href python:request.get('auth_url', '')" tal:content="python:request.get('auth_url', '')" /></blockquote>
-	<p>After access granting you only need to select the website for which you want the Google Analytics statistics to be displayed.</p>
-</span>
+	<form method="post" action="" name="frmAccount" id="frmAccount" tal:condition="authorization">
+		<p>Selected your website from the list below and save it as default account.</p>
+		<label for="account">Accounts</label>
+		<select name="account">
+			<option></option>
+		<tal:block repeat="entry python:request.get('accounts', '')">
+			<option tal:define="tableId python:entry[0];
+								title python:entry[1];"
+					tal:attributes="value tableId; selected python:tableId==here.account" 
+					tal:content="title" />
+		</tal:block>
+		</select>
+		<p>The statistics are shown since today until the start date selected below.</p>
+		<label for="date_interval">Dynamic start date</label>
+		<select name="date_interval">
+			<option></option>
+		<tal:block repeat="interval here/get_intervals">
+			<option tal:attributes="value interval/period; selected python:interval['period']==here.date_interval;" tal:content="interval/value" i18n:translate="" />
+		</tal:block>
+		</select> or choose a specific start date
+		<input type="text" class="vDateField" name="start_date" tal:attributes="value here/start_date" maxlength="10" size="10" /><br />
+		<em>Fill only one of the fields above.</em><br /><br />
+		<input type="submit" value="save" name="save" />
+	</form>
 
-<form method="post" action="" tal:condition="authorization">
-	<p>Selected your website from the list below and save it as default account.</p>
-	<select name="account">
-		<option></option>
-	<tal:block repeat="entry python:request.get('accounts', '')">
-		<option tal:define="tableId python:entry[0];
-							title python:entry[1];"
-				tal:attributes="value tableId; selected python:tableId==here.account" 
-				tal:content="title" />
-	</tal:block>
-	</select>
-	<input type="submit" value="save" name="save" />
-</form>
-
-<form method="post" action="" tal:condition="authorization">
-	<p>If you want to stop access to the Google Analytics statistics for your website choose the <em>Revoke access</em> button</p>
-	<input type="submit" value="Revoke access" name="revoke" />
-</form>
+	<form method="post" action="" tal:condition="authorization">
+		<p>If you want to stop access to the Google Analytics statistics for your website choose the <em>Revoke access</em> button</p>
+		<input type="submit" value="Revoke access" name="revoke" />
+	</form>
 </tal:block>
 
 </tal:block>

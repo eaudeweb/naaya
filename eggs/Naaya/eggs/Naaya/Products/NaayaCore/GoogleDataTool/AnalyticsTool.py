@@ -2,6 +2,7 @@ import cgi
 import gdata.auth
 import gdata.analytics.service
 import locale
+import time
 import datetime
 
 from Globals import InitializeClass
@@ -16,6 +17,12 @@ from Products.NaayaCore.managers.utils import utils
 
 SCOPE = 'https://www.google.com/analytics/feeds/'
 SOURCE = 'naaya-statistics-v1'
+INTERVALS = [
+                {'period': 30, 'value': 'Last month'},
+                {'period': 90, 'value': 'Last 3 months'},
+                {'period': 180, 'value': 'Last 6 months'},
+                {'period': 356, 'value': 'Last year'}
+            ]
 
 #@todo: ask alex morega about this
 locale.setlocale(locale.LC_ALL, "")
@@ -46,6 +53,8 @@ class AnalyticsTool(SimpleItem, utils):
         self.ga_service = gdata.analytics.service.AccountsService(source=SOURCE)
         self.gd_service = gdata.analytics.service.AnalyticsDataService(source=SOURCE)
         self.account = None
+        self.date_interval = 30
+        self.start_date = ''
 
     #administration
     def index_html(self, REQUEST):
@@ -65,8 +74,17 @@ class AnalyticsTool(SimpleItem, utils):
             #display accounts
             if REQUEST.has_key('save'):
                 account = REQUEST.get('account', '')
+                date_interval = REQUEST.get('date_interval', '')
+                start_date = REQUEST.get('start_date', '')
                 if account:
                     self.account = account
+                if start_date:
+                    self.start_date = start_date
+                    self.date_interval = 0
+                else:
+                    self.date_interval = int(date_interval)
+                    self.start_date = ''
+                if self.account or self.start_date or self.date_interval:
                     self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             elif REQUEST.has_key('revoke'):
                 self.delAuthToken()
@@ -116,7 +134,7 @@ class AnalyticsTool(SimpleItem, utils):
 
     def getVisitsGraph(self):
         """ Get the visitors graph """
-        sd, ed = self.get_current_month()
+        sd, ed = self.get_date_interval()
         try:
             data = self.gd_service.GetData(
                         ids=self.account, 
@@ -128,6 +146,7 @@ class AnalyticsTool(SimpleItem, utils):
         except gdata.service.RequestError:
             return None
         valid = False
+        data.entry.reverse()
         if data.entry:
             max = 0
             res = []
@@ -143,7 +162,7 @@ class AnalyticsTool(SimpleItem, utils):
 
     def getSiteSummary(self):
         """ Get esential date about site usage """
-        sd, ed = self.get_current_month()
+        sd, ed = self.get_date_interval()
         try:
             data = self.gd_service.GetData(
                         ids=self.account, 
@@ -164,7 +183,7 @@ class AnalyticsTool(SimpleItem, utils):
 
     def getSiteUsage(self):
         """ Get the site usage """
-        sd, ed = self.get_current_month()
+        sd, ed = self.get_date_interval()
         try:
             data = self.gd_service.GetData(
                         ids=self.account, 
@@ -190,7 +209,7 @@ class AnalyticsTool(SimpleItem, utils):
 
     def getTopPages(self):
         """ Get the top pages """
-        sd, ed = self.get_current_month()
+        sd, ed = self.get_date_interval()
         try:
             data = self.gd_service.GetData(
                         ids=self.account, 
@@ -213,7 +232,7 @@ class AnalyticsTool(SimpleItem, utils):
 
     def getTopReferers(self):
         """ Get the top referers """
-        sd, ed = self.get_current_month()
+        sd, ed = self.get_date_interval()
         try:
             data = self.gd_service.GetData(
                         ids=self.account, 
@@ -237,7 +256,7 @@ class AnalyticsTool(SimpleItem, utils):
 
     def getTopSearches(self):
         """ Get the top searches """
-        sd, ed = self.get_current_month()
+        sd, ed = self.get_date_interval()
         try:
             data = self.gd_service.GetData(
                         ids=self.account, 
@@ -266,11 +285,19 @@ class AnalyticsTool(SimpleItem, utils):
         except:
             return None
 
-    def get_current_month(self):
+    def get_date_interval(self):
         """ """
         end_date = datetime.datetime.today()
-        start_date = end_date - datetime.timedelta(days=30)
+        if self.start_date:
+            sd = time.strptime(self.start_date,'%d/%m/%Y')
+            start_date = datetime.datetime(*sd[0:6])
+        else:
+            start_date = end_date - datetime.timedelta(days=self.date_interval)
         return start_date, end_date
+
+    def get_intervals(self):
+        """ """
+        return INTERVALS
 
 InitializeClass(AnalyticsTool)
 
