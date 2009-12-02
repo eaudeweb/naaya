@@ -146,19 +146,19 @@ class AnalyticsTool(SimpleItem, utils):
         except gdata.service.RequestError:
             return None
         valid = False
-        data.entry.reverse()
         if data.entry:
-            max = 0
+            maximum = 0
             res = []
             for stats in data.entry:
                 visit_value = int(stats.visits.value)
-                if visit_value > max:
-                    max = visit_value
+                if visit_value > maximum:
+                    maximum = visit_value
                 if visit_value and not valid:
                     valid = True    #check for 0 values
                 res.append(stats.visits.value)
             if valid:
-                return ','.join(res), max*1.1   #chart values, y-axis maxi value
+                #chart values, y-axis maxi value, y-axis intermediate values, x-axis labels
+                return ','.join(res), maximum*1.1, '||%s|%s|%s|%s|' % (maximum/3, maximum/2, 2*maximum/3, maximum), '|%s|%s|' % (sd.strftime('%d %b'), ed.strftime('%d %b'))
 
     def getSiteSummary(self):
         """ Get esential date about site usage """
@@ -221,6 +221,15 @@ class AnalyticsTool(SimpleItem, utils):
                         max_results='10')
         except gdata.service.RequestError:
             return None
+
+        website_uri = ''
+        if data.extension_elements:
+            for elem in data.extension_elements:
+                if elem.tag == 'dataSource':
+                    for child in elem.children:
+                        if child.tag == 'tableName':
+                            website_uri = 'http://%s' % child.text
+                            break
         if data.entry:
             res = []
             for stats in data.entry:
@@ -228,7 +237,7 @@ class AnalyticsTool(SimpleItem, utils):
                 dic['pagePath'] = stats.pagePath.value
                 dic['pageviews'] = locale.format('%d', float(stats.pageviews.value), True)
                 res.append(dic)
-            return res
+            return res, website_uri
 
     def getTopReferers(self):
         """ Get the top referers """
