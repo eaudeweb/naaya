@@ -85,7 +85,6 @@ diff -ru default/talkbackconsultation_index.zpt custom/talkbackconsultation_inde
 +           tal:attributes="checked python:test(position_value=='country', 'checked', None)" />
 +    <label for="comment-position-country">Country/region position</label>
 +
-+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.js"></script>
 +<script type="text/javascript" tal:content="string:var current_position = '${position_value}';" />
 +<script type="text/javascript" tal:content="string:var country_position_text = '${country_position_text}';" />
 +<script type="text/javascript">
