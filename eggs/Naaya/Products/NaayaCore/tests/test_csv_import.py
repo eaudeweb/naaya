@@ -137,10 +137,6 @@ class NyCSVImportTest(NaayaTestCase):
             do_import_object(self, 'Nonexistent Metatype', csv_data, 'imported')
         self.failUnlessRaises(ValueError, do_import)
 
-    def test_import_bad_destination(self):
-        # TODO
-        pass
-
     def test_extra_csv_columns(self):
         csv_with_extra = ('Title,something,something_else\n'
                           'TY,asdf,qwer\n')
@@ -189,6 +185,16 @@ class NyCSVImportTest(NaayaTestCase):
         self.assertEqual(expected_sender, mail[2])
         self.assertEqual(expected_subject, mail[3])
         EmailTool.divert_mail(False)
+
+    def test_import_default_values(self):
+        data = 'Title,Sort order\nMy doc,\n'
+        do_import_object(self, 'Naaya Document', data, 'imported')
+        self.failUnless('my-doc' in self.portal.imported.objectIds())
+        my_doc = self.portal.imported._getOb('my-doc')
+        self.failUnlessEqual(my_doc.meta_type, 'Naaya Document')
+        self.failUnlessEqual(my_doc.title, 'My doc')
+        self.failUnlessEqual(my_doc.sortorder, 100)
+        self.failUnless(my_doc.approved)
 
 class CSVImportFunctionalTests(NaayaFunctionalTestCase):
 

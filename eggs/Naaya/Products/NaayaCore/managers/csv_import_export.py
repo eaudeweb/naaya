@@ -134,10 +134,11 @@ class CSVImportTool(Implicit, Item):
             try:
                 header = reader.next()
             except StopIteration:
+                msg = 'Invalid CSV file'
                 if REQUEST is None:
-                    raise ValueError('Invalid CSV file')
+                    raise ValueError(msg)
                 else:
-                    errors.append('Invalid CSV file')
+                    errors.append(msg)
                     reader = []
 
             record_number = 0
