@@ -453,11 +453,16 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         # otherwise start looking in LDAP sources
         # TODO: this should be done individually in each source type (if we'll have more than LDAP)
         for source in self.getSources():
+            additional_roles = self.get_ldap_group_roles(name, source)
+            # authenticate in source only if there is a mapping for this user
+            # this fixes authentication through acquisition
+            if not additional_roles:
+                continue
             user = source.getUserFolder().authenticate(name, password, request)
             if user is not None and not isinstance(user, SpecialUser):
                 user = deepcopy(user) #we make a copy so the new roles are not cached in the root acl_users
                 try:
-                    user.roles.extend([x for x in self.get_ldap_group_roles(name, source) if x not in user.roles])
+                    user.roles.extend([x for x in additional_roles if x not in user.roles])
                 # roles is not a list, roles remain unchanged
                 # this will happen when the LDAP user folder is
                 # replaced with a Zope UserFolder
