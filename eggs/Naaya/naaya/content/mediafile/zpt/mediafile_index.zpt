@@ -67,7 +67,6 @@
 ">
   <!-- Player -->
   <div>
-    <script type="text/javascript" src="misc_/Naaya/jquery-1.3.2.min.js"></script>
     <script type="text/javascript" tal:attributes="src flowplayer_js"></script>
     <script type="text/javascript" tal:attributes="src flowconfig_js"></script>
     <div id="player" style="width:500px; height:330px;"> </div>
