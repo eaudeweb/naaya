@@ -19,5 +19,6 @@ setup(name='Naaya',
           'twill >= 0.9',
           'simplejson >= 2.0.9',
           'vobject >= 0.8.1c',
+          'gdata >= 2.0.5',
       ]
 )
