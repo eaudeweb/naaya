@@ -20,7 +20,12 @@
 						top_referers here/getTopReferers;
 						top_searches here/getTopSearches">
 
-	<h2 i18n:translate="">Visits Over the Past 30 Days</h2>
+	<h2 tal:define="interval here/get_date_interval;
+					start_date python:interval[0];
+					end_date python:interval[1];" i18n:translate="">
+						Visits on the range of time: 
+						<span tal:replace="python:here.utShowDateTime1(start_date)" /> -
+						<span tal:replace="python:here.utShowDateTime1(end_date)" /></h2>
 	<div style="float:right;" tal:condition="chart">
 		<img tal:define="chart_values python:chart[0]; ymax python:chart[1];"
 			tal:attributes="src string:http://chart.apis.google.com/chart?cht=lc&chs=400x120&chd=t:${chart_values}&chco=224499&chm=B,76A4FB,0,0,0&chds=0,${ymax}" />
