@@ -97,6 +97,7 @@ class MegaSurvey(SurveyQuestionnaire, BaseSurveyTemplate):
         """ """
         #BaseSurveyTemplate.__init__(self, id, **kwargs)
         SurveyQuestionnaire.__init__(self, id, None, **kwargs)
+        self.approved = 1
 
     def all_meta_types(self, interfaces=None):
         """What can you put inside me?"""
