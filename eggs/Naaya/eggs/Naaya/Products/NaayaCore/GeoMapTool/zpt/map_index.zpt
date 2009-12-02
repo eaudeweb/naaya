@@ -18,7 +18,6 @@
 </span>
 <script type="text/javascript" src="misc_/NaayaCore/geomaptool.js"></script>
 <script type="text/javascript" src="misc_/NaayaCore/xmlhttp.js"></script>
-<script type="text/javascript" src="misc_/Naaya/jquery-1.3.2.min.js"></script>
 <span tal:replace="structure python:here.jsMapControl(here.map_engine, here.center_locality, zoom, width, height, here.enableKeyControls, here.map_types, here.default_type)" />
 <form action="." name="frmFilterMap" method="get" id="frmFilterMap">
 	<div id="center_content" style="width: 78%; overflow-x: auto;">

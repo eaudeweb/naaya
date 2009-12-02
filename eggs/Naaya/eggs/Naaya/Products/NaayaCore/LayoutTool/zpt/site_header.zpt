@@ -25,6 +25,7 @@
 	<metal:block define-slot="additional-head-links"></metal:block>
 	
 	<metal:block define-slot="standard-head-content">
+	<script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery-1.3.2.min.js"></script>
 	<script type="text/javascript">
 	//<![CDATA[
 	// required for the replacement of target="_blank"
