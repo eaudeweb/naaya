@@ -2,16 +2,43 @@
 <tal:block content="structure here/manage_page_header"/>
 <tal:block content="structure here/manage_tabs"/>
 
+<script src="misc_/naayaUpdater/jquery-1.3.2.min.js"></script>
+
 <h2 metal:define-slot="title" tal:content="string:${here/title_or_id} " />
 <!--<h3 metal:define-slot="priority">Priority: <span tal:replace="here/get_priority_string"/></h3>-->
 <div metal:define-slot="description"><span tal:replace="here/description"/></div>
 
 <metal:block define-slot="body">
 
+<script language="javascript" type="text/javascript">
+//<!--
+function toggleSelect() {
+    var select_button = $("#btn_select")[0];
+
+    var check = select_button.value == 'Select all';
+
+    if (check) {
+        select_button.value = 'Deselect all';
+    } else {
+        select_button.value = 'Select all';
+    }
+
+    var checkboxes = $('#site_list input');
+    for (var i in checkboxes) {
+        checkboxes[i].checked = check;
+    }
+}
+//-->
+</script>
+
+
 <form method="post">
 <metal:block define-slot="in-form" />
     <h4 style="margin: .5em">Portals:</h4>
-    <ul style="margin: .5em">
+    <input id="btn_select" type="button" value="Select all"
+            onclick="javascript:toggleSelect();"
+            i18n:attributes="value"/>
+    <ul id="site_list" style="margin: .5em">
         <tal:block repeat="portal here/getPortals">
         <li tal:define="portal_path python:'/'.join(portal.getPhysicalPath());
           form_portal_paths python:options.get('form', {}).get('portal_paths', [])">
