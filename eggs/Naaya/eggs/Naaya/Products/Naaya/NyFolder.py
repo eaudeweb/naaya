@@ -202,8 +202,6 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
     coverage = LocalProperty('coverage')
     keywords = LocalProperty('keywords')
 
-    _dynamic_content_types = {}
-
     def all_meta_types(self, interfaces=None):
         """ What can you put inside me? """
         if len(self.folder_meta_types) > 0:
@@ -334,64 +332,6 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
                           object.properties, object.discussion, object.objects)
         else:
             self.import_data_custom(self, object)
-
-    security.declarePublic('get_meta_type_label')
-    def get_meta_type_label(self, meta_type=None):
-        # Return label from meta_type
-        if not meta_type:
-            return ''
-        # Folder
-        if meta_type == METATYPE_FOLDER:
-            return LABEL_NYFOLDER
-        # Plugable content
-        pc = self.get_pluggable_content()
-        meta_item = pc.get(meta_type, {})
-        schema = self.getSchemaTool().getSchemaForMetatype(meta_type)
-        if schema:
-            return schema.title_or_id()
-        # Dynamic meta types
-        meta_item = self._dynamic_content_types.get(meta_type, ())
-        if len(meta_item) <= 1 or not meta_item[1]:
-            return meta_type
-        return meta_item[1]
-
-    security.declarePublic('get_meta_types')
-    def get_meta_types(self, folder=0):
-        #returns a list with objects metatypes
-        res = []
-        if folder==1:
-            res.append(METATYPE_FOLDER)
-        # Add Naaya Forum to subobjects list
-        res.extend(self._dynamic_content_types.keys())
-        res.extend(self.get_pluggable_installed_meta_types())
-        return res
-
-    def process_submissions(self):
-        #returns info regarding the meta_types that ce be added inside the folder
-        r = []
-        ra = r.append
-        #check for adding folders
-        if METATYPE_FOLDER in self.folder_meta_types:
-            if self.checkPermission(PERMISSION_ADD_FOLDER):
-                ra(('folder_add_html', LABEL_NYFOLDER))
-        # check for adding dynamic registered content types
-        for dynamic_key, dynamic_value in self._dynamic_content_types.items():
-            if dynamic_key in self.folder_meta_types:
-                if self.checkPermission(dynamic_value[2]):
-                    ra(dynamic_value[:2])
-        #check pluggable content
-        pc = self.get_pluggable_content()
-        schema_tool = self.getSchemaTool()
-        for k in self.get_pluggable_installed_meta_types():
-            if k in self.folder_meta_types:
-                if self.checkPermission(pc[k]['permission']):
-                    schema = schema_tool.getSchemaForMetatype(k)
-                    if schema is not None:
-                        meta_label = schema.title_or_id()
-                    else:
-                        meta_label = pc[k]['label']
-                    ra((pc[k]['add_form'], meta_label))
-        return r
 
     security.declareProtected(view, 'checkPermissionManageObjects')
     def checkPermissionManageObjects(self, sort_on='title', sort_order=0):

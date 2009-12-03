@@ -25,6 +25,7 @@
 		<form id="channel_details" title="Show all items from remote channel" />
 		<form id="comments_box" title="Box for content comments"/>
 		<form id="site_index" title="Portal home page"/>
+		<form id="site_menusubmissions" title="Site menu for submissions"/>
 		<form id="standard_error_message" title="Portal standard error page"/>
 		<form id="site_messages" title="Portal messages page"/>
 		<form id="site_login" title="Portal login"/>

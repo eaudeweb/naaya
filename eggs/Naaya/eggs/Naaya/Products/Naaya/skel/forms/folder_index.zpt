@@ -26,9 +26,11 @@
 	<p tal:condition="python:here.description!=''"
 		tal:content="structure here/description" />
 
-	<span tal:replace="structure here/menusubmissions" />
-
-	<metal:block use-macro="here/folder_listing/macros/content" />
+	<metal:block use-macro="here/folder_listing/macros/content">
+		<metal:block fill-slot="menu_extension">
+			<span tal:replace="structure here/menusubmissions" />
+		</metal:block>
+	</metal:block>
 
 	<div class="folder-feeds">
 		<a tal:attributes="href string:${here/absolute_url}/index_rdf">

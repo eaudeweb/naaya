@@ -35,6 +35,9 @@ function toggleSelect() {
 //-->
 </script>
 
+<metal:block define-slot="menu_extension">
+</metal:block>
+
 <form id="folder_listing" name="objectItems" method="post" action=".">
 	<div id="toolbar" tal:condition="python:btn_select or btn_copy or btn_cut or btn_paste or btn_delete or btn_paste">
 		<metal:block define-slot="toolbar_default">

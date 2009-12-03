@@ -17,7 +17,7 @@ from zope.app.i18n import ZopeMessageFactory as _
 # Products imports
 from constants import *
 from Products.NaayaBase.NyValidation import NyValidation
-from Products.Naaya import NyFolder
+from Products.Naaya import NyFolder, NyFolderBase
 
 
 class INaayaContent(Interface):
@@ -83,13 +83,13 @@ def register_naaya_content(_context, factory, **kwargs):
     _constants['METATYPE_FOLDER'] = 'Naaya Folder'
 
     security = ClassSecurityInfo()
-    NyFolder.NyFolder.security = security
+    NyFolderBase.NyFolderBase.security = security
 
     if factory['meta_type'] != 'Naaya Folder':
 
         for folder_property, object_constructor in factory['folder_constructors']:
-            setattr(NyFolder.NyFolder, folder_property, object_constructor)
-            NyFolder.NyFolder.security.declareProtected(factory['permission'], folder_property)
+            setattr(NyFolderBase.NyFolderBase, folder_property, object_constructor)
+            NyFolderBase.NyFolderBase.security.declareProtected(factory['permission'], folder_property)
 
     InitializeClass(NyFolder.NyFolder)
     # log success

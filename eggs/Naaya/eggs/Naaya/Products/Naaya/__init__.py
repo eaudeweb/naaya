@@ -32,6 +32,7 @@ from naaya.content.base.discover import get_pluggable_content
 from naaya.content.base import discover
 import NySite
 import NyFolder
+import NyFolderBase
 from managers import initialize as managers_initialize
 
 #make drag & drop available globally
@@ -193,29 +194,29 @@ def register_content(module, klass, module_methods, klass_methods, add_method):
     See NaayaForum for an example.
     """
     security = ClassSecurityInfo()
-    NyFolder.NyFolder.security = security
+    NyFolderBase.NyFolderBase.security = security
     
     # Register module methods
     for meth, permission in module_methods.items():
         meth_obj = getattr(module, meth, None)
         if not meth_obj:
             continue
-        setattr(NyFolder.NyFolder, meth, meth_obj)
+        setattr(NyFolderBase.NyFolderBase, meth, meth_obj)
         if permission:
-            NyFolder.NyFolder.security.declareProtected(permission, meth)
+            NyFolderBase.NyFolderBase.security.declareProtected(permission, meth)
     
     # Register class methods
     for meth, permission in klass_methods.items():
         meth_obj = getattr(klass, meth, None)
         if not meth_obj:
             continue
-        setattr(NyFolder.NyFolder, meth, meth_obj)
+        setattr(NyFolderBase.NyFolderBase, meth, meth_obj)
         if permission:
-            NyFolder.NyFolder.security.declareProtected(permission, meth)
+            NyFolderBase.NyFolderBase.security.declareProtected(permission, meth)
     
     klass_label = getattr(klass, 'meta_label', klass.meta_type)
     add_meth, add_perm = add_method
-    NyFolder.NyFolder._dynamic_content_types[klass.meta_type] = (add_meth, klass_label, add_perm)
+    NyFolderBase.NyFolderBase._dynamic_content_types[klass.meta_type] = (add_meth, klass_label, add_perm)
     zLOG.LOG(module.__name__, zLOG.INFO,
              'Dynamic module "%s" registered' % klass.__name__)
 
