@@ -281,7 +281,7 @@ class NyFolderBase(Folder, NyPermissions):
         if hasattr(self, 'folder_meta_types'):
             folder_meta_types = self.folder_meta_types
         else:
-            folder_meta_types = ['Naaya Forum', 'Naaya Mega Survey',
+            folder_meta_types = [METATYPE_FOLDER, 'Naaya Forum', 'Naaya Mega Survey',
                     'Naaya Photo Gallery', 'Naaya Photo Folder',
                     'Naaya TalkBack Consultation']
 
