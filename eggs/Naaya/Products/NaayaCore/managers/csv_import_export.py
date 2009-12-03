@@ -235,6 +235,7 @@ class CSVExportTool(Implicit, Item):
             ])
 
         if as_attachment and REQUEST is not None:
+            filename = '%s Export.csv' % meta_type
             set_response_attachment(REQUEST.RESPONSE, filename,
                 'text/csv; charset=utf-8', output.len)
         return output.getvalue()
