@@ -10,7 +10,7 @@ from zope.component import adapts, provideAdapter
 from OFS.interfaces import IItem
 
 #Product imports
-from Products.Naaya.constants import METATYPE_FOLDER
+from Products.Naaya.constants import METATYPE_FOLDER, LABEL_NYFOLDER, PERMISSION_ADD_FOLDER
 from Products.NaayaBase.NyPermissions import NyPermissions
 from naaya.content.base.interfaces import INyContentObject
 from interfaces import IObjectView
@@ -51,6 +51,8 @@ class NyFolderBase(Folder, NyPermissions):
     """
 
     security = ClassSecurityInfo()
+
+    _dynamic_content_types = {}
 
     def contained_objects(self):
         return [o for o in self.objectValues(self.get_meta_types())
@@ -233,6 +235,81 @@ class NyFolderBase(Folder, NyPermissions):
             else:
                 self.setSessionInfo(['Item(s) deleted.'])
         return REQUEST.RESPONSE.redirect('index_html')
+
+
+
+    security.declarePublic('get_meta_types')
+    def get_meta_types(self, folder=0):
+        """
+        returns a list with objects metatypes
+        """
+        res = []
+        if folder==1:
+            res.append(METATYPE_FOLDER)
+        res.extend(self._dynamic_content_types.keys())
+        res.extend(self.get_pluggable_installed_meta_types())
+        return res
+
+
+    security.declarePublic('get_meta_type_label')
+    def get_meta_type_label(self, meta_type=None):
+        """
+        returns label from meta_type
+        """
+        if not meta_type:
+            return ''
+        # Folder
+        if meta_type == METATYPE_FOLDER:
+            return LABEL_NYFOLDER
+        # Plugable content
+        pc = self.get_pluggable_content()
+        meta_item = pc.get(meta_type, {})
+        schema = self.getSchemaTool().getSchemaForMetatype(meta_type)
+        if schema:
+            return schema.title_or_id()
+        # Dynamic meta types
+        meta_item = self._dynamic_content_types.get(meta_type, ())
+        if len(meta_item) <= 1 or not meta_item[1]:
+            return meta_type
+        return meta_item[1]
+
+    def process_submissions(self):
+        """
+        returns info regarding the meta_types that ce be added inside the folder
+        [(FUNC_NAME, LABEL), (...), ...]
+        """
+        if hasattr(self, 'folder_meta_types'):
+            folder_meta_types = self.folder_meta_types
+        else:
+            folder_meta_types = ['Naaya Forum', 'Naaya Mega Survey',
+                    'Naaya Photo Gallery', 'Naaya Photo Folder',
+                    'Naaya TalkBack Consultation']
+
+        r = []
+        ra = r.append
+        #check for adding folders
+        if METATYPE_FOLDER in folder_meta_types:
+            if self.checkPermission(PERMISSION_ADD_FOLDER):
+                ra(('folder_add_html', LABEL_NYFOLDER))
+        # check for adding dynamic registered content types
+        for dynamic_key, dynamic_value in self._dynamic_content_types.items():
+            if dynamic_key in folder_meta_types:
+                if self.checkPermission(dynamic_value[2]):
+                    ra(dynamic_value[:2])
+        #check pluggable content
+        pc = self.get_pluggable_content()
+        schema_tool = self.getSchemaTool()
+        for k in self.get_pluggable_installed_meta_types():
+            if k in folder_meta_types:
+                if self.checkPermission(pc[k]['permission']):
+                    schema = schema_tool.getSchemaForMetatype(k)
+                    if schema is not None:
+                        meta_label = schema.title_or_id()
+                    else:
+                        meta_label = pc[k]['label']
+                    ra((pc[k]['add_form'], meta_label))
+        return r
+
 
 class ObjectListingPortlet(object):
     implements(INyPortlet)

@@ -145,7 +145,7 @@
 			<strong><label for="meta_types" i18n:translate="">Content type(s):</label></strong><br />
 			<ul style="list-style-type:none;" id="meta_types">
 		<tal:block repeat="item here/searchable_content">
-			<li tal:define="item_label python:here.get_label_for_meta_type(item)">
+			<li tal:define="item_label python:here.get_meta_type_label(item)">
 			<input type="checkbox" style="margin:0 3px;"
 				   tal:attributes="checked python:item in meta_types;
 									id python:item.replace(' ', '_');

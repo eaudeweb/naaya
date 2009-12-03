@@ -619,32 +619,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declarePublic('get_constant')
     def get_constant(self, c): return naaya.content.base.discover.get_constant(c)
 
-    security.declarePublic('get_meta_types')
-    def get_meta_types(self, folder=0):
-        #returns a list with objects metatypes
-        res = []
-        if folder==1:
-            res.append(METATYPE_FOLDER)
-        # Add Naaya Forum to subobjects list
-        try:
-            from Products.NaayaForum.constants import METATYPE_NYFORUM
-        except ImportError:
-            pass
-        else:
-            res.append(METATYPE_NYFORUM)
-        res.extend(self.get_pluggable_installed_meta_types())
-        return res
-
-    security.declarePublic('get_label_for_meta_type')
-    def get_label_for_meta_type(self, meta_type):
-        #returns the label associated with the given meta_type
-        #it can be a Naaya Folder or a pluggable content type
-        if meta_type == METATYPE_FOLDER:
-            return LABEL_NYFOLDER
-        else:
-            try: return self.getSchemaTool().getSchemaForMetatype(meta_type).title_or_id()
-            except: return meta_type
-
     security.declarePublic('getProductsMetaTypes')
     def getProductsMetaTypes(self):
         #returns a list with all meta types
@@ -3517,6 +3491,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def index_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_index')
+
+    security.declareProtected(view, 'menusubmissions')
+    def menusubmissions(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_menusubmissions')
 
     security.declareProtected(view, 'messages_html')
     def messages_html(self, REQUEST=None, RESPONSE=None):
