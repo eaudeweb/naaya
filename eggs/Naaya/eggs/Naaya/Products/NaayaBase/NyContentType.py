@@ -102,7 +102,7 @@ def get_schema_helper_for_metatype(context, meta_type, value_callback=None):
     return SchemaFormHelper(schema, context, value_callback)
 
 
-class NyContentType:
+class NyContentType(object):
     """
     Base class for NyZzz classes - wrapper for NyContentData instances
     that handle editing, displaying, etc.

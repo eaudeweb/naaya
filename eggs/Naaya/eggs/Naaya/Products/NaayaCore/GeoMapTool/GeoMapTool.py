@@ -1194,8 +1194,20 @@ class GeoMapTool(Folder, utils, session_manager, symbols_tool):
 
         for schema in self.getSite().portal_schemas.objectValues():
             new_visible = (schema.id in geotag)
-            schema.getWidget('geo_location').visible = new_visible
-            schema.getWidget('geo_type').visible = new_visible
+
+            try:
+                geo_location = schema.getWidget('geo_location')
+            except:
+                pass
+            else:
+                geo_location.visible = new_visible
+
+            try:
+                geo_type = schema.getWidget('geo_type')
+            except:
+                pass
+            else:
+                geo_type.visible = new_visible
 
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_map_contenttypes_html')

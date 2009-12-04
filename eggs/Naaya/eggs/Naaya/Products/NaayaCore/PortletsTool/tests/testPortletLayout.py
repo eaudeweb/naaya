@@ -114,9 +114,9 @@ class PortletArrangementUnitTestCase(ZopeTestCase.TestCase):
 
 class FunctionalSetupMixin(object):
     def afterSetUp(self):
-        addNyFolder(self.portal, 'fol', 'Folderr',
+        addNyFolder(self.portal, id='fol', title='Folderr',
             contributor='contributor', submitted=1)
-        addNyFolder(self.portal.fol, 'sub', 'Subfolderr',
+        addNyFolder(self.portal.fol, id='sub', title='Subfolderr',
             contributor='contributor', submitted=1)
         self.portal.fol.approved = 1
         portal_portlets = self.portal.portal_portlets

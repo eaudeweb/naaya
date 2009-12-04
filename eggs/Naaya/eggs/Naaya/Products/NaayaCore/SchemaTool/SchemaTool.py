@@ -103,6 +103,13 @@ class SchemaTool(Folder):
                 'defaults': content_type['default_schema'],
             }
 
+        from Products.Naaya import NyFolder
+        schemas['Naaya Folder'] = {
+            'id': 'NyFolder',
+            'title': 'Folder',
+            'defaults': NyFolder.DEFAULT_SCHEMA,
+        }
+
         return schemas
 
     security.declarePrivate('loadDefaultSchemas')
