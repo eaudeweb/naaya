@@ -40,6 +40,8 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.NaayaCore.constants import *
 from Products.NaayaCore.LayoutTool.Template import manage_addTemplateForm, manage_addTemplate, Template
 
+template_cache = {}
+
 def manage_addFormsTool(self, REQUEST=None):
     """
     Class that implements the tool.
@@ -135,7 +137,12 @@ class FormsTool(Folder):
                 if 'form_ob' in form:
                     t = form['form_ob']
                 else:
-                    t = PageTemplateFile(form['path'])
+                    file_path = form['path']
+                    if file_path in template_cache:
+                        t = template_cache[file_path]
+                    else:
+                        t = PageTemplateFile(file_path)
+                        template_cache[file_path] = t
 
                 return t.__of__(self)
         raise KeyError('Not found form named "%s"' % form_id)
