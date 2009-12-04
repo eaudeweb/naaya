@@ -129,7 +129,6 @@ def manage_addNySite(self, id='', title='', lang=None, default_content=True, REQ
     ob.createPortalTools()
     if default_content:
         ob.loadDefaultData()
-    manage_addSchemaTool(ob) # we add SchemaTool here because we need site languages to be loaded
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
 
@@ -251,6 +250,7 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         manage_addGeoMapTool(self)
         manage_addAnalyticsTool(self)
         manage_addErrorLog(self)
+        manage_addSchemaTool(self)
 
     security.declarePrivate('loadDefaultData')
     def loadDefaultData(self):

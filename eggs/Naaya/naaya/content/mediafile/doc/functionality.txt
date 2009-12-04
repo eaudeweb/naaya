@@ -6,7 +6,7 @@
 
     >>> self.login('contributor')
     >>> info = self.portal.info
-    >>> test_id = info.addNyFolder('test', 'test folder')
+    >>> test_id = info.addNyFolder(id='test', title='test folder')
     >>> test = info[test_id]
     >>> item_id = test[defitem[2]](id=defitem[0], title=defitem[1], _skip_videofile_check=True)
     >>> item_id == defitem[0]

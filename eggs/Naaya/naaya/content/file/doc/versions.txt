@@ -4,7 +4,7 @@ folder:
     >>> from StringIO import StringIO
     >>> self.login()
     >>> info = self.portal.info
-    >>> folder_id = info.addNyFolder('test', 'test folder')
+    >>> folder_id = info.addNyFolder(id='test', title='test folder')
     >>> folder = info._getOb(folder_id)
 
 Add a file:
@@ -77,7 +77,7 @@ Let's see what happends if we copy & paste this file:
 
 Let's see what happends if we cut & paste this file:
 
-    >>> folder_id2 = info.addNyFolder('test2', 'test 2 folder')
+    >>> folder_id2 = info.addNyFolder(id='test2', title='test 2 folder')
     >>> folder2 = info._getOb(folder_id2)
     >>> cp = folder.cutObjects(id=[nfile.getId()])
     >>> res = folder2.pasteObjects(cp_data=cp)

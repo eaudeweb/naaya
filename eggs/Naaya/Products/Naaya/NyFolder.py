@@ -20,7 +20,7 @@
 # Alec Ghica, Eau de Web
 
 #Python imports
-from copy import copy
+from copy import copy, deepcopy
 
 #Zope imports
 from DateTime import DateTime
@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.Permissions import view_management_screens, view, manage_users
 import Products
 from zope.interface import implements
+from zope import event
 
 #Product imports
 from interfaces import INyFolder
@@ -42,68 +43,109 @@ from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyProperties import NyProperties
 from Products.Localizer.LocalPropertyManager import LocalProperty
-from Products.NaayaBase.NyContentType import NyContentType
+from Products.NaayaBase.NyContentType import NyContentType, NyContentData
+from Products.NaayaBase.NyContentType import NY_CONTENT_BASE_SCHEMA
 from Products.NaayaCore.managers.csv_import_export import CSVImportTool, CSVExportTool
 from Products.NaayaCore.NotificationTool.Subscriber import Subscriber
 from NyFolderBase import NyFolderBase
+from naaya.content.base.events import NyContentObjectAddEvent
+from naaya.content.base.events import NyContentObjectEditEvent
 
 manage_addNyFolder_html = PageTemplateFile('zpt/folder_manage_add', globals())
 manage_addNyFolder_html.kind = METATYPE_FOLDER
 manage_addNyFolder_html.action = 'addNyFolder'
 
+DEFAULT_SCHEMA = deepcopy(NY_CONTENT_BASE_SCHEMA)
+del DEFAULT_SCHEMA['geo_location']
+del DEFAULT_SCHEMA['geo_type']
+DEFAULT_SCHEMA['title']['required'] = False
+DEFAULT_SCHEMA['maintainer_email'] = {
+    'sortorder': 110,
+    'widget_type': 'String',
+    'label': 'Maintainer email',
+}
+
 def folder_add_html(self, REQUEST=None, RESPONSE=None):
     """ """
-    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_FOLDER, 'action': 'addNyFolder'}, 'folder_add')
+    from Products.NaayaBase.NyContentType import get_schema_helper_for_metatype
+    form_helper = get_schema_helper_for_metatype(self, 'Naaya Folder')
+    return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_FOLDER, 'action': 'addNyFolder', 'form_helper': form_helper}, 'folder_add')
 
-def addNyFolder(self, id='', title='', description='', coverage='', keywords='', sortorder='',
-    publicinterface='', maintainer_email='', folder_meta_types='', contributor=None,
-    releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
+def _create_NyFolder_object(parent, id, contributor):
+    i = 0
+    orig_id = id
+    while parent._getOb(id, None):
+        i += 1
+        id = '%s-%u' % (orig_id, i)
+    ob = NyFolder(id, contributor)
+    parent.gl_add_languages(ob)
+    parent._setObject(id, ob)
+    ob = parent._getOb(id)
+    ob.after_setObject()
+    return ob
+
+def addNyFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
+#def addNyFolder(self, id='', title='', description='', coverage='', keywords='', sortorder='',
+#    publicinterface='', maintainer_email='', folder_meta_types='', contributor=None,
+#    releasedate='', discussion='', lang=None, REQUEST=None, **kwargs):
     """
     Create a Folder type of object.
     """
+    if REQUEST is not None:
+        schema_raw_data = dict(REQUEST.form)
+    else:
+        schema_raw_data = kwargs
+    _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
+    _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
+    _publicinterface = int(bool(schema_raw_data.pop('publicinterface', None)))
+    _folder_meta_types = schema_raw_data.pop('folder_meta_types', '')
+
     site = self.getSite()
+
     #process parameters
     id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(title)
+    if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
     if not id: id = PREFIX_FOLDER + self.utGenRandomId(5)
-    if publicinterface: publicinterface = 1
-    else: publicinterface = 0
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+
+    ob = _create_NyFolder_object(self, id, contributor)
+    form_errors = ob.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+    if form_errors:
+        if REQUEST is None:
+            raise ValueError(form_errors.popitem()[1]) # pick a random error
+        else:
+            import transaction; transaction.abort() # because we already called _crete_NyZzz_object
+            ob._prepare_error_response(REQUEST, form_errors, schema_raw_data)
+            REQUEST.RESPONSE.redirect('%s/folder_add_html' % self.absolute_url())
+            return
+
+    ob.createDynamicProperties(self.processDynamicProperties(METATYPE_FOLDER, REQUEST, kwargs), _lang)
+
+    #extra settings
+    if _folder_meta_types == '':
+        #inherit allowd meta types from the parent
+        if self.meta_type == site.meta_type:
+            ob.folder_meta_types = self.adt_meta_types
+        else:
+            ob.folder_meta_types = self.folder_meta_types
+    else:
+        ob.folder_meta_types = self.utConvertToList(_folder_meta_types)
+
     if self.glCheckPermissionPublishObjects():
         approved, approved_by = 1, self.REQUEST.AUTHENTICATED_USER.getUserName()
     else:
         approved, approved_by = 0, None
-    releasedate = self.process_releasedate(releasedate)
-    if folder_meta_types == '':
-        #inherit allowd meta types from the parent
-        if self.meta_type == site.meta_type: folder_meta_types = self.adt_meta_types
-        else: folder_meta_types = self.folder_meta_types
-    else: folder_meta_types = self.utConvertToList(folder_meta_types)
-    if lang is None: lang = self.gl_get_selected_language()
-    #verify if the object already exists
-    try:
-        ob = self._getOb(id)
-        id = '%s-%s' % (id, self.utGenRandomId(5))
-    except AttributeError:
-        pass
-    #create object
-    ob = NyFolder(id, title, description, coverage, keywords, sortorder, publicinterface,
-            maintainer_email, contributor, folder_meta_types, releasedate, lang)
-    self.gl_add_languages(ob)
-    ob.createDynamicProperties(self.processDynamicProperties(METATYPE_FOLDER, REQUEST, kwargs), lang)
-    self._setObject(id, ob)
-    #extra settings
-    ob = self._getOb(id)
-    ob.after_setObject()
-    ob.updatePropertiesFromGlossary(lang)
     ob.approveThis(approved, approved_by)
     ob.submitThis()
+
+    ob.publicinterface = _publicinterface
     ob.createPublicInterface()
-    if discussion: ob.open_for_comments()
+
+    if ob.discussion: ob.open_for_comments()
     self.recatalogNyObject(ob)
-    self.notifyFolderMaintainer(site, ob)
+    event.notify(NyContentObjectAddEvent(ob, contributor, schema_raw_data))
     #log post date
     auth_tool = self.getAuthenticationTool()
     auth_tool.changeLastPost(contributor)
@@ -116,8 +158,8 @@ def addNyFolder(self, id='', title='', description='', coverage='', keywords='',
             self.setSession('referer', self.absolute_url())
             return ob.object_submitted_message(REQUEST)
             REQUEST.RESPONSE.redirect('%s/messages_html' % self.absolute_url())
-    else:
-        return ob.getId()
+
+    return ob.getId()
 
 def importNyFolder(self, param, id, attrs, content, properties, discussion, objects):
     #this method is called during the import process
@@ -164,7 +206,7 @@ def importNyFolder(self, param, id, attrs, content, properties, discussion, obje
         for object in objects:
             ob.import_data(object)
 
-class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, NyContentType, NyFolderBase):
+class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, NyContentType, NyContentData, NyFolderBase):
     """ """
 
     implements(INyFolder)
@@ -218,23 +260,15 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
         else:
             return self.meta_types
 
-    def __init__(self, id, title, description, coverage, keywords, sortorder,
-        publicinterface, maintainer_email, contributor, folder_meta_types,
-        releasedate, lang):
+    def __init__(self, id, contributor):
         """ """
         self.id = id
         NyContainer.__dict__['__init__'](self)
         NyProperties.__dict__['__init__'](self)
-        self._setLocalPropValue('title', lang, title)
-        self._setLocalPropValue('description', lang, description)
-        self._setLocalPropValue('coverage', lang, coverage)
-        self._setLocalPropValue('keywords', lang, keywords)
-        self.publicinterface = publicinterface
-        self.maintainer_email = maintainer_email
-        self.sortorder = sortorder
         self.contributor = contributor
-        self.releasedate = releasedate
-        self.folder_meta_types = folder_meta_types
+
+    def hasVersion(self):
+        return False
 
     def write_import(self, REQUEST=None):
         """ """
@@ -828,36 +862,39 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
 
     #site actions
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveProperties')
-    def saveProperties(self, title='', description='', coverage='',
-        keywords='', sortorder='', maintainer_email='', releasedate='', discussion='',
-        lang=None, REQUEST=None, **kwargs):
+    def saveProperties(self, REQUEST=None, **kwargs):
         """ """
         if not self.checkPermissionEditObject():
             raise EXCEPTION_NOTAUTHORIZED, EXCEPTION_NOTAUTHORIZED_MSG
-        try: sortorder = abs(int(sortorder))
-        except: sortorder = DEFAULT_SORTORDER
-        releasedate = self.process_releasedate(releasedate, self.releasedate)
-        if lang is None: lang = self.gl_get_selected_language()
-        self._setLocalPropValue('title', lang, title)
-        self._setLocalPropValue('description', lang, description)
-        self._setLocalPropValue('coverage', lang, coverage)
-        self._setLocalPropValue('keywords', lang, keywords)
-        self.sortorder = sortorder
-        self.maintainer_email = maintainer_email
-        self.releasedate = releasedate
-        self.updatePropertiesFromGlossary(lang)
-        self.updateDynamicProperties(self.processDynamicProperties(METATYPE_FOLDER, REQUEST, kwargs), lang)
-        self._p_changed = 1
-        if discussion: self.open_for_comments()
-        else: self.close_for_comments()
-        self.recatalogNyObject(self)
-        #log date
-        contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
-        auth_tool = self.getAuthenticationTool()
-        auth_tool.changeLastPost(contributor)
-        if REQUEST:
-            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
-            REQUEST.RESPONSE.redirect('edit_html?lang=%s' % lang)
+
+        if REQUEST is not None:
+            schema_raw_data = dict(REQUEST.form)
+        else:
+            schema_raw_data = kwargs
+        _lang = schema_raw_data.pop('_lang', schema_raw_data.pop('lang', None))
+        _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
+
+        form_errors = self.process_submitted_form(schema_raw_data, _lang, _override_releasedate=_releasedate)
+
+        if not form_errors:
+            if self.discussion: self.open_for_comments()
+            else: self.close_for_comments()
+            self._p_changed = 1
+            self.recatalogNyObject(self)
+            #log date
+            contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
+            auth_tool = self.getAuthenticationTool()
+            auth_tool.changeLastPost(contributor)
+            event.notify(NyContentObjectEditEvent(self, contributor))
+            if REQUEST:
+                self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+        else:
+            if REQUEST is not None:
+                self._prepare_error_response(REQUEST, form_errors, schema_raw_data)
+                REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
+            else:
+                raise ValueError(form_errors.popitem()[1]) # pick a random error
 
     security.declareProtected(PERMISSION_EDIT_OBJECTS, 'saveLogo')
     def saveLogo(self, source='file', file='', url='', del_logo='', REQUEST=None, **kwargs):
