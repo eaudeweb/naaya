@@ -108,11 +108,6 @@ from Products.NaayaCore.managers import recaptcha_utils
 
 from naaya.core.template_helper import NaayaTemplateHelper
 
-streamlined_updates = [
-    '2009_05-zope_210_baseline',
-    '2009_05-schema_tool',
-]
-
 from naaya.z2util import redirect_to
 
 
@@ -180,7 +175,6 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         self.id = id
         self.__portal_uid = portal_uid
-        self._auto_updates_reg = set(streamlined_updates)
         self._setLocalPropValue('title', lang, title)
         self._setLocalPropValue('site_title', lang, title)
         self._setLocalPropValue('site_subtitle', lang, u'')
