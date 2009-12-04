@@ -9,6 +9,7 @@
 	<li><a tal:attributes="href string:${site_url}/admin_metadata_html" i18n:translate="">Metadata</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_logos_html" i18n:translate="">Logos</a></li>
     <li id="currenttab"><a tal:attributes="href string:${site_url}/admin_email_html" i18n:translate="">Email Settings</a></li>
+    <li><a tal:attributes="href string:${site_url}/admin_glossaries_html" i18n:translate="">Glossaries</a></li>
 	<li><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
 </ul>
 </div>

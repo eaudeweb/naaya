@@ -2047,6 +2047,29 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
             self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             REQUEST.RESPONSE.redirect('%s/admin_logos_html' % self.absolute_url())
 
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_set_glossary_ids')
+    def admin_set_glossary_ids(self, keywords=None, coverage=None, REQUEST=None):
+        """ Change glossary widget for all content types """
+
+        self.keywords_glossary = keywords
+        self.coverage_glossary = coverage
+
+        for schema in self.getSchemaTool().objectValues():
+            for widget in schema.listWidgets():
+                prop_name = widget.prop_name()
+
+                if prop_name == 'keywords':
+                    widget.glossary_id = keywords
+                elif prop_name == 'coverage':
+                    widget.glossary_id = coverage
+                else:
+                    continue
+
+        if REQUEST:
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+            REQUEST.RESPONSE.redirect('%s/admin_glossaries_html' % self.absolute_url())
+
+
     #administration actions
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties')
     def admin_properties(self, REQUEST=None, **kwargs):
@@ -2784,6 +2807,11 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     def admin_logos_html(self, REQUEST=None, RESPONSE=None):
         """ """
         return self.getFormsTool().getContent({'here': self}, 'site_admin_logos')
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_glossaries_html')
+    def admin_glossaries_html(self, REQUEST=None, RESPONSE=None):
+        """ """
+        return self.getFormsTool().getContent({'here': self}, 'site_admin_glossaries')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_properties_html')
     def admin_properties_html(self, REQUEST=None, RESPONSE=None):

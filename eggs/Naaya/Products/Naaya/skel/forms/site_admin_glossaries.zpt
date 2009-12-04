@@ -1,0 +1,55 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portal properties - Email Settings</h1>
+
+<tal:block metal:fill-slot="section" tal:define="site_url here/getSitePath">
+
+<div id="tabbedmenu">
+<ul>
+    <li><a tal:attributes="href string:${site_url}/admin_metadata_html" i18n:translate="">Metadata</a></li>
+    <li><a tal:attributes="href string:${site_url}/admin_logos_html" i18n:translate="">Logos</a></li>
+    <li><a tal:attributes="href string:${site_url}/admin_email_html" i18n:translate="">Email Settings</a></li>
+    <li id="currenttab"><a tal:attributes="href string:${site_url}/admin_glossaries_html" i18n:translate="">Glossaries</a></li>
+    <li><a tal:attributes="href string:${site_url}/admin_properties_html" i18n:translate="">Other properties</a></li>
+</ul>
+</div>
+
+<p i18n:translate="" class="cleaner">
+    Choose the glossaries used by the add/edit forms in this portal.
+</p>
+
+
+<form method="post" name="glossaries"
+      tal:attributes="action string:${site_url}/admin_set_glossary_ids">
+    <div class="field-inline">
+        <label for="coverage_glossary" i18n:translate="">Coverage</label>
+        <select name="coverage" id="coverage_glossary">
+            <option value="" i18n:translate="">[None]</option>
+            <tal:block repeat="item here/list_glossaries">
+            <option tal:define="item_id item/id"
+                    tal:attributes="value item_id;
+                                    selected python:item_id == here.coverage_glossary"
+                    tal:content="item/title_or_id" />
+            </tal:block>
+    </div>
+
+    <div class="field-inline">
+        <label for="keywords_glossary" i18n:translate="">Keywords</label>
+        <select name="keywords" id="keywords_glossary">
+            <option value="" i18n:translate="">[None]</option>
+            <tal:block repeat="item here/list_glossaries">
+            <option tal:define="item_id item/id"
+                    tal:attributes="value item_id;
+                                    selected python:item_id == here.keywords_glossary"
+                    tal:content="item/title_or_id" />
+            </tal:block>
+        </select>
+    </div>
+
+    <div class="field-inline">
+        <input type="submit" value="Save changes" />
+    </div>
+</form>
+</tal:block>
+
+</tal:block>

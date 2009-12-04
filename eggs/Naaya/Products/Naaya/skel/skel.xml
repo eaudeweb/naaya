@@ -44,6 +44,7 @@
 		<form id="site_admin_centre" title="Portal administration - centre"/>
 		<form id="site_admin_metadata" title="Portal administration - medata"/>
 		<form id="site_admin_logos" title="Portal administration - logos"/>
+		<form id="site_admin_glossaries" title="Portal administration - glossaries"/>
 		<form id="site_admin_properties" title="Portal administration - properties"/>
 		<form id="site_admin_email" title="Portal administration - email settings"/>
 		<form id="site_admin_layout" title="Portal administration - layout"/>
