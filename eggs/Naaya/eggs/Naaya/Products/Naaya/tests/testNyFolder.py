@@ -431,6 +431,18 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
         self.assertTrue(adapter is not None)
         self.assertTrue(isinstance(adapter, NyContentTypeViewAdapter))
 
+    def test_public_interface(self):
+        self.browser_do_login('admin', '')
+        folder_url = 'http://localhost/portal/info/testparentfolder/testfolder'
+        self.browser.go(folder_url + '/manage_edit_html')
+        form = self.browser.get_form('frmEdit')
+        form['publicinterface'] = ['on']
+        self.browser.clicked(form, self.browser.get_form_field(form, 'publicinterface'))
+        self.browser.submit()
+        self.browser_do_logout()
+
+        self.assertTrue('index' in self.folder.objectIds())
+
 
 def test_suite():
     suite = TestSuite()
