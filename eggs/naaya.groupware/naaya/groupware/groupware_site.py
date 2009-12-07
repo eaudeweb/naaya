@@ -52,8 +52,6 @@ class GroupwareSite(NySite):
         #set default 'Naaya' configuration
         NySite.__dict__['createPortalTools'](self)
         NySite.__dict__['loadDefaultData'](self)
-        from Products.NaayaCore.SchemaTool.SchemaTool import manage_addSchemaTool
-        manage_addSchemaTool(self)
 
         #remove Naaya default content
         self.getLayoutTool().manage_delObjects('skin')
