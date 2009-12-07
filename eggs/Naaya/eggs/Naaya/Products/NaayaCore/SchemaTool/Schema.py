@@ -95,6 +95,18 @@ class Schema(Folder):
         for name, data in schema_def.iteritems():
             self.addWidget(name, **data)
 
+        # manually set the keywords & coverage glossaries (ugly hack)
+        def set_glossary(name):
+            prop_name = '%s-property' % name
+            if prop_name not in self.objectIds(['Naaya Schema Glossary Widget']):
+                return
+            value = getattr(self.getSite(), '%s_glossary' % name, None)
+            if value is None:
+                return
+            self[prop_name].glossary_id = value
+        set_glossary('keywords')
+        set_glossary('coverage')
+
     security.declareProtected(view_management_screens, 'manage_addProperty')
     def manage_addProperty(self, REQUEST):
         """ Web method to create property widgets from ZMI """
