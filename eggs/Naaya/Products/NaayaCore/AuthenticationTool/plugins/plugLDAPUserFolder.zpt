@@ -175,7 +175,7 @@ function toggleSelect()
 <p><input type="submit" value="Revoke selected roles" /></p>
 </form>
 </fieldset>
-<a name="ldap_user_roles"/>
+<a name="ldap_user_roles"></a>
 <fieldset><legend>Assign roles to users</legend>
 <p>
 	Select a user from the above list by clicking on its ID or just type its userid in the field below,
@@ -198,7 +198,7 @@ function toggleSelect()
 						</select>
 		</td>
 		<td width="1"><label for="term">containing</label></td>
-		<td width="1"><input type="text" name="term" value="" /></td>
+		<td width="1"><input type="text" id="term" name="term" value="" /></td>
 		<td>
 			<input type="hidden" name="search" value="" />
 			<input type="hidden" name="id" tal:attributes="value source_id" />
@@ -207,12 +207,12 @@ function toggleSelect()
 	</tr>
 	<tr>
 		<td width="20"><div style="white-space: nowrap; "><label for="role">which have the role</label> </div></td>
-		<td width="1"><input type="text" name="role" size="15" />
+		<td width="1"><input type="text" id="role" name="role" size="15" />
 			<input type="hidden" name="dn" /></td>
 		<td width="1"><input type="button" name="pickroles2" value="   Pick   "
 						tal:attributes="onclick string:javascript:fPickRoles('${here/getPluginPath}/pickroles_html', 'dn')" /></td>
 		<td width="1">&nbsp;</td>
-		<td> <input type="submit" name="search_role" value="Search"></td>
+		<td> <input type="submit" name="search_role" value="Search" /></td>
 	</tr>
 </table>
 </form>
