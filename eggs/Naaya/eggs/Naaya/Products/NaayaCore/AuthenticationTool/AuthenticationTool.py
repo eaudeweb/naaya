@@ -932,11 +932,11 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
                 csv_writer.writerow(user_info)
 
-        RESPONSE.setHeader('Content-Type', 'text/csv; charset=utf-8')
+        RESPONSE.setHeader('Content-Type', 'application/csv; charset=utf-8')
         RESPONSE.setHeader('Content-Length', output.len)
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
-        RESPONSE.setHeader('Content-Disposition', "inline; filename*=UTF-8''users.csv")
+        RESPONSE.setHeader('Content-Disposition', 'inline; filename="users.csv"')
 
         return output.getvalue()
 
