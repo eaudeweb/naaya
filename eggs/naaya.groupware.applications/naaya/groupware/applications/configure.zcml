@@ -1,0 +1,39 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:five="http://namespaces.zope.org/five">
+
+  <browser:page
+      for="zope.app.container.interfaces.IAdding"
+      name="add_gw_applications_html"
+      template="zpt/manage_add.zpt"
+      class=".applications_item.GWApplicationsAddView"
+      permission="zope2.ViewManagementScreens"
+      />
+
+  <browser:resource
+      name="applications.gif"
+      image="www/applications.gif"
+      />
+
+  <five:registerClass
+      class=".applications_item.GWApplications"
+      meta_type="GW Applications"
+      addview="add_gw_applications_html"
+      icon="applications.gif"
+      permission="zope2.ViewManagementScreens"
+      />
+
+  <browser:page
+      for=".applications_item.IGWApplications"
+      name="index_html"
+      template="zpt/applications_index.zpt"
+      permission="zope2.View"
+      />
+
+  <browser:defaultView
+      for=".applications_item.IGWApplications"
+      name="index_html"
+      />
+
+</configure>

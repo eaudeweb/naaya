@@ -28,9 +28,11 @@ def manage_addGroupwareSite(self, id='', title='', lang=None, REQUEST=None):
     if not id: id = 'gw' + ut.utGenRandomId(6)
     portal_uid = '%s_%s' % ('gw', ut.utGenerateUID())
     self._setObject(id, GroupwareSite(id, portal_uid, title, lang))
-    self._getOb(id).loadDefaultData()
+    ob = self._getOb(id)
+    ob.loadDefaultData()
     if REQUEST is not None:
         return self.manage_main(self, REQUEST, update_menu=1)
+    return ob
 
 
 class GroupwareSite(NySite):
