@@ -1,4 +1,4 @@
-<tal:block metal:use-macro="python:here.getLayoutTool().standard_template.macros['page']">
+<tal:block metal:use-macro="here/standard_template_macro">
 	<!--metal:block fill-slot="doctype"/-->
 	<!--metal:block fill-slot="standard-head-meta"/-->
 		<metal:block fill-slot="standard-head-links">
