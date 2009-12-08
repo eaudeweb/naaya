@@ -1,5 +1,14 @@
-<span tal:replace="structure here/standard_html_header"/>
+<metal:block metal:use-macro="python:here.getLayoutTool().standard_template.macros['page']">
 
+<metal:block metal:fill-slot="title">
+	<title><tal:block i18n:translate="">Request Role</tal:block> | <span tal:replace="here/site_title" /></title>
+</metal:block>
+
+<metal:block metal:fill-slot="head">
+	<meta i18n:attributes="content" content="Web form used to obtain contribution privileges" name="description" />
+</metal:block>
+
+<metal:block metal:fill-slot="body">
 <tal:block define="role python:request.get('role', 'contributor')">
 
 <h1><span i18n:translate="">Application for</span> <span tal:content="role">contributor</span> <span i18n:translate="">privileges</span></h1>
@@ -75,4 +84,5 @@
 
 </tal:block>
 
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>
