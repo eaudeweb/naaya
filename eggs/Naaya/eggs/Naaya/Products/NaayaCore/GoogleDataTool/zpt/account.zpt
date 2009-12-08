@@ -30,6 +30,7 @@
 		<ul>
 			<li><a tal:attributes="href string:${here/absolute_url}/admin_stats" i18n:translate="">Statistics</a></li>
 			<li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/admin_account" i18n:translate="">Settings</a></li>
+			<li><a tal:attributes="href string:${here/absolute_url}/admin_verify" i18n:translate="">Verfication codes</a></li>
 		</ul>
 	</div>
 
