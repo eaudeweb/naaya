@@ -49,6 +49,14 @@
                     <a tal:attributes="href gw_root_url" title="Groupware home">Groupware home</a>
                 </div>
             </div>
+            <div id="leftcolumn" class="localnav" tal:define="user python:request.AUTHENTICATED_USER" tal:condition="python:user.getUserName() != 'Anonymous User'" metal:define-slot="div-leftcolumn">
+                <h2>IG applications</h2>
+                <ul>
+                    <li><a href="./applications">Apply for IG</a></li>
+                    <li tal:condition="python:'Manager' in user.getRoles()">
+                        <a href="./applications/basket_html">Manage applications</a></li>
+                </ul>
+            </div>
             <div id="workarea" metal:define-slot="div-workarea">
             </div>
         </div>
