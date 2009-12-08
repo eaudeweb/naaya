@@ -110,10 +110,19 @@ class LayoutTool(Folder, combosync_tool):
             l_data.append((l_skin.id, l_skin.title_or_id(), l_schemes))
         return (self.__current_skin_id, self.getCurrentSkinSchemeId(), l_data)
 
+
+    def get_current_skin(self):
+        return self._getOb(self.__current_skin_id)
+
+    def get_skin_files_path(self):
+        return '%s/%s' % (self.get_current_skin().absolute_url(), self.getCurrentSkinSchemeId())
+
+    def render_standard_template(self, context):
+        return self.get_current_skin().standard_template.__of__(context)()
+
     def getContent(self, p_context={}, p_page=None):
-        l_skin = self._getOb(self.__current_skin_id)
-        p_context['skin_files_path'] = '%s/%s' % (l_skin.absolute_url(), self.getCurrentSkinSchemeId())
-        return l_skin._getOb(p_page)(p_context)
+        p_context['skin_files_path'] = self.get_skin_files_path()
+        return self.get_current_skin()._getOb(p_page)(p_context)
 
     def getNaayaContentStyles(self):
         ny_content = self.get_pluggable_content()
@@ -134,11 +143,7 @@ class LayoutTool(Folder, combosync_tool):
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_layout_html')
 
-    def header(self):
-        return PageTemplateFile('zpt/site_header', globals()).__of__(self)
-
-    def footer(self):
-        return PageTemplateFile('zpt/site_footer', globals()).__of__(self)
+    standard_template = PageTemplateFile('zpt/standard_template', globals())
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_layout_html')
