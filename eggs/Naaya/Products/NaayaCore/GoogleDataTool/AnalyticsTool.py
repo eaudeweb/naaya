@@ -1,10 +1,10 @@
 import cgi
 import gdata.auth
 import gdata.analytics.service
-import locale
 import time
 import datetime
 
+from zope.i18n.locales import locales
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from AccessControl.Permissions import view_management_screens, view
@@ -24,8 +24,8 @@ INTERVALS = [
                 {'period': 356, 'value': 'Last year'}
             ]
 
-#@todo: ask alex morega about this
-locale.setlocale(locale.LC_ALL, "")
+en = locales.getLocale('en')
+formatter = en.numbers.getFormatter('decimal')
 
 def manage_addAnalyticsTool(self, REQUEST=None):
     """ """
@@ -40,10 +40,6 @@ class AnalyticsTool(SimpleItem, utils):
     meta_type = METATYPE_ANALYTICSTOOL
     icon = 'misc_/NaayaCore/AnalyticsTool.gif'
 
-    manage_options = (
-        {'label': 'Accounts', 'action': 'admin_account'},
-        ) + SimpleItem.manage_options
-
     security = ClassSecurityInfo()
 
     def __init__(self, id, title):
@@ -55,6 +51,26 @@ class AnalyticsTool(SimpleItem, utils):
         self.account = None
         self.date_interval = 30
         self.start_date = ''
+        self.ga_verify = '' #Google Analytics verification code
+        self.gw_verify = '' #Google Webmaster verification meta tag
+        self.clear_cache()
+
+    #cache
+    def set_cache(self, data, view_name):
+        """ """
+        if self.checkAuthorization() is not None:
+            self._cache[view_name] = data
+            self._cache_timestamp = datetime.datetime.now()
+
+    def get_cache(self, view_name):
+        interval = datetime.datetime.now() - self._cache_timestamp
+        if interval.days > 0:
+            return None
+        return self._cache.get(view_name, None)
+
+    def clear_cache(self):
+        self._cache = {}
+        self._cache_timestamp = datetime.datetime.now()
 
     #administration
     def index_html(self, REQUEST):
@@ -62,9 +78,30 @@ class AnalyticsTool(SimpleItem, utils):
         REQUEST.RESPONSE.redirect(self.absolute_url() + '/admin_account')
 
     _admin_account_zpt = NaayaPageTemplateFile('zpt/account', globals(), 'site_admin_account')
+    _admin_verify = NaayaPageTemplateFile('zpt/verify', globals(), 'site_admin_verify')
+    _admin_stats = NaayaPageTemplateFile('zpt/stats', globals(), 'site_admin_stats')
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_stats')
-    admin_stats = NaayaPageTemplateFile('zpt/stats', globals(), 'site_admin_stats')
+    def admin_stats(self, REQUEST):
+        """ """
+        view_name = 'stats'
+        cached_data = self.get_cache(view_name=view_name)
+        if cached_data is None:
+            # no data in the cache, so cache it
+            data_to_cache = self._admin_stats(REQUEST)
+            self.set_cache(data_to_cache, view_name=view_name)
+            return data_to_cache
+        # get cached data
+        return cached_data
+
+    security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_verify')
+    def admin_verify(self, REQUEST):
+        """ Administration page for Google verification codes """
+        if REQUEST.has_key('save'):
+            self.ga_verify = REQUEST.get('ga_verify', '')
+            self.gw_verify = REQUEST.get('gw_verify', '')
+            self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
+        return self._admin_verify(REQUEST)
 
     security.declareProtected(PERMISSION_PUBLISH_OBJECTS, 'admin_account')
     def admin_account(self, REQUEST):
@@ -85,9 +122,11 @@ class AnalyticsTool(SimpleItem, utils):
                     self.date_interval = int(date_interval)
                     self.start_date = ''
                 if self.account or self.start_date or self.date_interval:
+                    self.clear_cache()  #clear cached data
                     self.setSessionInfo([MESSAGE_SAVEDCHANGES % self.utGetTodayDate()])
             elif REQUEST.has_key('revoke'):
                 self.delAuthToken()
+                self.clear_cache()  #clear cached data
                 REQUEST.set('auth_url', self.generateAuthUrl(self.REQUEST.URL))
                 return self._admin_account_zpt(REQUEST)
             REQUEST.set('accounts', self.getAccounts())
@@ -162,24 +201,31 @@ class AnalyticsTool(SimpleItem, utils):
 
     def getSiteSummary(self):
         """ Get esential date about site usage """
-        sd, ed = self.get_date_interval()
-        try:
-            data = self.gd_service.GetData(
-                        ids=self.account, 
-                        start_date=sd.strftime('%Y-%m-%d'), 
-                        end_date=ed.strftime('%Y-%m-%d'),
-                        metrics='ga:visits,ga:visitors,ga:pageviews,ga:timeOnSite')
-        except gdata.service.RequestError:
-            return None
-        if data.entry:
-            res = {}
-            #take the first entry
-            stats = data.entry[0]
-            res['visits'] = locale.format('%d', float(stats.visits.value), True)
-            res['visitors'] = locale.format('%d', float(stats.visitors.value), True)
-            res['pageviews'] = locale.format('%d', float(stats.pageviews.value), True)
-            res['timeOnSite'] = humanize_time(float(stats.timeOnSite.value)/float(stats.visits.value))
-            return res
+        view_name = 'summary'
+        cached_data = self.get_cache(view_name=view_name)
+        if cached_data is None:
+            sd, ed = self.get_date_interval()
+            try:
+                data = self.gd_service.GetData(
+                            ids=self.account, 
+                            start_date=sd.strftime('%Y-%m-%d'), 
+                            end_date=ed.strftime('%Y-%m-%d'),
+                            metrics='ga:visits,ga:visitors,ga:pageviews,ga:timeOnSite')
+            except gdata.service.RequestError:
+                return None
+            if data.entry:
+                res = {}
+                #take the first entry
+                stats = data.entry[0]
+                res['visits'] = formatter.format(float(stats.visits.value))
+                res['visitors'] = formatter.format(float(stats.visitors.value))
+                res['pageviews'] = formatter.format(float(stats.pageviews.value))
+                res['timeOnSite'] = humanize_time(float(stats.timeOnSite.value)/float(stats.visits.value))
+                # no data in the cache, so cache it
+                self.set_cache(res, view_name=view_name)
+                return res
+        # get cached data
+        return cached_data
 
     def getSiteUsage(self):
         """ Get the site usage """
@@ -196,12 +242,12 @@ class AnalyticsTool(SimpleItem, utils):
             res = {}
             #take the first entry
             stats = data.entry[0]
-            res['visits'] = locale.format('%d', float(stats.visits.value), True)
+            res['visits'] = formatter.format(float(stats.visits.value))
             bounce_rate = float(stats.bounces.value)/float(stats.entrances.value)*100
             res['bounces'] = '%.2f%%' % bounce_rate
             pages_visit = float(stats.pageviews.value)/float(stats.visits.value)
             res['pages_visit'] = '%.2f' % pages_visit
-            res['pageviews'] = locale.format('%d', float(stats.pageviews.value), True)
+            res['pageviews'] = formatter.format(float(stats.pageviews.value))
             res['timeOnSite'] = humanize_time(float(stats.timeOnSite.value)/float(stats.visits.value))
             newVisits = float(stats.newVisits.value)/float(stats.visits.value)*100
             res['newVisits'] = '%.2f%%' % newVisits
@@ -235,7 +281,7 @@ class AnalyticsTool(SimpleItem, utils):
             for stats in data.entry:
                 dic = {}
                 dic['pagePath'] = stats.pagePath.value
-                dic['pageviews'] = locale.format('%d', float(stats.pageviews.value), True)
+                dic['pageviews'] = formatter.format(float(stats.pageviews.value))
                 res.append(dic)
             return res, website_uri
 
@@ -259,7 +305,7 @@ class AnalyticsTool(SimpleItem, utils):
             for stats in data.entry:
                 dic = {}
                 dic['source'] = stats.source.value
-                dic['visits'] = locale.format('%d', float(stats.visits.value), True)
+                dic['visits'] = formatter.format(float(stats.visits.value))
                 res.append(dic)
             return res
 
@@ -283,7 +329,7 @@ class AnalyticsTool(SimpleItem, utils):
             for stats in data.entry:
                 dic = {}
                 dic['keyword'] = stats.keyword.value
-                dic['visits'] = locale.format('%d', float(stats.visits.value), True)
+                dic['visits'] = formatter.format(float(stats.visits.value))
                 res.append(dic)
             return res
 
@@ -309,7 +355,6 @@ class AnalyticsTool(SimpleItem, utils):
         return INTERVALS
 
 InitializeClass(AnalyticsTool)
-
 
 def humanize_time(secs):
     mins, secs = divmod(secs, 60)

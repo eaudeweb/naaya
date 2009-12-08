@@ -1,0 +1,26 @@
+<tal:block metal:use-macro="python:here.getFormsTool().getForm('site_admin_template').macros['page']">
+
+<h1 metal:fill-slot="title" i18n:translate="">Portal statistics</h1>
+
+<tal:block metal:fill-slot="section">
+	<div id="tabbedmenu">
+		<ul>
+			<li><a tal:attributes="href string:${here/absolute_url}/admin_stats" i18n:translate="">Statistics</a></li>
+			<li><a tal:attributes="href string:${here/absolute_url}/admin_account" i18n:translate="">Settings</a></li>
+			<li id="currenttab"><a tal:attributes="href string:${here/absolute_url}/admin_verify" i18n:translate="">Verfication codes</a></li>
+		</ul>
+	</div>
+
+	<form method="post" action="" name="frmVerify" id="frmVerify">
+		<p i18n:translate="">Copy the javascript code from Google Analytics' page and paste it in the text area, in order to allow Google access your website traffic data.</p>
+		<label for="ga_verify" i18n:translate="">Google Analytics verification code:</label><br />
+		<textarea name="ga_verify" cols="80" rows="10" tal:content="here/ga_verify" />
+		<p i18n:translate="">Upon ownership verification, choose the meta tag (verification) method, and copy the meta tag code generated in the text area below 
+		in order to have it inserted properly following Google's requests. Save it and go back to Google to complete the verification process.</p>
+		<label for="gw_verify" i18n:translate="">Google Webmaster verification meta tag:</label><br />
+		<textarea name="gw_verify" cols="80" rows="2" tal:content="here/gw_verify" /><br /><br />
+		<input type="submit" value="save" name="save" />
+	</form>
+
+</tal:block>
+</tal:block>
