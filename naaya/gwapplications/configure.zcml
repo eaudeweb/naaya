@@ -24,7 +24,7 @@
       name="basket_html"
       template="zpt/applications_basket.zpt"
       class=".applications.GWApplicationsBasketView"
-      permission="zope2.View"
+      permission="zope2.ViewManagementScreens"
       />
 
   <browser:page

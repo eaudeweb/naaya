@@ -11,15 +11,21 @@ approved_mail = EmailPageTemplateFile('emailpt/approved_application.zpt', global
 rejected_mail = EmailPageTemplateFile('emailpt/rejected_application.zpt', globals())
 
 class IGWApplication(Interface):
-    """
+    """Interface for the GWApplication class
     """
 
     def approve(self):
-        """
+        """Approve the application.
+            - mark application as accepted
+            - create portal
+            - customize portal according to application_data
+            - send notification mail
         """
 
     def reject(self):
-        """
+        """Reject the application.
+            - mark application as rejected
+            - send notification mail
         """
 
 class GWApplication(SimpleItem):
@@ -34,7 +40,6 @@ class GWApplication(SimpleItem):
         self.approved = False
         self.rejected = False
         self.created_url = ""
-        #TODO: add date created
         self.date_created = datetime.now()
 
     def approve(self, **kwargs):
@@ -51,8 +56,7 @@ class GWApplication(SimpleItem):
         self.send_rejected_email()
 
     def create_portal(self, **kwargs):
-        # TODO: properly get gw root
-        gw_root = self.aq_parent.aq_parent.aq_parent.aq_parent
+        gw_root = self.get_gw_root(ob=True)
         pid = kwargs.get('id', '')
         ptitle = kwargs.get('title', '')
         return manage_addGroupwareSite(gw_root, pid, ptitle)
@@ -71,7 +75,7 @@ class GWApplication(SimpleItem):
 
     def send_approved_email(self):
         data = {'igurl': self.created_url}
-        mail_data = rejected_mail.render_email(**data)
+        mail_data = approved_mail.render_email(**data)
         mail_to = self.application_data.get('useremail', '')
         mail_from = self.mail_from
         mail_subject = mail_data['subject']
@@ -79,7 +83,7 @@ class GWApplication(SimpleItem):
         self.email_sender.sendEmail(mail_body, mail_to, mail_from, mail_subject)
 
     def send_rejected_email(self):
-        mail_data = approved_mail.render_email()
+        mail_data = rejected_mail.render_email()
         mail_to = self.application_data.get('useremail', '')
         mail_from = self.mail_from
         mail_subject = mail_data['subject']
