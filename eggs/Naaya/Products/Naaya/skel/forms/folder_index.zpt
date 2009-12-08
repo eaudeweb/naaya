@@ -1,4 +1,4 @@
-<metal:block metal:use-macro="python:here.getLayoutTool().standard_template.macros['page']">
+<metal:block metal:use-macro="here/standard_template_macro">
 
 <metal:block metal:fill-slot="title">
 	<title tal:content="string:${here/title} | ${here/site_title}" />
