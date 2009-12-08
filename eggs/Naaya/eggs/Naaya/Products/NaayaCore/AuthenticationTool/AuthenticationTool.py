@@ -889,7 +889,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         output = StringIO()
         csv_writer = csv.writer(output)
         # TODO: Username, Name, Organisation, Country, User's right, Justification, Date rights were granted, Person at EEA that granted rights
-        csv_writer.writerow(['Username', 'Name', 'Email address', 'LDAP Group', 'Roles', 'Account type'])
+        csv_writer.writerow(['Username', 'Name', 'Organisation', 'Postal address', 'Email address', 'LDAP Group', 'Roles', 'Account type'])
 
         local_users = self.getUsers()
         for user in local_users:
@@ -899,6 +899,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             last_name = self.utToUtf8(self.getUserLastName(user))
             name = first_name + ' ' + last_name
 
+            organisation = ''
+
+            postal_address = ''
+
             email = self.utToUtf8(self.getUserEmail(user))
 
             group = ''
@@ -907,7 +911,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
             type = 'Local'
 
-            csv_writer.writerow([username, name, email, group, role_str, type])
+            csv_writer.writerow([username, name, organisation, postal_address, email, group, role_str, type])
 
         ldap_sources = self.getSources()
 
@@ -923,6 +927,10 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
                 name = self.utToUtf8(source._get_user_full_name(user))
 
+                organisation = self.utToUtf8(source._get_user_organisation(user))
+
+                postal_address = self.utToUtf8(source._get_user_postal_address(user))
+
                 email = self.utToUtf8(source._get_user_email(user))
 
                 group = self.utToUtf8(source.getUserLocation(uid))
@@ -937,7 +945,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
                 type = 'LDAP (source_id=%s)' % source.id
 
-                csv_writer.writerow([username, name, email, group, role_str, type])
+                csv_writer.writerow([username, name, organisation, postal_address, email, group, role_str, type])
 
         RESPONSE.setHeader('Content-Type', 'text/x-csv')
         RESPONSE.setHeader('Content-Length', output.len)
