@@ -33,7 +33,9 @@ Every portal B{must} have an object of this type inside.
 #Zope imports
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from AccessControl.Permissions import view_management_screens, view
 from Products.ZCatalog.ZCatalog import ZCatalog
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 #Product imports
 from Products.NaayaCore.constants import *
@@ -43,6 +45,9 @@ try:
     txng_version = 2
 except ImportError:
     txng_version = 0
+
+from interfaces import INyCatalogAware
+from naaya.core.interfaces import INyObjectContainer
 
 def manage_addCatalogTool(self, languages=None, REQUEST=None):
     """
@@ -64,7 +69,9 @@ class CatalogTool(ZCatalog, utils):
     icon = 'misc_/NaayaCore/CatalogTool.gif'
 
     manage_options = (
-        ZCatalog.manage_options
+        ZCatalog.manage_options[:1] +
+        ({'label': "Maintenance", 'action': 'manage_maintenance'},) +
+        ZCatalog.manage_options[1:]
     )
 
     security = ClassSecurityInfo()
@@ -220,4 +227,60 @@ class CatalogTool(ZCatalog, utils):
         self.del_index_for_lang('objectkeywords', lang)
         self.del_index_for_lang('istranslated', lang)
 
+    security.declareProtected(view_management_screens, 'manage_maintenance')
+    _manage_maintenance = PageTemplateFile('zpt/manage_maintenance', globals())
+    def manage_maintenance(self, REQUEST):
+        """ maintenance tab """
+
+        ob_path = lambda ob: '/'.join(ob.getPhysicalPath())
+        path_ob = lambda p: self.unrestrictedTraverse(p)
+
+        def generate_report():
+            found_paths = set(ob_path(ob) for ob in walk_folder(self.getSite()))
+
+            cataloged_paths = set()
+            broken_paths = set()
+            for brain in self():
+                ob = brain.getObject()
+                if ob.meta_type == 'Broken Because Product is Gone':
+                    broken_paths.add(brain.getPath())
+                else:
+                    cataloged_paths.add(ob_path(ob))
+
+            missing_paths = found_paths - cataloged_paths
+            extra_paths = cataloged_paths - found_paths
+            return {
+                'missing': set(path_ob(ob) for ob in missing_paths),
+                'extra': set(path_ob(ob) for ob in extra_paths),
+                'broken': broken_paths,
+            }
+
+        options = {}
+        if REQUEST.get('report', '') == 'on':
+            options['report'] = generate_report()
+
+        return self._manage_maintenance(REQUEST, **options)
+
+    security.declareProtected(view_management_screens, 'manage_do_rebuild')
+    def manage_do_rebuild(self, REQUEST):
+        """ maintenance operations for the catalog """
+
+        def add_to_catalog(ob):
+            self.catalog_object(ob, '/'.join(ob.getPhysicalPath()))
+
+        self.manage_catalogClear()
+        for ob in walk_folder(self.getSite()):
+            add_to_catalog(ob)
+
+        REQUEST.RESPONSE.redirect(self.absolute_url() + '/manage_maintenance')
+
 InitializeClass(CatalogTool)
+
+def walk_folder(folder):
+    for ob in folder.objectValues():
+        if INyCatalogAware.providedBy(ob):
+            yield ob
+
+        if INyObjectContainer.providedBy(ob):
+            for ob in walk_folder(ob):
+                yield ob
