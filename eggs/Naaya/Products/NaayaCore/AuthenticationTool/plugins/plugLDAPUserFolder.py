@@ -329,7 +329,9 @@ class plugLDAPUserFolder(PlugBase):
             return ()
 
     def _get_user_by_uid(self, uid, acl_folder):
-        users = acl_folder.findUser(search_param='uid', search_term=uid)
+        attrs = acl_folder.getSchemaConfig().keys()
+        attrs.extend(['o', 'postalAddress'])
+        users = acl_folder.findUser(search_param='uid', search_term=uid, attrs=attrs)
         for user in users:
             if user.get('uid', '') == uid:
                 return user
@@ -355,6 +357,18 @@ class plugLDAPUserFolder(PlugBase):
         #return the full name of the given user id
         user = self._get_user_by_uid(p_username, acl_folder)
         return self._get_user_full_name(user)
+
+    def _get_user_organisation(self, user):
+        if user is not None:
+            return unicode(user.get('o', ''), 'iso-8859-1').encode('utf-8')
+        else:
+            return ''
+
+    def _get_user_postal_address(self, user):
+        if user is not None:
+            return unicode(user.get('postalAddress', ''), 'iso-8859-1').encode('utf-8')
+        else:
+            return ''
 
     def getLDAPUserFirstName(self, dn):
         return unicode(dn.get('sn', ''), 'iso-8859-1').encode('utf-8')
