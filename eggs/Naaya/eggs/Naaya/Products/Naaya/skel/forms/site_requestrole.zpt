@@ -1,4 +1,4 @@
-<metal:block metal:use-macro="python:here.getLayoutTool().standard_template.macros['page']">
+<metal:block metal:use-macro="here/standard_template_macro">
 
 <metal:block metal:fill-slot="title">
 	<title><tal:block i18n:translate="">Request Role</tal:block> | <span tal:replace="here/site_title" /></title>

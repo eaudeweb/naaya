@@ -3606,6 +3606,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         """ """
         return PageTemplateFile('skel/forms/admin_bulk_mail', globals()).__of__(self)()
 
+    def standard_template_macro(self):
+        return self.getLayoutTool().standard_template().macros['page']
+
     #calendar widget
     security.declareProtected(view, 'calendar_js')
     calendar_js = DTMLFile('zpt/calendar/calendar_js', globals())
