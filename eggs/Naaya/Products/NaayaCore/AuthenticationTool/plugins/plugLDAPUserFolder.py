@@ -334,21 +334,27 @@ class plugLDAPUserFolder(PlugBase):
             if user.get('uid', '') == uid:
                 return user
 
-    def getUserEmail(self, p_username, acl_folder):
-        #return the email of the given user id
-        user = self._get_user_by_uid(p_username, acl_folder)
+    def _get_user_email(self, user):
         if user is not None:
             return unicode(user.get('mail', ''), 'iso-8859-1').encode('utf-8')
         else:
             return ''
 
-    def getUserFullName(self, p_username, acl_folder):
+    def getUserEmail(self, p_username, acl_folder):
         #return the email of the given user id
         user = self._get_user_by_uid(p_username, acl_folder)
+        return self._get_user_email(user)
+
+    def _get_user_full_name(self, user):
         if user is not None:
             return unicode(user.get('cn', ''), 'iso-8859-1').encode('utf-8')
         else:
             return ''
+
+    def getUserFullName(self, p_username, acl_folder):
+        #return the full name of the given user id
+        user = self._get_user_by_uid(p_username, acl_folder)
+        return self._get_user_full_name(user)
 
     def getLDAPUserFirstName(self, dn):
         return unicode(dn.get('sn', ''), 'iso-8859-1').encode('utf-8')

@@ -888,57 +888,66 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
         output = StringIO()
         csv_writer = csv.writer(output)
-        csv_writer.writerow(['Account', 'User', 'Full name', 'Email address', 'LDAP Group', 'LDAP Roles'])
+        # TODO: Username, Name, Organisation, Country, User's right, Justification, Date rights were granted, Person at EEA that granted rights
+        csv_writer.writerow(['Username', 'Name', 'Email address', 'LDAP Group', 'Roles', 'Account type'])
 
         local_users = self.getUsers()
         for user in local_users:
-            user_info = []
+            username = self.utToUtf8(user)
 
-            user_info.append(u'Local')
+            first_name = self.utToUtf8(self.getUserFirstName(user))
+            last_name = self.utToUtf8(self.getUserLastName(user))
+            name = first_name + ' ' + last_name
 
-            user_info.append(unicode(user).encode('utf-8'))
+            email = self.utToUtf8(self.getUserEmail(user))
 
-            full_name = self.getUserFirstName(user) + ' ' + self.getUserLastName(user)
-            if isinstance(full_name, unicode):
-                full_name = full_name.encode('utf-8')
-            user_info.append(full_name)
+            group = ''
 
-            email = self.getUserEmail(user)
-            user_info.append(unicode(email).encode('utf-8'))
+            role_str = ''
 
-            csv_writer.writerow(user_info)
+            type = 'Local'
+
+            csv_writer.writerow([username, name, email, group, role_str, type])
 
         ldap_sources = self.getSources()
+
         for source in ldap_sources:
             acl = source.getUserFolder()
-            for user, roles in source.getUsersRoles(acl).items():
-                user_info = []
 
-                user_info.append(u'LDAP (source_id=%s)' % source.id)
+            items = source.getUsersRoles(acl).items()
 
-                user_info.append(user)
+            for uid, roles in items:
+                user = source._get_user_by_uid(uid, acl)
 
-                full_name = source.getUserFullName(user, acl)
-                user_info.append(full_name)
+                username = self.utToUtf8(uid)
 
-                email = source.getUserEmail(user, acl)
-                user_info.append(email)
+                name = self.utToUtf8(source._get_user_full_name(user))
 
-                group = source.getUserLocation(user)
-                user_info.append(group)
+                email = self.utToUtf8(source._get_user_email(user))
 
-                roles_info = ' | '.join([', '.join(role[0]) + ' on ' + role[1] for role in roles])
-                user_info.append(unicode(roles_info).encode('utf-8'))
+                group = self.utToUtf8(source.getUserLocation(uid))
 
-                csv_writer.writerow(user_info)
+                roles_info = []
+                for role in roles:
+                    user_roles = ', '.join([self.utToUtf8(r) for r in role[0]])
+                    path = self.utToUtf8(role[1])
+                    role_info = user_roles + ' on ' + path
+                    roles_info.append(role_info)
+                role_str = ' | '.join(roles_info)
 
-        RESPONSE.setHeader('Content-Type', 'application/csv; charset=utf-8')
+                type = 'LDAP (source_id=%s)' % source.id
+
+                csv_writer.writerow([username, name, email, group, role_str, type])
+
+        RESPONSE.setHeader('Content-Type', 'text/x-csv')
         RESPONSE.setHeader('Content-Length', output.len)
         RESPONSE.setHeader('Pragma', 'public')
         RESPONSE.setHeader('Cache-Control', 'max-age=0')
-        RESPONSE.setHeader('Content-Disposition', 'inline; filename="users.csv"')
+        RESPONSE.setHeader('Content-Disposition', 'attachment; filename="users.csv"')
 
-        return output.getvalue()
+        ret = output.getvalue()
+
+        return ret
 
     manage_users_html = PageTemplateFile('zpt/authentication_content', globals())
     manage_addUser_html = PageTemplateFile('zpt/authentication_adduser', globals())
