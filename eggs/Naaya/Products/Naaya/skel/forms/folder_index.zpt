@@ -1,5 +1,16 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block metal:use-macro="python:here.getLayoutTool().standard_template.macros['page']">
 
+<metal:block metal:fill-slot="title">
+	<title tal:content="string:${here/title} | ${here/site_title}" />
+</metal:block>
+
+<metal:block metal:fill-slot="head">
+	<meta tal:attributes="content here/contributor" name="author" />
+	<meta tal:condition="here/keywords" tal:attributes="content here/keywords" name="keywords" />
+	<meta tal:attributes="content here/gl_get_selected_language" name="dc.language" />
+</metal:block>
+
+<metal:block metal:fill-slot="body">
 <div id="center_content" tal:attributes="style python:test(len(here.portal_portlets.get_portlets_for_obj(here, 'right'))>0, 'width: 78%;; overflow-x: auto;;', '')">
 	<h1>
 		<img tal:attributes="
@@ -46,7 +57,6 @@
 </tal:block>
 </div>
 
-
 <div id="right_port">
 	<tal:block tal:repeat="item python:here.portal_portlets.get_portlets_for_obj(here, 'right')">
 		<span tal:replace="structure python:item({'here': here, 'portlet_macro': 'portlet_right_macro'})" />
@@ -54,6 +64,6 @@
 </div>
 
 <span tal:replace="structure here/comments_box" />
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
 
-
+</metal:block>

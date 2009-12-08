@@ -1,14 +1,19 @@
-<span tal:replace="structure here/standard_html_header"/>
+<metal:block metal:use-macro="python:here.getLayoutTool().standard_template.macros['page']">
+
+<metal:block metal:fill-slot="title">
+	<title><tal:block i18n:translate="">Login Form</tal:block> | <span tal:replace="here/site_title" /></title>
+</metal:block>
+
+<metal:block metal:fill-slot="body">
 
 <tal:block define="came_from python:request.get('came_from', '') or request.get('HTTP_REFERER', '');
 				action_url string:logged_in;
-        action_url_logout_directly string: 'logout'">
+				action_url_logout_directly string: 'logout'">
 
 <tal:block define="user python:request.AUTHENTICATED_USER.getUserName();
 								auth_tool python:here.getAuthenticationTool();
 								user_obj python:auth_tool.getUser(request.AUTHENTICATED_USER.getUserName());"
 								condition="python:user!='Anonymous User'">
-
 
 <h1 i18n:translate="">Log out</h1>
 <div class="tips_box" style="float: right; width: 30%; background-color: #FFFFE1;">
@@ -94,8 +99,7 @@
 </div>
 
 </tal:block>
-
-
 </tal:block>
 
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+</metal:block>
