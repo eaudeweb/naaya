@@ -32,7 +32,7 @@
       name="application_index"
       template="zpt/application_index.zpt"
       class=".application_item.GWApplicationIndexView"
-      permission="zope2.View"
+      permission="zope2.ViewManagementScreens"
       />
 
   <browser:resource
