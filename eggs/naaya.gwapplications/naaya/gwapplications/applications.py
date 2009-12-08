@@ -11,7 +11,7 @@ new_application_mail = EmailPageTemplateFile('emailpt/new_application.zpt', glob
 
 
 class IGWApplications(Interface):
-    """
+    """Interface for the GWApplications class
     """
 
 
