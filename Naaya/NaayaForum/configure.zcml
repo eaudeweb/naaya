@@ -10,4 +10,17 @@
     for="Products.NaayaForum.interfaces.INyForumObjectEditEvent"
     />
 
+  <class class=".NyForum.NyForum">
+    <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
+    <implements interface="naaya.core.interfaces.INyObjectContainer" />
+  </class>
+
+  <class class=".NyForumTopic.NyForumTopic">
+    <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
+    <implements interface="naaya.core.interfaces.INyObjectContainer" />
+  </class>
+
+  <class class=".NyForumMessage.NyForumMessage">
+    <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
+  </class>
 </configure>
