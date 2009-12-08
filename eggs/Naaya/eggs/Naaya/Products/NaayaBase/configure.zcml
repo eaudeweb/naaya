@@ -1,3 +1,7 @@
 <configure xmlns='http://namespaces.zope.org/zope'>
   <include package=".adapter" />
+
+  <class class=".NyContentType.NyContentType">
+    <implements interface="Products.NaayaCore.CatalogTool.interfaces.INyCatalogAware" />
+  </class>
 </configure>

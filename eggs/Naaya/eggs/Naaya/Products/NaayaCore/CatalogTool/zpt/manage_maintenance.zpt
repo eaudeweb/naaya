@@ -1,0 +1,52 @@
+<tal:block content="structure here/manage_page_header" />
+<tal:block content="structure here/manage_tabs" />
+
+<p>
+    <strong tal:content="python:len(here)"></strong> objects in catalog.
+</p>
+
+<form tal:attributes="action string:${here/absolute_url}/manage_maintenance"
+      method="get">
+<p>
+    Generate a report of cataloged objects:
+    <input type="hidden" name="report" value="on" />
+    <input type="submit" value="report" />
+</p>
+</form>
+
+<form tal:attributes="action string:${here/absolute_url}/manage_do_rebuild"
+      method="post">
+<p>
+    Clear catalog and re-populate it by traversing the site:
+    <input type="submit" value="rebuild catalog" />
+</p>
+</form>
+
+<tal:block define="broken options/report/broken|nothing" condition="broken">
+<h3>Broken (<tal:block content="python:len(broken)" />)</h3>
+<ul>
+    <li tal:repeat="ob_path broken" tal:content="ob_path" />
+</ul>
+</tal:block>
+
+<tal:block define="extra options/report/extra|nothing" condition="extra">
+<h3>Extra (<tal:block content="python:len(extra)" />)</h3>
+<ul>
+    <li tal:repeat="ob extra">
+        <a tal:attributes="href string:${ob/absolute_url}/manage_workspace"
+           tal:content="python:'/'.join(ob.getPhysicalPath())"></a>
+    </li>
+</ul>
+</tal:block>
+
+<tal:block define="missing options/report/missing|nothing" condition="missing">
+<h3>Missing (<tal:block content="python:len(missing)" />)</h3>
+<ul>
+    <li tal:repeat="ob missing">
+        <a tal:attributes="href string:${ob/absolute_url}/manage_workspace"
+           tal:content="python:'/'.join(ob.getPhysicalPath())"></a>
+    </li>
+</ul>
+</tal:block>
+
+<tal:block content="structure here/manage_page_footer" />

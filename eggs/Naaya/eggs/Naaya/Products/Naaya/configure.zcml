@@ -7,4 +7,7 @@
     name="portlet_objects_listing"
     />
 
+  <class class=".NyFolder.NyFolder">
+    <implements interface="naaya.core.interfaces.INyObjectContainer" />
+  </class>
 </configure>
