@@ -6,11 +6,11 @@
         tal:define="site_url here/getSitePath;
                     skin_files_path python:here.getLayoutTool().get_skin_files_path()">
     <head tal:define="layout_path python:here.getSite().getLayoutTool().absolute_url()">
-        <metal:block define-slot="standard-head-meta">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="shortcut icon" href="favicon.ico" type="image/ico"/>
+        <link rel="home" tal:attributes="href site_url" title="Home" i18n:attributes="title" />
+        <metal:block define-slot="title">
             <title tal:content="here/title_or_id" />
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-            <link rel="shortcut icon" href="favicon.ico" type="image/ico"/>
-            <link rel="home" tal:attributes="href site_url" title="Home" i18n:attributes="title" />
         </metal:block>
 
         <!--The stylesheets 'style', 'common' and 'print' are common to all schemes and are opened as imagefiles.
