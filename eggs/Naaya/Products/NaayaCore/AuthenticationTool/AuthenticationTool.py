@@ -891,9 +891,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         # TODO: Username, Name, Organisation, Country, User's right, Justification, Date rights were granted, Person at EEA that granted rights
         csv_writer.writerow(['Username', 'Name', 'Organisation', 'Postal address', 'Email address', 'LDAP Group', 'Roles', 'Account type'])
 
-        local_users = self.getUsers()
-        for user in local_users:
-            username = self.utToUtf8(user)
+        items = self.getUsersRoles().items()
+
+        for uid, roles in items:
+            user = self.getUser(uid)
+
+            username = self.utToUtf8(uid)
 
             first_name = self.utToUtf8(self.getUserFirstName(user))
             last_name = self.utToUtf8(self.getUserLastName(user))
@@ -907,7 +910,17 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
             group = ''
 
-            role_str = ''
+            roles_info = []
+            for role in roles:
+                if role[0] == []:
+                    continue
+                user_roles = ', '.join([self.utToUtf8(r) for r in role[0]])
+                path = self.utToUtf8(role[1])
+                if path == '':
+                    path = 'entire site'
+                role_info = user_roles + ' on ' + path
+                roles_info.append(role_info)
+            role_str = ' | '.join(roles_info)
 
             type = 'Local'
 
@@ -937,8 +950,12 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
 
                 roles_info = []
                 for role in roles:
+                    if role[0] == []:
+                        continue
                     user_roles = ', '.join([self.utToUtf8(r) for r in role[0]])
                     path = self.utToUtf8(role[1])
+                    if path == '':
+                        path = 'entire site'
                     role_info = user_roles + ' on ' + path
                     roles_info.append(role_info)
                 role_str = ' | '.join(roles_info)
