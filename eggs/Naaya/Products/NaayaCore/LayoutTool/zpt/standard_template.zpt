@@ -7,7 +7,8 @@
                     skin_files_path python:here.getLayoutTool().get_skin_files_path()">
     <head tal:define="layout_path python:here.getSite().getLayoutTool().absolute_url()">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link rel="shortcut icon" href="favicon.ico" type="image/ico"/>
+        <link rel="icon" tal:attributes="href string:${site_url}/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" tal:attributes="href string:${site_url}/favicon.ico" type="image/x-icon" />
         <link rel="home" tal:attributes="href site_url" title="Home" i18n:attributes="title" />
         <metal:block define-slot="title">
             <title tal:content="here/title_or_id" />
