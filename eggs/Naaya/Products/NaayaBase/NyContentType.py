@@ -32,6 +32,7 @@ from zope.interface import implements
 from Products.Localizer.LocalPropertyManager import LocalPropertyManager
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
 from Products.NaayaBase.NyProperties import NyProperties
+from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaCore.constants import ID_SCHEMATOOL
 from naaya.content.base.interfaces import INyContentObject
 
@@ -257,6 +258,13 @@ class NyContentType(object):
         version, editable = self._version_status()
         pt = PageTemplateFile('zpt/version_status', globals())
         return pt.__of__(self)(version=version, editable=editable)
+
+    # patch getVersionLocalProperty because some templates still use it
+    def getVersionLocalProperty(self, id, lang):
+        if isinstance(self, NyCheckControl):
+            return NyCheckControl.getVersionLocalProperty(self, id, lang)
+        else:
+            return self.getLocalProperty(id, lang)
 
 InitializeClass(NyContentType)
 
