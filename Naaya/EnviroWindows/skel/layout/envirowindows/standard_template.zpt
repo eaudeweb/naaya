@@ -56,16 +56,16 @@
                                 <label for="old_lang">Select language</label>
                             </div>
                             <ul tal:define="l_list python:here.getPortletsTool().getLinksListById('top').get_links_list()">
-                                <li><a tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'" tal:attributes="href string:${site_url}/login_html?came_from=${came_from}&disable_cookie_login__=1" i18n:translate="">Login</a></li>
+                                <li><a tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'" tal:attributes="href string:${site_url}/login_html?came_from=${came_from}&amp;disable_cookie_login__=1" i18n:translate="">Login</a></li>
                                 <li><a tal:condition="python:request.AUTHENTICATED_USER.getUserName() != 'Anonymous User'" tal:attributes="href string:${site_url}/login_html" i18n:translate="">Logout</a></li>
                                 <tal:block tal:repeat="item l_list">
-                                    <li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate="" /></li>
+                                    <li tal:condition="python:here.checkPermissionForLink(item.permission, here)"><a tal:attributes="href python:test(item.relative, '%s%s' % (site_url, item.url), item.url); title item/description" tal:content="item/title" i18n:attributes="title" i18n:translate=""></a></li>
                                 </tal:block>
                             </ul>
                             <ul class="site_actions">
                                 <li><a href="javascript:this.print();" title="Print this page"><img src="misc_/EnviroWindows/printer.gif" alt="print this page" /></a></li>
-                                <li><a id="fs_hide" title="Switch to/from full screen mode" href="javascript:fullScreen()" /></li>
-                                <li><a href="feedback_html" title="Feedback"  accesskey="9">Feedback</a>
+                                <li><a id="fs_hide" title="Switch to/from full screen mode" href="javascript:fullScreen()"></a></li>
+                                <li><a href="feedback_html" title="Feedback"  accesskey="9">Feedback</a></li>
                             </ul>
                         </div>
                         <div id="left_topnav">
@@ -85,11 +85,11 @@
                     <div id="menunav">
                         <ul id="dropdowns">
                             <li tal:repeat="main_categ here/getMainTopics">
-                                <a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/title" tal:content="main_categ/title" tal:condition="main_categ/checkPermissionView" />
+                                <a tal:attributes="href string:${main_categ/absolute_url}; title main_categ/title" tal:content="main_categ/title" tal:condition="main_categ/checkPermissionView"></a>
                                 <tal:block tal:define="sub_items python:[x for x in main_categ.objectValues(['Naaya Folder', 'Naaya Pointer']) if x.approved and x.sortorder < 1000]">
                                     <ul tal:condition="sub_items">
                                         <li tal:repeat="sub_item sub_items">
-                                            <a tal:content="sub_item/title_or_id" tal:attributes="href sub_item/absolute_url" />
+                                            <a tal:content="sub_item/title_or_id" tal:attributes="href sub_item/absolute_url"></a>
                                         </li>
                                     </ul>
                                 </tal:block>
@@ -106,7 +106,7 @@
                         <a tal:attributes="href string:${site_url}/" title="Home" i18n:attributes="title" i18n:translate="">Home</a>
                         <tal:block condition="crumbs">&raquo;</tal:block>
                         <tal:block repeat="crumb crumbs">
-                            <a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id" />
+                            <a tal:attributes="href string:${crumb/absolute_url}/; title crumb/title_or_id;" tal:content="crumb/title_or_id"></a>
                             <span tal:condition="not:repeat/crumb/end"> &raquo; </span>
                         </tal:block>
                     </div>
