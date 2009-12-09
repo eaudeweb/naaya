@@ -1,0 +1,13 @@
+<metal:block extend-macro="python:here.getLayoutTool().get_standard_template_base().macros['page']" define-macro="page">
+    <!--metal:block fill-slot="doctype"/-->
+    <!--metal:block fill-slot="title"/-->
+    <!--metal:block fill-slot="standard-head-links"/-->
+    <!--metal:block fill-slot="standard-head-content"/-->
+    <!--metal:block fill-slot="head"/-->
+    <!--metal:block fill-slot="standard-body"/-->
+        <!--metal:block fill-slot="standard-page-header"/-->
+        <!--metal:block fill-slot="left-port"/-->
+        <!--metal:block fill-slot="middle-port"/-->
+        <!--metal:block fill-slot="body"/-->
+        <!--metal:block fill-slot="footer"/-->
+</metal:block>

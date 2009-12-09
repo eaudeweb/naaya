@@ -117,9 +117,6 @@ class LayoutTool(Folder, combosync_tool):
     def get_skin_files_path(self):
         return '%s/%s' % (self.get_current_skin().absolute_url(), self.getCurrentSkinSchemeId())
 
-    def render_standard_template(self, context):
-        return self.get_current_skin().standard_template().__of__(context)()
-
     def getContent(self, p_context={}, p_page=None):
         p_context['skin_files_path'] = self.get_skin_files_path()
         return self.get_current_skin()._getOb(p_page)(p_context)
@@ -143,13 +140,19 @@ class LayoutTool(Folder, combosync_tool):
         if REQUEST:
             REQUEST.RESPONSE.redirect('manage_layout_html')
 
-    def standard_template(self):
+    _standard_template = PageTemplateFile('zpt/standard_template', globals())
+    def get_standard_template(self):
         try:
             return self.get_current_skin().aq_self.standard_template
         except AttributeError:
-            return self._standard_template
+            return self.get_standard_template_base()
 
-    _standard_template = PageTemplateFile('zpt/standard_template', globals())
+    def render_standard_template(self, context):
+        return self.get_standard_template().__of__(context)()
+
+    def get_standard_template_base(self):
+        return self._standard_template
+
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_layout_html')

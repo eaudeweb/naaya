@@ -88,6 +88,7 @@
 	</forms>
 	<layout default_skin_id="skin" default_scheme_id="scheme">
 		<skin id="skin" title="Skin">
+			<template id="standard_template" title="Portal standard template"/>
 			<template id="portlet_left_macro" title="Macro for left portlets"/>
 			<template id="portlet_center_macro" title="Macro for center portlets"/>
 			<template id="portlet_right_macro" title="Macro for right portlets"/>
