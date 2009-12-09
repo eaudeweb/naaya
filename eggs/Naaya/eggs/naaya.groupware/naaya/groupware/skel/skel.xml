@@ -8,8 +8,7 @@
     </forms>
 	<layout default_skin_id="groupware" default_scheme_id="eionet">
 		<skin id="groupware" title="Groupware">
-			<template id="site_header" title="Portal standard HTML header"/>
-			<template id="site_footer" title="Portal standard HTML footer"/>
+			<template id="standard_template" title="Customized standard template"/>
 			<template id="portlet_left_macro" title="Macro for left portlets"/>
 			<template id="portlet_center_macro" title="Macro for center portlets"/>
 			<template id="portlet_right_macro" title="Macro for right portlets"/>

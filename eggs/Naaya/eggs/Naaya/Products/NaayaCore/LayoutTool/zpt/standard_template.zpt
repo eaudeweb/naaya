@@ -128,13 +128,15 @@
                     <div class="cleaner"></div>
                 </div>
             </div>
-            <div id="footer">
-                <div class="footer_menu">
-                    <a href="http://naaya.eaudeweb.ro" target="_blank" id="poweredby" title="powered by Naaya">Powered by Naaya</a>
-                    <a tal:attributes="href string:${site_url}/info/contact" i18n:translate="">Contact us</a> |
-                    <a tal:attributes="href string:${site_url}/info/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>
+            <metal:block define-slot="footer">
+                <div id="footer">
+                    <div class="footer_menu">
+                        <a href="http://naaya.eaudeweb.ro" target="_blank" id="poweredby" title="powered by Naaya">Powered by Naaya</a>
+                        <a tal:attributes="href string:${site_url}/info/contact" i18n:translate="">Contact us</a> |
+                        <a tal:attributes="href string:${site_url}/info/accessibility" accesskey="0" i18n:translate="">Accessibility statement</a>
+                    </div>
                 </div>
-            </div>
+            </metal:block>
         </body>
     </metal:block>
     </html>
