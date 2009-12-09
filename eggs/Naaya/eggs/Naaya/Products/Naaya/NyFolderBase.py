@@ -56,11 +56,11 @@ class NyFolderBase(Folder, NyPermissions):
 
     def contained_objects(self):
         return [o for o in self.objectValues(self.get_meta_types())
-                if o.submitted==1]
+                if getattr(o, 'submitted', 0) == 1]
 
     def contained_folders(self):
         return [f for f in self.objectValues(METATYPE_FOLDER)
-                if f.submitted==1]
+                if getattr(f, 'submitted', 0) == 1]
 
 
     def listed_folders_info(self, sort_on='title', sort_order=0):
