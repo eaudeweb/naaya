@@ -68,11 +68,11 @@
 <![endif]-->
 <body onload="fs_show()">
 <tal:block tal:define="site_url here/getSitePath;
-           pss modules/Products.PythonScripts.standard;
-           proc_came_from python:request.get('URL', '');
-					 proc_query python:pss.url_quote(request.get('QUERY_STRING'));
-					 query python:test(proc_query.startswith('?'), proc_query, '?' + proc_query);
-					 global came_from python:test(query, proc_came_from + query, proc_came_from)">
+					pss modules/Products.PythonScripts.standard;
+					proc_came_from python:request.get('URL', '');
+					proc_query python:pss.url_quote(request.get('QUERY_STRING'));
+					query python:test(proc_query.startswith('?'), proc_query, '?' + proc_query);
+					global came_from python:test(query, proc_came_from + query, proc_came_from)">
 </tal:block>
 <div id="outer_wrapper">
 	<div id="container" tal:attributes="style python:test(len(here.portal_portlets.get_portlets_for_obj(here, 'right')) or here.meta_type == here.get_constant('METATYPE_FOLDER'), '', 'background: none')">
@@ -80,7 +80,7 @@
 			<div id="topnav">
 				<div id="language">
 					<span tal:replace="structure here/languages_box"/>
-					<label for="old_lang">Select language</label>
+					<label for="old_lang">Language</label>
 				</div>
 				<ul tal:define="l_list python:here.getPortletsTool().getLinksListById('top').get_links_list()">
 					<li><a tal:condition="python:request.AUTHENTICATED_USER.getUserName() == 'Anonymous User'" tal:attributes="href string:${site_url}/login_html?came_from=${came_from}&amp;disable_cookie_login__=1" i18n:translate="">Login</a></li>
