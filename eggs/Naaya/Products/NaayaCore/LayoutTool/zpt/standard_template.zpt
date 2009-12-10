@@ -12,7 +12,7 @@
         <link rel="home" tal:attributes="href site_url" title="Home" i18n:attributes="title" />
         <tal:block replace="structure here/portal_statistics/gw_verify" />
         <metal:block define-slot="title">
-            <title tal:content="here/title_or_id" />
+            <title tal:content="string:${here/site_title} - ${here/site_subtitle}" />
         </metal:block>
 
         <!--The stylesheets 'style', 'common' and 'print' are common to all schemes and are opened as imagefiles.

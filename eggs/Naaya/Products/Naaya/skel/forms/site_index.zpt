@@ -1,9 +1,5 @@
 <metal:block metal:use-macro="here/standard_template_macro">
 
-<metal:block metal:fill-slot="title">
-	<title tal:content="string:${here/title} | ${here/site_title}" />
-</metal:block>
-
 <metal:block metal:fill-slot="head">
 	<tal:block define="description here/description; content python:here.html2text(description)">
 	<meta tal:condition="content" tal:attributes="content content" name="description" />
