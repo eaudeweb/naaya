@@ -32,6 +32,7 @@ import urllib
 import time
 import codecs
 from zipfile import *
+from BeautifulSoup import BeautifulSoup
 
 import csv
 import tempfile
@@ -361,6 +362,14 @@ class utils:
             word = insert.join(word)
             res.append(word)
         return ' '.join(res)
+
+    def html2text(self, html):
+        soup = BeautifulSoup(html)
+        if soup.p is not None:
+            text = ''.join(soup.p(text=True))
+            if len(text) > 512:
+                return text[:512]
+            return text
 
     def getObjectPaginator(self, objects_list, num_per_page=50, orphans=-1):
         """ Returns objects_list in pages."""
