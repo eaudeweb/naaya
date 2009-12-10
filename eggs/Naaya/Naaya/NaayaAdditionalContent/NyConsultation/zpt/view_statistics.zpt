@@ -1,5 +1,5 @@
 <span tal:replace="structure here/standard_html_header" />
-	<div id="tabbedmenu" class="tabbedmenu">
+	<div id="tabbedmenu">
 		<ul>
 			<li id="currenttab"><a href="view_statistics_html" i18n:translate="">View statistics</a></li>
 			<li><a href="reviews_index_html" i18n:translate="">View answers</a></li>
