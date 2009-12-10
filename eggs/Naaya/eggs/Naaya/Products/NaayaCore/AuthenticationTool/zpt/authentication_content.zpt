@@ -4,7 +4,7 @@
 <h2>Users</h2>
 
 <p class="page-description">
-	This page lists the users defined in this portal, 15 per page. 
+	This page lists the users defined in this portal, 20 per page. 
 	You can sort the columns by <em>Username</em>, <em>Name</em>, <em>Email</em>.
 </p>
 
@@ -17,7 +17,7 @@
 				start python:request.get('start', 0);
 				skey python:request.get('skey', 'name');
 				rkey python:request.get('rkey', '');
-				result python:here.page_something(here.getUserNamesSortedByAttr(skey, rkey), start, p_perpage=15);
+				result python:here.page_something(here.getUserNamesSortedByAttr(skey, rkey), start, p_perpage=20);
 				paging python:result[0];
 				paging_start python:paging[0]+1;
 				paging_upper python:paging[1];
@@ -55,41 +55,41 @@
 	</div>
 </div>
 <br />
-<table border="1" cellspacing="0" cellpadding="2" width="80%">
-	<tr class="row-header">
-		<th width="5%" class="notsortable_th">Delete</th>
+<table border="1" cellspacing="0" cellpadding="2">
+	<tr>
+		<th width="5%">Delete</th>
 		<tal:block tal:condition="python:skey=='name'">
 			<tal:block tal:condition="python:rkey==''">
-				<th class="sort_asc_th">
+				<th>
 					<a tal:attributes="href string:${auth_tool}/manage_users_html?skey=name&amp;rkey=1">
-						<span tal:omit-tag="">Username</span>
+						Username
 					</a>
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
-				<th class="sort_desc_th">
+				<th>
 					<a tal:attributes="href string:${auth_tool}/manage_users_html?skey=name">
-						<span tal:omit-tag="">Username</span>
+						Username
 					</a>
 				</th>
 			</tal:block>
 		</tal:block>
 		<tal:block tal:condition="python:skey!='name'">
-			<th class="sort_th">
+			<th>
 				<a tal:attributes="href string:${auth_tool}/admin_users_html?skey=name">Username</a>
 			</th>
 		</tal:block>
 
 		<tal:block tal:condition="python:skey=='lastname'">
 			<tal:block tal:condition="python:rkey==''">
-				<th class="sort_asc_th">
+				<th>
 					<a tal:attributes="href string:${auth_tool}/manage_users_html?skey=lastname&amp;rkey=1">
 						<span tal:omit-tag="">Name</span>
 					</a>
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
-				<th class="sort_desc_th">
+				<th>
 					<a tal:attributes="href string:${auth_tool}/manage_users_html?skey=lastname">
 						<span tal:omit-tag="">Name</span>
 					</a>
@@ -97,21 +97,21 @@
 			</tal:block>
 		</tal:block>
 		<tal:block tal:condition="python:skey!='lastname'">
-			<th class="sort_th">
+			<th>
 				<a tal:attributes="href string:${auth_tool}/manage_users_html?skey=lastname">Name</a>
 			</th>
 		</tal:block>
 
 		<tal:block tal:condition="python:skey=='email'">
 			<tal:block tal:condition="python:rkey==''">
-				<th class="sort_asc_th">
+				<th>
 					<a tal:attributes="href string:${auth_tool}/manage_users_html?skey=email&amp;rkey=1">
 						<span tal:omit-tag="">Email</span>
 					</a>
 				</th>
 			</tal:block>
 			<tal:block tal:condition="python:rkey=='1'">
-				<th class="sort_desc_th">
+				<th>
 					<a tal:attributes="href string:${auth_tool}/manage_users_html?skey=email">
 						<span tal:omit-tag="">Email</span>
 					</a>
@@ -119,7 +119,7 @@
 			</tal:block>
 		</tal:block>
 		<tal:block tal:condition="python:skey!='email'">
-			<th class="sort_th">
+			<th>
 				<a tal:attributes="href string:${auth_tool}/manage_users_html?skey=email">Email</a>
 			</th>
 		</tal:block>
