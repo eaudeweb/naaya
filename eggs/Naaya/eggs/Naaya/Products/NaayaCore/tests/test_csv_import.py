@@ -265,7 +265,7 @@ class GeopointImportTest(NaayaTestCase):
         self.failUnlessEqual(doc_three.test_geo_type, 'sym2')
 
         doc_four = self.portal.imported._getOb('docfour')
-        self.failUnlessEqual(doc_four.test_geo_loc, Geo('44.434200', '26.102975', 'Bucharest'))
+        self.failUnlessEqual(doc_four.test_geo_loc, Geo('44.434295', '26.102965', 'Bucharest'))
         self.failUnlessEqual(doc_four.test_geo_type, 'sym2')
 
 class SecurityTestCase(NaayaFunctionalTestCase):
