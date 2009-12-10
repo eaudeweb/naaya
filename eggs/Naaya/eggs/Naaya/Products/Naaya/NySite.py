@@ -613,6 +613,20 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
     security.declarePublic('get_constant')
     def get_constant(self, c): return naaya.content.base.discover.get_constant(c)
 
+    security.declarePublic('get_label_for_meta_type')
+    def get_label_for_meta_type(self, meta_type):
+        """
+        returns the label associated with the given meta_type
+        it can be a Naaya Folder or a pluggable content type
+        WARNING: This function should not be used in new code.
+                Please use get_meta_type_label from NyFolderBase instead.
+        """
+        if meta_type == METATYPE_FOLDER:
+            return LABEL_NYFOLDER
+        else:
+            try: return self.getSchemaTool().getSchemaForMetatype(meta_type).title_or_id()
+            except: return meta_type
+
     security.declarePublic('getProductsMetaTypes')
     def getProductsMetaTypes(self):
         #returns a list with all meta types
