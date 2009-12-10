@@ -4,8 +4,11 @@
     </metal:block>
 
     <metal:block fill-slot="head">
-        <meta tal:attributes="content here/contributor" name="author" />
+        <tal:block define="description here/description; content python:here.html2text(description)">
+            <meta tal:condition="content" tal:attributes="content content" name="description" />
+        </tal:block>
         <meta tal:condition="here/keywords" tal:attributes="content here/keywords" name="keywords" />
+        <meta tal:attributes="content here/contributor" name="author" />
         <meta tal:attributes="content here/gl_get_selected_language" name="dc.language" />
     </metal:block>
 
