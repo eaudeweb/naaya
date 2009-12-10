@@ -1,4 +1,19 @@
-<span tal:replace="structure here/standard_html_header" />
+<metal:block metal:use-macro="here/standard_template_macro">
+
+<metal:block metal:fill-slot="title">
+	<title tal:content="string:${here/title} | ${here/site_title}" />
+</metal:block>
+
+<metal:block metal:fill-slot="head">
+	<tal:block define="description here/description; content python:here.html2text(description)">
+	<meta tal:condition="content" tal:attributes="content content" name="description" />
+	</tal:block>
+	<meta tal:condition="here/keywords" tal:attributes="content here/keywords" name="keywords" />
+	<meta tal:attributes="content here/contributor" name="author" />
+	<meta tal:attributes="content here/gl_get_selected_language" name="dc.language" />
+</metal:block>
+
+<metal:block metal:fill-slot="body">
 
 <tal:block define="right_portlets python:here.get_right_portlets_locations_objects(here)">
 <div id="center_content" tal:attributes="style python:test(request.AUTHENTICATED_USER.has_role(['Manager', 'Administrator'], here) or len(right_portlets)>0, 'width: 78%;; overflow-x: auto;;', '')">
@@ -66,4 +81,6 @@
 </div>
 
 </tal:block>
-<span tal:replace="structure here/standard_html_footer"/>
+</metal:block>
+
+</metal:block>
