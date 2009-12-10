@@ -40,8 +40,8 @@
 		</tr>
 		<tr tal:define="editor here/getEditorTool">
 			<td i18n:translate="" valign="top">Body</td>
-			<span tal:replace="structure python:editor.render('body', curr_lang, image_support=True)" />
-			<td><textarea id="body" name="body:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:ob.getLocalProperty('body', curr_lang)" /></td>
+			<td><span tal:replace="structure python:editor.render('body', curr_lang, image_support=True)" />
+			<textarea id="body" name="body:utf8:ustring" rows="20" cols="72" class="mceEditor" tal:content="python:ob.getLocalProperty('body', curr_lang)" /></td>
 		</tr>
 		<tr>
 			<td><input type="hidden" name="lang" tal:attributes="value curr_lang" /></td>

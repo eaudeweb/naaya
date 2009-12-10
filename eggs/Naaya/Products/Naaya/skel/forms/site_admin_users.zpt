@@ -37,7 +37,7 @@
 	<input type="button" value="Add role" onclick="document.location.href='admin_addrole_html';"  i18n:attributes="value" />
 	<input type="button" value="Users & Roles" onclick="document.location.href='admin_roles_html';"  i18n:attributes="value" />
 </span>
-<table border="0" cellspacing="0" cellpadding="4" width="95%" class="datatable">
+<table cellspacing="0" cellpadding="4" width="95%" class="datatable">
 	<tr>
 		<th width="5%" align="left" i18n:translate="">Delete</th>
 		<th width="15%" align="left">
