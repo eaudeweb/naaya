@@ -10,6 +10,7 @@
         <link rel="icon" tal:attributes="href string:${site_url}/favicon.ico" type="image/x-icon" />
         <link rel="shortcut icon" tal:attributes="href string:${site_url}/favicon.ico" type="image/x-icon" />
         <link rel="home" tal:attributes="href site_url" title="Home" i18n:attributes="title" />
+        <tal:block replace="structure here/portal_statistics/gw_verify" />
         <metal:block define-slot="title">
             <title tal:content="here/title_or_id" />
         </metal:block>
@@ -138,6 +139,7 @@
                     </div>
                 </div>
             </metal:block>
+            <tal:block replace="structure here/portal_statistics/ga_verify" />
         </body>
     </metal:block>
     </html>
