@@ -47,6 +47,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyImageContainer import NyImageContainer
 from Products.NaayaBase.NyContentType import NyContentData
+from Products.NaayaCore.managers.utils import make_id
 
 #module constants
 PROPERTIES_OBJECT = {
@@ -91,16 +92,13 @@ config = {
 
 def document_add(self, REQUEST=None, RESPONSE=None):
     """ """
-    id = 'doc' + self.utGenRandomId(6)
+    id = make_id(self, prefix='doc')
     self.addNyDocument(id)
     if REQUEST: REQUEST.RESPONSE.redirect('%s/add_html' % self._getOb(id).absolute_url())
     else: return id
 
 def _create_NyDocument_object(parent, id, contributor):
-    i = 0
-    while parent._getOb(id, None):
-        i += 1
-        id = '%s-%u' % (id, i)
+    id = make_id(parent, id=id)
     ob = NyDocument(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -120,9 +118,7 @@ def addNyDocument(self, id='', REQUEST=None, contributor=None, **kwargs):
     _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''))
     schema_raw_data.setdefault('body', '')
 
-    id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = 'doc' + self.utGenRandomId(5)
+    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix='doc')
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyDocument_object(self, id, contributor)
@@ -299,14 +295,8 @@ class NyDocument(document_item, NyAttributes, NyContainer, NyCheckControl, NyVal
         _releasedate = self.process_releasedate(schema_raw_data.pop('releasedate', ''), self.releasedate)
         _contact_word = schema_raw_data.get('contact_word', '')
 
-        id = self.utGenObjectId(schema_raw_data.get('title', ''))
         parent = self.getParentNode()
-        #verify if the object already exists
-        try:
-            ob = parent._getOb(id)
-            id = '%s-%s' % (id, self.utGenRandomId(5))
-        except AttributeError:
-            pass
+        id = make_id(parent, title=schema_raw_data.get('title', ''), prefix='doc')
 
         schema_raw_data['title'] = schema_raw_data['title'].replace(self.id, id)
         schema_raw_data['description'] = schema_raw_data['description'].replace(self.id, id)
