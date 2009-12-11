@@ -34,7 +34,7 @@ from OFS.Image import cookId
 #Product imports
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from Products.NaayaContent.constants import *
-from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyNonCheckControl import NyNonCheckControl
 from Products.NaayaBase.NyValidation import NyValidation
@@ -140,8 +140,7 @@ def addNyTalkBackConsultation(self,
     Create a Naaya TalkBack Consultation type of object.
     """
     #process parameters
-    id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(title)
+    id = make_id(self, id=id, title=title, prefix='talkbackconsultation')
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
 
@@ -172,11 +171,6 @@ def addNyTalkBackConsultation(self,
             approved, approved_by = 0, None
         releasedate = self.process_releasedate(releasedate)
         if lang is None: lang = self.gl_get_selected_language()
-        #check if the id is invalid (it is already in use)
-        i = 0
-        while self._getOb(id, None) is not None:
-            i += 1
-            id = '%s-%u' % (id, i)
         #create object
         ob = NyTalkBackConsultation(id, title, description, sortorder,
                                     start_date, end_date, public_registration,
