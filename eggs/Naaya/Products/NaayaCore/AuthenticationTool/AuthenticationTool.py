@@ -307,6 +307,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             raise Exception, 'No roles were specified'
         if loc == 'allsite':
             location = ''
+            location_obj = self.getSite()
         elif loc == 'other':
             location = location
             location_obj = self.unrestrictedTraverse(location, None)
@@ -316,6 +317,7 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
         roles = self.utConvertToList(roles)
         if location == '':
             self._doChangeUserRoles(name, roles)
+            location_obj.setLocalRolesInfo(name, roles)
         else:
             location_obj.manage_setLocalRoles(name, roles)
         if REQUEST: REQUEST.RESPONSE.redirect('manage_userRoles_html')
@@ -916,9 +918,15 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     continue
                 user_roles = ', '.join([self.utToUtf8(r) for r in role[0]])
                 path = self.utToUtf8(role[1])
+                location = self.getFolderByPath(path)
+                additional_info = location.getLocalRolesInfo(uid)
                 if path == '':
                     path = 'entire site'
-                role_info = user_roles + ' on ' + path
+                role_info = '%s on %s' % (user_roles, path)
+                if additional_info is not None:
+                    role_info += ' granted on %s by %s' % (
+                        additional_info['date'].isoformat(),
+                        additional_info['user_granting_roles'])
                 roles_info.append(role_info)
             role_str = ' | '.join(roles_info)
 
@@ -934,6 +942,8 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
             items = source.getUsersRoles(acl).items()
 
             for uid, roles in items:
+                tstartuser = time.time()
+
                 user = source._get_user_by_uid(uid, acl)
 
                 username = self.utToUtf8(uid)
@@ -954,10 +964,20 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                         continue
                     user_roles = ', '.join([self.utToUtf8(r) for r in role[0]])
                     path = self.utToUtf8(role[1])
+                    location = self.getFolderByPath(path)
+                    additional_info = location.getLocalRolesInfo(uid)
                     if path == '':
                         path = 'entire site'
-                    role_info = user_roles + ' on ' + path
+                    role_info = '%s on %s' % (user_roles, path)
+                    if additional_info is not None:
+                        role_info += ' granted on %s by %s' % (
+                            additional_info['date'].isoformat(),
+                            additional_info['user_granting_roles'])
                     roles_info.append(role_info)
+                # TODO: add group roles
+                #additional_roles = self.get_ldap_group_roles(uid, source)
+                #for role in additional_roles:
+                #    roles_info.append('%s on entire site from group roles' % role)
                 role_str = ' | '.join(roles_info)
 
                 type = 'LDAP (source_id=%s)' % source.id
