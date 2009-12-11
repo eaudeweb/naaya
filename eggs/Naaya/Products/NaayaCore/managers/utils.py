@@ -109,6 +109,34 @@ def genObjectId(s, num_chars=50):
     s = s.lower()                    # convert to lowercase
     return s
 
+def cleanupId(p_id=''):
+    if isinstance(p_id, unicode): x = p_id.encode('utf-8')
+    else: x = str(p_id)
+    x = x.strip()
+    return x.translate(TRANSMAP)
+
+def make_id(parent, temp_parent=None, id='', title='', prefix=''):
+    """
+    Generates a valid unique id based on a suggested id, title or prefix 
+    The generated id is checked for uniqueness in the parent folder
+    and if passed, in a second, 'temporary' folder
+    """
+    gen_id = cleanupId(id)
+    if not gen_id: gen_id = genObjectId(title)
+    if not gen_id: gen_id = prefix + genRandomId(5)
+    i = 1
+    search_id = gen_id
+    while True:
+        condition = parent._getOb(search_id, None) is not None
+        if temp_parent:
+            condition = condition or temp_parent._getOb(search_id, None) is not None
+        if condition:
+            search_id = '%s-%d' % (gen_id, i)
+            i += 1
+        else:
+            break
+    return search_id
+
 def toAscii(s):
     """Change accented and special characters by ASCII characters.
 
@@ -409,12 +437,9 @@ class utils:
         if p_string == '': p_string = '%s%s' % (time.time(), self.utGenRandomId())
         return md5.new(p_string).hexdigest()
 
-    def utCleanupId(self, p_id=''):
-        """ """
-        if isinstance(p_id, unicode): x = p_id.encode('utf-8')
-        else: x = str(p_id)
-        x = x.strip()
-        return x.translate(TRANSMAP)
+    def utCleanupId(self, *args, **kw):
+        """See the genRandomId function"""
+        return cleanupId(*args, **kw)
 
     def utCleanupProfileId(self, p_id=''):
         """ """
