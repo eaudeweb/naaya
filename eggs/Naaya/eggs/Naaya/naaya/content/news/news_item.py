@@ -45,6 +45,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
+from Products.NaayaCore.managers.utils import make_id
 
 #pluggable type metadata
 PROPERTIES_OBJECT = {
@@ -106,10 +107,7 @@ def news_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyNews', 'form_helper': form_helper}, 'news_add')
 
 def _create_NyNews_object(parent, id, contributor):
-    i = 0
-    while parent._getOb(id, None):
-        i += 1
-        id = '%s-%u' % (id, i)
+    id = make_id(parent, id=id, prefix='news')
     ob = NyNews(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -135,9 +133,7 @@ def addNyNews(self, id='', REQUEST=None, contributor=None, **kwargs):
     _bigpicture = schema_raw_data.pop('bigpicture', '')
     _contact_word = schema_raw_data.get('contact_word', '')
 
-    id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = 'news' + self.utGenRandomId(5)
+    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix='news')
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyNews_object(self, id, contributor)
