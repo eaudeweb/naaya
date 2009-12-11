@@ -8,17 +8,17 @@
 					portal_map here/getGeoMapTool;">
 
 <p i18n:translate="">
-	These settings apply to the <a tal:attributes="href string:${map_url}">portal_map</a> and the GeoPoint objects.
+	These settings apply to the <a tal:attributes="href string:${map_url}">portal_map</a> and the GeoPoint and ther other <a href="./admin_map_contenttypes_html">geo-taggable content</a>.
 </p>
 
 <div id="tabbedmenu">
-    <ul>
-        <li tal:repeat="tab here/admin_tabs"
-          tal:attributes="id python:test(tab['url'] == current_tab_url, 'currenttab', None)">
-            <a tal:attributes="href string:${map_url}/${tab/url}"
-                i18n:translate="" tal:content="tab/title"></a>
-        </li>
-    </ul>
+	<ul>
+		<li tal:repeat="tab here/admin_tabs"
+			tal:attributes="id python:test(tab['url'] == current_tab_url, 'currenttab', None)">
+			<a tal:attributes="href string:${map_url}/${tab/url}"
+				i18n:translate="" tal:content="tab/title"></a>
+		</li>
+	</ul>
 </div>
 
 <metal:block define-slot="tab_contents" />

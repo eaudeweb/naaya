@@ -10,7 +10,7 @@
 
 <p i18n:translate="" class="cleaner">
 	This page allows the definition of categories that will be used to classify
-	any <a href="./admin_map_contenttypes_html">geotaggable content</a> within the portal.
+	any <a href="./admin_map_contenttypes_html">geo-taggable content</a> within the portal.
 	(e.g. hotels, resorts, monuments, tourist attractions).
 </p>
 
