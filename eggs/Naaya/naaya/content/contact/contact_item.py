@@ -46,6 +46,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyValidation import NyValidation
+from Products.NaayaCore.managers.utils import make_id
 
 #module constants
 PROPERTIES_OBJECT = {
@@ -117,10 +118,7 @@ def contact_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyContact', 'form_helper': form_helper}, 'contact_add')
 
 def _create_NyContact_object(parent, id, contributor):
-    i = 0
-    while parent._getOb(id, None):
-        i += 1
-        id = '%s-%u' % (id, i)
+    id = make_id(parent, id=id, prefix='contact')
     ob = NyContact(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -145,9 +143,7 @@ def addNyContact(self, id='', REQUEST=None, contributor=None, **kwargs):
     schema_raw_data.setdefault('topitem', '')
     _contact_word = schema_raw_data.get('contact_word', '')
 
-    id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = 'contact' + self.utGenRandomId(5)
+    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix='contact')
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyContact_object(self, id, contributor)
