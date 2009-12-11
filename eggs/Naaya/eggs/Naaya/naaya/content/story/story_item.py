@@ -48,6 +48,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
+from Products.NaayaCore.managers.utils import make_id
 
 #module constants
 PROPERTIES_OBJECT = {
@@ -99,15 +100,12 @@ config = {
 
 def story_add(self, REQUEST=None, RESPONSE=None):
     """ """
-    id = 'story' + self.utGenRandomId(6)
+    id = make_id(self, prefix='story')
     self.addNyStory(id)
     if REQUEST: REQUEST.RESPONSE.redirect('%s/add_html' % self._getOb(id).absolute_url())
 
 def _create_NyStory_object(parent, id, contributor):
-    i = 0
-    while parent._getOb(id, None):
-        i += 1
-        id = '%s-%u' % (id, i)
+    id = make_id(parent, id=id, prefix='story')
     ob = NyStory(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -131,9 +129,7 @@ def addNyStory(self, id='', REQUEST=None, contributor=None, **kwargs):
     schema_raw_data.setdefault('topitem', '')
     _frontpicture = schema_raw_data.pop('frontpicture', '')
 
-    id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = 'story' + self.utGenRandomId(5)
+    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix='story')
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyStory_object(self, id, contributor)
@@ -360,15 +356,8 @@ class NyStory(story_item, NyAttributes, NyContainer, NyCheckControl, NyContentTy
         _frontpicture = schema_raw_data.pop('frontpicture', '')
         _contact_word = schema_raw_data.get('contact_word', '')
 
-        id = self.utGenObjectId(schema_raw_data.get('title', ''))
-
         parent = self.getParentNode()
-        #verify if the object already exists
-        try:
-            ob = parent._getOb(id)
-            id = '%s-%s' % (id, self.utGenRandomId(5))
-        except AttributeError:
-            pass
+        id = make_id(parent, title=schema_raw_data.get('title', ''), prefix='story')
 
         schema_raw_data['title'] = schema_raw_data['title'].replace(self.id, id)
         schema_raw_data['description'] = schema_raw_data['description'].replace(self.id, id)
