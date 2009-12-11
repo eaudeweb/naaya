@@ -32,7 +32,7 @@ from OFS.Image import cookId
 
 #Product imports
 from Products.NaayaContent.constants import *
-from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaBase.constants import *
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyAttributes import NyAttributes
@@ -47,7 +47,6 @@ from question_item import question_item
 from review_item import addConsultationReviewItem
 from RateList import manage_addRateList
 from constants import *
-
 
 METATYPE_OBJECT = 'Naaya Consultation'
 LABEL_OBJECT = 'Consultation'
@@ -104,8 +103,7 @@ def addNyConsultation(self, id='', title='', description='', sortorder='', start
     Create a Naaya Consultation type of object.
     """
     #process parameters
-    id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(title)
+    id = make_id(self, id=id, title=title, prefix='consultation')
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
 
@@ -126,11 +124,6 @@ def addNyConsultation(self, id='', title='', description='', sortorder='', start
             approved, approved_by = 0, None
         releasedate = self.process_releasedate(releasedate)
         if lang is None: lang = self.gl_get_selected_language()
-        #check if the id is invalid (it is already in use)
-        i = 0
-        while self._getOb(id, None) is not None:
-            i += 1
-            id = '%s-%u' % (id, i)
         #create object
         ob = NyConsultation(id, title, description, sortorder, start_date,
                                   end_date, public_registration, allow_file, line_comments, contributor, releasedate, lang)
