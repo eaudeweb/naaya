@@ -49,6 +49,7 @@ from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.Localizer.LocalPropertyManager import LocalProperty
 from Products.NaayaBase.NyContentType import NyContentData
+from Products.NaayaCore.managers.utils import make_id
 
 from converters.MediaConverter import \
      media2flv, \
@@ -86,7 +87,7 @@ else:
              "Video conversion will not be supported.")
     PROPERTIES_OBJECT["file"] = (1, MUST_BE_FLVFILE, "The file must be a valid flash video file (.flv)")
 
-FLV_HEADERS = ["application/x-flash-video", "video/x-flv"]
+FLV_HEADERS = ["application/x-flash-video", "video/x-flv", "video/flv"]
 
 # this dictionary is updated at the end of the module
 config = {
@@ -121,10 +122,7 @@ def mediafile_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyMediaFile', 'form_helper': form_helper}, 'mediafile_add')
 
 def _create_NyMediaFile_object(parent, id, contributor):
-    i = 0
-    while parent._getOb(id, None):
-        i += 1
-        id = '%s-%u' % (id, i)
+    id = make_id(parent, id=id, prefix='mediafile')
     ob = NyMediaFile_extfile(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -134,11 +132,13 @@ def _create_NyMediaFile_object(parent, id, contributor):
 
 def _check_video_file(the_file):
     errors = []
+    file_extension = the_file.filename.split('.')[-1]
     if ffmpeg_available:
         # TODO: check if our file is a valid video file!
         pass
     else:
-        if not the_file or the_file.headers.get("content-type", "") not in FLV_HEADERS:
+        if not the_file or \
+        (the_file.headers.get("content-type", "") not in FLV_HEADERS and file_extension != 'flv'):
             errors += ['The file must be a valid flash video file (.flv)']
     return errors
 
@@ -160,9 +160,7 @@ def addNyMediaFile(self, id='', REQUEST=None, contributor=None, **kwargs):
     _skip_videofile_check = schema_raw_data.pop('_skip_videofile_check', False)
     _contact_word = schema_raw_data.get('contact_word', '')
 
-    id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = 'media' + self.utGenRandomId(5)
+    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix='mediafile')
 
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
