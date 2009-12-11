@@ -84,6 +84,13 @@ class FormsTool(Folder):
         """
         pass
 
+    def getForm(self, form_id):
+        """
+        Backported getForm
+        Fetches a Naaya form
+        """
+        return self._getOb(form_id)
+
     def getContent(self, p_context={}, p_page=None):
         """
         Renders the given form and return the result.
