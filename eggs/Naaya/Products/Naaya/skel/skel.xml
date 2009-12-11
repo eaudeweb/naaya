@@ -97,10 +97,6 @@
 				<style id="scheme_style" title="Scheme CSS"/>
 				<image id="powered.gif" title="Powered"/>
 				<image id="screenshot.gif" title="Skin screenshot"/>
-				<image id="tableft.gif" title="Tabbed menu item"/>
-				<image id="tableft_on.gif" title="Tabbed menu item"/>
-				<image id="tabright.gif" title="Tabbed menu item"/>
-				<image id="tabright_on.gif" title="Tabbed menu item"/>
 				<image id="addcomment.gif" title="Add comment"/>
 				<image id="comment.gif" title="Comment icon"/>
 				<image id="logintoadd.gif" title="Login to add"/>
