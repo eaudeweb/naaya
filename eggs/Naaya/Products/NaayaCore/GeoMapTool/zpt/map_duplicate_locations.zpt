@@ -22,8 +22,8 @@
 </script>
 
 
-<p i18n:translate="">
-Showing duplicate locations that share <em>all</em> of the selected criteria:
+<p i18n:translate="" class="cleaner">
+	Showing duplicate locations that share <em>all</em> of the selected criteria:
 </p>
 
 <form method="get" tal:define="

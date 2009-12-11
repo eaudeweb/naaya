@@ -248,7 +248,7 @@ function toggleSelect()
 	</tr>
 </table>
 
-<table border="0" cellspacing="2" cellpadding="2" class="admin_table">
+<table border="0" cellspacing="2" cellpadding="2" class="datatable">
 	<tr>
 		<td style="vertical-align: top">Roles</td>
 		<td><select name="roles" size="5" multiple="multiple">

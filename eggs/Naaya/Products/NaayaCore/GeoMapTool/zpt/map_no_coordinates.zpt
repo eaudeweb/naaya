@@ -6,9 +6,9 @@
 					rkey python:request.get('rkey', '');
 					first_letter python:request.get('first_letter', '');">
 
-<p i18n:translate="">
+<p i18n:translate="" class="cleaner">
 This page lists the locations that do not have coordinates. The test is made on the following fields: <em>location type</em>, <em>address</em>, <em>longitude</em> and <em>latitude</em>.
-<br/>Only objects from geotaggable content types will be shown.
+<br/>Only objects from geo-taggable content types will be shown.
 </p>
 
 <br clear="all" />
@@ -38,7 +38,7 @@ This page lists the locations that do not have coordinates. The test is made on 
 			</tal:block>
 		</tal:block>
 		<table width="90%"
-			tal:attributes="class python:test(edit_mode, 'admin_table', 'datatable')">
+			class="datatable">
 			<thead>
 				<tr>
 					<th tal:condition="edit_mode" width="1%">
