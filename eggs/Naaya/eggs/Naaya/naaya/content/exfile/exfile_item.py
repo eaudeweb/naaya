@@ -52,6 +52,8 @@ from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaBase.NyFolderishVersioning import NyFolderishVersioning
 from Products.NaayaBase.NyFSFile import NyFSFile
+from Products.NaayaCore.managers.utils import make_id
+
 try:
     from Products.TextIndexNG2.Registry import ConverterRegistry
     txng_converters = 1
@@ -107,10 +109,7 @@ def exfile_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyExFile', 'form_helper': form_helper}, 'exfile_add')
 
 def _create_NyExFile_object(parent, id, contributor):
-    i = 0
-    while parent._getOb(id, None):
-        i += 1
-        id = '%s-%u' % (id, i)
+    id = make_id(parent, id=id, prefix='exfile')
     ob = NyExFile_extfile(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -138,10 +137,7 @@ def addNyExFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     title = schema_raw_data.get('title', '')
     if _source=='file': id = cookId(id, title, _file)[0] #upload from a file
-
-    id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(title)
-    if not id: id = 'exfile' + self.utGenRandomId(5)
+    id = make_id(self, id=id, title=title, prefix='exfile')
 
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
