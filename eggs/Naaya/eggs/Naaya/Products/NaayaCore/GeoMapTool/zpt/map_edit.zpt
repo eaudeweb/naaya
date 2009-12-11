@@ -3,9 +3,9 @@
 
 <metal:block fill-slot="tab_contents" tal:define="map_url here/getGeoMapToolPath;">
 
-<div i18n:translate="">
-    Obtaining a <em>Yahoo Map API key</em> is mandatory for the map to work and you can <a href="http://search.yahooapis.com/webservices/register_application" title="Yahoo.com | Get an application ID" i18n:translate="" i18n:attributes="title">request one here</a>. <em>The Google maps API key</em> can be obtained from the <a href="http://code.google.com/apis/maps/signup.html" title="Sign Up for the Google Maps API">Google Maps API page</a>
-</div>
+<p i18n:translate="" class="cleaner">
+	Obtaining a <em>Yahoo Map API key</em> is mandatory for the map to work and you can <a href="http://search.yahooapis.com/webservices/register_application" title="Yahoo.com | Get an application ID" i18n:translate="" i18n:attributes="title">request one here</a>. <em>The Google maps API key</em> can be obtained from the <a href="http://code.google.com/apis/maps/signup.html" title="Sign Up for the Google Maps API">Google Maps API page</a>
+</p>
 <form method="post" tal:attributes="action string:${map_url}/manageProperties">
 
 
@@ -73,7 +73,7 @@
 <fieldset class="form-fieldset">
     <legend i18n:translate="">Object index map</legend>
         <p i18n:translate="">
-            These settings affect the map displayed on the index and edit pages of geocodable objects.
+            These settings are applied to the map displayed on the index, add and edit pages of geo-taggable objects.
         </p>
         <div class="form-field">
             <label for="detailed_map_width">Map width</label>

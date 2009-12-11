@@ -3,11 +3,11 @@
 
 <metal:block fill-slot="tab_contents" tal:define="site_url here/getSitePath">
 
-<p i18n:translate="" class="cleaner">Choose which content types can be geotagged.</p>
+<p i18n:translate="" class="cleaner">Choose which content types can be geo-tagged.</p>
 
 <form tal:attributes="action string:${here/absolute_url}/admin_set_contenttypes">
 <fieldset>
-    <legend i18n:translate="">Geotagged content types</legend>
+    <legend i18n:translate="">Geo-tagged content types</legend>
     <tal:block repeat="content_type here/list_geotaggable_types">
         <input type="checkbox" name="geotag:list"
           tal:attributes="checked content_type/enabled;
