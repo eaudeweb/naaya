@@ -49,6 +49,7 @@ from Products.NaayaBase.NyAttributes import NyAttributes
 from Products.NaayaBase.NyValidation import NyValidation
 from Products.NaayaBase.NyCheckControl import NyCheckControl
 from Products.NaayaBase.NyFolderishVersioning import NyFolderishVersioning
+from Products.NaayaCore.managers.utils import make_id
 
 #module constants
 PROPERTIES_OBJECT = {
@@ -99,10 +100,7 @@ def file_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': config['meta_type'], 'action': 'addNyFile', 'form_helper': form_helper}, 'file_add')
 
 def _create_NyFile_object(parent, id, title, file, precondition, contributor):
-    i = 0
-    while parent._getOb(id, None):
-        i += 1
-        id = '%s-%u' % (id, i)
+    id = make_id(parent, id=id, title=title, prefix='file')
     ob = NyFile_extfile(id, title, file, precondition, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -132,9 +130,7 @@ def addNyFile(self, id='', REQUEST=None, contributor=None, **kwargs):
 
     #process parameters
     if _source=='file': id = cookId(id, title, _file)[0] #upload from a file
-    id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(title)
-    if not id: id = 'file' + self.utGenRandomId(5)
+    id = make_id(self, id=id, title=title, prefix='file')
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyFile_object(self, id, title, '', _precondition, contributor)
