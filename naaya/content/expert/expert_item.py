@@ -50,7 +50,7 @@ from Products.NaayaBase.NyContentType import NyContentData
 from Products.NaayaCore.SchemaTool.widgets.geo import Geo
 from Products.NaayaCore.FormsTool.NaayaTemplate import NaayaPageTemplateFile
 from naaya.content.bfile.NyBlobFile import make_blobfile
-from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.utils import utils, make_id
 from Products.NaayaCore.interfaces import ICSVImportExtraColumns
 
 from interfaces import INyExpert
@@ -145,10 +145,7 @@ def expert_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_OBJECT, 'action': 'addNyExpert', 'form_helper': form_helper}, 'expert_add')
 
 def _create_NyExpert_object(parent, id, title, contributor):
-    i = 0
-    while parent._getOb(id, None):
-        i += 1
-        id = '%s-%u' % (id, i)
+    id = make_id(parent, id=id, title=title, prefix='expert')
     ob = NyExpert(id, title, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -177,11 +174,7 @@ def addNyExpert(self, id='', REQUEST=None, contributor=None, **kwargs):
     _contact_word = schema_raw_data.get('contact_word', '')
 
     #process parameters
-    id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(_title)
-    if not id: id = 'expert' + self.utGenRandomId(5)
-
-    if id == '': id = PREFIX_OBJECT + self.utGenRandomId(6)
+    id = make_id(self, id=id, title=_title, prefix='expert')
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
 
     ob = _create_NyExpert_object(self, id, _title, contributor)
