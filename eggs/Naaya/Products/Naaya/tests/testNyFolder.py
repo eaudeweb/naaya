@@ -427,7 +427,7 @@ class TestNyFolderListing(NaayaFunctionalTestCase):
 
     def test_view_adapter(self):
         self.assertTrue(INyContentObject.providedBy(self.portal.info))
-        adapter = component.queryAdapter(self.portal.info)
+        adapter = component.queryAdapter(self.portal.info, IObjectView)
         self.assertTrue(adapter is not None)
         self.assertTrue(isinstance(adapter, NyContentTypeViewAdapter))
 
