@@ -9,8 +9,7 @@ This macro uses the following variables:
 - sortable: add links that sort the table in its header
 - first_letter
 </tal:comment>
-<table metal:define-macro="main" width="90%"
-       tal:attributes="class python:test(edit_mode, 'admin_table', 'datatable')">
+<table metal:define-macro="main" width="90%" class="datatable">
 	<thead>
 		<tr>
 			<th tal:condition="edit_mode" width="1%">

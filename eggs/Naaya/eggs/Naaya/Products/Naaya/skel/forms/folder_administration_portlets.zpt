@@ -215,7 +215,7 @@
 		<p i18n:translate="">You are presented with the list of locations (subfolders or folder's front page) from this folder
 		where right-side portlets have been defined. Click on a location to edit its list of right side portlets.</p>
 		<form method="post" tal:attributes="action string:${here/absolute_url}/admin_folder_portlets">
-		<table border="0" cellspacing="0" cellpadding="0" width="95%" class="admin_table">
+		<table border="0" cellspacing="0" cellpadding="0" width="95%" class="datatable">
 			<tr>
 				<th width="1%"></th>
 				<th width="60%" i18n:translate="">Location</th>
