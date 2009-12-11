@@ -37,7 +37,7 @@ from zope import event
 from interfaces import INyFolder
 from constants import *
 from Products.NaayaBase.constants import *
-from Products.NaayaCore.managers.utils import utils, batch_utils
+from Products.NaayaCore.managers.utils import utils, batch_utils, make_id
 from Products.NaayaBase.NyContainer import NyContainer
 from Products.NaayaBase.NyImportExport import NyImportExport
 from Products.NaayaBase.NyAttributes import NyAttributes
@@ -72,11 +72,7 @@ def folder_add_html(self, REQUEST=None, RESPONSE=None):
     return self.getFormsTool().getContent({'here': self, 'kind': METATYPE_FOLDER, 'action': 'addNyFolder', 'form_helper': form_helper}, 'folder_add')
 
 def _create_NyFolder_object(parent, id, contributor):
-    i = 0
-    orig_id = id
-    while parent._getOb(id, None):
-        i += 1
-        id = '%s-%u' % (orig_id, i)
+    make_id(parent, id=id, prefix=PREFIX_FOLDER)
     ob = NyFolder(id, contributor)
     parent.gl_add_languages(ob)
     parent._setObject(id, ob)
@@ -103,9 +99,7 @@ def addNyFolder(self, id='', REQUEST=None, contributor=None, **kwargs):
     site = self.getSite()
 
     #process parameters
-    id = self.utCleanupId(id)
-    if not id: id = self.utGenObjectId(schema_raw_data.get('title', ''))
-    if not id: id = PREFIX_FOLDER + self.utGenRandomId(5)
+    id = make_id(self, id=id, title=schema_raw_data.get('title', ''), prefix=PREFIX_FOLDER)
     try: sortorder = abs(int(sortorder))
     except: sortorder = DEFAULT_SORTORDER
     if contributor is None: contributor = self.REQUEST.AUTHENTICATED_USER.getUserName()
