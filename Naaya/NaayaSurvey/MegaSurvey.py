@@ -27,7 +27,7 @@ from zLOG import LOG, ERROR, DEBUG
 
 # Product imports
 from Products.NaayaBase.constants import PERMISSION_EDIT_OBJECTS
-from Products.NaayaCore.managers.utils import genObjectId, genRandomId, tmpfile
+from Products.NaayaCore.managers.utils import genRandomId, tmpfile, make_id
 
 from BaseSurveyTemplate import BaseSurveyTemplate
 from SurveyQuestionnaire import SurveyQuestionnaire
@@ -37,13 +37,7 @@ def manage_addMegaSurvey(context, id='', title='', lang=None, REQUEST=None, **kw
     """ """
     if not title:
         title = 'Survey'
-    if not id:
-        id = genObjectId(title)
-
-    idSuffix = ''
-    while id+idSuffix in context.objectIds():
-        idSuffix = genRandomId(p_length=4)
-    id = id + idSuffix
+    id = make_id(context, id=id, title=title)
 
     # Get selected language
     lang = REQUEST and REQUEST.form.get('lang', None)
