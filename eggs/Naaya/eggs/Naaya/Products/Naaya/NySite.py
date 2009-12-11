@@ -3733,6 +3733,10 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     helper = NaayaTemplateHelper()
 
+    def manage_setLocalRoles(self, name, roles, *args):
+        NyFolderBase.setLocalRolesInfo(self, name, roles)
+        return Folder.manage_setLocalRoles(self, name, roles, *args)
+
 InitializeClass(NySite)
 
 heartbeat_cooldown = {}

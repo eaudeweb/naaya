@@ -1,13 +1,15 @@
 #Python imports
+from datetime import datetime
 
 #Zope imports
 from OFS.Folder import Folder
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, getSecurityManager
 from AccessControl.Permissions import view
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.interface import Interface, implements
 from zope.component import adapts, provideAdapter
 from OFS.interfaces import IItem
+from persistent.dict import PersistentDict
 
 #Product imports
 from Products.Naaya.constants import METATYPE_FOLDER, LABEL_NYFOLDER, PERMISSION_ADD_FOLDER
@@ -310,6 +312,24 @@ class NyFolderBase(Folder, NyPermissions):
                     ra((pc[k]['add_form'], meta_label))
         return r
 
+    def setLocalRolesInfo(self, name, roles):
+        if not hasattr(self, '__Naaya_additional_ac_local_roles_info__'):
+            setattr(self, '__Naaya_additional_ac_local_roles_info__', PersistentDict())
+
+        self.__Naaya_additional_ac_local_roles_info__[name] = {
+            'roles': roles,
+            'date': datetime.now(),
+            'user_granting_roles': getSecurityManager().getUser().uid}
+
+        self._p_changed = 1
+
+    def getLocalRolesInfo(self, name, default=None):
+        if not hasattr(self, '__Naaya_additional_ac_local_roles_info__'):
+            return default
+        if not self.__Naaya_additional_ac_local_roles_info__.has_key(name):
+            return default
+
+        return self.__Naaya_additional_ac_local_roles_info__[name]
 
 class ObjectListingPortlet(object):
     implements(INyPortlet)

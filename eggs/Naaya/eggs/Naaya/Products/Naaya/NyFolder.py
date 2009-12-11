@@ -1530,4 +1530,8 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
     csv_import = CSVImportTool('csv_import')
     notifications_subscribe = Subscriber('notifications_subscribe')
 
+    def manage_setLocalRoles(self, name, roles, *args):
+        NyFolderBase.setLocalRolesInfo(self, name, roles)
+        return NyFolderBase.manage_setLocalRoles(self, name, roles, *args)
+
 InitializeClass(NyFolder)
