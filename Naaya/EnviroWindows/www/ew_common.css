@@ -94,16 +94,6 @@ dd#admin_textarea{
 	position: relative;
 	top:1px;
 }
-table#folderfile_list{
-/*
-<tal:block tal:condition="python: len(here.get_right_portlets_locations_objects(here)) > 0">
-	width: 79%;
-</tal:block>
-<tal:block tal:condition="python: len(here.get_right_portlets_locations_objects(here)) == 0">
-	width: 100%;
-</tal:block>
-*/
-}
 #folderfile_list th{
 	background-color: #eeeeee;
 	padding: 0.1em;
@@ -766,35 +756,6 @@ tr.duplicate a {
 tr.not-duplicate {
 }
 
-/* administration table */
-.admin_table {
-	border: none;
-	margin: 0; padding: 0;
-}
-.admin_table th {
-	border: 1px solid #fff;
-	background: #5f7f7e;
-	color: #fff;
-	font-weight: normal;
-	line-height: 1.8em;
-}
-.admin_table th a {
-	color: #fff;
-	text-decoration: underline;
-}
-.admin_table th a:hover {
-	text-decoration: none;
-}
-.admin_table td {
-	border-bottom: 1px solid #eee;
-	padding-left: 3px;
-}
-.admin_table tr.odd {
-	background: #fff;
-}
-.admin_table tr.even {
-	background: #fafafa;
-}
 /* Media file style sheet */
 .flvPlayer {
 }
@@ -854,7 +815,6 @@ table .center {
 	text-align: center;
 	background-color: #f6f6f6;
 	font-weight: bold;
-/*	border-top:    1px solid white;*/
 	border-bottom: 2px solid white;
 }
 .datatable th.scope-row { /* IE6 doesn't understand [scope="row"] */
@@ -872,19 +832,14 @@ table .center {
 	vertical-align: top;
 }
 .datatable td {
-/*	border-top:    2px solid #f6f6f6;*/
 	border-bottom: 2px solid #f6f6f6;
 }
-/*
 .datatable tr.zebraeven {
 	background-color: #f6f6f6;
 }
-*/
-/*
 .datatable tr:hover, .datatable tr:hover th {
 	background-color: #e4f1bc;
 }
-*/
 table.datatable {
 	border: 1px solid #b6b6b6;
 	color: #666666;
@@ -895,20 +850,16 @@ table.datatable {
 .searchQuery {
 	float: left;
 	width: 59%;
-
 }
-
 .searchQuery li {
 	float: left;
 	margin: 0.3em;
 	width: 15em;
 }
-
 .searchQuery ul {
 	float: left;
 	padding: 1em;
 }
-
 .tooltip {
 	float: right;
 	border: 1px dashed black;
@@ -917,7 +868,6 @@ table.datatable {
 	background-color: #F3F3F3;
 	padding: 0.5em;
 }
-
 .tip_item {padding:0.3em 0.3em 0.3em 0pt;}
 
 /* Map styles */
@@ -939,41 +889,40 @@ div.marker-body h3 {
 	text-transform: uppercase;
 }
 .map-button {
-color: #fff;
-font-size: 90%;
-border: 1px solid white;
-background-color: #336699;
-padding: 0.3em 0.2em;
+	color: #fff;
+	font-size: 90%;
+	border: 1px solid white;
+	background-color: #336699;
+	padding: 0.3em 0.2em;
 }
-
 #record_counter_message {
-font-size: x-small;
+	font-size: x-small;
 }
 #portalmap {
-width: 18%;
-font-size: 90%;
-float: left;
-padding: 7px;
-background: #fff;
-border: 1px solid #ccc;
-margin: 0 0 0 10px;
-white-space: normal;
+	width: 18%;
+	font-size: 90%;
+	float: left;
+	padding: 7px;
+	background: #fff;
+	border: 1px solid #ccc;
+	margin: 0 0 0 10px;
+	white-space: normal;
 }
 .portalmap_portlet {
-padding: 10px;
-margin: 0;
-background: #f3f3f3;
-line-height: 1.5;
+	padding: 10px;
+	margin: 0;
+	background: #f3f3f3;
+	line-height: 1.5;
 }
 #address {
 	width: 60%;
 }
 .portalmap_portlet .portalmap_portlet_title p{
-border-bottom:2px solid #BBBBBB;
-font-size:1.3em;
-font-weight:bold;
-margin:0 0 1em;
-padding:0.3em 0;
+	border-bottom:2px solid #BBBBBB;
+	font-size:1.3em;
+	font-weight:bold;
+	margin:0 0 1em;
+	padding:0.3em 0;
 }
 .portalmap_portlet div input[type="text"]:focus {
 	border: 1px solid #000;
@@ -1010,7 +959,6 @@ padding: 0 0 0 2em;
 	padding: 0;
 	list-style: none;
 }
-
 .maptypes li {
 	margin: 2px;
 	padding: 2px;
@@ -1050,4 +998,9 @@ td.portlet_arrange_right {
 }
 td.portlet_arrange_center {
 	background-color: #dfd;
+}
+
+/* other styles */
+.skiplink {
+	display: none;
 }
