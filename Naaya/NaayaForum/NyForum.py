@@ -31,7 +31,7 @@ from AccessControl.Permissions import view_management_screens, view
 #Product imports
 from constants import *
 from NyForumBase import NyForumBase
-from Products.NaayaCore.managers.utils import utils
+from Products.NaayaCore.managers.utils import utils, make_id
 from NyForumTopic import manage_addNyForumTopic_html, topic_add_html, addNyForumTopic
 from Products.NaayaBase.NyGadflyContainer import manage_addNyGadflyContainer
 from Products.NaayaBase.constants import MESSAGE_SAVEDCHANGES
@@ -42,8 +42,7 @@ STATISTICS_COLUMNS = {'topic': 'VARCHAR', 'hits': 'INTEGER'}
 manage_addNyForum_html = PageTemplateFile('zpt/forum_manage_add', globals())
 def manage_addNyForum(self, id='', title='', description='', categories='', file_max_size=0, REQUEST=None):
     """ """
-    id = self.utCleanupId(id)
-    if not id: id = PREFIX_NYFORUM + self.utGenRandomId(6)
+    id = make_id(self, id=id, title=title, prefix=PREFIX_NYFORUM)
     categories = self.utConvertLinesToList(categories)
     file_max_size = abs(int(file_max_size))
     ob = NyForum(id, title, description, categories, file_max_size)
