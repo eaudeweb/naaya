@@ -316,10 +316,17 @@ class NyFolderBase(Folder, NyPermissions):
         if not hasattr(self, '__Naaya_additional_ac_local_roles_info__'):
             setattr(self, '__Naaya_additional_ac_local_roles_info__', PersistentDict())
 
+        uid = '__unknown__'
+        user = getSecurityManager().getUser()
+        if hasattr(user, 'uid'):
+            uid = user.uid
+        elif hasattr(user, 'name'):
+            uid = user.name
+
         self.__Naaya_additional_ac_local_roles_info__[name] = {
             'roles': roles,
             'date': datetime.now(),
-            'user_granting_roles': getSecurityManager().getUser().uid}
+            'user_granting_roles': uid}
 
         self._p_changed = 1
 
