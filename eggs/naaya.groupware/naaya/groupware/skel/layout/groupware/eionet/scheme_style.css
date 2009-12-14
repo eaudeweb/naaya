@@ -1,5 +1,5 @@
 #header {
-    background: #A5CED1 url('top_01.png') repeat-y scroll 0 0;
+	background: #A5CED1 url('top_01.png') repeat-y scroll 0 0;
 }
 
 #dropdowns li ul li a:link, #dropdowns li ul li a:visited {
@@ -19,10 +19,10 @@ a#eealink {
 }
 
 .left_portlet ul li a {
-    background: transparent url('lnav_menu.gif') no-repeat scroll left top;
+	background: transparent url('lnav_menu.gif') no-repeat scroll left top;
 }
 
 .left_portlet li a:hover {
-    background: #deeff2 url('lnav_menu_h.gif') no-repeat scroll left top;
-    color: black;
+	background: #deeff2 url('lnav_menu_h.gif') no-repeat scroll left top;
+	color: black;
 }
