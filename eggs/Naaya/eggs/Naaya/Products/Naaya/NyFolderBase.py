@@ -325,7 +325,7 @@ class NyFolderBase(Folder, NyPermissions):
 
         self.__Naaya_additional_ac_local_roles_info__[name] = {
             'roles': roles,
-            'date': datetime.now(),
+            'date': datetime.utcnow(),
             'user_granting_roles': uid}
 
         self._p_changed = 1
