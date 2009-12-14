@@ -1,0 +1,3 @@
+<tal:block replace="structure here/standard_html_header"/>
+<span tal:replace="structure here/view_participant"/>
+<tal:block replace="structure here/standard_html_footer"/>
