@@ -9,7 +9,7 @@
 
 <h1 metal:define-slot="title" tal:content="string:Submit ${form_helper/get_meta_label}" />
 
-<p metal:define-slot="description">description</p>
+<p metal:define-slot="description"><!--description--></p>
 
 <script type="text/javascript">
 <!--

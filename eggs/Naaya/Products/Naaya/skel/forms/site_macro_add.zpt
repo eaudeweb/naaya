@@ -7,9 +7,9 @@
 <script type="text/javascript" tal:attributes="src string:${here/getSitePath}/datetime_js"></script>
 <tal:block tal:define="editor here/getEditorTool" tal:replace="structure editor/includeLibs" />
 
-<h1 metal:define-slot="title">add object</h1>
+<h1 metal:define-slot="title">Add Object</h1>
 
-<p metal:define-slot="description">description</p>
+<p metal:define-slot="description"><!--description--></p>
 
 <script type="text/javascript">
 <!--
