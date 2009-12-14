@@ -29,7 +29,7 @@
                     else {
                         document.body.className="";
                         document.getElementById("outer_wrapper_fs").id="outer_wrapper";
-                        document.getElementById("footer").style.maxWidth = '80em';
+                        document.getElementById("footer").style.maxWidth = '90%';
                     }
                 }
 
