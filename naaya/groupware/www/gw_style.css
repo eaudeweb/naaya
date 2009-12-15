@@ -224,16 +224,16 @@ body.fullscreen {
 	float: left;
 }
 .left_portlet {
-	padding: 10px;
+	padding: 0.1em 0.4em;
 }
 .left_portlet .left_portlet_title {
 	color:#495B6B;
 	font-family:Verdana,Arial,Helvetica,sans-serif;
-	font-size:115%;
+	font-size:110%;
 	font-style:normal;
 	font-weight:bold;
 	line-height:normal;
-	margin:10px 0 6px;
+	margin:0.3em 0 0.1em 0;
 	padding-top:0;
 	text-align:left;
 	text-decoration:none;
@@ -262,7 +262,6 @@ body.fullscreen {
 	border-top:1px dotted #009590;
 	font-family:Verdana,Arial,Helvetica,sans-serif;
 	font-size:90%;
-	font-weight:bold;
 	line-height:100%;
 	margin:0;
 	padding:0;
@@ -272,7 +271,6 @@ body.fullscreen {
 	border:medium none;
 	color:#495B6B;
 	display:block;
-	font-weight:bold;
 	margin:0;
 	padding:3px 6px 3px 25px;
 	text-decoration:none;
