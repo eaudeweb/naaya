@@ -174,10 +174,10 @@ def addNyMediaFile(self, id='', REQUEST=None, contributor=None, **kwargs):
         if captcha_validator:
             form_errors['captcha'] = captcha_validator
 
-
-    video_errors = _check_video_file(_file)
-    if video_errors and not _skip_videofile_check:
-        form_errors['mediafile'] = video_errors
+    if not _skip_videofile_check:
+        video_errors = _check_video_file(_file)
+        if video_errors:
+            form_errors['mediafile'] = video_errors
 
     if form_errors:
         if REQUEST is None:
