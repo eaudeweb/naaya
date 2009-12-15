@@ -8,16 +8,18 @@ body {
 select, input {
 	font-size: 90%;
 }
+fieldset {
+	border: 1px solid #cccccc;
+}
 fieldset legend {
 	font-weight: bold;
 	font-size: 0.9em;
 	padding: 0 10px;
-	color: #444;
+	color: #084173;
 }
 h2 {
 	border-bottom: 4px solid #CCCCCC;
 }
-
 a img {
 	border: none;
 }
@@ -237,6 +239,7 @@ body.fullscreen {
 	padding-top:0;
 	text-align:left;
 	text-decoration:none;
+	border-top:1px dotted #009590;
 }
 .left_portlet .left_portlet_title a {
 	text-decoration: none;
