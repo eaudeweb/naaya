@@ -137,7 +137,6 @@
 		<scriptchannel id="lateststories_rdf" title="Selected stories" description="Selected stories" language="en" type="Stories" numberofitems="5" portlet="1"/>
 		<scriptchannel id="upcomingevents_rdf" title="Upcoming events" description="Upcoming events" language="en" type="Events" numberofitems="5" portlet="1"/>
 		<scriptchannel id="latestevents_rdf" title="Latest events" description="Latest events" language="en" type="Events" numberofitems="5" portlet="0"/>
-		<localchannel id="news_rdf" title="News" description="News" language="en" type="News" objmetatype="Naaya News" numberofitems="5"/>
 		<!-- remotechannel id="" title="Example" url="http://" numbershownitems="10" /-->
 	</syndication>
 	<portlets left="portlet_maincategories" center="portlet_lateststories_rdf,portlet_latestnews_rdf,portlet_upcomingevents_rdf,portlet_latestuploads_rdf">
