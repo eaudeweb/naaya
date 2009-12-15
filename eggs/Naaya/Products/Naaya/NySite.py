@@ -48,7 +48,7 @@ from Globals import DTMLFile
 import Products
 from zope.interface import implements
 from App.ImageFile import ImageFile
-from zope import component, interface
+from zope import component, interface, event
 
 #Product imports
 from interfaces import INySite, IHeartbeat
@@ -102,6 +102,7 @@ from Products.NaayaCore.NotificationTool.Subscriber import Subscriber
 from Products.NaayaBase.gtranslate import translate, translate_url
 from NyFolderBase import NyFolderBase
 from naaya.core.utils import call_method
+from events import NyAddLocalRoleEvent, NySetLocalRoleEvent, NyDelLocalRoleEvent
 
 #reCaptcha
 from Products.NaayaCore.managers import recaptcha_utils
@@ -3733,9 +3734,19 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
 
     helper = NaayaTemplateHelper()
 
+    # Local roles support
+    # -------------------
+    def manage_addLocalRoles(self, name, roles, *args):
+        event.notify(NyAddLocalRoleEvent(self, name, roles))
+        return Folder.manage_addLocalRoles(self, name, roles, *args)
+
     def manage_setLocalRoles(self, name, roles, *args):
-        NyFolderBase.setLocalRolesInfo(self, name, roles)
+        event.notify(NySetLocalRoleEvent(self, name, roles))
         return Folder.manage_setLocalRoles(self, name, roles, *args)
+
+    def manage_delLocalRoles(self, name, *args):
+        event.notify(NyDelLocalRoleEvent(self, name))
+        return Folder.manage_delLocalRoles(self, name, *args)
 
 InitializeClass(NySite)
 
