@@ -29,7 +29,10 @@
                             <td tal:content="obj/userid">user</td>
                             <td tal:content="obj/pretty_date">date</td>
                             <td>
-                                <span tal:condition="python:obj.approved"><a tal:attributes="href obj/created_url">Approved</a></span>
+                                <span tal:condition="python:obj.approved">
+                                    <a tal:attributes="href obj/created_url" tal:condition="obj/created_url">Approved</a>
+                                    <span tal:condition="not:obj/created_url">Approved <em>(portal deleted)</em></span>
+                                </span>
                                 <span tal:condition="python:obj.rejected">Rejected</span>
                                 <span tal:condition="python:not obj.rejected and not obj.approved">Pending</span>
                             </td>
