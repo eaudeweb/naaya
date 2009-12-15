@@ -196,26 +196,29 @@ body.fullscreen {
 	padding: 0.2em 0 0.5em 2.4em;
 }
 .center_portlet {
-	background: #fff;
+	background-color: #fafafa;
+	border-top: 1px solid #b5bebe;
+	border-bottom: 1px solid #b5bebe;
+	margin-top: 0.5em;
 }
 .center_portlet .center_portlet_title {
-	/*background-color: #dddddd;*/
-	padding-left: 1em;
-	line-height: 1.5em;
-	margin-top: 0.5em;
-	position: relative;
-	font-size: 1.1em;
+	color: #000000;
+	font-size: 1.2em;
 	font-weight: bold;
-	color: #000;
-	border-bottom: 1px dashed #A0A0A0;
+	line-height: 1.5em;
+	margin-top: 0.3em;
+	padding-left: 0.3em;
+	position: relative;
 }
 .center_portlet .center_portlet_content {
-	/*border: 1px solid #dddddd;*/
 	position: relative;
 	line-height: 1.5em;
 }
 .center_portlet .center_portlet_content a {
 	color: blue;
+}
+.postedon {
+	font-size: 90%;
 }
 
 /* left side and left menu */
