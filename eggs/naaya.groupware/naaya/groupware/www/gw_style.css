@@ -29,12 +29,16 @@ a:link {
 a:visited {
 	color: #8e004d;
 }
-form input[type="button"], form input[type="submit"], form input[type="reset"]{
-	border: 1px solid #ccc;
-	background: #336399;
-	padding: 1px 4px;
-	color: #fff;
-	text-transform: lowercase;
+input[type="button"], input[type="submit"], input[type="reset"] {
+	background-color: #fff;
+	color: #000;
+	line-height: 2em;
+	border-left:1px solid #bbb;
+	border-top:1px solid #bbb;
+	border-bottom:1px solid #666;
+	border-right:1px solid #666;
+	padding:0.1em 0.4em;
+	margin: 0em 0.3em;
 }
 
 /* select language part */
@@ -472,6 +476,7 @@ body.fullscreen {
 }
 a#eealink {
 	padding-left: 18px;
+	background: url("eeaicon.gif") no-repeat left center;
 }
 #search {
 	margin: 0.3em 10px 0 0;
