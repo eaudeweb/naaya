@@ -108,6 +108,10 @@ form input[type="button"], form input[type="submit"], form input[type="reset"]{
 	padding:3px 0.5em 1px 16px;
 }
 
+body.fullscreen {
+        padding:0 1%;
+}
+
 /* styles for the two logos */
 #logo {
 	margin-right: 1em;
@@ -277,7 +281,6 @@ form input[type="button"], form input[type="submit"], form input[type="reset"]{
 #footer {
 	font-size: 90%;
 	background-color:#CEDC32;
-	border-left:1px solid #666666;
 	border-right:1px solid #666666;
 	border-bottom:1px solid #666666;
 	clear:both;
