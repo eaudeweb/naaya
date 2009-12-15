@@ -35,6 +35,7 @@ from Acquisition import Implicit
 from zope.event import notify
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from DateTime import DateTime
 
 #Product imports
 from Products.NaayaBase.NyContentType import NyContentType, NY_CONTENT_BASE_SCHEMA
@@ -483,6 +484,12 @@ class NyNews(news_item, NyAttributes, NyItem, NyCheckControl, NyContentType):
                 REQUEST.RESPONSE.redirect('%s/edit_html?lang=%s' % (self.absolute_url(), _lang))
             else:
                 raise ValueError(form_errors.popitem()[1]) # pick a random error
+
+    @property
+    def has_expired(self):
+        if not self.expirationdate:
+            return
+        return (DateTime() - 1).greaterThan(self.expirationdate)
 
     #zmi pages
     security.declareProtected(view_management_screens, 'manage_edit_html')
