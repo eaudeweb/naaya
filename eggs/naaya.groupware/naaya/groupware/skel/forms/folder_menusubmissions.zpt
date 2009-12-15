@@ -18,7 +18,7 @@
         </select>
     </span>
     <tal:block tal:condition="python:perm_edit_object or perm_publish_objects or perm_validate_objects">
-        <a tal:condition="perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit Folder</span></a>
+        <a tal:condition="perm_edit_object" tal:attributes="href string:${this_absolute_url}/edit_html"><span i18n:translate="">Edit folder</span></a>
         <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/subobjects_html"><span i18n:translate="">Subobjects</span></a>
         <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/basketofapprovals_html"><span i18n:translate="">Approvals</span></a>
         <a tal:condition="perm_publish_objects" tal:attributes="href string:${this_absolute_url}/sortorder_html"><span i18n:translate="">Sort order</span></a>
