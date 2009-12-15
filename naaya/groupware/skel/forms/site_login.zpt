@@ -43,9 +43,9 @@
                 <div class="right-floated-tip">
                     <div i18n:translate="">Tips</div>
                     <ul>
-                        <li i18n:translate=""><strong>&raquo;</strong> Having trouble logging in? Make sure that cookies are allowed in your browser</li>
-                        <li i18n:translate=""><strong>&raquo;</strong> Don't forget to logout or exit your browser when you're done</li>
-                        <li i18n:translate=""><strong>&raquo;</strong> Letting your browser to remember your username or password on this machine can be dangerous since other people might use this account to log in</li>
+                        <li i18n:translate="">Having trouble logging in? Make sure that cookies are allowed in your browser</li>
+                        <li i18n:translate="">Don't forget to logout or exit the browser when you're done</li>
+                        <li i18n:translate="">Letting your browser remember your username or password on this machine can be dangerous since other people might use this account to log in</li>
                     </ul>
                 </div>
                 <h1 i18n:translate="">Restricted access</h1>
