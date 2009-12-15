@@ -109,7 +109,7 @@ form input[type="button"], form input[type="submit"], form input[type="reset"]{
 }
 
 body.fullscreen {
-        padding:0 1%;
+	padding:0 1%;
 }
 
 /* styles for the two logos */
@@ -278,6 +278,77 @@ body.fullscreen {
 	text-decoration:none;
 }
 
+/*right side - menu and content*/
+#right_port {
+	margin: 0;
+	padding: 0;
+	width: 21%;
+	float: left;
+}
+* html #right_port { 
+	margin-left: 0.7%;
+}
+.right_portlet {
+	float: left;
+	margin: 0;
+	padding: 0 0 10px 10px;
+	width: 100%;
+}
+* html .right_portlet {
+	width: auto;
+}
+.right_portlet .right_portlet_title {
+	border-bottom: 1px solid #ccc;
+	background: #f3f3f3;
+	padding: 0.8em 0.5em 0.8em 0.5em;
+	text-transform: uppercase;
+	font-size: 0.9em;
+	font-family: Verdana, Arial, sans-serif;
+}
+.right_portlet .right_portlet_content {
+}
+.right_portlet ul {
+	background: #fff;
+	list-style-type: none;
+	list-style-image: none;
+	padding-left: 0;
+	margin: 0;
+	border-bottom: 1px dotted #ccc;
+}
+.right_portlet li{
+	padding: 0.3em;
+	background: #fff;
+	color: #084173;
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+	font-size: 90%;
+	font-weight: bold;
+	line-height: 100%;
+	vertical-align: bottom;
+	margin: 0px;
+	border-top: 1px solid #fefefe;
+	border-bottom: 1px solid #ddd;
+	display: block;
+}
+* html .right_portlet li{
+	display: inline-block; /* fix for IE peek-a-boo bug */
+}
+.right_portlet ul li:hover { 
+	background: #f2f2f2;
+}
+.right_portlet ul li a {
+	display:block;
+	font-weight: normal;
+	text-decoration: none;
+	color: #44464B;
+	padding: 3px 6px 3px 0;
+	border: none;
+	margin: 0px;
+}
+.right_portlet ul li a:hover {
+	color: #000;
+}
+
+/* footer part */
 #footer {
 	font-size: 90%;
 	background-color:#CEDC32;
@@ -300,7 +371,6 @@ body.fullscreen {
 	color: #333;
 	padding: 0.3em;
 }
-
 #last_modified {
 	margin: 1% 0% 1% 20%;
 }
