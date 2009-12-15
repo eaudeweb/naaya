@@ -26,3 +26,6 @@ a#eealink {
 	background: #deeff2 url('lnav_menu_h.gif') no-repeat scroll left top;
 	color: black;
 }
+.left_portlet_title {
+	background: #DEEFF2 url(lnav_menu_h.gif) no-repeat scroll left top;
+}
