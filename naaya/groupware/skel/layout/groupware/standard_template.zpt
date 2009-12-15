@@ -21,22 +21,23 @@
             <script type="text/javascript" tal:attributes="src string:${site_url}/misc_/Naaya/jquery.cookie.js"></script>
             <script type="text/javascript">
                 function fullScreen() {
-		            if($("body").hasClass("fullscreen")){
-		                $("body").removeClass("fullscreen");
-		                $("outer_wrapper_fs").attr("id", "outer_wrapper");
-		                $.cookie("fullscreen", null);
-		            }
-		            else{
-		                $("body").addClass("fullscreen");
-		                $("#outer_wrapper").attr("id", "outer_wrapper_fs");
-		                $.cookie("fullscreen", "y");
-		            }}
-		            $(document).ready(function() {
-		                $("#fs_hide").attr("id", "fs_show");
-		                if($.cookie("fullscreen")){
-                            fullScreen();
-		                }
-		        });
+                   if($("body").hasClass("fullscreen")){
+                        $("body").removeClass("fullscreen");
+                        $("outer_wrapper_fs").attr("id", "outer_wrapper");
+                        $.cookie("fullscreen", null, {path: '/'});
+                    }
+                    else{
+                        $("body").addClass("fullscreen");
+                        $("#outer_wrapper").attr("id", "outer_wrapper_fs");
+                        $.cookie("fullscreen", null, {path: '/'});
+                        $.cookie("fullscreen", "y", {path: '/'});
+                }}
+                $(document).ready(function() {
+                    $("#fs_hide").attr("id", "fs_show");
+                    if($.cookie("fullscreen")){
+                        fullScreen();
+                }
+        });
             </script>
         <metal:block define-slot="head">
         </metal:block>
