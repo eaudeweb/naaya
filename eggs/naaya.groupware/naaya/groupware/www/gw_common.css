@@ -284,7 +284,6 @@ td.title-column a:hover{
 	margin: 0.3em 0.1em 0 0.1em;
 	border: 1px solid #346d9f;
 	border-bottom: none;
-	text-transform: uppercase;
 }
 #tabbedmenu a:hover, .tabbedmenu a:hover {
 	background: #A8C7EC;
