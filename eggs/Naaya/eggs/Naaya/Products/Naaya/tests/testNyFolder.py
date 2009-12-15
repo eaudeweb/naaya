@@ -486,6 +486,31 @@ class TestNyFolderLocalRolesInfo(NaayaFunctionalTestCase):
 
         self.browser_do_logout()
 
+    def test_local_roles_add_remove(self):
+        self.browser_do_login('admin', '')
+
+        self.portal.info.manage_setLocalRoles(self.username, ['Manager'])
+        additional_info = self.portal.info.getLocalRolesInfo(self.username)
+        self.assertTrue(len(additional_info) == 1)
+        self.assertTrue(additional_info[0]['roles'] == ['Manager'])
+        self.assertTrue(additional_info[0].has_key('date'))
+        self.assertTrue(additional_info[0]['user_making_changes'] == 'admin')
+
+        self.portal.info.manage_addLocalRoles(self.username, ['Reader'])
+        additional_info = self.portal.info.getLocalRolesInfo(self.username)
+        self.assertTrue(len(additional_info) == 2)
+        self.assertTrue(additional_info[0]['roles'] == ['Manager'])
+        self.assertTrue(additional_info[0].has_key('date'))
+        self.assertTrue(additional_info[0]['user_making_changes'] == 'admin')
+        self.assertTrue(additional_info[1]['roles'] == ['Reader'])
+        self.assertTrue(additional_info[1].has_key('date'))
+        self.assertTrue(additional_info[1]['user_making_changes'] == 'admin')
+
+        self.portal.info.manage_delLocalRoles(self.username)
+        additional_info = self.portal.info.getLocalRolesInfo(self.username)
+        self.assertTrue(additional_info is None)
+
+        self.browser_do_logout()
 
 def test_suite():
     suite = TestSuite()

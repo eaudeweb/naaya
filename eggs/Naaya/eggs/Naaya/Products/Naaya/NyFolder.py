@@ -50,6 +50,7 @@ from Products.NaayaCore.NotificationTool.Subscriber import Subscriber
 from NyFolderBase import NyFolderBase
 from naaya.content.base.events import NyContentObjectAddEvent
 from naaya.content.base.events import NyContentObjectEditEvent
+from events import NyAddLocalRoleEvent, NySetLocalRoleEvent, NyDelLocalRoleEvent
 
 manage_addNyFolder_html = PageTemplateFile('zpt/folder_manage_add', globals())
 manage_addNyFolder_html.kind = METATYPE_FOLDER
@@ -1524,8 +1525,18 @@ class NyFolder(NyAttributes, NyProperties, NyImportExport, NyContainer, utils, N
     csv_import = CSVImportTool('csv_import')
     notifications_subscribe = Subscriber('notifications_subscribe')
 
+    # Local roles support
+    # -------------------
+    def manage_addLocalRoles(self, name, roles, *args):
+        event.notify(NyAddLocalRoleEvent(self, name, roles))
+        return NyFolderBase.manage_addLocalRoles(self, name, roles, *args)
+
     def manage_setLocalRoles(self, name, roles, *args):
-        NyFolderBase.setLocalRolesInfo(self, name, roles)
+        event.notify(NySetLocalRoleEvent(self, name, roles))
         return NyFolderBase.manage_setLocalRoles(self, name, roles, *args)
+
+    def manage_delLocalRoles(self, name, *args):
+        event.notify(NyDelLocalRoleEvent(self, name))
+        return NyFolderBase.manage_delLocalRoles(self, name, *args)
 
 InitializeClass(NyFolder)
