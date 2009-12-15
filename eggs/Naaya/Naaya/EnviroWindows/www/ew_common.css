@@ -3,6 +3,36 @@ h2 {border-bottom: 4px solid #CCCCCC;}
 a img {
 	border: none;
 }
+
+/* tip boxes */
+.right-floated-tip {
+	width: 20%;
+	float: right;
+	position: relative;
+	background: #FFFFDD none repeat scroll 0 0;
+	border: 1px outset #999966;
+	margin-top: 1em;
+	padding: 0.5em 1em;
+	font-size: 95%;
+}
+.tip {
+	background: #FFFFDD none repeat scroll 0 0;
+	border: 1px outset #999966;
+	margin-top: 1em;
+	padding: 0.5em 1em;
+	font-size: 95%;
+}
+.left-floated-tip {
+	width: 20%;
+	float: left;
+	position: relative;
+	background: #FFFFDD none repeat scroll 0 0;
+	border: 1px outset #999966;
+	margin-top: 1em;
+	padding: 0.5em 1em;
+	font-size: 95%;
+}
+
 /* Operations buttons */
 .floated-buttons {
 	float: right;
@@ -929,30 +959,30 @@ div.marker-body h3 {
 	padding: 1px;
 }
 .portalmap_portlet .portalmap_portlet_title small a{
-color: #000;
-text-decoration: underline;
-font-weight: bold;
-margin: 0.5em 0;
+	color: #000;
+	text-decoration: underline;
+	font-weight: bold;
+	margin: 0.5em 0;
 }
 .portalmap_portlet .portalmap_portlet_title small a:hover{
-color: #bbb;
+	color: #bbb;
 }
 .portalmap_portlet .map_filters {
-margin: 0;
-padding: 0;
+	margin: 0;
+	padding: 0;
 }
 .portalmap_portlet .map_filters div {
-margin: 0.5em 0 0 0;
-padding: 0;
+	margin: 0.5em 0 0 0;
+	padding: 0;
 }
 .portalmap_portlet .map_filters ul {
-margin: 0.7em 0 0.7em 0.3em;
-padding: 0;
-list-style: none;
-font-size: 95%;
+	margin: 0.7em 0 0.7em 0.3em;
+	padding: 0;
+	list-style: none;
+	font-size: 95%;
 }
 .portalmap_portlet .map_filters ul ul {
-padding: 0 0 0 2em;
+	padding: 0 0 0 2em;
 }
 .maptypes {
 	margin: 0;
