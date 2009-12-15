@@ -177,6 +177,7 @@ misc_ = {
 
     # jQuery
     'jquery-1.3.2.min.js':ImageFile('www/jquery-1.3.2.min.js', globals()),
+    'jquery.cookie.js':ImageFile('www/jquery.cookie.js', globals()),
     'jquery-ui-1.7.2.full.min.js':ImageFile('www/jquery-ui-1.7.2.full.min.js', globals()),
 		# jQuery plugins
     'jquery.bgiframe.min.js':ImageFile('www/jquery.bgiframe.min.js', globals()),
