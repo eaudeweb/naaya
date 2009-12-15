@@ -11,8 +11,11 @@
 </tal:block>
 <tal:block metal:fill-slot="portlet_content">
 	<ul>
-		<li tal:repeat="item channel/get_objects_for_rdf"><img tal:attributes="src item/icon; alt python:test(hasattr(item, 'get_meta_label'), item.get_meta_label(), item.meta_type); title python:test(hasattr(item, 'get_meta_label'), item.get_meta_label(), item.meta_type)" style="vertical-align: -5px;" alt="" />
-			<a tal:attributes="href item/absolute_url; title python:here.utStripAllHtmlTags(item.description)" tal:content="item/title_or_id" />
+		<li tal:repeat="item channel/get_objects_for_rdf">
+			<a tal:attributes="href item/absolute_url">
+				<img tal:attributes="src item/icon; alt python:test(hasattr(item, 'get_meta_label'), item.get_meta_label(), item.meta_type); title python:test(hasattr(item, 'get_meta_label'), item.get_meta_label(), item.meta_type)" alt="" />
+				<tal:block content="item/title_or_id" />
+			</a>
 			<span class="postedon">[<span i18n:translate="" tal:omit-tag="">posted on:</span> <tal:block tal:content="python:here.utShowDateTime(item.releasedate)"/>]</span>
 		</li>
 	</ul>

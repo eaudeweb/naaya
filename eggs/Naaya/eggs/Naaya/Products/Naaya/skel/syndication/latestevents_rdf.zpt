@@ -11,7 +11,7 @@
 </tal:block>
 <tal:block metal:fill-slot="portlet_content">
 <tal:block tal:repeat="item channel/get_objects_for_rdf">
-<a tal:attributes="href item/absolute_url" tal:content="item/title_or_id">item</a>	
+	<a tal:attributes="href item/absolute_url" tal:content="item/title_or_id">item</a>
 		<div tal:content="structure item/description" />
 	<span tal:replace="python:item.utShowDateTime(item.start_date)" />
 </tal:block>
