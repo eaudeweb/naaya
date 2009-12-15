@@ -924,9 +924,13 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                     path = 'entire site'
                 role_info = '%s on %s' % (user_roles, path)
                 if additional_info is not None:
-                    role_info += ' granted on %s by %s' % (
-                        additional_info['date'].isoformat(),
-                        additional_info['user_granting_roles'])
+                   role_info = ' | '.join([
+                                '%s on %s granted on %s by %s' % (
+                                    ', '.join(ai['roles']),
+                                    path,
+                                    ai['date'],
+                                    ai['user_making_changes'])
+                                for ai in additional_info])
                 roles_info.append(role_info)
             role_str = ' | '.join(roles_info)
 
@@ -970,9 +974,13 @@ class AuthenticationTool(BasicUserFolder, Role, ObjectManager, session_manager,
                         path = 'entire site'
                     role_info = '%s on %s' % (user_roles, path)
                     if additional_info is not None:
-                        role_info += ' granted on %s by %s' % (
-                            additional_info['date'].isoformat(),
-                            additional_info['user_granting_roles'])
+                        role_info = ' | '.join([
+                                    '%s on %s granted on %s by %s' % (
+                                        ', '.join(ai['roles']),
+                                        path,
+                                        ai['date'],
+                                        ai['user_making_changes'])
+                                    for ai in additional_info])
                     roles_info.append(role_info)
                 # TODO: add group roles
                 #additional_roles = self.get_ldap_group_roles(uid, source)

@@ -10,6 +10,7 @@ from zope.interface import Interface, implements
 from zope.component import adapts, provideAdapter
 from OFS.interfaces import IItem
 from persistent.dict import PersistentDict
+from persistent.list import PersistentList
 
 #Product imports
 from Products.Naaya.constants import METATYPE_FOLDER, LABEL_NYFOLDER, PERMISSION_ADD_FOLDER
@@ -312,31 +313,90 @@ class NyFolderBase(Folder, NyPermissions):
                     ra((pc[k]['add_form'], meta_label))
         return r
 
-    def setLocalRolesInfo(self, name, roles):
-        if not hasattr(self, '__Naaya_additional_ac_local_roles_info__'):
-            setattr(self, '__Naaya_additional_ac_local_roles_info__', PersistentDict())
-
+    ###############################
+    #Functions for local roles info
+    ###############################
+    def _getAuthenticatedUserUID(self):
         uid = '__unknown__'
         user = getSecurityManager().getUser()
         if hasattr(user, 'uid'):
             uid = user.uid
         elif hasattr(user, 'name'):
             uid = user.name
+        return uid
 
-        self.__Naaya_additional_ac_local_roles_info__[name] = {
+    def _getStorage4LocalRolesInfo(self):
+        # remove old attribute
+        old_attr = '__Naaya_additional_ac_local_roles_info__'
+        if hasattr(self, old_attr):
+            delattr(self, old_attr)
+
+        state_attr = '__Naaya_ac_local_roles_state__'
+        log_attr = '__Naaya_ac_local_roles_log__'
+        if not hasattr(self, state_attr):
+            setattr(self, state_attr, PersistentDict())
+        if not hasattr(self, log_attr):
+            setattr(self, log_attr, PersistentList())
+        return getattr(self, state_attr), getattr(self, log_attr)
+
+    def addLocalRolesInfo(self, name, roles):
+        state, log = self._getStorage4LocalRolesInfo()
+        current_date = datetime.utcnow()
+        auth_user = self._getAuthenticatedUserUID()
+        state[name].append(PersistentDict({
             'roles': roles,
-            'date': datetime.utcnow(),
-            'user_granting_roles': uid}
+            'date': current_date,
+            'user_making_changes': auth_user
+            }))
+        log.append(PersistentDict({
+            'roles': roles,
+            'date': current_date,
+            'user_making_changes': auth_user,
+            'user': name,
+            'operation': 'add'
+            }))
+
+        self._p_changed = 1
+
+    def setLocalRolesInfo(self, name, roles):
+        state, log = self._getStorage4LocalRolesInfo()
+        current_date = datetime.utcnow()
+        auth_user = self._getAuthenticatedUserUID()
+        state[name] = PersistentList()
+        state[name].append(PersistentDict({
+            'roles': roles,
+            'date': current_date,
+            'user_making_changes': auth_user
+            }))
+        log.append(PersistentDict({
+            'roles': roles,
+            'date': current_date,
+            'user_making_changes': auth_user,
+            'user': name,
+            'operation': 'set'
+            }))
+
+        self._p_changed = 1
+
+    def delLocalRolesInfo(self, name):
+        state, log = self._getStorage4LocalRolesInfo()
+        current_date = datetime.utcnow()
+        auth_user = self._getAuthenticatedUserUID()
+        del state[name]
+        log.append(PersistentDict({
+            'date': current_date,
+            'user_making_changes': auth_user,
+            'user': name,
+            'operation': 'del'
+            }))
 
         self._p_changed = 1
 
     def getLocalRolesInfo(self, name, default=None):
-        if not hasattr(self, '__Naaya_additional_ac_local_roles_info__'):
+        state, log = self._getStorage4LocalRolesInfo()
+        if not state.has_key(name):
             return default
-        if not self.__Naaya_additional_ac_local_roles_info__.has_key(name):
-            return default
-
-        return self.__Naaya_additional_ac_local_roles_info__[name]
+        return state[name]
 
 class ObjectListingPortlet(object):
     implements(INyPortlet)
