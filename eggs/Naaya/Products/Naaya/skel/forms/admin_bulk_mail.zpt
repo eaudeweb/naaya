@@ -17,6 +17,8 @@
             if ($("input[type=checkbox][name=user_mails:list]").length > 0) {
                 var sel_all = document.createElement('a');
                 var sel_none = document.createElement('a');
+                sel_all.addClass("button-like") = 'Select all';
+                sel_none.addClass("button-like") = 'Select none';
                 sel_all.innerHTML = 'Select all';
                 sel_none.innerHTML = 'Select none';
                 sel_all.id = 'select_all';
