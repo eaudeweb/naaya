@@ -46,6 +46,24 @@
 	border: 1px outset #999966;
 	margin-top: 1em;
 	padding: 0.5em 1em;
+	font-size: 95%;
+}
+.tip {
+	background: #FFFFDD none repeat scroll 0 0;
+	border: 1px outset #999966;
+	margin-top: 1em;
+	padding: 0.5em 1em;
+	font-size: 95%;
+}
+.left-floated-tip {
+	width: 20%;
+	float: left;
+	position: relative;
+	background: #FFFFDD none repeat scroll 0 0;
+	border: 1px outset #999966;
+	margin-top: 1em;
+	padding: 0.5em 1em;
+	font-size: 95%;
 }
 
 /* Operations buttons */
@@ -83,6 +101,19 @@
 	border-bottom: 1px solid #637785;
 	font-size: 100%;
 	color: white;
+}
+a.button-like, a.button-like:visited {
+	text-decoration: none;
+	background-color: #fff;
+	color: #000;
+	line-height: 2em;
+	border-left:1px solid #bbb;
+	border-top:1px solid #bbb;
+	border-bottom:1px solid #666;
+	border-right:1px solid #666;
+	padding:0.1em 0.4em;
+	margin: 0em 0.3em;
+	font-size: 95%;
 }
 
 /* site + folder index menu */
