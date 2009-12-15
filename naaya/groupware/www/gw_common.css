@@ -37,6 +37,17 @@
 	margin: 5px 0px;
 }
 
+/* tip boxes */
+.right-floated-tip {
+	width: 20%;
+	float: right;
+	position: relative;
+	background: #FFFFDD none repeat scroll 0 0;
+	border: 1px outset #999966;
+	margin-top: 1em;
+	padding: 0.5em 1em;
+}
+
 /* Operations buttons */
 .floated-buttons {
 	float: right;

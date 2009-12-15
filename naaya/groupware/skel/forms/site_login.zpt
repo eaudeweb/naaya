@@ -40,6 +40,14 @@
             </tal:block>
 
             <tal:block condition="python:username=='Anonymous User' or here.get_user_access() == 'restricted'">
+                <div class="right-floated-tip">
+                    <div i18n:translate="">Tips</div>
+                    <ul>
+                        <li i18n:translate=""><strong>&raquo;</strong> Having trouble logging in? Make sure that cookies are allowed in your browser</li>
+                        <li i18n:translate=""><strong>&raquo;</strong> Don't forget to logout or exit your browser when you're done</li>
+                        <li i18n:translate=""><strong>&raquo;</strong> Letting your browser to remember your username or password on this machine can be dangerous since other people might use this account to log in</li>
+                    </ul>
+                </div>
                 <h1 i18n:translate="">Restricted access</h1>
                 <p i18n:translate="">You may request access to this interest group by contacting your group leader or by filling out the <a href="./request_ig_access_html" title="Request IG access">access request</a> form.</p>
 
@@ -69,14 +77,6 @@
                         <input type="submit" name="submit" value=" Login " i18n:attributes="value" />
                     </div>
                 </form>
-                <div>
-                    <div i18n:translate="">Tips</div>
-                    <ul>
-                        <li i18n:translate=""><strong>&raquo;</strong> Having trouble logging in? Make sure that cookies are allowed in your browser</li>
-                        <li i18n:translate=""><strong>&raquo;</strong> Don't forget to logout or exit your browser when you're done</li>
-                        <li i18n:translate=""><strong>&raquo;</strong> Letting your browser to remember your username or password on this machine can be dangerous since other people might use this account to log in</li>
-                    </ul>
-                </div>
             </tal:block>
         </tal:block>
     </div>
