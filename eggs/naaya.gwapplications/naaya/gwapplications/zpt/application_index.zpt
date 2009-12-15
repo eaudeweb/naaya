@@ -9,42 +9,63 @@
         </div>
     </div>
     <div id="workarea" tal:define="username python:request.AUTHENTICATED_USER.getUserName()" metal:fill-slot="div-workarea">
-        <tal:block tal:define="data here/application_data">
+        <tal:block tal:define="data here/application_data;
+                               created_url here/created_url;
+                               pending python:not here.approved and not here.rejected;
+                               deleted python:here.approved and not created_url">
             <h1>Interest group application</h1>
             <table>
                 <tr>
-                    <th scope="row">Portal title<th>
+                    <th scope="row">Portal title</th>
                     <td><span tal:content="data/site_title"/></td>
                 </tr>
                 <tr>
-                    <th scope="row">Portal subtitle<th>
+                    <th scope="row">Portal subtitle</th>
                     <td><span tal:content="data/subtitle"/></td>
                 </tr>
                 <tr>
-                    <th scope="row">Portal description<th>
+                    <th scope="row">Portal description</th>
                     <td><span tal:content="data/description"/></td>
                 </tr>
                 <tr>
-                    <th scope="row">Applicant user<th>
+                    <th scope="row">Applicant user</th>
                     <td><span tal:content="here/userid"/></td>
                 </tr>
                 <tr>
-                    <th scope="row">Applicant user name<th>
+                    <th scope="row">Applicant user name</th>
                     <td><span tal:content="data/username"/></td>
                 </tr>
                 <tr>
-                    <th scope="row">Applicant user email<th>
+                    <th scope="row">Applicant user email</th>
                     <td><span tal:content="data/useremail"/></td>
+                </tr>
+                <tal:block tal:condition="here/approved">
+                    <tr>
+                        <th scope="row">Portal url</th>
+                        <td>
+                            <a tal:attributes="href created_url" tal:content="created_url" tal:condition="not:deleted">created_url</a>
+                            <span tal:condition="deleted">Portal deleted</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Approved on</th>
+                        <td><span tal:content="here/pretty_approved_date"/></td>
+                </tal:block>
+                <tr tal:condition="here/rejected">
+                    <th scope="row">Rejected on</th>
+                    <td><span tal:content="here/pretty_rejected_date"/></td>
                 </tr>
             <table>
 
-            <p>If you wish to approve this application please review and if necessary, change the fields below,
+            <p tal:condition="pending">If you wish to approve this application please review and if necessary, change the fields below,
             then press the <em>Approve</em> button. If you wish to reject the application
             just press the <em>Reject</em> button.</p>
-            <p>Upon approval, a new IG will be created, with the details specified below, 
+            <p tal:condition="deleted">This application is approved but the created portal was deleted. You can choose to reapprove
+            this application if you wish to recreate the initial portal.</p>
+            <p tal:condition="python:pending or deleted">Upon approval, a new IG will be created, with the details specified below, 
             and the applicant will be granted <em>Administrator</em> rights on that IG.</p>
 
-            <form action="." method="post">
+            <form action="." method="post" tal:condition="python:pending or deleted">
                 <div class="field">
                     <label for="id">Interest group id</label>
                     <input type="text" size="20" name="id" tal:attributes="value here/gen_id"/>
@@ -65,8 +86,13 @@
                     <textarea type="text" cols="50" rows="7" name="description" tal:content="data/description"></textarea>
                 </div>
 
-                <input type="submit" name="submitted" value="Approve"/>
-                <input type="submit" name="submitted" value="Reject"/>
+                <tal:block condition="python:not here.approved and not here.rejected">
+                    <input type="submit" name="submitted" value="Approve"/>
+                    <input type="submit" name="submitted" value="Reject"/>
+                </tal:block>
+                <tal:block condition="python:here.approved and not created_url">
+                    <input type="submit" name="submitted" value="Approve"/>
+                </tal:block>
                 <input type="submit" name="submitted" value="Cancel"/>
             </form>
         </tal:block>
