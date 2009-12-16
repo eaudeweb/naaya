@@ -35,5 +35,5 @@ class INyDelLocalRoleEvent(Interface):
     """ Local roles have been deleted """
 
     context = Attribute("Site or folder the roles are deleted for")
-    name = Attribute("UID of the user the roles are deleted for")
+    names = Attribute("List of UIDs the roles are deleted for")
 

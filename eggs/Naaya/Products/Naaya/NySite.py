@@ -3744,9 +3744,9 @@ class NySite(CookieCrumbler, LocalPropertyManager, Folder,
         event.notify(NySetLocalRoleEvent(self, name, roles))
         return Folder.manage_setLocalRoles(self, name, roles, *args)
 
-    def manage_delLocalRoles(self, name, *args):
-        event.notify(NyDelLocalRoleEvent(self, name))
-        return Folder.manage_delLocalRoles(self, name, *args)
+    def manage_delLocalRoles(self, names, *args):
+        event.notify(NyDelLocalRoleEvent(self, names))
+        return Folder.manage_delLocalRoles(self, names, *args)
 
 InitializeClass(NySite)
 

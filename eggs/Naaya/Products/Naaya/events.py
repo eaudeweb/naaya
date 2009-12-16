@@ -23,7 +23,7 @@ class NyDelLocalRoleEvent(object):
     """ Local roles have been deleted """
     implements(INyDelLocalRoleEvent)
 
-    def __init__(self, context, name):
+    def __init__(self, context, names):
         super(NyDelLocalRoleEvent, self).__init__()
-        self.context, self.name = context, name
+        self.context, self.names = context, names
 
